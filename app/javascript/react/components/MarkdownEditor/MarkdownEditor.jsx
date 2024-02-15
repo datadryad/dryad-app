@@ -17,6 +17,7 @@ import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';
 import {selectionListener, selectionCtx} from './selectionListener';
+import stringSimilarity from './stringSimilarity';
 import htmlSchema from './htmlSchema';
 import {
   bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
@@ -41,6 +42,7 @@ function MilkdownCore({onChange, setActive, setLevel}) {
       ctx.set(rootCtx, root);
       ctx.set(remarkStringifyOptionsCtx, {
         fences: true,
+        resourceLink: true,
         rule: '-',
         handlers: {
           paragraph: (node, _, state, info) => {
@@ -95,14 +97,20 @@ function MilkdownEditor({
   const [active, setActive] = useState([]);
   const [headingLevel, setHeadingLevel] = useState(0);
   const [parseError, setParseError] = useState(false);
-  const [editorVal, setEditorVal] = useState(0);
+  const [editorVal, setEditorVal] = useState(null);
   const [initialCode, setInitialCode] = useState(initialValue);
   const [mdEditor, setMDEditor] = useState(null);
 
   const activeList = () => active.some((a) => a && a.includes('list'));
 
+  const checkTemplate = (markdown) => {
+    if (stringSimilarity(markdown, initialValue) < 0.9) {
+      onChange(markdown);
+    }
+  };
+
   const saveMarkdown = (markdown) => {
-    onChange(markdown);
+    checkTemplate(markdown);
     setEditorVal(markdown);
   };
 
@@ -196,7 +204,7 @@ function MilkdownEditor({
             />
           </div>
         )}
-        <MilkdownCore onChange={onChange} setActive={setActive} setLevel={setHeadingLevel} />
+        <MilkdownCore onChange={checkTemplate} setActive={setActive} setLevel={setHeadingLevel} />
         <CodeEditor
           content={initialCode}
           onChange={saveMarkdown}
