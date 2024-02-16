@@ -268,6 +268,11 @@ table. The zenodo_copy_id is the id from that same table.
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31 12342
 ```
 
+** You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
+will not take effect. This is probably something we can fix in the code, but it is waiting for us
+to revisit the Zenodo integration. **
+
+
 Setting "Private For Peer Review" (PPR) on dataset that was accidentally published
 ==================================================================================
 ```
@@ -297,6 +302,9 @@ table. The zenodo_copy_id is the `stash_engine_zenodo_copies.id` from that same 
 # the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2023-07-25 1234
 ```
+** You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
+will not take effect. This is probably something we can fix in the code, but it is waiting for us
+to revisit the Zenodo integration. **
 
 Remove from our SOLR search:
 ```
