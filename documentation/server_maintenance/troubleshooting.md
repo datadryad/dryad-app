@@ -574,3 +574,32 @@ user = StashEngine::User.find(r.current_editor_id)
 inv = Stash::Payments::Invoicer.new(resource: r, curator: user)
 inv.charge_user_via_invoice
 ```
+
+Can't download a file because it is "not found"
+================================================
+
+For some old datasets, the Merritt system had trouble ingesting the
+files. Some issues were manually corrected, and some issues were automatically
+retried. For whatever reason, it is possible that Merritt's internal storage
+tracking was slightly different than Dryad's storage tracking. This generally
+didn't cause issues when we relied on Merritt to tell us the location of
+files. Now that we construct the path information ourselves, the lookup can
+sometimes fail when it runs into the old inconsistencies.
+
+Possible problems with a file that won't retrieve from the old Merritt storage hierarchy:
+- The resource where the file was created has the wrong `stash_version.merritt_version`
+- The resource where the file was created has the wrong ARK, and other versions
+  of the same dataset have different ARKs. (Don't worry about the details of
+  ARKs. They just correspond to folder names in the `download_uri` for a resource)
+
+To get some information about where Dryad thinks the file is stored:
+```
+f = StashEngine::DataFile.find(<id>)
+f = f.original_deposit_file
+v = f.resource.stash_version.merritt_version
+p = StashEngine::DataFile.mrt_bucket_path(file:f)
+```
+
+Look in the actual AWS S3 bucket, and see whether the file is stored in the ARK
+and version indicated. You may need to adjust the `download_uri` and/or
+`merritt_version` to sync up with the actual storage location.
