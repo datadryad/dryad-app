@@ -123,7 +123,7 @@ function MilkdownEditor({
     setInitialCode(markdown);
     try {
       parser(markdown);
-      editor()?.action(replaceAll(markdown));
+      editor()?.action(replaceAll(markdown, markdown === initialValue));
       if (markdown === initialValue) {
         const editorView = ctx.get(editorViewCtx);
         const serializer = ctx.get(serializerCtx);
