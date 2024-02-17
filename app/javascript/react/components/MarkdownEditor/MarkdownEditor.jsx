@@ -17,7 +17,6 @@ import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';
 import {selectionListener, selectionCtx} from './selectionListener';
-import stringSimilarity from './stringSimilarity';
 import htmlSchema from './htmlSchema';
 import {
   bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
@@ -98,19 +97,15 @@ function MilkdownEditor({
   const [headingLevel, setHeadingLevel] = useState(0);
   const [parseError, setParseError] = useState(false);
   const [editorVal, setEditorVal] = useState(null);
-  const [initialCode, setInitialCode] = useState(initialValue);
+  const [saveVal, setSaveVal] = useState(null);
+  const [defaultVal, setDefaultVal] = useState(null);
+  const [initialCode, setInitialCode] = useState(null);
   const [mdEditor, setMDEditor] = useState(null);
 
   const activeList = () => active.some((a) => a && a.includes('list'));
 
-  const checkTemplate = (markdown) => {
-    if (stringSimilarity(markdown, initialValue) < 0.9) {
-      onChange(markdown);
-    }
-  };
-
   const saveMarkdown = (markdown) => {
-    checkTemplate(markdown);
+    onChange(markdown);
     setEditorVal(markdown);
   };
 
@@ -129,16 +124,25 @@ function MilkdownEditor({
     try {
       parser(markdown);
       editor()?.action(replaceAll(markdown));
+      if (markdown === initialValue) {
+        const editorView = ctx.get(editorViewCtx);
+        const serializer = ctx.get(serializerCtx);
+        setDefaultVal(serializer(editorView.state.doc));
+      }
     } catch {
       setParseError(true);
       setEditType('markdown');
-      if (markdown !== editorVal) saveMarkdown(markdown);
+      if (markdown !== initialValue) onChange(markdown);
     }
   });
 
   useEffect(() => {
     setEditorVal(initialCode);
   }, [initialCode]);
+
+  useEffect(() => {
+    if (defaultVal && saveVal && saveVal !== defaultVal) onChange(saveVal);
+  }, [saveVal]);
 
   useEffect(() => {
     editor()?.action((ctx) => {
@@ -204,7 +208,7 @@ function MilkdownEditor({
             />
           </div>
         )}
-        <MilkdownCore onChange={checkTemplate} setActive={setActive} setLevel={setHeadingLevel} />
+        <MilkdownCore onChange={setSaveVal} setActive={setActive} setLevel={setHeadingLevel} />
         <CodeEditor
           content={initialCode}
           onChange={saveMarkdown}
@@ -231,14 +235,14 @@ const MarkdownEditor = React.forwardRef((props, ref) => (
 MarkdownEditor.propTypes = {
   id: PropTypes.string.isRequired,
   initialValue: PropTypes.string.isRequired,
-  newValue: PropTypes.string,
+  replaceValue: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   buttons: PropTypes.arrayOf(PropTypes.oneOf(defaultButtons)),
 };
 
 MarkdownEditor.defaultProps = {
   buttons: defaultButtons,
-  newValue: '',
+  replaceValue: '',
 };
 
 export default MarkdownEditor;
