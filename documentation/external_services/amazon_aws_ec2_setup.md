@@ -241,3 +241,22 @@ To troubleshoot load balancer:
   (when editing the bucket permissions, omit the "aws-account-id/" part)
 
 
+Set up other system services and crons
+======================================
+
+Set up systemd services that need to remain running
+```
+sudo cp ~/dryad-app/documentation/external_services/delayed_job.service /etc/systemd/system/delayed_job.service
+sudo nano /etc/systemd/system/delayed_job.service #edit the file to include the correct rails environment
+sudo cp ~/dryad-app/documentation/external_services/status_updater.service /etc/systemd/system/status_updater.service
+sudo nano /etc/systemd/system/status_updater.service #edit the file to include the correct rails environment
+
+sudo systemctl daemon-reload
+sudo systemctl start status_updater
+sudo systemctl enable status_updater
+sudo systemctl start delayed_job
+sudo systemctl enable delayed_job
+# check that they are running
+sudo systemctl status delayed_job
+sudo systemctl status status_updater
+```
