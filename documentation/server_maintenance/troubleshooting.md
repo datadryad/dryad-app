@@ -257,6 +257,7 @@ update stash_engine_curation_activities set status='embargoed' where id=;
 update stash_engine_resources set file_view=false where identifier_id=;
 update stash_engine_resources set publication_date='2020-07-25 01:01:01' where id=;
 update stash_engine_identifiers set pub_state='embargoed' where id=;
+select id,state,deposition_id,resource_id, copy_type from stash_engine_zenodo_copies where resource_id=;
 ```
 
 Now run a command like the one one below if it has been published to Zenodo.  It will
@@ -268,9 +269,9 @@ table. The zenodo_copy_id is the id from that same table.
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31 12342
 ```
 
-** You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
+**You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
 will not take effect. This is probably something we can fix in the code, but it is waiting for us
-to revisit the Zenodo integration. **
+to revisit the Zenodo integration.**
 
 
 Setting "Private For Peer Review" (PPR) on dataset that was accidentally published
