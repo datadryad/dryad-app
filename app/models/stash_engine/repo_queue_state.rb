@@ -78,6 +78,9 @@ module StashEngine
     def available_in_storage?
       return false unless resource.data_files.present?
 
+      # short circuit so we don't have to check AWS if there are no new files in this resource
+      return true if resource.data_files.where(file_state: 'created').empty?
+      
       puts "Checking storage status of resource #{resource_id}"
       s3 = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
 
