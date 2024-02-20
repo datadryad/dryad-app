@@ -1,5 +1,5 @@
 default: &default
-  enabled: true
+  enabled: false
   abbreviation: "TUHS"
   short_name: "Temple Health"
   long_name: "Temple University Health System"
