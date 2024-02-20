@@ -257,6 +257,7 @@ update stash_engine_curation_activities set status='embargoed' where id=;
 update stash_engine_resources set file_view=false where identifier_id=;
 update stash_engine_resources set publication_date='2020-07-25 01:01:01' where id=;
 update stash_engine_identifiers set pub_state='embargoed' where id=;
+select id,state,deposition_id,resource_id, copy_type from stash_engine_zenodo_copies where identifier_id=;
 ```
 
 Now run a command like the one one below if it has been published to Zenodo.  It will
@@ -268,9 +269,9 @@ table. The zenodo_copy_id is the id from that same table.
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31 12342
 ```
 
-** You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
+**You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
 will not take effect. This is probably something we can fix in the code, but it is waiting for us
-to revisit the Zenodo integration. **
+to revisit the Zenodo integration.**
 
 
 Setting "Private For Peer Review" (PPR) on dataset that was accidentally published
@@ -287,7 +288,7 @@ INSERT INTO `stash_engine_curation_activities` (`status`, `user_id`, `note`, `ke
   VALUES ('peer_review', '0', 'Set to peer review at curator request', NULL, '2022-07-27', '2022-07-27', 
   <resource-id>);
 
-select * from stash_engine_zenodo_copies where identifier_id=;
+select id,state,deposition_id,resource_id, copy_type from stash_engine_zenodo_copies where identifier_id=;
 ```
 For each finished `data`, `supp_publish` and `software_publish` record in the
 `stash_engine_zenodo_copies` table do the following procedure. (see last query above)
@@ -302,9 +303,9 @@ table. The zenodo_copy_id is the `stash_engine_zenodo_copies.id` from that same 
 # the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2023-07-25 1234
 ```
-** You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
+**You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
 will not take effect. This is probably something we can fix in the code, but it is waiting for us
-to revisit the Zenodo integration. **
+to revisit the Zenodo integration.**
 
 Remove from our SOLR search:
 ```
