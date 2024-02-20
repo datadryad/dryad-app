@@ -1,5 +1,5 @@
 default: &default
-  enabled: true
+  enabled: false
   abbreviation: "OU"
   short_name: "University of Oklahoma"
   long_name: "University of Oklahoma"
