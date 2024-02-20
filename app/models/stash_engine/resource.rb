@@ -435,6 +435,7 @@ module StashEngine
 
     def merritt_ark
       item = merritt_protodomain_and_local_id
+      return nil if item.blank?
 
       CGI.unescape(item[1])
     end
