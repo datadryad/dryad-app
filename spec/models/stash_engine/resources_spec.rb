@@ -268,6 +268,12 @@ module StashEngine
           resource.download_uri = download_uri
           expect(resource.merritt_ark).to eq('ark:/b5072/fk2736st5z')
         end
+
+        it 'returns nil if there is no ark present' do
+          resource = Resource.create(user_id: user.id)
+          resource.download_uri = ''
+          expect(resource.merritt_ark).to be_nil
+        end
       end
     end
 
