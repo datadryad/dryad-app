@@ -17,14 +17,10 @@ RAILS_ENV=development bundle exec rails affiliation_import:populate_funder_ror_m
 
 ## task to re-import latest ROR data
 
-Warning: This task isn't fast and you may need to give it 8 hours to run. It seems like
-it could probably use some optimization.
+Warning: This task isn't fast and you may need to give it some time to run.
 
 ```bash
-# NOPE!  NOT WORKING!, this commented out task not working
-# RAILS_ENV=development bundle exec rails affiliation_import:update_ror_orgs
-# Use this one instead:
-RAILS_ENV=development bundle exec rails affiliation_import:populate_ror_db /path/to/file
+RAILS_ENV=development bundle exec rails affiliation_import:update_ror_orgs
 ```
 
 ## Query to back up ROR data to a new table
