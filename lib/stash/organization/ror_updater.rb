@@ -11,8 +11,8 @@ module Stash
   module Organization
     class RorUpdater
 
-      FILE_DIR = '/apps/dryad/apps/ui/shared/ror'
-      DOWNLOAD_URL = 'https://zenodo.org/api/records/?communities=ror-data&sort=mostrecent'
+      FILE_DIR = '/home/ec2-user/deploy/shared/ror'
+      DOWNLOAD_URL = 'https://zenodo.org/api/communities/ror-data/records?q=&sort=newest'
 
       # rubocop:disable Metrics/MethodLength, Metrics/BlockNesting
       def self.perform(force: false)
@@ -44,7 +44,8 @@ module Stash
 
               if validate_downloaded_file(file_path: zip_file, checksum: metadata['checksum'])
                 # Hopefully, parse the correct filename out...though ROR hasn't been consistent with their names
-                json_file = download_file.split('/').last.gsub('.zip', '.json').gsub('.json.json', '.json')
+                dl_array = download_file.split('/')
+                json_file = dl_array[dl_array.length - 2].gsub('.zip', '.json').gsub('.json.json', '.json')
 
                 # Process the ROR JSON
                 if process_ror_file(zip_file: zip_file, file: json_file)
@@ -66,9 +67,6 @@ module Stash
       # rubocop:enable Metrics/MethodLength, Metrics/BlockNesting
 
       class << self
-        # this one is public so we can use it by downloading and updating manually since the Zenodo site is currently
-        # not really working according to the instructions at
-        # https://ror.readme.io/docs/data-dump#download-ror-data-dumps-programmatically-with-the-zenodo-api
         def process_ror_json(json_file_path:)
           json_file = File.open(json_file_path, 'r')
           json = JSON.parse(json_file.read)
@@ -118,7 +116,7 @@ module Stash
 
           headers = {
             host: 'zenodo.org',
-            Accept: 'application/zip'
+            Accept: 'application/json'
           }
           resp = HTTParty.get(url, headers: headers)
           unless resp.present? && resp.code == 200
