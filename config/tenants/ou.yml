@@ -1,23 +1,19 @@
 default: &default
-  enabled: true
-  abbreviation: "temple"
-  short_name: "Temple University"
-  long_name: "Temple University"
-  publisher_id: grid.264727.2
+  enabled: false
+  abbreviation: "OU"
+  short_name: "University of Oklahoma"
+  long_name: "University of Oklahoma"
+  publisher_id: grid.266900.b
   ror_ids:
-    - https://ror.org/00kx1jb78
-    - https://ror.org/04zzmzt85
-  tenant_id: temple
+    - https://ror.org/02aqsxs83
+  tenant_id: ou
   authentication:
-    strategy: shibboleth
-    entity_id: https://fim.temple.edu/idp/shibboleth
-    entity_domain: temple.edu
+    strategy: none
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
   partner_display: true
   covers_dpc: true
-  payment_plan: tiered
 
 development: &DEVELOPMENT
   <<: *default
@@ -34,7 +30,7 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
-production: &PRODUCTION
+production:
   <<: *default
   #Add any items that need to override the defaults here
 
@@ -45,4 +41,5 @@ v3_stage:
   <<: *default
 
 v3_production:
-  <<: *PRODUCTION
+  <<: *default
+
