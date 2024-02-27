@@ -254,6 +254,8 @@ sudo yum update -y
 Configuration
 - Update the contents of `/etc/shibboleth/shibboleth2.xml`
   - make sure the email address is set to `admin@datadryad.org`
+  - make sure the `entityID` has the correct value
+  - double-check the `SSO` section below and the url attached
 - Update the apache configs (uncomment relevant sections)
   - under `/etc/httpd/conf.d`, there is a `shib.conf`, as well as a `datadryad.org.conf` 
   - look out for the `cgi-bin` section  
