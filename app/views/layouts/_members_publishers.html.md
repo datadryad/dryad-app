@@ -9,6 +9,7 @@
   <li>Association for Tropical Biology and Conservation</li>
   <li>British Ecological Society</li>
   <li>Cambridge University Press</li>
+  <li>Canadian Science Publishing</li>
   <li>Ecological Society of America</li>
   <li>eLife</li>
   <li>European Respiratory Society</li>
