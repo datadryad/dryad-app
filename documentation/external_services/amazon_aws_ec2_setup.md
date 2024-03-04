@@ -204,6 +204,7 @@ sudo systemctl enable httpd
 sudo systemctl status httpd
 ln -s /etc/httpd ~/apache
 sudo cp ~/dryad-app/documentation/external_services/datadryad.org.conf ~/apache/conf.d/
+sudo touch /var/www/html/index.html
 sudo chmod a+w /var/www/html/index.html
 echo "<h1>Welcome to MACHINE_NAME</h1>" > /var/www/html/index.html
 # UPDATE the settings in datadryad.org.conf to reflect the correct server names
@@ -220,6 +221,11 @@ Set up a load balancer to send traffic to the machine
 - Ensure you are in the proper region -- all of these steps are region dependent
 - In Certificate Manager, create a certificate for the target DNS name 
 - In EC2, create a target group for the servers that will be balanced
+  - Instances
+  - HTTP (since the load balancer will handle the HTTPS connection)
+  - IPv4
+  - HTTP1
+  - Health check = /stash
 - In EC2, create the load balancer and attach the certificate
   - Application Load Balancer
   - Internet-facing
@@ -229,6 +235,7 @@ Set up a load balancer to send traffic to the machine
   - test by copying the load balancer's complex AWS DNS name to the browser
   - 443 listener should forward to the target group
   - 80 listener should redirect to port 443
+  - ensure 443 listener has group-level stickiness ON (so users can properly authenticate through Shibboleth)
 - In Route 53, create a real domain name for the load balancer
   - create an A name that is an alias
   - Alias to Application Load Balancer
