@@ -101,16 +101,6 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/bryan.jpg" alt="Headshot of Bryan Gee">
-  <h5>Bryan Gee</h5><br/>
-  <p><em>Senior Data Curator</em><br/>
-  Bryan has a B.A. in Geology from Pomona College and a Ph.D. in Ecology & Evolutionary Biology from the University 
-  of Toronto. His academic background is in vertebrate paleontology, with research interests in the early evolution 
-  of amphibians. In his free time, Bryan enjoys hiking and camping with his dog, playing Pokemon Go, and watching 
-  sports.
-  </p>
-</div>
-<div class="bio">
   <img src="/images/mollyhirst.jpg" alt="Headshot of Molly Hirst">
   <h5>Molly Hirst</h5><br/>
   <p><em>Data Curator</em><br/>
