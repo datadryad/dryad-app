@@ -43,7 +43,7 @@ We require:
     * Affiliations are drawn from the [Research Organization Registry (ROR)](http://ror.org)
     * If you provide your co-authors' email addresses, when the dataset is published, they will receive a message giving them the option to add their [ORCID](http://orcid.org) to the Dryad record
 * **Abstract**: Brief summary of the dataset’s structure and concepts including information regarding values, contents of the dataset, reuse potential and any legal or ethical considerations. If this dataset is associated with a study, abstract language can be similar, but it should focus on the information relevant to the data itself, rather than to the study.
-* **Research domain**: Primary research domain. Domains are drawn from the <a href="https://www.oecd.org/science/inno/38235147.pdf#page=6">OECD Fields of Science and Technology<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a> classification.
+* **Research domain**: Primary research domain. Domains are drawn from the <a href="https://web-archive.oecd.org/2012-06-15/138575-38235147.pdf#page=6">OECD Fields of Science and Technology<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a> classification.
 * **Keyword(s)**: Descriptive words that may help others discover your dataset. We recommend that you determine whether your discipline has an existing controlled vocabulary from which to choose your keywords. Please enter as many keywords as applicable.
 
 We recommend:
