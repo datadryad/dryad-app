@@ -8,7 +8,7 @@ module StashEngine
     before_action :require_publicly_viewable
 
     def banner_for_pub
-      send_file File.join(Rails.root, 'public', 'data_in_dryad.jpg'), type: 'image/jpeg', disposition: 'inline'
+      send_file File.join(Rails.root, 'public', 'data_in_dryad.png'), type: 'image/png', disposition: 'inline'
     end
 
     def data_package_for_pub
