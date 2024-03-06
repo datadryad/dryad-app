@@ -114,7 +114,7 @@ module Stash
         update = { storage_version_id: resource.id }
         if data_file.digest.nil?
           digest_type = 'sha-256'
-          @digest_input ||= s3.get(bucket: staged_bucket, key: staged_key)
+          @digest_input ||= s3.presigned_download_url(s3_key: staged_key)
           sums = Stash::Checksums.get_checksums([digest_type], @digest_input)
           update[:digest_type] = digest_type
           update[:digest] = sums.get_checksum(digest_type)
