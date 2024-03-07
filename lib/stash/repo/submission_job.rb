@@ -1,4 +1,5 @@
 require 'rails'
+require 'down'
 require 'active_record'
 require 'concurrent/promise'
 require 'byebug'
@@ -74,7 +75,11 @@ module Stash
           case f.file_state
           when 'created'
             logger.info(" -- created file moving to permanent store #{f.upload_file_name} -- #{f.s3_staged_path}")
-            copy_to_permanent_store(f)
+            if f.url && !s3.exists?(s3_key: f.s3_staged_path)
+              copy_external_to_permanent_store(f)
+            else
+              copy_to_permanent_store(f)
+            end
           when 'copied'
             # Files aren't actually copied, we just reference the file from the previous version of the dataset
             logger.info(" -- copied file #{f.upload_file_name}")
@@ -97,24 +102,16 @@ module Stash
         permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
         permanent_key = "v3/#{data_file.s3_staged_path}"
 
-        if data_file.url && !s3.exists?(s3_key: staged_key)
-          s3_perm = Stash::Aws::S3.new(s3_bucket_name: permanent_bucket)
-          URI.parse(data_file.url).open do |f|
-            logger.info("    #{data_file.url} ==> #{permanent_bucket}/#{permanent_key}")
-            s3_perm.put_stream(s3_key: permanent_key, stream: f)
-          end
-          digest_input = data_file.url
-        else
-          logger.info("    #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
-          s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
-                  to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
-                  size: data_file.upload_file_size)
-        end
+        logger.info("    #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
+        s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
+                to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
+                size: data_file.upload_file_size)
 
         update = { storage_version_id: resource.id }
+
         if data_file.digest.nil?
           digest_type = 'sha-256'
-          digest_input ||= s3.presigned_download_url(s3_key: staged_key)
+          digest_input = s3.presigned_download_url(s3_key: staged_key)
           sums = Stash::Checksums.get_checksums([digest_type], digest_input)
 
           raise "Error generating file checksum (#{data_file.upload_file_name})" if sums.input_size != data_file.upload_file_size
@@ -122,6 +119,38 @@ module Stash
           update[:digest_type] = digest_type
           update[:digest] = sums.get_checksum(digest_type)
         end
+        data_file.update(update)
+      end
+
+      def copy_external_to_permanent_store(data_file)
+        permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
+        permanent_key = "v3/#{data_file.s3_staged_path}"
+        s3_perm = Stash::Aws::S3.new(s3_bucket_name: permanent_bucket)
+
+        input_size = 0
+        digest_type = 'sha-256'
+        sums = Stash::Checksums.new([digest_type])
+        algorithm = sums.get_algorithm(digest_type).new
+
+        logger.info("    #{data_file.url} ==> #{permanent_bucket}/#{permanent_key}")
+        s3_perm.object(s3_key: permanent_key).upload_stream do |write_stream|
+          write_stream.binmode
+          Down.open(data_file.url).each_chunk do |chunk|
+            write_stream << chunk
+            input_size += chunk.length
+            algorithm.update(chunk)
+          end
+        end
+
+        update = { storage_version_id: resource.id }
+
+        if data_file.digest.nil?
+          raise "Error generating file checksum (#{data_file.upload_file_name})" if input_size != data_file.upload_file_size
+
+          update[:digest_type] = digest_type
+          update[:digest] = algorithm.hexdigest
+        end
+
         data_file.update(update)
       end
 
