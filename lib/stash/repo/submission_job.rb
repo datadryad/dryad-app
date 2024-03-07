@@ -118,7 +118,7 @@ module Stash
 
           update[:digest_type] = digest_type
           update[:digest] = sums.get_checksum(digest_type)
-          updated[:validated_at] = Time.now.utc
+          update[:validated_at] = Time.now.utc
         end
         data_file.update(update)
       end
@@ -150,7 +150,7 @@ module Stash
 
           update[:digest_type] = digest_type
           update[:digest] = algorithm.hexdigest
-          updated[:validated_at] = Time.now.utc
+          update[:validated_at] = Time.now.utc
         end
 
         data_file.update(update)
