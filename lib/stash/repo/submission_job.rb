@@ -116,6 +116,9 @@ module Stash
           digest_type = 'sha-256'
           digest_input ||= s3.presigned_download_url(s3_key: staged_key)
           sums = Stash::Checksums.get_checksums([digest_type], digest_input)
+
+          raise "Error generating file checksum (#{data_file.upload_file_name})" if sums.input_size != data_file.upload_file_size
+
           update[:digest_type] = digest_type
           update[:digest] = sums.get_checksum(digest_type)
         end
