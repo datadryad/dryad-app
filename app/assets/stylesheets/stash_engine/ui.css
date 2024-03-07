@@ -4380,7 +4380,7 @@ pre kbd, pre samp, pre code {
 }
 .c-upload__action progress {
   border: none;
-  background-color: rgb(242, 242, 242);
+  background-color: #ddd;
   color: #00527A;
   -moz-appearance: none;
   -webkit-appearance: none;

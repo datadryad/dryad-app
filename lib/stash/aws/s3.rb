@@ -81,13 +81,6 @@ module Stash
         s3_bucket.objects(prefix: starts_with)
       end
 
-      def get(bucket:, key:)
-        return unless bucket && key
-
-        resp = s3_client.get_object(bucket: bucket, key: key)
-        resp.body
-      end
-
       def copy(from_bucket_name:, from_s3_key:, to_bucket_name:, to_s3_key:, size:)
         options_hash = {}
         if size > 5_000_000_000
