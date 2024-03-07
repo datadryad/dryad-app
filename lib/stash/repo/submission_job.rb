@@ -103,7 +103,7 @@ module Stash
             logger.info("    #{data_file.url} ==> #{permanent_bucket}/#{permanent_key}")
             s3_perm.put_stream(s3_key: permanent_key, stream: f)
           end
-          @digest_input = data_file.url
+          digest_input = data_file.url
         else
           logger.info("    #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
           s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
@@ -114,8 +114,8 @@ module Stash
         update = { storage_version_id: resource.id }
         if data_file.digest.nil?
           digest_type = 'sha-256'
-          @digest_input ||= s3.presigned_download_url(s3_key: staged_key)
-          sums = Stash::Checksums.get_checksums([digest_type], @digest_input)
+          digest_input ||= s3.presigned_download_url(s3_key: staged_key)
+          sums = Stash::Checksums.get_checksums([digest_type], digest_input)
           update[:digest_type] = digest_type
           update[:digest] = sums.get_checksum(digest_type)
         end
