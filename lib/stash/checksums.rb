@@ -1,6 +1,6 @@
 require 'digest'
 require 'logger'
-require 'open-uri'
+require 'down'
 
 module Stash
   class Checksums
@@ -88,8 +88,14 @@ module Stash
     private
 
     def process_url(url)
-      URI.parse(url).open do |f|
-        process_stream(f)
+      Down.open(url).each_chunk do |chunk|
+        @input_size += chunk.length
+        @digest_list.each { |digest| digest.algorithm.update(chunk) }
+      end
+
+      @digest_list.each do |digest|
+        finish_digest(digest)
+        digest.input_size = @input_size
       end
     end
 
