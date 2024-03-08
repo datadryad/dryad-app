@@ -10,6 +10,11 @@ module Stash
     class SubmissionJob
       attr_reader :resource_id
 
+      # The default chunk size of Down is too small, and results in AWS transfers
+      # exceeding the number of chunks allowed for a multipart upload. We need to
+      # define a generous chunk size to ensure the transfer completes.
+      CHUNK_SIZE = 500 * 1024 * 1024
+
       def initialize(resource_id:)
         resource_id = resource_id.to_i if resource_id.is_a?(String)
         raise ArgumentError, "Invalid resource ID: #{resource_id || 'nil'}" unless resource_id.is_a?(Integer)
@@ -136,10 +141,13 @@ module Stash
         logger.info("    #{data_file.url} ==> #{permanent_bucket}/#{permanent_key}")
         s3_perm.object(s3_key: permanent_key).upload_stream do |write_stream|
           write_stream.binmode
-          Down.open(data_file.url).each_chunk do |chunk|
+          read_stream = Down.open(data_file.url, rewindable: false)
+          chunk = read_stream.read(CHUNK_SIZE)
+          while chunk.present?
             write_stream << chunk
             input_size += chunk.length
             algorithm.update(chunk)
+            chunk = read_stream.read(CHUNK_SIZE)
           end
         end
 
