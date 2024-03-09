@@ -106,19 +106,15 @@ module Stash
         staged_key = data_file.s3_staged_path
         permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
         permanent_key = "v3/#{data_file.s3_staged_path}"
-
-        logger.info("    #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
+        logger.info("file #{data_file.id} #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
         s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
                 to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
                 size: data_file.upload_file_size)
-
         update = { storage_version_id: resource.id }
-
         if data_file.digest.nil?
           digest_type = 'sha-256'
           digest_input = s3.presigned_download_url(s3_key: staged_key)
           sums = Stash::Checksums.get_checksums([digest_type], digest_input)
-
           raise "Error generating file checksum (#{data_file.upload_file_name})" if sums.input_size != data_file.upload_file_size
 
           update[:digest_type] = digest_type
@@ -128,6 +124,8 @@ module Stash
         data_file.update(update)
       end
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def copy_external_to_permanent_store(data_file)
         permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
         permanent_key = "v3/#{data_file.s3_staged_path}"
@@ -138,16 +136,21 @@ module Stash
         sums = Stash::Checksums.new([digest_type])
         algorithm = sums.get_algorithm(digest_type).new
 
-        logger.info("    #{data_file.url} ==> #{permanent_bucket}/#{permanent_key}")
+        logger.info("file #{data_file.id} #{data_file.url} ==> #{permanent_bucket}/#{permanent_key}")
         s3_perm.object(s3_key: permanent_key).upload_stream(part_size: CHUNK_SIZE) do |write_stream|
           write_stream.binmode
           read_stream = Down.open(data_file.url, rewindable: false)
           chunk = read_stream.read(CHUNK_SIZE)
+          chunk_num = 1
+          cycle_time = Time.now
           while chunk.present?
             write_stream << chunk
             input_size += chunk.length
+            logger.info("file #{data_file.id} chunk #{chunk_num} size #{chunk.length} ==> #{input_size} (#{Time.now - cycle_time})")
+            cycle_time = Time.now
             algorithm.update(chunk)
             chunk = read_stream.read(CHUNK_SIZE)
+            chunk_num += 1
           end
         end
 
@@ -163,6 +166,8 @@ module Stash
 
         data_file.update(update)
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def resource
         @resource ||= StashEngine::Resource.find(resource_id)
