@@ -139,7 +139,7 @@ module Stash
         algorithm = sums.get_algorithm(digest_type).new
 
         logger.info("    #{data_file.url} ==> #{permanent_bucket}/#{permanent_key}")
-        s3_perm.object(s3_key: permanent_key).upload_stream do |write_stream|
+        s3_perm.object(s3_key: permanent_key).upload_stream(part_size: CHUNK_SIZE) do |write_stream|
           write_stream.binmode
           read_stream = Down.open(data_file.url, rewindable: false)
           chunk = read_stream.read(CHUNK_SIZE)
