@@ -75,6 +75,12 @@ module Stash
         s3_bucket.objects(prefix: "#{s3_key}/").batch_delete!
       end
 
+      def object(s3_key:)
+        return unless s3_key
+
+        s3_bucket.object(s3_key)
+      end
+
       def objects(starts_with:)
         return unless starts_with
 
