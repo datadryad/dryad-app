@@ -322,7 +322,7 @@ production: &PRODUCTION
   <<: *DEFAULTS
   shib_sp_host: datadryad.org
   page_error_email: [ryan@datadryad.org, audrey@datadryad.org]
-  submission_error_email: [sfisher@ucop.edu, ryan@datadryad.org, audrey@datadryad.org, Steve.Diggs@ucop.edu]
+  submission_error_email: [ryan@datadryad.org, audrey@datadryad.org]
   zenodo_error_email: [ryan@datadryad.org, audrey@datadryad.org]
   helpdesk_email: help@datadryad.org
   feedback_email_from: no-reply-dryad@datadryad.org
