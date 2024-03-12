@@ -1,5 +1,5 @@
 default: &default
-  enabled: false
+  enabled: true
   abbreviation: "OU"
   short_name: "University of Oklahoma"
   long_name: "University of Oklahoma"
@@ -8,7 +8,9 @@ default: &default
     - https://ror.org/02aqsxs83
   tenant_id: ou
   authentication:
-    strategy: none
+    strategy: shibboleth
+    entity_id: https://shib.ou.edu/idp/shibboleth
+    entity_domain: shib.ou.edu
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
