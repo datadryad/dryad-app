@@ -3,7 +3,7 @@
 module StashApi
   class SafeError < StandardError
     attr_reader :original_exception,
-      :metadata
+                :metadata
 
     def initialize(message = nil, original: nil, metadata: {})
       super message

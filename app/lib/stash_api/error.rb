@@ -70,9 +70,7 @@ module StashApi
         if Rails.env.test? || Rails.env.development?
           @message
         else
-          # rubocop:disable Layout/LineLength
           'We have encountered an error processing the request. Please try again, and if the problem persists, contact support.'
-          # rubocop:enable Layout/LineLength
         end
       end
 
