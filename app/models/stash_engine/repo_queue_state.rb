@@ -13,9 +13,6 @@
 #
 #  index_stash_engine_repo_queue_states_on_resource_id  (resource_id)
 #
-
-require 'stash/aws/s3'
-
 module StashEngine
   class RepoQueueState < ApplicationRecord
     self.table_name = 'stash_engine_repo_queue_states'
