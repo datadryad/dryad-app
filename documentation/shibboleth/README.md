@@ -55,3 +55,40 @@ apache level. You may need to add further exceptions if there are further test
 servers which legitimately don't use SSL (like local servers, more containers or
 whatever). 
 
+
+Installing shibboleth service provider
+======================================
+
+
+Install the basic service provider daemon
+-----------------------------------------
+
+```
+sudo yum update -y
+```
+
+- create a repo file for the shibboleth package under `/etc/yum.repos.d/shibboleth.repo` and include the contents from this [link](https://shibboleth.net/downloads/service-provider/RPMS/) (choose Amazon Linux 2023 from the first dropdown and hit generate)
+- run `sudo yum install shibboleth.x86_64` (make sure the .x86_64 version is used)
+- enable the service: `sudo systemctl enable shibd.service`
+- run via `sudo systemctl start shibd`
+- even though it's "running", it probably didn't start correctly due to certificate issues (which we fix below) -- check in `/var/log/shibboleth`
+
+Configuration
+- Update the contents of `/etc/shibboleth/shibboleth2.xml`
+  - copy the initial file from the one in this directory
+  - make sure the email address is set to `admin@datadryad.org`
+  - make sure the `entityID` has the correct value
+  - double-check the `SSO` section below and the url attached
+- Update the apache configs (uncomment relevant sections)
+  - under `/etc/httpd/conf.d`, there is a `shib.conf`, as well as a `datadryad.org.conf` 
+  - look out for the `cgi-bin` section
+- copy the `inc-md-cert-mdq.pem` from this directory to `/etc/shibboleth`
+
+Certificate generation (the shibboleth certificate should *not* be the same as the web server certificate)
+```
+cd /etc/shibboleth
+sudo ./keygen.sh -o ~/tmp -h sandbox.datadryad.org -y 15 -e https://sandbox.datadryad.org/shibboleth -n sp
+sudo chmod a+r sp-key.pem   # key must be readable by the shibd process
+sudo systemctl restart shibd
+```
+Now check `/var/log/shibboleth` again for any errors, to ensure the process started correctly.
