@@ -248,24 +248,10 @@ To troubleshoot load balancer:
   (when editing the bucket permissions, omit the "aws-account-id/" part)
 
 
-## Set up shibboleth service provider
-```
-sudo yum update -y
-```
+Set up shibboleth service provider
+==================================
 
-- create a repo file for the shibboleth package under `/etc/yum.repos.d/shibboleth.repo` and include the contents from this [link](https://shibboleth.net/downloads/service-provider/RPMS/) (choose Amazon Linux 2023 from the first dropdown and hit generate)
-- run `sudo yum install shibboleth.x86_64` (make sure the .x86_64 version is used)
-- enable the service: `sudo systemctl enable shibd.service`
-- run via `sudo systemctl start shibd`
-
-Configuration
-- Update the contents of `/etc/shibboleth/shibboleth2.xml`
-  - make sure the email address is set to `admin@datadryad.org`
-  - make sure the `entityID` has the correct value
-  - double-check the `SSO` section below and the url attached
-- Update the apache configs (uncomment relevant sections)
-  - under `/etc/httpd/conf.d`, there is a `shib.conf`, as well as a `datadryad.org.conf` 
-  - look out for the `cgi-bin` section  
+See instructions in [the shibboleth directory](../shibboleth/README.md).
 
 
 Set up other system services and crons
