@@ -54,18 +54,11 @@ module StashDatacite
     private
 
     def ensure_subject(subject_str)
-      subject = find_or_create_subject(subject_str)
+      subject = StashDatacite::Subject.find_or_create_subject(subject_str)
       subjects = @resource.subjects
       return if subjects.exists?(subject.id)
 
       subjects << subject
-    end
-
-    def find_or_create_subject(subject)
-      existing = Subject.where('subject LIKE ?', subject).non_fos.first
-      return existing if existing
-
-      Subject.create(subject: subject)
     end
 
     def set_subject

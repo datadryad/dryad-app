@@ -31,5 +31,12 @@ module StashDatacite
     scope :fos, -> { where("subject_scheme = 'fos'") }
     scope :permissive_fos, -> { where("subject_scheme IN ('fos', 'bad_fos')") }
     scope :bad_fos, -> { where("subject_scheme = 'bad_fos'") }
+
+    def find_or_create_subject(subject, exact: false)
+      existing = exact ? where(subject: subject) : where('subject LIKE ?', subject).non_fos.first
+      return existing if existing
+
+      create(subject: subject)
+    end
   end
 end

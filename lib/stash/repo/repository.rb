@@ -7,6 +7,7 @@ module Stash
       attr_reader :executor
 
       ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}
+      AUTO_PUBLISH_FIELDS = %w[related_identifiers subjects authors funders].freeze
 
       # Initializes this repository
       # Concurrent::FixedThreadPool.new(2, idletime: 600)
@@ -98,7 +99,9 @@ module Stash
         return unless resource == resource.identifier&.processing_resource
 
         resource.download_uri = resource.s3_dir_name(type: 'data')
-        resource.current_state = 'submitted'
+
+        # TODO: add an activity record when auto publishing for audit / curators
+        resource.current_state = should_auto_publish(resource) ? 'published' : 'submitted'
         resource.save
       end
 
@@ -192,6 +195,52 @@ module Stash
           archive_submission_request: result.request_desc,
           archive_response: (result.message || result.error.to_s)
         )
+      end
+
+      def should_auto_publish(resource)
+        identifier = resource.identifier
+        previous_resource = identifier.resources.publicly_viewable.by_version_desc.second
+
+        changed_fields = resource.changed_fields(previous_resource)
+
+        # changed_fields also includes the actual changes as arrays of data, we don't care about that
+        # don't auto-publish if we have any field that is not part of the list of allowed auto-publish fields
+        return false unless ((changed_fields.filter { |f| f.is_a?(String) }) - AUTO_PUBLISH_FIELDS).empty?
+
+        # Adding a relationship to a primary article when there was not one before
+        return true if !previous_resource.related_identifiers.exists?(related_identifier_type: 'doi', work_type: 'primary_article') \
+          && resource.related_identifiers.exists?(related_identifier_type: 'doi', work_type: 'primary_article')
+
+        # Adding any non primary article relationships
+        previous_relationships = previous_resource.related_identifiers.pluck(:work_type)
+        current_relationships = resource.related_identifiers.pluck(:work_type)
+
+        return true unless (current_relationships - previous_relationships).include?('primary_article')
+
+        # Adding keywords
+        previous_keywords = previous_resource.subjects.pluck(:subject)
+        current_keywords = resource.subjects.pluck(:subject)
+
+        # TODO: the requirement here states
+        #       "New keywords must match a controlled vocabulary term or previously-existing keyword"
+        #       however at this stage the keywords are already created, so how do we verify that they were already existing?
+        #       maybe based on the `created_at` timestamp, eg: it needs to be equal or after the `resource.updated_at` timestamp
+        return true if StashDatacite.exists?(subject: (current_keywords - previous_keywords))
+
+        # Authors reordered but not changed
+        # TODO: do we care about more than the orcid when considering if an author has changed?
+        previous_authors = previous_resource.authors.pluck(:author_orcid)
+        current_authors = resource.authors.pluck(:author_orcid)
+
+        return true if (current_authors - previous_authors).empty?
+
+        # New Funder added
+        funders_changes = changed_fields[changed_fields.find_index('funders') + 1]
+
+        # TODO: double check this condition and how the values actually look like on the founder changes list
+        return true unless funders_changes.map { |fc| fc[:identifier_type] }.all?('Crossref Funder ID')
+
+        false
       end
     end
   end
