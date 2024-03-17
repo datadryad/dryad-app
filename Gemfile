@@ -39,7 +39,7 @@ gem 'puma', '6.1.0', group: :puma, require: false # puma 6.3.0 doesn't start
 # asset pipeline problems with Joels pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
 
 gem 'coffee-rails', '~> 5.0'
-gem 'jquery-rails', '~> 4.4.0'
+gem 'jquery-rails', '~> 4.0'
 # gem 'libv8', '~> 3.16.1' # I think taken care of as dependency of mini_racer
 gem 'mini_racer', '0.6.3'
 gem 'sassc-rails', '~> 2.1.2' # the default for newer rails, no need for yui and already used by bootstrap or something else
