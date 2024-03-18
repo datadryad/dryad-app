@@ -12,7 +12,11 @@ Any additional changes we make to the SOLR server schema and configuration shoul
 
 ## The how to install and start SOLR
 
-extract SOLR to an appropriate directory like `tar zxf solr-x.y.z.tgz`.
+Download a SOLR binary release file from the Apache SOLR site.
+
+Transfer this file to the target machine.
+
+Extract SOLR to an appropriate directory like `tar zxf solr-x.y.z.tgz`.
 
 ```
 # Create a generic core in SOLR (inside base solr directory)

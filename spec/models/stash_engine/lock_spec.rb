@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: locks
+#
+#  id         :integer          not null, primary key
+#  name       :string(40)
+#  created_at :datetime
+#  updated_at :datetime
+#
+# Indexes
+#
+#  index_locks_on_name  (name) UNIQUE
+#
 module StashEngine
   describe Lock, '.acquire' do
 

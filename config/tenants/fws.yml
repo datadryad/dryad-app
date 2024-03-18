@@ -13,8 +13,8 @@ default: &default
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
-  partner_display: true
-  covers_dpc: true
+  partner_display: false
+  covers_dpc: false
 
 development: &DEVELOPMENT
   <<: *default
@@ -31,7 +31,16 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
-production:
+production: &PRODUCTION
   <<: *default
   #Add any items that need to override the defaults here
   campus_contacts: ["john_wenburg@fws.gov"]
+
+v3_development:
+  <<: *default
+
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *PRODUCTION

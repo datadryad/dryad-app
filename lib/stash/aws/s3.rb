@@ -75,10 +75,28 @@ module Stash
         s3_bucket.objects(prefix: "#{s3_key}/").batch_delete!
       end
 
+      def object(s3_key:)
+        return unless s3_key
+
+        s3_bucket.object(s3_key)
+      end
+
       def objects(starts_with:)
         return unless starts_with
 
         s3_bucket.objects(prefix: starts_with)
+      end
+
+      def copy(from_bucket_name:, from_s3_key:, to_bucket_name:, to_s3_key:, size:)
+        options_hash = {}
+        if size > 5_000_000_000
+          options_hash[:multipart_copy] = true
+          options_hash[:content_length] = size
+        end
+
+        bucket = s3_resource.bucket(from_bucket_name)
+        object = bucket.object(from_s3_key)
+        object.copy_to({ bucket: to_bucket_name, key: to_s3_key }, options_hash)
       end
 
       private

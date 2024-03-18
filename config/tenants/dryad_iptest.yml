@@ -11,7 +11,7 @@ default: &default
     strategy: ip_address
     ranges: ["128.48.67.15/255.255.255.0", "127.0.0.1/255.255.255.0"]
   default_license: cc0
-  campus_contacts: ["scott.fisher@ucop.edu"] # for testing
+  campus_contacts: ["ryan@datadryad.org"] # for testing
   data_deposit_agreement: false
   partner_display: false
   covers_dpc: true
@@ -38,16 +38,18 @@ stage:
 migration:
   <<: *default
   #Add any items that need to override the defaults here
-  repository:
-    domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
-    username: <%= Rails.application.credentials[:production][:merritt_dryad_username] %>
-    password: <%= Rails.application.credentials[:production][:merritt_dryad_password] %>
 
-production:
+production: &PRODUCTION
   <<: *default
   #Add any items that need to override the defaults here
   enabled: false
   campus_contacts: [""]
 
+v3_development:
+  <<: *default
 
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *PRODUCTION

@@ -8,7 +8,6 @@ module StashApi
   class DatasetsController < ApiApplicationController
     include ActionView::Helpers::DateHelper
     include SubmissionMixin
-    include Downloadable
 
     before_action :require_json_headers, only: %i[show create index update]
     before_action :force_json_content_type, except: :download
@@ -29,8 +28,7 @@ module StashApi
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user, item_view: true)
       render json: ds.metadata
-      res = @stash_identifier.latest_viewable_resource(user: @user)
-      StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
+      @stash_identifier.latest_viewable_resource(user: @user)
     end
 
     # post /datasets
@@ -39,7 +37,7 @@ module StashApi
         format.json do
           dp = DatasetParser.new(hash: params['dataset'], id: nil, user: @user)
           @stash_identifier = dp.parse
-          ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user) # sets up display objects
+          ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user, post: true) # sets up display objects
           render json: ds.metadata, status: 201
         end
       end
@@ -386,7 +384,12 @@ module StashApi
     # get /datasets/<id>/download
     def download
       res = @stash_identifier.latest_downloadable_resource(user: @user)
-      download_version(resource: res)
+      @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: res)
+      if res&.may_download?(ui_user: @user) && @zip_version_presigned.valid_resource?
+        @version_presigned.download(resource: res)
+      else
+        render plain: 'Download for this version of the dataset is unavailable', status: 404
+      end
     end
 
     # post /datasets/<id>/set_internal_datum

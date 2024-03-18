@@ -1,3 +1,37 @@
+# == Schema Information
+#
+# Table name: stash_engine_generic_files
+#
+#  id                  :integer          not null, primary key
+#  cloud_service       :string(191)
+#  compressed_try      :integer          default(0)
+#  description         :text(65535)
+#  digest              :string(191)
+#  digest_type         :string(8)
+#  file_state          :string(7)
+#  original_filename   :text(65535)
+#  original_url        :text(65535)
+#  status_code         :integer
+#  timed_out           :boolean          default(FALSE)
+#  type                :string(191)
+#  upload_content_type :text(65535)
+#  upload_file_name    :text(65535)
+#  upload_file_size    :bigint
+#  upload_updated_at   :datetime
+#  url                 :text(65535)
+#  validated_at        :datetime
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  resource_id         :integer
+#  storage_version_id  :integer
+#
+# Indexes
+#
+#  index_stash_engine_generic_files_on_file_state        (file_state)
+#  index_stash_engine_generic_files_on_resource_id       (resource_id)
+#  index_stash_engine_generic_files_on_upload_file_name  (upload_file_name)
+#  index_stash_engine_generic_files_on_url               (url)
+#
 require 'byebug'
 module StashEngine
   class DataFile < GenericFile
@@ -56,10 +90,12 @@ module StashEngine
 
       bkt_instance = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
 
-      mrt_version_no.downto(1).each do |vers|
-        s3_path = "#{before_file.resource.merritt_ark}|#{vers}|producer/#{before_file.upload_file_name}"
-        return s3_path if bkt_instance.exists?(s3_key: s3_path)
+      ark = before_file.resource.merritt_ark
+      return nil if ark.blank?
 
+      mrt_version_no.downto(1).each do |vers|
+        s3_path = "#{ark}|#{vers}|producer/#{before_file.upload_file_name}"
+        return s3_path if bkt_instance.exists?(s3_key: s3_path)
       end
 
       upload_vers = before_file&.resource&.stash_version
@@ -67,7 +103,7 @@ module StashEngine
       # later to correct problems in later, but the database doesn't reflect that
       if upload_vers.present? && upload_vers&.version != upload_vers&.merritt_version
         (upload_vers.merritt_version + 1).upto(upload_vers.merritt_version + 2) do |vers|
-          s3_path = "#{before_file.resource.merritt_ark}|#{vers}|producer/#{before_file.upload_file_name}"
+          s3_path = "#{ark}|#{vers}|producer/#{before_file.upload_file_name}"
           return s3_path if bkt_instance.exists?(s3_key: s3_path)
 
         end
@@ -85,6 +121,12 @@ module StashEngine
       f = original_deposit_file # this is the deposit in the series where this file was last re-uploaded fully by dryad
       return nil if f.nil?
 
+      # First, look for the file in the v3 hierarchy
+      s3 = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+      permanent_key = "v3/#{f.s3_staged_path}"
+      return permanent_key if s3.exists?(s3_key: permanent_key)
+
+      # If it's not in the v3 hierarchy, check in the Merritt/ark hierarchy
       f2 = DataFile.find_merritt_deposit_file(file: f) # find where Merritt has decided to store the file, may be an earlier creation
 
       return DataFile.mrt_bucket_path(file: f2) unless f2.nil?

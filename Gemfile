@@ -17,16 +17,16 @@ gem 'webpacker', '6.0.0.rc.6'
 # Local engines
 
 path 'stash' do
-  gem 'stash-deposit'
-  gem 'stash-merritt'
   gem 'stash-wrapper'
 end
 
 # ############################################################
 # Deployment
 
+gem 'bcrypt_pbkdf', '1.1.0'
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.6.2'
+gem 'ed25519', '1.3.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.38', require: false
 # Use Puma as the app server
@@ -53,6 +53,7 @@ gem 'uglifier', '~> 4.2.0'
 
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.2.0'
+gem 'annotate', '~> 3.2'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
 gem 'blacklight'
@@ -86,7 +87,6 @@ gem 'leaflet-rails', '~> 1.7.0'
 gem 'loofah', '~> 2.16.0'
 gem 'net-sftp'
 gem 'noid', '~> 0.9.0'
-# gem 'oai', '~> 1.1.0'
 gem 'omniauth', '~> 2.1.0'
 gem 'omniauth-google-oauth2', '~> 1.1.1'
 gem 'omniauth-orcid', '~> 2.1', '>= 2.1.1'

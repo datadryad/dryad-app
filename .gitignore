@@ -204,8 +204,11 @@ flycheck_*.el
 
 # Ignore keys for decrypting credentials and more.
 /config/master.key
+/config/credentials/v3_development.key
 /config/credentials/production.key
+/config/credentials/v3_production.key
 /config/credentials/stage.key
+/config/credentials/v3_stage.key
 
 /public/packs
 /public/packs-test
@@ -213,3 +216,5 @@ flycheck_*.el
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+/config/credentials/development.key

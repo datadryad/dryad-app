@@ -1,9 +1,25 @@
+# == Schema Information
+#
+# Table name: stash_engine_repo_queue_states
+#
+#  id          :integer          not null, primary key
+#  hostname    :string(191)
+#  state       :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  resource_id :integer
+#
+# Indexes
+#
+#  index_stash_engine_repo_queue_states_on_resource_id  (resource_id)
+#
+
+require 'stash/aws/s3'
+
 module StashEngine
   class RepoQueueState < ApplicationRecord
     self.table_name = 'stash_engine_repo_queue_states'
     include StashEngine::Support::StringEnum
-
-    attr_reader :mrt_results # this is for tests
 
     belongs_to :resource
 
@@ -15,16 +31,13 @@ module StashEngine
     #
     # enqueued               -- The item is in an internal queue, waiting to submit to the repo when a worker is available.
     #
-    # processing             -- The item has been sent to Merritt and we do not have a Promise return status for the item yet (from Merritt-Sword)
+    # processing             -- The item has been sent to the repo and we do not have a Promise return status for the item yet
     #
-    # provisional_complete   -- Merritt said it was accepted but we still haven't seen it appear in their system search
+    # completed              -- A successful return status was received from the repo
     #
-    # completed              -- A successful return status was received (from Merritt-Sword)
-    #
-    # errored                -- An unsuccessful return status was received (from Merritt-Sword).  See stash_engine_submission_logs and maybe
-    #                           also server logs for details.
+    # errored                -- An unsuccessful return status was received from the repo.
+    # See stash_engine_submission_logs and maybe also server logs for details.
 
-    # a provisional complete means we got a message from SWORD saying it had been ingested but not searchable in Merritt yet
     enum_vals = %w[
       rejected_shutting_down
       enqueued
@@ -61,56 +74,49 @@ module StashEngine
       where(resource_id: resource_id).order(updated_at: :desc, id: :desc).first
     end
 
-    # Does remote query to check if this queue state has been ingested into Merritt yet
-    # Also sets @mrt_results as member variable so it can be reused without re-querying merritt again.
-    def available_in_merritt?
-      @mrt_results = resource&.identifier&.merritt_object_info
-      return false unless @mrt_results.present?
+    # Check if this queue state has been ingested into storage yet
+    def available_in_storage?
+      return false unless resource.data_files.present?
 
-      # get the merritt versions available, which may not be the same version numbers as stash versions in some cases
-      mrt_versions = @mrt_results['versions'].map { |i| i['version_number'] }
-      this_version = resource&.stash_version&.merritt_version
-      return false unless this_version.present?
+      puts "Checking storage status of resource #{resource_id}"
+      s3 = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
 
-      return false unless mrt_versions.include?(this_version)
+      # see if all files created for this resource/version are available in the v3 structure with the expected size
+      # Note: this doesn't walk the version history -- it only checks the files created for the current version
+      resource.data_files.where(file_state: 'created').each do |data_file|
+        puts "checking #{data_file.upload_file_name}"
+        return false if data_file.digest.nil?
+
+        permanent_key = "v3/#{data_file.s3_staged_path}"
+        puts " -- exist? #{s3.exists?(s3_key: permanent_key)}"
+        return false unless s3.exists?(s3_key: permanent_key)
+
+        puts " -- size #{s3.size(s3_key: permanent_key)} -- #{data_file.upload_file_size}"
+        return false unless s3.size(s3_key: permanent_key) == data_file.upload_file_size
+      end
 
       true
     end
 
-    # also returns true/false on success/error so we don't have to call the merritt api twice
+    # also returns true/false on success/error so we don't have to call the storage check twice
     # (once to get status and once to do the completion)
     def possibly_set_as_completed
       # this is a guard against setting something completed that isn't and that will make this method fail
-      return false unless available_in_merritt? # this also sets @mrt_results member variable so we don't have to redo the query again
+      return false unless resource.present? && available_in_storage?
 
-      merritt_id = "#{APP_CONFIG[:repository][:domain]}/d/#{@mrt_results['ark']}"
-      StashEngine.repository.harvested(identifier: resource.identifier, record_identifier: merritt_id)
-
+      StashEngine.repository.harvested(resource: resource)
       if StashEngine::RepoQueueState.where(resource_id: resource_id, state: 'completed').count < 1
         StashEngine.repository.class.update_repo_queue_state(resource_id: resource_id, state: 'completed')
       end
 
-      update_size!
+      id = resource.identifier
+      total_dataset_size = 0
+      resource.data_files.each do |data_file|
+        total_dataset_size += data_file.upload_file_size unless data_file.file_state == 'deleted'
+      end
+      id.update(storage_size: total_dataset_size)
       ::StashEngine.repository.cleanup_files(resource)
       true
-    end
-
-    # these "update" methods were moved from previous location in controller as post-processing steps
-    private def update_size!
-      return unless resource
-
-      id = resource.identifier
-      ds_info = Stash::Repo::DatasetInfo.new(id)
-      id.update(storage_size: ds_info.dataset_size)
-      update_zero_sizes!(ds_info)
-    end
-
-    private def update_zero_sizes!(ds_info_obj)
-      return unless resource
-
-      resource.data_files.where(upload_file_size: 0).where(file_state: 'created').each do |f|
-        f.update(upload_file_size: ds_info_obj.file_size(f.upload_file_name))
-      end
     end
 
   end

@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: dcs_dates
+#
+#  id          :integer          not null, primary key
+#  date        :string(191)
+#  date_type   :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  resource_id :integer
+#
+# Indexes
+#
+#  index_dcs_dates_on_resource_id  (resource_id)
+#
 require 'rails_helper'
 
 module StashDatacite

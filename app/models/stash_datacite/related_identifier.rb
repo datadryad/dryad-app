@@ -1,5 +1,30 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: dcs_related_identifiers
+#
+#  id                      :integer          not null, primary key
+#  added_by                :integer          default("default")
+#  hidden                  :boolean          default(FALSE)
+#  related_identifier      :text(65535)
+#  related_identifier_type :string
+#  related_metadata_scheme :text(65535)
+#  relation_type           :string
+#  scheme_URI              :text(65535)
+#  scheme_type             :text(65535)
+#  verified                :boolean          default(FALSE)
+#  work_type               :integer          default("undefined")
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  fixed_id                :text(65535)
+#  resource_id             :integer
+#
+# Indexes
+#
+#  index_dcs_related_identifiers_on_related_identifier  (related_identifier)
+#  index_dcs_related_identifiers_on_resource_id         (resource_id)
+#
 require 'http'
 
 # rubocop:disable Metrics/ClassLength

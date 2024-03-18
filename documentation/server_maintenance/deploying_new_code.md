@@ -43,10 +43,10 @@ Steps in a production deploy:
 2. Deploy to stage - For each server, remove it from the ALB, perform
    the deploy, and return it to the ALB. 
 3. Test any new functionality on stage
-4. Suspend jobs that transfer content to Merritt and Zenodo
+4. Suspend jobs that transfer content to permanent storage and Zenodo
 5. Deploy to prod - For each server, remove it from the ALB, perform
    the deploy, and return it to the ALB. 
-6. Resume Merritt/Zenodo submissions
+6. Resume repository and Zenodo submissions
 
 Creating tags for deployment
 ---------------------------------
@@ -87,7 +87,7 @@ After creating tags, you will usually want to create an official
 Suspending and re-enabling jobs around deployment
 -------------------------------------------------
 
-Dryad servers send datasets to Merritt and Zenodo using job
+Dryad servers send datasets to permanent storage and Zenodo using job
 queues. These queues should be suspended during a redeploy to ensure
 a dataset is not in the process of being transferred when the code is
 changed out.
@@ -106,24 +106,13 @@ After
 
 For information on starting/stopping these transfers, see:
 - [Zenodo extra copies](../zenodo_integration/delayed_jobs.md)
-- [Interactions with Merritt](merritt.md)
 
 
 De/Re-Registering Servers from the ALB
 ---------------------------------------
 
-When you are logged in to a production server, you can use convenience
-scripts to manage the ALB. Sample scripts for the staging environment
-are shown below, but `stg` can be replaced with `prd` to manage the
-production ALB as well:
+To register and de-register servers from the ALB, use the AWS console.
 
-```
-/apps/dryad/alb/alb_stg_check_status.sh
-/apps/dryad/alb/alb_deregister.sh stg a
-/apps/dryad/alb/alb_deregister.sh stg c
-/apps/dryad/alb/alb_register.sh stg a
-/apps/dryad/alb/alb_register.sh stg c
-```
 
 Setting a server to "Maintenance Mode"
 --------------------------------------

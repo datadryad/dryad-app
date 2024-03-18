@@ -106,6 +106,7 @@ Rails.application.routes.draw do
 
       resources :versions, shallow: true, path: '/versions' do
         get 'download', on: :member
+        get 'zip_assembly(/:token)', token: %r{[^\s/]+?}, to: 'versions#zip_assembly', as: 'zip_assembly'
         resources :files, shallow: true, path: '/files' do
           get :download, on: :member
           resource :frictionless_report, path: '/frictionlessReport'
@@ -260,6 +261,8 @@ Rails.application.routes.draw do
     get 'api', to: 'pages#api'
     get 'definitions', to: 'pages#definitions'
     get 'publication_policy', to: 'pages#publication_policy'
+    get 'privacy', to: 'pages#privacy'
+    get 'accessibility', to: 'pages#accessibility'
     get 'membership', to: 'pages#membership'
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
@@ -443,6 +446,7 @@ Rails.application.routes.draw do
     
     # get composite views or items that begin at the resource level
     get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', as: :datacite_metadata_entry_pages
+    get 'metadata_entry_pages/cedar_check', to: 'metadata_entry_pages#cedar_check', as: :metadata_entry_cedar_check
     get 'resources/review', to: 'resources#review'
     match 'resources/submission' => 'resources#submission', as: :resources_submission, via: :post
     get 'resources/show', to: 'resources#show'

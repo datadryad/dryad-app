@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: dcs_resource_types
+#
+#  id                    :integer          not null, primary key
+#  resource_type         :text(65535)
+#  resource_type_general :string
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  resource_id           :integer
+#
+# Indexes
+#
+#  index_dcs_resource_types_on_resource_id  (resource_id)
+#
 require 'rails_helper'
 
 module StashDatacite

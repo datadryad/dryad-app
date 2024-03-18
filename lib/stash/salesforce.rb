@@ -84,7 +84,7 @@ module Stash
       case_id = sf_client.create('Case',
                                  Subject: "Your Dryad data submission - DOI:#{identifier.identifier}",
                                  DOI__c: identifier.identifier,
-                                 Dataset_Title__c: identifier.latest_resource&.title,
+                                 Dataset_Title__c: identifier.latest_resource&.title&.truncate(255),
                                  Origin: 'Web',
                                  SuppliedName: user_name(case_user),
                                  SuppliedEmail: user_email(case_user),

@@ -37,7 +37,7 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
-production:
+production: &PRODUCTION
   <<: *default
   #Add any items that need to override the defaults here
   identifier_service:
@@ -47,3 +47,12 @@ production:
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
   campus_contacts: [""]
+
+v3_development:
+  <<: *default
+
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *PRODUCTION

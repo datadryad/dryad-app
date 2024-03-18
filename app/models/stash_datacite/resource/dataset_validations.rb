@@ -143,6 +143,12 @@ module StashDatacite
             page: metadata_page(@resource),
             ids: ["title__#{@resource.id}"]
           )
+        elsif @resource.title == @resource.title.upcase
+          return ErrorItem.new(
+            message: "Correct the casing of your {#{@resource&.resource_type&.resource_type} title}. Titles should be in sentence casing.",
+            page: metadata_page(@resource),
+            ids: ["title__#{@resource.id}"]
+          )
         end
 
         []

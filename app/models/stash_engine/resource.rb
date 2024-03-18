@@ -1,3 +1,42 @@
+# == Schema Information
+#
+# Table name: stash_engine_resources
+#
+#  id                        :integer          not null, primary key
+#  accepted_agreement        :boolean
+#  cedar_json                :text(65535)
+#  download_uri              :text(65535)
+#  file_view                 :boolean          default(FALSE)
+#  has_geolocation           :boolean          default(FALSE)
+#  hold_for_peer_review      :boolean          default(FALSE)
+#  loosen_validation         :boolean          default(FALSE)
+#  meta_view                 :boolean          default(FALSE)
+#  peer_review_end_date      :datetime
+#  preserve_curation_status  :boolean          default(FALSE)
+#  publication_date          :datetime
+#  skip_datacite_update      :boolean          default(FALSE)
+#  skip_emails               :boolean          default(FALSE)
+#  solr_indexed              :boolean          default(FALSE)
+#  title                     :text(65535)
+#  total_file_size           :bigint
+#  update_uri                :text(65535)
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  current_editor_id         :integer
+#  current_resource_state_id :integer
+#  identifier_id             :integer
+#  last_curation_activity_id :integer
+#  old_resource_id           :integer
+#  tenant_id                 :string(100)
+#  user_id                   :integer
+#
+# Indexes
+#
+#  index_stash_engine_resources_on_current_editor_id  (current_editor_id)
+#  index_stash_engine_resources_on_identifier_id      (identifier_id)
+#  index_stash_engine_resources_on_tenant_id          (tenant_id)
+#  index_stash_engine_resources_on_user_id            (user_id)
+#
 require 'stash/aws/s3'
 # require 'stash/indexer/indexing_resource'
 require 'stash/indexer/solr_indexer'
@@ -35,7 +74,7 @@ module StashEngine
     has_many :curation_activities, -> { order(id: :asc) }, class_name: 'StashEngine::CurationActivity', dependent: :destroy
     has_many :repo_queue_states, class_name: 'StashEngine::RepoQueueState', dependent: :destroy
     has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
-    # download tokens are for Merritt version downloads with presigned URL caching
+    # download tokens are for validating zip assembly requests by the zipping lambda
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
     has_many :publication_years, class_name: 'StashDatacite::PublicationYear', dependent: :destroy
     has_one :publisher, class_name: 'StashDatacite::Publisher', dependent: :destroy
@@ -147,7 +186,7 @@ module StashEngine
     end
 
     # ------------------------------------------------------------
-    # Scopes for Merritt status, which used to be the only status we had
+    # Scopes for repository status
     default_scope { includes(:curation_activities) }
 
     scope :in_progress, (-> do
@@ -229,9 +268,6 @@ module StashEngine
 
     # ------------------------------------------------------------
     # File upload utility methods
-    # TODO: these are obsolete, but we will want to remove Stash::Merritt::Sword classes at the same time that rely
-    # on direct file uploads when we do further cleanup of the Merritt classes.  May also deprecate all current Merritt
-    # classes if they offer a better API than SWORD.
 
     def self.uploads_dir
       File.join(Rails.root, 'uploads')
@@ -354,40 +390,18 @@ module StashEngine
       old_info = previous_resource&.descriptions&.type_technical_info&.first&.description
       return if technical_info == old_info
 
-      # check content against file
-      readme_file = data_files.present_files.where(upload_file_name: filename).first
-      file_content = readme_file&.file_content
+      add_data_as_file(filename, technical_info)
+    end
 
-      return if technical_info == file_content
+    def check_add_cedar_json
+      filename = 'DisciplineSpecificMetadata.json'
+      return if !cedar_json || cedar_json.empty?
 
-      # remove old file
-      readme_file.smart_destroy! if file_content
+      # check if new content
+      old_info = previous_resource&.cedar_json
+      return if cedar_json == old_info
 
-      # add file
-      Stash::Aws::S3.new.put_stream(
-        s3_key: "#{s3_dir_name(type: 'data')}/README.md",
-        stream: StringIO.new(technical_info)
-      )
-      send('data_files').where('lower(upload_file_name) = ?', filename.downcase)
-        .where.not(file_state: 'deleted').destroy_all
-
-      db_file =
-        StashEngine::DataFile.create(
-          upload_file_name: filename,
-          upload_content_type: 'text/markdown',
-          upload_file_size: technical_info.bytesize,
-          resource_id: id,
-          upload_updated_at: Time.new,
-          file_state: 'created',
-          original_filename: filename
-        )
-
-      update(total_file_size: StashEngine::DataFile
-          .where(resource_id: id)
-          .where(file_state: %w[created copied])
-          .sum(:upload_file_size))
-
-      db_file
+      add_data_as_file(filename, cedar_json)
     end
 
     # We create one of some editing items that aren't required and might not be filled in.  Also users may add a blank
@@ -410,9 +424,6 @@ module StashEngine
       "#{download_uri.sub('/d/', '/u/')}/#{version_number}"
     end
 
-    # TODO: we need a better way to get a Merritt local_id and domain than ripping it from the headlines
-    # (ie the Sword download URI)
-
     # returns two parts the protocol_and_domain part of the URL (with no trailing slash) and the local_id
     def merritt_protodomain_and_local_id
       return nil if download_uri.nil?
@@ -424,6 +435,7 @@ module StashEngine
 
     def merritt_ark
       item = merritt_protodomain_and_local_id
+      return nil if item.blank?
 
       CGI.unescape(item[1])
     end
@@ -551,7 +563,6 @@ module StashEngine
       last_version_number ? last_version_number + 1 : 1
     end
 
-    # TODO: get this out of StashEngine into Stash::Merritt
     def merritt_version
       stash_version && stash_version.merritt_version
     end
@@ -645,12 +656,12 @@ module StashEngine
     end
 
     # Checks if someone may download files for this resource
-    # 1. Merritt's status, resource_state = 'submitted', meaning they are available to download from Merritt
+    # 1. Repo's status, resource_state = 'submitted', meaning they are available to download from the repo
     # 2. Curation state of files_public? means anyone may download
     # 3. if not public then users with admin privileges over the item can still download
     # Note: the special download links mean anyone with that link may download and this doesn't apply
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
-      return false unless current_resource_state&.resource_state == 'submitted' # is available in Merritt
+      return false unless current_resource_state&.resource_state == 'submitted' # is available in the repo
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
 
@@ -783,7 +794,7 @@ module StashEngine
       update(solr_indexed: false) if result
     end
 
-    # this just sends a **COPY** job to zenodo (ie Merritt duplication), not for replication which could be sfw or supp
+    # this just sends a **COPY** job to zenodo (ie duplication), not for replication which could be sfw or supp
     def send_to_zenodo(note: nil)
       return if data_files.empty? # no files? Then don't send to Zenodo for duplication.
 
@@ -989,8 +1000,50 @@ module StashEngine
 
     private
 
+    def add_data_as_file(filename, content)
+      # check content against file
+      old_file = data_files.present_files.where(upload_file_name: filename).first
+      file_content = old_file&.file_content
+
+      return if content == file_content
+
+      # remove old file
+      old_file.smart_destroy! if file_content
+
+      # add file
+      Stash::Aws::S3.new.put_stream(
+        s3_key: "#{s3_dir_name(type: 'data')}/#{filename}",
+        stream: StringIO.new(content)
+      )
+      send('data_files').where('lower(upload_file_name) = ?', filename.downcase)
+        .where.not(file_state: 'deleted').destroy_all
+
+      digest_type = 'sha-256'
+      sums = Stash::Checksums.get_checksums([digest_type], StringIO.new(content))
+
+      db_file =
+        StashEngine::DataFile.create(
+          upload_file_name: filename,
+          upload_content_type: 'text/markdown',
+          upload_file_size: content.bytesize,
+          resource_id: id,
+          upload_updated_at: Time.new,
+          file_state: 'created',
+          original_filename: filename,
+          digest_type: digest_type,
+          digest: sums.get_checksum(digest_type)
+        )
+
+      update(total_file_size: StashEngine::DataFile
+          .where(resource_id: id)
+          .where(file_state: %w[created copied])
+          .sum(:upload_file_size))
+
+      db_file
+    end
+
     # -----------------------------------------------------------
-    # Handle the 'submitted' resource state (happens after successful Merritt submission)
+    # Handle the 'submitted' resource state (happens after successful repo submission)
     def prepare_for_curation
       prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
 

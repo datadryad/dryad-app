@@ -5,35 +5,34 @@ class CedarController < ApplicationController
 
   def json_config
     json_output = {
-      showTemplateUpload: false,
-      templateUploadBaseUrl: 'https://api-php.cee.metadatacenter.org',
-      templateUploadEndpoint: '/upload_not_used',
-      templateDownloadEndpoint: '/download_not_used',
-
-      showDataSaver: true,
-      dataSaverEndpointUrl: '/cedar-save',
-
       showSampleTemplateLinks: false,
-      expandedSampleTemplateLinks: false,
-      sampleTemplateLocationPrefix: '/cedar-embeddable-editor',
+      terminologyIntegratedSearchUrl: 'https://terminology.metadatacenter.org/bioportal/integrated-search',
+
+      sampleTemplateLocationPrefix: '/cedar-embeddable-editor/templates',
       loadSampleTemplateName: params[:template],
-
-      showFooter: false,
-      showHeader: false,
-
-      terminologyProxyUrl: 'https://terminology.metadatacenter.org/bioportal/integrated-search',
+      expandedSampleTemplateLinks: false,
 
       showTemplateRenderingRepresentation: false,
-      showMultiInstanceInfo: false,
-      showTemplateSourceData: false,
       showInstanceDataCore: false,
-      showInstanceDataFull: true,
-
       expandedInstanceDataCore: false,
-      expandedInstanceDataFull: false,
-      expandedTemplateSourceData: false,
+      showMultiInstanceInfo: false,
+      expandedMultiInstanceInfo: false,
+
       expandedTemplateRenderingRepresentation: false,
-      expandedMultiInstanceInfo: false
+      showInstanceDataFull: true,
+      expandedInstanceDataFull: false,
+      showTemplateSourceData: false,
+      expandedTemplateSourceData: false,
+
+      showHeader: false,
+      showFooter: false,
+
+      defaultLanguage: 'en',
+      fallbackLanguage: 'en',
+
+      collapseStaticComponents: false,
+      showStaticText: true,
+      showAllMultiInstanceValues: false
     }
 
     respond_to do |format|

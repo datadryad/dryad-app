@@ -1,3 +1,37 @@
+# == Schema Information
+#
+# Table name: stash_engine_generic_files
+#
+#  id                  :integer          not null, primary key
+#  cloud_service       :string(191)
+#  compressed_try      :integer          default(0)
+#  description         :text(65535)
+#  digest              :string(191)
+#  digest_type         :string(8)
+#  file_state          :string(7)
+#  original_filename   :text(65535)
+#  original_url        :text(65535)
+#  status_code         :integer
+#  timed_out           :boolean          default(FALSE)
+#  type                :string(191)
+#  upload_content_type :text(65535)
+#  upload_file_name    :text(65535)
+#  upload_file_size    :bigint
+#  upload_updated_at   :datetime
+#  url                 :text(65535)
+#  validated_at        :datetime
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  resource_id         :integer
+#  storage_version_id  :integer
+#
+# Indexes
+#
+#  index_stash_engine_generic_files_on_file_state        (file_state)
+#  index_stash_engine_generic_files_on_resource_id       (resource_id)
+#  index_stash_engine_generic_files_on_upload_file_name  (upload_file_name)
+#  index_stash_engine_generic_files_on_url               (url)
+#
 require 'fileutils'
 require 'byebug'
 require 'cgi'
@@ -251,15 +285,20 @@ module StashEngine
       end
 
       it 'returns nil if unable to retrieve range of S3 file' do
-        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+        stub_request(:head, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
+          .to_return(status: 404, body: '', headers: {})
+        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
           .to_return(status: 404, body: '', headers: {})
 
         expect(@upload2.preview_file).to be_nil
       end
 
       it 'returns content if successful request for http URL' do
-        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+        stub_request(:head, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
           .to_return(status: 200, body: "This,is,my,great,csv\n0,1,2,3,4", headers: {})
+        stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
+          .to_return(status: 200, body: "This,is,my,great,csv\n0,1,2,3,4", headers: {})
+        allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
 
         expect(@upload2.preview_file).to eql("This,is,my,great,csv\n0,1,2,3,4")
       end
@@ -484,9 +523,10 @@ module StashEngine
       end
 
       it 'generates the merritt URL in S3 bucket' do
+        allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
+
         @resource.current_resource_state.update(resource_state: 'submitted')
-        # "#{f.resource.merritt_ark}|#{f.resource.stash_version.merritt_version}|producer/#{f.upload_file_name}"
-        expect(@upload.s3_permanent_path).to eq("#{@resource.merritt_ark}|1|producer/foo.bar")
+        expect(@upload.s3_permanent_path).to include("-#{@resource.id}/data/foo.bar")
       end
     end
 

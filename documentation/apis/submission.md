@@ -143,7 +143,7 @@ To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/ap
 This will add entries to the database with the information you specify.  Only the `url` is required. Other fields, which are optional, are described below:
 
 - `path` can provide a filename when the name is not specified in the URL (this is common when the URL is using an identifier string rather than a file name)
-- `digest` and `digestType` are not required, but if they are added then they will be passed as part of the ingest manifest to Merritt. If the digest doesn't match when Merritt downloads the files from the internet, then Merritt will cause an error on ingesting and you'll need to check/fix it.
+- `digest` and `digestType` are not required, but if they are added then they will be added to the database in place of a generated checksum. If the digest doesn't match when the file is downloaded from the internet, that will cause an error on ingesting and you'll need to check/fix it.
 - `skipValidation`, if true, will tell DASH to skip the step of validating the existence of the file
 
 ## Submit your dataset

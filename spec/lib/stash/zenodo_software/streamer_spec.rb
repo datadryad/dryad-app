@@ -3,7 +3,7 @@ require 'digest'
 
 require 'rails_helper'
 
-require 'stash/download/file_presigned' # to import the Stash::Download::Merritt exception
+require 'stash/download/file_presigned' # to import the Stash::Download::S3CustomError exception
 require "#{Rails.root}/spec/lib/stash/zenodo_software/webmocks_helper"
 
 RSpec.configure(&:infer_spec_type_from_file_location!)
@@ -99,13 +99,13 @@ module Stash
         end
 
         it 'raises Stash::ZenodoReplicate::ZenodoError for handling with S3CustomErrors' do
-          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
             .to_return(status: 200, body: '', headers: {})
 
           stub_request(:put, %r{https://example.org/my/great/test/bucket/.+})
             .to_return(status: 404, body: '', headers: {})
+          allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
 
-          # stub_request(:get, /merritt-fake/).to_return(status: 404, body: '', headers: {})
           @resource.data_files << create(:data_file)
           data_file = @resource.data_files.first
 

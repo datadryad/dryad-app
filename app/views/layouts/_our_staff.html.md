@@ -1,6 +1,6 @@
 <p>Our team applies their diverse backgrounds in scientific research, librarianship, non-profits, business administration, publishing, and computer science to support open data infrastructure and the preservation of knowledge. To reach us, contact <a href=mailto:help@datadryad.org>help@datadryad.org</a>.</p>
 
-<h4>Head Office</h4>
+<h4>Head office</h4>
 <div class="about-bios">
 <div class="bio">
   <img src="/images/jgibson.jpeg" alt="Headshot of Jennifer Gibson">
@@ -71,38 +71,26 @@
 </div>
 </div>
 
-#### Product Development Team
+#### Product development team
 
 <div class="about-bios">
 <div class="bio">
-  <img src="/images/stevediggs.png" alt="Headshot of Steve Diggs">
-  <h5>Steve Diggs</h5><br/>
-  <p><em>Product Manager</em><br/>
-  Steve is a Research Data Specialist with the University of California Office of the President (UCOP), where he serves as the Senior Product Manager for the data publishing portfolio at the University of California Curation Center (UC3). Previously, Steve worked as the Technical Director for the Hydrographic Data Office at the Scripps Institution of Oceanography at UC San Diego. Steve has spent decades focusing on designing and operating full-stack information systems that deliver valuable data to the research community. Besides actively managing data, Steve is a member of several international data and data science teams and currently serves on the Board on Research Data and Information (BRDI) under The National Academies of Sciences, Engineering, and Medicine (NASEM). Having worked directly with researchers in both field and lab settings, Steve understands the challenges and opportunities they face when managing data as an integral part of their scholarly outputs.</p>
-</div>
-<div class="bio">
-  <img src="/images/scott.jpg" alt="Headshot of Scott Fisher">
-  <h5>Scott Fisher</h5><br/>
-  <p><em>Software Developer</em><br/>
-  Scott is a lead developer at the University of California Curation Center (UC3) at the California Digital Library (CDL).
-  As part of the
-  <a href="https://blog.datadryad.org/2018/05/30/dryad-partnering-with-cdl-to-accelerate-data-publishing/"
-  target="_blank">CDL-Dryad partnership</a>, he is also the tech lead on the Dryad publishing platform.
-  Scott has many years of software development and UX design experience and graduated with a master's degree from the
-  UC Berkeley School of Information. He previously worked on software projects to archive web pages, plan and preserve
-  research data, and make data metrics available.
+  <img src="/images/audrey.jpg" alt="Headshot of Audrey Hamelers">
+  <h5>Audrey Hamelers</h5><br/>
+  <p><em>Senior Software Developer</em><br/>
+  Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
   </p>
 </div>
 <div class="bio">
-  <img src="/images/audrey.jpg" alt="Headshot of Audrey Hamelers">
-  <h5>Audrey Hamelers</h5><br/>
-  <p><em>Software Developer</em><br/>
-  Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
+  <img src="/images/dragos.jpg" alt="Headshot of Dragos Iorgulescu">
+  <h5>Dragos Iorgulescu</h5><br/>
+  <p><em>Senior Software Developer</em><br/>
+  Over the past ~15 years Dragos has been involved in a series of start-ups and large-scale enterprises, ranging from training applications and cloud SAAS/IAAS platforms to medical credentialing/licensing, trading, banking, and social media. This has allowed him to work on complex and challenging projects, gaining experience with understanding product requirements and translating them into intuitive and performant solutions. When he's not coding, he pets his cat, likes to practice sports, travel, & disconnect.
   </p>
 </div>
 </div>
 
-#### Curation Team
+#### Curation team
 
 <div class="about-bios">
 <div class="bio">
@@ -113,13 +101,10 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/bryan.jpg" alt="Headshot of Bryan Gee">
-  <h5>Bryan Gee</h5><br/>
-  <p><em>Senior Data Curator</em><br/>
-  Bryan has a B.A. in Geology from Pomona College and a Ph.D. in Ecology & Evolutionary Biology from the University 
-  of Toronto. His academic background is in vertebrate paleontology, with research interests in the early evolution 
-  of amphibians. In his free time, Bryan enjoys hiking and camping with his dog, playing Pokemon Go, and watching 
-  sports.
+  <img src="/images/mollyhirst.jpg" alt="Headshot of Molly Hirst">
+  <h5>Molly Hirst</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Molly holds a Ph.D. in Ecology and Evolutionary Biology from the University of Michigan, where she studied genomics and sperm biology in hybridizing Platyrrhine primates. She gained extensive experience and a passion for curation as a graduate student curatorial assistant for nearly all UM Museum of Zoology and Herbarium divisions. Molly can be found cuddling her cats, reading, traveling the world as a naturalist, gardening, ice skating, and spoiling her nephew.
   </p>
 </div>
 <div class="bio">

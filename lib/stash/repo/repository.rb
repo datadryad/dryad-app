@@ -1,17 +1,17 @@
 require 'fileutils'
 require 'concurrent'
+
 module Stash
   module Repo
-    # Abstraction for a repository
     class Repository
-      attr_reader :url_helpers, :executor
+      attr_reader :executor
+
+      ARK_PATTERN = %r{ark:/[a-z0-9]+/[a-z0-9]+}
 
       # Initializes this repository
-      # @param url_helpers [Module] Rails URL helpers
       # Concurrent::FixedThreadPool.new(2, idletime: 600)
-      def initialize(url_helpers:, executor: nil, threads: 1)
+      def initialize(executor: nil, threads: 1)
         @executor = executor
-        @url_helpers = url_helpers
         return unless @executor.nil?
 
         @executor = Concurrent::ThreadPoolExecutor.new(
@@ -34,16 +34,18 @@ module Stash
       # Creates a {SubmissionJob} for the specified resource
       # @param resource_id [Integer] the database ID of the resource
       # @return [SubmissionJob] a job that will submit that resource
-      def create_submission_job(resource_id:) # rubocop:disable Lint/UnusedMethodArgument
-        raise NoMethodError, "#{self.class} should override #create_submission_job to return one or more submission tasks"
+      def create_submission_job(resource_id:)
+        SubmissionJob.new(resource_id: resource_id)
       end
 
       # Determines the download URI for the specified resource. Called after the record is harvested
       # for discovery.
       # @param resource [StashEngine::Resource] the resource
       # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
-      def download_uri_for(record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
-        raise NoMethodError, "#{self.class} should override #download_uri_for to determine the download URI"
+      def download_uri_for(record_identifier:)
+        merritt_host = APP_CONFIG[:repository][:domain]
+        ark = ark_from(record_identifier)
+        "#{merritt_host}/d/#{ERB::Util.url_encode(ark)}"
       end
 
       # Determines the update URI for the specified resource. Called after the record is harvested
@@ -51,7 +53,10 @@ module Stash
       # @param resource [StashEngine::Resource] the resource
       # @param record_identifier [String] the harvested record identifier (repository- or protocol-dependent)
       def update_uri_for(resource:, record_identifier:) # rubocop:disable Lint/UnusedMethodArgument
-        raise NoMethodError, "#{self.class} should override #update_uri_for to determine the update URI"
+        sword_endpoint = APP_CONFIG[:repository][:endpoint]
+        doi = resource.identifier_str
+        edit_uri_base = sword_endpoint.sub('/collection/', '/edit/')
+        "#{edit_uri_base}/#{ERB::Util.url_encode(doi)}"
       end
 
       # Returns a logger
@@ -86,23 +91,21 @@ module Stash
         end
       end
 
-      def harvested(identifier:, record_identifier:)
-        resource = identifier.processing_resource
-        return unless resource # harvester could be re-harvesting stuff we already have
+      # Register that a dataset has completed processing into the storage system
+      # TODO: rename this... "harvested" is a weird term left over from old versions of this system
+      def harvested(resource:)
+        return unless resource.present?
+        return unless resource == resource.identifier&.processing_resource
 
-        resource.download_uri = get_download_uri(resource, record_identifier)
-        resource.update_uri = get_update_uri(resource, record_identifier)
+        resource.download_uri = resource.s3_dir_name(type: 'data')
         resource.current_state = 'submitted'
         resource.save
-        # Keep files until they've been successfully confirmed in the OAI-PMH feed, don't aggressively clean up until then
-        # cleanup_files(resource)
       end
 
-      # this will be called after Merritt confirms successful ingest by OAI-PMH feed to prevent deleting files
-      # before we know they're really good in Merritt for a good safety net.
+      # this will be called after merritt_status confirms successful ingest
       def cleanup_files(resource)
         remove_public_dir(resource) # where the local manifest file is stored
-        remove_s3_data_files(resource)
+        remove_submission_data_files(resource)
       rescue StandardError => e
         msg = "An unexpected error occurred when cleaning up files for resource #{resource.id}: "
         msg << e.full_message
@@ -120,6 +123,13 @@ module Stash
 
       private
 
+      def ark_from(record_identifier)
+        ark_match_data = record_identifier && record_identifier.match(ARK_PATTERN)
+        raise ArgumentError, "No ARK found in record identifier #{record_identifier || 'nil'}" unless ark_match_data
+
+        ark_match_data[0].strip
+      end
+
       def get_download_uri(resource, record_identifier)
         download_uri_for(record_identifier: record_identifier)
       rescue StandardError => e
@@ -136,7 +146,7 @@ module Stash
         result.log_to(logger)
         update_submission_log(result)
 
-        # don't set new queue state on deferred submission results until the OAI-PMH feed does it for us, it's still
+        # don't set new queue state on deferred submission results until the merrit_status checker does it for us, it's still
         # in progress until that happens.
         self.class.update_repo_queue_state(resource_id: result.resource_id, state: 'provisional_complete') unless result.deferred?
       rescue StandardError => e
@@ -144,7 +154,6 @@ module Stash
         log_error(e)
       end
 
-      # rubcop:disable Metrics/MethodLength
       def handle_failure(result)
         result.log_to(logger)
         update_submission_log(result)
@@ -156,7 +165,6 @@ module Stash
       ensure
         resource.current_state = 'error' if resource.present?
       end
-      # rubcop:enable Metrics/MethodLength
 
       def log_error(error)
         logger.error(error.full_message)
@@ -173,7 +181,7 @@ module Stash
         remove_if_exists(res_public_dir)
       end
 
-      def remove_s3_data_files(resource)
+      def remove_submission_data_files(resource)
         Stash::Aws::S3.new.delete_dir(s3_key: resource.s3_dir_name(type: 'manifest').to_s)
         Stash::Aws::S3.new.delete_dir(s3_key: resource.s3_dir_name(type: 'data').to_s)
       end

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
@@ -79,111 +79,38 @@ const changeStatusToProgressBar = (chosenFileId) => {
   progressBar.setAttribute('value', '0');
 };
 
-class UploadFiles extends React.Component {
-  state = {
-    chosenFiles: [],
-    submitButtonFilesDisabled: true,
-    urls: null,
-    // TODO: workaround to deal with manifest file types when making request.
-    //  See better way: maybe when clicking in URL button for an Upload Type,
-    //  send the type information to the modal somehow. And when submitting carry on
-    //  that information and add to request URL.
-    currentManifestFileType: null,
-    validationReportFile: null,
-    failedUrls: [],
-    loading: false,
-    warningMessage: null,
-    validating: null,
-    // This is for polling for completion for Frictionless being validated
-    // Since this is not a hooks component, use the old way as demonstrated at
-    // https://blog.bitsrc.io/polling-in-react-using-the-useinterval-custom-hook-e2bcefda4197
-    pollingCount: 0,
-    pollingDelay,
-  };
+export default function UploadFiles({
+  file_uploads, resource_id, frictionless, app_config_s3, s3_dir_name, readme_size, previous_version, file_note,
+}) {
+  const [chosenFiles, setChosenFiles] = useState([]);
+  const [validating, setValidating] = useState([]);
+  const [failedUrls, setFailedUrls] = useState([]);
+  const [submitDisabled, setSubmitDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [urls, setUrls] = useState(null);
+  const [manFileType, setManFileType] = useState(null);
+  const [valFile, setValFile] = useState(null);
+  const [warning, setWarning] = useState(null);
+  const [pollingCount, setPollingCount] = useState(0);
 
-  modalRef = React.createRef();
+  const modalRef = useRef(null);
+  const modalValidationRef = useRef(null);
+  const interval = useRef(null);
 
-  modalValidationRef = React.createRef();
+  const isValidTabular = (file) => (ValidTabular.extensions.includes(file.sanitized_name.split('.').pop())
+            || ValidTabular.mime_types.includes(file.upload_content_type))
+            && (file.upload_file_size <= frictionless.size_limit);
 
-  componentDidMount() {
-    const files = this.props.file_uploads;
-    const transformed = transformData(files);
-    const withTabularCheckStatus = this.updateTabularCheckStatus(transformed);
-    this.setState({chosenFiles: withTabularCheckStatus});
-    addCsrfToken();
-    this.interval = null; // may be set interval later
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.interval && prevState.pollingDelay !== this.state.pollingDelay) {
-      clearInterval(this.interval);
-      this.interval = setInterval(this.tick, this.state.pollingDelay);
-    }
-  }
-
-  // clear interval before navigating away
-  componentWillUnmount() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-  }
-
-  // this is a tick for polling of frictionless reports had results put into database
-  tick = () => {
-    const {pollingCount, chosenFiles} = this.state;
-    this.setState({
-      pollingCount: pollingCount + 1,
-    }, () => console.log('polling for Frictionless report updates', pollingCount));
-
-    // these are files with remaining checks
-    const toCheck = chosenFiles.filter((f) => (f?.id && f?.status === 'Uploaded' && f?.tabularCheckStatus === TabularCheckStatus.checking));
-
-    if (this.checkPollingDone(toCheck)) return;
-
-    axios.get(
-      `/stash/generic_file/check_frictionless/${this.props.resource_id}`,
-      {params: {file_ids: toCheck.map((file) => file.id)}},
-    ).then((response) => {
-      const transformed = transformData(response.data);
-      const files = this.simpleTabularCheckStatus(transformed);
-      this.updateAlreadyChosenById(files);
-      const updatedFiles = chosenFiles.filter((f) => (f?.id && f?.status === 'Uploaded' && f?.tabularCheckStatus === TabularCheckStatus.checking));
-      this.checkPollingDone(updatedFiles);
-    }).catch((error) => console.log(error));
-  };
-
-  checkPollingDone = (filteredFiles) => {
-    if (this.state.pollingCount > 60 || filteredFiles.length < 1 || !this.state.validating) {
-      // 60 * 10000 = 600000 or 10 minutes
-      clearInterval(this.interval);
-      this.interval = null;
-      this.setState({validating: false, pollingCount: 0}, () => {
-        // Set any unchecked files as error after 10 minutes
-        const files = this.simpleTabularCheckStatus(filteredFiles);
-        this.updateAlreadyChosenById(files);
-      });
-      return true;
-    }
-    return false;
-  };
-
-  // updates only based on the state of the actual report and not this.state.validating
-  simpleTabularCheckStatus = (files) => files.map((file) => ({
-    ...file,
-    tabularCheckStatus: this.setTabularCheckStatus(file),
-  }));
-
-  // updates to checking (if during validation phase) or n/a or a status based on frictionless report from database
-  updateTabularCheckStatus = (files) => {
-    if (this.state.validating) {
-      return files.map((file) => ({...file, tabularCheckStatus: TabularCheckStatus.checking}));
-    }
-    return this.simpleTabularCheckStatus(files);
+  const labelNonTabular = (files) => {
+    files.map((file) => {
+      file.tabularCheckStatus = isValidTabular(file) ? null : TabularCheckStatus.na;
+      return file;
+    });
   };
 
   // set status based on contents of frictionless report
-  setTabularCheckStatus = (file) => {
-    if (!this.isValidTabular(file)) {
+  const setTabularCheckStatus = (file) => {
+    if (!isValidTabular(file)) {
       return TabularCheckStatus.na;
     } if (file.frictionless_report) {
       return TabularCheckStatus[file.frictionless_report.status];
@@ -191,18 +118,183 @@ class UploadFiles extends React.Component {
     return TabularCheckStatus.error;
   };
 
-  addFilesHandler = (event, uploadType) => {
+  // updates only based on the state of the actual report and not this.state.validating
+  const simpleTabularCheckStatus = (files) => files.map((file) => ({
+    ...file,
+    tabularCheckStatus: setTabularCheckStatus(file),
+  }));
+
+  // updates to checking (if during validation phase) or n/a or a status based on frictionless report from database
+  const updateTabularCheckStatus = (files) => {
+    if (validating.length) {
+      return files.reduce((arr, file) => {
+        const cf = chosenFiles.find((c) => c.id === file.id);
+        if (!cf.tabularCheckStatus) arr.push({...file, tabularCheckStatus: TabularCheckStatus.checking});
+        return arr;
+      }, []);
+    }
+    return simpleTabularCheckStatus(files);
+  };
+
+  useEffect(() => {
+    const files = file_uploads;
+    const transformed = transformData(files);
+    const withTabularCheckStatus = updateTabularCheckStatus(transformed);
+    setChosenFiles(withTabularCheckStatus);
+    addCsrfToken();
+    interval.current = null; // may be set interval later
+    return () => {
+      // clear interval before navigating away
+      if (interval.current) {
+        clearInterval(interval.current);
+      }
+    };
+  }, []);
+
+  const updateAlreadyChosenById = (filesToUpdate) => {
+    setChosenFiles((cf) => cf.map((f) => {
+      const updateFile = filesToUpdate.find((u) => u.id === f.id);
+      if (updateFile) {
+        return updateFile;
+      }
+      return f;
+    }));
+  };
+
+  const checkPollingDone = (filteredFiles) => {
+    if (pollingCount > 60 || filteredFiles.length < 1 || !validating.length) {
+      // 60 * 10000 = 600000 or 10 minutes
+      clearInterval(interval.current);
+      interval.current = null;
+      setPollingCount(0);
+      // Set any unchecked files as error after 10 minutes
+      const files = simpleTabularCheckStatus(filteredFiles);
+      updateAlreadyChosenById(files);
+      return true;
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    if (pollingCount === 0) {
+      setValidating([]);
+      if (interval.current) {
+        clearInterval(interval.current);
+        interval.current = null;
+      }
+    } else {
+      console.log('polling for Frictionless report updates', pollingCount);
+      // these are files with remaining checks
+      const toCheck = chosenFiles.filter((f) => (f?.id && f?.status === 'Uploaded' && f?.tabularCheckStatus === TabularCheckStatus.checking));
+
+      if (checkPollingDone(toCheck)) return;
+
+      axios.get(
+        `/stash/generic_file/check_frictionless/${resource_id}`,
+        {params: {file_ids: toCheck.map((file) => file.id)}},
+      ).then((response) => {
+        const transformed = transformData(response.data);
+        const files = simpleTabularCheckStatus(transformed);
+        updateAlreadyChosenById(files);
+      }).catch((error) => console.log(error));
+    }
+  }, [pollingCount]);
+
+  // this is a tick for polling of frictionless reports had results put into database
+  const tick = () => {
+    setPollingCount((p) => p + 1);
+  };
+
+  useEffect(() => {
+    if (validating.length) {
+      // sets file object to have tabularCheckStatus: TabularCheckStatus['checking']} || n/a or status based on report
+      const files = updateTabularCheckStatus(validating);
+      // I think these are files that are being uploaded now????  IDK what it means.
+      updateAlreadyChosenById(files);
+      // post to the method to trigger frictionless validation in AWS Lambda
+      axios.post(
+        `/stash/generic_file/trigger_frictionless/${resource_id}`,
+        {file_ids: files.map((file) => file.id)},
+      ).then(() => {
+        if (!interval.current) {
+          // start polling for report updates if not polling already
+          interval.current = setInterval(tick, pollingDelay);
+        }
+      }).catch((error) => console.log(error));
+    }
+  }, [validating]);
+
+  const setWarningRepeatedFile = (countRepeated) => {
+    if (countRepeated < 0) return;
+    if (countRepeated === 0) setWarning(null);
+    if (countRepeated === 1) setWarning(Messages.fileAlreadySelected);
+    if (countRepeated > 1) setWarning(Messages.filesAlreadySelected);
+  };
+
+  const discardAlreadyChosenById = (files) => {
+    const idsAlready = chosenFiles.map((file) => file.id);
+    return files.filter((file) => !idsAlready.includes(file.id));
+  };
+
+  const discardAlreadyChosenByName = (filenames, uploadType) => {
+    const filesAlreadySelected = chosenFiles.filter((file) => file.uploadType === uploadType
+      || (file.uploadType === 'data' && file.sanitized_name.toLowerCase() === 'readme.md'));
+    if (!filesAlreadySelected.length) return filenames;
+
+    const filenamesAlreadySelected = filesAlreadySelected.map((file) => file.sanitized_name.toLowerCase());
+
+    return filenames.filter((filename) => !filenamesAlreadySelected.includes(sanitize(filename).toLowerCase())
+      && sanitize(filename).toLowerCase() !== 'readme.md');
+  };
+
+  const discardFilesAlreadyChosen = (files, uploadType) => {
+    const filenames = files.map((file) => file.name);
+    const newFilenames = discardAlreadyChosenByName(filenames, uploadType);
+    if (filenames.length === newFilenames.length) return files;
+
+    const newFiles = files.filter((file) => newFilenames.includes(file.name));
+
+    const countRepeated = files.length - newFiles.length;
+    if (filenames.includes('README.md')) {
+      setWarning(Messages.fileReadme);
+    } else {
+      setWarningRepeatedFile(countRepeated);
+    }
+    return newFiles;
+  };
+
+  const discardUrlsAlreadyChosen = (uris, uploadType) => {
+    const handleUrls = uris.split('\n').filter((url) => url);
+
+    const filenames = handleUrls.map((url) => url.split('/').pop());
+    const newFilenames = discardAlreadyChosenByName(filenames, uploadType);
+    if (filenames.length === newFilenames.length) return handleUrls.join('\n');
+
+    const newUrls = handleUrls.filter((url) => newFilenames.some((filename) => url.includes(filename)));
+
+    const countRepeated = handleUrls.length - newUrls.length;
+    setWarningRepeatedFile(countRepeated);
+    return newUrls.join('\n');
+  };
+
+  const updateFileList = (files) => {
+    labelNonTabular(files);
+    setChosenFiles((c) => [...c, ...files]);
+  };
+
+  const addFilesHandler = (event, uploadType) => {
     displayAriaMsg('Your files are being checked');
-    this.setState({warningMessage: null, submitButtonFilesDisabled: true});
-    const files = this.discardFilesAlreadyChosen([...event.target.files], uploadType);
-    const fileCount = this.state.chosenFiles.length + files.length;
+    setWarning(null);
+    setSubmitDisabled(true);
+    const files = discardFilesAlreadyChosen([...event.target.files], uploadType);
+    const fileCount = chosenFiles.length + files.length;
     if (fileCount > maxFiles) {
-      this.setState({warningMessage: Messages.tooManyFiles});
+      setWarning(Messages.tooManyFiles);
     } else {
       displayAriaMsg('Your files were added and are pending upload.');
       // TODO: make a function?; future: unify adding file attributes
       const newFiles = files.map((file, index) => {
-        file.id = `pending${this.state.chosenFiles.length + index}`;
+        file.id = `pending${chosenFiles.length + index}`;
         file.sanitized_name = sanitize(file.name);
         file.status = 'Pending';
         file.url = null;
@@ -212,31 +304,15 @@ class UploadFiles extends React.Component {
         file.sizeKb = formatSizeUnits(file.size);
         return file;
       });
-      this.updateFileList(newFiles);
+      updateFileList(newFiles);
     }
   };
 
-  uploadFilesHandler = () => {
-    const config = {
-      aws_key: this.props.app_config_s3.table.key,
-      bucket: this.props.app_config_s3.table.bucket,
-      awsRegion: this.props.app_config_s3.table.region,
-      // Assign any first signerUrl, but it changes for each upload file type
-      // when call evaporate object add method bellow
-      signerUrl: `/stash/generic_file/presign_upload/${this.props.resource_id}`,
-      awsSignatureVersion: '4',
-      computeContentMd5: true,
-      cryptoMd5Method: (data) => AWS.util.crypto.md5(data, 'base64'),
-      cryptoHexEncodedHash256: (data) => AWS.util.crypto.sha256(data, 'hex'),
-    };
-    Evaporate.create(config).then(this.uploadFileToS3);
-  };
-
-  uploadFileToS3 = (evaporate) => {
-    this.state.chosenFiles.map((file, index) => {
+  const uploadFileToS3 = (evaporate) => {
+    chosenFiles.map((file, index) => {
       if (file.status === 'Pending') {
         // TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
-        const evaporateUrl = `${this.props.s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.sanitized_name}`;
+        const evaporateUrl = `${s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.sanitized_name}`;
         const addConfig = {
           name: evaporateUrl,
           file,
@@ -251,18 +327,27 @@ class UploadFiles extends React.Component {
           },
           complete: () => {
             axios.post(
-              `/stash/${file.uploadType}_file/upload_complete/${this.props.resource_id}`,
+              `/stash/${file.uploadType}_file/upload_complete/${resource_id}`,
               {
-                resource_id: this.props.resource_id,
+                resource_id,
                 name: file.sanitized_name,
                 size: file.size,
                 type: file.type,
                 original: file.name,
               },
             ).then((response) => {
-              this.updateFileData(response.data.new_file, index);
-              if (this.isValidTabular(this.state.chosenFiles[index])) {
-                this.validateFrictionlessLambda([this.state.chosenFiles[index]]);
+              const {new_file} = response.data;
+              setChosenFiles((cf) => cf.map((c, i) => {
+                if (i === index) {
+                  c.id = new_file.id;
+                  c.sanitized_name = new_file.upload_file_name;
+                  c.status = 'Uploaded';
+                }
+                return c;
+              }));
+              displayAriaMsg(`${file.original_filename} finished uploading`);
+              if (isValidTabular(chosenFiles[index])) {
+                setValidating((v) => [...v, chosenFiles[index]]);
               }
             }).catch((error) => console.log(error));
           },
@@ -270,7 +355,7 @@ class UploadFiles extends React.Component {
         // Before start uploading, change file status cell to a progress bar
         changeStatusToProgressBar(file.id);
 
-        const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${this.props.resource_id}`;
+        const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${resource_id}`;
         evaporate.add(addConfig, {signerUrl})
           .then(
             (awsObjectKey) => console.log('File successfully uploaded to: ', awsObjectKey),
@@ -281,309 +366,167 @@ class UploadFiles extends React.Component {
     });
   };
 
-  updateFileData = (file, index) => {
-    const {chosenFiles} = this.state;
-    chosenFiles[index].id = file.id;
-    chosenFiles[index].sanitized_name = file.upload_file_name;
-    chosenFiles[index].status = 'Uploaded';
-    this.setState({chosenFiles});
-    displayAriaMsg(`${file.original_filename} finished uploading`);
+  const uploadFilesHandler = () => {
+    const {key, bucket, region} = app_config_s3.table;
+    const config = {
+      aws_key: key,
+      bucket,
+      awsRegion: region,
+      // Assign any first signerUrl, but it changes for each upload file type
+      // when call evaporate object add method bellow
+      signerUrl: `/stash/generic_file/presign_upload/${resource_id}`,
+      awsSignatureVersion: '4',
+      computeContentMd5: true,
+      cryptoMd5Method: (data) => AWS.util.crypto.md5(data, 'base64'),
+      cryptoHexEncodedHash256: (data) => AWS.util.crypto.sha256(data, 'hex'),
+    };
+    Evaporate.create(config).then(uploadFileToS3);
   };
 
-  updateManifestFiles = (files) => {
-    let {failedUrls} = this.state;
-    failedUrls = failedUrls.concat(files.invalid_urls);
-    this.setState({failedUrls});
+  const updateManifestFiles = (files) => {
+    if (files.invalid_urls?.length) {
+      setFailedUrls((failed) => [...failed, ...files.invalid_urls]);
+    }
 
     if (!files.valid_urls.length) return;
     let successfulUrls = files.valid_urls;
-    if (this.state.chosenFiles.length) {
-      successfulUrls = this.discardAlreadyChosenById(successfulUrls);
+    if (chosenFiles.length) {
+      successfulUrls = discardAlreadyChosenById(successfulUrls);
     }
     const newManifestFiles = transformData(successfulUrls);
-    this.updateFileList(newManifestFiles);
-    const tabularFiles = newManifestFiles.filter((file) => this.isValidTabular(file));
-    this.validateFrictionlessLambda(tabularFiles);
+    updateFileList(newManifestFiles);
+    const tabularFiles = newManifestFiles.filter((file) => isValidTabular(file));
+    setValidating((v) => [...v, ...tabularFiles]);
   };
 
-  // I'm not sure why this is plural since only one file at a time is passed in, maybe because of some of the
-  // other methods it uses which rely on a collection
-  validateFrictionlessLambda = (f) => {
-    this.setState({validating: true}, () => {
-      // sets file object to have tabularCheckStatus: TabularCheckStatus['checking']} || n/a or status based on report
-      const files = this.updateTabularCheckStatus(f);
-      // I think these are files that are being uploaded now????  IDK what it means.
-      this.updateAlreadyChosenById(files);
-      // post to the method to trigger frictionless validation in AWS Lambda
-      axios.post(
-        `/stash/generic_file/trigger_frictionless/${this.props.resource_id}`,
-        {file_ids: files.map((file) => file.id)},
-      ).then(() => {
-        if (!this.interval) {
-          // start polling for report updates if not polling already
-          this.interval = setInterval(this.tick, this.state.pollingDelay);
-        }
-      }).catch((error) => console.log(error));
-    });
-  };
-
-  updateAlreadyChosenById = (filesToUpdate) => {
-    const {chosenFiles} = this.state;
-    filesToUpdate.forEach((fileToUpdate) => {
-      const index = chosenFiles.findIndex((file) => file.id === fileToUpdate.id);
-      chosenFiles[index] = fileToUpdate;
-    });
-    this.setState({chosenFiles});
-  };
-
-  updateFileList = (files) => {
-    this.labelNonTabular(files);
-    if (!this.state.chosenFiles.length) {
-      this.setState({chosenFiles: files});
-    } else {
-      let {chosenFiles} = this.state;
-      chosenFiles = chosenFiles.concat(files);
-      this.setState({chosenFiles});
-    }
-  };
-
-  /* hasPlainTextTabular = (files) => files.some((file) => file.sanitized_name.split('.').pop() === 'csv'
-                || file.upload_content_type === 'text/csv'); */
-
-  labelNonTabular = (files) => {
-    files.map((file) => {
-      file.tabularCheckStatus = this.isValidTabular(file) ? null : TabularCheckStatus.na;
-      return file;
-    });
-  };
-
-  isValidTabular = (file) => (ValidTabular.extensions.includes(file.sanitized_name.split('.').pop())
-            || ValidTabular.mime_types.includes(file.upload_content_type))
-            && (file.upload_file_size <= this.props.frictionless.size_limit);
-
-  removeFileHandler = (id) => {
-    this.setState({warningMessage: null});
-    const file = this.state.chosenFiles.find((f) => f.id === id);
+  const removeFileHandler = (id) => {
+    setWarning(null);
+    const file = chosenFiles.find((f) => f.id === id);
     if (file.status !== 'Pending') {
       axios.patch(`/stash/${file.uploadType}_files/${id}/destroy_manifest`)
         .then(() => {
-          this.removeFileLine(id);
+          setChosenFiles((cf) => cf.filter((f) => f.id !== id));
         })
         .catch((error) => console.log(error));
     } else {
-      this.removeFileLine(id);
+      setChosenFiles((cf) => cf.filter((f) => f.id !== id));
     }
     displayAriaMsg(`${file.sanitized_name} removed`);
   };
 
-  removeFileLine = (id) => {
-    const {chosenFiles} = this.state;
-    const removed = chosenFiles.filter((f) => f.id !== id);
-    this.setState({chosenFiles: removed});
-  };
-
-  toggleCheckedFiles = (event) => {
-    this.setState({submitButtonFilesDisabled: !event.target.checked});
-  };
-
-  /* toggleCheckedUrls = (event) => {
-    this.setState({submitButtonUrlsDisabled: !event.target.checked});
-  }; */
-
-  showModalHandler = (uploadType) => {
-    this.setState({currentManifestFileType: uploadType});
-    this.modalRef.current.showModal();
-    document.addEventListener('keydown', this.hideModal);
-  };
-
-  hideModal = (event) => {
-    if (this.modalRef.current && (event.type === 'submit' || event.type === 'click'
+  const hideModal = (event) => {
+    if (modalRef.current && (event.type === 'submit' || event.type === 'click'
             || (event.type === 'keydown' && event.keyCode === 27))) {
-      this.modalRef.current.close();
-      this.setState({
-        // submitButtonUrlsDisabled: true,
-        currentManifestFileType: null,
-      });
-      document.removeEventListener('keydown', this.hideModal);
+      modalRef.current.close();
+      setManFileType(null);
+      document.removeEventListener('keydown', hideModal);
     }
   };
 
-  hideValidationReport = () => {
-    this.modalValidationRef.current.close();
-    this.setState({validationReportFile: null});
+  const showModalHandler = (uploadType) => {
+    setManFileType(uploadType);
+    modalRef.current.showModal();
+    document.addEventListener('keydown', hideModal);
   };
 
-  showValidationReportHandler = (file) => {
-    this.setState({validationReportFile: file}, () => {
-      this.modalValidationRef.current.showModal();
-    });
+  useEffect(() => {
+    if (valFile) {
+      modalValidationRef.current.showModal();
+    }
+  }, [valFile]);
+
+  const hideValidationReport = () => {
+    modalValidationRef.current.close();
+    setValFile(null);
   };
 
-  submitUrlsHandler = (event) => {
-    this.setState({warningMessage: null});
+  const submitUrlsHandler = (event) => {
+    setWarning(null);
     event.preventDefault();
-    this.hideModal(event);
-    // this.toggleCheckedUrls(event);
+    hideModal(event);
 
-    if (!this.state.urls) return;
+    if (!urls) return;
 
-    const urlsObject = {
-      url: this.discardUrlsAlreadyChosen(this.state.urls, this.state.currentManifestFileType),
-    };
+    const urlsObject = {url: discardUrlsAlreadyChosen(urls, manFileType)};
+
     if (urlsObject.url.length) {
-      this.setState({loading: true});
-      const typeFilePartialRoute = `${this.state.currentManifestFileType}_file`;
-      axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${this.props.resource_id}`, urlsObject)
+      setLoading(true);
+      const typeFilePartialRoute = `${manFileType}_file`;
+      axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${resource_id}`, urlsObject)
         .then((response) => {
-          this.updateManifestFiles(response.data);
+          updateManifestFiles(response.data);
+          setLoading(false);
         })
         .catch((error) => console.log(error));
-      // .finally(() => this.setState({urls: null, loading: false}));
     }
   };
 
-  discardUrlsAlreadyChosen = (uris, uploadType) => {
-    const urls = uris.split('\n').filter((url) => url);
-
-    const filenames = urls.map((url) => url.split('/').pop());
-    const newFilenames = this.discardAlreadyChosenByName(filenames, uploadType);
-    if (filenames.length === newFilenames.length) return urls.join('\n');
-
-    const newUrls = urls.filter((url) => newFilenames.some((filename) => url.includes(filename)));
-
-    const countRepeated = urls.length - newUrls.length;
-    this.setWarningRepeatedFile(countRepeated);
-    return newUrls.join('\n');
-  };
-
-  /**
-     * The controller returns data with the successfully inserted manifest
-     * files into the table. Check for the files already added to this.state.chosenFiles.
-     * @param files
-     * @returns {[]}
-     */
-  discardAlreadyChosenById = (files) => {
-    const idsAlready = this.state.chosenFiles.map((file) => file.id);
-    return files.filter((file) => !idsAlready.includes(file.id));
-  };
-
-  discardFilesAlreadyChosen = (files, uploadType) => {
-    const filenames = files.map((file) => file.name);
-    const newFilenames = this.discardAlreadyChosenByName(filenames, uploadType);
-    if (filenames.length === newFilenames.length) return files;
-
-    const newFiles = files.filter((file) => newFilenames.includes(file.name));
-
-    const countRepeated = files.length - newFiles.length;
-    if (filenames.includes('README.md')) {
-      this.setState({warningMessage: Messages.fileReadme});
-    } else {
-      this.setWarningRepeatedFile(countRepeated);
-    }
-    return newFiles;
-  };
-
-  discardAlreadyChosenByName = (filenames, uploadType) => {
-    const filesAlreadySelected = this.state.chosenFiles.filter((file) => file.uploadType === uploadType
-      || (file.uploadType === 'data' && file.sanitized_name.toLowerCase() === 'readme.md'));
-    if (!filesAlreadySelected.length) return filenames;
-
-    const filenamesAlreadySelected = filesAlreadySelected.map((file) => file.sanitized_name.toLowerCase());
-
-    return filenames.filter((filename) => !filenamesAlreadySelected.includes(sanitize(filename).toLowerCase())
-      && sanitize(filename).toLowerCase() !== 'readme.md');
-  };
-
-  setWarningRepeatedFile = (countRepeated) => {
-    if (countRepeated < 0) return;
-    if (countRepeated === 0) {
-      this.setState({warningMessage: null});
-    }
-    let message;
-    if (countRepeated === 1) message = Messages.fileAlreadySelected;
-    if (countRepeated > 1) message = Messages.filesAlreadySelected;
-    this.setState({warningMessage: message});
-  };
-
-  onChangeUrls = (event) => {
-    this.setState({urls: event.target.value});
-  };
-
-  removeFailedUrlHandler = (index) => {
-    let {failedUrls} = this.state;
-    failedUrls = failedUrls.filter((url, urlIndex) => urlIndex !== index);
-    this.setState({failedUrls});
+  const removeFailedUrlHandler = (index) => {
+    setFailedUrls((failed) => failed.filter((url, urlIndex) => urlIndex !== index));
   };
 
   // checks the file list if any files are pending and if so returns true (or false)
-  hasPendingFiles = () => this.state.chosenFiles.filter((file) => file.status === 'Pending').length > 0;
+  const hasPendingFiles = () => chosenFiles.filter((file) => file.status === 'Pending').length > 0;
 
-  render() {
-    const {
-      failedUrls, chosenFiles, loading, warningMessage, validationReportFile,
-    } = this.state;
-    return (
-      <div className="c-upload">
-        <div className="c-autosave-header">
-          <h1 className="o-heading__level1">Upload your files</h1>
-          <div className="c-autosave__text saving_text" hidden>Saving&hellip;</div>
-          <div className="c-autosave__text saved_text" hidden>All progress saved</div>
-        </div>
-        <UploadSelect changed={this.addFilesHandler} clickedModal={this.showModalHandler} />
-        {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={this.removeFailedUrlHandler} />}
-        {chosenFiles.length > 0 ? (
-          <div>
-            <FileList
-              chosenFiles={chosenFiles}
-              clickedRemove={this.removeFileHandler}
-              clickedValidationReport={this.showValidationReportHandler}
-              totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0) + this.props.readme_size)}
-              readmeSize={formatSizeUnits(this.props.readme_size)}
-            />
-            {loading && (
-              <div className="c-upload__loading-spinner">
-                <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-              </div>
-            )}
-            {warningMessage && <WarningMessage message={warningMessage} />}
-            {this.hasPendingFiles() && (
-              <ValidateFiles
-                id="confirm_to_validate_files"
-                buttonLabel="Upload pending files"
-                checkConfirmed
-                disabled={this.state.submitButtonFilesDisabled}
-                changed={this.toggleCheckedFiles}
-                clicked={this.uploadFilesHandler}
-              />
-            )}
-          </div>
-        ) : (
-          <div>
-            <h2 className="o-heading__level2">Files</h2>
-            {loading ? (
-              <div className="c-upload__loading-spinner">
-                <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-              </div>
-            ) : <p>No files have been selected.</p> }
-          </div>
-        )}
-        {(this.props.previous_version && chosenFiles.some((f) => f.status !== 'Pending' && f.file_state !== 'copied')) && (
-          <TrackChanges id={this.props.resource_id} file_note={this.props.file_note} />
-        )}
-        <ModalUrl
-          ref={this.modalRef}
-          submitted={this.submitUrlsHandler}
-          changedUrls={this.onChangeUrls}
-          clickedClose={this.hideModal}
-        />
-        <ModalValidationReport
-          file={validationReportFile}
-          ref={this.modalValidationRef}
-          clickedClose={this.hideValidationReport}
-        />
+  return (
+    <div className="c-upload">
+      <div className="c-autosave-header">
+        <h1 className="o-heading__level1">Upload your files</h1>
+        <div className="c-autosave__text saving_text" hidden>Saving&hellip;</div>
+        <div className="c-autosave__text saved_text" hidden>All progress saved</div>
       </div>
-    );
-  }
+      <UploadSelect changed={addFilesHandler} clickedModal={showModalHandler} />
+      {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={removeFailedUrlHandler} />}
+      {chosenFiles.length > 0 ? (
+        <div>
+          <FileList
+            chosenFiles={chosenFiles}
+            clickedRemove={removeFileHandler}
+            clickedValidationReport={(file) => setValFile(file)}
+            totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0) + readme_size)}
+            readmeSize={readme_size && formatSizeUnits(readme_size)}
+          />
+          {loading && (
+            <div className="c-upload__loading-spinner">
+              <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
+            </div>
+          )}
+          {warning && <WarningMessage message={warning} />}
+          {hasPendingFiles() && (
+            <ValidateFiles
+              id="confirm_to_validate_files"
+              buttonLabel="Upload pending files"
+              checkConfirmed
+              disabled={submitDisabled}
+              changed={(e) => setSubmitDisabled(!e.target.checked)}
+              clicked={uploadFilesHandler}
+            />
+          )}
+        </div>
+      ) : (
+        <div>
+          <h2 className="o-heading__level2">Files</h2>
+          {loading ? (
+            <div className="c-upload__loading-spinner">
+              <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
+            </div>
+          ) : <p>No files have been selected.</p> }
+        </div>
+      )}
+      {(previous_version && chosenFiles.some((f) => f.status !== 'Pending' && f.file_state !== 'copied')) && (
+        <TrackChanges id={resource_id} file_note={file_note} />
+      )}
+      <ModalUrl
+        ref={modalRef}
+        submitted={submitUrlsHandler}
+        changedUrls={(e) => setUrls(e.target.value)}
+        clickedClose={hideModal}
+      />
+      <ModalValidationReport
+        file={valFile}
+        ref={modalValidationRef}
+        clickedClose={hideValidationReport}
+      />
+    </div>
+  );
 }
-
-export default UploadFiles;

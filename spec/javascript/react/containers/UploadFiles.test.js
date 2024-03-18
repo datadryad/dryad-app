@@ -358,7 +358,6 @@ describe('UploadFiles', () => {
     };
     const promise = Promise.resolve({status: 200, data});
     axios.post.mockImplementationOnce(() => promise);
-    axios.post.mockImplementationOnce(() => Promise.resolve({status: 200}));
 
     render(<UploadFiles {...info} />);
     const [button] = screen.getAllByText('Enter URLs');

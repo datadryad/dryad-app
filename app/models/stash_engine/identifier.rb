@@ -1,3 +1,32 @@
+# == Schema Information
+#
+# Table name: stash_engine_identifiers
+#
+#  id                  :integer          not null, primary key
+#  edit_code           :string(191)
+#  identifier          :text(65535)
+#  identifier_type     :text(65535)
+#  import_info         :integer          default("other")
+#  payment_type        :string(191)
+#  pub_state           :string
+#  search_words        :text(65535)
+#  storage_size        :bigint
+#  waiver_basis        :string(191)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  latest_resource_id  :integer
+#  license_id          :string(191)      default("cc0")
+#  payment_id          :text(65535)
+#  software_license_id :integer
+#
+# Indexes
+#
+#  admin_search_index                                     (search_words)
+#  index_stash_engine_identifiers_on_identifier           (identifier)
+#  index_stash_engine_identifiers_on_latest_resource_id   (latest_resource_id)
+#  index_stash_engine_identifiers_on_license_id           (license_id)
+#  index_stash_engine_identifiers_on_software_license_id  (software_license_id)
+#
 require 'httparty'
 require 'http'
 
@@ -139,7 +168,7 @@ module StashEngine
       (lsv = last_submitted_resource) && lsv.version_number
     end
 
-    # this returns a resource object for the last version in Merritt, caching in instance variable for repeated calls
+    # this returns a resource object for the last preserved version, caching in instance variable for repeated calls
     def last_submitted_resource
       return @last_submitted_resource unless @last_submitted_resource.blank?
 
@@ -514,22 +543,6 @@ module StashEngine
         .where("stash_engine_zenodo_copies.state = 'finished'")
         .where('stash_engine_zenodo_copies.copy_type = ?', copy_type)
         .order(id: :desc).limit(1).first
-    end
-
-    # Info about dataset object from Merritt. See spec/fixtures/merritt_local_id_search_response.json for an example.
-    # Currently used for checking if things have gone into Merritt yet, but may be used for other purposes in the future.
-    def merritt_object_info
-      repo = APP_CONFIG[:repository]
-      collection = repo.endpoint.match(%r{[^/]+$}).to_s
-      enc_doi = ERB::Util.url_encode(to_s)
-      resp = HTTP.basic_auth(user: repo.username, pass: repo.password)
-        .headers(accept: 'application/json')
-        .get("#{repo.domain}/api/#{collection}/local_id_search?terms=#{enc_doi}")
-      return resp.parse if resp.headers['content-type'].start_with?('application/json')
-
-      {}
-    rescue HTTP::Error, JSON::ParserError
-      {}
     end
 
     # ------------------------------------------------------------

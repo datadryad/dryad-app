@@ -257,6 +257,7 @@ update stash_engine_curation_activities set status='embargoed' where id=;
 update stash_engine_resources set file_view=false where identifier_id=;
 update stash_engine_resources set publication_date='2020-07-25 01:01:01' where id=;
 update stash_engine_identifiers set pub_state='embargoed' where id=;
+select id,state,deposition_id,resource_id, copy_type from stash_engine_zenodo_copies where identifier_id=;
 ```
 
 Now run a command like the one one below if it has been published to Zenodo.  It will
@@ -267,6 +268,11 @@ table. The zenodo_copy_id is the id from that same table.
 # the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31 12342
 ```
+
+**You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
+will not take effect. This is probably something we can fix in the code, but it is waiting for us
+to revisit the Zenodo integration.**
+
 
 Setting "Private For Peer Review" (PPR) on dataset that was accidentally published
 ==================================================================================
@@ -282,7 +288,7 @@ INSERT INTO `stash_engine_curation_activities` (`status`, `user_id`, `note`, `ke
   VALUES ('peer_review', '0', 'Set to peer review at curator request', NULL, '2022-07-27', '2022-07-27', 
   <resource-id>);
 
-select * from stash_engine_zenodo_copies where identifier_id=;
+select id,state,deposition_id,resource_id, copy_type from stash_engine_zenodo_copies where identifier_id=;
 ```
 For each finished `data`, `supp_publish` and `software_publish` record in the
 `stash_engine_zenodo_copies` table do the following procedure. (see last query above)
@@ -297,6 +303,9 @@ table. The zenodo_copy_id is the `stash_engine_zenodo_copies.id` from that same 
 # the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
 RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2023-07-25 1234
 ```
+**You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
+will not take effect. This is probably something we can fix in the code, but it is waiting for us
+to revisit the Zenodo integration.**
 
 Remove from our SOLR search:
 ```
@@ -574,3 +583,32 @@ user = StashEngine::User.find(r.current_editor_id)
 inv = Stash::Payments::Invoicer.new(resource: r, curator: user)
 inv.charge_user_via_invoice
 ```
+
+Can't download a file because it is "not found"
+================================================
+
+For some old datasets, the Merritt system had trouble ingesting the
+files. Some issues were manually corrected, and some issues were automatically
+retried. For whatever reason, it is possible that Merritt's internal storage
+tracking was slightly different than Dryad's storage tracking. This generally
+didn't cause issues when we relied on Merritt to tell us the location of
+files. Now that we construct the path information ourselves, the lookup can
+sometimes fail when it runs into the old inconsistencies.
+
+Possible problems with a file that won't retrieve from the old Merritt storage hierarchy:
+- The resource where the file was created has the wrong `stash_version.merritt_version`
+- The resource where the file was created has the wrong ARK, and other versions
+  of the same dataset have different ARKs. (Don't worry about the details of
+  ARKs. They just correspond to folder names in the `download_uri` for a resource)
+
+To get some information about where Dryad thinks the file is stored:
+```
+f = StashEngine::DataFile.find(<id>)
+f = f.original_deposit_file
+v = f.resource.stash_version.merritt_version
+p = StashEngine::DataFile.mrt_bucket_path(file:f)
+```
+
+Look in the actual AWS S3 bucket, and see whether the file is stored in the ARK
+and version indicated. You may need to adjust the `download_uri` and/or
+`merritt_version` to sync up with the actual storage location.

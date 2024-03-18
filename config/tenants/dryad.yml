@@ -10,7 +10,7 @@ default: &default
   authentication:
     strategy: none
   default_license: cc0
-  campus_contacts: ["scott.fisher@ucop.edu"] # for testing
+  campus_contacts: ["ryan@datadryad.org"] # for testing
   data_deposit_agreement: false
   partner_display: false
   covers_dpc: false
@@ -33,15 +33,18 @@ stage:
   <<: *default
   #Add any items that need to override the defaults here
 
+v3_development:
+  <<: *default
+
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *default
 
 migration:
   <<: *default
   #Add any items that need to override the defaults here
-  repository:
-    domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
-    username: <%= Rails.application.credentials[:production][:merritt_dryad_username] %>
-    password: <%= Rails.application.credentials[:production][:merritt_dryad_password] %>
 
 production:
   <<: *default

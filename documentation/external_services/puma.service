@@ -1,0 +1,18 @@
+# A unit file for systemd, to launch the Puma server for Dryad
+[Unit]
+Description=Puma HTTP Server
+Documentation=https://github.com/CDL-Dryad/dryad-app.git
+After=remote-fs.target network.target
+
+[Service]
+User=ec2-user
+WorkingDirectory=/home/ec2-user/deploy/current
+Environment=RAILS_ENV=some_environment
+
+ExecStart=/home/ec2-user/.rbenv/shims/bundle exec pumactl -F config/puma.rb start
+ExecReload=/home/ec2-user/.rbenv/shims/bundle exec pumactl -F config/puma.rb phased-restart
+PIDFile=/home/ec2-user/deploy/shared/tmp/pids/server.pid
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

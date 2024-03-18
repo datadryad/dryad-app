@@ -1,8 +1,8 @@
 <p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to <a href="/docs/DryadBylaws.pdf">the organization’s bylaws<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>, have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing.</p>
 
-<p>Our <a href="https://blog.datadryad.org/code-of-conduct/">Code of Conduct</a> applies for all Dryad community spaces.</p>
+<p>Our <a href="https://blog.datadryad.org/code-of-conduct/">Code of conduct</a> applies for all Dryad community spaces.</p>
 
-#### Current Board members
+#### Current board members
 
 <div class="about-bios">
 <div class="bio">
@@ -91,24 +91,21 @@
   <img src="/images/ramonetti.jpg" alt="Headshot of Mona Ramonetti">
   <h5>Mona Ramonetti (Class of 2024)</h5><p> is the Interim Associate Dean for Library Technologies, Discovery and Digital Services at Stony Brook University in New York. She manages a team of library technology faculty and staff in creating, implementing and overseeing the technology initiatives and infrastructure that support the Stony Brook University Library community. She also leads and manages policy, planning and implementation for Scholarly Communications initiatives that include data management, scholarly publishing, open educational resources, among others. She has chaired and served on numerous national and international committees and working groups such as FORCE 11, COAPI and SPARC. In addition to her role in promoting and sustaining an academic environment of openness and accessibility, she has demonstrated a strong commitment to advancing diversity, inclusion, equity and social justice within the academic environment. She has chaired and served on DEI committees and task forces where she creates and promotes spaces to address discrimination and inequity while fostering a culture of inclusivity and social justice. Outside of her academic work and accomplishments, she enjoys tennis, gardening and spending time with her husband, daughter, son and three dogs (Emma Wheatgerm, Punkin Chubacca and Nova Argentina).</p>
 </div>
-<div class="bio">
-  <img src="/images/waibel.jpg" alt="Headshot of Günter Waibel">
-  <h5>Günter Waibel (Ex Officio)</h5><p> is Associate Vice Provost and Executive Director of California Digital Library, one of the world's largest digital research libraries. Collaborating with stakeholders across the UC system and beyond, Waibel is advancing efforts to build and support new models of scholarly communication; provide leadership, strategic planning, management and decision making for the CDL; and foster strategic partnerships at the state, national, and international levels. Waibel brings extensive experience in the digital library and broader cultural heritage communities and is well-known for his work in promoting cross-domain collaboration. In his previous position as the Director of the Digitization Program Office at the Smithsonian Institution, Waibel oversaw the strategic plan for creating a digital Smithsonian out of the institution’s 19 museums and 9 research centers. More at <a href="http://www.linkedin.com/in/waibel" target="_blank" title="Günter's linked in profile (opens in a new window)">Günter's LinkedIn profile</a></p>
-</div></div>
+</div>
 
 #### Board information
 
 <ul>
   <li>Dryad produces <a href="https://github.com/datadryad/governance/blob/main/annual-reports/index.md">annual reports</a> on the state of the organization's operations.
-  <li>Dryad Board maintains <a href=https://github.com/datadryad/governance/blob/main/meeting-minutes/index.md>meeting minutes</a> for all of its meetings.
-  <li><a href=https://github.com/datadryad/governance/blob/main/COIs/index.md>Dryad Board Conflict of Interest Forms</a>
+  <li>Dryad board maintains <a href=https://github.com/datadryad/governance/blob/main/meeting-minutes/index.md>meeting minutes</a> for all of its meetings.
+  <li><a href=https://github.com/datadryad/governance/blob/main/COIs/index.md>Dryad board conflict of interest forms</a>
 </ul>
 
 
-#### Past Board members
+#### Past board members
 
 <p>
-  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad Board of Directors for at least one term from 2012 to 2023:
+  We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad board of directors for at least one term from 2012 to 2024:
 </p>
 
-<p>Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, Brian Hole, Marcel Holyoak, Wolfram Horstmann, Brian Lavoie, Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore, Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone, Eefke Smit, Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Mike Whitlock, and Todd Vision (Dryad’s founding PI and long-serving Board member).</p>
+<p>Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, Brian Hole, Marcel Holyoak, Wolfram Horstmann, Brian Lavoie, Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore, Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone, Eefke Smit, Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Günter Waibel, Mike Whitlock, and Todd Vision (Dryad’s founding PI and long-serving Board member).</p>

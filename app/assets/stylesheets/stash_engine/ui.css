@@ -2322,6 +2322,7 @@ td:last-child, th:last-child {
         -ms-flex: 0 1 90ch;
             flex: 0 1 90ch;
     padding-right: 5ch;
+    overflow: auto;
   }
 }
 
@@ -3484,7 +3485,7 @@ td:last-child, th:last-child {
   font-size: 0.9em;
 }
 @media (min-width: 760px) {
-  #dryads-latest #blog-latest-posts p {
+  #dryads-latest #latest_tiles p, #dryads-latest #blog-latest-posts p {
     font-size: 0.8em;
   }
 }
@@ -4379,7 +4380,7 @@ pre kbd, pre samp, pre code {
 }
 .c-upload__action progress {
   border: none;
-  background-color: rgb(242, 242, 242);
+  background-color: #ddd;
   color: #00527A;
   -moz-appearance: none;
   -webkit-appearance: none;

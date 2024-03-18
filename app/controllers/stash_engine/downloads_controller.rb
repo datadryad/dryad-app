@@ -1,5 +1,4 @@
 require 'stash/download/file_presigned'
-require 'stash/download/version_presigned'
 require 'http'
 
 module StashEngine
@@ -32,25 +31,22 @@ module StashEngine
       end
     end
 
-    # set up the Merritt file & version objects so they have access to the controller context before continuing
+    # set up the file & version objects so they have access to the controller context before continuing
     def setup_streaming
       @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
     end
 
     def zip_assembly_info
-      # add some code here to enforce security and this request was previously OKed (from the session)
-      unless session[:downloads].present? && session[:downloads].include?(params[:resource_id].to_i)
-        return render json: ['unauthorized'], status: :unauthorized
-      end
+      # input is resource_id and output is json with keys size, filename and url for each entry
+      @resource = nil
+      @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
+      check_for_sharing
+      return render json: ['unauthorized'], status: :unauthorized unless @resource&.may_download?(ui_user: current_user) || @sharing_link
 
       respond_to do |format|
         format.json do
           # input is resource_id and output is json with keys size, filename and url for each entry
           @resource = Resource.find(params[:resource_id])
-
-          # logs line like http://localhost:3000/stash/downloads/zip_assembly_info/4210 which needs adding to our
-          # Counter log processor
-          StashEngine::CounterLogger.version_download_hit(request: request, resource: @resource)
 
           info = @resource.data_files.present_files.map do |f|
             {
@@ -59,59 +55,24 @@ module StashEngine
               url: f.s3_permanent_presigned_url
             }
           end
-
           render json: info
         end
       end
     end
 
-    # for downloading the full version -- the old merritt way
+    # for downloading the full version
+    # uses presigned
     def download_resource
       @resource = nil
       @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
       check_for_sharing
 
-      @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
-      unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
-        render status: 404, plain: "404: Not found or invalid download\n"
-        return
+      @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: @resource)
+      if @version_presigned.valid_resource? && (@resource&.may_download?(ui_user: @user) || @sharing_link)
+        @version_presigned.download(resource: @resource)
+      else
+        render plain: 'Download for this dataset is unavailable', status: 404
       end
-
-      respond_to do |format|
-        format.html do
-          non_ajax_response_for_download
-        end
-        format.js do
-          @status_hash = @version_presigned.download
-          log_counter_version if @status_hash[:status] == 200
-          if @status_hash[:status] == 408
-            notify_download_timeout
-            render 'download_timeout'
-            return
-          end
-        end
-      end
-    end
-
-    # checks assembly status for a resource and returns json from Merritt and http-ish status code, from progressbar polling
-    def assembly_status
-      @resource = nil
-      @resource = Resource.where(id: params[:id]).first if params[:share].nil?
-      check_for_sharing
-
-      @version_presigned = Stash::Download::VersionPresigned.new(resource: @resource)
-      unless @version_presigned.valid_resource? && (@resource.may_download?(ui_user: current_user) || @sharing_link)
-        render json: { status: 202 } # it will never be ready for them, this url isn't useful except to legit users so shouldn't happen
-        return
-      end
-
-      @status_hash = @version_presigned.status
-      log_counter_version if @status_hash[:status] == 200 # because this triggers the download when it has this status
-      logger.warn("Timeout in downloads_controller#assembly_status for #{@resource&.id}") if @status_hash[:status] == 408
-      render json: @status_hash
-    rescue HTTP::TimeoutError
-      logger.warn("HTTP Timeout from Merritt in downloads_controller#assembly_status for Resource #{@resource&.id}")
-      render json: { status: 408 }
     end
 
     # method to download by the secret sharing link, must match the string they generated to look up and download
@@ -128,7 +89,6 @@ module StashEngine
       check_for_sharing
       data_file = DataFile.where(id: params[:file_id]).present_files.first
       if data_file&.resource&.may_download?(ui_user: current_user) || @sharing_link
-        CounterLogger.general_hit(request: request, file: data_file)
         @file_presigned.download(file: data_file)
       else
         render status: 403, plain: 'You may not download this file.'
@@ -179,7 +139,6 @@ module StashEngine
       @status_hash = @version_presigned.download
       case @status_hash[:status]
       when 200
-        log_counter_version
         redirect_to @status_hash[:url]
       when 202
         render status: 202,
@@ -237,14 +196,10 @@ module StashEngine
       redirect_to landing_show_path(id: @resource.identifier_str)
     end
 
-    def log_counter_version
-      CounterLogger.version_download_hit(request: request, resource: @resource)
-    end
-
     def notify_download_timeout
       msg = "Timeout in downloads_controller#download_resource for resource #{@resource&.id} for IP #{request.remote_ip}"
       logger.warn(msg)
-      ExceptionNotifier.notify_exception(Stash::Download::MerrittException.new(msg))
+      ExceptionNotifier.notify_exception(Stash::Download::S3CustomError.new(msg))
     end
 
   end

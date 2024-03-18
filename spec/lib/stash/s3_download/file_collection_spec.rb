@@ -40,15 +40,16 @@ module Stash
         end
 
         it 'raises an exception for S3 download errors' do
-          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
             .to_return(status: 404, body: '', headers: {})
+          allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
           expect { @fc.download_files }.to raise_error(Stash::S3Download::DownloadError)
         end
 
         it 'sets up info_hash on success' do
-          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
             .to_return(status: 200, body: '', headers: {})
-
+          allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
           @fc.download_files
 
           expect(@fc.info_hash.keys).to include(@data_file.upload_file_name)

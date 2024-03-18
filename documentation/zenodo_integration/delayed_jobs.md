@@ -3,13 +3,66 @@
 For environments that send datasets to Zenodo, the process of
 transferring the data only lives on one server (e.g., 01, but not 02).
 
-## Something errored and I want to send it through again
-- Go to the *Admin | Zenodo Submissions* menu, find the item in the list and click *resend*.
-- Click the "Reset stalled to error state" which finds anything incorrectly showing running still and reset it to error.
-- If there are multiple items for the same identifier, you will need to send them through
-  in order for the same copy type (see the id column for order)
-- You can click the link for an item under the "ident.id" to just see replication jobs for that identifier.
+## I want to go fix a number of failed Zenodo submissions.  How?
+1. Go to the *Datasets > Zenodo Submissions* option in the UI as a superuser.
+2. ssh into the server and restart the delayed job daemon likw `sudo cdlsysctl restart delayed_job` just to
+   be sure old stuff is cleared out and it's running well.
+3. Go to the `delayed_jobs` table in the database and look for items that show `SIGTERM` or `Execution expired`
+   I believe in the `last error` column but it may be another column.  Remove these records from the table.
+4. Go back to the UI and click the *Reset stalled to error state* button.  This will make items correctly
+   show error states, even if they stalled or had another problem.
+5. Sort the table by ID descending. Scroll down to about the time you saw the errors you want to correct starting.
+6. Click the *Resend* buttons for items you care about (such as software or supplemental items, I'd ignore large data replications).  Some items
+   will need prerequisites to be submitted first (will show in the table after clicking).
+7. Go up the list until you get to the top.
+8. You can refresh the page to see current statuses. If you want to see a chain of items for an identifier then
+   click on the *identifier id* and it will open a window with just submissions for that dataset.  If you
+   want to look at error and submission details then click on the zenodo_copies.id in the first column to troubleshoot.
+9. Rinse and repeat steps 4-8 until all that you can fix is fixed.  If you run into bad problems with useless
+   crap clogging the queue then start at step 2 again.
+
+You may have to read over error messages and see where things are failing in Zenodo and intervene with other
+solutions manually.
+
+## Fixing "Please remove all files to create a new version in Zenodo" errors (workaround)
+
+This may be an error caused only by the transition, but I wouldn't be surprised if it reappears.
+
+1. Find the previous submission where this was published (should be version before this one in
+   `stash_engine_zenodo_copies` table).  Write down or copy/paste the *old deposition_id* and save it.
+2. Go into the Zenodo user interface on their site, find the item that won't go through and
+   click the new version button.  Write down the deposition_id for the *new deposition_id* (it should be
+   in the URL). You can leave that page open in the UI if you wish.
+3. Go to the zenodo_copies table and change the old deposition_id for the previously submitted version
+   to the new item you just created in step 2. Also change the current submission's deposition_id to this number.
+   (For some reason when it's in this state it's impossible to get the new deposits created through the API 
+   until you do this.)
+4. Resubmit through the Dryad queue interface for the item.
+5. After it goes through, go back to the record from step 1 and put the *old deposition_id* back in as the correct one.
+
+## Fixing errors because of zero length files
+
+Zenodo has decided they do not accept zero length files in the API, which I think is a bad decision since there are a
+number of cases in software when people add zero length files to indicate something (.gitkeep files come
+to mind or Passenger web server lets you touch a file to change status). They may also indicate a file
+to be filled or used later.
+
+Anyway, if you get errors because of Zero length files, our option is to go remove them all from our
+`stash_engine_generic_files` table and resubmit the item.  You may need to do this for multiple versions to
+get them all through.
+
+## Can't upload anymore files to Zenodo?
+
+Zenodo has now limited the number of files you can upload to 100 now. I suppose this means the user
+must put them into a package like a zip if they want more files than that at Zenodo.
+
+## People put in dumb github URLs for software and the sizes don't match
+
+If they do this they should use the RAW URL from github, not just put in a github UI URL. They are not trying
+to preserve the github UI for future generations.  They want to get their software files in, not HTML
+user interface files from github.
   
+---
 
 ## It's not processing? Why?
 - start or restart the service `sudo cdlsysctl restart delayed_job` on the 01 server.
@@ -24,8 +77,7 @@ transferring the data only lives on one server (e.g., 01, but not 02).
 - (On server 01) "pause" or "drain" the jobs a bit ahead with `~/bin/long_jobs.sh drain`.  This just creates
   the file `defer_jobs.txt` in `~/apps/ui/releases` and it will not submit new things to zenodo while it's there.
 - After deploy, do `~/bin/long_jobs.sh restart` or remove the `defer_jobs.txt` explained above. (The
-  `hold-submissions.txt` file does something similar but for merritt submissions).
-- See more at `documentation/server_maintenance/merritt.md` for how to deal with Merritt, if needed.
+  `hold-submissions.txt` file does something similar but for repository submissions).
 - If you deployed new code you should restart delayed job.  `sudo cdlsysctl restart delayed_job`
 
 ## How to clear out a big log jam of recently failed items
@@ -102,9 +154,4 @@ RAILS_ENV=local_dev bin/delayed_job stop
 ```
 
 ActiveJob is really just a work queue and doesn't automatically track application states.
-
-We really may want to move our Merritt submissions to use something
-like this rather than the expansion I made to David's home-baked
-queueing system which still runs inside the UI server processes and
-can have problems if the UI server goes down at an inopportune time.
 

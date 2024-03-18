@@ -21,19 +21,43 @@
   "title": "A Study of Red-Black Trees with Weight",
   "authors": [
     {
-      "firstName": "Scott",
-      "lastName": "Fisher",
-      "email": "Scott.Fisher@ucop.edu",
-      "affiliation": "UC Office of the President"
+      "firstName": "Matilda",
+      "lastName": "Swinton",
+      "email": "matilda.swinton@example.com",
+      "affiliation": "Example Organization"
     },
     {
       "firstName": "Norah",
       "lastName": "Moraga",
       "email": "Norah.Moraga@example.com",
-      "affiliation": "UC Davis"
+      "affiliation": "University of California, Davis",
+      "affiliationROR": "https://ror.org/05rrcem69"
     }
   ],
-  "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning, and hackers worldwide concur. In fact, few electrical engineers would disagree with the emulation of replication, which embodies the compelling principles of cryptoanalysis. Weight, our new method for journaling file systems, is the solution to all of these grand challenges.</p>\r\n",
+  "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning.</p>\r\n",
+  "funders": [
+    {
+      "organization": "Stichting Sem Presser Archief",
+      "identifierType": "ror",
+      "identifier": "https://ror.org/02f5r3008",
+      "awardNumber": "12345"
+    }
+  ],
+  "keywords": [
+    "Cat",
+    "Host",
+    "Computer",
+    "Log"
+  ],
+  "methods": "<p><br>\r\nMany mathematicians would agree that, had it not been for systems, the emulation of active networks might never have occurred. We view algorithms as following a cycle of four phases: simulation, investigation, observation, and investigation. After years of robust research into Boolean logic, we confirm the evaluation of Smalltalk. to what extent can spreadsheets be evaluated to realize this intent?</p>\r\n",
+  "relatedWorks": [
+    {
+      "relationship": "article",
+      "identifierType": "URL",
+      "identifier": "http://example.org/cats"
+    }
+  ],
   "versionNumber": 1,
-  "versionStatus": "in_progress"
+  "versionStatus": "in_progress",
+  "userId": 1234
 }

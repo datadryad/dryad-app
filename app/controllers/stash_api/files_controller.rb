@@ -42,7 +42,7 @@ module StashApi
       Stash::Aws::S3.new.put_stream(s3_key: @file_path, stream: request.body)
       after_upload_processing { return }
       file = StashApi::File.new(file_id: @file.id)
-      render json: file.metadata, status: 201
+      render json: file.metadata_with_url, status: 201
     end
 
     # DELETE /files/<id>
@@ -59,7 +59,6 @@ module StashApi
     def download
       if @resource.may_download?(ui_user: @user)
         @file_presigned = Stash::Download::FilePresigned.new(controller_context: self)
-        StashEngine::CounterLogger.general_hit(request: request, file: @stash_file)
         @file_presigned.download(file: @stash_file)
       else
         render status: 404, plain: 'Not found'
@@ -199,7 +198,7 @@ module StashApi
       when 'copied' # make 'deleted' which will remove in this version on next submission
         data_file.update!(file_state: 'deleted')
       end
-      StashApi::File.new(file_id: data_file.id).metadata
+      StashApi::File.new(file_id: data_file.id).metadata_with_url
     end
 
     def require_viewable_file

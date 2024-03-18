@@ -12,6 +12,12 @@ const removeStyle = (el) => {
   const sup = el.style.verticalAlign === 'super';
   const sub = el.style.verticalAlign === 'sub';
   [...el.attributes].forEach((attr) => attr.name !== 'href' && el.removeAttribute(attr.name));
+  if (el.tagName === 'A' && el.attributes.length === 0) {
+    const span = document.createElement('span');
+    span.innerHTML = el.innerHTML;
+    el.replaceWith(span);
+    el = span;
+  }
   if (b) {
     const strong = document.createElement('strong');
     strong.innerHTML = el.outerHTML;

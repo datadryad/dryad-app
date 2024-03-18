@@ -7,8 +7,8 @@
   <div>    
   <% contributors.each_with_index do |contributor, i| %>
       <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
-      <% @award_string = ", <span class='#{'highlight' if highlights&.key?(:award)}'>Award: #{contributor.award_number}</span>".html_safe %>
       <% @desc_string = ", <span class='#{'highlight' if highlights&.key?(:desc)}'>#{contributor.award_description}</span>".html_safe %>
+      <% @award_string = ", <span class='#{'highlight' if highlights&.key?(:award)}'>Award: #{contributor.award_number}</span>".html_safe %>
       <% if current_user && current_user.limited_curator? %>
 	  <p>
 	      <span class="<%= 'highlight' if highlights&.key?(:name) %>"><%= contributor.contributor_name_friendly(show_asterisk: true) %></span><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>

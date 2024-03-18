@@ -2,8 +2,7 @@ require 'datacite/mapping'
 require 'cgi'
 
 # This file and classes are based on David's stash-harvester class and mostly the 'datacite_extensions.rb' which is
-# most of the functionality we need, but we need it to come from the database instead of the returned stash-wrapper.xml
-# file which we give to Merritt and it gives back to us.
+# most of the functionality we need, but we need it to come from the database
 #
 # The methods are the same names for duck-typing should we ever need it (most likely we won't).  I also added a few
 # additional methods for some missing fields that needed very little translation in the old code.  Also the to_index_document
@@ -120,7 +119,7 @@ module Stash
       end
 
       def subjects
-        @resource.subjects.non_fos.map { |s| s.subject&.strip }.reject(&:blank?)
+        @resource.subjects.map { |s| s.subject&.strip }.reject(&:blank?)
       end
 
       def publication_year

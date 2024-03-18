@@ -8,6 +8,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   layout 'layouts/stash_engine/application'
 
+  before_action :log_request
   skip_before_action :verify_authenticity_token
 
   DEFAULT_PAGE_SIZE = 20
@@ -83,6 +84,8 @@ class ApiApplicationController < StashEngine::ApplicationController
               # Client Credentials Grant type
               doorkeeper_token.application.owner
             end
+
+    logger.info("User: #{@user&.id}")
   end
 
   def require_in_progress_resource
@@ -140,5 +143,16 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   def force_json_content_type
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
+  end
+
+  def api_logger
+    Rails.application.config.api_logger
+  end
+
+  def log_request
+    api_logger.info('---')
+    api_logger.info("Path: #{request.path}")
+    api_logger.info("Params: #{request.params}")
+    api_logger.info("Body: #{request.body}")
   end
 end

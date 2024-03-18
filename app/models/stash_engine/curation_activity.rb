@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: stash_engine_curation_activities
+#
+#  id          :integer          not null, primary key
+#  keywords    :string(191)
+#  note        :text(65535)
+#  status      :string(191)      default("in_progress")
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  resource_id :integer
+#  user_id     :integer
+#
+# Indexes
+#
+#  index_stash_engine_curation_activities_on_resource_id_and_id  (resource_id,id)
+#
 require 'stash/doi/datacite_gen'
 require 'stash/payments/invoicer'
 module StashEngine
@@ -353,11 +370,11 @@ module StashEngine
     end
 
     def should_update_doi?
-      last_merritt_version = resource.identifier&.last_submitted_version_number
-      return false if last_merritt_version.nil? # don't submit random crap to DataCite unless it's preserved in Merritt
+      last_repo_version = resource.identifier&.last_submitted_version_number
+      return false if last_repo_version.nil? # don't submit random crap to DataCite unless it's preserved
 
-      # only do UPDATEs with DOIs in production because ID updates like to fail in test EZID/DataCite because they delete their identifiers at random
-      return false if last_merritt_version > 1 && Rails.env != 'production'
+      # only do UPDATEs with DOIs in production because ID updates like to fail in test DataCite because they delete their identifiers at random
+      return false if last_repo_version > 1 && Rails.env != 'production'
 
       true
     end

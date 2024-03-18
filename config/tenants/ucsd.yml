@@ -46,12 +46,20 @@ demo:
   <<: *default
   enabled: false
 
-production:
+production: &PRODUCTION
   <<: *default
   enabled: true
-
   campus_contacts: ["tmarconi@ucsd.edu"]
 
 test:
   <<: *default
   #Add any items that need to override the defaults here
+
+v3_development:
+  <<: *default
+
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *PRODUCTION

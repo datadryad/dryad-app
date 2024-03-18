@@ -2,8 +2,6 @@
 
 module StashApi
   class VersionsController < ApiApplicationController
-    include Downloadable
-
     before_action :require_json_headers, only: %i[show index]
     before_action :force_json_content_type, except: :download
     before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: [:index]
@@ -15,8 +13,7 @@ module StashApi
     def show
       v = Version.new(resource_id: params[:id], item_view: true)
       render json: v.metadata_with_links
-      res = @stash_resources.first
-      StashEngine::CounterLogger.general_hit(request: request, resource: res) if res
+      @stash_resources.first
     end
 
     # get /datasets/<dataset-id>/versions
@@ -29,9 +26,32 @@ module StashApi
     def download
       if @stash_resources.length == 1
         res = @stash_resources.first
-        download_version(resource: res)
+        @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: res)
+        if res&.may_download?(ui_user: @user) && @version_presigned.valid_resource?
+          @version_presigned.download(resource: res)
+        else
+          render plain: 'Download for this version of the dataset is unavailable', status: 404
+        end
       else
-        render text: 'not found', status: 404
+        render plain: 'not found', status: 404
+      end
+    end
+
+    # get /versions/<id>/zip_assembly
+    def zip_assembly
+      @resource = StashEngine::Resource.find(params[:version_id])
+      found = @resource&.download_token
+      if found.token == params[:token] && Time.now.utc < found.available
+        info = @resource.data_files.present_files.map do |f|
+          {
+            size: f.upload_file_size,
+            filename: f.upload_file_name,
+            url: f.s3_permanent_presigned_url
+          }
+        end
+        render json: info
+      else
+        render json: 'Unauthorized', status: 401
       end
     end
 
