@@ -39,12 +39,6 @@ function copyPackageFilesTask() {
   });
 };
 
-// copy font-awesome into fonts
-function iconsTask(cb) {
-  return src('./ui-library/bower_components/font-awesome/fonts/**.*')
-    .pipe(dest('./ui-library/fonts'));
-};
-
 // Minify all images during development:
 function minifyImagesTask(cb) {
   return src('ui-library/images/**')
@@ -181,11 +175,11 @@ exports.modernizr = modernizrTask;
 exports.validateHTML = validateHtmlTask;
 
 // Standard build that should be run before deploying the application
-exports.build = series(cleanTask, copyPackageFilesTask, scssLintTask, jsLintTask, sassTask, userefTask, iconsTask,
+exports.build = series(cleanTask, copyPackageFilesTask, scssLintTask, jsLintTask, sassTask, userefTask, 
                        copyImagesTask, copyFontsTask, copyToAssetsTask);
 
 // Publish a build to GitHub Pages
-exports.publish = series(cleanTask, copyPackageFilesTask, scssLintTask, jsLintTask, sassTask, userefTask, iconsTask, copyImagesTask, copyFontsTask, publishTask);
+exports.publish = series(cleanTask, copyPackageFilesTask, scssLintTask, jsLintTask, sassTask, userefTask, copyImagesTask, copyFontsTask, publishTask);
 
 // Setup the default to run gulp in dev mode so that its watching our files
 exports.default = parallel(copyPackageFilesTask, sassTask, browserSyncTask, watchTask);

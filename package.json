@@ -135,7 +135,6 @@
     "@testing-library/user-event": "^13.5.0",
     "@webpack-cli/serve": "^2.0.5",
     "babel-plugin-dynamic-import-node": "^2.3.3",
-    "bower": "^1.8.14",
     "datalist-polyfill": "^1.24.4",
     "del": "^6.0.0",
     "eslint": "^8.19.0",
