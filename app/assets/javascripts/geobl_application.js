@@ -10,14 +10,10 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
+//= require jquery3
+//= require jquery.turbolinks
 //= require jquery_ujs
-// these following two are supposed to be right
-// require turbolinks
-// require jquery3
-// require rails-ujs
-// require activestorage -- this doesn't work for some reason
-
+//= require jquery-ui
 //
 // Required by Blacklight
 //= require popper
@@ -25,9 +21,6 @@
 //= require twitter/typeahead
 //= require bootstrap
 //= require blacklight/blacklight
-
-// if remove require tree below then the map stops loading
-//= require_tree .
 
 Blacklight.doSearchContextBehavior = function(){
   console.log("Redefining doSearchContextBehavior so as not to intercept search results.")
