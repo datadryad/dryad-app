@@ -14,6 +14,5 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui
-//= require jquery-ui
 //= require_tree
 console.log('Loaded stash_engine/application.js')
