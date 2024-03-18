@@ -10,9 +10,8 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
+//= require jquery3
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery-ui
-//= require_tree .
 console.log('Loaded stash_engine/application.js')
