@@ -541,7 +541,7 @@ module StashEngine
 
     describe '#has_accepted_manuscript?' do
       it 'is false when no matching manuscript exists' do
-        expect(@identifier.has_accepted_manuscript?).to be(false)
+        expect(@identifier.has_accepted_manuscript?).to be_falsey
       end
 
       it 'is true when matching manuscript is accepted' do
