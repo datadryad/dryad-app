@@ -77,9 +77,10 @@ module StashDatacite
         @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: parsed_msid)
       end
 
-      if @resource.identifier.allow_review? && @resource.previous_curated_resource.blank? && @resource.curation_start_date.blank?
-        # if the newly-set journal wants PPR by default, set the PPR value for this resource
-        @resource.update(hold_for_peer_review: @se_id.journal&.default_to_ppr)
+      if @resource.identifier.allow_review? && @resource.previous_curated_resource.blank? &&
+        @resource.curation_start_date.blank? && @se_id.journal&.default_to_ppr?
+        # if the newly-set journal wants PPR by default, and it is allowed, set the PPR value for this resource
+        @resource.update(hold_for_peer_review: @se_id.journal.default_to_ppr)
       end
 
       save_doi
