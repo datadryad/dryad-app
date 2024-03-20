@@ -143,7 +143,7 @@ namespace :identifiers do
     end
 
     # Remove resources that have been "in progress" for more than a year without updates
-    StashEngine::Resource.in_progress.each do |res|
+    StashEngine::Resource.in_progress.where('updated_at < ?', 1.year.ago).each do |res|
       next unless res.updated_at < 1.year.ago
       next unless res.current_curation_status == 'in_progress'
 
