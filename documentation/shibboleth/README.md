@@ -80,11 +80,12 @@ Configuration
   - make sure the `entityID` has the correct value
   - double-check the `SSO` section below and the url attached
 - Update the apache configs (uncomment relevant sections)
-  - under `/etc/httpd/conf.d`, there is a `shib.conf`, as well as a `datadryad.org.conf` 
+  - copy `shib.conf`, `shibboleth-ds.conf, and `datadryad.org.conf` to  `/etc/httpd/conf.d`
   - look out for the `cgi-bin` section
-- copy the `inc-md-cert-mdq.pem` from this directory to `/etc/shibboleth`
+- Copy the `inc-md-cert-mdq.pem` from this directory to `/etc/shibboleth`
+- Copy the `idpselect_config.js` to `/etc/shibboleth-ds` and update webserver names
 
-Certificate generation (the shibboleth certificate should *not* be the same as the web server certificate)
+Certificate generation (the shibboleth certificate should *not* be the same as the web server's certificate)
 ```
 cd /etc/shibboleth
 sudo ./keygen.sh -o ~/tmp -h sandbox.datadryad.org -y 15 -e https://sandbox.datadryad.org/shibboleth -n sp
@@ -92,3 +93,10 @@ sudo chmod a+r sp-key.pem   # key must be readable by the shibd process
 sudo systemctl restart shibd
 ```
 Now check `/var/log/shibboleth` again for any errors, to ensure the process started correctly.
+
+
+Testing
+----------
+
+- https://sandbox.datadryad.org/shibtest
+- mdquery -e https://sandbox.datadryad.org/shibboleth

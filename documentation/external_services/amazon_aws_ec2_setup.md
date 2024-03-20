@@ -207,6 +207,9 @@ sudo cp ~/dryad-app/documentation/external_services/datadryad.org.conf ~/apache/
 sudo touch /var/www/html/index.html
 sudo chmod a+w /var/www/html/index.html
 echo "<h1>Welcome to MACHINE_NAME</h1>" > /var/www/html/index.html
+# Tell SELinux that Apache is allowed to do stuff!
+setsebool -P httpd_read_user_content 1
+setsebool -P httpd_can_network_connect 1
 # UPDATE the settings in datadryad.org.conf to reflect the correct server names
 sudo systemctl restart httpd
 # check that the homepage renders at the Apache port
