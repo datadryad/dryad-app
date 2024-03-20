@@ -149,7 +149,7 @@ namespace :identifiers do
 
       ident = res.identifier
       s3_dir = res.s3_dir_name(type: 'base')
-      puts "ident #{ident.id} Res #{res.id} -- updated_at #{res.updated_at}"
+      puts "ident #{ident&.id || 'MISSING'} Res #{res.id} -- updated_at #{res.updated_at}"
       puts "   DESTROY s3 #{s3_dir}"
       Stash::Aws::S3.new.delete_dir(s3_key: s3_dir) unless dry_run
       puts "   DESTROY resource #{res.id}"
