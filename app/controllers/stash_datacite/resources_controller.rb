@@ -29,7 +29,10 @@ module StashDatacite
           check_required_fields(@resource)
           @review = Resource::Review.new(@resource)
           @resource.has_geolocation = @review.geolocation_data?
-          unless @resource.identifier.allow_review? && @resource.previous_curated_resource.blank? && @resource.curation_start_date.blank?
+          if @resource.identifier.manuscript_number? && !@resource.identifier.has_accepted_manuscript? &&
+            !@resource.identifier.has_rejected_manuscript
+            @resource.hold_for_peer_review = true
+          elsif !@resource.identifier.allow_review? || @resource.previous_curated_resource.present? || @resource.curation_start_date.present?
             @resource.hold_for_peer_review = false
             @resource.peer_review_end_date = nil
           end
