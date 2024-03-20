@@ -342,6 +342,13 @@ module StashEngine
 
       manu.accepted?
     end
+
+    def has_rejected_manuscript?
+      manu = StashEngine::Manuscript.where(manuscript_number: manuscript_number).last
+      return false unless manu
+
+      manu.rejected?
+    end
     # rubocop:enable Naming/PredicateName
 
     def publication_article_doi
