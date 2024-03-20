@@ -1,4 +1,4 @@
-<% if @resource.identifier.allow_review? && @resource.previous_curated_resource.nil? && @resource.curation_start_date.nil? %>
+<% if @resource.identifier.allow_review? && @resource.previous_curated_resource.blank? && @resource.curation_start_date.blank? %>
   <!-- This is only available if the id has not been curated AND
      the associated journal allows a review workflow -->
   <div>
