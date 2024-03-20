@@ -634,6 +634,25 @@ module StashApi
         result = output['_embedded']['stash:datasets'].last
         expect(result['identifier']).to eq("doi:#{@ident.identifier}")
       end
+
+      it 'passes a sanitised query to solr' do
+        solr_mock = instance_double(RSolr::Client)
+        allow(RSolr).to receive(:connect).and_return(solr_mock)
+        allow(solr_mock).to receive(:paginate).and_return(JSON.parse(default_results))
+
+        get '/api/v2/search?q=system+%28fo%29', headers: default_authenticated_headers
+
+        expect(solr_mock).to have_received(:paginate).with(
+          1,
+          20,
+          'select',
+          params: {
+            q: 'system \\(fo\\)',
+            fq: [],
+            fl: 'dc_identifier_s'
+          }
+        )
+      end
     end
 
     # view single dataset
