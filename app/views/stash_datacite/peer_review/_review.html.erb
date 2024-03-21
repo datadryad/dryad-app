@@ -1,4 +1,4 @@
-<% if @resource.identifier.manuscript_number.present? && !@resource.identifier.has_accepted_manuscript? && !@resource.identifier.has_rejected_manuscript? %>
+<% if @resource.identifier.automatic_ppr? %>
   <div>
     <p>This dataset will remain private for peer review until we receive a notification from the journal confirming formal acceptance of the associated manuscript.</p>
   </div>
