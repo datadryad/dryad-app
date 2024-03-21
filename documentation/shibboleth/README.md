@@ -56,6 +56,19 @@ servers which legitimately don't use SSL (like local servers, more containers or
 whatever). 
 
 
+Shibboleth flow of control
+============================
+
+- Dryad login screen sends users to the InCommon discovery service to locate
+  info about the shibboleth IDP with the entityID that the user selected from the
+  dropdown.
+- InCommon (or the IDP???) directs users to our SP to initialize the
+  transaction, with a URL like https://datadryad.org/Shibboleth.sso/Login
+  - Apache uses mod_shib to connect this URL to the shibd process
+- Once login is complete, control goes back to https://datadryad.org/stash/auth/shibboleth/callback,
+  which is handled by Rails
+
+
 Installing shibboleth service provider
 ======================================
 
@@ -89,7 +102,9 @@ Certificate generation (the shibboleth certificate should *not* be the same as t
 ```
 cd /etc/shibboleth
 sudo ./keygen.sh -o ~/tmp -h sandbox.datadryad.org -y 15 -e https://sandbox.datadryad.org/shibboleth -n sp
-sudo chmod a+r sp-key.pem   # key must be readable by the shibd process
+sudo chown shibd *.pem # keys must be readable by the shibd process
+# sudo chmod a+r sp-key.pem   # probably not needed??? but needs to be tested
+sudo chmod a+rx /var/cache/shibboleth/inc-mdq-cache 
 sudo systemctl restart shibd
 ```
 Now check `/var/log/shibboleth` again for any errors, to ensure the process started correctly.
@@ -98,5 +113,16 @@ Now check `/var/log/shibboleth` again for any errors, to ensure the process star
 Testing
 ----------
 
-- https://sandbox.datadryad.org/shibtest
-- mdquery -e https://sandbox.datadryad.org/shibboleth
+These commands will test various aspects of the Shibboleth service (replace "sandbox" with the specific DNS name):
+- Is the shibboleth2.xml valid?
+  `shibd -t`
+- Details of the certificate:
+  `openssl x509 -text -noout -in /etc/shibboleth/sp-cert.pem`
+- Is shibboleth responding through Apache?
+  `curl -k https://localhost/Shibboleth.sso/Status`
+- What metadata is InCommon delivering for this SP?
+  `mdquery -e https://sandbox.datadryad.org`
+- Does the end-to-end shibboleth traffic work?
+  (in browser) https://sandbox.datadryad.org/cgi-bin/PrintShibInfo.pl
+  (in browser) https://sandbox.datadryad.org/shibtest
+
