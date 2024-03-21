@@ -46,6 +46,9 @@
       <%= render partial: "stash_datacite/geolocation_places/show",
                  locals: { geolocation_places: review.geolocation_places } %>
     </div>
+    <script>
+      $( document ).ready( loadReviewMap(<%=resource.id%>) );
+    </script>
   <% end %>
 <script type="application/ld+json">
   <%= schema_org_ds %>
