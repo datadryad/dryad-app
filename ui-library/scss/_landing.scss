@@ -8,14 +8,6 @@
 	margin: 0 0 $spacing-md;
 }
 
-.t-landing__main {
-
-	@include bp(screen2) {
-		margin: 0 30px 0 0;
-	}
-
-}
-
 .citation-section {
 	background-color: $design-lightest-blue-color;
 	display: flex;
