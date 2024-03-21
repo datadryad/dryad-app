@@ -335,19 +335,27 @@ module StashEngine
       internal_data.find_by(data_type: 'manuscriptNumber')&.value&.strip
     end
 
+    def latest_manuscript
+      StashEngine::Manuscript.where(manuscript_number: manuscript_number).last
+    end
+
+    def automatic_ppr?
+      return false unless latest_manuscript.present?
+
+      !has_accepted_manuscript? && !has_rejected_manuscript?
+    end
+
     # rubocop:disable Naming/PredicateName
     def has_accepted_manuscript?
-      manu = StashEngine::Manuscript.where(manuscript_number: manuscript_number).last
-      return false unless manu
+      return false unless latest_manuscript.present?
 
-      manu.accepted?
+      latest_manuscript.accepted?
     end
 
     def has_rejected_manuscript?
-      manu = StashEngine::Manuscript.where(manuscript_number: manuscript_number).last
-      return false unless manu
+      return false unless latest_manuscript.present?
 
-      manu.rejected?
+      latest_manuscript.rejected?
     end
     # rubocop:enable Naming/PredicateName
 
