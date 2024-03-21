@@ -33,6 +33,17 @@ const allowSpans = [
   'listItem',
 ];
 
+/* eslint-disable consistent-return */
+const joinListItems = (left, right, parent) => {
+  if (left.type === 'listItem' && right.type === 'listItem') {
+    return 0;
+  }
+  if (parent.type === 'listItem' && left.type === 'paragraph' && right.type === 'list') {
+    return 0;
+  }
+};
+/* eslint-enable consistent-return */
+
 function MilkdownCore({onChange, setActive, setLevel}) {
   useEditor((root) => Editor
     .make()
@@ -51,6 +62,7 @@ function MilkdownCore({onChange, setActive, setLevel}) {
             return value;
           },
         },
+        join: [joinListItems],
         unsafe: [
           {character: '_', notInConstruct: allowSpans},
           {before: '[\\s]', character: '_'},
