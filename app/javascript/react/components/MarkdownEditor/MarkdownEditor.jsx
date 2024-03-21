@@ -128,7 +128,7 @@ function MilkdownEditor({
         const editorView = ctx.get(editorViewCtx);
         const serializer = ctx.get(serializerCtx);
         setDefaultVal(serializer(editorView.state.doc));
-      }
+      } else if (editType === 'markdown') onChange(markdown);
     } catch {
       setParseError(true);
       setEditType('markdown');
