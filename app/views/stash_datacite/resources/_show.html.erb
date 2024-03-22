@@ -21,7 +21,7 @@
      other: '', highlight_fields: [] } %>
 
   <% if @resource.display_readme? %>
-    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review, highlight_fields: [] } %>
+    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review, highlight_fields: [], expand_readme: false } %>
   <% end %>
 
   <%= render partial: "stash_datacite/descriptions/show",

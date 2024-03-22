@@ -55,7 +55,9 @@
     <section class="t-review__section" style="margin-bottom: 1rem;">
     <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' unless @review.readme_content.blank? %>
-    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: @review, highlight_fields: highlight_fields } %>
+    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: @review, highlight_fields: highlight_fields, expand_readme: true } %>
+    <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
+                class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' unless @review.readme_content.blank? %>
     </section>
 
     <% if @resource.geolocations.count.positive? %>
