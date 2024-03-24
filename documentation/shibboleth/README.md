@@ -115,7 +115,6 @@ Configuration
   - `entityID` has the correct value
   - handlerSSL="true"
 - Copy the `inc-md-cert-mdq.pem` and `non_federation_metadata.xml` from this directory to `/etc/shibboleth`
-- Copy the `idpselect_config.js` to `/etc/shibboleth-ds` and update webserver names (this file is only used for testing purposes)
 - Copy `PrintShibInfo.pl` from this directory to `/var/www/cgi-bin`
 - Update the apache configs (uncomment relevant sections)
   - copy `shib.conf`, `shibboleth-ds.conf` to  `/etc/httpd/conf.d`
