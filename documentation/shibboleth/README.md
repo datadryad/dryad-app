@@ -40,7 +40,12 @@ Current Validation Methods (most to least preferred)
 Technical details
 =================
 
-Rack "hack" for omniauth and ORCID login
+Shibboleth authentication consists of two major pieces:
+- Identity Provider (IDP) -- the service where a user logs in, typically at a university
+- Service Provider (SP) -- the service that uses the login information, like Dryad
+
+
+Rack "hack" for Omniauth and ORCID login
 ----------------------------------------
 
 See the file config/initializers/omniauth.rb . It has to be tricked into
@@ -75,11 +80,11 @@ Shibboleth flow of control
     - redirects as appropriate
 
 
-Installing shibboleth service provider
+Installing Shibboleth Service Provider
 ======================================
 
 
-Install the basic service provider daemon
+Install the basic Service Provider daemon
 -----------------------------------------
 
 ```
@@ -89,10 +94,15 @@ sudo yum update -y
 Basic install
 - Create a repo file for the shibboleth package under `/etc/yum.repos.d/shibboleth.repo` and include the contents from
   this [link](https://shibboleth.net/downloads/service-provider/RPMS/) (choose Amazon Linux 2023 from the first dropdown and hit generate)
-- Run `sudo yum install shibboleth.x86_64` (make sure the .x86_64 version is used)
-- Enable the service: `sudo systemctl enable shibd.service`
-- Run via `sudo systemctl start shibd`
-- Even though it's "running", it probably didn't start correctly due to certificate issues (which we fix below) -- check in `/var/log/shibboleth`
+
+```
+sudo yum install shibboleth.x86_64 #(make sure the .x86_64 version is used)
+sudo yum install shibboleth-embedded-ds
+sudo systemctl enable shibd.service #enable the service
+sudo systemctl start shibd
+```
+
+Even though it's "running", it probably didn't start correctly due to certificate issues (which we will fix below) -- check in `/var/log/shibboleth`
 
 Ensure SELinux doesn't prevent Apache from working properly
 - `sudo setsebool -P httpd_read_user_content 1`
@@ -101,24 +111,35 @@ Ensure SELinux doesn't prevent Apache from working properly
 Configuration
 - Update the contents of `/etc/shibboleth/shibboleth2.xml`
   - copy the initial file from the one in this directory
-  - make sure the email address is set to `admin@datadryad.org`
-  - make sure the `entityID` has the correct value
-  - double-check the `SSO` section below and the url attached
+  - email address set to `admin@datadryad.org`
+  - `entityID` has the correct value
+  - handlerSSL="true"
+- Copy the `inc-md-cert-mdq.pem` and `non_federation_metadata.xml` from this directory to `/etc/shibboleth`
+- Copy the `idpselect_config.js` to `/etc/shibboleth-ds` and update webserver names (this file is only used for testing purposes)
+- Copy `PrintShibInfo.pl` from this directory to `/var/www/cgi-bin`
 - Update the apache configs (uncomment relevant sections)
-  - copy `shib.conf`, `shibboleth-ds.conf, and `datadryad.org.conf` to  `/etc/httpd/conf.d`
-  - look out for the `cgi-bin` section
-- Copy the `inc-md-cert-mdq.pem` from this directory to `/etc/shibboleth`
-- Copy the `idpselect_config.js` to `/etc/shibboleth-ds` and update webserver names
+  - copy `shib.conf`, `shibboleth-ds.conf` to  `/etc/httpd/conf.d`
+  - edit `/etc/httpd/conf.d/datadryad.org.conf` to  uncomment the shibboleth sections
 
-Certificate generation for InCommon (the shibboleth certificate should *not* be the same as the web server's certificate)
+
+Certificate generation for InCommon
+- The shibboleth certificate should *not* be the same as the web server's SSL certificate
+- If you already have the same entityID on another server, don't make a new certificate, just copy the keys
+
 ```
 cd /etc/shibboleth
 sudo ./keygen.sh -o ~/tmp -h sandbox.datadryad.org -y 15 -e https://sandbox.datadryad.org/shibboleth -n sp
 sudo chown shibd *.pem # keys must be readable by the shibd process
-# sudo chmod a+r sp-key.pem   # probably not needed??? but needs to be tested
-sudo chmod a+rx /var/cache/shibboleth/inc-mdq-cache 
+sudo chmod a+r sp-key.pem
+```
+
+Fix permissions for InCommon cache
+```
+sudo systemctl restart shibd
+sudo chmod a+rx /var/cache/shibboleth/inc-mdq-cache
 sudo systemctl restart shibd
 ```
+
 Now check `/var/log/shibboleth` again for any errors, to ensure the process started correctly.
 
 
@@ -129,6 +150,17 @@ Additional config
   - Maps the field specififed by "name" attribute from the provider's assertion to field specified by "id" attribute in our metadata
 - non_fedaration_metadata.xml
   - Specifies locations and properties for IDPs that are not managed by InCommon
+
+
+InCommon metadata setup
+-----------------------
+
+Use InCommon's Federation Manager to create or edit the metadata entry for the Service Provider.
+
+- Copy most settings from the [sample metadata file](sample-SP-metadata.xml)
+- Only give InCommon the public key (sp-cert.pem), not private!
+- The key generated above uses AES-128-CBC encryption
+
 
 
 Testing
@@ -145,6 +177,7 @@ These commands will test various aspects of the Shibboleth service (replace "san
   - `mdquery -e https://sandbox.datadryad.org`
   - `curl https://sandbox.datadryad.org/Shibboleth.sso/Metadata`
 - Does the end-to-end shibboleth traffic work?
+  - (in browser) https://sandbox.datadryad.org/Shibboleth.sso/Session
   - (in browser) https://sandbox.datadryad.org/cgi-bin/PrintShibInfo.pl
 - See logs in `/var/log/shibboleth`
   - shibd.log and shibd_warn.log show issues with shibd itself

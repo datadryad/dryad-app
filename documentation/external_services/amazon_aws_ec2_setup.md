@@ -219,13 +219,16 @@ curl http://localhost:80/stash
 To troubleshoot Apache:
 - Apache can "hang" if someone has tried to load the homepage and the SOLR server did not allow connection. In this case, some Apache threads will never finish, and the server will quickly become unresponsive. To fix, ensure that the SOLR server has a security group that accepts connections from the IP address of the Rails/Apache serer. Then kill all "httpd" processes and restart Aapache.
 
+
 Set up a load balancer to send traffic to the machine
+=====================================================
+
 - All of the following steps are in AWS console
 - Ensure you are in the proper region -- all of these steps are region dependent
 - In Certificate Manager, create a certificate for the target DNS name 
 - In EC2, create a target group for the servers that will be balanced
   - Instances
-  - HTTP (since the load balancer will handle the HTTPS connection)
+  - HTTP (for testing basic access; will change to HTTPS in next section)
   - IPv4
   - HTTP1
   - Health check = /stash
@@ -249,6 +252,32 @@ To troubleshoot load balancer:
 - Enable access logging
   https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html
   (when editing the bucket permissions, omit the "aws-account-id/" part)
+
+
+Set up SSL certificate for Shibboleth support
+=============================================
+
+The "main" certificates for Dryad are managed within AWS, using Certificate
+Manager. However, Shibboleth requires direct connections between the `shibd`
+service and the Identity Provider, which bypass the load balancer. These
+connections require Apache to support SSL on its own. We use certificates from
+Let's Encrypt for these direct connections.
+
+In a load-balanced system, only create the certificate on one machine, and copy to the others.
+
+```
+# Adapted from https://certbot.eff.org/instructions?ws=apache&os=pip
+sudo dnf install -y augeas-libs
+sudo python3 -m venv /opt/certbot/
+sudo /opt/certbot/bin/pip install --upgrade pip
+sudo /opt/certbot/bin/pip install certbot certbot-apache
+sudo ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+sudo certbot certonly --apache
+sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/fullchain.pem /etc/pki/tls/certs/letsencrypt.crt
+sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/privkey.pem /etc/pki/tls/private/letsencrypt.key
+```
+
+To get Apache using the new certificates, rebuild the Target Group (as in the section above), using HTTPS setting instead of HTTP.
 
 
 Set up shibboleth service provider
