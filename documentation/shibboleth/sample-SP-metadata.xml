@@ -1,0 +1,108 @@
+
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" ID="_196effe8-7f37-4f42-ad25-3d7bba640248" entityID="https://sandbox.datadryad.org" validUntil="2024-04-07T20:32:07.200Z">
+
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <Reference URI="#_196effe8-7f37-4f42-ad25-3d7bba640248">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <DigestValue>t2cXCWGPi3f3uPxHUk/HnaNaC7LwuHAlXMpfdYS3oLc=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>X6FeQT6mONJp6Ua9dfnGB80pGC5MY8fszr+Z2GZo0dGynEN4WacqajpVZLuLAob/bGmkuzrOOZPS&#xD;
+M34mC6A/bgFelfBeTWOzOdCtZMln2M+eLAv2vIaj1fYDiy5LKE7omM0NIkCbK1N3KfYyWCi/R1cu&#xD;
+SkquJAGjV+SSNI8ya+qSUqR6fleu654TLIckfPpLYHj0eVLGQulCefZ/t6O5R6iiKGkxl4Dv+XwN&#xD;
+iyRLlIJkM7I+7smAI8lqPztybF7DtxX0WQJmmTGpn0pnpODacVKqz0mtb12S/uQqP6g2EPlm8epy&#xD;
+igEkpXqpBO+OiXIXpBFzQ+1p1tCxrEvytOwjLQFBCIimdWe3n4Ye4Of3VVVUL1FqouT9Q3kAODu+&#xD;
+Q293ougmQdksKwE+3vL/lx0Afwgem42azWa87U1vneVtzCCOR34w1gypR7aZhzR5P+Cleasp1HVv&#xD;
+/EOaisZWQZIFtlobsXi04hJ4IqLgWdP+OereUSj2AE2D2kZTZp4cfhVV</SignatureValue>
+  </Signature>
+  <Extensions>
+    <mdrpi:RegistrationInfo xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" registrationAuthority="https://incommon.org"/>
+    <mdattr:EntityAttributes xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
+      <saml:Attribute xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" Name="urn:oasis:names:tc:SAML:attribute:assurance-certification" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>https://refeds.org/sirtfi</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" Name="http://macedir.org/entity-category" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+        <saml:AttributeValue>http://id.incommon.org/category/registered-by-incommon</saml:AttributeValue>
+      </saml:Attribute>
+    </mdattr:EntityAttributes>
+  </Extensions>
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://sandbox.datadryad.org/Shibboleth.sso/Login" index="1"/>
+      <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+        <mdui:DisplayName xml:lang="en">Dryad sandbox</mdui:DisplayName>
+        <mdui:PrivacyStatementURL xml:lang="en">https://datadryad.org/stash/privacy</mdui:PrivacyStatementURL>
+        <mdui:Logo height="210" width="1100" xml:lang="en">https://datadryad.org/assets/stash_engine/logo_dryad-b63b80e8fdc94e79fe893976701a292b54840f9f288be4367fa67b6e208ddd0f.png</mdui:Logo>
+      </mdui:UIInfo>
+    </Extensions>
+    <KeyDescriptor>
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          
+          <ds:X509Certificate>
+MIIEMDCCApigAwIBAgIUNxUuih9cb14JJswaAvL9nOm0VCcwDQYJKoZIhvcNAQEL
+BQAwIDEeMBwGA1UEAxMVc2FuZGJveC5kYXRhZHJ5YWQub3JnMB4XDTI0MDMxODEy
+MTM0OFoXDTM5MDMxNTEyMTM0OFowIDEeMBwGA1UEAxMVc2FuZGJveC5kYXRhZHJ5
+YWQub3JnMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAwcCNktgWfmzd
+hbKkczP2d3jwOvDmFLgoZYHAd6XPJTkFMQXjlCxx7/ku9s2ZuidLCGfBU/xGFtN8
+fWUAOdja8a9q0cPSkr6PTvWThucP+unMy16LuosBj4C1L8hy+kTk03PlLsiZlPYp
+IG6754WUr2b0/M2Ld2iYxP5F0+PlVwl9chfS+CJp8xHcicJMXQC39Y2tOcZmjaqk
+3uC1heSSEK/Z4bf/2S6iyDE9elQth3eTbwU3l2Ka3NXdfMXkgOGjf5SBgX79smxh
+wignjwHoz0acJ2MbhYSuiOwNOpgYxrupckIyFfmJuFut/lt6q6/JKAecFZnjEeQw
+MeeI0tA1xyO8ql7RfpUT39pQ7EGaP2mhXXNJyBEG0KYHEZtUP05uiISrRTFFwr17
+1dc3coC9OkwAKvOk5buICO7dqxHKKUaoUxuaJTfsfCaIbxJnLW/tGsTi4MUt2jQE
+fBKtGIONQl0rm+vXLbUCCVDgVbKGehCGjyLe7L5iPNGtd9Bgy/ANAgMBAAGjYjBg
+MD8GA1UdEQQ4MDaCFXNhbmRib3guZGF0YWRyeWFkLm9yZ4YdaHR0cHM6Ly9zYW5k
+Ym94LmRhdGFkcnlhZC5vcmcwHQYDVR0OBBYEFImK4oztVoSnCjUuO/IPbCHV5ydU
+MA0GCSqGSIb3DQEBCwUAA4IBgQBnSyJ88o7W5F0P7q3EAqFvBInxfrw41niSBfO5
+IFApA4OVT02u8KFXp4HMArFFiYYdldRAinbuwPzOwd+jw4GBLs0BYu1VaOp2l+iz
+gQmvbAaOK0qsrjbA4hhCbxbYYoi/g2+GDXCoM8co7A7IJWxbWTRiHVB1puqpzrOQ
+XJHy0vMaKcxpE+TeDUhgs+t94Fg+eabieiKRd/AhSHb8GMXQyTB0HEzLbAH6Xddp
+Ktl2fOmO2ueSBiIrFxQT3TauVSI6JOwyj8x3n8ER0xEOZgT3887mtsnDqGdSVX4E
+631tfOMCurMYWyOCumekehaBqJIG0Hhyi03ha+nD72b/VMHQobOt1hUpIUjmqkIN
+q86szz/PDCkQrfv9KUArEoZaUiYFsNhsJxpIrUqIxHgYD0nWH+dcXQAVDwGfjCs0
+v9/qd/Gkz+3EZYjAtWvCA5YoaHC4XQX8jbZlcRceUVSFQqM/x4gB7GLTvp5MAH7g
+MwEvksvOdKH6oMEIQYM+M9KHFV8=
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+      <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc"/>
+    </KeyDescriptor>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://sandbox.datadryad.org/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://sandbox.datadryad.org/Shibboleth.sso/SAML2/Artifact" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://sandbox.datadryad.org/Shibboleth.sso/SAML/POST" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://sandbox.datadryad.org/Shibboleth.sso/SAML/Artifact" index="4"/>
+    <AttributeConsumingService index="1">
+      <ServiceName xml:lang="en">Dryad sandbox</ServiceName>
+      <RequestedAttribute FriendlyName="displayName" Name="urn:oid:2.16.840.1.113730.3.1.241" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="eduPersonPrincipalName" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.6" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+      <RequestedAttribute FriendlyName="givenName" Name="urn:oid:2.5.4.42" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+      <RequestedAttribute FriendlyName="sn" Name="urn:oid:2.5.4.4" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"/>
+    </AttributeConsumingService>
+  </SPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="en">Dryad</OrganizationName>
+    <OrganizationDisplayName xml:lang="en">Dryad</OrganizationDisplayName>
+    <OrganizationURL xml:lang="en">https://datadryad.org/stash</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Ryan Scherle</GivenName>
+    <EmailAddress>mailto:ryan@datadryad.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="technical">
+    <GivenName>Ryan Scherle</GivenName>
+    <EmailAddress>mailto:ryan@datadryad.org</EmailAddress>
+  </ContactPerson>
+  <ContactPerson contactType="other" xmlns:remd="http://refeds.org/metadata" remd:contactType="http://refeds.org/metadata/contactType/security">
+    <GivenName>Ryan Scherle</GivenName>
+    <EmailAddress>mailto:ryan@datadryad.org</EmailAddress>
+  </ContactPerson>
+
+</EntityDescriptor>
