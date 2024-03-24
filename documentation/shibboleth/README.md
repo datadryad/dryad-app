@@ -57,16 +57,22 @@ whatever).
 
 
 Shibboleth flow of control
-============================
+--------------------------
 
 - Dryad login screen sends users to the InCommon discovery service to locate
   info about the shibboleth IDP with the entityID that the user selected from the
   dropdown.
 - InCommon (or the IDP???) directs users to our SP to initialize the
-  transaction, with a URL like https://datadryad.org/Shibboleth.sso/Login
-  - Apache uses mod_shib to connect this URL to the shibd process
+  transaction, with a URL like https://datadryad.org/Shibboleth.sso/Login, including the IDP entityID
+  - Apache uses detects that Shibboleth.sso is protected by mod_shib, so it hands control to the shibd process
+- shibd sends to https://wayf.incommonfederation.org/DS/WAYF
+   - IDP makes a SAML assertion and sends it back to shibd
+   - Apache sees it's approved and forwards to puma
 - Once login is complete, control goes back to https://datadryad.org/stash/auth/shibboleth/callback,
   which is handled by Rails
+  - In Rails `SessionsController.callback` handles the call,
+    - verifyies the validity of the package sent from the IDP
+    - redirects as appropriate
 
 
 Installing shibboleth service provider
@@ -80,11 +86,17 @@ Install the basic service provider daemon
 sudo yum update -y
 ```
 
-- create a repo file for the shibboleth package under `/etc/yum.repos.d/shibboleth.repo` and include the contents from this [link](https://shibboleth.net/downloads/service-provider/RPMS/) (choose Amazon Linux 2023 from the first dropdown and hit generate)
-- run `sudo yum install shibboleth.x86_64` (make sure the .x86_64 version is used)
-- enable the service: `sudo systemctl enable shibd.service`
-- run via `sudo systemctl start shibd`
-- even though it's "running", it probably didn't start correctly due to certificate issues (which we fix below) -- check in `/var/log/shibboleth`
+Basic install
+- Create a repo file for the shibboleth package under `/etc/yum.repos.d/shibboleth.repo` and include the contents from
+  this [link](https://shibboleth.net/downloads/service-provider/RPMS/) (choose Amazon Linux 2023 from the first dropdown and hit generate)
+- Run `sudo yum install shibboleth.x86_64` (make sure the .x86_64 version is used)
+- Enable the service: `sudo systemctl enable shibd.service`
+- Run via `sudo systemctl start shibd`
+- Even though it's "running", it probably didn't start correctly due to certificate issues (which we fix below) -- check in `/var/log/shibboleth`
+
+Ensure SELinux doesn't prevent Apache from working properly
+- `sudo setsebool -P httpd_read_user_content 1`
+- `sudo setsebool -P httpd_can_network_connect 1`
 
 Configuration
 - Update the contents of `/etc/shibboleth/shibboleth2.xml`
@@ -98,7 +110,7 @@ Configuration
 - Copy the `inc-md-cert-mdq.pem` from this directory to `/etc/shibboleth`
 - Copy the `idpselect_config.js` to `/etc/shibboleth-ds` and update webserver names
 
-Certificate generation (the shibboleth certificate should *not* be the same as the web server's certificate)
+Certificate generation for InCommon (the shibboleth certificate should *not* be the same as the web server's certificate)
 ```
 cd /etc/shibboleth
 sudo ./keygen.sh -o ~/tmp -h sandbox.datadryad.org -y 15 -e https://sandbox.datadryad.org/shibboleth -n sp
@@ -110,19 +122,31 @@ sudo systemctl restart shibd
 Now check `/var/log/shibboleth` again for any errors, to ensure the process started correctly.
 
 
+Additional config
+-----------------
+
+- attribute-map.xml
+  - Maps the field specififed by "name" attribute from the provider's assertion to field specified by "id" attribute in our metadata
+- non_fedaration_metadata.xml
+  - Specifies locations and properties for IDPs that are not managed by InCommon
+
+
 Testing
 ----------
 
 These commands will test various aspects of the Shibboleth service (replace "sandbox" with the specific DNS name):
 - Is the shibboleth2.xml valid?
-  `shibd -t`
+  - `shibd -t`
 - Details of the certificate:
-  `openssl x509 -text -noout -in /etc/shibboleth/sp-cert.pem`
+  - `openssl x509 -text -noout -in /etc/shibboleth/sp-cert.pem`
 - Is shibboleth responding through Apache?
-  `curl -k https://localhost/Shibboleth.sso/Status`
+  - `curl -k https://localhost/Shibboleth.sso/Status`
 - What metadata is InCommon delivering for this SP?
-  `mdquery -e https://sandbox.datadryad.org`
+  - `mdquery -e https://sandbox.datadryad.org`
+  - `curl https://sandbox.datadryad.org/Shibboleth.sso/Metadata`
 - Does the end-to-end shibboleth traffic work?
-  (in browser) https://sandbox.datadryad.org/cgi-bin/PrintShibInfo.pl
-  (in browser) https://sandbox.datadryad.org/shibtest
+  - (in browser) https://sandbox.datadryad.org/cgi-bin/PrintShibInfo.pl
+- See logs in `/var/log/shibboleth`
+  - shibd.log and shibd_warn.log show issues with shibd itself
+  - transaction.log shows details of the communication with InCommon
 
