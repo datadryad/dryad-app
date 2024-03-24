@@ -171,7 +171,9 @@ module StashEngine
     end
 
     def auth_hash_good
-      @auth_hash && @auth_hash['info'] && @auth_hash['info']['email'] && @auth_hash['uid']
+      # Identity Providers do not always give us full details in the metadata, and we do not actually use
+      # the details. We just want know know that the login was successful.
+      @auth_hash['info']['identity_provider'].present?
     end
 
     # using one controller for multiple orcid login actions (set metadata, log in, orcid_invite so decide which it is before controller)
