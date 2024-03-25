@@ -70,7 +70,7 @@ module StashApi
         begin
           StashEngine::User.find(@hash['userId']).id
         rescue ActiveRecord::RecordNotFound
-          raise 'The userId is not known to Dryad. Please supply the id of an existing Dryad user, or an orcid matching an author of the dataset.'
+          raise ActionController::BadRequest, 'The userId is not known to Dryad. Please supply the id of an existing Dryad user, or an orcid matching an author of the dataset.'
         end
       else
         # otherwise, give ownership to the API user
@@ -88,7 +88,7 @@ module StashApi
         @hash['authors'].each do |a|
           found_author = a if a['orcid']&.match(@hash['userId'])
         end
-        raise 'The userId orcid is not known to Dryad. Please supply a matching orcid in the dataset author list.' unless found_author
+        raise ActionController::BadRequest, 'The userId orcid is not known to Dryad. Please supply a matching orcid in the dataset author list.' unless found_author
 
         owning_user = StashEngine::User.create(orcid: @hash['userId'],
                                                first_name: found_author['firstName'],
