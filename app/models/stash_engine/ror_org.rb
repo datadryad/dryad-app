@@ -28,21 +28,33 @@ module StashEngine
       query = query.downcase
       results = []
 
-      # First, find matches at the beginning of the name string, or anywhere in the
-      # acronyms/aliases
-      resp = where('LOWER(name) LIKE ? OR LOWER(acronyms) LIKE ? or LOWER (aliases) LIKE ?',
-                   "#{query}%", "%#{query}%", "%#{query}%").limit(ROR_MAX_RESULTS)
+      # First, find matches at the beginning of the name string, and exact matches in the acronyms/aliases
+      resp = where("LOWER(name) LIKE ? OR JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
+                   "#{query}%", query.to_s, query.to_s).limit(ROR_MAX_RESULTS)
       resp.each do |r|
-        results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms }
+        results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
+      end
+
+      p results
+
+      # If we don't have enough results, find matches at the beginning of the acronyms/aliases
+      if results.size < ROR_MAX_RESULTS
+        resp = where("JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
+                     "#{query}%", "#{query}%").limit(ROR_MAX_RESULTS - results.size)
+        resp.each do |r|
+          results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
+        end
       end
 
       # If we don't have enough results, find matches elsewhere in the name string
       if results.size < ROR_MAX_RESULTS
-        resp = where('LOWER(name) LIKE ?', "%#{query}%").limit(ROR_MAX_RESULTS)
+        resp = where('LOWER(name) LIKE ?', "%#{query}%").limit(ROR_MAX_RESULTS - results.size)
         resp.each do |r|
-          results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms }
+          results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
         end
       end
+
+      p results
 
       results.flatten.uniq
     end
