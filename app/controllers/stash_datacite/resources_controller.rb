@@ -76,7 +76,11 @@ module StashDatacite
       end
 
       # hide readme on landing page if set by curator
-      resource.update(display_readme: false) if params[:hide_readme]
+      if params[:hide_readme]
+        resource.update(display_readme: false)
+      elsif !resource.display_readme
+        resource.update(display_readme: true)
+      end
 
       # write the software license to the database
       license_id = (params[:software_license].blank? ? 'MIT' : params[:software_license])
