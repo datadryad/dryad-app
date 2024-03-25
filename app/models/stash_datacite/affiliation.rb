@@ -74,6 +74,7 @@ module StashDatacite
 
       if check_ror
         ror_affil = find_by_ror_long_name(long_name: long_name)
+        ror_affil = find_first_ror_by_phrase(phrase: long_name) unless ror_affil.present?
         return ror_affil if ror_affil.present?
       end
 
