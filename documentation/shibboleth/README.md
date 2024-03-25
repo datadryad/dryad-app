@@ -40,7 +40,12 @@ Current Validation Methods (most to least preferred)
 Technical details
 =================
 
-Rack "hack" for omniauth and ORCID login
+Shibboleth authentication consists of two major pieces:
+- Identity Provider (IdP) -- the service where a user logs in, typically at a university
+- Service Provider (SP) -- the service that uses the login information, like Dryad
+
+
+Rack "hack" for Omniauth and ORCID login
 ----------------------------------------
 
 See the file config/initializers/omniauth.rb . It has to be tricked into
@@ -54,4 +59,126 @@ like you may not have to change it if the new servers are using https at the
 apache level. You may need to add further exceptions if there are further test
 servers which legitimately don't use SSL (like local servers, more containers or
 whatever). 
+
+
+Shibboleth flow of control
+--------------------------
+
+- Dryad login screen sends users to the InCommon discovery service to locate
+  info about the shibboleth IdP with the entityID that the user selected from the
+  dropdown.
+- InCommon (or the IdP?) directs users to our SP to initialize the
+  transaction, with a URL like https://datadryad.org/Shibboleth.sso/Login, including the IdP entityID
+  - Apache uses detects that Shibboleth.sso is protected by mod_shib, so it hands control to the shibd process
+- shibd sends to https://wayf.incommonfederation.org/DS/WAYF
+   - IdP makes a SAML assertion and sends it back to shibd
+   - Apache sees it's approved and forwards to puma
+- Once login is complete, control goes back to https://datadryad.org/stash/auth/shibboleth/callback,
+  which is handled by Rails
+  - In Rails `SessionsController.callback` handles the call,
+    - verifyies the validity of the package sent from the IdP
+    - redirects as appropriate
+
+
+Installing Shibboleth Service Provider
+======================================
+
+
+Install the basic Service Provider daemon
+-----------------------------------------
+
+```
+sudo yum update -y
+```
+
+Basic install
+- Create a repo file for the shibboleth package under `/etc/yum.repos.d/shibboleth.repo` and include the contents from
+  this [link](https://shibboleth.net/downloads/service-provider/RPMS/) (choose Amazon Linux 2023 from the first dropdown and hit generate)
+
+```
+sudo yum install shibboleth.x86_64 #(make sure the .x86_64 version is used)
+sudo yum install shibboleth-embedded-ds
+sudo systemctl enable shibd.service #enable the service
+sudo systemctl start shibd
+```
+
+Even though it's "running", it probably didn't start correctly due to certificate issues (which we will fix below) -- check in `/var/log/shibboleth`
+
+Ensure SELinux doesn't prevent Apache from working properly
+- `sudo setsebool -P httpd_read_user_content 1`
+- `sudo setsebool -P httpd_can_network_connect 1`
+
+Configuration
+- Update the contents of `/etc/shibboleth/shibboleth2.xml`
+  - copy the initial file from the one in this directory
+  - email address set to `admin@datadryad.org`
+  - `entityID` has the correct value
+  - handlerSSL="true"
+- Copy the `inc-md-cert-mdq.pem` and `non_federation_metadata.xml` from this directory to `/etc/shibboleth`
+- Copy `PrintShibInfo.pl` from this directory to `/var/www/cgi-bin`
+- Update the apache configs (uncomment relevant sections)
+  - copy `shib.conf`, `shibboleth-ds.conf` to  `/etc/httpd/conf.d`
+  - edit `/etc/httpd/conf.d/datadryad.org.conf` to  uncomment the shibboleth sections
+
+
+Certificate generation for InCommon
+- The shibboleth certificate should *not* be the same as the web server's SSL certificate
+- If you already have the same entityID on another server, don't make a new certificate, just copy the keys
+
+```
+cd /etc/shibboleth
+sudo ./keygen.sh -h sandbox.datadryad.org -y 15 -e https://sandbox.datadryad.org -n sp
+sudo chown shibd *.pem # keys must be readable by the shibd process
+sudo chmod a+r sp-key.pem
+```
+
+Fix permissions for InCommon cache
+```
+sudo systemctl restart shibd
+sudo chmod a+rx /var/cache/shibboleth/inc-mdq-cache
+sudo systemctl restart shibd
+```
+
+Now check `/var/log/shibboleth` again for any errors, to ensure the process started correctly.
+
+
+Additional config
+-----------------
+
+- attribute-map.xml
+  - Maps the field specififed by "name" attribute from the provider's assertion to field specified by "id" attribute in our metadata
+- non_fedaration_metadata.xml
+  - Specifies locations and properties for IdPs that are not managed by InCommon
+
+
+InCommon metadata setup
+-----------------------
+
+Use InCommon's Federation Manager to create or edit the metadata entry for the Service Provider.
+
+- Copy most settings from the [sample metadata file](sample-SP-metadata.xml)
+- Only give InCommon the public key (sp-cert.pem), not private!
+- The key generated above uses AES-128-CBC encryption
+
+
+
+Testing
+----------
+
+These commands will test various aspects of the Shibboleth service (replace "sandbox" with the specific DNS name):
+- Is the shibboleth2.xml valid?
+  - `shibd -t`
+- Details of the certificate:
+  - `openssl x509 -text -noout -in /etc/shibboleth/sp-cert.pem`
+- Is shibboleth responding through Apache?
+  - `curl -k https://localhost/Shibboleth.sso/Status`
+- What metadata is InCommon delivering for this SP?
+  - `mdquery -e https://sandbox.datadryad.org`
+  - `curl https://sandbox.datadryad.org/Shibboleth.sso/Metadata`
+- Does the end-to-end shibboleth traffic work?
+  - (in browser) https://sandbox.datadryad.org/Shibboleth.sso/Session
+  - (in browser) https://sandbox.datadryad.org/cgi-bin/PrintShibInfo.pl
+- See logs in `/var/log/shibboleth`
+  - shibd.log and shibd_warn.log show issues with shibd itself
+  - transaction.log shows details of the communication with InCommon
 
