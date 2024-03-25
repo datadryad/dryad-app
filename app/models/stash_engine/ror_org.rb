@@ -65,6 +65,16 @@ module StashEngine
       where(name: ror_name)&.first
     end
 
+    # Return the first match for the given axact name in name, alias, or acronym
+    # @return a StashEngine::RorOrg or nil
+    def self.find_first_ror_by_phrase(phrase)
+      query = phrase.downcase
+      where(
+        "LOWER(name) = ? OR JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
+        query.to_s, query.to_s, query.to_s
+      )&.first
+    end
+
     # Search for a specific organization.
     # @return a StashEngine::RorOrg or nil
     def self.find_by_ror_id(ror_id)
