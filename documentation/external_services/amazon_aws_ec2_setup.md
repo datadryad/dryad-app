@@ -207,6 +207,9 @@ sudo cp ~/dryad-app/documentation/external_services/datadryad.org.conf ~/apache/
 sudo touch /var/www/html/index.html
 sudo chmod a+w /var/www/html/index.html
 echo "<h1>Welcome to MACHINE_NAME</h1>" > /var/www/html/index.html
+# Tell SELinux that Apache is allowed to do stuff!
+setsebool -P httpd_read_user_content 1
+setsebool -P httpd_can_network_connect 1
 # UPDATE the settings in datadryad.org.conf to reflect the correct server names
 sudo systemctl restart httpd
 # check that the homepage renders at the Apache port
@@ -214,15 +217,19 @@ curl http://localhost:80/stash
 ```
 
 To troubleshoot Apache:
+- It may complain that the default configuration file has references to certificate files -- those are fixed below, but for now they can just be commented out
 - Apache can "hang" if someone has tried to load the homepage and the SOLR server did not allow connection. In this case, some Apache threads will never finish, and the server will quickly become unresponsive. To fix, ensure that the SOLR server has a security group that accepts connections from the IP address of the Rails/Apache serer. Then kill all "httpd" processes and restart Aapache.
 
+
 Set up a load balancer to send traffic to the machine
+=====================================================
+
 - All of the following steps are in AWS console
 - Ensure you are in the proper region -- all of these steps are region dependent
 - In Certificate Manager, create a certificate for the target DNS name 
 - In EC2, create a target group for the servers that will be balanced
   - Instances
-  - HTTP (since the load balancer will handle the HTTPS connection)
+  - HTTP (for testing basic access; will change to HTTPS in next section)
   - IPv4
   - HTTP1
   - Health check = /stash
@@ -248,24 +255,36 @@ To troubleshoot load balancer:
   (when editing the bucket permissions, omit the "aws-account-id/" part)
 
 
-## Set up shibboleth service provider
+Set up SSL certificate for Shibboleth support
+=============================================
+
+The "main" certificates for Dryad are managed within AWS, using Certificate
+Manager. However, Shibboleth requires direct connections between the `shibd`
+service and the Identity Provider, which bypass the load balancer. These
+connections require Apache to support SSL on its own. We use certificates from
+Let's Encrypt for these direct connections.
+
+In a load-balanced system, only create the certificate on one machine, and copy to the others.
+
 ```
-sudo yum update -y
+# Adapted from https://certbot.eff.org/instructions?ws=apache&os=pip
+sudo dnf install -y augeas-libs
+sudo python3 -m venv /opt/certbot/
+sudo /opt/certbot/bin/pip install --upgrade pip
+sudo /opt/certbot/bin/pip install certbot certbot-apache
+sudo ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+sudo certbot certonly --apache
+sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/fullchain.pem /etc/pki/tls/certs/letsencrypt.crt
+sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/privkey.pem /etc/pki/tls/private/letsencrypt.key
 ```
 
-- create a repo file for the shibboleth package under `/etc/yum.repos.d/shibboleth.repo` and include the contents from this [link](https://shibboleth.net/downloads/service-provider/RPMS/) (choose Amazon Linux 2023 from the first dropdown and hit generate)
-- run `sudo yum install shibboleth.x86_64` (make sure the .x86_64 version is used)
-- enable the service: `sudo systemctl enable shibd.service`
-- run via `sudo systemctl start shibd`
+To get Apache using the new certificates, rebuild the Target Group (as in the section above), using HTTPS setting instead of HTTP.
 
-Configuration
-- Update the contents of `/etc/shibboleth/shibboleth2.xml`
-  - make sure the email address is set to `admin@datadryad.org`
-  - make sure the `entityID` has the correct value
-  - double-check the `SSO` section below and the url attached
-- Update the apache configs (uncomment relevant sections)
-  - under `/etc/httpd/conf.d`, there is a `shib.conf`, as well as a `datadryad.org.conf` 
-  - look out for the `cgi-bin` section  
+
+Set up shibboleth service provider
+==================================
+
+See instructions in [the shibboleth directory](../shibboleth/README.md).
 
 
 Set up other system services and crons
