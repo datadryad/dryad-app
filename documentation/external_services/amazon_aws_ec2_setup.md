@@ -217,6 +217,7 @@ curl http://localhost:80/stash
 ```
 
 To troubleshoot Apache:
+- It may complain that the default configuration file has references to certificate files -- those are fixed below, but for now they can just be commented out
 - Apache can "hang" if someone has tried to load the homepage and the SOLR server did not allow connection. In this case, some Apache threads will never finish, and the server will quickly become unresponsive. To fix, ensure that the SOLR server has a security group that accepts connections from the IP address of the Rails/Apache serer. Then kill all "httpd" processes and restart Aapache.
 
 

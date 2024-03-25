@@ -41,7 +41,7 @@ Technical details
 =================
 
 Shibboleth authentication consists of two major pieces:
-- Identity Provider (IDP) -- the service where a user logs in, typically at a university
+- Identity Provider (IdP) -- the service where a user logs in, typically at a university
 - Service Provider (SP) -- the service that uses the login information, like Dryad
 
 
@@ -65,18 +65,18 @@ Shibboleth flow of control
 --------------------------
 
 - Dryad login screen sends users to the InCommon discovery service to locate
-  info about the shibboleth IDP with the entityID that the user selected from the
+  info about the shibboleth IdP with the entityID that the user selected from the
   dropdown.
-- InCommon (or the IDP???) directs users to our SP to initialize the
-  transaction, with a URL like https://datadryad.org/Shibboleth.sso/Login, including the IDP entityID
+- InCommon (or the IdP?) directs users to our SP to initialize the
+  transaction, with a URL like https://datadryad.org/Shibboleth.sso/Login, including the IdP entityID
   - Apache uses detects that Shibboleth.sso is protected by mod_shib, so it hands control to the shibd process
 - shibd sends to https://wayf.incommonfederation.org/DS/WAYF
-   - IDP makes a SAML assertion and sends it back to shibd
+   - IdP makes a SAML assertion and sends it back to shibd
    - Apache sees it's approved and forwards to puma
 - Once login is complete, control goes back to https://datadryad.org/stash/auth/shibboleth/callback,
   which is handled by Rails
   - In Rails `SessionsController.callback` handles the call,
-    - verifyies the validity of the package sent from the IDP
+    - verifyies the validity of the package sent from the IdP
     - redirects as appropriate
 
 
@@ -127,7 +127,7 @@ Certificate generation for InCommon
 
 ```
 cd /etc/shibboleth
-sudo ./keygen.sh -o ~/tmp -h sandbox.datadryad.org -y 15 -e https://sandbox.datadryad.org/shibboleth -n sp
+sudo ./keygen.sh -h sandbox.datadryad.org -y 15 -e https://sandbox.datadryad.org -n sp
 sudo chown shibd *.pem # keys must be readable by the shibd process
 sudo chmod a+r sp-key.pem
 ```
@@ -148,7 +148,7 @@ Additional config
 - attribute-map.xml
   - Maps the field specififed by "name" attribute from the provider's assertion to field specified by "id" attribute in our metadata
 - non_fedaration_metadata.xml
-  - Specifies locations and properties for IDPs that are not managed by InCommon
+  - Specifies locations and properties for IdPs that are not managed by InCommon
 
 
 InCommon metadata setup
