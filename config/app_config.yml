@@ -163,10 +163,6 @@ defaults: &DEFAULTS
       ftp_password: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_ftp_password] %>
       ftp_provider_id: 7893
       api_key: <%= Rails.application.credentials[Rails.env.to_sym][:pubmed_api_key] %>
-  aws_ses:
-    host_address: 
-    user_name: 
-    password: <%= Rails.application.credentials[Rails.env.to_sym][:aws_ses_password] %>
   s3:
     region: us-west-2
     bucket: dryad-s3-dev
