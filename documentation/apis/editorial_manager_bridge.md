@@ -21,8 +21,8 @@ To use: make a submission request with the bridging endpoint, like
 
 The JSON document that is submitted must have the format of either of Editorial Manager's
 submission formats:
-- (emDeposit.json)[emDeposit.json]
-- (emSubmission.json)[emSubmission.json]
+- [emDeposit.json](emDeposit.json)
+- [emSubmission.json](emSubmission.json)
 
 If an update is being provided for a previously-created dataset, the
 encoded identifier for the dataset should be provided as a suffix to
