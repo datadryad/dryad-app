@@ -3,8 +3,9 @@ namespace :checksums do
   task validate_files: :environment do
     today = Time.now.utc
     p "Validating file digests #{today}"
-    StashEngine::DataFile.where(file_state: 'created').where('validated_at is null or validated_at < ?',
-                                                             60.days.ago).where.not(digest: nil).each do |f|
+    StashEngine::DataFile
+      .where(file_state: 'created').where('validated_at is null or validated_at < ?', 60.days.ago)
+      .where.not(digest: nil).find_each do |f|
       p "   Validating file id #{f.id}"
       sums = Stash::Checksums.get_checksums([f.digest_type], f.s3_permanent_presigned_url)
       checksum = sums.get_checksum(f.digest_type)
@@ -27,7 +28,7 @@ namespace :checksums do
   task recreate_digests: :environment do
     today = Time.now.utc
     p "Recreating file digests #{today}"
-    StashEngine::DataFile.where(file_state: 'created').where(digest: 'checksum_regen_required').each do |f|
+    StashEngine::DataFile.where(file_state: 'created').where(digest: 'checksum_regen_required').find_each do |f|
       p "   Regenerating checksum for file id #{f.id}"
       digest_type = 'sha-256'
       sums = Stash::Checksums.get_checksums([digest_type], f.s3_permanent_presigned_url)
@@ -53,7 +54,7 @@ namespace :checksums do
   task copy_digests: :environment do
     today = Time.now.utc
     p "Copying file digests #{today}"
-    StashEngine::DataFile.where(file_state: 'copied').each do |copied|
+    StashEngine::DataFile.where(file_state: 'copied').find_each do |copied|
       created = copied.original_deposit_file
       next if created.digest == copied.digest
 
