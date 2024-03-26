@@ -66,15 +66,6 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "dash2_production"
   # config.active_job.queue_name_prefix = "dryad_#{Rails.env}"  
   
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.delivery_method = :sendmail
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: 'datadryad.org' }
-
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
@@ -142,6 +133,21 @@ Rails.application.configure do
       :ignore_exceptions => ['ActionController::InvalidAuthenticityToken', 'ActionController::InvalidCrossOriginRequest'] + ExceptionNotifier.ignored_exceptions,
       :ignore_crawlers => %w{Googlebot bingbot}
   end
+
+  # Email through Amazon SES
+  # Although it would be nice to read these settings from the APP_CONFIG,
+  # that hash doesn't exist at the time this file is loaded, so we need to
+  # put the configuration directly in here.
+  ActionMailer::Base.smtp_settings = {
+    :address => 'email-smtp.us-west-2.amazonaws.com',
+    :port => '587',
+    :authentication => :plain,
+    :user_name => 'AKIA2KERHV5ERJHPR552',
+    :password => Rails.application.credentials[Rails.env.to_sym][:aws_ses_password]
+  }
+  
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
 
   Rails.application.default_url_options = { host: 'datadryad.org' }
 end
