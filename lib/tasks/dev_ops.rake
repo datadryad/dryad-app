@@ -19,7 +19,7 @@ namespace :dev_ops do
     end
     in_process = StashEngine::Resource.joins(:current_resource_state).where("stash_engine_resource_states.resource_state = 'processing'")
     puts "resource_id\tuser_id\tcurrent_status\tupdated at\ttitle" if in_process.count > 0
-    in_process.each do |i|
+    in_process.find_each do |i|
       puts "#{i.id}\t#{i.user_id}\t#{i.current_resource_state_id}\t#{i.updated_at}\t#{i.title}"
     end
   end
@@ -49,8 +49,7 @@ namespace :dev_ops do
       puts 'RAILS_ENV must be explicitly set before running this script'
       next
     end
-    fus = StashEngine::DataFile.where(upload_file_size: [0, nil])
-    fus.each do |data_file|
+    StashEngine::DataFile.where(upload_file_size: [0, nil]).find_each do |data_file|
       resource = data_file.resource
       next unless resource && resource.current_resource_state && resource.current_resource_state.resource_state == 'submitted'
 
@@ -68,7 +67,7 @@ namespace :dev_ops do
     puts "Are you sure you want to update desciption text to html in #{Rails.env}?  (Type 'yes' to proceed, 'no' to preview.)"
     response = $stdin.gets
     if response.strip.casecmp('YES').zero?
-      StashDatacite::Description.all.each do |desc|
+      StashDatacite::Description.find_each do |desc|
         item = Script::HtmlizeDescriptions.new(desc.description)
         next if item.html? || desc.description.blank?
 
@@ -80,7 +79,7 @@ namespace :dev_ops do
       end
 
     else
-      StashDatacite::Description.all.each do |desc|
+      StashDatacite::Description.find_each do |desc|
         item = Script::HtmlizeDescriptions.new(desc.description)
         next if item.html? || desc.description.blank?
 
