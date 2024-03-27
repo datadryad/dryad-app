@@ -192,7 +192,7 @@ module StashEngine
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
 
-      bc_email = Rails.env.production? ? @helpdesk_email : nil
+      bc_email = Rails.env.include?('production') ? @helpdesk_email : nil
       mail(to: user_email(@user), bcc: bc_email,
            subject: "#{rails_env}Related work updated for \"#{resource.title}\"")
     end
@@ -259,7 +259,7 @@ module StashEngine
     end
 
     def rails_env
-      return "[#{Rails.env}] " unless Rails.env == 'production'
+      return "[#{Rails.env}] " unless Rails.env.include?('production')
 
       ''
     end
