@@ -149,6 +149,7 @@ Additional config
   - Maps the field specififed by "name" attribute from the provider's assertion to field specified by "id" attribute in our metadata
 - non_fedaration_metadata.xml
   - Specifies locations and properties for IdPs that are not managed by InCommon
+- `/etc/shibboleth/shibd.logger` -- configuration for log rotation, should come already set up out of the box
 
 
 InCommon metadata setup
