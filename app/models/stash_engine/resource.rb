@@ -836,7 +836,7 @@ module StashEngine
     # development environments on either different servers or against different databases (local or not local)
     def s3_dir_name(type: 'data')
       raise 'Error, incorrect upload type' if ALLOWED_UPLOAD_TYPES[type].nil?
-      return "#{id}#{ALLOWED_UPLOAD_TYPES[type]}" if %w[production stage].include?(Rails.env)
+      return "#{id}#{ALLOWED_UPLOAD_TYPES[type]}" if Rails.env.include?('production') || Rails.env.include?('stage')
 
       db_host = Rails.configuration.database_configuration[Rails.env]['host']
       if db_host.include?('localhost') || db_host.include?('127.0.0.1')
