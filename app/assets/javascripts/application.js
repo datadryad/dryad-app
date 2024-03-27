@@ -13,7 +13,8 @@
 
 // This is renamed "papplication.js" because otherwise it clobbers the one needed by
 // geoblacklight to load it's junk and then nothing works.
-//= require jquery
+//= require jquery3
+//= require jquery.turbolinks
 //= require jquery_ujs
-//= require turbolinks
-//= require_tree .
+//= require jquery-ui
+//= require_tree
