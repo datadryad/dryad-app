@@ -3,41 +3,28 @@
 <p>Thank you for your submission to Dryad titled, "<%= @resource.title %>".</p>
 
 <p>
-  Once your submission has been reviewed and approved for publication by our curators, your dataset will be made public, pending any questions or requests from our team and/or timed publication requirements dictated by the journal title associated with your submission.
+  Your data submission will soon be evaluated by a member of our curation team. Keep in mind that datasets are evaluated in the order they are received.
 </p>
 
+<p>Your dataset has been assigned two important links:</p>
 <% shr = @resource.identifier.shares.first.sharing_link %>
+<ul>
+  <li>Reviewer URL: <a href="<%= shr %>"><%= shr %></a>.
+    <p>This temporary link can be shared with the journal office or collaborators during the peer-review process to allow access only to the data files included with your submission. This link will expire upon publication of your Dryad dataset.</p>
+  </li>
+  <li>A unique digital object identifier (DOI): <%= @resource.identifier_str %>
+    <p>When your dataset has been approved for publication by a member of our curation team, it will be made public. This DOI link is permanent and should be provided to the journal office for inclusion in the Data Availability statement of your published article.</p> 
+  </li>
+</ul>
+
+<%if @resource.identifier.user_must_pay? %>
+<p>You will receive an invoice via email upon publication of your dataset.</p>
+<% end %>
 
 <p>
-  Your submission has been assigned a unique digital object
-  identifier (DOI): <%= @resource.identifier_str %><br/>
-  If your dataset is associated with a manuscript submission, you may provide
-  this DOI to the journal office. The link will only be active upon
-  publication of your dataset, and it will not change. Prior to publication,
-  you may provide private access to download the data files included with your submission by sharing this 
-  unique URL: <a href="<%= shr %>"><%= shr %></a>.
+  You can check the status of your data submission via your Dryad "My datasets" page. If you have any questions, please contact Dryad's Helpdesk at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.
 </p>
-
-<p>
-  Please note, datasets are evaluated in the order they are received. Changing your submission
-  before it enters our curation process will reset its position in the queue and potentially delay its publication.
-  If you do need to edit your dataset before curation begins, be sure to select 'Submit'
-  after you have reviewed and confirmed your most recent changes. Once editing has begun, navigating away from the page without submitting or discarding your changes will keep your submission from entering the curation queue.
-</p>
-
-<p>
-  To check the status of your data submission, please contact Dryad's Helpdesk at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>. Kindly include the DOI in your email to ensure efficient and effective assistance.
-</p>
-
-<p>
-  If you were required to agree to payment on the final page of the submission
-  form, you will receive an invoice via email upon publication.
-</p>
-
+<p>Thank you for choosing Dryad to host your data. We appreciate your support.</p>
+<p>The Dryad Team</p>
 <p>We would greatly appreciate your feedback! Please complete <a href="https://form.jotform.com/232493320676357?datasetDOI=<%= CGI.escape(@resource.identifier.identifier) %>">a short survey about your submission experience</a>.</p>
-
-<p>
-  Thank you for choosing Dryad to host your data. We appreciate your support. If
-  you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.
-</p>
 
