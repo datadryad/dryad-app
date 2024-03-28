@@ -3,7 +3,7 @@
 Most of the Dryad Cron jobs are executed via the shell scripts in this directory.
 
 The files deploy with the code (in `apps/ui/current`), but the logs and shared items are in
-`/apps/dryad/apps/ui/shared/cron`.
+`/home/ec2-user/deploy/shared/cron`.
 
 ## Frequencies:
 
@@ -13,7 +13,7 @@ Cron jobs run on one of the following schedules:
 - weekly.sh <-- Every Sunday at 21:00
 - monthly.sh <- On the 20th at 19:00
 
-Cron MUST pass in the environment as an argument when executing the scripts! For example: `/apps/dryad/apps/ui/shared/cron/daily.sh development`
+Cron MUST pass in the environment as an argument when executing the scripts! For example: `/home/ec2-user/deploy/shared/cron/daily.sh development`
 
 
 ## Adding a new Cron task:
@@ -26,13 +26,13 @@ example crontab
 
 ```shell
 # Run jobs every 5 minutes
-*/5 * * * * /apps/dryad/apps/ui/current/cron/every_5.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
+*/5 * * * * /apps/dryad/apps/ui/current/cron/every_5.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
 
 # Run the jobs at noon each day
-00 12 * * * /apps/dryad/apps/ui/current/cron/daily.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
+00 12 * * * /apps/dryad/apps/ui/current/cron/daily.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
 
 # Run the jobs every Sunday at 21:00
-00 21 * * 0 /apps/dryad/apps/ui/current/cron/weekly.sh stage >> /apps/dryad/apps/ui/shared/cron/logs/cron.log 2>&1
+00 21 * * 0 /apps/dryad/apps/ui/current/cron/weekly.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
 ```
 
 ##counter-processor move to new server (require for counter weekly cron to work after move)
@@ -53,6 +53,6 @@ scp <user>@<domain>:~/apps/counter/counter-processor/state/* .
 
 Also copy over any old finished reports
 ```bash
-cd /apps/dryad/apps/ui/shared/cron/counter-json
+cd /home/ec2-user/deploy/shared/cron/counter-json
 scp <user>@<domain>:/apps/dryad-prd-shared/json-reports/* .
 ```
