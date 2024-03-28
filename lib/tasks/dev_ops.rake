@@ -92,7 +92,7 @@ namespace :dev_ops do
 
   desc 'Backup database by mysqldump'
   task backup: :environment do
-    directory = '/apps/dryad/apps/ui/shared/cron/backups'
+    directory = '/home/ec2-user/deploy/shared/cron/backups'
     FileUtils.mkdir_p directory
     # YAML.safe_load is preferred by rubocop but it causes the read to fail on `unknown alias 'defaul'`
     # rubocop:disable Security/YAMLLoad

@@ -5,7 +5,7 @@ module StashEngine
 
     class EventDataCitationService < DependencyCheckerService
 
-      LOG_FILE = '/apps/dryad/apps/ui/shared/cron/logs/citation_populator.log'
+      LOG_FILE = '/home/ec2-user/deploy/shared/cron/logs/citation_populator.log'
 
       def ping_dependency
         super
