@@ -233,6 +233,11 @@ Set up a load balancer to send traffic to the machine
   - IPv4
   - HTTP1
   - Health check = /stash
+- After creating the target group, enable "stickiness" so shibboleth connections will attach to the same server and pass their cookies correctly
+  - On the group's detail page, go to Attributes, Edit
+  - Turn on stickiness
+  - Duration: 10 minutes (don't want it too long, or users will never fail over to the other server)
+  - Load balancer generated cookie
 - In EC2, create the load balancer and attach the certificate
   - Application Load Balancer
   - Internet-facing
@@ -242,7 +247,7 @@ Set up a load balancer to send traffic to the machine
   - test by copying the load balancer's complex AWS DNS name to the browser
   - 443 listener should forward to the target group
   - 80 listener should redirect to port 443
-  - ensure 443 listener has group-level stickiness ON (so users can properly authenticate through Shibboleth)
+  - ensure 443 listener has group-level stickiness ON (in addition to the group's internal stickiness; so users can properly authenticate through Shibboleth)
 - In Route 53, create a real domain name for the load balancer
   - create an A name that is an alias
   - Alias to Application Load Balancer
