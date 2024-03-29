@@ -145,7 +145,7 @@ module StashEngine
 
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.where(created_at: date..(date + 1.day), status: to_status).join(:resource).find_each do |ca|
+      CurationActivity.where(created_at: date..(date + 1.day), status: to_status).joins(:resource).find_each do |ca|
         next unless ca.resource
 
         # if the previous ca was from_status, add the identifier to datasets_found
