@@ -368,6 +368,11 @@ export default function UploadFiles({
 
   const uploadFilesHandler = () => {
     const {key, bucket, region} = app_config_s3.table;
+    // AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
+    let partSize = 5 * 1024 * 1024;
+    const maxSize = chosenFiles.reduce((p, c) => (p.size > c.size ? p.size : c.size), 0);
+    if (maxSize > 10000000000) partSize = 10 * 1024 * 1024;
+    if (maxSize > 100000000000) partSize = 30 * 1024 * 1024;
     const config = {
       aws_key: key,
       bucket,
@@ -379,6 +384,8 @@ export default function UploadFiles({
       computeContentMd5: true,
       cryptoMd5Method: (data) => AWS.util.crypto.md5(data, 'base64'),
       cryptoHexEncodedHash256: (data) => AWS.util.crypto.sha256(data, 'hex'),
+      partSize,
+      maxConcurrentParts: 50,
     };
     Evaporate.create(config).then(uploadFileToS3);
   };
