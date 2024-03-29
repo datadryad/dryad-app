@@ -11,7 +11,7 @@ Delayed::Worker.read_ahead = 5
 Delayed::Worker.default_queue_name = 'default'
 Delayed::Worker.delay_jobs = !Rails.env.test?
 Delayed::Worker.raise_signal_exceptions = :term
-Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'))
+Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'), 5, 10.megabytes.to_i)
 
 # when there are jobs in the software and supplemental queues, give them priority, apparently lower numbers are higher priority
 # See https://github.com/collectiveidea/delayed_job/tree/v4.1.9
