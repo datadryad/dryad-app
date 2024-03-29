@@ -102,6 +102,7 @@ module StashDatacite
     def self.find_by_ror_long_name(long_name:)
       # Do a lookup for the long_name
       ror_org = StashEngine::RorOrg.find_first_by_ror_name(long_name)
+      ror_org = StashEngine::RorOrg.find_first_ror_by_phrase(long_name) unless ror_org.present?
       Affiliation.new(long_name: ror_org.name, ror_id: ror_org.id) if ror_org.present?
     end
 
