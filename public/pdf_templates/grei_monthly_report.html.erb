@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monthly NIH-Funded Research Metrics Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .center {
+            text-align: center;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+
+        .chart-container {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        table.two-col th,
+        table.two-col td {
+            width: 50%;
+        }
+
+        table.three-col th,
+        table.three-col td {
+            width: 33.33%;
+        }
+
+        table.four-col th,
+        table.four-col td {
+            width: 25%;
+        }
+
+        table.bar-chart-table {
+            width: 100%;
+            border-collapse: collapse;
+            height: 150px;
+        }
+
+        table.bar-chart-table.count {
+            height: 200px;
+        }
+
+        table.bar-chart-table.storage {
+            height: 350px;
+        }
+        
+        table.bar-chart-table th,
+        table.bar-chart-table td {
+            padding: 0;
+            border: none;
+            position: relative;
+        }
+        table.bar-chart-table td div.count {
+            height: 20px; /* Default height, can be adjusted per data point */
+            background-color: #4a90e2; /* Color for your bars */
+            position: absolute;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1 class="center">Monthly Metrics Report - <%= Date.current.strftime('%B %Y') %></h1>
+
+<h2>New and Total Datasets Count</h2>
+<table class="three-col">
+    <tr>
+        <th>Month</th>
+        <th>New Datasets</th>
+        <th>Total Datasets</th>
+    </tr>
+    <tr>
+        <td><%= month %></td>
+        <td><%= counts_data[:new_datasets] %></td>
+        <td><%= counts_data[:total_datasets] %></td>
+    </tr>
+</table>
+
+<h2>New and Total Amount of Storage Used</h2>
+<table class="three-col">
+    <tr>
+        <th>Month</th>
+        <th>New Storage Used (GB)</th>
+        <th>Total Storage Used (GB)</th>
+    </tr>
+
+    <tr>
+      <td><%= month %></td>
+      <td><%= storage_data[:new_storage] %></td>
+      <td><%= storage_data[:total_storage] %></td>
+    </tr>
+</table>
+
+<h2>Total Number of Views, Downloads, and Citations</h2>
+<table class="four-col">
+    <tr>
+        <th>Month</th>
+        <th>Views</th>
+        <th>Downloads</th>
+        <th>Citations</th>
+    </tr>
+    <tr>
+        <td><%= month %></td>
+        <td><%= stats_data[:current_month][:views] %></td>
+        <td><%= stats_data[:current_month][:downloads] %></td>
+        <td><%= stats_data[:current_month][:citations] %></td>
+    </tr>
+</table>
+
+<% if stats_data[:all_time_average] %>
+  <h2>All-Time Average Number of Views, Downloads, and Citations</h2>
+  <table class="four-col">
+    <tr>
+      <th>Month</th>
+      <th>Views</th>
+      <th>Downloads</th>
+      <th>Citations</th>
+    </tr>
+    <tr>
+      <td><%= month %></td>
+      <td><%= stats_data[:all_time_average][:views] %></td>
+      <td><%= stats_data[:all_time_average][:downloads] %></td>
+      <td><%= stats_data[:all_time_average][:citations] %></td>
+    </tr>
+  </table>
+<% end %>
+
+<h2>Dataset Counts per Type</h2>
+<table>
+  <tr>
+    <th>Dataset Type</th>
+    <th>Total Number</th>
+  </tr>
+  <% counts_per_type.map do |counter| %>
+    <tr>
+      <td><%= counter.identifier_type  %></td>
+      <td><%= counter.total %></td>
+    </tr>
+  <% end %>
+</table>
+
+<h2>Dataset Counts per License Type</h2>
+<table class="two-col">
+  <tr>
+    <th>License Type</th>
+    <th>Total Number</th>
+  </tr>
+
+  <% counts_per_license_type.map do |counter| %>
+    <tr>
+      <td><%= counter.license_name  %></td>
+      <td><%= counter.total %></td>
+    </tr>
+  <% end %>
+</table>
+
+
+<h2>Frequency of Citation Counts for Cited Datasets</h2>
+<table class="two-col">
+    <tr>
+        <th>Number of Citations</th>
+        <th>Frequency</th>
+    </tr>
+    <% citations_per_dataset.map do |counter| %>
+      <tr>
+        <td><%= counter.total_citations  %></td>
+        <td><%= counter.identifiers_count %></td>
+      </tr>
+    <% end %>
+</table>
+
+<div class="page-break"></div>
+
+<h2>Total Items Per Month Within The Last Year</h2>
+<div class="chart-container">
+  <table class="bar-chart-table count">
+    <tr>
+      <% graph_data[:counts].each do |count| %>
+        <td>
+          <div class="count" style="text-align: center; background-color: #4a90e2; width: 90%; height: <%= count.total %>px;">
+            <div style="margin-top: -1.5rem"><%= count.total %></div>
+          </div>
+        </td>
+      <% end %>
+    </tr>
+    <tr style="height: 2rem;">
+      <% graph_data[:counts].each do |count| %>
+        <td><%= Date::MONTHNAMES[count.month] %></td>
+      <% end %>
+    </tr>
+  </table>
+</div>
+
+<h2>Total Storage Per Month Within The Last Year</h2>
+<div class="chart-container">
+  <table class="bar-chart-table storage">
+    <tr>
+      <% graph_data[:storage].each do |storage| %>
+        <td>
+          <div class="count" style="text-align: center; background-color: #4a90e2; width: 90%; height: <%= storage.total / (1024**3) / 10 %>px;">
+            <div style="margin-top: -1.5rem; font-size: 0.8rem"><%= (storage.total / (1024**3)) %>Gb</div>
+          </div>
+        </td>
+      <% end %>
+    </tr>
+    <tr style="height: 2rem;">
+      <% graph_data[:storage].each do |storage| %>
+        <td><%= Date::MONTHNAMES[storage.month] %></td>
+      <% end %>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

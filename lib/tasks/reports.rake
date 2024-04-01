@@ -25,4 +25,10 @@ namespace :reports do
     Tasks::Reports::InstitutionDatasets.datasets_by_name(name: ENV.fetch('name', nil))
     puts "Done, see #{ENV.fetch('name', nil)}-#{Time.now.strftime('%Y-%m-%d')}.tsv"
   end
+
+  desc 'Generates a PDF report with monthly stats for GREI'
+  task grei_monthly_report: :environment do
+    Tasks::Reports::GREI.generate_monthly_report
+
+  end
 end
