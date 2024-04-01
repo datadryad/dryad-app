@@ -423,10 +423,15 @@ export default function UploadFiles({
     }
   };
 
+  useEffect(() => {
+    if (manFileType) {
+      modalRef.current.showModal();
+      document.addEventListener('keydown', hideModal);
+    }
+  }, [manFileType]);
+
   const showModalHandler = (uploadType) => {
     setManFileType(uploadType);
-    modalRef.current.showModal();
-    document.addEventListener('keydown', hideModal);
   };
 
   useEffect(() => {
@@ -518,6 +523,7 @@ export default function UploadFiles({
       )}
       <ModalUrl
         ref={modalRef}
+        key={manFileType}
         submitted={submitUrlsHandler}
         changedUrls={(e) => setUrls(e.target.value)}
         clickedClose={hideModal}
