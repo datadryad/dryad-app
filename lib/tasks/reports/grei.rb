@@ -69,9 +69,9 @@ module Tasks
 
           # TODO: calculating all-time averages on the fly is very expensive,
           #       we need to think about how to optimize this.
-          # all_time_average_stats = calculate_stats(all_datasets).tap do |stats|
-          #   stats.transform_values! { |value| (value / all_datasets.count.to_f).round(2) }
-          # end
+          all_time_average_stats = calculate_stats(current_year_datasets).tap do |stats|
+            stats.transform_values! { |value| (value / current_year_datasets.count.to_f).round(2) }
+          end
 
           {
             count: {
@@ -87,7 +87,8 @@ module Tasks
               storage: monthly_storage
             },
             stats: {
-              current_month: current_month_stats
+              current_month: current_month_stats,
+              all_time_average: all_time_average_stats
               # all_time_average: { views: '-', downloads: '-', citations: '-'}
             },
             dataset_counts_per_type: dataset_counts_per_type,
@@ -142,16 +143,17 @@ module Tasks
         end
 
         def calculate_stats(datasets)
+          totals = { views: 0, downloads: 0, citations: 0 }
+
           # TODO: this needs to be optimized, ideally computed directly in SQL
-          datasets.each_with_object({}) do |resource, mapping|
-            counter_stat = StashEngine::CounterStat.find_by(identifier_id: resource.identifier_id)
-
-            mapping[:views] = mapping[:views].to_i + counter_stat&.views.to_i
-            mapping[:downloads] = mapping[:downloads].to_i + counter_stat&.downloads.to_i
-            mapping[:citations] = mapping[:citations].to_i + counter_stat&.citation_count.to_i
-
-            mapping
+          datasets.joins(identifier: :counter_stat).find_each do |resource|
+            counter_stat = resource.identifier.counter_stat
+            totals[:views] = totals[:views].to_i + counter_stat&.views.to_i
+            totals[:downloads] = totals[:downloads].to_i + counter_stat&.downloads.to_i
+            totals[:citations] = totals[:citations].to_i + counter_stat&.citation_count.to_i
           end
+
+          totals
         end
 
       end
