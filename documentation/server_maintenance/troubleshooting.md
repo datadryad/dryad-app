@@ -466,11 +466,10 @@ Updating DataCite Metadata
 ==========================
 
 Occasionally, there will be a problem sending metadata to DataCite for
-an item. You can force the metadata in DataCite to update by:
+an item. You can force the metadata in DataCite to update in the Rails console with:
 
 ```
-idg = Stash::Doi::IdGen.make_instance(resource: r)
-idg.update_identifier_metadata!
+Stash::Doi::DataciteGen.new(resource: StashEngine::Resource.where(id: <resource_id>).first).update_identifier_metadata!
 ```
 
 If you need to update DataCite for *all* items in Dryad, you can use:
