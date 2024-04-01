@@ -126,15 +126,13 @@
 
 <% if stats_data[:all_time_average] %>
   <h2>All-Time Average Number of Views, Downloads, and Citations</h2>
-  <table class="four-col">
+  <table class="three-col">
     <tr>
-      <th>Month</th>
       <th>Views</th>
       <th>Downloads</th>
       <th>Citations</th>
     </tr>
     <tr>
-      <td><%= month %></td>
       <td><%= stats_data[:all_time_average][:views] %></td>
       <td><%= stats_data[:all_time_average][:downloads] %></td>
       <td><%= stats_data[:all_time_average][:citations] %></td>
