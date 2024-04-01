@@ -33,6 +33,9 @@ module Tasks
 
         private
 
+        # rubocop:disable Metrics/MethodLength (this method is long but it's mostly data retrieval)
+        # rubocop:disable Metrics/AbcSize
+        # rubocop:disable Layout/LineLength
         def retrieve_datasets_info
           monthly_counts = current_year_datasets
             .select("YEAR(#{resource_table_name}.created_at) AS year, MONTH(#{resource_table_name}.created_at) AS month, COUNT(DISTINCT #{resource_table_name}.id) AS total")
@@ -92,6 +95,9 @@ module Tasks
             citations_count_per_dataset: citations_count_per_dataset
           }
         end
+        # rubocop:enable Metrics/MethodLength
+        # rubocop:enable Metrics/AbcSize
+        # rubocop:enable Layout/LineLength
 
         def nih_contributor_rors
           StashDatacite::ContributorGrouping
