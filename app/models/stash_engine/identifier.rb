@@ -71,17 +71,13 @@ module StashEngine
     end
 
     scope :cited_by_pubmed, -> do
-      ids = publicly_viewable.map(&:id)
-      joins(:internal_data)
-        .where('stash_engine_identifiers.id IN (?)', ids)
+      publicly_viewable.joins(:internal_data)
         .where('stash_engine_internal_data.data_type = ? AND stash_engine_internal_data.value IS NOT NULL', 'pubmedID')
         .order('stash_engine_identifiers.identifier')
     end
 
     scope :cited_by_external_site, ->(site) do
-      ids = publicly_viewable.map(&:id)
-      joins(:external_references)
-        .where('stash_engine_identifiers.id IN (?)', ids)
+      publicly_viewable.joins(:external_references)
         .where('stash_engine_external_references.source = ? AND stash_engine_external_references.value IS NOT NULL', site)
         .order('stash_engine_identifiers.identifier')
     end
