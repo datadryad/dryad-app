@@ -13,14 +13,6 @@ namespace :status_dashboard do
       status: 1
     },
     {
-      abbreviation: 'submission_status',
-      name: 'Repo submission status',
-      description: 'Hits the S3 API endpoint to check if outstanding submissions are finished yet',
-      documentation: "Checks the logs at <RAILS_ROOT>/log/merritt_status_updater.log to be sure it has been checked recently. This is a daemon started by system.d which calls the a rake task like 'RAILS_ENV=development rails merritt_status:update'",
-      internally_managed: true,
-      status: 1
-    },
-    {
       abbreviation: 'db_backup',
       name: 'Database Backups',
       description: 'The service manages short-term backups of the database',
