@@ -1,9 +1,8 @@
 .o-dependency-group__list {
   display: flex;
   flex-direction: column;
-  margin-top: 5px;
-  margin-right: 10px;
-  padding: 25px;
+  margin: 5px 0 10px;
+  padding: 1rem 0 1rem 1rem;
   border: thin solid $design-black-color;
   list-style: none;
 }
@@ -11,10 +10,10 @@
 .o-dependency-group__list__item {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 25px;
+  margin-bottom: 1.5rem;
 
   .dependency-name {
-    padding-right: 25px;
+    padding-right: 1ch;
     font-size: 1.2rem;
     font-weight: bold;
   }
