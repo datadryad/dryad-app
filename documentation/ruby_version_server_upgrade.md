@@ -51,13 +51,13 @@ export CAP_ENV=development
 
 - [ ] Mess with your releases directory so you can use capistrano with this version of Ruby/Gems
 ```shell script
-cd ~/apps/ui/releases/
+cd ~/deploy//releases/
 git clone --single-branch --branch $MY_BRANCH git@github.com:CDL-Dryad/dryad-app.git temp-cap
 
 # mess with current
 cd ~/apps/ui/
 unlink current
-ln -s /apps/dryad/apps/ui/releases/temp-cap current
+ln -s /home/ec2-user/deploy/releases/temp-cap current
 cd current
 bundle install --deployment
 # You may get weird errors saying a gem can't be installed because it's not the default.

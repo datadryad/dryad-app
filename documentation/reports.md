@@ -37,10 +37,10 @@ To run the report and retrieve the files:
 ```
 # On dryad-prd (in personal account, where the journal-payments repository is checked out)
 sudo su - dryad
-cd /apps/dryad/apps/ui/current
+cd /home/ec2-user/deploy/current
 RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report YEAR_MONTH=2020-11
 exit # go back to personal account
-cp /apps/dryad/apps/ui/current/shopping* ~/journal-payments/shoppingcart/
+cp /home/ec2-user/deploy/current/shopping* ~/journal-payments/shoppingcart/
 cd ~/journal-payments/shoppingcart
 git pull
 git add <new-file>

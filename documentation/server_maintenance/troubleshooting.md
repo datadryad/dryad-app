@@ -103,7 +103,7 @@ a real completion before taking actions since it may be delayed or rarely has a 
 If a submission has failed in Merritt, do the following on the server(s) to see Merritt error messages
 to give to them or to troubleshoot the problem.
 
-`less /apps/dryad/apps/ui/current/log/production.log`
+`less /home/ec2-user/deploy/current/log/production.log`
 
 - Press `>` to go to the end of the file.
 - Press CTRL-C to stop line number calculation.
