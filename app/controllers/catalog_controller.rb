@@ -270,10 +270,10 @@ class CatalogController < ApplicationController
     internal_datum_types = %w[pubmedID manuscriptNumber]
     where_clause = 'stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value = ?'
     internal_data = StashEngine::Identifier
-      .publicly_viewable.joins(:internal_data)
+      .publicly_viewable.distinct.joins(:internal_data)
       .where(where_clause, internal_datum_types, params[:query])
     related_ids = StashEngine::Identifier
-      .publicly_viewable.joins(resources: :related_identifiers)
+      .publicly_viewable.distinct.joins(resources: :related_identifiers)
       .where(related_identifiers: { work_type: StashDatacite::RelatedIdentifier.work_types[:primary_article] })
       .where("related_identifier like '%#{params[:query]}'")
 
