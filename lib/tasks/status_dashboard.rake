@@ -38,10 +38,10 @@ namespace :status_dashboard do
     },
     {
       abbreviation: 'download',
-      name: 'Download server',
-      description: 'The server used to retrieve/download dataset files',
-      documentation: 'The download service is used to download a dataset\'s files. It is found on the dataset landing page and involves the `stash_engine/lib/stash/download` and the `stash_engine/lib/repo` files.',
-      internally_managed: true,
+      name: 'AWS S3 downloads',
+      description: 'The service used to retrieve/download dataset files',
+      documentation: 'The download service is used to download a dataset\'s files. It is found on the dataset landing page and involves the `lib/stash/download` and the `lib/stash/repo` files.',
+      internally_managed: false,
       status: 1
     },
     {
