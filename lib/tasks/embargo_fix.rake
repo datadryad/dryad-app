@@ -6,7 +6,7 @@ namespace :embargo_fix do
   desc 'Embargo manipulation to correct the problem of conservative embargoes from migration'
   task migration_issue: :environment do
     p 'Starting embargo correction'
-    File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
+    File.readlines('/home/ec2-user/embargoIssues.txt').each do |line|
       line.gsub!('doi:', '')
       line.gsub!(/\s+/, '')
       p "Processing #{line}"
@@ -75,7 +75,7 @@ namespace :embargo_fix do
   desc 'Embargo manipulation to correct problems caused by Embargo Datasets CRON'
   task cron_issue: :environment do
     p 'Starting embargo CRON correction'
-    File.readlines('/apps/dryad/embargoIssues.txt').each do |line|
+    File.readlines('/home/ec2-user/embargoIssues.txt').each do |line|
       line.gsub!('doi:', '')
       line.gsub!(/\s+/, '')
       p "Processing #{line}"

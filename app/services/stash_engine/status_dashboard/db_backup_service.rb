@@ -7,7 +7,7 @@ module StashEngine
 
     class DbBackupService < DependencyCheckerService
 
-      BACKUP_DIR = '/dryad/apps/ui/shared/cron/backups'
+      BACKUP_DIR = '/home/ec2-user/deploy/shared/cron/backups'
 
       def ping_dependency
         super
