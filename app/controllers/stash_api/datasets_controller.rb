@@ -307,6 +307,11 @@ module StashApi
       page = params['page'] || 1
       query = params['q']
 
+      # do some light sanitization
+      # passing `system(_any_string_)` or `exec(_any_string_)` will return a 403 from solr
+      # escaping these as `system\(_any_string_\)` will perform the query as expected
+      query = query&.gsub(/.*\(.*?\).*/) { |match| match.gsub('(', '\(').gsub(')', '\)') }
+
       begin
         solr_call = @solr.paginate(page, per_page, 'select',
                                    params: { q: query.to_s, fq: solr_filter_query, fl: 'dc_identifier_s' })
