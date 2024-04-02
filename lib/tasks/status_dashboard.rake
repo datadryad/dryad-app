@@ -14,7 +14,7 @@ namespace :status_dashboard do
     },
     {
       abbreviation: 'db_backup',
-      name: 'Database Backups',
+      name: 'Database backups',
       description: 'The service manages short-term backups of the database',
       documentation: 'This is managed by the 30-minute cron job on the server.',
       internally_managed: true,
@@ -70,7 +70,7 @@ namespace :status_dashboard do
     },
     {
       abbreviation: 'event_data_citation',
-      name: 'DataCite Event Data Citations Pre-population',
+      name: 'DataCite citations population',
       description: 'Checks logs for new or updated citations checker from event data. Checks the script ran successfully',
       documentation: 'It checks the log for the rake task "counter:populate_citations" from the weekly cron.' \
                      'The cron logs to /home/ec2-user/deploy/shared/cron/logs/citation_populator.log.' \
