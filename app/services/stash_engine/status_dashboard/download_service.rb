@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'httparty'
-require 'stash/repo/http_client'
 
 module StashEngine
   module StatusDashboard
@@ -13,10 +12,9 @@ module StashEngine
         # Get a small dataset
         identifier = StashEngine::Identifier.publicly_viewable.where.not(storage_size: nil).order(:storage_size).first
         record_status(online: false, message: 'No dataset available for download to perform test') unless identifier.present?
-        resource = identifier.resources.where.not(download_uri: nil).order(:id).last
-
-        client = Stash::Repo::HttpClient.new(cert_file: APP_CONFIG.ssl_cert_file).client
-        resp = client.head(resource.download_uri, follow_redirect: true)
+        file = identifier.latest_resource_with_public_download.data_files.order(:upload_file_size).first
+        url = file.s3_permanent_presigned_url(head_only: true)
+        resp = HTTParty.head(url, follow_redirect: true, maintain_method_across_redirects: true)
         online = resp.code == 200
         msg = "Download service is reporting an HTTP #{resp.code}!" unless online
         msg += resp.body if !online && resp.body.present?
