@@ -85,7 +85,7 @@ RSpec.describe 'Rack::Attack', type: :request do
     it 'throttles download of zip files' do
       target_url = '/stash/downloads/download_resource/BOGUS'
       freeze_time do
-        APP_CONFIG[:rate_limit][:zip_downloads].times do
+        APP_CONFIG[:rate_limit][:zip_downloads_per_hour].times do
           get target_url, headers: headers
           expect(response).to have_http_status(:not_found)
         end
