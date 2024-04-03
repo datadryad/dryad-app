@@ -56,9 +56,16 @@ Rack::Attack.throttle('all_requests_by_IP', limit: APP_CONFIG[:rate_limit][:all_
   req.ip unless req.path.start_with?('/assets') || req.path.match(%r{^/stash/[a-z]+_file/presign_upload/\d+})
 end
 
+# File download throttling
+# We don't want a user to simply download everything in Dryad. That costs us too much in bandwidth charges!
+Rack::Attack.throttle('file_downloads', limit:  APP_CONFIG[:rate_limit][:file_downloads_per_hour], period: 1.hour) do |req|
+  "file_download_#{req.ip}" if req.path.start_with?('/stash/downloads/file_stream') ||
+                               req.path.match(/api.*files.*download/)
+end
+
 # Zip downloads have a much lower limit than other requests,
 # since it is expensive to asemble the zip files.
-Rack::Attack.throttle('zip_downloads', limit: APP_CONFIG[:rate_limit][:zip_downloads], period: 1.minute) do |req|
+Rack::Attack.throttle('zip_downloads', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_hour], period: 1.hour) do |req|
   "zip_download_#{req.ip}" if req.path.start_with?('/stash/downloads/download_resource') ||
                               req.path.match(/api.*(version|dataset).*download/)
 end
