@@ -58,7 +58,7 @@ end
 
 # File download throttling
 # We don't want a user to simply download everything in Dryad. That costs us too much in bandwidth charges!
-Rack::Attack.throttle('file_downloads', limit:  APP_CONFIG[:rate_limit][:file_downloads_per_hour], period: 1.hour) do |req|
+Rack::Attack.throttle('file_downloads', limit: APP_CONFIG[:rate_limit][:file_downloads_per_hour], period: 1.hour) do |req|
   "file_download_#{req.ip}" if req.path.start_with?('/stash/downloads/file_stream') ||
                                req.path.match(/api.*files.*download/)
 end
