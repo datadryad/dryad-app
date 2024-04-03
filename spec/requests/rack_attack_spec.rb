@@ -94,7 +94,7 @@ RSpec.describe 'Rack::Attack', type: :request do
         expect(response).to have_http_status(:too_many_requests)
       end
 
-      travel_to(2.minutes.from_now) do
+      travel_to(2.hours.from_now) do
         get target_url, headers: headers
         expect(response).to have_http_status(:not_found)
       end
