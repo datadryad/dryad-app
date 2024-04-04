@@ -168,8 +168,9 @@ defaults: &DEFAULTS
     # number of requests allowed per minute
     # these rates are low to facilitate quick testing of the rate limiter,
     # but the rate limiter is disabled for most rspec classes
+    file_downloads_per_hour: 2
+    zip_downloads_per_hour: 2
     all_requests: 10
-    zip_downloads: 2
     api_requests_anon: 5
     api_requests_auth: 10
     api_requests_v1: 5
