@@ -32,6 +32,7 @@ module StashEngine
     has_many :journal_roles
     has_many :journals, through: :journal_roles
     belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
+    belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
 
     has_many :access_grants,
              class_name: 'Doorkeeper::AccessGrant',
