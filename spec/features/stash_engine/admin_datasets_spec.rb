@@ -9,14 +9,12 @@ RSpec.feature 'AdminDatasets', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
-  include Mocks::Tenant
   include Mocks::DataFile
 
   context :content do
 
     before(:each) do
       mock_stripe!
-      mock_tenant!
       mock_salesforce!
 
       # Create a user, identifier and 2 resources for each tenant
@@ -104,7 +102,6 @@ RSpec.feature 'AdminDatasets', type: :feature do
       mock_repository!
       mock_datacite!
       mock_file_content!
-      mock_tenant!
       neuter_curation_callbacks!
       @admin = create(:user, role: 'admin', tenant_id: 'mock_tenant')
       @user = create(:user, tenant_id: @admin.tenant_id)
