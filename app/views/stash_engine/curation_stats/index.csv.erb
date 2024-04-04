@@ -1,5 +1,5 @@
 <%= "Date,Curated,QueueSize,New,NewToSubmitted,NewToPPR,PPRToSubmitted,CurationToAAR,CurationToPublished,Embargoed,Withdrawn,AuthorRevised,AuthorVersioned" %>
-<% @all_stats.each do |stat|
+<% @all_stats.order(:date).each do |stat|
     row = [
 	formatted_date(stat.date),
 	stat.datasets_curated,
