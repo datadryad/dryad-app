@@ -59,6 +59,7 @@ module StashEngine
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     belongs_to :user, class_name: 'StashEngine::User'
+    belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
     has_one :current_resource_state,
             class_name: 'StashEngine::ResourceState',
             primary_key: 'current_resource_state_id',
