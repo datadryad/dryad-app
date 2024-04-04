@@ -31,7 +31,6 @@ module StashEngine
     include Mocks::RSolr
     include Mocks::Salesforce
     include Mocks::Stripe
-    include Mocks::Tenant
 
     before(:each) do
       mock_aws!
@@ -39,7 +38,6 @@ module StashEngine
       mock_datacite!
       mock_salesforce!
       mock_stripe!
-      mock_tenant!
       neuter_curation_callbacks!
 
       @curator = create(:user, tenant_id: 'dryad', role: 'curator')

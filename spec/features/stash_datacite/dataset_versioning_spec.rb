@@ -9,7 +9,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
-  include Mocks::Tenant
   include Mocks::DataFile
 
   before(:each) do
@@ -18,7 +17,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     mock_solr!
     mock_datacite_gen!
     mock_stripe!
-    mock_tenant!
     ignore_zenodo!
     neuter_curation_callbacks!
     mock_file_content!

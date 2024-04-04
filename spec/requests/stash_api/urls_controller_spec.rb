@@ -21,42 +21,28 @@ module StashApi
   }.freeze
 
   RSpec.describe UrlsController, type: :request do
-
     include Mocks::CurationActivity
     include Mocks::RSolr
     include Mocks::Salesforce
     include Mocks::Stripe
     include Mocks::Repository
-    include Mocks::Tenant
     include Mocks::UrlUpload
-
-    before(:all) do
-      host! 'my.example.org'
-      @user = create(:user, role: 'superuser')
-      @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
-      setup_access_token(doorkeeper_application: @doorkeeper_application)
-    end
-
-    after(:all) do
-      @user.destroy
-      @doorkeeper_application.destroy
-    end
 
     # set up some versions with different curation statuses (visibility)
     before(:each) do
       neuter_curation_callbacks!
-      mock_tenant!
       mock_salesforce!
-
-      @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
-
-      @user1 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+      @user = create(:user, role: 'superuser')
+      @user1 = create(:user, role: 'user')
+      host! 'my.example.org'
+      @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
+      setup_access_token(doorkeeper_application: @doorkeeper_application)
 
       @identifier = create(:identifier)
 
-      @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id),
-                    create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id)]
+      @resources = [create(:resource, user_id: @user1.id, identifier_id: @identifier.id),
+                    create(:resource, user_id: @user1.id, identifier_id: @identifier.id)]
 
       @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
                                create(:curation_activity, resource: @resources[0], status: 'curation'),

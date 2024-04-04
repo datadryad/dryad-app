@@ -3,7 +3,6 @@ require 'byebug'
 module StashApi
   RSpec.describe DatasetParser do
     include Mocks::Datacite
-    include Mocks::Tenant
     include Mocks::Salesforce
 
     before(:each) do
@@ -11,21 +10,19 @@ module StashApi
       mock_salesforce!
       allow(Stash::Doi::DataciteGen).to receive(:mint_id).and_return('doi:10.5072/dryad.12345678')
 
-      @user = StashEngine::User.create(
-        first_name: 'Lisa',
-        last_name: 'Muckenhaupt',
-        email: 'lmuckenhaupt@ucop.edu',
-        tenant_id: 'exemplia',
-        orcid: '1234-5678-9876-5432'
-      )
+      @user = create(:user,
+                     first_name: 'Lisa',
+                     last_name: 'Muckenhaupt',
+                     email: 'lmuckenhaupt@ucop.edu',
+                     tenant_id: 'exemplia',
+                     orcid: '1234-5678-9876-5432')
 
-      @user2 = StashEngine::User.create(
-        first_name: 'Gordon',
-        last_name: 'Madsen',
-        email: 'gmadsen@example.org',
-        tenant_id: 'exemplia',
-        orcid: '555-1212'
-      )
+      @user2 = create(:user,
+                      first_name: 'Gordon',
+                      last_name: 'Madsen',
+                      email: 'gmadsen@example.org',
+                      tenant_id: 'exemplia',
+                      orcid: '555-1212')
 
       @basic_metadata = {
         'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
@@ -348,7 +345,6 @@ module StashApi
       end
 
       it 'updates an existing dataset with a new in-progress version' do
-        mock_tenant!
         resource = @stash_identifier.in_progress_resource
         resource.update(skip_emails: true)
         resource.current_state = 'submitted' # make it look like the first was successfully submitted, so this next will be new version

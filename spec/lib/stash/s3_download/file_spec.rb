@@ -12,10 +12,8 @@ RSpec.configure(&:infer_spec_type_from_file_location!)
 module Stash
   module S3Download
     RSpec.describe File do
-      include Mocks::Tenant
 
       before(:each) do
-        mock_tenant!
         @resource = create(:resource)
         @data_file = create(:data_file, resource_id: @resource.id)
         allow(StashEngine::DataFile).to receive(:find_merritt_deposit_file).and_return(@data_file)

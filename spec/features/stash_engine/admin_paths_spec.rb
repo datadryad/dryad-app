@@ -3,6 +3,10 @@ require 'pry-remote'
 RSpec.feature 'AdminPaths', type: :feature do
   include Mocks::Salesforce
 
+  before(:each) do
+    create(:tenant)
+  end
+
   context :admin_datasets_path do
     it 'is not accessible by regular users' do
       sign_in

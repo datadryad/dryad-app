@@ -9,6 +9,7 @@ RSpec.describe 'Rack::Attack', type: :request do
     # Enable Rack::Attack for this test
     Rack::Attack.enabled = true
     Rack::Attack.reset!
+    create(:tenant)
   end
 
   after do

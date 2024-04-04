@@ -6,17 +6,12 @@ require 'fixtures/stash_api/metadata'
 module StashApi
   RSpec.describe SubmissionQueueController, type: :request do
 
-    before(:all) do
+    before(:each) do
       host! 'my.example.org'
       @user = create(:user, role: 'superuser')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
-    end
-
-    after(:all) do
-      @user.destroy
-      @doorkeeper_application.destroy
     end
 
     # I am not testing queuing working here since this is just read only visibility into what

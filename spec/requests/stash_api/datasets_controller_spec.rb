@@ -8,7 +8,6 @@ require 'cgi'
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi
   RSpec.describe DatasetsController, type: :request do
-
     include Mocks::Aws
     include Mocks::RSolr
     include Mocks::Stripe
@@ -16,23 +15,18 @@ module StashApi
     include Mocks::Repository
     include Mocks::Salesforce
     include Mocks::Datacite
-    include Mocks::Tenant
 
     before(:each) do
+      create(:tenant_dryad)
+      create(:tenant_ucop)
       neuter_curation_callbacks!
       mock_salesforce!
-      mock_tenant!
       mock_datacite_gen!
       @user = create(:user, role: 'superuser', tenant_id: 'dryad')
       @system_user = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
-    end
-
-    after(:each) do
-      @user.destroy
-      @doorkeeper_application.destroy
     end
 
     # test creation of a new dataset
@@ -377,7 +371,6 @@ module StashApi
 
         @identifiers = []
         0.upto(7).each { |_i| @identifiers.push(create(:identifier)) }
-
         @user1 = create(:user, tenant_id: 'ucop', role: nil)
         @user2 = create(:user, tenant_id: 'ucop', role: 'admin')
         @user3 = create(:user, tenant_id: 'ucb', role: 'curator')
@@ -619,10 +612,9 @@ module StashApi
       end
 
       it 'allows searches by tenant' do
-        target_tenant = @res.tenant
         target_ror = @res.authors.first.affiliation.ror_id
-        allow(target_tenant).to receive(:ror_ids).and_return(['https://ror.org/test', target_ror])
-        get '/api/v2/search?tenant=dryad', headers: default_authenticated_headers
+        create(:tenant_ror_org, tenant_id: @res.tenant.id, ror_id: target_ror)
+        get "/api/v2/search?tenant=#{@res.tenant.id}", headers: default_authenticated_headers
         output = response_body_hash
         result = output['_embedded']['stash:datasets'].last
         expect(result['authors'].first['affiliationROR']).to eq(target_ror)
@@ -660,7 +652,7 @@ module StashApi
       before(:each) do
         neuter_curation_callbacks!
 
-        @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
+        @tenant_ids = StashEngine::Tenant.enabled.map(&:id)
 
         # I think @user is created for use with doorkeeper already
         @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
@@ -772,7 +764,7 @@ module StashApi
         end
 
         it "doesn't submit dataset when the PATCH is not allowed for user (not owner or no permission)" do
-          @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
+          @tenant_ids = StashEngine::Tenant.enabled.map(&:id)
           @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
           @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                      owner_id: @user2.id, owner_type: 'StashEngine::User')
@@ -794,7 +786,7 @@ module StashApi
         end
 
         it 'allows submission if done by owner of the dataset (resource)' do
-          @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
+          @tenant_ids = StashEngine::Tenant.enabled.map(&:id)
           user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user', orcid: @ds_info['authors'].first['orcid'])
           @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                      owner_id: user2.id, owner_type: 'StashEngine::User')

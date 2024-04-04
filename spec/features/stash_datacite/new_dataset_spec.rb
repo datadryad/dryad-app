@@ -4,14 +4,12 @@ RSpec.feature 'NewDataset', type: :feature do
   include DatasetHelper
   include Mocks::RSolr
   include Mocks::CrossrefFunder
-  include Mocks::Tenant
   include Mocks::Salesforce
 
   before(:each) do
     mock_salesforce!
     mock_solr!
     mock_funders!
-    mock_tenant!
     @user = create(:user)
     sign_in(@user)
   end

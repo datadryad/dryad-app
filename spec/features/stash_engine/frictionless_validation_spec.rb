@@ -26,6 +26,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     mock_stripe!
     mock_aws!
     ignore_zenodo!
+    create(:tenant)
     @author = create(:user, tenant_id: 'dryad')
 
     ActionMailer::Base.deliveries = []

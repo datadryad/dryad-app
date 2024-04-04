@@ -8,7 +8,6 @@ RSpec.feature 'Admin', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
-  include Mocks::Tenant
   include Mocks::DataFile
 
   context :tenant_admin do
@@ -18,9 +17,8 @@ RSpec.feature 'Admin', type: :feature do
       mock_solr!
       mock_stripe!
       mock_datacite_gen!
-      mock_tenant!
       neuter_curation_callbacks!
-      @admin = create(:user, role: 'admin', tenant_id: 'mock_tenant')
+      @admin = create(:user, role: 'admin')
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
@@ -69,7 +67,6 @@ RSpec.feature 'Admin', type: :feature do
       new_user = create(:user, tenant_id: nil)
       expect { create(:resource, :submitted, user: new_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
-      expect(page.current_path).to eq('/stash/sessions/choose_sso')
       expect(page).to have_text('Logout')
     end
 

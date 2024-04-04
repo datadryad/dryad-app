@@ -6,11 +6,9 @@ require 'byebug'
 module StashEngine
   RSpec.describe DownloadsController, type: :request do
     include Mocks::Salesforce
-    include Mocks::Tenant
 
     before(:each) do
       mock_salesforce!
-      mock_tenant!
       @user = create(:user, role: 'superuser')
       @resource = create(:resource, user_id: @user.id, total_file_size: 0)
       @resource.current_resource_state.update(resource_state: 'submitted')

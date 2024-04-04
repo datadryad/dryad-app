@@ -4,16 +4,11 @@ module StashEngine
 
     # https://github.com/bobf/rspec-html might be helpful if I want more complex matching of document returned
 
-    include Mocks::Tenant
-
-    before(:each) do
-      mock_tenant!
-    end
-
     context :tenant_limited do
 
       before(:each) do
-        @user = create(:user, role: 'admin', tenant_id: 'mock_tenant')
+        create(:tenant)
+        @user = create(:user, role: 'admin', tenant_id: 'dryad')
         # HACK: in session because requests specs don't allow session in rails 4
         allow_any_instance_of(AdminDatasetFundersController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
         @resources = 5.times.map do |_i|
@@ -26,9 +21,9 @@ module StashEngine
           @resources.first.resource_states.first.update(resource_state: 'submitted', updated_at: Time.new(2011, 11, 11, 12))
           @resources.second.resource_states.first.update(resource_state: 'submitted', updated_at: Time.new(2006, 6, 6, 12))
           @resources.third.resource_states.first.update(resource_state: 'submitted', updated_at: Time.new(2006, 6, 6, 12))
-          @resources.first.update(tenant_id: 'mock_tenant')
-          @resources.second.update(tenant_id: 'dryad')
-          @resources.third.update(tenant_id: 'mock_tenant')
+          @resources.first.update(tenant_id: 'dryad')
+          @resources.second.update(tenant_id: 'mock_tenant')
+          @resources.third.update(tenant_id: 'dryad')
         end
 
         it 'limits to tenant institution' do

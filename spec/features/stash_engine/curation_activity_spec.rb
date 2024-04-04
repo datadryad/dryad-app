@@ -2,7 +2,6 @@ require 'pry-remote'
 
 RSpec.feature 'CurationActivity', type: :feature do
   include Mocks::Stripe
-  include Mocks::Tenant
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Datacite
@@ -13,6 +12,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       mock_salesforce!
       mock_stripe!
       mock_datacite_gen!
+      create(:tenant)
       @user = create(:user, tenant_id: 'ucop')
       @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
       create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
@@ -54,9 +54,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       mock_solr!
       mock_stripe!
       mock_datacite_gen!
-      mock_tenant!
       neuter_curation_callbacks!
-      @admin = create(:user, role: 'admin', tenant_id: 'mock_tenant')
+      @admin = create(:user, role: 'admin')
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
@@ -156,7 +155,7 @@ RSpec.feature 'CurationActivity', type: :feature do
     context :journal_admin do
       before(:each) do
         @journal = create(:journal)
-        @journal_admin = create(:user, tenant_id: 'mock_tenant')
+        @journal_admin = create(:user)
         @journal_role = create(:journal_role, journal: @journal, user: @journal_admin, role: 'admin')
         @journal_admin.reload
         sign_in(@journal_admin, false)
@@ -182,7 +181,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
       before(:each) do
         mock_salesforce!
-        @tenant_curator = create(:user, role: 'tenant_curator', tenant_id: 'mock_tenant')
+        @tenant_curator = create(:user, role: 'tenant_curator')
         sign_in(@tenant_curator, false)
       end
 

@@ -5,7 +5,6 @@ describe FixInProgressResources do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
-  include Mocks::Tenant
 
   attr_reader :in_progress_resources
 
@@ -14,7 +13,6 @@ describe FixInProgressResources do
     mock_datacite!
     mock_salesforce!
     mock_stripe!
-    mock_tenant!
 
     @in_progress_resources = []
     ident_count = 3

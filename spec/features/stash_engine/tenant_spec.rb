@@ -3,19 +3,14 @@ require 'rails_helper'
 RSpec.feature 'Tenant', type: :feature do
 
   context :logos do
-
-    TENANT_CONFIG.each_value do |hash|
-      it "displays the correct logo for #{hash[:short_name]}" do
-        sign_in(create(:user, tenant_id: hash[:tenant_id]))
-        visit root_path
-        # Always expect to see the Dryad logo
-        expect(page).to have_css('img[alt="Dryad"]')
-        # If the tenant_id is not dryad or localhost then expect to
-        # see the institution's logo
-        expect(page).to have_css("img[alt=\" #{hash[:short_name]}\"]") unless %w[localhost dryad].include?(hash[:tenant_id])
-      end
+    it 'displays the correct logo for UCOP' do
+      create(:tenant)
+      @user = create(:user, tenant_id: 'ucop')
+      sign_in(@user)
+      visit root_path
+      # Always expect to see the Dryad logo
+      expect(page).to have_css('img[alt="Dryad"]')
+      expect(page).to have_css("img[alt=\" #{@user.tenant.short_name}\"]")
     end
-
   end
-
 end

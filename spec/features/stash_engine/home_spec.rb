@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.feature 'HomePage', type: :feature do
 
+  before(:each) { create(:tenant) }
+
   it 'resolves to the site "My datasets" when logged in' do
     sign_in
     visit root_path

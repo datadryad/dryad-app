@@ -7,11 +7,9 @@ RSpec.configure(&:infer_spec_type_from_file_location!)
 module Stash
   module Doi
     RSpec.describe DataciteGen do
-      include Mocks::Tenant
 
       describe 'Cirneco replacement methods' do
         before(:each) do
-          mock_tenant!
           @resource = create(:resource)
           @datacite_gen = DataciteGen.new(resource: @resource)
           dc_xml = Datacite::Mapping::DataciteXMLFactory.new(

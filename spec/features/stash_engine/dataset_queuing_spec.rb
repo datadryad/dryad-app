@@ -1,7 +1,6 @@
 require 'rails_helper'
 require 'fileutils'
 RSpec.feature 'DatasetQueuing', type: :feature do
-
   hold_submissions_path = File.expand_path(File.join(Rails.root, '..', 'hold-submissions.txt')).freeze
 
   include DatasetHelper
@@ -10,7 +9,6 @@ RSpec.feature 'DatasetQueuing', type: :feature do
   include Mocks::SubmissionJob
   include Mocks::RSolr
   include Mocks::Stripe
-  include Mocks::Tenant
   include Mocks::Salesforce
   include AjaxHelper
 
@@ -23,7 +21,6 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     mock_datacite_gen!
     mock_stripe!
     mock_salesforce!
-    mock_tenant!
     neuter_curation_callbacks!
     @curator = create(:user, role: 'admin', tenant_id: 'dryad')
     @superuser = create(:user, tenant_id: 'dryad', role: 'superuser')

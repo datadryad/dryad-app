@@ -12,7 +12,6 @@ RSpec.feature 'Landing', type: :feature, js: true do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
-  include Mocks::Tenant
   include Mocks::Counter
 
   before(:each) do
@@ -22,7 +21,6 @@ RSpec.feature 'Landing', type: :feature, js: true do
     mock_datacite!
     mock_salesforce!
     mock_stripe!
-    mock_tenant!
     mock_counter!
 
     # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset

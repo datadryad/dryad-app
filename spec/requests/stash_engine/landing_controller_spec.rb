@@ -16,7 +16,6 @@ module StashEngine
     include Mocks::RSolr
     include Mocks::Salesforce
     include Mocks::Stripe
-    include Mocks::Tenant
 
     before(:each) do
       # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
@@ -25,10 +24,8 @@ module StashEngine
       mock_datacite!
       mock_salesforce!
       mock_stripe!
-      mock_tenant!
       ignore_zenodo!
       neuter_curation_callbacks!
-
       # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
       create_basic_dataset!
     end
