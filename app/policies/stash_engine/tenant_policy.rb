@@ -12,7 +12,7 @@ module StashEngine
 
       def resolve
         if @user.tenant_limited?
-          @scope.all.select { |tenant| user.tenant.ror_ids.include?(tenant.ror_ids.first) }
+          @scope.enabled.joins(:tenant_ror_orgs).where(tenant_ror_orgs: { ror_id: user.tenant.ror_ids })
         else
           @scope.all
         end

@@ -224,7 +224,7 @@ module StashEngine
         def create_tenant_limit(admin_tenant)
           return nil if admin_tenant.blank?
 
-          ActiveRecord::Base.send(:sanitize_sql_array, ['( ser.tenant_id = ? OR dcs_a.ror_id IN (?) )', admin_tenant.tenant_id,
+          ActiveRecord::Base.send(:sanitize_sql_array, ['( ser.tenant_id = ? OR dcs_a.ror_id IN (?) )', admin_tenant.id,
                                                         admin_tenant.ror_ids])
         end
 

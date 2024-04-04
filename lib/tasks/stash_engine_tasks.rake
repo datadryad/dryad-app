@@ -949,7 +949,7 @@ namespace :identifiers do
       csv << %w[SponsorName InstitutionName Count Price]
       sponsor_summary = []
       sponsor_total_count = 0
-      StashEngine::Tenant.all.each do |tenant|
+      StashEngine::Tenant.enabled.each do |tenant|
         next if tenant&.sponsor_id&.present?
 
         consortium = tenant&.tenants_sponsored
@@ -958,7 +958,7 @@ namespace :identifiers do
 
           tenant_item_count = 0
           sc_report.each do |item|
-            if item['PaymentID'] == c.tenant_id
+            if item['PaymentID'] == c.id
               tenant_item_count += 1
               sponsor_summary << [item['DOI'], c.short_name, item['ApprovalDate']]
             end
@@ -986,7 +986,7 @@ namespace :identifiers do
     base_values = {}
     base_report = CSV.parse(File.read(base_report_file), headers: true)
     sponsor_total_count = 0
-    StashEngine::Tenant.all.each do |tenant|
+    StashEngine::Tenant.enabled.each do |tenant|
       next if tenant&.sponsor_id&.present?
 
       consortium = tenant&.tenants_sponsored
@@ -995,7 +995,7 @@ namespace :identifiers do
 
         tenant_item_count = 0
         base_report.each do |item|
-          tenant_item_count += 1 if item['PaymentID'] == c.tenant_id
+          tenant_item_count += 1 if item['PaymentID'] == c.id
         end
         sponsor_total_count += tenant_item_count
       end
