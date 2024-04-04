@@ -18,6 +18,11 @@
   @extend %o-button__link-style;
   color: $design-dark-blue-color;
   position: relative;
+  display: inline-flex;
+  min-width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 
   &::before {
     display: inline-block;
@@ -25,6 +30,15 @@
     content: '\f054';
     color: currentColor;
     margin-right: .5ch;
+  }
+
+  span:first-of-type {
+    margin-right: auto;
+  }
+
+  span:last-child {
+    font-size: 0.98rem;
+    margin-left: 1ch;
   }
 
 }
