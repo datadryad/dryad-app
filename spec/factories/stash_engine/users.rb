@@ -32,13 +32,16 @@ FactoryBot.define do
     first_name { Faker::Name.unique.first_name }
     last_name { Faker::Name.unique.last_name }
     email { Faker::Internet.unique.email }
-    tenant_id { 'localhost' }
     role { 'user' }
+    tenant_id { 'mock_tenant' }
     orcid { SecureRandom.hex }
     old_dryad_email { Faker::Internet.unique.email }
     eperson_id { rand(10_000) }
     validation_tries { 0 }
 
+    after(:create) do |user|
+      create(:tenant, id: user.tenant_id) if user.tenant_id.present? && !StashEngine::Tenant.exists?(user.tenant_id)
+    end
   end
 
 end
