@@ -194,9 +194,10 @@ defaults: &DEFAULTS
     size_limit: 10_000_000
     missing_values: ",NA,na,N/A,n/a,N.A.,n.a.,-,.,empty,blank"
   rate_limit:
-    # number of requests allowed per minute
+    file_downloads_per_hour: 100
+    zip_downloads_per_hour: 20
+    # all other rates are number of requests allowed per minute
     all_requests: 120
-    zip_downloads: 10
     api_requests_anon: 30
     api_requests_auth: 120
     api_requests_v1: 30
