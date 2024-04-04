@@ -5,7 +5,7 @@
 
   <p>
     <%=
-    tenant_options = StashEngine::Tenant.all.collect { |t| [ t.short_name, t.tenant_id ] }
+    tenant_options = StashEngine::Tenant.enabled.collect { |t| [ t.short_name, t.id ] }
     select_tag('tenant', options_for_select(tenant_options, user.tenant_id))
     %>  
   </p>

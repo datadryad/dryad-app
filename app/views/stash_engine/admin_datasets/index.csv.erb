@@ -14,7 +14,7 @@
             resource.views,
             resource.downloads,
             resource.citations,
-            StashEngine::Tenant.find(resource.tenant_id)&.long_name,
+            StashEngine::Tenant.exists?(resource.tenant_id) ? StashEngine::Tenant.find(resource.tenant_id)&.long_name : '',
             resource&.created_date
     ]
 -%><%= row.to_csv(row_sep: nil).html_safe %>

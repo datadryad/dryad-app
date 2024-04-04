@@ -14,7 +14,7 @@ module StashEngine
     # :nocov:
 
     def institution_select
-      policy_scope(StashEngine::Tenant).map { |item| [item.short_name, item.tenant_id] }
+      policy_scope(StashEngine::Tenant).map { |t| [t.short_name, t.id] }
     end
 
     # no decimal removes the after decimal bits

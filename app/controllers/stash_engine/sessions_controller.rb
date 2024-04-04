@@ -94,7 +94,7 @@ module StashEngine
 
       @tenants = [OpenStruct.new(id: 'dryad', name: 'Dryad')]
       @tenants << StashEngine::Tenant.partner_list.map do |t|
-        OpenStruct.new(id: t.tenant_id, name: t.short_name)
+        OpenStruct.new(id: t.id, name: t.short_name)
       end
       @tenants.flatten!
 
@@ -111,7 +111,7 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def choose_sso
-      tenants = StashEngine::Tenant.partner_list.map { |t| { id: t.tenant_id, name: t.short_name } }
+      tenants = StashEngine::Tenant.partner_list.map { |t| { id: t.id, name: t.short_name } }
       # If no tenants are defined redirect to the no_parter path
       if tenants.empty?
         redirect_to :no_partner, method: :post
@@ -136,11 +136,11 @@ module StashEngine
 
     # send the user to the tenant's SSO url
     def sso
-      tenant = StashEngine::Tenant.find(params[:tenant_id])
-      if tenant.present?
+      if StashEngine::Tenant.exists?(params[:tenant_id])
+        tenant = StashEngine::Tenant.find(params[:tenant_id])
         case tenant&.authentication&.strategy
         when 'author_match'
-          current_user.update(tenant_id: tenant.tenant_id)
+          current_user.update(tenant_id: tenant.id)
           if session[:origin] == 'feedback'
             redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
             session[:origin] = session[:contact_method] = session[:link_location] = nil
@@ -150,7 +150,7 @@ module StashEngine
         when 'ip_address'
           validate_ip(tenant: tenant) # this redirects internally
         else
-          redirect_to tenant.omniauth_login_path(tenant_id: tenant.tenant_id)
+          redirect_to tenant.omniauth_login_path(tenant_id: tenant.id)
         end
       else
         render :choose_sso, alert: 'You must select a partner institution from the list.'
@@ -299,7 +299,7 @@ module StashEngine
         net = IPAddr.new(range)
         next unless net.include?(IPAddr.new(request.remote_ip))
 
-        current_user.update(tenant_id: tenant.tenant_id)
+        current_user.update(tenant_id: tenant.id)
         if session[:origin] == 'feedback'
           redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
           session[:origin] = session[:contact_method] = session[:link_location] = nil
@@ -310,7 +310,7 @@ module StashEngine
       end
 
       # else log out and redirect to a page explaining why they can't log in
-      logger.warn("Login request failed for #{tenant&.tenant_id} from #{request.remote_ip}")
+      logger.warn("Login request failed for #{tenant.id} from #{request.remote_ip}")
       reset_session
       clear_user
       redirect_to stash_url_helpers.ip_error_path

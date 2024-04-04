@@ -94,7 +94,7 @@ module StashApi
                                           last_name: author['last_name'],
                                           email: author['email'],
                                           orcid: author['orcid'],
-                                          tenant_id: StashEngine::Tenant.find_by_long_name(author['institution'])&.tenant_id,
+                                          tenant_id: StashEngine::Tenant.where(long_name: author['institution'])&.first&.id,
                                           role: 'user')
       elsif author['email'].present?
         user = StashEngine::User.where(email: author['email'])&.first
@@ -338,8 +338,8 @@ module StashApi
         fq_array << "dryad_author_affiliation_id_sm:\"#{params['affiliation']}\" "
       elsif params['tenant']
         # multiple affiliations, separated by OR
-        tenant = StashEngine::Tenant.find(params['tenant'])
-        if tenant
+        if StashEngine::Tenant.exists?(params['tenant'])
+          tenant = StashEngine::Tenant.find(params['tenant'])
           ror_array = []
           tenant.ror_ids.each do |r|
             # map the id into the format
