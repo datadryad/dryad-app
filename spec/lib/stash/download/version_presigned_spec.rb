@@ -24,7 +24,7 @@ module Stash
         end
 
         it 'is false if tenant is blank' do
-          @resource.tenant_id = 'grobber'
+          @resource.tenant_id = nil
           vp = VersionPresigned.new(resource: @resource, controller_context: @controller_context)
           expect(vp.valid_resource?).to be_falsey
         end
