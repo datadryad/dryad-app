@@ -472,6 +472,13 @@ an item. You can force the metadata in DataCite to update in the Rails console w
 Stash::Doi::DataciteGen.new(resource: StashEngine::Resource.where(id: <resource_id>).first).update_identifier_metadata!
 ```
 
+Or select a set of resources and send it for each, for example:
+```
+StashEngine::Resource.where('publication_date >= ?', 3.days.ago).each do |r|
+  Stash::Doi::DataciteGen.new(resource: r).update_identifier_metadata!
+end
+```
+
 If you need to update DataCite for *all* items in Dryad, you can use:
 ```
 RAILS_ENV=production bundle exec rails datacite_target:update_dryad
