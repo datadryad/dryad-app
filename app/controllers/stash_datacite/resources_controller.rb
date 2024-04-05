@@ -76,7 +76,7 @@ module StashDatacite
       # Update default behaviors that may have been changed by API superusers.
       # In a production environment, updates through the UI reset these values
       # to their default (UI) settings.
-      if Rails.env == 'production'
+      if Rails.env.include?('production')
         resource.update(skip_datacite_update: false, skip_emails: false,
                         preserve_curation_status: false, loosen_validation: false)
       end

@@ -179,7 +179,7 @@ module Stash
       # as their own and their added functionality for re-editing things doesn't work with them unless we give them
       # a non-test DOI so they don't do the wrong thing.
       def bork_doi_for_zenodo_sandbox(doi:)
-        return doi if Rails.env == 'production'
+        return doi if Rails.env.include?('production')
 
         # bork our datacite test dois into non-test shoulders because Zenodo reserves them as their own, don't bork their own DOIs
         doi.gsub!(/^10\.5072/, '10.55072') if @dataset_type == :data
