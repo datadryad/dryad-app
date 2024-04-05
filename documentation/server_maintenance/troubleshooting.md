@@ -466,17 +466,17 @@ Updating DataCite Metadata
 ==========================
 
 Occasionally, there will be a problem sending metadata to DataCite for
-an item. You can force the metadata in DataCite to update in the Rails console with:
-
-```
-Stash::Doi::DataciteGen.new(resource: StashEngine::Resource.where(id: <resource_id>).first).update_identifier_metadata!
-```
-
-Or select a set of resources and send it for each, for example:
+an item. You can select a resource or set of resources, and send metadata with
+the rails console, for example:
 ```
 StashEngine::Resource.where('publication_date >= ?', 3.days.ago).each do |r|
   Stash::Doi::DataciteGen.new(resource: r).update_identifier_metadata!
 end
+```
+
+To update anything published between a set of dates using a task, you can use:
+```
+RAILS_ENV=production bundle exec rails datacite_target:update_by_publication YYYY-MM-DD YYYY-MM-DD
 ```
 
 If you need to update DataCite for *all* items in Dryad, you can use:
