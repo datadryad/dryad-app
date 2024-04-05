@@ -374,7 +374,7 @@ module StashEngine
       return false if last_repo_version.nil? # don't submit random crap to DataCite unless it's preserved
 
       # only do UPDATEs with DOIs in production because ID updates like to fail in test DataCite because they delete their identifiers at random
-      return false if last_repo_version > 1 && Rails.env != 'production'
+      return false if last_repo_version > 1 && !Rails.env.include?('production')
 
       true
     end
