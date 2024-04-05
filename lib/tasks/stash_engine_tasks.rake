@@ -949,13 +949,11 @@ namespace :identifiers do
       csv << %w[SponsorName InstitutionName Count Price]
       sponsor_summary = []
       sponsor_total_count = 0
-      StashEngine::Tenant.enabled.each do |tenant|
-        next if tenant&.sponsor_id&.present?
+      StashEngine::Tenant.tiered.each do |tenant|
+        next if tenant.sponsor
 
-        consortium = tenant&.tenants_sponsored
+        consortium = tenant.consortium
         consortium.each do |c|
-          next unless c.payment_plan == 'tiered'
-
           tenant_item_count = 0
           sc_report.each do |item|
             if item['PaymentID'] == c.id
@@ -986,13 +984,11 @@ namespace :identifiers do
     base_values = {}
     base_report = CSV.parse(File.read(base_report_file), headers: true)
     sponsor_total_count = 0
-    StashEngine::Tenant.enabled.each do |tenant|
-      next if tenant&.sponsor_id&.present?
+    StashEngine::Tenant.tiered.each do |tenant|
+      next if tenant.sponsor
 
-      consortium = tenant&.tenants_sponsored
+      consortium = tenant.consortium
       consortium.each do |c|
-        next unless c.payment_plan == 'tiered'
-
         tenant_item_count = 0
         base_report.each do |item|
           tenant_item_count += 1 if item['PaymentID'] == c.id

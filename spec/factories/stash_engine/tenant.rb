@@ -60,7 +60,8 @@ FactoryBot.define do
     sponsor_id { nil }
 
     after(:create) do |tenant|
-      create(:tenant_ror_org, tenant_id: tenant.id)
+      ror = create(:tenant_ror_org, tenant_id: tenant.id)
+      create(:tenant_ror_org, tenant_id: tenant.sponsor_id, ror_id: ror.ror_id) if tenant.sponsor_id.present?
     end
   end
 

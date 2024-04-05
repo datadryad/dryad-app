@@ -224,8 +224,10 @@ module StashEngine
         def create_tenant_limit(admin_tenant)
           return nil if admin_tenant.blank?
 
-          ActiveRecord::Base.send(:sanitize_sql_array, ['( ser.tenant_id = ? OR dcs_a.ror_id IN (?) )', admin_tenant.id,
-                                                        admin_tenant.ror_ids])
+          tenant_ids = StashEngine::TenantRorOrg.where(ror_id: admin_tenant.ror_ids).map(&:tenant_id)
+
+          ActiveRecord::Base.send(:sanitize_sql_array, ['( ser.tenant_id IN (?) OR dcs_a.ror_id IN (?) )',
+                                                        tenant_ids, admin_tenant.ror_ids])
         end
 
         def create_journals_limit(admin_journals)
