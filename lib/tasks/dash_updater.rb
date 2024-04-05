@@ -14,6 +14,11 @@ module Tasks
         .where("stash_engine_resources.tenant_id = 'dryad'").order('stash_engine_identifiers.id').distinct
     end
 
+    def self.dated_items_to_update(start, stop)
+      StashEngine::Identifier.joins(:resources).where('DATE(stash_engine_resources.publication_date) BETWEEN ? AND ?', start, stop)
+        .order('stash_engine_identifiers.id').distinct
+    end
+
     def self.all_items_to_update
       # always order ID
       StashEngine::Identifier.joins(:resources).where(pub_state: %w[embargoed published])

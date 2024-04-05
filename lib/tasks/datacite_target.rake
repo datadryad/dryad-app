@@ -15,6 +15,26 @@ namespace :datacite_target do
     end
   end
 
+  desc 'update Dryad DOI targets to reflect new environment'
+  task update_by_publication: :environment do
+    $stdout.sync = true
+    unless ARGV.length == 3
+      puts 'Takes 2 dates in format YYYY-MM-DD to create a range for DOI updates'
+      next
+    end
+    stash_ids = Tasks::DashUpdater.dated_items_to_update(ARGV[1].to_s, ARGV[2].to_s)
+    stash_ids.each_with_index do |stash_id, idx|
+      puts "#{idx + 1}/#{stash_ids.length}: updating #{stash_id.identifier}"
+      begin
+        Tasks::DashUpdater.submit_id_metadata(stash_identifier: stash_id)
+      rescue Stash::Doi::DataciteGenError, ArgumentError, Net::HTTPClientException => e
+        outstr = "\n#{stash_id.id}: #{stash_id.identifier}\n#{e.message}\n"
+        File.write('datacite_update_errors.txt', outstr, mode: 'a')
+      end
+      sleep 1
+    end
+  end
+
   # this will go through the items in the same order, so if it crashes at a point it can be restarted from that item again
   # saves errors to a separate errors.txt file so we can handle these separately/manually assuming there are only a few
   desc 'update Dryad DOI targets to reflect new environment'
