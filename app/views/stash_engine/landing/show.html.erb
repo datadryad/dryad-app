@@ -5,7 +5,7 @@
 <script>
 	const { trackMetric } = DataCiteTracker.Tracker({
 		repoId: '<%= APP_CONFIG[:datacite_data_repo_id] %>',
-		trackLocalhost: <%= Rails.env == 'production' ? 'true' : 'false' %>,
+		trackLocalhost: <%= Rails.env.include?('production') ? 'true' : 'false' %>,
 	});
 	let dc_download = DataCiteTracker.MetricType.Download;
 	trackMetric(DataCiteTracker.MetricType.View, { doi: '<%= @resource&.identifier&.identifier %>' });
