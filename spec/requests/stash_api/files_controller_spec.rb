@@ -55,10 +55,27 @@ module StashApi
     # working with files
     # rubocop:disable Security/IoMethods
     describe '#update' do
+      let(:request_path) { "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}" }
+      let(:request_args) do
+        {
+          params: IO.read(@file_path),
+          headers: default_authenticated_headers.merge('Content-Type' => @mime_type)
+
+        }
+      end
+
       it 'will add a file upload to the server and add metadata' do
-        response_code = put "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/files/#{CGI.escape(::File.basename(@file_path))}",
-                            params: IO.read(@file_path),
-                            headers: default_authenticated_headers.merge('Content-Type' => @mime_type)
+        response_code = put request_path, **request_args
+        expect(response_code).to eq(201)
+        hsh = response_body_hash
+        expect(hsh['_links']['self']['href']).not_to be_nil
+        expect(hsh['path']).to eq(::File.basename(@file_path))
+        expect(hsh['mimeType']).to eq(@mime_type)
+        expect(hsh['status']).to eq('created')
+      end
+
+      it 'supports the POST HTTP verb as well' do
+        response_code = post request_path, **request_args
         expect(response_code).to eq(201)
         hsh = response_body_hash
         expect(hsh['_links']['self']['href']).not_to be_nil
