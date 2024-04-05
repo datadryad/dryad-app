@@ -14,7 +14,7 @@ module StashEngine
     # return all enabled tenants sorted by name
     scope :enabled, -> { where(enabled: true).order(:short_name) }
     scope :partner_list, -> { enabled.where(partner_display: true) }
-    scope :tenants_sponsored, -> { enabled.where('id = ? or sponsor_id = ?', id, id) }
+    scope :tiered, -> { enabled.where(payment_plan: :tiered) }
 
     def logo_file
       @logo_file ||= begin
@@ -38,6 +38,10 @@ module StashEngine
 
     def campus_contacts
       JSON.parse(super)
+    end
+
+    def consortium
+      Tenant.where('id = ? or sponsor_id= ?', id, id)
     end
 
     def ror_ids
