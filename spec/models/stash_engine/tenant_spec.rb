@@ -31,6 +31,16 @@ module StashEngine
       end
     end
 
+    describe :consortium do
+      it 'lists consortium members' do
+        create(:tenant, id: 'consortium')
+        create(:tenant, id: 'member1', sponsor_id: 'consortium')
+        create(:tenant, id: 'member2', sponsor_id: 'consortium')
+        tenant = Tenant.find('consortium')
+        expect(tenant.consortium.count).to eq 3
+      end
+    end
+
     describe :ror_ids do
       it 'lists associated ROR IDs' do
         create_list(:tenant_ror_org, 2, tenant_id: 'dryad')

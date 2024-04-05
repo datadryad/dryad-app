@@ -38,6 +38,22 @@ RSpec.feature 'AdminDatasets', type: :feature do
       expect(all('.c-lined-table__row').length).to eql(2)
     end
 
+    it 'shows consortium admins datasets for their tenants' do
+      create(:tenant, id: 'consortium')
+      create(:tenant, id: 'member1', sponsor_id: 'consortium')
+      create(:tenant, id: 'member2', sponsor_id: 'consortium')
+      user = create(:user, tenant_id: 'member1')
+      2.times do
+        identifier = create(:identifier)
+        create(:resource, :submitted, user: user, identifier: identifier)
+      end
+      sign_in(create(:user, role: 'admin', tenant_id: 'consortium'))
+      visit stash_url_helpers.ds_admin_path
+      expect(page).to have_select('tenant')
+      expect(page).to have_selector('#tenant option', count: 4)
+      expect(all('.c-lined-table__row').length).to eql(2)
+    end
+
     it 'lets curators see all datasets' do
       sign_in(create(:user, role: 'curator'))
       visit stash_url_helpers.ds_admin_path
