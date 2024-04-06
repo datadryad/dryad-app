@@ -26,13 +26,13 @@ example crontab
 
 ```shell
 # Run jobs every 5 minutes
-*/5 * * * * /apps/dryad/apps/ui/current/cron/every_5.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
+*/5 * * * * /home/ec2-user/deploy/current/cron/every_5.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
 
 # Run the jobs at noon each day
-00 12 * * * /apps/dryad/apps/ui/current/cron/daily.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
+00 12 * * * /home/ec2-user/deploy/current/cron/daily.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
 
 # Run the jobs every Sunday at 21:00
-00 21 * * 0 /apps/dryad/apps/ui/current/cron/weekly.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
+00 21 * * 0 /home/ec2-user/deploy/current/cron/weekly.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
 ```
 
 ##counter-processor move to new server (require for counter weekly cron to work after move)
