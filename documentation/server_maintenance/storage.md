@@ -21,7 +21,7 @@ Stopping submissions
 
 To pause submissions, on each server:
 ```
-touch /apps/dryad/apps/ui/releases/hold-submissions.txt
+touch /home/ec2-user/deploy/releases/hold-submissions.txt
 ```
 
 This will put any queued submissions into the
@@ -34,7 +34,7 @@ Restarting submissions from hold or errors
 
 To restart submissions, on each server:
 ```
-rm /apps/dryad/apps/ui/releases/hold-submissions.txt
+rm /home/ec2-user/deploy/releases/hold-submissions.txt
 ```
 
 THEN, on one server, in the Rails console:

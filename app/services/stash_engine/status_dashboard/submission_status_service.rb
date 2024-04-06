@@ -6,7 +6,7 @@ module StashEngine
   module StatusDashboard
     class SubmissionStatusService < DependencyCheckerService
 
-      LOG_FILE = '/apps/dryad/apps/ui/current/log/merritt_status_updater.log'
+      LOG_FILE = '/home/ec2-user/deploy/current/log/merritt_status_updater.log'
 
       def ping_dependency
         super

@@ -40,7 +40,7 @@ if [ "$EUID" != "0" ]; then
 
     # Set up path and other env vars for rails, same as original passenger.erb
     export RAILS_ENV='development'
-    export RAILS_ROOT=/dryad/apps/ui/current
+    export RAILS_ROOT=/home/ec2-user/deploy/current
 
     # Don't touch $PATH or $HOME of root!
 
