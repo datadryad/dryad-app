@@ -10,7 +10,7 @@ default: &default
   authentication:
     strategy: shibboleth
     entity_id: http://www.okta.com/exkiiea33x6YYZI5k4x7
-    entity_domain: nyit.okta.com
+    entity_domain: www.okta.com
   default_license: cc0
   campus_contacts: [""]
   data_deposit_agreement: false
