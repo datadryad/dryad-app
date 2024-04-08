@@ -274,7 +274,7 @@ module StashEngine
         return
       end
       update_author_orcid(invitation)
-      update_identifier_metadata(invitation) # TODO: This needs to be more selective and only update if DS is public or embargoed
+      update_identifier_metadata(invitation) unless identifier.date_first_published.nil?
       redirect_to stash_url_helpers.show_path(identifier.to_s), flash: { info: "Your ORCID #{@auth_hash.uid} has been added for this dataset." }
     end
 

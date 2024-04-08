@@ -27,7 +27,7 @@ Problems:
 
 - Because of slowness and bugs at the hub we stopped automatically submitting there and have
 lots of workarounds in place.
-  - We save reports to `/apps/dryad-prd-shared/json-reports`
+  - We save reports to `/home/ec2-user/deploy/shared/cron/counter-json`
   - Weekly processing script at `cron/counter.sh` in our config repo.
   - `bundle exec rails counter:clear_cache` completely clears our database table that contains counts.
   - `bundle exec rails counter:cop_manual` reads every month out of the json files and accumulates

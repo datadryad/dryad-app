@@ -103,7 +103,7 @@ a real completion before taking actions since it may be delayed or rarely has a 
 If a submission has failed in Merritt, do the following on the server(s) to see Merritt error messages
 to give to them or to troubleshoot the problem.
 
-`less /apps/dryad/apps/ui/current/log/production.log`
+`less /home/ec2-user/deploy/current/log/production.log`
 
 - Press `>` to go to the end of the file.
 - Press CTRL-C to stop line number calculation.
@@ -282,11 +282,9 @@ select id, file_view, meta_view from stash_engine_resources where identifier_id=
 select * from stash_engine_curation_activities where resource_id=;
 update stash_engine_curation_activities set status='submitted' where id=;
 update stash_engine_resources set file_view=false, meta_view=false, solr_indexed=false where identifier_id=;
-update stash_engine_resources set peer_review_end_date='2023-07-25', publication_date=NULL where id=;
+update stash_engine_resources set peer_review_end_date=DATE_ADD(now(), INTERVAL 6 MONTH), publication_date=NULL where id=;
 update stash_engine_identifiers set pub_state='unpublished' where id=;
-INSERT INTO `stash_engine_curation_activities` (`status`, `user_id`, `note`, `keywords`, `created_at`, `updated_at`, `resource_id`)
-  VALUES ('peer_review', '0', 'Set to peer review at curator request', NULL, '2022-07-27', '2022-07-27', 
-  <resource-id>);
+INSERT INTO `stash_engine_curation_activities` (`status`, `user_id`, `note`, `keywords`, `created_at`, `updated_at`, `resource_id`) VALUES ('peer_review', '0', 'Set to peer review at curator request', NULL, now(), now(), <resource-id>);
 
 select id,state,deposition_id,resource_id, copy_type from stash_engine_zenodo_copies where identifier_id=;
 ```
@@ -468,11 +466,17 @@ Updating DataCite Metadata
 ==========================
 
 Occasionally, there will be a problem sending metadata to DataCite for
-an item. You can force the metadata in DataCite to update by:
+an item. You can force the metadata in DataCite to update in the Rails console with:
 
 ```
-idg = Stash::Doi::IdGen.make_instance(resource: r)
-idg.update_identifier_metadata!
+Stash::Doi::DataciteGen.new(resource: StashEngine::Resource.where(id: <resource_id>).first).update_identifier_metadata!
+```
+
+Or select a set of resources and send it for each, for example:
+```
+StashEngine::Resource.where('publication_date >= ?', 3.days.ago).each do |r|
+  Stash::Doi::DataciteGen.new(resource: r).update_identifier_metadata!
+end
 ```
 
 If you need to update DataCite for *all* items in Dryad, you can use:

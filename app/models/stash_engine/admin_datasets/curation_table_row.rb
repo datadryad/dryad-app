@@ -64,6 +64,7 @@ module StashEngine
       TENANT_CLAUSE = 'ser.tenant_id = %{term}'
       STATUS_CLAUSE = 'seca.status = %{term}'
       EDITOR_CLAUSE = 'ser.current_editor_id = %{term}'
+      EDITOR_NULL = 'ser.current_editor_id is NULL'
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
       IDENTIFIER_CLAUSE = 'sei.id = %{term}'
 
@@ -157,7 +158,7 @@ module StashEngine
             (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
             add_term_to_clause(STATUS_CLAUSE, status_filter),
-            add_term_to_clause(EDITOR_CLAUSE, editor_filter),
+            editor_filter == 'NA' ? EDITOR_NULL : add_term_to_clause(EDITOR_CLAUSE, editor_filter),
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter),
             add_term_to_clause(IDENTIFIER_CLAUSE, identifier_id),
             create_tenant_limit(admin_tenant),

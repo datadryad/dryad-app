@@ -9,22 +9,9 @@
     </span>
     <%= link_to_document document, counter: counter %>
   </h3>
-  <span class='status-icons' data-turbolinks="false">
-    <%= render partial: 'header_icons', locals: { document: document } %>
-
-    <button
-      class="caret-toggle btn"
-      data-toggle="collapse"
-      data-target="#doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>-fields-collapse"
-      aria-label="<%= t('geoblacklight.metadata.toggle_summary') %>"
-      aria-expanded="false"
-      aria-controls="doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>-fields-collapse">
-    </button>
-  </span>
 <% end %>
-
 <div class='more-info-area' data-turbolinks="false">
-  <div id="doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>-fields-collapse" class='collapse'>
+  <div id="doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>">
     <small>
       <%= geoblacklight_present(:index_fields_display, document) %>
     </small>
