@@ -1,10 +1,9 @@
 <!-- 
-Dryad stage server
-currently defined as an endpoint of the dash-stage SP 
+Dryad sandbox server
 -->
-<AttributeFilterPolicy id="Dryad-Stage">
+<AttributeFilterPolicy id="Dryad-Sandbox">
 	<PolicyRequirementRule xsi:type="basic:AttributeRequesterString"
-	value="https://dash-stg.cdlib.org/shibboleth" />
+	value="https://sandbox.datadryad.org/shibboleth" />
 
 	<AttributeRule attributeID="eduPersonPrincipalName">
 		<PermitValueRule xsi:type="basic:ANY" />
