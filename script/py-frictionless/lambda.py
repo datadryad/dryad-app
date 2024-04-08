@@ -9,23 +9,31 @@ import sys
 
 # event json has these params passed in: download_url, callback_url, file_mime_type, token
 def lambda_handler(event, context):
+  print(event)
   ftype = event.get("file_mime_type", '')
-  if ftype.endswith('/xml'):
+  xml_doublecheck = ftype == 'text/plain' and event["download_url"].endswith('.xml')
+  json_doublecheck = ftype == 'text/plain' and event["download_url"].endswith('.json')
+  if ftype.endswith('/xml') or xml_doublecheck:
     try:
       xmlfile = urlopen(event["download_url"])
       report = ET.parse(xmlfile)
     except ET.ParseError as err:
       # invalid XML
-      update(token=event["token"], status='issues', report=json.dumps({'report': f'XML file is invalid: {err}'}), callback=event['callback_url'])
+      report=json.dumps({'report': f'XML file is invalid: {err}'})
+      update(token=event["token"], status='issues', report=report, callback=event['callback_url'])
+      return report
     # valid XML
     update(token=event["token"], status='noissues', report=json.dumps({'report': ''}), callback=event['callback_url'])
-  if ftype.endswith('/json'):
+    return report
+  if ftype.endswith('/json') or json_doublecheck:
     try:
       jsonfile = urlopen(event["download_url"])
       report = json.load(jsonfile)
     except ValueError as err:
       # invalid JSON
-      update(token=event["token"], status='issues', report=json.dumps({'report': f'JSON file is invalid: {err}'}), callback=event['callback_url'])
+      report=json.dumps({'report': f'JSON file is invalid: {err}'})
+      update(token=event["token"], status='issues', report=report, callback=event['callback_url'])
+      return report
     # valid JSON
     update(token=event["token"], status='noissues', report=json.dumps({'report': ''}), callback=event['callback_url'])
     return report
