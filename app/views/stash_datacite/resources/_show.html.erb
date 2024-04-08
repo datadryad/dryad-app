@@ -46,38 +46,11 @@
       <%= render partial: "stash_datacite/geolocation_places/show",
                  locals: { geolocation_places: review.geolocation_places } %>
     </div>
+    <script>
+      $( document ).ready( loadReviewMap(<%=resource.id%>) );
+    </script>
   <% end %>
 <script type="application/ld+json">
   <%= schema_org_ds %>
 </script>
-<script>
-  $( document ).ready( loadReviewMap(<%=resource.id%>) );
-</script>
   <%# render partial: "stash_datacite/licenses/review" %>
-
-<script type="text/javascript">
-  function copyItem(e) {
-    const item = e.currentTarget.dataset.item
-    const icon = e.currentTarget.firstElementChild
-    const citation = e.currentTarget.nextElementSibling.innerText
-    window.navigator.clipboard.writeText(citation).then(() => {
-      icon.classList.remove('fa-clipboard');
-      icon.classList.add('fa-check');
-      icon.innerHTML = `<span class="screen-reader-only">${item} copied</span>`
-      setTimeout(function(){
-        icon.parentElement.setAttribute('title', `Copy ${item.toLowerCase()}`);
-        icon.classList.add('fa-clipboard');
-        icon.classList.remove('fa-check');
-        icon.innerHTML = '';
-      }, 2000);
-    });
-  }
-  document.querySelectorAll('.copy-icon').forEach((button) => {
-    button.addEventListener('click', copyItem)
-    button.addEventListener('keydown', (e) => {
-      if (event.key === ' ' || event.key === 'Enter') {
-        copyItem(e)
-      }
-    });
-  });
-</script>

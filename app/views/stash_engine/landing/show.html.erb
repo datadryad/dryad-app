@@ -5,7 +5,7 @@
 <script>
 	const { trackMetric } = DataCiteTracker.Tracker({
 		repoId: '<%= APP_CONFIG[:datacite_data_repo_id] %>',
-		trackLocalhost: <%= Rails.env == 'production' ? 'true' : 'false' %>,
+		trackLocalhost: <%= Rails.env.include?('production') ? 'true' : 'false' %>,
 	});
 	let dc_download = DataCiteTracker.MetricType.Download;
 	trackMetric(DataCiteTracker.MetricType.View, { doi: '<%= @resource&.identifier&.identifier %>' });
@@ -52,3 +52,37 @@
 <% unless @invitations.blank? %>
   <%= render partial: 'orcid_invite', locals: {identifier_id: id.id} %>
 <% end %>
+
+<script type="text/javascript">
+  function copyItem(e) {
+    const item = e.currentTarget.dataset.item
+    const icon = e.currentTarget.firstElementChild
+    const citation = e.currentTarget.nextElementSibling.innerText
+    window.navigator.clipboard.writeText(citation).then(() => {
+      icon.classList.remove('fa-clipboard');
+      icon.classList.add('fa-check');
+      icon.innerHTML = `<span class="screen-reader-only">${item} copied</span>`
+      setTimeout(function(){
+        icon.parentElement.setAttribute('title', `Copy ${item.toLowerCase()}`);
+        icon.classList.add('fa-clipboard');
+        icon.classList.remove('fa-check');
+        icon.innerHTML = '';
+      }, 2000);
+    });
+  }
+  document.querySelectorAll('.copy-icon').forEach((button) => {
+    button.addEventListener('click', copyItem)
+    button.addEventListener('keydown', (e) => {
+      if (event.key === ' ' || event.key === 'Enter') {
+        copyItem(e)
+      }
+    });
+  });
+  document.querySelectorAll('.t-landing__text-wall a').forEach((link) => {
+    const span = document.createElement('span')
+    span.classList.add('screen-reader-only')
+    span.innerHTML = ' (opens in new window)'
+    link.appendChild(span)
+    link.setAttribute('target', '_blank')
+  });
+</script>
