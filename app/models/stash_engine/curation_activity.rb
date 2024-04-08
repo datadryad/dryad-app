@@ -197,8 +197,8 @@ module StashEngine
       # Send out orcid invitations now that the citation has been registered
       email_orcid_invitations if published?
     rescue Stash::Doi::DataciteGenError => e
-      Rails.logger.error "Stash::Doi::DataciteGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
-      Rails.logger.error e.message
+      logger.error "Stash::Doi::DataciteGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
+      logger.error e.message
       StashEngine::UserMailer.error_report(resource, e).deliver_now
       raise e
     end
@@ -208,9 +208,9 @@ module StashEngine
     end
 
     def process_resource
-      Rails.logger.info("SKIP_PROCESS_RESOURCE due to 'skip_datacite_update'") and return if resource.skip_datacite_update
-      Rails.logger.info("SKIP_PROCESS_RESOURCE due to 'published? #{published?} || embargoed? #{embargoed?}'") and return unless published? || embargoed?
-      Rails.logger.info("SKIP_PROCESS_RESOURCE due to '!latest_curation_status_changed?'") and return unless latest_curation_status_changed?
+      logger.info("SKIP_PROCESS_RESOURCE due to 'skip_datacite_update'") and return if resource.skip_datacite_update
+      logger.info("SKIP_PROCESS_RESOURCE due to 'published? #{published?} || embargoed? #{embargoed?}'") and return unless published? || embargoed?
+      logger.info("SKIP_PROCESS_RESOURCE due to '!latest_curation_status_changed?'") and return unless latest_curation_status_changed?
 
       submit_to_datacite
       update_solr
@@ -374,11 +374,11 @@ module StashEngine
     def should_update_doi?
       last_repo_version = resource.identifier&.last_submitted_version_number
       # don't submit random crap to DataCite unless it's preserved
-      Rails.logger.info("SKIP_DOI_UPDATE due to 'last_repo_version' #{last_repo_version}") and return false if last_repo_version.nil?
+      logger.info("SKIP_DOI_UPDATE due to 'last_repo_version' #{last_repo_version}") and return false if last_repo_version.nil?
 
       # only do UPDATES with DOIs in production because ID updates like to fail in test DataCite because they delete their identifiers at random
       if last_repo_version > 1 && APP_CONFIG[:identifier_service][:prefix] == '10.7959'
-        Rails.logger.info("SKIP_DOI_UPDATE due to 'last_repo_version' #{last_repo_version} && #{APP_CONFIG[:identifier_service][:prefix]}") and return false
+        logger.info("SKIP_DOI_UPDATE due to 'last_repo_version' #{last_repo_version} && #{APP_CONFIG[:identifier_service][:prefix]}") and return false
       end
 
       true
