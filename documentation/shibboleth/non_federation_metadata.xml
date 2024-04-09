@@ -606,8 +606,7 @@ Rn8K0LotExRg8sKixUSA74fETSM=
       <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://nshe-dri.okta.com/app/nshe-dri_dryadtest_1/exkh1l6ocbKBRm4RB1t7/sso/saml"/>
     </md:IDPSSODescriptor>
   </md:EntityDescriptor>
-</EntitiesDescriptor>
-
+  
 <!-- NYIT - New York Institute of Technology -->
   <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" entityID="http://www.okta.com/exkiiea33x6YYZI5k4x7">
     <md:IDPSSODescriptor WantAuthnRequestsSigned="false" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
