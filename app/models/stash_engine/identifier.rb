@@ -243,7 +243,7 @@ module StashEngine
     end
 
     # the search words is a special MySQL search field that concatenates the following fields required to be searched over
-    # https://github.com/CDL-Dryad/dryad-product-roadmap/issues/125
+    # https://github.com/datadryad/dryad-product-roadmap/issues/125
     # doi (from this model), latest_resource.title, latest_resource.authors (names, emails, orcids), dcs_descriptions of type abstract
     def update_search_words!
       my_string = to_s

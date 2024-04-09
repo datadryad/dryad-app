@@ -5,7 +5,7 @@ Dryad Documentation
 Dryad's basic documentation philosophy includes 4 levels of
 visibility:
 1. "Very" public documents -- High-level descriptions and information, on the [Main Dryad website](https://datadryad.org)
-2. Public documentation -- Technical documents and other details about dryad. Stored in Github, usually within [this directory](https://github.com/CDL-Dryad/dryad-app/tree/main/documentation)
+2. Public documentation -- Technical documents and other details about dryad. Stored in Github, usually within [this directory](https://github.com/datadryad/dryad-app/tree/main/documentation)
 3. Private documentation -- Internal details, for Dryad staff. Stored in Confluence.
 4. Private working documents -- Documents that are edited frequently. Stored in Dryad's Google Dive.
 
@@ -18,7 +18,7 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
 
 ## Github Repositories & Similar
 
-* The main application for Dryad is at [https://github.com/CDL-Dryad/dryad-app](https://github.com/CDL-Dryad/dryad-app) with minor customizations and configuration for an installation. 
+* The main application for Dryad is at [https://github.com/datadryad/dryad-app](https://github.com/datadryad/dryad-app) with minor customizations and configuration for an installation. 
 
     * The stash_engine and stash_datacite modules hold most of the code for the user interface.
 
@@ -43,11 +43,11 @@ Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https:/
 
 * [Dataset submission flow](submission_flow.md), one of our longest and more complicated flows.  (Login is also somewhat complicated, but people don’t spend a lot of time doing it.)
 
-* The UI Library from the UX team and how to integrate CSS and major UI changes into the Dash application.  https://github.com/CDL-Dryad/dryad-app/blob/main/ui-library/README.md
+* The UI Library from the UX team and how to integrate CSS and major UI changes into the Dash application.  https://github.com/datadryad/dryad-app/blob/main/ui-library/README.md
 
 * Please see [how to set up and run tests locally](local_testing_setup.md) so you can add tests and run current tests to be sure nothing breaks.
 
 ## Development Process
 
-* Development progress is tracked in the [GitHub CDL-Dryad Development Tracker](https://github.com/CDL-Dryad/dryad-product-roadmap/projects)
+* Development progress is tracked in the [GitHub CDL-Dryad Development Tracker](https://github.com/datadryad/dryad-product-roadmap/projects)
 

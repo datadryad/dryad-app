@@ -5,7 +5,7 @@
 [NCBI LinkOut](https://www.ncbi.nlm.nih.gov/projects/linkout/) and [European PMC LabsLink](http://europepmc.org/LabsLink) are mechanisms by which NCBI and PMC pages link to content in Dryad. Dryad data packages are related to articles in PubMed, and to molecular sequences in GenBank's nucleotide and protein databases.
 
 The core service code lives in the
-[Dryad-app repo](https://github.com/CDL-Dryad/dryad-app/tree/main) in
+[Dryad-app repo](https://github.com/datadryad/dryad-app/tree/main) in
 the `lib/stash/link_out/` directory. The rake taks
 live in `lib/tasks/link_out.rake`. The XML ERB
 templates however reside within the higher-level `app/views/link_out/`

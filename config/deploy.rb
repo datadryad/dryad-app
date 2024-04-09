@@ -4,7 +4,7 @@ lock '~> 3.14'
 # set vars from ENV
 set :deploy_to,        ENV['DEPLOY_TO']       || '/home/ec2-user/deploy'
 set :rails_env,        ENV['RAILS_ENV']       || 'production'
-set :repo_url,         ENV['REPO_URL']        || 'https://github.com/CDL-Dryad/dryad-app.git'
+set :repo_url,         ENV['REPO_URL']        || 'https://github.com/datadryad/dryad-app.git'
 set :branch,           ENV['BRANCH']          || 'main'
 
 set :application,      'dryad'

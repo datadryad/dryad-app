@@ -32,7 +32,7 @@ OR
   The JSON has information about number or errors and all error messages.
 - At the appropriate time, a **React component is initialized and displayed** by the user.
   It is from [frictionlessdata/components](https://github.com/frictionlessdata/components).
-  See [the code for initializing and displaying it](https://github.com/CDL-Dryad/dryad-app/blob/f61b26e21f5d62fef7293de2a5a756fa5ab1fbc8/app/javascript/components/FileUpload/ModalValidationReport/ModalValidationReport.js).
+  See [the code for initializing and displaying it](https://github.com/datadryad/dryad-app/blob/f61b26e21f5d62fef7293de2a5a756fa5ab1fbc8/app/javascript/components/FileUpload/ModalValidationReport/ModalValidationReport.js).
   - Imports on line 6 & 7 would be set for the generic frictionless component
     starting with `@frictionlessdata/frictionless-components` instead of ours for a new implementation.
     Also install this component into your `package.json` for dependency management

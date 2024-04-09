@@ -52,7 +52,7 @@ export CAP_ENV=development
 - [ ] Mess with your releases directory so you can use capistrano with this version of Ruby/Gems
 ```shell
 cd ~/deploy/releases/
-git clone --single-branch --branch $MY_BRANCH git@github.com:CDL-Dryad/dryad-app.git temp-cap
+git clone --single-branch --branch $MY_BRANCH git@github.com:datadryad/dryad-app.git temp-cap
 
 # mess with current
 cd ~/deploy

@@ -21,14 +21,14 @@ To access more powerful features, an API account is required. API accounts allow
 - Access datasets that are not yet public, but are associated with the account's community (institution, journal, etc.)
 - Update datasets associated with the account's community
 
-See the <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/api_accounts.md" target="blank">API accounts document<span class="screen-reader-only"> (opens in new window)</span></a> for more information on requesting an API account and using it to access datasets.
+See the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md" target="blank">API accounts document<span class="screen-reader-only"> (opens in new window)</span></a> for more information on requesting an API account and using it to access datasets.
 
 
 ## Submission
 
 The Submission API is used by institutions that partner closely with Dryad, and use systems to create dataset submissions directly. Please contact us if you are [interested in partnering with Dryad](/stash/interested), and setting up an API account for submission.
 
-The <a href="https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md" target="blank">API submission examples document<span class="screen-reader-only"> (opens in new window)</span></a> gives concrete examples of submission through the Dryad API.
+The <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md" target="blank">API submission examples document<span class="screen-reader-only"> (opens in new window)</span></a> gives concrete examples of submission through the Dryad API.
 
 ### Dryad sandbox
 
