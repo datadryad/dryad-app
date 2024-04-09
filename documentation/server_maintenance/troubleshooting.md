@@ -13,7 +13,7 @@ If there is a serious issue that users need to know about, edit the file
 `app/views/layouts/stash_engine/application.html.erb`
 
 Add an alert box like this:
-```
+```html
 <div class="js-alert c-alert--informational" role="alert">
   <div class="c-alert__text">
     The message goes here!
@@ -38,7 +38,7 @@ with a typo and wipes out the values in a single column).
 $ sed -n -e '/CREATE TABLE.*`mytable`/,/Table structure for table/p' mysql.dump > mytable.dump
 ```
 2. At the top of the new file, add a drop table command:
-```
+```sql
 DROP TABLE IF EXISTS `mytable`;
 ```
 3. In the new file, just above the table contents, remove any "commented" commands about character sets, like this:
@@ -58,7 +58,7 @@ If a dataset does not appear in search results, it probably needs to be
 reindexed in SOLR. In a rails console, obtain a copy of the object and
 force it to index:
 
-```
+```ruby
 r=StashEngine::Resource.find(<resource_id>)
 r.submit_to_solr
 ```
@@ -177,7 +177,57 @@ If the user needs to change a data problem that caused a submission error (rare)
 Changing the latest queue state doesn't matter since it will enqueue
 when it's submitted by them again.
 
-#We need a corporate author instead of an accountable individual author
+Transfer Ownership / Change "Corresponding Author"
+==================================================
+
+The curators should give the dataset and ORCID information for who ownership goes to.  If you
+discover that this user has never logged in then you cannot transfer ownership until
+that user has logged in and has a record in the users table.
+
+Look up the dataset to see what you're dealing with and the resources involved.
+
+```sql
+SELECT res.* FROM stash_engine_resources res
+JOIN stash_engine_identifiers ids
+ON res.identifier_id = ids.id
+WHERE ids.identifier = '<bare-doi>'
+```
+
+Make a note of the user_id that owns the dataset and also note the last couple of resource.ids.
+
+Lookup the desired user_id to transfer ownership to.  Curator should've given the ORCID.  Note their user.id.
+```sql
+SELECT * FROM `stash_engine_users` WHERE `orcid` = '<new-owner-orcid>';
+```
+
+Lookup the current user_id and note the ORCID, name (you already have their user.id).
+```sql
+SELECT * FROM `stash_engine_users` WHERE `id` = '<old-owner-id>'
+```
+
+Update both the user_id and current_editor_id for the last couple versions to match the new owner.
+```sql
+UPDATE stash_engine_resources SET user_id=<new-id>, current_editor_id=<new-id> WHERE id IN (<id1, id2>);
+```
+
+Often, a user or curator has completely destroyed the correct association between the
+author and their ORCID by retyping someone else's name for the author that
+had a verified ORCID.  Check to see.
+
+```sql
+SELECT * FROM `stash_engine_authors` WHERE `resource_id` IN (<id1, id2>);
+```
+
+If necessary, change the two authors so they have the same
+ORCIDs associated with the names as in the user accounts 
+(which will have names and ORCIDS correct).
+
+If you don't update the authors to be sure authors/orcids are correct then the
+"corresponding author" may not appear correctly and it also plays havok with data consistency
+with ORCIDs for wrong people.
+
+We need a corporate author instead of an accountable individual author
+----------------------------------------------------------------------
 
 In rare cases, we've allowed this, though, rarely.  Have a user submit the dataset like normal and when it is time
 to change to a corporate author, do the following:
@@ -191,55 +241,6 @@ to change to a corporate author, do the following:
 - Check the landing page to be sure it appears correctly.
 - There may be additional things someone wants done such as waiving payment or other things.
 
-Transfer Ownership / Change "Corresponding Author"
-==================================================
-
-The curators should give the dataset and ORCID information for who ownership goes to.  If you
-discover that this user has never logged in then you cannot transfer ownership until
-that user has logged in and has a record in the users table.
-
-Look up the dataset to see what you're dealing with and the resources involved.
-
-```
-SELECT res.* FROM stash_engine_resources res
-JOIN stash_engine_identifiers ids
-ON res.identifier_id = ids.id
-WHERE ids.identifier = '<bare-doi>'
-```
-
-Make a note of the user_id that owns the dataset and also note the last couple of resource.ids.
-
-Lookup the desired user_id to transfer ownership to.  Curator should've given the ORCID.  Note their user.id.
-```
-SELECT * FROM `stash_engine_users` WHERE `orcid` = '<new-owner-orcid>';
-```
-
-Lookup the current user_id and note the ORCID, name (you already have their user.id).
-```
-SELECT * FROM `stash_engine_users` WHERE `id` = '<old-owner-id>'
-```
-
-Update both the user_id and current_editor_id for the last couple versions to match the new owner.
-```
-UPDATE stash_engine_resources SET user_id=<new-id>, current_editor_id=<new-id> WHERE id IN (<id1, id2>);
-```
-
-Often, a user or curator has completely destroyed the correct association between the
-author and their ORCID by retyping someone else's name for the author that
-had a verified ORCID.  Check to see.
-
-```
-SELECT * FROM `stash_engine_authors` WHERE `resource_id` IN (<id1, id2>);
-```
-
-If necessary, change the two authors so they have the same
-ORCIDs associated with the names as in the user accounts 
-(which will have names and ORCIDS correct).
-
-If you don't update the authors to be sure authors/orcids are correct then the
-"corresponding author" may not appear correctly and it also plays havok with data consistency
-with ORCIDs for wrong people.
-
 
 Setting embargo on a dataset that was accidentally published
 =============================================================
@@ -249,7 +250,7 @@ it; don't worry about the actual status, you'll change it in the DB.
 
 In the database, run these commands, filling in the appropriate
 identifiers at the end of each line, and the appropriate embargo date:
-```
+```sql
 select id,identifier,pub_state from stash_engine_identifiers where identifier like '%';
 select id, file_view, meta_view from stash_engine_resources where identifier_id=;
 select * from stash_engine_curation_activities where resource_id=;
@@ -276,7 +277,7 @@ to revisit the Zenodo integration.**
 
 Setting "Private For Peer Review" (PPR) on dataset that was accidentally published
 ==================================================================================
-```
+```sql
 select id,identifier,pub_state from stash_engine_identifiers where identifier like '%';
 select id, file_view, meta_view from stash_engine_resources where identifier_id=;
 select * from stash_engine_curation_activities where resource_id=;
@@ -308,6 +309,8 @@ to revisit the Zenodo integration.**
 Remove from our SOLR search:
 ```
 bundle exec rails c -e production # console for production environment
+```
+```ruby
 solr = RSolr.connect url: Blacklight.connection_config[:url]
 solr.delete_by_query("uuid:\"doi:<doi>\"")  # replace the <doi> in that string
 solr.commit
@@ -468,12 +471,12 @@ Updating DataCite Metadata
 Occasionally, there will be a problem sending metadata to DataCite for
 an item. You can force the metadata in DataCite to update in the Rails console with:
 
-```
-Stash::Doi::DataciteGen.new(resource: StashEngine::Resource.where(id: <resource_id>).first).update_identifier_metadata!
+```ruby
+Stash::Doi::DataciteGen.new(resource: StashEngine::Resource.find(<resource_id>)).update_identifier_metadata!
 ```
 
 Or select a set of resources and send it for each, for example:
-```
+```ruby
 StashEngine::Resource.where('publication_date >= ?', 3.days.ago).each do |r|
   Stash::Doi::DataciteGen.new(resource: r).update_identifier_metadata!
 end
@@ -501,7 +504,7 @@ replace a controlled value with an uncontrolled one.
 To add the new (non-ROR) affiliation and associate it with the author,
 follow a process like this:
 
-```
+```ruby
 i=StashEngine::Identifier.where(identifier: '10.5061/dryad.z8w9ghx8g').first
 r=i.resources.last
 r.authors
@@ -520,7 +523,7 @@ and the deposit should be waived or charged to another entity, change
 the payment information recorded in the Identifier object. This allows us
 to apply fee waivers or charge a different organization for the deposit.
 
-```
+```sql
 update stash_engine_identifiers set payment_type="waiver", payment_id="<COUNTRY>" where id=<SOME_ID>;
 ```
 
@@ -581,7 +584,7 @@ If you need to generate a new invoice for a dataset that has already been publis
 2. If there was a previous invoice, go into Stripe and ensure that it is voided.
 3. In the database, remove the payment information from the dataset.
 4. In a Rails console:
-```
+```ruby
 r = StashEngine::Resource.find(<resource_id>)
 user = StashEngine::User.find(r.current_editor_id)
 inv = Stash::Payments::Invoicer.new(resource: r, curator: user)
@@ -606,7 +609,7 @@ Possible problems with a file that won't retrieve from the old Merritt storage h
   ARKs. They just correspond to folder names in the `download_uri` for a resource)
 
 To get some information about where Dryad thinks the file is stored:
-```
+```ruby
 f = StashEngine::DataFile.find(<id>)
 f = f.original_deposit_file
 v = f.resource.stash_version.merritt_version

@@ -11,13 +11,13 @@ from Ruby 2.4 to Ruby 2.6.
 ## Basic Ruby Setup on server
 
 - [ ] Remove old versions of Ruby junk in the local directory
-```shell script
+```shell
 cd /dryad/local
 mv bin bin-old
 ```
 
 - [ ] Compile and install the new Ruby version
-```shell script
+```shell
 cd ~/install  # or make this directory first if it doesn't exist
 wget https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.6.tar.gz
 tar -xvf ruby-2.6.6.tar.gz
@@ -34,7 +34,7 @@ rm -rf ruby-2.6.6
 ## Basic Gems
 
 - [ ] Install some basic gems
-```shell script
+```shell
 gem update --system
 gem install bundler -v 2.1.4
 ```
@@ -42,7 +42,7 @@ gem install bundler -v 2.1.4
 ## Get Capistrano Working
 
 - [ ] Set environment variables for your environment, change as necessary
-```shell script
+```shell
 export MY_BRANCH=main
 export RAILS_ENV=development
 # the capistrano environment may be things like stage1 and refers to the server
@@ -50,8 +50,8 @@ export CAP_ENV=development
 ```
 
 - [ ] Mess with your releases directory so you can use capistrano with this version of Ruby/Gems
-```shell script
-cd ~/deploy//releases/
+```shell
+cd ~/deploy/releases/
 git clone --single-branch --branch $MY_BRANCH git@github.com:CDL-Dryad/dryad-app.git temp-cap
 
 # mess with current
@@ -66,14 +66,14 @@ bundle install --deployment
 ```
 
 - [ ] Symlink the shared files, otherwise capistrano task fails, change the deployment host in commands below.
-```shell script
+```shell
 bundle exec cap $CAP_ENV deploy:symlink:shared
 ```
 
 ## Deploy with Capistrano
 
 - [ ] Now capistrano should be able to deploy, change deploy host below (development there)
-```shell script
+```shell
 bundle exec cap $CAP_ENV deploy BRANCH="$MY_BRANCH"
 ```
 
@@ -83,7 +83,7 @@ up some things in ~/install or logs
 ## Check the disk isn't full
 - [ ] for good measure check `df` to see free space and clean something up if needed
 - [ ] It doesn't hurt to check the restart scripts in ~/init.d for passenger still working
-```shell script
+```shell
 ~/init.d/passenger.dryad restart
 ```
 
