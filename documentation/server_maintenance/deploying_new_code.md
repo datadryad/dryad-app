@@ -2,36 +2,6 @@
 Deployment of code to the Dryad servers
 =========================================
 
-Code deployment with Capistrano
--------------------------------
-
-Most of the servers have a `~/tools/deploy/dryad-app` directory, which
-contains a copy of the codebase suitable for launching the deployment
-process. However, the deployment process will place the resultant
-files into `~/apps/ui/current`.
-
-To deploy with capistrano, you must be in the deploy directory, then:
-```
-cap <capistrano deploy environment> deploy BRANCH="<branch or tag>"
-```
-
-Note that there are both machine-level and environment-level
-capistrano environment settings for convenience. `stage1` will only
-deploy to the first stage server, `stage2` will only deploy to the
-second, `stage` will deploy to both. The other way to do this is to
-set an environment variable SERVER_HOSTS (with all domain names
-separated by spaces) and it will attempt deploying to the domain names
-you specify.  I can never remember the long 12-part domain names CDL
-sets up without copy-pasting them, though.
-
-Remember, in order for capistrano to work, it must SSH in to servers.
-That means that the public key for any computer you want to deploy
-from must be added to the authorized_keys for the dryad account on the
-server you want to deploy to. This also means that if you want to
-deploy locally on a machine you must add the public key to the
-authorized keys on the same computer because it still uses ssh.
-
-
 Steps to deploy a new release to stage/production
 -------------------------------------------------
 
@@ -51,7 +21,7 @@ Steps in a production deploy:
 Creating tags for deployment
 ---------------------------------
 
-Capistrano allows deploying from a tag as well as a branch.
+You may deploy from a tag as well as a branch.
 
 [Git-Basics-Tagging](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
 gives some information about how to tag. For this project, there are a
@@ -84,6 +54,14 @@ git push --delete origin <tag-name>
 After creating tags, you will usually want to create an official
 "release" along with release notes in the GitHub user interface.
 
+
+De/Re-Registering Servers from the ALB
+---------------------------------------
+
+To register and de-register servers from the ALB, use the AWS console.
+
+<!-- CHECK ALL AGAINST NEW SERVERS!!
+
 Suspending and re-enabling jobs around deployment
 -------------------------------------------------
 
@@ -108,12 +86,6 @@ For information on starting/stopping these transfers, see:
 - [Zenodo extra copies](../zenodo_integration/delayed_jobs.md)
 
 
-De/Re-Registering Servers from the ALB
----------------------------------------
-
-To register and de-register servers from the ALB, use the AWS console.
-
-
 Setting a server to "Maintenance Mode"
 --------------------------------------
 
@@ -125,3 +97,5 @@ maintenance on both.
 Maintenance mode shows outside IP addresses a maintenance page served
 by Apache, while our internal IP addresses have traffic passed through
 and are able to see the application served by Passenger.
+
+-->
