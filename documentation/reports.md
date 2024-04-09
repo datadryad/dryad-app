@@ -226,9 +226,7 @@ multiple sources (like us and Zenodo) and we don't pre-populate them all the tim
 It includes published and embargoed (shows the landing page but no downloads) which is why some
 publication dates are in the future.
 
-Sorry, IDK why the markdown seems to do it's own thing when indenting, even if I do it preformatted.
-
-<pre>
+```sql
 SELECT se_id3.identifier, se_res3.title, se_auth3.author_first_name, se_auth3.author_last_name, se_auth3.author_email, dcs_affil3.long_name, se_id3.created_at, se_res3.publication_date,
 (stash_engine_counter_stats.unique_investigation_count - stash_engine_counter_stats.unique_request_count) as unique_views, stash_engine_counter_stats.unique_request_count as unique_downloads
 FROM
@@ -265,11 +263,11 @@ LEFT JOIN stash_engine_counter_stats
 ON se_id3.id = stash_engine_counter_stats.`identifier_id`
 WHERE dcs_affil3.ror_id IN ('https://ror.org/02y3ad647', 'https://ror.org/0419bgt07', 'https://ror.org/04tk2gy88')
 ORDER BY se_res3.publication_date, se_id3.identifier, se_res3.title;
-</pre>
+```
 
 # See all institutions associated with all authors for dataset (all versions, all statuses)
 (replace the identifier with the one you want to see).
-```mysql
+```sql
 SELECT res.id as resource_id, res.created_at resource_created, resource_id, affil.*
   FROM stash_engine_identifiers ids
 	JOIN stash_engine_resources res
@@ -289,7 +287,7 @@ SELECT res.id as resource_id, res.created_at resource_created, resource_id, affi
 Replace the list of ROR institutions and only works when people have filled in the
 RORs correctly.
 
-```mysql
+```sql
 SELECT DISTINCT ids.identifier
   FROM stash_engine_identifiers ids
 	JOIN stash_engine_resources res
@@ -305,7 +303,7 @@ SELECT DISTINCT ids.identifier
 
 # See all DOIs submitted under a tenant
 (Change tenant ids below to the ones you want to see)
-```mysql
+```sql
 SELECT DISTINCT ids.identifier
   FROM stash_engine_identifiers ids
     JOIN stash_engine_resources res
@@ -320,7 +318,7 @@ This may not match the tenant id in the dataset since users may have their affil
 after making submissions. Users have their tenant_id association set after bringing
 a new tenant on board by searching for users with emails at an institution.
 
-```mysql
+```sql
 SELECT DISTINCT ids.identifier
   FROM stash_engine_identifiers ids
     JOIN stash_engine_resources res
@@ -340,7 +338,7 @@ There are lots of duplicate authors who seem to be entering their names in sligh
 In order to get a really unique count, it probably needs to be gone through by hand and eliminate seeming duplicates and it still might not be
 100% accurate, but would be close.
 
-```
+```sql
 SELECT DISTINCT auths.`author_first_name`, auths.`author_last_name`, affils.`long_name` FROM stash_engine_authors auths
 JOIN dcs_affiliations_authors aa
 ON auths.id = aa.`author_id`
@@ -354,7 +352,7 @@ Published datasets and published by year
 ========================================
 
 List of published
-```
+```sql
 /* get all datasets and their publication date */
 SELECT ids.identifier, res.publication_date FROM stash_engine_identifiers ids
 JOIN (SELECT max(id) as res2_id, identifier_id FROM stash_engine_resources
@@ -368,7 +366,7 @@ WHERE ids.pub_state IN ('published', 'embargoed');
 ```
 
 Counts of published by year (change embargo or not below)
-```
+```sql
 SELECT DATE_FORMAT(res.publication_date, '%Y') as year, count(*) as year_count FROM stash_engine_identifiers ids
 JOIN (SELECT max(id) as res2_id, identifier_id FROM stash_engine_resources
   WHERE meta_view = 1
@@ -383,7 +381,7 @@ GROUP BY DATE_FORMAT(res.publication_date, '%Y');
 
 Lists of objects in non-Dryad collections for respository migration
 ===============================================================
-```
+```sql
 SELECT ids.identifier, ids.storage_size, res.download_uri, res.title, res.tenant_id, res_count.versions
 FROM stash_engine_identifiers ids
 JOIN (SELECT max(stash_engine_resources.id) as res2_id, identifier_id FROM stash_engine_resources
@@ -403,7 +401,7 @@ ORDER BY res.tenant_id, ids.identifier;
 
 Lists of items sent to Zenodo and then embargoed afterward (need hiding in Zenodo)
 ==================================================================================
-```
+```sql
 SELECT cur_published.identifier_id, cur_published.curation_id as last_publication_id, cur_embargoed.curation_id as last_embargo_id,
 ids.*
 FROM

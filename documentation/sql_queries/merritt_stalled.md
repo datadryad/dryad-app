@@ -13,7 +13,7 @@ Not 100% accurrate, but a useful place to start when asking Merritt to investiga
 When we've seen this problem, the item is also not available in the OAI-PMH feed (or our logs) and that version doesn't appear if
 checking the Merritt UI directly.
 
-```
+```sql
 SELECT res.id, download_uri, ver.`merritt_version`, rs.resource_state, sl.`created_at`, sl.`archive_submission_request`, sl.`archive_response`
 FROM stash_engine_resources res
 JOIN 

@@ -14,7 +14,7 @@ and possibly has already been shared with others.
 
 If these can't be transferred then we need to change the DOIs to a Dryad one.
 
-```mysql
+```sql
 SELECT * 
 	FROM `stash_engine_identifiers`
 	WHERE `identifier` NOT LIKE '10.5061%'
@@ -26,7 +26,7 @@ SELECT *
 This is helpful because we do not need to recreate these in DataCite, but there
 are only about 103 out of 750 unpublished right now.
 
-```mysql
+```sql
 SELECT DISTINCT ids.* 
 	FROM `stash_engine_identifiers` ids
 		JOIN stash_engine_resources res

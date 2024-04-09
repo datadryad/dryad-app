@@ -76,7 +76,7 @@ Alternate titles
 Each journal has a primary title, but may have multiple `alternate_titles`.
 
 To add an alternate title to a journal:
-```
+```ruby
 # Find the target journal and assign it to j
 
 # Then create the alternate title
@@ -99,7 +99,7 @@ the corresponding journal that has the same name:
 `rails journals:clean_titles_with_asterisks`
 
 Search for journals that are candidates to fix, in the database:
-```
+```sql
 SELECT value, COUNT(value)
 FROM stash_engine_internal_data
 WHERE value like '%*%'
@@ -116,7 +116,7 @@ IF there is no corresponding journal, create an entry for a new journal in the
 system, using a command like the the one below. Edit any
 of the relevant fields, but the most critical are `title` and `issn`. Note that `issn` may contain
 either a single ISSN or an array of them. 
-```
+```ruby
 j = StashEngine::Journal.create(title: '', issn: '',
                                 notify_contacts: ["automated-messages@datadryad.org"], allow_review_workflow: true,
 								allow_embargo: false, allow_blackout: false, sponsor_id: nil)
@@ -129,7 +129,7 @@ StashEngine::JournalTitle.create(title: 'Some new title', journal: j, show_in_au
 ```
 
 Finally, replace the title throughout the system:
-```
+```ruby
 old_name = 'The Greatest Journal*'
 new_id = 123
 StashEngine::Journal.replace_uncontrolled_journal(old_name: old_name, new_id: new_id)
@@ -141,7 +141,7 @@ Updating journals for payment plans and integrations
 When a journal changes payment plans, simply update the `payment_plan_type`
 field. If the change needs to be retroactive, use this function in the Rails console,
 and then re-generate any needed shopping cart reports:
-```
+```ruby
 # Update the payment types for datasets associated with a journal in a given month
 # usage: change_journal_payment_type(year_month: '2023-01',
 #                                    journal_id: 220, 
@@ -173,7 +173,7 @@ When a journal integrates with the email process, the journal must have the
 When a journal starts using API access, the associated API account must be
 designated as an administrator of the journal. To enable a set of journals for
 an API user, use something like:
-```
+```ruby
 u = StashEngine::User.find(<user_id>)
 jj = StashEngine::Journal.where("title like '<title>%'") # or search by sponsor_id
 jj.each do |j|
@@ -382,7 +382,7 @@ To process emails:
 `rails journal_email:process`
 
 To use individual emails:
-```
+```ruby
 require 'stash/google/journal_g_mail'
 m=Stash::Google::JournalGMail.messages_to_process.first
 mc=Stash::Google::JournalGMail.message_content(message: m)
@@ -391,7 +391,7 @@ l=Stash::Google::JournalGMail.message_labels(message: m)
 ```
 
 To access parsed metadata:
-```
+```ruby
 m=StashEngine::Manuscript.last
 m.status
 m.journal

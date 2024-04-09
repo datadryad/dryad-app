@@ -119,6 +119,8 @@ the test (with bundle exce rspec), the code will break there. Within the break c
 To enable the Mocks in Rails Console:
 ```
 RAILS_ENV=test rails_console.sh
+```
+```ruby
 require 'webmock'
 require 'rspec/mocks/standalone'
 include WebMock::API
@@ -134,6 +136,8 @@ mock_funders!
 To use the Factories in Rails Console:
 ```
 RAILS_ENV=test rails_console.sh
+```
+```ruby
 $LOAD_PATH.unshift("/home/ubuntu/dryad-app/spec"); nil
 require('rails_helper')
 i=FactoryBot.create(:identifier)

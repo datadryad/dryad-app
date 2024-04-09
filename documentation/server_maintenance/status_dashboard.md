@@ -17,7 +17,7 @@ To remove items from the dashboard, you must edit all of the items listed above!
 
 To run a checker in the Rails console, both instantiate it and specify its
 abbreviation:
-```
+```ruby
 dc=StashEngine::StatusDashboard::DBBackupService.new(abbreviation: 'db_backup')
 dc.ping_dependency
 ```
