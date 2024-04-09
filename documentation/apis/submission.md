@@ -129,7 +129,7 @@ To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/ap
 
 ```json
 {
-    "url": "https://raw.githubusercontent.com/CDL-Dryad/dryad-app/main/documentation/apis/submission.md",
+    "url": "https://raw.githubusercontent.com/datadryad/dryad-app/main/documentation/apis/submission.md",
     "digest": "aca3032d20c829a6060f1b90afda6d14",
     "digestType": "md5",
     "description": "This is the best file ever!",

@@ -90,7 +90,7 @@ module StashApi
       [
         {
           name: 'stash',
-          href: 'https://github.com/CDL-Dryad/stash/blob/main/stash_api/link-relations.md#{rel}', # rubocop:disable Lint/InterpolationCheck
+          href: 'https://github.com/datadryad/stash/blob/main/stash_api/link-relations.md#{rel}', # rubocop:disable Lint/InterpolationCheck
           templated: 'true'
         }
       ]

@@ -1,6 +1,6 @@
 # stash
 
-[![Build Status](https://travis-ci.org/CDL-Dryad/stash.svg?branch=main)](https://travis-ci.org/CDL-Dryad/stash) 
+[![Build Status](https://travis-ci.org/datadryad/stash.svg?branch=main)](https://travis-ci.org/datadryad/stash) 
 
 ## Introduction
 
@@ -29,7 +29,7 @@ repository.
 
 The next generation of [Dryad](https://datadryad.org) is being rebuilt
 with the Stash core. For the Dryad source code, see the
-[dryad](https://github.com/CDL-Dryad/dryad-app) repository.
+[dryad](https://github.com/datadryad/dryad-app) repository.
 
 ## Contributing
 

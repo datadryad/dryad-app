@@ -1,7 +1,7 @@
 # A unit file for systemd, to launch the Puma server for Dryad
 [Unit]
 Description=Puma HTTP Server
-Documentation=https://github.com/CDL-Dryad/dryad-app.git
+Documentation=https://github.com/datadryad/dryad-app.git
 After=remote-fs.target network.target
 
 [Service]

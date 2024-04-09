@@ -11,7 +11,7 @@ module StashApi
 
   FILE_HASH = {
     'skipValidation' => true,
-    'url' => 'http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico',
+    'url' => 'http://github.com/datadryad/dryad-app/raw/main/app/assets/images/favicon.ico',
     'digestType' => 'md5',
     'path' => 'favicon.ico',
     'mimeType' => 'image/vnd.microsoft.icon',
@@ -75,14 +75,14 @@ module StashApi
     describe '#create' do
       it 'will retrive, validate and fill in info from a URL from the internet by HEAD request' do
         mock_github_head_request!
-        test_url = 'http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico'
+        test_url = 'http://github.com/datadryad/dryad-app/raw/main/app/assets/images/favicon.ico'
         response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls",
                              params: { url: test_url }.to_json,
                              headers: default_authenticated_headers
         expect(response_code).to eq(201)
         hsh = response_body_hash
         expect(hsh['path']).to eq('favicon.ico')
-        expect(hsh['url']).to eq('http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico')
+        expect(hsh['url']).to eq('http://github.com/datadryad/dryad-app/raw/main/app/assets/images/favicon.ico')
         expect(hsh['size']).to eq(6318)
         expect(hsh['mimeType']).to eq('image/vnd.microsoft.icon')
         expect(hsh['status']).to eq('created')
@@ -109,7 +109,7 @@ module StashApi
 
       it "doesn't allow anonymous (not logged in) users to add urls" do
         mock_github_head_request!
-        test_url = 'http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico'
+        test_url = 'http://github.com/datadryad/dryad-app/raw/main/app/assets/images/favicon.ico'
         response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls",
                              params: { url: test_url }.to_json,
                              headers: default_json_headers
@@ -118,7 +118,7 @@ module StashApi
 
       it "doesn't allow adding the same URL multiple times" do
         mock_github_head_request!
-        test_url = 'http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico'
+        test_url = 'http://github.com/datadryad/dryad-app/raw/main/app/assets/images/favicon.ico'
         post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls",
              params: { url: test_url }.to_json,
              headers: default_authenticated_headers
@@ -140,7 +140,7 @@ module StashApi
 
       it 'gives an error for non-validating urls (404)' do
         mock_github_bad_head_request!
-        test_url = 'http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico'
+        test_url = 'http://github.com/datadryad/dryad-app/raw/main/app/assets/images/favicon.ico'
         response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls",
                              params: { url: test_url }.to_json,
                              headers: default_authenticated_headers
@@ -152,7 +152,7 @@ module StashApi
         @resources[0].current_resource_state.update(resource_state: 'submitted')
         @resources[1].current_resource_state.update(resource_state: 'processing')
         mock_github_head_request!
-        test_url = 'http://github.com/CDL-Dryad/dryad-app/raw/main/app/assets/images/favicon.ico'
+        test_url = 'http://github.com/datadryad/dryad-app/raw/main/app/assets/images/favicon.ico'
         response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls",
                              params: { url: test_url }.to_json,
                              headers: default_authenticated_headers

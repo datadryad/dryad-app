@@ -79,7 +79,7 @@ Rails.application.routes.draw do
   get '/Governance', to: redirect('stash/our_governance')
   get '*path',
       constraints: {host: 'wiki.datadryad.org'},
-      to: redirect('https://github.com/CDL-Dryad/dryad-app/tree/main/documentation/v1_wiki_content.md')
+      to: redirect('https://github.com/datadryad/dryad-app/tree/main/documentation/v1_wiki_content.md')
 
   ############################# API support ######################################
 

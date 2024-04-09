@@ -17,7 +17,7 @@ WORKING_TREE=/home/ec2-user/dryad-app
 CAP_STAGE="v3_stage"
 DEPLOY_TO="/home/ec2-user/deploy"
 RAILS_ENV="v3_stage"
-REPO_URL="https://github.com/CDL-Dryad/dryad-app.git"
+REPO_URL="https://github.com/datadryad/dryad-app.git"
 BUNDLE="/home/ec2-user/.rbenv/shims/bundle"
 BRANCH=$1
 

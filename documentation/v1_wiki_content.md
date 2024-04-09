@@ -9,7 +9,7 @@ Content from that wiki has been phased out, or transitioned to updated
 documentation that lives in various other places.
 
 *Technical documentation* is primarily alongside the Dryad code in
-GitHub, at https://github.com/CDL-Dryad/dryad-app/tree/main/documentation, supplemented with
+GitHub, at https://github.com/datadryad/dryad-app/tree/main/documentation, supplemented with
 [API documentation](https://datadryad.org/stash/api)
 
 *Documents related to Dryad's governance* can be found in:
