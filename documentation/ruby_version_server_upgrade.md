@@ -55,7 +55,7 @@ cd ~/deploy/releases/
 git clone --single-branch --branch $MY_BRANCH git@github.com:CDL-Dryad/dryad-app.git temp-cap
 
 # mess with current
-cd ~/apps/ui/
+cd ~/deploy
 unlink current
 ln -s /home/ec2-user/deploy/releases/temp-cap current
 cd current

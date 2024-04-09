@@ -70,33 +70,22 @@ same as the name of the config file.
 id_scheme (always doi right now).
 
 authentication:
-- `authentication_strategy` is usually shibboleth right now.  There are
-  other keys and values under authentication depending on the strategy
-  chosen.
-  - `entity_id`
-    - Seems that if you go to https://dryad-stg.cdlib.org/cgi-bin/printenv and
-      search for the item in the list while having your browser inspector open
-      to the network tab you may be able to dig out the entity id.  I found mine
-      in the response for the file "DiscoFeed" where it had some JSON with the
-      display name I selected and the entityID.  But seems like it only allows
-      discovery for some institutions.
-    - (old way) can normally be found by looking up the institution’s from
-       the InCommon config file. On stage/prod, this is
-       `/apps/dryad/local/shibboleth-sp/var/InCommon-metadata.xml`. If the
-    institution is not part of InCommon, the shibboleth for that
-    institution may be configured separately. Look at the files in prod
-    directory `/apps/dryad/local/shibboleth-sp/etc/shibboleth`.
-    
-  - `entity_domain` is simply the domain portion of the entity_id
-- A strategy of `author_match` allows login by that institution without
-  shibboleth validation, but requires an author to be from the same tenant
-  (an author ROR institution should match).
-- A strategy of `ip_address` allows validating membership by requiring that
-  the user logs in from their organization network the first time.  The organization
-  supplies the network ranges that are allowed and we put in an array under the
-  key `ranges`.  The format is those accepted by ipaddr.rb which could be in
-  CIDR (ie "192.168.1.0/24") or network mask formats like "192.168.1.0/255.255.255.0"
-  (see their docs).  It also supports IPv6 (which we're not currently using).
+- `strategy` is usually shibboleth right now.  There are other keys and values
+  depending on the strategy chosen.
+  - A strategy of `author_match` allows login by that institution without
+    shibboleth validation, but requires an author to be from the same tenant
+    (an author ROR institution should match).
+  - A strategy of `ip_address` allows validating membership by requiring that
+    the user logs in from their organization network the first time.  The organization
+    supplies the network ranges that are allowed and we put in an array under the
+    key `ranges`.  The format is those accepted by ipaddr.rb which could be in
+    CIDR (ie "192.168.1.0/24") or network mask formats like "192.168.1.0/255.255.255.0"
+    (see their docs).  It also supports IPv6 (which we're not currently using).
+  - A strategy of `shibboleth` allows login using our [shibboleth][shibboleth/README.md] setup,
+    usually through InCommon.
+    - `entity_id` often discoverable in https://incommon.org/community-organizations/.
+      Organizations not in InCommon must be configured separately.
+    - `entity_domain` is simply the domain portion of the entity_id
 
 `default_license` is either cc0 or cc_by right now but might be set to
 other licenses configured at the application-level with some text and

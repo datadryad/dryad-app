@@ -75,7 +75,7 @@ user interface files from github.
 
 ## How to handle maintenance
 - (On server 01) "pause" or "drain" the jobs a bit ahead with `~/bin/long_jobs.sh drain`.  This just creates
-  the file `defer_jobs.txt` in `~/apps/ui/releases` and it will not submit new things to zenodo while it's there.
+  the file `defer_jobs.txt` in `deploy/releases` and it will not submit new things to zenodo while it's there.
 - After deploy, do `~/bin/long_jobs.sh restart` or remove the `defer_jobs.txt` explained above. (The
   `hold-submissions.txt` file does something similar but for repository submissions).
 - If you deployed new code you should restart delayed job.  `sudo cdlsysctl restart delayed_job`
