@@ -479,6 +479,11 @@ StashEngine::Resource.where('publication_date >= ?', 3.days.ago).each do |r|
 end
 ```
 
+To update anything published between a set of dates using a task, you can use:
+```
+RAILS_ENV=production bundle exec rails datacite_target:update_by_publication YYYY-MM-DD YYYY-MM-DD
+```
+
 If you need to update DataCite for *all* items in Dryad, you can use:
 ```
 RAILS_ENV=production bundle exec rails datacite_target:update_dryad
