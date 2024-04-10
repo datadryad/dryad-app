@@ -11,7 +11,7 @@ one-off requests in the future.
 
 The following gives published items with an author at one of the UC RORs
 that are listed in our tenants.
-```mysql
+```sql
 SELECT DISTINCT ids.id FROM dcs_affiliations affil
 JOIN dcs_affiliations_authors affil_auth
 ON affil.`id` = affil_auth.`affiliation_id`
@@ -28,7 +28,7 @@ AND pub_state = 'published'
 
 UC Authors of datasets grouped by publication year.  I'm assuming the first resource
 where the files show up is the one with the publication year that is correct.
-```mysql
+```sql
 SELECT pub_year, count(pub_year) as number FROM
 (SELECT pub_ids.id, first_pub.min_resource_id, year(res2.publication_date) as pub_year FROM
 (SELECT DISTINCT ids.id FROM dcs_affiliations affil
@@ -55,7 +55,7 @@ Published datasets by the submitter and their current affiliation as a UC tenant
 probably be optimized by using the tenant_id in the resource instead.  There may be some difference
 in number since users may move affiliations as they change jobs and the original tenant was the
 one that was present on initial submission.
-```mysql
+```sql
 SELECT pub_year, count(pub_year) as number FROM
 (SELECT pub_ids.id, first_pub.min_resource_id, year(res2.publication_date) as pub_year FROM
 (SELECT DISTINCT seid.id FROM stash_engine_resources res

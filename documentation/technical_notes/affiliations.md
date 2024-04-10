@@ -27,7 +27,7 @@ asterisk appended. Ideally, all affiliations will appear in ROR, so we can chang
 controlled names.
 
 Search for affiliations that are candidates to fix, in the database:
-```
+```sql
 SELECT long_name, COUNT(long_name)
 FROM dcs_affiliations
 WHERE long_name like '%*%'
@@ -41,7 +41,7 @@ database.
 IF there is no corresponding ROR, leave it alone.
 
 IF there is a corresponding ROR, update the associated affiliation entries to have the correct values, using a process like:
-```
+```ruby
 # find offending identifiers
 aa = StashDatacite::Affiliation.where("long_name like '%<INST_NAME>%*'")
 aa.each do |a|

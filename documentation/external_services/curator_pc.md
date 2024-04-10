@@ -229,7 +229,7 @@ rbenv init
 mkdir -p "$(rbenv root)"/plugins
 git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
 rbenv install 2.6.6
-git clone https://github.com/CDL-Dryad/dryad-app.git
+git clone https://github.com/datadryad/dryad-app.git
 cd dryad-app
 sudo gem install bundler:2.2.27
 cd script/file-download
@@ -245,7 +245,7 @@ Windows has difficulty cloning the Dryad code due to a filename with crazy
 characters, which we intentionally created to test filenames.
 
 The code should be able to be cloned with:
-`git clone -c core.protectNTFS=false -n https://github.com/CDL-Dryad/dryad-app.git`
+`git clone -c core.protectNTFS=false -n https://github.com/datadryad/dryad-app.git`
 
 Download the [Ruby+Devkit 2.6.8-1](https://rubyinstaller.org/downloads/)
 (x64) and install it as administrator. Install the option "with MinGW", since

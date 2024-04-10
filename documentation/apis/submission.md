@@ -16,7 +16,7 @@ Before using the submission API, each user must have an [API Account](api_accoun
 Create the appropriate metadata. A sample of the bare minimum metadata
 is shown below, but typical metadata should be more complete:
 
-```
+```json
   {
     "title": "Visualizing Congestion Control Using Self-Learning Epistemologies",
     "authors": [
@@ -127,9 +127,9 @@ The other method is adding by URL.  You can do a POST to {{url-domain-name}}/api
 
 To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/urls` with json something like the following:
 
-```
+```json
 {
-    "url": "https://raw.githubusercontent.com/CDL-Dryad/dryad-app/main/documentation/apis/submission.md",
+    "url": "https://raw.githubusercontent.com/datadryad/dryad-app/main/documentation/apis/submission.md",
     "digest": "aca3032d20c829a6060f1b90afda6d14",
     "digestType": "md5",
     "description": "This is the best file ever!",

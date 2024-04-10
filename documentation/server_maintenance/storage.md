@@ -38,7 +38,7 @@ rm /home/ec2-user/deploy/releases/hold-submissions.txt
 ```
 
 THEN, on one server, in the Rails console:
-```
+```ruby
 resource_ids =
   StashEngine::RepoQueueState.latest_per_resource.where(state: 'rejected_shutting_down').order(:updated_at).map(&:resource_id)
 resource_ids.each do |res_id|
@@ -48,7 +48,7 @@ end
 
 If storage had errors, you can use a similar process, but you must remove any `processing` entries for
 the RepoQueueState:
-```
+```ruby
 resource_ids =
   StashEngine::RepoQueueState.latest_per_resource.where(state: 'errored').order(:updated_at).map(&:resource_id)
 resource_ids.each do |res_id|

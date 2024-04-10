@@ -35,7 +35,7 @@
    These use the copied fields you set up in number 2.
 4. You will need to copy (scp) these completed files into the geoblacklight core on
    each server you want to use it on.  Start by testing on dev.  The core is someplace
-   like `~/apps/solr/server/solr/geoblacklight/conf`.  You'll need to restart SOLR
+   like `/solr/server/solr/geoblacklight/conf`.  You'll need to restart SOLR
    afterwards (right now from `~/init.d` script).
 5. Double-check search is still working as expected without error after restarting.
 6. Add constants to the geoblacklight example and config for your new facet.

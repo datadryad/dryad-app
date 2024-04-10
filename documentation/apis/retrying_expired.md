@@ -30,7 +30,7 @@ to avoid some repetitive code that is sent with most requests, but the main thin
 
 Similar retry logic can be incorporated in most programming
 
-```
+```ruby
 # a method to retry a request that is passed in
 def retry(method, *args)
   retries ||= 0
@@ -59,7 +59,7 @@ before making a call since the retry method handles obtaining a new token or
 retrying on an Unauthorized status.
 
 
-```
+```ruby
 require_relative 'retry_client'
 rc = RetryClient.new(
           app_id: '<your-app-id>',

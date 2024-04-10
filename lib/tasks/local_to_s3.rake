@@ -1,6 +1,6 @@
 # Local-to-S3 conversion
 # Moves files from local storage to Amazon S3
-# See ticket https://github.com/CDL-Dryad/dryad-product-roadmap/issues/1079
+# See ticket https://github.com/datadryad/dryad-product-roadmap/issues/1079
 
 # :nocov:
 require 'stash/aws/s3'
