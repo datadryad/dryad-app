@@ -1,11 +1,11 @@
 # Dryad
 
-[![Build Status](https://travis-ci.com/datadryad/dryad-app.svg?branch=main)](https://travis-ci.com/datadryad/dryad-app)
+<!-- [![Build Status](https://travis-ci.com/datadryad/dryad-app.svg?branch=main)](https://travis-ci.com/datadryad/dryad-app) -->
 
 ## Introduction
 
 **Dryad** is a research data publishing platform based on the [UC Curation Center](http://www.cdlib.org/uc3/)'s
-implementation of the [Stash](https://github.com/datadryad/stash) application framework. It relies on metadata based on the
+implementation of the [Stash](https://github.com/CDL-Dryad/stash) application framework. It relies on metadata based on the
 [DataCite Metadata Schema](https://schema.datacite.org/).
 
 - [About Dryad](https://datadryad.org/)
