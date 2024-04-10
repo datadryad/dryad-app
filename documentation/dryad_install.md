@@ -1,7 +1,5 @@
 # Dryad installation (v0.0.2)
 
-The Dryad application is made of a number of parts intended to keep it more flexible and to separate concerns so that parts can be replaced with new metadata and other engines to customize it.  Some basic information about the project and architechiture is available at [the Dryad Platform](https://datadryad.org/stash/our_platform), but this document focuses on getting Dryad up and running for development.
-
 ## The ingredients
 
 You'll need the following parts installed and configured on a (local) UI development server to do development on the full UI application.  Don't worry, there are more detailed installation instructions in other sections below and this is meant to give an overview of the larger dependencies to configure.
