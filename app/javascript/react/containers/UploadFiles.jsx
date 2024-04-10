@@ -370,7 +370,7 @@ export default function UploadFiles({
     const {key, bucket, region} = app_config_s3.table;
     // AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
     let partSize = 5 * 1024 * 1024;
-    const maxSize = chosenFiles.reduce((p, c) => (p.size > c.size ? p.size : c.size), 0);
+    const maxSize = chosenFiles.reduce((p, c) => (p > c.size ? p : c.size), 0);
     if (maxSize > 10000000000) partSize = 10 * 1024 * 1024;
     if (maxSize > 100000000000) partSize = 30 * 1024 * 1024;
     const config = {
