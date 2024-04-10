@@ -80,8 +80,6 @@ need to execute any client-side Javascript code.
 - **It supplies a little information about how to test, if it's not obvious**.  For
 example, if you need a specific identifier or specific data to test, then please note
 in the PR.
-- **It adds major, brand-new layouts as examples in the UI library**.  Not required
-for most things that are minor tweaks or have similar examples in the UI library.
 - Other things?
 
 
