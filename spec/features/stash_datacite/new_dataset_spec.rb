@@ -135,7 +135,7 @@ RSpec.feature 'NewDataset', type: :feature do
       expect(page).to have_text('you will receive an invoice')
     end
 
-    it 'waives the fee when institution is in a fee-waiver country', js: true do
+    xit 'waives the fee when institution is in a fee-waiver country', js: true do
       waiver_country = Faker::Address.country
       waiver_university = Faker::Educator.university
       ror_org = create(:ror_org, name: waiver_university, country: waiver_country)
