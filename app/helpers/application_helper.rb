@@ -25,6 +25,9 @@ module ApplicationHelper
 
     return '' if content.blank?
 
+    content = CGI.escapeHTML(content)
+    content = CGI.unescapeElement(content, %w[sub sup])
+
     markdown = Redcarpet::Markdown.new(KnockDownHeadings.new(hard_wrap: true), @md_options)
     markdown.render(content).html_safe
   end

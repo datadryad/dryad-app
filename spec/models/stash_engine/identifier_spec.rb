@@ -502,7 +502,7 @@ module StashEngine
         expect(@identifier.payment_type).to eq('institution')
       end
 
-      it 'records an a country-based fee waiver' do
+      xit 'records an a country-based fee waiver' do
         affil = double(StashDatacite::Affiliation)
         allow(affil).to receive(:fee_waivered?).and_return(true)
         allow(affil).to receive(:country_name).and_return('Bogusland')

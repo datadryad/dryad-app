@@ -10,11 +10,6 @@ module Stash
     class SubmissionJob
       attr_reader :resource_id
 
-      # The default chunk size of Down is too small, and results in AWS transfers
-      # exceeding the number of chunks allowed for a multipart upload. We need to
-      # define a generous chunk size to ensure the transfer completes.
-      CHUNK_SIZE = 500 * 1024 * 1024
-
       def initialize(resource_id:)
         resource_id = resource_id.to_i if resource_id.is_a?(String)
         raise ArgumentError, "Invalid resource ID: #{resource_id || 'nil'}" unless resource_id.is_a?(Integer)
@@ -130,6 +125,7 @@ module Stash
         permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
         permanent_key = "v3/#{data_file.s3_staged_path}"
         s3_perm = Stash::Aws::S3.new(s3_bucket_name: permanent_bucket)
+        chunk_size = get_chunk_size(data_file.upload_file_size)
 
         input_size = 0
         digest_type = 'sha-256'
@@ -137,10 +133,10 @@ module Stash
         algorithm = sums.get_algorithm(digest_type).new
 
         logger.info("file #{data_file.id} #{data_file.url} ==> #{permanent_bucket}/#{permanent_key}")
-        s3_perm.object(s3_key: permanent_key).upload_stream(part_size: CHUNK_SIZE) do |write_stream|
+        s3_perm.object(s3_key: permanent_key).upload_stream(part_size: chunk_size) do |write_stream|
           write_stream.binmode
           read_stream = Down.open(data_file.url, rewindable: false)
-          chunk = read_stream.read(CHUNK_SIZE)
+          chunk = read_stream.read(chunk_size)
           chunk_num = 1
           cycle_time = Time.now
           while chunk.present?
@@ -149,7 +145,7 @@ module Stash
             logger.info("file #{data_file.id} chunk #{chunk_num} size #{chunk.length} ==> #{input_size} (#{Time.now - cycle_time})")
             cycle_time = Time.now
             algorithm.update(chunk)
-            chunk = read_stream.read(CHUNK_SIZE)
+            chunk = read_stream.read(chunk_size)
             chunk_num += 1
           end
         end
@@ -168,6 +164,14 @@ module Stash
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
+
+      def get_chunk_size(size)
+        # AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
+        return 30 * 1024 * 1024 if size > 100_000_000_000
+        return 10 * 1024 * 1024 if size > 10_000_000_000
+
+        5 * 1024 * 1024
+      end
 
       def resource
         @resource ||= StashEngine::Resource.find(resource_id)

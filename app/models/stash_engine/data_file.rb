@@ -138,9 +138,11 @@ module StashEngine
     end
 
     # the permanent storage URL, not the staged storage URL
-    def s3_permanent_presigned_url
-      Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
-        .presigned_download_url(s3_key: s3_permanent_path, filename: upload_file_name)
+    def s3_permanent_presigned_url(head_only: false)
+      bucket = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+      return bucket.presigned_head_url(s3_key: s3_permanent_path) if head_only
+
+      bucket.presigned_download_url(s3_key: s3_permanent_path, filename: upload_file_name)
     end
 
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
@@ -191,8 +193,11 @@ module StashEngine
 
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
-    def s3_staged_presigned_url
-      Stash::Aws::S3.new.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}")
+    def s3_staged_presigned_url(head_only: false)
+      s3_key = "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
+      return Stash::Aws::S3.new.presigned_head_url(s3_key: s3_key) if head_only
+
+      Stash::Aws::S3.new.presigned_download_url(s3_key: s3_key)
     end
 
     # the URL we use for replication to zenodo, for software it's always the merritt url, but for software we have the same

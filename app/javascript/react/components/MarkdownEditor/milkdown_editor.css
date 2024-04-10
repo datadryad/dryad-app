@@ -310,6 +310,10 @@
   height: 100%;
 }
 
+.ProseMirror p {
+  white-space: normal;
+}
+
 .markdown_editor .milkdown .ProseMirror.editor,
 .markdown_editor .cm-editor {
   padding: 1.5rem 1rem;

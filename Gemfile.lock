@@ -762,7 +762,7 @@ GEM
     websocket-extensions (0.1.5)
     wicked_pdf (2.1.0)
       activesupport
-    wkhtmltopdf-binary (0.12.6.6)
+    wkhtmltopdf-binary (0.12.5.4)
     xml-mapping (0.10.1)
     xml-mapping_extensions (0.4.9)
       mime-types (~> 3.0)
@@ -892,7 +892,7 @@ DEPENDENCIES
   webmock
   webpacker (= 6.0.0.rc.6)
   wicked_pdf (~> 2.1.0)
-  wkhtmltopdf-binary
+  wkhtmltopdf-binary (~> 0.12.5.4)
   yaml (~> 0.1.1)
   zaru (~> 0.3.0)
 

@@ -1,0 +1,46 @@
+default: &default
+  enabled: true
+  abbreviation: "NYIT"
+  short_name: "New York Institute of Technology"
+  long_name: "New York Institute of Technology"
+  publisher_id: grid.260914.8
+  ror_ids:
+    - https://ror.org/01bghzb51
+  tenant_id: nyit
+  authentication:
+    strategy: shibboleth
+    entity_id: http://www.okta.com/exkiiea33x6YYZI5k4x7
+    entity_domain: www.okta.com
+  default_license: cc0
+  campus_contacts: [""]
+  data_deposit_agreement: false
+  partner_display: true
+  covers_dpc: true
+
+development: &DEVELOPMENT
+  <<: *default
+  #Add any items that need to override the defaults here
+
+local_dev:
+  <<: *DEVELOPMENT
+
+local:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+stage:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+production:
+  <<: *default
+  #Add any items that need to override the defaults here
+
+v3_development:
+  <<: *default
+
+v3_stage:
+  <<: *default
+
+v3_production:
+  <<: *default
