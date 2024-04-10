@@ -51,10 +51,10 @@ module StashDatacite
     end
 
     def fee_waivered?
-      return false if country_name.nil?
-      return false unless country_name.present?
-
-      fee_waiver_countries&.include?(country_name)
+      false
+      # return false if country_name.nil?
+      # return false unless country_name.present?
+      # fee_waiver_countries&.include?(country_name)
     end
 
     def fee_waiver_countries
