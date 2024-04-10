@@ -7,12 +7,12 @@
   <p><strong>The following dependencies were last checked on: <em><%= formatted_datetime(@latest_check) %></em></strong></p>
 
   <div class="o-admin-columns" style="justify-content: space-around;">
-    <div>
-      <h2>Dryad or CDL managed</h2>
+    <div style="flex-basis: 500px;">
+      <h2>Dryad managed</h2>
       <%= render partial: 'dependency_list', locals: { dependencies: @managed_dependencies } %>
     </div>
 
-    <div>
+    <div style="flex-basis: 500px;">
       <h2>Vendor managed</h2>
       <%= render partial: 'dependency_list', locals: { dependencies: @unmanaged_dependencies } %>
     </div>
