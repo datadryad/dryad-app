@@ -26,7 +26,7 @@ way across different repositories.  It has specific technical requirements for h
     - For each country (number/size) and also totals for all
     - "Unique" stats only count an item within an hour time slice and uniqueness is determined by a special
       session ID which uses one of 4 different metrics (user id, cookie id, session cookie id, ip address ).
-  - It produces a JSON report (see `apps/ui/shared/cron/counter-json`).
+  - It produces a JSON report (see `deploy/shared/cron/counter-json`).
   - It attempts uploading to DataCite reporting interface (large compressed format upload must be used).
   - Report is saved to our file system and we have our own script that tallies all the reports each week
     and saves total numbers into our database.

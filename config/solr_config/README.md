@@ -25,7 +25,7 @@ bin/solr create -c geoblacklight
 
 ```
 # get access to our github files like
-git clone git@github.com:CDL-Dryad/dryad-app.git
+git clone git@github.com:datadryad/dryad-app.git
 cp dryad-app/config/solr_config/* ~/apps/solr/server/solr/geoblacklight/conf
 # remove the cloned repo if you wish like rm -rf dryad-app
 

@@ -1,6 +1,6 @@
 # Dryad
 
-[![Build Status](https://travis-ci.com/CDL-Dryad/dryad-app.svg?branch=main)](https://travis-ci.com/CDL-Dryad/dryad-app)
+<!-- [![Build Status](https://travis-ci.com/datadryad/dryad-app.svg?branch=main)](https://travis-ci.com/datadryad/dryad-app) -->
 
 ## Introduction
 
@@ -12,12 +12,12 @@ implementation of the [Stash](https://github.com/CDL-Dryad/stash) application fr
 
 ## Development
 
-More detailed documentation is available in the [documentation folder](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation)
+More detailed documentation is available in the [documentation folder](https://github.com/datadryad/dryad-app/blob/main/documentation)
 
 ### Installation
 
 See
-[Dryad Installation](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/dryad_install.md)
+[Dryad Installation](https://github.com/datadryad/dryad-app/blob/main/documentation/dryad_install.md)
 for installation notes.
 
 ### Quick Cheat Sheet

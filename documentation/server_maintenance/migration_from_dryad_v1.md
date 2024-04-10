@@ -42,7 +42,7 @@ The DSpace implementation lives in these Java files:
 - DashService = API communications with Dash
 - TransferToDash = curation task that manages bulk transfer of packages to Dash
 
-The DASH implementation lives primarily in the [DASH submission API](https://github.com/CDL-Dryad/dryad-app/blob/main/documentation/apis/submission.md).
+The DASH implementation lives primarily in the [DASH submission API](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md).
 
 ## Statistics Migration
 

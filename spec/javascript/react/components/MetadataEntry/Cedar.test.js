@@ -23,7 +23,7 @@ describe('Cedar', () => {
       title: faker.lorem.sentence(),
       cedar_json: null,
     };
-    editorUrl = 'https://raw.githubusercontent.com/CDL-Dryad/dryad-app/main/public/cedar-embeddable-editor/cedar-embeddable-editor.js';
+    editorUrl = 'https://raw.githubusercontent.com/datadryad/dryad-app/main/public/cedar-embeddable-editor/cedar-embeddable-editor.js';
     templateName = faker.lorem.words(3);
     templates = [[1, 'Nothing', 'Empty template'], [2, 'Faked', templateName]];
   });

@@ -42,7 +42,7 @@ base_path = File.expand_path(config_info['base_path'])
 puts "This is an initial testing version of a script to download files directly from the API. That avoids a lot of time and wasted"
 puts "resources creating zip packages and unzipping them."
 puts ''
-puts "If you encounter problems, please let us know at https://github.com/CDL-Dryad/dryad-product-roadmap/projects/1 in the Backlog."
+puts "If you encounter problems, please let us know at https://github.com/datadryad/dryad-product-roadmap/projects/1 in the Backlog."
 puts ''
 
 puts "Copy/paste the Dryad landing URL or type it below (format like doi:xxxxx/xxxxx) and press enter:"

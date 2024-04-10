@@ -29,7 +29,7 @@ sudo yum install mysql-devel
 ```
 - check out the Dryad code
 ```
-git clone https://github.com/CDL-Dryad/dryad-app.git
+git clone https://github.com/datadryad/dryad-app.git
 ```
 - install ruby
 ```
