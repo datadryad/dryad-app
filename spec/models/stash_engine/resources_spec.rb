@@ -815,6 +815,7 @@ module StashEngine
       end
 
       it 'prefers to purge non-controlled vocab subjects over ones with vocabulary' do
+        @resource.purge_duplicate_subjects!
         existing_subj = @resource.subjects.non_fos.first
         @resource.subjects << create(:subject, subject: existing_subj.subject, subject_scheme: 'gumma')
         starting_size = @resource.subjects.count
