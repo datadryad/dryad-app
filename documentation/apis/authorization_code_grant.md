@@ -35,7 +35,7 @@ The basic flow the user sees:
 
 ## Example setup for a sample external application
 
-If you do not want to enter all this manually, you may [download the code](https://github.com/datadryad/api_test)
+If you do not want to enter all this manually, you may [download the code](https://github.com/CDL-Dryad/api_test)
 from our git repository (and fill in items such as your API keys in the code).
 
 This is an application in Ruby and Rails, but the concepts will be very similar in many frameworks and
