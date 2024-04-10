@@ -606,4 +606,28 @@ Rn8K0LotExRg8sKixUSA74fETSM=
       <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://nshe-dri.okta.com/app/nshe-dri_dryadtest_1/exkh1l6ocbKBRm4RB1t7/sso/saml"/>
     </md:IDPSSODescriptor>
   </md:EntityDescriptor>
+  
+<!-- NYIT - New York Institute of Technology -->
+  <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" entityID="http://www.okta.com/exkiiea33x6YYZI5k4x7">
+    <md:IDPSSODescriptor WantAuthnRequestsSigned="false" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+      <md:Extensions>
+        <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
+          <mdui:DisplayName xml:lang="en">New York Institute of Technology</mdui:DisplayName>
+        </mdui:UIInfo>
+        <shibmd:Scope regexp="false">nyit.edu</shibmd:Scope>
+      </md:Extensions>
+      <md:KeyDescriptor use="signing">
+        <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+          <ds:X509Data>
+            <ds:X509Certificate>
+MIIDmDCCAoCgAwIBAgIGAY6fTmlHMA0GCSqGSIb3DQEBCwUAMIGMMQswCQYDVQQGEwJVUzETMBEG A1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwNU2FuIEZyYW5jaXNjbzENMAsGA1UECgwET2t0YTEU MBIGA1UECwwLU1NPUHJvdmlkZXIxDTALBgNVBAMMBG55aXQxHDAaBgkqhkiG9w0BCQEWDWluZm9A b2t0YS5jb20wHhcNMjQwNDAyMTQ1MzU5WhcNMzQwNDAyMTQ1NDU5WjCBjDELMAkGA1UEBhMCVVMx EzARBgNVBAgMCkNhbGlmb3JuaWExFjAUBgNVBAcMDVNhbiBGcmFuY2lzY28xDTALBgNVBAoMBE9r dGExFDASBgNVBAsMC1NTT1Byb3ZpZGVyMQ0wCwYDVQQDDARueWl0MRwwGgYJKoZIhvcNAQkBFg1p bmZvQG9rdGEuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuPBt/My3E/glLfqu AasO5k4kGxabJmH0aCNKo/pPeHXgz+5AucrIeLN7soS8sWAOo+XW98yc+j3/NzNJSBTReH4gv32f MlzmwcYVa/wjr7I1TJ6nykuVB4PH4hWHIB5mzGJH6sH2yfH/OhzuyOuQPuQG0B1+CFpHcmtGmISz E55MRz/Kovqdae7H82nkrPocD0UiBhqC3U022EgENjFq2s8nNr17gG0d9hSS2VouJusuRXV7zctU cjI6vny9e9Ep+MQWXGjz12RAf0yDYC4PXhJZn28QtTgqTbg3b+HD6NtpDjFcs+OZ0b4g4vfHZ2be TcgoUgmeoELYiVAnSdJKuQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQAGp5U3CLmj9IvHknj2atGE VHcUzwIwBV+M1UxlZf2iAx0ZdGsJyXtQLykNs+84sE+dCLT7enD1e2jXRTa6TKCyli94h5OpXaPz 72ACyn9xiT2OEc9JyNeGw5GNFOyqa0K9qavbL7MDFjHlTXlFDjHHW/luqxG+lrLcyxKCDw+Z8/8x 3TtH5lKs6kgTAw1pyci4FduaroYSfWivkbSXEjl+YfZJLyr2thTrTIzONa9jzpDNDHuMjd91du6f wZEXsT9AWbU7VpZlfCCxppWnYaOD11WubXWdjp6LDWb6u+Qr0VNhwgmC8rIlSydYi3ljzG3UMMRL 6ferbCzqFeTb7FLo
+            </ds:X509Certificate>
+          </ds:X509Data>
+        </ds:KeyInfo>
+      </md:KeyDescriptor>
+      <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+      <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://nyit.okta.com/app/nyit_dryaddatapublishing_1/exkiiea33x6YYZI5k4x7/sso/saml"/>
+      <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://nyit.okta.com/app/nyit_dryaddatapublishing_1/exkiiea33x6YYZI5k4x7/sso/saml"/>
+    </md:IDPSSODescriptor>
+  </md:EntityDescriptor>
 </EntitiesDescriptor>
