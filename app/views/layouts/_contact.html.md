@@ -6,9 +6,7 @@ Please contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@pleh</a> f
 
 ## Get involved
 
-Is your institution interested in [joining or working with Dryad](/stash/join_us)? Tell us about your interests, and our partnership team will get back to you.
-
-<a href="/stash/interested" class="o-link__buttonlink">Share your interest</a> 
+Is your organization interested in [joining or working with Dryad](https://datadryad.org/stash/join_us)? Contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@spihsrentrap</a> and our partnership team will get back to you. Individual researchers do not need a Dryad membership, and should follow our [submission instructions](https://datadryad.org/stash/submission_process) to get started.
 
 ## Preview changes
 

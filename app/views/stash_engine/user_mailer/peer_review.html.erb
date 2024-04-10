@@ -2,25 +2,28 @@
 
 <p>Thank you for submitting your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) to Dryad.</p>
 
+<p>Your dataset has been assigned two important links:</p>
+<% shr = @resource.identifier.shares.first.sharing_link %>
+<ul>
+  <li>Reviewer URL: <a href="<%= shr %>"><%= shr %></a>.
+    <p>This temporary link can be shared with the journal office or collaborators during the peer-review process to allow access only to the data files included with your submission. This link will expire upon publication of your Dryad dataset.</p>
+  </li>
+  <li>A unique digital object identifier (DOI): <%= @resource.identifier_str %>
+    <p>When your dataset has been approved for publication by a member of our curation team, it will be made public. This DOI link is permanent and should be provided to the journal office for inclusion in the Data Availability statement of your published article.</p> 
+  </li>
+</ul>
+
 <p>Please note, you have selected to keep your Dryad data submission in "Private for peer review" status. While in this status, your submission will not enter our curation process for review and publication.</p>
 
-<% shr = @resource.identifier.shares.first.sharing_link %>
-<p>A private, randomized URL has been created for your submission. This temporary link can be shared with the journal office and/or collaborators while your manuscript is in peer review and your dataset is unpublished. Clicking the link immediately launches a download of the data files <em>only</em>: <a href="<%= shr %>"><%= shr %></a></p>
-
-<p>
-Your data submission has also been assigned a unique DOI (<%= @resource.identifier_str %>). You may provide this DOI to the journal or include it in your manuscript, although it will not be live until the dataset is published. Should you need to reach out to Dryad’s Helpdesk regarding this submission, kindly provide the DOI in your email to ensure efficient and effective assistance.
-</p>
-
-<p>When your related manuscript has been accepted or when you are ready to initiate the curation process and proceed to publication, follow these steps:</p>
+<p>When your related manuscript has been accepted, or when you are ready to initiate the curation process and proceed to publication, follow these steps:</p>
 <ol>
-    <li><a href="https://datadryad.org">Login to https://datadryad.org</a></li>
-    <li>Click on “My datasets”</li>
-    <li>Click “Update” on your dataset</li>
-    <li>On the final page of the submission form (Review and submit page), select "Make my dataset available for public download as soon as possible"</li>
-    <li>Click "Submit"</li>
+  <li><a href="https://datadryad.org">Login to https://datadryad.org</a></li>
+  <li>Click on "My datasets" to view your list of data submissions.</li>
+  <li>Click "Release for curation" on your dataset.</li>
 </ol>
 
-<p>If you have any questions, please let us know. We appreciate your support of Dryad.</p>
-
+<p>If you have any questions, please contact Dryad's Helpdesk at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>
+<p>Thank you for choosing Dryad to host your data. We appreciate your support.</p>
 <p>The Dryad Team</p>
+<p>We would greatly appreciate your feedback! Please complete <a href="https://form.jotform.com/232493320676357?datasetDOI=<%= CGI.escape(@resource.identifier.identifier) %>">a short survey about your submission experience</a>.</p>
 
