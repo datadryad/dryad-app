@@ -466,8 +466,13 @@ Updating DataCite Metadata
 ==========================
 
 Occasionally, there will be a problem sending metadata to DataCite for
-an item. You can select a resource or set of resources, and send metadata with
-the rails console, for example:
+an item. You can force the metadata in DataCite to update in the Rails console with:
+
+```
+Stash::Doi::DataciteGen.new(resource: StashEngine::Resource.where(id: <resource_id>).first).update_identifier_metadata!
+```
+
+Or select a set of resources and send it for each, for example:
 ```
 StashEngine::Resource.where('publication_date >= ?', 3.days.ago).each do |r|
   Stash::Doi::DataciteGen.new(resource: r).update_identifier_metadata!

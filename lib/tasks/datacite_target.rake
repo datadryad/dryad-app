@@ -15,7 +15,7 @@ namespace :datacite_target do
     end
   end
 
-  desc 'update Dryad DOI targets to reflect new environment'
+  desc 'update Dryad DOI targets for a specific date range of publication'
   task update_by_publication: :environment do
     $stdout.sync = true
     unless ARGV.length == 3
