@@ -62,7 +62,8 @@ module StashEngine
       BOOLEAN_SEARCH_CLAUSE = 'MATCH(sei.search_words) AGAINST(%{term} IN BOOLEAN MODE)'
       SCAN_CLAUSE = 'sei.search_words LIKE %{term}'
       TENANT_CLAUSE = 'ser.tenant_id = %{term}'
-      STATUS_CLAUSE = '(sers.resource_state = %{term} or seca.status = %{term})'
+      STATE_CLAUSE = '(sers.resource_state = %{term} or seca.status = %{term})'
+      STATUS_CLAUSE = "(sers.resource_state not in ('error', 'processing') and seca.status = %{term})"
       EDITOR_CLAUSE = 'ser.current_editor_id = %{term}'
       EDITOR_NULL = "(ser.current_editor_id is NULL or seu.role not in ('superuser', 'curator', 'tenant_curator'))"
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
@@ -158,7 +159,7 @@ module StashEngine
           where_clause = [
             (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
-            add_term_to_clause(STATUS_CLAUSE, status_filter),
+            add_term_to_clause(%w[error processing].include?(status_filter) ? STATE_CLAUSE : STATUS_CLAUSE, status_filter),
             editor_filter == 'NA' ? EDITOR_NULL : add_term_to_clause(EDITOR_CLAUSE, editor_filter),
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter),
             add_term_to_clause(IDENTIFIER_CLAUSE, identifier_id),
