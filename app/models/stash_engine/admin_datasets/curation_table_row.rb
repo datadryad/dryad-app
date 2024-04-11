@@ -64,7 +64,7 @@ module StashEngine
       TENANT_CLAUSE = 'ser.tenant_id = %{term}'
       STATUS_CLAUSE = 'seca.status = %{term}'
       EDITOR_CLAUSE = 'ser.current_editor_id = %{term}'
-      EDITOR_NULL = 'ser.current_editor_id is NULL'
+      EDITOR_NULL = "(ser.current_editor_id is NULL or seu.role not in ('superuser', 'curator', 'tenant_curator'))"
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
       IDENTIFIER_CLAUSE = 'sei.id = %{term}'
 
