@@ -186,9 +186,16 @@ module Stash
         doi
       end
 
+      def funding_description(contributor)
+        return nil if contributor.name_identifier_id.nil?
+
+        id_type = contributor.identifier_type == 'crossref_funder_id' ? 'Crossref Funder Registry ID' : "#{contributor.identifier_type.upcase} ID"
+        "#{id_type}: #{CGI.escapeHTML(contributor.name_identifier_id)}"
+      end
+
       def funding_text(contributor)
         ["Funding provided by: #{CGI.escapeHTML(contributor.contributor_name.to_s)}",
-         (contributor.name_identifier_id.nil? ? nil : "Crossref Funder Registry ID: #{CGI.escapeHTML(contributor.name_identifier_id)}"),
+         funding_description(contributor),
          (contributor.award_number.nil? ? nil : "Award Number: #{CGI.escapeHTML(contributor.award_number)}")].compact.join('<br/>')
       end
 
