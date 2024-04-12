@@ -8,6 +8,13 @@
   }
 }
 
+.c-columns {
+  flex-direction: column;
+  @include bp(screen3) {
+    flex-direction: row;
+  }
+}
+
 #page-columns {
   flex-direction: column-reverse;
 
@@ -26,23 +33,11 @@
 
 .c-columns__sidebar1,
 .c-columns__sidebar2 {
-  margin: $spacing-sm -10px 0;
-
-  @include bp(screen1) {
-    margin: $spacing-sm -20px 0;
-  }
-
-  @include bp(screen2) {
-    margin: $spacing-sm -30px 0;
-  }
+  margin: $spacing-sm 0 0;
 
   @include bp(screen3) {
     margin: 0;
     flex: 0 1 35ch;
-  }
-
-  @media (max-width: $screen-lg-min - 1) {
-    padding: 0 $spacing-sm;
   }
 }
 
