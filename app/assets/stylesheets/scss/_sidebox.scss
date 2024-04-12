@@ -3,6 +3,7 @@
 $sidebox-padding: 10px;
 
 .c-sidebox {
+  margin: 0 0 $spacing-md;
   padding: $sidebox-padding;
   border: thin solid $design-dark-blue-color;
 }
