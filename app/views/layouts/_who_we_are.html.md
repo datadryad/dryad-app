@@ -135,7 +135,7 @@ The release of this statement was deeply formative in Dryad’s development and 
   </div>
   <div>
     <dt>2022</dt>
-    <dd><a href="https://scoss.org/4thpledgingroundannouncment/">Dryad selecting by SCOSS for funding as essential open-source infrastructure</a></dd>
+    <dd><a href="https://scoss.org/4thpledgingroundannouncment/">Dryad selection by SCOSS for funding as essential open-source infrastructure</a></dd>
   </div>
   <div>
     <dt>2023</dt>
