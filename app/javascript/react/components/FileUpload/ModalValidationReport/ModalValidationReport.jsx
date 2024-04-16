@@ -15,7 +15,7 @@ function getReportErrors(task) {
       reportError = {
         count: 0,
         type: error.type || error.code,
-        name: error.name,
+        name: error.title || error.name,
         tags: error.tags,
         description: error.description,
         header,
