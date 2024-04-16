@@ -7,7 +7,7 @@ import './frictionless-components.css';
 function getReportErrors(task) {
   const reportErrors = {};
   for (const error of task.errors) {
-    const header = task.resource.schema.fields.map((field) => field.name);
+    const header = task.labels.fields.map((field) => field.name);
 
     // Prepare reportError
     let reportError = reportErrors[error.type || error.code];
