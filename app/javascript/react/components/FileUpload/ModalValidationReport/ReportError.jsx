@@ -9,7 +9,6 @@ function getRowPositions(reportError) {
 
 function ReportError(props) {
   const {reportError} = props;
-  console.log(reportError);
   const [visibleRowsCount, setVisibleRowsCount] = useState(10);
   const rowPositions = getRowPositions(reportError);
 
@@ -53,7 +52,7 @@ function ReportError(props) {
       </div>
 
       {/* Table view */}
-      {!['source-error'].includes(reportError.code) && (
+      {!['source-error'].includes(reportError.type) && (
         <div className="table-view">
           <div className="inner">
             <ReportTable
