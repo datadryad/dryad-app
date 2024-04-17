@@ -55,7 +55,7 @@ const paste_preprocess = (_editor, args) => {
 const curatorTools = '| code strikethrough forecolor backcolor';
 
 export default function Description({
-  dcsDescription, path, mceKey, mceLabel, isCurator,
+  dcsDescription, path, mceLabel, isCurator,
 }) {
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -99,7 +99,8 @@ export default function Description({
       <Editor
         id={`editor_${dcsDescription.description_type}`}
         onInit={(evt, editor) => { editorRef.current = editor; }}
-        apiKey={mceKey}
+        tinymceScriptSrc="/packs/tinymce/tinymce.min.js"
+        licenseKey="gpl"
         initialValue={dcsDescription.description}
         init={{
           height: 300,
@@ -119,7 +120,7 @@ export default function Description({
         onBlur={submit}
         onEditorChange={checkSubmit}
       />
-      <p>Press Alt 0 or Option 0 for help using the rich text editor with keyboard only.</p>
+      <p>Press Alt 0 or Option 0 for help using the rich text editor with keyboard only!</p>
     </div>
   );
 }
@@ -127,7 +128,6 @@ export default function Description({
 Description.propTypes = {
   dcsDescription: PropTypes.object.isRequired,
   path: PropTypes.string.isRequired,
-  mceKey: PropTypes.string.isRequired,
   mceLabel: PropTypes.object.isRequired,
   isCurator: PropTypes.bool.isRequired,
 };
