@@ -71,7 +71,6 @@
     <%= react_component('components/MetadataEntry/Description',
                         dcsDescription: @metadata_entry.abstract,
                         path: descriptions_update_path,
-                        mceKey: APP_CONFIG[:mce_key],
                         mceLabel: {label: 'Abstract', required: true, describe: ''},
                         isCurator: current_user&.limited_curator?) %>
   <% unless @resource&.resource_type&.resource_type == 'collection' %>
@@ -89,7 +88,6 @@
     <%= react_component('components/MetadataEntry/Description',
                     dcsDescription: @metadata_entry.methods,
                     path: descriptions_update_path,
-                    mceKey: APP_CONFIG[:mce_key],
                     mceLabel: {label: 'Methods:', required: false, describe: ' How was this dataset collected? How has it been processed?'},
                     isCurator: current_user&.limited_curator?) %>
 
@@ -97,7 +95,6 @@
     <%= react_component('components/MetadataEntry/Description',
                     dcsDescription: @metadata_entry.other,
                     path: descriptions_update_path,
-                    mceKey: APP_CONFIG[:mce_key],
                     mceLabel: {label: 'Usage notes:', required: false,
                                describe: ' What programs and/or software are required to open the data files included with your submission? ' +
 			       'If proprietary, include open-source alternatives.'},
