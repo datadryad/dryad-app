@@ -120,7 +120,7 @@ export default function Description({
         onBlur={submit}
         onEditorChange={checkSubmit}
       />
-      <p>Press Alt 0 or Option 0 for help using the rich text editor with keyboard only!</p>
+      <p>Press Alt 0 or Option 0 for help using the rich text editor with keyboard only.</p>
     </div>
   );
 }
