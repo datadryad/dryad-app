@@ -99,7 +99,7 @@ export default function Description({
       <Editor
         id={`editor_${dcsDescription.description_type}`}
         onInit={(evt, editor) => { editorRef.current = editor; }}
-        tinymceScriptSrc="/packs/tinymce/tinymce.min.js"
+        tinymceScriptSrc="/tinymce/tinymce.min.js"
         licenseKey="gpl"
         initialValue={dcsDescription.description}
         init={{

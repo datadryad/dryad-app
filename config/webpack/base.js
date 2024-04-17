@@ -5,7 +5,7 @@ const customConfig = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "./node_modules/tinymce", to: "./tinymce" }
+        { from: "./node_modules/tinymce", to: "../tinymce" }
       ]
     })
   ],
