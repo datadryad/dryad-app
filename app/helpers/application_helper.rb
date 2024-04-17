@@ -25,8 +25,17 @@ module ApplicationHelper
 
     return '' if content.blank?
 
-    content = CGI.escapeHTML(content)
-    content = CGI.unescapeElement(content, %w[sub sup])
+    # all html elements minus those in next comment
+    esc_elements = %w[abbr address area article aside audio bdi bdo blockquote body br button
+                      canvas caption cite col colgroup command datalistdd del details dfn div
+                      dl dt embed fieldset figcaption figure footer form header html iframe
+                      img input ins kbd keygen label legend main map mark menu meter nav object
+                      optgroup option output p param progress q rp rt ruby s samp section
+                      select small source span summary textarea timetr track u var video wbr
+                      a b code em h1 h2 h3 h4 h5 h6 hr i li pre ol strong ul]
+    # kept elements: sub sup table tbody td tfoot th thead
+
+    content = CGI.escapeElement(content, esc_elements)
 
     markdown = Redcarpet::Markdown.new(KnockDownHeadings.new(hard_wrap: true), @md_options)
     markdown.render(content).html_safe
