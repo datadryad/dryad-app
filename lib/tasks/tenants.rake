@@ -31,7 +31,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/038x2fh14']
     },
     {
-      id: 'clare-cgu',
+      id: 'cgu',
       short_name: 'Claremont Graduate University',
       long_name: 'Claremont Graduate University',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.cgu.edu/idp/shibboleth', entity_domain: 'webauth.cgu.edu' }.to_json,
@@ -40,11 +40,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'clare-cs',
+      sponsor_id: 'claremont',
       ror_orgs: ['https://ror.org/0157pnt69']
     },
     {
-      id: 'clare-cmc',
+      id: 'cmc',
       short_name: 'Claremont McKenna College',
       long_name: 'Claremont McKenna College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.cmc.edu/idp/shibboleth', entity_domain: 'webauth.cmc.edu' }.to_json,
@@ -53,11 +53,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'clare-cs',
+      sponsor_id: 'claremont',
       ror_orgs: ['https://ror.org/04n1me355']
     },
     {
-      id: 'clare-cs',
+      id: 'claremont',
       short_name: 'Claremont College Services (TCCS)',
       long_name: 'Claremont College Services (TCCS)',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.cuc.claremont.edu/idp/shibboleth',
@@ -79,7 +79,7 @@ namespace :tenants do
                  'https://ror.org/01n260e81']
     },
     {
-      id: 'clare-hmc',
+      id: 'hmc',
       short_name: 'Harvey Mudd College',
       long_name: 'Harvey Mudd College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://identity.hmc.edu/idp', entity_domain: 'hmc.edu' }.to_json,
@@ -88,11 +88,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'clare-cs',
+      sponsor_id: 'claremont',
       ror_orgs: ['https://ror.org/025ecfn45']
     },
     {
-      id: 'clare-kgi',
+      id: 'kgi',
       short_name: 'Keck Graduate Institute',
       long_name: 'Keck Graduate Institute',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.kgi.edu/idp/shibboleth', entity_domain: 'kgi.edu' }.to_json,
@@ -101,11 +101,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'clare-cs',
+      sponsor_id: 'claremont',
       ror_orgs: ['https://ror.org/00f4jdp82']
     },
     {
-      id: 'clare-pitzer',
+      id: 'pitzer',
       short_name: 'Pitzer College',
       long_name: 'Pitzer College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.pitzer.edu/idp/shibboleth', entity_domain: 'pitzer.edu' }.to_json,
@@ -114,11 +114,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'clare-cs',
+      sponsor_id: 'claremont',
       ror_orgs: ['https://ror.org/0197n2v40']
     },
     {
-      id: 'clare-pomona',
+      id: 'pomona',
       short_name: 'Pomona College',
       long_name: 'Pomona College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://websso.pomona.edu/', entity_domain: 'pomona.edu' }.to_json,
@@ -127,11 +127,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'clare-cs',
+      sponsor_id: 'claremont',
       ror_orgs: ['https://ror.org/0074grg94']
     },
     {
-      id: 'clare-scripps',
+      id: 'scrippscollege',
       short_name: 'Scripps College',
       long_name: 'Scripps College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.scrippscollege.edu/idp/shibboleth',
@@ -141,7 +141,7 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'clare-cs',
+      sponsor_id: 'claremont',
       ror_orgs: ['https://ror.org/00p55jd14']
     },
     {
@@ -171,7 +171,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/00hj8s172', 'https://ror.org/01esghr10']
     },
     {
-      id: 'csueb',
+      id: 'csueastbay',
       short_name: 'Cal State East Bay',
       long_name: 'California State University, East Bay',
       authentication: { strategy: 'shibboleth', entity_id: 'https://vince.csueastbay.edu/idp/shibboleth',
@@ -291,7 +291,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/02kpeqv85', 'https://ror.org/05gwbwn20', 'https://ror.org/05qs31q25']
     },
     {
-      id: 'lbnl',
+      id: 'lbl',
       short_name: 'Lawrence Berkeley Lab',
       long_name: 'Lawrence Berkeley National Laboratory',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:lbl.gov', entity_domain: 'datasets2-dev.lbl.gov' }.to_json,
@@ -526,7 +526,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/0420db125', 'https://ror.org/00jjq6q61']
     },
     {
-      id: 'sheffield',
+      id: 'shef',
       short_name: 'University of Sheffield',
       long_name: 'The University of Sheffield',
       authentication: { strategy: 'shibboleth', entity_id: 'https://idp-qa.shef.ac.uk/shibboleth', entity_domain: 'shef.ac.uk' }.to_json,
@@ -559,7 +559,7 @@ namespace :tenants do
       ]
     },
     {
-      id: 'suny-buffalo',
+      id: 'buffalo',
       short_name: 'SUNY Buffalo',
       long_name: 'University at Buffalo',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:buffalo.edu', entity_domain: 'buffalo.edu' }.to_json,
@@ -572,7 +572,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/01y64my43']
     },
     {
-      id: 'suny-buffalostate',
+      id: 'buffalostate',
       short_name: 'Buffalo State',
       long_name: 'SUNY Buffalo State University',
       authentication: { strategy: 'ip_address', ranges: ['136.183.0.0/16'] }.to_json,
@@ -585,7 +585,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/05ms04m92']
     },
     {
-      id: 'suny-downstate',
+      id: 'downstate',
       short_name: 'SUNY Downstate',
       long_name: 'SUNY Downstate Health Sciences University',
       authentication: { strategy: 'ip_address', ranges: ['138.5.0.0/16'] }.to_json,
@@ -598,7 +598,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/0041qmd21']
     },
     {
-      id: 'suny-fredonia',
+      id: 'fredonia',
       short_name: 'SUNY Fredonia',
       long_name: 'State University of New York at Fredonia',
       authentication: { strategy: 'ip_address', ranges: ['141.238.0.0/16', '141.238.1.23/24', '132.174.249.205/24'] }.to_json,
@@ -611,7 +611,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/05vrs0r17']
     },
     {
-      id: 'suny-geneseo',
+      id: 'geneseo',
       short_name: 'SUNY Geneseo',
       long_name: 'State University of New York College at Geneseo',
       authentication: { strategy: 'ip_address', ranges: ['137.238.0.0/16'] }.to_json,
@@ -624,7 +624,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/03g1q6c06']
     },
     {
-      id: 'suny-stonybrook',
+      id: 'stonybrook',
       short_name: 'SUNY Stony Brook',
       long_name: 'Stony Brook University',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:stonybrook.edu', entity_domain: 'stonybrook.edu' }.to_json,
@@ -753,7 +753,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/03rmrcq20']
     },
     {
-      id: 'ucb',
+      id: 'berkeley',
       short_name: 'UC Berkeley',
       long_name: 'University of California, Berkeley',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:berkeley.edu', entity_domain: '.berkeley.edu' }.to_json,
@@ -773,7 +773,7 @@ namespace :tenants do
       ]
     },
     {
-      id: 'ucd',
+      id: 'ucdavis',
       short_name: 'UC Davis',
       long_name: 'University of California, Davis',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:ucdavis.edu', entity_domain: '.ucdavis.edu' }.to_json,
@@ -827,7 +827,7 @@ namespace :tenants do
       ]
     },
     {
-      id: 'ucm',
+      id: 'ucmerced',
       short_name: 'UC Merced',
       long_name: 'University of California, Merced',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:ucmerced.edu', entity_domain: '.ucmerced.edu' }.to_json,
