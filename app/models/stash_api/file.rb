@@ -50,7 +50,7 @@ module StashApi
     # secret internal link for admins only
     def add_file_download!(hsh)
       hsh['stash:file-download'] = { href: @se_data_file.s3_permanent_presigned_url } if @se_data_file.resource.submitted? &&
-          @se_data_file.resource.admin_for_this_item?(ui_user: @user)
+          @se_data_file.resource.admin_for_this_item?(user: @user)
     end
 
     def add_download!(hsh)
