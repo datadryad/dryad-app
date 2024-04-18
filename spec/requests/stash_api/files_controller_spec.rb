@@ -155,7 +155,7 @@ module StashApi
         expect(lnks['stash:dataset']['href']).to eq(ds_path)
         expect(lnks['stash:version']['href']).to eq(version_path(resource.id))
         expect(lnks['stash:files']['href']).to eq(version_files_path(resource.id))
-        expect(lnks['stash:file-download']['href']).to eq(download_file_path(@file_id))
+        expect(lnks['stash:download']['href']).to eq(download_file_path(@file_id))
       end
     end
     # rubocop:enable Security/IoMethods
