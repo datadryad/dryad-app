@@ -1,11 +1,11 @@
 <% if !review.readme_content.blank? %>
 <% content = review.readme_content %>
-<% # if content.match(/^\\#/) %>
-  <% # reformat = markdown_render content %>
-  <% # content = ActionView::Base.full_sanitizer.sanitize(reformat) %>
-<% # end %>
-<div id="landing_readme">
-    <button id="expand-readme" class="o-button__plain-text4" aria-expanded="false" aria-controls="landing_readme">Expand README <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+<%# if content.match(/^\\#/) %>
+  <%# reformat = markdown_render content %>
+  <%# content = ActionView::Base.full_sanitizer.sanitize(reformat) %>
+<%# end %>
+<div id="landing_readme" class="<%='expanded' if expand_readme %>">
+    <% unless expand_readme %><button id="expand-readme" class="o-button__plain-text4" aria-expanded="false" aria-controls="landing_readme">Expand README <i class="fa fa-caret-down" aria-hidden="true"></i></button><% end %>
     <div class="t-landing__text-wall <%= 'highlight' if highlight_fields.include?('technical_info') %>">
     <% if !content.match(/^# /) %>
       <h2>README</h2>
@@ -13,6 +13,7 @@
     <%= markdown_render content.sub(/^# /, '# README: ') %>
     </div>
 </div>
+<% unless expand_readme %>
 <script type="text/javascript">
     const readme = document.getElementById('landing_readme')
     const button = document.getElementById("expand-readme")
@@ -32,4 +33,5 @@
       }
     })
 </script>
+<% end %>
 <% end %>
