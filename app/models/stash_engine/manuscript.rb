@@ -29,7 +29,7 @@ module StashEngine
     end
 
     def rejected?
-      rejected_statuses = ['rejected', 'transferred', 'rejected w/o review']
+      rejected_statuses = ['rejected', 'transferred', 'rejected w/o review', 'withdrawn']
       rejected_statuses.include?(status)
     end
 
