@@ -7,14 +7,12 @@ require 'cgi'
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi
   RSpec.describe FilesController, type: :request do
-
     include Mocks::Aws
     include Mocks::CurationActivity
     include Mocks::RSolr
     include Mocks::Salesforce
     include Mocks::Stripe
     include Mocks::Repository
-    include Mocks::Tenant
     include Mocks::UrlUpload
 
     # set up some versions with different curation statuses (visibility)
@@ -27,11 +25,8 @@ module StashApi
       neuter_curation_callbacks!
       mock_aws!
       mock_salesforce!
-      mock_tenant!
 
-      @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
-
-      @user1 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+      @user1 = create(:user, role: 'user')
 
       @identifier = create(:identifier)
       @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id),
@@ -200,7 +195,7 @@ module StashApi
       end
 
       it 'shows an index of files for a private dataset version to the admin' do
-        @user.update(role: 'admin', tenant_id: @tenant_ids.first)
+        @user.update(role: 'admin')
         response_code = get "/api/v2/versions/#{@resources[1].id}/files", headers: default_authenticated_headers
         hsh = response_body_hash
         expect(response_code).to eq(200)
@@ -213,7 +208,7 @@ module StashApi
       end
 
       it "doesn't show private versions list of files to a random user" do
-        @user.update(role: 'user', tenant_id: @tenant_ids.first)
+        @user.update(role: 'user')
         response_code = get "/api/v2/versions/#{@resources[1].id}/files", headers: default_authenticated_headers
         expect(response_code).to eq(404)
       end
@@ -267,7 +262,7 @@ module StashApi
       end
 
       it 'allows destroying file if admin for same tenant' do
-        @user.update(role: 'admin', tenant_id: @tenant_ids.first)
+        @user.update(role: 'admin')
         response_code = delete "/api/v2/files/#{@files[1].first.id}", headers: default_authenticated_headers
         expect(response_code).to eq(200)
         hsh = response_body_hash
@@ -338,7 +333,7 @@ module StashApi
 
       it 'allows download by admin for tenant for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
-        @user.update(role: 'admin', tenant_id: @tenant_ids.first)
+        @user.update(role: 'admin')
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
         expect(response_code).to eq(302)
       end
@@ -351,7 +346,7 @@ module StashApi
 
       it 'disallows download by random normal user for unpublished' do
         @curation_activities[0][2].destroy!
-        @user.update(role: 'user', tenant_id: @tenant_ids.first)
+        @user.update(role: 'user')
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
         expect(response_code).to eq(404)
       end

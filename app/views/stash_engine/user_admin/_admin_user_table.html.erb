@@ -49,7 +49,7 @@
       <td class="c-lined-table__digits"><nobr><%= u.orcid %></nobr></td>
       <td id="user_tenant_<%= u.id %>">
         <div class="c-lined-table__with-actions">
-        <div class="c-lined-table__data"><%= StashEngine::Tenant.find(u.tenant_id)&.short_name %></div>
+        <div class="c-lined-table__data"><%= StashEngine::Tenant.find(u.tenant_id)&.short_name if StashEngine::Tenant.exists?(u.tenant_id) %></div>
       	<% if current_user.role == 'superuser' %>
           <div class="c-lined-table__actions">
       	  <%= form_with(url: stash_url_helpers.user_tenant_popup_path(u.id), method: :get, local: false) do %>

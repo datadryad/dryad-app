@@ -1,44 +1,25 @@
+require 'json'
 require 'ostruct'
 module StashEngine
-  class Tenant
+  class Tenant < ApplicationRecord
+    self.table_name = 'stash_engine_tenants'
+    belongs_to :sponsor, class_name: 'Tenant', optional: true
+    has_many :tenant_ror_orgs, class_name: 'StashEngine::TenantRorOrg', dependent: :destroy
+    has_many :ror_orgs, class_name: 'StashEngine::RorOrg', through: :tenant_ror_orgs
 
-    # TODO: Don't assume existince of UCOP logo
-    DEFAULT_LOGO_FILE = 'logo_ucop.svg'.freeze
+    enum payment_plan: {
+      tiered: 0
+    }
 
-    # This was originally designed differently and I had to change it to create some instances on the fly because
-    # testing loads things twice and didn't work correctly to create instances up front on engine initialization
-    # in the test environment.  :-(
-
-    def initialize(hash)
-      @ostruct = hash.to_ostruct
-    end
-
-    # return list of all tenants, tenant is a lightly wrapped ostruct (see method missing) with extra methods in here
-    def self.all
-      TENANT_CONFIG.values.map { |h| new(h) if h['enabled'] && h['enabled'] == true }.compact.sort_by(&:short_name)
-    end
-
-    def self.partner_list
-      all.delete_if { |t| t.partner_display == false }
-    end
-
-    def tenants_sponsored
-      Tenant.all.select { |tenant| tenant.tenant_id == tenant_id || tenant.sponsor_id == tenant_id }
-    end
-
-    # gets the Tenant class to respond to the keys so you can call hash like methods
-    def method_missing(m)
-      @ostruct.send(m)
-    end
-
-    def respond_to_missing?(*args)
-      @ostruct.respond_to?(*args)
-    end
+    # return all enabled tenants sorted by name
+    scope :enabled, -> { where(enabled: true).order(:short_name) }
+    scope :partner_list, -> { enabled.where(partner_display: true) }
+    scope :tiered, -> { enabled.where(payment_plan: :tiered) }
 
     def logo_file
       @logo_file ||= begin
         tenant_images_path = File.join(Rails.root, 'app', 'assets', 'images', 'tenants')
-        logo_filenames = %w[svg png jpg].lazy.map { |ext| "logo_#{tenant_id}.#{ext}" }
+        logo_filenames = %w[svg png jpg].lazy.map { |ext| "logo_#{id}.#{ext}" }
         logo_filenames.find do |filename|
           image_file = File.join(tenant_images_path, filename)
           File.exist?(image_file)
@@ -47,8 +28,24 @@ module StashEngine
     end
 
     def data_deposit_agreement?
-      dda = File.join(Rails.root, 'app', 'views', 'tenants', tenant_id, '_dda.html.erb')
-      File.exist?(dda) && data_deposit_agreement
+      dda = File.join(Rails.root, 'app', 'views', 'tenants', id, '_dda.html.erb')
+      File.exist?(dda)
+    end
+
+    def authentication
+      JSON.parse(super, object_class: OpenStruct)
+    end
+
+    def campus_contacts
+      JSON.parse(super)
+    end
+
+    def consortium
+      Tenant.where('id = ? or sponsor_id= ?', id, id)
+    end
+
+    def ror_ids
+      tenant_ror_orgs.map(&:ror_id)
     end
 
     def omniauth_login_path(params = nil)
@@ -67,23 +64,6 @@ module StashEngine
 
     def callback_path_begin
       "https://#{Rails.application.default_url_options[:host]}#{APP_CONFIG.stash_mount}/auth/"
-    end
-
-    def self.exists?(tenant_id)
-      TENANT_CONFIG.key?(tenant_id)
-    end
-
-    def self.find(tenant_id)
-      return nil unless TENANT_CONFIG[tenant_id]
-
-      new(TENANT_CONFIG[tenant_id])
-    end
-
-    def self.find_by_long_name(tenant_name)
-      all.each do |t|
-        return t if t.long_name == tenant_name
-      end
-      nil
     end
 
     def full_url(path)

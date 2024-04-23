@@ -8,7 +8,6 @@ RSpec.feature 'UserAdmin', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
-  include Mocks::Tenant
   include Mocks::DataFile
 
   context :user_admin do
@@ -18,7 +17,6 @@ RSpec.feature 'UserAdmin', type: :feature do
       mock_solr!
       mock_stripe!
       mock_datacite_gen!
-      mock_tenant!
       neuter_curation_callbacks!
       @user = create(:user, tenant_id: 'mock_tenant')
       @identifier = create(:identifier)
@@ -29,11 +27,11 @@ RSpec.feature 'UserAdmin', type: :feature do
 
     it 'allows filtering by institution', js: true do
       expect do
-        @user1 = create(:user, tenant_id: 'dataone')
+        @user1 = create(:user, tenant_id: 'match_tenant')
         @user2 = create(:user, tenant_id: 'ucop')
       end.to change(StashEngine::User, :count).by(2)
       visit stash_url_helpers.user_admin_path
-      select 'DataONE', from: 'tenant_id'
+      select 'Match Tenant', from: 'tenant_id'
       click_on 'Search'
       expect(page).to have_link(@user1.name)
       expect(page).not_to have_link(@user2.name)
@@ -80,7 +78,7 @@ RSpec.feature 'UserAdmin', type: :feature do
       end
       within(:css, '#genericModalDialog') do
         find('#tenant').click
-        find("option[value='localhost']").select_option
+        find("option[value='dryad']").select_option
         find('input[name=commit]').click
       end
 

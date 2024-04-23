@@ -10,7 +10,7 @@
   <div class="o-admin-head-right">
     <h2 class="o-heading__level3"><%= "#{user.first_name} #{user.last_name}" %></h2>
     <ul>
-      <li><%= StashEngine::Tenant.find(user.tenant_id)&.short_name %><br/>
+      <li><%= StashEngine::Tenant.find(user.tenant_id)&.short_name if StashEngine::Tenant.exists?(user.tenant_id)%><br/>
       <li><%= mail_to user.email %>
     </ul>
   </div>
