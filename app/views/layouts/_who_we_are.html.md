@@ -58,7 +58,7 @@ We are also pleased to partner with the following organizations and initiatives,
 * **Data publishing and generalist repository alignment:** [National Institutes of Health Generalist Repository Ecosystem Initiative](https://datascience.nih.gov/news/nih-office-of-data-science-strategy-announces-new-initiative-to-improve-data-access) (GREI)
 * **Metadata enhancement**: [Metadata Game Changers](https://metadatagamechangers.com/), [CEDAR](https://metadatacenter.org/)
 * **Dataset curation and publication**: [Kriyadocs](https://www.kriyadocs.com/)
-* **Accounting, finance, and human resources support**: Cxore https://www.cxore.com/
+* **Accounting, finance, and human resources support**: CxORE https://www.cxore.com/
 
 This list is a work-in-progress. If you’d like to suggest an addition, please [contact us](/stash/contact). 
 
