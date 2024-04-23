@@ -31,7 +31,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/038x2fh14']
     },
     {
-      id: 'cgu',
+      id: 'clare-cgu',
       short_name: 'Claremont Graduate University',
       long_name: 'Claremont Graduate University',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.cgu.edu/idp/shibboleth', entity_domain: 'webauth.cgu.edu' }.to_json,
@@ -40,11 +40,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'claremont',
+      sponsor_id: 'clare-cs',
       ror_orgs: ['https://ror.org/0157pnt69']
     },
     {
-      id: 'cmc',
+      id: 'clare-cmc',
       short_name: 'Claremont McKenna College',
       long_name: 'Claremont McKenna College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.cmc.edu/idp/shibboleth', entity_domain: 'webauth.cmc.edu' }.to_json,
@@ -53,11 +53,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'claremont',
+      sponsor_id: 'clare-cs',
       ror_orgs: ['https://ror.org/04n1me355']
     },
     {
-      id: 'claremont',
+      id: 'clare-cs',
       short_name: 'Claremont College Services (TCCS)',
       long_name: 'Claremont College Services (TCCS)',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.cuc.claremont.edu/idp/shibboleth',
@@ -79,7 +79,7 @@ namespace :tenants do
                  'https://ror.org/01n260e81']
     },
     {
-      id: 'hmc',
+      id: 'clare-hmc',
       short_name: 'Harvey Mudd College',
       long_name: 'Harvey Mudd College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://identity.hmc.edu/idp', entity_domain: 'hmc.edu' }.to_json,
@@ -88,11 +88,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'claremont',
+      sponsor_id: 'clare-cs',
       ror_orgs: ['https://ror.org/025ecfn45']
     },
     {
-      id: 'kgi',
+      id: 'clare-kgi',
       short_name: 'Keck Graduate Institute',
       long_name: 'Keck Graduate Institute',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.kgi.edu/idp/shibboleth', entity_domain: 'kgi.edu' }.to_json,
@@ -101,11 +101,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'claremont',
+      sponsor_id: 'clare-cs',
       ror_orgs: ['https://ror.org/00f4jdp82']
     },
     {
-      id: 'pitzer',
+      id: 'clare-pitzer',
       short_name: 'Pitzer College',
       long_name: 'Pitzer College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.pitzer.edu/idp/shibboleth', entity_domain: 'pitzer.edu' }.to_json,
@@ -114,11 +114,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'claremont',
+      sponsor_id: 'clare-cs',
       ror_orgs: ['https://ror.org/0197n2v40']
     },
     {
-      id: 'pomona',
+      id: 'clare-pomona',
       short_name: 'Pomona College',
       long_name: 'Pomona College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://websso.pomona.edu/', entity_domain: 'pomona.edu' }.to_json,
@@ -127,11 +127,11 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'claremont',
+      sponsor_id: 'clare-cs',
       ror_orgs: ['https://ror.org/0074grg94']
     },
     {
-      id: 'scrippscollege',
+      id: 'clare-scripps',
       short_name: 'Scripps College',
       long_name: 'Scripps College',
       authentication: { strategy: 'shibboleth', entity_id: 'https://webauth.scrippscollege.edu/idp/shibboleth',
@@ -141,7 +141,7 @@ namespace :tenants do
       enabled: true,
       partner_display: true,
       covers_dpc: true,
-      sponsor_id: 'claremont',
+      sponsor_id: 'clare-cs',
       ror_orgs: ['https://ror.org/00p55jd14']
     },
     {
@@ -171,7 +171,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/00hj8s172', 'https://ror.org/01esghr10']
     },
     {
-      id: 'csueastbay',
+      id: 'csueb',
       short_name: 'Cal State East Bay',
       long_name: 'California State University, East Bay',
       authentication: { strategy: 'shibboleth', entity_id: 'https://vince.csueastbay.edu/idp/shibboleth',
@@ -291,7 +291,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/02kpeqv85', 'https://ror.org/05gwbwn20', 'https://ror.org/05qs31q25']
     },
     {
-      id: 'lbl',
+      id: 'lbnl',
       short_name: 'Lawrence Berkeley Lab',
       long_name: 'Lawrence Berkeley National Laboratory',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:lbl.gov', entity_domain: 'datasets2-dev.lbl.gov' }.to_json,
@@ -357,7 +357,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/01sf06y89']
     },
     {
-      id: 'montana',
+      id: 'msu',
       short_name: 'Montana State University',
       long_name: 'Montana State University',
       authentication: { strategy: 'shibboleth', entity_id: 'https://login.montana.edu/idp/shibboleth', entity_domain: 'login.montana.edu' }.to_json,
@@ -370,7 +370,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/02w0trx84', 'https://ror.org/04ygywa46', 'https://ror.org/0343myz07']
     },
     {
-      id: 'msu',
+      id: 'msu2',
       short_name: 'Michigan State University',
       long_name: 'Michigan State University',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:msu.edu', entity_domain: 'msu.edu' }.to_json,
@@ -464,7 +464,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/01bghzb51']
     },
     {
-      id: 'osu',
+      id: 'ohiostate',
       short_name: 'Ohio State University',
       long_name: 'The Ohio State University',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:osu.edu', entity_domain: 'osu.edu' }.to_json,
@@ -526,7 +526,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/0420db125', 'https://ror.org/00jjq6q61']
     },
     {
-      id: 'shef',
+      id: 'sheffield',
       short_name: 'University of Sheffield',
       long_name: 'The University of Sheffield',
       authentication: { strategy: 'shibboleth', entity_id: 'https://idp-qa.shef.ac.uk/shibboleth', entity_domain: 'shef.ac.uk' }.to_json,
@@ -559,7 +559,7 @@ namespace :tenants do
       ]
     },
     {
-      id: 'buffalo',
+      id: 'suny-buffalo',
       short_name: 'SUNY Buffalo',
       long_name: 'University at Buffalo',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:buffalo.edu', entity_domain: 'buffalo.edu' }.to_json,
@@ -572,7 +572,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/01y64my43']
     },
     {
-      id: 'buffalostate',
+      id: 'suny-buffalostate',
       short_name: 'Buffalo State',
       long_name: 'SUNY Buffalo State University',
       authentication: { strategy: 'ip_address', ranges: ['136.183.0.0/16'] }.to_json,
@@ -585,7 +585,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/05ms04m92']
     },
     {
-      id: 'downstate',
+      id: 'suny-downstate',
       short_name: 'SUNY Downstate',
       long_name: 'SUNY Downstate Health Sciences University',
       authentication: { strategy: 'ip_address', ranges: ['138.5.0.0/16'] }.to_json,
@@ -598,7 +598,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/0041qmd21']
     },
     {
-      id: 'fredonia',
+      id: 'suny-fredonia',
       short_name: 'SUNY Fredonia',
       long_name: 'State University of New York at Fredonia',
       authentication: { strategy: 'ip_address', ranges: ['141.238.0.0/16', '141.238.1.23/24', '132.174.249.205/24'] }.to_json,
@@ -611,7 +611,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/05vrs0r17']
     },
     {
-      id: 'geneseo',
+      id: 'suny-geneseo',
       short_name: 'SUNY Geneseo',
       long_name: 'State University of New York College at Geneseo',
       authentication: { strategy: 'ip_address', ranges: ['137.238.0.0/16'] }.to_json,
@@ -624,7 +624,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/03g1q6c06']
     },
     {
-      id: 'stonybrook',
+      id: 'suny-stonybrook',
       short_name: 'SUNY Stony Brook',
       long_name: 'Stony Brook University',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:stonybrook.edu', entity_domain: 'stonybrook.edu' }.to_json,
@@ -675,7 +675,7 @@ namespace :tenants do
       ]
     },
     {
-      id: 'unsw',
+      id: 'sydneynsw',
       short_name: 'University of New South Wales, Sydney',
       long_name: 'University of New South Wales, Sydney',
       authentication: { strategy: 'shibboleth', entity_id: 'https://aaf.unsw.edu.au/idp/shibboleth', entity_domain: 'aaf.unsw.edu.au' }.to_json,
@@ -753,7 +753,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/03rmrcq20']
     },
     {
-      id: 'berkeley',
+      id: 'ucb',
       short_name: 'UC Berkeley',
       long_name: 'University of California, Berkeley',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:berkeley.edu', entity_domain: '.berkeley.edu' }.to_json,
@@ -773,7 +773,7 @@ namespace :tenants do
       ]
     },
     {
-      id: 'ucdavis',
+      id: 'ucd',
       short_name: 'UC Davis',
       long_name: 'University of California, Davis',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:ucdavis.edu', entity_domain: '.ucdavis.edu' }.to_json,
@@ -827,7 +827,7 @@ namespace :tenants do
       ]
     },
     {
-      id: 'ucmerced',
+      id: 'ucm',
       short_name: 'UC Merced',
       long_name: 'University of California, Merced',
       authentication: { strategy: 'shibboleth', entity_id: 'urn:mace:incommon:ucmerced.edu', entity_domain: '.ucmerced.edu' }.to_json,
@@ -1062,7 +1062,7 @@ namespace :tenants do
       ror_orgs: ['https://ror.org/013ckk937']
     },
     {
-      id: 'vu',
+      id: 'victoria',
       short_name: 'Victoria University, Melbourne',
       long_name: 'Victoria University, Melbourne',
       authentication: { strategy: 'shibboleth', entity_id: 'https://idpweb1.vu.edu.au/idp/shibboleth', entity_domain: 'idpweb1.vu.edu.au' }.to_json,
@@ -1130,6 +1130,290 @@ namespace :tenants do
         StashEngine::TenantRorOrg.create!(tenant_id: tenant[:id], ror_id: ror_id)
       end
     end
+  end
+
+  desc 'Rename bad tenants'
+  task :rename, [:dir] => :environment do |_task, args|
+    if ApplicationRecord.connection.foreign_key_exists?(:stash_engine_tenant_ror_orgs, :stash_engine_tenants)
+      ApplicationRecord.connection.remove_foreign_key :stash_engine_tenant_ror_orgs, :stash_engine_tenants, column: :tenant_id
+    end
+    if args.dir == 'reverse'
+      p 'Reversing tenant id changes.'
+
+      StashEngine::Tenant.find('shef').update(id: 'sheffield')
+      StashEngine::TenantRorOrg.where(tenant_id: 'shef').update_all(tenant_id: 'sheffield')
+      StashEngine::User.where(tenant_id: 'shef').update_all(tenant_id: 'sheffield')
+      StashEngine::Resource.where(tenant_id: 'shef').update_all(tenant_id: 'sheffield')
+      StashEngine::Identifier.where(payment_id: 'shef').update_all(payment_id: 'sheffield')
+      StashEngine::Tenant.find('lbl').update(id: 'lbnl')
+      StashEngine::TenantRorOrg.where(tenant_id: 'lbl').update_all(tenant_id: 'lbnl')
+      StashEngine::User.where(tenant_id: 'lbl').update_all(tenant_id: 'lbnl')
+      StashEngine::Resource.where(tenant_id: 'lbl').update_all(tenant_id: 'lbnl')
+      StashEngine::Identifier.where(payment_id: 'lbl').update_all(payment_id: 'lbnl')
+      StashEngine::Tenant.find('csueastbay').update(id: 'csueb')
+      StashEngine::TenantRorOrg.where(tenant_id: 'csueastbay').update_all(tenant_id: 'csueb')
+      StashEngine::User.where(tenant_id: 'csueastbay').update_all(tenant_id: 'csueb')
+      StashEngine::Resource.where(tenant_id: 'csueastbay').update_all(tenant_id: 'csueb')
+      StashEngine::Identifier.where(payment_id: 'csueastbay').update_all(payment_id: 'csueb')
+      StashEngine::Tenant.find('vu').update(id: 'victoria')
+      StashEngine::TenantRorOrg.where(tenant_id: 'vu').update_all(tenant_id: 'victoria')
+      StashEngine::User.where(tenant_id: 'vu').update_all(tenant_id: 'victoria')
+      StashEngine::Resource.where(tenant_id: 'vu').update_all(tenant_id: 'victoria')
+      StashEngine::Identifier.where(payment_id: 'vu').update_all(payment_id: 'victoria')
+      StashEngine::Tenant.find('unsw').update(id: 'sydneynsw')
+      StashEngine::TenantRorOrg.where(tenant_id: 'unsw').update_all(tenant_id: 'sydneynsw')
+      StashEngine::User.where(tenant_id: 'unsw').update_all(tenant_id: 'sydneynsw')
+      StashEngine::Resource.where(tenant_id: 'unsw').update_all(tenant_id: 'sydneynsw')
+      StashEngine::Identifier.where(payment_id: 'unsw').update_all(payment_id: 'sydneynsw')
+      StashEngine::Tenant.find('osu').update(id: 'ohiostate')
+      StashEngine::TenantRorOrg.where(tenant_id: 'osu').update_all(tenant_id: 'ohiostate')
+      StashEngine::User.where(tenant_id: 'osu').update_all(tenant_id: 'ohiostate')
+      StashEngine::Resource.where(tenant_id: 'osu').update_all(tenant_id: 'ohiostate')
+      StashEngine::Identifier.where(payment_id: 'osu').update_all(payment_id: 'ohiostate')
+      StashEngine::Tenant.find('msu').update(id: 'msu2')
+      StashEngine::TenantRorOrg.where(tenant_id: 'msu').update_all(tenant_id: 'msu2')
+      StashEngine::User.where(tenant_id: 'msu').update_all(tenant_id: 'msu2')
+      StashEngine::Resource.where(tenant_id: 'msu').update_all(tenant_id: 'msu2')
+      StashEngine::Identifier.where(payment_id: 'msu').update_all(payment_id: 'msu2')
+      StashEngine::Tenant.find('montana').update(id: 'msu')
+      StashEngine::TenantRorOrg.where(tenant_id: 'montana').update_all(tenant_id: 'msu')
+      StashEngine::User.where(tenant_id: 'montana').update_all(tenant_id: 'msu')
+      StashEngine::Resource.where(tenant_id: 'montana').update_all(tenant_id: 'msu')
+      StashEngine::Identifier.where(payment_id: 'montana').update_all(payment_id: 'msu')
+
+      # UC system
+      StashEngine::Tenant.find('berkeley').update(id: 'ucb')
+      StashEngine::TenantRorOrg.where(tenant_id: 'berkeley').update_all(tenant_id: 'ucb')
+      StashEngine::User.where(tenant_id: 'berkeley').update_all(tenant_id: 'ucb')
+      StashEngine::Resource.where(tenant_id: 'berkeley').update_all(tenant_id: 'ucb')
+      StashEngine::Identifier.where(payment_id: 'berkeley').update_all(payment_id: 'ucb')
+      StashEngine::Tenant.find('ucdavis').update(id: 'ucd')
+      StashEngine::TenantRorOrg.where(tenant_id: 'ucdavis').update_all(tenant_id: 'ucd')
+      StashEngine::User.where(tenant_id: 'ucdavis').update_all(tenant_id: 'ucd')
+      StashEngine::Resource.where(tenant_id: 'ucdavis').update_all(tenant_id: 'ucd')
+      StashEngine::Identifier.where(payment_id: 'ucdavis').update_all(payment_id: 'ucd')
+      StashEngine::Tenant.find('ucmerced').update(id: 'ucm')
+      StashEngine::TenantRorOrg.where(tenant_id: 'ucmerced').update_all(tenant_id: 'ucm')
+      StashEngine::User.where(tenant_id: 'ucmerced').update_all(tenant_id: 'ucm')
+      StashEngine::Resource.where(tenant_id: 'ucmerced').update_all(tenant_id: 'ucm')
+      StashEngine::Identifier.where(payment_id: 'ucmerced').update_all(payment_id: 'ucm')
+
+      # SUNY consortium
+      StashEngine::Tenant.find('buffalo').update(id: 'suny-buffalo')
+      StashEngine::TenantRorOrg.where(tenant_id: 'buffalo').update_all(tenant_id: 'suny-buffalo')
+      StashEngine::User.where(tenant_id: 'buffalo').update_all(tenant_id: 'suny-buffalo')
+      StashEngine::Resource.where(tenant_id: 'buffalo').update_all(tenant_id: 'suny-buffalo')
+      StashEngine::Identifier.where(payment_id: 'buffalo').update_all(payment_id: 'suny-buffalo')
+      StashEngine::Tenant.find('buffalostate').update(id: 'suny-buffalostate')
+      StashEngine::TenantRorOrg.where(tenant_id: 'buffalostate').update_all(tenant_id: 'suny-buffalostate')
+      StashEngine::User.where(tenant_id: 'buffalostate').update_all(tenant_id: 'suny-buffalostate')
+      StashEngine::Resource.where(tenant_id: 'buffalostate').update_all(tenant_id: 'suny-buffalostate')
+      StashEngine::Identifier.where(payment_id: 'buffalostate').update_all(payment_id: 'suny-buffalostate')
+      StashEngine::Tenant.find('downstate').update(id: 'suny-downstate')
+      StashEngine::TenantRorOrg.where(tenant_id: 'downstate').update_all(tenant_id: 'suny-downstate')
+      StashEngine::User.where(tenant_id: 'downstate').update_all(tenant_id: 'suny-downstate')
+      StashEngine::Resource.where(tenant_id: 'downstate').update_all(tenant_id: 'suny-downstate')
+      StashEngine::Identifier.where(payment_id: 'downstate').update_all(payment_id: 'suny-downstate')
+      StashEngine::Tenant.find('fredonia').update(id: 'suny-fredonia')
+      StashEngine::TenantRorOrg.where(tenant_id: 'fredonia').update_all(tenant_id: 'suny-fredonia')
+      StashEngine::User.where(tenant_id: 'fredonia').update_all(tenant_id: 'suny-fredonia')
+      StashEngine::Resource.where(tenant_id: 'fredonia').update_all(tenant_id: 'suny-fredonia')
+      StashEngine::Identifier.where(payment_id: 'fredonia').update_all(payment_id: 'suny-fredonia')
+      StashEngine::Tenant.find('geneseo').update(id: 'suny-geneseo')
+      StashEngine::TenantRorOrg.where(tenant_id: 'geneseo').update_all(tenant_id: 'suny-geneseo')
+      StashEngine::User.where(tenant_id: 'geneseo').update_all(tenant_id: 'suny-geneseo')
+      StashEngine::Resource.where(tenant_id: 'geneseo').update_all(tenant_id: 'suny-geneseo')
+      StashEngine::Identifier.where(payment_id: 'geneseo').update_all(payment_id: 'suny-geneseo')
+      StashEngine::Tenant.find('stonybrook').update(id: 'suny-stonybrook')
+      StashEngine::TenantRorOrg.where(tenant_id: 'stonybrook').update_all(tenant_id: 'suny-stonybrook')
+      StashEngine::User.where(tenant_id: 'stonybrook').update_all(tenant_id: 'suny-stonybrook')
+      StashEngine::Resource.where(tenant_id: 'stonybrook').update_all(tenant_id: 'suny-stonybrook')
+      StashEngine::Identifier.where(payment_id: 'stonybrook').update_all(payment_id: 'suny-stonybrook')
+
+      # Clare consortium
+      StashEngine::Tenant.find('claremont').update(id: 'clare-cs')
+      StashEngine::Tenant.where(sponsor_id: 'claremont').update_all(sponsor_id: 'clare-cs')
+      StashEngine::TenantRorOrg.where(tenant_id: 'claremont').update_all(tenant_id: 'clare-cs')
+      StashEngine::User.where(tenant_id: 'claremont').update_all(tenant_id: 'clare-cs')
+      StashEngine::Resource.where(tenant_id: 'claremont').update_all(tenant_id: 'clare-cs')
+      StashEngine::Identifier.where(payment_id: 'claremont').update_all(payment_id: 'clare-cs')
+      StashEngine::Tenant.find('cgu').update(id: 'clare-cgu')
+      StashEngine::TenantRorOrg.where(tenant_id: 'cgu').update_all(tenant_id: 'clare-cgu')
+      StashEngine::User.where(tenant_id: 'cgu').update_all(tenant_id: 'clare-cgu')
+      StashEngine::Resource.where(tenant_id: 'cgu').update_all(tenant_id: 'clare-cgu')
+      StashEngine::Identifier.where(payment_id: 'cgu').update_all(payment_id: 'clare-cgu')
+      StashEngine::Tenant.find('cmc').update(id: 'clare-cmc')
+      StashEngine::TenantRorOrg.where(tenant_id: 'cmc').update_all(tenant_id: 'clare-cmc')
+      StashEngine::User.where(tenant_id: 'cmc').update_all(tenant_id: 'clare-cmc')
+      StashEngine::Resource.where(tenant_id: 'cmc').update_all(tenant_id: 'clare-cmc')
+      StashEngine::Identifier.where(payment_id: 'cmc').update_all(payment_id: 'clare-cmc')
+      StashEngine::Tenant.find('hmc').update(id: 'clare-hmc')
+      StashEngine::TenantRorOrg.where(tenant_id: 'hmc').update_all(tenant_id: 'clare-hmc')
+      StashEngine::User.where(tenant_id: 'hmc').update_all(tenant_id: 'clare-hmc')
+      StashEngine::Resource.where(tenant_id: 'hmc').update_all(tenant_id: 'clare-hmc')
+      StashEngine::Identifier.where(payment_id: 'hmc').update_all(payment_id: 'clare-hmc')
+      StashEngine::Tenant.find('kgi').update(id: 'clare-kgi')
+      StashEngine::TenantRorOrg.where(tenant_id: 'kgi').update_all(tenant_id: 'clare-kgi')
+      StashEngine::User.where(tenant_id: 'kgi').update_all(tenant_id: 'clare-kgi')
+      StashEngine::Resource.where(tenant_id: 'kgi').update_all(tenant_id: 'clare-kgi')
+      StashEngine::Identifier.where(payment_id: 'kgi').update_all(payment_id: 'clare-kgi')
+      StashEngine::Tenant.find('pitzer').update(id: 'clare-pitzer')
+      StashEngine::TenantRorOrg.where(tenant_id: 'pitzer').update_all(tenant_id: 'clare-pitzer')
+      StashEngine::User.where(tenant_id: 'pitzer').update_all(tenant_id: 'clare-pitzer')
+      StashEngine::Resource.where(tenant_id: 'pitzer').update_all(tenant_id: 'clare-pitzer')
+      StashEngine::Identifier.where(payment_id: 'pitzer').update_all(payment_id: 'clare-pitzer')
+      StashEngine::Tenant.find('pomona').update(id: 'clare-pomona')
+      StashEngine::TenantRorOrg.where(tenant_id: 'pomona').update_all(tenant_id: 'clare-pomona')
+      StashEngine::User.where(tenant_id: 'pomona').update_all(tenant_id: 'clare-pomona')
+      StashEngine::Resource.where(tenant_id: 'pomona').update_all(tenant_id: 'clare-pomona')
+      StashEngine::Identifier.where(payment_id: 'pomona').update_all(payment_id: 'clare-pomona')
+      StashEngine::Tenant.find('scrippscollege').update(id: 'clare-scripps')
+      StashEngine::TenantRorOrg.where(tenant_id: 'scrippscollege').update_all(tenant_id: 'clare-scripps')
+      StashEngine::User.where(tenant_id: 'scrippscollege').update_all(tenant_id: 'clare-scripps')
+      StashEngine::Resource.where(tenant_id: 'scrippscollege').update_all(tenant_id: 'clare-scripps')
+      StashEngine::Identifier.where(payment_id: 'scrippscollege').update_all(payment_id: 'clare-scripps')
+    else
+      p 'Correcting tenant ids.'
+
+      StashEngine::Tenant.find('victoria').update(id: 'vu')
+      StashEngine::TenantRorOrg.where(tenant_id: 'victoria').update_all(tenant_id: 'vu')
+      StashEngine::User.where(tenant_id: 'victoria').update_all(tenant_id: 'vu')
+      StashEngine::Resource.where(tenant_id: 'victoria').update_all(tenant_id: 'vu')
+      StashEngine::Identifier.where(payment_id: 'victoria').update_all(payment_id: 'vu')
+      StashEngine::Tenant.find('msu').update(id: 'montana')
+      StashEngine::TenantRorOrg.where(tenant_id: 'msu').update_all(tenant_id: 'montana')
+      StashEngine::User.where(tenant_id: 'msu').update_all(tenant_id: 'montana')
+      StashEngine::Resource.where(tenant_id: 'msu').update_all(tenant_id: 'montana')
+      StashEngine::Identifier.where(payment_id: 'msu').update_all(payment_id: 'montana')
+      StashEngine::Tenant.find('msu2').update(id: 'msu')
+      StashEngine::TenantRorOrg.where(tenant_id: 'msu2').update_all(tenant_id: 'msu')
+      StashEngine::User.where(tenant_id: 'msu2').update_all(tenant_id: 'msu')
+      StashEngine::Resource.where(tenant_id: 'msu2').update_all(tenant_id: 'msu')
+      StashEngine::Identifier.where(payment_id: 'msu2').update_all(payment_id: 'msu')
+      StashEngine::Tenant.find('ohiostate').update(id: 'osu')
+      StashEngine::TenantRorOrg.where(tenant_id: 'ohiostate').update_all(tenant_id: 'osu')
+      StashEngine::User.where(tenant_id: 'ohiostate').update_all(tenant_id: 'osu')
+      StashEngine::Resource.where(tenant_id: 'ohiostate').update_all(tenant_id: 'osu')
+      StashEngine::Identifier.where(payment_id: 'ohiostate').update_all(payment_id: 'osu')
+      StashEngine::Tenant.find('sydneynsw').update(id: 'unsw')
+      StashEngine::TenantRorOrg.where(tenant_id: 'sydneynsw').update_all(tenant_id: 'unsw')
+      StashEngine::User.where(tenant_id: 'sydneynsw').update_all(tenant_id: 'unsw')
+      StashEngine::Resource.where(tenant_id: 'sydneynsw').update_all(tenant_id: 'unsw')
+      StashEngine::Identifier.where(payment_id: 'sydneynsw').update_all(payment_id: 'unsw')
+      StashEngine::Tenant.find('csueb').update(id: 'csueastbay')
+      StashEngine::TenantRorOrg.where(tenant_id: 'csueb').update_all(tenant_id: 'csueastbay')
+      StashEngine::User.where(tenant_id: 'csueb').update_all(tenant_id: 'csueastbay')
+      StashEngine::Resource.where(tenant_id: 'csueb').update_all(tenant_id: 'csueastbay')
+      StashEngine::Identifier.where(payment_id: 'csueb').update_all(payment_id: 'csueastbay')
+      StashEngine::Tenant.find('lbnl').update(id: 'lbl')
+      StashEngine::TenantRorOrg.where(tenant_id: 'lbnl').update_all(tenant_id: 'lbl')
+      StashEngine::User.where(tenant_id: 'lbnl').update_all(tenant_id: 'lbl')
+      StashEngine::Resource.where(tenant_id: 'lbnl').update_all(tenant_id: 'lbl')
+      StashEngine::Identifier.where(payment_id: 'lbnl').update_all(payment_id: 'lbl')
+      StashEngine::Tenant.find('sheffield').update(id: 'shef')
+      StashEngine::TenantRorOrg.where(tenant_id: 'sheffield').update_all(tenant_id: 'shef')
+      StashEngine::User.where(tenant_id: 'sheffield').update_all(tenant_id: 'shef')
+      StashEngine::Resource.where(tenant_id: 'sheffield').update_all(tenant_id: 'shef')
+      StashEngine::Identifier.where(payment_id: 'sheffield').update_all(payment_id: 'shef')
+
+      # Clare consortium
+      StashEngine::Tenant.find('clare-cs').update(id: 'claremont')
+      StashEngine::Tenant.where(sponsor_id: 'clare-cs').update_all(sponsor_id: 'claremont')
+      StashEngine::TenantRorOrg.where(tenant_id: 'clare-cs').update_all(tenant_id: 'claremont')
+      StashEngine::User.where(tenant_id: 'clare-cs').update_all(tenant_id: 'claremont')
+      StashEngine::Resource.where(tenant_id: 'clare-cs').update_all(tenant_id: 'claremont')
+      StashEngine::Identifier.where(payment_id: 'clare-cs').update_all(payment_id: 'claremont')
+      StashEngine::Tenant.find('clare-cgu').update(id: 'cgu')
+      StashEngine::TenantRorOrg.where(tenant_id: 'clare-cgu').update_all(tenant_id: 'cgu')
+      StashEngine::User.where(tenant_id: 'clare-cgu').update_all(tenant_id: 'cgu')
+      StashEngine::Resource.where(tenant_id: 'clare-cgu').update_all(tenant_id: 'cgu')
+      StashEngine::Identifier.where(payment_id: 'clare-cgu').update_all(payment_id: 'cgu')
+      StashEngine::Tenant.find('clare-cmc').update(id: 'cmc')
+      StashEngine::TenantRorOrg.where(tenant_id: 'clare-cmc').update_all(tenant_id: 'cmc')
+      StashEngine::User.where(tenant_id: 'clare-cmc').update_all(tenant_id: 'cmc')
+      StashEngine::Resource.where(tenant_id: 'clare-cmc').update_all(tenant_id: 'cmc')
+      StashEngine::Identifier.where(payment_id: 'clare-cmc').update_all(payment_id: 'cmc')
+      StashEngine::Tenant.find('clare-hmc').update(id: 'hmc')
+      StashEngine::TenantRorOrg.where(tenant_id: 'clare-hmc').update_all(tenant_id: 'hmc')
+      StashEngine::User.where(tenant_id: 'clare-hmc').update_all(tenant_id: 'hmc')
+      StashEngine::Resource.where(tenant_id: 'clare-hmc').update_all(tenant_id: 'hmc')
+      StashEngine::Identifier.where(payment_id: 'clare-hmc').update_all(payment_id: 'hmc')
+      StashEngine::Tenant.find('clare-kgi').update(id: 'kgi')
+      StashEngine::TenantRorOrg.where(tenant_id: 'clare-kgi').update_all(tenant_id: 'kgi')
+      StashEngine::User.where(tenant_id: 'clare-kgi').update_all(tenant_id: 'kgi')
+      StashEngine::Resource.where(tenant_id: 'clare-kgi').update_all(tenant_id: 'kgi')
+      StashEngine::Identifier.where(payment_id: 'clare-kgi').update_all(payment_id: 'kgi')
+      StashEngine::Tenant.find('clare-pitzer').update(id: 'pitzer')
+      StashEngine::TenantRorOrg.where(tenant_id: 'clare-pitzer').update_all(tenant_id: 'pitzer')
+      StashEngine::User.where(tenant_id: 'clare-pitzer').update_all(tenant_id: 'pitzer')
+      StashEngine::Resource.where(tenant_id: 'clare-pitzer').update_all(tenant_id: 'pitzer')
+      StashEngine::Identifier.where(payment_id: 'clare-pitzer').update_all(payment_id: 'pitzer')
+      StashEngine::Tenant.find('clare-pomona').update(id: 'pomona')
+      StashEngine::TenantRorOrg.where(tenant_id: 'clare-pomona').update_all(tenant_id: 'pomona')
+      StashEngine::User.where(tenant_id: 'clare-pomona').update_all(tenant_id: 'pomona')
+      StashEngine::Resource.where(tenant_id: 'clare-pomona').update_all(tenant_id: 'pomona')
+      StashEngine::Identifier.where(payment_id: 'clare-pomona').update_all(payment_id: 'pomona')
+      StashEngine::Tenant.find('clare-scripps').update(id: 'scrippscollege')
+      StashEngine::TenantRorOrg.where(tenant_id: 'clare-scripps').update_all(tenant_id: 'scrippscollege')
+      StashEngine::User.where(tenant_id: 'clare-scripps').update_all(tenant_id: 'scrippscollege')
+      StashEngine::Resource.where(tenant_id: 'clare-scripps').update_all(tenant_id: 'scrippscollege')
+      StashEngine::Identifier.where(payment_id: 'clare-scripps').update_all(payment_id: 'scrippscollege')
+
+      # SUNY consortium
+      StashEngine::Tenant.find('suny-buffalo').update(id: 'buffalo')
+      StashEngine::TenantRorOrg.where(tenant_id: 'suny-buffalo').update_all(tenant_id: 'buffalo')
+      StashEngine::User.where(tenant_id: 'suny-buffalo').update_all(tenant_id: 'buffalo')
+      StashEngine::Resource.where(tenant_id: 'suny-buffalo').update_all(tenant_id: 'buffalo')
+      StashEngine::Identifier.where(payment_id: 'suny-buffalo').update_all(payment_id: 'buffalo')
+      StashEngine::Tenant.find('suny-buffalostate').update(id: 'buffalostate')
+      StashEngine::TenantRorOrg.where(tenant_id: 'suny-buffalostate').update_all(tenant_id: 'buffalostate')
+      StashEngine::User.where(tenant_id: 'suny-buffalostate').update_all(tenant_id: 'buffalostate')
+      StashEngine::Resource.where(tenant_id: 'suny-buffalostate').update_all(tenant_id: 'buffalostate')
+      StashEngine::Identifier.where(payment_id: 'suny-buffalostate').update_all(payment_id: 'buffalostate')
+      StashEngine::Tenant.find('suny-downstate').update(id: 'downstate')
+      StashEngine::TenantRorOrg.where(tenant_id: 'suny-downstate').update_all(tenant_id: 'downstate')
+      StashEngine::User.where(tenant_id: 'suny-downstate').update_all(tenant_id: 'downstate')
+      StashEngine::Resource.where(tenant_id: 'suny-downstate').update_all(tenant_id: 'downstate')
+      StashEngine::Identifier.where(payment_id: 'suny-downstate').update_all(payment_id: 'downstate')
+      StashEngine::Tenant.find('suny-fredonia').update(id: 'fredonia')
+      StashEngine::TenantRorOrg.where(tenant_id: 'suny-fredonia').update_all(tenant_id: 'fredonia')
+      StashEngine::User.where(tenant_id: 'suny-fredonia').update_all(tenant_id: 'fredonia')
+      StashEngine::Resource.where(tenant_id: 'suny-fredonia').update_all(tenant_id: 'fredonia')
+      StashEngine::Identifier.where(payment_id: 'suny-fredonia').update_all(payment_id: 'fredonia')
+      StashEngine::Tenant.find('suny-geneseo').update(id: 'geneseo')
+      StashEngine::TenantRorOrg.where(tenant_id: 'suny-geneseo').update_all(tenant_id: 'geneseo')
+      StashEngine::User.where(tenant_id: 'suny-geneseo').update_all(tenant_id: 'geneseo')
+      StashEngine::Resource.where(tenant_id: 'suny-geneseo').update_all(tenant_id: 'geneseo')
+      StashEngine::Identifier.where(payment_id: 'suny-geneseo').update_all(payment_id: 'geneseo')
+      StashEngine::Tenant.find('suny-stonybrook').update(id: 'stonybrook')
+      StashEngine::TenantRorOrg.where(tenant_id: 'suny-stonybrook').update_all(tenant_id: 'stonybrook')
+      StashEngine::User.where(tenant_id: 'suny-stonybrook').update_all(tenant_id: 'stonybrook')
+      StashEngine::Resource.where(tenant_id: 'suny-stonybrook').update_all(tenant_id: 'stonybrook')
+      StashEngine::Identifier.where(payment_id: 'suny-stonybrook').update_all(payment_id: 'stonybrook')
+
+      # UC system
+      StashEngine::Tenant.find('ucb').update(id: 'berkeley')
+      StashEngine::TenantRorOrg.where(tenant_id: 'ucb').update_all(tenant_id: 'berkeley')
+      StashEngine::User.where(tenant_id: 'ucb').update_all(tenant_id: 'berkeley')
+      StashEngine::Resource.where(tenant_id: 'ucb').update_all(tenant_id: 'berkeley')
+      StashEngine::Identifier.where(payment_id: 'ucb').update_all(payment_id: 'berkeley')
+      StashEngine::Tenant.find('ucd').update(id: 'ucdavis')
+      StashEngine::TenantRorOrg.where(tenant_id: 'ucd').update_all(tenant_id: 'ucdavis')
+      StashEngine::User.where(tenant_id: 'ucd').update_all(tenant_id: 'ucdavis')
+      StashEngine::Resource.where(tenant_id: 'ucd').update_all(tenant_id: 'ucdavis')
+      StashEngine::Identifier.where(payment_id: 'ucd').update_all(payment_id: 'ucdavis')
+      StashEngine::Tenant.find('ucm').update(id: 'ucmerced')
+      StashEngine::TenantRorOrg.where(tenant_id: 'ucm').update_all(tenant_id: 'ucmerced')
+      StashEngine::User.where(tenant_id: 'ucm').update_all(tenant_id: 'ucmerced')
+      StashEngine::Resource.where(tenant_id: 'ucm').update_all(tenant_id: 'ucmerced')
+      StashEngine::Identifier.where(payment_id: 'ucm').update_all(payment_id: 'ucmerced')
+    end
+    unless ApplicationRecord.connection.foreign_key_exists?(:stash_engine_tenant_ror_orgs, :stash_engine_tenants)
+      ApplicationRecord.connection.add_foreign_key :stash_engine_tenant_ror_orgs, :stash_engine_tenants, column: :tenant_id
+    end
+  rescue StandardError => e
+    p e
+    p 'Tenants ids not changed from original'
   end
 end
 # rubocop:enable Metrics/BlockLength
