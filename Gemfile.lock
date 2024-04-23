@@ -442,7 +442,7 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.3.0)
-    mysql2 (0.5.5)
+    mysql2 (0.5.6)
     nenv (0.3.0)
     net-http-persistent (2.9.4)
     net-scp (4.0.0)
@@ -897,4 +897,4 @@ DEPENDENCIES
   zaru (~> 0.3.0)
 
 BUNDLED WITH
-   2.4.22
+   2.5.6
