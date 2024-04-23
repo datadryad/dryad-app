@@ -5,9 +5,10 @@ module StashApi
   class File
     include Presenter
 
-    def initialize(file_id:)
+    def initialize(file_id:, user: nil)
       @se_data_file = StashEngine::DataFile.find(file_id)
       @resource = @se_data_file.resource
+      @user = user
     end
 
     def metadata
@@ -39,16 +40,22 @@ module StashApi
         self: { href: api_url_helper.file_path(@se_data_file.id) },
         'stash:dataset': { href: parent_version.parent_dataset.self_path },
         'stash:version': { href: parent_version.self_path },
-        'stash:files': { href: parent_version.files_path },
-        'stash:file-download': { href: api_url_helper.download_file_path(id: @se_data_file.id) }
+        'stash:files': { href: parent_version.files_path }
       }
+      add_file_download!(hsh)
       add_download!(hsh)
       hsh
     end
 
+    # secret internal link for admins only
+    def add_file_download!(hsh)
+      hsh['stash:file-download'] = { href: @se_data_file.s3_permanent_presigned_url } if @se_data_file.resource.submitted? &&
+          @se_data_file.resource.admin_for_this_item?(user: @user)
+    end
+
     def add_download!(hsh)
       hsh['stash:download'] = { href: api_url_helper.download_file_path(@se_data_file.id) } if @se_data_file.resource.submitted? &&
-          @se_data_file.resource.may_download?(ui_user: nil)
+          @se_data_file.resource.may_download?(ui_user: @user)
     end
 
   end
