@@ -1,0 +1,33 @@
+// ##### Search Field Component ##### //
+
+$search-field-size: 28px;
+
+.o-global-search {
+  display: flex;
+  height: $search-field-size;
+}
+
+.o-global-search__label {
+  @extend %hide;
+}
+
+.o-global-search__input {
+  @extend %fcontrol-focus;
+  flex: 1 0 auto;
+  padding: 0 0 0 0.5em;
+  font-size: 0.9em;
+  border: solid $design-light-blue-color;
+  border-width: 1px 3px 1px 1px; // for focus styles
+
+  &::placeholder {
+    opacity: 1;
+    color: $design-black-color;
+  }
+
+}
+
+.o-global-search__submit-button {
+  width: $search-field-size;
+  border: none;
+  background: $design-light-blue-color url('/images/scss/icon_magnifying-glass.svg') center center no-repeat;
+}
