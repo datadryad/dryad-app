@@ -55,7 +55,9 @@
     <section class="t-review__section" style="margin-bottom: 1rem;">
     <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
                 class: 't-review__edit-button-top o-button__icon-left', role: 'button' unless @review.readme_content.blank? %>
-    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: @review, highlight_fields: highlight_fields } %>
+    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: @review, highlight_fields: highlight_fields, expand_readme: true } %>
+    <%= link_to 'Edit README', stash_url_helpers.prepare_readme_resource_path(@resource),
+                class: 't-review__edit-button-bottom o-button__icon-left', role: 'button' unless @review.readme_content.blank? %>
     </section>
 
     <% if @resource.geolocations.count.positive? %>
@@ -119,7 +121,7 @@
   <h2 class="o-heading__page-span">Agree to terms</h2>
     <%= render partial: "stash_datacite/licenses/review" %>
 
-<div class="o-dataset-nav">
+<div class="o-dataset-nav" style="align-items: flex-end;">
   <% if @resource&.resource_type&.resource_type == 'collection' %>
   <%= link_to 'Back to Describe collection', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
   <% else %>
@@ -143,6 +145,10 @@
       <%= check_box_tag 'all_filled',  1, true, :style => "display: none;", class: 'all_filled js-agrees' %>
       <div>
         <% if current_user&.id != @resource.user_id # only show to admins %>
+           <p>
+            <span><%= check_box_tag :hide_readme, true, !@resource.display_readme %></span>
+            <%= label_tag :hide_readme, "Hide the README on the landing page"%> 
+          </p>
           <%= text_field_tag :user_comment, @resource.edit_histories.first.try(:user_comment), size: 50,
               placeholder: 'Describe edits made (required)', class: 't-review__user-comment' %>
         <% end %>

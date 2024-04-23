@@ -20,7 +20,9 @@
        locals: { abstract: review.abstract, methods: '',
      other: '', highlight_fields: [] } %>
 
-  <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review, highlight_fields: [] } %>
+  <% if @resource.display_readme? %>
+    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review, highlight_fields: [], expand_readme: false } %>
+  <% end %>
 
   <%= render partial: "stash_datacite/descriptions/show",
      locals: { abstract: '', methods: review.methods,

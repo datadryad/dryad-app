@@ -18,7 +18,7 @@
   <% end %>
   <div class="o-admin-form-pair">
     <label for="curation_status">Status:</label>
-    <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select, params[:curation_status]),
+    <%= select_tag(:curation_status, options_for_select( [['Status', '']] + status_select + [['Upload error', 'error']], params[:curation_status]),
                  class: 'c-input__text', onchange: "this.form.submit();" ) %>
   </div>
   <% if @publications.any? %>

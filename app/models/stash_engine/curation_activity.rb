@@ -121,6 +121,8 @@ module StashEngine
       return '' unless status.present?
 
       case status
+      when 'error'
+        'Upload error'
       when 'peer_review'
         'Private for peer review'
       when 'action_required'

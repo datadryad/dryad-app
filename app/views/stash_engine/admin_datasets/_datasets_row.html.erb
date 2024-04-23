@@ -25,13 +25,7 @@
   <td id="js-curation-state-<%= dataset.identifier_id %>">
     <div class="c-lined-table__with-actions">
       <div class="c-lined-table__data">
-        <% if (dataset.resource_state == 'error') %>
-          Upload error
-        <% elsif (dataset.resource_state == 'processing') %>
-          Processing
-        <% else %>
-          <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
-        <% end %>
+        <%= StashEngine::CurationActivity.readable_status(dataset.status) %>
       </div>
       <% if policy(dataset).curation_activity_popup? %>
        <div class="c-lined-table__actions">
