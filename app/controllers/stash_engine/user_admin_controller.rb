@@ -150,7 +150,7 @@ module StashEngine
     end
 
     def setup_tenants
-      @tenants = [OpenStruct.new(id: '', name: '* Select Institution *')]
+      @tenants = [OpenStruct.new(id: '', name: '* Select institution *')]
       @tenants << StashEngine::Tenant.enabled.map do |t|
         OpenStruct.new(id: t.id, name: t.short_name)
       end
