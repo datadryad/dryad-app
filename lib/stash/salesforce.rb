@@ -174,7 +174,7 @@ module Stash
 
     def self.find_account_by_tenant(tenant)
       return unless tenant
-      return if tenant.tenant_id == 'dryad' # we don't maintain a Salesforce account for the Dryad organization
+      return if tenant.id == 'dryad' # we don't maintain a Salesforce account for the Dryad organization
 
       # try lookup by ROR
       tenant.ror_ids&.each do |ror_id|
