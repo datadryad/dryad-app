@@ -467,56 +467,54 @@ namespace :identifiers do
     puts 'Writting in_progress_detail.csv'
     CSV.open('in_progress_detail.csv', 'w') do |csv|
       csv << %w[DOI PubDOI Version DateEnteredIP DateExitedIP StatusExitedTo DatasetSize CurrentStatus EverCurated? EverPublished? Journal WhoPays]
-      StashEngine::Identifier.find_in_batches do |ids|
-        ids.each_with_index do |i, ind|
-          puts ind if (ind % 100) == 0
-          in_ip = false
-          date_entered_ip = i.created_at
+      StashEngine::Identifier.find_each.with_index do |i, ind|
+        puts ind if (ind % 100) == 0
+        in_ip = false
+        date_entered_ip = i.created_at
 
-          who_pays = if i.journal&.will_pay?
-                       'journal'
-                     elsif i.institution_will_pay?
-                       'institution'
-                     elsif i.submitter_affiliation&.fee_waivered?
-                       'waiver'
-                     elsif i.funder_will_pay?
-                       'funder'
-                     else
-                       'user'
-                     end
+        who_pays = if i.journal&.will_pay?
+                     'journal'
+                   elsif i.institution_will_pay?
+                     'institution'
+                   elsif i.submitter_affiliation&.fee_waivered?
+                     'waiver'
+                   elsif i.funder_will_pay?
+                     'funder'
+                   else
+                     'user'
+                   end
 
-          ever_curated = i.resources.map(&:curation_activities).flatten.map(&:status).include?('curation')
-          ever_published = i.resources.map(&:curation_activities).flatten.map(&:status).include?('published')
+        ever_curated = i.resources.map(&:curation_activities).flatten.map(&:status).include?('curation')
+        ever_published = i.resources.map(&:curation_activities).flatten.map(&:status).include?('published')
 
-          i.resources.map(&:curation_activities).flatten.each do |ca|
-            if ca.in_progress?
-              next if in_ip # do nothing if it was already in in_progress
+        i.resources.map(&:curation_activities).flatten.each do |ca|
+          if ca.in_progress?
+            next if in_ip # do nothing if it was already in in_progress
 
-              in_ip = true
-              date_entered_ip = ca.created_at
-            elsif in_ip
-              # the previous status was in_progress, but this satatus is not,
-              # so close out the entry
-              in_ip = false
-              csv << [i.identifier, i.publication_article_doi,
-                      ca.resource.stash_version.version, date_entered_ip, ca.created_at, ca.status,
-                      ca.resource.size, i.latest_resource&.current_curation_status,
-                      ever_curated, ever_published,
-                      i.journal&.title, who_pays]
-            end
+            in_ip = true
+            date_entered_ip = ca.created_at
+          elsif in_ip
+            # the previous status was in_progress, but this satatus is not,
+            # so close out the entry
+            in_ip = false
+            csv << [i.identifier, i.publication_article_doi,
+                    ca.resource.stash_version.version, date_entered_ip, ca.created_at, ca.status,
+                    ca.resource.size, i.latest_resource&.current_curation_status,
+                    ever_curated, ever_published,
+                    i.journal&.title, who_pays]
           end
-
-          # if we're at the end of the history and in_ip,
-          # finalize the current stats before moving to next identifier
-          next unless in_ip
-
-          csv << [i.identifier, i.publication_article_doi,
-                  i.latest_resource.stash_version.version, date_entered_ip, 'None', 'None',
-                  i.latest_resource.size, i.latest_resource&.current_curation_status,
-                  ever_curated, ever_published,
-                  i.journal&.title, who_pays]
-          in_ip = false
         end
+
+        # if we're at the end of the history and in_ip,
+        # finalize the current stats before moving to next identifier
+        next unless in_ip
+
+        csv << [i.identifier, i.publication_article_doi,
+                i.latest_resource.stash_version.version, date_entered_ip, 'None', 'None',
+                i.latest_resource.size, i.latest_resource&.current_curation_status,
+                ever_curated, ever_published,
+                i.journal&.title, who_pays]
+        in_ip = false
       end
     end
   end
@@ -526,16 +524,14 @@ namespace :identifiers do
     puts 'Writing ppr_to_curation.csv'
     CSV.open('ppr_to_curation.csv', 'w') do |csv|
       csv << %w[DOI CreatedAt]
-      StashEngine::Identifier.find_in_batches do |ids|
-        ids.each_with_index do |i, ind|
-          puts ind if (ind % 100) == 0
-          ppr_found = false
-          i.resources.map(&:curation_activities).flatten.each do |ca|
-            ppr_found = true if ca.peer_review?
-            if ca.curation? && ppr_found
-              csv << [i.identifier, i.created_at]
-              break
-            end
+      StashEngine::Identifier.find_each.with_index do |i, ind|
+        puts ind if (ind % 100) == 0
+        ppr_found = false
+        i.resources.map(&:curation_activities).flatten.each do |ca|
+          ppr_found = true if ca.peer_review?
+          if ca.curation? && ppr_found
+            csv << [i.identifier, i.created_at]
+            break
           end
         end
       end
@@ -547,48 +543,46 @@ namespace :identifiers do
     puts 'Writting ppr_detail.csv'
     CSV.open('ppr_detail.csv', 'w') do |csv|
       csv << %w[DOI PubDOI ManuNumber Version DateEnteredPPR DateExitedPPR StatusExitedTo DatasetSize Journal AutoPPR Integrated WhoPays]
-      StashEngine::Identifier.find_in_batches do |ids|
-        ids.each_with_index do |i, ind|
-          puts ind if (ind % 100) == 0
-          in_ppr = false
-          date_entered_ppr = 'ERROR'
+      StashEngine::Identifier.find_each.with_index do |i, ind|
+        puts ind if (ind % 100) == 0
+        in_ppr = false
+        date_entered_ppr = 'ERROR'
 
-          who_pays = if i.journal&.will_pay?
-                       'journal'
-                     elsif i.institution_will_pay?
-                       'institution'
-                     elsif i.submitter_affiliation&.fee_waivered?
-                       'waiver'
-                     elsif i.funder_will_pay?
-                       'funder'
-                     else
-                       'user'
-                     end
+        who_pays = if i.journal&.will_pay?
+                     'journal'
+                   elsif i.institution_will_pay?
+                     'institution'
+                   elsif i.submitter_affiliation&.fee_waivered?
+                     'waiver'
+                   elsif i.funder_will_pay?
+                     'funder'
+                   else
+                     'user'
+                   end
 
-          i.resources.map(&:curation_activities).flatten.each do |ca|
-            if ca.peer_review?
-              next if in_ppr # do nothing if it was already in PPR
+        i.resources.map(&:curation_activities).flatten.each do |ca|
+          if ca.peer_review?
+            next if in_ppr # do nothing if it was already in PPR
 
-              in_ppr = true
-              date_entered_ppr = ca.created_at
-            elsif in_ppr
-              # the previous status was PPR, but this satatus is not,
-              # so close out the entry
-              in_ppr = false
-              csv << [i.identifier, i.publication_article_doi, i.manuscript_number,
-                      ca.resource.stash_version.version, date_entered_ppr, ca.created_at, ca.status,
-                      ca.resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
-            end
+            in_ppr = true
+            date_entered_ppr = ca.created_at
+          elsif in_ppr
+            # the previous status was PPR, but this satatus is not,
+            # so close out the entry
+            in_ppr = false
+            csv << [i.identifier, i.publication_article_doi, i.manuscript_number,
+                    ca.resource.stash_version.version, date_entered_ppr, ca.created_at, ca.status,
+                    ca.resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
           end
-          # if we're at the end of the history and in_ppr,
-          # finalize the current stats before moving to next identifier
-          next unless in_ppr
-
-          csv << [i.identifier, i.publication_article_doi, i.manuscript_number,
-                  i.latest_resource.stash_version.version, date_entered_ppr, 'None', 'None',
-                  i.latest_resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
-          in_ppr = false
         end
+        # if we're at the end of the history and in_ppr,
+        # finalize the current stats before moving to next identifier
+        next unless in_ppr
+
+        csv << [i.identifier, i.publication_article_doi, i.manuscript_number,
+                i.latest_resource.stash_version.version, date_entered_ppr, 'None', 'None',
+                i.latest_resource.size, i.journal&.title, i.journal&.default_to_ppr, i.journal&.manuscript_number_regex&.present?, who_pays]
+        in_ppr = false
       end
     end
   end
@@ -949,16 +943,14 @@ namespace :identifiers do
       csv << %w[SponsorName InstitutionName Count Price]
       sponsor_summary = []
       sponsor_total_count = 0
-      StashEngine::Tenant.all.each do |tenant|
-        next if tenant&.sponsor_id&.present?
+      StashEngine::Tenant.tiered.each do |tenant|
+        next if tenant.sponsor
 
-        consortium = tenant&.tenants_sponsored
+        consortium = tenant.consortium
         consortium.each do |c|
-          next unless c.payment_plan == 'tiered'
-
           tenant_item_count = 0
           sc_report.each do |item|
-            if item['PaymentID'] == c.tenant_id
+            if item['PaymentID'] == c.id
               tenant_item_count += 1
               sponsor_summary << [item['DOI'], c.short_name, item['ApprovalDate']]
             end
@@ -986,16 +978,14 @@ namespace :identifiers do
     base_values = {}
     base_report = CSV.parse(File.read(base_report_file), headers: true)
     sponsor_total_count = 0
-    StashEngine::Tenant.all.each do |tenant|
-      next if tenant&.sponsor_id&.present?
+    StashEngine::Tenant.tiered.each do |tenant|
+      next if tenant.sponsor
 
-      consortium = tenant&.tenants_sponsored
+      consortium = tenant.consortium
       consortium.each do |c|
-        next unless c.payment_plan == 'tiered'
-
         tenant_item_count = 0
         base_report.each do |item|
-          tenant_item_count += 1 if item['PaymentID'] == c.tenant_id
+          tenant_item_count += 1 if item['PaymentID'] == c.id
         end
         sponsor_total_count += tenant_item_count
       end
@@ -1108,11 +1098,9 @@ namespace :identifiers do
   task update_all_search_words: :environment do
     count = StashEngine::Identifier.count
     puts "Updating search words for #{count} items"
-    StashEngine::Identifier.find_in_batches do |identifiers|
-      identifiers.each_with_index do |id, idx|
-        id&.update_search_words!
-        puts "Updated #{idx + 1}/#{count} items" if (idx + 1) % 100 == 0
-      end
+    StashEngine::Identifier.find_each.with_index do |id, idx|
+      id&.update_search_words!
+      puts "Updated #{idx + 1}/#{count} items" if (idx + 1) % 100 == 0
     end
   end
 end
@@ -1142,48 +1130,46 @@ namespace :curation_stats do
     launch_day = Date.new(2019, 9, 17)
     CSV.open('curation_timeline_report.csv', 'w') do |csv|
       csv << %w[DOI CreatedDate CurationStartDate TimesCurated ApprovalDate Size NumFiles FileFormats]
-      StashEngine::Identifier.where(created_at: launch_day..Time.now.utc.to_date).find_in_batches do |datasets|
-        datasets.each_with_index do |i, idx|
-          puts("#{idx}/#{datasets.size}") if idx % 100 == 0
-          approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
-          created_date_str = i.created_at&.strftime('%Y-%m-%d')
-          next unless i.resources.submitted.present?
+      StashEngine::Identifier.where(created_at: launch_day..Time.now.utc.to_date).find_each.with_index do |i, idx|
+        puts("#{idx}/#{datasets.size}") if idx % 100 == 0
+        approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+        created_date_str = i.created_at&.strftime('%Y-%m-%d')
+        next unless i.resources.submitted.present?
 
-          curation_start_date = i.resources.submitted.each do |r|
-            break r.curation_start_date if r.curation_start_date.present?
-          end
-          next if curation_start_date.is_a?(Array) # There really isn't a start date, loop returns the array of resources
-          next unless curation_start_date > launch_day
+        curation_start_date = i.resources.submitted.each do |r|
+          break r.curation_start_date if r.curation_start_date.present?
+        end
+        next if curation_start_date.is_a?(Array) # There really isn't a start date, loop returns the array of resources
+        next unless curation_start_date > launch_day
 
-          curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
+        curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
 
-          times_curated = 0
-          in_curation = false
-          i.resources.each do |r|
-            r.curation_activities.each do |ca|
-              if in_curation && %w[embargoed withdrawn published action_required].include?(ca.status)
-                # detect moves from in_curation to out
-                in_curation = false
-              elsif !in_curation && %w[curation].include?(ca.status)
-                # detect and count moves from out of curation to in_curation
-                in_curation = true
-                times_curated += 1
-              end
+        times_curated = 0
+        in_curation = false
+        i.resources.each do |r|
+          r.curation_activities.each do |ca|
+            if in_curation && %w[embargoed withdrawn published action_required].include?(ca.status)
+              # detect moves from in_curation to out
+              in_curation = false
+            elsif !in_curation && %w[curation].include?(ca.status)
+              # detect and count moves from out of curation to in_curation
+              in_curation = true
+              times_curated += 1
             end
           end
-
-          # Skip datasets that bypassed the normal curation process. These are mostly items that
-          # had problems during the migration from the v1 server, so they were "created" after
-          # launch day, even though they are actually older items.
-          next unless times_curated > 0
-
-          num_files = i.latest_resource.data_files.size
-
-          file_formats = i.latest_resource.data_files.map(&:upload_content_type).uniq.sort
-
-          csv << [i.identifier, created_date_str, curation_start_date_str, times_curated, approval_date_str,
-                  i.storage_size, num_files, file_formats]
         end
+
+        # Skip datasets that bypassed the normal curation process. These are mostly items that
+        # had problems during the migration from the v1 server, so they were "created" after
+        # launch day, even though they are actually older items.
+        next unless times_curated > 0
+
+        num_files = i.latest_resource.data_files.size
+
+        file_formats = i.latest_resource.data_files.map(&:upload_content_type).uniq.sort
+
+        csv << [i.identifier, created_date_str, curation_start_date_str, times_curated, approval_date_str,
+                i.storage_size, num_files, file_formats]
       end
     end
   end

@@ -1,5 +1,138 @@
-@import 'customizations';
+// ##### Styles for Dash ##### //
 
-@import 'bootstrap';
-@import 'blacklight';
-@import 'geoblacklight';
+// ***** Global Settings ***** //u
+
+@import 'scss/variables';
+@import 'scss/mixins';
+@import 'scss/testing';
+@import 'scss/normalize';
+@import 'scss/fonts';
+@import 'scss/resets';
+
+body {
+	line-height: 135%;
+}
+
+body, body#yes-really {
+	max-width: 1220px;
+	margin: 0 auto;
+	padding: 10px;
+	font-family: 'KievitWeb', sans-serif;
+
+	/* Blacklight/geoblacklight resets */
+	font-size: initial;
+	font-size: 1.1rem;
+
+	@include bp(screen1) {
+		padding: 10px 20px;
+	}
+
+	@include bp(screen2) {
+		padding: 10px 30px;
+	}
+
+	&.prevent-clicks, &.prevent-clicks * {
+		pointer-events: none;
+	}
+
+}
+
+input:focus, button:focus, *[tabindex]:focus, a:focus-visible {
+	outline: 2px solid $design-medium-blue-color;
+}
+
+a:focus-visible {
+	outline-offset: 4px;
+}
+
+a[role='button']:focus-visible, a[class*='button']:focus-visible {
+	outline-offset: 0;
+} 
+
+// ***** Objects ***** //
+
+@import 'scss/banner';
+@import 'scss/buttons';
+@import 'scss/data-list';
+@import 'scss/dataset-nav';
+@import 'scss/dependency-list';
+@import 'scss/download';
+@import 'scss/drop';
+@import 'scss/global-search';
+@import 'scss/headings';
+@import 'scss/home-search';
+@import 'scss/links';
+@import 'scss/list';
+@import 'scss/logout';
+@import 'scss/map';
+@import 'scss/metadata';
+@import 'scss/metrics';
+@import 'scss/modal';
+@import 'scss/proposed-change';
+@import 'scss/quote';
+@import 'scss/section';
+@import 'scss/select';
+@import 'scss/showhide';
+@import 'scss/table';
+
+// ***** Components ***** //
+
+@import 'scss/admin-layout';
+@import 'scss/admin-edit';
+@import 'scss/alert';
+@import 'scss/autosave';
+@import 'scss/auto-complete';
+@import 'scss/choose';
+@import 'scss/columns';
+@import 'scss/datasets-heading';
+@import 'scss/data-results';
+@import 'scss/real_facets';
+@import 'scss/fieldsets';
+@import 'scss/file-group';
+@import 'scss/footer';
+@import 'scss/form-group';
+@import 'scss/header';
+@import 'scss/input';
+@import 'scss/import_metadata';
+@import 'scss/keywords';
+@import 'scss/latest';
+@import 'scss/license';
+@import 'scss/location';
+@import 'scss/locations';
+@import 'scss/login';
+@import 'scss/orcid';
+@import 'scss/pagination';
+@import 'scss/progress';
+@import 'scss/pubdate';
+@import 'scss/review-files';
+@import 'scss/sidebox';
+@import 'scss/table-heading';
+@import 'scss/text-styles';
+@import 'scss/upload-file';
+@import 'scss/upload-manifest';
+@import 'scss/upload-cedar';
+@import 'scss/upload-table';
+@import 'scss/upload-widgets';
+@import 'scss/why-share';
+@import 'scss/why-use';
+@import 'scss/sharing-steps';
+@import 'scss/getting-started';
+@import 'scss/social-share';
+
+// ***** Elements ***** //
+
+@import 'scss/progress-element';
+
+// ***** Themes ***** //
+
+@import 'scss/about';
+@import 'scss/contact';
+@import 'scss/datasets';
+@import 'scss/describe';
+@import 'scss/help';
+@import 'scss/home';
+@import 'scss/landing';
+@import 'scss/review';
+@import 'scss/search-results';
+@import 'scss/upload';
+@import 'scss/geoblacklight-icons';

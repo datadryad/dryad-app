@@ -25,7 +25,7 @@ module StashApi
 
     # GET /files/<id>
     def show
-      file = StashApi::File.new(file_id: params[:id])
+      file = StashApi::File.new(file_id: params[:id], user: @user)
       render json: file.metadata
     end
 
@@ -41,7 +41,7 @@ module StashApi
       pre_upload_checks { return }
       Stash::Aws::S3.new.put_stream(s3_key: @file_path, stream: request.body)
       after_upload_processing { return }
-      file = StashApi::File.new(file_id: @file.id)
+      file = StashApi::File.new(file_id: @file.id, user: @user)
       render json: file.metadata_with_url, status: 201
     end
 
@@ -174,7 +174,7 @@ module StashApi
       visible = resource.data_files.present_files
       all_count = visible.count
       data_files = visible.limit(per_page).offset(per_page * (page - 1))
-      results = data_files.map { |i| StashApi::File.new(file_id: i.id).metadata }
+      results = data_files.map { |i| StashApi::File.new(file_id: i.id, user: @user).metadata }
       files_output(all_count, results)
     end
 

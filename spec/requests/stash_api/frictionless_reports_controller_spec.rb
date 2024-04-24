@@ -7,11 +7,9 @@ require 'cgi'
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashApi
   RSpec.describe FrictionlessReportsController, type: :request do
-
     include Mocks::CurationActivity
     include Mocks::Repository
     include Mocks::Salesforce
-    include Mocks::Tenant
 
     # set up some versions with different curation statuses (visibility)
     before(:each) do
@@ -22,14 +20,11 @@ module StashApi
 
       neuter_curation_callbacks!
       mock_salesforce!
-      mock_tenant!
 
-      @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
-
-      @user1 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+      @user1 = create(:user, role: 'user')
 
       @identifier = create(:identifier)
-      @resource = create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id)
+      @resource = create(:resource, user: @user1, identifier_id: @identifier.id)
 
       create(:curation_activity, resource: @resource, status: 'in_progress')
 

@@ -4,7 +4,6 @@ module Stash
   module Repo
     describe SubmissionJob do
       include Mocks::Aws
-      include Mocks::Tenant
 
       attr_reader :job
       attr_reader :logger
@@ -52,7 +51,6 @@ module Stash
       context 'old Merritt-level tests ' do
         before(:each) do
           mock_aws!
-          mock_tenant!
 
           @logger = instance_double(Logger)
           allow(@logger).to receive(:debug)

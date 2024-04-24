@@ -8,7 +8,7 @@ module StashEngine
     before_action :require_user_login
     before_action :setup_paging, only: [:index]
 
-    TENANT_IDS = Tenant.all.map(&:tenant_id)
+    TENANT_IDS = Tenant.enabled.map(&:id)
 
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     # rubocop:disable Metrics/AbcSize

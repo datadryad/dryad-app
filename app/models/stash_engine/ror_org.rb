@@ -18,7 +18,7 @@ module StashEngine
     self.table_name = 'stash_engine_ror_orgs'
     validates :ror_id, uniqueness: { case_sensitive: true }
 
-    ROR_MAX_RESULTS = 20
+    ROR_MAX_RESULTS = 40
 
     # Search the RorOrgs for the given string. This will search name, acronyms, aliases, etc.
     # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }

@@ -3,6 +3,9 @@ require 'rails_helper'
 RSpec.feature 'Session', type: :feature do
 
   include Mocks::RSolr
+  before(:each) do
+    create(:tenant)
+  end
 
   describe :orcid_login do
 
@@ -71,6 +74,7 @@ RSpec.feature 'Session', type: :feature do
   describe :author_match, js: true do
 
     before(:each) do
+      create(:tenant_match)
       user = create(:user, tenant_id: nil)
       mock_orcid!(user)
       OmniAuth.config.test_mode = true
@@ -80,7 +84,7 @@ RSpec.feature 'Session', type: :feature do
 
     it 'logs in without shibboleth auth for configured tenant' do
       click_link 'Login or create your ORCID iD'
-      fill_in 'tenant_id', with: 'DataONE'
+      fill_in 'tenant_id', with: 'Author Match Tenant'
       click_button 'Login to verify'
       expect(page).to have_text('My datasets')
     end

@@ -32,7 +32,7 @@ module StashEngine
       if limit
         # WHERE conditions
         # Limit to tenant by either role or selected limit
-        tenant_ids = policy_scope(StashEngine::Tenant).map(&:tenant_id)
+        tenant_ids = policy_scope(StashEngine::Tenant).map(&:id)
         tenant_limit = params[:tenant].present? && tenant_ids.include?(params[:tenant]) ? [params[:tenant]] : tenant_ids
         @rep.add_where(arr: ['last_res.tenant_id in (?)', tenant_limit.join(', ')])
       else
