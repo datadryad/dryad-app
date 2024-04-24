@@ -1,8 +1,8 @@
 <% @page_title = "Manage users" %>
-<h1 class="o-heading__level1">Manage users</h1>
 
+<%= render partial: 'stash_engine/shared/account_header', locals: {current: 'users'} %>
 
-<h2>User administration</h2>
+<h2>Manage users</h2>
 
 <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/user_admin', action: 'index', only_path: true),
 method: 'get', id: 'search_form') do %>
@@ -16,14 +16,8 @@ method: 'get', id: 'search_form') do %>
     <%= select_tag :tenant_id, options_from_collection_for_select(@tenants, "id", "name", params[:tenant_id]), class: 'c-input__text' %>
   </div>
   <%= submit_tag('Search', class: 'o-button__submit' ) %>
-
-  <%# not sure what the following is really doing since I don't think anything needs rewriting %>
-  <% params.except(:controller, :action, :q, :commit, :page, :page_size, :show_all, :sort, :direction,
-  :all_advanced, :tenant_id).each_pair do |k,v| %>
-    <%= hidden_field_tag k, v, id: "search_#{k}" %>
-  <% end %>
 </div>
-<% end %>     
+<% end %>
 
 
 <!-- table and paging here -->

@@ -1,0 +1,27 @@
+<% @page_title = "Manage member institutions" %>
+
+<%= render partial: 'stash_engine/shared/account_header', locals: {current: 'tenants'} %>
+
+<h2>Manage member institutions</h2>
+
+<%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/tenant_admin', action: 'index', only_path: true), method: 'get', id: 'search_form') do %>
+  <div class="o-admin-form-inline">
+    <div class="o-admin-form-pair">
+      <label for="search-terms">Member search:</label>
+      <%= search_field_tag(:q, params[:q], class: 'c-input__text', id: 'search-terms' ) %>
+    </div>
+    <div class="o-admin-form-pair">
+      <label for="tenant_id">Sponsor:</label>
+      <%= select_tag :sponsor, options_from_collection_for_select(@sponsors, "id", "name", params[:sponsor]), class: 'c-input__text' %>
+    </div>
+    <%= submit_tag('Search', class: 'o-button__submit' ) %>
+  </div>
+<% end %>
+
+<%= render partial: 'admin_tenant_table', locals: { tenants: @tenants } %>
+
+<div class="search-results-footer">
+  <div class="c-space-paginator">
+    <%= paginate @tenants, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>
+  </div>
+</div>

@@ -3,7 +3,8 @@ require 'ostruct'
 module StashEngine
   class Tenant < ApplicationRecord
     self.table_name = 'stash_engine_tenants'
-    belongs_to :sponsor, class_name: 'Tenant', optional: true
+    belongs_to :sponsor, class_name: 'Tenant', inverse_of: :sponsored, optional: true
+    has_many :sponsored, class_name: 'Tenant', primary_key: :id, foreign_key: :sponsor_id, inverse_of: :sponsor
     has_many :tenant_ror_orgs, class_name: 'StashEngine::TenantRorOrg', dependent: :destroy
     has_many :ror_orgs, class_name: 'StashEngine::RorOrg', through: :tenant_ror_orgs
 
@@ -15,6 +16,7 @@ module StashEngine
     scope :enabled, -> { where(enabled: true).order(:short_name) }
     scope :partner_list, -> { enabled.where(partner_display: true) }
     scope :tiered, -> { enabled.where(payment_plan: :tiered) }
+    scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 
     def logo_file
       @logo_file ||= begin

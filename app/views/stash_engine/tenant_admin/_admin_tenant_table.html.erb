@@ -1,0 +1,96 @@
+<div class="table-wrapper">
+<table class="c-lined-table">
+  <thead>
+    <tr>
+      <th class="c-lined-table__sort <%= sort_display('id') %>">
+        <%= sortable_column_head sort_field: 'id', title: 'ID' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('short_name') %>">
+        <%= sortable_column_head sort_field: 'short_name', title: 'Short name' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('long_name') %>">
+        <%= sortable_column_head sort_field: 'long_name', title: 'Long name' %>
+      </th>
+      <th class="c-admin-table">
+        ROR IDs
+      </th>
+      <th class="c-admin-table">
+        Campus contacts
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('partner_display') %>">
+        <%= sortable_column_head sort_field: 'partner_display', title: 'Display' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('enabled') %>">
+        <%= sortable_column_head sort_field: 'enabled', title: 'Connect' %>
+      </th>
+    </tr>
+  </thead>
+
+<tbody>  
+  <% tenants.each do |t| %>
+    <tr class="c-lined-table__row">
+      <td><%= t.id %></td>
+      <td id="tenant_name_<%= t.id %>" >
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data">
+           <%= t.short_name %>
+          </div>
+          <div class="c-lined-table__actions">
+          </div>
+        </div>
+      </td>
+      <td id="tenant_long_name_<%= t.id %>" >
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data">
+           <%= t.long_name %>
+          </div>
+          <div class="c-lined-table__actions">
+          </div>
+        </div>
+      </td>
+      <td id="tenant_rors_<%= t.id %>" >
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data">
+            <%= t.ror_ids.map {|r| "<a href='#{r}'>#{r}</a>"}.join(', ').html_safe %>
+          </div>
+          <div class="c-lined-table__actions">
+          </div>
+        </div>
+      </td>
+      <td id="tenant_contacts_<%= t.id %>" >
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data">
+            <%= t.campus_contacts.join(', ') %>
+          </div>
+          <div class="c-lined-table__actions">
+          </div>
+        </div>
+      </td>
+      <td id="tenant_display_<%= t.id %>" >
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data">
+            <span style="color: <%= t.partner_display ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+              <%= t.partner_display ? "Shown" : "Hidden" %>
+            </span>
+          </div>
+          <div class="c-lined-table__actions">
+          </div>
+        </div>
+      </td>
+      <td id="tenant_enabled_<%= t.id %>" >
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data">
+            <span style="color: <%= t.enabled ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+              <%= t.enabled ? "Enabled" : "Disabled" %>
+            </span>
+          </div>
+          <div class="c-lined-table__actions">
+          </div>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+</tbody>
+</table>
+</div>
+
