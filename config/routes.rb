@@ -118,9 +118,9 @@ Rails.application.routes.draw do
     end
   
     # this one doesn't follow the pattern since it gloms filename on the end, so manual route
-    # This should be PUT, not POST because of filename, see https://stackoverflow.com/questions/630453/put-vs-post-in-rest for example
-    put '/datasets/:id/files/:filename', id: %r{[^\s/]+?}, filename: %r{[^\s/]+?}, to: 'files#update', as: 'dataset_file', format: false
-    
+    # supporting both POST and PUT for updating the file to ensure as many clients as possible can use this end point
+    match '/datasets/:id/files/:filename', to: 'files#update', as: 'dataset_file', constraints: { id: %r{[^\s/]+?}, filename: %r{[^\s/]+?} }, format: false, via: %i[post put]
+
     resources :users, path: '/users', only: %i[index show]
     
     get '/queue_length', to: 'submission_queue#length'
@@ -232,7 +232,7 @@ Rails.application.routes.draw do
     match 'sessions/destroy', to: 'sessions#destroy', via: %i[get post]
     get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
     get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
-    post 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner'
+    match 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner', via: [:get, :post]
     post 'sessions/sso', to: 'sessions#sso', as: 'sso'    
     get 'feedback', to: 'sessions#feedback', as: 'feedback'
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'

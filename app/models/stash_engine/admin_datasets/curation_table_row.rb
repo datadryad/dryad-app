@@ -62,14 +62,15 @@ module StashEngine
       BOOLEAN_SEARCH_CLAUSE = 'MATCH(sei.search_words) AGAINST(%{term} IN BOOLEAN MODE)'
       SCAN_CLAUSE = 'sei.search_words LIKE %{term}'
       TENANT_CLAUSE = 'ser.tenant_id = %{term}'
-      STATUS_CLAUSE = 'seca.status = %{term}'
+      STATE_CLAUSE = '(sers.resource_state = %{term} or seca.status = %{term})'
+      STATUS_CLAUSE = "(sers.resource_state not in ('error', 'processing') and seca.status = %{term})"
       EDITOR_CLAUSE = 'ser.current_editor_id = %{term}'
-      EDITOR_NULL = 'ser.current_editor_id is NULL'
+      EDITOR_NULL = "(ser.current_editor_id is NULL or seu.role not in ('superuser', 'curator', 'tenant_curator'))"
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
       IDENTIFIER_CLAUSE = 'sei.id = %{term}'
 
       # this method is long, but quite uncomplicated as it mostly just sets variables from the query
-      #
+      # rubocop:disable Metrics/AbcSize
       def initialize(result, curator_ids)
         return unless result.is_a?(Array) && result.length >= 23
 
@@ -88,7 +89,7 @@ module StashEngine
         @resource_state_id = result[11]
         @resource_state = result[12]
         @curation_activity_id = result[13]
-        @status = result[14]
+        @status = %w[error processing].include?(result[12]) ? result[12] : result[14]
         @updated_at = result[15]
         @submission_date = result[16]
         @editor_id = curator_ids.include?(result[17].to_i) ? result[17] : nil
@@ -99,6 +100,7 @@ module StashEngine
         @citations = result[23] || 0
         @relevance = result.length > 24 ? result[24] : nil
       end
+      # rubocop:enable Metrics/AbcSize
 
       # lets you get a resource when you need it and caches it
       def resource
@@ -157,7 +159,7 @@ module StashEngine
           where_clause = [
             (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
-            add_term_to_clause(STATUS_CLAUSE, status_filter),
+            add_term_to_clause(%w[error processing].include?(status_filter) ? STATE_CLAUSE : STATUS_CLAUSE, status_filter),
             editor_filter == 'NA' ? EDITOR_NULL : add_term_to_clause(EDITOR_CLAUSE, editor_filter),
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter),
             add_term_to_clause(IDENTIFIER_CLAUSE, identifier_id),
@@ -225,8 +227,10 @@ module StashEngine
         def create_tenant_limit(admin_tenant)
           return nil if admin_tenant.blank?
 
-          ActiveRecord::Base.send(:sanitize_sql_array, ['( ser.tenant_id = ? OR dcs_a.ror_id IN (?) )', admin_tenant.tenant_id,
-                                                        admin_tenant.ror_ids])
+          tenant_ids = StashEngine::TenantRorOrg.where(ror_id: admin_tenant.ror_ids).map(&:tenant_id)
+
+          ActiveRecord::Base.send(:sanitize_sql_array, ['( ser.tenant_id IN (?) OR dcs_a.ror_id IN (?) )',
+                                                        tenant_ids, admin_tenant.ror_ids])
         end
 
         def create_journals_limit(admin_journals)

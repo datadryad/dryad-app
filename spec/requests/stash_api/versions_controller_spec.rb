@@ -13,33 +13,21 @@ module StashApi
     include Mocks::CurationActivity
     include Mocks::Repository
     include Mocks::Salesforce
-
-    before(:all) do
-      host! 'my.example.org'
-      @user = create(:user, role: 'superuser')
-      @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
-      setup_access_token(doorkeeper_application: @doorkeeper_application)
-    end
-
-    after(:all) do
-      @user.destroy
-      @doorkeeper_application.destroy
-    end
-
     # set up some versions with different curation statuses (visibility)
     before(:each) do
       mock_salesforce!
       neuter_curation_callbacks!
-
-      @tenant_ids = StashEngine::Tenant.all.map(&:tenant_id)
-
-      @user1 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+      @user = create(:user, role: 'superuser')
+      @user1 = create(:user, role: 'user')
+      host! 'my.example.org'
+      @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
+      setup_access_token(doorkeeper_application: @doorkeeper_application)
 
       @identifier = create(:identifier)
 
-      @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id),
-                    create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id)]
+      @resources = [create(:resource, user_id: @user1.id, identifier_id: @identifier.id),
+                    create(:resource, user_id: @user1.id, identifier_id: @identifier.id)]
 
       @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress', user_id: @user1.id),
                                create(:curation_activity, resource: @resources[0], status: 'curation', user_id: @user1.id),
@@ -50,7 +38,7 @@ module StashApi
 
       # we get some crazy failures and it refused to update the resource because of ridiculous curation failures if user zero doesn't exist
       # Took me hours to figure out and really annoying.
-      @sys_user = create(:user, id: 0, tenant_id: @tenant_ids.first, role: 'user', first_name: 'system user')
+      @sys_user = create(:user, id: 0, role: 'user', first_name: 'system user')
 
       # be sure versions are set correctly, because creating them manually like this doesn't ensure it
       @resources[0].stash_version.update(version: 1)
@@ -92,7 +80,7 @@ module StashApi
       end
 
       it 'shows only 1st version to a random user' do
-        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+        @user2 = create(:user, role: 'user')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -123,7 +111,7 @@ module StashApi
       end
 
       it 'shows both versions to an admin for this tenant' do
-        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'admin')
+        @user2 = create(:user, role: 'admin')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -141,7 +129,7 @@ module StashApi
 
       it 'shows both versions to an admin for this journal' do
         # set up @user2 as a journal admin, and @identifier as belonging to that journal
-        @user2 = create(:user, tenant_id: @tenant_ids.first, role: nil)
+        @user2 = create(:user, role: nil)
         journal = create(:journal)
         create(:journal_role, journal: journal, user: @user2, role: 'admin')
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
@@ -179,7 +167,7 @@ module StashApi
       end
 
       it "doesn't show unpublished version to random unauthorized user" do
-        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+        @user2 = create(:user, role: 'user')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -190,7 +178,7 @@ module StashApi
       end
 
       it 'shows anything existing to a superuser' do
-        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'superuser')
+        @user2 = create(:user, role: 'superuser')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -222,7 +210,7 @@ module StashApi
       end
 
       it 'shows stuff to admin from the same tenant' do
-        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'admin')
+        @user2 = create(:user, role: 'admin')
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)

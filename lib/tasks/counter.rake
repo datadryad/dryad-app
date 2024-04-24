@@ -57,11 +57,10 @@ namespace :counter do
     $stdout.sync = true
 
     puts "Starting run to update COUNTER CoP stats from DataCite hub at #{Time.new}"
-    identifiers = StashEngine::Identifier.where(pub_state: %i[published embargoed])
-
     # we only need stats for published and embargoed items, though there may be a few views from preview links before
-    identifiers.each_with_index do |identifier, idx|
-      puts "Updated #{idx + 1}/#{identifiers.length}" if (idx + 1) % 10 == 0
+    count = StashEngine::Identifier.where(pub_state: %i[published embargoed]).count
+    StashEngine::Identifier.where(pub_state: %i[published embargoed]).find_each.with_index do |identifier, idx|
+      puts "Updated #{idx + 1}/#{count}" if (idx + 1) % 10 == 0
       cs = identifier.counter_stat
       cs.update_if_necessary # does update if not updated in this calendar week
       sleep 1 # to avoid overloading DataCite hub
@@ -72,16 +71,16 @@ namespace :counter do
   # stats can be manually rebuilt from our full JSON stat files which DataCite doesn't accept for unknown reasons.
   desc "zero out table of cached Counter stats without affecting citation count which doesn't come from counter"
   task clear_cache: :environment do
-    StashEngine::CounterStat.update_all(unique_investigation_count: 0, unique_request_count: 0)
+    StashEngine::CounterStat.in_batches.update_all(unique_investigation_count: 0, unique_request_count: 0)
   end
 
   desc 'task to populate in citation information that has not been cached'
   task populate_citations: :environment do
     puts "Run to update citations at #{Time.new}"
-    identifiers = StashEngine::Identifier.where(pub_state: %i[published embargoed])
+    count = StashEngine::Identifier.where(pub_state: %i[published embargoed]).count
 
-    identifiers.each_with_index do |identifier, idx|
-      puts "Updated #{idx + 1}/#{identifiers.length}" if (idx + 1) % 100 == 0
+    StashEngine::Identifier.where(pub_state: %i[published embargoed]).find_each.with_index do |identifier, idx|
+      puts "Updated #{idx + 1}/#{count}" if (idx + 1) % 100 == 0
 
       counter_stat = identifier.counter_stat
       next if counter_stat.citation_updated > 30.days.ago # only do this expensive operation once a month, so skip if it's been checked lately

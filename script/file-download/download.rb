@@ -150,11 +150,10 @@ while (response = http.get(page, headers: default_headers)) do
   # another loop to download each file
   json['_embedded']['stash:files'].each do |file_info|
     if file_info['status'] != 'deleted'
-      copy_file.save(url: "#{base_url}#{file_info['_links']['stash:file-download']['href']}",
+      copy_file.save(url: file_info['_links']['stash:file-download']['href'],
                      token: access_token,
                      filename: file_info['path'])
       puts ''
-      sleep 1 # to prevent us hitting the API limits by too many requests
     end
   end
   break if json['_links']['next'].nil?

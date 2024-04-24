@@ -9,10 +9,9 @@ module StashDatacite
       attr_reader :tenant
 
       before(:each) do
-        @user = StashEngine::User.create(
-          email: 'lmuckenhaupt@example.edu',
-          tenant_id: 'dataone'
-        )
+        @user = create(:user,
+                       email: 'lmuckenhaupt@example.edu',
+                       tenant_id: 'dataone')
 
         dc3_xml = File.read('spec/data/archive/mrt-datacite.xml')
         @dcs_resource = Datacite::Mapping::Resource.parse_xml(dc3_xml)

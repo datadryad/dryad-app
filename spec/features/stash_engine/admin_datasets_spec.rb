@@ -9,14 +9,12 @@ RSpec.feature 'AdminDatasets', type: :feature do
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
-  include Mocks::Tenant
   include Mocks::DataFile
 
   context :content do
 
     before(:each) do
       mock_stripe!
-      mock_tenant!
       mock_salesforce!
 
       # Create a user, identifier and 2 resources for each tenant
@@ -37,6 +35,22 @@ RSpec.feature 'AdminDatasets', type: :feature do
     it 'shows admins datasets for their tenant' do
       sign_in(create(:user, role: 'admin', tenant_id: 'mock_tenant'))
       visit stash_url_helpers.ds_admin_path
+      expect(all('.c-lined-table__row').length).to eql(2)
+    end
+
+    it 'shows consortium admins datasets for their tenants' do
+      create(:tenant, id: 'consortium')
+      create(:tenant, id: 'member1', sponsor_id: 'consortium')
+      create(:tenant, id: 'member2', sponsor_id: 'consortium')
+      user = create(:user, tenant_id: 'member1')
+      2.times do
+        identifier = create(:identifier)
+        create(:resource, :submitted, user: user, identifier: identifier)
+      end
+      sign_in(create(:user, role: 'admin', tenant_id: 'consortium'))
+      visit stash_url_helpers.ds_admin_path
+      expect(page).to have_select('tenant')
+      expect(page).to have_selector('#tenant option', count: 4)
       expect(all('.c-lined-table__row').length).to eql(2)
     end
 
@@ -104,7 +118,6 @@ RSpec.feature 'AdminDatasets', type: :feature do
       mock_repository!
       mock_datacite!
       mock_file_content!
-      mock_tenant!
       neuter_curation_callbacks!
       @admin = create(:user, role: 'admin', tenant_id: 'mock_tenant')
       @user = create(:user, tenant_id: @admin.tenant_id)

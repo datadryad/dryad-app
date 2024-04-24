@@ -165,13 +165,13 @@ module StashEngine
     end
 
     def setup_superuser_facets
-      @tenant_facets = StashEngine::Tenant.all.sort_by(&:short_name)
+      @tenant_facets = StashEngine::Tenant.enabled.sort_by(&:short_name)
     end
 
     def setup_tenants
       @tenants = [OpenStruct.new(id: '', name: '* Select Institution *')]
-      @tenants << StashEngine::Tenant.all.map do |t|
-        OpenStruct.new(id: t.tenant_id, name: t.short_name)
+      @tenants << StashEngine::Tenant.enabled.map do |t|
+        OpenStruct.new(id: t.id, name: t.short_name)
       end
       @tenants.flatten!
     end

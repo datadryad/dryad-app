@@ -2,7 +2,7 @@
   <ul class="c-header__nav-group" id="mobile-nav-bar">
     <% if current_user && %w[development test local_dev local].include?(Rails.env) %>
       <li class="c-header__nav-item dev-only" title="<%= current_user.email %>">[<%= current_user.name %>
-        @<%= current_tenant&.tenant_id %>]</li>
+        @<%= current_tenant&.id %>]</li>
     <% end %>
     <li class="c-header__nav-item"><%= link_to raw('Explore<span class="hide-mobile">&nbsp;data</span>'), '/search', class: 'js-nav-out' %>
     <li class="c-header__nav-item last-child">
