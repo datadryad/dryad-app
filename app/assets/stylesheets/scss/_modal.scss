@@ -49,7 +49,7 @@
 }
 
 #genericModalContent > *:first-child {
-  margin-right: calc(26px + $spacing-md);
+  margin-right: calc(26px + #{$spacing-md});
 }
 
 .c-modal-h1 {
