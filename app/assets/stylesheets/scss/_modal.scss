@@ -1,9 +1,15 @@
 .modalDialog {
   position: fixed;
   max-width: 80vw;
+  border: none;
+
+  @include bp(screen1) {
+    min-width: 80vw;
+  }
 
   @include bp(screen2) {
     max-width: 45rem;
+    min-width: 30rem;
   }
 
   &.extra-wide {
@@ -96,4 +102,11 @@
 .c-uploadmodal__button-validate {
   display: block;
   margin-top: $spacing-md;
+}
+
+.c-modal__buttons-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  column-gap: 2ch;
 }
