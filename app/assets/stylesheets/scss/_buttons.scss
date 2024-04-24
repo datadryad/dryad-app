@@ -6,6 +6,12 @@
   text-decoration: none;
 
   &:hover {opacity: 0.85;}
+
+  &[disabled] {
+    background-color: lighten($design-light-gray-color, 20%);
+    color: $design-dark-gray-color;
+    opacity: 1;
+  }
 }
 
 .o-button__plain-text1 {
