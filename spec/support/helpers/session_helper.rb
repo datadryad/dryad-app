@@ -7,7 +7,7 @@ module SessionsHelper
   def sign_in(user = create(:user), with_shib = false)
     visit root_path
     expect(page).to have_css('h1.o-banner__tagline', text: 'Trusted, simple, community driven')
-    sign_out if have_text('Logout')
+    sign_out if have_text('User settings')
     expect(page).to have_css('h1.o-banner__tagline', text: 'Trusted, simple, community driven')
     case user
     when StashEngine::User
