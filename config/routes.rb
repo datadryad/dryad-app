@@ -289,6 +289,8 @@ Rails.application.routes.draw do
     post 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
     # admin tenant management
     get 'tenant_admin', to: 'tenant_admin#index' # main page for administering tenants
+    get 'tenant_admin/:id/edit/:field', to: 'tenant_admin#popup', as: 'tenant_popup'
+    post 'tenant_admin/:id', to: 'tenant_admin#edit', as: 'tenant_edit'
 
     # admin_datasets, aka "Curator Dashboard"
     # this routes actions to ds_admin with a possible id without having to define for each get action, default is index
