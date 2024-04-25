@@ -1,0 +1,3 @@
+<p>Change activation of <%= @tenant.short_name %></p>
+<p>This setting controls whether the member is active.</p>
+<p><%= form.check_box :enabled, {checked: @tenant.enabled}, 1, 0 %> <%= form.label :enabled, "Member is active", class: 'c-input__label' %></p>

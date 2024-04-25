@@ -1,0 +1,5 @@
+<p>Add or remove ROR IDs for <%= @tenant.short_name %></p>
+<div class="c-input">
+<%= form.label :campus_contacts, "Place each ROR ID (as a URL) on a new line:"%>
+<%= form.text_area(:ror_orgs, value: @tenant.ror_ids.join("\n"), class: 'c-input__textarea', style: 'width:100%; min-height:200px') %>
+</div>

@@ -1,0 +1,3 @@
+<p>Change display settings for <%= @tenant.short_name %></p>
+<p>This setting controls whether the member is displayed and selectable from the member list.</p>
+<p><%= form.check_box :partner_display, {checked: @tenant.partner_display}, 1, 0 %> <%= form.label :partner_display, "Member is displayed", class: 'c-input__label' %></p>
