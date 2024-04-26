@@ -136,7 +136,7 @@ dl.timeline {
     left: 40px;
     z-index: -1;
     width: 2px;
-    height: calc(100% - $spacing-sm);
+    height: calc(100% - #{$spacing-sm});
     background-color: $design-black-color;
   }
   div {

@@ -1,0 +1,103 @@
+<div class="table-wrapper">
+<table class="c-lined-table">
+  <thead>
+    <tr>
+      <th class="c-lined-table__sort <%= sort_display('id') %>">
+        <%= sortable_column_head sort_field: 'id', title: 'ID' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('short_name') %>">
+        <%= sortable_column_head sort_field: 'short_name', title: 'Short name' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('long_name') %>">
+        <%= sortable_column_head sort_field: 'long_name', title: 'Long name' %>
+      </th>
+      <th class="c-admin-table">
+        ROR IDs
+      </th>
+      <th class="c-admin-table">
+        Notify
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('partner_display') %>">
+        <%= sortable_column_head sort_field: 'partner_display', title: 'Display' %>
+      </th>
+      <th class="c-lined-table__sort <%= sort_display('enabled') %>">
+        <%= sortable_column_head sort_field: 'enabled', title: 'Connect' %>
+      </th>
+    </tr>
+  </thead>
+
+<tbody>  
+  <% tenants.each do |t| %>
+    <tr class="c-lined-table__row">
+      <td><%= t.id %></td>
+      <td><%= t.short_name %></td>
+      <td><%= t.long_name %></td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="ror_orgs_<%= t.id %>">
+            <%= t.ror_ids.map {|r|
+              org = t.ror_orgs.find{ |o| o.ror_id == r }
+              "<a href='#{r}'>#{org ? org.name : r}</a>"}.join(', ').html_safe
+            %>
+          </div>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'ror_orgs'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member ROR Orgs" alt="Edit member ROR Orgs">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="campus_contacts_<%= t.id %>">
+            <%= t.campus_contacts.join(', ') %>
+          </div>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'campus_contacts'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member contacts" alt="Edit member contacts">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="partner_display_<%= t.id %>">
+            <span style="color: <%= t.partner_display ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+              <%= t.partner_display ? "Shown" : "Hidden" %>
+            </span>
+          </div>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'partner_display'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member display" alt="Edit member display">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="enabled_<%= t.id %>">
+            <span style="color: <%= t.enabled ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+              <%= t.enabled ? "Enabled" : "Disabled" %>
+            </span>
+          </div>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'enabled'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit whether member is enabled" alt="Edit whether member is enabled">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+</tbody>
+</table>
+</div>
+

@@ -1,0 +1,15 @@
+document.getElementById("<%= @field %>_<%= @tenant.id %>").innerHTML = "<%=
+case @field
+when 'partner_display'
+  "<span style='color: #{@tenant.partner_display ? '#3c763d' : 'rgb(209, 44, 29)'}'>#{@tenant.partner_display ? 'Shown' : 'Hidden'}</span>".html_safe
+when 'enabled'
+  "<span style='color: #{@tenant.enabled ? '#3c763d' : 'rgb(209, 44, 29)'}''>#{@tenant.enabled ? "Enabled" : "Disabled"}</span>".html_safe
+when 'campus_contacts'
+  @tenant.campus_contacts.join(', ')
+when 'ror_orgs'
+  @tenant.ror_ids.map {|r|
+    org = @tenant.ror_orgs.find{ |o| o.ror_id == r }
+    "<a href='#{r}'>#{org ? org.name : r}</a>"
+  }.join(', ').html_safe
+end %>";
+document.getElementById('genericModalDialog').close();
