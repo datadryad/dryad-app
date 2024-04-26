@@ -1,7 +1,6 @@
 import json
 import time
-from pprint import pprint
-from frictionless import Detector, validate, validate_resource
+from frictionless import Detector, validate
 from urllib.request import urlopen
 import xml.etree.ElementTree as ET
 import requests
@@ -40,25 +39,25 @@ def lambda_handler(event, context):
   else:
     detector = Detector(field_missing_values=", ,na,n/a,.,none,NA,N/A,N.A.,n.a.,-,empty,blank".split(","))
     try:
-      report = validate(event["download_url"], "resource", detector=detector, limit_errors=10)
+      report = validate(event["download_url"], limit_errors=10, detector=detector)
     except Exception as e:
       update(token=event["token"], status='error', report=str(e), callback=event["callback_url"] )
       return {"status": 200, "message": "Error parsing file with Frictionless"}
 
     # these errors indicate a failure by Frictionless to operate on file and are not linting results
-    if report["errors"]:
-      update(token=event["token"], status='error', report=report, callback=event["callback_url"] )
+    if report.errors:
+      update(token=event["token"], status='error', report=json.dumps({'report': report.to_dict()}), callback=event["callback_url"] )
       return {"status": 200, "message": "Error parsing file with Frictionless"}
 
-    lint_status = "issues" if report["tasks"][0].get("errors") else 'noissues'
+    lint_status = "noissues" if report.valid else 'issues'
     poss_error_msg = ''
     if lint_status == 'issues':
-      poss_error_msg = report["tasks"][0]["errors"][0].get("description", "")
+      poss_error_msg = report.tasks[0].errors[0].description
 
     if poss_error_msg.startswith("Data reading error"):
       lint_status = "error"
 
-    update(token=event["token"], status=lint_status, report=json.dumps({'report': report}), callback=event['callback_url'])
+    update(token=event["token"], status=lint_status, report=json.dumps({'report': report.to_dict()}), callback=event['callback_url'])
 
     return report
 
