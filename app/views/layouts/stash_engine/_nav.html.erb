@@ -68,7 +68,7 @@
               <li><%= link_to 'Zenodo submissions', stash_url_helpers.zenodo_queue_path %>
             <% end %>
           </ul>
-        <% elsif current_user.journals_as_admin.present? || current_user.funders_as_admin.present? %>
+        <% elsif current_user.journals_as_admin.present? || current_user.funders.present? %>
           <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>

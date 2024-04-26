@@ -16,9 +16,9 @@ module StashEngine
       end
 
       it 'returns funders that the user administers' do
-        expect(@user.funders_as_admin.size).to eql(2)
-        expect(@user.funders_as_admin.map(&:ror_id)).to include(@funder1.ror_id)
-        expect(@user.funders_as_admin.map(&:ror_id)).to include(@funder2.ror_id)
+        expect(@user.funders.size).to eql(2)
+        expect(@user.funders.map(&:ror_id)).to include(@funder1.ror_id)
+        expect(@user.funders.map(&:ror_id)).to include(@funder2.ror_id)
 
       end
 
@@ -51,7 +51,7 @@ module StashEngine
         create(:role, role_object: @org, user: @user)
       end
 
-      describe 'basic JournalRoles are supported' do
+      describe 'basic journal roles are supported' do
         it 'allows scoping to just administrators' do
           expect(Role.journal_roles.admin.size).to eql(1)
           expect(Role.journal_roles.admin.first.journal).to eql(@journal2)
