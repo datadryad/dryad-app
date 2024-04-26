@@ -37,7 +37,7 @@ RSpec.feature 'Admin', type: :feature do
       @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
       visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
       expect(page).to have_text('Describe your dataset')
-      expect(page).to have_text('Logout')
+      expect(page).to have_text('User settings')
     end
 
     it 'rejects an attempt to edit the dataset with an invalid edit_code', js: true do
@@ -67,7 +67,7 @@ RSpec.feature 'Admin', type: :feature do
       new_user = create(:user, tenant_id: nil)
       expect { create(:resource, :submitted, user: new_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
-      expect(page).to have_text('Logout')
+      expect(page).to have_text('User settings')
     end
 
     it 'allows a user with a valid edit_code to take ownership of a dataset owned by the system user' do
@@ -77,7 +77,7 @@ RSpec.feature 'Admin', type: :feature do
       system_user = StashEngine::User.where(id: 0).first || create(:user, id: 0)
       expect { @resource = create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
-      expect(page).to have_text('Logout')
+      expect(page).to have_text('User settings')
       @resource.reload
       expect(@resource.user_id).to eq(@admin.id)
     end

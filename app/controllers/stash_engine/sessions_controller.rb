@@ -129,6 +129,8 @@ module StashEngine
       if session[:origin] == 'feedback'
         redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
         session[:origin] = session[:contact_method] = session[:link_location] = nil
+      elsif session[:origin] == 'account'
+        redirect_to stash_url_helpers.my_account_path
       else
         redirect_to stash_url_helpers.dashboard_path
       end
@@ -144,6 +146,8 @@ module StashEngine
           if session[:origin] == 'feedback'
             redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
             session[:origin] = session[:contact_method] = session[:link_location] = nil
+          elsif session[:origin] == 'account'
+            redirect_to stash_url_helpers.my_account_path
           else
             redirect_to stash_url_helpers.dashboard_path, status: :found
           end

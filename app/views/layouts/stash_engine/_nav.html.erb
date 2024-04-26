@@ -53,7 +53,7 @@
           <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
-            <li><%= link_to 'Dataset curation', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', editor_id: current_user.id, curation_status: 'submitted', only_path: true) %>
+            <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', editor_id: current_user.id, curation_status: 'submitted', only_path: true) %>
             <li><%= link_to 'Curation stats', stash_url_helpers.curation_stats_path %>
             <li><%= link_to 'Journals', stash_url_helpers.journals_path %>
             <% if current_user.curator? %>
@@ -63,7 +63,6 @@
             <% end %>
             <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
             <% if current_user.superuser? %>
-              <li><%= link_to 'User management', stash_url_helpers.user_admin_path %>
               <li><%= link_to 'Status dashboard', stash_url_helpers.status_dashboard_path %>
               <li><%= link_to 'Submission queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>
               <li><%= link_to 'Zenodo submissions', stash_url_helpers.zenodo_queue_path %>
@@ -73,7 +72,7 @@
           <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
-            <li><%= link_to 'Admin', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
+            <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
           </ul>
         <% elsif current_user.role == 'admin' || current_user.role == 'tenant_curator' %>
           <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
