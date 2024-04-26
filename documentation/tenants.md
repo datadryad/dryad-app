@@ -10,102 +10,113 @@ Adding a New Tenant
 ====================
 
 Tasks:
-- In the `config/tenants` directory, add a config file for the tenant
-- In the `app/assets/images/tenants` directory, add a logo
-- After the new configuration goes live, in the production database,
+- In the `app/assets/images/tenants` directory, add the banner logo for the tenant
+- Add the tenant's configuration information to the database
+- After the new tenant is live in the production database,
   update `tenant_id` for all entries in `stash_engine_users` who have emails with the
   institutional domain name 
 
 Prerequisites and Dependencies for a New Tenant
 ------------------------------------------------
 
-You’ll need these things configured before you can get a
-fully-functioning install for a tenant.  Many of these will require
-you to get separate instances of items for each dev, stage and
-production deployment you’d like to activate.
+You’ll need these things configured before a tenant will be
+fully-functioning.
 
-- A configured external login method via Shibboleth
 - Logo
-- Campus contacts
-
-Adding the Configuration
--------------------------
-
-The easiest way to configure an instance is to copy the configuration
-from another and then modify the values. Since the UC campuses have
-somewhat different settings than other institutions, it is best to
-copy from an institution of the same type (UC or non-UC).  The
-configurations set a default configuration and then override the
-defaults for development, stage, demo and production environments
-since many of the configs remain the same for all environments.
-
-If you override a specific configuration key that has sub-values, be
-sure to put in all sub-values.  When the parent key is overridden, any
-sub-values are no longer present so you’ll need to re-enter all
-sub-values for a key if you override it (for nested elements).
-
-Some configuration option information:
-
-`enabled`: true or false.  If false then that tenant will not show up or
-allow log in.
-
-`abbreviation`, `short_name`, `long_name`: different versions of an
-institution name like UCLA; UC Los Angeles; University of California,
-Los Angeles.  The `abbreviation` must be unique. The `short_name` should
-be the most commonly used form of the name --  is the one that is used
-for users to choose when they log in, and for setting values for
-dataset publisher.
-
-`publisher_id` is the GRID ID -- you can get it from the ROR database
-
-`ror_id` -- can likewise come from ROR. All entries in this list will
-show up when tenant administrators view "their" content on the admin page.
-
-`tenant_id` should be a unique value for the tenants you have installed
-and should not be changed later. It is useful to have this be the same
-as the short_name, but all lowercase. Also useful to have this the
-same as the name of the config file.
-
-`identifier_service` is DataCite. There are sub-keys for shoulder, account, password,
-id_scheme (always doi right now).
-
-authentication:
-- `strategy` is usually shibboleth right now.  There are other keys and values
-  depending on the strategy chosen.
-  - A strategy of `author_match` allows login by that institution without
-    shibboleth validation, but requires an author to be from the same tenant
-    (an author ROR institution should match).
-  - A strategy of `ip_address` allows validating membership by requiring that
-    the user logs in from their organization network the first time.  The organization
-    supplies the network ranges that are allowed and we put in an array under the
-    key `ranges`.  The format is those accepted by ipaddr.rb which could be in
-    CIDR (ie "192.168.1.0/24") or network mask formats like "192.168.1.0/255.255.255.0"
-    (see their docs).  It also supports IPv6 (which we're not currently using).
-  - A strategy of `shibboleth` allows login using our [shibboleth][shibboleth/README.md] setup,
-    usually through InCommon.
-    - `entity_id` often discoverable in https://incommon.org/community-organizations/.
-      Organizations not in InCommon must be configured separately.
-    - `entity_domain` is simply the domain portion of the entity_id
-
-`default_license` is either cc0 or cc_by right now but might be set to
-other licenses configured at the application-level with some text and
-a logo.
-
-`campus_contacts` is the list of email addresses that will be copied on
-each submission to this tenant.
-
-`usage_disclaimer` is text that is displayed on top of the review page
-before submitting a dataset. Can be left out or left blank, but UC
-Press wanted this disclaimer when people go to submit.
-
-`covers_dpc` is typically true, since covering the DPC is the main
-reason institutions become tenants.
-
+- ROR ID(s)
+- Agreement information
+- A configured external login method via Shibboleth
 
 Adding the logo
 ---------------
 
 Logos go into `app/assets/images/tenants`
+
+Adding the Configuration
+-------------------------
+
+Each entry in `StashEngine::Tenants` contains the following fields:
+```ruby
+tenant_hash = {
+  id: '' , # tenant ID string, usually matching the tenant's domain. Required!
+  short_name: '', # tenant name,
+  long_name: '', # any alternate, longer tenant name, or duplicate of short_name
+  authentication: {}.to_json, # a json object, for property options see below
+  campus_contacts: [].to_json, # a json array
+  payment_plan: nil, # an enum for different agreed payment plans, default is nil
+  enabled: true, # whether the tenant is enabled to be claimed by users
+  partner_display: true, # whether the tenant should appear on the member list
+  covers_dpc: true, # whether the tenant will cover associated user datasets
+  sponsor_id: nil, # for consortium members
+}
+
+# You can insert a new tenant in the database, or with the rails console:
+StashEngine::Tenant.create!(tenant_hash)
+```
+
+After the tenant is created in the table, you must also add any associated
+ROR IDs to `StashEngine::TenantRorOrgs`:
+```ruby
+# You can insert a new tenant in the database, or with the rails console:
+StashEngine::TenantRorOrg.create!(tenant_id: <tenant_id>, ror_id: <ROR ID URL>)
+```
+
+### Field details
+
+`id`: required and must be unique. If possible, this should match the tenant's web domain.
+
+`short_name`, `long_name`: different versions of an institution name like "UC Los Angeles"
+and "University of California, Los Angeles". The `short_name` should be the most commonly
+used form of the name, and is seen most often by users. The `long_name` appears on the
+partner display list.
+
+`authentication`: an object containing a `strategy` and other information dependant on the strategy.
+- `strategy`: the method by which users identify with the institution.
+    - A strategy of `author_match` allows login by that institution without login validation,
+      but requires an author to list an affiliation from the same tenant (ROR ID must match).
+    - A strategy of `ip_address` allows validating membership by requiring that
+      the user logs in from their organization network the first time.
+          - The organization supplies the network ranges that are allowed, and we include an array
+          in the object under the key `ranges`.  The format is those accepted by ipaddr.rb which
+          could be in CIDR (ie "192.168.1.0/24") or network mask formats like "192.168.1.0/255.255.255.0"
+          (see their docs).  It also supports IPv6 (which we're not currently using).
+    - A strategy of `shibboleth` allows login using our [shibboleth][shibboleth/README.md] setup,
+      usually through InCommon. The following additional keys should be included in the object:
+        - `entity_id` often discoverable in https://incommon.org/community-organizations/.
+          Organizations not in InCommon must be configured separately.
+        - `entity_domain` is simply the domain portion of the entity_id
+
+`campus_contacts`: the list of email addresses that will be copied on
+each submission to this tenant.
+
+`payment_plan`: in indication for the type of payment plan agreed to by the tenant
+
+`enabled`: true or false.  If false then that tenant will not show up or allow log in.
+
+`partner_display`: true or false. Whether the (enabled) tenant should be displayed on the member list. 
+
+`covers_dpc`: true or false. If false then the member users will be asked to pay the DPC.
+
+`sponsor_id`: for consortia, the tenant_id of the tenant with the consortium-level administrators
+
+`ror_id`: the tenant representatives should provide a list of all ROR IDs associated with
+their institution. Datasets affiliated with all entries will show up when tenant administrators 
+view their admin pages.
+
+
+Testing the shibboleth setup
+----------------------------
+
+1. Add the tenant details and deploy the logo to a non-production server. (Best to test this from
+our sandbox.)
+2. In the database for that server, remove the `tenant_id` for the user you
+will be testing with.
+3. Go to login, and you should see the selection screen for shibboleth.
+4. Select the new tenant, and verify that it goes to their shibboleth
+login screen.
+5. You won't be able to login at their site, so go back to the DB and
+manually set your tenant to the target tenant.
+6. Go to the user dashboard and make sure the logo shows up.
 
 
 Updating pre-existing users in the database
@@ -115,26 +126,8 @@ Updating pre-existing users in the database
 
 Existing users in the database will want to take advantage of the new
 tenant status. To do this, determine the email suffix that applies to
-users of the tenant, and update them with a command like:
+users of the tenant, and update them like:
 
-`update stash_engine_users set tenant_id='columbia' where email like '%columbia.edu';`
-
-Testing the setup
--------------------
-
-Deploy the setup to a non-production server. (Best to test this from
-our stage server.)
-
-In the database for that server, remove the `tenant_id` for the user you
-will be testing with.
-
-Go to login, and you should see the selection screen for shibboleth.
-
-Select the new tenant, and verify that it goes to their shibboleth
-login screen.
-
-You won't be able to login at their site, so go back to the DB and
-manually set your tenant to the target tenant.
-
-Go to the user dashboard and make sure the logo shows up.
-
+```ruby
+StashEngine::User.where("email like '%columbia.edu'").update_all(tenant_id: 'columbia')
+```
