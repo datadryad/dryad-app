@@ -63,7 +63,7 @@ JOIN stash_engine_users users
 ON res.`user_id` = users.id
 JOIN stash_engine_identifiers seid
 ON res.identifier_id = seid.id
-WHERE users.`tenant_id` IN ('ucb', 'ucd', 'uci', 'ucla', 'ucm', 'ucop', 'ucpress', 'ucr', 'ucsb', 'ucsc', 'ucsd', 'ucsf')
+WHERE users.`tenant_id` IN ('berkeley', 'ucdavis', 'uci', 'ucla', 'ucmerced', 'ucop', 'ucpress', 'ucr', 'ucsb', 'ucsc', 'ucsd', 'ucsf')
 AND pub_state = 'published') as pub_ids
 JOIN ( SELECT MIN(id) as min_resource_id, identifier_id FROM stash_engine_resources WHERE file_view = 1 GROUP BY identifier_id) as first_pub
 ON pub_ids.id = first_pub.identifier_id

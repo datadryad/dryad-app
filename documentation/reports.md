@@ -308,7 +308,7 @@ SELECT DISTINCT ids.identifier
   FROM stash_engine_identifiers ids
     JOIN stash_engine_resources res
     ON ids.id = res.identifier_id
-  WHERE res.tenant_id IN ('suny-buffalo', 'suny-buffalostate', 'suny-stonybrook', 'suny');
+  WHERE res.tenant_id IN ('buffalo', 'buffalostate', 'stonybrook', 'suny');
 ```
 
 # See all DOIs submitted by a user who is associated with a tenant (all versions, all statuses)
@@ -325,7 +325,7 @@ SELECT DISTINCT ids.identifier
       ON ids.id = res.identifier_id
     JOIN stash_engine_users users
       ON res.user_id = users.id
-  WHERE users.tenant_id IN ('suny-buffalo', 'suny-buffalostate', 'suny-stonybrook', 'suny');
+  WHERE users.tenant_id IN ('buffalo', 'buffalostate', 'stonybrook', 'suny');
 ```
 
 Unique authors from ROR institutions (from SQL)
@@ -387,7 +387,7 @@ FROM stash_engine_identifiers ids
 JOIN (SELECT max(stash_engine_resources.id) as res2_id, identifier_id FROM stash_engine_resources
   JOIN stash_engine_resource_states sts
   ON stash_engine_resources.`current_resource_state_id` = sts.id
-  WHERE tenant_id IN ('dataone', 'lbnl', 'ucb', 'ucd', 'uci', 'ucla', 'ucm', 'ucop', 'ucpress', 'ucr', 'ucsb', 'ucsc', 'ucsf')
+  WHERE tenant_id IN ('dataone', 'lbnl', 'berkeley', 'ucdavis', 'uci', 'ucla', 'ucmerced', 'ucop', 'ucpress', 'ucr', 'ucsb', 'ucsc', 'ucsf')
   AND sts.resource_state = 'submitted'
   GROUP BY identifier_id
 ) as res2

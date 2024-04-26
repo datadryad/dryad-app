@@ -39,7 +39,7 @@ module StashEngine
 
       Identifier.select(:id, :identifier, :identifier_type, :updated_at).distinct
         .joins(join_conditions)
-        .where('stash_engine_users.tenant_id = ?', my_tenant.tenant_id)
+        .where('stash_engine_users.tenant_id = ?', my_tenant.id)
     end
 
     def gen_xml_from_identifiers(ar_identifiers)
