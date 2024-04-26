@@ -19,7 +19,7 @@ h1, *[class^="o-heading__level1"] {
 }
 
 %o-heading__level2 {
-  margin-top: calc($spacing-base * 3.75);
+  margin-top: calc(#{$spacing-base} * 3.75);
   margin-bottom: $spacing-sm;
   color: $design-dark-blue-color;
   font-size: 1.65rem;
@@ -36,8 +36,8 @@ h2, *[class^="o-heading__level2"] {
 }
 
 %o-heading__level3 {
-  margin-top: calc($spacing-base * 3.5);
-  margin-bottom: calc($spacing-base * 1.5);
+  margin-top: calc(#{$spacing-base} * 3.5);
+  margin-bottom: calc(#{$spacing-base} * 1.5);
   color: $design-orange-color;
   font-size: 1.4rem;
   line-height: 1.75rem;
@@ -70,8 +70,8 @@ h1:first-child, *[class^="o-heading__level"]:first-child {
 }
 
 %o-heading__level4 {
-  margin-top: calc($spacing-base * 3);
-  margin-bottom: calc($spacing-base * 1.5);
+  margin-top: calc(#{$spacing-base} * 3);
+  margin-bottom: calc(#{$spacing-base} * 1.5);
   color: $design-dark-blue-color;
   font-size: 1.25rem;
   line-height: 1.5rem;

@@ -10,7 +10,6 @@ module StashEngine
 
     # the admin_users main page showing users and stats
     def index
-      setup_stats
       setup_superuser_facets
       setup_tenants
 
@@ -146,30 +145,12 @@ module StashEngine
       @page_presenters = Kaminari.paginate_array(@presenters).page(@page).per(@page_size)
     end
 
-    def setup_stats
-      setup_superuser_stats
-      @stats.each { |k, v| @stats[k] = v.count }
-    end
-
-    def setup_superuser_stats
-      @stats =
-        {
-          user_count: User.all,
-          dataset_count: Identifier.all,
-          user_7days: User.where(['stash_engine_users.created_at > ?', Time.new.utc - 7.days]),
-          dataset_started_7days: Resource.joins(:current_resource_state)
-            .where(stash_engine_resource_states: { resource_state: %i[in_progress] })
-            .where(['stash_engine_resources.created_at > ?', Time.new.utc - 7.days]),
-          dataset_submitted_7days: Identifier.where(['stash_engine_identifiers.created_at > ?', Time.new.utc - 7.days])
-        }
-    end
-
     def setup_superuser_facets
       @tenant_facets = StashEngine::Tenant.enabled.sort_by(&:short_name)
     end
 
     def setup_tenants
-      @tenants = [OpenStruct.new(id: '', name: '* Select Institution *')]
+      @tenants = [OpenStruct.new(id: '', name: '* Select institution *')]
       @tenants << StashEngine::Tenant.enabled.map do |t|
         OpenStruct.new(id: t.id, name: t.short_name)
       end

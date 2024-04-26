@@ -4,6 +4,10 @@ module StashEngine
       @user.present?
     end
 
+    def load?
+      @user.superuser?
+    end
+
     class Scope
       def initialize(user, scope)
         @user = user
