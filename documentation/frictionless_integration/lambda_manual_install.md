@@ -57,10 +57,10 @@ it zips up correctly for the Lambda Layer.
 
 ```
 pandas
-frictionless # the last 4.x version
-frictionless[excel] # the last 4.x version
-frictionless[csv] # the last 4.x version
-frictionless[json] # the last 4.x version
+frictionless # the last 5.x version
+frictionless[excel] # the last 5.x version
+frictionless[csv] # the last 5.x version
+frictionless[json] # the last 5.x version
 requests
 ```
 
