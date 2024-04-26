@@ -63,8 +63,8 @@ module StashEngine
           @scope.where(**@params)
         elsif @user.journals_as_admin.present?
           @scope.where(**@params, journals: @user.journals_as_admin.map(&:title))
-        elsif @user.funders_as_admin.present?
-          @scope.where(**@params, funders: @user.funders_as_admin.map(&:ror_id))
+        elsif @user.funders.present?
+          @scope.where(**@params, funders: @user.funders.map(&:ror_id))
         else
           false
         end
