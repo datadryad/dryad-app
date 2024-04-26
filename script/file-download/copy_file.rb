@@ -8,16 +8,17 @@ class CopyFile
   end
 
   def save(url:, token:, filename:)
-    puts url
+    # puts url
 
     # get redirect to the S3 presigned url
-    redir = HTTP.get(url, headers: { 'Authorization' => "Bearer #{token}" })
-    if redir.code > 399
-      STDERR.puts "Error #{redir.code} getting S3 presigned url for #{url}"
-      return
-    end
+    # redir = HTTP.get(url, headers: { 'Authorization' => "Bearer #{token}" })
+    # if redir.code > 399
+    #   STDERR.puts "Error #{redir.code} getting S3 presigned url for #{url}"
+    #   return
+    # end
 
-    response = HTTP.get(redir.headers['Location'])
+    # response = HTTP.get(redir.headers['Location'])
+    response = HTTP.get(url)
 
     outfn = File.join(@save_path, filename)
     puts "writing #{outfn}"
