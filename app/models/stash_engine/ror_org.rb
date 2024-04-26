@@ -35,8 +35,6 @@ module StashEngine
         results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
       end
 
-      p results
-
       # If we don't have enough results, find matches at the beginning of the acronyms/aliases
       if results.size < ROR_MAX_RESULTS
         resp = where("JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
@@ -53,8 +51,6 @@ module StashEngine
           results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
         end
       end
-
-      p results
 
       results.flatten.uniq
     end
