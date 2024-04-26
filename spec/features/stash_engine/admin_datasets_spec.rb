@@ -182,7 +182,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
 
       it 'has admin link', js: true do
         click_button 'Datasets'
-        expect(page).to have_link('Dataset curation')
+        expect(page).to have_link('Admin dashboard')
       end
 
       it 'submits a curation status changes and reflects in the page and history afterwards' do
@@ -246,7 +246,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
       it 'has admin link' do
         visit root_path
         click_button 'Datasets'
-        expect(page).to have_link('Dataset curation')
+        expect(page).to have_link('Admin dashboard')
         expect(page).to have_link('Publication updater')
         expect(page).to have_link('Status dashboard')
         expect(page).to have_link('Submission queue')
@@ -360,7 +360,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
 
       it 'shows limited menus to an administrative curator' do
         click_button 'Datasets'
-        expect(page).to have_link('Dataset curation')
+        expect(page).to have_link('Admin dashboard')
         expect(page).to have_link('Curation stats')
         expect(page).to have_link('Journals')
         expect(page).not_to have_link('User management')
@@ -370,7 +370,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
       it 'Limits options in the curation page' do
         visit root_path
         click_button 'Datasets'
-        click_link 'Dataset curation'
+        click_link 'Admin dashboard'
         click_on('Reset all filters')
 
         expect(page).to have_content(@resource.title)
