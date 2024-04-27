@@ -73,13 +73,8 @@ class ApiApplicationController < StashEngine::ApplicationController
 
     @user = if doorkeeper_token.resource_owner_id.present?
               # Authorization Code Grant
-              user = StashEngine::User.where(id: doorkeeper_token.resource_owner_id).first
-              # set user role to 'user' for this request (without saving to db) since people doing proxy edits for a
-              # user's data don't get special curator/admin/superuser permissions
-              if user.present?
-                user.role = 'user'
-                user
-              end
+              # Roleless user for API proxy
+              StashEngine::ProxyUser.where(id: doorkeeper_token.resource_owner_id).first
             else
               # Client Credentials Grant type
               doorkeeper_token.application.owner
