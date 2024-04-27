@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: stash_engine_tenants
+#
+#  id              :string(191)      not null, primary key
+#  authentication  :json
+#  campus_contacts :json
+#  covers_dpc      :boolean          default(TRUE)
+#  enabled         :boolean          default(TRUE)
+#  long_name       :string(191)
+#  partner_display :boolean          default(TRUE)
+#  payment_plan    :integer
+#  short_name      :string(191)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  sponsor_id      :string(191)
+#
+# Indexes
+#
+#  index_stash_engine_tenants_on_id  (id)
+#
 require 'json'
 require 'ostruct'
 module StashEngine
