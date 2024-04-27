@@ -156,7 +156,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       before(:each) do
         @journal = create(:journal)
         @journal_admin = create(:user)
-        @journal_role = create(:journal_role, journal: @journal, user: @journal_admin, role: 'admin')
+        @journal_role = create(:role, role_object: @journal, user: @journal_admin)
         @journal_admin.reload
         sign_in(@journal_admin, false)
         ident1 = create(:identifier)

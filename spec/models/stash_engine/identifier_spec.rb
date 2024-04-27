@@ -376,7 +376,7 @@ module StashEngine
           it 'returns the latest non-published for an admin from journal' do
             user2 = create(:user, role: 'user', tenant_id: 'localhost')
             journal = Journal.create(title: 'Test Journal', issn: @fake_issn)
-            JournalRole.create(journal: journal, user: user2, role: 'admin')
+            create(:role, role_object: journal, user: user2, role: 'admin')
             user2.reload
             InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
             @identifier.reload

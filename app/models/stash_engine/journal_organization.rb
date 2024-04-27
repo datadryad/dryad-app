@@ -14,6 +14,8 @@ module StashEngine
   class JournalOrganization < ApplicationRecord
     self.table_name = 'stash_engine_journal_organizations'
     belongs_to :parent_org, class_name: 'JournalOrganization', optional: true
+    has_many :roles, class_name: 'StashEngine::Role', as: :role_object
+    has_many :users, through: :roles
 
     # Treat the 'type' column as a string, not a single-inheritance class name
     self.inheritance_column = :_type_disabled
