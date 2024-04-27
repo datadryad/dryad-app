@@ -5,6 +5,7 @@
 #  id                        :integer          not null, primary key
 #  accepted_agreement        :boolean
 #  cedar_json                :text(65535)
+#  display_readme            :boolean          default(TRUE)
 #  download_uri              :text(65535)
 #  file_view                 :boolean          default(FALSE)
 #  has_geolocation           :boolean          default(FALSE)
