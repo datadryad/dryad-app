@@ -121,7 +121,7 @@ module StashApi
         # journal_user is the journal administrator, test_user is the user that will own the dataset
         journal_user = create(:user, tenant_id: 'ucop', role: nil)
         journal = create(:journal, issn: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}")
-        create(:journal_role, journal: journal, user: journal_user, role: 'admin')
+        create(:role, role_object: journal, user: journal_user)
         doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                  owner_id: journal_user.id, owner_type: 'StashEngine::User')
         setup_access_token(doorkeeper_application: doorkeeper_application)
@@ -473,7 +473,7 @@ module StashApi
           # set up user4 as a journal admin, and identifiers[1] as belonging to that journal
           user4 = create(:user, tenant_id: 'ucop', role: nil)
           journal = create(:journal)
-          create(:journal_role, journal: journal, user: user4, role: 'admin')
+          create(:role, role_object: journal, user: user4)
           create(:internal_datum, identifier_id: @identifiers[1].id, data_type: 'publicationISSN', value: journal.single_issn)
           @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                     owner_id: user4.id, owner_type: 'StashEngine::User')

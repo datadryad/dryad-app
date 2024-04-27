@@ -1,0 +1,77 @@
+class AddRolesTable < ActiveRecord::Migration[6.1]
+  def change
+    create_table :stash_engine_funders do |t|
+      t.string :name
+      t.string :ror_id
+      t.integer :payment_plan
+      t.boolean :enabled, default: true
+      t.boolean :covers_dpc, default: true
+      t.timestamps
+    end
+    add_index :stash_engine_funders, :ror_id
+    StashEngine::Funder.create(name: 'Chan Zuckerberg Initiative', ror_id: 'https://ror.org/02qenvm24')
+    create_table :stash_engine_roles do |t|
+      t.integer :user_id
+      t.string :role      
+      t.string :role_object_type
+      t.string :role_object_id
+      t.timestamps
+    end
+    add_index :stash_engine_roles, :user_id
+    add_index :stash_engine_roles, [:role_object_type, :role_object_id]
+    add_foreign_key :stash_engine_roles, :stash_engine_users, column: :user_id
+    reversible do |dir|
+      dir.up do
+        StashEngine::JournalRole.all.each do |r|
+          StashEngine::Role.create(user_id: r.user_id, role: 'admin', role_object: StashEngine::Journal.find(r.journal_id)) unless r.journal_id.nil?
+          StashEngine::Role.create(user_id: r.user_id, role: 'admin', role_object: StashEngine::JournalOrganization.find(r.journal_organization_id)) unless r.journal_organization_id.nil?
+        end
+        StashEngine::FunderRole.all.each do |r|
+          StashEngine::Role.create(user_id: r.user_id, role: r.role, role_object: StashEngine::Funder.find_by(name: r.funder_name))
+        end
+        StashEngine::User.where("role != 'user'").each do |u|
+          case u.role
+            when 'limited_curator'
+              StashEngine::Role.create(user_id: u.id, role: 'admin')
+            when 'curator'
+              StashEngine::Role.create(user_id: u.id, role: 'curator')
+            when 'superuser'
+              StashEngine::Role.create(user_id: u.id, role: 'superuser')
+            when 'admin'
+              StashEngine::Role.create(user_id: u.id, role: 'admin', role_object: StashEngine::Tenant.find(u.tenant_id))
+            when 'tenant_curator'
+              StashEngine::Role.create(user_id: u.id, role: 'curator', role_object: StashEngine::Tenant.find(u.tenant_id))
+          end
+        end
+      end
+      dir.down do
+        StashEngine::Role.journal_admin_roles.each do |r|
+          StashEngine::JournalRole.create(user_id: r.user_id, role: r.role_object_type == 'StashEngine::Journal' ? 'admin' : 'org_admin', journal_id: r.role_object_type == 'StashEngine::Journal' ? r.role_object_id : nil, journal_organization_id: r.role_object_type == 'StashEngine::Journal' ? nil : r.role_object_id)
+        end
+        StashEngine::Role.funder_admin_roles.each do |r|
+          funder = StashEngine::Funder.find(r.role_object_id)
+          StashEngine::FunderRole.create(user_id: r.user_id, role: 'admin', funder_name: funder.name, funder_id: funder.ror_id)
+        end
+        StashEngine::Role.admin_roles.each {|r| StashEngine::User.find(r.user_id).update(role: 'limited_curator')}
+        StashEngine::Role.curator_roles {|r| StashEngine::User.find(r.user_id).update(role: 'curator')}
+        StashEngine::Role.superuser_roles {|r| StashEngine::User.find(r.user_id).update(role: 'superuser')}
+        StashEngine::Role.tenant_admin_roles.each {|r| StashEngine::User.find(r.user_id).update(role: 'admin')}
+        StashEngine::Role.tenant_curator_roles {|r| StashEngine::User.find(r.user_id).update(role: 'tenant_curator')}
+      end
+    end
+    drop_table :stash_engine_funder_roles do |t|
+      t.string :funder_name
+      t.string :role
+      t.string :funder_id
+      t.bigint :user_id
+      t.timestamps
+    end
+    drop_table :stash_engine_journal_roles do |t|
+      t.integer :user_id
+      t.integer :journal_id
+      t.string :role
+      t.integer :journal_organization_id
+      t.timestamps
+    end
+  end
+end

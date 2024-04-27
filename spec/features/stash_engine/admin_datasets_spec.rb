@@ -413,7 +413,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
       before(:each) do
         @journal = create(:journal)
         @journal_admin = create(:user, tenant_id: 'mock_tenant')
-        @journal_role = create(:journal_role, journal: @journal, user: @journal_admin, role: 'admin')
+        @journal_role = create(:role, role_object: @journal, user: @journal_admin)
         @journal_admin.reload
         sign_in(@journal_admin, false)
         ident1 = create(:identifier)
@@ -448,9 +448,10 @@ RSpec.feature 'AdminDatasets', type: :feature do
         ident1 = create(:identifier)
         @res1 = create(:resource, identifier_id: ident1.id, user: @user, tenant_id: @admin.tenant_id)
         contributor = create(:contributor, resource: @res1)
+        funder = create(:funder, name: contributor.contributor_name, ror_id: contributor.name_identifier_id)
         @funder_admin = create(:user, tenant_id: 'mock_tenant')
-        @funder_role = create(:funder_role, funder_id: contributor.name_identifier_id, funder_name: contributor.contributor_name,
-                                            user: @funder_admin, role: 'admin')
+        @funder_role = create(:role, role_object: funder, user: @funder_admin)
+        @funder_role.reload
         @funder_admin.reload
         sign_in(@funder_admin, false)
       end

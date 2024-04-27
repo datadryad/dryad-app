@@ -7,6 +7,8 @@ module StashEngine
     has_many :sponsored, class_name: 'Tenant', primary_key: :id, foreign_key: :sponsor_id, inverse_of: :sponsor
     has_many :tenant_ror_orgs, class_name: 'StashEngine::TenantRorOrg', dependent: :destroy
     has_many :ror_orgs, class_name: 'StashEngine::RorOrg', through: :tenant_ror_orgs
+    has_many :roles, class_name: 'StashEngine::Role', as: :role_object
+    has_many :users, through: :roles
 
     enum payment_plan: {
       tiered: 0

@@ -29,8 +29,8 @@ module StashEngine
   class User < ApplicationRecord
     self.table_name = 'stash_engine_users'
     has_many :resources
-    has_many :journal_roles
-    has_many :journals, through: :journal_roles
+    has_many :roles
+    has_many :journals, -> { where('stash_engine_roles' => { role_object_type: 'StashEngine::Journal' }) }, through: :roles
     belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
 
@@ -108,16 +108,16 @@ module StashEngine
     end
 
     def journals_as_admin
-      admin_journals = journals.merge(JournalRole.admins)
+      admin_journals = journals.merge(StashEngine::Role.journal_roles.where(user_id: id).map(&:journal))
 
-      admin_orgs = StashEngine::JournalRole.where(user_id: id, role: 'org_admin').map(&:journal_organization).compact
+      admin_orgs = StashEngine::Role.journal_org_roles.where(user_id: id).map(&:journal_organization).compact
       admin_org_journals = admin_orgs.map(&:journals_sponsored).flatten
 
       admin_journals + admin_org_journals
     end
 
     def funders_as_admin
-      StashEngine::FunderRole.where(user_id: id, role: 'admin')
+      StashEngine::Role.funder_roles.where(user_id: id).map(&:funder)
     end
 
     # Merges the other user into this user.  Updates so that this user owns other user's old stuff and has their critical info.
