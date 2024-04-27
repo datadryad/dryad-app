@@ -3,7 +3,7 @@
   <h3 class="o-heading__level3-related-works"><%= item_label.pluralize(article_ids.count) %></h3>
   <ul class="o-list-related">
     <% article_ids.each do |r| %>
-      <% bad_asterisk = ( (current_user&.limited_curator? && !r.verified?) ? ' *' : '') %>
+      <% bad_asterisk = ( (current_user&.min_app_admin? && !r.verified?) ? ' *' : '') %>
       <li>
         <% if r.work_type == 'undefined' %>
           This dataset <%= r.relation_name_english %>

@@ -17,7 +17,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
       create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
       @resource.resource_states.first.update(resource_state: 'submitted')
-      sign_in(create(:user, role: 'curator', tenant_id: 'dryad'))
+      sign_in(create(:user, role: 'curator'))
       visit("#{stash_url_helpers.ds_admin_path}?curation_status=curation")
     end
 
@@ -55,7 +55,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       mock_stripe!
       mock_datacite_gen!
       neuter_curation_callbacks!
-      @admin = create(:user, role: 'admin')
+      @admin = create(:user)
+      create(:role, user: @admin, role: 'admin', role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
@@ -78,7 +79,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
       before(:each) do
         mock_salesforce!
-        @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
+        @superuser = create(:user, role: 'superuser')
         sign_in(@superuser, false)
       end
 
@@ -137,7 +138,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
     context :limited_curator do
       before(:each) do
-        @user.update(role: 'limited_curator')
+        create(:role, user: @user, role: 'admin')
         sign_in(@user, false)
       end
 
@@ -181,7 +182,8 @@ RSpec.feature 'CurationActivity', type: :feature do
 
       before(:each) do
         mock_salesforce!
-        @tenant_curator = create(:user, role: 'tenant_curator')
+        @tenant_curator = create(:user)
+        create(:role, user: @tenant_curator, role: 'curator', role_object: @tenant_curator.tenant)
         sign_in(@tenant_curator, false)
       end
 

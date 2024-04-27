@@ -33,6 +33,7 @@ module StashEngine
     has_many :journals, through: :roles, source: :role_object, source_type: 'StashEngine::Journal'
     has_many :journal_organizations, through: :roles, source: :role_object, source_type: 'StashEngine::JournalOrganization'
     has_many :funders, through: :roles, source: :role_object, source_type: 'StashEngine::Funder'
+    has_many :tenants, through: :roles, source: :role_object, source_type: 'StashEngine::Tenant'
     belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
 
@@ -46,13 +47,17 @@ module StashEngine
              foreign_key: :resource_owner_id,
              dependent: :delete_all # or :destroy if you need callbacks
 
-    scope :curators, -> do
-      where(role: %w[superuser curator tenant_curator])
-    end
+    accepts_nested_attributes_for :roles
 
-    scope :limited_curators, -> do
-      where(role: %w[superuser curator tenant_curator limited_curator])
-    end
+    scope :curators, -> { joins(:roles).where('stash_engine_roles' => { role: 'curator' }) }
+
+    scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
+
+    scope :app_admins, -> {
+      joins(:roles).where(
+        "((stash_engine_roles.role in ('superuser', 'curator')) or (stash_engine_roles.role = 'admin' and stash_engine_roles.role_object_id is null))"
+      )
+    }
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
@@ -87,26 +92,32 @@ module StashEngine
       [last_name, first_name].join(', ')
     end
 
-    def superuser?
-      role == 'superuser'
-    end
-
     def tenant_limited?
-      role == 'tenant_curator' || role == 'admin'
+      roles.tenant_roles.present?
     end
 
     def admin?
-      role == 'admin' || limited_curator? || journals_as_admin.present? || funders.present?
+      roles.admin.present?
     end
 
-    # this role and higher permission
     def curator?
-      role == 'superuser' || role == 'curator' || role == 'tenant_curator'
+      roles.curator.present?
     end
 
-    # this role and higher permission
-    def limited_curator?
-      %w[superuser curator tenant_curator limited_curator].include?(role)
+    def superuser?
+      roles.superuser.present?
+    end
+
+    def min_admin?
+      roles.min_admin.present?
+    end
+
+    def min_app_admin?
+      roles.min_app_admin.present?
+    end
+
+    def min_curator?
+      roles.min_curator.present?
     end
 
     def journals_as_admin
@@ -190,7 +201,7 @@ module StashEngine
 
     def self.create_user_with_orcid(auth_hash:, temp_email:)
       User.create(first_name: auth_hash[:extra][:raw_info][:first_name], last_name: auth_hash[:extra][:raw_info][:last_name],
-                  email: temp_email, tenant_id: nil, last_login: Time.new.utc, role: 'user', orcid: auth_hash[:uid])
+                  email: temp_email, tenant_id: nil, last_login: Time.new.utc, orcid: auth_hash[:uid])
     end
 
   end

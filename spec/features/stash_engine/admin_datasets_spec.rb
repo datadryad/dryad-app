@@ -33,13 +33,13 @@ RSpec.feature 'AdminDatasets', type: :feature do
     end
 
     it 'shows admins datasets for their tenant' do
-      sign_in(create(:user, role: 'admin', tenant_id: 'mock_tenant'))
+      sign_in(create(:user, role: 'admin', role_object: StashEngine::Tenant.find('ucop'), tenant_id: 'ucop'))
       visit stash_url_helpers.ds_admin_path
       expect(all('.c-lined-table__row').length).to eql(2)
     end
 
     it 'shows consortium admins datasets for their tenants' do
-      create(:tenant, id: 'consortium')
+      consortium = create(:tenant, id: 'consortium')
       create(:tenant, id: 'member1', sponsor_id: 'consortium')
       create(:tenant, id: 'member2', sponsor_id: 'consortium')
       user = create(:user, tenant_id: 'member1')
@@ -47,7 +47,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
         identifier = create(:identifier)
         create(:resource, :submitted, user: user, identifier: identifier)
       end
-      sign_in(create(:user, role: 'admin', tenant_id: 'consortium'))
+      sign_in(create(:user, role: 'admin', role_object: consortium, tenant_id: 'consortium'))
       visit stash_url_helpers.ds_admin_path
       expect(page).to have_select('tenant')
       expect(page).to have_selector('#tenant option', count: 4)
@@ -61,7 +61,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
     end
 
     it 'has ajax showing counter stats and citations', js: true do
-      sign_in(create(:user, role: 'curator', tenant_id: 'dryad'))
+      sign_in(create(:user, role: 'curator'))
       visit stash_url_helpers.ds_admin_path
       el = find('td', text: @identifiers.first.resources.first.title)
       el = el.find(:css, '.js-stats')
@@ -74,7 +74,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
     end
 
     it 'generates a csv having dataset information with citations, views and downloads' do
-      sign_in(create(:user, role: 'curator', tenant_id: 'dryad'))
+      sign_in(create(:user, role: 'curator'))
       visit stash_url_helpers.ds_admin_path
       click_link('Get Comma Separated Values (CSV) for import into Excel')
 
@@ -93,7 +93,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
     end
 
     it 'generates a csv that includes submitter institutional name' do
-      sign_in(create(:user, role: 'curator', tenant_id: 'dryad'))
+      sign_in(create(:user, role: 'curator'))
       visit stash_url_helpers.ds_admin_path
       click_link('Get Comma Separated Values (CSV) for import into Excel')
 
@@ -119,7 +119,9 @@ RSpec.feature 'AdminDatasets', type: :feature do
       mock_datacite!
       mock_file_content!
       neuter_curation_callbacks!
-      @admin = create(:user, role: 'admin', tenant_id: 'mock_tenant')
+      create(:tenant)
+      @admin = create(:user, tenant_id: 'test_tenant')
+      create(:role, user: @admin, role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, skip_datacite_update: true)
@@ -176,7 +178,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
       before(:each) do
         create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
         @resource.resource_states.first.update(resource_state: 'submitted')
-        sign_in(create(:user, role: 'curator', tenant_id: 'dryad'))
+        sign_in(create(:user, role: 'curator'))
         visit stash_url_helpers.ds_admin_path(curation_status: 'curation')
       end
 
@@ -239,7 +241,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
 
       before(:each) do
         mock_salesforce!
-        @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
+        @superuser = create(:user, role: 'superuser')
         sign_in(@superuser, false)
       end
 
@@ -317,7 +319,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
       end
 
       it 'allows un-assigning a curator, changing status if it is curation' do
-        @curator = create(:user, role: 'superuser', tenant_id: 'dryad')
+        @curator = create(:user, role: 'superuser')
         expect { create(:curation_activity, resource: @resource, status: 'curation', note: 'forcing to curation') }
           .to change(StashEngine::CurationActivity, :count).by(1)
         @resource.reload
@@ -351,10 +353,10 @@ RSpec.feature 'AdminDatasets', type: :feature do
       end
     end
 
-    context :limited_curator, js: true do
+    context :app_admin, js: true do
 
       before(:each) do
-        @user.update(role: 'limited_curator')
+        create(:role, user: @user, role: 'admin')
         sign_in(@user, false)
       end
 
@@ -382,7 +384,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
 
       before(:each) do
         mock_salesforce!
-        @tenant_curator = create(:user, role: 'tenant_curator', tenant_id: 'mock_tenant')
+        @tenant_curator = create(:user, role: 'curator', role_object: @admin.tenant, tenant_id: @admin.tenant_id)
         sign_in(@tenant_curator, false)
       end
 

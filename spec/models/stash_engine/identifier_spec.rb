@@ -47,7 +47,7 @@ module StashEngine
       mock_stripe!
       neuter_curation_callbacks!
       create(:tenant_ucop)
-      @user = create(:user, tenant_id: 'dryad', role: nil)
+      @user = create(:user, tenant_id: 'dryad')
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
       @res1 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
       @res2 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
@@ -116,7 +116,7 @@ module StashEngine
 
       describe '#most_recent_curator' do
         it 'finds the most recent curator' do
-          user = create(:user, role: 'user')
+          user = create(:user)
           cur1 = create(:user, role: 'curator')
           cur2 = create(:user, role: 'curator')
           @res3.update(current_editor_id: user.id)
@@ -127,7 +127,7 @@ module StashEngine
         end
 
         it 'returns nil when there is no curator' do
-          user = create(:user, role: 'user')
+          user = create(:user)
           @res3.update(current_editor_id: user.id)
           @res2.update(current_editor_id: user.id)
           @res1.update(current_editor_id: user.id)
@@ -344,7 +344,7 @@ module StashEngine
           end
 
           it 'returns the latest published for non-owner and regular user' do
-            user2 = User.new
+            user2 = create(:user)
             expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource_with_public_metadata)
           end
 
@@ -353,12 +353,13 @@ module StashEngine
           end
 
           it 'returns the latest non-published for a curator' do
-            user2 = User.new(role: 'curator')
+            user2 = create(:user, role: 'curator')
             expect(@identifier.latest_viewable_resource(user: user2)).to eql(@identifier.latest_resource)
           end
 
           it 'returns the latest non-published for an admin from the same tenant as the owner' do
-            user2 = User.new(role: 'admin', tenant_id: 'localhost')
+            user2 = create(:user, tenant_id: 'localhost')
+            create(:role, user: user2, role: 'admin', role_object: user2.tenant)
             @res1.update(tenant_id: 'localhost')
             @res2.update(tenant_id: 'localhost')
             @res3.update(tenant_id: 'localhost')
@@ -366,7 +367,8 @@ module StashEngine
           end
 
           it 'returns the latest published for an admin from a different tenant as the owner' do
-            user2 = User.new(role: 'admin', tenant_id: 'clownschool')
+            user2 = create(:user, tenant_id: 'clownschool')
+            create(:role, user: user2, role: 'admin', role_object: user2.tenant)
             @res1.update(tenant_id: 'localhost')
             @res2.update(tenant_id: 'localhost')
             @res3.update(tenant_id: 'localhost')
@@ -374,7 +376,7 @@ module StashEngine
           end
 
           it 'returns the latest non-published for an admin from journal' do
-            user2 = create(:user, role: 'user', tenant_id: 'localhost')
+            user2 = create(:user, tenant_id: 'localhost')
             journal = Journal.create(title: 'Test Journal', issn: @fake_issn)
             create(:role, role_object: journal, user: user2, role: 'admin')
             user2.reload
@@ -927,8 +929,9 @@ module StashEngine
     describe :with_visibility do
       before(:each) do
         Identifier.destroy_all
-        @user = create(:user, first_name: 'Lisa', last_name: 'Muckenhaupt', email: 'lmuckenhaupt@ucop.edu', tenant_id: 'ucop', role: nil)
-        @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop', role: 'admin')
+        @user = create(:user, first_name: 'Lisa', last_name: 'Muckenhaupt', email: 'lmuckenhaupt@ucop.edu', tenant_id: 'ucop')
+        @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop')
+        create(:role, user: @user2, role: 'admin', role_object: @user2.tenant)
         @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'curator')
 
         @identifiers = [create(:identifier, identifier: '10.1072/FK2000'),
@@ -1039,7 +1042,7 @@ module StashEngine
     describe :cited_by do
       before(:each) do
         neuter_curation_callbacks!
-        user = create(:user, tenant_id: 'dryad', role: nil)
+        user = create(:user, tenant_id: 'dryad')
         @identifier2 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/789')
         @identifier3 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/000')
 

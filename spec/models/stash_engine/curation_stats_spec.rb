@@ -40,8 +40,8 @@ module StashEngine
       mock_stripe!
       neuter_curation_callbacks!
 
-      @curator = create(:user, tenant_id: 'dryad', role: 'curator')
-      @user = create(:user, tenant_id: 'dryad', role: 'user')
+      @curator = create(:user, role: 'curator')
+      @user = create(:user, tenant_id: 'dryad')
       @system_user = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
 
       # setup some identifiers, each with one resource

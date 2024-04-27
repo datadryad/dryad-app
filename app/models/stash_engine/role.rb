@@ -17,11 +17,11 @@ module StashEngine
 
     scope :admin, -> { where(role: 'admin') }
     scope :curator, -> { where(role: 'curator') }
-    scope :superuser, -> { where(role: 'superuser') }
+    scope :superuser, -> { where(role: 'superuser', role_object_id: nil) }
 
-    scope :admin_roles, -> { admin.where(role_object_id: nil) }
-    scope :curator_roles, -> { curator.where(role_object_id: nil) }
-    scope :superuser_roles, -> { superuser.where(role_object_id: nil) }
+    scope :min_admin, -> { where(role: %w[admin curator superuser]) }
+    scope :min_app_admin, -> { curator.or(where(role: %w[admin superuser], role_object_id: nil)) }
+    scope :min_curator, -> { where(role: %w[curator superuser]) }
 
   end
 end

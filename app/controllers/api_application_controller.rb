@@ -113,21 +113,20 @@ class ApiApplicationController < StashEngine::ApplicationController
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
-  def require_limited_curator
-    return if @user.limited_curator?
+  def require_min_app_admin
+    return if @user.min_app_admin?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
   def require_curator
-    return if @user.curator?
+    return if @user.min_curator?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
   def require_admin
-    return if %w[superuser curator admin tenant_curator].include?(@user.role) ||
-              @user.journals_as_admin.present?
+    return if current_user && current_user.min_admin?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end

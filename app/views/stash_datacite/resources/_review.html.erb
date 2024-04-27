@@ -1,7 +1,7 @@
 <h1 class="o-heading__level1">Finalize submission</h1>
 
     <!-- If a curator is viewing this page, highlight the changed fields -->
-    <% highlight_fields = current_user.limited_curator? ? @resource.changed_from_previous_curated : [] %>
+    <% highlight_fields = current_user.min_app_admin? ? @resource.changed_from_previous_curated : [] %>
     <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? && @resource.previous_resource.current_curation_status == 'action_required' %>
       <div class="c-error-box" id="error-box">
         <p>Changes are required in order to submit.</p>

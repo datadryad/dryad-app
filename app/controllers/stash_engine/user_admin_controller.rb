@@ -51,7 +51,7 @@ module StashEngine
     # sets the user role (admin/user)
     def set_role
       new_role = params[:role]
-      return render(nothing: true, status: :unauthorized) if new_role == 'superuser' && current_user.role != 'superuser'
+      return render(nothing: true, status: :unauthorized) if new_role == 'superuser' && !current_user.superuser?
 
       @user.role = new_role
       @user.save!
@@ -66,7 +66,7 @@ module StashEngine
     # sets the user email
     def set_email
       new_email = params[:email]
-      return render(nothing: true, status: :unauthorized) if current_user.role != 'superuser'
+      return render(nothing: true, status: :unauthorized) unless current_user.superuser?
 
       @user.update(email: new_email)
 

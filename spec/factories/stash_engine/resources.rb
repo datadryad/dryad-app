@@ -83,9 +83,9 @@ FactoryBot.define do
 
     after(:create) do |resource|
       create(:curation_activity, :curation, user: resource.user, resource: resource)
-      create(:curation_activity, :embargoed, resource: resource,
-                                             user: create(:user, role: 'admin',
-                                                                 tenant_id: resource.user.tenant_id)).id
+      create(:curation_activity,
+             :embargoed, resource: resource,
+                         user: create(:user, role: 'admin', role_object: resource.user.tenant, tenant_id: resource.user.tenant_id)).id
     end
 
   end
@@ -98,9 +98,9 @@ FactoryBot.define do
 
     after(:create) do |resource|
       create(:curation_activity, :curation, user: resource.user, resource: resource)
-      create(:curation_activity, :published, resource: resource,
-                                             user: create(:user, role: 'admin',
-                                                                 tenant_id: resource.user.tenant_id)).id
+      create(:curation_activity,
+             :published, resource: resource,
+                         user: create(:user, role: 'admin', role_object: resource.user.tenant, tenant_id: resource.user.tenant_id)).id
     end
 
   end

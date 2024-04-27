@@ -11,7 +11,7 @@ RSpec.feature 'Session', type: :feature do
 
     before(:each) do
       mock_solr!
-      @user = create(:user, role: 'user', tenant_id: nil, orcid: nil)
+      @user = create(:user, tenant_id: nil, orcid: nil)
     end
 
     it 'New user signs up successfully with ORCID and does not select an organization', js: true do

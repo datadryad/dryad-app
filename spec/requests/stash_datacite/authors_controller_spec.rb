@@ -10,7 +10,7 @@ module StashDatacite
 
     before(:each) do
       mock_salesforce!
-      @user = create(:user, role: 'user')
+      @user = create(:user)
       @resource = create(:resource, user_id: @user.id)
       @authors = Array.new(7) { |_i| create(:author, resource: @resource) }
       allow_any_instance_of(AuthorsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
@@ -31,7 +31,7 @@ module StashDatacite
       end
 
       it 'detects if user not authorized to modify this resource' do
-        @user2 = create(:user, role: 'user')
+        @user2 = create(:user)
         @resource2 = create(:resource, user_id: @user2.id)
         @authors2 = Array.new(7) { |_i| create(:author, resource: @resource2) }
         update_info = @authors2.to_h { |author| [author.id.to_s, author.author_order] }
