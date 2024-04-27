@@ -49,14 +49,14 @@
 
     <% if current_user %>
       <li class="c-header__nav-item">
-        <% if current_user.limited_curator? && !(current_user.role == 'tenant_curator') %>        
+        <% if current_user.min_app_admin? && !current_user.tenant_limited? %>        
           <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
             <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', editor_id: current_user.id, curation_status: 'submitted', only_path: true) %>
             <li><%= link_to 'Curation stats', stash_url_helpers.curation_stats_path %>
             <li><%= link_to 'Journals', stash_url_helpers.journals_path %>
-            <% if current_user.curator? %>
+            <% if current_user.min_curator? %>
               <li>
                 <%= link_to 'Publication updater', stash_url_helpers.publication_updater_path %>
               </li>
@@ -74,7 +74,7 @@
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
             <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
           </ul>
-        <% elsif current_user.role == 'admin' || current_user.role == 'tenant_curator' %>
+        <% elsif current_user.tenant_limited? %>
           <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>

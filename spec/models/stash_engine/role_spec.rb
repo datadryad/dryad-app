@@ -4,6 +4,24 @@ module StashEngine
 
   RSpec.describe Role, type: :model do
 
+    describe 'users as tenant admins' do
+
+      before(:each) do
+        @tenant = create(:tenant_dryad)
+        @user = create(:user, tenant_id: @tenant.id, role: 'admin', role_object: @tenant)
+        @res = create(:resource)
+      end
+
+      it 'allows admin when resource has the same tenant' do
+        @res.update(tenant_id: @tenant.id)
+        expect(@res.admin_for_this_item?(user: @user)).to be_truthy
+      end
+
+      it 'disallows admin when resource has a different tenant' do
+        expect(@res.admin_for_this_item?(user: @user)).to be_falsey
+      end
+    end
+
     describe 'users as funder admins' do
 
       before(:each) do

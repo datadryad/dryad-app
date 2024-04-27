@@ -16,7 +16,6 @@ module StashApi
         lastName: @se_user.last_name,
         email: @se_user.email,
         tenantId: @se_user.tenant_id,
-        role: @se_user.role,
         orcid: @se_user.orcid,
         affiliation: afilliation&.long_name,
         affiliationROR: afilliation&.ror_id,

@@ -10,10 +10,10 @@ module StashEngine
       def resolve
         if !@user || @user.nil?
           @scope.publicly_viewable
-        elsif @user.limited_curator?
+        elsif @user.min_app_admin?
           @scope.all
         else
-          tenant_admin = (@user.tenant_id if @user.role == 'admin')
+          tenant_admin = (@user.tenant_id if @user.roles.tenant_roles.admin.present?)
           @scope.with_visibility(states: %w[published embargoed],
                                  tenant_id: tenant_admin,
                                  journal_issns: @user.journals_as_admin.map(&:single_issn),

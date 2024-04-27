@@ -18,7 +18,7 @@ module StashApi
       mock_salesforce!
       neuter_curation_callbacks!
       @user = create(:user, role: 'superuser')
-      @user1 = create(:user, role: 'user')
+      @user1 = create(:user)
       host! 'my.example.org'
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
@@ -38,7 +38,7 @@ module StashApi
 
       # we get some crazy failures and it refused to update the resource because of ridiculous curation failures if user zero doesn't exist
       # Took me hours to figure out and really annoying.
-      @sys_user = create(:user, id: 0, role: 'user', first_name: 'system user')
+      @sys_user = create(:user, id: 0, first_name: 'system user')
 
       # be sure versions are set correctly, because creating them manually like this doesn't ensure it
       @resources[0].stash_version.update(version: 1)
@@ -80,7 +80,7 @@ module StashApi
       end
 
       it 'shows only 1st version to a random user' do
-        @user2 = create(:user, role: 'user')
+        @user2 = create(:user)
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -111,7 +111,8 @@ module StashApi
       end
 
       it 'shows both versions to an admin for this tenant' do
-        @user2 = create(:user, role: 'admin')
+        @user2 = create(:user)
+        create(:role, user: @user2, role: 'admin', role_object: @user2.tenant)
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -129,7 +130,7 @@ module StashApi
 
       it 'shows both versions to an admin for this journal' do
         # set up @user2 as a journal admin, and @identifier as belonging to that journal
-        @user2 = create(:user, role: nil)
+        @user2 = create(:user)
         journal = create(:journal)
         create(:role, role_object: journal, user: @user2)
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
@@ -167,7 +168,7 @@ module StashApi
       end
 
       it "doesn't show unpublished version to random unauthorized user" do
-        @user2 = create(:user, role: 'user')
+        @user2 = create(:user)
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -210,7 +211,8 @@ module StashApi
       end
 
       it 'shows stuff to admin from the same tenant' do
-        @user2 = create(:user, role: 'admin')
+        @user2 = create(:user)
+        create(:role, user: @user2, role: 'admin', role_object: @user2.tenant)
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -288,7 +290,7 @@ module StashApi
         end
 
         it 'disallows random user from downloading non-public, but submitted version' do
-          @user.update(role: 'user')
+          @user.roles.superuser.delete_all
           response_code = get "/api/v2/versions/#{@resources[1].id}/download",
                               headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(404)
@@ -300,7 +302,9 @@ module StashApi
         end
 
         it 'allows admin to download private, but submitted to Merritt version' do
-          @user.update(role: 'admin', tenant_id: @resources[1].tenant_id)
+          @user.roles.superuser.delete_all
+          create(:role, user: @user, role: 'admin', role_object: @resources[1].tenant)
+          @user.update(tenant_id: @resources[1].tenant_id)
           response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(302)
           expect(response.body).to include('http://example.com/fun')

@@ -2,11 +2,11 @@ module StashEngine
   class InternalDatumPolicy < ApplicationPolicy
 
     def index?
-      @user.limited_curator?
+      @user.min_app_admin?
     end
 
     def create?
-      @user.limited_curator?
+      @user.min_app_admin?
     end
 
     def new?
@@ -14,7 +14,7 @@ module StashEngine
     end
 
     def update?
-      @user.limited_curator?
+      @user.min_app_admin?
     end
 
     def edit?
@@ -22,7 +22,7 @@ module StashEngine
     end
 
     def destroy?
-      @user.limited_curator?
+      @user.min_app_admin?
     end
 
   end

@@ -22,8 +22,9 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     mock_stripe!
     mock_salesforce!
     neuter_curation_callbacks!
-    @curator = create(:user, role: 'admin', tenant_id: 'dryad')
-    @superuser = create(:user, tenant_id: 'dryad', role: 'superuser')
+    @curator = create(:user, tenant_id: 'dryad')
+    create(:role, user: @curator, role: 'admin', role_object: @curator.tenant)
+    @superuser = create(:user, role: 'superuser')
     @document_list = []
   end
 

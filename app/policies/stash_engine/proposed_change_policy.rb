@@ -2,11 +2,11 @@ module StashEngine
   class ProposedChangePolicy < ApplicationPolicy
 
     def index?
-      @user.curator?
+      @user.min_curator?
     end
 
     def update?
-      @user.curator?
+      @user.min_curator?
     end
 
     def edit?
@@ -14,7 +14,7 @@ module StashEngine
     end
 
     def destroy?
-      @user.curator?
+      @user.min_curator?
     end
 
   end

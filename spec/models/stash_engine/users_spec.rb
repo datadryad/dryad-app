@@ -104,7 +104,7 @@ module StashEngine
       it 'finds the tenant' do
         tenant = instance_double(Tenant)
         allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
-        user = User.create(tenant_id: 'ucop')
+        user = create(:user, tenant_id: 'ucop')
         expect(user.tenant).to eq(tenant)
       end
     end
@@ -163,32 +163,32 @@ module StashEngine
       end
 
       it 'returns a user\'s name' do
-        user = User.create(first_name: 'Johann', last_name: 'Jones')
+        user = create(:user, first_name: 'Johann', last_name: 'Jones')
         expect(user.name).to eq('Johann Jones')
-        user2 = User.create(first_name: 'Bob', last_name: nil)
+        user2 = create(:user, first_name: 'Bob', last_name: nil)
         expect(user2.name).to eq('Bob')
       end
 
       it 'returns correct role information more generous roles contain lesser roles)' do
-        user = User.create(role: 'superuser')
+        user = create(:user, role: 'superuser')
         expect(user.superuser?).to be_truthy
-        expect(user.curator?).to be_truthy
-        expect(user.limited_curator?).to be_truthy
+        expect(user.min_curator?).to be_truthy
+        expect(user.min_app_admin?).to be_truthy
 
-        user2 = User.create(role: 'curator')
+        user2 = create(:user, role: 'curator')
         expect(user2.superuser?).to be_falsey
-        expect(user2.curator?).to be_truthy
-        expect(user2.limited_curator?).to be_truthy
+        expect(user2.min_curator?).to be_truthy
+        expect(user2.min_app_admin?).to be_truthy
 
-        user3 = User.create(role: 'user')
+        user3 = create(:user)
         expect(user3.superuser?).to be_falsey
-        expect(user3.curator?).to be_falsey
-        expect(user3.limited_curator?).to be_falsey
+        expect(user3.min_curator?).to be_falsey
+        expect(user3.min_app_admin?).to be_falsey
 
-        user4 = User.create(role: 'limited_curator')
+        user4 = create(:user, role: 'admin')
         expect(user4.superuser?).to be_falsey
-        expect(user4.curator?).to be_falsey
-        expect(user4.limited_curator?).to be_truthy
+        expect(user4.min_curator?).to be_falsey
+        expect(user4.min_app_admin?).to be_truthy
       end
     end
 
@@ -235,7 +235,7 @@ module StashEngine
         # create users1 and user2 to be merged and user3 to be left alone
 
         @user1 = create(:user, first_name: 'Gloriana', last_name: 'McSweeney', email: 'gmc@example.com',
-                               tenant_id: 'exemplia', role: 'user', orcid: '1098-415-1212')
+                               tenant_id: 'exemplia', orcid: '1098-415-1212')
         @identifier1 = create(:identifier)
         @resource1 = create(:resource, identifier_id: @identifier1.id, user_id: @user1.id, current_editor_id: @user1.id)
         @curation_activity1 = create(:curation_activity, resource: @resource1, user_id: @user1.id)

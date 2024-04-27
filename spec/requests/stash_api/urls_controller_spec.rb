@@ -33,7 +33,7 @@ module StashApi
       neuter_curation_callbacks!
       mock_salesforce!
       @user = create(:user, role: 'superuser')
-      @user1 = create(:user, role: 'user')
+      @user1 = create(:user)
       host! 'my.example.org'
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
@@ -86,7 +86,7 @@ module StashApi
       end
 
       it 'does not allow regular users to populate urls that are not validated' do
-        @user.update(role: 'user')
+        @user.roles.superuser.delete_all
         response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls",
                              params: FILE_HASH.to_json,
                              headers: default_authenticated_headers

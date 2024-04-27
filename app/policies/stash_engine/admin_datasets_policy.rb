@@ -2,7 +2,7 @@ module StashEngine
   class AdminDatasetsPolicy < ApplicationPolicy
 
     def index?
-      @user.admin?
+      @user.min_admin?
     end
 
     def activity_log?
@@ -14,11 +14,11 @@ module StashEngine
     end
 
     def data_popup?
-      @user.limited_curator?
+      @user.min_app_admin?
     end
 
     def curation_activity_change?
-      @user.curator?
+      @user.min_curator?
     end
 
     def curation_activity_popup?
@@ -26,7 +26,7 @@ module StashEngine
     end
 
     def current_editor_change?
-      @user.curator?
+      @user.min_curator?
     end
 
     def current_editor_popup?
@@ -34,7 +34,7 @@ module StashEngine
     end
 
     def create_salesforce_case?
-      @user.limited_curator?
+      @user.min_app_admin?
     end
 
     def waiver_add?
@@ -59,7 +59,7 @@ module StashEngine
       def resolve
         if @user.tenant_limited?
           @scope.where(**@params, tenant: @user.tenant)
-        elsif @user.limited_curator?
+        elsif @user.min_app_admin?
           @scope.where(**@params)
         elsif @user.journals_as_admin.present?
           @scope.where(**@params, journals: @user.journals_as_admin.map(&:title))
