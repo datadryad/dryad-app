@@ -199,7 +199,7 @@ module Stash
 
       def should_auto_publish(resource)
         identifier = resource.identifier
-        previous_resource = identifier.resources.publicly_viewable.by_version_desc.second
+        previous_resource = identifier.publicly_viewable.resources.by_version_desc.second
 
         changed_fields = resource.changed_fields(previous_resource)
 
