@@ -31,6 +31,7 @@ module StashEngine
     belongs_to :journal_organization, class_name: 'StashEngine::JournalOrganization', foreign_key: 'role_object_id', optional: true
     belongs_to :funder, class_name: 'StashEngine::Funder', foreign_key: 'role_object_id', optional: true
 
+    scope :system_roles, -> { where(role_object_type: nil) }
     scope :tenant_roles, -> { where(role_object_type: 'StashEngine::Tenant') }
     scope :funder_roles, -> { where(role_object_type: 'StashEngine::Funder') }
     scope :journal_roles, -> { where(role_object_type: 'StashEngine::Journal') }
