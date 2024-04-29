@@ -14,13 +14,6 @@ gem 'sprockets', '~> 3.0' # going to 4 breaks lots of things unless doing manual
 gem 'webpacker', '6.0.0.rc.6'
 
 # ############################################################
-# Local engines
-
-path 'stash' do
-  gem 'stash-wrapper'
-end
-
-# ############################################################
 # Deployment
 
 gem 'bcrypt_pbkdf', '1.1.0'
