@@ -1,10 +1,6 @@
-require 'stash/wrapper'
-
 module Stash
   module Repo
     class StashWrapperBuilder < ValidatingXMLBuilder
-      include Stash::Wrapper
-
       class << self
         def stash_wrapper_schema
           @stash_wrapper_schema ||= begin
