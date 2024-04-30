@@ -1,0 +1,10 @@
+document.getElementById("<%= @field %>_<%= @org.id %>").innerHTML = "<%=
+case @field
+when 'parent_org_id'
+  @org.parent_org&.name
+when 'contact'
+  @org.contact&.join(', ')
+when 'name'
+  @org.name
+end %>";
+document.getElementById('genericModalDialog').close();
