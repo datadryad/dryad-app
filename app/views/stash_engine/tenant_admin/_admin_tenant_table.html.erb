@@ -11,6 +11,9 @@
       <th class="c-lined-table__sort <%= sort_display('long_name') %>">
         <%= sortable_column_head sort_field: 'long_name', title: 'Long name' %>
       </th>
+      <th class="c-lined-table__sort <%= sort_display('authentication') %>">
+        <%= sortable_column_head sort_field: 'authentication', title: 'Auth method' %>
+      </th>
       <th class="c-admin-table">
         ROR IDs
       </th>
@@ -32,6 +35,7 @@
       <td><%= t.id %></td>
       <td><%= t.short_name %></td>
       <td><%= t.long_name %></td>
+      <td><%= t.authentication.strategy.sub('_', ' ').capitalize.sub('Ip', 'IP') %></td>
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="ror_orgs_<%= t.id %>">
