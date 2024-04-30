@@ -35,7 +35,7 @@
       <td><%= t.id %></td>
       <td><%= t.short_name %></td>
       <td><%= t.long_name %></td>
-      <td><%= t.authentication.strategy.sub('_', ' ').capitalize.sub('Ip', 'IP') %></td>
+      <td><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></td>
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="ror_orgs_<%= t.id %>">
