@@ -1,0 +1,9 @@
+<p>Choose the sponsoring organization for <%= @journal.title %></p>
+<div class="c-input">
+  <%
+    options = StashEngine::JournalOrganization.all.collect { |o| [ o.name, o.id ] } 
+    options.unshift(['None', ''])
+  %>
+  <%= label_tag 'sponsor_id', 'Publishers/societies', class: 'c-input__label' %>
+  <%= select_tag('sponsor_id', options_for_select(options, @journal.sponsor_id), class: 'c-input__select') %>  
+</div>

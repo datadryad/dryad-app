@@ -36,11 +36,10 @@ module StashEngine
     has_many :users, through: :journal_roles
     belongs_to :sponsor, class_name: 'JournalOrganization', optional: true
 
+    def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
+
     def will_pay?
-      payment_plan_type == 'SUBSCRIPTION' ||
-        payment_plan_type == 'PREPAID' ||
-        payment_plan_type == 'DEFERRED' ||
-        payment_plan_type == 'TIERED'
+      payment_plans.include?(payment_plan_type)
     end
 
     def top_level_org
@@ -68,6 +67,14 @@ module StashEngine
       return JSON.parse(issn) if issn.start_with?('[')
 
       [issn]
+    end
+
+    def notify_contacts
+      JSON.parse(super) unless super.nil?
+    end
+
+    def review_contacts
+      JSON.parse(super) unless super.nil?
     end
 
     def self.find_by_title(title)
