@@ -214,6 +214,35 @@ RSpec.feature 'AdminPaths', type: :feature do
     end
   end
 
+  context :journal_admin_path do
+    it 'is not accessible by regular users' do
+      sign_in
+      visit stash_url_helpers.journal_admin_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is not accessible by admins' do
+      sign_in(create(:user, role: 'admin', tenant_id: 'ucop'))
+      visit stash_url_helpers.journal_admin_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is not accessible by curators' do
+      sign_in(create(:user, role: 'curator', tenant_id: 'dryad'))
+      visit stash_url_helpers.journal_admin_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is accessible by super users' do
+      sign_in(create(:user, role: 'superuser', tenant_id: 'dryad'))
+      visit stash_url_helpers.journal_admin_path
+      expect(page).to have_text('Manage journals')
+    end
+  end
+
   context :status_dashboard_path do
     it 'is not accessible by regular users' do
       sign_in
