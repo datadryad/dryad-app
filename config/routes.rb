@@ -298,6 +298,10 @@ Rails.application.routes.draw do
     get 'journal_admin', to: 'journal_admin#index' # main page for administering tenants
     get 'journal_admin/:id/edit/:field', to: 'journal_admin#popup', as: 'journal_popup'
     post 'journal_admin/:id', to: 'journal_admin#edit', as: 'journal_edit'
+    # admin publisher management
+    get 'publisher_admin', to: 'journal_organization_admin#index' # main page for administering tenants
+    get 'publisher_admin/:id/edit/:field', to: 'journal_organization_admin#popup', as: 'publisher_popup'
+    post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
 
     # admin_datasets, aka "Curator Dashboard"
     # this routes actions to ds_admin with a possible id without having to define for each get action, default is index

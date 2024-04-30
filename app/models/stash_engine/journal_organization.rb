@@ -13,10 +13,17 @@
 module StashEngine
   class JournalOrganization < ApplicationRecord
     self.table_name = 'stash_engine_journal_organizations'
-    belongs_to :parent_org, class_name: 'JournalOrganization', optional: true
+    has_many :children, class_name: 'JournalOrganization', primary_key: :id, foreign_key: :parent_org_id, inverse_of: :parent_org
+    belongs_to :parent_org, class_name: 'JournalOrganization', optional: true, inverse_of: :children
+
+    scope :has_children, -> { distinct.joins(:children) }
 
     # Treat the 'type' column as a string, not a single-inheritance class name
     self.inheritance_column = :_type_disabled
+
+    def contact
+      JSON.parse(super) unless super.nil?
+    end
 
     # journals sponsored directly by this org
     def journals_sponsored
@@ -35,12 +42,11 @@ module StashEngine
     # All organizations that are part of this organization,
     # at any level of hierarchy
     def orgs_included
-      suborgs = StashEngine::JournalOrganization.where(parent_org: id)
-      return nil if suborgs.blank?
+      return nil if children.blank?
 
       all_orgs = []
 
-      suborgs.each do |sub|
+      children.each do |sub|
         all_orgs << sub
         all_orgs += sub.orgs_included if sub.orgs_included.present?
       end

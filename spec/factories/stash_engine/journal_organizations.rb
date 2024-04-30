@@ -16,6 +16,7 @@ FactoryBot.define do
 
     name { Faker::Company.name }
     type { 'publisher' }
+    parent_org_id { nil }
 
   end
 
