@@ -28,7 +28,7 @@ module StashEngine
 
       mail(to: user_email(@user),
            bcc: @resource&.tenant&.campus_contacts,
-           template_name: withdrawn_by_journal,
+           template_name: 'withdrawn_by_journal',
            subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
 
       update_activities(resource: resource, message: 'Withdrawal by journal', status: status)
