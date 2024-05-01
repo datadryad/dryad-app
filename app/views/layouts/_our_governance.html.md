@@ -108,4 +108,6 @@
   We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad board of directors for at least one term from 2012 to 2024:
 </p>
 
-<p>Lynn Baird, Theo Bloom, Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson, Chuck Fox, Simon Hodson, Brian Hole, Marcel Holyoak, Wolfram Horstmann, Brian Lavoie, Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore, Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone, Eefke Smit, Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Günter Waibel, Mike Whitlock, and Todd Vision (Dryad’s founding PI and long-serving Board member).</p>
+Lynn Baird, Theo Bloom,\* Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson,\* Chuck Fox, Simon Hodson,\* Brian Hole, Marcel Holyoak,\* Wolfram Horstmann, Brian Lavoie,\* Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore,\* Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone,\* Eefke Smit,\* Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Günter Waibel, Mike Whitlock,\* and Todd Vision\* (Dryad’s founding PI and long-serving Board member).
+
+<p>* Founding Board members, 2012.</p>

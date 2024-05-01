@@ -1,7 +1,11 @@
 // open a modal dialog
-console.log("<%= @field %> popup");
+console.log('<%= @field %> popup');
 document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'popup_form') %>";
 document.getElementById('genericModalDialog').showModal();
+document.getElementById('<%= @field %>_button').setAttribute('aria-expanded', 'true');
+document.getElementById('genericModalDialog').addEventListener('close', () => {
+  document.getElementById('<%= @field %>_button').setAttribute('aria-expanded', 'false');
+})
 document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('genericModalDialog').close();
