@@ -13,16 +13,19 @@ Rack::Attack.safelist_ip('::1')
 # -------------------
 
 # IPs to block outright
-# Rack::Attack.blocklist_ip("5.6.7.8")
+# Rack::Attack.blocklist_ip("17.31.15.82")
+
 
 # Set a long block period for any client that is explicitly looking for security holes
 Rack::Attack.blocklist('malicious_clients') do |req|
-  Rack::Attack::Fail2Ban.filter("fail2ban_malicious_#{req.ip}", maxretry: 1, findtime: 1.day, bantime: 1.day) do
+  Rack::Attack::Fail2Ban.filter("fail2ban_malicious_#{req.ip}", maxretry: 1, findtime: 1.day, bantime: 1.month) do
     CGI.unescape(req.query_string) =~ %r{/etc/passwd} ||
       req.path.include?('/etc/passwd') ||
       req.path.include?('wp-admin') ||
       req.path.include?('wp-login') ||
       (req.ip.start_with?('172.31') && req.path.start_with?('/stash/downloads')) ||
+      (req.ip.start_with?('64.233') && req.path.start_with?('/stash/downloads')) ||
+      (req.ip.start_with?('47.76') && req.path.start_with?('/stash/downloads')) ||
       /\S+\.php/.match?(req.path)
   end
 end

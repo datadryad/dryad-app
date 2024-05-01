@@ -110,7 +110,7 @@ RSpec.describe 'Rack::Attack', type: :request do
       get '/stash', headers: headers
       expect(response).to have_http_status(:forbidden)
       # Resets after days
-      travel_to(2.days.from_now) do
+      travel_to(2.months.from_now) do
         get '/stash', headers: headers
         expect(response).to have_http_status(:success)
       end
