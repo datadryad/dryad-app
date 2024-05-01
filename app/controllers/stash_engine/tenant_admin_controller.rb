@@ -28,13 +28,14 @@ module StashEngine
     end
 
     def popup
-      strings = { campus_contacts: 'contacts', partner_display: 'member display', ror_orgs: 'ROR organizations', enabled: 'active membership' }
+      strings = { campus_contacts: 'contacts', partner_display: 'member display', ror_orgs: 'ROR organizations', enabled: 'active membership',
+                  logo: 'logo' }
       @desc = strings[@field.to_sym]
       respond_to(&:js)
     end
 
     def edit
-      valid = %i[partner_display enabled]
+      valid = %i[partner_display enabled logo]
       update = edit_params.slice(*valid)
       update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params[:campus_contacts]
       @tenant.update(update)
@@ -72,7 +73,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :field, :campus_contacts, :partner_display, :enabled, :ror_orgs)
+      params.permit(:id, :field, :logo, :campus_contacts, :partner_display, :enabled, :ror_orgs)
     end
 
   end

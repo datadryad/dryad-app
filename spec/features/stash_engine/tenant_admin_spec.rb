@@ -25,6 +25,22 @@ RSpec.feature 'TenantAdmin', type: :feature do
       expect(page).not_to have_content(@match.short_name)
     end
 
+    it 'allows changing the logo as a superuser', js: true do
+      visit stash_url_helpers.tenant_admin_path
+      expect(page).to have_content(@match.short_name)
+      within(:css, "form[action=\"#{tenant_popup_path(id: @match.id, field: 'logo')}\"]") do
+        find('.c-admin-edit-icon').click
+      end
+      within(:css, '#genericModalDialog') do
+        attach_file('file-select', "#{Rails.root}/spec/fixtures/stash_engine/logo.png")
+        expect(find('#file-preview')[:src]).to eq(logo_image)
+        find('input[name=commit]').click
+      end
+      expect(page.find("#logo_#{@match.id} img")[:src]).to eq(logo_image)
+      changed = StashEngine::Tenant.find(@match.id)
+      expect(changed.logo).to eq(logo_image)
+    end
+
     it 'allows changing ROR IDs as a superuser', js: true do
       visit stash_url_helpers.tenant_admin_path
       expect(page).to have_content(@match.short_name)
@@ -87,3 +103,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
 
   end
 end
+
+# rubocop:disable Layout/LineLength
+def logo_image = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAaVBMVEUAAAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD///+kkpPsAAAAIXRSTlMABlem2PRWU93cUgOMiwKJUN5Vp6Ta8/HZ16NUBdtPiIq8tKWIAAAAAWJLR0QiXWVcrAAAAAd0SU1FB+cLFxUEFBnQr08AAACESURBVBjTbdDtEoIgFEXRg+BnSWpEkWjd93/JlGEsuO1/rhlkOMCeKKQqSyUrgaO6oVjbRTqd6adeB0yM6BLOUtaw3dHmOAoUxJpw5Whw46hgOdp/eMeDo4Pk+ETFcYZfcmu2qboc1/3xfWqvsJJ+JyPpuOhw/HdZv9P7yThrnZl9+PwAiOknqc4Zu0AAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMTEtMjNUMjE6MDQ6MjArMDA6MDANo+62AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTExLTIzVDIxOjA0OjIwKzAwOjAwfP5WCgAAAABJRU5ErkJggg=='
+# rubocop:enable Layout/LineLength
