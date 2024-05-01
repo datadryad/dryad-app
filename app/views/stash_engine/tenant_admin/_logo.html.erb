@@ -1,0 +1,14 @@
+<p>Change logo for <%= @tenant.short_name %></label></p>
+<% if @tenant.logo.present? %>
+<div id="current-logo">
+  <p>Current logo:</p>
+  <p class="c-input__inline" style="column-gap: 4ch; margin-bottom: 2rem; justify-content: space-around;">
+    <img src="<%= @tenant.logo %>" style="max-height: 60px" alt="logo for <%= @tenant.short_name %>"/>
+    <button class="o-button__plain-text7" id="remove-file"><i class="fa fa-times" aria-hidden="true"></i> Remove</button>
+  </p>
+</div>
+<% end %>
+<p><label for="file-select">Choose new logo:</label>
+<p><input id="file-select" type="file" accept="image/png, image/jpg, image/jpeg, image/svg+xml, .png, .jpg, .jpeg, .svg, .svgz" /></p>
+<img id="file-preview" style="max-height: 60px"/>
+<%= form.hidden_field :logo, value: @tenant.logo, id: 'logo_input' %>
