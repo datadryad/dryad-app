@@ -40,10 +40,10 @@
             <%= logo_path({style: 'max-height: 50px'}) unless current_tenant.logo_file.blank? %>
             <%= current_tenant.long_name %>
             <span style="flex-grow: 1"></span>
-            <button class="o-button__plain-text7" id="edit_tenant"><i class="fa fa-pencil" aria-hidden="true"></i> Edit affiliation</button>
+            <button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-pencil" aria-hidden="true"></i> Edit affiliation</button>
           </p>
         <% else %>
-        <p><button class="o-button__plain-text7" id="edit_tenant"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a Dryad member institution</button></p>
+        <p><button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a Dryad member institution</button></p>
         <% end %>
       </div>
       <div id="edit-tenant-form" hidden>
@@ -54,7 +54,7 @@
               <%= react_component('components/TenantForm', {tenants: @tenants}) %>
               <%= submit_tag 'Login to verify', class: 't-login__buttonlink' %>
               <span style="flex-grow: 1"></span>
-              <button class="o-button__plain-text7" id="keep_tenant"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+              <button class="o-button__plain-text7" id="keep_tenant" aria-expanded="true" aria-controls="edit_tenant-form"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
             <% end %>
           </div>
         </div>

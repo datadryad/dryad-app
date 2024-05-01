@@ -288,14 +288,19 @@ Several settings need to be in the server's settings to connect with GMail.
 
 Rails reads the GMail credentials from the credentials file, but it also needs a token that
 will allow it to read from a specific GMail account. The token is stored in a
-file called `google_token.json`, one directory above the codebase, so it is not
+file called `google_token.json`, outside the codebase, so it is not
 affected by updates to the codebase. You can test whether the
 token is valid and/or reset the token by running:
 `rails journal_email:validate_gmail_connection`
 
-If something is wrong with the authorization, you can delete the `token.yaml`
+If something is wrong with the authorization, you can delete the `google_token.json`
 file and generate it again. To generate it, login to Dryad as a superuser and navigate to
 `/stash/gmail_auth`. Follow the instructions there.
+
+If you get an error about "Credentials do not contain a refresh_token.", You
+will need to de-authorize Dryad for this account (because it only sends the
+refresh token on the first authorization). Go to
+https://myaccount.google.com/u/0/permissions and remove the Dryad application.
 
 Rarely, if the validation process above produces an error, you may need to regenerate
 the application-level GMail credentials:

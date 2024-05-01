@@ -65,7 +65,7 @@ module StashEngine
         tag = transformed_tags[tag] if transformed_tags.keys.include?(tag)
         # if the line starts with a valid tag, add it to the hash
         if allowed_tags.include?(tag)
-          value = line[colon_index + 1..].strip
+          value = line[colon_index + 1..].strip.gsub(/\xC2|\xA0/n, '')
           value.downcase! if downcase_tags.include?(tag)
           @hash[tag] = value
         end
@@ -140,7 +140,7 @@ module StashEngine
 
         # although, if there was only one author and it was listed as lastname, firstname, it would have a comma too...
         if split_string.length == 2 && !split_string[1].include?(' and ')
-          authors << [split_string[0].strip, split_string[1].strip]
+          authors << parse_author_name(author_string)
           split_string = []
         end
       end

@@ -11,6 +11,9 @@
       <th class="c-lined-table__sort <%= sort_display('long_name') %>">
         <%= sortable_column_head sort_field: 'long_name', title: 'Long name' %>
       </th>
+      <th class="c-lined-table__sort <%= sort_display('authentication') %>">
+        <%= sortable_column_head sort_field: 'authentication', title: 'Auth method' %>
+      </th>
       <th class="c-admin-table">
         ROR IDs
       </th>
@@ -32,6 +35,7 @@
       <td><%= t.id %></td>
       <td><%= t.short_name %></td>
       <td><%= t.long_name %></td>
+      <td><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></td>
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="ror_orgs_<%= t.id %>">
@@ -42,7 +46,7 @@
           </div>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'ror_orgs'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit member ROR Orgs" alt="Edit member ROR Orgs">
+              <button class="c-admin-edit-icon" aria-label="Edit member ROR Orgs" alt="Edit member ROR Orgs"  aria-haspopup="dialog" aria-expanded="false" id="ror_orgs_button">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -56,7 +60,7 @@
           </div>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'campus_contacts'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit member contacts" alt="Edit member contacts">
+              <button class="c-admin-edit-icon" aria-label="Edit member contacts" alt="Edit member contacts" aria-haspopup="dialog" aria-expanded="false" id="campus_contacts_button">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -72,7 +76,7 @@
           </div>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'partner_display'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit member display" alt="Edit member display">
+              <button class="c-admin-edit-icon" aria-label="Edit member display" alt="Edit member display" aria-haspopup="dialog" aria-expanded="false" id="partner_display_button">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -88,7 +92,7 @@
           </div>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'enabled'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit whether member is enabled" alt="Edit whether member is enabled">
+              <button class="c-admin-edit-icon" aria-label="Edit whether member is enabled" alt="Edit whether member is enabled" aria-haspopup="dialog" aria-expanded="false" id="enabled_button">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
