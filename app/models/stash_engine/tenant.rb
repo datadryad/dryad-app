@@ -18,17 +18,6 @@ module StashEngine
     scope :tiered, -> { enabled.where(payment_plan: :tiered) }
     scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 
-    def logo_file
-      @logo_file ||= begin
-        tenant_images_path = File.join(Rails.root, 'app', 'assets', 'images', 'tenants')
-        logo_filenames = %w[svg png jpg].lazy.map { |ext| "logo_#{id}.#{ext}" }
-        logo_filenames.find do |filename|
-          image_file = File.join(tenant_images_path, filename)
-          File.exist?(image_file)
-        end || ''
-      end
-    end
-
     def data_deposit_agreement?
       dda = File.join(Rails.root, 'app', 'views', 'tenants', id, '_dda.html.erb')
       File.exist?(dda)
