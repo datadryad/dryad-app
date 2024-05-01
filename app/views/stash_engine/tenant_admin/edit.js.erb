@@ -12,4 +12,5 @@ when 'ror_orgs'
     "<a href='#{r}'>#{org ? org.name : r}</a>"
   }.join(', ').html_safe
 end %>";
+document.getElementById('<%= @field %>_button').setAttribute('aria-expanded', 'false');
 document.getElementById('genericModalDialog').close();
