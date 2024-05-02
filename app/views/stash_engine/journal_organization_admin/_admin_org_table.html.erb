@@ -31,7 +31,7 @@
           </div>
           <div class="c-lined-table__actions">
             <%= form_with(url: publisher_popup_path(id: o.id, field: 'contact'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit contacts" alt="Edit contacts" aria-haspopup="dialog" aria-expanded="false" id="contact_button_<%= o.id %>"">
+              <button class="c-admin-edit-icon" aria-label="Edit contacts" aria-haspopup="dialog" aria-expanded="false" id="contact_button_<%= o.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -47,7 +47,7 @@
           </div>
           <div class="c-lined-table__actions">
             <%= form_with(url: publisher_popup_path(id: o.id, field: 'parent_org_id'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit parent org" alt="Edit parent org" aria-haspopup="dialog" aria-expanded="false" id="parent_org_id_button_<%= o.id %>"">
+              <button class="c-admin-edit-icon" aria-label="Edit parent org" aria-haspopup="dialog" aria-expanded="false" id="parent_org_id_button_<%= o.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
