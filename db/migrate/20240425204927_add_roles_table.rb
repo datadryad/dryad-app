@@ -23,11 +23,11 @@ class AddRolesTable < ActiveRecord::Migration[6.1]
     reversible do |dir|
       dir.up do
         StashEngine::JournalRole.all.each do |r|
-          StashEngine::Role.create(user_id: r.user_id, role: 'admin', role_object: StashEngine::Journal.find(r.journal_id)) unless r.journal_id.nil?
-          StashEngine::Role.create(user_id: r.user_id, role: 'admin', role_object: StashEngine::JournalOrganization.find(r.journal_organization_id)) unless r.journal_organization_id.nil?
+          StashEngine::Role.create(user_id: r.user_id, role: 'admin', role_object: StashEngine::Journal.find(r.journal_id)) if StashEngine::Journal.exists?(r.journal_id)
+          StashEngine::Role.create(user_id: r.user_id, role: 'admin', role_object: StashEngine::JournalOrganization.find(r.journal_organization_id)) if StashEngine::JournalOrganization.exists?(r.journal_organization_id)
         end
         StashEngine::FunderRole.all.each do |r|
-          StashEngine::Role.create(user_id: r.user_id, role: r.role, role_object: StashEngine::Funder.find_by(name: r.funder_name))
+          StashEngine::Role.create(user_id: r.user_id, role: r.role, role_object: StashEngine::Funder.find_by(name: r.funder_name)) if StashEngine::Funder.find_by(name: r.funder_name).exists?
         end
         StashEngine::User.where("role != 'user'").each do |u|
           case u.role
@@ -38,9 +38,9 @@ class AddRolesTable < ActiveRecord::Migration[6.1]
             when 'superuser'
               StashEngine::Role.create(user_id: u.id, role: 'superuser')
             when 'admin'
-              StashEngine::Role.create(user_id: u.id, role: 'admin', role_object: StashEngine::Tenant.find(u.tenant_id))
+              StashEngine::Role.create(user_id: u.id, role: 'admin', role_object: StashEngine::Tenant.find(u.tenant_id)) if StashEngine::Tenant.exists?(u.tenant_id)
             when 'tenant_curator'
-              StashEngine::Role.create(user_id: u.id, role: 'curator', role_object: StashEngine::Tenant.find(u.tenant_id))
+              StashEngine::Role.create(user_id: u.id, role: 'curator', role_object: StashEngine::Tenant.find(u.tenant_id)) if StashEngine::Tenant.exists?(u.tenant_id)
           end
         end
       end
@@ -52,11 +52,11 @@ class AddRolesTable < ActiveRecord::Migration[6.1]
           funder = StashEngine::Funder.find(r.role_object_id)
           StashEngine::FunderRole.create(user_id: r.user_id, role: 'admin', funder_name: funder.name, funder_id: funder.ror_id)
         end
-        StashEngine::Role.admin_roles.each {|r| StashEngine::User.find(r.user_id).update(role: 'limited_curator')}
-        StashEngine::Role.curator_roles {|r| StashEngine::User.find(r.user_id).update(role: 'curator')}
-        StashEngine::Role.superuser_roles {|r| StashEngine::User.find(r.user_id).update(role: 'superuser')}
-        StashEngine::Role.tenant_admin_roles.each {|r| StashEngine::User.find(r.user_id).update(role: 'admin')}
-        StashEngine::Role.tenant_curator_roles {|r| StashEngine::User.find(r.user_id).update(role: 'tenant_curator')}
+        StashEngine::Role.admin_roles.each {|r| StashEngine::User.find(r.user_id).update(role: 'limited_curator') if StashEngine::User.exists?(r.user_id)}
+        StashEngine::Role.curator_roles {|r| StashEngine::User.find(r.user_id).update(role: 'curator') if StashEngine::User.exists?(r.user_id)}
+        StashEngine::Role.superuser_roles {|r| StashEngine::User.find(r.user_id).update(role: 'superuser') if StashEngine::User.exists?(r.user_id)}
+        StashEngine::Role.tenant_admin_roles.each {|r| StashEngine::User.find(r.user_id).update(role: 'admin') if StashEngine::User.exists?(r.user_id)}
+        StashEngine::Role.tenant_curator_roles {|r| StashEngine::User.find(r.user_id).update(role: 'tenant_curator') if StashEngine::User.exists?(r.user_id)}
       end
     end
     drop_table :stash_engine_funder_roles do |t|
