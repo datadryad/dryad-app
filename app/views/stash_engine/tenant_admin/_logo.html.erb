@@ -10,5 +10,6 @@
 <% end %>
 <p><label for="file-select">Choose new logo:</label>
 <p><input id="file-select" type="file" accept="image/png, image/jpg, image/jpeg, image/svg+xml, .png, .jpg, .jpeg, .svg, .svgz" /></p>
-<img id="file-preview" style="max-height: 60px"/>
+<div id="file-preview" style="max-height: 60px">
+</div>
 <%= form.hidden_field :logo, value: @tenant.logo, id: 'logo_input' %>
