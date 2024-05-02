@@ -19,7 +19,7 @@
       <%= button_to 'Submit', lnk, method: :get, class: "c-header__menu-button", title: txt %>
     </li>
     <li class="c-header__nav-item show-mobile">
-      <button id="header-menu-button" class="c-header__menu-button" aria-controls="site-menu" aria-expanded="false">More <i class="fa fa-bars" aria-hidden="true"></i></button>
+      <button id="header-menu-button" aria-haspopup="menu" class="c-header__menu-button" aria-controls="site-menu" aria-expanded="false">More <i class="fa fa-bars" aria-hidden="true"></i></button>
     </li>
   </ul>
 
@@ -36,7 +36,7 @@
     </li>
 
     <li class="c-header__nav-item">
-      <button class="c-header_nav-button" aria-expanded="false" aria-controls="help-menu">Help</button>
+      <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="help-menu">Help</button>
       <ul class="c-header__nav-submenu" id="help-menu" hidden>
         <li><%= link_to 'Submission requirements', "#{stash_url_helpers.requirements_path}" %>
         <li><%= link_to 'Submission walkthrough', "#{stash_url_helpers.submission_process_path}" %>
@@ -50,7 +50,7 @@
     <% if current_user %>
       <li class="c-header__nav-item">
         <% if current_user.limited_curator? && !(current_user.role == 'tenant_curator') %>        
-          <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
+          <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
             <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', editor_id: current_user.id, curation_status: 'submitted', only_path: true) %>
@@ -69,13 +69,13 @@
             <% end %>
           </ul>
         <% elsif current_user.journals_as_admin.present? || current_user.funders_as_admin.present? %>
-          <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
+          <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
             <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
           </ul>
         <% elsif current_user.role == 'admin' || current_user.role == 'tenant_curator' %>
-          <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
+          <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
             <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>

@@ -18,7 +18,7 @@ module StashEngine
                                   "%#{q}%", "%#{q}%", "%#{q}%")
       end
 
-      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name partner_display enabled])
+      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication partner_display enabled])
       @tenants = @tenants.order(ord)
 
       @tenants = @tenants.where('id = ? or sponsor_id= ?', params[:sponsor], params[:sponsor]) if params[:sponsor].present?
