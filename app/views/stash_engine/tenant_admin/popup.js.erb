@@ -13,7 +13,7 @@ document.getElementById('file-select').addEventListener('change', () => {
   const reader = new FileReader();
   reader.addEventListener('load', () => {
     document.getElementById('logo_input').value = reader.result;
-    document.getElementById('file-preview').src = reader.result;
+    document.getElementById('file-preview').innerHTML = `<img src="${reader.result}" aria-hidden="true"/>`;
   });
   if (file) {
     reader.readAsDataURL(file);

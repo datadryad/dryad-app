@@ -33,7 +33,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
       end
       within(:css, '#genericModalDialog') do
         attach_file('file-select', "#{Rails.root}/spec/fixtures/stash_engine/logo.png")
-        expect(find('#file-preview')[:src]).to eq(logo_image)
+        expect(find('#file-preview img')[:src]).to eq(logo_image)
         find('input[name=commit]').click
       end
       expect(page.find("#logo_#{@match.id} img")[:src]).to eq(logo_image)
