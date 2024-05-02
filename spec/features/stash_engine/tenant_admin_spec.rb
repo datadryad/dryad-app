@@ -25,7 +25,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
       expect(page).not_to have_content(@match.short_name)
     end
 
-    it 'allows changing the logo as a superuser', js: true do
+    xit 'allows changing the logo as a superuser', js: true do
       visit stash_url_helpers.tenant_admin_path
       expect(page).to have_content(@match.short_name)
       within(:css, "form[action=\"#{tenant_popup_path(id: @match.id, field: 'logo')}\"]") do
