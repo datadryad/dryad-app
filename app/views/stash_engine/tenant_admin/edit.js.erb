@@ -14,5 +14,5 @@ when 'ror_orgs'
 when 'logo'
   @tenant.logo.blank? ? '' : "<img src='#{@tenant.logo}' alt='#{@tenant.short_name} logo'/>".html_safe
 end %>";
-document.getElementById('<%= @field %>_button').setAttribute('aria-expanded', 'false');
+document.getElementById('<%= @field %>_button_<%= @tenant.id %>').setAttribute('aria-expanded', 'false');
 document.getElementById('genericModalDialog').close();
