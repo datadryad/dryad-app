@@ -1,13 +1,85 @@
-<% @page_title = "#{@user.first_name} #{@user.last_name}".strip + "'s activity" %>
-<h1 class="o-heading__level1"><%= "#{@user.first_name} #{@user.last_name}".strip %>'s activity</h1>
-
-<%= render partial: 'user_activity_head', locals: {user: @user, progress_count: @progress_count } %>
-
-<div class="o-admin-columns">
-  <div class="o-admin-left">
-    <h2>Filters</h2>
-    <%= render partial: 'status_facet', locals: { facets: @status_facets } %>
+<% @page_title = "#{@user.first_name} #{@user.last_name}".strip %>
+<% content_for(:head) do %>
+  <style type="text/css">
+    .o-admin-container {
+      max-width: 90ch;
+      @media (min-width: 870px) {
+        flex-wrap: nowrap;
+      }
+    }
+    .o-admin-container > * {
+      flex-grow: 1;
+    }
+    .o-admin-head-full {
+      margin-top: 1em; max-width: 90ch;
+    }
+    .o-admin-head-full .expand-button {
+      margin: 0; background-color: #00527A; color: #fff; padding: 0.5rem;
+    }
+    .o-admin-head-full .expand-button:hover {opacity: 0.85;}
+    .o-admin-head-full .expand-button:hover::after,
+    .o-admin-head-full .expand-button:focus-visible::after {
+      color: currentColor;
+    }
+    #edit_roles_form {
+      padding: 0 1rem 1rem;
+    }
+  </style>
+<% end %>
+<div style="display: flex; align-items: center; justify-content: flex-start; column-gap: 2ch">
+  <h1 class="o-heading__level1"><%= "#{@user.first_name} #{@user.last_name}".strip %></h1>
+  <% if @user.orcid %>
+    <p><a href="<%= @orcid_link %>" target="_blank"><span class="c-orcid__icon"><span class="screen-reader-only">ORCID profile (opens in new tab): </span></span><%= @user.orcid %></a></p>
+  <% end %>
+</div>
+<div class="o-admin-container">
+  <div class="o-admin-head-left">
+    <h2 class="o-heading__level3">Activity</h2>
+    <ul>
+      <li>Last login: <span style="font-size: .9em"><%= formatted_datetime(@user.last_login) %></span>
+      <li><%= @progress_count %> datasets in progress
+    </ul>
   </div>
+  <div class="o-admin-head-left">
+    <h2 class="o-heading__level3">Details</h2>
+    <ul>
+      <li class="c-lined-table__with-actions">
+        <div class="c-lined-table__data"><b>Institution:</b> <span id="user_tenant_<%= @user.id %>"><%= StashEngine::Tenant.find(@user.tenant_id)&.short_name if StashEngine::Tenant.exists?(@user.tenant_id)%></span></div>
+        <div class="c-lined-table__actions">
+          <%= form_with(url: stash_url_helpers.user_tenant_popup_path(@user.id), method: :get, local: false) do %>
+            <button class="c-admin-edit-icon" aria-label="Edit user tenant" alt="Edit user tenant">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          <% end %>
+        </div>
+      </li>
+      <li class="c-lined-table__with-actions">
+        <div class="c-lined-table__data"><b>Email:</b> <%= mail_to @user.email, nil, id: "user_email_#{@user.id}" %></div>
+        <div class="c-lined-table__actions">
+          <%= form_with(url: stash_url_helpers.user_email_popup_path(@user.id), method: :get, local: false) do %>
+            <button class="c-admin-edit-icon" aria-label="Edit user email" alt="Edit user email">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          <% end %>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="o-admin-head-right">
+    <h2 class="o-heading__level3">Roles</h2>
+    <ul>
+      <li id="user_role_<%= @user.id %>"><%= @user.roles.present? ? @user.roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %></li>
+      <li id="user_role_details"><%= @user.journal_organizations.map(&:name).join(", ") %> <%= @user.journals.map(&:title).join(", ") %> <%= @user.funders.map(&:name).join(", ") %></li>
+    </ul>
+  </div>
+</div>
+<div class="o-admin-head-full">
+  <h3 id="edit_roles" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="edit_roles_form">Edit roles</h3>
+  <div id="edit_roles_form" hidden>
+    <%= render partial: 'admin_role_form', locals: { user: @user } %>
+  </div>
+</div>
+<div class="o-admin-columns" style="flex-direction: row-reverse;">
   <div class="o-admin-right">
     <h2>Datasets</h2>
     <!-- table and paging here -->
@@ -16,5 +88,9 @@
     <div class="c-space-paginator">
       <%= paginate @page_presenters, params: {page_size: @page_size} %>
     </div>
+  </div>
+  <div class="o-admin-left">
+    <h3>Filters</h3>
+    <%= render partial: 'status_facet', locals: { facets: @status_facets } %>
   </div>
 </div>

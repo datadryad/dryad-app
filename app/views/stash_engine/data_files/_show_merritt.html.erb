@@ -1,7 +1,7 @@
 <%# the resource is passed in. Only link previously submitted files. %>
  <ul class="c-review-files__list">
   <% uploaded = resource.previous_resource&.submitted? %>
-  <% highlight = current_user.limited_curator? && resource.previous_curated_resource.present? %>
+  <% highlight = current_user.min_app_admin? && resource.previous_curated_resource.present? %>
 	<% unless @review.technical_info.try(:description).blank? && resource.data_files.present_files.where(upload_file_name: 'README.md').empty? %>        
     <li class=""><%= link_to 'README.md', stash_url_helpers.prepare_readme_resource_path(@resource) %>&nbsp;&nbsp;&nbsp;
     <% if @review.technical_info.try(:description).present? %>
@@ -43,7 +43,7 @@
 
 <%# If curator, show all changed files from prev versions %>
 <div>
-<% if current_user.limited_curator? && highlight_files.present? %>
+<% if current_user.min_app_admin? && highlight_files.present? %>
 	<h4 style="margin-top:0">All changes since previous curated version</h4>
   <ul class="c-review-files__list highlight">
 	<% highlight_files.each do |fu| %>

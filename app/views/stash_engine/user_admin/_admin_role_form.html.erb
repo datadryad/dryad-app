@@ -1,28 +1,120 @@
 <% # local: user %>
-<h1>Choose new role</h1>
-<p>Set new role for user: <%= "#{user.first_name} #{user.last_name}".strip %></p>
 <%
-role_radios = [ ['superuser', 'Superuser — Has full access.'],
-  ['curator', 'Curator — Has access to most features, though not some that are more dangerous.'],
-  ['limited_curator', 'Limited Curator — like a curator, but no editing or auto-assignment of datasets'],
-  ['tenant_curator', 'Tenant Curator — Can view and edit datasets in the associated tenant.'], 
-  ['admin', 'Tenant Administrator — Can view datasets in the associated tenant.'],
-  ['user', 'User — Can view published datasets. Can view and edit datasets they created.']
+system_roles = [
+  ['superuser', 'Superuser <span>Can access all pages and administrative menus.</span>'],
+  ['curator', 'Curator <span>Can view and edit all submissions. Auto curation assignment.</span>'],
+  ['admin', 'Admin <span>Can view all submissions and curation pages, without editing.</span>'],
+  ['', 'User <span>Default user role. Can submit, view, and edit their submissions.</span>']
 ]
-  role_radios.drop(1) if current_user.role == 'admin' # don't give admins a choice to make a superuser
+tenant_roles = [
+  ['admin', 'Admin <span>Can view all tenant submissions and curation pages, without editing.</span>'],
+  ['curator', 'Curator <span>Can view and edit datasets with the associated tenant.</span>'],
+  ['', 'Remove tenant role']
+]
+publisher_roles = [
+  ['admin', 'Admin <span>Can view all publisher submissions and curation pages, without editing.</span>'],
+  ['curator', 'Curator <span>Can view and edit datasets with the associated publisher.'],
+  ['', 'Remove publisher role']
+]
+journal_roles = [
+  ['admin', 'Admin <span>Can view all journal submissions and curation pages, without editing.</span>'],
+  ['curator', 'Curator <span>Can view and edit datasets with the associated journal.</span>'],
+  ['', 'Remove journal role']
+]
+funder_roles = [
+  ['admin', 'Admin <span>Can view all funder submissions and curation pages, without editing.</span>'],
+  ['', 'Remove funder role']
+]
 %>
-
-<%= form_with(url: user_admin_set_role_path(user.id), method: :post, local: false) do -%>
-  <fieldset class="c-fieldset">
-    <legend class="c-fieldset__legend">Roles:</legend>
-    <% role_radios.each do |role| %>
-        <%= radio_button_tag('role', role.first, user.role == role.first) %> <label for="<%= "role_#{role.first}" %>"><%= role[1] %></label></br>
+<% content_for(:head) do %>
+  <style type="text/css">
+    #role_form_flex {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 2ch;
+      row-gap: 1ch;
+      align-items: flex-start;
+    }
+    #role_form_flex button {
+      order: 2;
+      flex-basis: 100%;
+      flex-shrink: 0;
+    }
+    #role_form_flex fieldset {
+      order: 1;
+      margin: 1rem 0;
+      flex-basis: 48%;
+      flex-shrink: 0;
+      flex-grow: 1;
+    }
+    #role_form_flex fieldset p {
+      margin: 0 auto 1rem;
+    }
+    #role_form_flex fieldset ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+    #role_form_flex fieldset ul li {
+      padding-left: 2ch;
+      text-indent: -2ch;
+      margin-bottom: .3rem;
+    }
+    #role_form_flex fieldset ul li span {
+      font-size: .9em;
+      margin-left: .5ch;
+      padding-left: .75ch;
+      border-left: 1px solid black;
+    }
+  </style>
+<% end %>
+<%= form_with(url: user_admin_set_role_path(user.id), method: :post, local: false, html: {id: 'role_form'}) do -%>
+  <div id="role_form_flex">
+    <fieldset class="c-fieldset">
+      <legend class="c-fieldset__legend">Dryad system roles:</legend>
+      <ul>
+        <% system_roles.each do |role| %>
+          <li><%= radio_button_tag('role', role.first, @system_role ? @system_role.role == role.first : '' == role.first) %> <label for="<%= "role_#{role.first}" %>"><%= role[1].html_safe %></label>
+        <% end %>
+      </ul>
+    </fieldset>
+    <% unless user.tenant_id == APP_CONFIG.default_tenant %>
+      <% unless @tenant_role %>
+        <button class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a tenant role (for <%= user.tenant.short_name %>)</button>
+      <% end %>
+      <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'tenant', select_label: 'For user member institution:', roles: tenant_roles } %>
     <% end %>
-  </fieldset>
-  <br/>
+    <% unless @publisher_role %>
+      <button class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a publisher role</button>
+    <% end %>
+    <%= render partial: 'admin_role_fieldset', locals: { user_role: @publisher_role, label: 'publisher', select_label: 'For organization or society:', roles: publisher_roles, options: StashEngine::JournalOrganization.all.collect { |j| [ j.name, j.id ] } } %>
+    <% unless @journal_role %>
+      <button class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a journal role</button>
+    <% end %>
+    <%= render partial: 'admin_role_fieldset', locals: { user_role: @journal_role, label: 'journal', select_label: 'For journal:', roles: journal_roles, options: StashEngine::Journal.all.collect { |j| [ j.title, j.id ] } } %>
+    <% unless @funder_role %>
+      <button class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a funder role</button>
+    <% end %>
+    <%= render partial: 'admin_role_fieldset', locals: { user_role: @funder_role, label: 'funder', select_label: 'For funder:', roles: funder_roles, options: StashEngine::Funder.exemptions.collect { |f| [ f.name, f.id ] } } %>
+  </div>
   <div class="c-modal__buttons-right">
-    <%= submit_tag 'Submit', class: 'o-button__plain-text2' %>
-    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+    <%= submit_tag 'Submit role changes', class: 'o-button__plain-text2' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_form', class: 'o-button__plain-text7' %>
   </div>
 <% end %>
-
+<script type="text/javascript">
+  const formButtons = Array.from(document.getElementsByClassName('button-expand'));
+  formButtons.forEach(button => {
+    button.addEventListener('click', e => {
+      e.currentTarget.setAttribute('hidden', true);
+      e.currentTarget.nextElementSibling.removeAttribute('hidden');
+    })
+  })
+  document.getElementById('cancel_form').addEventListener('click', e => {
+    document.getElementById('role_form').reset()
+    formButtons.forEach(button => {
+      button.nextElementSibling.setAttribute('hidden', true);
+      button.removeAttribute('hidden');
+    })
+  })
+</script>

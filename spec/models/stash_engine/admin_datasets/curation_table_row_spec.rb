@@ -12,7 +12,7 @@ module StashEngine
           # need resource, user, identifier
           @identifiers = []
           3.times do
-            user = create(:user, tenant_id: 'ucop', role: nil)
+            user = create(:user, tenant_id: 'ucop')
             identifier = create(:identifier)
             resource = create(:resource, user_id: user.id, tenant_id: user.tenant_id, identifier_id: identifier.id)
             create(:version, resource_id: resource.id)

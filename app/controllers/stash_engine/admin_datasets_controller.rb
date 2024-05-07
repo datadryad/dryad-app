@@ -15,7 +15,7 @@ module StashEngine
     def index
       # Limits due to the current search/filter settings are handled within CurationTableRow
       authorize %i[stash_engine admin_datasets]
-      my_tenant_id = (%w[admin tenant_curator].include?(current_user.role) ? current_user.tenant_id : nil)
+      my_tenant_id = current_user.tenant_limited? ? current_user.tenants&.first&.id : nil
       @all_stats = Stats.new
       @seven_day_stats = Stats.new(tenant_id: my_tenant_id, since: (Time.new.utc - 7.days))
 

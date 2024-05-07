@@ -2,15 +2,15 @@ module StashEngine
   class CurationActivityPolicy < ApplicationPolicy
 
     def index?
-      @user.limited_curator?
+      @user.min_app_admin?
     end
 
     def curation_note?
-      @user.admin?
+      @user.min_admin?
     end
 
     def file_note?
-      @user.limited_curator? ||
+      @user.min_app_admin? ||
       @user.id == @resource.user_id
     end
 

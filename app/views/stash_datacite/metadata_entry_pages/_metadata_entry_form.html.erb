@@ -31,7 +31,7 @@
           dryadAuthors: @resource.authors.includes(:affiliations).map{|auth| auth.as_json.merge(
               affiliation: auth.affiliation.as_json,
               orcid_invite_path: auth&.orcid_invite_path)},
-              curator: current_user&.limited_curator?,
+              curator: current_user&.min_app_admin?,
               correspondingAuthorId: @resource.owner_author&.id,
               createPath: authors_create_path,
               reorderPath: authors_reorder_path,
@@ -72,7 +72,7 @@
                         dcsDescription: @metadata_entry.abstract,
                         path: descriptions_update_path,
                         mceLabel: {label: 'Abstract', required: true, describe: ''},
-                        isCurator: current_user&.limited_curator?) %>
+                        isCurator: current_user&.min_app_admin?) %>
   <% unless @resource&.resource_type&.resource_type == 'collection' %>
     <h2 class="o-heading__page-span">Data description</h2>    
   <% end %>
@@ -89,7 +89,7 @@
                     dcsDescription: @metadata_entry.methods,
                     path: descriptions_update_path,
                     mceLabel: {label: 'Methods:', required: false, describe: ' How was this dataset collected? How has it been processed?'},
-                    isCurator: current_user&.limited_curator?) %>
+                    isCurator: current_user&.min_app_admin?) %>
 
     <% if @metadata_entry.other.description.present? %>
     <%= react_component('components/MetadataEntry/Description',
@@ -98,7 +98,7 @@
                     mceLabel: {label: 'Usage notes:', required: false,
                                describe: ' What programs and/or software are required to open the data files included with your submission? ' +
 			       'If proprietary, include open-source alternatives.'},
-                    isCurator: current_user&.limited_curator?) %>
+                    isCurator: current_user&.min_app_admin?) %>
     <% end %>
 
     <!--  CEDAR Metadata Editor -->

@@ -38,6 +38,5 @@ To set permissions for the API account:
   either the database or rails console:
   `update stash_engine_users set role='admin' where id= <user id>;`
   `StashEngine::User.find(<user id>).update(role: 'admin')`
-- The user can be set as a journal administrator using either the database or rails console:
-  `insert into stash_engine_journal_roles (journal_id, user_id, role) values (1, 3, 'admin');`
-  `StashEngine::JournalRole.new(user:u, journal:j, role:'admin').save`
+- The user can be set as a journal administrator using either the rails console:
+  `StashEngine::JournalRole.new(user_id: u.id, role_object: Journal.find(<journal_id>), role:'admin').save`
