@@ -1,2 +1,3 @@
 $('#user_tenant_<%= @user.id %>').html("<nobr><%= escape_javascript(@user.tenant.short_name) %></nobr>");
+$('#edit_roles_form').html("<%= escape_javascript(render partial: 'admin_role_form', locals: { user: @user }) %>");
 $('#genericModalDialog')[0].close();
