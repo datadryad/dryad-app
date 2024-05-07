@@ -1,0 +1,62 @@
+<div class="table-wrapper">
+<table class="c-lined-table">
+  <thead>
+    <tr>
+      <th class="c-lined-table__sort <%= sort_display('name') %>">
+        <%= sortable_column_head sort_field: 'name', title: 'Name' %>
+      </th>
+      <th class="c-admin-table">
+        Contacts
+      </th>
+      <th class="c-admin-table">
+        Child orgs
+      </th>
+      <th class="c-admin-table">
+        Journals
+      </th>
+      <th class="c-admin-table">
+        Parent org
+      </th>
+    </tr>
+  </thead>
+
+<tbody>  
+  <% orgs.each do |o| %>
+    <tr class="c-lined-table__row">
+      <td><%= o.name %></td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="contact_<%= o.id %>">
+            <%= o.contact&.join(', ') %>
+          </div>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: publisher_popup_path(id: o.id, field: 'contact'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit contacts" aria-haspopup="dialog" aria-expanded="false" id="contact_button_<%= o.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </td>
+      <td><%= o.children.map(&:name).join(', ') %></td>
+      <td><%= o.journals_sponsored_deep.map(&:title).join(', ') %></td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="parent_org_id_<%= o.id %>">
+            <%= o.parent_org&.name %>
+          </div>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: publisher_popup_path(id: o.id, field: 'parent_org_id'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit parent org" aria-haspopup="dialog" aria-expanded="false" id="parent_org_id_button_<%= o.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+</tbody>
+</table>
+</div>
+
