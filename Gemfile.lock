@@ -1,7 +1,6 @@
 GIT
-  remote: https://github.com/datadryad/datacite-mapping.git
-  revision: 36a8a6fc28a6de5497e81cfcd60c8081c2b6e2be
-  branch: add-publisher-id
+  remote: https://github.com/CDLUC3/datacite-mapping.git
+  revision: 5c1f00fd4189f005c3b1f0f551da5f41f0686be2
   specs:
     datacite-mapping (0.5.0)
       typesafe_enum (~> 0.1, >= 0.1.7)
