@@ -26,14 +26,11 @@
 #  index_stash_engine_users_on_tenant_id       (tenant_id)
 #
 module StashEngine
-  class User < ApplicationRecord
+
+  # Roleless user for API proxy
+  class ProxyUser < ApplicationRecord
     self.table_name = 'stash_engine_users'
     has_many :resources
-    has_many :roles, dependent: :destroy
-    has_many :journals, through: :roles, source: :role_object, source_type: 'StashEngine::Journal'
-    has_many :journal_organizations, through: :roles, source: :role_object, source_type: 'StashEngine::JournalOrganization'
-    has_many :funders, through: :roles, source: :role_object, source_type: 'StashEngine::Funder'
-    has_many :tenants, through: :roles, source: :role_object, source_type: 'StashEngine::Tenant'
     belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
 
@@ -46,18 +43,6 @@ module StashEngine
              class_name: 'Doorkeeper::AccessToken',
              foreign_key: :resource_owner_id,
              dependent: :delete_all # or :destroy if you need callbacks
-
-    accepts_nested_attributes_for :roles
-
-    scope :curators, -> { joins(:roles).where('stash_engine_roles' => { role: 'curator' }) }
-
-    scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
-
-    scope :app_admins, -> {
-      joins(:roles).where(
-        "((stash_engine_roles.role in ('superuser', 'curator')) or (stash_engine_roles.role = 'admin' and stash_engine_roles.role_object_id is null))"
-      )
-    }
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
@@ -81,7 +66,7 @@ module StashEngine
     def self.find_by_orcid_or_emails(orcid:, emails:)
       emails = Array.wrap(emails)
       emails.delete_if(&:blank?)
-      StashEngine::User.where(['orcid = ? or email IN ( ? )', orcid, emails])
+      StashEngine::ApiUser.where(['orcid = ? or email IN ( ? )', orcid, emails])
     end
 
     def name
@@ -92,58 +77,19 @@ module StashEngine
       [last_name, first_name].join(', ')
     end
 
-    def tenant_limited?
-      roles.tenant_roles.present?
-    end
+    def tenant_limited? = false
+    def admin? = false
+    def curator? = false
+    def superuser? = false
+    def min_admin? = false
+    def min_app_admin? = false
+    def min_curator? = false
 
-    def admin?
-      roles.admin.present?
-    end
-
-    def curator?
-      roles.curator.present?
-    end
-
-    def superuser?
-      roles.superuser.present?
-    end
-
-    def min_admin?
-      roles.min_admin.present?
-    end
-
-    def min_app_admin?
-      roles.min_app_admin.present?
-    end
-
-    def min_curator?
-      roles.min_curator.present?
-    end
-
-    def journals_as_admin
-      admin_org_journals = journal_organizations.map(&:journals_sponsored).flatten
-      (journals + admin_org_journals).uniq
-    end
-
-    # Merges the other user into this user.  Updates so that this user owns other user's old stuff and has their critical info.
-    # Also overwrites some selected fields from this user with other user's info which should be more current.
-    # The other_user passed in is generally a newly logged in user that is having any of their new stuff transferred into their existing, old
-    # user account. Then they will use that old user account from then on (current user and other things will be switched around on the fly
-    # in the controller).
-    def merge_user!(other_user:)
-      # these methods do not invoke callbacks, since not really needed for taking ownership
-      CurationActivity.where(user_id: other_user.id).update_all(user_id: id)
-      ResourceState.where(user_id: other_user.id).update_all(user_id: id)
-      Resource.where(user_id: other_user.id).update_all(user_id: id)
-      Resource.where(current_editor_id: other_user.id).update_all(current_editor_id: id)
-
-      # merge in any special things updated in other user and prefer these details from other_user over self.user
-      out_hash = {}
-      %i[first_name last_name email tenant_id last_login orcid].each do |i|
-        out_hash[i] = other_user.send(i) unless other_user.send(i).blank?
-      end
-      update(out_hash)
-    end
+    def tenants = []
+    def funders = []
+    def journals = []
+    def journal_organizations = []
+    def journals_as_admin = []
 
     def self.split_name(name)
       comma_split = name.split(',')
@@ -183,25 +129,6 @@ module StashEngine
       SQL
 
       Resource.where(query, id)
-    end
-
-    def self.init_user_from_auth(user, auth)
-      user.email = auth.info.email.split(';').first # because ucla has two values separated by ;
-      # name is kludgy and many places do not provide them broken out
-      user.first_name, user.last_name = split_name(auth.info.name) if auth.info.name
-    end
-    private_class_method :init_user_from_auth
-
-    # convenience method for updating and returning user
-    def update_user_orcid(orcid:, temp_email:)
-      update(last_login: Time.new.utc, orcid: orcid)
-      update(email: temp_email) if temp_email && email.nil?
-      self
-    end
-
-    def self.create_user_with_orcid(auth_hash:, temp_email:)
-      User.create(first_name: auth_hash[:extra][:raw_info][:first_name], last_name: auth_hash[:extra][:raw_info][:last_name],
-                  email: temp_email, tenant_id: nil, last_login: Time.new.utc, orcid: auth_hash[:uid])
     end
 
   end

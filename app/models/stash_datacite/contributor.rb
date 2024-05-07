@@ -125,9 +125,8 @@ module StashDatacite
     end
 
     def payment_exempted?
-      return false if contributor_name.blank? || contributor_type != 'funder' || APP_CONFIG.funder_exemptions.blank?
-
-      return true if APP_CONFIG.funder_exemptions.include?(contributor_name) # these should be consistent because of fundref lookup
+      return false if contributor_name.blank? || contributor_type != 'funder'
+      return true if StashEngine::Funder.exemptions.find_by(name: contributor_name)
 
       false
     end

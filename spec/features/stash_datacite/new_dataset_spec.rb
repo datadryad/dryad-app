@@ -154,17 +154,16 @@ RSpec.feature 'NewDataset', type: :feature do
     end
 
     it 'waives the fee when funder has agreed to pay', js: true do
-      # APP_CONFIG.funder_exemptions has the exceptions. Right now, just 'Happy Clown School' in test environment
+      funder = create(:funder, name: 'Happy Clown School')
       stub_funder_name_lookup(name: 'Happy Clown School')
       fill_required_metadata
-      fill_in_funder(name: 'Happy Clown School', value: '12XU')
+      fill_in_funder(name: 'Happy Clown School', value: funder.id)
 
       navigate_to_review
       expect(page).to have_text('Payment for this deposit is sponsored by Happy Clown School')
     end
 
     it "doesn't waive the fee when funder isn't paying", js: true do
-      # APP_CONFIG.funder_exemptions has the exceptions. Right now, just 'Happy Clown School' in test environment
       fill_required_metadata
       fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
 

@@ -73,13 +73,8 @@ class ApiApplicationController < StashEngine::ApplicationController
 
     @user = if doorkeeper_token.resource_owner_id.present?
               # Authorization Code Grant
-              user = StashEngine::User.where(id: doorkeeper_token.resource_owner_id).first
-              # set user role to 'user' for this request (without saving to db) since people doing proxy edits for a
-              # user's data don't get special curator/admin/superuser permissions
-              if user.present?
-                user.role = 'user'
-                user
-              end
+              # Roleless user for API proxy
+              StashEngine::ProxyUser.where(id: doorkeeper_token.resource_owner_id).first
             else
               # Client Credentials Grant type
               doorkeeper_token.application.owner
@@ -113,21 +108,20 @@ class ApiApplicationController < StashEngine::ApplicationController
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
-  def require_limited_curator
-    return if @user.limited_curator?
+  def require_min_app_admin
+    return if @user.min_app_admin?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
   def require_curator
-    return if @user.curator?
+    return if @user.min_curator?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
   def require_admin
-    return if %w[superuser curator admin tenant_curator].include?(@user.role) ||
-              @user.journals_as_admin.present?
+    return if current_user && current_user.min_admin?
 
     render json: { error: 'unauthorized' }.to_json, status: 401
   end

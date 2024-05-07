@@ -1,0 +1,49 @@
+# == Schema Information
+#
+# Table name: stash_engine_roles
+#
+#  id               :bigint           not null, primary key
+#  role             :string(191)
+#  role_object_type :string(191)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  role_object_id   :string(191)
+#  user_id          :integer
+#
+# Indexes
+#
+#  index_stash_engine_roles_on_role_object_type_and_role_object_id  (role_object_type,role_object_id)
+#  index_stash_engine_roles_on_user_id                              (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => stash_engine_users.id)
+#
+module StashEngine
+  class Role < ApplicationRecord
+    self.table_name = 'stash_engine_roles'
+    belongs_to :user, class_name: 'User'
+    belongs_to :role_object, polymorphic: true, optional: true
+
+    # only join after relevant scopes for query efficiency
+    belongs_to :tenant, class_name: 'StashEngine::Tenant', foreign_key: 'role_object_id', optional: true
+    belongs_to :journal, class_name: 'StashEngine::Journal', foreign_key: 'role_object_id', optional: true
+    belongs_to :journal_organization, class_name: 'StashEngine::JournalOrganization', foreign_key: 'role_object_id', optional: true
+    belongs_to :funder, class_name: 'StashEngine::Funder', foreign_key: 'role_object_id', optional: true
+
+    scope :system_roles, -> { where(role_object_type: nil) }
+    scope :tenant_roles, -> { where(role_object_type: 'StashEngine::Tenant') }
+    scope :funder_roles, -> { where(role_object_type: 'StashEngine::Funder') }
+    scope :journal_roles, -> { where(role_object_type: 'StashEngine::Journal') }
+    scope :journal_org_roles, -> { where(role_object_type: 'StashEngine::JournalOrganization') }
+
+    scope :admin, -> { where(role: 'admin') }
+    scope :curator, -> { where(role: 'curator') }
+    scope :superuser, -> { where(role: 'superuser', role_object_id: nil) }
+
+    scope :min_admin, -> { where(role: %w[admin curator superuser]) }
+    scope :min_app_admin, -> { curator.or(where(role: %w[admin superuser], role_object_id: nil)) }
+    scope :min_curator, -> { where(role: %w[curator superuser]) }
+
+  end
+end

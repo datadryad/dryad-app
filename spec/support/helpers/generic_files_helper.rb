@@ -20,8 +20,8 @@ module GenericFilesHelper
   end
 
   def generic_rejects_presign_expects(url, json_hash)
-    @user.update(role: 'user')
-    @user2 = create(:user, role: 'user')
+    @user.roles.destroy_all
+    @user2 = create(:user)
     @resource.update(user_id: @user2.id) # not the owner
     response_code = get url, params: json_hash, as: :json
     expect(response_code).to eql(403)

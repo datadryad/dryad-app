@@ -60,7 +60,7 @@ module StashEngine
       resource.save
       resource.fill_blank_author!
       import_manuscript_using_params(resource) if params['journalID']
-      session[:resource_type] = current_user.limited_curator? && params.key?(:collection) ? 'collection' : 'dataset'
+      session[:resource_type] = current_user.min_app_admin? && params.key?(:collection) ? 'collection' : 'dataset'
       redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
     rescue StandardError => e
       logger.error("Unable to create new resource: #{e.full_message}")

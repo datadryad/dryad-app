@@ -625,26 +625,24 @@ module StashEngine
     # can edit means they are not locked out because edits in progress and have permission
     def can_edit?(user:)
       # only curators and above (not limited curators) have permission to edit
-      permission_to_edit?(user: user) && (dataset_in_progress_editor.id == user.id || user.curator?)
+      permission_to_edit?(user: user) && (dataset_in_progress_editor.id == user.id || user.min_curator?)
     end
 
     def admin_for_this_item?(user: nil)
       return false if user.nil?
 
-      user.limited_curator? ||
-        user_id == user.id ||
-        (user.tenant_id == tenant_id && user.role == 'admin') ||
+      user.min_app_admin? || user_id == user.id ||
+        user.tenants.map(&:id).include?(tenant_id) ||
         funders_match?(user: user) ||
         user.journals_as_admin.include?(identifier&.journal) ||
         (user.journals_as_admin.present? && identifier&.journal.blank?)
     end
 
     def funders_match?(user:)
-      user_funders = user.funders_as_admin
       resource_funders = contributors
-      return false unless user_funders.present? && resource_funders.present?
+      return false unless user.funders.present? && resource_funders.present?
 
-      user_funder_ids = user_funders.map(&:funder_id).compact.reject(&:empty?)
+      user_funder_ids = user.funders.map(&:ror_id).compact.reject(&:empty?)
       resource_funder_ids = resource_funders.map(&:name_identifier_id).compact.reject(&:empty?)
       user_funder_ids.&(resource_funder_ids).present?
     end
@@ -1111,10 +1109,10 @@ module StashEngine
 
     def auto_assign_curator(target_status:)
       target_curator = identifier.most_recent_curator
-      if target_curator.nil? || !target_curator.curator?
+      if target_curator.nil? || !target_curator.min_curator?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to a random current curator , but not a superuser
-        cur_list = StashEngine::User.where(role: 'curator').to_a
+        cur_list = StashEngine::User.curators.to_a
         target_curator = cur_list[rand(cur_list.length)]
       end
 

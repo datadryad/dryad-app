@@ -148,7 +148,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     context :by_curator do
       before(:each, js: true) do
         # needed to set the user to system user.  Not migrated as part of tests for some reason
-        StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System', role: 'user') unless StashEngine::User.where(id: 0).first
+        StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System') unless StashEngine::User.where(id: 0).first
 
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
         expect do
@@ -285,7 +285,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       before(:each) do
         # needed to set the user to system user.  Not migrated as part of tests for some reason
-        StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System', role: 'user') unless StashEngine::User.where(id: 0).first
+        StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System') unless StashEngine::User.where(id: 0).first
 
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
         @resource.reload
@@ -337,7 +337,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           # demote the original curator
-          @curator.update(role: 'user')
+          @curator.roles.curator.destroy_all
 
           sign_in(@author)
           click_link 'My datasets'
@@ -352,7 +352,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
 
         it 'does not use the backup curator when the previous curator is a tenant_curator', js: true do
-          @curator.update(role: 'tenant_curator')
+          @curator.roles.curator.destroy_all
+          create(:role, user: @curator, role: 'curator', role_object: @resource.tenant)
           create(:user, role: 'curator') # backup curator
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
           @resource.reload

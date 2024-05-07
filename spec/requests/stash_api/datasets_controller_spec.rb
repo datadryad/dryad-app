@@ -22,7 +22,7 @@ module StashApi
       neuter_curation_callbacks!
       mock_salesforce!
       mock_datacite_gen!
-      @user = create(:user, role: 'superuser', tenant_id: 'dryad')
+      @user = create(:user, role: 'superuser')
       @system_user = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
@@ -119,9 +119,9 @@ module StashApi
 
       it 'creates a new dataset with a userId explicitly set by journal admin' do
         # journal_user is the journal administrator, test_user is the user that will own the dataset
-        journal_user = create(:user, tenant_id: 'ucop', role: nil)
+        journal_user = create(:user, tenant_id: 'ucop')
         journal = create(:journal, issn: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}")
-        create(:journal_role, journal: journal, user: journal_user, role: 'admin')
+        create(:role, role_object: journal, user: journal_user)
         doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                  owner_id: journal_user.id, owner_type: 'StashEngine::User')
         setup_access_token(doorkeeper_application: doorkeeper_application)
@@ -371,8 +371,9 @@ module StashApi
 
         @identifiers = []
         0.upto(7).each { |_i| @identifiers.push(create(:identifier)) }
-        @user1 = create(:user, tenant_id: 'ucop', role: nil)
-        @user2 = create(:user, tenant_id: 'ucop', role: 'admin')
+        @user1 = create(:user, tenant_id: 'ucop')
+        @user2 = create(:user, tenant_id: 'ucop')
+        create(:role, user: @user2, role: 'admin', role_object: @user2.tenant)
         @user3 = create(:user, tenant_id: 'ucb', role: 'curator')
 
         @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
@@ -471,9 +472,9 @@ module StashApi
 
         it 'gets a list for journal admins: public items and private items associated with the journal' do
           # set up user4 as a journal admin, and identifiers[1] as belonging to that journal
-          user4 = create(:user, tenant_id: 'ucop', role: nil)
+          user4 = create(:user, tenant_id: 'ucop')
           journal = create(:journal)
-          create(:journal_role, journal: journal, user: user4, role: 'admin')
+          create(:role, role_object: journal, user: user4)
           create(:internal_datum, identifier_id: @identifiers[1].id, data_type: 'publicationISSN', value: journal.single_issn)
           @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                     owner_id: user4.id, owner_type: 'StashEngine::User')
@@ -655,7 +656,7 @@ module StashApi
         @tenant_ids = StashEngine::Tenant.enabled.map(&:id)
 
         # I think @user is created for use with doorkeeper already
-        @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+        @user2 = create(:user, tenant_id: @tenant_ids.first)
 
         @identifier = create(:identifier)
 
@@ -765,7 +766,7 @@ module StashApi
 
         it "doesn't submit dataset when the PATCH is not allowed for user (not owner or no permission)" do
           @tenant_ids = StashEngine::Tenant.enabled.map(&:id)
-          @user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user')
+          @user2 = create(:user, tenant_id: @tenant_ids.first)
           @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                      owner_id: @user2.id, owner_type: 'StashEngine::User')
           access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -787,7 +788,7 @@ module StashApi
 
         it 'allows submission if done by owner of the dataset (resource)' do
           @tenant_ids = StashEngine::Tenant.enabled.map(&:id)
-          user2 = create(:user, tenant_id: @tenant_ids.first, role: 'user', orcid: @ds_info['authors'].first['orcid'])
+          user2 = create(:user, tenant_id: @tenant_ids.first, orcid: @ds_info['authors'].first['orcid'])
           @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                      owner_id: user2.id, owner_type: 'StashEngine::User')
           access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)

@@ -31,10 +31,10 @@ module StashEngine
   class Journal < ApplicationRecord
     self.table_name = 'stash_engine_journals'
     validates :issn, uniqueness: { case_sensitive: false }
-    has_many :alternate_titles, class_name: 'JournalTitle', dependent: :destroy
-    has_many :journal_roles
-    has_many :users, through: :journal_roles
-    belongs_to :sponsor, class_name: 'JournalOrganization', optional: true
+    has_many :alternate_titles, class_name: 'StashEngine::JournalTitle', dependent: :destroy
+    has_many :roles, class_name: 'StashEngine::Role', as: :role_object
+    has_many :users, through: :roles
+    belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
 
     def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
 

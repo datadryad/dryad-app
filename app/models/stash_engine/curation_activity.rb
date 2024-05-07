@@ -289,8 +289,8 @@ module StashEngine
           break
         end
       end
-      # was this version submitted by a curator?
-      prev_sub = true if user.curator?
+      # was this version submitted by a min_curator?
+      prev_sub = true if user.min_curator?
       prev_sub
     end
 

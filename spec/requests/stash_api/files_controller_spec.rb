@@ -26,7 +26,7 @@ module StashApi
       mock_aws!
       mock_salesforce!
 
-      @user1 = create(:user, role: 'user')
+      @user1 = create(:user)
 
       @identifier = create(:identifier)
       @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifier.id),
@@ -123,7 +123,8 @@ module StashApi
       end
 
       it 'shows non-public files to an admin for the same tenant' do
-        @user1.update(role: 'admin')
+        @user.roles.superuser.delete_all
+        create(:role, user: @user, role: 'admin', role_object: @user.tenant)
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user1.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
@@ -195,7 +196,8 @@ module StashApi
       end
 
       it 'shows an index of files for a private dataset version to the admin' do
-        @user.update(role: 'admin')
+        @user.roles.superuser.delete_all
+        create(:role, user: @user, role: 'admin', role_object: @user.tenant)
         response_code = get "/api/v2/versions/#{@resources[1].id}/files", headers: default_authenticated_headers
         hsh = response_body_hash
         expect(response_code).to eq(200)
@@ -208,7 +210,7 @@ module StashApi
       end
 
       it "doesn't show private versions list of files to a random user" do
-        @user.update(role: 'user')
+        @user.roles.superuser.delete_all
         response_code = get "/api/v2/versions/#{@resources[1].id}/files", headers: default_authenticated_headers
         expect(response_code).to eq(404)
       end
@@ -262,7 +264,8 @@ module StashApi
       end
 
       it 'allows destroying file if admin for same tenant' do
-        @user.update(role: 'admin')
+        @user.roles.superuser.delete_all
+        create(:role, user: @user, role: 'admin', role_object: @user.tenant)
         response_code = delete "/api/v2/files/#{@files[1].first.id}", headers: default_authenticated_headers
         expect(response_code).to eq(200)
         hsh = response_body_hash
@@ -275,7 +278,7 @@ module StashApi
       end
 
       it 'blocks destroying file if another regular user' do
-        @user.update(role: 'user')
+        @user.roles.superuser.delete_all
         response_code = delete "/api/v2/files/#{@files[1].first.id}", headers: default_authenticated_headers
         expect(response_code).to eq(401)
       end
@@ -333,7 +336,8 @@ module StashApi
 
       it 'allows download by admin for tenant for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
-        @user.update(role: 'admin')
+        @user.roles.superuser.delete_all
+        create(:role, user: @user, role: 'admin', role_object: @user.tenant)
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
         expect(response_code).to eq(302)
       end
@@ -346,7 +350,7 @@ module StashApi
 
       it 'disallows download by random normal user for unpublished' do
         @curation_activities[0][2].destroy!
-        @user.update(role: 'user')
+        @user.roles.superuser.delete_all
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
         expect(response_code).to eq(404)
       end

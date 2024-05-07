@@ -24,7 +24,7 @@ module StashApi
 
       neuter_curation_callbacks!
 
-      @user1 = create(:user, role: 'user')
+      @user1 = create(:user)
 
       @identifier = create(:identifier)
       @resource = create(:resource, user_id: @user1.id, identifier_id: @identifier.id)
