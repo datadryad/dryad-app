@@ -79,6 +79,7 @@ FactoryBot.define do
       else false end
     end
     sponsor_id { nil }
+    logo { id == 'ucop' ? logo_ucop : nil }
 
     after(:create) do |tenant|
       ror = create(:tenant_ror_org, tenant_id: tenant.id)
@@ -101,5 +102,8 @@ FactoryBot.define do
   factory :tenant_ucop, parent: :tenant, class: StashEngine::Tenant do
     id { 'ucop' }
   end
-
 end
+
+# rubocop:disable Layout/LineLength
+def logo_ucop = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAaVBMVEUAAAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD///+kkpPsAAAAIXRSTlMABlem2PRWU93cUgOMiwKJUN5Vp6Ta8/HZ16NUBdtPiIq8tKWIAAAAAWJLR0QiXWVcrAAAAAd0SU1FB+cLFxUEFBnQr08AAACESURBVBjTbdDtEoIgFEXRg+BnSWpEkWjd93/JlGEsuO1/rhlkOMCeKKQqSyUrgaO6oVjbRTqd6adeB0yM6BLOUtaw3dHmOAoUxJpw5Whw46hgOdp/eMeDo4Pk+ETFcYZfcmu2qboc1/3xfWqvsJJ+JyPpuOhw/HdZv9P7yThrnZl9+PwAiOknqc4Zu0AAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjMtMTEtMjNUMjE6MDQ6MjArMDA6MDANo+62AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIzLTExLTIzVDIxOjA0OjIwKzAwOjAwfP5WCgAAAABJRU5ErkJggg=='
+# rubocop:enable Layout/LineLength

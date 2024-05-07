@@ -4,6 +4,7 @@
   display: inline-block;
   border: none;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {opacity: 0.85;}
 
@@ -14,7 +15,8 @@
   }
 }
 
-.o-button__plain-text1 {
+.o-button__plain-text1,
+input[type=file]::file-selector-button {
   @extend %o-button__plain-text;
   padding: 8px 12px;
   background-color: $design-dark-blue-color;

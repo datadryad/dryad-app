@@ -11,6 +11,8 @@ when 'ror_orgs'
     org = @tenant.ror_orgs.find{ |o| o.ror_id == r }
     "<a href='#{r}'>#{org ? org.name : r}</a>"
   }.join(', ').html_safe
+when 'logo'
+  @tenant.logo.blank? ? '' : "<img src='#{@tenant.logo}' alt='#{@tenant.short_name} logo'/>".html_safe
 end %>";
 document.getElementById('<%= @field %>_button').setAttribute('aria-expanded', 'false');
 document.getElementById('genericModalDialog').close();

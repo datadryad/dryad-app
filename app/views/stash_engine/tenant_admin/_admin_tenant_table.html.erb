@@ -15,6 +15,9 @@
         <%= sortable_column_head sort_field: 'authentication', title: 'Auth method' %>
       </th>
       <th class="c-admin-table">
+        Logo
+      </th>
+      <th class="c-admin-table">
         ROR IDs
       </th>
       <th class="c-admin-table">
@@ -36,6 +39,20 @@
       <td><%= t.short_name %></td>
       <td><%= t.long_name %></td>
       <td><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="logo_<%= t.id %>">
+            <%= "<img src='#{t.logo}' alt='#{t.short_name} logo'/>".html_safe unless t.logo.blank? %>
+          </div>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'logo'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member logo" aria-haspopup="dialog" aria-expanded="false" id="logo_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </td>
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="ror_orgs_<%= t.id %>">

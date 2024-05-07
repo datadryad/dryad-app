@@ -30,14 +30,6 @@ module StashEngine
       create(:tenant_ucop)
     end
 
-    describe :logo_file do
-      it 'returns the tenant file if it exists' do
-        tenant = Tenant.find('ucop')
-        logo_filename = "logo_#{tenant.id}.svg"
-        expect(tenant.logo_file).to eq(logo_filename)
-      end
-    end
-
     describe :authentication do
       it 'parses authentication' do
         tenant = Tenant.find('ucop')
