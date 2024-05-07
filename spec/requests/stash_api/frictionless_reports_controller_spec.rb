@@ -21,7 +21,7 @@ module StashApi
       neuter_curation_callbacks!
       mock_salesforce!
 
-      @user1 = create(:user, role: 'user')
+      @user1 = create(:user)
 
       @identifier = create(:identifier)
       @resource = create(:resource, user: @user1, identifier_id: @identifier.id)
@@ -50,7 +50,7 @@ module StashApi
       end
 
       it "doesn't show a report for an item the user doesn't have permission for" do
-        @user.update(role: 'user')
+        @user.roles.superuser.delete_all
         response_code = get @path, headers: default_authenticated_headers
         expect(response_code).to eq(404)
         expect(response_body_hash).to eq({ 'error' => 'not-found' })
@@ -94,7 +94,7 @@ module StashApi
       end
 
       it "doesn't allow updating without the correct permissions" do
-        @user.update(role: 'user')
+        @user.roles.superuser.delete_all
         response_code = put @path,
                             params: { status: 'noissues', report: @frict_report2.report }.to_json, # same as report2 json
                             headers: default_authenticated_headers

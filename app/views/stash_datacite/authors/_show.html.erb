@@ -3,7 +3,7 @@
     <% authors.each_with_index do |author, i| %>
     <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
 	<div class="o-metadata__group1">
-	  <% if current_user && current_user.limited_curator? %>
+	  <% if current_user && current_user.min_app_admin? %>
 		<%= ([ (author.author_full_name ?
 			"<span class='o-metadata__author#{' highlight' if highlights&.key?(:author_full_name)}'>#{h(author.author_full_name)}</span>" : nil) ] +
 		     author.affiliations.map{|i|

@@ -57,7 +57,7 @@ module StashDatacite
 
       describe '#payment_exempted?' do
         before(:each) do
-          stub_const('APP_CONFIG', OpenStruct.new(funder_exemptions: %w[Nugget Sprout]))
+          create(:funder, name: 'Nugget')
         end
 
         it 'is not exempted if it is not a funder' do

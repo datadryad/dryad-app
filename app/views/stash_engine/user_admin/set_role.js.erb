@@ -1,2 +1,5 @@
-$('#user_role_<%= @user.id %>').html("<%= escape_javascript(@user.role.capitalize) %>");
+$('#user_role_<%= @user.id %>').html("<%= @user.roles.present? ? @user.roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>");
+if (document.getElementById('user_role_details')) {
+  document.getElementById('user_role_details').innerHTML = "<%= @user.journal_organizations.map(&:name).join(", ") %> <%= @user.journals.map(&:title).join(", ") %> <%= @user.funders.map(&:name).join(", ") %>"
+}
 $('#genericModalDialog')[0].close();

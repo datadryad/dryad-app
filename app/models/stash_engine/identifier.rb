@@ -182,7 +182,7 @@ module StashEngine
         next unless r.current_editor_id
 
         user = StashEngine::User.find(r.current_editor_id)
-        return user if user.curator?
+        return user if user.min_curator?
       end
       nil
     end

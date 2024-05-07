@@ -28,19 +28,23 @@
 FactoryBot.define do
 
   factory :user, class: StashEngine::User do
+    transient do
+      role { nil }
+      role_object { nil }
+    end
 
     first_name { Faker::Name.unique.first_name }
     last_name { Faker::Name.unique.last_name }
     email { Faker::Internet.unique.email }
-    role { 'user' }
     tenant_id { 'mock_tenant' }
     orcid { SecureRandom.hex }
     old_dryad_email { Faker::Internet.unique.email }
     eperson_id { rand(10_000) }
     validation_tries { 0 }
 
-    after(:create) do |user|
+    after(:create) do |user, e|
       create(:tenant, id: user.tenant_id) if user.tenant_id.present? && !StashEngine::Tenant.exists?(user.tenant_id)
+      create(:role, user: user, role: e.role, role_object: e.role_object) if e.role.present?
     end
   end
 

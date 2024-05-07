@@ -5,7 +5,7 @@ module StashEngine
     def self.included(c)
       c.helper_method \
         %i[
-          owner? admin? curator? limited_curator? superuser?
+          owner? admin? min_curator? min_app_admin? superuser?
         ]
     end
 
@@ -58,31 +58,29 @@ module StashEngine
     end
 
     def require_curator
-      return if current_user && current_user.curator?
+      return if current_user && current_user.min_curator?
 
       flash[:alert] = 'You must be a curator to view this information.'
       redirect_to stash_url_helpers.dashboard_path
     end
 
     def ajax_require_curator
-      false unless current_user && current_user.curator?
+      false unless current_user && current_user.min_curator?
     end
 
-    def require_limited_curator
-      return if current_user && current_user.limited_curator?
+    def require_min_app_admin
+      return if current_user && current_user.min_app_admin?
 
       flash[:alert] = 'You must be a curator to view this information.'
       redirect_to stash_url_helpers.dashboard_path
     end
 
-    def ajax_require_limited_curator
-      false unless current_user && current_user.limited_curator?
+    def ajax_require_min_app_admin
+      false unless current_user && current_user.min_app_admin?
     end
 
     def require_admin
-      return if current_user && (current_user.limited_curator? || current_user.role == 'admin' ||
-                                 current_user.journals_as_admin.present? ||
-                                 current_user.funders_as_admin.present?)
+      return if current_user && current_user.min_admin?
 
       flash[:alert] = 'You must be an administrator to view this information.'
       redirect_to stash_url_helpers.dashboard_path
@@ -100,7 +98,7 @@ module StashEngine
     def require_in_progress_editor
       return if valid_edit_code? ||
                 resource&.dataset_in_progress_editor&.id == current_user.id ||
-                current_user.curator?
+                current_user.min_curator?
 
       display_authorization_failure
     end
@@ -125,12 +123,12 @@ module StashEngine
       resource&.admin_for_this_item?(user: current_user)
     end
 
-    def curator?
-      current_user.present? && current_user.curator?
+    def min_curator?
+      current_user.present? && current_user.min_curator?
     end
 
-    def limited_curator?
-      current_user.present? && current_user.limited_curator?
+    def min_app_admin?
+      current_user.present? && current_user.min_app_admin?
     end
 
     def superuser?

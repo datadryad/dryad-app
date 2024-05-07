@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: stash_engine_tenants
+#
+#  id              :string(191)      not null, primary key
+#  authentication  :json
+#  campus_contacts :json
+#  covers_dpc      :boolean          default(TRUE)
+#  enabled         :boolean          default(TRUE)
+#  long_name       :string(191)
+#  partner_display :boolean          default(TRUE)
+#  payment_plan    :integer
+#  short_name      :string(191)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  sponsor_id      :string(191)
+#
+# Indexes
+#
+#  index_stash_engine_tenants_on_id  (id)
+#
 require 'json'
 require 'ostruct'
 module StashEngine
@@ -7,6 +28,8 @@ module StashEngine
     has_many :sponsored, class_name: 'Tenant', primary_key: :id, foreign_key: :sponsor_id, inverse_of: :sponsor
     has_many :tenant_ror_orgs, class_name: 'StashEngine::TenantRorOrg', dependent: :destroy
     has_many :ror_orgs, class_name: 'StashEngine::RorOrg', through: :tenant_ror_orgs
+    has_many :roles, class_name: 'StashEngine::Role', as: :role_object
+    has_many :users, through: :roles
 
     enum payment_plan: {
       tiered: 0

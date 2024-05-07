@@ -1,4 +1,3 @@
-<%# locals: users %>
 <div class="table-wrapper">
 <table class="c-lined-table">
   <thead>
@@ -16,8 +15,8 @@
       <th class="c-lined-table__sort c-admin-table__user-tenant <%= sort_display('tenant_id') %>">
         <%= sortable_column_head sort_field: 'tenant_id', title: 'Institution' %>
       </th>
-      <th class="c-lined-table__sort c-admin-table__user-role <%= sort_display('role') %>">
-        <%= sortable_column_head sort_field: 'role', title: 'Role' %>
+      <th class="c-admin-table__user-role">
+        Roles
       </th>
       <th class="c-lined-table__sort c-admin-table__user-last-login <%= sort_display('last_login') %>">
         <%= sortable_column_head sort_field: 'last_login', title: 'Last login' %>
@@ -29,10 +28,10 @@
   <% users.each do |u| %>
     <tr class="c-lined-table__row">
       <td><%= check_box("user_ids", "selections", {:multiple => true}, u.id, nil) %></td>
-      <td><%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u) %></td>
-      <td id="user_email_<%= u.id %>" >
+      <td><%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u), title: "#{u.first_name} #{u.last_name}'s activity and datasets" %></td>
+      <td>
         <div class="c-lined-table__with-actions">
-        <div class="c-lined-table__data">
+        <div class="c-lined-table__data" id="user_email_<%= u.id %>">
 	       <%= u.email %>
         </div>
         <div class="c-lined-table__actions">
@@ -45,9 +44,9 @@
         </div>
       </td>
       <td class="c-lined-table__digits"><nobr><%= u.orcid %></nobr></td>
-      <td id="user_tenant_<%= u.id %>">
+      <td>
         <div class="c-lined-table__with-actions">
-        <div class="c-lined-table__data"><%= StashEngine::Tenant.find(u.tenant_id)&.short_name if StashEngine::Tenant.exists?(u.tenant_id) %></div>
+        <div class="c-lined-table__data" id="user_tenant_<%= u.id %>"><%= StashEngine::Tenant.find(u.tenant_id)&.short_name if StashEngine::Tenant.exists?(u.tenant_id) %></div>
           <div class="c-lined-table__actions">
       	  <%= form_with(url: stash_url_helpers.user_tenant_popup_path(u.id), method: :get, local: false) do %>
       	    <button class="c-admin-edit-icon" aria-label="Edit user tenant" alt="Edit user tenant">
@@ -57,22 +56,13 @@
           </div>
         </div>
       </td>
-      <td id="user_role_<%= u.id %>">
+      <td>
         <div class="c-lined-table__with-actions">
-        <div class="c-lined-table__data"><%= u.role&.capitalize %></div>
+        <div class="c-lined-table__data" id="user_role_<%= u.id %>"><%= u.roles.present? ? u.roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %></div>
         <div class="c-lined-table__actions">
-      	  <%= form_with(url: stash_url_helpers.user_role_popup_path(u.id), method: :get, local: false) do %>
-      	    <button class="c-admin-edit-icon" aria-label="Edit user role" alt="Edit user role">
-      	      <i class="fa fa-pencil" aria-hidden="true"></i>
-      	    </button>
-      	  <% end %>
-	      <%= form_with(url: stash_url_helpers.user_journals_popup_path(u.id), method: :get, local: false) do %>
-      	  <% if u.journals_as_admin.present? %>
-      	    <button class="c-admin-edit-icon" title="Journal Administrator" aria-label="Journal Administrator" alt="Journal Administrator">
-      	      <i class="fa fa-file-text" aria-hidden="true"></i>
-      	    </button>
-      	  <% end %>
-	       <% end %>
+    	    <a class="c-admin-edit-icon" aria-label="Edit user role" title="Edit user role" href="<%=stash_url_helpers.user_admin_profile_path(u) %>#edit_roles">
+    	      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    	    </a>
         </div>
       </div>
       </td>
