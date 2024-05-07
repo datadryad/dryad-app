@@ -3,5 +3,7 @@
   <ul class="c-header__nav-group" style="height: 22.2667px; font-size: 1rem;">
     <li class="c-second__nav-item"><% if current == 'users' %><span>Users</span><% else %><a href="<%= user_admin_path %>">Users</a><% end %>
     <li class="c-second__nav-item"><% if current == 'tenants' %><span>Members</span><% else %><a href="<%= tenant_admin_path %>">Members</a><% end %>
+    <li class="c-second__nav-item"><% if current == 'journals' %><span>Journals</span><% else %><a href="<%= journal_admin_path %>">Journals</a><% end %>
+    <li class="c-second__nav-item"><% if current == 'publishers' %><span>Publishers</span><% else %><a href="<%= publisher_admin_path %>">Publishers</a><% end %>
   </ul>
 </div>

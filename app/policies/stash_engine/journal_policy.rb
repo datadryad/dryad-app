@@ -5,5 +5,9 @@ module StashEngine
       @user.min_app_admin? && !@user.tenant_limited?
     end
 
+    def load?
+      @user.superuser?
+    end
+
   end
 end
