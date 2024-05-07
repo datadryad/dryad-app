@@ -15,7 +15,6 @@ Metadata about journals
 Metadata about the journals and their workflows is stored in the following
 models:
 - `StashEngine::Journal`
-- `StashEngine::JournalRoles`
 - `StashEngine::JournalOrganizations`
 
 
@@ -55,9 +54,8 @@ The organizational relationships are used for:
 Adding journal administrators
 -------------------------------
 
-A user can be set as a journal administrator in two ways:
-- Database: `insert into stash_engine_journal_roles (journal_id, user_id, role) values (1, 3, 'admin');`
-- Rails console: `StashEngine::JournalRole.create(user: u, journal: j, role: 'admin')`
+A user can be set as a journal administrator in the Rails console: 
+`StashEngine::Role.create(user: u, role_object: j, role: 'admin')`
 
 A user can also be set as an organizational administrator. The organization may
 be a publisher, society, or other organization that sponsors the data
@@ -67,7 +65,7 @@ administrator:
 2. Ensure that all appropriate journals have the `JournalOrganization` listed as
    their `sponsor`
 3. Ensure that the administrator has a `User` account
-3. Add a `JournalRole` as in `StashEngine::JournalRole.create(user: u, journal_organization: o, role: 'org_admin')`
+3. Add a `Role` as in `StashEngine::Role.create(user: u, role_object: o, role: 'admin')`
 
 
 Alternate titles
@@ -177,7 +175,7 @@ an API user, use something like:
 u = StashEngine::User.find(<user_id>)
 jj = StashEngine::Journal.where("title like '<title>%'") # or search by sponsor_id
 jj.each do |j|
-  StashEngine::JournalRole.new(user:u, journal:j, role:'admin').save
+  StashEngine::Role.new(user: u, role_object: j, role: 'admin').save
 end
 ```
 

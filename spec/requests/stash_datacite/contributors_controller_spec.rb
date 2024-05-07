@@ -88,7 +88,7 @@ module StashDatacite
       end
 
       it 'detects if user not authorized to modify this resource' do
-        @user2 = create(:user, role: 'user')
+        @user2 = create(:user)
         @resource3 = create(:resource, user_id: @user2.id)
         @contributors2 = Array.new(7) { |_i| create(:contributor, resource: @resource3) }
         update_info = @contributors2.to_h { |funder| [funder.id.to_s, funder.funder_order] }

@@ -20,7 +20,7 @@
     <% other_ids = @resource.related_identifiers.where(work_type: orel.work_type).where(hidden: false) %>
     <ul class="o-list-related">
 	<% other_ids.each do |r| %>
-	    <% bad_asterisk = ( (current_user&.limited_curator? && !r.verified?) ? ' *' : '') %>
+	    <% bad_asterisk = ( (current_user&.min_app_admin? && !r.verified?) ? ' *' : '') %>
 	    <li>
 				<% if r.work_type == 'undefined' %>
 						This dataset <%= r.relation_name_english %>

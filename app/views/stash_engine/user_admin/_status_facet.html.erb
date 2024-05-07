@@ -1,6 +1,8 @@
 <%# takes tenants as local: facets %>
-<h3 class="<%= ( params[:status] ? 'c-facet-title--open' : 'c-facet-title--closed' ) %> js-title-toggle"><a data-no-turbolink="true" href="#">Status</a></h3>
-<div class="js-hideshow">
+<%= "No filters available" unless facets.present? %>
+<% if facets.present? %>
+<h4 tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="status-facet">Status</h4>
+<div id="status-facet" hidden>
   <ul class="c-facet-list">
     <% facets.each do |f| %>
       <li>
@@ -18,3 +20,4 @@
     <% end %>
   </ul>
 </div>
+<% end %>

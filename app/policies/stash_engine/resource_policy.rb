@@ -33,13 +33,13 @@ module StashEngine
       def resolve
         if @user.nil?
           @scope.with_visibility(states: %w[published embargoed])
-        elsif @user.limited_curator?
+        elsif @user.min_app_admin?
           @scope.all
         else
-          tenant_admin = (@user.tenant_id if @user.role == 'admin')
+          tenant_admin = (@user.tenant_id if @user.roles.tenant_roles.admin.present?)
           @scope.with_visibility(states: %w[published embargoed],
                                  tenant_id: tenant_admin,
-                                 funder_ids: @user.funders_as_admin.map(&:funder_id),
+                                 funder_ids: @user.funders.map(&:funder_id),
                                  journal_issns: @user.journals_as_admin.map(&:single_issn),
                                  user_id: @user.id)
         end

@@ -8,7 +8,8 @@ module StashEngine
 
       before(:each) do
         create(:tenant)
-        @user = create(:user, role: 'admin', tenant_id: 'dryad')
+        @user = create(:user, tenant_id: 'dryad')
+        create(:role, user: @user, role_object: @user.tenant)
         # HACK: in session because requests specs don't allow session in rails 4
         allow_any_instance_of(AdminDatasetFundersController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
         @resources = 5.times.map do |_i|

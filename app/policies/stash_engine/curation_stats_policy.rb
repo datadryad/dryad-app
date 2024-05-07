@@ -2,7 +2,7 @@ module StashEngine
   class CurationStatsPolicy < ApplicationPolicy
 
     def index?
-      @user.admin?
+      @user.min_admin?
     end
 
   end

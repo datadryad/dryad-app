@@ -1,32 +1,3 @@
-h3.expand-button {
-  border-bottom: thin solid $design-orange-color;
-  cursor: pointer;
-
-  &::after {
-    font-family: FontAwesome;
-    content: " \f0d7";
-  }
-
-  &:focus {
-    outline: 0;
-  }
-
-  &:hover, &:focus-visible {
-    &::after {
-      color: $link-body-color;
-    }
-  }
-
-  &:focus-visible {
-    border-color: $design-medium-blue-color;
-    box-shadow: 0 4px 0px -0px $design-medium-blue-color;
-  }
-
-  &[aria-expanded=true]::after {
-    content: " \f0d8";
-  }
-}
-
 .about-bios {
   padding-top: $spacing-sm;
   border-top: thin solid $design-dark-blue-color;

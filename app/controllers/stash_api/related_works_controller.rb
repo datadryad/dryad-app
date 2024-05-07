@@ -5,7 +5,7 @@ module StashApi
     before_action :force_json_content_type
     before_action :doorkeeper_authorize!, only: %i[update]
     before_action :require_api_user, only: %i[update]
-    before_action :require_limited_curator, only: %i[update]
+    before_action :require_min_app_admin, only: %i[update]
     before_action -> { require_stash_identifier(doi: params[:dataset_id]) }, only: %i[update]
     before_action :require_good_doi, only: %i[update]
     before_action :require_valid_work_type, only: %i[update]

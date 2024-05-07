@@ -4,7 +4,7 @@
 	    <% related_identifiers.each do |r| %>
 	    <% highlights = highlight_fields.detect {|h| h[:id] == r.related_identifier} %>
 		<% if r.work_type == 'undefined' %>
-		    <% bad_asterisk = ( (current_user&.limited_curator? && !r.verified?) ? ' *' : '') %>
+		    <% bad_asterisk = ( (current_user&.min_app_admin? && !r.verified?) ? ' *' : '') %>
 		    <li><span class="<%= 'highlight' if highlights&.key?(:type) %>">This dataset <%= r.relation_name_english %></span>
 			<span class="<%= 'highlight' if highlights&.key?(:id) %>"><%= display_id(type: r.related_identifier_type,
 				       my_id: r.related_identifier) %><%= bad_asterisk %></span></li>

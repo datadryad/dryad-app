@@ -6,7 +6,8 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     before_action :load_user, only: %i[email_popup role_popup tenant_popup journals_popup set_role set_tenant set_email user_profile]
-    before_action :setup_paging, only: %i[index]
+    before_action :setup_roles, only: %i[set_role user_profile]
+    before_action :setup_paging, only: :index
 
     # the admin_users main page showing users and stats
     def index
@@ -35,7 +36,7 @@ module StashEngine
         end
       end
 
-      ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id role last_login])
+      ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id last_login])
       @users = @users.order(ord)
 
       add_institution_filter! # if they chose a facet or are only an admin
@@ -44,17 +45,18 @@ module StashEngine
       @users = @users.page(@page).per(@page_size)
     end
 
-    def role_popup
-      respond_to(&:js)
-    end
-
-    # sets the user role (admin/user)
+    # sets the user roles
     def set_role
-      new_role = params[:role]
-      return render(nothing: true, status: :unauthorized) if new_role == 'superuser' && current_user.role != 'superuser'
-
-      @user.role = new_role
-      @user.save!
+      # set system role
+      save_role(role_params[:role], @system_role)
+      # set tenant role
+      save_role(role_params[:tenant_role], @tenant_role, @user.tenant)
+      # set publisher role
+      save_role(role_params[:publisher_role], @publisher_role, StashEngine::JournalOrganization.find_by(id: role_params[:publisher]))
+      # set journal role
+      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params[:journal]))
+      # set funder role
+      save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
 
       respond_to(&:js)
     end
@@ -66,7 +68,7 @@ module StashEngine
     # sets the user email
     def set_email
       new_email = params[:email]
-      return render(nothing: true, status: :unauthorized) if current_user.role != 'superuser'
+      return render(nothing: true, status: :unauthorized) unless current_user.superuser?
 
       @user.update(email: new_email)
 
@@ -111,6 +113,7 @@ module StashEngine
 
     # profile for a user showing stats and datasets
     def user_profile
+      @orcid_link = orcid_link
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
       # some of these columns are calculated values for display that aren't stored (publication date)
       @resources = Resource.where(user_id: @user.id).latest_per_dataset
@@ -132,6 +135,24 @@ module StashEngine
 
     def load_user
       @user = authorize User.find(params[:id]), :load_user?
+    end
+
+    def setup_roles
+      @system_role = @user.roles.where(role_object_type: nil)&.first
+      @tenant_role = @user.roles.tenant_roles&.first
+      @journal_role = @user.roles.journal_roles&.first
+      @publisher_role = @user.roles.journal_org_roles&.first
+      @funder_role = @user.roles.funder_roles&.first
+    end
+
+    def save_role(role, existing, object = nil)
+      if role.blank?
+        existing.delete if existing
+      elsif existing
+        existing.update(role: role)
+      else
+        StashEngine::Role.create(user: @user, role: role, role_object: object)
+      end
     end
 
     def setup_ds_status_facets
@@ -159,6 +180,16 @@ module StashEngine
 
     def add_institution_filter!
       @users = @users.where(tenant_id: params[:institution]) if params[:institution]
+    end
+
+    def orcid_link
+      return "https://sandbox.orcid.org/#{@user.orcid}" if APP_CONFIG.orcid.site == 'https://sandbox.orcid.org/'
+
+      "https://orcid.org/#{@user.orcid}"
+    end
+
+    def role_params
+      params.permit(:role, :tenant_role, :publisher, :publisher_role, :journal, :journal_role, :funder, :funder_role)
     end
   end
 end

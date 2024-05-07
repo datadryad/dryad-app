@@ -94,3 +94,44 @@ h5, h6 {
 h6 {
   font-style: italic;
 }
+
+
+.expand-button {
+  cursor: pointer;
+
+  &::after {
+    font-family: FontAwesome;
+    content: " \f0d7";
+  }
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:focus-visible {
+    border-color: $design-medium-blue-color;
+    box-shadow: 0 4px 0px -0px $design-medium-blue-color;
+  }
+
+  &[aria-expanded=true]::after {
+    content: " \f0d8";
+  }
+}
+
+h3.expand-button {
+  border-bottom: thin solid $design-orange-color;
+  &:hover, &:focus-visible {
+    &::after {
+      color: $link-body-color;
+    }
+  }
+}
+
+h4.expand-button {
+  border-bottom: thin solid $design-dark-blue-color;
+  &:hover, &:focus-visible {
+    &::after {
+      color: $link-body-hover-color;
+    }
+  }
+}

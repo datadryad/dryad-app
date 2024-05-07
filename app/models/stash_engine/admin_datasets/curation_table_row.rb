@@ -64,8 +64,6 @@ module StashEngine
       TENANT_CLAUSE = 'ser.tenant_id = %{term}'
       STATE_CLAUSE = '(sers.resource_state = %{term} or seca.status = %{term})'
       STATUS_CLAUSE = "(sers.resource_state not in ('error', 'processing') and seca.status = %{term})"
-      EDITOR_CLAUSE = 'ser.current_editor_id = %{term}'
-      EDITOR_NULL = "(ser.current_editor_id is NULL or seu.role not in ('superuser', 'curator', 'tenant_curator'))"
       PUBLICATION_CLAUSE = 'seid.value = %{term}'
       IDENTIFIER_CLAUSE = 'sei.id = %{term}'
 
@@ -142,7 +140,7 @@ module StashEngine
             #{build_order_clause(column, params.fetch(:direction, ''), params.fetch(:q, ''))}
             #{build_limit_clause(page: page, page_size: page_size)}
           "
-          curator_ids = StashEngine::User.curators.map(&:id)
+          curator_ids = StashEngine::User.min_curators.map(&:id)
           results = ApplicationRecord.connection.execute(query).map { |result| new(result, curator_ids) }
           # If the user is trying to sort by author names, then
           (column == 'author_names' ? sort_by_author_names(results, params.fetch(:direction, '')) : results)
@@ -160,9 +158,9 @@ module StashEngine
             (search_term.present? ? build_search_clause(search_term, all_advanced) : nil),
             add_term_to_clause(TENANT_CLAUSE, tenant_filter),
             add_term_to_clause(%w[error processing].include?(status_filter) ? STATE_CLAUSE : STATUS_CLAUSE, status_filter),
-            editor_filter == 'NA' ? EDITOR_NULL : add_term_to_clause(EDITOR_CLAUSE, editor_filter),
             add_term_to_clause(PUBLICATION_CLAUSE, publication_filter),
             add_term_to_clause(IDENTIFIER_CLAUSE, identifier_id),
+            create_editor_limit(editor_filter),
             create_tenant_limit(admin_tenant),
             create_journals_limit(admin_journals),
             create_sponsor_limit(sponsor_filter),
@@ -222,6 +220,15 @@ module StashEngine
           return nil unless clause.present? && term.present?
 
           format(clause.to_s, term: ActiveRecord::Base.connection.quote(term))
+        end
+
+        def create_editor_limit(editor_filter)
+          if editor_filter == 'NA'
+            admin_users = StashEngine::Users.min_curators.map(&:id)
+            ActiveRecord::Base.send(:sanitize_sql_array, ['(ser.current_editor_id is NULL or ser.current_editor_id not in (?))', admin_users])
+          else
+            add_term_to_clause('ser.current_editor_id = %{term}', editor_filter)
+          end
         end
 
         def create_tenant_limit(admin_tenant)

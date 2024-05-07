@@ -94,8 +94,7 @@ module StashApi
                                           last_name: author['last_name'],
                                           email: author['email'],
                                           orcid: author['orcid'],
-                                          tenant_id: StashEngine::Tenant.where(long_name: author['institution'])&.first&.id,
-                                          role: 'user')
+                                          tenant_id: StashEngine::Tenant.where(long_name: author['institution'])&.first&.id)
       elsif author['email'].present?
         user = StashEngine::User.where(email: author['email'])&.first
       end
@@ -555,7 +554,7 @@ module StashApi
           render json: { error: "Bad Request: #{attr} must be true or false" }.to_json, status: 400
           return false
         end
-        if item_value.instance_of?(TrueClass) && @user.role != 'superuser'
+        if item_value.instance_of?(TrueClass) && !@user.superuser?
           render json: { error: "Unauthorized: only superusers may set #{attr} to true" }.to_json, status: 401
           return false
         end
@@ -565,7 +564,7 @@ module StashApi
     def check_may_set_user_id
       return if params['userId'].nil?
 
-      unless %w[superuser curator tenant_curator].include?(@user.role) ||
+      unless @user.min_curator? ||
              params['userId'].to_i == @user.id || # or it is your own user
              @user.journals_as_admin&.map(&:issn_array)&.flatten&.include?(params['dataset']['publicationISSN']) # or you admin the target journal
         render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
@@ -576,7 +575,7 @@ module StashApi
     def check_may_set_payment_id
       return if params['paymentId'].nil?
 
-      unless @user.role == 'superuser'
+      unless @user.superuser?
         render json: { error: 'Unauthorized: only superuser roles may set a paymentId' }.to_json, status: 401
         return false
       end

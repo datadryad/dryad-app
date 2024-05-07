@@ -18,7 +18,8 @@ RSpec.feature 'Admin', type: :feature do
       mock_stripe!
       mock_datacite_gen!
       neuter_curation_callbacks!
-      @admin = create(:user, role: 'admin')
+      @admin = create(:user)
+      create(:role, user: @admin, role: 'admin', role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
