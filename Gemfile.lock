@@ -1,5 +1,13 @@
 GIT
-  remote: https://github.com/jquery-ui-rails/jquery-ui-rails
+  remote: https://github.com/CDLUC3/datacite-mapping.git
+  revision: 5c1f00fd4189f005c3b1f0f551da5f41f0686be2
+  specs:
+    datacite-mapping (0.5.0)
+      typesafe_enum (~> 0.1, >= 0.1.7)
+      xml-mapping_extensions (~> 0.4, >= 0.4.7)
+
+GIT
+  remote: https://github.com/jquery-ui-rails/jquery-ui-rails.git
   revision: 413265e81f790f795239e07e7e25e01429b2f18d
   tag: v7.0.0
   specs:
@@ -185,9 +193,6 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    datacite-mapping (0.5.0)
-      typesafe_enum (~> 0.1, >= 0.1.7)
-      xml-mapping_extensions (~> 0.4, >= 0.4.7)
     debug_inspector (1.1.0)
     declarative (0.0.20)
     deep_merge (1.2.2)
@@ -801,7 +806,7 @@ DEPENDENCIES
   concurrent-ruby (~> 1.1.10)
   daemons (~> 1.4.1)
   database_cleaner (~> 2.0.1)
-  datacite-mapping (~> 0.5)
+  datacite-mapping!
   delayed_job_active_record (~> 4.1.7)
   devise (~> 4.8.0)
   devise-guests (~> 0.6)
@@ -897,4 +902,4 @@ DEPENDENCIES
   zaru (~> 0.3.0)
 
 BUNDLED WITH
-   2.5.6
+   2.5.10
