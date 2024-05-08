@@ -63,7 +63,7 @@ module StashEngine
 
     def setup_sponsors
       @sponsors = [OpenStruct.new(id: '', name: '*Select institution*')]
-      @sponsors << StashEngine::Tenant.sponsored.map { |t| OpenStruct.new(id: t.id, name: t.short_name) }
+      @sponsors << StashEngine::Tenant.sponsored.order(:short_name).map { |t| OpenStruct.new(id: t.id, name: t.short_name) }
       @sponsors.flatten!
     end
 
