@@ -1,0 +1,9 @@
+<h1>Update <%= @desc %></h1>
+<%= form_with(url: user_admin_edit_path(@user.id), method: :post, local: false) do |form| -%>
+  <%= hidden_field_tag :field, @field %>
+  <%= render partial: "#{@field}", locals: {form: form} %>
+  <div class="c-modal__buttons-right">
+    <%= submit_tag 'Submit', class: 'o-button__plain-text2' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+  </div>
+<% end %>
