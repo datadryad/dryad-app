@@ -14,16 +14,16 @@
         <td><div class="c-lined-table__with-actions">
           <div class="c-lined-table__data"><%= item.data_type %></div>
           <% if current_user.min_curator? %>
-          <div class="c-lined-table__actions">
+          <div class="c-lined-table__actions" style="display: flex;">
             <%= button_to stash_engine_internal_datum_path(item), method: :delete, remote: true, data: { confirm: 'Are you sure?' },
                           form_class: 'o-button__inline-form', class: 'c-admin-edit-icon', title: 'Delete internal data item' do %>
               <i class="fa fa-trash" aria-hidden="true"></i>
             <% end %>
-            <%= form_with(url: url_for( controller: '/stash_engine/admin_datasets', action: 'data_popup',
-                                        id: item.identifier_id, sub_method: 'put', only_path: true),
-                    method: :get, local: false) do -%>
+            <%= form_with(url: ds_admin_popup_path(id: item.identifier_id, field: 'data'), method: :get, local: false) do %>
               <%= hidden_field_tag :internal_datum_id, item.id %>
-              <button class="c-admin-edit-icon" title="Edit data item"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+              <button class="c-admin-edit-icon" aria-label="Edit data item" title="Edit data item" aria-haspopup="dialog" aria-expanded="false" id="<%= item.id %>data_button_<%= item.identifier_id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
             <% end %>
           </div>
           <% end %>

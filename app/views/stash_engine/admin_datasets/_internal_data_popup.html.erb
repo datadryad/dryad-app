@@ -1,20 +1,17 @@
 <% # local: identifier %>
-<div class="o-admin-dialog">
-  <h1><%= title %></h1>
-  <% if params[:sub_method] != 'put'
-    my_path = internal_data_create_path(@identifier)
-  else
-    my_path = stash_engine_internal_datum_path(@internal_datum)
-  end %>
-  <%= form_with(model: @internal_datum, url: my_path, method: params[:sub_method], local: false ) do |f| -%>
-    <div class="c-input">
-      <%= f.select(:data_type, options_for_select( @options, @internal_datum.data_type), {}, { disabled: ( params[:sub_method] == 'put' ) } ) %>
-    </div>
-    <div class="c-input">
-      <label class="c-input__label" for="internal_datum_value">Value</label>
-      <%= f.text_area(:value, class: 'c-input__textarea') %>
-    </div>
+<h1><%= title %></h1>
+<% my_path = params[:sub_method] == 'put' ? stash_engine_internal_datum_path(@internal_datum) :internal_data_create_path(@identifier) %>
+<%= form_with(model: @internal_datum, url: my_path, method: params[:sub_method], local: false ) do |f| -%>
+  <div class="c-input">
+    <%= f.label :data_type, "Type:", class: 'c-input__label' %>
+    <%= f.select(:data_type, options_for_select( @options, @internal_datum.data_type), {}, { disabled: ( params[:sub_method] == 'put' ), class: 'c-input__select'} ) %>
+  </div>
+  <div class="c-input">
+    <%= f.label :value, "Value:", class: 'c-input__label' %>
+    <%= f.text_area(:value, class: 'c-input__textarea', style: 'width:100%') %>
+  </div>
+  <div class="c-modal__buttons-right">
     <%= f.button 'Submit', type: 'submit', class: 'o-button__plain-text2' %>
     <%= f.button 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text3' %>
-  <% end %>
-</div>
+  </div>
+<% end %>
