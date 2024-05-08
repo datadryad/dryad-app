@@ -42,7 +42,7 @@
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="logo_<%= t.id %>">
-            <%= "<img src='#{t.logo}' alt='#{t.short_name} logo'/>".html_safe unless t.logo.blank? %>
+            <%= "<img src='#{t.logo}' style='min-width: 40px;' alt='#{t.short_name} logo'/>".html_safe unless t.logo.blank? %>
           </div>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'logo'), method: :get, local: false) do %>
@@ -58,7 +58,7 @@
           <div class="c-lined-table__data" id="ror_orgs_<%= t.id %>">
             <%= t.ror_ids.map {|r|
               org = t.ror_orgs.find{ |o| o.ror_id == r }
-              "<a href='#{r}'>#{org ? org.name : r}</a>"}.join(', ').html_safe
+              "<a href='#{r}' target='_blank'>#{org ? org.name : r}</a>"}.join(', ').html_safe
             %>
           </div>
           <div class="c-lined-table__actions">

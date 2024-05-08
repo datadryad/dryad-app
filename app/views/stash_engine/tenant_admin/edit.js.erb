@@ -9,7 +9,7 @@ when 'campus_contacts'
 when 'ror_orgs'
   @tenant.ror_ids.map {|r|
     org = @tenant.ror_orgs.find{ |o| o.ror_id == r }
-    "<a href='#{r}'>#{org ? org.name : r}</a>"
+    "<a href='#{r}' target='_blank'>#{org ? org.name : r}</a>"
   }.join(', ').html_safe
 when 'logo'
   @tenant.logo.blank? ? '' : "<img src='#{@tenant.logo}' alt='#{@tenant.short_name} logo'/>".html_safe
