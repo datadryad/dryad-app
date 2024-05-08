@@ -2,14 +2,13 @@ module StashEngine
   class JournalAdminController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :require_superuser
     before_action :setup_paging, only: :index
     before_action :load, only: %i[popup edit]
 
     def index
       setup_sponsors
 
-      @journals = StashEngine::Journal.all
+      @journals = authorize StashEngine::Journal.all
 
       if params[:q]
         q = params[:q]
@@ -64,7 +63,7 @@ module StashEngine
     end
 
     def load
-      @journal = authorize StashEngine::Journal.find(params[:id]), :load?
+      @journal = authorize StashEngine::Journal.find(params[:id]), :popup?
       @field = params[:field]
     end
 
