@@ -252,9 +252,14 @@ module Datacite
       end
 
       def to_dcs_publisher(sd_publisher)
-        return 'unknown' unless sd_publisher
+        return Publisher.new(value: 'unknown') unless sd_publisher
 
-        sd_publisher.publisher
+        Publisher.new(
+          identifier: 'https://ror.org/00x6h5n95',
+          identifier_scheme: 'ROR',
+          scheme_uri: 'https://ror.org/',
+          value: sd_publisher.publisher
+        )
       end
 
       def to_dcs_pub_year(sd_pub_year)

@@ -63,7 +63,7 @@ gem 'charlock_holmes', '~> 0.7.7'
 gem 'concurrent-ruby', '~> 1.1.10'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'
-gem 'datacite-mapping', '~> 0.5'
+gem 'datacite-mapping', git: 'https://github.com/CDLUC3/datacite-mapping.git'
 gem 'delayed_job_active_record', '~> 4.1.7'
 gem 'devise', '~> 4.8.0' # I don't believe we are using it directly
 gem 'devise-guests', '~> 0.6' # I don't believe we're using it directly
@@ -80,7 +80,7 @@ gem 'httparty', '~> 0.20.0'
 gem 'httpclient', '~> 2.8.3'
 gem 'jbuilder' # is this used?
 gem 'jquery-turbolinks', '~> 2.1.0'
-gem 'jquery-ui-rails', '~> 7.0', git: 'https://github.com/jquery-ui-rails/jquery-ui-rails', tag: 'v7.0.0'
+gem 'jquery-ui-rails', '~> 7.0', git: 'https://github.com/jquery-ui-rails/jquery-ui-rails.git', tag: 'v7.0.0'
 gem 'jwt', '~> 2.3.0'
 gem 'kaminari', '~> 1.2.2'
 gem 'leaflet-rails', '~> 1.7.0'
