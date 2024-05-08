@@ -52,6 +52,7 @@ module StashEngine
 
     def edit
       valid = %i[email tenant_id]
+      check_tenant_role
       update = edit_params.slice(*valid)
       @user.update(update)
 
@@ -92,7 +93,8 @@ module StashEngine
       save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params[:journal]))
       # set funder role
       save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
-
+      # reload roles
+      setup_roles
       respond_to(&:js)
     end
 
@@ -139,6 +141,13 @@ module StashEngine
       else
         StashEngine::Role.create(user: @user, role: role, role_object: object)
       end
+    end
+
+    def check_tenant_role
+      return unless edit_params[:tenant_id] != @user.tenant_id
+
+      @user.roles.tenant_roles.delete_all
+      setup_roles
     end
 
     def setup_ds_status_facets
