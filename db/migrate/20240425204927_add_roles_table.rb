@@ -27,7 +27,7 @@ class AddRolesTable < ActiveRecord::Migration[6.1]
           StashEngine::Role.create(user_id: r.user_id, role: 'admin', role_object: StashEngine::JournalOrganization.find(r.journal_organization_id)) if r.journal_organization_id.present? && StashEngine::JournalOrganization.exists?(r.journal_organization_id)
         end
         StashEngine::FunderRole.all.each do |r|
-          StashEngine::Role.create(user_id: r.user_id, role: r.role, role_object: StashEngine::Funder.find_by(name: r.funder_name)) if StashEngine::Funder.find_by(name: r.funder_name).exists?
+          StashEngine::Role.create(user_id: r.user_id, role: r.role, role_object: StashEngine::Funder.find_by(name: r.funder_name)) if StashEngine::Funder.find_by(name: r.funder_name).present?
         end
         StashEngine::User.where("role != 'user'").each do |u|
           case u.role
