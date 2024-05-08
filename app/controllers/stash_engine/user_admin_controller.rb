@@ -10,7 +10,7 @@ module StashEngine
 
     # the admin_users main page showing users and stats
     def index
-      setup_superuser_facets
+      setup_facets
       setup_tenants
 
       # Default to recently-created users
@@ -45,12 +45,14 @@ module StashEngine
     end
 
     def popup
+      authorize %i[stash_engine user]
       strings = { email: 'email', tenant_id: 'member institution' }
       @desc = strings[@field.to_sym]
       respond_to(&:js)
     end
 
     def edit
+      authorize %i[stash_engine user]
       valid = %i[email tenant_id]
       check_tenant_role
       update = edit_params.slice(*valid)
@@ -100,6 +102,7 @@ module StashEngine
 
     # profile for a user showing stats and datasets
     def user_profile
+      @user = User.find(params[:id])
       @orcid_link = orcid_link
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
       # some of these columns are calculated values for display that aren't stored (publication date)
@@ -121,7 +124,7 @@ module StashEngine
     end
 
     def load
-      @user = authorize User.find(params[:id]), :load?
+      @user = User.find(params[:id])
       @field = params[:field]
     end
 
@@ -161,7 +164,7 @@ module StashEngine
       @page_presenters = Kaminari.paginate_array(@presenters).page(@page).per(@page_size)
     end
 
-    def setup_superuser_facets
+    def setup_facets
       @tenant_facets = StashEngine::Tenant.enabled.sort_by(&:short_name)
     end
 

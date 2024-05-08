@@ -45,6 +45,7 @@
     <ul>
       <li class="c-lined-table__with-actions">
         <div class="c-lined-table__data"><b>Institution:</b> <span id="user_tenant_id_<%= @user.id %>"><%= StashEngine::Tenant.find(@user.tenant_id)&.short_name if StashEngine::Tenant.exists?(@user.tenant_id)%></span></div>
+        <% if policy([:stash_engine, :user]).popup? %>
         <div class="c-lined-table__actions">
           <%= form_with(url: user_popup_path(id: @user.id, field: 'tenant_id'), method: :get, local: false) do %>
             <button class="c-admin-edit-icon" aria-label="Edit user tenant" aria-haspopup="dialog" aria-expanded="false" id="tenant_id_button_<%= @user.id %>">
@@ -52,9 +53,11 @@
             </button>
           <% end %>
         </div>
+        <% end %>
       </li>
       <li class="c-lined-table__with-actions">
         <div class="c-lined-table__data"><b>Email:</b> <%= mail_to @user.email, nil, id: "user_email_#{@user.id}" %></div>
+        <% if policy([:stash_engine, :user]).popup? %>
         <div class="c-lined-table__actions">
           <%= form_with(url: user_popup_path(id: @user.id, field: 'email'), method: :get, local: false) do %>
             <button class="c-admin-edit-icon" aria-label="Edit user email" aria-haspopup="dialog" aria-expanded="false" id="email_button_<%= @user.id %>">
@@ -62,9 +65,10 @@
             </button>
           <% end %>
         </div>
+        <% end %>
       </li>
     </ul>
-  </div>
+  </div>  
   <div class="o-admin-head-right">
     <h2 class="o-heading__level3">Roles</h2>
     <ul>
@@ -73,12 +77,14 @@
     </ul>
   </div>
 </div>
+<% if policy([:stash_engine, :user]).set_role? %>
 <div class="o-admin-head-full">
   <h3 id="edit_roles" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="edit_roles_form">Edit roles</h3>
   <div id="edit_roles_form" hidden>
     <%= render partial: 'admin_role_form', locals: { user: @user } %>
   </div>
 </div>
+<% end %>
 <div class="o-admin-columns" style="flex-direction: row-reverse;">
   <div class="o-admin-right">
     <h2>Datasets</h2>

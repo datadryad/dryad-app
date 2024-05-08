@@ -178,15 +178,8 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by curators' do
-      sign_in(create(:user, role: 'curator'))
-      visit stash_url_helpers.user_admin_path
-      # User redirected
-      expect(page).to have_text('My datasets')
-    end
-
-    it 'is accessible by super users' do
-      sign_in(create(:user, role: 'superuser'))
+    it 'is accessible by app_admins' do
+      sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.user_admin_path
       expect(page).to have_text('Manage users')
     end

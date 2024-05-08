@@ -31,7 +31,7 @@
         <div class="c-lined-table__data">
           <span title="<%= p.title %>"><%= link_to truncate(p.title), stash_url_helpers.edit_histories_path(resource_id: p.resource.id)  %></span>
         </div>
-        <% if p.resource.submitted? || p.resource.dataset_in_progress_editor&.id == current_user.id %>
+        <% if (p.resource.submitted? && current_user.min_curator?) || p.resource.dataset_in_progress_editor&.id == current_user.id %>
         <div class="c-lined-table__actions">
           <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post) do -%>
             <button class="c-admin-edit-icon" title="Edit dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>

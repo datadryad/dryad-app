@@ -2,7 +2,6 @@ module StashEngine
   class TenantAdminController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :require_superuser
     before_action :setup_paging, only: :index
     before_action :load, only: %i[popup edit]
 
