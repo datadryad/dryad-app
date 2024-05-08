@@ -302,23 +302,15 @@ Rails.application.routes.draw do
     post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
 
     # admin_datasets, aka "Curator Dashboard"
-    # this routes actions to ds_admin with a possible id without having to define for each get action, default is index
     get 'ds_admin', to: 'admin_datasets#index'
-    get 'ds_admin/index', to: 'admin_datasets#index'
-    get 'ds_admin/index/:id', to: 'admin_datasets#index'
-    get 'ds_admin/data_popup/:id', to: 'admin_datasets#data_popup'
-    get 'ds_admin/note_popup/:id', to: 'admin_datasets#note_popup'
-    get 'ds_admin/waiver_popup/:id', to: 'admin_datasets#waiver_popup'
-    get 'ds_admin/create_salesforce_case/:id', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
-    get 'ds_admin/curation_activity_popup/:id', to: 'admin_datasets#curation_activity_popup'
-    get 'ds_admin/current_editor_popup/:id', to: 'admin_datasets#current_editor_popup'
-    get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'
-    get 'ds_admin/stats_popup/:id', to: 'admin_datasets#stats_popup'
+    get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
+    get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
+    get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
+    post 'ds_admin/:id', to: 'admin_datasets#edit', as: 'ds_admin_edit'
+
+    # curation notes
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
     post 'file_note/:id', to: 'curation_activity#file_note', as: 'file_note'
-    post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
-    post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
-    post 'waiver_add/:id', to: 'admin_datasets#waiver_add', as: 'waiver_add'
 
     # admin report for dataset funders
     get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'

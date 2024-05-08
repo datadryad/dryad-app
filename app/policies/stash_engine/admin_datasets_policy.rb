@@ -9,6 +9,10 @@ module StashEngine
       index?
     end
 
+    def stats_popup?
+      index?
+    end
+
     def note_popup?
       index?
     end
@@ -17,20 +21,8 @@ module StashEngine
       @user.min_app_admin?
     end
 
-    def curation_activity_change?
+    def curation_actions?
       @user.min_curator?
-    end
-
-    def curation_activity_popup?
-      curation_activity_change?
-    end
-
-    def current_editor_change?
-      @user.min_curator?
-    end
-
-    def current_editor_popup?
-      current_editor_change?
     end
 
     def create_salesforce_case?
@@ -39,14 +31,6 @@ module StashEngine
 
     def waiver_add?
       @user.superuser?
-    end
-
-    def waiver_popup?
-      waiver_add?
-    end
-
-    def stats_popup?
-      index?
     end
 
     class Scope

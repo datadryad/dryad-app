@@ -26,7 +26,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       @curation_activity = create(:curation_activity, note: 'SF #0001 does not exist', resource: @resource)
       @curation_activity = create(:curation_activity, note: 'SF #0002 should exist', resource: @resource)
       within(:css, '.c-lined-table__row', wait: 10) do
-        find('button[title="View Activity Log"]').click
+        find('a[title="Activity log"]').click
       end
       expect(page).to have_text('Activity log for')
       expect(page).to have_text('Not a valid SF link')
@@ -39,7 +39,7 @@ RSpec.feature 'CurationActivity', type: :feature do
 
     it 'renders salesforce section' do
       within(:css, '.c-lined-table__row', wait: 10) do
-        find('button[title="View Activity Log"]').click
+        find('a[title="Activity log"]').click
       end
       expect(page).to have_text('Activity log for')
       expect(page).to have_text('Salesforce cases')
@@ -67,8 +67,8 @@ RSpec.feature 'CurationActivity', type: :feature do
         sign_in(@admin)
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
 
         expect(page).to have_text('Activity log for')
         expect(page).to have_text('Add note')
@@ -86,8 +86,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'allows adding notes to the curation activity log' do
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
 
         expect(page).to have_text('Activity log for')
         expect(page).to have_text('Add note')
@@ -96,8 +96,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'adds a note to the curation activity log', js: true do
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
 
         expect(page).to have_text('Activity log for')
         click_button 'Add note'
@@ -109,8 +109,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'adds internal data', js: true do
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
 
         expect(page).to have_text('Activity log for')
         click_button 'Add data'
@@ -123,8 +123,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'allows superuser to set a fee waiver', js: true do
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
 
         expect(@resource.identifier.payment_type).to be(nil)
         expect(page).to have_text('Payment information')
@@ -132,7 +132,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_text('Please provide a reason')
         find("#select_div option[value='no_funds']").select_option
         click_button('Submit')
-        expect(@resource.identifier.payment_type).to be(nil), wait: 2
+        expect(@resource.identifier.payment_type).to be(nil)
       end
     end
 
@@ -145,8 +145,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'allows adding notes to the curation activity log' do
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
 
         expect(page).to have_text('Activity log for')
         expect(page).to have_text('Add note')
@@ -170,8 +170,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'allows adding notes to the curation activity log' do
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
 
         expect(page).to have_text('Activity log for')
         expect(page).to have_text('Add note')
@@ -190,8 +190,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'allows adding notes to the curation activity log' do
         visit stash_url_helpers.ds_admin_path
 
-        expect(page).to have_css('button[title="View Activity Log"]')
-        find('button[title="View Activity Log"]').click
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
 
         expect(page).to have_text('Activity log for')
         expect(page).to have_text('Add note')

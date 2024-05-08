@@ -3,10 +3,10 @@ require 'stash/salesforce'
 # rubocop:disable Metrics/ClassLength
 module StashEngine
   class AdminDatasetsController < ApplicationController
-
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :setup_paging, only: [:index]
+    before_action :setup_paging, only: :index
+    before_action :load, only: %i[popup note_popup edit]
 
     TENANT_IDS = Tenant.enabled.map(&:id)
 
@@ -47,187 +47,45 @@ module StashEngine
     end
     # rubocop:enable Metrics/AbcSize
 
-    # Unobtrusive Javascript (UJS) to do AJAX by running javascript
-    def data_popup
-      authorize %i[stash_engine admin_datasets]
-      respond_to do |format|
-        @identifier = Identifier.find(params[:id])
-        @internal_datum = if params[:internal_datum_id]
-                            InternalDatum.find(params[:internal_datum_id])
-                          else
-                            InternalDatum.new(identifier_id: @identifier.id)
-                          end
-        setup_internal_data_list
-        format.js
-      end
-    end
-
-    def note_popup
-      authorize %i[stash_engine admin_datasets]
-      respond_to do |format|
-        @identifier = Identifier.where(id: params[:id]).first
-        resource =
-          if @identifier.last_submitted_resource&.id.present?
-            Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
-          else
-            @identifier.latest_resource # usually notes go on latest submitted, but there is none, so put it here
-          end
+    def popup
+      case @field
+      when 'stats'
+        authorize %i[stash_engine admin_datasets], :stats_popup?
+      when 'note'
+        authorize %i[stash_engine admin_datasets], :note_popup?
         @curation_activity = CurationActivity.new(
-          resource_id: resource.id,
-          status: resource.last_curation_activity&.status
+          resource_id: @resource.id,
+          status: @resource.last_curation_activity&.status
         )
-        format.js
-      end
-    end
-
-    # Unobtrusive Javascript (UJS) to do AJAX by running javascript
-    def curation_activity_popup
-      authorize %i[stash_engine admin_datasets]
-      respond_to do |format|
-        @identifier = Identifier.where(id: params[:id]).first
-        # using the last submitted resource should apply the curation to the correct place, even with windows held open
-        @resource =
-          if @identifier.last_submitted_resource&.id.present?
-            Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
-          else
-            @identifier.latest_resource # usually notes go on latest submitted, but there is none, so put it here
-          end
+      when 'data'
+        authorize %i[stash_engine admin_datasets], :data_popup?
+        setup_internal_data_list
+      when 'waiver'
+        authorize %i[stash_engine admin_datasets], :waiver_add?
+        @desc = 'Add fee waiver'
+      when 'curation_activity', 'current_editor'
+        authorize %i[stash_engine admin_datasets], :curation_actions?
+        @desc = @field == 'curation_activity' ? 'Edit dataset status' : 'Change dataset curator'
         @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
-        format.js
       end
+
+      respond_to(&:js)
     end
 
-    def current_editor_popup
-      authorize %i[stash_engine admin_datasets]
-      respond_to do |format|
-        @identifier = Identifier.where(id: params[:id]).first
-        # using the last submitted resource should apply the curation to the correct place, even with windows held open
-        @resource =
-          if @identifier.last_submitted_resource&.id.present?
-            Resource.includes(:identifier, :curation_activities).find(@identifier.last_submitted_resource.id)
-          else
-            @identifier.latest_resource # usually notes go on latest submitted, but there is none, so put it here
-          end
-        @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
-        format.js
+    def edit
+      case @field
+      when 'waiver'
+        authorize %i[stash_engine admin_datasets], :waiver_add?
+        waiver_add
+      when 'curation_activity'
+        authorize %i[stash_engine admin_datasets], :curation_actions?
+        curation_activity_change
+        @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
+      when 'current_editor'
+        authorize %i[stash_engine admin_datasets], :curation_actions?
+        current_editor_change
       end
-    end
-
-    def waiver_popup
-      authorize %i[stash_engine admin_datasets]
-      respond_to do |format|
-        @identifier = Identifier.where(id: params[:id]).first
-        format.js
-      end
-    end
-
-    def current_editor_change
-      authorize %i[stash_engine admin_datasets]
-      respond_to do |format|
-        format.js do
-          @identifier = Identifier.find(params[:identifier_id])
-          @resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
-          decipher_curation_activity
-          editor_id = params[:stash_engine_resource][:current_editor][:id]
-          if editor_id&.to_i == 0
-            @resource.update(current_editor_id: nil)
-            editor_name = 'unassigned'
-            @status = 'submitted' if @resource.current_curation_status == 'curation'
-          else
-            @resource.update(current_editor_id: editor_id)
-            editor_name = StashEngine::User.find(editor_id)&.name
-          end
-          @note = "Changing current editor to #{editor_name}. " + params[:stash_engine_resource][:curation_activity][:note]
-          @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
-                                                                   status: @status,
-                                                                   note: @note)
-          @resource.update_salesforce_metadata
-          @resource.reload
-          # Refresh the page the same way we would for a change of curation activity
-          @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
-          render :curation_activity_change
-        end
-      end
-    end
-
-    # rubocop:disable Metrics/AbcSize
-    def curation_activity_change
-      authorize %i[stash_engine admin_datasets]
-      respond_to do |format|
-        format.js do
-          @identifier = Identifier.find(params[:identifier_id])
-          @resource = @identifier.last_submitted_resource
-          @last_resource = @identifier.resources.order(id: :desc).first # the last resource of all, even not submitted
-
-          if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:stash_engine_resource][:curation_activity][:status])
-            return publishing_error
-          end
-
-          @last_state = @resource&.curation_activities&.last&.status
-          @this_state = (if params[:stash_engine_resource][:curation_activity][:status].blank?
-                           @last_state
-                         else
-                           params[:stash_engine_resource][:curation_activity][:status]
-                         end)
-
-          return state_error unless CurationActivity.allowed_states(@last_state).include?(@this_state)
-
-          @note = params[:stash_engine_resource][:curation_activity][:note]
-          @resource.current_editor_id = current_user.id
-          decipher_curation_activity
-          @resource.publication_date = @pub_date
-          @resource.hold_for_peer_review = true if @status == 'peer_review'
-          @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
-          @resource.save
-          @resource.reload
-
-          # this is janky because the publication activity is triggered after create of the curation activity so it's
-          # a side effect.  For DataCiteXML to be generated correctly then the view flags and date both need to be set
-          # before the curation activity side effect happens that submits to DataCite.
-
-          @resource.curation_activities << CurationActivity.create(user_id: current_user.id,
-                                                                   status: @status,
-                                                                   note: @note)
-
-          @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
-        end
-      end
-    end
-    # rubocop:enable Metrics/AbcSize
-
-    def waiver_add
-      authorize %i[stash_engine admin_datasets]
-      @identifier = Identifier.find(params[:id])
-      @resource = @identifier.latest_resource
-
-      respond_to do |format|
-        format.js do
-          if @identifier.payment_type == 'stripe'
-            # if it's already invoiced, show a warning
-            @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
-            render :curation_activity_error and return
-          elsif params[:waiver_basis] == 'none'
-            @error_message = 'No waiver message selected, so waiver was not applied.'
-            render :curation_activity_error and return
-          elsif params[:waiver_basis] == 'other'
-            basis = 'unspecified'
-            if params[:other].present?
-              basis = params[:other]
-            else
-              @error_message = 'No waiver message selected, so waiver was not applied.'
-              render :curation_activity_error and return
-            end
-          else
-            basis = params[:waiver_basis]
-          end
-
-          @identifier.update(payment_type: 'waiver',
-                             payment_id: '',
-                             waiver_basis: basis)
-
-          render
-        end
-      end
+      respond_to(&:js)
     end
 
     # show curation activities for this item
@@ -241,15 +99,6 @@ module StashEngine
     rescue ActiveRecord::RecordNotFound
       admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
       redirect_to admin_path, notice: "Identifier ID #{params[:id]} no longer exists."
-    end
-
-    def stats_popup
-      authorize %i[stash_engine admin_datasets]
-      respond_to do |format|
-        format.js do
-          @resource = Resource.find(params[:id])
-        end
-      end
     end
 
     def create_salesforce_case
@@ -279,8 +128,21 @@ module StashEngine
                    end
     end
 
+    def load
+      @identifier = Identifier.find(params[:id])
+      @resource = if @identifier.last_submitted_resource&.id.present?
+                    Resource.includes(:identifier,
+                                      :curation_activities).find(@identifier.last_submitted_resource.id)
+                  else
+                    @identifier.latest_resource
+                  end
+      # usually notes go on latest submitted, but there is none, so put it here
+      @field = params[:field]
+    end
+
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
     def setup_internal_data_list
+      @internal_datum = params[:internal_datum_id] ? InternalDatum.find(params[:internal_datum_id]) : InternalDatum.new(identifier_id: @identifier.id)
       @options = StashEngine::InternalDatum.validators_on(:data_type).first.options[:in].dup
       return if params[:internal_datum_id] # do not winnow list if doing update since it's read-only and just changes the value on update
 
@@ -293,9 +155,53 @@ module StashEngine
       end
     end
 
+    def waiver_add
+      if @identifier.payment_type == 'stripe'
+        # if it's already invoiced, show a warning
+        @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
+        render :curation_activity_error and return
+      elsif params[:waiver_basis] == 'none'
+        @error_message = 'No waiver message selected, so waiver was not applied.'
+        render :curation_activity_error and return
+      elsif params[:waiver_basis] == 'other'
+        basis = 'unspecified'
+        if params[:other].present?
+          basis = params[:other]
+        else
+          @error_message = 'No waiver message selected, so waiver was not applied.'
+          render :curation_activity_error and return
+        end
+      else
+        basis = params[:waiver_basis]
+      end
+      @identifier.update(payment_type: 'waiver', payment_id: '', waiver_basis: basis)
+    end
+
+    def curation_activity_change
+      @last_resource = @identifier.latest_resource # the last resource of all, even not submitted
+      if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:stash_engine_resource][:curation_activity][:status])
+        return publishing_error
+      end
+
+      @last_state = @resource&.curation_activities&.last&.status
+      @this_state = params[:curation_activity][:status] || @last_state
+
+      return state_error unless CurationActivity.allowed_states(@last_state).include?(@this_state)
+
+      @note = params[:curation_activity][:note]
+      @resource.current_editor_id = current_user.id
+      decipher_curation_activity
+      @resource.publication_date = @pub_date
+      @resource.hold_for_peer_review = true if @status == 'peer_review'
+      @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
+      @resource.save
+      @resource.reload
+      @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
+    end
+
     def decipher_curation_activity
-      @status = params[:stash_engine_resource][:curation_activity][:status]
-      @pub_date = params[:stash_engine_resource][:publication_date]
+      @status = params[:curation_activity][:status]
+      @pub_date = params[:publication_date]
       # If the status was nil then we are just adding a note so get the prior status
       @status = @resource.current_curation_status unless @status.present?
       case @status
@@ -362,6 +268,26 @@ module StashEngine
         <p>Reference information -- resource id <strong>#{@resource.id}</strong> and doi <strong>#{@resource.identifier.identifier}</strong></p>
       HTML
       render :curation_activity_error
+    end
+
+    def current_editor_change
+      @resource = @identifier.latest_resource
+      decipher_curation_activity
+      editor_id = params[:current_editor][:id]
+      if editor_id&.to_i == 0
+        @resource.update(current_editor_id: nil)
+        editor_name = 'unassigned'
+        @status = 'submitted' if @resource.current_curation_status == 'curation'
+      else
+        @resource.update(current_editor_id: editor_id)
+        editor_name = StashEngine::User.find(editor_id)&.name
+      end
+      @note = "Changing current editor to #{editor_name}. " + params[:curation_activity][:note]
+      @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
+      @resource.update_salesforce_metadata
+      @resource.reload
+      # Refresh the page the same way we would for a change of curation activity
+      @curation_row = StashEngine::AdminDatasets::CurationTableRow.where(params: {}, tenant: nil, identifier_id: @resource.identifier.id).first
     end
 
   end
