@@ -4,8 +4,7 @@
 
 <h2>Manage users</h2>
 
-<%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/user_admin', action: 'index', only_path: true),
-method: 'get', id: 'search_form') do %>
+<%= form_with(url: stash_url_helpers.user_admin_path, method: 'get', id: 'search_form') do %>
 <div class="o-admin-form-inline">
   <div class="o-admin-form-pair">
     <label for="search-terms">User search:</label>
@@ -15,7 +14,7 @@ method: 'get', id: 'search_form') do %>
     <label for="tenant_id">Institution:</label>
     <%= select_tag :tenant_id, options_from_collection_for_select(@tenants, "id", "name", params[:tenant_id]), class: 'c-input__text' %>
   </div>
-  <%= submit_tag('Search', class: 'o-button__submit' ) %>
+  <%= submit_tag('Search', name: nil, class: 'o-button__submit' ) %>
 </div>
 <% end %>
 
@@ -32,6 +31,19 @@ method: 'get', id: 'search_form') do %>
   <% end %>
   <div class="c-space-paginator">
     <%= paginate @users, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>
+    <div class="c-paginator-page_size">
+      Page size:
+      <%
+        current_ps = params[:page_size].to_i
+        current_ps = 10 if current_ps == 0
+        [10, 50, 100].each do |ps| %>
+        <% if ps == current_ps %>
+          <span class="page-current"><%= ps %></span>
+        <% else %>
+          <%= link_to(ps, stash_url_helpers.user_admin_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1))) %>
+        <% end %>
+      <% end %>
+    </div>
   </div>
 </div>
 <!-- Catch selections from the admin_user_table and populate the selected_users for the merge form above -->
