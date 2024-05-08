@@ -1,7 +1,11 @@
 module StashEngine
   class JournalOrganizationPolicy < ApplicationPolicy
 
-    def load?
+    def index?
+      @user.min_app_admin?
+    end
+
+    def popup?
       @user.superuser?
     end
 

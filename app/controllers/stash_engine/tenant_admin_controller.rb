@@ -6,6 +6,7 @@ module StashEngine
     before_action :load, only: %i[popup edit]
 
     def index
+      authorize %i[stash_engine tenant], :admin?
       setup_sponsors
 
       @tenants = StashEngine::Tenant.all
@@ -67,7 +68,7 @@ module StashEngine
     end
 
     def load
-      @tenant = authorize Tenant.find(params[:id]), :load?
+      @tenant = authorize Tenant.find(params[:id]), :popup?
       @field = params[:field]
     end
 
