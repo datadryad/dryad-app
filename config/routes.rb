@@ -280,16 +280,14 @@ Rails.application.routes.draw do
     post 'account/edit', to: 'user_account#edit', as: 'edit_account'
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
-    get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' # page for viewing a single user
-    get 'user_admin/role_popup/:id', to: 'user_admin#role_popup', as: 'user_role_popup'
-    get 'user_admin/email_popup/:id', to: 'user_admin#email_popup', as: 'user_email_popup'
-    get 'user_admin/journals_popup/:id', to: 'user_admin#journals_popup', as: 'user_journals_popup'
-    get 'user_admin/tenant_popup/:id', to: 'user_admin#tenant_popup', as: 'user_tenant_popup'
-    get 'user_admin/merge_popup', to: 'user_admin#merge_popup', as: 'user_merge_popup'
+    # page for viewing a single user
+    get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' 
     post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
-    post 'user_admin/set_email/:id', to: 'user_admin#set_email', as: 'user_admin_set_email'
-    post 'user_admin/set_tenant/:id', to: 'user_admin#set_tenant', as: 'user_admin_set_tenant'
+    # admin editing user
+    get 'user_admin/merge', to: 'user_admin#merge_popup', as: 'user_merge_popup'
     post 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
+    get 'user_admin/:id/edit/:field', to: 'user_admin#popup', as: 'user_popup'
+    post 'user_admin/:id', to: 'user_admin#edit', as: 'user_admin_edit'
     # admin tenant management
     get 'tenant_admin', to: 'tenant_admin#index' # main page for administering tenants
     get 'tenant_admin/:id/edit/:field', to: 'tenant_admin#popup', as: 'tenant_popup'

@@ -136,6 +136,13 @@ module StashEngine
       ResourceState.where(user_id: other_user.id).update_all(user_id: id)
       Resource.where(user_id: other_user.id).update_all(user_id: id)
       Resource.where(current_editor_id: other_user.id).update_all(current_editor_id: id)
+      Role.where(user_id: other_user.id).each do |r|
+        if Role.find_by(user_id: id, role_object: r.role_object)
+          r.delete
+        else
+          r.update(user_id: id)
+        end
+      end
 
       # merge in any special things updated in other user and prefer these details from other_user over self.user
       out_hash = {}

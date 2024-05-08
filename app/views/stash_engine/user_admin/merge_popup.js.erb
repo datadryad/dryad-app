@@ -1,15 +1,23 @@
-// now open a modal dialog
-$(function() {
-  $('#genericModalContent').html("<%= escape_javascript(
-          render partial: 'stash_engine/user_admin/admin_merge_form', locals: { user1: @user1, user2: @user2 }) %>");
-  // expand the width of the default dialog to accommodate the merge table
-  $('#genericModalDialog')[0].classList.add('extra-wide');
-  $('#genericModalDialog')[0].showModal();
-
-  $("#cancel_dialog").click(function (e) {
-    e.preventDefault();
-    // reset the dialog to its default width
-    $('#genericModalDialog')[0].classList.remove('extra-wide');
-    $('#genericModalDialog')[0].close();
-  });
+// open a modal dialog
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'stash_engine/user_admin/merge_form', locals: { user1: @user1, user2: @user2 }) %>";
+// expand the width of the default dialog to accommodate the merge table
+document.getElementById('genericModalContent').classList.add('extra-wide');
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('merge_selected_button').setAttribute('aria-expanded', 'true');
+document.getElementById('genericModalDialog').addEventListener('close', () => {
+  // reset the dialog to its default width
+  document.getElementById('genericModalDialog').classList.remove('extra-wide');
+  document.getElementById('merge_selected_button').setAttribute('aria-expanded', 'false');
 });
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});
+document.getElementById('merge_user_form').addEventListener('submit', () => {
+  const checkedBoxes = document.querySelectorAll('input:checked');
+  for (const box of checkedBoxes) {
+    box.checked = false;
+  }
+  var su = document.getElementById("selected_users");
+  su.value = null;
+})

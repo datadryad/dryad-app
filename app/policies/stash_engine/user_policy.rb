@@ -4,7 +4,7 @@ module StashEngine
       @user.superuser?
     end
 
-    def load_user?
+    def load?
       @user.superuser?
     end
 

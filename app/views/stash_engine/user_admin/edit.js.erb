@@ -1,0 +1,8 @@
+document.getElementById("user_<%= @field %>_<%= @user.id %>").innerHTML = "<%=
+case @field
+when 'email'
+  @user.email
+when 'tenant_id'
+  @user.tenant.short_name
+end %>";
+document.getElementById('genericModalDialog').close();
