@@ -14,15 +14,18 @@
 
   <h2 class="o-heading__level2">Limit to</h2>
   <%= form_with url: stash_url_helpers.publication_updater_path, method: :get do |form| %>  
-
+  <div class="o-admin-form-inline">
     <div class="o-admin-form-pair">
       <label for="list_search">Search:</label>
       <%= text_field_tag 'list_search', params[:list_search], {size: 30, class: 'c-input__text', placeholder: 'Search words (all are required)'} %>
     </div>
-
-    <%= form.submit "Submit", class: "o-button__submit" %>
+    <div class="o-admin-form-pair">
+      <label for="status">Status:</label>
+      <%= select_tag :status, options_from_collection_for_select(@statuses, "value", "label", params[:status]), class: 'c-input__text' %>
+    </div>
+    <%= submit_tag('Search', class: 'o-button__submit' ) %>
     <%= button_tag "Reset", type: :reset, id: 'reset_button', class: "o-button__remove" %>
-
+  </div>
   <% end %>
 
   <div class="table-wrapper">
@@ -63,6 +66,20 @@
 
   <div class="c-space-paginator">
     <%= paginate @proposed_changes, params: { page_size: @page_size, show_all: false } %>
+        <div class="c-paginator-page_size">
+      Page size:
+      <%
+        current_ps = params[:page_size].to_i
+        current_ps = 10 if current_ps == 0
+        [10, 50, 100].each do |ps| %>
+        <% if ps == current_ps %>
+          <span class="page-current"><%= ps %></span>
+        <% else %>
+          <%= link_to(ps, stash_url_helpers.publication_updater_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1))) %>
+        <% end %>
+      <% end %>
+    </div>
+
   </div>
 
   <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
