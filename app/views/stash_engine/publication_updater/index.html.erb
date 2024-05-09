@@ -12,7 +12,17 @@
     <li>Make your selection for type and metadata import from the dropdown, and click "Accept"</li>
   </ol>
 
+  <div style="display: flex; align-items: baseline; column-gap: 30px; flex-wrap: wrap">
   <h2 class="o-heading__level2">Limit to</h2>
+    <ul class="c-header__nav-group" style="height: 22.2667px; font-size: 1rem;">
+      <% 
+        atext = "Likely articles (#{@article_count})"
+        pretext = "Likely preprints (#{@preprint_count})"
+      %>
+      <li class="c-second__nav-item"><%= params[:match_type] == 'preprints' ? link_to(atext, stash_url_helpers.publication_updater_path(request.parameters.except(:action, :controller).merge(match_type: 'articles'))) : atext %></li>
+      <li class="c-second__nav-item"><%= params[:match_type] == 'preprints' ? pretext : link_to(pretext, stash_url_helpers.publication_updater_path(request.parameters.except(:action, :controller).merge(match_type: 'preprints'))) %></li>
+    </ul>
+  </div>
   <%= form_with url: stash_url_helpers.publication_updater_path, method: :get do |form| %>  
   <div class="o-admin-form-inline">
     <div class="o-admin-form-pair">
@@ -20,7 +30,7 @@
       <%= text_field_tag 'list_search', params[:list_search], {size: 30, class: 'c-input__text', placeholder: 'Search words (all are required)'} %>
     </div>
     <div class="o-admin-form-pair">
-      <label for="status">Status:</label>
+      <label for="status">Curation status:</label>
       <%= select_tag :status, options_from_collection_for_select(@statuses, "value", "label", params[:status]), class: 'c-input__text' %>
     </div>
     <%= submit_tag('Search', class: 'o-button__submit' ) %>

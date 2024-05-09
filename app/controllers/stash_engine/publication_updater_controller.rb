@@ -28,8 +28,12 @@ module StashEngine
     def index
       proposed_changes = authorize StashEngine::ProposedChange # .includes(identifier: :latest_resource)
         .joins(identifier: :latest_resource).where(approved: false, rejected: false)
-        .where('stash_engine_identifiers.pub_state != ?', 'withdrawn')
+        .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         .select('stash_engine_proposed_changes.*')
+
+      setup_counts(proposed_changes)
+
+      params[:match_type] = 'articles' if params[:match_type].blank?
 
       proposed_changes = add_param_filters(proposed_changes)
 
@@ -93,6 +97,11 @@ module StashEngine
       @statuses.flatten!
     end
 
+    def setup_counts(proposed_changes)
+      @article_count = proposed_changes.where('stash_engine_proposed_changes.publication_issn is not null').count('*')
+      @preprint_count = proposed_changes.where('stash_engine_proposed_changes.publication_issn is null').count('*')
+    end
+
     def add_param_filters(proposed_changes)
       if params[:list_search].present?
         proposed_changes = proposed_changes.joins(CONCAT_FOR_SEARCH)
@@ -106,6 +115,13 @@ module StashEngine
           'JOIN stash_engine_curation_activities sa ON sa.id = stash_engine_resources.last_curation_activity_id'
         ).where('sa.status' => params[:status])
       end
+
+      if params[:match_type]
+        proposed_changes = proposed_changes.where(
+          "stash_engine_proposed_changes.publication_issn is #{params[:match_type] == 'preprints' ? 'null' : 'not null'}"
+        )
+      end
+
       proposed_changes
     end
 
