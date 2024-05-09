@@ -14,7 +14,7 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @tenants = @tenants.where('short_name LIKE ? OR long_name LIKE ? OR id LIKE ?',
+        @tenants = @tenants.where('LOWER(short_name) LIKE LOWER(?) OR LOWER(long_name) LIKE LOWER(?) OR LOWER(id) LIKE LOWER(?)',
                                   "%#{q}%", "%#{q}%", "%#{q}%")
       end
 
