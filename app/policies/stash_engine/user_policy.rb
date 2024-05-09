@@ -1,7 +1,7 @@
 module StashEngine
   class UserPolicy < ApplicationPolicy
     def index?
-      @user.min_app_admin?
+      @user.system_user?
     end
 
     def merge_popup?
@@ -21,7 +21,7 @@ module StashEngine
     end
 
     def user_profile?
-      @user.min_app_admin?
+      @user.system_user?
     end
 
     def set_role?
