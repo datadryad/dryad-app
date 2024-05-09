@@ -30,7 +30,12 @@ module StashEngine
   # Roleless user for API proxy
   class ProxyUser < ApplicationRecord
     self.table_name = 'stash_engine_users'
-    has_many :resources
+    has_many :resources, foreign_key: :user_id
+    has_many :roles, -> { where.not(role_object_type: nil) }, foreign_key: :user_id
+    has_many :journals, through: :roles, source: :role_object, source_type: 'StashEngine::Journal'
+    has_many :journal_organizations, through: :roles, source: :role_object, source_type: 'StashEngine::JournalOrganization'
+    has_many :funders, through: :roles, source: :role_object, source_type: 'StashEngine::Funder'
+    has_many :tenants, through: :roles, source: :role_object, source_type: 'StashEngine::Tenant'
     belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
 
@@ -77,7 +82,10 @@ module StashEngine
       [last_name, first_name].join(', ')
     end
 
-    def tenant_limited? = false
+    def tenant_limited?
+      roles.tenant_roles.present?
+    end
+
     def admin? = false
     def curator? = false
     def superuser? = false
@@ -85,11 +93,10 @@ module StashEngine
     def min_app_admin? = false
     def min_curator? = false
 
-    def tenants = []
-    def funders = []
-    def journals = []
-    def journal_organizations = []
-    def journals_as_admin = []
+    def journals_as_admin
+      admin_org_journals = journal_organizations.map(&:journals_sponsored).flatten
+      (journals + admin_org_journals).uniq
+    end
 
     def self.split_name(name)
       comma_split = name.split(',')
