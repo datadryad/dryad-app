@@ -91,6 +91,7 @@
 
 <div id="internal_data" style="clear: both">
   <div style="float: left"><h2>Internal data</h2></div>
+  
   <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
     <div style="float: right">
       <br/>
@@ -105,14 +106,11 @@
   </div>
 </div>
 
-<% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
+<% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
   <div id="payment_info" class="table-wrapper" style="clear: both">
     <div style="float: left"><h2>Payment information</h2></div>
     <%= render partial: 'payment_info_table' %>
   </div>
-<% end %>
-
-<% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
   <div id="dangerous_actions">
     <div style="float: left"><h2>Dangerous actions</h2>
 

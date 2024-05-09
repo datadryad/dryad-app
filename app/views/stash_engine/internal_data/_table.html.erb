@@ -13,7 +13,7 @@
         <td><%= formatted_datetime(item.updated_at) %></td>
         <td><div class="c-lined-table__with-actions">
           <div class="c-lined-table__data"><%= item.data_type %></div>
-          <% if current_user.min_curator? %>
+          <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
           <div class="c-lined-table__actions" style="display: flex;">
             <%= button_to stash_engine_internal_datum_path(item), method: :delete, remote: true, data: { confirm: 'Are you sure?' },
                           form_class: 'o-button__inline-form', class: 'c-admin-edit-icon', title: 'Delete internal data item' do %>
