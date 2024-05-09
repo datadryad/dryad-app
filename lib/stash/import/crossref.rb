@@ -400,7 +400,8 @@ module Stash
         if @sm['ISSN'].present? && @sm['ISSN'].first.present?
           issndatum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
                                                                        data_type: 'publicationISSN')
-          if issndatum.present? && StashEngine::Journal.find_by_issn(@sm['ISSN'].first).present? && (StashEngine::Journal.find_by_issn(issndatum.value).id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first).id)
+          if issndatum.present? && StashEngine::Journal.find_by_issn(@sm['ISSN'].first).present? &&
+            (StashEngine::Journal.find_by_issn(issndatum.value).id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first).id)
             return
           end
         end
