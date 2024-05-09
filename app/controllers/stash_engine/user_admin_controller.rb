@@ -26,12 +26,13 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @users = @users.where('first_name LIKE ? OR last_name LIKE ? OR orcid LIKE ? or email LIKE ?',
+        @users = @users.where('LOWER(first_name) LIKE LOWER(?) OR LOWER(last_name) LIKE LOWER(?) OR orcid LIKE ? or LOWER(email) LIKE LOWER(?)',
                               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%")
         if q.include?(' ')
           # add any matches for "firstname lastname"
           splitname = q.split
-          @users = @users.or(User.where('first_name LIKE ? and last_name LIKE ?', "%#{splitname.first}%", "%#{splitname.second}%"))
+          @users = @users.or(User.where('LOWER(first_name) LIKE LOWER(?) and LOWER(last_name) LIKE LOWER(?)', "%#{splitname.first}%",
+                                        "%#{splitname.second}%"))
         end
       end
 

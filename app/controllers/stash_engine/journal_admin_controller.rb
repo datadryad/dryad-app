@@ -13,7 +13,7 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.where('title LIKE ? OR issn LIKE ?', "%#{q}%", "%#{q}%")
+        @journals = @journals.where('LOWER(title) LIKE LOWER(?) OR LOWER(issn) LIKE LOWER(?)', "%#{q}%", "%#{q}%")
       end
 
       ord = helpers.sortable_table_order(whitelist: %w[title issn payment_plan_type default_to_ppr])

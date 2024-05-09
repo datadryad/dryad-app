@@ -13,7 +13,7 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @orgs = @orgs.where('name LIKE ?', "%#{q}%")
+        @orgs = @orgs.where('LOWER(name) LIKE LOWER(?)', "%#{q}%")
       end
 
       ord = helpers.sortable_table_order(whitelist: %w[name])
