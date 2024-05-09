@@ -15,14 +15,14 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by admins' do
+    it 'is accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.ds_admin_path
       expect(page).to have_text('Admin dashboard')
     end
 
-    it 'is accessible by app_admins' do
+    it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.ds_admin_path
       expect(page).to have_text('Admin dashboard')
@@ -45,14 +45,14 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by admins' do
+    it 'is accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit @path
       expect(page).to have_text("Activity log for #{@dataset.title}")
     end
 
-    it 'is accessible by app_admins' do
+    it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit @path
       expect(page).to have_text("Activity log for #{@dataset.title}")
@@ -67,14 +67,14 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by admins' do
+    it 'is accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.curation_stats_path
       expect(page).to have_text('Curation stats table')
     end
 
-    it 'is accessible by app_admins' do
+    it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.curation_stats_path
       expect(page).to have_text('Curation stats table')
@@ -89,7 +89,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.journals_path
@@ -97,7 +97,15 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by app_admins' do
+    it 'is not accessible by tenant curators' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.journals_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.journals_path
       expect(page).to have_text('Journals')
@@ -112,7 +120,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.publication_updater_path
@@ -120,7 +128,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by app_admins' do
+    it 'is not accessible by dryad admins' do
       sign_in(create(:user,  role: 'admin'))
       visit stash_url_helpers.publication_updater_path
       # User redirected
@@ -129,6 +137,13 @@ RSpec.feature 'AdminPaths', type: :feature do
 
     it 'is accessible by curators' do
       sign_in(create(:user, role: 'curator'))
+      visit stash_url_helpers.publication_updater_path
+      expect(page).to have_text('Publication updater')
+    end
+
+    it 'is accessible by tenant curators' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.publication_updater_path
       expect(page).to have_text('Publication updater')
     end
@@ -148,14 +163,14 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by admins' do
+    it 'is accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.ds_admin_funders_path
       expect(page).to have_text('Dataset funder dashboard')
     end
 
-    it 'is accessible by app_admins' do
+    it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.ds_admin_funders_path
       expect(page).to have_text('Dataset funder dashboard')
@@ -170,7 +185,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.user_admin_path
@@ -178,7 +193,15 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by app_admins' do
+    it 'is not accessible by tenant curators' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.user_admin_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.user_admin_path
       expect(page).to have_text('Manage users')
@@ -193,7 +216,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.tenant_admin_path
@@ -201,7 +224,15 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by app_admins' do
+    it 'is not accessible by tenant curators' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.tenant_admin_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.tenant_admin_path
       expect(page).to have_text('Manage member institutions')
@@ -216,7 +247,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.journal_admin_path
@@ -224,7 +255,15 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by app_admins' do
+    it 'is not accessible by tenant curators' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.journal_admin_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_text('Manage journals')
@@ -239,7 +278,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.publisher_admin_path
@@ -247,7 +286,15 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by app_admins' do
+    it 'is not accessible by tenant curators' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.publisher_admin_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.publisher_admin_path
       expect(page).to have_text('Manage publishers')
@@ -262,7 +309,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.status_dashboard_path
@@ -293,7 +340,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.submission_queue_path
@@ -323,7 +370,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is not accessible by admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.zenodo_queue_path

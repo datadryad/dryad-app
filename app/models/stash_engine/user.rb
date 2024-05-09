@@ -53,12 +53,6 @@ module StashEngine
 
     scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
 
-    scope :app_admins, -> {
-      joins(:roles).where(
-        "((stash_engine_roles.role in ('superuser', 'curator')) or (stash_engine_roles.role = 'admin' and stash_engine_roles.role_object_id is null))"
-      )
-    }
-
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
 
@@ -106,6 +100,10 @@ module StashEngine
 
     def superuser?
       roles.superuser.present?
+    end
+
+    def system_user?
+      roles.system_roles.present?
     end
 
     def min_admin?

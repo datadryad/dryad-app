@@ -5,7 +5,7 @@ module StashEngine
     end
 
     def admin?
-      @user.min_app_admin?
+      @user.system_user?
     end
 
     def popup?
