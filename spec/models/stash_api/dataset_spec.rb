@@ -37,7 +37,7 @@ module StashApi
     describe :basic_dataset_view do
 
       before(:each) do
-        @user.update(role: 'superuser') # need to be superuser to see all dataset info
+        create(:role, user: @user, role: 'superuser') # need to be superuser to see all dataset info
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
       end

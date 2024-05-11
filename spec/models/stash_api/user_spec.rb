@@ -42,10 +42,6 @@ module StashApi
         expect(@metadata[:tenantId]).to eq(@user.tenant_id)
       end
 
-      it 'has a valid role' do
-        expect(@metadata[:role]).to eq(@user.role)
-      end
-
       it 'has a valid orcid' do
         expect(@metadata[:orcid]).to eq(@user.orcid)
       end
