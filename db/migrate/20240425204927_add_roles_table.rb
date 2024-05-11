@@ -45,18 +45,21 @@ class AddRolesTable < ActiveRecord::Migration[6.1]
         end
       end
       dir.down do
-        StashEngine::Role.journal_admin_roles.each do |r|
-          StashEngine::JournalRole.create(user_id: r.user_id, role: r.role_object_type == 'StashEngine::Journal' ? 'admin' : 'org_admin', journal_id: r.role_object_type == 'StashEngine::Journal' ? r.role_object_id : nil, journal_organization_id: r.role_object_type == 'StashEngine::Journal' ? nil : r.role_object_id)
+        StashEngine::Role.journal_roles.each do |r|
+          StashEngine::JournalRole.create(user_id: r.user_id, role: 'admin', journal_id: r.role_object_id)
         end
-        StashEngine::Role.funder_admin_roles.each do |r|
+        StashEngine::Role.journal_org_roles.each do |r|
+          StashEngine::JournalRole.create(user_id: r.user_id, role: 'org_admin', journal_organization_id: r.role_object_id)
+        end
+        StashEngine::Role.funder_roles.each do |r|
           funder = StashEngine::Funder.find(r.role_object_id)
           StashEngine::FunderRole.create(user_id: r.user_id, role: 'admin', funder_name: funder.name, funder_id: funder.ror_id)
         end
-        StashEngine::Role.admin_roles.each {|r| StashEngine::User.find(r.user_id).update(role: 'limited_curator') if StashEngine::User.exists?(r.user_id)}
-        StashEngine::Role.curator_roles {|r| StashEngine::User.find(r.user_id).update(role: 'curator') if StashEngine::User.exists?(r.user_id)}
-        StashEngine::Role.superuser_roles {|r| StashEngine::User.find(r.user_id).update(role: 'superuser') if StashEngine::User.exists?(r.user_id)}
-        StashEngine::Role.tenant_admin_roles.each {|r| StashEngine::User.find(r.user_id).update(role: 'admin') if StashEngine::User.exists?(r.user_id)}
-        StashEngine::Role.tenant_curator_roles {|r| StashEngine::User.find(r.user_id).update(role: 'tenant_curator') if StashEngine::User.exists?(r.user_id)}
+        StashEngine::Role.system_roles.admin.each {|r| StashEngine::User.find(r.user_id).update(role: 'limited_curator') if StashEngine::User.exists?(r.user_id)}
+        StashEngine::Role.system_roles.curator.each {|r| StashEngine::User.find(r.user_id).update(role: 'curator') if StashEngine::User.exists?(r.user_id)}
+        StashEngine::Role.superuser.each {|r| StashEngine::User.find(r.user_id).update(role: 'superuser') if StashEngine::User.exists?(r.user_id)}
+        StashEngine::Role.tenant_roles.admin.each {|r| StashEngine::User.find(r.user_id).update(role: 'admin') if StashEngine::User.exists?(r.user_id)}
+        StashEngine::Role.tenant_roles.curator.each {|r| StashEngine::User.find(r.user_id).update(role: 'tenant_curator') if StashEngine::User.exists?(r.user_id)}
       end
     end
     drop_table :stash_engine_funder_roles do |t|
