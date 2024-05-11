@@ -45,7 +45,8 @@ module Stash
               if validate_downloaded_file(file_path: zip_file, checksum: metadata['checksum'])
                 # Hopefully, parse the correct filename out...though ROR hasn't been consistent with their names
                 dl_array = download_file.split('/')
-                json_file = dl_array[dl_array.length - 2].gsub('.zip', '.json').gsub('.json.json', '.json')
+                # Get v2 json file
+                json_file = dl_array[dl_array.length - 2].gsub('.zip', '_schema_v2.json')
 
                 # Process the ROR JSON
                 if process_ror_file(zip_file: zip_file, file: json_file)
@@ -175,22 +176,35 @@ module Stash
         end
 
         # Transfer the contents of a single JSON record to the database
+        # rubocop:disable Metrics/AbcSize
         def process_ror_record(record)
           return nil unless record.present? && record.is_a?(Hash) && record['id'].present?
 
+          acronyms = []
+          aliases = []
+          record.fetch('names', []).each do |n|
+            acronyms.push(n['value']) if n['types'].include?('acronym')
+            aliases.push(n['value']) if n['types'].include?('alias')
+            aliases.push(n['value']) if n['types'].include?('label') && !n['types'].include?('ror_display')
+          end
+          ror_display = record.fetch('names', []).find { |n| n['types'].include?('ror_display') } || {}
+          website_link = record.fetch('links', []).find { |l| l['type'] == 'website' } || {}
+          isni_ids = record.fetch('external_ids', []).find { |set| set['type'] == 'isni' } || {}
+
           ror_org = StashEngine::RorOrg.find_or_create_by(ror_id: record['id'])
-          ror_org.name = safe_string(value: record['name'])
-          ror_org.home_page = safe_string(value: record.fetch('links', []).first)
-          ror_org.country = record.dig('country', 'country_name')
-          ror_org.acronyms = record['acronyms']
-          ror_org.aliases = record['aliases']
-          ror_org.isni_ids = record.dig('external_ids', 'ISNI', 'all')
+          ror_org.name = safe_string(value: ror_display.fetch('value', ''))
+          ror_org.home_page = safe_string(value: website_link.fetch('value', ''))
+          ror_org.country = record.dig('locations', 0, 'geonames_details', 'country_name')
+          ror_org.acronyms = acronyms
+          ror_org.aliases = aliases
+          ror_org.isni_ids = isni_ids.fetch('all', [])
           ror_org.save
           true
         rescue StandardError => e
           puts('Error processing record', e)
           false
         end
+        # rubocop:enable Metrics/AbcSize
 
         def safe_string(value:)
           return value if value.blank? || value.length < 190
