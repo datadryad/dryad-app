@@ -312,6 +312,7 @@
 
 .ProseMirror p {
   white-space: normal;
+  white-space-collapse: preserve-spaces;
 }
 
 .markdown_editor .milkdown .ProseMirror.editor,
