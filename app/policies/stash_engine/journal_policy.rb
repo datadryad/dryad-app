@@ -2,10 +2,10 @@ module StashEngine
   class JournalPolicy < ApplicationPolicy
 
     def index?
-      @user.min_app_admin? && !@user.tenant_limited?
+      @user.system_user?
     end
 
-    def load?
+    def popup?
       @user.superuser?
     end
 

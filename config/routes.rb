@@ -280,16 +280,14 @@ Rails.application.routes.draw do
     post 'account/edit', to: 'user_account#edit', as: 'edit_account'
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
-    get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' # page for viewing a single user
-    get 'user_admin/role_popup/:id', to: 'user_admin#role_popup', as: 'user_role_popup'
-    get 'user_admin/email_popup/:id', to: 'user_admin#email_popup', as: 'user_email_popup'
-    get 'user_admin/journals_popup/:id', to: 'user_admin#journals_popup', as: 'user_journals_popup'
-    get 'user_admin/tenant_popup/:id', to: 'user_admin#tenant_popup', as: 'user_tenant_popup'
-    get 'user_admin/merge_popup', to: 'user_admin#merge_popup', as: 'user_merge_popup'
+    # page for viewing a single user
+    get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' 
     post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
-    post 'user_admin/set_email/:id', to: 'user_admin#set_email', as: 'user_admin_set_email'
-    post 'user_admin/set_tenant/:id', to: 'user_admin#set_tenant', as: 'user_admin_set_tenant'
+    # admin editing user
+    get 'user_admin/merge', to: 'user_admin#merge_popup', as: 'user_merge_popup'
     post 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
+    get 'user_admin/:id/edit/:field', to: 'user_admin#popup', as: 'user_popup'
+    post 'user_admin/:id', to: 'user_admin#edit', as: 'user_admin_edit'
     # admin tenant management
     get 'tenant_admin', to: 'tenant_admin#index' # main page for administering tenants
     get 'tenant_admin/:id/edit/:field', to: 'tenant_admin#popup', as: 'tenant_popup'
@@ -304,23 +302,15 @@ Rails.application.routes.draw do
     post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
 
     # admin_datasets, aka "Curator Dashboard"
-    # this routes actions to ds_admin with a possible id without having to define for each get action, default is index
     get 'ds_admin', to: 'admin_datasets#index'
-    get 'ds_admin/index', to: 'admin_datasets#index'
-    get 'ds_admin/index/:id', to: 'admin_datasets#index'
-    get 'ds_admin/data_popup/:id', to: 'admin_datasets#data_popup'
-    get 'ds_admin/note_popup/:id', to: 'admin_datasets#note_popup'
-    get 'ds_admin/waiver_popup/:id', to: 'admin_datasets#waiver_popup'
-    get 'ds_admin/create_salesforce_case/:id', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
-    get 'ds_admin/curation_activity_popup/:id', to: 'admin_datasets#curation_activity_popup'
-    get 'ds_admin/current_editor_popup/:id', to: 'admin_datasets#current_editor_popup'
-    get 'ds_admin/activity_log/:id', to: 'admin_datasets#activity_log'
-    get 'ds_admin/stats_popup/:id', to: 'admin_datasets#stats_popup'
+    get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
+    get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
+    get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
+    post 'ds_admin/:id', to: 'admin_datasets#edit', as: 'ds_admin_edit'
+
+    # curation notes
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
     post 'file_note/:id', to: 'curation_activity#file_note', as: 'file_note'
-    post 'curation_activity_change/:id', to: 'admin_datasets#curation_activity_change', as: 'curation_activity_change'
-    post 'current_editor_change/:id', to: 'admin_datasets#current_editor_change', as: 'current_editor_change'
-    post 'waiver_add/:id', to: 'admin_datasets#waiver_add', as: 'waiver_add'
 
     # admin report for dataset funders
     get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'

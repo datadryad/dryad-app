@@ -126,7 +126,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         it 'displays the proper information on the Activity Log page', js: true do
           within(:css, '.c-lined-table__row') do
-            find('button[aria-label="View Activity Log"]').click
+            find('a[aria-label="Activity log"]').click
           end
 
           expect(page).to have_text(@resource.identifier)
@@ -202,7 +202,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
       it 'displays the proper information on the Activity Log page', js: true do
         within(:css, '.c-lined-table__row') do
-          find('button[aria-label="View Activity Log"]').click
+          find('a[aria-label="Activity log"]').click
         end
 
         expect(page).to have_text(@resource.identifier)
@@ -270,7 +270,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         visit stash_url_helpers.ds_admin_path
 
         within(:css, '.c-lined-table__row') do
-          find('button[aria-label="View Activity Log"]').click
+          find('a[aria-label="Activity log"]').click
         end
 
         expect(page).to have_text(@resource.identifier.identifier)

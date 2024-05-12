@@ -5,9 +5,8 @@
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
   <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
     <div style="float: right;">
-      <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'note_popup', id: @identifier&.id, only_path: true),
-                    method: :get, local: false) do -%>
-        <button class="o-button__submit">Add note</button>
+      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
+        <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="note_button_<%= @identifier&.id %>">Add note</button>
       <% end %>
     </div>
   <% end %>
@@ -92,13 +91,12 @@
 
 <div id="internal_data" style="clear: both">
   <div style="float: left"><h2>Internal data</h2></div>
+  
   <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
     <div style="float: right">
       <br/>
-      <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'data_popup', id: @identifier.id,
-                                                   sub_method: 'post', only_path: true),
-                    method: :get, local: false) do -%>
-        <button class="o-button__submit">Add data</button>
+      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'data'), method: :get, local: false) do %>
+        <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="data_button_<%= @identifier&.id %>">Add data</button>
       <% end %>
     </div>
   <% end %>
@@ -108,14 +106,11 @@
   </div>
 </div>
 
-<% if policy([:stash_engine, :admin_datasets]).waiver_popup? %>
+<% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
   <div id="payment_info" class="table-wrapper" style="clear: both">
     <div style="float: left"><h2>Payment information</h2></div>
     <%= render partial: 'payment_info_table' %>
   </div>
-<% end %>
-
-<% if current_user.min_curator? %>
   <div id="dangerous_actions">
     <div style="float: left"><h2>Dangerous actions</h2>
 
@@ -131,19 +126,16 @@
           Please only do this if you know the author is unable/unwilling to submit it.</p>
       </div>
 
-      <% if policy([:stash_engine, :admin_datasets]).waiver_popup? && @identifier.payment_type != 'waiver' %>
+      <% if policy([:stash_engine, :admin_datasets]).waiver_add? && @identifier.payment_type != 'waiver' %>
         <div style="float: left" id="apply_fee_waiver">
-          <%= form_with(url: stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'waiver_popup', id: @identifier.id,
-                                                       sub_method: 'post', only_path: true),
-                        method: :get, local: false) do -%>
-            <button class="o-button__submit">Apply fee waiver</button>
-            <p>&nbsp;</p>
+          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
+            <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="waiver_button_<%= @identifier&.id %>">Apply fee waiver</button>
           <% end %>
         </div>
       <% end %>
 
       <div style="clear: both" id="revert_edit_div">
-
+        <br/>
         <hr/>
         <h3>New version based on previous</h3>
         <% if @identifier&.latest_resource&.current_resource_state&.submitted? && @identifier.resources.count > 1 %>

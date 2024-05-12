@@ -53,12 +53,6 @@ module StashEngine
 
     scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
 
-    scope :app_admins, -> {
-      joins(:roles).where(
-        "((stash_engine_roles.role in ('superuser', 'curator')) or (stash_engine_roles.role = 'admin' and stash_engine_roles.role_object_id is null))"
-      )
-    }
-
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
 
@@ -108,6 +102,10 @@ module StashEngine
       roles.superuser.present?
     end
 
+    def system_user?
+      roles.system_roles.present?
+    end
+
     def min_admin?
       roles.min_admin.present?
     end
@@ -136,6 +134,13 @@ module StashEngine
       ResourceState.where(user_id: other_user.id).update_all(user_id: id)
       Resource.where(user_id: other_user.id).update_all(user_id: id)
       Resource.where(current_editor_id: other_user.id).update_all(current_editor_id: id)
+      Role.where(user_id: other_user.id).each do |r|
+        if Role.find_by(user_id: id, role_object: r.role_object)
+          r.delete
+        else
+          r.update(user_id: id)
+        end
+      end
 
       # merge in any special things updated in other user and prefer these details from other_user over self.user
       out_hash = {}

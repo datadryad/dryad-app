@@ -2,16 +2,15 @@ require 'kaminari'
 
 module StashEngine
   class UserAdminController < ApplicationController
-
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :load_user, only: %i[email_popup role_popup tenant_popup journals_popup set_role set_tenant set_email user_profile]
+    before_action :load, only: %i[popup edit set_role user_profile]
     before_action :setup_roles, only: %i[set_role user_profile]
     before_action :setup_paging, only: :index
 
     # the admin_users main page showing users and stats
     def index
-      setup_superuser_facets
+      setup_facets
       setup_tenants
 
       # Default to recently-created users
@@ -27,12 +26,13 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @users = @users.where('first_name LIKE ? OR last_name LIKE ? OR orcid LIKE ? or email LIKE ?',
+        @users = @users.where('LOWER(first_name) LIKE LOWER(?) OR LOWER(last_name) LIKE LOWER(?) OR orcid LIKE ? or LOWER(email) LIKE LOWER(?)',
                               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%")
         if q.include?(' ')
           # add any matches for "firstname lastname"
           splitname = q.split
-          @users = @users.or(User.where('first_name LIKE ? and last_name LIKE ?', "%#{splitname.first}%", "%#{splitname.second}%"))
+          @users = @users.or(User.where('LOWER(first_name) LIKE LOWER(?) and LOWER(last_name) LIKE LOWER(?)', "%#{splitname.first}%",
+                                        "%#{splitname.second}%"))
         end
       end
 
@@ -45,46 +45,19 @@ module StashEngine
       @users = @users.page(@page).per(@page_size)
     end
 
-    # sets the user roles
-    def set_role
-      # set system role
-      save_role(role_params[:role], @system_role)
-      # set tenant role
-      save_role(role_params[:tenant_role], @tenant_role, @user.tenant)
-      # set publisher role
-      save_role(role_params[:publisher_role], @publisher_role, StashEngine::JournalOrganization.find_by(id: role_params[:publisher]))
-      # set journal role
-      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params[:journal]))
-      # set funder role
-      save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
-
+    def popup
+      authorize %i[stash_engine user]
+      strings = { email: 'email', tenant_id: 'member institution' }
+      @desc = strings[@field.to_sym]
       respond_to(&:js)
     end
 
-    def email_popup
-      respond_to(&:js)
-    end
-
-    # sets the user email
-    def set_email
-      new_email = params[:email]
-      return render(nothing: true, status: :unauthorized) unless current_user.superuser?
-
-      @user.update(email: new_email)
-
-      respond_to(&:js)
-    end
-
-    def journals_popup
-      respond_to(&:js)
-    end
-
-    def tenant_popup
-      respond_to(&:js)
-    end
-
-    def set_tenant
-      @user.update(tenant_id: params[:tenant])
+    def edit
+      authorize %i[stash_engine user]
+      valid = %i[email tenant_id]
+      check_tenant_role
+      update = edit_params.slice(*valid)
+      @user.update(update)
 
       respond_to(&:js)
     end
@@ -103,16 +76,34 @@ module StashEngine
 
     def merge
       authorize %i[stash_engine user]
-      user1 = StashEngine::User.find(params['user1'])
-      user2 = StashEngine::User.find(params['user2'])
+      user1 = StashEngine::User.find(params[:user1])
+      user2 = StashEngine::User.find(params[:user2])
       user1.merge_user!(other_user: user2)
       user2.destroy
 
       respond_to(&:js)
     end
 
+    # sets the user roles
+    def set_role
+      # set system role
+      save_role(role_params[:role], @system_role)
+      # set tenant role
+      save_role(role_params[:tenant_role], @tenant_role, @user.tenant)
+      # set publisher role
+      save_role(role_params[:publisher_role], @publisher_role, StashEngine::JournalOrganization.find_by(id: role_params[:publisher]))
+      # set journal role
+      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params[:journal]))
+      # set funder role
+      save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
+      # reload roles
+      setup_roles
+      respond_to(&:js)
+    end
+
     # profile for a user showing stats and datasets
     def user_profile
+      @user = User.find(params[:id])
       @orcid_link = orcid_link
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
       # some of these columns are calculated values for display that aren't stored (publication date)
@@ -133,8 +124,9 @@ module StashEngine
                    end
     end
 
-    def load_user
-      @user = authorize User.find(params[:id]), :load_user?
+    def load
+      @user = User.find(params[:id])
+      @field = params[:field]
     end
 
     def setup_roles
@@ -155,6 +147,13 @@ module StashEngine
       end
     end
 
+    def check_tenant_role
+      return unless edit_params[:tenant_id] != @user.tenant_id
+
+      @user.roles.tenant_roles.delete_all
+      setup_roles
+    end
+
     def setup_ds_status_facets
       @status_facets = @presenters.map(&:embargo_status).uniq.sort
       return unless params[:status]
@@ -166,7 +165,7 @@ module StashEngine
       @page_presenters = Kaminari.paginate_array(@presenters).page(@page).per(@page_size)
     end
 
-    def setup_superuser_facets
+    def setup_facets
       @tenant_facets = StashEngine::Tenant.enabled.sort_by(&:short_name)
     end
 
@@ -186,6 +185,10 @@ module StashEngine
       return "https://sandbox.orcid.org/#{@user.orcid}" if APP_CONFIG.orcid.site == 'https://sandbox.orcid.org/'
 
       "https://orcid.org/#{@user.orcid}"
+    end
+
+    def edit_params
+      params.permit(:id, :field, :email, :tenant_id)
     end
 
     def role_params

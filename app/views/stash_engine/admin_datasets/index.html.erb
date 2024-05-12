@@ -27,7 +27,7 @@
         <% if ps == current_ps %>
           <span class="page-current"><%= ps %></span>
         <% else %>
-            <%= link_to(ps, stash_url_helpers.ds_admin_path(request.parameters.merge(page_size: ps, page: 1))) %>
+            <%= link_to(ps, stash_url_helpers.ds_admin_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1))) %>
         <% end %>
       <% end %>
     </div>

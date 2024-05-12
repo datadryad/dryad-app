@@ -34,9 +34,7 @@ To create an API account:
 To set permissions for the API account:
 - Determine which role the account should have. For details on the available
   roles, see the [Permissions](../technical_notes/permissions.md) document.
-- The user can be given an appropraite role using
-  either the database or rails console:
-  `update stash_engine_users set role='admin' where id= <user id>;`
-  `StashEngine::User.find(<user id>).update(role: 'admin')`
-- The user can be set as a journal administrator using either the rails console:
-  `StashEngine::JournalRole.new(user_id: u.id, role_object: Journal.find(<journal_id>), role:'admin').save`
+- The user can be given an appropriate role in the user management UI, or using the rails console:
+  ```ruby
+  StashEngine::Role.new(user: <User>, role: 'admin', role_object: <Tenant, Journal, etc.>).save
+  ```

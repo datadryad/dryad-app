@@ -38,7 +38,7 @@ RSpec.feature 'UserAdmin', type: :feature do
       expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
       visit stash_url_helpers.user_admin_path
       expect(page).to have_link(@user.name)
-      within(:css, "form[action=\"#{stash_url_helpers.user_email_popup_path(@user.id)}\"]") do
+      within(:css, "form[action=\"#{stash_url_helpers.user_popup_path(id: @user.id, field: 'email')}\"]") do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
@@ -55,15 +55,15 @@ RSpec.feature 'UserAdmin', type: :feature do
       expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
       visit stash_url_helpers.user_admin_path
       expect(page).to have_link(@user.name)
-      within(:css, "form[action=\"#{stash_url_helpers.user_tenant_popup_path(@user.id)}\"]") do
+      within(:css, "form[action=\"#{stash_url_helpers.user_popup_path(id: @user.id, field: 'tenant_id')}\"]") do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
-        find('#tenant').click
+        find('#tenant_id').click
         find("option[value='dryad']").select_option
         find('input[name=commit]').click
       end
-      expect(page.find("#user_tenant_#{@user.id}")).to have_text(dryad.short_name)
+      expect(page.find("#user_tenant_id_#{@user.id}")).to have_text(dryad.short_name)
       user_changed = StashEngine::User.find(@user.id)
       expect(user_changed.tenant_id).to eq(dryad.id)
     end
@@ -120,7 +120,7 @@ RSpec.feature 'UserAdmin', type: :feature do
 
         it 'allows changing user email as a superuser', js: true do
           expect(page).to have_content(@user.name)
-          within(:css, "form[action=\"#{stash_url_helpers.user_email_popup_path(@user.id)}\"]") do
+          within(:css, "form[action=\"#{stash_url_helpers.user_popup_path(id: @user.id, field: 'email')}\"]") do
             find('.c-admin-edit-icon').click
           end
           within(:css, '#genericModalDialog') do
@@ -134,15 +134,15 @@ RSpec.feature 'UserAdmin', type: :feature do
 
         it 'allows changing user tenant as a superuser', js: true do
           expect(page).to have_content(@user.name)
-          within(:css, "form[action=\"#{stash_url_helpers.user_tenant_popup_path(@user.id)}\"]") do
+          within(:css, "form[action=\"#{stash_url_helpers.user_popup_path(id: @user.id, field: 'tenant_id')}\"]") do
             find('.c-admin-edit-icon').click
           end
           within(:css, '#genericModalDialog') do
-            find('#tenant').click
+            find('#tenant_id').click
             find("option[value='dryad']").select_option
             find('input[name=commit]').click
           end
-          expect(page.find("#user_tenant_#{@user.id}")).to have_text(@dryad.short_name)
+          expect(page.find("#user_tenant_id_#{@user.id}")).to have_text(@dryad.short_name)
           user_changed = StashEngine::User.find(@user.id)
           expect(user_changed.tenant_id).to eq(@dryad.id)
         end

@@ -42,8 +42,9 @@
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="logo_<%= t.id %>">
-            <%= "<img src='#{t.logo}' alt='#{t.short_name} logo'/>".html_safe unless t.logo.blank? %>
+            <%= "<img src='#{t.logo}' style='min-width: 40px;' alt='#{t.short_name} logo'/>".html_safe unless t.logo.blank? %>
           </div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'logo'), method: :get, local: false) do %>
               <button class="c-admin-edit-icon" aria-label="Edit member logo" aria-haspopup="dialog" aria-expanded="false" id="logo_button_<%= t.id %>">
@@ -51,6 +52,7 @@
               </button>
             <% end %>
           </div>
+          <% end %>
         </div>
       </td>
       <td>
@@ -58,9 +60,10 @@
           <div class="c-lined-table__data" id="ror_orgs_<%= t.id %>">
             <%= t.ror_ids.map {|r|
               org = t.ror_orgs.find{ |o| o.ror_id == r }
-              "<a href='#{r}'>#{org ? org.name : r}</a>"}.join(', ').html_safe
+              "<a href='#{r}' target='_blank'>#{org ? org.name : r}</a>"}.join(', ').html_safe
             %>
           </div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'ror_orgs'), method: :get, local: false) do %>
               <button class="c-admin-edit-icon" aria-label="Edit member ROR Orgs" aria-haspopup="dialog" aria-expanded="false" id="ror_orgs_button_<%= t.id %>">
@@ -68,6 +71,7 @@
               </button>
             <% end %>
           </div>
+          <% end %>
         </div>
       </td>
       <td>
@@ -75,6 +79,7 @@
           <div class="c-lined-table__data" id="campus_contacts_<%= t.id %>">
             <%= t.campus_contacts.join(', ') %>
           </div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'campus_contacts'), method: :get, local: false) do %>
               <button class="c-admin-edit-icon" aria-label="Edit member contacts" aria-haspopup="dialog" aria-expanded="false" id="campus_contacts_button_<%= t.id %>">
@@ -82,6 +87,7 @@
               </button>
             <% end %>
           </div>
+          <% end %>
         </div>
       </td>
       <td>
@@ -91,6 +97,7 @@
               <%= t.partner_display ? "Shown" : "Hidden" %>
             </span>
           </div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'partner_display'), method: :get, local: false) do %>
               <button class="c-admin-edit-icon" aria-label="Edit member display" aria-haspopup="dialog" aria-expanded="false" id="partner_display_button_<%= t.id %>">
@@ -98,6 +105,7 @@
               </button>
             <% end %>
           </div>
+          <% end %>
         </div>
       </td>
       <td>
@@ -107,6 +115,7 @@
               <%= t.enabled ? "Enabled" : "Disabled" %>
             </span>
           </div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'enabled'), method: :get, local: false) do %>
               <button class="c-admin-edit-icon" aria-label="Edit whether member is enabled" aria-haspopup="dialog" aria-expanded="false" id="enabled_button_<%= t.id %>">
@@ -114,6 +123,7 @@
               </button>
             <% end %>
           </div>
+          <% end %>
         </div>
       </td>
     </tr>

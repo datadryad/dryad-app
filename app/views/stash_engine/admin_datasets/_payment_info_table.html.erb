@@ -3,7 +3,9 @@
     <tr>
       <th>Payment type</th>
       <th>Payment ID</th>
-      <th>Waiver basis</th>
+      <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
+        <th>Waiver basis</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -16,7 +18,9 @@
         <% end %>
       </td>
       <td><%= @identifier.payment_id %></td>
-      <td><%= @identifier.waiver_basis %></td>
+      <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
+        <td><%= @identifier.waiver_basis %></td>
+      <% end %>
     </tr>
   </tbody>
 </table>
