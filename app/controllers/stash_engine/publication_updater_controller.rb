@@ -3,6 +3,7 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     before_action :setup_paging, only: [:index]
+    before_action :setup_filter, only: [:index]
 
     CONCAT_FOR_SEARCH = <<~SQL.freeze
        JOIN
@@ -23,20 +24,18 @@ module StashEngine
        ON search_table.id = stash_engine_proposed_changes.id
     SQL
 
-    # rubocop:disable Metrics/AbcSize
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     def index
       proposed_changes = authorize StashEngine::ProposedChange # .includes(identifier: :latest_resource)
         .joins(identifier: :latest_resource).where(approved: false, rejected: false)
-        .where('stash_engine_identifiers.pub_state != ?', 'withdrawn')
+        .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         .select('stash_engine_proposed_changes.*')
 
-      if params[:list_search].present?
-        proposed_changes = proposed_changes.joins(CONCAT_FOR_SEARCH)
+      setup_counts(proposed_changes)
 
-        keys = params[:list_search].split(/\s+/).map(&:strip)
-        proposed_changes = proposed_changes.where((['search_table.big_text LIKE ?'] * keys.size).join(' AND '), *keys.map { |key| "%#{key}%" })
-      end
+      params[:match_type] = 'articles' if params[:match_type].blank?
+
+      proposed_changes = add_param_filters(proposed_changes)
 
       params[:sort] = 'score' if params[:sort].blank?
       params[:direction] = 'desc' if params[:direction].blank?
@@ -62,7 +61,6 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     def update
       respond_to do |format|
@@ -89,6 +87,42 @@ module StashEngine
     def setup_paging
       @page = params[:page] || '1'
       @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
+    end
+
+    def setup_filter
+      @statuses = [OpenStruct.new(value: '', label: '*Select status*')]
+      @statuses << StashEngine::CurationActivity.statuses.map do |s|
+        OpenStruct.new(value: s, label: StashEngine::CurationActivity.readable_status(s))
+      end
+      @statuses.flatten!
+    end
+
+    def setup_counts(proposed_changes)
+      @article_count = proposed_changes.where('stash_engine_proposed_changes.publication_issn is not null').count('*')
+      @preprint_count = proposed_changes.where('stash_engine_proposed_changes.publication_issn is null').count('*')
+    end
+
+    def add_param_filters(proposed_changes)
+      if params[:list_search].present?
+        proposed_changes = proposed_changes.joins(CONCAT_FOR_SEARCH)
+
+        keys = params[:list_search].split(/\s+/).map(&:strip)
+        proposed_changes = proposed_changes.where((['search_table.big_text LIKE ?'] * keys.size).join(' AND '), *keys.map { |key| "%#{key}%" })
+      end
+
+      if params[:status]
+        proposed_changes = proposed_changes.joins(
+          'JOIN stash_engine_curation_activities sa ON sa.id = stash_engine_resources.last_curation_activity_id'
+        ).where('sa.status' => params[:status])
+      end
+
+      if params[:match_type]
+        proposed_changes = proposed_changes.where(
+          "stash_engine_proposed_changes.publication_issn is #{params[:match_type] == 'preprints' ? 'null' : 'not null'}"
+        )
+      end
+
+      proposed_changes
     end
 
   end

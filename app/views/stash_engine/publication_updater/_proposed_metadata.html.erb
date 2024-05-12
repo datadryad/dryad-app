@@ -1,3 +1,12 @@
+<% options = [
+  ['Primary', 'primary_no_metadata'],
+  ['Primary + metadata', 'primary'],
+  ['Related + metadata', 'related_no_metadata'],
+  ['Related article', 'related'],
+]
+options.insert(params[:match_type] == 'preprints' ? 0 : 2, ['Preprint + metadata', 'preprint'], ['Preprint', 'preprint_no_metadata'])
+%>
+
 <td>
   <strong>Publication:</strong>
   <%= link_to proposed_change.title, proposed_change.url, target: '_blank' %>
@@ -9,16 +18,7 @@
     <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :PUT, local: false do |f| %>
     <strong><label for="select_type_<%= proposed_change.id %>">Related work</label></strong>
     <br/>
-      <%= f.select :related_type, options_for_select(
-          [
-            ['Primary + metadata', 'primary'],
-            ['Primary', 'primary_no_metadata'],
-            ['Preprint + metadata', 'preprint'],
-            ['Preprint', 'preprint_no_metadata'],
-            ['Related + metadata', 'related_no_metadata'],
-            ['Related article', 'related'],
-          ]
-        ), {}, class: 'c-input__select', id: "select_type_#{proposed_change.id}" %>
+      <%= f.select :related_type, options_for_select(options), {}, class: 'c-input__select', id: "select_type_#{proposed_change.id}" %>
       <button name="accept_changes" class="o-button__plain-text2" type="submit">Accept</button>
     <% end %>
     <%= form_with model: StashEngine::ProposedChange.new, url: url, method: :DELETE, local: false do |f| %>
