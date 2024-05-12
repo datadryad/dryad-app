@@ -1,0 +1,8 @@
+<% # local: identifier, title %>
+<div class="o-admin-dialog">
+  <%= hidden_field_tag :log_page, 'true' %>
+  <div class="c-input">
+    <%= form.label :note, "Notes:", class: 'c-input__label' %>
+    <%= form.text_area(:note, class: 'c-input__textarea', style: 'width: 100%') %>
+  </div>
+</div>

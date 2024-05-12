@@ -169,7 +169,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
         click_button 'Datasets'
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
-        expect(page).not_to have_css('button[title="Edit Dataset"]')
+        expect(page).not_to have_css('button[title="Edit dataset"]')
       end
     end
 
@@ -193,15 +193,15 @@ RSpec.feature 'AdminDatasets', type: :feature do
         end
         # select the author action required
 
-        find("#stash_engine_resource_curation_activity_status option[value='action_required']").select_option
+        find("#activity_status_select option[value='action_required']").select_option
 
         # fill in a note
-        fill_in(id: 'stash_engine_resource_curation_activity_note', with: 'My cat says hi')
+        fill_in(id: 'activity_note', with: 'My cat says hi')
         click_button('Submit')
 
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(page).to have_text('Action required')
-          find('button[title="View Activity Log"]').click
+          find('a[title="Activity log"]').click
         end
 
         expect(page).to have_text('My cat says hi')
@@ -262,8 +262,8 @@ RSpec.feature 'AdminDatasets', type: :feature do
         expect { @resource.subjects << [create(:subject), create(:subject), create(:subject)] }
           .to change(StashDatacite::Subject, :count).by(3)
         visit stash_url_helpers.user_admin_profile_path(@user)
-        expect(page).to have_css('button[title="Edit Dataset"]')
-        find('button[title="Edit Dataset"]').click
+        expect(page).to have_css('button[title="Edit dataset"]')
+        find('button[title="Edit dataset"]').click
         expect(page).to have_text("You are editing #{@user.name}'s dataset.")
         all('[id^=instit_affil_]').last.set('test institution')
         page.send_keys(:tab)
@@ -284,7 +284,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_css('button[title="Update curator"]')
         find('button[title="Update curator"]').click
-        find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
+        find("#current_editor option[value='#{@curator.id}']").select_option
         click_button('Submit')
 
         within(:css, '.c-lined-table__row', wait: 10) do
@@ -304,10 +304,10 @@ RSpec.feature 'AdminDatasets', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_css('button[title="Update curator"]')
         find('button[title="Update curator"]').click
-        find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
+        find("#current_editor option[value='#{@curator.id}']").select_option
         click_button('Submit')
         find('button[title="Update curator"]').click
-        find("#stash_engine_resource_current_editor_id option[value='0']").select_option
+        find("#current_editor option[value='0']").select_option
         click_button('Submit')
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(page).not_to have_text(@curator.name_last_first)
@@ -334,13 +334,13 @@ RSpec.feature 'AdminDatasets', type: :feature do
         end
 
         find('button[title="Update curator"]').click
-        find("#stash_engine_resource_current_editor_id option[value='#{@curator.id}']").select_option
+        find("#current_editor option[value='#{@curator.id}']").select_option
         click_button('Submit')
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(page).to have_text(@curator.name)
         end
         find('button[title="Update curator"]').click
-        find("#stash_engine_resource_current_editor_id option[value='0']").select_option
+        find("#current_editor option[value='0']").select_option
         click_button('Submit')
         within(:css, '.c-lined-table__row', wait: 10) do
           expect(page).not_to have_text(@curator.name)

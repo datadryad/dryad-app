@@ -38,11 +38,15 @@ Options for processing in `StashEngine::Journal`:
 - *default_to_ppr* -- Whether the Peer Review checkbox should be checked by
   default when a new dataset is associated with this journal.
 
+There may also be a journal organization. The organization may
+be a publisher, society, or other organization that sponsors the data
+publication fees for a journal.
+
 Organizational relationships:
 - `StashEngine::Journal.sponsor` is the organization that controls the journal
   and causes it to be sponsored. Note that the actual payments may come from a
   parent organization of the sponsor.
-- `StashEngine::JournalOrganization.parent`` is a parent organization that provides funding
+- `StashEngine::JournalOrganization.parent` is a parent organization that provides funding
   for a lower-level organization.
 
 The organizational relationships are used for:
@@ -54,18 +58,19 @@ The organizational relationships are used for:
 Adding journal administrators
 -------------------------------
 
-A user can be set as a journal administrator in the Rails console: 
-`StashEngine::Role.create(user: u, role_object: j, role: 'admin')`
-
-A user can also be set as an organizational administrator. The organization may
-be a publisher, society, or other organization that sponsors the data
-publication fees for a journal. To add a user as an organizational
-administrator:
-1. Ensure that the `JournalOrganization` exists
-2. Ensure that all appropriate journals have the `JournalOrganization` listed as
+1. Ensure that the `Journal` exists
+2. Ensure that the `JournalOrganization` exists (if required)
+3. Ensure that all appropriate journals have the `JournalOrganization` listed as
    their `sponsor`
-3. Ensure that the administrator has a `User` account
-3. Add a `Role` as in `StashEngine::Role.create(user: u, role_object: o, role: 'admin')`
+4. Ensure that the administrator has a `User` account
+
+A user can be set as a journal administrator or an organizational administrator
+most easily through the user management UI.
+
+A user can also be set as a journal administrator in the Rails console: 
+```ruby
+StashEngine::Role.create(user: <User>, role_object: <Journal or JournalOrganization>, role: 'admin')
+```
 
 
 Alternate titles

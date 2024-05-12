@@ -1,0 +1,20 @@
+<p>Change curator for <em><%= @resource.title %></em></p>
+
+<%= hidden_field_tag :identifier_id, @resource.identifier_id %>
+<%# Users cannot change the editor once the files are published %>
+<%# if @resource.curatable? %>
+  <%= form.fields_for :current_editor, @resource do |r| %>
+    <div class="c-input">
+      <%= r.label :id, 'Curator', class: 'c-input__label' %>
+      <%= r.select :id, options_for_select([['(unassign)', '0']] + editor_select, @resource.current_editor_id), {include_blank: true}, {class: 'c-input__select', id: 'current_editor'} %>
+    </div>
+  <% end %>
+<%# end %>
+
+<%# User can always add a note %>
+<%= form.fields_for :curation_activity, @curation_activity do |ca| %>
+  <div class="c-input">
+    <label class="c-input__label">Notes</label>
+    <%= ca.text_area :note, class: 'c-input__textarea', style: 'width: 100%' %>
+  </div>
+<% end %>

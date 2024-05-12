@@ -1,0 +1,12 @@
+document.getElementById("user_<%= @field %>_<%= @user.id %>").innerHTML = "<%=
+case @field
+when 'email'
+  @user.email
+when 'tenant_id'
+  @user.tenant.short_name
+end %>";
+<% if @field == 'tenant_id' %>
+$('#edit_roles_form').html("<%= escape_javascript(render partial: 'admin_role_form', locals: { user: @user }) %>");
+<% end %>
+
+document.getElementById('genericModalDialog').close();

@@ -1,0 +1,5 @@
+<p>Set new email for user: <%= "#{@user.first_name} #{@user.last_name}".strip %></p>
+<div class="c-input">
+  <%= label_tag 'Email', @user.email, class: 'c-input__label' %>
+  <%= text_field_tag('email', @user.email, class: 'c-input__text') %>
+</div>

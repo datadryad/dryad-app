@@ -4,7 +4,11 @@ module StashEngine
       @user.present?
     end
 
-    def load?
+    def admin?
+      @user.system_user?
+    end
+
+    def popup?
       @user.superuser?
     end
 

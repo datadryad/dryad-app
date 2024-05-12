@@ -2,19 +2,18 @@ module StashEngine
   class JournalOrganizationAdminController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :require_superuser
     before_action :setup_paging, only: :index
     before_action :load, only: %i[popup edit]
 
     def index
       setup_sponsors
 
-      @orgs = StashEngine::JournalOrganization.all
+      @orgs = authorize StashEngine::JournalOrganization.all
 
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @orgs = @orgs.where('name LIKE ?', "%#{q}%")
+        @orgs = @orgs.where('LOWER(name) LIKE LOWER(?)', "%#{q}%")
       end
 
       ord = helpers.sortable_table_order(whitelist: %w[name])
@@ -55,12 +54,12 @@ module StashEngine
 
     def setup_sponsors
       @sponsors = [OpenStruct.new(id: '', name: '*Select publisher*')]
-      @sponsors << StashEngine::JournalOrganization.has_children.map { |o| OpenStruct.new(id: o.id, name: o.name) }
+      @sponsors << StashEngine::JournalOrganization.has_children.order(:name).map { |o| OpenStruct.new(id: o.id, name: o.name) }
       @sponsors.flatten!
     end
 
     def load
-      @org = authorize StashEngine::JournalOrganization.find(params[:id]), :load?
+      @org = authorize StashEngine::JournalOrganization.find(params[:id]), :popup?
       @field = params[:field]
     end
 

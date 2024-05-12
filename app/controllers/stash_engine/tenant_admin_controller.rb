@@ -2,11 +2,11 @@ module StashEngine
   class TenantAdminController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :require_superuser
     before_action :setup_paging, only: :index
     before_action :load, only: %i[popup edit]
 
     def index
+      authorize %i[stash_engine tenant], :admin?
       setup_sponsors
 
       @tenants = StashEngine::Tenant.all
@@ -14,7 +14,7 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @tenants = @tenants.where('short_name LIKE ? OR long_name LIKE ? OR id LIKE ?',
+        @tenants = @tenants.where('LOWER(short_name) LIKE LOWER(?) OR LOWER(long_name) LIKE LOWER(?) OR LOWER(id) LIKE LOWER(?)',
                                   "%#{q}%", "%#{q}%", "%#{q}%")
       end
 
@@ -63,12 +63,12 @@ module StashEngine
 
     def setup_sponsors
       @sponsors = [OpenStruct.new(id: '', name: '*Select institution*')]
-      @sponsors << StashEngine::Tenant.sponsored.map { |t| OpenStruct.new(id: t.id, name: t.short_name) }
+      @sponsors << StashEngine::Tenant.sponsored.order(:short_name).map { |t| OpenStruct.new(id: t.id, name: t.short_name) }
       @sponsors.flatten!
     end
 
     def load
-      @tenant = authorize Tenant.find(params[:id]), :load?
+      @tenant = authorize Tenant.find(params[:id]), :popup?
       @field = params[:field]
     end
 
