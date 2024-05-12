@@ -224,7 +224,7 @@ module StashEngine
 
         def create_editor_limit(editor_filter)
           if editor_filter == 'NA'
-            admin_users = StashEngine::Users.min_curators.map(&:id)
+            admin_users = StashEngine::User.min_curators.map(&:id)
             ActiveRecord::Base.send(:sanitize_sql_array, ['(ser.current_editor_id is NULL or ser.current_editor_id not in (?))', admin_users])
           else
             add_term_to_clause('ser.current_editor_id = %{term}', editor_filter)
