@@ -26,11 +26,20 @@ a.btn-primary:hover {
   }
 }
 
+.navbar-search .search-query-form {
+  max-width: 100%;
+}
+
 #map,
 .geobl-homepage-masthead.jumbotron ~ .row:last-of-type .row.text-center > .col-sm:last-of-type,
 .document-counter,
 button[data-toggle='collapse'] {
   display: none;
+}
+
+.category-icon .blacklight-icons svg {
+  width: 4.5rem;
+  margin: 1rem 0 .3rem;
 }
 
 .documents-list .document {
@@ -50,6 +59,14 @@ button[data-toggle='collapse'] {
 .documents-list {
   flex: 0 0 100%;
   max-width: 100%;
+}
+
+.documents-list .document {
+  margin-top: 0;
+}
+
+h3.index_title {
+  font-size: 1.15rem;
 }
 
 // The facets shouldn't be lime green
