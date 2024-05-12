@@ -41,7 +41,14 @@ export default function ReadMe({
       // Set markdown!
       setReplaceValue(result);
     });
-    if (file) reader.readAsText(file);
+    if (file) {
+      if (file.type.includes('pdf') || file.type.includes('application')
+        || file.type.includes('xml')) {
+        document.getElementById('bad-readme-modal').showModal();
+      } else {
+        reader.readAsText(file);
+      }
+    }
     // allow replacement uploads
     e.target.value = null;
   };
@@ -110,6 +117,16 @@ export default function ReadMe({
             >Import README
             </label>
           </div>
+          <dialog id="bad-readme-modal" className="modalDialog">
+            <div className="modalClose">
+              <button aria-label="Close" type="button" onClick={() => document.getElementById('bad-readme-modal').close()} />
+            </div>
+            <div>
+              <h1>File not accepted</h1>
+              <p>Only <a href="https://www.markdownguide.org/">Markdown format</a> README imports are accepted.</p>
+              <p>Have a different file type? Try copying and pasting the contents of your file into the editor!</p>
+            </div>
+          </dialog>
         </div>
       </div>
       {initialValue ? (
