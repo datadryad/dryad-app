@@ -84,7 +84,6 @@
     "formik": "^2.2.9",
     "html-react-parser": "^1.4.14",
     "identity-obj-proxy": "^3.0.0",
-    "istextorbinary": "^9.5.0",
     "lodash": "^4.17.21",
     "match-sorter": "^6.3.1",
     "mini-css-extract-plugin": "^2.7.6",
