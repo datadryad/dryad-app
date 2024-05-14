@@ -194,7 +194,7 @@ stage: &STAGE
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
-  shib_sp_host: dryad-stg.cdlib.org
+  shib_sp_host: sandbox.datadryad.org
   page_error_email: [devs@datadryad.org]
   feedback_email_from: no-reply-dryad-stg@datadryad.org
   google_analytics_id: UA-145629338-3
@@ -218,7 +218,7 @@ migration:
   <<: *DEFAULTS
   submission_error_email: [devs@datadryad.org]
   zenodo_error_email: [devs@datadryad.org]
-  shib_sp_host: dryad-stg.cdlib.org
+  shib_sp_host: sandbox.datadryad.org
   page_error_email: ["ryan@datadryad.org"]
   feedback_email_from: no-reply-dryad-migration@datadryad.org
 
