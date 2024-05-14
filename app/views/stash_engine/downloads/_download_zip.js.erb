@@ -20,32 +20,55 @@ const insertFiles = async (files) => {
   }
   return true;
 }
+const loadFiles = async (files) => {
+  await insertFiles(files);
+  form.submit();
+  dlbutton.childNodes[1].nodeValue = 'Download full dataset';
+  dialogContent.innerHTML = '<h1>Download in progress</h1><p>Closing this window may interrupt the dataset download. Please keep this window open until your download is complete.</p>';
+  dialog.showModal();
+  keepAlive = setInterval(() => {
+    navigator.serviceWorker.ready.then(worker => {
+      worker.active.postMessage({type: 'keep-alive'})
+    })
+  }, 10000);
+}
+const failMessage = () => {
+  if (dialog.open) dialog.close();
+  dialogContent.innerHTML = '<h1>Download error</h1><p>Please reload and try again, or download the individual files.</p>';
+  dialog.showModal();
+  dlbutton.childNodes[1].nodeValue = 'Download full dataset';
+  dlbutton.classList.add('o-download__files');
+  dlbutton.classList.remove('o-download__wait');
+  dlbutton.removeAttribute('disabled');
+}
+const checkResponse = async (response) => {
+  if (response.ok) {
+    const files = await response.json();
+    loadFiles(files);
+  } else if (response.status === 405) {
+    dialogContent.innerHTML = '<h1>Confirm you are human</h1><div id="captcha-div"></div>'
+    AwsWafCaptcha.renderCaptcha(document.getElementById('captcha-div'), {
+      apiKey: '<%= APP_CONFIG.waf_key %>',
+      skipTitle: true,
+      onLoad: () => { if (!dialog.open) dialog.showModal(); },
+      onSuccess: async (token) =>  {
+        dialog.close();
+        const response = await AwsWafIntegration.fetch(zip_url);
+        checkResponse(response);
+      },
+      onError: failMessage,
+    });
+  } else {
+    failMessage();
+  }
+}
 dlbutton.addEventListener('click', async e => {
   dlbutton.disabled = true;
   dlbutton.classList.remove('o-download__files');
   dlbutton.classList.add('o-download__wait');
   dlbutton.childNodes[1].nodeValue = 'Preparing download';
-  const response = await fetch(zip_url);
-  if (response.ok) {
-    const files = await response.json();
-    await insertFiles(files);
-    form.submit();
-    dlbutton.childNodes[1].nodeValue = 'Download full dataset';
-    dialogContent.innerHTML = '<h1>Download in progress</h1><p>Closing this window may interrupt the dataset download. Please keep this window open until your download is complete.</p>';
-    dialog.showModal();
-    keepAlive = setInterval(() => {
-      navigator.serviceWorker.ready.then(worker => {
-        worker.active.postMessage({type: 'keep-alive'})
-      })
-    }, 10000);
-  } else {
-    dialogContent.innerHTML = '<h1>Download error</h1><p>Please reload and try again, or download the individual files.</p>';
-    dialog.showModal();
-    dlbutton.childNodes[1].nodeValue = 'Download full dataset';
-    dlbutton.classList.add('o-download__files');
-    dlbutton.classList.remove('o-download__wait');
-    dlbutton.removeAttribute('disabled');
-  }
+  const response = await AwsWafIntegration.fetch(zip_url);
+  checkResponse(response);
 })
 messageChannel.port1.start();
 messageChannel.port1.addEventListener("message", ({data}) => {
