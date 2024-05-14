@@ -32,7 +32,7 @@ The <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis
 
 ### Dryad sandbox
 
-<a href="https://dryad-stg.cdlib.org/" target="blank">Dryad's sandbox server<span class="screen-reader-only"> (opens in new window)</span></a> allows users to experiment with data submission and the Dryad API, without worrying about the effects on "real" data. Anyone may create an account on the sandbox server for testing purposes. When creating an account, keep in mind that Dryad's sandbox relies on the <a href="https://sandbox.orcid.org/" target="_blank">sandbox version of ORCID<span class="screen-reader-only"> (opens in new window)</span></a>, which allows you to make test ORCID accounts. Sandbox ORCID IDs should be used in the Dryad sandbox, while use of Dryad's production system requires a real ORCID ID.
+<a href="https://sandbox.datadryad.org/" target="blank">Dryad's sandbox server<span class="screen-reader-only"> (opens in new window)</span></a> allows users to experiment with data submission and the Dryad API, without worrying about the effects on "real" data. Anyone may create an account on the sandbox server for testing purposes. When creating an account, keep in mind that Dryad's sandbox relies on the <a href="https://sandbox.orcid.org/" target="_blank">sandbox version of ORCID<span class="screen-reader-only"> (opens in new window)</span></a>, which allows you to make test ORCID accounts. Sandbox ORCID IDs should be used in the Dryad sandbox, while use of Dryad's production system requires a real ORCID ID.
 
 
 ## Dryad API methods
