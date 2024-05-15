@@ -8,7 +8,7 @@ needed to set it up.
 Please contact Dryad to obtain API access to the Dryad repository. Please let us know the
 following:
 
-- That you've logged into the UI systems you'd like to use (dryad-stg.cdlib.org and/or datadryad.org).
+- That you've logged into the UI systems you'd like to use (sandbox.datadryad.org and/or datadryad.org).
   Note that the stage system uses an ORCID sandbox account which is a different login and ORCID than
   the production ORCID system.
 - The email address or ORCID of the user(s) you logged into the UI(s) with.
@@ -73,7 +73,7 @@ class TestController < ApplicationController
     # change REDIRECT_URI if your settings are different and must match server/path configured when you
     # set up the key and secret with Dryad
     REDIRECT_URI = 'http://localhost:3000/oauth/callback'
-    OAUTH_URL = "https://dryad-stg.cdlib.org/oauth/authorize?" \
+    OAUTH_URL = "https://sandbox.datadryad.org/oauth/authorize?" \
         "client_id=#{ERB::Util.url_encode(CLIENT_ID)}" \
         "&redirect_uri=#{ERB::Util.url_encode(REDIRECT_URI)}" \
         "&response_type=code&scope=all"
@@ -84,7 +84,7 @@ class TestController < ApplicationController
 
     def callback
       # make a request to get the access token
-      resp = HTTP.post('https://dryad-stg.cdlib.org/oauth/token', 
+      resp = HTTP.post('https://sandbox.datadryad.org/oauth/token', 
                 json: { client_id: CLIENT_ID,
                         client_secret: CLIENT_SECRET,
                         grant_type: 'authorization_code',
@@ -94,7 +94,7 @@ class TestController < ApplicationController
       token = resp.parse['access_token']
 
       # make a test request to the API using the access token
-      resp = HTTP.headers('Authorization': "Bearer #{token}").get('https://dryad-stg.cdlib.org/api/v2/test')
+      resp = HTTP.headers('Authorization': "Bearer #{token}").get('https://sandbox.datadryad.org/api/v2/test')
 
       hash = resp.parse
       @welcome_message = hash['message']

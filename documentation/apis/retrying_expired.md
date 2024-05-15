@@ -64,7 +64,7 @@ require_relative 'retry_client'
 rc = RetryClient.new(
           app_id: '<your-app-id>',
           secret: '<your-secret>',
-          scheme_host_port: 'https://dryad-stg.cdlib.org')
+          scheme_host_port: 'https://sandbox.datadryad.org')
 response = rc.retry(:get, '/api/v2/test', {}) # params are HTTP method, path and extra headers
 => <RestClient::Response 200 "{\"message\":..."> # response object returned
 ```
