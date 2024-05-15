@@ -14,7 +14,7 @@ visibility:
 
 ## Demo Instance of Dryad
 
-Our demo instance of Dryad is available at [https://dryad-stg.cdlib.org](https://dryad-stg.cdlib.org) and you may submit and test freely.
+Our demo instance of Dryad is available at [https://sandbox.datadryad.org](https://sandbox.datadryad.org) and you may submit and test freely.
 
 ## Github Repositories & Similar
 
