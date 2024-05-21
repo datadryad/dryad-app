@@ -17,7 +17,7 @@
           <%= @identifier.payment_type %>
         <% end %>
       </td>
-      <td><%= @identifier.payment_id %></td>
+      <td><%= format_external_references(@identifier.payment_id) %></td>
       <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
         <td><%= @identifier.waiver_basis %></td>
       <% end %>
