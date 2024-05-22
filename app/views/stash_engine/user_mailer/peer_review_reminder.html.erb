@@ -1,6 +1,9 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>As a reminder, your Dryad data submission titled, "<%= @resource.title %>" is currently in "Private for peer review" status and has not entered our curation process. If your related manuscript is still in the peer review process, you may ignore this email.</p>
+<p>Title: <%= @resource.title %><br/>
+DOI: <%= @resource.identifier_str %></p>
+
+<p>As a reminder, your Dryad data submission is currently in "Private for peer review" status and has not entered our curation process. If your related manuscript is still in the peer review process, you may ignore this email.</p>
 
 <p>If your related article has been accepted, or if you are ready to initiate the curation process and proceed to publication, please follow these steps:</p>
 <ol>

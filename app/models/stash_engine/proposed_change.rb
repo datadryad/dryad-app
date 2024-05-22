@@ -66,6 +66,7 @@ module StashEngine
       resource = cr.populate_pub_update!(article_type: article_type, update_type: update_type)
 
       add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, resource)
+      release_updated_resource(resource) if resource.current_curation_status == 'peer_review' && article_type == 'primary_article'
       update(approved: true, user_id: current_user.id)
       true
     end
@@ -78,6 +79,15 @@ module StashEngine
     end
 
     private
+
+    def release_updated_resource(resource)
+      resource.curation_activities << StashEngine::CurationActivity.new(
+        user_id: 0, # system user
+        status: 'submitted',
+        note: 'Automatically released from private for peer review'
+      )
+      StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
+    end
 
     def add_metadata_updated_curation_note(provenance, resource)
       resource.curation_activities << StashEngine::CurationActivity.new(
