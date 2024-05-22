@@ -38,8 +38,8 @@ module StashEngine
 
     def zip_assembly_info
       # input is resource_id and output is json with keys size, filename and url for each entry
-      @resource = nil
-      @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
+      @resource = Resource.where(id: params[:resource_id]).first
+      @resource = nil if params[:share]
       check_for_sharing
       return render json: ['unauthorized'], status: :unauthorized unless @resource&.may_download?(ui_user: current_user) || @sharing_link
 
@@ -63,8 +63,8 @@ module StashEngine
     # for downloading the full version
     # uses presigned
     def download_resource
-      @resource = nil
-      @resource = Resource.where(id: params[:resource_id]).first if params[:share].nil?
+      @resource = Resource.where(id: params[:resource_id]).first
+      @resource = nil if params[:share]
       check_for_sharing
 
       @version_presigned = Stash::Download::VersionPresigned.new(controller_context: self, resource: @resource)
