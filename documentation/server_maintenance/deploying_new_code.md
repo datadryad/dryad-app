@@ -54,48 +54,21 @@ git push --delete origin <tag-name>
 After creating tags, you will usually want to create an official
 "release" along with release notes in the GitHub user interface.
 
+Deploying a tag
+----------------
+
+```
+deploy_dryad.sh <tag-name>
+puma_restart.sh
+```
+
 
 De/Re-Registering Servers from the ALB
 ---------------------------------------
 
-To register and de-register servers from the ALB, use the AWS console.
-
-<!-- CHECK ALL AGAINST NEW SERVERS!!
-
-Suspending and re-enabling jobs around deployment
--------------------------------------------------
-
-Dryad servers send datasets to permanent storage and Zenodo using job
-queues. These queues should be suspended during a redeploy to ensure
-a dataset is not in the process of being transferred when the code is
-changed out.
-
-Briefly, a little while ahead:
-- On 2c, run `~/bin/long_jobs.dryad drain`.  It touches the defer_jobs.txt and hold-submissions.txt files in `~/apps/ui/releases`.
-- On 2a, touch `~/apps/ui/releases/hold-submissions.txt`
-
-Deploy
-
-After
-- Run `~/bin/long_jobs.dryad restart` on 2c.
-- Remove `~/apps/ui/releases/hold-submissions.txt` on 2a.
-- Reset the servername in the repo_queue_state table for any jobs being held to match the server name you're looking at in the UI.
-- Click "Restart submissions which were shut down gracefully."  It'll send them through again.
-
-For information on starting/stopping these transfers, see:
-- [Zenodo extra copies](../zenodo_integration/delayed_jobs.md)
+To register and de-register servers from the ALB, use the AWS console. You will
+go into the <a href="https://us-west-2.console.aws.amazon.com/ec2/home?region=us-west-2#TargetGroups:">EC2
+Target Groups</a>, select the group you want to work with, and update the status
+of the individual servers.
 
 
-Setting a server to "Maintenance Mode"
---------------------------------------
-
-Put a `maintenance.html` file in the vhost's htdocs directory (document
-root). If it is there maintenance will be shown to outside IP
-addresses and not to us. You'll need to do on both servers for
-maintenance on both.
-
-Maintenance mode shows outside IP addresses a maintenance page served
-by Apache, while our internal IP addresses have traffic passed through
-and are able to see the application served by Passenger.
-
--->
