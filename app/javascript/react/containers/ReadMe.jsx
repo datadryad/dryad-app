@@ -1,9 +1,11 @@
 import React, {
   useRef, useState, useEffect, useCallback,
 } from 'react';
+import {Buffer} from 'buffer';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import {debounce} from 'lodash';
+import {isText} from './textorbinary';
 import MarkdownEditor from '../components/MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../lib/utils';
 
@@ -36,19 +38,23 @@ export default function ReadMe({
   const importFile = (e) => {
     const [file] = e.target.files;
     const reader = new FileReader();
+    const readerX = new FileReader();
     reader.addEventListener('load', () => {
       const {result} = reader;
-      // Set markdown!
+      // Test markdown
+      const buffer = Buffer.from(new Uint8Array(result));
+      if (isText(buffer)) {
+        readerX.readAsText(file);
+      } else {
+        document.getElementById('bad-readme-modal').showModal();
+      }
+    });
+    readerX.addEventListener('load', () => {
+      const {result} = readerX;
+      // Set markdown
       setReplaceValue(result);
     });
-    if (file) {
-      if (file.type.includes('pdf') || file.type.includes('application')
-        || file.type.includes('xml')) {
-        document.getElementById('bad-readme-modal').showModal();
-      } else {
-        reader.readAsText(file);
-      }
-    }
+    if (file) reader.readAsArrayBuffer(file);
     // allow replacement uploads
     e.target.value = null;
   };
