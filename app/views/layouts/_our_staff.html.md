@@ -25,19 +25,6 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/mark.jpg" alt="Headshot of Mark Kurtz">
-  <h5>Mark Kurtz</h5><br/>
-  <p><em>Head of Business Operations</em><br/>  
-  Mark has worked in academic publishing for over 20 years, with experience
-  ranging from editorial management to strategic development, in academic,
-  nonprofit, and commercial settings. He has held positions at the
-  Archaeological Institute of America, SAGE, and BioOne, where he was Senior
-  Director for Strategic Development. Long active in the development of
-  open-access models, he believes that sustainable models are essential to
-  meaningful innovation in scholarly communications.
-  </p>
-</div>
-<div class="bio">
   <img src="/images/sarah.jpg" alt="Headshot of Sarah Lippincott">
   <h5>Sarah Lippincott</h5><br/>
   <p><em>Head of Community Engagement</em><br/>
