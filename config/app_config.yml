@@ -107,7 +107,11 @@ defaults: &DEFAULTS
     missing_values: ",NA,na,N/A,n/a,N.A.,n.a.,-,.,empty,blank"
   rate_limit:
     file_downloads_per_hour: 100
+    file_downloads_per_day: 500
+    file_downloads_per_month: 3000
     zip_downloads_per_hour: 20
+    zip_downloads_per_day: 100
+    zip_downloads_per_month: 500
     # all other rates are number of requests allowed per minute
     all_requests: 120
     api_requests_anon: 30

@@ -62,15 +62,35 @@ end
 
 # File download throttling
 # We don't want a user to simply download everything in Dryad. That costs us too much in bandwidth charges!
-Rack::Attack.throttle('file_downloads', limit: APP_CONFIG[:rate_limit][:file_downloads_per_hour], period: 1.hour) do |req|
-  "file_download_#{req.ip}" if req.path.start_with?('/stash/downloads/file_stream') ||
+Rack::Attack.throttle('file_downloads_per_hour', limit: APP_CONFIG[:rate_limit][:file_downloads_per_hour], period: 1.hour) do |req|
+  "file_download_hour_#{req.ip}" if req.path.start_with?('/stash/downloads/file_stream') ||
+                               req.path.match(/api.*files.*download/)
+end
+
+Rack::Attack.throttle('file_downloads_per_day', limit: APP_CONFIG[:rate_limit][:file_downloads_per_day], period: 1.day) do |req|
+  "file_download_per_day_#{req.ip}" if req.path.start_with?('/stash/downloads/file_stream') ||
+                               req.path.match(/api.*files.*download/)
+end
+
+Rack::Attack.throttle('file_downloads_per_month', limit: APP_CONFIG[:rate_limit][:file_downloads_per_month], period: 30.days) do |req|
+  "file_download_per_month_#{req.ip}" if req.path.start_with?('/stash/downloads/file_stream') ||
                                req.path.match(/api.*files.*download/)
 end
 
 # Zip downloads have a much lower limit than other requests,
 # since it is expensive to asemble the zip files.
-Rack::Attack.throttle('zip_downloads', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_hour], period: 1.hour) do |req|
-  "zip_download_#{req.ip}" if req.path.start_with?('/stash/downloads/download_resource') ||
+Rack::Attack.throttle('zip_downloads_per_hour', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_hour], period: 1.hour) do |req|
+  "zip_download_per_hour_#{req.ip}" if req.path.start_with?('/stash/downloads/download_resource') ||
+                              req.path.match(/api.*(version|dataset).*download/)
+end
+
+Rack::Attack.throttle('zip_downloads_per_day', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_day], period: 1.day) do |req|
+  "zip_download_per_day_#{req.ip}" if req.path.start_with?('/stash/downloads/download_resource') ||
+                              req.path.match(/api.*(version|dataset).*download/)
+end
+
+Rack::Attack.throttle('zip_downloads_per_month', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_month], period: 30.days) do |req|
+  "zip_download_per_month_#{req.ip}" if req.path.start_with?('/stash/downloads/download_resource') ||
                               req.path.match(/api.*(version|dataset).*download/)
 end
 

@@ -169,7 +169,11 @@ defaults: &DEFAULTS
     # these rates are low to facilitate quick testing of the rate limiter,
     # but the rate limiter is disabled for most rspec classes
     file_downloads_per_hour: 2
+    file_downloads_per_day: 5
+    file_downloads_per_month: 10
     zip_downloads_per_hour: 2
+    zip_downloads_per_day: 5
+    zip_downloads_per_month: 10
     all_requests: 10
     api_requests_anon: 5
     api_requests_auth: 10
