@@ -179,7 +179,7 @@ module StashEngine
 
     def curation_activity_change
       @last_resource = @identifier.latest_resource # the last resource of all, even not submitted
-      if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:stash_engine_resource][:curation_activity][:status])
+      if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:curation_activity][:status])
         return publishing_error
       end
 
