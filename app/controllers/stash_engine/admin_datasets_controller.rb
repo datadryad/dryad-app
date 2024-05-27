@@ -179,14 +179,14 @@ module StashEngine
 
     def curation_activity_change
       @last_resource = @identifier.latest_resource # the last resource of all, even not submitted
-      return publishing_error if @resource.id != @last_resource.id && %w[embargoed published].include?(params[:curation_activity][:status])
+      return publishing_error if @resource.id != @last_resource.id && %w[embargoed published].include?(params.dig(:curation_activity, :status))
 
       @last_state = @resource&.curation_activities&.last&.status
-      @this_state = params[:curation_activity][:status] || @last_state
+      @this_state = params.dig(:curation_activity, :status) || @last_state
 
       return state_error unless CurationActivity.allowed_states(@last_state).include?(@this_state)
 
-      @note = params[:curation_activity][:note]
+      @note = params.dig(:curation_activity, :note)
       @resource.current_editor_id = current_user.id
       decipher_curation_activity
       @resource.publication_date = @pub_date
@@ -198,7 +198,7 @@ module StashEngine
     end
 
     def decipher_curation_activity
-      @status = params[:curation_activity][:status]
+      @status = params.dig(:curation_activity, :status)
       @pub_date = params[:publication_date]
       # If the status was nil then we are just adding a note so get the prior status
       @status = @resource.current_curation_status unless @status.present?
@@ -271,7 +271,7 @@ module StashEngine
     def current_editor_change
       @resource = @identifier.latest_resource
       decipher_curation_activity
-      editor_id = params[:current_editor][:id]
+      editor_id = params.dig(:current_editor, :id)
       if editor_id&.to_i == 0
         @resource.update(current_editor_id: nil)
         editor_name = 'unassigned'
@@ -280,7 +280,7 @@ module StashEngine
         @resource.update(current_editor_id: editor_id)
         editor_name = StashEngine::User.find(editor_id)&.name
       end
-      @note = "Changing current editor to #{editor_name}. " + params[:curation_activity][:note]
+      @note = "Changing current editor to #{editor_name}. " + params.dig(:curation_activity, :note)
       @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
       @resource.update_salesforce_metadata
       @resource.reload
