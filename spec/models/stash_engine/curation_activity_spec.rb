@@ -16,7 +16,6 @@
 #  index_stash_engine_curation_activities_on_resource_id_and_id  (resource_id,id)
 #
 require 'ostruct'
-require_relative '../../../stash/spec_helpers/factory_helper'
 require 'byebug'
 
 module StashEngine
