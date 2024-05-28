@@ -1,9 +1,5 @@
 require 'xml/mapping'
 
-require 'stash/wrapper/descriptive_node'
-require 'stash/wrapper/identifier'
-require 'stash/wrapper/stash_administrative'
-
 module Stash
   module Wrapper
     # Mapping for the root `<st:stash_wrapper>` element

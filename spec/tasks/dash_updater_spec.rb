@@ -1,6 +1,5 @@
 require 'ostruct'
 require_relative '../../lib/tasks/dash_updater'
-require_relative '../../stash/spec_helpers/factory_helper'
 require 'byebug'
 
 describe 'datacite_target:update_dash', type: :task do

@@ -36,7 +36,7 @@ lots of workarounds in place.
 
 ## The Counter Uploader tool
 
-We reworked the [counter-uploader](../stash/script/counter-uploader/readme.md) so that it can independently
+We reworked the [counter-uploader](../script/stash/counter-uploader/readme.md) so that it can independently
 upload counter files outside of the Python tool.  (At least for the time being) the idea
 is that we'll process the counter files, populate numbers into our daatabase manually and
 then once a month we can upload any missing reports to DataCite.  The tool should be
