@@ -1,5 +1,4 @@
 require 'datacite/mapping'
-require 'stash/wrapper'
 require 'time'
 
 # rubocop:disable Naming/AccessorMethodName

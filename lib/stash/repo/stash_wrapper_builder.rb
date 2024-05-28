@@ -1,5 +1,3 @@
-require 'stash/wrapper'
-
 module Stash
   module Repo
     class StashWrapperBuilder < ValidatingXMLBuilder

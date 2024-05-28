@@ -1,8 +1,4 @@
 require 'xml/mapping'
-require 'stash/wrapper/version'
-require 'stash/wrapper/license'
-require 'stash/wrapper/embargo'
-require 'stash/wrapper/inventory'
 
 module Stash
   module Wrapper
