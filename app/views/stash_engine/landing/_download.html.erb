@@ -1,4 +1,7 @@
 <% # takes dataset_identifier as local %>
+<% content_for(:head) do %>
+<script type="text/javascript" src="https://16077a4ae659.us-west-2.captcha-sdk.awswaf.com/16077a4ae659/jsapi.js" defer></script>
+<% end %>
 <% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
 <% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>
   <div class="o-download">
