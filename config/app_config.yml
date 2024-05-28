@@ -83,6 +83,7 @@ defaults: &DEFAULTS
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   lambda_id:
     dataZip: w27i4vubmmwkssdf6xpszafmhq0rffog
+  waf_key: <%= Rails.application.credentials[Rails.env.to_sym][:aws_waf_key] %>
   google_analytics_id: null
   matomo_analytics_id: null
   google_recaptcha_sitekey: 6Lfhn5kiAAAAAIzZPQEGRa43cDJz-rNVxRcQIkU4
