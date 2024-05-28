@@ -1,6 +1,5 @@
 {
   "name": "dryad",
-  "__jest_comment__": "See https://medium.com/@kylefox/how-to-setup-javascript-testing-in-rails-5-1-with-webpacker-and-jest-ef7130a4c08e",
   "jest": {
     "verbose": true,
     "roots": [
@@ -39,9 +38,12 @@
     "lint:style": "stylelint app/**/*.scss app/**/*.css --fix"
   },
   "dependencies": {
-    "@babel/core": "^7.23.0",
+    "@babel/core": "7",
     "@babel/eslint-parser": "^7.18.6",
+    "@babel/plugin-transform-runtime": "7",
+    "@babel/preset-env": "7",
     "@babel/preset-react": "^7.18.6",
+    "@babel/runtime": "7",
     "@codemirror/autocomplete": "^6.11.0",
     "@codemirror/commands": "^6.3.0",
     "@codemirror/lang-markdown": "^6.2.2",
@@ -53,6 +55,7 @@
     "@emotion/css": "^11.7.1",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@lezer/common": "^1.0.0",
     "@lezer/highlight": "^1.2.0",
     "@lezer/markdown": "^1.1.0",
     "@milkdown/core": "7.3.0",
@@ -66,13 +69,14 @@
     "@milkdown/react": "7.3.0",
     "@milkdown/transformer": "7.3.0",
     "@milkdown/utils": "7.3.0",
-    "@rails/webpacker": "^6.0.0-rc.6",
     "@tinymce/tinymce-react": "^5.0.1",
     "aws-sdk": "^2.1060.0",
     "axios": "^1.6.0",
+    "babel-loader": "8",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "browser-sync": "^2.27.9",
     "browsersync-ssi": "^0.2.4",
+    "compression-webpack-plugin": "9",
     "copy-webpack-plugin": "^11.0.0",
     "copyfiles": "^2.4.1",
     "css-loader": "^6.8.1",
@@ -89,6 +93,7 @@
     "mini-css-extract-plugin": "^2.7.6",
     "moment": "^2.29.4",
     "nanoid": "<4.0.0",
+    "pnp-webpack-plugin": "^1.7.0",
     "postcss-assets": "^6.0.0",
     "prop-types": "^15.8.1",
     "prosemirror-commands": "^1.5.2",
@@ -98,16 +103,21 @@
     "react-dom": "^18.2.0",
     "react_ujs": "^2.6.1",
     "sass": "^1.49.10",
+    "shakapacker": "6.6.0",
     "string-similarity": "^4.0.4",
     "style-loader": "^3.3.3",
+    "terser-webpack-plugin": "5",
     "truncate-utf8-bytes": "^1.0.2",
-    "webpack": "^5.53.0",
-    "webpack-cli": "^4.8.0",
+    "webpack": "5",
+    "webpack-assets-manifest": "5",
+    "webpack-cli": "4",
+    "webpack-merge": "5",
+    "webpack-sources": "^3.2.3",
     "yup": "^0.32.11"
   },
   "babel": {
     "presets": [
-      "./node_modules/@rails/webpacker/package/babel/preset.js",
+      "./node_modules/shakapacker/package/babel/preset.js",
       "@babel/preset-react"
     ]
   },
@@ -138,14 +148,14 @@
     "jquery-ui": "^1.13.2",
     "jshint": "^2.13.4",
     "ndb": "^1.1.5",
-    "node": "^16.18.1",
+    "node": "^18.0.0",
     "normalize-scss": "^7.0.1",
     "postcss": "^8.4.31",
     "react-test-renderer": "^17.0.2",
     "stylelint": "^15.10.1",
     "stylelint-config-property-sort-order-smacss": "^9.0.0",
     "stylelint-config-recommended-scss": "^6.0.0",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^5.0.4"
   },
   "resolutions": {
     "nanoid": "<4.0.0"

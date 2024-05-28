@@ -1,4 +1,4 @@
-const { webpackConfig, merge } = require('@rails/webpacker')
+const { webpackConfig, merge } = require('shakapacker')
 const CopyPlugin = require('copy-webpack-plugin')
 
 const customConfig = {
