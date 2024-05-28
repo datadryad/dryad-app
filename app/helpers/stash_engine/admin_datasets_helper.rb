@@ -33,6 +33,9 @@ module StashEngine
     def format_external_references(instring)
       return '' unless instring.present?
 
+      # Stripe invoice references
+      return render inline: link_to(instring, "https://dashboard.stripe.com/invoices/#{instring}", target: :_blank) if instring.start_with?('in_')
+
       # Turn salesforce references into hyperlinks
       matchdata = instring.match(/(.*)SF ?#? ?(\d+)(.*)/)
       return instring unless matchdata
