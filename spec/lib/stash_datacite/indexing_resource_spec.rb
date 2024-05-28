@@ -1,5 +1,3 @@
-require_relative '../../../stash/spec_helpers/factory_helper'
-
 module Datacite
   module Mapping
 
