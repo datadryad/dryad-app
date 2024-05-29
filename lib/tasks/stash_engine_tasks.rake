@@ -999,9 +999,23 @@ namespace :identifiers do
 
   desc 'Generate a report of Dryad authors and their countries'
   task geographic_authors_report: :environment do
+    # Get the year-month specified in YEAR_MONTH environment variable.
+    # If none, default to the previously completed month.
+    if ENV['YEAR_MONTH'].blank?
+      p 'No month specified, assuming last month.'
+      year_month = 1.month.ago.strftime('%Y-%m')
+    else
+      year_month = ENV['YEAR_MONTH']
+    end
+
+    p "Writing Geographic Authors Report for #{year_month} to file..."
     CSV.open('geographic_authors_report.csv', 'w') do |csv|
       csv << ['Dataset DOI', 'Author First', 'Author Last', 'Institution', 'Country']
-      StashEngine::Identifier.publicly_viewable.find_each do |i|
+      # Limit the query to datasets that existed at the time of the target report,
+      # and have been updated the within the month of the target.
+      limit_date = Date.parse("#{year_month}-01")
+      limit_date_filter = "updated_at > '#{limit_date - 1.day}' AND created_at < '#{limit_date + 1.month}' "
+      StashEngine::Identifier.publicly_viewable.where(limit_date_filter).find_each do |i|
         res = i.latest_viewable_resource
         res&.authors&.each do |a|
           affil = a.affiliation
