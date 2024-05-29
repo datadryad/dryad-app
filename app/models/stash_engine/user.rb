@@ -49,7 +49,7 @@ module StashEngine
 
     accepts_nested_attributes_for :roles
 
-    scope :curators, -> { joins(:roles).where('stash_engine_roles' => { role: 'curator' }) }
+    scope :curators, -> { joins(:roles).where('stash_engine_roles' => { role: 'curator', role_object_id: nil }) }
 
     scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
 
