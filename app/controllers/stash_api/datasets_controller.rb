@@ -210,9 +210,8 @@ module StashApi
         keywords = [art_params['keywords'], art_params['classifications']].flatten.compact
         em_params['keywords'] = keywords if keywords
         if art_params['funding_information']
-          em_funders = []
-          art_params['funding_information'].each do |f|
-            em_funders << {
+          em_funders = art_params['funding_information'].map do |f|
+            {
               organization: f['funder'],
               awardNumber: f['award_number'],
               awardDescription: f['award_description']
@@ -339,10 +338,9 @@ module StashApi
         # multiple affiliations, separated by OR
         if StashEngine::Tenant.exists?(params['tenant'])
           tenant = StashEngine::Tenant.find(params['tenant'])
-          ror_array = []
-          tenant.ror_ids.each do |r|
+          ror_array = tenant.ror_ids.map do |r|
             # map the id into the format
-            ror_array << "dryad_author_affiliation_id_sm:\"#{r}\" "
+            "dryad_author_affiliation_id_sm:\"#{r}\" "
           end
           fq_array << ror_array.join(' OR ')
         else

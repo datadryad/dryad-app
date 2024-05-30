@@ -21,7 +21,7 @@ gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.6.2'
 gem 'ed25519', '1.3.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
-gem 'rubocop', '~> 1.38', require: false
+gem 'rubocop', '~> 1.64', require: false
 # Use Puma as the app server
 gem 'puma', '6.4.2', group: :puma, require: false
 
@@ -78,6 +78,7 @@ gem 'jwt', '~> 2.3.0'
 gem 'kaminari', '~> 1.2.2'
 gem 'leaflet-rails', '~> 1.7.0'
 gem 'loofah', '~> 2.19.1'
+gem 'net-ftp', '~> 0.3.4'
 gem 'net-sftp'
 gem 'noid', '~> 0.9.0'
 gem 'omniauth', '~> 2.1.0'
@@ -105,7 +106,7 @@ gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside fr
 gem 'twitter-typeahead-rails', '0.11.1' # this is in a generator to install blacklight
 gem 'wicked_pdf', '~> 2.1.0'
 gem 'wkhtmltopdf-binary', '~> 0.12.5.4'
-gem 'yaml', '~> 0.2.1' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
+gem 'yaml', '~> 0.3.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
 # ############################################################
@@ -177,5 +178,3 @@ group :development, :test, :local_dev do
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
   gem 'spring-commands-rspec'
 end
-
-gem 'net-ftp', '~> 0.3.4'

@@ -78,10 +78,7 @@ namespace :zenodo do
     start_num = ARGV[1].to_i
     identifiers = StashEngine::Identifier.joins(:zenodo_copies).distinct.order(:id).offset(start_num)
 
-    # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end } # prevents rake from interpreting addional args as other rake tasks
-    # rubocop:enable Style/BlockDelimiters
-
+    ARGV.each { |a| task(a.to_sym {}) } # prevents rake from interpreting addional args as other rake tasks
     puts "Updating zenodo metadata starting at record #{start_num}"
 
     # this stops spamming of activerecord query logs in dev environment

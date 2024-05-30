@@ -9,7 +9,7 @@ module StashEngine
         super
         # Check the status of the Crossref API via the Serrano gem
         works = Serrano.works(ids: StashEngine::Identifier.publicly_viewable.last&.identifier)
-        online = (works.is_a?(Array) && works.first['message'].blank?)
+        online = works.is_a?(Array) && works.first['message'].blank?
         msg = "We couldn't obtain information from CrossRef about this DOI" unless online
         record_status(online: online, message: msg)
         online

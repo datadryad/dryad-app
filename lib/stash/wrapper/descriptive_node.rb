@@ -8,7 +8,7 @@ module Stash
 
       # See `XML::Mapping::SingleAttributeNode#initialize`
       def initialize(*args)
-        path, *myargs = super(*args)
+        path, *myargs = super
         @path = ::XML::XXPath.new(path)
         myargs # rubocop:disable Lint/Void
       end
