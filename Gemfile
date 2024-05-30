@@ -77,7 +77,7 @@ gem 'jquery-ui-rails', '~> 7.0', git: 'https://github.com/jquery-ui-rails/jquery
 gem 'jwt', '~> 2.3.0'
 gem 'kaminari', '~> 1.2.2'
 gem 'leaflet-rails', '~> 1.7.0'
-gem 'loofah', '~> 2.16.0'
+gem 'loofah', '~> 2.19.1'
 gem 'net-sftp'
 gem 'noid', '~> 0.9.0'
 gem 'omniauth', '~> 2.1.0'
