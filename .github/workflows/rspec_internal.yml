@@ -32,7 +32,7 @@ jobs:
     - name: 'setup node for node-sass'
       uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: 20
 
     - name: 'Install MySQL Packages'
       run: |

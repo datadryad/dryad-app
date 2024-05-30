@@ -63,7 +63,7 @@ cp ~/dryad-app/script/server-utils/deploy_dryad.sh ~/bin/
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 . ~/.nvm/nvm.sh
 nvm install --lts
-nvm install 16.20.2
+nvm install 20.13.1
 npm install --global yarn
 cd ~/dryad-app
 yarn install
@@ -72,7 +72,7 @@ npm install --legacy-peer-deps
 - ensure config is correct in startup scripts; add the following to .bashrc
 ```
 . ~/.nvm/nvm.sh
-nvm use 16.20.2 >/dev/null
+nvm use 20.13.1 >/dev/null
 export RAILS_ENV=v3_stage 
 ```
 - compile components

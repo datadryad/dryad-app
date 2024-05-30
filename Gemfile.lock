@@ -665,6 +665,11 @@ GEM
       multi_json (~> 1.15)
       thor (~> 1.0, >= 1.0.1)
     sexp_processor (4.17.0)
+    shakapacker (6.6.0)
+      activesupport (>= 5.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 5.2)
+      semantic_range (>= 2.3.0)
     shellany (0.0.1)
     shoulda (2.11.3)
     shoulda-matchers (5.3.0)
@@ -748,11 +753,6 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webpacker (6.0.0.rc.6)
-      activesupport (>= 5.2)
-      rack-proxy (>= 0.6.1)
-      railties (>= 5.2)
-      semantic_range (>= 2.3.0)
     webrick (1.8.1)
     websocket (1.2.9)
     websocket-driver (0.7.6)
@@ -871,6 +871,7 @@ DEPENDENCIES
   sassc-rails (~> 2.1.2)
   selenium-webdriver (~> 4.11)
   serrano (~> 1.0)
+  shakapacker (~> 6.0)
   shoulda
   shoulda-matchers (~> 5.0)
   simplecov
@@ -887,7 +888,6 @@ DEPENDENCIES
   uglifier (~> 4.2.0)
   web-console
   webmock
-  webpacker (= 6.0.0.rc.6)
   wicked_pdf (~> 2.1.0)
   wkhtmltopdf-binary (~> 0.12.5.4)
   yaml (~> 0.1.1)
