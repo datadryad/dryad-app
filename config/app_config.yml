@@ -1,3 +1,128 @@
+<% if Rails.env == 'test' %>
+test:
+  shared_resource_model: StashEngine::Resource
+  stash_mount: /stash
+  ezid:
+    host: ezid.cdlib.org
+    port: 443
+  contact_us_uri: help@datadryad.org
+  repository:
+    domain: https://merritt-test.example.org
+    endpoint: "https://merritt-test.example.org:39001/mrtsword/collection/cdl_dryaddev"
+    username: horsecat
+    password: MyHorseCatPassword
+  orcid:
+    site: https://sandbox.orcid.org/
+    authorize_url: https://sandbox.orcid.org/oauth/authorize
+    token_url: https://api.sandbox.orcid.org/oauth/token
+    key:  APP-I07IMI2NJTMP9Z6G
+    secret: <REPLACE-ME>
+    member: true
+    sandbox: true
+    api: https://api.sandbox.orcid.org
+  submission_error_email: [my.fun.submission.error.emails@example.com]
+  submission_bc_emails: [""]
+  zenodo_error_email: [my.fun.zenodo.error.emails@example.com]
+  contact_email: ["contact1@example.edu", "contact2@example.edu"]
+  default_tenant: mock_tenant
+  old_dryad_url: https://api.datadryad.example.org
+  helpdesk_email: dryad.helpdesk@mailinator.com
+  send_journal_published_notices: false
+  counter:
+    account: CDL.DASH
+    token: ci1NiJDAwLTAwkb
+  zenodo:
+    access_token: "ThisIsAFakeToken"
+    client_id: zenodo_client_id
+    client_secret: zenodo_client_secret
+    base_url: https://sandbox.zenodo.org
+    community_id: dryad-test
+    application_id: 1234
+  payments:
+    service: stripe
+    key: replace-me
+    data_processing_charge: 12000 # charge in cents
+    data_processing_charge_new: 15000 # charge in cents 
+    dpc_change_date: 2023-01-01
+    large_file_size: 5.0e+10
+    additional_storage_chunk_size: 1.0e+10 # 10 GB
+    additional_storage_chunk_cost: 5000 # in cents  
+  merritt_base_url: https://merritt-stage.cdlib.org
+  merritt_max_submission_threads: 5
+  crossref_base_url: https://api.crossref.org
+  crossref_mailto: test.dude@example.edu
+  fee_waiver_countries:
+    - 'Afghanistan'
+    - 'Guinea-Bissau'
+    - 'Sierra Leone'
+  funder_exemptions:
+    - 'Happy Clown School'
+  link_out:
+    # LinkOut FTP information for Europe PubMed Central
+    labslink:
+      ftp_host: labslink.example.org
+      ftp_dir: testing
+      ftp_username: username
+      ftp_password: password
+      ftp_provider_id: 1234
+    # LinkOut FTP information for NCBI
+    pubmed:
+      ftp_host: pubmed.example.org
+      ftp_dir: testing
+      ftp_username: username
+      ftp_password: password
+      ftp_provider_id: 9876
+  s3:
+    region: us-west-2
+    bucket: a-test-bucket
+    merritt_bucket: a-merritt-test-bucket
+    key: abcdefg
+    secret: HIJKLMNOP
+  lambda_id:
+    dataZip: abcdefg
+  maximums:
+    merritt_size: 3.0e+10
+    zenodo_size: 5.0e+9
+    zip_size: 11.0e+9
+    api_zip_size: 200
+    files: 100
+  frictionless:
+    size_limit: 6291456
+  rate_limit:
+    # number of requests allowed per minute
+    # these rates are low to facilitate quick testing of the rate limiter,
+    # but the rate limiter is disabled for most rspec classes
+    file_downloads_per_hour: 2
+    file_downloads_per_day: 5
+    file_downloads_per_month: 10
+    zip_downloads_per_hour: 2
+    zip_downloads_per_day: 5
+    zip_downloads_per_month: 10
+    all_requests: 10
+    api_requests_anon: 5
+    api_requests_auth: 10
+    api_requests_v1: 5
+  salesforce:
+    server: https://testsalesforce.com
+    login_host: test.salesforce.com
+    username: nobody@datadryad.org
+    password: nopass
+    security_token: notoken
+    client_id: noclientid
+    client_secret: noclientsecret
+  container_file_extensions:
+    - 'zip'
+    - 'tar.gz'
+    - 'tgz'
+  datacite_data_repo_id: dryad_testing_repo_id
+  identifier_service:
+    provider: datacite
+    prefix: "10.5072"
+    account: my.account
+    password: "my.password"
+    sandbox: true
+<% else %>
+
 defaults: &DEFAULTS
   shared_resource_model: StashEngine::Resource
   stash_mount: /stash
@@ -189,92 +314,6 @@ local:
 local_dev:
   <<: *DEVELOPMENT
 
-test:
-  <<: *DEFAULTS
-  repository:
-    domain: https://merritt-test.example.org
-    endpoint: "https://merritt-test.example.org:39001/mrtsword/collection/cdl_dryaddev"
-    username: horsecat
-    password: MyHorseCatPassword
-  orcid:
-    site: https://sandbox.orcid.org/
-    authorize_url: https://sandbox.orcid.org/oauth/authorize
-    token_url: https://api.sandbox.orcid.org/oauth/token
-    key:  APP-I07IMI2NJTMP9Z6G
-    secret: <REPLACE-ME>
-    member: true
-    sandbox: true
-    api: https://api.sandbox.orcid.org
-  submission_error_email: [my.fun.submission.error.emails@example.com]
-  submission_bc_emails: [""]
-  zenodo_error_email: [my.fun.zenodo.error.emails@example.com]
-  contact_email: ["contact1@example.edu", "contact2@example.edu"]
-  default_tenant: mock_tenant
-  old_dryad_url: https://api.datadryad.example.org
-  counter:
-    account: CDL.DASH
-    token: ci1NiJDAwLTAwkb
-  zenodo:
-    access_token: "ThisIsAFakeToken"
-    client_id: zenodo_client_id
-    client_secret: zenodo_client_secret
-    base_url: https://sandbox.zenodo.org
-    community_id: dryad-test
-    application_id: 1234
-  payments:
-    service: stripe
-    key: replace-me
-    data_processing_charge: 12000 # charge in cents
-    data_processing_charge_new: 15000 # charge in cents 
-    dpc_change_date: 2023-01-01
-    large_file_size: 5.0e+10
-    additional_storage_chunk_size: 1.0e+10 # 10 GB
-    additional_storage_chunk_cost: 5000 # in cents
-  crossref_mailto: test.dude@example.edu
-  fee_waiver_countries:
-    - 'Afghanistan'
-    - 'Guinea-Bissau'
-    - 'Sierra Leone'
-  funder_exemptions:
-    - 'Happy Clown School'
-  link_out:
-    # LinkOut FTP information for Europe PubMed Central
-    labslink:
-      ftp_host: labslink.example.org
-      ftp_dir: testing
-      ftp_username: username
-      ftp_password: password
-      ftp_provider_id: 1234
-    # LinkOut FTP information for NCBI
-    pubmed:
-      ftp_host: pubmed.example.org
-      ftp_dir: testing
-      ftp_username: username
-      ftp_password: password
-      ftp_provider_id: 9876
-  s3:
-    region: us-west-2
-    bucket: a-test-bucket
-    merritt_bucket: a-merritt-test-bucket
-    key: abcdefg
-    secret: HIJKLMNOP
-  lambda_id:
-    dataZip: abcdefg
-  salesforce:
-    server: https://testsalesforce.com
-    login_host: test.salesforce.com
-    username: nobody@datadryad.org
-    password: nopass
-    security_token: notoken
-    client_id: noclientid
-    client_secret: noclientsecret
-  identifier_service:
-    provider: datacite
-    prefix: "10.5072"
-    account: my.account
-    password: "my.password"
-    sandbox: true
-
 stage: &STAGE
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
@@ -396,3 +435,5 @@ production: &PRODUCTION
 
 v3_production:
   <<: *PRODUCTION
+
+<% end %>
