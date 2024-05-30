@@ -264,7 +264,7 @@ module StashEngine
       recipient = journal ? 'journal' : 'author'
       note = "#{message} notification sent to #{recipient}"
       StashEngine::CurationActivity.create(resource: resource,
-                                           user_id: 0,  # system user
+                                           user_id: 0, # system user
                                            note: note,
                                            status: status)
     end

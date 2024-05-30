@@ -91,7 +91,7 @@ module StashEngine
 
       StashEngine::CurationActivity.create(resource: resource,
                                            status: target_status,
-                                           user_id: 0,  # system user
+                                           user_id: 0, # system user
                                            note: target_note)
     end
 
