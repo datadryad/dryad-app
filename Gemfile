@@ -69,7 +69,7 @@ gem 'font-awesome-rails', '~> 4.7'
 gem 'geoblacklight', '~> 3.0'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'http', '~> 5.0.4'
-gem 'httparty', '~> 0.20.0'
+gem 'httparty', '~> 0.21.0'
 gem 'httpclient', '~> 2.8.3'
 gem 'jbuilder' # is this used?
 gem 'jquery-turbolinks', '~> 2.1.0'
