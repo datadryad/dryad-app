@@ -6,12 +6,12 @@ source 'https://rubygems.org'
 # Rails
 
 gem 'irb', '~> 1.4.1'
-gem 'mail', '= 2.7.1' # update this later
+gem 'mail', '~> 2.8'
 gem 'mysql2', '~> 0.5.3'
 gem 'rails', '~> 7.0'
 gem 'react-rails', '~> 2.6.2'
 gem 'shakapacker', '~> 6.0'
-gem 'sprockets', '~> 3.0' # going to 4 breaks lots of things unless doing manual upgrade of files
+gem 'sprockets', '~> 4.0'
 
 # ############################################################
 # Deployment
@@ -105,7 +105,7 @@ gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside fr
 gem 'twitter-typeahead-rails', '0.11.1' # this is in a generator to install blacklight
 gem 'wicked_pdf', '~> 2.1.0'
 gem 'wkhtmltopdf-binary', '~> 0.12.5.4'
-gem 'yaml', '~> 0.1.1' # version 0.2 breaks Gmail, see https://github.com/datadryad/dryad-app/pull/771
+gem 'yaml', '~> 0.2.1' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
 # ############################################################
@@ -177,3 +177,5 @@ group :development, :test, :local_dev do
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
   gem 'spring-commands-rspec'
 end
+
+gem 'net-ftp', '~> 0.3.4'
