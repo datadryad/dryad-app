@@ -1,3 +1,15 @@
+<% if Rails.env == 'test' %>
+test:
+  adapter: mysql2
+  host: localhost
+  database: dashv2_test
+  username: travis
+  password: ""
+  port: 3306
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+<% else %>
+
 default: &default
   pool: 40
   timeout: 10000
@@ -32,16 +44,6 @@ local:
 local_dev:
   <<: *default
 
-test:
-  adapter: mysql2
-  host: localhost
-  database: dashv2_test
-  username: travis
-  password: ""
-  port: 3306
-  encoding: utf8mb4
-  collation: utf8mb4_unicode_ci
-
 stage:
   <<: *default
 
@@ -53,3 +55,4 @@ production:
 
 v3_production:
   <<: *default
+<% end %>
