@@ -102,9 +102,7 @@ yarn test Funder
 ## Configuration files
 
 When Rails runs in the test environment, the config files from the
-main config directory are loaded. However, most of these files are set
-up to import the equivalent test configs from
-`dryad-config-example`. This behavior occurs for tenant configs as well.
+main config directory are loaded.
 
 ## Debugging tests
 

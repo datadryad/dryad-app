@@ -6,4 +6,4 @@
   <code><%= APP_CONFIG[:google][:journal_account_name] %></code>
 </p>
 
-<%= button_to "Log in with Google", '/auth/google_oauth2'  %>
+<%= button_to "Log in with Google", '/auth/google_oauth2', method: :post  %>

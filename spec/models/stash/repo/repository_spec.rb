@@ -262,7 +262,7 @@ module Stash
             describe 'unexpected errors' do
               before(:each) do
                 puts :deliver_now
-                allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_raise(Net::SMTPAuthenticationError)
+                allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_raise(Net::SMTPAuthenticationError.new('error'))
               end
 
               it 'logs the error' do

@@ -1,7 +1,3 @@
-# When in the 'test' environment, only use the content from dryad-config-example, not the content
-# in the main part of this file.
-
-# blacklight yaml parsing now no longer allows inheriting settings from an alias
 test:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:8983/solr/geoblacklight" %>
