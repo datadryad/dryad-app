@@ -37,7 +37,7 @@ module Stash
                        "Filename: #{file.upload_file_name}\n"
           StashEngine::UserMailer.general_error(file&.resource, error_text).deliver_now
         else
-          cc.redirect_to url
+          cc.redirect_to url, allow_other_host: true
         end
       rescue HTTP::Error => e
         raise S3CustomError, "HTTP Error while creating presigned URL from S3\n" \

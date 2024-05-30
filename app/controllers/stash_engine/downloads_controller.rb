@@ -115,7 +115,7 @@ module StashEngine
             return
           end
 
-          redirect_to zen_presign
+          redirect_to zen_presign, allow_other_host: true
         end
       else
         render status: 403, plain: 'You are not authorized to download this file'

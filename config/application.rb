@@ -22,7 +22,7 @@ Bundler.require(*Rails.groups)
 module Dash2
   class Application < Rails::Application
     # Initialize configuration defaults for the Rails version.
-    config.load_defaults 6.1
+    config.load_defaults 7.0
 
     config.eager_load_paths << Rails.root.join("lib")
     config.autoload_paths << Rails.root.join("lib")
@@ -49,5 +49,9 @@ module Dash2
     # ryan used this in some manuscript parsing and gem updates break it.  See
     # https://stackoverflow.com/questions/72970170/upgrading-to-rails-6-1-6-1-causes-psychdisallowedclass-tried-to-load-unspecif
     config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess]
+
+    config.after_initialize do
+      StashEngine.repository
+    end
   end
 end
