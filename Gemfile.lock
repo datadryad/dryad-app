@@ -121,8 +121,10 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
+    base64 (0.2.0)
     bcrypt (3.1.19)
     bcrypt_pbkdf (1.1.0)
+    bigdecimal (3.1.8)
     bindex (0.8.1)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
@@ -449,6 +451,7 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.3.0)
+    mutex_m (0.2.0)
     mysql2 (0.5.6)
     nenv (0.3.0)
     net-ftp (0.3.4)
@@ -808,7 +811,9 @@ DEPENDENCIES
   annotate (~> 3.2)
   aws-sdk-lambda
   aws-sdk-s3 (~> 1.113)
+  base64
   bcrypt_pbkdf (= 1.1.0)
+  bigdecimal
   binding_of_caller
   blacklight
   bootsnap
@@ -860,6 +865,7 @@ DEPENDENCIES
   mail (~> 2.8)
   mini_racer (= 0.12.0)
   mocha
+  mutex_m
   mysql2 (~> 0.5.3)
   net-ftp (~> 0.3.4)
   net-sftp

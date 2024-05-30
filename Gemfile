@@ -109,6 +109,13 @@ gem 'wkhtmltopdf-binary', '~> 0.12.5.4'
 gem 'yaml', '~> 0.3.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
+# Peer dependencies
+# with future versions of activesupport and bootsnap, these may not be needed here
+
+gem 'base64'
+gem 'bigdecimal'
+gem 'mutex_m'
+
 # ############################################################
 # Development and testing
 
