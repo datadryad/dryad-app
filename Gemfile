@@ -35,7 +35,7 @@ gem 'puma', '6.4.2', group: :puma, require: false
 gem 'coffee-rails', '~> 5.0'
 gem 'jquery-rails', '~> 4.6'
 # gem 'libv8', '~> 3.16.1' # I think taken care of as dependency of mini_racer
-gem 'mini_racer', '0.12.0'
+# gem 'mini_racer', '0.12.0'
 gem 'sassc-rails', '~> 2.1.2' # the default for newer rails, no need for yui and already used by bootstrap or something else
 # gem 'therubyracer', platforms: :ruby # this is very outdated and people say to use mini_racer instead if possible
 gem 'turbolinks'
