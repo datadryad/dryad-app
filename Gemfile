@@ -19,6 +19,7 @@ gem 'sprockets', '~> 4.0'
 gem 'bcrypt_pbkdf', '1.1.0'
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.6.2'
+gem 'capistrano-yarn'
 gem 'ed25519', '1.3.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.64', require: false
