@@ -415,9 +415,6 @@ GEM
       addressable (~> 2.8)
     leaflet-rails (1.7.0)
       rails (>= 4.2.0)
-    libv8-node (21.7.2.0)
-    libv8-node (21.7.2.0-x86_64-darwin)
-    libv8-node (21.7.2.0-x86_64-linux)
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -442,8 +439,6 @@ GEM
     mime-types-data (3.2024.0507)
     mini_mime (1.1.5)
     mini_portile2 (2.8.6)
-    mini_racer (0.12.0)
-      libv8-node (~> 21.7.2.0)
     minitest (5.23.1)
     mize (0.4.1)
       protocol (~> 2.0)
@@ -866,7 +861,6 @@ DEPENDENCIES
   listen
   loofah (~> 2.19.1)
   mail (~> 2.8)
-  mini_racer (= 0.12.0)
   mocha
   mutex_m
   mysql2 (~> 0.5.3)
