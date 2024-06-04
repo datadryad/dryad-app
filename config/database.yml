@@ -37,9 +37,6 @@ aws_db:
 
 local:
   <<: *default
-  host: 127.0.0.1
-  username: travis
-  password: ""
 
 local_dev:
   <<: *default
