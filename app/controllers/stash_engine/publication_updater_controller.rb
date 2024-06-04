@@ -26,8 +26,7 @@ module StashEngine
 
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     def index
-      proposed_changes = authorize StashEngine::ProposedChange # .includes(identifier: :latest_resource)
-        .joins(identifier: :latest_resource).where(approved: false, rejected: false)
+      proposed_changes = authorize StashEngine::ProposedChange.unprocessed.joins(:latest_resource)
         .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         .select('stash_engine_proposed_changes.*')
 
@@ -51,8 +50,6 @@ module StashEngine
 
       @proposed_changes = proposed_changes.order(ord).page(@page).per(@page_size)
       return unless @proposed_changes.present?
-
-      @resources = StashEngine::Resource.latest_per_dataset.where(identifier_id: @proposed_changes&.map(&:identifier_id))
 
       respond_to do |format|
         format.html

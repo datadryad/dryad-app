@@ -64,11 +64,7 @@
       </thead>
       <tbody>
       <% @proposed_changes.each do |proposed_change| %>
-        <% resource = @resources.select{ |r| r.identifier_id == proposed_change.identifier_id }.first %>
-        <% if resource.present? %>
-          <%= render partial: 'proposed_change_line',
-                     locals: { proposed_change: proposed_change, resource: resource } %>
-        <% end %>
+        <%= render partial: 'proposed_change_line',locals: { proposed_change: proposed_change, resource: proposed_change.latest_resource } %>
       <% end %>
       </tbody>
     </table>
