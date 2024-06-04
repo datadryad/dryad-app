@@ -36,7 +36,10 @@ module StashEngine
   class ProposedChange < ApplicationRecord
     self.table_name = 'stash_engine_proposed_changes'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
+    has_one :latest_resource, class_name: 'StashEngine::Resource', through: :identifier
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id', optional: true
+
+    scope :unprocessed, -> { where(approved: false, rejected: false) }
 
     CROSSREF_PUBLISHED_MESSAGE = 'reported that the related journal has been published'.freeze
     CROSSREF_UPDATE_MESSAGE = 'provided additional metadata'.freeze
