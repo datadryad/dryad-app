@@ -114,13 +114,13 @@ module StashEngine
         proposed_changes = proposed_changes.where((['search_table.big_text LIKE ?'] * keys.size).join(' AND '), *keys.map { |key| "%#{key}%" })
       end
 
-      if params[:status]
+      if params[:status].present?
         proposed_changes = proposed_changes.joins(
           'JOIN stash_engine_curation_activities sa ON sa.id = stash_engine_resources.last_curation_activity_id'
         ).where('sa.status' => params[:status])
       end
 
-      if params[:match_type]
+      if params[:match_type].present?
         proposed_changes = proposed_changes.where(
           "stash_engine_proposed_changes.publication_issn is #{params[:match_type] == 'preprints' ? 'null' : 'not null'}"
         )
