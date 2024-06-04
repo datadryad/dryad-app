@@ -86,7 +86,11 @@ module StashEngine
 
     def setup_paging
       @page = params[:page] || '1'
-      @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
+      @page_size = if params[:page_size].blank? || params[:page_size].to_i == 0
+                     10
+                   else
+                     params[:page_size].to_i
+                   end
     end
 
     def setup_filter
