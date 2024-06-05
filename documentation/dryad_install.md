@@ -125,8 +125,11 @@ gem install bundler:2.2.27
 ```
 brew install shared-mime-info
 xcode-select --install
-gem install libv8 -v '3.16.14.19' -- --with-system-v8
-gem install therubyracer -v '0.12.3' -- --with-v8-dir=/usr/local/opt/v8@3.15
+
+# Replaced with Node
+#gem install libv8 -v '3.16.14.19' -- --with-system-v8
+#gem install therubyracer -v '0.12.3' -- --with-v8-dir=/usr/local/opt/v8@3.15
+
 gem install mysql2 -v '0.5.3' -- --with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include
 ```
 
