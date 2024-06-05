@@ -63,7 +63,7 @@ module StashEngine
     end
 
     def omniauth_login_path(params = nil)
-      @omniauth_login_path ||= send("#{authentication.strategy}_login_path".intern, params)
+      @omniauth_login_path ||= send(:"#{authentication.strategy}_login_path", params)
     end
 
     # generate login path for shibboleth & omniauth, this is unusual since we have multi-institution login,

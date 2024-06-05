@@ -21,7 +21,7 @@ module StashEngine
 
         # the select part of the query is deferred to specific query because count causes badness when it
         # tries to count a series of fields
-        @datasets = StashEngine::Identifier \
+        @datasets = StashEngine::Identifier
           .joins("INNER JOIN (#{subquery}) as res2 ON stash_engine_identifiers.id = res2.identifier_id")
           .joins('INNER JOIN stash_engine_resources res ON res.id = res2.res_id')
           .where("stash_engine_identifiers.pub_state IN ('embargoed', 'published')")

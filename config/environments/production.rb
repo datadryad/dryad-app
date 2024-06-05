@@ -127,7 +127,7 @@ Rails.application.configure do
 
   # this is obnoxious because the initializers haven't run yet, so have to duplicate code to read config
   # this will interpret any ERB in the yaml file first before bringing in
-  ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml'))).result)[Rails.env]
+  ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml'))).result, aliases: true, permitted_classes: [Date])[Rails.env]
 
   unless ac['page_error_email'].blank?
     Rails.application.config.middleware.use ExceptionNotification::Rack,

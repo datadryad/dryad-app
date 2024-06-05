@@ -39,7 +39,7 @@ module Stash
 
       describe '#download' do
         it 'returns 405 error if file size is too large' do
-          @resource.total_file_size = 400
+          @resource.total_file_size = 400_000_000
           vp = VersionPresigned.new(resource: @resource, controller_context: @controller_context)
           expect(vp.download(resource: @resource)).to eq('rendered 405')
         end

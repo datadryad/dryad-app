@@ -183,10 +183,7 @@ namespace :dev_ops do
     # apparently I have to do this, at least in some cases because arguments to rake are ugly
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
 
-    # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end } # see comment above
-    # rubocop:enable Style/BlockDelimiters
-
+    ARGV.each { |a| task(a.to_sym {}) } # see comment above
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
       next
@@ -276,10 +273,7 @@ namespace :dev_ops do
     # apparently I have to do this, at least in some cases because arguments to rake are ugly
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
 
-    # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end } # see comment above
-    # rubocop:enable Style/BlockDelimiters
-
+    ARGV.each { |a| task(a.to_sym {}) } # see comment above
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
       next
@@ -340,10 +334,7 @@ namespace :dev_ops do
     # apparently I have to do this, at least in some cases because arguments to rake are ugly
     # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
 
-    # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end } # see comment above
-    # rubocop:enable Style/BlockDelimiters
-
+    ARGV.each { |a| task(a.to_sym {}) } # see comment above
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
       next
@@ -385,10 +376,7 @@ namespace :dev_ops do
   # This creates a directory in the Rails.root named after the resource id and downloads the files into that from S3
   desc 'Download the files someone uploaded to S3, should take one argument which is the resource id'
   task download_s3: :environment do
-    # rubocop:disable Style/BlockDelimiters
-    ARGV.each { |a| task a.to_sym do; end } # see comment above
-    # rubocop:enable Style/BlockDelimiters
-
+    ARGV.each { |a| task(a.to_sym {}) } # see comment above
     resource_id = ARGV[1].to_i
 
     unless ENV['RAILS_ENV']

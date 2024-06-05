@@ -40,7 +40,7 @@ module StashEngine
 
       datacite_metadata = Stash::DataciteMetadata.new(doi: doi)
       html_citation = datacite_metadata.html_citation
-      return nil if html_citation.blank?  # do not save to database and return nil early
+      return nil if html_citation.blank? # do not save to database and return nil early
 
       create(citation: html_citation, doi: doi, identifier_id: stash_identifier.id)
     end

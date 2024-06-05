@@ -190,7 +190,7 @@ module Stash
         StashEngine::SubmissionLog.create(
           resource_id: result.resource_id,
           archive_submission_request: result.request_desc,
-          archive_response: (result.message || result.error.to_s)
+          archive_response: result.message || result.error.to_s
         )
       end
     end
