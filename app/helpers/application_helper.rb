@@ -45,6 +45,10 @@ module ApplicationHelper
     def header(text, header_level)
       "<h#{header_level + 1}>#{text}</h#{header_level + 1}>"
     end
+
+    def table(header, body)
+      "<div class='table-wrapper'><table>#{header}#{body}</table></div>"
+    end
   end
 
 end
