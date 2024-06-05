@@ -20,7 +20,7 @@ module StashEngine
       statuses.delete(current_status) # because we don't show the current state as an option, it is implied by leaving state blank
 
       # makes select list
-      status_select(statuses)
+      status_select(statuses) unless statuses.empty?
     end
 
     def editor_select

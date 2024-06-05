@@ -61,6 +61,7 @@ module StashEngine
     # change state in practice.  The UI may choose not to display the same state in the list, but it is allowed.
     CURATOR_ALLOWED_STATES = {
       in_progress: %w[in_progress],
+      processing: %w[in_progress processing],
       submitted: %w[submitted curation withdrawn peer_review],
       peer_review: %w[peer_review curation withdrawn],
       curation: (enum_vals - %w[in_progress submitted]),
