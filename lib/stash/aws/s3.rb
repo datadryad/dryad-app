@@ -50,13 +50,6 @@ module Stash
         obj.size
       end
 
-      def presigned_head_url(s3_key:)
-        return unless s3_key
-
-        object = s3_bucket.object(s3_key)
-        object.presigned_url(:head_object, expires_in: 1.day.to_i)
-      end
-
       def presigned_download_url(s3_key:, filename: nil)
         return unless s3_key
 
