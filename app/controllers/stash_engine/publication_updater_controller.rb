@@ -26,8 +26,7 @@ module StashEngine
 
     # the admin datasets main page showing users and stats, but slightly different in scope for curators vs tenant admins
     def index
-      proposed_changes = authorize StashEngine::ProposedChange # .includes(identifier: :latest_resource)
-        .joins(identifier: :latest_resource).where(approved: false, rejected: false)
+      proposed_changes = authorize StashEngine::ProposedChange.unprocessed.joins(:latest_resource)
         .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         .select('stash_engine_proposed_changes.*')
 
@@ -51,8 +50,6 @@ module StashEngine
 
       @proposed_changes = proposed_changes.order(ord).page(@page).per(@page_size)
       return unless @proposed_changes.present?
-
-      @resources = StashEngine::Resource.latest_per_dataset.where(identifier_id: @proposed_changes&.map(&:identifier_id))
 
       respond_to do |format|
         format.html
@@ -86,7 +83,11 @@ module StashEngine
 
     def setup_paging
       @page = params[:page] || '1'
-      @page_size = (params[:page_size].blank? || params[:page_size] != '1000000' ? '10' : '1000000')
+      @page_size = if params[:page_size].blank? || params[:page_size].to_i == 0
+                     10
+                   else
+                     params[:page_size].to_i
+                   end
     end
 
     def setup_filter
@@ -110,13 +111,13 @@ module StashEngine
         proposed_changes = proposed_changes.where((['search_table.big_text LIKE ?'] * keys.size).join(' AND '), *keys.map { |key| "%#{key}%" })
       end
 
-      if params[:status]
+      if params[:status].present?
         proposed_changes = proposed_changes.joins(
           'JOIN stash_engine_curation_activities sa ON sa.id = stash_engine_resources.last_curation_activity_id'
         ).where('sa.status' => params[:status])
       end
 
-      if params[:match_type]
+      if params[:match_type].present?
         proposed_changes = proposed_changes.where(
           "stash_engine_proposed_changes.publication_issn is #{params[:match_type] == 'preprints' ? 'null' : 'not null'}"
         )
