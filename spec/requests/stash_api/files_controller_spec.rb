@@ -306,7 +306,7 @@ module StashApi
           # o is the object instance and cc is the controller context
           # o.cc.response.headers['Location'] = 'http://example.com'
           # o.cc.render -- this isn't needed in the tests and causes a double-render which is different than the actual method
-          o.cc.redirect_to 'http://example.com'
+          o.cc.redirect_to 'http://example.com', allow_other_host: true
         end
       end
 

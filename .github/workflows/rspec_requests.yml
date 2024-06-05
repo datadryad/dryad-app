@@ -14,13 +14,13 @@ jobs:
 
     steps:
     - name: 'Checkout the repo'
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 1
 
     - name: 'Set Ruby and Bundler Versions'
       run: |
-        echo "RUBY_VERSION=3.0.4" >> $GITHUB_ENV
+        echo "RUBY_VERSION=3.3.1" >> $GITHUB_ENV
         echo "BUNDLER_VERSION=`cat ./Gemfile.lock | grep -A 1 'BUNDLED WITH' | grep -oE '[0-9]\.[0-9]'`" >> $GITHUB_ENV
 
     - name: 'Install Ruby and gems'
@@ -30,7 +30,7 @@ jobs:
         bundler-cache: true
 
     - name: 'setup node for node-sass'
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 20
 
@@ -51,7 +51,9 @@ jobs:
         bin/rails db:migrate:reset RAILS_ENV=test
 
     - name: 'Compile Assets'
-      run: bin/rails assets:precompile
+      run: |
+        yarn install
+        RAILS_ENV=test bundle exec rails assets:precompile
 
     - name: 'Compile webpacker assets'
       run: RAILS_ENV=test bundle exec rails webpacker:compile

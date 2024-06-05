@@ -1,5 +1,6 @@
 module Tasks
   module Reports
+    # rubocop:disable Metrics/ModuleLength
     module GREI
       class << self
         def generate_monthly_report
@@ -155,8 +156,8 @@ module Tasks
 
           totals
         end
-
       end
     end
+    # rubocop:enable Metrics/ModuleLength
   end
 end

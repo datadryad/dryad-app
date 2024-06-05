@@ -191,24 +191,24 @@ module StashEngine
     # Scopes for repository status
     default_scope { includes(:curation_activities) }
 
-    scope :in_progress, (-> do
+    scope :in_progress, -> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress error] })
-    end)
-    scope :in_progress_only, (-> do
+    end
+    scope :in_progress_only, -> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress] })
-    end)
-    scope :submitted, (-> do
+    end
+    scope :submitted, -> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted processing] })
-    end)
-    scope :submitted_only, (-> do
+    end
+    scope :submitted_only, -> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted] })
-    end)
-    scope :processing, (-> do
+    end
+    scope :processing, -> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:processing] })
-    end)
-    scope :error, (-> do
+    end
+    scope :error, -> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:error] })
-    end)
+    end
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
 
@@ -264,9 +264,9 @@ module StashEngine
     end
 
     # limits to the latest resource for each dataset if added to resources
-    scope :latest_per_dataset, (-> do
+    scope :latest_per_dataset, -> do
       joins('INNER JOIN stash_engine_identifiers ON stash_engine_resources.id = stash_engine_identifiers.latest_resource_id')
-    end)
+    end
 
     # ------------------------------------------------------------
     # File upload utility methods
@@ -375,9 +375,8 @@ module StashEngine
 
       resources = StashEngine::Resource.where(identifier_id: identifier_id)
         .where('id <= ? AND id > ?', id, other_resource.id).order(id: :desc)
-      result = []
-      resources.each do |r|
-        result << r.send(association).where(file_state: %w[created deleted])
+      result = resources.map do |r|
+        r.send(association).where(file_state: %w[created deleted])
       end
 
       result.flatten
@@ -561,7 +560,7 @@ module StashEngine
     end
 
     def next_version_number
-      last_version_number = (identifier && identifier.last_submitted_version_number)
+      last_version_number = identifier && identifier.last_submitted_version_number
       last_version_number ? last_version_number + 1 : 1
     end
 
@@ -570,7 +569,7 @@ module StashEngine
     end
 
     def next_merritt_version
-      last_version = (identifier && identifier.last_submitted_resource)
+      last_version = identifier && identifier.last_submitted_resource
       last_version ? last_version.merritt_version + 1 : 1
     end
 

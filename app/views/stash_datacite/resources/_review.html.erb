@@ -132,7 +132,7 @@
   <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? %>
     <% if @resource.previous_resource.current_curation_status == 'action_required' %>
       <%= check_box_tag 'all_filled',  1, false, :style => "display: none;", class: 'all_filled js-agrees' %>
-      <%= button_to("Submit", '#', class: 'o-button__submit js-submission', id: 'error_button') %>
+      <%= button_to("Submit", '#', class: 'o-button__submit js-submission', id: 'error_button', method: :post) %>
     <% else %>
       <%= button_to stash_url_helpers.resource_path(@resource), method: :delete, data: { confirm: 'No changes made! Do you want to cancel this update and revert to the previous version?' }, form_class: '', class: 'o-button__submit js-submission' do %>
         Submit
@@ -158,7 +158,7 @@
     <% end -%>
   <% else %>
     <%= check_box_tag 'all_filled',  1, false, :style => "display: none;", class: 'all_filled js-agrees' %>
-    <%= button_to("Submit", '#', class: 'o-button__submit js-submission', id: 'error_button') %>
+    <%= button_to("Submit", '#', class: 'o-button__submit js-submission', id: 'error_button', method: :post) %>
   <% end %>
 </div>
 

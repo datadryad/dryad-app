@@ -26,13 +26,11 @@ module StashEngine
       return [] unless query.present?
 
       query = query.downcase
-      results = []
-
       # First, find matches at the beginning of the name string, and exact matches in the acronyms/aliases
       resp = where("LOWER(name) LIKE ? OR JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
                    "#{query}%", query.to_s, query.to_s).limit(ROR_MAX_RESULTS)
-      resp.each do |r|
-        results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
+      results = resp.map do |r|
+        { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
       end
 
       # If we don't have enough results, find matches at the beginning of the acronyms/aliases

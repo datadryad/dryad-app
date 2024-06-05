@@ -59,7 +59,7 @@ module Tasks
               url = file.s3_permanent_presigned_url
 
               resp = @http.get(url)
-              size = resp.headers['Content-Length']&.to_i || 0
+              size = resp.headers['Content-Length'].to_i
 
               if resp.status.code >= 400
                 save_error(resource: res, file: file, error: "http status response from S3: #{resp.status.code}")

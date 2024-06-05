@@ -45,7 +45,7 @@
       <td><%= zc.copy_type.gsub('_', ' ') %></td>
       <td class="c-lined-table__digits"><%= filesize(zc.size) %></td>
       <td>
-        <%= button_to('resend', zenodo_queue_resubmit_job_path(id: zc.id), remote: true) %>
+        <%= button_to('resend', zenodo_queue_resubmit_job_path(id: zc.id), remote: true, method: :post) %>
       </td>
     </tr>
   <% end %>

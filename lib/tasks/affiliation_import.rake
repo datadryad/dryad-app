@@ -441,7 +441,7 @@ namespace :affiliation_import do
       # puts "<< #{entry} >>"
       next if entry[0] == 'DOI' && entry[1] == 'person' # header row
 
-      doi, person, organization, ror_original, ror, identifier_date, supplement_to, \
+      doi, person, organization, ror_original, ror, identifier_date, supplement_to,
       publication_date, title, type, update_date, organization_date = entry
 
       next if @dois_to_skip.include?(doi)
