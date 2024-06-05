@@ -45,8 +45,11 @@ rbenv install $(cat .ruby-version)
 rbenv global $(cat .ruby-version)
 sudo ln -s ~/.rbenv/shims/bundle /usr/bin/bundle
 gem update --system --no-user-install
-gem install libv8 -v '3.16.14.19' --
-gem install therubyracer -v '0.12.3' --
+
+# Replaced by Node and ExcelJS
+#gem install libv8 -v '3.16.14.19' --
+#gem install therubyracer -v '0.12.3' --
+
 gem install mysql2 -v '0.5.3' -- 
 bundle install
 ```
@@ -68,6 +71,11 @@ npm install --global yarn
 cd ~/dryad-app
 yarn install
 npm install --legacy-peer-deps
+
+# add a symlink so other account use the correct node version
+sudo su -
+ln -s /home/ec2-user/.nvm/versions/node/v20.13.1/bin/node /usr/bin/node
+exit
 ```
 - ensure config is correct in startup scripts; add the following to .bashrc
 ```
