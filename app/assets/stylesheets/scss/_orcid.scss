@@ -6,12 +6,12 @@
 	margin: 0;
 }
 
-.c-orcid__icon {
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-	margin: 0 5px 0 0;
-	background: url('/images/scss/icon_orcid.png') no-repeat;
+.fa-orcid {
+	color: #a6ce39;
+}
+
+a:hover .fa-orcid {
+	color: lighten(#a6ce39, 10%);
 }
 
 .c-orcid__id {
