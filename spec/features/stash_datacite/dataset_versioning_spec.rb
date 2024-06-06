@@ -323,6 +323,48 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.current_editor_id).to eql(@curator.id)
       end
 
+      it 'does not go to ppr when prior version was curated', js: true do
+        @resource = create(
+          :resource, :submitted, identifier: @identifier, user_id: @author.id, tenant_id: @author.tenant_id,
+                                 current_editor_id: @curator.id, hold_for_peer_review: true
+        )
+        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
+        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'action_required')
+        @resource.reload
+
+        sign_in(@author)
+        click_link 'My datasets'
+        within(:css, "form[action=\"/stash/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
+          find('button[name="update"]').click
+        end
+        update_dataset
+        @resource.reload
+        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_editor_id).to eql(@curator.id)
+      end
+
+      it 'is automatically published with simple changes', js: true do
+        sign_in(@author)
+        click_link 'My datasets'
+        create_dataset
+        @resource.current_state = 'submitted'
+        @resource.publication_date { Date.today.to_s }
+        @resource.save
+        @resource.reload
+        create(:curation_activity, :curation, user: @resource.user, resource: @resource)
+        create(
+          :curation_activity, :published, resource: @resource,
+                                          user: create(:user, role: 'admin', role_object: @resource.user.tenant, tenant_id: @resource.user.tenant_id)
+        )
+        click_link 'My datasets'
+        within(:css, "form[action=\"/stash/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
+          find('button[name="update"]').click
+        end
+        minor_update
+        @resource.reload
+        expect(@resource.current_curation_status).to eql('published')
+      end
+
       context :curator_workflow do
 
         before(:each) do
@@ -374,6 +416,30 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
     end
 
+  end
+
+  def create_dataset
+    start_new_dataset
+    fill_required_fields
+    navigate_to_review
+    check 'agree_to_license'
+    check 'agree_to_tos'
+    check 'agree_to_payment'
+    click_button 'submit_dataset'
+    @resource = StashEngine::Resource.last
+    mock_successfull_merritt_submission!(@resource)
+  end
+
+  def minor_update
+    navigate_to_metadata
+    fill_in_keywords
+    fill_in_funder
+    # Submit the changes
+    navigate_to_review
+    agree_to_everything
+    click_button 'Submit'
+    @resource = StashEngine::Resource.last
+    mock_successfull_merritt_submission!(@resource)
   end
 
   def update_dataset(curator: false)
