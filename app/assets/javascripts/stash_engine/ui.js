@@ -1628,12 +1628,12 @@ function joelsReady(){
     navigator.clipboard.writeText(email).then(() => {
       // Successful copy
       copyButton.parentElement.setAttribute('title', 'Email copied');
-      copyButton.classList.remove('fa-clipboard');
+      copyButton.classList.remove('fa-paste');
       copyButton.classList.add('fa-check');
       copyButton.innerHTML = '<span class="screen-reader-only">Email address copied</span>'
       setTimeout(function(){
         copyButton.parentElement.setAttribute('title', 'Copy email');
-        copyButton.classList.add('fa-clipboard');
+        copyButton.classList.add('fa-paste');
         copyButton.classList.remove('fa-check');
         copyButton.innerHTML = '';
       }, 2000);
@@ -1653,7 +1653,7 @@ function joelsReady(){
     newEl.setAttribute('tabindex', 0);
     newEl.setAttribute('aria-label', 'Copy email address');
     newEl.setAttribute('title', 'Copy email');
-    newEl.innerHTML = '<i class="fa fa-clipboard" role="status"></i>';
+    newEl.innerHTML = '<i class="fa fa-paste" role="status"></i>';
     const element = emails[i];
     element.parentNode.insertBefore(newEl, element.nextSibling);
     newEl.addEventListener('click', copyEmail)
