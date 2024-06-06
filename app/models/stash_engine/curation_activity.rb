@@ -299,14 +299,15 @@ module StashEngine
     def email_orcid_invitations
       return unless published?
 
-      # Do not send an invitation to users who have no email address and do not have an
+      # Do not send an invitation to users who have no email address or have an
       # existing invitation for the identifier
       existing_invites = StashEngine::OrcidInvitation.where(identifier_id: resource.identifier_id).pluck(:email).uniq
-      authors = resource.authors.where.not(author_email: existing_invites).where.not(author_email: nil).reject { |au| au&.author_email.blank? }
+      authors = resource.authors.where.not(author_email: existing_invites).where.not(author_email: nil)
+      authors = authors.delete_if { |au| au&.author_email.blank? }
 
-      return if authors.length <= 1
+      return if authors.empty?
 
-      authors[1..authors.length].each do |author|
+      authors.each do |author|
         StashEngine::UserMailer.orcid_invitation(
           StashEngine::OrcidInvitation.create(
             email: author.author_email,
