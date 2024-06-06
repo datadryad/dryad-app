@@ -58,6 +58,12 @@
   }
 }
 
+.t-login__buttonlink {
+  display: inline-flex;
+  align-items: center;
+  column-gap: .5ch;
+}
+
 .t-login__buttonlink,
 .t-login__buttonlink:link,
 .t-login__buttonlink:visited,
