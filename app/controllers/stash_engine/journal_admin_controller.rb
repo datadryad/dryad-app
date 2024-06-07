@@ -35,11 +35,11 @@ module StashEngine
     def edit
       valid = %i[default_to_ppr payment_plan_type sponsor_id]
       update = edit_params.slice(*valid)
-      update[:sponsor_id] = nil if edit_params[:sponsor_id].blank?
-      update[:payment_plan_type] = nil if edit_params[:payment_plan_type].blank?
-      update[:issn] = edit_params[:issn].split("\n").map(&:strip).to_json if edit_params[:issn]
-      update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json if edit_params[:notify_contacts]
-      update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json if edit_params[:review_contacts]
+      update[:sponsor_id] = nil if edit_params.key?(:sponsor_id) && edit_params[:sponsor_id].blank?
+      update[:payment_plan_type] = nil if edit_params.key?(:payment_plan_type) && edit_params[:payment_plan_type].blank?
+      update[:issn] = edit_params[:issn].split("\n").map(&:strip).to_json if edit_params[:issn].present?
+      update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json if edit_params[:notify_contacts].present?
+      update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json if edit_params[:review_contacts].present?
       @journal.update(update)
 
       respond_to(&:js)
