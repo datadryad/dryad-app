@@ -34,7 +34,7 @@ module StashEngine
     def edit
       valid = %i[name parent_org_id]
       update = edit_params.slice(*valid)
-      update[:parent_org_id] = nil if edit_params[:parent_org_id].blank?
+      update[:parent_org_id] = nil if edit_params.key?(:parent_org_id) && edit_params[:parent_org_id].blank?
       update[:contact] = edit_params[:contact].split("\n").map(&:strip).to_json if edit_params[:contact]
       @org.update(update)
 
