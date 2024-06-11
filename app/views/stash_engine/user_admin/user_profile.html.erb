@@ -92,7 +92,7 @@
     <%= render partial: 'stash_engine/user_admin/user_datasets', locals: { presenters: @page_presenters } %>
 
     <div class="c-space-paginator">
-      <%= paginate @page_presenters, params: {page_size: @page_size} %>
+      <%= paginate @page_presenters, params: { page_size: @page_size } %>
     </div>
   </div>
   <div class="o-admin-left">
