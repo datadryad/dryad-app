@@ -22,7 +22,7 @@
 
 <div class="search-results-footer">
   <div class="c-space-paginator">
-    <%= paginate @journals, params: {page_size: @page_size, show_all: false, show_last_page: false, remote: false} %>
+    <%= paginate @journals, params: { page_size: @page_size } %>
     <div class="c-paginator-page_size">
       Page size:
       <%
