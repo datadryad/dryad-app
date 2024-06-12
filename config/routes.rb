@@ -302,6 +302,7 @@ Rails.application.routes.draw do
     post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
 
     # admin_datasets, aka "Curator Dashboard"
+    match 'admin_dashboard', to: 'admin_dashboard#index', via: %i[get post]
     get 'ds_admin', to: 'admin_datasets#index'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
