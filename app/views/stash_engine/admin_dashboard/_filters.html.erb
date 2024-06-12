@@ -1,0 +1,26 @@
+<%
+def selecter(id, options)
+  h = { member: 'Dryad member', sponsor: 'Journal sponsor' }
+  label = h[id.to_sym] || id.capitalize
+
+  '<div class="o-admin-form-pair">' +
+  "<label for='filter-#{id}'>#{label}:</label>" +
+  select_tag("filters[#{id}]", options_for_select(options, @filters.dig(id.to_sym)), id: "filter-#{id}", class: 'c-input__select') +
+  '</div>'
+end
+%>
+
+<h2 id="filter-legend">Filter</h2>
+<div style="display: flex; flex-wrap: wrap; column-gap: 2ch; row-gap: 2ch;">
+  <%= selecter('member', [['', '']] + institution_select).html_safe %>
+  <%= selecter('status', [['', '']] + status_select).html_safe %>
+  <% if current_user.min_curator? %><%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %><% end %>
+  <%# journal search select %>
+  <%= selecter('sponsor', [['', '']] + sponsor_select).html_safe %>
+  <%# funder search select %>
+  <%# affiliation search select %>
+
+  <%= render partial: 'filter_date', locals: { id: 'updated_at', label: 'Last modified' } %>
+  <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Submitted' } %>
+  <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Published' } %>
+</div>

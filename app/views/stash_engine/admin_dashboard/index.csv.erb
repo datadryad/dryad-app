@@ -1,0 +1,60 @@
+<% 
+head = 'Title'
+head += ',DOI' if @fields.include?('doi')
+head += ',Keywords' if @fields.include?('keywords')
+head += ',Authors' if @fields.include?('authors')
+if @fields.include?('affiliations') || @fields.include?('countries')
+  head += @fields.include?('affiliations') ? ',Affiliations' : ',Countries'
+end
+head += ',Status' if @fields.include?('status')
+head += ',Size' if @fields.include?('size')
+head += ',Metrics' if @fields.include?('metrics')
+if @fields.include?('funders') || @fields.include?('awards')
+  head += @fields.include?('funders') ? ',Grant funders' : ',Award IDs'
+end
+head += ',Journal' if @fields.include?('journal')
+head += ',Journal sponsor' if @fields.include?('sponsor')
+head += ',Curator' if @fields.include?('curator')
+head += ',DPC paid by' if @fields.include?('dpc')
+head += ',Last modified' if @fields.include?('updated_at')
+head += ',Submitted' if @fields.include?('submit_date')
+head += ',Published' if @fields.include?('publication_date')
+%>
+<%= head %>
+<% @datasets.each do |dataset| 
+  row = [dataset.title]
+  row << dataset.identifier.identifier if @fields.include?('doi')
+  row << dataset.subjects.map(&:subject).join(', ') if @fields.include?('keywords')
+  row << dataset.author_string if @fields.include?('authors') 
+  if @fields.include?('affiliations') || @fields.include?('countries')
+    affs = dataset.authors.map(&:affiliations).flatten.uniq.each_with_object([]) { |a, arr| 
+      if a.ror_id 
+        arr << a 
+      end
+      arr }.map { |aff| ([@fields.include?('affiliations') ? aff.smart_name : nil] + [@fields.include?('countries')? aff.country_name : nil]).reject(&:blank?).join(', ') }
+    row << ([dataset.tenant_id == 'dryad' ? nil : ([@fields.include?('affiliations') ? dataset.tenant&.short_name : nil] + [@fields.include?('countries') ? dataset.tenant&.country_name : nil]).reject(&:blank?).join(', ')].flatten).concat(affs).uniq.reject(&:blank?).join('; ')
+  end
+  row << StashEngine::CurationActivity.readable_status(dataset.status) if @fields.include?('status')
+  row << filesize(dataset.total_file_size) if @fields.include?('size')
+  if @fields.include?('metrics')
+    row << "#{dataset.unique_investigation_count.blank? || dataset.unique_investigation_count < dataset.unique_request_count ? dataset.unique_request_count || 0 : dataset.unique_investigation_count} views, #{dataset.unique_request_count || 0} downloads, #{dataset.citation_count || 0} citations"
+  end
+  if @fields.include?('funders') || @fields.include?('awards')
+    row << dataset.funders.map { |f| ([@fields.include?('funders') ? f.contributor_name : nil] + [@fields.include?('awards') ? f.award_number : nil]).reject(&:blank?).join(', ')}.uniq.reject(&:blank?).join('; ') 
+  end
+  row << dataset.journal_title if @fields.include?('journal')
+  row << dataset.sponsor_id && StashEngine::JournalOrganization.where(id: dataset.sponsor_id).first&.name if @fields.include?('sponsor')
+  row << dataset.curator_name if @fields.include?('curator')
+  if @fields.include?('dpc')
+    dpc = ''
+    dpc = dataset.tenant&.short_name if dataset.identifier.payment_id = dataset.tenant_id
+    dpc = dataset.journal_title if dataset&.issn&.include?(dataset.identifier.payment_id)
+    dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id.starts_with?('funder')
+    row << dpc
+  end
+  row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at') 
+  row << dataset.submit_date if @fields.include?('submit_date')
+  row << dataset.publication_date if @fields.include?('publication_date')
+%>
+<%= row.to_csv(row_sep: nil).html_safe %>
+<% end %>

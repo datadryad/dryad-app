@@ -1,0 +1,48 @@
+<%
+def check(id)
+  h = {funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Submitted', publication_date: 'Published'}
+  label = h[id.to_sym]
+  label ||= id.length < 4 ? id.upcase : id.capitalize
+
+  '<div class="o-admin-form-pair">' +
+  check_box_tag('fields[]', id, @fields.include?(id), {id: id}) +
+  label_tag('fields[]', label, {for: id})+
+  '</div>'
+end
+%>
+
+<fieldset class="c-fieldset">
+  <legend><h2 id="field-legend">Fields</h2></legend>
+  <div style="display: flex; column-gap: 2ch;">
+    <fieldset class="c-fieldset" style="padding: 0; text-indent: 1ch; display: flex; flex-direction: column;">
+      <legend style="text-indent: -1ch">Description:</legend>
+      <%= check('doi').html_safe %>
+      <%= check('keywords').html_safe %>
+    </fieldset>
+    <div style="display: flex; flex-direction: column;">
+      <%= check('authors').html_safe %>
+      <%= check('affiliations').html_safe %>
+      <div style="padding-left: 1ch"><%= check('countries').html_safe %></div>
+    </div>
+    <div style="display: flex; flex-direction: column;">
+      <%= check('status').html_safe %>
+      <%= check('metrics').html_safe %>
+      <%= check('size').html_safe %>
+    </div>
+    <div style="display: flex; flex-direction: column;">
+      <%= check('journal').html_safe %>
+      <%= check('sponsor').html_safe %>
+      <%= check('dpc').html_safe %>
+    </div>
+    <div style="display: flex; flex-direction: column;">
+      <%= check('funders').html_safe %>
+      <div style="padding-left: 1ch"><%= check('awards').html_safe %></div>
+      <% if current_user.min_curator? %><%= check('curator').html_safe %><% end %>      
+    </div>
+    <div style="display: flex; flex-direction: column;">
+      <%= check('updated_at').html_safe %>
+      <%= check('submit_date').html_safe %>
+      <%= check('publication_date').html_safe %>
+    </div>
+  </div>
+</fieldset>

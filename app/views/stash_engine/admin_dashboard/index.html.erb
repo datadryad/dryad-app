@@ -1,0 +1,45 @@
+<% @page_title = "Admin dashboard" %>
+
+<h1 class="o-heading__level1">Admin dashboard</h1>
+
+<%= form_with(url: stash_url_helpers.admin_dashboard_path, method: 'post', id: 'search_form') do %>
+  <%= render partial: 'fields' %>
+  <%= render partial: 'filters' %>
+  <p class="o-admin-form-pair" style="width: 100%">
+    <label for="search-string">Search terms: </label>
+    <%= search_field_tag(:q, @search_string, class: 'c-input__text', id: 'search-string' ) %>
+    <%= submit_tag('Apply', name: nil, class: 'o-button__submit', style: 'margin-right: 0;' ) %>
+  </p>
+<% end %>
+
+<p style="margin-bottom: -1rem; text-align: right; font-size: .9em; display: flex; align-items: center; justify-content: flex-end; column-gap: 2ch;">
+  <span style=""><b><%= @datasets.total_count %></b> results</span>
+  <%= link_to 'Export all as CSV', stash_url_helpers.admin_dashboard_path(request.parameters.except(:action, :controller, :fields, :authenticity_token, :fields, :filters).merge(format: :csv)), class: 'o-link__buttonlink' %>
+</p>
+<div class="table-wrapper">
+  <table class="c-lined-table">
+    <%= render partial: 'table_header' %>
+    <tbody>
+      <%= render partial: 'table_row' %>
+    </tbody>
+  </table>
+</div>
+
+<div class="search-results-footer">
+  <div class="c-space-paginator">
+    <%= paginate @datasets, params: {fields: nil, filters: nil, page_size: @page_size} %>
+    <div class="c-paginator-page_size">
+      Page size:
+      <%
+        current_ps = params[:page_size].to_i
+        current_ps = 10 if current_ps == 0
+        [10, 50, 100].each do |ps| %>
+        <% if ps == current_ps %>
+          <span class="page-current"><%= ps %></span>
+        <% else %>
+          <%= link_to(ps, stash_url_helpers.admin_dashboard_path(request.parameters.except(:action, :controller, :fields, :authenticity_token, :fields, :filters).merge(page_size: ps, page: 1))) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

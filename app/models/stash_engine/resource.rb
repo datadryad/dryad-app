@@ -83,6 +83,7 @@ module StashEngine
     has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy
     has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy
     has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy
+    has_many :funders, -> { where(contributor_type: 'funder') }, class_name: 'StashDatacite::Contributor'
     has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy
     has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy
     has_many :geolocations, class_name: 'StashDatacite::Geolocation', dependent: :destroy
@@ -607,15 +608,6 @@ module StashEngine
         .where("stash_engine_curation_activities.status IN ('published', 'embargoed', 'action_required')")
         .where(identifier_id: identifier_id).where('stash_engine_resources.id < ?', id)
         .order(id: :desc).first
-    end
-
-    # ------------------------------------------------------------
-    # Ownership
-
-    def tenant
-      return nil unless tenant_id
-
-      Tenant.find(tenant_id)
     end
 
     # -----------------------------------------------------------

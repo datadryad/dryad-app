@@ -1,0 +1,10 @@
+<%# locals: id, label %>
+<fieldset class="c-fieldset">
+  <div class="o-admin-form-pair">
+    <legend><%= label %></legend>
+    <label for="<%= id %>start">from:</label>
+    <%= date_field_tag("filters[#{id}][start_date]", @filters.dig(id.to_sym, :start_date), class: 'c-input__text', id: "#{id}start") %>
+    <label for="<%= id %>end">to:</label>
+    <%= date_field_tag("filters[#{id}][end_date]", @filters.dig(id.to_sym, :end_date), class: 'c-input__text', id: "#{id}end") %>
+  </div>
+</fieldset>
