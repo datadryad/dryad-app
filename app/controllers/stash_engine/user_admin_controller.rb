@@ -93,7 +93,7 @@ module StashEngine
       # set publisher role
       save_role(role_params[:publisher_role], @publisher_role, StashEngine::JournalOrganization.find_by(id: role_params[:publisher]))
       # set journal role
-      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params[:journal]))
+      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params.dig(:journal, :value)))
       # set funder role
       save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
       # reload roles
@@ -192,7 +192,7 @@ module StashEngine
     end
 
     def role_params
-      params.permit(:role, :tenant_role, :publisher, :publisher_role, :journal, :journal_role, :funder, :funder_role)
+      params.permit(:role, :tenant_role, :publisher, :publisher_role, :funder, :funder_role, :journal_role, journal: %i[value label])
     end
   end
 end

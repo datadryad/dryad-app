@@ -15,10 +15,41 @@ end
   <%= selecter('member', [['', '']] + institution_select).html_safe %>
   <%= selecter('status', [['', '']] + status_select).html_safe %>
   <% if current_user.min_curator? %><%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %><% end %>
-  <%# journal search select %>
+  <% # locals: field_name, id, selected, options_path, placeholder %>
+  <div class="o-admin-form-pair" style="flex-basis: 500px">
+    <%= render partial: 'stash_engine/shared/search_select', locals: {
+      id: 'journal',
+      label: 'Journal',
+      field_name: 'filters[journal]',
+      options_path: '/stash_datacite/publications/autocomplete?term=',
+      options_label: 'title',
+      options_value: 'id',
+      selected: @filters.dig(:journal)
+    } %>
+  </div>
   <%= selecter('sponsor', [['', '']] + sponsor_select).html_safe %>
-  <%# funder search select %>
-  <%# affiliation search select %>
+  <div class="o-admin-form-pair" style="flex-basis: 500px">
+    <%= render partial: 'stash_engine/shared/search_select', locals: {
+      id: 'funder',
+      label: 'Funder',
+      field_name: 'filters[funder]',
+      options_path: '/stash_datacite/contributors/autocomplete?query=',
+      options_label: 'name',
+      options_value: 'id',
+      selected: @filters.dig(:funder)
+    } %>
+  </div>
+  <div class="o-admin-form-pair" style="flex-basis: 500px">
+    <%= render partial: 'stash_engine/shared/search_select', locals: {
+      id: 'affiliation',
+      label: 'Affiliation',
+      field_name: 'filters[affiliation]',
+      options_path: '/stash_datacite/affiliations/autocomplete?query=',
+      options_label: 'name',
+      options_value: 'id',
+      selected: @filters.dig(:affiliation)
+    } %>
+  </div>
 
   <%= render partial: 'filter_date', locals: { id: 'updated_at', label: 'Last modified' } %>
   <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Submitted' } %>

@@ -100,21 +100,19 @@ module StashEngine
 
     # rubocop:disable Style/MultilineIfModifier
     def add_filters
+      if @filters[:member].present? || @filters.dig(:funder, :value).present? || @filters.dig(:affiliation, :value).present?
+        @datasets = @datasets.left_outer_joins(authors: :affiliations).left_outer_joins(:funders)
+      end
+      tenant_filter
       @datasets = @datasets.where('stash_engine_curation_activities.status': @filters[:status]) if @filters[:status].present?
       @datasets = @datasets.where(
         'curator.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
       ) if @filters[:curator].present?
+      @datasets = @datasets.where('stash_engine_journals.id': @filters.dig(:journal, :value)) if @filters.dig(:journal, :value).present?
       @datasets = @datasets.where('stash_engine_journals.sponsor_id': @filters[:sponsor]) if @filters[:sponsor].present?
       @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') > 0") unless @search_string.blank?
-      return unless @filters[:member].present? && StashEngine::Tenant.find_by(id: @filters[:member]).present?
-
-      tenant_orgs = StashEngine::Tenant.find(@filters[:member]).ror_ids
-      @datasets = @datasets.left_outer_joins(authors: :affiliations).left_outer_joins(:funders)
-      @datasets = @datasets.where(
-        'stash_engine_resources.tenant_id = ? or stash_engine_identifiers.payment_id = ?
-        or dcs_affiliations.ror_id in (?) or dcs_contributors.name_identifier_id in (?)',
-        @filters[:member], @filters[:member], tenant_orgs, tenant_orgs
-      )
+      @datasets = @datasets.where('dcs_contributors.name_identifier_id': @filters.dig(:funder, :value)) if @filters.dig(:funder, :value).present?
+      @datasets = @datasets.where('dcs_affiliations.ror_id': @filters.dig(:affiliation, :value)) if @filters.dig(:affiliation, :value).present?
     end
 
     def date_filters
@@ -129,6 +127,17 @@ module StashEngine
       ) unless @filters[:publication_date].nil? || @filters[:publication_date].values.all?(&:blank?)
     end
     # rubocop:enable Style/MultilineIfModifier
+
+    def tenant_filter
+      return unless @filters[:member].present? && StashEngine::Tenant.find_by(id: @filters[:member]).present?
+
+      tenant_orgs = StashEngine::Tenant.find(@filters[:member]).ror_ids
+      @datasets = @datasets.where(
+        'stash_engine_resources.tenant_id = ? or stash_engine_identifiers.payment_id = ?
+        or dcs_affiliations.ror_id in (?) or dcs_contributors.name_identifier_id in (?)',
+        @filters[:member], @filters[:member], tenant_orgs, tenant_orgs
+      )
+    end
 
     def date_string(date_hash)
       from = date_hash[:start_date]
