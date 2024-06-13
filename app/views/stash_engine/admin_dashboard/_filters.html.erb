@@ -9,13 +9,13 @@ def selecter(id, options)
   '</div>'
 end
 %>
-
-<h2 id="filter-legend">Filter</h2>
-<div style="display: flex; flex-wrap: wrap; column-gap: 2ch; row-gap: 2ch;">
+<div class="admin-dashboard-buttons">
+  <b id="edit_filters" role="heading" aria-level="2">Search filters</b>
+</div>
+<fieldset id="edit_filters-form" aria-label="Search filters">
   <%= selecter('member', [['', '']] + institution_select).html_safe %>
   <%= selecter('status', [['', '']] + status_select).html_safe %>
   <% if current_user.min_curator? %><%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %><% end %>
-  <% # locals: field_name, id, selected, options_path, placeholder %>
   <div class="o-admin-form-pair" style="flex-basis: 500px">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
       id: 'journal',
@@ -54,4 +54,4 @@ end
   <%= render partial: 'filter_date', locals: { id: 'updated_at', label: 'Last modified' } %>
   <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Submitted' } %>
   <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Published' } %>
-</div>
+</fieldset>
