@@ -6,12 +6,7 @@
       <%= select_label %> <b><%= @user.tenant.short_name %></b>
     <% else %>
       <%= label_tag(label, select_label, class: 'c-input__label') %>
-      <% if options.length < 10 %>
-        <%= select_tag(label, options_for_select(options, user_role&.role_object_id), class: 'c-input__select') %>
-      <% else %>
-        <%= text_field_tag(label, options.find {|o| o[1].to_i == user_role&.role_object_id&.to_i }&.first, list: "#{label}-options", class: 'c-input__select', placeholder: 'Begin typing...') %>
-        <datalist id="<%= label %>-options"><%= options_for_select(options, user_role&.role_object_id) %></datalist>
-      <% end %>
+      <%= select_tag(label, options_for_select(options, user_role&.role_object_id), class: 'c-input__select') %>
     <% end %>
   </p>
   <ul>

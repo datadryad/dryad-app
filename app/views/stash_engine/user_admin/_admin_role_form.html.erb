@@ -47,20 +47,24 @@ funder_roles = [
       flex-shrink: 0;
       flex-grow: 1;
     }
-    #role_form_flex fieldset p {
+    #role_form_flex fieldset p,
+    #role_form_flex fieldset div {
       margin: 0 auto 1rem;
     }
-    #role_form_flex fieldset ul {
+    #role_form_flex fieldset div > div {
+      display: inline-block;
+    }
+    #role_form_flex fieldset > ul {
       margin: 0;
       padding: 0;
       list-style-type: none;
     }
-    #role_form_flex fieldset ul li {
+    #role_form_flex fieldset > ul li {
       padding-left: 2ch;
       text-indent: -2ch;
       margin-bottom: .3rem;
     }
-    #role_form_flex fieldset ul li span {
+    #role_form_flex fieldset > ul li span {
       font-size: .9em;
       margin-left: .5ch;
       padding-left: .75ch;
@@ -91,7 +95,25 @@ funder_roles = [
     <% unless @journal_role %>
       <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a journal role</button>
     <% end %>
-    <%= render partial: 'admin_role_fieldset', locals: { user_role: @journal_role, label: 'journal', select_label: 'For journal:', roles: journal_roles, options: StashEngine::Journal.all.collect { |j| [ j.title, j.id ] } } %>
+    <fieldset class="c-fieldset" id="journal_fieldset" <%= "hidden" unless @journal_role %> >
+      <legend class="c-fieldset__legend">Journal roles:</legend>
+      <div>
+        <%= render partial: 'stash_engine/shared/search_select', locals: {
+          id: 'journal',
+          label: 'For journal',
+          field_name: 'journal',
+          options_path: '/stash_datacite/publications/autocomplete?term=',
+          options_label: 'title',
+          options_value: 'id',
+          selected: {value: @journal_role&.role_object_id, label: @user&.journals&.map(&:title)}
+        } %>
+      </div>
+      <ul>
+        <% journal_roles.each do |role| %>
+          <li><%= radio_button_tag("journal_role", role.first, @journal_role&.role == role.first) %> <label for="<%= "journal_role_#{role.first}" %>"><%= role[1].html_safe %></label>
+        <% end %>
+      </ul>
+    </fieldset>
     <% unless @funder_role %>
       <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a funder role</button>
     <% end %>

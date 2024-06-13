@@ -1,0 +1,55 @@
+<% # locals: field_name, label, id, selected, options_path, options_label, options_value %>
+<label for="searchselect-<%= id %>__input"><%= label %>:</label>
+<div class="searchselect" id="searchselect-<%= id %>" tabindex="-1">
+  <input type="hidden" name="<%= field_name %>[value]" id="searchselect-<%= id %>__value" value="<%= selected&.dig(:value) %>">
+  <input type="hidden" name="<%= field_name %>[label]" id="searchselect-<%= id %>__label" value="<%= selected&.dig(:label) %>">
+  <%= text_field_tag(nil, selected&.dig(:label), id: "searchselect-#{id}__input", class: 'c-input__select', placeholder: 'Find as you type...', 'aria-autocomplete': 'both', 'aria-controls': "searchselect-#{id}__list", 'aria-expanded': 'false', role: 'combobox') %>
+  <ul id="searchselect-<%= id %>__list" role="listbox" aria-label="<%= label %>" tabindex="-1" hidden></ul>
+  <span id="searchselect-<%= id %>__status" class="screen-reader-only" role="status"></span>
+</div>
+<script type="text/javascript">
+  var searchSelect<%= id %> = () => {
+    const itemId = 'searchselect-<%= id %>'
+    const combobox = document.getElementById(itemId)
+    const textbox = document.getElementById(itemId + '__input')
+    const list = document.getElementById(itemId + '__list')
+    const status = document.getElementById(itemId + '__status')
+    const v = document.getElementById(itemId + '__value')
+    const l = document.getElementById(itemId + '__label')
+    const fill = async () => {
+      status.innerHTML = 'Loading results'
+      list.innerHTML = '<li><i class="fa fa-circle-o-notch fa-spin" aria-hidden="true"></i></li>'
+      if (textbox.value.length > 2) {
+        const response = await fetch('<%= options_path %>' + textbox.value)
+        const json = await response.json()
+        if (json.length > 0) {
+          list.innerHTML = `<li role="option" data-value="" data-label="" tabindex="-1" ${!v.value ? 'class="selected-option" aria-selected="true"' : ''}>&nbsp;</li>`
+          for (const i of json) {
+            if (!list.querySelector(`li[data-value='${i['<%= options_value %>']}']`)) {
+              const li = list.appendChild(document.createElement('li'))
+              let htmlString = i['<%= options_label %>']
+              if (i['country'] || i['acronyms']) {
+                htmlString += `<br/><small>${i.acronyms.length > 0 ? `(${i.acronyms.join(', ')}) ` : ''}${i.country}</small>`
+              }
+              li.innerHTML = htmlString;
+              li.setAttribute('role', 'option');
+              li.setAttribute('aria-selected', i['<%= options_value %>'] == v.value);
+              li.setAttribute('data-value', i['<%= options_value %>'])
+              li.setAttribute('data-label', i['<%= options_label %>'])
+              li.setAttribute('tabindex', '-1')
+              if (i['<%= options_value %>'] == v.value) li.classList.add('selected-option')
+            }
+          }
+        }
+        status.innerHTML = 'Results loaded'
+      }
+    }
+    const select = ({label, value}) => {
+      v.value = value
+      l.value = label
+    }
+
+    new ComboboxAutocomplete(combobox, textbox, list, fill, select)
+  }
+  searchSelect<%= id %>();
+</script>
