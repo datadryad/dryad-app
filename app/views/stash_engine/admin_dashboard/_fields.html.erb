@@ -4,45 +4,85 @@ def check(id)
   label = h[id.to_sym]
   label ||= id.length < 4 ? id.upcase : id.capitalize
 
-  '<div class="o-admin-form-pair">' +
-  check_box_tag('fields[]', id, @fields.include?(id), {id: id}) +
+  '<span class="field-pair">' +
+  check_box_tag('fields[]', id, @fields.include?(id), {id: id, 'aria-describedby': "#{id}-desc"}) +
   label_tag('fields[]', label, {for: id})+
-  '</div>'
+  '</span>'
 end
 %>
-
-<fieldset class="c-fieldset">
-  <legend><h2 id="field-legend">Fields</h2></legend>
-  <div style="display: flex; column-gap: 2ch;">
-    <fieldset class="c-fieldset" style="padding: 0; text-indent: 1ch; display: flex; flex-direction: column;">
-      <legend style="text-indent: -1ch">Description:</legend>
-      <%= check('doi').html_safe %>
-      <%= check('keywords').html_safe %>
-    </fieldset>
-    <div style="display: flex; flex-direction: column;">
-      <%= check('authors').html_safe %>
-      <%= check('affiliations').html_safe %>
-      <div style="padding-left: 1ch"><%= check('countries').html_safe %></div>
+<div class="admin-dashboard-buttons">
+  <b role="heading" aria-level="2" id="edit_fields">Display fields</b>
+  <button type="button" class="o-button__plain-text7" id="edit_fields-help" aria-hidden="true"><i class="fa fa-info-circle"></i> Display field help</button>
+</div>
+<fieldset id="edit_fields-form" aria-labelledby="edit_fields">
+  <div>
+    <%= check('doi').html_safe %>
+    <span class="help" id="doi-desc"><a href="https://www.doi.org/" target="_blank">Identifier</a> assigned to the dataset. Appears under Description.</span>
+  </div>
+  <div>
+    <%= check('keywords').html_safe %>
+    <span class="help" id="keywords-desc">Subjects entered by the submitter. Appear under Description.</span>
+  </div>
+  <div>
+    <%= check('authors').html_safe %>
+    <span class="help" id="authors-desc">Authors list provided for the dataset.</span>
+  </div>
+  <div>
+    <%= check('affiliations').html_safe %>
+    <span class="help" id="affiliations-desc">Author affiliations matched with a <a href="https://ror.org/" target="_blank">ROR ID</a>.</span>
+  </div>
+  <div>
+    <%= check('countries').html_safe %>
+    <span class="help" id="countries-desc">Countries associated with author affiliations.</span>
+  </div>
+  <div>
+    <%= check('status').html_safe %>
+    <span class="help" id="status-desc">Status of the submission in Dryad processing.</span>
+  </div>
+  <div>
+    <%= check('metrics').html_safe %>
+    <span class="help" id="metrics-desc">View, download, and citation statistics.</span>
+  </div>
+  <div>
+    <%= check('size').html_safe %>
+    <span class="help" id="help-desc">Total size of the uploaded data files.</span>
+  </div>
+  <div>
+    <%= check('journal').html_safe %>
+    <span class="help" id="journal-desc">Journal of the manuscript or primary article associated with the dataset.</span>
+  </div>
+  <div>
+    <%= check('sponsor').html_safe %>
+    <span class="help" id="sponsor-desc">Publisher or organization sponsoring the journal.</span>
+  </div>
+  <div>
+    <%= check('dpc').html_safe %>
+    <span class="help" id="dpc-desc">Party responsible for the <a href="/stash/requirements#cost" target="_blank">Dryad Data Publishing Charge</a>.</span>
+  </div>
+  <div>
+    <%= check('funders').html_safe %>
+     <span class="help" id="funders-desc">Funding organizations matched with a <a href="https://ror.org/" target="_blank">ROR ID</a>.</span>
+  </div>
+  <div>
+    <%= check('awards').html_safe %>
+    <span class="help" id="awards-desc">Grant and other funder identifiers.</span>
+  </div>
+  <% if current_user.min_curator? %>
+    <div>
+      <%= check('curator').html_safe %>
+      <span class="help" id="curator-desc">The curator currently editing the dataset.</span>
     </div>
-    <div style="display: flex; flex-direction: column;">
-      <%= check('status').html_safe %>
-      <%= check('metrics').html_safe %>
-      <%= check('size').html_safe %>
-    </div>
-    <div style="display: flex; flex-direction: column;">
-      <%= check('journal').html_safe %>
-      <%= check('sponsor').html_safe %>
-      <%= check('dpc').html_safe %>
-    </div>
-    <div style="display: flex; flex-direction: column;">
-      <%= check('funders').html_safe %>
-      <div style="padding-left: 1ch"><%= check('awards').html_safe %></div>
-      <% if current_user.min_curator? %><%= check('curator').html_safe %><% end %>      
-    </div>
-    <div style="display: flex; flex-direction: column;">
-      <%= check('updated_at').html_safe %>
-      <%= check('submit_date').html_safe %>
-      <%= check('publication_date').html_safe %>
-    </div>
+  <% end %>
+  <div>
+    <%= check('updated_at').html_safe %>
+    <span class="help" id="updated_at-desc">Date of the last edit made.</span>
+  </div>
+  <div>
+    <%= check('submit_date').html_safe %>
+    <span class="help" id="submit_date-desc">Date submitted for curation or peer review.</span>
+  </div>
+  <div>
+    <%= check('publication_date').html_safe %>
+    <span class="help" id="publication_date-desc">Publication date of the dataset.</span>
   </div>
 </fieldset>
