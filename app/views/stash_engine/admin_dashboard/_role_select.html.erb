@@ -1,0 +1,18 @@
+<% roles = current_user.roles.map { |r| 
+  obj = r.role_object
+  label = nil
+  label = obj.title if defined?(obj.title)
+  label = obj.name if defined?(obj.name)
+  label = obj.long_name if defined?(obj.long_name)
+  ["#{label ? "#{label} " : ''}#{r.role.capitalize}", r.id] 
+}
+if roles.length > 1 %>
+  <%= form_with(url: stash_url_helpers.admin_dashboard_path, method: 'post') do %>
+    <div class="o-admin-form-pair">
+      <%= label_tag(:user_role, 'View as:') %>
+      <%= select_tag(:user_role, options_for_select(roles, session[:admin_search_role]), class: 'c-input__select', onchange: "this.form.submit();") %>
+    </div>
+  <% end %>
+<% else %>
+  <%= roles.first.first %>
+<% end %>

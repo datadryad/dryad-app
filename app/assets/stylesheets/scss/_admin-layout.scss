@@ -173,6 +173,15 @@
   }
 }
 
+.admin-dashboard-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: 1ch;
+  row-gap: .5ch;
+  flex-wrap: wrap;
+}
+
 .admin-dashboard-buttons {
   display: flex;
   align-items: center;

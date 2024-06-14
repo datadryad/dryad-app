@@ -12,22 +12,39 @@ end
 <div class="admin-dashboard-buttons">
   <b id="edit_filters" role="heading" aria-level="2">Search filters</b>
 </div>
-<fieldset id="edit_filters-form" aria-label="Search filters">
-  <%= selecter('member', [['', '']] + institution_select).html_safe %>
+<fieldset id="edit_filters-form" aria-labelledby="edit_filters">
+  <%= selecter('member', [['', '']] + @tenant_limit.map { |t| [t.short_name, t.id] }).html_safe %>
   <%= selecter('status', [['', '']] + status_select).html_safe %>
-  <% if current_user.min_curator? %><%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %><% end %>
-  <div class="o-admin-form-pair" style="flex-basis: 500px">
-    <%= render partial: 'stash_engine/shared/search_select', locals: {
-      id: 'journal',
-      label: 'Journal',
-      field_name: 'filters[journal]',
-      options_path: '/stash_datacite/publications/autocomplete?term=',
-      options_label: 'title',
-      options_value: 'id',
-      selected: @filters.dig(:journal)
-    } %>
-  </div>
-  <%= selecter('sponsor', [['', '']] + sponsor_select).html_safe %>
+  <% if current_user.min_curator? %>
+    <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
+  <% end %>
+  <% if @journal_limit.present? %>
+    <% if @journal_limit.length > 1 %>
+      <div class="o-admin-form-pair">
+        <label for='filter-journal'>Journal:</label>
+        <%= select_tag("filters[journal][value]", options_for_select([['', '']] + @journal_limit.map { |j| [j.title, j.id] }, @filters.dig(:journal, :value)), id: "filter-journal", class: 'c-input__select') %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="o-admin-form-pair" style="flex-basis: 500px">
+      <%= render partial: 'stash_engine/shared/search_select', locals: {
+        id: 'journal',
+        label: 'Journal',
+        field_name: 'filters[journal]',
+        options_path: '/stash_datacite/publications/autocomplete?term=',
+        options_label: 'title',
+        options_value: 'id',
+        selected: @filters.dig(:journal)
+      } %>
+    </div>
+  <% end %>
+  <% unless @journal_limit.present? && @sponsor_limit.empty? %>
+    <% if @journal_limit.length > 1 %>
+      <%= selecter('sponsor', [['', '']] + @sponsor_limit.map { |item| [item.name, item.id] }).html_safe %>    
+    <% else %>
+      <%= selecter('sponsor', [['', '']] + sponsor_select).html_safe %>
+    <% end %>
+  <% end %>
   <div class="o-admin-form-pair" style="flex-basis: 500px">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
       id: 'funder',

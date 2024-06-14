@@ -3,12 +3,13 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     before_action :setup_paging, only: :index
+    before_action :setup_limits, only: :index
     before_action :setup_search, only: :index
     # before_action :load, only: %i[popup note_popup edit]
 
     # rubocop:disable Metrics/MethodLength
     def index
-      @datasets = StashEngine::Resource.latest_per_dataset
+      @datasets = authorize StashEngine::Resource.latest_per_dataset
         .left_outer_joins(identifier: %i[counter_stat internal_data])
         .preload(identifier: %i[counter_stat internal_data])
         .left_outer_joins(:last_curation_activity)
@@ -41,7 +42,6 @@ module StashEngine
 
       add_fields
       add_filters
-      date_filters
 
       order_string = 'relevance desc'
       if params[:sort].present?
@@ -79,6 +79,7 @@ module StashEngine
                    end
     end
 
+    # rubocop:disable Style/MultilineIfModifier
     def setup_search
       @search_string = params[:q] || ''
       @filters = params[:filters] || session[:admin_search_filters] || {}
@@ -87,8 +88,26 @@ module StashEngine
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
       return unless @fields.blank?
 
-      @fields = %w[doi keywords authors status metrics submit_date publication_date]
+      @fields = %w[doi authors status metrics submit_date publication_date]
+      @fields << 'journal' if @sponsor_limit
+      @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
+      @fields << 'awards' if @role_object.is_a?(StashEngine::Funder)
       @fields << 'curator' if current_user.min_curator?
+    end
+
+    def setup_limits
+      session[:admin_search_role] = params[:user_role] if params[:user_role].present?
+      user_role = current_user.roles.find_by(id: session[:admin_search_role]) || current_user.roles.first
+      @role_object = user_role.role_object
+      @tenant_limit = @role_object.is_a?(StashEngine::Tenant) ? policy_scope(StashEngine::Tenant) : StashEngine::Tenant.enabled
+      if @role_object.is_a?(StashEngine::JournalOrganization)
+        sponsor_limit = [@role_object]
+        sponsor_limit += @role_object.orgs_included if @role_object.orgs_included
+      end
+      @sponsor_limit = sponsor_limit || []
+      journal_limit = @role_object.journals_sponsored_deep if @sponsor_limit.present?
+      journal_limit = [@role_object] if @role_object.is_a?(StashEngine::Journal)
+      @journal_limit = journal_limit || []
     end
 
     def add_fields
@@ -96,23 +115,26 @@ module StashEngine
       @datasets = @datasets.preload(:subjects) if @fields.include?('keywords')
       @datasets = @datasets.preload(authors: :affiliations).preload(:tenant) if @fields.include?('affiliations')
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
+      return unless @filters[:member].present? || @filters.dig(:funder, :value).present? || @filters.dig(:affiliation, :value).present? ||
+        @role_object.is_a?(StashEngine::Tenant) || @role_object.is_a?(StashEngine::Funder)
+
+      @datasets = @datasets.left_outer_joins(authors: :affiliations).left_outer_joins(:funders)
     end
 
-    # rubocop:disable Style/MultilineIfModifier
     def add_filters
-      if @filters[:member].present? || @filters.dig(:funder, :value).present? || @filters.dig(:affiliation, :value).present?
-        @datasets = @datasets.left_outer_joins(authors: :affiliations).left_outer_joins(:funders)
-      end
       tenant_filter
+      journal_filter
+      sponsor_filter
+      funder_filter
+
       @datasets = @datasets.where('stash_engine_curation_activities.status': @filters[:status]) if @filters[:status].present?
+      @datasets = @datasets.where('dcs_affiliations.ror_id': @filters.dig(:affiliation, :value)) if @filters.dig(:affiliation, :value).present?
       @datasets = @datasets.where(
         'curator.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
-      ) if @filters[:curator].present?
-      @datasets = @datasets.where('stash_engine_journals.id': @filters.dig(:journal, :value)) if @filters.dig(:journal, :value).present?
-      @datasets = @datasets.where('stash_engine_journals.sponsor_id': @filters[:sponsor]) if @filters[:sponsor].present?
+      ) if @filters[:curator].present? && current_user.min_curator?
       @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') > 0") unless @search_string.blank?
-      @datasets = @datasets.where('dcs_contributors.name_identifier_id': @filters.dig(:funder, :value)) if @filters.dig(:funder, :value).present?
-      @datasets = @datasets.where('dcs_affiliations.ror_id': @filters.dig(:affiliation, :value)) if @filters.dig(:affiliation, :value).present?
+
+      date_filters
     end
 
     def date_filters
@@ -129,14 +151,46 @@ module StashEngine
     # rubocop:enable Style/MultilineIfModifier
 
     def tenant_filter
-      return unless @filters[:member].present? && StashEngine::Tenant.find_by(id: @filters[:member]).present?
+      return unless @role_object.is_a?(StashEngine::Tenant) || @filters[:member].present?
 
-      tenant_orgs = StashEngine::Tenant.find(@filters[:member]).ror_ids
+      tenant_limit = @tenant_limit
+      tenant_orgs = @role_object.ror_ids if @role_object.is_a?(StashEngine::Tenant)
+
+      if @filters[:member].present? && tenant_limit.find_by(id: @filters[:member])
+        tenant_limit = tenant_limit.where(id: @filters[:member])
+        tenant_orgs = StashEngine::Tenant.find(@filters[:member]).ror_ids
+      end
+
       @datasets = @datasets.where(
-        'stash_engine_resources.tenant_id = ? or stash_engine_identifiers.payment_id = ?
+        'stash_engine_resources.tenant_id in (?) or stash_engine_identifiers.payment_id in (?)
         or dcs_affiliations.ror_id in (?) or dcs_contributors.name_identifier_id in (?)',
-        @filters[:member], @filters[:member], tenant_orgs, tenant_orgs
+        tenant_limit.map(&:id), tenant_limit.map(&:id), tenant_orgs, tenant_orgs
       )
+    end
+
+    def journal_filter
+      return unless @journal_limit.present? || @filters.dig(:journal, :value).present?
+
+      journal_ids = @filters.dig(:journal, :value)
+      journal_ids = (@journal_limit.map(&:id).include?(journal_ids) ? journal_ids : @journal_limit.map(&:id)) if @journal_limit.present?
+
+      @datasets = @datasets.where('stash_engine_journals.id': journal_ids) if journal_ids.present?
+    end
+
+    def sponsor_filter
+      return unless @sponsor_limit.present? || @filters[:sponsor].present?
+
+      sponsor_ids = @filters[:sponsor]
+      sponsor_ids = (@sponsor_limit.map(&:id).include?(sponsor_ids) ? sponsor_ids : @sponsor_limit.map(&:id)) if @sponsor_limit.present?
+
+      @datasets = @datasets.where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
+    end
+
+    def funder_filter
+      return unless @role_object.is_a?(StashEngine::Funder) || @filters.dig(:funder, :value).present?
+
+      funder_ror = @role_object.ror_id || @filters.dig(:funder, :value)
+      @datasets = @datasets.where('dcs_contributors.name_identifier_id': funder_ror)
     end
 
     def date_string(date_hash)

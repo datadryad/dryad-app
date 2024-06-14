@@ -1,6 +1,9 @@
 <% @page_title = "Admin dashboard" %>
 
-<h1 class="o-heading__level1">Admin dashboard</h1>
+<div class="admin-dashboard-header">
+  <h1 class="o-heading__level1">Admin dashboard</h1>
+  <%= render partial: 'role_select' %>
+</div>
 
 <%= form_with(url: stash_url_helpers.admin_dashboard_path, method: 'post', id: 'search_form', class: 'admin-dashboard-form') do %>
   <%= render partial: 'fields' %>
