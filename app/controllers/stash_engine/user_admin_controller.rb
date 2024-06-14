@@ -141,7 +141,7 @@ module StashEngine
       if role.blank?
         existing.delete if existing
       elsif existing
-        existing.update(role: role)
+        existing.update(role: role, role_object: object)
       else
         StashEngine::Role.create(user: @user, role: role, role_object: object)
       end
