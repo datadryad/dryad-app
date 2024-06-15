@@ -78,6 +78,12 @@ module StashEngine
       StashEngine::User.where(['orcid = ? or email IN ( ? )', orcid, emails])
     end
 
+    def orcid_link
+      return "https://sandbox.orcid.org/#{orcid}" if APP_CONFIG.orcid.site == 'https://sandbox.orcid.org/'
+
+      "https://orcid.org/#{orcid}"
+    end
+
     def name
       "#{first_name} #{last_name}".strip
     end

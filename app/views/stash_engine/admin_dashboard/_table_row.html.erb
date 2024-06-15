@@ -22,7 +22,14 @@
             arr << a 
           end
           arr }.map { |aff| ([@fields.include?('affiliations') ? aff.smart_name : nil] + [@fields.include?('countries') ? aff.country_name : nil]).reject(&:blank?).join(', ') }%>
-          <%= ([dataset.tenant_id == 'dryad' ? nil : ([@fields.include?('affiliations') ? dataset.tenant&.short_name : nil] + [@fields.include?('countries') ? dataset.tenant&.country_name : nil]).reject(&:blank?).join(', ')].flatten).concat(affs).uniq.reject(&:blank?).join('; ') %></td>
+          <%= ([dataset.tenant_id == 'dryad' ? nil : ([@fields.include?('affiliations') ? dataset.tenant&.short_name : nil] + [@fields.include?('countries') ? dataset.tenant&.country_name : nil]).reject(&:blank?).join(', ')].flatten).concat(affs).uniq.reject(&:blank?).first(6).join('; ') %></td>
+    <% end %>
+    <% if @fields.include?('submitter') %>
+      <td>
+        <% if dataset.user.orcid %><a href="<%= dataset.user.orcid_link %>" target="blank"><% end %>
+        <%= "#{dataset.user.first_name} #{dataset.user.last_name}" %>
+        <% if dataset.user.orcid %></a><% end %>
+      </td>
     <% end %>
     <% if @fields.include?('status') %>
       <td><%= StashEngine::CurationActivity.readable_status(dataset.status) %></td>
