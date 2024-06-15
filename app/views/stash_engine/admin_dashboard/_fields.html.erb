@@ -25,15 +25,19 @@ end
   </div>
   <div>
     <%= check('authors').html_safe %>
-    <span class="help" id="authors-desc">Authors list provided for the dataset.</span>
+    <span class="help" id="authors-desc">The first 6 listed authors of the dataset.</span>
   </div>
   <div>
     <%= check('affiliations').html_safe %>
-    <span class="help" id="affiliations-desc">Author affiliations matched with a <a href="https://ror.org/" target="_blank">ROR ID</a>.</span>
+    <span class="help" id="affiliations-desc">Up to 6 author affiliations matched with a <a href="https://ror.org/" target="_blank">ROR ID</a>.</span>
   </div>
   <div>
     <%= check('countries').html_safe %>
-    <span class="help" id="countries-desc">Countries associated with author affiliations.</span>
+    <span class="help" id="countries-desc">Up to 6 countries associated with author affiliations.</span>
+  </div>
+  <div>
+    <%= check('submitter').html_safe %>
+    <span class="help" id="submitter-desc">The submitting user of the dataset linked to their <a href="https://orcid.org/" target="_blank">ORCID</a>.</span>
   </div>
   <div>
     <%= check('status').html_safe %>

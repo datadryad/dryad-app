@@ -11,6 +11,9 @@
     <% if @fields.include?('affiliations') || @fields.include?('countries') %>
       <th><%= @fields.include?('affiliations') ? 'Affiliations' : 'Countries' %></th>
     <% end %>
+    <% if @fields.include?('submitter') %>
+      <th>Submitter</th>
+    <% end %>
     <% if @fields.include?('status') %>
       <th class="c-lined-table__sort <%= sort_display('status') %>">
         <%= sortable_column_head sort_field: 'status', title: 'Status' %>

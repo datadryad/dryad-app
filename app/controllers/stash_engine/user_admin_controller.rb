@@ -104,7 +104,6 @@ module StashEngine
     # profile for a user showing stats and datasets
     def user_profile
       @user = User.find(params[:id])
-      @orcid_link = orcid_link
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
       # some of these columns are calculated values for display that aren't stored (publication date)
       @resources = Resource.where(user_id: @user.id).latest_per_dataset
@@ -179,12 +178,6 @@ module StashEngine
 
     def add_institution_filter!
       @users = @users.where(tenant_id: params[:institution]) if params[:institution]
-    end
-
-    def orcid_link
-      return "https://sandbox.orcid.org/#{@user.orcid}" if APP_CONFIG.orcid.site == 'https://sandbox.orcid.org/'
-
-      "https://orcid.org/#{@user.orcid}"
     end
 
     def edit_params

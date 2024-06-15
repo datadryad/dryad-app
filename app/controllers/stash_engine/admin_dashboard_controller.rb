@@ -36,7 +36,7 @@ module StashEngine
           stash_engine_journals.title as journal_title, stash_engine_journals.sponsor_id, stash_engine_journals.issn,
           CONCAT_WS(' ', curator.first_name, curator.last_name) as curator_name,
           (select GROUP_CONCAT(distinct CONCAT_WS(', ', sea.author_last_name, sea.author_first_name) ORDER BY sea.author_order, sea.id separator '; ')
-            from stash_engine_authors sea where sea.resource_id = stash_engine_resources.id) as author_string,
+            from stash_engine_authors sea where sea.resource_id = stash_engine_resources.id limit 6) as author_string,
           MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') as relevance
         ")
 
@@ -111,6 +111,7 @@ module StashEngine
     end
 
     def add_fields
+      @datasets = @datasets.preload(:user) if @fields.include?('submitter')
       @datasets = @datasets.preload(:funders) if @fields.include?('funders')
       @datasets = @datasets.preload(:subjects) if @fields.include?('keywords')
       @datasets = @datasets.preload(authors: :affiliations).preload(:tenant) if @fields.include?('affiliations')

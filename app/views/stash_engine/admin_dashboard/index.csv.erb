@@ -6,6 +6,7 @@ head += ',Authors' if @fields.include?('authors')
 if @fields.include?('affiliations') || @fields.include?('countries')
   head += @fields.include?('affiliations') ? ',Affiliations' : ',Countries'
 end
+head += ',Submitter' if @fields.include?('submitter')
 head += ',Status' if @fields.include?('status')
 head += ',Size' if @fields.include?('size')
 head += ',Metrics' if @fields.include?('metrics')
@@ -32,7 +33,10 @@ head += ',Published' if @fields.include?('publication_date')
         arr << a 
       end
       arr }.map { |aff| ([@fields.include?('affiliations') ? aff.smart_name : nil] + [@fields.include?('countries')? aff.country_name : nil]).reject(&:blank?).join(', ') }
-    row << ([dataset.tenant_id == 'dryad' ? nil : ([@fields.include?('affiliations') ? dataset.tenant&.short_name : nil] + [@fields.include?('countries') ? dataset.tenant&.country_name : nil]).reject(&:blank?).join(', ')].flatten).concat(affs).uniq.reject(&:blank?).join('; ')
+    row << ([dataset.tenant_id == 'dryad' ? nil : ([@fields.include?('affiliations') ? dataset.tenant&.short_name : nil] + [@fields.include?('countries') ? dataset.tenant&.country_name : nil]).reject(&:blank?).join(', ')].flatten).concat(affs).uniq.reject(&:blank?).first(6).join('; ')
+  end
+  if @fields.include?('submitter')
+    row << "#{dataset.user.first_name} #{dataset.user.last_name}#{dataset.user.orcid ? " ORCID: #{dataset.user.orcid}" : ''}"
   end
   row << StashEngine::CurationActivity.readable_status(dataset.status) if @fields.include?('status')
   row << filesize(dataset.total_file_size) if @fields.include?('size')
