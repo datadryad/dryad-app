@@ -36,7 +36,7 @@ module StashEngine
     has_many :tenants, through: :roles, source: :role_object, source_type: 'StashEngine::Tenant'
     belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
-
+    has_many :admin_searches, class_name: 'StashEngine::AdminSearch', dependent: :destroy
     has_many :access_grants,
              class_name: 'Doorkeeper::AccessGrant',
              foreign_key: :resource_owner_id,

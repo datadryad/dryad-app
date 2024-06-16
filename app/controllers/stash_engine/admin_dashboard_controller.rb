@@ -1,10 +1,11 @@
 module StashEngine
   class AdminDashboardController < ApplicationController
     helper SortableTableHelper
-    before_action :require_user_login
+    before_action :require_admin
     before_action :setup_paging, only: :index
-    before_action :setup_limits, only: :index
-    before_action :setup_search, only: :index
+    before_action :setup_limits, only: %i[index new_search save_search]
+    before_action :setup_search, only: %i[index new_search save_search]
+    before_action :collect_properties, only: %i[new_search save_search]
     # before_action :load, only: %i[popup note_popup edit]
 
     # rubocop:disable Metrics/MethodLength
@@ -63,6 +64,18 @@ module StashEngine
     end
     # rubocop:enable Metrics/MethodLength
 
+    def new_search
+      respond_to(&:js)
+    end
+
+    def save_search
+      existing = authorize StashEngine::AdminSearch.find_by(id: params[:id])
+      return unless existing
+
+      existing.update(properties: @properties)
+      respond_to(&:js)
+    end
+
     private
 
     def setup_paging
@@ -80,21 +93,6 @@ module StashEngine
     end
 
     # rubocop:disable Style/MultilineIfModifier
-    def setup_search
-      @search_string = params[:q] || ''
-      @filters = params[:filters] || session[:admin_search_filters] || {}
-      session[:admin_search_filters] = params[:filters] if params[:filters].present?
-      @fields = params[:fields] || session[:admin_search_fields]
-      session[:admin_search_fields] = params[:fields] if params[:fields].present?
-      return unless @fields.blank?
-
-      @fields = %w[doi authors status metrics submit_date publication_date]
-      @fields << 'journal' if @sponsor_limit
-      @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
-      @fields << 'awards' if @role_object.is_a?(StashEngine::Funder)
-      @fields << 'curator' if current_user.min_curator?
-    end
-
     def setup_limits
       session[:admin_search_role] = params[:user_role] if params[:user_role].present?
       user_role = current_user.roles.find_by(id: session[:admin_search_role]) || current_user.roles.first
@@ -108,6 +106,35 @@ module StashEngine
       journal_limit = @role_object.journals_sponsored_deep if @sponsor_limit.present?
       journal_limit = [@role_object] if @role_object.is_a?(StashEngine::Journal)
       @journal_limit = journal_limit || []
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    def setup_search
+      @saved_search = current_user.admin_searches[params[:search].to_i - 1] if params[:search]
+      @saved_search ||= current_user.admin_searches.find_by(default: true)
+
+      @search_string = params[:q] || @saved_search&.search_string || session[:admin_search_string]
+      @filters = params[:filters] || @saved_search&.filters || session[:admin_search_filters]
+      @fields = params[:fields] || @saved_search&.fields || session[:admin_search_fields]
+
+      session[:admin_search_filters] = params[:filters] if params[:filters].present?
+      session[:admin_search_fields] = params[:fields] if params[:fields].present?
+      session[:admin_search_string] = params[:q] if params[:q].present?
+
+      return unless @fields.blank?
+
+      @search_string = ''
+      @filters = {}
+      @fields = %w[doi authors status metrics submit_date publication_date]
+      @fields << 'journal' if @sponsor_limit
+      @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
+      @fields << 'awards' if @role_object.is_a?(StashEngine::Funder)
+      @fields << 'curator' if current_user.min_curator?
+    end
+    # rubocop:enable Metrics/AbcSize
+
+    def collect_properties
+      @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
     end
 
     def add_fields
