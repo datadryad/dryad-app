@@ -1,9 +1,14 @@
 // ##### Footer Component ##### //
 
+#maincontent {
+  min-height: 79vh;
+  @media (max-width: 1060px) { min-height: 75vh; } 
+  @media (max-width: 900px) { min-height: 70vh; } 
+}
+
 .c-footer {
   @extend %pull-borders;
   margin-top: 2em;
-  margin-bottom: $spacing-md;
   padding-top: 10px;
   clear: both;
   border-top: thin solid $design-dark-gray-color;

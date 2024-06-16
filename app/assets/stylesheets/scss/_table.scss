@@ -107,16 +107,6 @@ td, th {
   & > *:first-child {
     margin-bottom: $spacing-base;
   }
-
-  button {
-    border: none;
-    color: $design-medium-blue-color;
-    background-color: transparent;
-
-    &:hover {
-      color: $design-orange-color;
-    }
-  }
 }
 
 .c-user-datasets-table {
