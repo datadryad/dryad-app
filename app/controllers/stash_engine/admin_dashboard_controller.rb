@@ -143,6 +143,7 @@ module StashEngine
       @datasets = @datasets.preload(:subjects) if @fields.include?('keywords')
       @datasets = @datasets.preload(authors: :affiliations).preload(:tenant) if @fields.include?('affiliations')
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
+      @datasets = @datasets.left_outer_joins(:related_identifiers) unless @filters[:identifiers].blank?
       return unless @filters[:member].present? || @filters.dig(:funder, :value).present? || @filters.dig(:affiliation, :value).present? ||
         @role_object.is_a?(StashEngine::Tenant) || @role_object.is_a?(StashEngine::Funder)
 
@@ -161,6 +162,10 @@ module StashEngine
         'curator.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
       ) if @filters[:curator].present? && current_user.min_curator?
       @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') > 0") unless @search_string.blank?
+      @datasets = @datasets.where(
+        'dcs_related_identifiers.related_identifier like ? or stash_engine_internal_data.value like ?',
+        "%#{@filters[:identifiers]}%", "%#{@filters[:identifiers]}%"
+      ) unless @filters[:identifiers].blank?
 
       date_filters
     end
@@ -217,7 +222,7 @@ module StashEngine
     def funder_filter
       return unless @role_object.is_a?(StashEngine::Funder) || @filters.dig(:funder, :value).present?
 
-      funder_ror = @role_object.ror_id || @filters.dig(:funder, :value)
+      funder_ror = @role_object&.ror_id || @filters.dig(:funder, :value)
       @datasets = @datasets.where('dcs_contributors.name_identifier_id': funder_ror)
     end
 
