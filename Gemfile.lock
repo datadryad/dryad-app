@@ -431,6 +431,9 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
+    markdiff (0.8.1)
+      diff-lcs
+      nokogiri
     matrix (0.4.2)
     memoist (0.16.2)
     method_source (1.1.0)
@@ -861,6 +864,7 @@ DEPENDENCIES
   listen
   loofah (~> 2.19.1)
   mail (~> 2.8)
+  markdiff (~> 0.8.1)
   mocha
   mutex_m
   mysql2 (~> 0.5.3)
