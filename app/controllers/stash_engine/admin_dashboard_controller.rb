@@ -108,7 +108,7 @@ module StashEngine
       @journal_limit = journal_limit || []
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def setup_search
       @saved_search = current_user.admin_searches[params[:search].to_i - 1] if params[:search]
       @saved_search ||= current_user.admin_searches.find_by(default: true)
@@ -125,13 +125,14 @@ module StashEngine
 
       @search_string = ''
       @filters = {}
-      @fields = %w[doi authors status metrics submit_date publication_date]
-      @fields << 'journal' if @sponsor_limit
+      @fields = %w[doi authors metrics status submit_date publication_date]
+      @fields << 'journal' if @sponsor_limit.present?
+      @fields << 'identifiers' if @journal_limit.present?
       @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
-      @fields << 'awards' if @role_object.is_a?(StashEngine::Funder)
-      @fields << 'curator' if current_user.min_curator?
+      @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
+      @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def collect_properties
       @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
@@ -143,6 +144,7 @@ module StashEngine
       @datasets = @datasets.preload(:subjects) if @fields.include?('keywords')
       @datasets = @datasets.preload(authors: :affiliations).preload(:tenant) if @fields.include?('affiliations')
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
+      @datasets = @datasets.preload(:related_identifiers) if @fields.include?('identifiers')
       @datasets = @datasets.left_outer_joins(:related_identifiers) unless @filters[:identifiers].blank?
       return unless @filters[:member].present? || @filters.dig(:funder, :value).present? || @filters.dig(:affiliation, :value).present? ||
         @role_object.is_a?(StashEngine::Tenant) || @role_object.is_a?(StashEngine::Funder)

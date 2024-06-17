@@ -1,6 +1,6 @@
 <%
 def check(id)
-  h = {funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Submitted', publication_date: 'Published'}
+  h = {funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Submitted', publication_date: 'Published', identifiers: 'Publication IDs'}
   label = h[id.to_sym]
   label ||= id.length < 4 ? id.upcase : id.capitalize
 
@@ -14,7 +14,7 @@ end
   <b role="heading" aria-level="3" id="edit_fields">Display fields</b>
   <button type="button" class="o-button__plain-text7" id="edit_fields-help" aria-hidden="true"><i class="fa fa-info-circle"></i> Display field help</button>
 </div>
-<fieldset id="edit_fields-form" aria-labelledby="edit_fields">
+<fieldset id="edit_fields-form" aria-labelledby="edit_fields" <%if current_user.min_curator?%>class="extra-column"<%end%>>
   <div>
     <%= check('doi').html_safe %>
     <span class="help" id="doi-desc"><a href="https://www.doi.org/" target="_blank">Identifier</a> assigned to the dataset. Appears under Description.</span>
@@ -60,6 +60,10 @@ end
     <span class="help" id="sponsor-desc">Publisher or organization sponsoring the journal.</span>
   </div>
   <div>
+    <%= check('identifiers').html_safe %>
+    <span class="help" id="identifiers-desc">Up to 6 identifiers of related publications.</span>
+  </div>
+  <div>
     <%= check('dpc').html_safe %>
     <span class="help" id="dpc-desc">Party responsible for the <a href="/stash/requirements#cost" target="_blank">Dryad Data Publishing Charge</a>.</span>
   </div>
@@ -83,10 +87,10 @@ end
   </div>
   <div>
     <%= check('submit_date').html_safe %>
-    <span class="help" id="submit_date-desc">Date submitted for curation or peer review.</span>
+    <span class="help" id="submit_date-desc">Date of version submission for curation or peer review.</span>
   </div>
   <div>
     <%= check('publication_date').html_safe %>
-    <span class="help" id="publication_date-desc">Publication date of the dataset.</span>
+    <span class="help" id="publication_date-desc">Publication date of the dataset version.</span>
   </div>
 </fieldset>

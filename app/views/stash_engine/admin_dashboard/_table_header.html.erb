@@ -38,6 +38,9 @@
     <% if @fields.include?('sponsor') %>
       <th>Journal sponsor</th>
     <% end %>
+    <% if @fields.include?('identifiers') %>
+      <th>Publication IDs</th>
+    <% end %>
     <% if @fields.include?('curator') %>
       <th class="c-lined-table__sort <%= sort_display('curator_name') %>">
         <%= sortable_column_head sort_field: 'curator_name', title: 'Curator' %>

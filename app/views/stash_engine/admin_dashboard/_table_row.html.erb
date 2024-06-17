@@ -52,6 +52,9 @@
     <% if @fields.include?('sponsor') %>
       <td><%= dataset.sponsor_id && StashEngine::JournalOrganization.where(id: dataset.sponsor_id).first&.name %></td>
     <% end %>
+    <% if @fields.include?('identifiers') %>
+      <td><%= ([dataset.identifier.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ') %></td>
+    <% end %>
     <% if @fields.include?('curator') %>
       <td><%= dataset.curator_name %></td>
     <% end %>
