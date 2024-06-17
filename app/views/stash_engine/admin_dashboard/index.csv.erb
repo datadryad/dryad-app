@@ -15,6 +15,7 @@ if @fields.include?('funders') || @fields.include?('awards')
 end
 head += ',Journal' if @fields.include?('journal')
 head += ',Journal sponsor' if @fields.include?('sponsor')
+head += ',Publication IDs' if @fields.include?('identifiers')
 head += ',Curator' if @fields.include?('curator')
 head += ',DPC paid by' if @fields.include?('dpc')
 head += ',Last modified' if @fields.include?('updated_at')
@@ -48,6 +49,9 @@ head += ',Published' if @fields.include?('publication_date')
   end
   row << dataset.journal_title if @fields.include?('journal')
   row << dataset.sponsor_id && StashEngine::JournalOrganization.where(id: dataset.sponsor_id).first&.name if @fields.include?('sponsor')
+  if @fields.include?('identifiers')
+    row << ([dataset.identifier.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ')
+  end
   row << dataset.curator_name if @fields.include?('curator')
   if @fields.include?('dpc')
     dpc = ''

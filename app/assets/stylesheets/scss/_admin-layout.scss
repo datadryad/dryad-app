@@ -121,8 +121,11 @@ button.c-admin-edit-icon {
 
   #edit_fields-form {
     columns: 6;
-    @media (max-width: 920px) { columns: 3 }
-    @media (max-width: 420px) { columns: 2 }
+
+    &.extra-column {
+      columns: 7;
+      @media (max-width: 1070px) { columns: 5 }
+    }
     
     div {
       margin-bottom: 4px;
@@ -139,6 +142,11 @@ button.c-admin-edit-icon {
         margin: .2rem 0 1rem 1.1rem;
       }
     }
+  }
+
+  #edit_fields-form, #edit_fields-form.extra-column {
+    @media (max-width: 920px) { columns: 3 }
+    @media (max-width: 480px) { columns: 2 }
   }
 
   #edit_filters-form {
@@ -217,7 +225,9 @@ button.c-admin-edit-icon {
 
 .admin-dashboard-results {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: flex-start;
   column-gap: 2ch;
+  row-gap: 1ch;
 }
