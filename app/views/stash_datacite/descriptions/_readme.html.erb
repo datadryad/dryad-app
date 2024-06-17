@@ -5,33 +5,59 @@
   <%# content = ActionView::Base.full_sanitizer.sanitize(reformat) %>
 <%# end %>
 <div id="landing_readme" class="<%='expanded' if expand_readme %>">
-    <% unless expand_readme %><button id="expand-readme" class="o-button__plain-text4" aria-expanded="false" aria-controls="landing_readme">Expand README <i class="fa fa-caret-down" aria-hidden="true"></i></button><% end %>
-    <div class="t-landing__text-wall <%= 'highlight' if highlight_fields.include?('technical_info') %>">
+  <% unless expand_readme %><button id="expand-readme" class="o-button__plain-text4" aria-expanded="false" aria-controls="landing_readme">Expand README <i class="fa fa-caret-down" aria-hidden="true"></i></button><% end %>
+  <% if highlight_fields.include?('technical_info') %>
+    <p><span class="highlight" style="font-size: 1.5em; padding: 6px; margin-right: 50px">README changed</span> <button type="button" class="o-button__plain-text1 diff-toggle" style="margin-right: 10px" disabled>View changes</button><button type="button" class="o-button__plain-text1 diff-toggle">View final</button></p>
+    <div class="t-landing__text-wall highlight-readme">
+      <% if !content.match(/^# /) %>
+        <h2>README</h2>
+      <% end %>
+      <% old_content = @resource.previous_curated_resource.descriptions.type_technical_info.map(&:description).first %>
+      <% old = markdown_render old_content.sub(/^# /, '# README: ') %>
+      <% newc = markdown_render content.sub(/^# /, '# README: ') %>
+      <%= markdown_differ(old, newc) %>
+    </div>
+  <% end %>
+  <div class="t-landing__text-wall" <%= 'hidden' if highlight_fields.include?('technical_info') %>>
     <% if !content.match(/^# /) %>
       <h2>README</h2>
     <% end %>
     <%= markdown_render content.sub(/^# /, '# README: ') %>
-    </div>
+  </div>
 </div>
 <% unless expand_readme %>
-<script type="text/javascript">
-    const readme = document.getElementById('landing_readme')
-    const button = document.getElementById("expand-readme")
-    if (readme.scrollHeight <= readme.offsetHeight ) {
-        button.setAttribute('hidden', true)
-    }
-    button.addEventListener('click', e => {
-      const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
-      if (closed) {
-        e.currentTarget.setAttribute('aria-expanded', 'true');
-        e.currentTarget.parentElement.classList.add('expanded');
-        e.currentTarget.innerHTML = 'Collapse README <i class="fa fa-caret-up" aria-hidden="true"></i>'
-      } else {
-        e.currentTarget.setAttribute('aria-expanded', 'false');
-        e.currentTarget.parentElement.classList.remove('expanded');
-        e.currentTarget.innerHTML = 'Expand README <i class="fa fa-caret-down" aria-hidden="true"></i>'
+  <script type="text/javascript">
+      const readme = document.getElementById('landing_readme')
+      const button = document.getElementById("expand-readme")
+      if (readme.scrollHeight <= readme.offsetHeight ) {
+          button.setAttribute('hidden', true)
       }
+      button.addEventListener('click', e => {
+        const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
+        if (closed) {
+          e.currentTarget.setAttribute('aria-expanded', 'true');
+          e.currentTarget.parentElement.classList.add('expanded');
+          e.currentTarget.innerHTML = 'Collapse README <i class="fa fa-caret-up" aria-hidden="true"></i>'
+        } else {
+          e.currentTarget.setAttribute('aria-expanded', 'false');
+          e.currentTarget.parentElement.classList.remove('expanded');
+          e.currentTarget.innerHTML = 'Expand README <i class="fa fa-caret-down" aria-hidden="true"></i>'
+        }
+      })
+  </script>
+<% end %>
+<% if highlight_fields.include?('technical_info') %>
+  <script type="text/javascript">
+    [...document.getElementsByClassName('diff-toggle')].forEach(button => {
+      button.addEventListener('click', (e) => {
+        p = e.target.parentElement
+        for (const b of p.querySelectorAll('button')) {
+          b.toggleAttribute('disabled')
+        }
+        p.nextElementSibling.nextElementSibling.toggleAttribute('hidden')
+        p.nextElementSibling.toggleAttribute('hidden')        
+      })
     })
-</script>
+  </script>
 <% end %>
 <% end %>

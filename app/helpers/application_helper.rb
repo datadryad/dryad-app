@@ -1,3 +1,5 @@
+require 'markdiff'
+
 module ApplicationHelper
   # reverses name and puts last, first middle, etc
   def name_reverser(name)
@@ -7,6 +9,11 @@ module ApplicationHelper
     return name if name_split.length < 2
 
     "#{name_split.last} #{name_split[0..-2].join(' ')}"
+  end
+
+  def markdown_differ(a, b)
+    differ = Markdiff::Differ.new
+    differ.render(a, b).to_html.html_safe
   end
 
   def markdown_render(content)
