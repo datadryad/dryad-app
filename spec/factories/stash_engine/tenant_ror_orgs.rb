@@ -12,6 +12,10 @@
 #
 #  index_stash_engine_tenant_ror_orgs_on_tenant_id_and_ror_id  (tenant_id,ror_id)
 #
+# Foreign Keys
+#
+#  fk_rails_...  (tenant_id => stash_engine_tenants.id)
+#
 FactoryBot.define do
   factory :tenant_ror_org, class: StashEngine::TenantRorOrg do
     tenant_id { 'mock_tenant' }

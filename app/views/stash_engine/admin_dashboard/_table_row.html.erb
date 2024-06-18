@@ -1,0 +1,81 @@
+<% @datasets.each do |dataset| %>
+  <tr>
+    <td>
+      <div class="c-lined-table__with-actions">
+        <div class="c-lined-table__data">
+          <%= link_to dataset.title, stash_url_helpers.show_path(id: dataset.identifier_str), target: '_blank' %>
+          <% if @fields.include?('doi') %>
+            <div class="c-lined-table__digits">DOI: <%= dataset.identifier.identifier %></div>
+          <% end %>
+          <% if @fields.include?('keywords') && dataset.subjects.present? %>
+            <div class="c-lined-table__digits"><%= dataset.subjects.map(&:subject).join(', ') %></div>
+          <% end %>
+        </div>
+      </div>
+    </td>
+    <% if @fields.include?('authors') %>
+      <td><%= dataset.author_string %></td>
+    <% end %>
+    <% if @fields.include?('affiliations') || @fields.include?('countries') %>
+      <td><% affs = dataset.authors.map(&:affiliations).flatten.uniq.each_with_object([]) { |a, arr| 
+          if a.ror_id 
+            arr << a 
+          end
+          arr }.map { |aff| ([@fields.include?('affiliations') ? aff.smart_name : nil] + [@fields.include?('countries') ? aff.country_name : nil]).reject(&:blank?).join(', ') }%>
+          <%= ([dataset.tenant_id == 'dryad' ? nil : ([@fields.include?('affiliations') ? dataset.tenant&.short_name : nil] + [@fields.include?('countries') ? dataset.tenant&.country_name : nil]).reject(&:blank?).join(', ')].flatten).concat(affs).uniq.reject(&:blank?).first(6).join('; ') %></td>
+    <% end %>
+    <% if @fields.include?('submitter') %>
+      <td>
+        <% if dataset.user.orcid %><a href="<%= dataset.user.orcid_link %>" target="blank"><% end %>
+        <%= "#{dataset.user.first_name} #{dataset.user.last_name}" %>
+        <% if dataset.user.orcid %></a><% end %>
+      </td>
+    <% end %>
+    <% if @fields.include?('status') %>
+      <td><%= StashEngine::CurationActivity.readable_status(dataset.status) %></td>
+    <% end %>
+    <% if @fields.include?('size') %>
+      <td class="c-lined-table__digits"><%= filesize(dataset.total_file_size) %></td>
+    <% end %>
+    <% if @fields.include?('metrics') %>
+      <td class="c-lined-table__digits"><%= dataset.unique_investigation_count.blank? || dataset.unique_investigation_count < dataset.unique_request_count ? dataset.unique_request_count || 0 : dataset.unique_investigation_count %> views<br/>
+        <%= dataset.unique_request_count || 0 %> downloads<br/>
+        <%= dataset.citation_count || 0 %> citations
+      </td>
+    <% end %>
+    <% if @fields.include?('funders') || @fields.include?('awards') %>
+      <td><%= dataset.funders.map { |f| ([@fields.include?('funders') ? f.contributor_name : nil] + [@fields.include?('awards') ? f.award_number : nil]).reject(&:blank?).join(', ')}.uniq.reject(&:blank?).join('; ') %></td>
+    <% end %>
+    <% if @fields.include?('journal') %>
+      <td><%= dataset.journal_title %></td>
+    <% end %>
+    <% if @fields.include?('sponsor') %>
+      <td><%= dataset.sponsor_id && StashEngine::JournalOrganization.where(id: dataset.sponsor_id).first&.name %></td>
+    <% end %>
+    <% if @fields.include?('identifiers') %>
+      <td><%= ([dataset.identifier.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ') %></td>
+    <% end %>
+    <% if @fields.include?('curator') %>
+      <td><%= dataset.curator_name %></td>
+    <% end %>
+    <% if @fields.include?('dpc') %>
+      <td>
+        <% dpc = ''
+          dpc = dataset.tenant&.short_name if dataset.identifier.payment_id = dataset.tenant_id
+          dpc = dataset.journal_title if dataset&.issn&.include?(dataset.identifier.payment_id)
+          dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id.starts_with?('funder')
+        %>
+        <%= dpc %>
+      </td>
+    <% end %>
+    <% if @fields.include?('updated_at') %>
+      <td class="c-lined-table__digits"><%= formatted_datetime(dataset.last_curation_activity.updated_at) %></span></td>
+    <% end %>
+    <% if @fields.include?('submit_date') %>
+      <td class="c-lined-table__digits"><%= formatted_datetime(dataset.submit_date) %></td>
+    <% end %>
+    <% if @fields.include?('publication_date') %>
+      <td class="c-lined-table__digits"><%= formatted_datetime(dataset.publication_date) %></td>
+    <% end %>
+  </tr>
+<% end %>

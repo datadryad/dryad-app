@@ -1,0 +1,68 @@
+<thead>
+  <tr>
+    <th class="c-lined-table__sort <%= sort_display('title') %>">
+      <%= sortable_column_head sort_field: 'title', title: 'Description' %> 
+    </th>
+    <% if @fields.include?('authors') %>
+      <th class="c-lined-table__sort <%= sort_display('author_string') %>">
+        <%= sortable_column_head sort_field: 'author_string', title: 'Authors' %>
+      </th>
+    <% end %>
+    <% if @fields.include?('affiliations') || @fields.include?('countries') %>
+      <th><%= @fields.include?('affiliations') ? 'Affiliations' : 'Countries' %></th>
+    <% end %>
+    <% if @fields.include?('submitter') %>
+      <th>Submitter</th>
+    <% end %>
+    <% if @fields.include?('status') %>
+      <th class="c-lined-table__sort <%= sort_display('status') %>">
+        <%= sortable_column_head sort_field: 'status', title: 'Status' %>
+      </th>
+    <% end %>
+    <% if @fields.include?('size') %>
+      <th class="c-lined-table__sort <%= sort_display('total_file_size') %>">
+        <%= sortable_column_head sort_field: 'total_file_size', title: 'Size' %>
+      </th>
+    <% end %>
+    <% if @fields.include?('metrics') %>
+      <th class="c-lined-table__sort <%= sort_display('unique_investigation_count') %>">
+        <%= sortable_column_head sort_field: 'unique_investigation_count', title: 'Metrics' %>
+      </th>
+    <% end %>
+    <% if @fields.include?('funders') || @fields.include?('awards') %>
+      <th><%= @fields.include?('funders') ? 'Grant funders' : 'Award IDs' %></th>
+    <% end %>
+    <% if @fields.include?('journal') %>
+      <th>Journal</th>
+    <% end %>
+    <% if @fields.include?('sponsor') %>
+      <th>Journal sponsor</th>
+    <% end %>
+    <% if @fields.include?('identifiers') %>
+      <th>Publication IDs</th>
+    <% end %>
+    <% if @fields.include?('curator') %>
+      <th class="c-lined-table__sort <%= sort_display('curator_name') %>">
+        <%= sortable_column_head sort_field: 'curator_name', title: 'Curator' %>
+      </th>
+    <% end %>
+    <% if @fields.include?('dpc') %>
+      <th>DPC paid by</th>
+    <% end %>
+    <% if @fields.include?('updated_at') %>
+      <th class="c-lined-table__sort <%= sort_display('updated_at') %>">
+        <%= sortable_column_head sort_field: 'updated_at', title: 'Last modified' %>
+      </th>
+    <% end %>
+    <% if @fields.include?('submit_date') %>
+      <th class="c-lined-table__sort <%= sort_display('submit_date') %>">
+        <%= sortable_column_head sort_field: 'submit_date', title: 'Submitted' %>
+      </th>
+    <% end %>
+    <% if @fields.include?('publication_date') %>
+      <th class="c-lined-table__sort <%= sort_display('publication_date') %>">
+        <%= sortable_column_head sort_field: 'publication_date', title: 'Published' %>
+      </th>
+    <% end %>
+  </tr>
+</thead>

@@ -1,6 +1,10 @@
 module StashEngine
   class ResourcePolicy < ApplicationPolicy
 
+    def index?
+      @user.min_admin?
+    end
+
     def create?
       @user.present?
     end

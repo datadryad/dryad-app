@@ -301,6 +301,18 @@ Rails.application.routes.draw do
     get 'publisher_admin/:id/edit/:field', to: 'journal_organization_admin#popup', as: 'publisher_popup'
     post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
 
+    # admin_dashboard
+    match 'admin_dashboard', to: 'admin_dashboard#index', via: %i[get post]
+    get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'
+    match 'admin_search/:id', to: 'admin_dashboard#save_search', via: %i[put patch], as: 'save_admin_search'
+
+    # saved_searches
+    # get 'account/saved_searches/:type', to: 'saved_searches#index'
+    post 'saved_search', to: 'saved_searches#create'
+    get 'saved_search/:id', to: 'saved_searches#edit', as: 'saved_search_edit'
+    match 'saved_search/:id', to: 'saved_searches#update', via: %i[put patch], as: 'update_saved_search'
+    delete 'saved_search/:id', to: 'saved_searches#destroy', as: 'saved_search_delete'
+
     # admin_datasets, aka "Curator Dashboard"
     get 'ds_admin', to: 'admin_datasets#index'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'

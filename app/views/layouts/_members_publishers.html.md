@@ -22,6 +22,7 @@
   <li>The Palaeontological Association</li>
   <li>The Paleontological Society</li>
   <li>Rockefeller University Press</li>
+  <li>Royal Entomological Society</li>
   <li>The Royal Society</li>
   <li>Society for the Study of Evolution</li>
   <li>Society of Systematic Biologists</li>

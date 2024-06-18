@@ -3,3 +3,54 @@
 .o-select {
 	margin: 0 0 20px;
 }
+
+.searchselect {
+	position: relative;
+	flex-grow: 2;
+
+	& > input {
+		width: 100%;
+	}
+
+	&:focus-within input {
+		outline: 2px solid $design-medium-blue-color;
+	}
+
+	ul {
+		margin: 0;
+		padding: 2px 0;
+		list-style-type: none;
+		position: absolute;		
+		top: 32px;
+		right: -2px;
+		left: -2px;
+		z-index: 10;
+		width: calc(100% + 4px);
+		max-height: 50vh;
+		overflow-y: auto;
+		background-color: $design-extra-light-gray-color;
+
+		li {
+			padding: 6px 10px;
+			cursor: default;
+			&[role='option'] {
+				padding-left: 3ch;
+				&:before {
+					content: '';
+					display: inline-block;
+					width: 2.5ch;
+					margin-left: -2.5ch;
+					font-family: FontAwesome;
+				}
+				&.selected-option:before {
+					content: '\f00c';
+				}
+			  &:hover,
+			  &:focus {
+			  	color: $design-white-color;
+			    background-color: $design-dark-blue-color;
+			  }		 
+			} 
+		}
+	}
+}

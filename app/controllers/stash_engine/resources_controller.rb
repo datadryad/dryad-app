@@ -101,7 +101,7 @@ module StashEngine
             return_url = session["return_url_#{@resource.identifier_id}"] || session[:returnURL]
             session["return_url_#{@resource.identifier_id}"] = nil
             session[:returnURL] = nil
-            redirect_to return_url, notice: notice
+            redirect_to(return_url, allow_other_host: true, notice: notice)
           elsif current_user
             redirect_to return_to_path_or(dashboard_path), notice: notice
           else

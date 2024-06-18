@@ -56,11 +56,10 @@ module StashDatacite
       before(:each) do
         @affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group', ror_id: '12345')
         @ror_org = StashEngine::RorOrg.new(ror_id: '12345', name: 'Bertelsmann Music Group')
-        allow(StashEngine::RorOrg).to receive(:find_by_ror_id).and_return(@ror_org)
       end
 
       it 'returns the correct country_name when given a country object' do
-        @ror_org.country = 'East Timor'
+        @ror_org.update(country: 'East Timor')
         expect(@affil.country_name).to eql('East Timor')
       end
     end

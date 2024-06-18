@@ -61,13 +61,21 @@
 #### Product development team
 
 <div class="about-bios">
-<div class="bio">
-  <img src="/images/audrey.jpg" alt="Headshot of Audrey Hamelers">
-  <h5>Audrey Hamelers</h5><br/>
-  <p><em>Senior Software Developer</em><br/>
-  Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
-  </p>
-</div>
+   <div class="bio">
+     <img src="/images/audrey.jpg" alt="Headshot of Audrey Hamelers">
+     <h5>Audrey Hamelers</h5><br/>
+     <p><em>Senior Software Developer</em><br/>
+     Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
+     </p>
+   </div>
+   <div class="bio"><!-- This item was added so that when there are just 2 bios these are on the same row --></div>
+   <div class="bio">
+     <img src="/images/alin.jpeg" alt="Headshot of Alin Vetian">
+     <h5>Alin Vetian</h5><br/>
+     <p><em>Senior Software Developer</em><br/>
+     Alin has a great experience developing web applications and other digital products. In his previous roles, he has successfully handled data integration from multiple sources, ensuring seamless data flow and consistency. With skills in implementing advanced data visualization techniques he helped transform complex datasets into clear, actionable insights.
+     </p>
+   </div>
 </div>
 
 #### Curation team
