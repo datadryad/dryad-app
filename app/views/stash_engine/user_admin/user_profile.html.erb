@@ -26,10 +26,10 @@
     }
   </style>
 <% end %>
-<div style="display: flex; align-items: center; justify-content: flex-start; column-gap: 2ch">
+<div style="display: flex; align-items: baseline; justify-content: flex-start; column-gap: 2ch">
   <h1 class="o-heading__level1"><%= "#{@user.first_name} #{@user.last_name}".strip %></h1>
   <% if @user.orcid %>
-    <p><a href="<%= @user.orcid_link %>" target="_blank"><span class="c-orcid__icon"><span class="screen-reader-only">ORCID profile (opens in new tab): </span></span><%= @user.orcid %></a></p>
+    <p><a href="<%= @user.orcid_link %>" target="_blank"><i class="fab fa-orcid" aria-hidden="true" style="margin-right: 3px;"></i><span class="screen-reader-only">ORCID profile (opens in new tab): </span><%= @user.orcid %></a></p>
   <% end %>
 </div>
 <div class="o-admin-container">

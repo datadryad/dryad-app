@@ -9,7 +9,7 @@
     <div style="display: flex; align-items: center; justify-content: space-between; row-gap: 2ch">
       <h1>My account</h1>
       <% if current_user.orcid %>
-        <p><a href="<%= current_user.orcid_link %>" target="_blank"><span class="c-orcid__icon"><span class="screen-reader-only">ORCID profile (opens in new tab): </span></span><%= current_user.orcid %></a></p>
+        <p><a href="<%= current_user.orcid_link %>" target="_blank"><i class="fab fa-orcid" aria-hidden="true" style="margin-right: 3px;"></i><span class="screen-reader-only">ORCID profile (opens in new tab): </span><%= current_user.orcid %></a></p>
       <% end %>
     </div>
     <div id="user_profile">

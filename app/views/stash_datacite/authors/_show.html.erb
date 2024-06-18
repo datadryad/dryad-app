@@ -1,48 +1,60 @@
 <% unless authors.nil? %>
-  <div>
-    <% authors.each_with_index do |author, i| %>
-    <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
-	<div class="o-metadata__group1">
-	  <% if current_user && current_user.min_app_admin? %>
-		<%= ([ (author.author_full_name ?
-			"<span class='o-metadata__author#{' highlight' if highlights&.key?(:author_full_name)}'>#{h(author.author_full_name)}</span>" : nil) ] +
-		     author.affiliations.map{|i|
-					     if i.smart_name.present? && i.smart_name != ',' && i.smart_name != '.'
-					       "<span class='o-metadata__affiliation#{' highlight' if highlights&.key?(:affiliation)}'>#{h(i.smart_name(show_asterisk: true))}</span>"
-					     else
-					       nil
-					     end
-		     } +
-		     [ (author.author_orcid ? "<span class='c-orcid__icon'></span><span>#{display_author_orcid(author)}</span>" : nil) ])
-		     .flatten.reject(&:blank?).join(", ").html_safe %>
-	    <% else %>
-		<%= ([ (author.author_full_name ?
-			"<span class='o-metadata__author'>#{h(author.author_full_name)}</span>" : nil) ] +
-		     author.affiliations.map{|i|
-					     if i.smart_name.present? && i.smart_name != ',' && i.smart_name != '.'
-					       "<span class='o-metadata__affiliation'>#{h(i.smart_name(show_asterisk: false))}</span>"
-					     else
-					       nil
-					     end
-		     } +
-		     [ (author.author_orcid ? "<span class='c-orcid__icon'></span><span>#{display_author_orcid(author)}</span>" : nil) ])
-		     .flatten.reject(&:blank?).join(", ").html_safe %>
-	    <% end %>
-	</div>
-    <% end %>
-    <div class="o-metadata__group1">
-			<%= authors.each_with_index.map{ |author, i|
-				  highlights = highlight_fields.detect {|h| h[:index] == i}
-					unless author.author_email.blank?
-						"<span class='#{' highlight' if highlights&.key?(:email)}'>#{author.author_email}</span>"
-					else
-						nil
-					end
-				}.reject(&:blank?).join(", ").html_safe  %>
-    </div>
-    <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
-    <% if deleted %>
-    	<div class="highlight"><%= deleted[:deleted] %> authors deleted</div>
-    <% end %>
-  </div>
+  <% if highlight_fields.present? && current_user && current_user.min_app_admin? %>
+  	<div class="o-metadata__group1">
+	  	<% authors.each_with_index do |author, i| %>
+	  		<% highlights = highlight_fields.detect {|h| h[:index] == i} %>
+				<%= ([ (author.author_full_name ?
+					"<span class='o-metadata__author#{' highlight' if highlights&.key?(:author_full_name)}'>#{h(author.author_full_name)}</span>" : nil) ] +
+			     author.affiliations.map{|i|
+						     if i.smart_name.present? && i.smart_name != ',' && i.smart_name != '.'
+						       "<span class='o-metadata__affiliation#{' highlight' if highlights&.key?(:affiliation)}'>#{h(i.smart_name(show_asterisk: true))}</span>"
+						     else
+						       nil
+						     end
+			     } +
+			     [ (author.author_orcid ? "<span class='c-orcid__icon'></span><span>#{display_author_orcid(author)}</span>" : nil) ] + [(author.author_email.present? ?
+							"<span class='#{' highlight' if highlights&.key?(:email)}'>#{author.author_email}</span>" : nil)])
+			     .flatten.reject(&:blank?).join(", ").html_safe %>
+		  <% end %>
+		  <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
+		  <% if deleted %>
+		  	<div class="highlight"><%= deleted[:deleted] %> authors deleted</div>
+		  <% end %>
+		</div>
+  <% else %>
+    <% affs = authors.map(&:affiliations).flatten.uniq.each_with_object([]) do |a, arr| 
+  		if a.smart_name.present? && a.smart_name != ',' && a.smart_name != '.'
+  			arr << [a.id, a.smart_name, a.ror_id]
+			end
+			arr
+		end %>
+		<p>
+    <%= authors.map { |author| 
+    	if author.author_full_name
+	    	str = "<span class='o-metadata__author'>#{author.author_full_name}</span>"
+	    	af = author.affiliations.map { |a|
+			     if a.smart_name.present? && a.smart_name != ',' && a.smart_name != '.'
+			       "<a class='o-metadata__link' href='#aff#{a.id}'>#{affs.index { |x| x[0] == a.id } + 1}</a>"
+			     else
+			       nil
+			     end
+		     }.join(', ')
+		    str += af unless af.blank?
+		    str += "<a href='mailto:#{author.author_email}' class='o-metadata__link' aria-label='Email author' target='_blank'><i class='fa fa-envelope' aria-hidden='true'></i></a>" if author.author_email.present?
+		    str += "<a href='#{author_orcid_link(author)}' class='o-metadata__link' target='_blank' aria-label='Author ORCID profile' title='ORCID: #{author.author_orcid}'><i class='fab fa-orcid' aria-hidden='true'></i></a>" if author.author_orcid.present?
+		    str
+		  end
+	  }.reject(&:blank?).join("; ").html_safe %>
+		</p>
+  <% end %>
+  <% if affs.present? %>
+	  <div>
+	  	<b>Affiliations</b>
+	  	<ol>
+	  	<% affs.map do |aff| %>
+	  		<li id="aff<%= aff[0] %>"><%= aff[1] %></li>
+	  	<% end %>
+	  	</l>
+	  </div>
+  <% end %>
 <% end %>

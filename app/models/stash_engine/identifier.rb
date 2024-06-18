@@ -623,17 +623,11 @@ module StashEngine
     end
 
     def date_first_published
-      resources.map(&:curation_activities).flatten.each do |ca|
-        return ca.created_at if ca.published? || ca.embargoed?
-      end
-      nil
+      resources.map(&:publication_date)&.first || nil
     end
 
     def date_last_published
-      resources.map(&:curation_activities).flatten.reverse.each do |ca|
-        return ca.created_at if ca.published? || ca.embargoed?
-      end
-      nil
+      resources.map(&:publication_date)&.last || nil
     end
 
     # the first time this dataset had metadata exposed to the public

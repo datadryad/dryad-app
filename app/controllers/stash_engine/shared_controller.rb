@@ -16,7 +16,7 @@ module StashEngine
           formatted_date formatted_datetime formatted_html5_date minimal_date local_time default_date
           current_tenant current_user
           field_suffix shorten_linked_url english_list
-          display_id display_id_plain display_author_orcid
+          display_id display_id_plain display_author_orcid author_orcid_link
         ]
     end
 
@@ -207,6 +207,12 @@ module StashEngine
                              "https://orcid.org/#{author.author_orcid}",
                              target: '_blank', class: 'c-orcid__id').html_safe
       end
+    end
+
+    def author_orcid_link(author)
+      return "https://sandbox.orcid.org/#{author.author_orcid}" if APP_CONFIG.orcid.site == 'https://sandbox.orcid.org/'
+
+      "https://orcid.org/#{author.author_orcid}"
     end
 
     # ----------------------

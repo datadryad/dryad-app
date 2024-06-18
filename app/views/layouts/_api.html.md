@@ -51,12 +51,12 @@ Detailed, interactive documentation of all available Dryad request methods:
     navigator.clipboard.writeText(`${apiUrl}${requestUrl}`).then(() => {
       // Successful copy
       copyButton.parentElement.setAttribute('title', 'Copied');
-      copyButton.classList.remove('fa-clipboard');
+      copyButton.classList.remove('fa-paste');
       copyButton.classList.add('fa-check');
       copyButton.innerHTML = '<span class="screen-reader-only">Copied</span>'
       setTimeout(function(){
         copyButton.parentElement.setAttribute('title', 'Copy API URL');
-        copyButton.classList.add('fa-clipboard');
+        copyButton.classList.add('fa-paste');
         copyButton.classList.remove('fa-check');
         copyButton.innerHTML = '';
       }, 2000);
@@ -92,7 +92,7 @@ Detailed, interactive documentation of all available Dryad request methods:
       newEl.setAttribute('tabindex', 0);
       newEl.setAttribute('aria-label', 'Copy API URL');
       newEl.setAttribute('title', 'Copy API URL');
-      newEl.innerHTML = '<i class="fa fa-clipboard" role="status"></i>';
+      newEl.innerHTML = '<i class="fa fa-paste" role="status"></i>';
       block.insertBefore(newEl, block.lastElementChild);
       newEl.addEventListener('click', copyUrl)
       newEl.addEventListener('keydown', (e) => {

@@ -63,7 +63,7 @@
                 Resume <i class="fa fa-pencil" aria-hidden="true"></i>
               <% end %>
               <%= button_to stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: resource&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
-                <%= resource&.stash_version.version > 1 ? 'Revert' : 'Delete' %> <i class="fa fa-trash" aria-hidden="true"></i>
+                <%= resource&.stash_version.version > 1 ? 'Revert' : 'Delete' %> <i class="fa fa-trash-can" aria-hidden="true"></i>
               <% end %>
             <% elsif resource&.dataset_in_progress_editor.present? %>
               Dataset being edited by <%= resource.dataset_in_progress_editor.name %>

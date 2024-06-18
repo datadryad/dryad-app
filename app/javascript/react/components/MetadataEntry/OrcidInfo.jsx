@@ -15,7 +15,7 @@ export default function OrcidInfo({
     <div className="c-orcid">
       {orcidInfo && (
         <div className="c-orcid__div" style={{marginRight: '2em'}}>
-          <span className="c-orcid__icon" />
+          <i className="fab fa-orcid" aria-hidden="true" />
           <a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{orcidInfo}</a>
         </div>
       )}
@@ -26,7 +26,7 @@ export default function OrcidInfo({
       )}
       {(curator && !orcidInfo && dryadAuthor.orcid_invite_path) ? (
         <div className="c-orcid__div">
-          Associate &nbsp;<span className="c-orcid__icon" />&nbsp;at {dryadAuthor.orcid_invite_path}
+          Associate &nbsp;<i className="fab fa-orcid" aria-hidden="true" />&nbsp;at {dryadAuthor.orcid_invite_path}
         </div>
       ) : ''}
     </div>
