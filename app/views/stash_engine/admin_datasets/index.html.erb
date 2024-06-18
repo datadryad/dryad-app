@@ -17,7 +17,7 @@
      stash_url_helpers.ds_admin_path(sortable_table_params.merge(format: :csv)) %>
 
   <div class="c-space-paginator">
-    <%= paginate @datasets, params: { page_size: @page_size, show_all: false, show_last_page: false } %>
+    <%= paginate @datasets, params: { page_size: @page_size } %>
     <div class="c-paginator-page_size">
       Page size:
       <%
