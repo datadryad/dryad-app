@@ -48,7 +48,9 @@ td, th {
   
   &::after {
     display: inline-block;
-    font-family: FontAwesome;
+    font-size: .8rem;
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
     content: '\f176\f175';
     margin-left: .5ch;
     color: $design-light-gray-color;
@@ -59,7 +61,9 @@ td, th {
 .c-lined-table__sort-asc {
   a::after {
     display: inline-block;
-    font-family: FontAwesome;
+    font-size: .8rem;
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
     content: '\f176';
     margin-left: .7ch;
     color: $design-dark-blue-color;
@@ -73,8 +77,10 @@ td, th {
 .c-lined-table__sort-desc {
   a::after {
     display: inline-block;
-    font-family: FontAwesome;
+    font-size: .8rem;
+    font-family: 'Font Awesome 6 Free';
     content: '\f176';
+    font-weight: 900;
     margin-left: .7ch;
     color: $design-light-gray-color;
   }
