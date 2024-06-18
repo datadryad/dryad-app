@@ -109,17 +109,12 @@ module StashEngine
 
     # get the current tenant for submission
     def current_tenant
-      if current_user && current_user.tenant_id.present? && StashEngine::Tenant.exists?(current_user.tenant_id)
-        StashEngine::Tenant.find(current_user.tenant_id)
-      else
-        StashEngine::Tenant.find(APP_CONFIG.default_tenant)
-      end
+      current_tenant = StashEngine::Tenant.find_by(id: current_user.tenant_id) if current_user && current_user.tenant_id.present?
+      current_tenant || StashEngine::Tenant.find(APP_CONFIG.default_tenant)
     end
 
     def current_user
-      # without the StashEngine namespace in the following line, Rails does something janky with dynamic reloading for
-      # development environments and it sometimes finds no users
-      @current_user ||= StashEngine::User.find_by_id(session[:user_id]) if session[:user_id]
+      @current_user ||= StashEngine::User.preload(:roles).find_by(id: session[:user_id]) if session[:user_id]
     end
 
     def clear_user

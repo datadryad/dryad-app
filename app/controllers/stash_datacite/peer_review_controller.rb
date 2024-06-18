@@ -24,19 +24,13 @@ module StashDatacite
         begin
           @resource = StashEngine::Resource.find(peer_review_params[:id])
           @error_list = StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors
-          @resource.hold_for_peer_review = false
-          @resource.peer_review_end_date = nil
+          @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
+          @resource.reload
 
           if @error_list.empty?
             @resource.curation_activities << StashEngine::CurationActivity.create(user_id: current_user.id,
                                                                                   status: 'submitted',
                                                                                   note: 'Release from PPR')
-          end
-
-          @resource.save
-          @resource.reload
-
-          if @error_list.empty?
             redirect_to dashboard_path, notice: 'Dataset released from private for peer review and submitted for curation'
           else
             duplicate_resource

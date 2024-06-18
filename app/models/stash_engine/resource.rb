@@ -610,6 +610,19 @@ module StashEngine
         .order(id: :desc).first
     end
 
+    def previous_resource_published?
+      %w[published embargoed].include?(previous_resource&.last_curation_activity&.status)
+    end
+
+    # ------------------------------------------------------------
+    # Ownership
+
+    def tenant
+      return nil unless tenant_id
+
+      Tenant.find(tenant_id)
+    end
+
     # -----------------------------------------------------------
     # Permissions
 
@@ -1045,6 +1058,9 @@ module StashEngine
 
       target_status = create_post_submission_status(prior_cur_act)
 
+      # If it's auto-published, we're done
+      return if %w[published embargoed].include?(target_status)
+
       # Warn curators if this is potentially a duplicate
       completions = StashDatacite::Resource::Completions.new(self)
       if prior_version.blank? && completions.duplicate_submission
@@ -1053,17 +1069,15 @@ module StashEngine
                                                                     note: "System noticed possible duplicate dataset #{dup_id}")
       end
 
-      # if it's the first version, or the prior version was in the submitter's control, we're done
+      # If it's the first version, or the prior version was in the submitter's control, we're done
       return if prior_version.blank? || prior_version.current_curation_status.blank?
       return unless identifier.date_last_curated.present?
 
-      # If we get here, the previous status was *not* controlled by the submitter,
-      # meaning there was a curator
+      # If we get here, the previous version was *not* controlled by the submitter, but a curator
       # so assign it to the previous curator, with a fallback process
       auto_assign_curator(target_status: target_status)
 
-      # If the last user to edit it was the current_editor
-      # return it to curation status
+      # If the last user to edit it was the current_editor return it to curation status
       return unless last_curation_activity.user_id == current_editor_id
 
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
@@ -1072,14 +1086,26 @@ module StashEngine
 
     def create_post_submission_status(prior_cur_act)
       attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
+      curation_note = ''
+      target_status = 'submitted'
+
+      # Determine whether to auto-publish
+      if previous_resource_published?
+        changes = changed_fields(previous_resource)
+        changes = changes.delete_if { |c| c.is_a?(Array) }
+        if (changes - %w[related_identifiers subjects funders]).empty?
+          # create submitted status
+          curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
+          # immediately create published status
+          target_status = previous_resource.last_curation_activity.status
+          curation_note = "Auto-published with minimal changes to #{changes.join(', ')}"
+        end
       # Determine which submission status to use, :submitted or :peer_review status
-      publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
-      if hold_for_peer_review?
+      elsif hold_for_peer_review? && previous_curated_resource.blank? && curation_start_date.blank?
         # Moving this logic to user facing, will not allow PPR selection by user
+        publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
         if publication_accepted
-          manuscript = identifier.manuscript_number || identifier.publication_article_doi
-          curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has " \
-                          'already been accepted, so automatically moving to submitted status'
+          curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has already been accepted"
           target_status = 'submitted'
           update(hold_for_peer_review: false, peer_review_end_date: nil)
         else
@@ -1087,12 +1113,9 @@ module StashEngine
           target_status = 'peer_review'
           update(peer_review_end_date: Time.now.utc + 6.months)
         end
-      else
-        curation_note = ''
-        target_status = 'submitted'
       end
 
-      # Generate the :submitted or :peer_review status
+      # Generate the status
       # This will usually have the side effect of sending out notification emails to the author/journal
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
       target_status
