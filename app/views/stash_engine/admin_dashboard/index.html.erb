@@ -1,11 +1,13 @@
 <% @page_title = "Admin dashboard" %>
 <% keepopen = params[:filters].present? || params[:fields].present? || params[:search_string].present? %>
 <% unaltered = @saved_search&.filters == @filters && @saved_search&.fields == @fields && (@saved_search&.search_string == @search_string || (@saved_search&.search_string.blank? && @search_string.blank?)) %>
+<div class="callout">
+  <p>Welcome to the beta version of the new Admin dashboard! Please send your feedback to <a href="mailto:community@datadryad.org?subject=Admin dashboard feedback">community@datadryad.org</a>.</p>
+</div>
 <div class="admin-dashboard-header">
   <h1 class="o-heading__level1">Admin dashboard</h1>
   <%= render partial: 'role_select' %>
 </div>
-
 <div class="admin-dashboard-buttons" style="margin-top: 0; margin-bottom: -1.5rem">
   <div class="admin-dashboard-results">
     <b role="heading" aria-level="2" id="search_head">Search results<% if @saved_search %>: <a href="/stash/account#saved" style="font-weight: normal;"><%= @saved_search.title %></a><% end %></b>
