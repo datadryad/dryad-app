@@ -614,15 +614,6 @@ module StashEngine
       %w[published embargoed].include?(previous_resource&.last_curation_activity&.status)
     end
 
-    # ------------------------------------------------------------
-    # Ownership
-
-    def tenant
-      return nil unless tenant_id
-
-      Tenant.find(tenant_id)
-    end
-
     # -----------------------------------------------------------
     # Permissions
 

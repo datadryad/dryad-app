@@ -49,8 +49,9 @@ blockquote {
   margin: 2rem 0 2rem 2.2rem;
 
   &:before {
-    font-family: FontAwesome;
+    font-family: 'Font Awesome 6 Free';
     content: '\f10d';
+    font-weight: 900;
     font-size: 2rem;
     margin-left: -2.2rem;
     position: absolute;

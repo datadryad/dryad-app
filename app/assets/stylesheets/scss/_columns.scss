@@ -65,7 +65,8 @@
       align-items: center;
       justify-content: center;
       &::before {
-        font-family: FontAwesome;
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
         font-size: 1.25rem;
       }
     }
