@@ -345,8 +345,9 @@
 
   &::after {
     color: $design-white-color;
-    font-family: FontAwesome;
+    font-family: 'Font Awesome 6 Free';
     content: " \f0d7";
+    font-weight: 900;
   }
 
   &[aria-expanded=true]::after {
