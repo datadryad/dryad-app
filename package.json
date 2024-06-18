@@ -74,7 +74,6 @@
     "axios": "^1.6.0",
     "babel-loader": "8",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "browser-sync": "^3.0.0",
     "compression-webpack-plugin": "9",
     "copy-webpack-plugin": "^11.0.0",
     "copyfiles": "^2.4.1",
