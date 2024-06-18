@@ -26,8 +26,9 @@
 
   &::before {
     display: inline-block;
-    font-family: FontAwesome;
+    font-family: 'Font Awesome 6 Free';
     content: '\f054';
+    font-weight: 900;
     color: currentColor;
     margin-right: .5ch;
   }

@@ -100,8 +100,9 @@ h6 {
   cursor: pointer;
 
   &::after {
-    font-family: FontAwesome;
+    font-family: 'Font Awesome 6 Free';
     content: " \f0d7";
+    font-weight: 900;
   }
 
   &:focus {

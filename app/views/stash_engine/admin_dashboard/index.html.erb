@@ -36,7 +36,7 @@
     <% unless unaltered %>
       <% if @saved_search %>
         <%= form_with(url: save_admin_search_path(id: @saved_search&.id), method: :patch, local: false) do %>
-          <button class="o-button__plain-text7" id="search_edit" aria-controls="search_form" aria-expanded="true"><i class="fa fa-bookmark-o" aria-hidden="true"></i>Save search changes</button>
+          <button class="o-button__plain-text7" id="search_edit" aria-controls="search_form" aria-expanded="true"><i class="far fa-bookmark" aria-hidden="true"></i>Save search changes</button>
         <% end %>
       <% end %>
       <%= form_with(url: new_admin_search_path, method: :get, local: false) do %>
