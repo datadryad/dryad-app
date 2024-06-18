@@ -143,7 +143,6 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-fail-on-console": "^2.2.3",
     "jquery-ui": "^1.13.2",
-    "ndb": "^1.1.5",
     "node": "^20.0.0",
     "normalize-scss": "^7.0.1",
     "postcss": "^8.4.31",
