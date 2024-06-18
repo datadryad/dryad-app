@@ -47,12 +47,14 @@
 	  }.reject(&:blank?).join("; ").html_safe %>
 		</p>
   <% end %>
-  <div>
-  	<b>Affiliations</b>
-  	<ol>
-  	<% affs.map do |aff| %>
-  		<li id="aff<%= aff[0] %>"><%= aff[1] %></li>
-  	<% end %>
-  	</l>
-  </div>
+  <% if affs.present? %>
+	  <div>
+	  	<b>Affiliations</b>
+	  	<ol>
+	  	<% affs.map do |aff| %>
+	  		<li id="aff<%= aff[0] %>"><%= aff[1] %></li>
+	  	<% end %>
+	  	</l>
+	  </div>
+  <% end %>
 <% end %>
