@@ -50,3 +50,22 @@ span.highlight,
 a.highlight {
 	padding: 3px 0 2px;
 }
+
+.highlight-readme {
+	ins, del {
+		padding: 3px 0 2px;
+
+		p {
+			display: inline;
+		}
+	}
+	ins {
+		background-color: lighten($design-green-color, 50);
+		&.ins-before::after {
+			content: ' ';
+		}
+	}
+	del {
+		background-color: $design-pink-color;
+	}
+}
