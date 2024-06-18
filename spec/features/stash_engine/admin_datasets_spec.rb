@@ -428,7 +428,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
       it 'has admin link' do
         visit root_path
         click_button 'Datasets'
-        expect(page).to have_link('Admin')
+        expect(page).to have_link('Admin dashboard')
       end
 
       it 'only shows datasets from the target journal' do
@@ -437,7 +437,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
 
         visit root_path
         click_button 'Datasets'
-        click_link('Admin')
+        find('a', exact_text: 'Admin dashboard').click
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_text(@res1.title)
         expect(page).not_to have_text(res2.title)
@@ -461,7 +461,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
       it 'has admin link' do
         visit root_path
         click_button 'Datasets'
-        expect(page).to have_link('Admin')
+        expect(page).to have_link('Admin dashboard')
       end
 
       it 'only shows datasets from the target journal' do
@@ -470,7 +470,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
 
         visit root_path
         click_button 'Datasets'
-        click_link('Admin')
+        find('a', exact_text: 'Admin dashboard').click
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_text(@res1.title)
         expect(page).not_to have_text(res2.title)
