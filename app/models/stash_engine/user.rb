@@ -91,35 +91,35 @@ module StashEngine
     end
 
     def tenant_limited?
-      roles.tenant_roles.present?
+      roles.any? { |r| r.role_object_type == 'StashEngine::Tenant' }
     end
 
     def admin?
-      roles.admin.present?
+      roles.any? { |r| r.role == 'admin' }
     end
 
     def curator?
-      roles.curator.present?
+      roles.any? { |r| r.role == 'curator' }
     end
 
     def superuser?
-      roles.superuser.present?
+      roles.any? { |r| r.role == 'superuser' }
     end
 
     def system_user?
-      roles.system_roles.present?
+      roles.any? { |r| r.role_object_id.nil? }
     end
 
     def min_admin?
-      roles.min_admin.present?
+      roles.any? { |r| %w[superuser curator admin].include?(r.role) }
     end
 
     def min_app_admin?
-      roles.min_app_admin.present?
+      system_user? || min_curator?
     end
 
     def min_curator?
-      roles.min_curator.present?
+      roles.any? { |r| %w[superuser curator].include?(r.role) }
     end
 
     def journals_as_admin
