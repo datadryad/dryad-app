@@ -18,7 +18,7 @@ Doorkeeper.configure do
     #   # Put your admin authentication logic here.
     #   # Example implementation:
     #   Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
-    (current_user && (current_user.role == 'superuser')) || redirect_to(stash_url_helpers.choose_login_path)
+    (current_user && current_user.superuser?) || redirect_to(stash_url_helpers.choose_login_path)
   end
 
   # Authorization Code expiration time (default 10 minutes).
