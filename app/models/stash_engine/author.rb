@@ -90,8 +90,9 @@ module StashEngine
     after_save :init_user_orcid
 
     def orcid_invite_path
-      orcid_invite = StashEngine::OrcidInvitation.where(email: author_email, identifier_id: resource.identifier_id)&.first
+      return nil if author_email.blank?
 
+      orcid_invite = StashEngine::OrcidInvitation.where(email: author_email, identifier_id: resource.identifier_id)&.first
       # Ensure an invite exists -- it may not for a legacy dataset that never received invites,
       # or if the author_email has changed since the original creation.
       orcid_invite ||= StashEngine::OrcidInvitation.create(

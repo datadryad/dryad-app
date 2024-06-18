@@ -109,7 +109,7 @@ module StashEngine
 
       # redirect to it
       sf_url = Stash::Salesforce.case_view_url(case_id: sf_case_id)
-      redirect_to sf_url
+      redirect_to(sf_url, allow_other_host: true)
     end
 
     private

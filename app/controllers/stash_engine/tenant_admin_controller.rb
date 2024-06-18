@@ -37,7 +37,7 @@ module StashEngine
     def edit
       valid = %i[partner_display enabled logo]
       update = edit_params.slice(*valid)
-      update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params[:campus_contacts]
+      update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params[:campus_contacts].present?
       @tenant.update(update)
 
       if edit_params[:ror_orgs]&.present?

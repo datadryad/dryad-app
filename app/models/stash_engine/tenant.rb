@@ -7,6 +7,7 @@
 #  campus_contacts :json
 #  covers_dpc      :boolean          default(TRUE)
 #  enabled         :boolean          default(TRUE)
+#  logo            :text(4294967295)
 #  long_name       :string(191)
 #  partner_display :boolean          default(TRUE)
 #  payment_plan    :integer
@@ -60,6 +61,13 @@ module StashEngine
 
     def ror_ids
       tenant_ror_orgs.map(&:ror_id)
+    end
+
+    def country_name
+      ror_org = ror_orgs.first
+      return nil if ror_org.nil? || ror_org.country.nil?
+
+      ror_org.country
     end
 
     def omniauth_login_path(params = nil)

@@ -1,0 +1,48 @@
+<div style="margin-bottom: 3rem;">
+  <p class="c-input__label">Dryad member affiliation:</p>
+  <div id="dryad-member">
+    <% if current_tenant.id != 'dryad' %>
+      <p style="display: flex; align-items: center; column-gap: 2ch">
+        <%= logo_path({style: 'max-height: 50px'}) unless current_tenant.logo.blank? %>
+        <%= current_tenant.long_name %>
+        <span style="flex-grow: 1"></span>
+        <button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-pencil" aria-hidden="true"></i> Edit affiliation</button>
+      </p>
+    <% else %>
+    <p><button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a Dryad member institution</button></p>
+    <% end %>
+  </div>
+  <div id="edit-tenant-form" hidden>
+    <p id="label_tenant_lookup">Select your Dryad member institution:</p>
+    <div class="t-login__choose">
+      <div class="c-institution__container">
+        <%= form_with(url: sso_path, method: :post, html: {style: 'justify-content: flex-start;'}) do %>
+          <%= react_component('components/TenantForm', {tenants: @tenants}) %>
+          <%= submit_tag 'Login to verify', class: 't-login__buttonlink' %>
+          <span style="flex-grow: 1"></span>
+          <button class="o-button__plain-text7" id="keep_tenant" aria-expanded="true" aria-controls="edit_tenant-form"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+        <% end %>
+      </div>
+    </div>
+    <% if current_tenant.id != 'dryad' %>
+      <br/><br/>
+      <p>Is your institution not a member of Dryad?</p>
+      <%= form_with(url: no_partner_path, method: :post) do |f| %>
+        <%= f.button type: 'submit', class: 'o-button__plain-text7' do %>
+           <i class="fa fa-minus-circle" aria-hidden="true"></i> Remove member affiliation (<%= current_tenant.short_name %>)
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+<script type="text/javascript">
+  document.getElementById('edit_tenant').addEventListener('click', () => {
+    document.getElementById('dryad-member').setAttribute('hidden', 'hidden');
+    document.getElementById('edit-tenant-form').removeAttribute('hidden');
+  });
+  document.getElementById('keep_tenant').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('edit-tenant-form').setAttribute('hidden', 'hidden');
+    document.getElementById('dryad-member').removeAttribute('hidden');
+  });
+</script>

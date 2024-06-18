@@ -1,0 +1,27 @@
+<%= form_with(url: edit_account_path, method: :post, id: 'user_edit_form', local: false) do |f| %>
+  <div class="c-input__inline">
+    <div class="c-input">
+      <%= f.label :first_name, "First name", class: 'c-input__label' %>
+      <%= f.text_field :first_name, class: 'c-input__text', required: true, value: current_user.first_name %>
+    </div>
+    <div class="c-input">
+      <%= f.label :last_name, "Last name", class: 'c-input__label' %>
+      <%= f.text_field :last_name, class: 'c-input__text', required: true, value: current_user.last_name %>
+    </div>
+  </div>
+  <div class="c-input">
+    <%= f.label :email, "Email", class: 'c-input__label' %>
+    <%= f.text_field :email, class: 'c-input__text', value: current_user.email %>
+  </div>
+  <p style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2ch">
+    <span style="color: #cf4817;">* Fields are required</span>
+    <%= f.submit 'Save changes', id: 'edit_submit', class: 'o-button__plain-text2', disabled: true %>
+  </p>
+<% end %>
+<script type="text/javascript">
+  document.getElementById('edit_submit').disabled = true
+  const profile_form = document.getElementById('user_edit_form')
+  profile_form.addEventListener('change', () => {
+    document.getElementById('edit_submit').disabled = !profile_form.checkValidity()
+  });
+</script>

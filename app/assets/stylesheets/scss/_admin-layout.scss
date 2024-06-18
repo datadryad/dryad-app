@@ -96,3 +96,138 @@
     margin-right: .5ch;
   }
 }
+
+button.c-admin-edit-icon {
+  border: none;
+  color: $design-medium-blue-color;
+  background-color: transparent;
+
+  &:hover {
+    color: $design-orange-color;
+  }
+}
+
+.admin-dashboard-form {
+  margin-bottom: 2rem;
+
+  #edit_fields-form,
+  #edit_filters-form {
+    border: none;
+    background-color: $design-lightest-blue-color;
+    padding: 20px;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  #edit_fields-form {
+    columns: 6;
+
+    &.extra-column {
+      columns: 7;
+      @media (max-width: 1070px) { columns: 5 }
+    }
+    
+    div {
+      margin-bottom: 4px;
+    }
+
+    &.show-help {
+      columns: 3;
+      @media (max-width: 620px) { columns: 2 }
+      div {
+        display: table;
+        
+      }
+      .help {
+        margin: .2rem 0 1rem 1.1rem;
+      }
+    }
+  }
+
+  #edit_fields-form, #edit_fields-form.extra-column {
+    @media (max-width: 920px) { columns: 3 }
+    @media (max-width: 480px) { columns: 2 }
+  }
+
+  #edit_filters-form {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 2ch;
+    column-gap: 2ch;
+
+    .help {
+      margin: .5rem auto 1rem;
+    }
+  }
+
+  .help {
+    display: none;
+    font-size: .9em;
+  }
+
+  .show-help .help {
+    display: block;
+  }
+
+  .field-pair {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: nowrap;
+    gap: .5ch;
+  }
+
+  select{
+    max-width: 80vw;
+    text-overflow: ellipsis;
+  }
+
+  .c-input__select {
+    background-color: $design-white-color;
+  }
+}
+
+.admin-dashboard-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: 1ch;
+  row-gap: .5ch;
+  flex-wrap: wrap;
+  margin-bottom: 1.1rem;
+
+  h1 {
+    margin-bottom: 0;
+  }
+}
+
+.admin-dashboard-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 1ch;
+  row-gap: .5ch;
+  flex-wrap: wrap;
+  margin: .8rem auto .2rem;
+
+  *[role='heading'] {
+    &[aria-level='2'] {
+      font-size: 1.35em;
+    }
+    &[aria-level='3'] {
+      font-size: 1.1em;
+    }
+  }
+
+  button i {
+    margin-right: .5ch;
+  }
+}
+
+.admin-dashboard-results {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-start;
+  column-gap: 2ch;
+  row-gap: 1ch;
+}

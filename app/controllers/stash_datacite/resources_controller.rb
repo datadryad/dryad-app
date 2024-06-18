@@ -64,7 +64,7 @@ module StashDatacite
         return_url = session["return_url_#{@resource.identifier_id}"] || session[:returnURL]
         session["return_url_#{@resource.identifier_id}"] = nil
         session[:returnURL] = nil
-        redirect_to return_url, notice: "Submitted updates for #{@resource.identifier}, title: #{@resource.title}"
+        redirect_to(return_url, notice: "Submitted updates for #{@resource.identifier}, title: #{@resource.title}", allow_other_host: true)
       else
         redirect_to(stash_url_helpers.dashboard_path(doi: @resource.identifier.identifier), notice: resource_submitted_message(@resource))
       end
