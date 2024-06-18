@@ -34,7 +34,10 @@ module StashEngine
       return '' unless instring.present?
 
       # Stripe invoice references
-      return render inline: link_to(instring, "https://dashboard.stripe.com/invoices/#{instring}", target: :_blank) if instring.start_with?('in_')
+      if instring.start_with?('in_') && !instring.start_with?('in_progress')
+        return render inline: link_to(instring, "https://dashboard.stripe.com/invoices/#{instring}",
+                                      target: :_blank)
+      end
 
       # Turn salesforce references into hyperlinks
       matchdata = instring.match(/(.*)SF ?#? ?(\d+)(.*)/)
