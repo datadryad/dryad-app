@@ -93,7 +93,7 @@ module StashEngine
       # set publisher role
       save_role(role_params[:publisher_role], @publisher_role, StashEngine::JournalOrganization.find_by(id: role_params[:publisher]))
       # set journal role
-      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params[:journal]))
+      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params.dig(:journal, :value)))
       # set funder role
       save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
       # reload roles
@@ -104,7 +104,6 @@ module StashEngine
     # profile for a user showing stats and datasets
     def user_profile
       @user = User.find(params[:id])
-      @orcid_link = orcid_link
       @progress_count = Resource.in_progress.where(user_id: @user.id).count
       # some of these columns are calculated values for display that aren't stored (publication date)
       @resources = Resource.where(user_id: @user.id).latest_per_dataset
@@ -141,7 +140,7 @@ module StashEngine
       if role.blank?
         existing.delete if existing
       elsif existing
-        existing.update(role: role)
+        existing.update(role: role, role_object: object)
       else
         StashEngine::Role.create(user: @user, role: role, role_object: object)
       end
@@ -181,18 +180,12 @@ module StashEngine
       @users = @users.where(tenant_id: params[:institution]) if params[:institution]
     end
 
-    def orcid_link
-      return "https://sandbox.orcid.org/#{@user.orcid}" if APP_CONFIG.orcid.site == 'https://sandbox.orcid.org/'
-
-      "https://orcid.org/#{@user.orcid}"
-    end
-
     def edit_params
       params.permit(:id, :field, :email, :tenant_id)
     end
 
     def role_params
-      params.permit(:role, :tenant_role, :publisher, :publisher_role, :journal, :journal_role, :funder, :funder_role)
+      params.permit(:role, :tenant_role, :publisher, :publisher_role, :funder, :funder_role, :journal_role, journal: %i[value label])
     end
   end
 end

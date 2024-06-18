@@ -172,7 +172,7 @@ RSpec.feature 'UserAdmin', type: :feature do
           before(:each) do
             create(:tenant_dryad)
             create(:journal_organization)
-            create(:journal)
+            @journal = create(:journal)
             create(:funder)
             @user.update(tenant_id: 'dryad')
             visit "#{stash_url_helpers.user_admin_profile_path(@user.id)}#edit_roles"
@@ -218,6 +218,8 @@ RSpec.feature 'UserAdmin', type: :feature do
           end
           it 'allows the superuser to set the journal role' do
             find_button('Add a journal role').click
+            fill_in 'searchselect-journal__input', with: @journal.title
+            find("li[data-value='#{@journal.id}']").click
             find('#journal_role_admin').set(true)
             find('input[name=commit]').click
             expect(page.find("#user_role_#{@user.id}")).to have_text('Journal admin')
