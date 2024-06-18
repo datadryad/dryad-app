@@ -508,7 +508,8 @@ Rails.application.routes.draw do
   get '/repo/*path', to: redirect('/')
   get '/repo', to: redirect('/')
   get '/submit', to: redirect { |params, request| "/stash/resources/new?#{request.params.to_query}" }
-  get '/interested', to: redirect('/stash/contact')
+  get '/interested', to: redirect('/stash/contact#get-involved')
+  get '/stash/interested', to: redirect('/stash/contact#get-involved')
   
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
