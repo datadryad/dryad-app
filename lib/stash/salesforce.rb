@@ -50,7 +50,7 @@ module Stash
     end
 
     def self.find_cases_by_doi(doi)
-      result = db_query("SELECT Id, Status, Case_Reasons__c, Reason, Case_Reason_Other__c FROM Case Where Subject like '%#{doi}%' " \
+      result = db_query("SELECT Id, Status, OwnerId, Case_Reasons__c, Reason, Case_Reason_Other__c FROM Case Where Subject like '%#{doi}%' " \
                         "or DOI__c like '%#{doi}%' ")
       return unless result && result.size > 0
 
@@ -71,7 +71,8 @@ module Stash
                          id: found.Id,
                          path: case_view_url(case_num: found.CaseNumber),
                          status: found.Status,
-                         reason: reason }.to_ostruct
+                         reason: reason,
+                         owner: found.OwnerId.present? }.to_ostruct
       end
       cases_found
     end
@@ -101,7 +102,7 @@ module Stash
 
     # Update the metadata in a case based on the metadata in a resource
     # Updates each field separately, so a failure of one field doesn't impact the others
-    def self.update_case_metadata(case_id:, resource:, update_timestamp: false)
+    def self.update_case_metadata(case_id:, resource:, update_timestamp: false, update_owner: false)
       return unless case_id.present? && resource.present?
 
       if resource.title.present?
@@ -115,13 +116,6 @@ module Stash
                kv_hash: { Dataset_Status__c: readable_status })
       end
 
-      current_editor = StashEngine::User.find(resource.current_editor_id)&.orcid
-      owner_id = find_user_by_orcid(current_editor)
-      if owner_id.present?
-        update(obj_type: 'Case', obj_id: case_id,
-               kv_hash: { OwnerId: owner_id })
-      end
-
       if resource.identifier.journal.present?
         update(obj_type: 'Case', obj_id: case_id,
                kv_hash: { Journal__c: find_account_by_name(resource.identifier.journal&.title) })
@@ -131,6 +125,15 @@ module Stash
       if tenant.present?
         update(obj_type: 'Case', obj_id: case_id,
                kv_hash: { Institutional_Affiliation__c: find_account_by_tenant(tenant) })
+      end
+
+      if update_owner
+        current_editor = StashEngine::User.find(resource.current_editor_id)&.orcid
+        owner_id = find_user_by_orcid(current_editor)
+        if owner_id.present?
+          update(obj_type: 'Case', obj_id: case_id,
+                 kv_hash: { OwnerId: owner_id })
+        end
       end
 
       return unless update_timestamp
