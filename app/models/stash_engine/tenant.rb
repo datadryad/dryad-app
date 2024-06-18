@@ -63,6 +63,13 @@ module StashEngine
       tenant_ror_orgs.map(&:ror_id)
     end
 
+    def country_name
+      ror_org = ror_orgs.first
+      return nil if ror_org.nil? || ror_org.country.nil?
+
+      ror_org.country
+    end
+
     def omniauth_login_path(params = nil)
       @omniauth_login_path ||= send(:"#{authentication.strategy}_login_path", params)
     end

@@ -24,6 +24,7 @@ module StashDatacite
     self.table_name = 'dcs_affiliations'
     has_and_belongs_to_many :authors, class_name: 'StashEngine::Author', join_table: 'dcs_affiliations_authors'
     has_and_belongs_to_many :contributors, class_name: 'StashDatacite::Contributor'
+    belongs_to :ror_org, class_name: 'StashEngine::RorOrg', primary_key: 'ror_id', foreign_key: 'ror_id', optional: true
 
     validates :long_name, presence: true
 
@@ -42,9 +43,6 @@ module StashDatacite
     end
 
     def country_name
-      return nil if ror_id.blank?
-
-      ror_org = StashEngine::RorOrg.find_by_ror_id(ror_id)
       return nil if ror_org.nil? || ror_org.country.nil?
 
       ror_org.country

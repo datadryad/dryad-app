@@ -1,0 +1,102 @@
+<% @page_title = "Admin dashboard" %>
+<% keepopen = params[:filters].present? || params[:fields].present? || params[:search_string].present? %>
+<% unaltered = @saved_search&.filters == @filters && @saved_search&.fields == @fields && (@saved_search&.search_string == @search_string || (@saved_search&.search_string.blank? && @search_string.blank?)) %>
+<div class="admin-dashboard-header">
+  <h1 class="o-heading__level1">Admin dashboard</h1>
+  <%= render partial: 'role_select' %>
+</div>
+
+<div class="admin-dashboard-buttons" style="margin-top: 0; margin-bottom: -1.5rem">
+  <div class="admin-dashboard-results">
+    <b role="heading" aria-level="2" id="search_head">Search results<% if @saved_search %>: <a href="/stash/account#saved" style="font-weight: normal;"><%= @saved_search.title %></a><% end %></b>
+    <button type="button" class="o-button__plain-text7" id="search_open" aria-controls="search_form" aria-expanded="<%= keepopen %>" <% if keepopen %>hidden<% end %>><i class="fa fa-sliders" aria-hidden="true"></i>Fields and filters</button>
+  </div>
+  <div id="search_form" <% unless params[:filters] || params[:fields] || params[:search_string] %>hidden<% end %>>
+    <%= form_with(url: admin_dashboard_path(search: params[:search]), method: 'post', class: 'admin-dashboard-form') do %>
+      <%= render partial: 'fields' %>
+      <%= render partial: 'filters' %>
+      <div class="admin-dashboard-buttons" style="column-gap: 3ch; row-gap: 2ch">
+        <div class="o-admin-form-pair" style="flex-grow: 2;">
+          <label for="search-string">Search terms: </label>
+          <%= search_field_tag(:q, @search_string, class: 'c-input__text', id: 'search-string', style: 'flex-grow: 2' ) %>
+        </div>
+        <div class="o-admin-form-pair" style="flex-grow: 2;">
+          <label for="related-search">Publication IDs: </label>
+          <%= search_field_tag('filters[identifiers]', @filters[:identifiers], class: 'c-input__text', id: 'related-search', style: 'flex-grow: 2' ) %>
+        </div>
+        <div class="admin-dashboard-results" style="margin-left: auto">
+          <button type="button" class="o-button__plain-text7" id="clear_filters" title="Clear search and filters"><i class="fa fa-times" aria-hidden="true"></i>Clear</button>
+          <%= submit_tag('Apply', name: nil, class: 'o-button__submit') %>
+        </div>
+      </div>
+      </p>
+    <% end %>
+  </div>  
+  <div class="admin-dashboard-results">
+    <% unless unaltered %>
+      <% if @saved_search %>
+        <%= form_with(url: save_admin_search_path(id: @saved_search&.id), method: :patch, local: false) do %>
+          <button class="o-button__plain-text7" id="search_edit" aria-controls="search_form" aria-expanded="true"><i class="fa fa-bookmark-o" aria-hidden="true"></i>Save search changes</button>
+        <% end %>
+      <% end %>
+      <%= form_with(url: new_admin_search_path, method: :get, local: false) do %>
+        <button class="o-button__plain-text7" id="search_save" aria-haspopup="true" aria-expanded="false" <% unless keepopen %>hidden<% end %>><i class="fa fa-bookmark" aria-hidden="true"></i>Save <%= @saved_search ? 'as new ' : ''%>search</button>
+      <% end %>
+    <% end %>
+  </div>  
+  <div class="admin-dashboard-results" style="font-size: .9em;">
+    <span><b><%= number_with_delimiter(@datasets.total_count) %></b> results</span>
+    <%= link_to 'Export all as CSV', stash_url_helpers.admin_dashboard_path(request.parameters.except(:action, :controller, :fields, :authenticity_token, :fields, :filters).merge(format: :csv)), class: 'o-link__buttonlink' %>
+  </div>
+</div>
+<div class="table-wrapper">
+  <table class="c-lined-table">
+    <%= render partial: 'table_header' %>
+    <tbody>
+      <%= render partial: 'table_row' %>
+    </tbody>
+  </table>
+</div>
+
+<div class="search-results-footer">
+  <div class="c-space-paginator">
+    <%= paginate @datasets, params: {fields: nil, filters: nil, q: nil, page_size: @page_size} %>
+    <div class="c-paginator-page_size">
+      Page size:
+      <%
+        current_ps = params[:page_size].to_i
+        current_ps = 10 if current_ps == 0
+        [10, 50, 100].each do |ps| %>
+        <% if ps == current_ps %>
+          <span class="page-current"><%= ps %></span>
+        <% else %>
+          <%= link_to(ps, stash_url_helpers.admin_dashboard_path(request.parameters.except(:action, :controller, :authenticity_token, :fields, :filters, :q).merge(page_size: ps, page: 1))) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  document.getElementById('search_open').addEventListener('click', (e) => {
+    e.target.setAttribute('aria-expanded', true)
+    e.target.setAttribute('hidden', true)
+    document.getElementById('search_form').removeAttribute('hidden')
+    document.getElementById('search_save') && document.getElementById('search_save').removeAttribute('hidden')
+  })
+  document.getElementById('edit_fields-help').addEventListener('click', (e) => {
+    e.preventDefault()
+    document.getElementById('edit_fields-form').classList.toggle('show-help')
+  })
+  document.getElementById('clear_filters').addEventListener('click', (e) => {
+    e.preventDefault()
+    const inputs = document.querySelectorAll(['#edit_filters-form input', '#search_form input[type="search"]'])
+    for (const input of inputs) {
+      input.value = ''
+    }
+    const selects = document.querySelectorAll('#edit_filters-form select')
+    for (const sel of selects) {
+      sel.selectedIndex = -1
+    }
+  })
+</script>

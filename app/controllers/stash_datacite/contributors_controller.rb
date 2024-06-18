@@ -64,24 +64,16 @@ module StashDatacite
       end
     end
 
-    # GET /contributors/autocomplete?term={query_term}
+    # GET /contributors/autocomplete?query={query_term}
     def autocomplete
-      return if params.blank?
-
-      partial_term = params['term']
+      partial_term = params['query']
       if partial_term.blank?
         render json: nil
       else
-        # clean the partial_term of unwanted characters so it doesn't cause errors when calling the CrossRef API
-        partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
-        response = HTTParty.get('https://api.crossref.org/funders',
-                                query: { query: partial_term },
-                                headers: { 'Content-Type' => 'application/json' })
-        return if response.parsed_response.blank?
-        return if response.parsed_response['message'].blank?
-
-        result_list = response.parsed_response['message']['items']
-        render json: bubble_up_exact_matches(result_list: result_list, term: partial_term)
+        @affiliations = StashEngine::RorOrg.distinct.joins(
+          "inner join dcs_contributors on identifier_type = 'ror' and contributor_type = 'funder' and name_identifier_id = ror_id"
+        ).find_by_ror_name(partial_term)
+        render json: @affiliations
       end
     end
 
