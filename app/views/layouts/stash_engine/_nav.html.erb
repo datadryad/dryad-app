@@ -49,37 +49,25 @@
 
     <% if current_user %>
       <li class="c-header__nav-item">
-        <% if current_user.min_app_admin? && !current_user.tenant_limited? %>        
+        <% if current_user.min_admin? %>        
           <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
-            <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', editor_id: current_user.id, curation_status: 'submitted', only_path: true) %>
-            <li><%= link_to 'Curation stats', stash_url_helpers.curation_stats_path %>
-            <li><%= link_to 'Journals', stash_url_helpers.journals_path %>
-            <% if current_user.min_curator? %>
-              <li>
-                <%= link_to 'Publication updater', stash_url_helpers.publication_updater_path %>
-              </li>
+            <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', editor_id: current_user.curator? ? current_user.id : '', curation_status: current_user.curator? ? 'submitted' : '', only_path: true) %>
+            <li><a href="<%=stash_url_helpers.admin_dashboard_path %>"><i class="fa fa-star" aria-hidden="true"></i>New Admin dashboard</a></li>
+            <% if current_user.system_user? %>
+              <li><%= link_to 'Curation stats', stash_url_helpers.curation_stats_path %>
+              <li><%= link_to 'Journals', stash_url_helpers.journals_path %>
+              <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
+              <% if current_user.min_curator? %>
+                <li><%= link_to 'Publication updater', stash_url_helpers.publication_updater_path %></li>
+              <% end %>
             <% end %>
-            <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
             <% if current_user.superuser? %>
               <li><%= link_to 'Status dashboard', stash_url_helpers.status_dashboard_path %>
               <li><%= link_to 'Submission queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>
               <li><%= link_to 'Zenodo submissions', stash_url_helpers.zenodo_queue_path %>
             <% end %>
-          </ul>
-        <% elsif current_user.journals_as_admin.present? || current_user.funders.present? %>
-          <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
-          <ul class="c-header__nav-submenu" id="manage-menu" hidden>
-            <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
-            <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
-          </ul>
-        <% elsif current_user.tenant_limited? %>
-          <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
-          <ul class="c-header__nav-submenu" id="manage-menu" hidden>
-            <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
-            <li><%= link_to 'Admin dashboard', stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true) %>
-            <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
           </ul>
         <% else %>
         <%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out border-left' %>
