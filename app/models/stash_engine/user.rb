@@ -10,7 +10,6 @@
 #  migration_token  :string(191)
 #  old_dryad_email  :string(191)
 #  orcid            :string(191)
-#  role             :string
 #  validation_tries :integer          default(0)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
@@ -53,6 +52,10 @@ module StashEngine
 
     scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
 
+    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
+
+    validates :email, format: EMAIL_REGEX, allow_blank: true
+
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
 
@@ -93,35 +96,35 @@ module StashEngine
     end
 
     def tenant_limited?
-      roles.tenant_roles.present?
+      roles.any? { |r| r.role_object_type == 'StashEngine::Tenant' }
     end
 
     def admin?
-      roles.admin.present?
+      roles.any? { |r| r.role == 'admin' }
     end
 
     def curator?
-      roles.curator.present?
+      roles.any? { |r| r.role == 'curator' }
     end
 
     def superuser?
-      roles.superuser.present?
+      roles.any? { |r| r.role == 'superuser' }
     end
 
     def system_user?
-      roles.system_roles.present?
+      roles.any? { |r| r.role_object_id.nil? }
     end
 
     def min_admin?
-      roles.min_admin.present?
+      roles.any? { |r| %w[superuser curator admin].include?(r.role) }
     end
 
     def min_app_admin?
-      roles.min_app_admin.present?
+      system_user? || min_curator?
     end
 
     def min_curator?
-      roles.min_curator.present?
+      roles.any? { |r| %w[superuser curator].include?(r.role) }
     end
 
     def journals_as_admin

@@ -6,14 +6,9 @@
     remote:        data-remote
     paginator:     the paginator that renders the pagination tags inside
 -%>
-<% if per_page == 1000000 && !(params[:show_all] == false) %>
-  <%= link_to 'Show pages', params.merge(page_size: 5, page: 1), remote: remote %>
-<% end %>
 <%= paginator.render do -%>
   <nav class="pagination" role="navigation" aria-label="Pagination Navigation">
-    <% unless params[:show_all] == false %>
-      <%= link_to 'Show all', params.merge(page_size: '1000000', page: 1), remote: remote %>
-    <% end %>
+    <%#= link_to 'Show all', params.merge(page_size: '1000000', page: 1), remote: remote %>
 
     <%= first_page_tag unless current_page.first? %>
     <%= prev_page_tag unless current_page.first? %>
@@ -27,6 +22,8 @@
     <% end -%>
     
     <%= next_page_tag unless current_page.last? %>
-    <%= last_page_tag unless current_page.last? || params[:show_last_page] == false %>
+    <% if total_pages > 5 %>
+      <%= last_page_tag unless current_page.last? %>
+    <% end %>
   </nav>
 <% end -%>

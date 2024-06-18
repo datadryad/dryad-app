@@ -7,6 +7,7 @@
 #  campus_contacts :json
 #  covers_dpc      :boolean          default(TRUE)
 #  enabled         :boolean          default(TRUE)
+#  logo            :text(4294967295)
 #  long_name       :string(191)
 #  partner_display :boolean          default(TRUE)
 #  payment_plan    :integer
