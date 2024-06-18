@@ -13,10 +13,7 @@
  *= require jquery-ui
  *= require_tree .
  *= require_self
- *= require font-awesome
  */
-
-/* I think  require font-awesome is not longer needed */
 
 div.head_box {
     padding: 10px;
