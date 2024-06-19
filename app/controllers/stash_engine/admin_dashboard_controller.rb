@@ -212,10 +212,7 @@ module StashEngine
 
       return unless journal_ids.present?
 
-      @datasets = @datasets.joins("inner join stash_engine_internal_data jourissn on
-        jourissn.identifier_id = stash_engine_identifiers.id and jourissn.data_type = 'publicationISSN'")
-        .joins("inner join stash_engine_journals on stash_engine_journals.issn like CONCAT('%', jourissn.value ,'%')")
-        .where('stash_engine_journals.id': journal_ids)
+      @datasets = @datasets.joins(identifier: :journal).where('stash_engine_journals.id': journal_ids)
     end
 
     def sponsor_filter
@@ -254,8 +251,10 @@ module StashEngine
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
       @datasets = @datasets.preload(:user) if @fields.include?('submitter')
       @datasets = @datasets.preload(identifier: :counter_stat) if @fields.include?('metrics')
+      @datasets = @datasets.preload(identifier: :journal) if @fields.include?('journal') || @fields.include?('sponsor')
+      @datasets = @datasets.preload(identifier: { journal: :sponsor }) if @fields.include?('sponsor')
       @datasets = @datasets.preload(:funders) if @fields.include?('funders')
-      @datasets = @datasets.preload(:related_identifiers) if @fields.include?('identifiers')
+      @datasets = @datasets.preload(:related_identifiers).preload(identifier: :manuscript_datum) if @fields.include?('identifiers')
     end
 
   end

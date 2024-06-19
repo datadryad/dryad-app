@@ -30,7 +30,8 @@
 module StashEngine
   class Journal < ApplicationRecord
     self.table_name = 'stash_engine_journals'
-    validates :issn, uniqueness: { case_sensitive: false }
+    # validates :issn, uniqueness: { case_sensitive: false }
+    has_many :issns, -> { order(created_at: :asc) }, class_name: 'StashEngine::JournalIssn', dependent: :destroy
     has_many :alternate_titles, class_name: 'StashEngine::JournalTitle', dependent: :destroy
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object
     has_many :users, through: :roles
@@ -53,20 +54,20 @@ module StashEngine
     # Return the single ISSN that is representative of this journal,
     # even if the journal contains multiple ISSNs
     def single_issn
-      return nil unless issn.present?
-      return issn.first if issn.is_a?(Array)
-      return JSON.parse(issn)&.first if issn.start_with?('[')
+      # return nil unless issn.present?
+      # return issn.first if issn.is_a?(Array)
+      # return JSON.parse(issn)&.first if issn.start_with?('[')
 
-      issn
+      issns.map(&:id)&.first
     end
 
     # Return an array of ISSNs, even if the journal contains a single ISSN
     def issn_array
-      return nil unless issn.present?
-      return issn if issn.is_a?(Array)
-      return JSON.parse(issn) if issn.start_with?('[')
+      # return nil unless issn.present?
+      # return issn if issn.is_a?(Array)
+      # return JSON.parse(issn) if issn.start_with?('[')
 
-      [issn]
+      issns.map(&:id)
     end
 
     def notify_contacts
@@ -93,7 +94,7 @@ module StashEngine
     def self.find_by_issn(issn)
       return nil if issn.blank? || issn.size < 9
 
-      StashEngine::Journal.where("issn like '%#{issn}%'")&.first
+      StashEngine::JournalIssn.find_by(id: issn)&.journal
     end
 
     # Replace an uncontrolled journal name (typically containing '*')

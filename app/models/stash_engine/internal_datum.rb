@@ -17,7 +17,9 @@
 module StashEngine
   class InternalDatum < ApplicationRecord
     self.table_name = 'stash_engine_internal_data'
-    belongs_to :stash_identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
+    belongs_to :stash_identifier, class_name: 'StashEngine::Identifier', foreign_key: :identifier_id
+    belongs_to :journal_issn, class_name: 'StashEngine::JournalIssn', foreign_key: :value, optional: true
+    belongs_to :manuscripts, class_name: 'StashEngine::Manuscript', primary_key: :manuscript_number, foreign_key: :value, optional: true
     validates :data_type, inclusion: {
       in: %w[manuscriptNumber mismatchedDOI duplicateItem formerManuscriptNumber publicationISSN
              publicationName pubmedID dansArchiveDate dansEditIRI],

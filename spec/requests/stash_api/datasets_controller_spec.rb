@@ -924,6 +924,7 @@ module StashApi
                                   'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
                                 )
           expect(response_code).to eq(200)
+          @identifier.reload
           expect(@identifier.publication_issn).to eq(issn_target)
           expect(@identifier.publication_name).to eq(journal.title)
         end
@@ -940,6 +941,7 @@ module StashApi
                                 headers: default_json_headers.merge(
                                   'Content-Type' =>  'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
                                 )
+          @identifier.reload
           expect(response_code).to eq(200)
           expect(@identifier.publication_issn).to eq(nil)
         end

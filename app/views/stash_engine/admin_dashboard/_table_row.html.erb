@@ -50,7 +50,7 @@
       <td><%= dataset.identifier&.journal&.title %></td>
     <% end %>
     <% if @fields.include?('sponsor') %>
-      <td><%= dataset.identifier&.journal&.sponsor_id && StashEngine::JournalOrganization.find_by(id: dataset.identifier.journal.sponsor_id)&.name %></td>
+      <td><%= dataset.identifier&.journal&.sponsor&.name %></td>
     <% end %>
     <% if @fields.include?('identifiers') %>
       <td><%= ([dataset.identifier.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ') %></td>
@@ -62,7 +62,7 @@
       <td>
         <% dpc = ''
           dpc = dataset.tenant&.short_name if dataset.identifier.payment_id = dataset.tenant_id
-          dpc = dataset.identifier&.journal&.journal_title if dataset.identifier&.journal&.issn&.include?(dataset.identifier.payment_id)
+          dpc = dataset.identifier&.journal&.journal_title if dataset.identifier&.journal&.issn_array&.include?(dataset.identifier.payment_id)
           dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id.starts_with?('funder')
         %>
         <%= dpc %>

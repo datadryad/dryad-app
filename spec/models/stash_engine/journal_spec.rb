@@ -70,10 +70,10 @@ module StashEngine
         @issn2 = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
         @issn3 = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
         @issn_distractor = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+        @journal = create(:journal, issn: @issn1)
       end
 
       it 'finds by issn' do
-        @journal.update(issn: @issn1)
         j = StashEngine::Journal.find_by_issn(@issn1)
         expect(j).to eq(@journal)
 
@@ -88,7 +88,8 @@ module StashEngine
       end
 
       it 'finds by issn when there are multiples' do
-        @journal.update(issn: [@issn1, @issn2, @issn3])
+        [@issn2, @issn3].each { |id| create(:journal_issn, journal: @journal, id: id) }
+        @journal.reload
         j = StashEngine::Journal.find_by_issn(@issn1)
         expect(j).to eq(@journal)
         j = StashEngine::Journal.find_by_issn(@issn2)
@@ -100,25 +101,31 @@ module StashEngine
       end
 
       it 'gets single_issn' do
-        @journal.update(issn: @issn1)
         expect(@journal.single_issn).to eq(@issn1)
 
-        @journal.update(issn: [@issn2, @issn3])
+        @journal.issns.destroy_all
+        create(:journal_issn, journal: @journal, id: @issn2)
+        create(:journal_issn, journal: @journal, id: @issn3)
+        @journal.reload
         expect(@journal.single_issn).to eq(@issn2)
 
-        @journal.update(issn: nil)
+        @journal.issns.destroy_all
+        @journal.reload
         expect(@journal.single_issn).to be(nil)
       end
 
       it 'gets issn_array' do
-        @journal.update(issn: @issn1)
         expect(@journal.issn_array).to eq([@issn1])
 
-        @journal.update(issn: [@issn2, @issn3])
+        @journal.issns.destroy_all
+        create(:journal_issn, journal: @journal, id: @issn2)
+        create(:journal_issn, journal: @journal, id: @issn3)
+        @journal.reload
         expect(@journal.issn_array).to eq([@issn2, @issn3])
 
-        @journal.update(issn: nil)
-        expect(@journal.issn_array).to be(nil)
+        @journal.issns.destroy_all
+        @journal.reload
+        expect(@journal.issn_array).to be_empty
       end
     end
 

@@ -214,7 +214,7 @@ module StashEngine
       end
 
       it 'returns true if admin for same journal' do
-        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
         resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
@@ -224,7 +224,7 @@ module StashEngine
       end
 
       it 'returns true if admin for a journal, and the item has no journal set' do
-        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
         create(:role, role_object: journal, user: @user, role: 'admin')
@@ -444,7 +444,7 @@ module StashEngine
       end
 
       it 'returns true if being viewed by a journal admin' do
-        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         identifier.update(pub_state: 'unpublished')
         InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
@@ -1549,7 +1549,7 @@ module StashEngine
           end
 
           it 'shows all resources to an admin for this journal' do
-            journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+            journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
             InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
             create(:role, role_object: journal, user: @user2, role: 'admin')
             resources = StashEngine::ResourcePolicy::VersionScope.new(@user2, @identifier.resources).resolve
