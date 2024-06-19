@@ -32,7 +32,7 @@
       </td>
     <% end %>
     <% if @fields.include?('status') %>
-      <td><%= StashEngine::CurationActivity.readable_status(dataset.status) %></td>
+      <td><%= StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) %></td>
     <% end %>
     <% if @fields.include?('size') %>
       <td class="c-lined-table__digits"><%= filesize(dataset.total_file_size) %></td>
@@ -47,10 +47,10 @@
       <td><%= dataset.funders.map { |f| ([@fields.include?('funders') ? f.contributor_name : nil] + [@fields.include?('awards') ? f.award_number : nil]).reject(&:blank?).join(', ')}.uniq.reject(&:blank?).join('; ') %></td>
     <% end %>
     <% if @fields.include?('journal') %>
-      <td><%= dataset.journal_title %></td>
+      <td><%= dataset.identifier&.journal&.title %></td>
     <% end %>
     <% if @fields.include?('sponsor') %>
-      <td><%= dataset.sponsor_id && StashEngine::JournalOrganization.where(id: dataset.sponsor_id).first&.name %></td>
+      <td><%= dataset.identifier&.journal&.sponsor_id && StashEngine::JournalOrganization.find_by(id: dataset.identifier.journal.sponsor_id)&.name %></td>
     <% end %>
     <% if @fields.include?('identifiers') %>
       <td><%= ([dataset.identifier.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ') %></td>
@@ -62,7 +62,7 @@
       <td>
         <% dpc = ''
           dpc = dataset.tenant&.short_name if dataset.identifier.payment_id = dataset.tenant_id
-          dpc = dataset.journal_title if dataset&.issn&.include?(dataset.identifier.payment_id)
+          dpc = dataset.identifier&.journal&.journal_title if dataset.identifier&.journal&.issn&.include?(dataset.identifier.payment_id)
           dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id.starts_with?('funder')
         %>
         <%= dpc %>
