@@ -38,6 +38,11 @@ module StashEngine
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
     has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
+    has_many :manuscript_datum, -> { where(data_type: 'manuscriptNumber') }, class_name: 'StashEngine::InternalDatum'
+    has_many :manuscripts, through: :manuscript_datum
+    has_one :journal_datum, -> { where(data_type: 'publicationISSN').order(created_at: :desc).limit(1) }, class_name: 'StashEngine::InternalDatum'
+    has_one :journal_issn, through: :journal_datum
+    has_one :journal, through: :journal_issn
     has_many :external_references, class_name: 'StashEngine::ExternalReference', dependent: :destroy
     # there are places we may have more than one from our old versions
     has_many :shares, class_name: 'StashEngine::Share', dependent: :destroy
@@ -261,12 +266,6 @@ module StashEngine
       !journal&.will_pay? && !institution_will_pay? && !funder_will_pay?
     end
 
-    def journal
-      return nil if publication_issn.nil?
-
-      Journal.find_by_issn(publication_issn)
-    end
-
     def record_payment
       # once we have assigned payment to an entity, keep that entity,
       # unless it was a journal that the submission is no longer affiliated with
@@ -316,7 +315,7 @@ module StashEngine
     end
 
     def publication_issn
-      internal_data.find_by(data_type: 'publicationISSN')&.value&.strip
+      journal_datum&.value&.strip
     end
 
     # This is the name typed by the user. If there is an associated journal, the
@@ -328,11 +327,11 @@ module StashEngine
     end
 
     def manuscript_number
-      internal_data.find_by(data_type: 'manuscriptNumber')&.value&.strip
+      manuscript_datum.last&.value&.strip
     end
 
     def latest_manuscript
-      StashEngine::Manuscript.where(manuscript_number: manuscript_number).last
+      manuscripts.last
     end
 
     def automatic_ppr?

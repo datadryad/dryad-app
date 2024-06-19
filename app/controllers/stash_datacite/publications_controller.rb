@@ -38,14 +38,11 @@ module StashDatacite
         # clean the partial_term of unwanted characters so it doesn't cause errors
         partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
 
-        matches = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40).to_a
-        matches.map do |m|
-          m.issn = m.single_issn
-          m
-        end
+        found = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40).to_a
+        matches = found.map { |m| { id: m.id, title: m.title, issn: m.single_issn } }
         alt_matches = StashEngine::JournalTitle.where('show_in_autocomplete=true and title like ?', "%#{partial_term}%").limit(10)
         alt_matches.each do |am|
-          matches << { title: am.title, issn: am.journal.single_issn }
+          matches << { id: am.journal.id, title: am.title, issn: am.journal.single_issn }
         end
         render json: bubble_up_exact_matches(result_list: matches, term: partial_term)
       end

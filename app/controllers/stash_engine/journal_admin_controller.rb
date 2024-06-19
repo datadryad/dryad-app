@@ -13,10 +13,11 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.where('LOWER(title) LIKE LOWER(?) OR LOWER(issn) LIKE LOWER(?)', "%#{q}%", "%#{q}%")
+        @journals = @journals.left_outer_joins(:issns).where('LOWER(title) LIKE LOWER(?) OR LOWER(stash_engine_journal_issns.id) LIKE ?',
+                                                             "%#{q.strip}%", "%#{q.strip}%")
       end
 
-      ord = helpers.sortable_table_order(whitelist: %w[title issn payment_plan_type default_to_ppr])
+      ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan_type default_to_ppr])
       @journals = @journals.order(ord)
 
       @journals = @journals.where('sponsor_id= ?', params[:sponsor]) if params[:sponsor].present?
@@ -37,7 +38,7 @@ module StashEngine
       update = edit_params.slice(*valid)
       update[:sponsor_id] = nil if edit_params.key?(:sponsor_id) && edit_params[:sponsor_id].blank?
       update[:payment_plan_type] = nil if edit_params.key?(:payment_plan_type) && edit_params[:payment_plan_type].blank?
-      update[:issn] = edit_params[:issn].split("\n").map(&:strip).to_json if edit_params[:issn].present?
+      update_issns if edit_params[:issn].present?
       update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json if edit_params[:notify_contacts].present?
       update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json if edit_params[:review_contacts].present?
       @journal.update(update)
@@ -65,6 +66,13 @@ module StashEngine
     def load
       @journal = authorize StashEngine::Journal.find(params[:id]), :popup?
       @field = params[:field]
+    end
+
+    def update_issns
+      issns = edit_params[:issn].split("\n").map(&:strip)
+      @journal.issns.where.not(id: issns).destroy_all
+      issns.reject { |id| @journal.issns.map(&:id).include?(id) }.each { |issn| StashEngine::JournalIssn.create(id: issn, journal_id: @journal.id) }
+      @journal.reload
     end
 
     def edit_params

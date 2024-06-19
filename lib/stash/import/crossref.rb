@@ -200,7 +200,7 @@ module Stash
         def title_author_query_params(resource)
           return [nil, nil, nil] unless resource.present?
 
-          issn = resource.identifier.internal_data.where(data_type: 'publicationISSN').first&.value
+          issn = resource.identifier&.publication_issn
           issn = CGI.escape(issn) if issn.present?
           title_query = resource.title&.gsub(/\s+/, ' ')&.strip
           title_query = CGI.escape(title_query)&.gsub(/\s/, '+') if title_query.present?

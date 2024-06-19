@@ -564,7 +564,8 @@ module StashApi
 
       unless @user.min_curator? ||
              params['userId'].to_i == @user.id || # or it is your own user
-             @user.journals_as_admin&.map(&:issn_array)&.flatten&.include?(params['dataset']['publicationISSN']) # or you admin the target journal
+             # or you admin the target journal
+             @user.journals_as_admin.map(&:issn_array)&.flatten&.reject(&:blank?)&.include?(params['dataset']['publicationISSN'])
         render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
         false
       end

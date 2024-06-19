@@ -439,7 +439,7 @@ module Stash
 
         before(:each) do
           identifier = StashEngine::Identifier.create(identifier: 'ABCD')
-          identifier.internal_data << StashEngine::InternalDatum.new(data_type: 'publicationISSN', value: '123-456')
+          identifier.internal_data << StashEngine::InternalDatum.new(data_type: 'publicationISSN', value: '1234-5678')
           identifier.save
           @resource = StashEngine::Resource.create(title: ' Testing  Again\\', identifier: identifier)
           @resource.authors = [
@@ -586,7 +586,7 @@ module Stash
 
           it 'returns an array containing the [ISSN, TITLE, AUTHOR LAST NAMES]' do
             issn, title_query, author_query = Crossref.send(:title_author_query_params, @resource)
-            expect(issn).to eql('123-456')
+            expect(issn).to eql('1234-5678')
             expect(title_query).to eql('Testing+Again%5C')
             expect(author_query).to eql('Doe+Van-jones')
           end
