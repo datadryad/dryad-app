@@ -12,11 +12,8 @@ module StashEngine
     def index
       @datasets = authorize StashEngine::Resource.latest_per_dataset
         .left_outer_joins(identifier: %i[counter_stat internal_data])
-        .preload(identifier: %i[counter_stat internal_data])
         .left_outer_joins(:last_curation_activity)
-        .preload(:last_curation_activity)
         .left_outer_joins(:authors)
-        .preload(:authors)
         .joins("
           left outer join stash_engine_curation_activities seca on seca.id = (
             select ca.id from stash_engine_curation_activities ca where ca.resource_id = stash_engine_resources.id
@@ -139,12 +136,6 @@ module StashEngine
     end
 
     def add_fields
-      @datasets = @datasets.preload(:user) if @fields.include?('submitter')
-      @datasets = @datasets.preload(:funders) if @fields.include?('funders')
-      @datasets = @datasets.preload(:subjects) if @fields.include?('keywords')
-      @datasets = @datasets.preload(authors: :affiliations).preload(:tenant) if @fields.include?('affiliations')
-      @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
-      @datasets = @datasets.preload(:related_identifiers) if @fields.include?('identifiers')
       @datasets = @datasets.left_outer_joins(:related_identifiers) unless @filters[:identifiers].blank?
       return unless @filters[:member].present? || @filters.dig(:funder, :value).present? || @filters.dig(:affiliation, :value).present? ||
         @role_object.is_a?(StashEngine::Tenant) || @role_object.is_a?(StashEngine::Funder)
