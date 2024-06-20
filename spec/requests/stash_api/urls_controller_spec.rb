@@ -146,8 +146,7 @@ module StashApi
         expect(response_body_hash.key?('error')).to eq(true)
       end
 
-
-      it "correctly sets original url and raw url for Github link" do
+      it 'correctly sets original url and raw url for Github link' do
         mock_github_blob_head_request!
         test_url = 'https://github.com/tracykteal/chicken-naming/blob/master/chicken-naming.ipynb'
         response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls",

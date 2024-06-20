@@ -25,12 +25,12 @@ module Mocks
           }
         )
         .to_return(status: 200, body: '', headers: {
-          'ETag' => 'e422b2e5bec8dddc1d2b99fd9908b6c8d074f5a270b41b589468a90bf13daabf',
-          'Content-Type' => 'text/plain',
-          'Cache-Control' => 'max-age=300',
-          'Content-Length' => 5373,
-          'Accept-Ranges' => 'bytes'
-        })
+                     'ETag' => 'e422b2e5bec8dddc1d2b99fd9908b6c8d074f5a270b41b589468a90bf13daabf',
+                     'Content-Type' => 'text/plain',
+                     'Cache-Control' => 'max-age=300',
+                     'Content-Length' => 5373,
+                     'Accept-Ranges' => 'bytes'
+                   })
     end
 
     def mock_github_bad_head_request!
