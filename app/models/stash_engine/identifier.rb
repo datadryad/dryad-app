@@ -35,6 +35,7 @@ module StashEngine
   class Identifier < ApplicationRecord
     self.table_name = 'stash_engine_identifiers'
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
+    has_one :process_date, as: :processable, dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
     has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
@@ -54,6 +55,7 @@ module StashEngine
             foreign_key: 'id'
     belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense', optional: true
 
+    after_create :create_process_date, unless: :process_date
     after_create :create_share
 
     # This makes the setting of the "preliminary information" and how something was imported explicit.  Default is other.

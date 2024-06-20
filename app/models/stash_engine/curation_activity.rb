@@ -84,13 +84,15 @@ module StashEngine
 
     # Callbacks
     # ------------------------------------------
+    before_validation :set_resource
 
-    # Once we are certain that we will be publishing this dataset,
-    # remove any "N/A" placeholders
+    # Once we are certain that we will be publishing this dataset, remove any "N/A" placeholders
     # Note tht this uses "after_validation" to ensure it runs before all of the "after_create"
     after_validation :remove_placeholder_funders, if: proc { |ca|
-      (ca.published? || ca.embargoed?) && latest_curation_status_changed?
+      (ca.published? || ca.embargoed?) && curation_status_changed?
     }
+
+    after_create :process_dates, if: %i[curation_status_changed? first_time_in_status?]
 
     # the publication flags need to be set before creating datacite metadata (after create below)
     after_create :update_publication_flags, if: proc { |ca| %w[published embargoed peer_review withdrawn].include?(ca.status) }
@@ -99,19 +101,19 @@ module StashEngine
     after_create :process_resource
 
     after_create :copy_to_zenodo, if: proc { |ca|
-      !ca.resource.skip_datacite_update && ca.published? && latest_curation_status_changed?
+      !ca.resource.skip_datacite_update && ca.published? && curation_status_changed?
     }
 
     # Email the author and/or journal about status changes
     after_create :email_status_change_notices,
-                 if: proc { |_ca| latest_curation_status_changed? && !resource.skip_emails }
+                 if: proc { |_ca| curation_status_changed? && !resource.skip_emails }
 
     # Email invitations to register ORCIDs to authors when published
     after_create :email_orcid_invitations,
-                 if: proc { |ca| ca.published? && latest_curation_status_changed? && !resource.skip_emails }
+                 if: proc { |ca| ca.published? && curation_status_changed? && !resource.skip_emails }
 
     after_create :update_salesforce_metadata, if: proc { |_ca|
-                                                    latest_curation_status_changed? &&
+                                                    curation_status_changed? &&
                                                          CurationActivity.where(resource_id: resource_id).count > 1
                                                   }
 
@@ -135,6 +137,10 @@ module StashEngine
 
     # Instance methods
     # ------------------------------------------
+    def set_resource
+      self.resource = StashEngine::Resource.find_by(id: resource_id) if resource.blank?
+    end
+
     # Not sure why this uses splat? http://andrewberls.com/blog/post/naked-asterisk-parameters-in-ruby
     # maybe this calls super somehow and is useful for some reason, though I don't see it documented in the
     # ActiveModel::Serializers::JSON .
@@ -158,11 +164,21 @@ module StashEngine
       CurationActivity.readable_status(status)
     end
 
-    def latest_curation_status_changed?
-      last_two_statuses = CurationActivity.where(resource_id: resource_id).order(updated_at: :desc, id: :desc).limit(2)
-      return true if last_two_statuses.count < 2 # no second-to-last status for this resource, it should be new to this resource
+    def previous_status
+      resource&.curation_activities&.where('id < ?', id)&.order(updated_at: :desc, id: :desc)&.last&.status
+    end
 
-      last_two_statuses.first.status != last_two_statuses.second.status
+    def curation_status_changed?
+      return true if previous_status.blank?
+
+      status != previous_status
+    end
+
+    def first_time_in_status?
+      return false unless curation_status_changed?
+      return true unless resource
+
+      resource.curation_activities.where('id < ?', id).where(status: status).empty?
     end
 
     def self.allowed_states(current_state)
@@ -210,10 +226,30 @@ module StashEngine
       resource.submit_to_solr
     end
 
+    def process_dates
+      update_dates = {}
+      if first_time_in_status?
+        case status
+        when 'processing', 'peer_review', 'submitted', 'withdrawn'
+          update_dates[status.to_sym] = created_at
+        when 'curation'
+          update_dates[:curation_start] = created_at
+        when 'embargoed', 'published'
+          update_dates[:approved] = created_at
+        end
+      end
+      update_dates[:curation_end] = created_at if previous_status == 'curation' && resource.process_date.curation_end.blank?
+      return if update_dates.empty?
+
+      resource.process_date.update(update_dates)
+      id_dates = update_dates.delete_if { |k, _v| resource.identifier.process_date.send(k).present? }
+      resource.identifier.process_date.update(id_dates) unless id_dates.empty?
+    end
+
     def process_resource
       logger.info("SKIP_PROCESS_RESOURCE due to 'skip_datacite_update'") and return if resource.skip_datacite_update
       logger.info("SKIP_PROCESS_RESOURCE due to 'published? #{published?} || embargoed? #{embargoed?}'") and return unless published? || embargoed?
-      logger.info("SKIP_PROCESS_RESOURCE due to '!latest_curation_status_changed?'") and return unless latest_curation_status_changed?
+      logger.info("SKIP_PROCESS_RESOURCE due to '!curation_status_changed?'") and return unless curation_status_changed?
 
       submit_to_datacite
       update_solr
@@ -234,9 +270,7 @@ module StashEngine
     end
 
     def remove_peer_review
-      resource.hold_for_peer_review = false
-      resource.peer_review_end_date = nil
-      resource.save
+      resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
     end
 
     # Triggered on a status change
@@ -253,9 +287,9 @@ module StashEngine
       when 'submitted'
 
         # Don't send multiple emails for the same resource, or for submission made by curator
-        return if previously_submitted?
+        return unless first_time_in_status?
 
-        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.status_change(resource, status).deliver_now unless user.min_curator?
       when 'withdrawn'
         return if note.include?('final action required reminder') # this has already gotten a special withdrawal email
 
@@ -268,31 +302,11 @@ module StashEngine
     end
 
     def previously_published?
-      # ignoring the current CA, is there an embargoed or published status at any point for this identifier?
-      prev_pub = false
-      resource.identifier&.resources&.each do |res|
-        res.curation_activities&.each do |ca|
-          if (ca.id != id) && %w[published embargoed].include?(ca.status)
-            prev_pub = true
-            break
-          end
-        end
-      end
-      prev_pub
-    end
+      return false unless resource
 
-    def previously_submitted?
-      prev_sub = false
-      # ignoring the current CA, is there a submitted status at any point for this resource?
-      resource.curation_activities&.each do |ca|
-        if (ca.id != id) && ca.submitted?
-          prev_sub = true
-          break
-        end
-      end
-      # was this version submitted by a min_curator?
-      prev_sub = true if user.min_curator?
-      prev_sub
+      # ignoring the current CA, is there an embargoed or published status at any point for this identifier?
+      resource.identifier.resources.map(&:curation_activities).flatten.reject { |ca| ca.id == id }
+        .map(&:status).intersect?(%w[published embargoed]) || false
     end
 
     # Triggered on a status of :published
@@ -367,16 +381,16 @@ module StashEngine
     # ------------------------------------------
 
     def ready_for_payment?
-      resource&.identifier&.reload
-      APP_CONFIG.payments&.service == 'stripe' &&
-        (resource&.identifier&.payment_type.nil? ||
-          resource&.identifier&.payment_type == 'unknown' ||
-          resource&.identifier&.payment_type == 'waiver') &&
-        (status == 'published' || status == 'embargoed')
+      return false unless resource
+
+      resource.identifier.reload
+      APP_CONFIG&.payments&.service == 'stripe' &&
+        (resource.identifier.payment_type.nil? || %w[unknown waiver].include?(resource.identifier.payment_type)) &&
+        %w[published embargoed].include?(status)
     end
 
     def should_update_doi?
-      last_repo_version = resource.identifier&.last_submitted_version_number
+      last_repo_version = resource&.identifier&.last_submitted_version_number
       # don't submit random crap to DataCite unless it's preserved
       logger.info("SKIP_DOI_UPDATE due to 'last_repo_version' #{last_repo_version}") and return false if last_repo_version.nil?
 
