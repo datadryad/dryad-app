@@ -50,7 +50,7 @@ module StashEngine
     self.table_name = 'stash_engine_resources'
     # ------------------------------------------------------------
     # Relations
-
+    has_one :process_date, as: :processable, dependent: :destroy
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
@@ -97,6 +97,8 @@ module StashEngine
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
+
+    after_create :create_process_date, unless: :process_date
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
