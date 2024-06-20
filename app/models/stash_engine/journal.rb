@@ -31,7 +31,7 @@ module StashEngine
     # validates :issn, uniqueness: { case_sensitive: false }
     has_many :issns, -> { order(created_at: :asc) }, class_name: 'StashEngine::JournalIssn', dependent: :destroy
     has_many :alternate_titles, class_name: 'StashEngine::JournalTitle', dependent: :destroy
-    has_many :roles, class_name: 'StashEngine::Role', as: :role_object
+    has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
 
