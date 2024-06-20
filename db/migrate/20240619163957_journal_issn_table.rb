@@ -16,15 +16,15 @@ class JournalIssnTable < ActiveRecord::Migration[7.0]
             StashEngine::JournalIssn.create(id: issn, journal_id: j.id)
           end
         end
-        remove_index :stash_engine_journals, :issn
-        remove_column :stash_engine_journals, :issn
+        # remove_index :stash_engine_journals, :issn
+        # remove_column :stash_engine_journals, :issn
       end
       dir.down do
-        add_column :stash_engine_journals, :issn, :string
+        # add_column :stash_engine_journals, :issn, :string
+        # add_index :stash_engine_journals, :issn
         StashEngine::Journal.find_each do |j|
           j.update(issn: j.issns.map(&:id).to_json)
         end
-        add_index :stash_engine_journals, :issn
       end
     end
   end
