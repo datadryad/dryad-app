@@ -11,6 +11,7 @@
 #
 # Indexes
 #
+#  index_internal_data_on_identifier_and_data_type          (identifier_id,data_type)
 #  index_stash_engine_internal_data_on_data_type_and_value  (data_type,value)
 #  index_stash_engine_internal_data_on_identifier_id        (identifier_id)
 #

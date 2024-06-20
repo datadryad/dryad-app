@@ -8,7 +8,6 @@
 #  allow_review_workflow   :boolean
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
-#  issn                    :string(191)
 #  journal_code            :string(191)
 #  manuscript_number_regex :string(191)
 #  notify_contacts         :text(65535)
@@ -24,7 +23,6 @@
 #
 # Indexes
 #
-#  index_stash_engine_journals_on_issn   (issn)
 #  index_stash_engine_journals_on_title  (title)
 #
 require 'rails_helper'
