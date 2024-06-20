@@ -557,70 +557,38 @@ module StashEngine
     # returns the date on which this identifier was initially approved for publication
     # (i.e., the date on which it entered the status 'published' or 'embargoed'
     def approval_date
-      return nil unless %w[published embargoed].include?(pub_state)
-
-      found_approval_date = nil
-      resources.reverse_each do |res|
-        res.curation_activities.each do |ca|
-          next unless %w[published embargoed].include?(ca.status)
-
-          found_approval_date = ca.created_at
-          break
-        end
-      end
-      found_approval_date
+      process_date.approved
     end
 
     # returns the date on which this identifier was initially referred for author action
     def aar_date
-      resources.map(&:curation_activities).flatten.each do |ca|
-        return ca.created_at if ca.action_required?
-      end
-      nil
+      resources.map(&:curation_activities).flatten.uniq(&:status)
+        .select { |ca| ca.status == 'action_required' }.pluck(&:created_at).first
     end
 
     # returns the date on which this identifier was returned to curators after action_required
     def aar_end_date
-      found_aar = false
-      resources.map(&:curation_activities).flatten.each do |ca|
-        found_aar = true if ca.action_required?
-        return ca.created_at if found_aar && !ca.action_required?
-      end
-      nil
+      return nil unless aar_date
+
+      changes = resources.map(&:curation_activities).flatten.pluck(:status, :created_at).uniq(&:first)
+      prev = changes.index { |c| c.first == 'aar_date' }
+      changes[prev + 1]&.last
     end
 
     def date_available_for_curation
-      resources.map(&:curation_activities).flatten.each do |ca|
-        return ca.created_at if ca.submitted?
-      end
-      nil
+      process_date.submitted
     end
 
     def curation_completed_date
-      return nil unless %w[action_required published embargoed withdrawn].include?(pub_state)
-
-      found_cc_date = nil
-      resources.map(&:curation_activities).flatten.each do |ca|
-        next unless %w[action_required published embargoed withdrawn].include?(ca.status)
-
-        found_cc_date = ca.created_at
-        break
-      end
-      found_cc_date
+      process_date.curation_end
     end
 
     def date_first_curated
-      resources.map(&:curation_activities).flatten.each do |ca|
-        return ca.created_at if ca.curation?
-      end
-      nil
+      process_date.curation_start
     end
 
     def date_last_curated
-      resources.map(&:curation_activities).flatten.reverse.each do |ca|
-        return ca.created_at if ca.curation?
-      end
-      nil
+      resources.map(&:process_date).pluck(:curation_start).reject(&:blank?)&.last || nil
     end
 
     def date_first_published
