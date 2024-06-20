@@ -72,7 +72,7 @@
       <td class="c-lined-table__digits"><%= formatted_datetime(dataset.last_curation_activity.updated_at) %></span></td>
     <% end %>
     <% if @fields.include?('submit_date') %>
-      <td class="c-lined-table__digits"><%= formatted_datetime(dataset.submit_date) %></td>
+      <td class="c-lined-table__digits"><%= formatted_datetime(dataset.process_date.submitted || dataset.process_date.peer_review) %></td>
     <% end %>
     <% if @fields.include?('publication_date') %>
       <td class="c-lined-table__digits"><%= formatted_datetime(dataset.publication_date) %></td>
