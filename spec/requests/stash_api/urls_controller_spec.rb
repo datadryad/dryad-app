@@ -145,6 +145,23 @@ module StashApi
         expect(response_code).to eq(403)
         expect(response_body_hash.key?('error')).to eq(true)
       end
+
+
+      it "correctly sets original url and raw url for Github link" do
+        mock_github_blob_head_request!
+        test_url = 'https://github.com/tracykteal/chicken-naming/blob/master/chicken-naming.ipynb'
+        response_code = post "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}/urls",
+                             params: { url: test_url }.to_json,
+                             headers: default_authenticated_headers
+
+        expect(response_code).to eq(201)
+        hash = response_body_hash
+        expect(hash['path']).to eq('chicken-naming.ipynb')
+        expect(hash['url']).to eq('https://raw.githubusercontent.com/tracykteal/chicken-naming/master/chicken-naming.ipynb')
+        expect(hash['size']).to eq(5373)
+        expect(hash['mimeType']).to eq('text/plain')
+        expect(hash['status']).to eq('created')
+      end
     end
   end
 end
