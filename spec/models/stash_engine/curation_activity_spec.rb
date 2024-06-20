@@ -137,7 +137,7 @@ module StashEngine
       end
     end
 
-    describe '#latest_curation_status_changed?' do
+    describe '#curation_status_changed?' do
 
       before(:each) do
         @user = create(:user)
@@ -148,20 +148,20 @@ module StashEngine
       it 'considers things changed if there is only one curation status for this resource' do
         StashEngine::CurationActivity.destroy_all
         @curation_activity = create(:curation_activity, resource: @resource)
-        expect(@curation_activity.latest_curation_status_changed?).to be true
+        expect(@curation_activity.curation_status_changed?).to be true
       end
 
       it 'considers changed to be true if the last two curation statuses are unequal' do
         @curation_activity1 = create(:curation_activity, status: 'in_progress', resource: @resource)
         @curation_activity2 = create(:curation_activity, status: 'embargoed', resource: @resource)
-        expect(@curation_activity2.latest_curation_status_changed?).to be true
+        expect(@curation_activity2.curation_status_changed?).to be true
       end
 
       it 'considers changed to be false if the last two curation statuses are equal' do
         @curation_activity1 = create(:curation_activity, status: :embargoed, resource: @resource)
         @curation_activity2 = create(:curation_activity, status: :embargoed, resource: @resource,
                                                          note: 'We need more about cats')
-        expect(@curation_activity2.latest_curation_status_changed?).to be false
+        expect(@curation_activity2.curation_status_changed?).to be false
       end
     end
 
