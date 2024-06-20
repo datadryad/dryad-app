@@ -112,19 +112,19 @@ module StashEngine
       @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
     end
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
     def add_fields
       if @fields.include?('metrics')
         @datasets = @datasets.joins('left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id')
           .select('stats.unique_investigation_count, stats.citation_count, stats.unique_request_count')
       end
-      if @fields.include?('submit_date') || @filters[:submit_date]&.values&.any?(&:present?)
-        @datasets = @datasets.joins("#{@filters[:submit_date]&.values&.any?(&:present?) ? '' : 'left outer '}join
-          stash_engine_curation_activities subdate on subdate.id = (
-          select ca.id from stash_engine_curation_activities ca where ca.resource_id = stash_engine_resources.id
-          and ca.status in ('submitted', 'peer_review')
-          order by ca.created_at limit 1
-        )").select('subdate.created_at as submit_date')
+      if @filters[:submit_date]&.values&.any?(&:present?)
+        @datasets = @datasets.joins(:process_date)
+      elsif @sort == 'submitted'
+        @datasets = @datasets.left_outer_joins(:process_date)
+      end
+      if @sort == 'submitted' || @filters[:submit_date]&.values&.any?(&:present?)
+        @datasets = @datasets.select('IFNULL(stash_engine_process_dates.submitted, stash_engine_process_dates.peer_review) as submit_date')
       end
       if current_user.min_curator? && (@fields.include?('curator') || @filters[:curator].present?)
         @datasets = @datasets.joins("left outer join (
@@ -146,7 +146,7 @@ module StashEngine
         "MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') as relevance"
       ) if @search_string.present?
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/PerceivedComplexity
 
     def add_filters
       tenant_filter
@@ -178,7 +178,7 @@ module StashEngine
         "stash_engine_curation_activities.updated_at #{date_string(@filters[:updated_at])}"
       ) unless @filters[:updated_at].nil? || @filters[:updated_at].values.all?(&:blank?)
       @datasets = @datasets.where(
-        "subdate.created_at #{date_string(@filters[:submit_date])}"
+        "IFNULL(stash_engine_process_dates.submitted, stash_engine_process_dates.peer_review) #{date_string(@filters[:submit_date])}"
       ) unless @filters[:submit_date].nil? || @filters[:submit_date].values.all?(&:blank?)
       @datasets = @datasets.where(
         "stash_engine_resources.publication_date #{date_string(@filters[:publication_date])}"
@@ -244,6 +244,7 @@ module StashEngine
 
     def add_subqueries
       @datasets = @datasets.preload(:identifier)
+      @datasets = @datasets.preload(:process_date) if @fields.include?('submit_date')
       @datasets = @datasets.preload(:last_curation_activity) if @fields.include?('status') || @fields.include?('updated_at')
       @datasets = @datasets.preload(:subjects) if @fields.include?('keywords')
       @datasets = @datasets.preload(:authors) if @fields.include?('authors')
