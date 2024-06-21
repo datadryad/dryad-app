@@ -134,7 +134,55 @@ namespace :identifiers do
   desc 'remove abandoned, unpublished datasets that will never be published'
   task remove_abandoned_datasets: :environment do
     # This task cleans up datasets that may have had some activity, but they have no real chance of being published.
+    dry_run = ENV['DRY_RUN'] == 'true'
+    if dry_run
+      puts ' ##### remove_abandoned_datasets DRY RUN -- not actually running delete commands'
+    else
+      puts ' ##### remove_abandoned_datasets -- Deleting old versions of datasets that are still in progress'
+    end
+    permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
     
+    StashEngine::Identifier.where(pub_state: [nil, 'withdrawn', 'unpublished']).find_each do |i|
+      next if i.date_first_published.present?
+      next unless %w[in_progress withdrawn].include?(i.latest_resource&.current_curation_status)
+
+      # Double-check whether it was ever published -- even though we checked the date_first_published,
+      # some older datasets did not have this date set properly in the internal metadata before they were
+      # withdrawn, so we need to be certain.
+      next if i.resources.map(&:curation_activities).flatten.map(&:status).include?("published")
+      
+      # Find the last activity by a "real" user (not the system user)
+      last_user_activity = nil
+      i.latest_resource&.curation_activities&.reverse_each do |ca|
+        if ca.user_id.present? && ca.user_id > 0
+          last_user_activity = ca.created_at
+          break
+        end
+      end
+
+      if last_user_activity.present? && last_user_activity < 1.year.ago
+        puts "ABANDONED #{i.identifier} -- #{i.id} -- size #{i.latest_resource.size}"
+
+        if dry_run
+          puts " -- skipping deletion due to DRY_RUN setting"
+        else
+          puts " -- deleting"
+          # Perform the actual removal
+          i.resources.each do |r|
+            # Temp upload directory, if it exists
+            s3_dir = r.s3_dir_name(type: 'base')
+            Stash::Aws::S3.new.delete_dir(s3_key: s3_dir)
+            # Permanent storage directory, if it exists
+            perm_bucket = Stash::Aws::S3.new(s3_bucket_name: permanent_bucket)
+            perm_bucket.delete_dir(s3_key: "v3/{s3_dir}")
+            perm_bucket.delete_dir(s3_key: "v3/{s3_dir}")
+            # Metadata
+            r.destroy
+          end
+        end
+      end
+    end
+
   end
   
 
