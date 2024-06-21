@@ -144,10 +144,6 @@ Journal Name: ##JOURNAL_NAME##
 Journal Code: XXXX
 Print ISSN: XXX
 Online ISSN: XXX
-Journal Admin Email: ##EMAIL_CONTACT_ADMIN_CENTER_EMAIL##
-Journal Editor: ##PROLE_MANAGING_EDITOR_FIRSTNAME##
-##PROLE_MANAGING_EDITOR_LASTNAME##
-Journal Editor Email: ##PROLE_MANAGING_EDITOR_EMAIL##
 MS Reference Number: ##DOCUMENT_ID##
 Article Status: accepted
 MS Title: ##DOCUMENT_TITLE##
