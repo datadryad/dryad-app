@@ -94,7 +94,7 @@ namespace :dev_ops do
   task backup: :environment do
     directory = '/home/ec2-user/deploy/shared/cron/backups'
     FileUtils.mkdir_p directory
-    # YAML.safe_load is preferred by rubocop but it causes the read to fail on `unknown alias 'defaul'`
+    # YAML.safe_load is preferred by rubocop but it causes the read to fail on `unknown alias 'default'`
     # rubocop:disable Security/YAMLLoad
     db = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'database.yml'))).result)[Rails.env]
     # rubocop:enable Security/YAMLLoad
