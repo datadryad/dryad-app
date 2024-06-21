@@ -164,7 +164,7 @@ module StashEngine
       res_count = Resource.where(identifier_id: identifier_id).count
       return if res_count.positive?
 
-      Identifier.destroy(identifier_id)
+      Identifier.destroy(identifier_id) if Identifier.exists?(identifier_id)
     end
 
     def remove_s3_temp_files
