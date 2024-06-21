@@ -1389,5 +1389,23 @@ namespace :journal_email do
   end
 end
 
+namespace :generic_files do
+  desc 'Set Github download and original URLs that were not already converted to raw files'
+  task fix_github_urls: :environment do
+    Rails.logger.level = Logger::INFO
+    files = StashEngine::GenericFile.where("url like '%https://github.com%'")
+    puts "Updating #{files.count} files"
+
+    files.each do |file|
+      print '.'
+      translator = Stash::UrlTranslator.new(file.url)
+      file.update_columns(original_url: file.url, url: translator.direct_download || file.url)
+    end
+
+    puts ''
+    puts 'Finished'
+  end
+end
+
 # rubocop:enable Metrics/BlockLength
 # :nocov:
