@@ -96,7 +96,7 @@ namespace :dev_ops do
     FileUtils.mkdir_p directory
     # YAML.safe_load is preferred by rubocop but it causes the read to fail on `unknown alias 'defaul'`
     # rubocop:disable Security/YAMLLoad
-    db = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'database.yml'))).result)[Rails.env]
+    db = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'database.yml'))).result, aliases: true)[Rails.env]
     # rubocop:enable Security/YAMLLoad
     file = File.join(directory, "#{Rails.env}_#{Time.now.strftime('%H_%M')}.sql")
     p command = 'mysqldump --opt --skip-add-locks --single-transaction --no-create-db --set-gtid-purged=off ' \
