@@ -131,8 +131,17 @@ namespace :identifiers do
     end
   end
 
-  desc 'remove in_progress versions and temporary files that have lingered for too long'
+  desc 'remove abandoned, unpublished datasets that will never be published'
+  task remove_abandoned_datasets: :environment do
+    # This task cleans up datasets that may have had some activity, but they have no real chance of being published.
+    
+  end
+  
+
+  desc 'clean up in_progress versions and temporary files that are disconnected from datasets'
   task remove_old_versions: :environment do
+    # This task cleans up garbage versions of datasets, which may have been abandoned, but they may also have been accidentally created
+    # and not properly connected to an Identifier object
     dry_run = ENV['DRY_RUN'] == 'true'
     if dry_run
       puts ' ##### remove_old_versions DRY RUN -- not actually running delete commands'
@@ -141,20 +150,20 @@ namespace :identifiers do
     end
 
     # Remove resources that have been "in progress" for more than a year without updates
-    StashEngine::Resource.in_progress.where('updated_at < ?', 1.year.ago).find_each do |res|
+    StashEngine::Resource.in_progress.find_each do |res|
       next unless res.updated_at < 1.year.ago
       next unless res.current_curation_status == 'in_progress'
 
       ident = res.identifier
       s3_dir = res.s3_dir_name(type: 'base')
       puts "ident #{ident&.id || 'MISSING'} Res #{res.id} -- updated_at #{res.updated_at}"
-      puts "   DESTROY s3 #{s3_dir}"
+      puts "   DESTROY temporary s3 contents #{s3_dir}"
       Stash::Aws::S3.new.delete_dir(s3_key: s3_dir) unless dry_run
       puts "   DESTROY resource #{res.id}"
       res.destroy unless dry_run
     end
-
-    # Remove directories in AWS that have no corresponding resource, or whose resource is already submitted
+    
+    # Remove directories in AWS temporary storage that have no corresponding resource, or whose resource is already submitted
     s3_prefix = StashEngine::Resource.last.s3_dir_name(type: 'base')
     s3_prefix = if s3_prefix.include?('-')
                   s3_prefix.split('-').first
@@ -174,12 +183,12 @@ namespace :identifiers do
         r = StashEngine::Resource.find(res_id)
         if r.submitted? &&
            (r.zenodo_copies.where("copy_type LIKE 'software%' OR copy_type like 'supp%'").where.not(state: 'finished').count == 0)
-          # if the resource is state == submitted and all zenodo transfers have completed, delete the data
+          # if the resource is state == submitted and all zenodo transfers have completed, delete the temporary data
           puts "   resource is submitted -- DELETE s3 dir #{id_prefix}"
           Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
         end
       else
-        # there is no reasource, delete the files
+        # there is no reasource that corresponds to this S3 dir, so delete the temporary files
         puts "   resource is deleted -- DELETE s3 dir #{id_prefix}"
         Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
       end

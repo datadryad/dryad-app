@@ -13,6 +13,7 @@ module Stash
 
       attr_reader :s3_bucket
 
+      # By default, use the temporary storage bucket
       def initialize(s3_bucket_name: APP_CONFIG[:s3][:bucket])
         @s3_bucket = s3_resource.bucket(s3_bucket_name)
       end
