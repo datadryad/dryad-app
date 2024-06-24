@@ -43,6 +43,9 @@
         <%= dataset.citation_count || 0 %> citations
       </td>
     <% end %>
+    <% if @fields.include?('funders') || @fields.include?('awards') %>
+      <td><%= dataset.funders.map { |f| ([@fields.include?('funders') ? f.contributor_name : nil] + [@fields.include?('awards') ? f.award_number : nil]).reject(&:blank?).join(', ')}.uniq.reject(&:blank?).join('; ') %></td>
+    <% end %>
     <% if @fields.include?('journal') %>
       <td><%= dataset.identifier&.journal&.title %></td>
     <% end %>
@@ -51,9 +54,6 @@
     <% end %>
     <% if @fields.include?('identifiers') %>
       <td><%= ([dataset.identifier.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ') %></td>
-    <% end %>
-    <% if @fields.include?('funders') || @fields.include?('awards') %>
-      <td><%= dataset.funders.map { |f| ([@fields.include?('funders') ? f.contributor_name : nil] + [@fields.include?('awards') ? f.award_number : nil]).reject(&:blank?).join(', ')}.uniq.reject(&:blank?).join('; ') %></td>
     <% end %>
     <% if @fields.include?('dpc') %>
       <td>
