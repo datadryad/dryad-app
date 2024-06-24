@@ -15,7 +15,7 @@ module StashEngine
       add_fields
       add_filters
 
-      if @page == 1 || session[:admin_search_count].blank?
+      if request.format.html? && (@page == 1 || session[:admin_search_count].blank?)
         session[:admin_search_count] = StashEngine::Resource.select('count(*) as total').from(@datasets).map(&:total).first
       end
 
@@ -59,7 +59,7 @@ module StashEngine
     def setup_paging
       if request.format.csv?
         @page = 1
-        @page_size = 2_000
+        @page_size = 1_000_000
         return
       end
       @page = params[:page] || 1

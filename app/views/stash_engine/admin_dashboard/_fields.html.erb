@@ -53,6 +53,10 @@ end
     <span class="help" id="metrics-desc">View, download, and citation statistics.</span>
   </div>
   <div>
+    <%= check('funders').html_safe %>
+     <span class="help" id="funders-desc">Funding organizations matched with a <a href="https://ror.org/" target="_blank">ROR ID</a>.</span>
+  </div>
+  <div>
     <%= check('journal').html_safe %>
     <span class="help" id="journal-desc">Journal of the manuscript or primary article associated with the dataset.</span>
   </div>
@@ -63,10 +67,6 @@ end
   <div>
     <%= check('identifiers').html_safe %>
     <span class="help" id="identifiers-desc">Up to 6 related work identifiers, including manuscripts.</span>
-  </div>
-  <div>
-    <%= check('funders').html_safe %>
-     <span class="help" id="funders-desc">Funding organizations matched with a <a href="https://ror.org/" target="_blank">ROR ID</a>.</span>
   </div>
   <div>
     <%= check('awards', true).html_safe %>
