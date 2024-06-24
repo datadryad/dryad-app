@@ -140,7 +140,7 @@ namespace :identifiers do
     else
       puts ' ##### remove_abandoned_datasets -- Deleting old versions of datasets that are still in progress'
     end
-        
+
     StashEngine::Identifier.where(pub_state: [nil, 'withdrawn', 'unpublished']).find_each do |i|
       next if i.date_first_published.present?
       next unless %w[in_progress withdrawn].include?(i.latest_resource&.current_curation_status)
@@ -149,7 +149,7 @@ namespace :identifiers do
       # some older datasets did not have this date set properly in the internal metadata before they were
       # withdrawn, so we need to be certain.
       next if i.resources.map(&:curation_activities).flatten.map(&:status).include?('published')
-      
+
       # Find the last activity by a "real" user (not the system user)
       last_user_activity = nil
       i.latest_resource&.curation_activities&.reverse_each do |ca|
@@ -193,7 +193,7 @@ namespace :identifiers do
     end
 
   end
-  
+
 
   desc 'clean up in_progress versions and temporary files that are disconnected from datasets'
   task remove_old_versions: :environment do
@@ -219,7 +219,7 @@ namespace :identifiers do
       puts "   DESTROY resource #{res.id}"
       res.destroy unless dry_run
     end
-    
+
     # Remove directories in AWS temporary storage that have no corresponding resource, or whose resource is already submitted
     s3_prefix = StashEngine::Resource.last.s3_dir_name(type: 'base')
     s3_prefix = if s3_prefix.include?('-')
