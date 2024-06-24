@@ -21,8 +21,8 @@ module StashApi
 
     # this is the basic required metadata
     def parse
-      clear_previous_metadata
       owning_user_id = establish_owning_user_id
+      clear_previous_metadata
       owning_user = StashEngine::User.find(owning_user_id)
       user_note = "Created by API user, assigned ownership to #{owning_user&.name} (#{owning_user_id})"
       hold_for_peer_review = @hash['holdForPeerReview']
