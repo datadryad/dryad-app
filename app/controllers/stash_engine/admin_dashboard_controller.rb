@@ -110,18 +110,19 @@ module StashEngine
       @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
       @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize
 
     def collect_properties
       @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
     end
 
-    # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/MethodLength
     def add_fields
       if @fields.include?('metrics')
         @datasets = @datasets.joins('left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id')
           .select('stats.unique_investigation_count, stats.citation_count, stats.unique_request_count')
       end
+      @datasets = @datasets.joins(:last_curation_activity) if @filters[:status].present? || @sort == 'status'
       if @filters[:submit_date]&.values&.any?(&:present?)
         @datasets = @datasets.joins(:process_date)
       elsif @sort == 'submitted'
@@ -150,7 +151,7 @@ module StashEngine
         "MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') as relevance"
       ) if @search_string.present?
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def add_filters
       tenant_filter
@@ -178,7 +179,7 @@ module StashEngine
     end
 
     def date_filters
-      @datasets = @datasets.joins(:last_curation_activity).where(
+      @datasets = @datasets.where(
         "stash_engine_curation_activities.updated_at #{date_string(@filters[:updated_at])}"
       ) unless @filters[:updated_at].nil? || @filters[:updated_at].values.all?(&:blank?)
       @datasets = @datasets.where(
