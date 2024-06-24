@@ -1,10 +1,10 @@
 <%
-def check(id)
+def check(id, indent = false)
   h = {funders: 'Grant funders', awards: 'Award IDs', sponsor: 'Journal sponsor', dpc: 'DPC paid by', updated_at: 'Last modified', submit_date: 'Submitted', publication_date: 'Published', identifiers: 'Publication IDs'}
   label = h[id.to_sym]
   label ||= id.length < 4 ? id.upcase : id.capitalize
 
-  '<span class="field-pair">' +
+  '<span class="field-pair">' + (indent ? '<i class="fa-solid fa-arrow-turn-up fa-rotate-90" style="font-size:.85em; margin-left: .2em" aria-hidden="true"></i>' : '') +
   check_box_tag('fields[]', id, @fields.include?(id), {id: id, 'aria-describedby': "#{id}-desc"}) +
   label_tag('fields[]', label, {for: id})+
   '</span>'
@@ -14,13 +14,14 @@ end
   <b role="heading" aria-level="3" id="edit_fields">Display fields</b>
   <button type="button" class="o-button__plain-text7" id="edit_fields-help" aria-hidden="true"><i class="fa fa-info-circle"></i> Display field help</button>
 </div>
-<fieldset id="edit_fields-form" aria-labelledby="edit_fields" <%if current_user.min_curator?%>class="extra-column"<%end%>>
+<fieldset id="edit_fields-form" aria-labelledby="edit_fields">
+  <div>Description</div>
   <div>
-    <%= check('doi').html_safe %>
+    <%= check('doi', true).html_safe %>
     <span class="help" id="doi-desc"><a href="https://www.doi.org/" target="_blank">Identifier</a> assigned to the dataset. Appears under Description.</span>
   </div>
   <div>
-    <%= check('keywords').html_safe %>
+    <%= check('keywords', true).html_safe %>
     <span class="help" id="keywords-desc">Subjects entered by the submitter. Appear under Description.</span>
   </div>
   <div>
@@ -32,8 +33,8 @@ end
     <span class="help" id="affiliations-desc">Up to 6 author affiliations matched with a <a href="https://ror.org/" target="_blank">ROR ID</a>.</span>
   </div>
   <div>
-    <%= check('countries').html_safe %>
-    <span class="help" id="countries-desc">Up to 6 countries associated with author affiliations.</span>
+    <%= check('countries', true).html_safe %>
+    <span class="help" id="countries-desc">Up to 6 countries associated with author affiliations. Appear with Affiliations.</span>
   </div>
   <div>
     <%= check('submitter').html_safe %>
@@ -44,12 +45,12 @@ end
     <span class="help" id="status-desc">Status of the submission in Dryad processing.</span>
   </div>
   <div>
-    <%= check('metrics').html_safe %>
-    <span class="help" id="metrics-desc">View, download, and citation statistics.</span>
-  </div>
-  <div>
     <%= check('size').html_safe %>
     <span class="help" id="help-desc">Total size of the uploaded data files.</span>
+  </div>
+  <div>
+    <%= check('metrics').html_safe %>
+    <span class="help" id="metrics-desc">View, download, and citation statistics.</span>
   </div>
   <div>
     <%= check('journal').html_safe %>
@@ -61,19 +62,19 @@ end
   </div>
   <div>
     <%= check('identifiers').html_safe %>
-    <span class="help" id="identifiers-desc">Up to 6 identifiers of related publications.</span>
-  </div>
-  <div>
-    <%= check('dpc').html_safe %>
-    <span class="help" id="dpc-desc">Party responsible for the <a href="/stash/requirements#cost" target="_blank">Dryad Data Publishing Charge</a>.</span>
+    <span class="help" id="identifiers-desc">Up to 6 related work identifiers, including manuscripts.</span>
   </div>
   <div>
     <%= check('funders').html_safe %>
      <span class="help" id="funders-desc">Funding organizations matched with a <a href="https://ror.org/" target="_blank">ROR ID</a>.</span>
   </div>
   <div>
-    <%= check('awards').html_safe %>
-    <span class="help" id="awards-desc">Grant and other funder identifiers.</span>
+    <%= check('awards', true).html_safe %>
+    <span class="help" id="awards-desc">Grant and other funder identifiers. Appear with Funders.</span>
+  </div>
+  <div>
+    <%= check('dpc').html_safe %>
+    <span class="help" id="dpc-desc">Party responsible for the <a href="/stash/requirements#cost" target="_blank">Dryad Data Publishing Charge</a>.</span>
   </div>
   <% if current_user.min_curator? %>
     <div>
