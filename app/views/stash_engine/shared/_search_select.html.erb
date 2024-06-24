@@ -39,11 +39,11 @@
             }
           }
         }
+        status.innerHTML = 'Results loaded'
       } else {
         status.innerHTML = 'Loading results'
         list.innerHTML = '<li><i class="fa fa-circle-o-notch fa-spin" aria-hidden="true"></i></li>'
       }
-      status.innerHTML = 'Results loaded'
     }
     const select = ({label, value}) => {
       v.value = value
