@@ -131,8 +131,72 @@ namespace :identifiers do
     end
   end
 
-  desc 'remove in_progress versions and temporary files that have lingered for too long'
+  desc 'remove abandoned, unpublished datasets that will never be published'
+  task remove_abandoned_datasets: :environment do
+    # This task cleans up datasets that may have had some activity, but they have no real chance of being published.
+    dry_run = ENV['DRY_RUN'] == 'true'
+    if dry_run
+      puts ' ##### remove_abandoned_datasets DRY RUN -- not actually running delete commands'
+    else
+      puts ' ##### remove_abandoned_datasets -- Deleting old versions of datasets that are still in progress'
+    end
+
+    StashEngine::Identifier.where(pub_state: [nil, 'withdrawn', 'unpublished']).find_each do |i|
+      next if i.date_first_published.present?
+      next unless %w[in_progress withdrawn].include?(i.latest_resource&.current_curation_status)
+
+      # Double-check whether it was ever published -- even though we checked the date_first_published,
+      # some older datasets did not have this date set properly in the internal metadata before they were
+      # withdrawn, so we need to be certain.
+      next if i.resources.map(&:curation_activities).flatten.map(&:status).include?('published')
+
+      # Find the last activity by a "real" user (not the system user)
+      last_user_activity = nil
+      i.latest_resource&.curation_activities&.reverse_each do |ca|
+        if ca.user_id.present? && ca.user_id > 0
+          last_user_activity = ca.created_at
+          break
+        end
+      end
+
+      if last_user_activity.present? && last_user_activity < 1.year.ago
+        puts "ABANDONED #{i.identifier} -- #{i.id} -- size #{i.latest_resource.size}"
+
+        if dry_run
+          puts ' -- skipping deletion due to DRY_RUN setting'
+        else
+          puts ' -- deleting'
+          # Perform the actual removal
+          i.resources.each do |r|
+            # Delete temp upload directory, if it exists
+            s3_dir = r.s3_dir_name(type: 'base')
+            Stash::Aws::S3.new.delete_dir(s3_key: s3_dir)
+            # Delete permanent storage, if it exists
+            perm_bucket = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+            if r.download_uri.include?('ark%3A%2F')
+              m = /ark.*/.match(r.download_uri)
+              base_path = CGI.unescape(m.to_s)
+              merritt_version = r.stash_version.merritt_version
+              perm_bucket.delete_dir(s3_key: "#{base_path}|#{merritt_version}|producer")
+              perm_bucket.delete_dir(s3_key: "#{base_path}|#{merritt_version}|system")
+              perm_bucket.delete_file(s3_key: "#{base_path}|manifest")
+            else
+              perm_bucket.delete_dir(s3_key: "v3/#{s3_dir}")
+            end
+
+            # Metadata
+            # Note that when the last resource is destroyed, the Identifier is automatically destroyed
+            r.destroy
+          end
+        end
+      end
+    end
+  end
+
+  desc 'clean up in_progress versions and temporary files that are disconnected from datasets'
   task remove_old_versions: :environment do
+    # This task cleans up garbage versions of datasets, which may have been abandoned, but they may also have been accidentally created
+    # and not properly connected to an Identifier object
     dry_run = ENV['DRY_RUN'] == 'true'
     if dry_run
       puts ' ##### remove_old_versions DRY RUN -- not actually running delete commands'
@@ -141,20 +205,20 @@ namespace :identifiers do
     end
 
     # Remove resources that have been "in progress" for more than a year without updates
-    StashEngine::Resource.in_progress.where('updated_at < ?', 1.year.ago).find_each do |res|
+    StashEngine::Resource.in_progress.find_each do |res|
       next unless res.updated_at < 1.year.ago
       next unless res.current_curation_status == 'in_progress'
 
       ident = res.identifier
       s3_dir = res.s3_dir_name(type: 'base')
       puts "ident #{ident&.id || 'MISSING'} Res #{res.id} -- updated_at #{res.updated_at}"
-      puts "   DESTROY s3 #{s3_dir}"
+      puts "   DESTROY temporary s3 contents #{s3_dir}"
       Stash::Aws::S3.new.delete_dir(s3_key: s3_dir) unless dry_run
       puts "   DESTROY resource #{res.id}"
       res.destroy unless dry_run
     end
 
-    # Remove directories in AWS that have no corresponding resource, or whose resource is already submitted
+    # Remove directories in AWS temporary storage that have no corresponding resource, or whose resource is already submitted
     s3_prefix = StashEngine::Resource.last.s3_dir_name(type: 'base')
     s3_prefix = if s3_prefix.include?('-')
                   s3_prefix.split('-').first
@@ -174,12 +238,12 @@ namespace :identifiers do
         r = StashEngine::Resource.find(res_id)
         if r.submitted? &&
            (r.zenodo_copies.where("copy_type LIKE 'software%' OR copy_type like 'supp%'").where.not(state: 'finished').count == 0)
-          # if the resource is state == submitted and all zenodo transfers have completed, delete the data
+          # if the resource is state == submitted and all zenodo transfers have completed, delete the temporary data
           puts "   resource is submitted -- DELETE s3 dir #{id_prefix}"
           Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
         end
       else
-        # there is no reasource, delete the files
+        # there is no reasource that corresponds to this S3 dir, so delete the temporary files
         puts "   resource is deleted -- DELETE s3 dir #{id_prefix}"
         Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
       end
