@@ -140,8 +140,7 @@ namespace :identifiers do
     else
       puts ' ##### remove_abandoned_datasets -- Deleting old versions of datasets that are still in progress'
     end
-    permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
-    
+        
     StashEngine::Identifier.where(pub_state: [nil, 'withdrawn', 'unpublished']).find_each do |i|
       next if i.date_first_published.present?
       next unless %w[in_progress withdrawn].include?(i.latest_resource&.current_curation_status)
@@ -149,7 +148,7 @@ namespace :identifiers do
       # Double-check whether it was ever published -- even though we checked the date_first_published,
       # some older datasets did not have this date set properly in the internal metadata before they were
       # withdrawn, so we need to be certain.
-      next if i.resources.map(&:curation_activities).flatten.map(&:status).include?("published")
+      next if i.resources.map(&:curation_activities).flatten.map(&:status).include?('published')
       
       # Find the last activity by a "real" user (not the system user)
       last_user_activity = nil
@@ -164,9 +163,9 @@ namespace :identifiers do
         puts "ABANDONED #{i.identifier} -- #{i.id} -- size #{i.latest_resource.size}"
 
         if dry_run
-          puts " -- skipping deletion due to DRY_RUN setting"
+          puts ' -- skipping deletion due to DRY_RUN setting'
         else
-          puts " -- deleting"
+          puts ' -- deleting'
           # Perform the actual removal
           i.resources.each do |r|
             # Delete temp upload directory, if it exists
@@ -174,7 +173,7 @@ namespace :identifiers do
             Stash::Aws::S3.new.delete_dir(s3_key: s3_dir)
             # Delete permanent storage, if it exists
             perm_bucket = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
-            if r.download_uri.include?("ark%3A%2F")
+            if r.download_uri.include?('ark%3A%2F')
               m = /ark.*/.match(r.download_uri)
               base_path = CGI.unescape(m.to_s)
               merritt_version = r.stash_version.merritt_version
@@ -182,12 +181,12 @@ namespace :identifiers do
               perm_bucket.delete_dir(s3_key: "#{base_path}|#{merritt_version}|system")
               perm_bucket.delete_file(s3_key: "#{base_path}|manifest")
             else
-              perm_bucket.delete_dir(s3_key: "v3/{s3_dir}")
+              perm_bucket.delete_dir(s3_key: "v3/#{s3_dir}")
             end
 
             # Metadata
             # Note that when the last resource is destroyed, the Identifier is automatically destroyed
-            r.destroy 
+            r.destroy
           end
         end
       end
