@@ -15,6 +15,10 @@ module StashEngine
       add_fields
       add_filters
 
+      if @page == 1 || session[:admin_search_count].blank?
+        session[:admin_search_count] = StashEngine::Resource.select('count(*) as total').from(@datasets).map(&:total).first
+      end
+
       if params[:sort].present? || @search_string.present?
         order_string = 'relevance desc'
         if params[:sort].present?
@@ -58,7 +62,7 @@ module StashEngine
         @page_size = 2_000
         return
       end
-      @page = params[:page] || '1'
+      @page = params[:page] || 1
       @page_size = if params[:page_size].blank? || params[:page_size].to_i == 0
                      10
                    else
