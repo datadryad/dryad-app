@@ -169,15 +169,25 @@ namespace :identifiers do
           puts " -- deleting"
           # Perform the actual removal
           i.resources.each do |r|
-            # Temp upload directory, if it exists
+            # Delete temp upload directory, if it exists
             s3_dir = r.s3_dir_name(type: 'base')
             Stash::Aws::S3.new.delete_dir(s3_key: s3_dir)
-            # Permanent storage directory, if it exists
-            perm_bucket = Stash::Aws::S3.new(s3_bucket_name: permanent_bucket)
-            perm_bucket.delete_dir(s3_key: "v3/{s3_dir}")
-            perm_bucket.delete_dir(s3_key: "v3/{s3_dir}")
+            # Delete permanent storage, if it exists
+            perm_bucket = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+            if r.download_uri.include?("ark%3A%2F")
+              m = /ark.*/.match(r.download_uri)
+              base_path = CGI.unescape(m.to_s)
+              merritt_version = r.stash_version.merritt_version
+              perm_bucket.delete_dir(s3_key: "#{base_path}|#{merritt_version}|producer")
+              perm_bucket.delete_dir(s3_key: "#{base_path}|#{merritt_version}|system")
+              perm_bucket.delete_file(s3_key: "#{base_path}|manifest")
+            else
+              perm_bucket.delete_dir(s3_key: "v3/{s3_dir}")
+            end
+
             # Metadata
-            r.destroy
+            # Note that when the last resource is destroyed, the Identifier is automatically destroyed
+            r.destroy 
           end
         end
       end
