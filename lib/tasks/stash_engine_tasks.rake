@@ -193,7 +193,6 @@ namespace :identifiers do
     end
   end
 
-
   desc 'clean up in_progress versions and temporary files that are disconnected from datasets'
   task remove_old_versions: :environment do
     # This task cleans up garbage versions of datasets, which may have been abandoned, but they may also have been accidentally created
