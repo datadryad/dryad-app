@@ -8,7 +8,6 @@
 #  allow_review_workflow   :boolean
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
-#  issn                    :string(191)
 #  journal_code            :string(191)
 #  manuscript_number_regex :string(191)
 #  notify_contacts         :text(65535)
@@ -24,20 +23,32 @@
 #
 # Indexes
 #
-#  index_stash_engine_journals_on_issn   (issn)
 #  index_stash_engine_journals_on_title  (title)
 #
 FactoryBot.define do
 
   factory :journal, class: StashEngine::Journal do
+    transient do
+      issn { nil }
+    end
 
     title { Faker::Company.industry }
-    issn do
-      ["#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}",
-       "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"]
-    end
     journal_code { Faker::Name.initials(number: 4) }
     sponsor_id { nil }
+
+    after(:create) do |journal, e|
+      if e.issn.present?
+        if e.issn.is_a?(Array)
+          e.issn.each { |id| create(:journal_issn, journal_id: journal.id, id: id) }
+        else
+          create(:journal_issn, journal_id: journal.id, id: e.issn)
+        end
+      else
+        create(:journal_issn, journal_id: journal.id)
+      end
+      journal.reload
+    end
+
   end
 
 end

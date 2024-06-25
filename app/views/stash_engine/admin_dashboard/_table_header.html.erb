@@ -41,13 +41,13 @@
     <% if @fields.include?('identifiers') %>
       <th>Publication IDs</th>
     <% end %>
+    <% if @fields.include?('dpc') %>
+      <th>DPC paid by</th>
+    <% end %>
     <% if @fields.include?('curator') %>
       <th class="c-lined-table__sort <%= sort_display('curator_name') %>">
         <%= sortable_column_head sort_field: 'curator_name', title: 'Curator' %>
       </th>
-    <% end %>
-    <% if @fields.include?('dpc') %>
-      <th>DPC paid by</th>
     <% end %>
     <% if @fields.include?('updated_at') %>
       <th class="c-lined-table__sort <%= sort_display('updated_at') %>">

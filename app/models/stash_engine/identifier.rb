@@ -35,9 +35,15 @@ module StashEngine
   class Identifier < ApplicationRecord
     self.table_name = 'stash_engine_identifiers'
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
+    has_one :process_date, as: :processable, dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy
     has_one :counter_stat, class_name: 'StashEngine::CounterStat', dependent: :destroy
     has_many :internal_data, class_name: 'StashEngine::InternalDatum', dependent: :destroy
+    has_many :manuscript_datum, -> { where(data_type: 'manuscriptNumber') }, class_name: 'StashEngine::InternalDatum'
+    has_many :manuscripts, through: :manuscript_datum
+    has_one :journal_datum, -> { where(data_type: 'publicationISSN').order(created_at: :desc).limit(1) }, class_name: 'StashEngine::InternalDatum'
+    has_one :journal_issn, through: :journal_datum
+    has_one :journal, through: :journal_issn
     has_many :external_references, class_name: 'StashEngine::ExternalReference', dependent: :destroy
     # there are places we may have more than one from our old versions
     has_many :shares, class_name: 'StashEngine::Share', dependent: :destroy
@@ -49,6 +55,7 @@ module StashEngine
             foreign_key: 'id'
     belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense', optional: true
 
+    after_create :create_process_date, unless: :process_date
     after_create :create_share
 
     # This makes the setting of the "preliminary information" and how something was imported explicit.  Default is other.
@@ -261,12 +268,6 @@ module StashEngine
       !journal&.will_pay? && !institution_will_pay? && !funder_will_pay?
     end
 
-    def journal
-      return nil if publication_issn.nil?
-
-      Journal.find_by_issn(publication_issn)
-    end
-
     def record_payment
       # once we have assigned payment to an entity, keep that entity,
       # unless it was a journal that the submission is no longer affiliated with
@@ -316,7 +317,7 @@ module StashEngine
     end
 
     def publication_issn
-      internal_data.find_by(data_type: 'publicationISSN')&.value&.strip
+      journal_datum&.value&.strip
     end
 
     # This is the name typed by the user. If there is an associated journal, the
@@ -328,11 +329,11 @@ module StashEngine
     end
 
     def manuscript_number
-      internal_data.find_by(data_type: 'manuscriptNumber')&.value&.strip
+      manuscript_datum.last&.value&.strip
     end
 
     def latest_manuscript
-      StashEngine::Manuscript.where(manuscript_number: manuscript_number).last
+      manuscripts.last
     end
 
     def automatic_ppr?
@@ -556,70 +557,38 @@ module StashEngine
     # returns the date on which this identifier was initially approved for publication
     # (i.e., the date on which it entered the status 'published' or 'embargoed'
     def approval_date
-      return nil unless %w[published embargoed].include?(pub_state)
-
-      found_approval_date = nil
-      resources.reverse_each do |res|
-        res.curation_activities.each do |ca|
-          next unless %w[published embargoed].include?(ca.status)
-
-          found_approval_date = ca.created_at
-          break
-        end
-      end
-      found_approval_date
+      process_date.approved
     end
 
     # returns the date on which this identifier was initially referred for author action
     def aar_date
-      resources.map(&:curation_activities).flatten.each do |ca|
-        return ca.created_at if ca.action_required?
-      end
-      nil
+      resources.map(&:curation_activities).flatten.uniq(&:status)
+        .select { |ca| ca.status == 'action_required' }.pluck(&:created_at).first
     end
 
     # returns the date on which this identifier was returned to curators after action_required
     def aar_end_date
-      found_aar = false
-      resources.map(&:curation_activities).flatten.each do |ca|
-        found_aar = true if ca.action_required?
-        return ca.created_at if found_aar && !ca.action_required?
-      end
-      nil
+      return nil unless aar_date
+
+      changes = resources.map(&:curation_activities).flatten.pluck(:status, :created_at).uniq(&:first)
+      prev = changes.index { |c| c.first == 'aar_date' }
+      changes[prev + 1]&.last
     end
 
     def date_available_for_curation
-      resources.map(&:curation_activities).flatten.each do |ca|
-        return ca.created_at if ca.submitted?
-      end
-      nil
+      process_date.submitted
     end
 
     def curation_completed_date
-      return nil unless %w[action_required published embargoed withdrawn].include?(pub_state)
-
-      found_cc_date = nil
-      resources.map(&:curation_activities).flatten.each do |ca|
-        next unless %w[action_required published embargoed withdrawn].include?(ca.status)
-
-        found_cc_date = ca.created_at
-        break
-      end
-      found_cc_date
+      process_date.curation_end
     end
 
     def date_first_curated
-      resources.map(&:curation_activities).flatten.each do |ca|
-        return ca.created_at if ca.curation?
-      end
-      nil
+      process_date.curation_start
     end
 
     def date_last_curated
-      resources.map(&:curation_activities).flatten.reverse.each do |ca|
-        return ca.created_at if ca.curation?
-      end
-      nil
+      resources.map(&:process_date).pluck(:curation_start).reject(&:blank?)&.last || nil
     end
 
     def date_first_published

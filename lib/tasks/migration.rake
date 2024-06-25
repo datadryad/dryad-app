@@ -44,7 +44,7 @@ namespace :dryad_migration do
       # is the primary ISSN. We don't want to use a secondary ISSN if it was
       # present in the input file.
       j = StashEngine::Journal.find_or_create_by(issn: pr['issn'])
-      puts "migrating journal #{j.id} -- #{j.issn} -- #{pr['fullName']}"
+      puts "migrating journal #{j.id} -- #{j.single_issn} -- #{pr['fullName']}"
 
       j.update(title: pr['fullName'],
                issn: pr['issn'],

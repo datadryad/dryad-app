@@ -64,7 +64,7 @@ module StashEngine
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
       end
 
-      @fake_issn = 'bogus-issn-value'
+      @fake_issn = '1234-000X'
       @int_datum_issn = InternalDatum.new(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
       @int_datum_issn.save!
       @fake_manuscript_number = 'bogus-manuscript-number'
@@ -358,7 +358,7 @@ module StashEngine
 
           it 'returns the latest non-published for an admin from journal' do
             user2 = create(:user, tenant_id: 'localhost')
-            journal = Journal.create(title: 'Test Journal', issn: @fake_issn)
+            journal = create(:journal, title: 'Test Journal', issn: @fake_issn)
             create(:role, role_object: journal, user: user2, role: 'admin')
             user2.reload
             InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
@@ -445,7 +445,7 @@ module StashEngine
       end
 
       it 'returns false if journal will pay' do
-        Journal.create(issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
+        create(:journal, issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
         expect(@identifier.user_must_pay?).to eq(false)
       end
 
@@ -463,16 +463,17 @@ module StashEngine
       end
 
       it 'records a journal payment' do
-        Journal.create(issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
+        create(:journal, issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/journal/)
       end
 
       it 'replaces a journal payment when the associated journal has changed' do
-        Journal.create(issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
+        create(:journal, issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/journal/)
-        @int_datum_issn.update(value: 'not the journal issn')
+        @int_datum_issn.update(value: '0000-0000')
+        @identifier.reload
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/unknown/)
       end
@@ -550,7 +551,7 @@ module StashEngine
     describe '#journal' do
       it 'retrieves the associated journal' do
         @bogus_title = 'Some Bogus Title'
-        Journal.create(issn: @fake_issn, title: @bogus_title)
+        create(:journal, issn: @fake_issn, title: @bogus_title)
         expect(@identifier.journal.title).to eq(@bogus_title)
       end
 
@@ -559,12 +560,12 @@ module StashEngine
       end
 
       it 'allows review when the journal allows review' do
-        Journal.create(issn: @fake_issn, allow_review_workflow: true)
+        create(:journal, issn: @fake_issn, allow_review_workflow: true)
         expect(@identifier.allow_review?).to be(true)
       end
 
       it 'disallows review when the journal disallows review' do
-        Journal.create(issn: @fake_issn, allow_review_workflow: false)
+        create(:journal, issn: @fake_issn, allow_review_workflow: false)
         expect(@identifier.allow_review?).to be(false)
       end
 
@@ -574,7 +575,7 @@ module StashEngine
       end
 
       it 'allows review when the curation status is review, regardless of journal settings' do
-        Journal.create(issn: @fake_issn, allow_review_workflow: false)
+        create(:journal, issn: @fake_issn, allow_review_workflow: false)
         allow_any_instance_of(Resource).to receive(:current_curation_status).and_return('peer_review')
         expect(@identifier.allow_review?).to be(true)
       end
@@ -584,7 +585,7 @@ module StashEngine
       end
 
       it 'allows blackout when the journal allows blackout' do
-        Journal.create(issn: @fake_issn, allow_blackout: true)
+        create(:journal, issn: @fake_issn, allow_blackout: true)
         expect(@identifier.allow_blackout?).to be(true)
       end
     end

@@ -28,12 +28,12 @@ RSpec.feature 'JournalAdmin', type: :feature do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
-        find('#issn').set('1A1A-Y2Y2')
+        find('#issn').set('1111-2222')
         find('input[name=commit]').click
       end
-      expect(page.find("#issn_#{@journal.id}")).to have_text('1A1A-Y2Y2')
+      expect(page.find("#issn_#{@journal.id}")).to have_text('1111-2222')
       changed = StashEngine::Journal.find(@journal.id)
-      expect(changed.issn_array).to include('1A1A-Y2Y2')
+      expect(changed.issn_array).to include('1111-2222')
     end
 
     it 'allows changing notify contacts as a superuser', js: true do
