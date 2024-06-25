@@ -56,6 +56,10 @@ module StashEngine
 
     private
 
+    def collect_properties
+      @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
+    end
+
     def setup_paging
       if request.format.csv?
         @page = 1
@@ -110,11 +114,6 @@ module StashEngine
       @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
       @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
     end
-    # rubocop:enable Metrics/AbcSize
-
-    def collect_properties
-      @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
-    end
 
     # rubocop:disable Metrics/MethodLength
     def add_fields
@@ -150,10 +149,12 @@ module StashEngine
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_counter_stats.unique_investigation_count') if @sort == 'unique_investigation_count'
       @datasets = @datasets.select(
-        "MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') as relevance"
+        "MATCH(stash_engine_identifiers.search_words) AGAINST('#{
+          /^(10..+)/.match(@search_string) ? "\"#{@search_string}\"" : @search_string
+        }') as relevance"
       ) if @search_string.present?
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
 
     def add_filters
       tenant_filter
@@ -168,7 +169,11 @@ module StashEngine
       @datasets = @datasets.where(
         'curator.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
       ) if @filters[:curator].present? && current_user.min_curator?
-      @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') > 0") unless @search_string.blank?
+      unless @search_string.blank?
+        @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{
+          /^(10..+)/.match(@search_string) ? "\"#{@search_string}\"" : @search_string
+        }') > 0")
+      end
       @datasets = @datasets.left_outer_joins(:related_identifiers)
         .joins("left outer join stash_engine_internal_data msnum on
           msnum.idenmsnum.identifier_id = stash_engine_identifiers.id and msnum.data_type = 'manuscriptNumber'")
