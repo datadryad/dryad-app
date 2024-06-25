@@ -59,7 +59,7 @@ module StashEngine
     def setup_paging
       if request.format.csv?
         @page = 1
-        @page_size = 1_000_000
+        @page_size = 2_000
         return
       end
       @page = params[:page] || 1
