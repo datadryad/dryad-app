@@ -237,7 +237,7 @@ module StashEngine
       funder_ror = @role_object&.ror_id || @filters.dig(:funder, :value)
       @datasets = @datasets.joins(
         "inner join dcs_contributors on stash_engine_resources.id = dcs_contributors.resource_id
-        and contributor_type = 'funder' and dcs_contributors.name_identifier_id = #{funder_ror}"
+        and dcs_contributors.contributor_type = 'funder' and dcs_contributors.name_identifier_id = '#{funder_ror}'"
       )
     end
 
