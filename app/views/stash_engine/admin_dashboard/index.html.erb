@@ -48,7 +48,7 @@
   </div>  
   <div class="admin-dashboard-results" style="font-size: .9em;">
     <span><b><%= number_with_delimiter(session[:admin_search_count]) %></b> results</span>
-    <%= link_to 'Export all as CSV', stash_url_helpers.admin_dashboard_path(request.parameters.except(:action, :controller, :fields, :authenticity_token, :fields, :filters).merge(format: :csv)), class: 'o-link__buttonlink' %>
+    <%= link_to "Export #{session[:admin_search_count] > 2000 ? 'first 2000' : 'all'} as CSV", stash_url_helpers.admin_dashboard_path(request.parameters.except(:action, :controller, :fields, :authenticity_token, :fields, :filters).merge(format: :csv)), class: 'o-link__buttonlink' %>
   </div>
 </div>
 <div class="table-wrapper">
