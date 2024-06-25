@@ -245,8 +245,9 @@ module StashEngine
       from = date_hash[:start_date]
       to = date_hash[:end_date]
       return "< '#{to}'" if from.blank?
+      return "> '#{from}'" if to.blank?
 
-      "BETWEEN '#{from}' AND #{to.blank? ? 'now()' : "'#{to}'"}"
+      "BETWEEN '#{from}' AND '#{to}'"
     end
 
     def add_subqueries
