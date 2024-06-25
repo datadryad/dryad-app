@@ -214,7 +214,7 @@ module StashEngine
       end
 
       it 'returns true if admin for same journal' do
-        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
         resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
@@ -224,7 +224,7 @@ module StashEngine
       end
 
       it 'returns true if admin for a journal, and the item has no journal set' do
-        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
         create(:role, role_object: journal, user: @user, role: 'admin')
@@ -444,7 +444,7 @@ module StashEngine
       end
 
       it 'returns true if being viewed by a journal admin' do
-        journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+        journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
         identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
         identifier.update(pub_state: 'unpublished')
         InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
@@ -1407,14 +1407,15 @@ module StashEngine
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'submitted')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'submitted')
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'curation')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-04', status: 'published')
           expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
-          expect(res.curation_start_date.to_date).to eql(Date.parse('2020-01-02'))
+          expect(res.curation_start_date.to_date).to eql(Date.parse('2020-01-03'))
         end
 
         it 'returns the correct dates when an item went straight from peer_review to curation' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
+          p res.id
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'peer_review')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'curation')
@@ -1427,6 +1428,16 @@ module StashEngine
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
           expect(res.submitted_date).to be_nil
+          expect(res.curation_start_date).to be_nil
+        end
+
+        it 'returns no curation date without curation' do
+          res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'submitted')
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'submitted')
+          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-04', status: 'published')
+          expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
           expect(res.curation_start_date).to be_nil
         end
       end
@@ -1549,7 +1560,7 @@ module StashEngine
           end
 
           it 'shows all resources to an admin for this journal' do
-            journal = Journal.create(title: 'Test Journal', issn: '1234-4321')
+            journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
             InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
             create(:role, role_object: journal, user: @user2, role: 'admin')
             resources = StashEngine::ResourcePolicy::VersionScope.new(@user2, @identifier.resources).resolve

@@ -50,7 +50,7 @@ module StashEngine
     self.table_name = 'stash_engine_resources'
     # ------------------------------------------------------------
     # Relations
-
+    has_one :process_date, as: :processable, dependent: :destroy
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
@@ -97,6 +97,8 @@ module StashEngine
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
+
+    after_create :create_process_date, unless: :process_date
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
@@ -497,13 +499,13 @@ module StashEngine
 
     # Date on which the user first submitted this resource
     def submitted_date
-      curation_activities.order(:id).where("status = 'submitted' OR status = 'peer_review'")&.first&.created_at
+      process_date.submitted || process_date.peer_review
     end
 
     # Date on which the curators first received this resource
     # (for peer_review datasets, the date at which it came out of peer_review)
     def curation_start_date
-      curation_activities.order(:id).where("status = 'submitted' OR status = 'curation'")&.first&.created_at
+      process_date.curation_start
     end
 
     # ------------------------------------------------------------
