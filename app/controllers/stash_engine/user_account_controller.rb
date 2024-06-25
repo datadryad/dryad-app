@@ -3,7 +3,6 @@ module StashEngine
     before_action :require_user_login
 
     def index
-      @tenants = StashEngine::Tenant.partner_list.map { |t| { id: t.id, name: t.short_name } }
       session[:origin] = 'account'
     end
 

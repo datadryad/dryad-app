@@ -63,6 +63,10 @@ module StashEngine
       tenant_ror_orgs.map(&:ror_id)
     end
 
+    def self.find_by_ror_id(ror_id)
+      StashEngine::Tenant.joins(:tenant_ror_orgs).where('stash_engine_tenant_ror_orgs.ror_id = ?', ror_id)
+    end
+
     def country_name
       ror_org = ror_orgs.first
       return nil if ror_org.nil? || ror_org.country.nil?
