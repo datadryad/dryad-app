@@ -44,7 +44,7 @@ function PrelimInfo(
 
         <div className="c-import__choicesbox js-import-choice">
           <div className="c-import__choicebox">
-            <div className="c-import__icon"><i className="fa fa-pencil-square-o fa-3x" /></div>
+            <div className="c-import__icon"><i className="fas fa-pen-to-square fa-3x" aria-hidden="true"/></div>
             <div>
               <input
                 type="radio"
@@ -59,7 +59,7 @@ function PrelimInfo(
           </div>
 
           <div className="c-import__choicebox">
-            <div className="c-import__icon"><i className="fa fa-file-text-o fa-3x" /></div>
+            <div className="c-import__icon"><i className="fa fa-file-lines fa-3x" aria-hidden="true"/></div>
             <div>
               <input
                 type="radio"
@@ -74,7 +74,7 @@ function PrelimInfo(
           </div>
 
           <div className="c-import__choicebox">
-            <div className="c-import__icon"><i className="fa fa-table fa-3x" /></div>
+            <div className="c-import__icon"><i className="fa fa-table fa-3x" aria-hidden="true"/></div>
             <div>
               <input
                 type="radio"
