@@ -122,7 +122,9 @@ module StashEngine
         @datasets = @datasets.joins('left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id')
           .select('stats.unique_investigation_count, stats.citation_count, stats.unique_request_count')
       end
-      @datasets = @datasets.joins(:last_curation_activity) if @filters[:status].present? || @sort == 'status'
+      if @filters[:status].present? || @sort == 'status' || @filters[:updated_at]&.values&.any?(&:present?)
+        @datasets = @datasets.joins(:last_curation_activity)
+      end
       if @filters[:submit_date]&.values&.any?(&:present?)
         @datasets = @datasets.joins(:process_date)
       elsif @sort == 'submitted'
@@ -234,7 +236,7 @@ module StashEngine
 
       funder_ror = @role_object&.ror_id || @filters.dig(:funder, :value)
       @datasets = @datasets.joins(
-        "dcs_contributors on stash_engine_resources.id = dcs_contributors.resource_id
+        "inner join dcs_contributors on stash_engine_resources.id = dcs_contributors.resource_id
         and contributor_type = 'funder' and dcs_contributors.name_identifier_id = #{funder_ror}"
       )
     end
