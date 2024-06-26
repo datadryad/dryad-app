@@ -1,3 +1,4 @@
+require_relative './args_parser'
 require_relative 'zenodo/stats'
 require_relative 'zenodo/metadata'
 require 'byebug'
@@ -66,6 +67,7 @@ namespace :zenodo do
     puts "Optimistic completion date: #{(Time.new + time_remaining).strftime('%Y-%m-%d')}"
   end
 
+  # example: rails/rake zenodo:update_metadata -- --start_id 10
   desc 'Update metadata at zenodo latest version for datasets'
   task update_metadata: :environment do
     $stdout.sync = true # keeps the output from buffering and delaying output
@@ -74,13 +76,11 @@ namespace :zenodo do
       puts 'Exiting metadata update'
       exit
     end
-
-    start_num = ARGV[1].to_i
+    options = ArgsParser.parse([:start_id])
+    start_num = options[:start_id].to_i
     identifiers = StashEngine::Identifier.joins(:zenodo_copies).distinct.order(:id).offset(start_num)
 
-    ARGV.each { |a| task(a.to_sym {}) } # prevents rake from interpreting addional args as other rake tasks
     puts "Updating zenodo metadata starting at record #{start_num}"
-
     # this stops spamming of activerecord query logs in dev environment
     ActiveRecord::Base.logger.silence do
       identifiers.each_with_index do |identifier, idx|
@@ -106,5 +106,6 @@ namespace :zenodo do
         sleep 1
       end
     end
+    exit # prevents rake from interpreting additional args as other rake tasks
   end
 end
