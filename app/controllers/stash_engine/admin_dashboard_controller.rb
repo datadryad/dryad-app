@@ -150,7 +150,7 @@ module StashEngine
       @datasets = @datasets.select('stash_engine_counter_stats.unique_investigation_count') if @sort == 'unique_investigation_count'
       @datasets = @datasets.select(
         "MATCH(stash_engine_identifiers.search_words) AGAINST('#{
-          /^(10..+)/.match(@search_string) ? "\"#{@search_string}\"" : @search_string
+          %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
         }') as relevance"
       ) if @search_string.present?
     end
@@ -171,7 +171,7 @@ module StashEngine
       ) if @filters[:curator].present? && current_user.min_curator?
       unless @search_string.blank?
         @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{
-          /^(10..+)/.match(@search_string) ? "\"#{@search_string}\"" : @search_string
+          %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
         }') > 0")
       end
       @datasets = @datasets.left_outer_joins(:related_identifiers)
