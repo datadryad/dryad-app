@@ -10,7 +10,11 @@ module StashEngine
     # before_action :load, only: %i[popup note_popup edit]
 
     def index
-      @datasets = authorize StashEngine::Resource.latest_per_dataset.select('distinct stash_engine_resources.*')
+      @datasets = authorize StashEngine::Resource.latest_per_dataset.select(
+        'distinct stash_engine_resources.id, stash_engine_resources.title, stash_engine_resources.total_file_size,
+        stash_engine_resources.user_id, stash_engine_resources.tenant_id, stash_engine_resources.identifier_id,
+        stash_engine_resources.last_curation_activity_id, stash_engine_resources.publication_date'
+      )
 
       add_fields
       add_filters
