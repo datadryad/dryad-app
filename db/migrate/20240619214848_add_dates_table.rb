@@ -31,7 +31,7 @@ class AddDatesTable < ActiveRecord::Migration[7.0]
             status_changes.each_with_index do |c, i|
               dates[c.first.to_sym] = c.last if ['processing', 'peer_review', 'submitted', 'withdrawn'].include?(c.first)
               dates[:curation_start] = c.last if c.first == 'curation'
-              dates[:curation_end] = c.last if status_changes[i - 1].first == 'curation'
+              dates[:curation_end] = c.last if i > 1 && status_changes[i - 1].first == 'curation'
               dates[:approved] = c.last if ['embargoed', 'published'].include?(c.first) 
             end
             resource.process_date.update(dates)
