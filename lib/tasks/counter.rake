@@ -2,8 +2,9 @@ require 'net/scp'
 require_relative 'counter/validate_file'
 require_relative 'counter/log_combiner'
 require_relative 'counter/json_stats'
-namespace :counter do
+require_relative './args_parser'
 
+namespace :counter do
   desc 'get and combine files from the other servers'
   task :combine_files do
     lc = Tasks::Counter::LogCombiner.new(log_directory: ENV.fetch('LOG_DIRECTORY', nil), scp_hosts: ENV['SCP_HOSTS'].split,
@@ -20,15 +21,15 @@ namespace :counter do
     lc.remove_old_logs_remote(days_old: 60)
   end
 
+  # example: rails/rake counter:validate_logs -- --files file_name_1,file_name_2
   desc 'validate counter logs format (filenames come after rake task)'
   task :validate_logs do
-    if ARGV.length == 1
-      puts 'Please enter the filenames of files to validate, separated by spaces'
+    options = ArgsParser.parse([:files])
+    unless options[:files]
+      puts 'Please enter the filenames of files to validate, separated by comma'
       exit
     end
-    ARGV.each do |filename|
-      next if filename == 'counter:validate_logs'
-
+    options[:files].split(',').each do |filename|
       puts "Validating #{filename}"
       cv = Tasks::Counter::ValidateFile.new(filename: filename)
       cv.validate_file
@@ -37,19 +38,21 @@ namespace :counter do
     exit # makes the arguments not be interpreted as other rake tasks
   end # end of task
 
-  # example: JSON_DIRECTORY="/user/me/json-reports" RAILS_ENV=production bundle exec rake counter:cop_manual
+  # example: RAILS_ENV=production bundle exec rake counter:cop_manual -- --json_directory /user/me/json-reports
   desc 'manually populate CoP stats from json files'
-  task cop_manual: :environment do
+  task cop_manual: :environment do |t, args|
     # this keeps the output from buffering forever until a chunk fills so that output is timely
     $stdout.sync = true
-    puts "JSON_DIRECTORY is #{ENV.fetch('JSON_DIRECTORY', nil)}"
+    options = ArgsParser.parse([:json_directory])
+    puts "JSON_DIRECTORY is #{options[:json_directory]}"
 
     js = Tasks::Counter::JsonStats.new
-    Dir.glob(File.join(ENV.fetch('JSON_DIRECTORY', nil), '????-??.json')).each do |f|
+    Dir.glob(File.join(options[:json_directory], '????-??.json')).each do |f|
       puts f
       js.update_stats(f)
     end
     js.update_database
+    exit
   end
 
   desc 'pre-populate our COUNTER CoP stats from datacite hub'

@@ -1,5 +1,8 @@
 # :nocov:
+require_relative './args_parser'
+
 namespace :compressed do
+  # example: rails/rake compressed:update_contents
   task update_contents: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
 
@@ -52,15 +55,17 @@ namespace :compressed do
   end
 
   # a simplified version of the above task that only updates one resource for testing and doesn't catch errors
+  # example: rails/rake compressed:update_one -- --file_id 10
   task update_one: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
+    options = ArgsParser.parse([:file_id])
 
-    if ARGV.length != 1
+    unless options[:file_id]
       puts 'Please enter the file id as the only argument to this task'
       exit
     end
 
-    db_file = StashEngine::DataFile.find(ARGV[0])
+    db_file = StashEngine::DataFile.find(options[:file_id])
 
     puts "Updating container_contents for #{db_file.upload_file_name} (id: #{db_file.id}, " \
          "resource_id: #{db_file.resource_id})"
