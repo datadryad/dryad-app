@@ -181,7 +181,7 @@ module StashEngine
       end
       @datasets = @datasets.left_outer_joins(:related_identifiers)
         .joins("left outer join stash_engine_internal_data msnum on
-          msnum.idenmsnum.identifier_id = stash_engine_identifiers.id and msnum.data_type = 'manuscriptNumber'")
+          msnum.identifier_id = stash_engine_identifiers.id and msnum.data_type = 'manuscriptNumber'")
         .where(
           'dcs_related_identifiers.related_identifier like ? or msnum.value like ?',
           "%#{@filters[:identifiers]}%", "%#{@filters[:identifiers]}%"
