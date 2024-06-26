@@ -173,7 +173,7 @@ namespace :identifiers do
             Stash::Aws::S3.new.delete_dir(s3_key: s3_dir)
             # Delete permanent storage, if it exists
             perm_bucket = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
-            if r.download_uri.include?('ark%3A%2F')
+            if r.download_uri&.include?('ark%3A%2F')
               m = /ark.*/.match(r.download_uri)
               base_path = CGI.unescape(m.to_s)
               merritt_version = r.stash_version.merritt_version
