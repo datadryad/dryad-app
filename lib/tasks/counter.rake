@@ -2,7 +2,6 @@ require 'net/scp'
 require_relative 'counter/validate_file'
 require_relative 'counter/log_combiner'
 require_relative 'counter/json_stats'
-require_relative './args_parser'
 
 namespace :counter do
   desc 'get and combine files from the other servers'
@@ -24,12 +23,13 @@ namespace :counter do
   # example: rails/rake counter:validate_logs -- --files file_name_1,file_name_2
   desc 'validate counter logs format (filenames come after rake task)'
   task :validate_logs do
-    options = ArgsParser.parse([:files])
-    unless options[:files]
+    args = ArgsParser.parse(:files)
+    unless args.files
       puts 'Please enter the filenames of files to validate, separated by comma'
       exit
     end
-    options[:files].split(',').each do |filename|
+
+    args.files.split(',').each do |filename|
       puts "Validating #{filename}"
       cv = Tasks::Counter::ValidateFile.new(filename: filename)
       cv.validate_file
@@ -40,14 +40,14 @@ namespace :counter do
 
   # example: RAILS_ENV=production bundle exec rake counter:cop_manual -- --json_directory /user/me/json-reports
   desc 'manually populate CoP stats from json files'
-  task cop_manual: :environment do |t, args|
+  task cop_manual: :environment do
     # this keeps the output from buffering forever until a chunk fills so that output is timely
     $stdout.sync = true
-    options = ArgsParser.parse([:json_directory])
-    puts "JSON_DIRECTORY is #{options[:json_directory]}"
+    args = ArgsParser.parse(:json_directory)
+    puts "JSON_DIRECTORY is #{args.json_directory}"
 
     js = Tasks::Counter::JsonStats.new
-    Dir.glob(File.join(options[:json_directory], '????-??.json')).each do |f|
+    Dir.glob(File.join(args.json_directory, '????-??.json')).each do |f|
       puts f
       js.update_stats(f)
     end
