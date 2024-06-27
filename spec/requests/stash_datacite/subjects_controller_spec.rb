@@ -1,35 +1,31 @@
 require_relative '../stash_api/helpers'
+
 module StashDatacite
-  RSpec.describe SubjectsController, type: :request, skip: 'figure out authentication' do
+  RSpec.describe SubjectsController, type: :request do
     before(:each) do
       @user = StashEngine::User.create(
         email: 'lmuckenhaupt@example.edu',
         tenant_id: 'dataone'
       )
 
-      @resource = create(:resource, user_id: @user.id)
-
-      @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
-      setup_access_token(doorkeeper_application: @doorkeeper_application)
+      @resource = create(:resource, user_id: @user.id, subjects: [])
+      allow_any_instance_of(SubjectsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
     end
 
     describe 'create' do
-      let(:params_hash) do
-        {
-          resource_id: @resource.id,
-          subject: ' foo, , bar ,baz '
-        }
-      end
+      let(:params_hash) { { resource_id: @resource.id, subject: ' foo, , bar ,bz , ;tag;,[this1., tag, ' } }
 
+      # removes starting and ending punctuation and spaces
+      # removes duplicates
+      # removes empty tags
+      # does NOT remove punctuation from inside of tag
+      # does not remove numbers
       it 'strips subject strings and removes blanks' do
-        # when
         post '/stash_datacite/subjects/create', params: params_hash, headers: default_authenticated_headers, as: :json
 
-        # then
-        subjects = StashDatacite::Subject.all
-
-        expect(subjects.map(&:subject)).to eq(%w[foo bar baz])
+        expected_array = %w[foo bar bz tag this1]
+        json_response = JSON.parse(response.body)
+        expect(json_response.map { |a| a['subject'] } & expected_array).to match_array(expected_array)
       end
     end
   end

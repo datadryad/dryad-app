@@ -13,8 +13,8 @@ module StashDatacite
     def create
       params[:subject]
         .split(/\s*,\s*/)
+        .map { |s| strip_subject(s) }
         .delete_if(&:blank?)
-        .map(&:strip)
         .each { |s| ensure_subject(s) }
       @subjects = resource.subjects.non_fos
       respond_to do |format|
@@ -77,6 +77,10 @@ module StashDatacite
 
     def resource
       @resource ||= StashEngine::Resource.find(params[:resource_id])
+    end
+
+    def strip_subject(text)
+      text.gsub(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/, '')
     end
   end
 end
