@@ -8,7 +8,7 @@ const upload_types = [
     logo: '../../../images/logo_dryad.svg',
     alt: 'Dryad',
     name: 'Data',
-    description: 'e.g., csv, xsl, fasta',
+    description: 'e.g., .csv, .xsl, fasta, .zip',
     buttonFiles: 'Choose files',
     buttonURLs: 'Enter URLs',
   },
