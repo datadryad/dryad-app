@@ -20,7 +20,7 @@
 <% end %>
 
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
-<%= react_component('containers/ReadMe', {
+<%= react_component('containers/ReadMeWizard', {
   dcsDescription: @metadata_entry.technical_info,
   updatePath: descriptions_update_path,
   fileContent: @file_content,
