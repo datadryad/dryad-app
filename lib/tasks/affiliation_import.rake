@@ -96,33 +96,37 @@ namespace :affiliation_import do
     puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')}"
   end
 
+  # example: rake affiliation_import:populate_ror_db -- --path /path/to/json_file
   desc 'Populate our ROR database manually from the ROR dump json file because the Zenodo API not working'
   task populate_ror_db: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
 
-    if ARGV.length != 1
+    args = Tasks::ArgsParser.parse(:path)
+    unless args.path
       puts 'Please enter the path to the ROR dump json file as an argument'
       puts 'You can get the latest dump from https://doi.org/10.5281/zenodo.6347574 (get json file for last version in zip)'
       exit
     end
 
-    ror_dump_file = ARGV[0]
+    ror_dump_file = args.path
     exit unless File.exist?(ror_dump_file)
 
     Stash::Organization::RorUpdater.process_ror_json(json_file_path: ror_dump_file)
   end
 
+  # example: rake affiliation_import:populate_funder_ror_mapping -- --path /path/to/json_file
   desc 'Populate fundref_id to ror_id mapping table'
   task populate_funder_ror_mapping: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
 
-    if ARGV.length != 1
+    args = Tasks::ArgsParser.parse(:path)
+    unless args.path
       puts 'Please enter the path to the ROR dump json file as an argument'
       puts 'You can get the latest dump from https://doi.org/10.5281/zenodo.6347574 (get json file for last version in zip)'
       exit
     end
 
-    ror_dump_file = ARGV[0]
+    ror_dump_file = args.path
     exit unless File.exist?(ror_dump_file)
 
     ActiveRecord::Base.connection.truncate(StashEngine::XrefFunderToRor.table_name)
