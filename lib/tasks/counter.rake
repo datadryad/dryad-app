@@ -23,7 +23,7 @@ namespace :counter do
   # example: rails/rake counter:validate_logs -- --files file_name_1,file_name_2
   desc 'validate counter logs format (filenames come after rake task)'
   task :validate_logs do
-    args = ArgsParser.parse(:files)
+    args = Tasks::ArgsParser.parse(:files)
     unless args.files
       puts 'Please enter the filenames of files to validate, separated by comma'
       exit
@@ -43,7 +43,7 @@ namespace :counter do
   task cop_manual: :environment do
     # this keeps the output from buffering forever until a chunk fills so that output is timely
     $stdout.sync = true
-    args = ArgsParser.parse(:json_directory)
+    args = Tasks::ArgsParser.parse(:json_directory)
     puts "JSON_DIRECTORY is #{args.json_directory}"
 
     js = Tasks::Counter::JsonStats.new

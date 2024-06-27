@@ -76,7 +76,7 @@ namespace :zenodo do
       puts 'Exiting metadata update'
       exit
     end
-    args = ArgsParser.parse(:start_id)
+    args = Tasks::ArgsParser.parse(:start_id)
     start_num = args.start_id.to_i
     identifiers = StashEngine::Identifier.joins(:zenodo_copies).distinct.order(:id).offset(start_num)
 

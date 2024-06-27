@@ -57,7 +57,7 @@ namespace :compressed do
   # example: rails/rake compressed:update_one -- --file_id 10
   task update_one: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
-    args = ArgsParser.parse(:file_id)
+    args = Tasks::ArgsParser.parse(:file_id)
 
     unless args.file_id
       puts 'Please enter the file id as the only argument to this task'
