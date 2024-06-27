@@ -1,15 +1,15 @@
 require 'optparse'
-
+# rubocop:disable Lint/EmptyBlock
 module ArgsParser
 
-  def self.parse(attrs = [])
-    options = {}
-    return options if attrs.blank?
+  def self.parse(*attributes)
+    options = OpenStruct.new
+    return options if attributes.blank?
 
     opts = OptionParser.new
-    opts.banner = "Usage: rake add [options]"
-    attrs.each do |key|
-      opts.on("-o", "--#{key} ARG", String) { |num1| options[key] = num1 }
+    opts.banner = 'Usage: rake add [options]'
+    attributes.each do |key|
+      opts.on('-o', "--#{key}=value", String) { |value| options[key] = value }
     end
 
     args = opts.order!(ARGV) {}
@@ -18,14 +18,4 @@ module ArgsParser
     options
   end
 end
-
-# require_relative './args_parser'
-#
-# task :add,  do |t, args|
-#   pp ARGV
-#   options = ArgsParser.parse([:num1, :num2])
-#   pp 'xxxxxxxxx'
-#   pp options
-#
-#   exit
-# end
+# rubocop:enable Lint/EmptyBlock

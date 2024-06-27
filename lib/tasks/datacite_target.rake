@@ -15,14 +15,18 @@ namespace :datacite_target do
     end
   end
 
+  # example: rails datacite_target:update_by_publication -- --start 2024-06-25 --end 2024-06-26
   desc 'update Dryad DOI targets for a specific date range of publication'
   task update_by_publication: :environment do
     $stdout.sync = true
-    unless ARGV.length == 3
+    options = ArgsParser.parse(%i[start end])
+
+    if !options[:start] || !options[:end]
       puts 'Takes 2 dates in format YYYY-MM-DD to create a range for DOI updates'
-      next
+      exit
     end
-    stash_ids = Tasks::DashUpdater.dated_items_to_update(ARGV[1].to_s, ARGV[2].to_s)
+
+    stash_ids = Tasks::DashUpdater.dated_items_to_update(options[:start].to_s, options[:end].to_s)
     stash_ids.each_with_index do |stash_id, idx|
       puts "#{idx + 1}/#{stash_ids.length}: updating #{stash_id.identifier}"
       begin
@@ -33,16 +37,19 @@ namespace :datacite_target do
       end
       sleep 1
     end
+    exit
   end
 
   # this will go through the items in the same order, so if it crashes at a point it can be restarted from that item again
   # saves errors to a separate errors.txt file so we can handle these separately/manually assuming there are only a few
+  # example: rails datacite_target:update_dryad -- --start 10
   desc 'update Dryad DOI targets to reflect new environment'
   task update_dryad: :environment do
     $stdout.sync = true
+    options = ArgsParser.parse([:start])
 
     start_from = 0
-    start_from = ARGV[1].to_i unless ARGV[1].blank?
+    start_from = options[:start].to_i if options[:start]
 
     stash_ids = Tasks::DashUpdater.all_items_to_update
 
@@ -59,6 +66,7 @@ namespace :datacite_target do
       end
       sleep 1
     end
+    exit
   end
 end
 # :nocov:

@@ -10,7 +10,7 @@ require 'fileutils'
 # rubocop:disable Metrics/BlockLength
 namespace :dev_ops do
 
-  # use like: bundle exec rake dev_ops:processing RAILS_ENV=development
+  # example: bundle exec rake dev_ops:processing RAILS_ENV=development
   desc 'Shows processing submissions'
   task processing: :environment do
     unless ENV['RAILS_ENV']
@@ -160,53 +160,52 @@ namespace :dev_ops do
   # changed to point to dryad, and 2) this script needs to be run against the text file
   # provided by David Loy in order to update the ARKs in the sword URLs so that downloads
   # and further version submissions work.
+  # example: RAILS_ENV="development" bundle exec rake dev_ops:download_uri -- --path /path/to/file.txt
   desc 'Updates database for Merritt ark changes'
   task download_uri: :environment do
-    # example command
-    # RAILS_ENV="development" bundle exec rake dev_ops:download_uri /path/to/file.txt
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
-      next
+      exit
     end
+    args = ArgsParser.parse(:path)
 
-    unless ARGV.length == 2
+    unless args.path
       puts 'Please put the path to the file to process'
-      next
+      exit
     end
 
-    Tasks::DevOps::DownloadUri.update_from_file(file_path: ARGV[1])
+    Tasks::DevOps::DownloadUri.update_from_file(file_path: args.path)
     puts 'Done'
+    exit
   end
 
+  # example: RAILS_ENV="development" bundle exec rake dev_ops:version_into_new_dataset -- --doi string --user_id 10 --tenant_id 20
   desc 'Takes a DOI, user_id (number), tenant_id and copies the latest submitted version into a new dataset for manual submission'
   task version_into_new_dataset: :environment do
-    # apparently I have to do this, at least in some cases because arguments to rake are ugly
-    # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
-
-    ARGV.each { |a| task(a.to_sym {}) } # see comment above
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
-      next
+      exit
     end
+    args = ArgsParser.parse(:doi, :user_id, :tenant_id)
 
-    unless ARGV.length == 4
+    if !args.doi || !args.user_id || !args.tenant_id
       puts 'takes DOI, user_id (number from db), tenant_id -- please quote the DOI and do only bare DOI like 10.18737/D7CC8B'
-      next
+      exit
     end
-
-    identif_str = ARGV[1].strip
-    user_id = ARGV[2].strip.to_i
-    tenant_id = ARGV[3].strip
 
     # get the identifier
-    dryad_id_obj = StashEngine::Identifier.where(identifier: identif_str).first
+    dryad_id_obj = StashEngine::Identifier.where(identifier: args.doi).first
+    unless dryad_id_obj
+      puts 'Invalid DOI'
+      exit
+    end
 
     # get the the last resource
     last_res = dryad_id_obj.resources.submitted_only.last
 
     # duplicate the resource
     new_res = last_res.amoeba_dup
-    new_res.tenant_id = tenant_id
+    new_res.tenant_id = args.tenant_id
     new_res.identifier_id = nil
 
     new_res.save
@@ -217,7 +216,7 @@ namespace :dev_ops do
     db_id_obj = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
 
     # cleanup some old garbage from merritt-sword and reset user
-    new_res.update(identifier_id: db_id_obj.id, user_id: user_id, current_editor_id: user_id, download_uri: nil, update_uri: nil)
+    new_res.update(identifier_id: db_id_obj.id, user_id: args.user_id, current_editor_id: args.user_id, download_uri: nil, update_uri: nil)
 
     # update the versions to be version 1, since otherwise it will be version number from old resource
     new_res.stash_version.update(version: 1, merritt_version: 1)
@@ -230,6 +229,7 @@ namespace :dev_ops do
 
     # delete any file records for deleted items
     new_res.data_files.deleted_from_version.each(&:destroy!)
+    exit
   end
 
   # We have a lot of junk identifiers without files that actually work since metadata was imported for testing without
@@ -268,23 +268,22 @@ namespace :dev_ops do
     end
   end
 
+  # example: RAILS_ENV="development" bundle exec rake dev_ops:destroy_dataset -- --doi 20.18737/D7CC8B
   desc 'Takes a DOI (bare, without doi on front) and destroys it'
   task destroy_dataset: :environment do
-    # apparently I have to do this, at least in some cases because arguments to rake are ugly
-    # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
+    args = ArgsParser.parse(:doi)
 
-    ARGV.each { |a| task(a.to_sym {}) } # see comment above
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
-      next
+      exit
     end
 
-    unless ARGV.length == 2
+    unless args.doi
       puts 'Takes a DOI (bare, without doi on front) and destroys it like 10.18737/D7CC8B'
-      next
+      exit
     end
 
-    identif_str = ARGV[1].strip
+    identif_str = args.doi
 
     puts "Are you sure you want to delete #{identif_str}?  (Type 'yes' to proceed)"
     response = $stdin.gets
@@ -329,63 +328,59 @@ namespace :dev_ops do
     identifier.destroy!
   end
 
+  # example: RAILS_ENV="development" bundle exec rake dev_ops:destroy_dataset -- --resource_id 5 --deposition_id 10 /
+  # --date 2024-06-06 --zenodo_copy_id 30
   desc 'Updates database for Merritt ark changes'
   task embargo_zenodo: :environment do
-    # apparently I have to do this, at least in some cases because arguments to rake are ugly
-    # https://www.seancdavis.com/blog/4-ways-to-pass-arguments-to-a-rake-task/
-
-    ARGV.each { |a| task(a.to_sym {}) } # see comment above
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
-      next
+      exit
     end
 
-    unless ARGV.length == 5
-      puts 'Add the following arguments after the rake command <resource_id> <deposition_id> <yyyy-mm-dd> <zenodo_copy_id>'
+    args = ArgsParser.parse(:resource_id, :deposition_id, :date, :zenodo_copy_id)
+    if !args.resource_id || !args.deposition_id || !args.date || !args.zenodo_copy_id
+      puts 'Add the following arguments after the rake command --resource_id 5 --deposition_id 10 --date 2024-06-06 --zenodo_copy_id 30'
       puts 'The deposition id can be found in the stash_engine_zenodo_copies table'
-      next
+      exit
     end
-
-    res_id = ARGV[1].to_s
-    dep_id = ARGV[2].to_s
-    emb_date = ARGV[3].to_s
-    zc_id = ARGV[4].to_s
 
     require 'stash/zenodo_replicate/deposit'
-    res = StashEngine::Resource.find(res_id)
+    res = StashEngine::Resource.find(args.resource_id)
 
-    dep = Stash::ZenodoReplicate::Deposit.new(resource: res, zc_id: zc_id)
+    dep = Stash::ZenodoReplicate::Deposit.new(resource: res, zc_id: args.zenodo_copy_id)
 
-    resp = dep.get_by_deposition(deposition_id: dep_id)
+    resp = dep.get_by_deposition(deposition_id: args.deposition_id)
 
     meta = resp['metadata']
 
     meta['access_right'] = 'embargoed'
-    meta['embargo_date'] = emb_date
+    meta['embargo_date'] = args.date
 
     dep.reopen_for_editing
 
     dep.update_metadata(manual_metadata: meta)
 
     dep.publish
+    exit
   end
 
   # NOTE: this only downloads the newly uploaded to S3 files since those are the only ones to exist there.
   # The rest that have been previously uploaded are in s#.
   #
   # This creates a directory in the Rails.root named after the resource id and downloads the files into that from S3
+  # # example: RAILS_ENV="development" bundle exec rake dev_ops:download_s3 -- --resource_id 5
   desc 'Download the files someone uploaded to S3, should take one argument which is the resource id'
   task download_s3: :environment do
-    ARGV.each { |a| task(a.to_sym {}) } # see comment above
-    resource_id = ARGV[1].to_i
+    args = ArgsParser.parse(:resource_id)
+    resource_id = args.resource_id
 
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
       next
     end
 
-    unless ARGV.length == 2
-      puts 'Add the following arguments after the rake command <resource_id>'
+    unless resource_id
+      puts 'Add the following arguments after the rake command --resource_id'
       next
     end
 

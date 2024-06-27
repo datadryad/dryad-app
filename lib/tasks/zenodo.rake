@@ -1,4 +1,4 @@
-require_relative './args_parser'
+require_relative 'args_parser'
 require_relative 'zenodo/stats'
 require_relative 'zenodo/metadata'
 require 'byebug'
@@ -76,8 +76,8 @@ namespace :zenodo do
       puts 'Exiting metadata update'
       exit
     end
-    options = ArgsParser.parse([:start_id])
-    start_num = options[:start_id].to_i
+    args = ArgsParser.parse(:start_id)
+    start_num = args.start_id.to_i
     identifiers = StashEngine::Identifier.joins(:zenodo_copies).distinct.order(:id).offset(start_num)
 
     puts "Updating zenodo metadata starting at record #{start_num}"
