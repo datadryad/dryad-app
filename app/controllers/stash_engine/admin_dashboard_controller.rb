@@ -102,7 +102,7 @@ module StashEngine
 
       @search_string = params[:q] || @saved_search&.search_string || session[:admin_search_string]
       @filters = params[:filters] || @saved_search&.filters || session[:admin_search_filters]
-      @filters = @filters.deep_transform_keys(&:to_sym)
+      @filters = @filters.deep_transform_keys(&:to_sym) unless @filters.blank?
       @fields = params[:fields] || @saved_search&.fields || session[:admin_search_fields]
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
