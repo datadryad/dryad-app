@@ -79,8 +79,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows the right navigation buttons at the bottom' do
-      expect(page). to have_content('Back to README')
-      expect(page). to have_content('Proceed to Review')
+      expect(page). to have_content('Back to Describe dataset')
+      expect(page). to have_content('Proceed to README')
     end
 
     it 'shows only files with status different of "deleted"' do
@@ -356,7 +356,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'disallows navigation away with pending uploads' do
-      click_on('Proceed to Review')
+      click_on('Proceed to README')
       sleep 0.5
       expect(page).to have_text('please click "Upload pending files"')
     end
