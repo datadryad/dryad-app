@@ -19,7 +19,7 @@ namespace :datacite_target do
   desc 'update Dryad DOI targets for a specific date range of publication'
   task update_by_publication: :environment do
     $stdout.sync = true
-    options = ArgsParser.parse(%i[start end])
+    options = Tasks::ArgsParser.parse(%i[start end])
 
     if !options[:start] || !options[:end]
       puts 'Takes 2 dates in format YYYY-MM-DD to create a range for DOI updates'
@@ -46,7 +46,7 @@ namespace :datacite_target do
   desc 'update Dryad DOI targets to reflect new environment'
   task update_dryad: :environment do
     $stdout.sync = true
-    options = ArgsParser.parse([:start])
+    options = Tasks::ArgsParser.parse([:start])
 
     start_from = 0
     start_from = options[:start].to_i if options[:start]

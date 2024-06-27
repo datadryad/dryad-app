@@ -167,7 +167,7 @@ namespace :dev_ops do
       puts 'RAILS_ENV must be explicitly set before running this script'
       exit
     end
-    args = ArgsParser.parse(:path)
+    args = Tasks::ArgsParser.parse(:path)
 
     unless args.path
       puts 'Please put the path to the file to process'
@@ -186,7 +186,7 @@ namespace :dev_ops do
       puts 'RAILS_ENV must be explicitly set before running this script'
       exit
     end
-    args = ArgsParser.parse(:doi, :user_id, :tenant_id)
+    args = Tasks::ArgsParser.parse(:doi, :user_id, :tenant_id)
 
     if !args.doi || !args.user_id || !args.tenant_id
       puts 'takes DOI, user_id (number from db), tenant_id -- please quote the DOI and do only bare DOI like 10.18737/D7CC8B'
@@ -271,7 +271,7 @@ namespace :dev_ops do
   # example: RAILS_ENV="development" bundle exec rake dev_ops:destroy_dataset -- --doi 20.18737/D7CC8B
   desc 'Takes a DOI (bare, without doi on front) and destroys it'
   task destroy_dataset: :environment do
-    args = ArgsParser.parse(:doi)
+    args = Tasks::ArgsParser.parse(:doi)
 
     unless ENV['RAILS_ENV']
       puts 'RAILS_ENV must be explicitly set before running this script'
@@ -337,7 +337,7 @@ namespace :dev_ops do
       exit
     end
 
-    args = ArgsParser.parse(:resource_id, :deposition_id, :date, :zenodo_copy_id)
+    args = Tasks::ArgsParser.parse(:resource_id, :deposition_id, :date, :zenodo_copy_id)
     if !args.resource_id || !args.deposition_id || !args.date || !args.zenodo_copy_id
       puts 'Add the following arguments after the rake command --resource_id 5 --deposition_id 10 --date 2024-06-06 --zenodo_copy_id 30'
       puts 'The deposition id can be found in the stash_engine_zenodo_copies table'
@@ -371,7 +371,7 @@ namespace :dev_ops do
   # # example: RAILS_ENV="development" bundle exec rake dev_ops:download_s3 -- --resource_id 5
   desc 'Download the files someone uploaded to S3, should take one argument which is the resource id'
   task download_s3: :environment do
-    args = ArgsParser.parse(:resource_id)
+    args = Tasks::ArgsParser.parse(:resource_id)
     resource_id = args.resource_id
 
     unless ENV['RAILS_ENV']
