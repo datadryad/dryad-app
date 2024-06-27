@@ -1,4 +1,5 @@
 <% @page_title = "Upload your files — publish and preserve your data" %>
+<div id="submission-wizard">
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
@@ -25,9 +26,8 @@
 }) %>
 
 <!-- display messages to let arias know what's happening -->
-<div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text">
+<div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text"></div>
 </div>
-
 <%= render partial: 'stash_engine/shared/dataset_steps_bottom_nav', locals: {page: 3} %>
 
 <script>
