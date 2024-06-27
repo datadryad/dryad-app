@@ -1,9 +1,17 @@
 // ##### Footer Component ##### //
 
 #maincontent {
-  min-height: 79vh;
-  @media (max-width: 1060px) { min-height: 75vh; } 
-  @media (max-width: 900px) { min-height: 70vh; } 
+  min-height: calc(100vh - 240px);
+  @media (max-width: 968px) { min-height: calc(100vh - 280px); } 
+  @media (max-width: 870px) { min-height: calc(100vh - 306px); } 
+  @media (max-width: 640px) { min-height: calc(100vh - 346px); } 
+
+  #submission-wizard {
+    min-height: calc(100vh - 320px);
+    @media (max-width: 968px) { min-height: calc(100vh - 360px); } 
+    @media (max-width: 870px) { min-height: calc(100vh - 386px); } 
+    @media (max-width: 640px) { min-height: calc(100vh - 426px); } 
+  }
 }
 
 .c-footer {
