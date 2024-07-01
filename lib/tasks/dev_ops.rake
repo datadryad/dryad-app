@@ -10,7 +10,7 @@ require 'fileutils'
 # rubocop:disable Metrics/BlockLength
 namespace :dev_ops do
 
-  # example: bundle exec rake dev_ops:processing RAILS_ENV=development
+  # example: RAILS_ENV=development bundle exec rake dev_ops:processing
   desc 'Shows processing submissions'
   task processing: :environment do
     unless ENV['RAILS_ENV']
@@ -328,7 +328,7 @@ namespace :dev_ops do
     identifier.destroy!
   end
 
-  # example: RAILS_ENV="development" bundle exec rake dev_ops:destroy_dataset -- --resource_id 5 --deposition_id 10 /
+  # example: RAILS_ENV="development" bundle exec rake dev_ops:embargo_zenodo -- --resource_id 5 --deposition_id 10 /
   # --date 2024-06-06 --zenodo_copy_id 30
   desc 'Updates database for Merritt ark changes'
   task embargo_zenodo: :environment do

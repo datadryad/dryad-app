@@ -13,7 +13,7 @@ RAILS_ENV=production bundle exec rails affiliation_import:update_ror_orgs
 
 Download the zip and extract the json file from https://doi.org/10.5281/zenodo.6347574:
 ```bash
-RAILS_ENV=<environment> bundle exec rails affiliation_import:populate_funder_ror_mapping <path/to/ror/dump.json>
+RAILS_ENV=<environment> bundle exec rails affiliation_import:populate_funder_ror_mapping -- --path <path/to/ror/dump.json>
 ```
 
 After the imports you can run the following query to see how items in the database map and that
