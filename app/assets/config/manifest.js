@@ -5,3 +5,4 @@
 //= link_directory ../stylesheets .css
 //= link_directory ../stylesheets/stash_engine .css
 //= link_directory ../stylesheets/stash_datacite .css
+//= link_directory ../stylesheets/geoblacklight .css
