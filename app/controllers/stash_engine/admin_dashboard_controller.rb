@@ -4,9 +4,8 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_admin
     before_action :setup_paging, only: :index
-    before_action :setup_limits, only: %i[index new_search save_search]
-    before_action :setup_search, only: %i[index new_search save_search]
-    before_action :collect_properties, only: %i[new_search save_search]
+    before_action :setup_limits, only: :index
+    before_action :setup_search, only: :index
     # before_action :load, only: %i[popup note_popup edit]
 
     def index
@@ -47,6 +46,7 @@ module StashEngine
     end
 
     def new_search
+      @properties = session[:search]
       respond_to(&:js)
     end
 
@@ -54,14 +54,14 @@ module StashEngine
       existing = authorize StashEngine::AdminSearch.find_by(id: params[:id])
       return unless existing
 
-      existing.update(properties: @properties)
+      existing.update!(properties: session[:search])
       respond_to(&:js)
     end
 
     private
 
     def collect_properties
-      @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
+      { fields: @fields, filters: @filters, search_string: @search_string }.to_json
     end
 
     def setup_paging
@@ -108,16 +108,18 @@ module StashEngine
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
       session[:admin_search_string] = params[:q] if params.key?(:q)
-      return unless @fields.blank?
-
-      @search_string = ''
-      @filters = {}
-      @fields = %w[doi authors metrics status submit_date publication_date]
-      @fields << 'journal' if @sponsor_limit.present?
-      @fields << 'identifiers' if @journal_limit.present?
-      @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
-      @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
-      @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
+      if @fields.blank?
+        @search_string = ''
+        @filters = {}
+        @fields = %w[doi authors metrics status submit_date publication_date]
+        @fields << 'journal' if @sponsor_limit.present?
+        @fields << 'identifiers' if @journal_limit.present?
+        @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
+        @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
+        @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
+      end
+      session[:search] = collect_properties
+      p session[:search]
     end
 
     # rubocop:disable Metrics/MethodLength
