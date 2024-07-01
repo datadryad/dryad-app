@@ -99,7 +99,7 @@ module StashEngine
     end
 
     def choose_sso
-      tenants = tenant_select
+      tenants = StashEngine::Tenant.partner_list.map { |t| { id: t.id, name: t.short_name } }
       # If no tenants are defined redirect to the no_parter path
       if tenants.empty?
         redirect_to :no_partner, method: :post

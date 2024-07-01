@@ -14,9 +14,8 @@
   <p id="label_tenant_lookup">Select your Dryad member institution:</p>
   <div class="t-login__choose">
     <div class="c-institution__container">
-      <%= form_with(url: sso_path, method: :post, html: {style: 'justify-content: flex-start;'}) do %>
+      <%= form_with(url: sso_path, method: :post, html: {style: 'justify-content: space-between;'}) do %>
         <%= react_component('components/TenantForm', {tenants: tenant_select}) %>
-        <%= submit_tag 'Login to verify', class: 't-login__buttonlink' %>
         <span style="flex-grow: 1"></span>
         <button class="o-button__plain-text7" id="keep_tenant" aria-expanded="true" aria-controls="edit_tenant-form"><i class="fas fa-times" aria-hidden="true"></i> Cancel</button>
       <% end %>
