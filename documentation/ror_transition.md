@@ -12,7 +12,7 @@ Truncate the table to remove all current entries.  The table is called `stash_en
 You can download the latest ROR exports at https://doi.org/10.5281/zenodo.6347574 .
 
 ```bash
-RAILS_ENV=development bundle exec rails affiliation_import:populate_funder_ror_mapping /path/to/file
+RAILS_ENV=development bundle exec rails affiliation_import:populate_funder_ror_mapping -- --path /path/to/file
 ```
 
 ## task to re-import latest ROR data

@@ -16,7 +16,7 @@ that DataCite does not have or that have a suspiciously small number of results.
 Use a command like this:
 
 ```shell script
-RAILS_ENV=production REPORT_DIR="/my/report/dir" bundle exec rails counter:datacite_pusher
+RAILS_ENV=production bundle exec rails counter:datacite_pusher -- --report_dir /my/report/dir
 ```
 
 ## Force upload of JSON reports (even if they're not suspicious)
@@ -27,7 +27,7 @@ appear suspicious at DataCite.
 Use a command like this:
 
 ```shell script
-RAILS_ENV=production REPORT_DIR="/my/report/dir" FORCE_SUBMISSION="2021-11" bundle exec rails counter:datacite_pusher
+RAILS_ENV=production bundle exec rails counter:datacite_pusher -- --report_dir /my/report/dir --force_submission 2021-11
 ```
 
 ## Get information about the reports at DataCite, but don't upload any reports
@@ -37,7 +37,7 @@ with the number of pages of results each of those months has. It's useful for tr
 down submission problems.
 
 ```shell script
-RAILS_ENV=production REPORT_DIR="/my/report/dir" REPORT_IDS=true bundle exec rails counter:datacite_pusher
+RAILS_ENV=production bundle exec rails counter:datacite_pusher -- --report_dir /my/report/dir --report_ids true
 ```
 
 At the end of the output it will print out report months, DataCite report identifiers and

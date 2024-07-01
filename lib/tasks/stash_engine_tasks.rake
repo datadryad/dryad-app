@@ -131,10 +131,12 @@ namespace :identifiers do
     end
   end
 
+  # example: RAILS_ENV=production bundle exec rails identifiers:remove_abandoned_datasets -- --dry_run true
   desc 'remove abandoned, unpublished datasets that will never be published'
   task remove_abandoned_datasets: :environment do
+    args = Tasks::ArgsParser.parse :dry_run
     # This task cleans up datasets that may have had some activity, but they have no real chance of being published.
-    dry_run = ENV['DRY_RUN'] == 'true'
+    dry_run = args.dry_run == 'true'
     if dry_run
       puts ' ##### remove_abandoned_datasets DRY RUN -- not actually running delete commands'
     else
@@ -191,13 +193,17 @@ namespace :identifiers do
         end
       end
     end
+    exit
   end
 
+  # example: RAILS_ENV=production bundle exec rails identifiers:remove_old_versions -- --dry_run true
   desc 'clean up in_progress versions and temporary files that are disconnected from datasets'
   task remove_old_versions: :environment do
     # This task cleans up garbage versions of datasets, which may have been abandoned, but they may also have been accidentally created
     # and not properly connected to an Identifier object
-    dry_run = ENV['DRY_RUN'] == 'true'
+    args = Tasks::ArgsParser.parse :dry_run
+    # This task cleans up datasets that may have had some activity, but they have no real chance of being published.
+    dry_run = args.dry_run == 'true'
     if dry_run
       puts ' ##### remove_old_versions DRY RUN -- not actually running delete commands'
     else
@@ -248,6 +254,7 @@ namespace :identifiers do
         Stash::Aws::S3.new.delete_dir(s3_key: id_prefix) unless dry_run
       end
     end
+    exit
   end
 
   # This task is deprecated, since we no longer want to automatically expire the review date,
@@ -690,16 +697,18 @@ namespace :identifiers do
     end
   end
 
+  # example: RAILS_ENV=production bundle exec rails identifiers:shopping_cart_report -- --year_month 2024-05
   desc 'Generate a report of items that have been published in a given month'
   task shopping_cart_report: :environment do
-    # Get the year-month specified in YEAR_MONTH environment variable.
+    args = Tasks::ArgsParser.parse(:year_month)
+    # Get the year-month specified in --year_month argument.
     # If none, default to the previously completed month.
-    if ENV['YEAR_MONTH'].blank?
-      p 'No month specified, assuming last month.'
-      year_month = 1.month.ago.strftime('%Y-%m')
-    else
-      year_month = ENV['YEAR_MONTH']
-    end
+    year_month = if args.year_month.blank?
+                   p 'No month specified, assuming last month.'
+                   1.month.ago.strftime('%Y-%m')
+                 else
+                   args.year_month
+                 end
 
     p "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
@@ -729,16 +738,18 @@ namespace :identifiers do
     exit
   end
 
+  # example: RAILS_ENV=production bundle exec rails identifiers:deferred_journal_reports -- --sc_report /path/to/file
   desc 'Generate reports of items that should be billed for deferred journals'
   task deferred_journal_reports: :environment do
-    # Get the input shopping cart report in SC_REPORT environment variable.
-    if ENV['SC_REPORT'].blank?
-      puts 'Usage: deferred_journal_reports SC_REPORT=<shopping_cart_report_filename>'
+    args = Tasks::ArgsParser.parse(:sc_report)
+    # Get the input shopping cart report in --sc_report argument.
+    if args.sc_report.blank?
+      puts 'Usage: rails deferred_journal_reports -- --sc_report <shopping_cart_report_filename>'
       exit
-    else
-      sc_report_file = ENV['SC_REPORT']
-      puts "Producing deferred journal reports for #{sc_report_file}"
     end
+
+    sc_report_file = args.sc_report
+    puts "Producing deferred journal reports for #{sc_report_file}"
 
     sc_report = CSV.parse(File.read(sc_report_file), headers: true)
 
@@ -779,17 +790,19 @@ namespace :identifiers do
     exit
   end
 
+  # example: RAILS_ENV=production bundle exec rails identifiers:tiered_journal_reports -- --base_report /path/to/base_report --sc_report /path/to/file
   desc 'Generate reports of items that should be billed for tiered journals'
   task tiered_journal_reports: :environment do
-    # Get the input shopping cart report in BASE_REPORT and SC_REPORT environment variables.
-    if ENV['SC_REPORT'].blank? || ENV['BASE_REPORT'].blank?
-      puts 'Usage: tiered_journal_reports BASE_REPORT=<shopping_cart_base_filename> SC_REPORT=<shopping_cart_report_filename>'
+    args = Tasks::ArgsParser.parse(:sc_report, :base_report)
+    # Get the input shopping cart report in --base_report and --sc_report arguments.
+    if args.sc_report.blank? || args.base_report.blank?
+      puts 'Usage: tiered_journal_reports -- --base_report <shopping_cart_base_filename> --sc_report <shopping_cart_report_filename>'
       exit
-    else
-      base_report_file = ENV.fetch('BASE_REPORT', nil)
-      sc_report_file = ENV.fetch('SC_REPORT', nil)
-      puts "Producing tiered journal reports for #{sc_report_file}, using base in #{base_report_file}"
     end
+
+    base_report_file = args.base_report
+    sc_report_file = args.sc_report
+    puts "Producing tiered journal reports for #{sc_report_file}, using base in #{base_report_file}"
 
     base_values = tiered_base_values(base_report_file)
     puts "Calculated base values #{base_values}"
@@ -975,17 +988,19 @@ namespace :identifiers do
   end
   # rubocop:enable Metrics/MethodLength
 
+  # example: RAILS_ENV=production bundle exec rails identifiers:tiered_tenant_reports -- --base_report /path/to/base_report --sc_report /path/to/file
   desc 'Generate reports of items that should be billed for tiered tenant institutions'
   task tiered_tenant_reports: :environment do
-    # Get the input shopping cart report in BASE_REPORT and SC_REPORT environment variables.
-    if ENV['SC_REPORT'].blank? || ENV['BASE_REPORT'].blank?
-      puts 'Usage: tiered_tenant_reports BASE_REPORT=<shopping_cart_base_filename> SC_REPORT=<shopping_cart_report_filename>'
+    args = Tasks::ArgsParser.parse(:sc_report, :base_report)
+    # Get the input shopping cart report in --base_report and --sc_report arguments.
+    if args.sc_report.blank? || args.base_report.blank?
+      puts 'Usage: tiered_tenant_reports -- --base_report <shopping_cart_base_filename> --sc_report <shopping_cart_report_filename>'
       exit
-    else
-      base_report_file = ENV.fetch('BASE_REPORT', nil)
-      sc_report_file = ENV.fetch('SC_REPORT', nil)
-      puts "Producing tiered tenant reports for #{sc_report_file}, using base in #{base_report_file}"
     end
+
+    base_report_file = args.base_report
+    sc_report_file = args.sc_report
+    puts "Producing tiered tenant reports for #{sc_report_file}, using base in #{base_report_file}"
 
     base_values = tiered_tenant_base_values(base_report_file)
     puts "Calculated base values #{base_values}"
@@ -1061,16 +1076,18 @@ namespace :identifiers do
     base_values
   end
 
+  # example: RAILS_ENV=production bundle exec rails identifiers:geographic_authors_report -- --year_month 2024-05
   desc 'Generate a report of Dryad authors and their countries'
   task geographic_authors_report: :environment do
-    # Get the year-month specified in YEAR_MONTH environment variable.
+    args = Tasks::ArgsParser.parse(:year_month)
+    # Get the year-month specified in --year_month argument.
     # If none, default to the previously completed month.
-    if ENV['YEAR_MONTH'].blank?
-      p 'No month specified, assuming last month.'
-      year_month = 1.month.ago.strftime('%Y-%m')
-    else
-      year_month = ENV['YEAR_MONTH']
-    end
+    year_month = if args.year_month.blank?
+                   p 'No month specified, assuming last month.'
+                   1.month.ago.strftime('%Y-%m')
+                 else
+                   args.year_month
+                 end
 
     p "Writing Geographic Authors Report for #{year_month} to file..."
     CSV.open('geographic_authors_report.csv', 'w') do |csv|
@@ -1095,16 +1112,19 @@ namespace :identifiers do
     exit
   end
 
+  # example: RAILS_ENV=production bundle exec rails identifiers:dataset_info_report -- --year_month 2024-05
   desc 'Generate a summary report of all items in Dryad'
   task dataset_info_report: :environment do
-    # Get the year-month specified in YEAR_MONTH environment variable.
+    args = Tasks::ArgsParser.parse(:year_month)
+    # Get the year-month specified in --year_month argument.
     # If none, default to the previously completed month.
-    if ENV['YEAR_MONTH'].blank?
-      p 'No month specified, assuming all months.'
-      year_month = nil
+
+    if args.year_month.blank?
+      p 'No month specified, assuming last month.'
+      year_month = 1.month.ago.strftime('%Y-%m')
       filename = "dataset_info_report-#{Date.today.strftime('%Y-%m-%d')}.csv"
     else
-      year_month = ENV['YEAR_MONTH']
+      year_month = args.year_month
       filename = "dataset_info_report-#{year_month}.csv"
     end
 
@@ -1394,13 +1414,14 @@ namespace :journals do
     nil
   end
 
+  # example: RAILS_ENV=production bundle exec rails journals:check_salesforce_sync -- --dry_run true
   desc 'Compare journal differences between Dryad and Salesforce'
   task check_salesforce_sync: :environment do
-
-    dry_run = if ENV['DRY_RUN'].blank?
+    args = Tasks::ArgsParser.parse(:dry_run)
+    dry_run = if args.dry_run.blank?
                 true
               else
-                ENV['DRY_RUN'] != 'false'
+                args.dry_run != 'false'
               end
 
     puts 'Processing with DRY_RUN' if dry_run
@@ -1432,7 +1453,7 @@ namespace :journals do
       sf_parent = Stash::Salesforce.find(obj_type: 'Account', obj_id: sf_parent_id)
       puts "SPONSOR MISMATCH for #{j.single_issn} -- #{j.sponsor&.name} -- #{sf_parent['Name']}" if j.sponsor&.name != sf_parent['Name']
     end
-    nil
+    exit
   end
 end
 

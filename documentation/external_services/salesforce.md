@@ -80,7 +80,7 @@ journal settings:
 rails journals:check_salesforce_sync
 ```
 
-To clean up metadata in Salesforce associated with journals, add `DRY_RUN=false`
+To clean up metadata in Salesforce associated with journals, add ` -- --dry_run false`
 to the end of the above command.
 
 
