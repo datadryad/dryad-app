@@ -319,3 +319,12 @@ sudo systemctl enable delayed_job
 sudo systemctl status delayed_job
 sudo systemctl status status_updater
 ```
+
+Troubleshooting
+================
+
+Load balancer intermittently reports server as unhealthy
+- Verify that the server can reach SOLR, using `curl` with the SOLR server's base address from
+  `config/blacklight.yml` -- Note that receiving an error is fine, since this
+  is only the base URL. If the call hangs, there is likely a problem with the
+  SOLR server's security group not letting the Rails server connect.
