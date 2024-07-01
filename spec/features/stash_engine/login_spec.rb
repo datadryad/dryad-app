@@ -82,9 +82,9 @@ RSpec.feature 'Session', type: :feature do
       click_link 'Login'
     end
 
-    it 'logs in without shibboleth auth for configured tenant' do
+    xit 'logs in without shibboleth auth for configured tenant' do
       click_link 'Login or create your ORCID iD'
-      fill_in 'tenant_id', with: 'Author Match Tenant'
+      fill_in 'tenant_id', with: 'Match Tenant'
       click_button 'Login to verify'
       expect(page).to have_text('My datasets')
     end

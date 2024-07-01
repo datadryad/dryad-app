@@ -118,8 +118,12 @@
 
 <% end %>
 
-  <h2 class="o-heading__page-span">Agree to terms</h2>
-    <%= render partial: "stash_datacite/licenses/review" %>
+<h2 class="o-heading__page-span">Agree to terms</h2>
+<%= render partial: "stash_datacite/licenses/review" %>
+<% unless @resource&.resource_type&.resource_type == 'collection' %>
+  <%= render partial: "payment" %>
+<% end %>
+<br>
 
 <div class="o-dataset-nav" style="align-items: flex-end;">
   <% if @resource&.resource_type&.resource_type == 'collection' %>
@@ -163,6 +167,31 @@
 </div>
 
 <script type="text/javascript">
+  $(document).ready(function(){
+    $('.js-agrees').bind( "click", function() {
+      allChecked = true;
+      //check if each checkbox is checked
+      $('.js-agrees:enabled').each(function( index ) {
+        allChecked = allChecked && $( this ).is(':checked');
+        // console.log( index + ": " + $( this ).text() );
+      });
+      let hasErrors = ($('div.c-error-box').length > 0) && ($('div.c-error-box')[0].innerHTML.length > 0);
+      if (allChecked && !hasErrors) {
+          $('.js-submission').attr('disabled', false); //enable input
+      } else {
+          $('.js-submission').attr('disabled', true); //disable input
+      }
+    });
+  });
+
+  $('#zenodo_license').on('change', function(e){
+    $('#software_license').val($("#zenodo_license option:selected").val());
+  });
+
+  <% if current_user && (current_user.id != @resource.user_id) %>
+  $('#agree_to_license, #agree_to_tos, #agree_to_dda').prop('disabled', true);
+  <% end %>
+
   document.querySelectorAll('.t-landing__text-wall a').forEach((link) => {
     const span = document.createElement('span')
     span.classList.add('screen-reader-only')

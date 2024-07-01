@@ -1,10 +1,9 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import GenericNameIdAutocomplete from './MetadataEntry/GenericNameIdAutocomplete';
 
 // the autocomplete name, autocomplete id (like ROR), get/set autocomplete Text, get/set autocomplete ID
 export default function TenantForm({tenants}) {
-  const formRef = useRef(0);
   // in order to use this component, we need to track the state of the autocomplete text and the autocomplete id
   // https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ is a better functional example than the react docs.
   // also tracking "autoBlurred" since we need to know when things exit to trigger form resubmission or sending to server.
@@ -24,7 +23,7 @@ export default function TenantForm({tenants}) {
   });
 
   return (
-    <div ref={formRef}>
+    <>
       <GenericNameIdAutocomplete
         acText={acText || ''}
         setAcText={setAcText}
@@ -37,7 +36,8 @@ export default function TenantForm({tenants}) {
         setAutoBlurred={() => false}
       />
       <input type="hidden" name="tenant_id" value={acID} />
-    </div>
+      <button type="submit" className="t-login__buttonlink" disabled={!acID}>Login to verify</button>
+    </>
   );
 }
 

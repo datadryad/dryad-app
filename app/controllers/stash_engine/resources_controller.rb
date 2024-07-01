@@ -114,8 +114,7 @@ module StashEngine
 
     # Review responds as a get request to review the resource before saving
     def review
-      # record a payment exemption if there is one, before submission
-      @resource&.identifier&.record_payment
+      resource.update(tenant_id: resource.user.tenant_id) unless resource.tenant_id == resource.user.tenant_id
     end
 
     # Submission of the resource to the repository

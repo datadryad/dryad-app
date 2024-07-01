@@ -36,12 +36,19 @@ module StashDatacite
             @resource.peer_review_end_date = nil
           end
           @resource.save!
+          @resource.reload
+          if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown'
+            session[:origin] = 'resource'
+            session[:redirect_resource_id] = @resource.id
+            @aff_tenant = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id).partner_list.first
+          end
         end
       end
     end
 
     def submission
       @resource.current_state = 'processing'
+      @resource.identifier.record_payment
       @resource.check_add_readme_file
       @resource.check_add_cedar_json
 

@@ -17,6 +17,10 @@ module StashEngine
       policy_scope(StashEngine::Tenant).map { |t| [t.short_name, t.id] }
     end
 
+    def tenant_select
+      StashEngine::Tenant.partner_list.map { |t| { id: t.id, name: t.short_name } }
+    end
+
     # no decimal removes the after decimal bits
     def filesize(bytes, decimal_points = 2)
       return '' if bytes.nil?
