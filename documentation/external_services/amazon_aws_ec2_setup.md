@@ -83,16 +83,6 @@ exit
 nvm use 20.13.1 >/dev/null
 export RAILS_ENV=v3_stage 
 ```
-- compile components
-```
-bin/webpack
-bundle exec rails webpacker:compile
-```
-- run rails
-```
-cd ~/dryad-app
-rails s
-```
 
 Database setup
 ===============
@@ -131,6 +121,8 @@ mysql_stg.sh < myfile.sql
 
 SOLR setup
 ============
+
+SOLR should be installed on a separate machine from the Rails server!
 
 All of these tools are outdated. To make SOLR work with Dryad's old
 GeoBlacklight, we need to use SOLR 7 or before. SOLR 7 requires very old Java,
@@ -216,12 +208,12 @@ sudo touch /var/www/html/index.html
 sudo chmod a+w /var/www/html/index.html
 echo "<h1>Welcome to MACHINE_NAME</h1>" > /var/www/html/index.html
 # Tell SELinux that Apache is allowed to do stuff!
-setsebool -P httpd_read_user_content 1
-setsebool -P httpd_can_network_connect 1
+sudo setsebool -P httpd_read_user_content 1
+sudo setsebool -P httpd_can_network_connect 1
 # UPDATE the settings in datadryad.org.conf to reflect the correct server names
 sudo systemctl restart httpd
-# check that the homepage renders at the Apache port
-curl http://localhost:80/stash
+# check that the dummy homepage renders at the Apache port
+curl http://localhost:80
 ```
 
 To troubleshoot Apache:
