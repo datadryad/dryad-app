@@ -1,10 +1,10 @@
 <% @datasets.each_with_index do |dataset, i| %>
   <% resource = dataset&.latest_resource %>
-  <% display_r = @display_resources[i]%>
+  <% title = resource.title.blank? ? '[No title supplied]' : resource.title %>
   <% delete_confirm = 'Are you sure you want to remove this dataset'
     if resource&.stash_version.version > 1
       delete_confirm << ' version?'
-      if dataset.date_last_published
+      if dataset.pub_state == 'published'
         delete_confirm << ' The published version will still be available.'
       end
     else
@@ -35,12 +35,12 @@
     <div>
       <p class="c-user-dataset-title">
         <% if resource.submitted? # merritt state %>
-          <%= link_to display_r.title, stash_url_helpers.show_path(display_r.external_identifier) %>
+          <%= link_to title, stash_url_helpers.show_path(dataset.identifier_str) %>
         <% else %>
-          <%= display_r.title %>
+          <%= title %>
         <% end %>
       </p>
-      <p class="c-user-dataset-details"><span>DOI: <%= dataset.identifier %></span><span>Version <%= resource&.stash_version.version%></span><span><%= time_ago_in_words(resource.updated_at, include_seconds: true) %> since last update</span><% if dataset.date_last_published %><span>Published: <%= formatted_date(dataset.date_last_published) %></span><% if dataset.sort_order != 3 %><span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span><% end %><% end %></p>
+      <p class="c-user-dataset-details"><span>DOI: <%= dataset.identifier %></span><span>Version <%= resource&.stash_version.version%></span><span><%= time_ago_in_words(resource.updated_at, include_seconds: true) %> since last update</span><% if dataset.pub_state == 'published' %><span>Published: <%= formatted_date(dataset.date_last_published) %></span><% if dataset.sort_order != 3 %><span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span><% end %><% end %></p>
     </div>
       <div>
       <div class="c-user-datasets-status">
@@ -58,15 +58,15 @@
         "><%= resource&.last_curation_activity&.readable_status %></span>
         <div class="c-user-datasets-actions">
           <% if resource&.last_curation_activity.status == 'in_progress' %>
-            <% if resource&.dataset_in_progress_editor&.id == current_user&.id %>
+            <% if resource.current_editor_id == current_user&.id %>
               <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
                 Resume <i class="fa fa-pencil" aria-hidden="true"></i>
               <% end %>
               <%= button_to stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: resource&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
                 <%= resource&.stash_version.version > 1 ? 'Revert' : 'Delete' %> <i class="fa fa-trash-can" aria-hidden="true"></i>
               <% end %>
-            <% elsif resource&.dataset_in_progress_editor.present? %>
-              Dataset being edited by <%= resource.dataset_in_progress_editor.name %>
+            <% elsif resource.current_editor_id.present? %>
+              Dataset being edited by <%= resource.editor.name %>
             <% end %>
           <% end %>
           <% if dataset.sort_order == 1 %>
@@ -91,10 +91,10 @@
 <script type="text/javascript">
   (function () {
     window.onpageshow = function(event) {
-        if (event.persisted) {
-            window.location.reload();
-          }
-      };
+      if (event.persisted) {
+          window.location.reload();
+        }
+    };
   })();
   function setLoading(e) {
     var icon = e.target.lastElementChild

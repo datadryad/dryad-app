@@ -24,7 +24,7 @@ module StashEngine
       respond_to do |format|
         format.js do
           @datasets = policy_scope(Identifier, policy_scope_class: IdentifierPolicy::DashboardScope).page(@page).per(@page_size)
-          @display_resources = @datasets.map { |dataset| StashDatacite::ResourcesController::DatasetPresenter.new(dataset&.latest_resource) }
+          @datasets = @datasets.preload(latest_resource: %i[last_curation_activity stash_version current_resource_state])
         end
       end
     end
