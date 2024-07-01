@@ -23,15 +23,15 @@
 #
 module StashEngine
   class AdminSearch < SavedSearch
-    before_create :only_one_default
-    before_update :only_one_default
+    after_create :only_one_default, if: :saved_change_to_default?
+    after_update :only_one_default, if: :saved_change_to_default?
 
     def fields
       properties['fields']
     end
 
     def filters
-      properties['filters']
+      properties['filters'].deep_transform_keys(&:to_sym)
     end
 
     def search_string
@@ -43,7 +43,7 @@ module StashEngine
     def only_one_default
       return unless default?
 
-      StashEngine::User.find(user_id).admin_searches.update_all(default: false)
+      StashEngine::User.find(user_id).admin_searches.where.not(id: id).update_all(default: false)
     end
   end
 end
