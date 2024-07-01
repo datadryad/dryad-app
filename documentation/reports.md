@@ -83,7 +83,7 @@ Run the tiered journal payment reports with a command like:
 # This command must be run in a personal account with the journal-payments checked out
 cp ~/journal-payments/shoppingcart/shopping_cart_report_2023* /tmp
 # This command must be run on the production server, to access the production database
-RAILS_ENV=production bundle exec rails identifiers:tiered_journal_reports SC_REPORT=/tmp/shopping_cart_report_2023-Q1.csv BASE_REPORT=/tmp/shopping_cart_report_2023.csv
+RAILS_ENV=v3_production bundle exec rails identifiers:tiered_journal_reports SC_REPORT=/tmp/shopping_cart_report_2023-Q1.csv BASE_REPORT=/tmp/shopping_cart_report_2023.csv
 ```
 
 For tenant institutions that have a tiered payment plan, a similar secondary task
@@ -96,7 +96,7 @@ Run the tiered institution payment reports with a command like:
 # This command must be run in a personal account with the journal-payments checked out
 cp ~/journal-payments/shoppingcart/shopping_cart_report_2023* /tmp
 # This command must be run on the production server, to access the production database
-RAILS_ENV=production bundle exec rails identifiers:tiered_tenant_reports SC_REPORT=/tmp/shopping_cart_report_2023-Q1.csv BASE_REPORT=/tmp/shopping_cart_report_2023.csv
+RAILS_ENV=v3_production bundle exec rails identifiers:tiered_tenant_reports SC_REPORT=/tmp/shopping_cart_report_2023-Q1.csv BASE_REPORT=/tmp/shopping_cart_report_2023.csv
 ```
 
 Dataset info report
@@ -108,7 +108,7 @@ list of Dryad's contents to external users.
 
 Run it with a command like:
 ```
-RAILS_ENV=production bundle exec rails identifiers:dataset_info_report
+RAILS_ENV=v3_production bundle exec rails identifiers:dataset_info_report
 ```
 
 Fields in the dataset info report
@@ -129,7 +129,7 @@ with their institutions and countries, in geographic_authors_report.csv.
 
 Run it with a command like:
 ```
-RAILS_ENV=production bundle exec rails identifiers:geographic_authors_report
+RAILS_ENV=v3_production bundle exec rails identifiers:geographic_authors_report
 ```
 
 
@@ -205,7 +205,7 @@ This also gives institutions when people didn't autocomplete their ROR correctly
 Run like:
 
 ```
-bundle exec rails reports:from_text_institution name="Planck" RAILS_ENV=production
+bundle exec rails reports:from_text_institution name="Planck" RAILS_ENV=v3_production
 ```
 
 Put the string you want to detect in the `name` variable.  It shows the matches in `author_affiliations`
