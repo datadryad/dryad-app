@@ -1,4 +1,5 @@
- <% @page_title = "Prepare your README – publish and preserve your data" %>
+<% @page_title = "Prepare your README – publish and preserve your data" %>
+<div id="submission-wizard">
 <%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
 
@@ -20,12 +21,13 @@
 <% end %>
 
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
-<%= react_component('containers/ReadMe', {
+<%= react_component('containers/ReadMeWizard', {
   dcsDescription: @metadata_entry.technical_info,
   updatePath: descriptions_update_path,
   fileContent: @file_content,
+  fileList: @resource.data_files.map(&:upload_file_name),
   title: @resource.title || 'Title of Dataset',
   doi: @resource.identifier_uri
 }) %>
-
+</div>
 <%= render partial: 'stash_engine/shared/dataset_steps_bottom_nav', locals: {page: 2} %>

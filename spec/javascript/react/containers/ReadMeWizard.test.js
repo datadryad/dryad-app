@@ -9,7 +9,7 @@ import {faker} from '@faker-js/faker';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import ReadMe from '../../../../app/javascript/react/containers/ReadMe';
+import ReadMe from '../../../../app/javascript/react/containers/ReadMeWizard';
 
 jest.mock('axios');
 
