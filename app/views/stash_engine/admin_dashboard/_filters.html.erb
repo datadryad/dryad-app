@@ -3,30 +3,34 @@ def selecter(id, options)
   h = { member: 'Dryad member', sponsor: 'Journal sponsor' }
   label = h[id.to_sym] || id.capitalize
 
-  '<div class="o-admin-form-pair">' +
   "<label for='filter-#{id}'>#{label}:</label>" +
-  select_tag("filters[#{id}]", options_for_select(options, @filters.dig(id.to_sym)), id: "filter-#{id}", class: 'c-input__select') +
-  '</div>'
+  select_tag("filters[#{id}]", options_for_select(options, @filters.dig(id.to_sym)), id: "filter-#{id}", class: 'c-input__select')
 end
 %>
 <div class="admin-dashboard-buttons">
   <b id="edit_filters" role="heading" aria-level="3">Search filters</b>
 </div>
 <fieldset id="edit_filters-form" aria-labelledby="edit_filters">
-  <%= selecter('member', [['', '']] + @tenant_limit.map { |t| [t.short_name, t.id] }).html_safe %>
-  <%= selecter('status', [['', '']] + status_select).html_safe %>
+  <% if @tenant_limit.length > 1 %>
+    <div class="o-admin-form-pair half-width">
+      <%= selecter('member', [['', '']] + @tenant_limit.map { |t| [t.short_name, t.id] }).html_safe %>
+    </div>
+  <% end %>
+  <div class="o-admin-form-pair"><%= selecter('status', [['', '']] + status_select).html_safe %></div>
   <% if current_user.min_curator? %>
-    <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
+    <div class="o-admin-form-pair">
+      <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
+    </div>
   <% end %>
   <% if @journal_limit.present? %>
     <% if @journal_limit.length > 1 %>
-      <div class="o-admin-form-pair">
+      <div class="o-admin-form-pair half-width">
         <label for='filter-journal'>Journal:</label>
         <%= select_tag("filters[journal][value]", options_for_select([['', '']] + @journal_limit.map { |j| [j.title, j.id] }, @filters.dig(:journal, :value)), id: "filter-journal", class: 'c-input__select') %>
       </div>
     <% end %>
   <% else %>
-    <div class="o-admin-form-pair" style="flex-basis: 500px">
+    <div class="o-admin-form-pair half-width">
       <%= render partial: 'stash_engine/shared/search_select', locals: {
         id: 'journal',
         label: 'Journal',
@@ -38,14 +42,16 @@ end
       } %>
     </div>
   <% end %>
-  <% unless @journal_limit.present? && @sponsor_limit.empty? %>
-    <% if @journal_limit.length > 1 %>
-      <%= selecter('sponsor', [['', '']] + @sponsor_limit.map { |item| [item.name, item.id] }).html_safe %>    
-    <% else %>
-      <%= selecter('sponsor', [['', '']] + sponsor_select).html_safe %>
-    <% end %>
+  <% unless @journal_limit.present? && @sponsor_limit.length < 2 %>
+    <div class="o-admin-form-pair half-width">
+      <% if @sponsor_limit.length > 1 %>
+        <%= selecter('sponsor', [['', '']] + @sponsor_limit.map { |item| [item.name, item.id] }).html_safe %>    
+      <% else %>
+        <%= selecter('sponsor', [['', '']] + sponsor_select).html_safe %>
+      <% end %>
+    </div>
   <% end %>
-  <div class="o-admin-form-pair" style="flex-basis: 500px">
+  <div class="o-admin-form-pair half-width">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
       id: 'funder',
       label: 'Funder',
@@ -56,7 +62,7 @@ end
       selected: @filters.dig(:funder)
     } %>
   </div>
-  <div class="o-admin-form-pair" style="flex-basis: 500px">
+  <div class="o-admin-form-pair half-width">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
       id: 'affiliation',
       label: 'Affiliation',

@@ -16,5 +16,9 @@ bundle exec rails journal_email:clean_old_manuscripts RAILS_ENV=$1 >> /home/ec2-
 #bundle exec rails compressed:update_contents RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/compressed_contents.log 2>&1
 bundle exec rails identifiers:datasets_without_primary_articles_report  RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/datasets_without_primary_articles_report.log 2>&1
 
+# Clean outdated content from the database and temporary S3 store
+bundle exec rails identifiers:remove_old_versions DRY_RUN=false >> /home/ec2-user/deploy/shared/log/remove_old_versions.log 2>&1
+bundle exec rails identifiers:remove_abandoned_datasets DRY_RUN=false RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/abandoned_datasets.log 2>&1
+
 # Download & validate file digests
 bundle exec rails checksums:validate_files >> /home/ec2-user/deploy/shared/log/validate_files.log 2>&1

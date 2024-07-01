@@ -10,7 +10,11 @@ module StashEngine
     # before_action :load, only: %i[popup note_popup edit]
 
     def index
-      @datasets = authorize StashEngine::Resource.latest_per_dataset.select('distinct stash_engine_resources.*')
+      @datasets = authorize StashEngine::Resource.latest_per_dataset.select(
+        'distinct stash_engine_resources.id, stash_engine_resources.title, stash_engine_resources.total_file_size,
+        stash_engine_resources.user_id, stash_engine_resources.tenant_id, stash_engine_resources.identifier_id,
+        stash_engine_resources.last_curation_activity_id, stash_engine_resources.publication_date'
+      )
 
       add_fields
       add_filters
@@ -56,10 +60,14 @@ module StashEngine
 
     private
 
+    def collect_properties
+      @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
+    end
+
     def setup_paging
       if request.format.csv?
         @page = 1
-        @page_size = 1_000_000
+        @page_size = 2_000
         return
       end
       @page = params[:page] || 1
@@ -94,6 +102,7 @@ module StashEngine
 
       @search_string = params[:q] || @saved_search&.search_string || session[:admin_search_string]
       @filters = params[:filters] || @saved_search&.filters || session[:admin_search_filters]
+      @filters = @filters.deep_transform_keys(&:to_sym) unless @filters.blank?
       @fields = params[:fields] || @saved_search&.fields || session[:admin_search_fields]
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
@@ -110,11 +119,6 @@ module StashEngine
       @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
       @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
     end
-    # rubocop:enable Metrics/AbcSize
-
-    def collect_properties
-      @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
-    end
 
     # rubocop:disable Metrics/MethodLength
     def add_fields
@@ -122,7 +126,9 @@ module StashEngine
         @datasets = @datasets.joins('left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id')
           .select('stats.unique_investigation_count, stats.citation_count, stats.unique_request_count')
       end
-      @datasets = @datasets.joins(:last_curation_activity) if @filters[:status].present? || @sort == 'status'
+      if @filters[:status].present? || @sort == 'status' || @filters[:updated_at]&.values&.any?(&:present?)
+        @datasets = @datasets.joins(:last_curation_activity)
+      end
       if @filters[:submit_date]&.values&.any?(&:present?)
         @datasets = @datasets.joins(:process_date)
       elsif @sort == 'submitted'
@@ -148,10 +154,12 @@ module StashEngine
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_counter_stats.unique_investigation_count') if @sort == 'unique_investigation_count'
       @datasets = @datasets.select(
-        "MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') as relevance"
+        "MATCH(stash_engine_identifiers.search_words) AGAINST('#{
+          %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
+        }') as relevance"
       ) if @search_string.present?
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
 
     def add_filters
       tenant_filter
@@ -166,10 +174,14 @@ module StashEngine
       @datasets = @datasets.where(
         'curator.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
       ) if @filters[:curator].present? && current_user.min_curator?
-      @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{@search_string}') > 0") unless @search_string.blank?
+      unless @search_string.blank?
+        @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{
+          %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
+        }') > 0")
+      end
       @datasets = @datasets.left_outer_joins(:related_identifiers)
         .joins("left outer join stash_engine_internal_data msnum on
-          msnum.idenmsnum.identifier_id = stash_engine_identifiers.id and msnum.data_type = 'manuscriptNumber'")
+          msnum.identifier_id = stash_engine_identifiers.id and msnum.data_type = 'manuscriptNumber'")
         .where(
           'dcs_related_identifiers.related_identifier like ? or msnum.value like ?',
           "%#{@filters[:identifiers]}%", "%#{@filters[:identifiers]}%"
@@ -234,8 +246,8 @@ module StashEngine
 
       funder_ror = @role_object&.ror_id || @filters.dig(:funder, :value)
       @datasets = @datasets.joins(
-        "dcs_contributors on stash_engine_resources.id = dcs_contributors.resource_id
-        and contributor_type = 'funder' and dcs_contributors.name_identifier_id = #{funder_ror}"
+        "inner join dcs_contributors on stash_engine_resources.id = dcs_contributors.resource_id
+        and dcs_contributors.contributor_type = 'funder' and dcs_contributors.name_identifier_id = '#{funder_ror}'"
       )
     end
 
@@ -243,8 +255,9 @@ module StashEngine
       from = date_hash[:start_date]
       to = date_hash[:end_date]
       return "< '#{to}'" if from.blank?
+      return "> '#{from}'" if to.blank?
 
-      "BETWEEN '#{from}' AND #{to.blank? ? 'now()' : "'#{to}'"}"
+      "BETWEEN '#{from}' AND '#{to}'"
     end
 
     def add_subqueries
