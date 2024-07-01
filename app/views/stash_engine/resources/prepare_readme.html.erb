@@ -25,6 +25,7 @@
   dcsDescription: @metadata_entry.technical_info,
   updatePath: descriptions_update_path,
   fileContent: @file_content,
+  fileList: @resource.data_files.map(&:upload_file_name),
   title: @resource.title || 'Title of Dataset',
   doi: @resource.identifier_uri
 }) %>
