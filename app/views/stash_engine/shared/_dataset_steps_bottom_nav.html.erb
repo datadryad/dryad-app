@@ -1,4 +1,4 @@
-<div class="c-autosave-footer">
+<div class="c-autosave-footer" <% if page == 2 %>hidden<% end %>>
   <div class="c-autosave__text saving_text" hidden>Saving&hellip;</div>
   <div class="c-autosave__text saved_text" hidden>All progress saved</div>
 </div>
@@ -13,7 +13,7 @@
   <% end %>
   <%when 2%>  
   <%= link_to 'Back to Upload', stash_url_helpers.upload_resource_path(@resource), id: 'upload_path',class: 'o-button__icon-left js-nav-out', role: 'button' %>
-  <%= link_to 'Proceed to Review', stash_url_helpers.review_resource_path(@resource.id), class: 'o-button__icon-right js-nav-out', role: 'button', id: 'proceed_review' %>
+  <%= link_to 'Proceed to Review', stash_url_helpers.review_resource_path(@resource.id), class: 'o-button__icon-right js-nav-out', role: 'button', id: 'proceed_review', hidden: true %>
   <%when 3%>
   <%= link_to 'Back to Describe dataset', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'o-button__icon-left js-nav-out', role: 'button', id: 'describe_back' %>
   <%= link_to 'Proceed to README', stash_url_helpers.prepare_readme_resource_path(@resource), id: 'readme_path', class: 'o-button__icon-right js-nav-out', role: 'button' %>
