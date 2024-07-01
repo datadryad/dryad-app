@@ -12,7 +12,6 @@
     <div class="c-institution__container">
       <%= form_with(url: 'sso/', method: :post) do %>
         <%= react_component('components/TenantForm', {tenants: @tenants}) %>
-        <%= submit_tag 'Login to verify', class: 't-login__buttonlink' %>
       <% end %>      
     </div>
     <br>
