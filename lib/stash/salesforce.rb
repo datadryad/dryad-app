@@ -72,7 +72,7 @@ module Stash
                          path: case_view_url(case_num: found.CaseNumber),
                          status: found.Status,
                          reason: reason,
-                         owner: found.OwnerId.present? }.to_ostruct
+                         owner: found.OwnerId }.to_ostruct
       end
       cases_found
     end
