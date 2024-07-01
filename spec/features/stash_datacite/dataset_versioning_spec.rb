@@ -45,7 +45,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         click_link 'My datasets'
 
         expect(page).to have_text(@resource.title)
-        expect(page).to have_text('In progress')
+        expect(page).not_to have_text('In progress')
       end
     end
 
