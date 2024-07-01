@@ -17,6 +17,11 @@
   overflow: auto;
 }
 
+#readme_step_editor .md_editor_textarea {
+  height: 400px;
+  max-height: 65vh;
+}
+
 .md_editor_textarea > div:not(.c-alert--error) {
   overflow: auto;
   position: absolute;
@@ -310,16 +315,20 @@
   height: 100%;
 }
 
-.ProseMirror p {
-  white-space: normal;
-  white-space-collapse: preserve-spaces;
-}
-
 .markdown_editor .milkdown .ProseMirror.editor,
 .markdown_editor .cm-editor {
   padding: 1.5rem 1rem;
   font-size: 1rem;
   min-height: 100%;
+}
+
+.ProseMirror.editor *:first-child {
+  margin-top: 0;
+}
+
+.ProseMirror.editor p {
+  white-space: normal;
+  white-space-collapse: preserve-spaces;
 }
 
 .milkdown, .headingMenu li {

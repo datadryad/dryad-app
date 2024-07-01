@@ -153,7 +153,7 @@ function MilkdownEditor({
   }, [initialCode]);
 
   useEffect(() => {
-    if (defaultVal && saveVal && saveVal !== defaultVal) onChange(saveVal);
+    if (saveVal !== defaultVal) onChange(saveVal);
   }, [saveVal]);
 
   useEffect(() => {
@@ -236,13 +236,15 @@ function MilkdownEditor({
 
 // <p className="screen-reader-only" role="status" aria-live="polite" id="menu-status">{status}</p>
 
-const MarkdownEditor = React.forwardRef((props, ref) => (
-  <div ref={ref} id={props.id} className="markdown_editor">
-    <MilkdownProvider>
-      <MilkdownEditor {...props} />
-    </MilkdownProvider>
-  </div>
-));
+function MarkdownEditor(props) {
+  return (
+    <div id={props.id} className="markdown_editor">
+      <MilkdownProvider>
+        <MilkdownEditor {...props} />
+      </MilkdownProvider>
+    </div>
+  );
+}
 
 MarkdownEditor.propTypes = {
   id: PropTypes.string.isRequired,

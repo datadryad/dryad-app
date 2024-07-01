@@ -125,8 +125,7 @@
   <% if @resource&.resource_type&.resource_type == 'collection' %>
   <%= link_to 'Back to Describe collection', stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), class: 'o-button__icon-left', role: 'button', id: 'describe_back' %>
   <% else %>
-  <%= link_to 'Back to Upload', stash_url_helpers.up_code_resource_path(@resource), id: 'dashboard_path',
-          class: 'o-button__icon-left', role: 'button' %>
+  <%= link_to 'Back to README', stash_url_helpers.prepare_readme_resource_path(@resource), id: 'readme_path', class: 'o-button__icon-left js-nav-out', role: 'button' %>
   <% end %>
 
   <% if @resource.previous_curated_resource && @resource.changed_from_previous_curated.empty? %>
