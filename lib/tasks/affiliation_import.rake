@@ -22,21 +22,23 @@ namespace :affiliation_import do
     Stash::Organization::RorUpdater.perform
   end
 
+  # example: RAILS_ENV=development bundle exec rake affiliation_import:process_ror_csv -- --affiliation_mode true
   desc 'Process all of the CSV files'
   task process_ror_csv: :environment do
     start_time = Time.now
     @dois_to_skip = []
     @live_mode = false
     @last_resource = nil
+    args = Tasks::ArgsParser.parse(:affiliation_mode)
 
-    case ENV.fetch('AFFILIATION_MODE', nil)
+    case args.affiliation_mode
     when nil
-      puts 'Environment variable AFFILIATION_MODE is blank, assuming test mode.'
+      puts '--affiliation_mode argument is blank, assuming test mode.'
     when 'live'
-      puts 'Starting live processing due to environment variable AFFILIATION_MODE.'
+      puts 'Starting live processing due to --affiliation_mode argument.'
       @live_mode = true
     else
-      puts "Environment variable AFFILIATION_MODE is #{ENV.fetch('AFFILIATION_MODE', nil)}, entering test mode."
+      puts "--affiliation_mode argument is #{args.affiliation_mode}, entering test mode."
     end
 
     puts 'Loading affiliation info from CSV files in /tmp/dryad_affiliations*'
@@ -50,25 +52,28 @@ namespace :affiliation_import do
     end
 
     puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')}"
+    exit
   end
 
+  # example: RAILS_ENV=development bundle exec rake affiliation_import:merge_duplicate_authors -- --author_merge_mode true --start 0
   desc 'Merge duplicate authors'
   task merge_duplicate_authors: :environment do
     start_time = Time.now
     @live_mode = false
+    args = Tasks::ArgsParser.parse(:author_merge_mode, :start)
 
-    case ENV.fetch('AUTHOR_MERGE_MODE', nil)
+    case args.author_merge_mode
     when nil
-      puts 'Environment variable AUTHOR_MERGE_MODE is blank, assuming test mode.'
+      puts '--author_merge_mode argument is blank, assuming test mode.'
     when 'live'
-      puts 'Starting live processing due to environment variable AUTHOR_MERGE_MODE.'
+      puts 'Starting live processing due to --author_merge_mode argument.'
       @live_mode = true
     else
-      puts "Environment variable AUTHOR_MERGE_MODE is #{ENV.fetch('AUTHOR_MERGE_MODE', nil)}, entering test mode."
+      puts "--author_merge_mode argument is #{args.author_merge_mode}, entering test mode."
     end
 
     start_from = 0
-    start_from = ENV['START'].to_i unless ENV['START'].blank?
+    start_from = args.start.to_i unless args.start.blank?
 
     stash_ids = StashEngine::Identifier.all.order('stash_engine_identifiers.id').distinct
     stash_ids.each_with_index do |i, idx|
@@ -94,6 +99,7 @@ namespace :affiliation_import do
       end
     end
     puts "DONE! Elapsed time: #{Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')}"
+    exit
   end
 
   # example: rake affiliation_import:populate_ror_db -- --path /path/to/json_file

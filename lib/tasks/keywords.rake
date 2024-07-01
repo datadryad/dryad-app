@@ -1,11 +1,13 @@
 # :nocov:
 namespace :keywords do
+  # example: RAILS_ENV=production bundle exec rails keywords:update_plos -- --plos_path /path/to/file
   task update_plos: :environment do
     $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
+    args = Tasks::ArgsParser.parse(:plos_path)
 
-    if ENV['PLOS_PATH'].blank? || ENV['RAILS_ENV'].blank?
-      puts 'Please enter the path to the PLoS keywords as the PLOS_PATH environment variable'
-      puts 'For example: PLOS_PATH="/my/path/to/plosthes.2020-1.full.tsv"'
+    if args.plos_path.blank? || ENV['RAILS_ENV'].blank?
+      puts 'Please enter the path to the PLoS keywords as the --plos_path argument'
+      puts 'For example: --plos_path "/my/path/to/plosthes.2020-1.full.tsv"'
       puts ''
       puts 'You can get the Excel files from https://github.com/PLOS/plos-thesaurus.'
       puts 'then open in a program that can convert to tab separated values such as Google docs.'
@@ -23,7 +25,7 @@ namespace :keywords do
 
     # without silencing this, all I saw was ActiveRecord SQL logging and it was hard to see the progress
     Rails.logger.silence do
-      plos = Tasks::Keywords::Plos.new(fn: ENV.fetch('PLOS_PATH', nil))
+      plos = Tasks::Keywords::Plos.new(fn: args.plos_path)
       plos.populate
     end
 
