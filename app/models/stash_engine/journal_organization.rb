@@ -15,7 +15,7 @@ module StashEngine
     self.table_name = 'stash_engine_journal_organizations'
     has_many :children, class_name: 'JournalOrganization', primary_key: :id, foreign_key: :parent_org_id, inverse_of: :parent_org
     belongs_to :parent_org, class_name: 'JournalOrganization', optional: true, inverse_of: :children
-    has_many :roles, class_name: 'StashEngine::Role', as: :role_object
+    has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
 
     scope :has_children, -> { distinct.joins(:children) }
