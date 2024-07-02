@@ -22,7 +22,7 @@ export default function ReadMeSteps({
       content: content.step1 || fileList.map((f) => `* ${f}`).join('\n'),
     },
     2: {
-      desc: 'Define all variables and abbreviations in your data files, including missing values (empty cells, NA, null, etc.) if present.',
+      desc: 'Define all variables and abbreviations in your data files, including units of measurement. List how you indicate missing values (blank cells, "NA", etc.) if applicable.',
       content: content.step2 || '',
     },
     3: {
@@ -61,7 +61,11 @@ export default function ReadMeSteps({
           <i className="fa fa-caret-left" aria-hidden="true" /> Previous
         </button>
         <button type="button" className="o-button__plain-text2" onClick={() => setStep(step + 1)}>
-          Next <i className="fa fa-caret-right" aria-hidden="true" />
+          {step === secTitles.length ? (
+            <>Complete &amp; generate README</>
+          ) : (
+            <>Next <i className="fa fa-caret-right" aria-hidden="true" /></>
+          )}
         </button>
       </div>
     </>
