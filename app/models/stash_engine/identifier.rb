@@ -604,11 +604,11 @@ module StashEngine
     end
 
     def date_first_published
-      resources.map(&:publication_date)&.first || nil
+      resources.map(&:publication_date)&.reject(&:blank?)&.first || nil
     end
 
     def date_last_published
-      resources.map(&:publication_date)&.last || nil
+      resources.map(&:publication_date)&.reject(&:blank?)&.last || nil
     end
 
     # the first time this dataset had metadata exposed to the public
