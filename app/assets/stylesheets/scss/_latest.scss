@@ -5,7 +5,7 @@
 }
 
 .c-latest__dataset, #blog-latest-posts div {
-	border-bottom: thin solid $design-dark-blue-color;
+	border-bottom: thin solid $dark-blue;
 }
 
 #dryads-latest {
@@ -22,7 +22,7 @@
 	}
 
 	#latest_tiles, #blog-latest-posts {
-		border: thin solid $design-orange-color;
+		border: thin solid $orange;
 		border-radius: $spacing-base;
 		grid-row: 2;
 		display: flex;

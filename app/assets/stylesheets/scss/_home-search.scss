@@ -2,7 +2,7 @@
 
 .o-home-search {
   padding: 10px;
-  background-color: $design-dark-blue-color;
+  background-color: $dark-blue;
 
   @include bp(screen1) {
     display: flex;
@@ -18,7 +18,7 @@
 .o-home-search__label {
   display: block;
   margin: 0 0 10px;
-  color: $design-white-color;
+  color: white;
   font-size: 1.4em;
   text-align: center;
 
@@ -44,14 +44,14 @@
 .o-home-search__submit-button {
   font-size: 18px;
   padding: 17px 35px 15px;
-  border: thin solid $design-white-color;
-  background-color: $design-white-color;
-  color: $design-dark-blue-color;
+  border: thin solid white;
+  background-color: white;
+  color: $dark-blue;
   font-weight: 2em;
 
   &:focus,
   &:hover {
-    outline: 2px solid $design-medium-blue-color;
+    outline: 2px solid $medium-blue;
   }
 
 }

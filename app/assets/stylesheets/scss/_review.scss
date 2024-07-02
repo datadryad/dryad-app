@@ -17,8 +17,8 @@
   position: relative;
   width: 25px;
   margin: 5px;
-  border: thin solid $design-extra-light-gray-color;
-  background: $design-extra-light-gray-color;
+  border: thin solid $lighter-gray;
+  background: $lighter-gray;
   cursor: pointer;
 
 }
@@ -60,12 +60,12 @@ a.highlight {
 		}
 	}
 	ins {
-		background-color: lighten($design-green-color, 50);
+		background-color: lighten($green, 50);
 		&.ins-before::after {
 			content: ' ';
 		}
 	}
 	del {
-		background-color: $design-pink-color;
+		background-color: $lightest-red;
 	}
 }

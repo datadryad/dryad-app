@@ -33,7 +33,7 @@
 	.o-banner__credit {
 		padding: 8px;
 		font-size: .8rem;
-		color: $design-white-color;
+		color: white;
 		align-self: end;
 		margin-top: auto;
 
@@ -42,7 +42,7 @@
 		}
 
 		a:hover, a:focus {
-			color: $design-orange-color;
+			color: $orange;
 		}
 
 		@media (max-width: $screen-md-min) {

@@ -16,7 +16,7 @@
   }
 
   button, button:hover {
-    color: $design-dark-gray-color;
+    color: $dark-gray;
   }
   a[data-share='email'] {
     &, &:hover, &:visited {
@@ -49,6 +49,6 @@
   margin: 0;
   font-size: .85em;
   padding: 6px;
-  color: $design-white-color;
-  background-color: $design-green-color;
+  color: white;
+  background-color: $green;
 }

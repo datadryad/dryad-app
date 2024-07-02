@@ -37,7 +37,7 @@
 
 .modalClose button, .button-close-modal {
   background-color: transparent;
-  color: $design-dark-blue-color;
+  color: $dark-blue;
   border: none;
   padding: 0;
   padding-left: $spacing-sm;
@@ -51,7 +51,7 @@
 
   &:hover, &:focus {
     outline: none;
-    color: $design-orange-color;
+    color: $orange;
   }
 }
 
