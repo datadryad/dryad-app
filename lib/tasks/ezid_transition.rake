@@ -58,24 +58,26 @@ namespace :ezid_transition do
     puts "file written to #{filename}"
   end
 
+  # example: RAILS_ENV=production bundle exec rails ezid_transition:registered -- --doi_file /path/to/file
   desc 'Updates from list of DOIs to change reserved to registered in EZID'
   task registered: :environment do
     $stdout.sync = true
+    args = Tasks::ArgsParser.parse(:doi_file)
 
-    unless ENV['RAILS_ENV'] && ENV['DOI_FILE']
+    if ENV['RAILS_ENV'].blank? || args.doi_file.blank?
       puts 'RAILS_ENV must be explicitly set before running this script (such as production)'
-      puts 'Also set environment variable DOI_FILE to the file that contains the DOIs to update with placeholder data.'
+      puts 'Also set --doi_file argument to the file that contains the DOIs to update with placeholder data.'
       puts 'These should be EZID DOIs to pre-populate with data so they are more than reserved and can be moved to DataCite.'
       puts ''
       puts 'Example:'
-      puts 'RAILS_ENV=development DOI_FILE="spec/fixtures/ezid_doi_examples.txt" bundle exec rails ezid_transition:registered'
+      puts 'RAILS_ENV=development bundle exec rails ezid_transition:registered -- --doi_file spec/fixtures/ezid_doi_examples.txt'
       puts ''
       puts 'The file with lists of DOIs should be one per line and be bare DOIs like 10.5072/FK2HT2SM2K.'
       puts 'You can check DOIs at urls like https://ezid.cdlib.org/id/doi:10.5072/FK2HT2SM2K'
-      next
+      exit
     end
 
-    File.foreach(ENV.fetch('DOI_FILE', nil)).with_index do |doi, idx|
+    File.foreach(args.doi_file).with_index do |doi, idx|
       doi.strip!
       next if doi.blank?
 
@@ -85,6 +87,7 @@ namespace :ezid_transition do
       sleep 1
     end
     puts 'Done'
+    exit
   end
 end
 # :nocov:
