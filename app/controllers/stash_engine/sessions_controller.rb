@@ -15,12 +15,7 @@ module StashEngine
     # this is the place omniauth calls back for shibboleth logins
     def callback
       current_user.update(tenant_id: params[:tenant_id])
-      if session[:origin] == 'feedback'
-        redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
-        session[:origin] = session[:contact_method] = session[:link_location] = nil
-      else
-        redirect_to stash_url_helpers.dashboard_path
-      end
+      do_redirect
     end
 
     # would only get here if the pre-processor decides this is an actual login and not just an orcid validation (by login)
@@ -31,12 +26,7 @@ module StashEngine
       user.update(affiliation_id: employment&.id) unless employment.blank?
       session[:user_id] = user.id
       if user.tenant_id.present?
-        if session[:origin] == 'feedback'
-          redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
-          session[:origin] = session[:contact_method] = session[:link_location] = nil
-        else
-          redirect_to stash_url_helpers.dashboard_path
-        end
+        do_redirect
       else
         redirect_to stash_url_helpers.choose_sso_path
       end
@@ -124,14 +114,7 @@ module StashEngine
         current_user.tenant_id = APP_CONFIG.default_tenant
         current_user.save!
       end
-      if session[:origin] == 'feedback'
-        redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
-        session[:origin] = session[:contact_method] = session[:link_location] = nil
-      elsif session[:origin] == 'account'
-        redirect_to stash_url_helpers.my_account_path
-      else
-        redirect_to stash_url_helpers.dashboard_path
-      end
+      do_redirect
     end
 
     # send the user to the tenant's SSO url
@@ -141,14 +124,7 @@ module StashEngine
         case tenant&.authentication&.strategy
         when 'author_match'
           current_user.update(tenant_id: tenant.id)
-          if session[:origin] == 'feedback'
-            redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
-            session[:origin] = session[:contact_method] = session[:link_location] = nil
-          elsif session[:origin] == 'account'
-            redirect_to stash_url_helpers.my_account_path
-          else
-            redirect_to stash_url_helpers.dashboard_path, status: :found
-          end
+          do_redirect
         when 'ip_address'
           validate_ip(tenant: tenant) # this redirects internally
         else
@@ -302,12 +278,7 @@ module StashEngine
         next unless net.include?(IPAddr.new(request.remote_ip))
 
         current_user.update(tenant_id: tenant.id)
-        if session[:origin] == 'feedback'
-          redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
-          session[:origin] = session[:contact_method] = session[:link_location] = nil
-        else
-          redirect_to stash_url_helpers.dashboard_path, status: :found
-        end
+        do_redirect
         return nil # adding nil here to jump out of loop and return early since rubocop sucks & requires a return value
       end
 
@@ -316,6 +287,20 @@ module StashEngine
       reset_session
       clear_user
       redirect_to stash_url_helpers.ip_error_path
+    end
+
+    def do_redirect
+      case session[:origin]
+      when 'feedback'
+        redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
+        session[:origin] = session[:contact_method] = session[:link_location] = nil
+      when 'account'
+        redirect_to stash_url_helpers.my_account_path
+      when 'resource'
+        redirect_to stash_url_helpers.review_resource_path(session[:redirect_resource_id])
+      else
+        redirect_to stash_url_helpers.dashboard_path
+      end
     end
 
   end
