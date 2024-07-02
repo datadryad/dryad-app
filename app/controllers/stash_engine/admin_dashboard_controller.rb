@@ -119,7 +119,6 @@ module StashEngine
         @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
       end
       session[:search] = collect_properties
-      p session[:search]
     end
 
     # rubocop:disable Metrics/MethodLength
