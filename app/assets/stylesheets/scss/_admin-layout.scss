@@ -99,13 +99,17 @@
   }
 }
 
-button.c-admin-edit-icon {
+.c-admin-edit-icon {
   border: none;
   color: $medium-blue;
   background-color: transparent;
 
-  &:hover {
-    color: $orange;
+  &:link, &:visited {
+    color: $medium-blue;
+  }
+
+  &:hover, &:focus, &:active {
+    color: $light-green;
   }
 }
 

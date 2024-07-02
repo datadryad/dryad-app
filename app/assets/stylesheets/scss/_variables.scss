@@ -23,15 +23,20 @@ $light-orange: rgb(237, 129, 90);
 $red: rgb(209, 44, 29);
 $lightest-red: rgb(249, 213, 210);
 $green: #3c763d;
+$medium-green: rgb(82, 131, 70);
+$light-green: #74b736;
+$lighter-green: rgb(172, 204, 84);
+$lightest-green: lighten($green, 59%);
 
 // ***** Link Colors ***** //
 
 $link-body-color: $dark-blue;
-$link-body-hover-color: $orange;
+$link-body-hover-color: $medium-blue;
+$link-body-active-color: $red;
 $link-body-visited-color: #65007a;
 
 $link-globalnav-color: black;
-$link-globalnav-hover-color: $orange;
+$link-globalnav-hover-color: $medium-blue;
 
 // ***** Breakpoints ***** //
 

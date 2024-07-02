@@ -126,6 +126,9 @@
     a:link, a:visited {
       color: $link-body-color;
     }
+    a:active {
+      color: $link-body-active-color;
+    }
   }
   
   @media (max-width: $screen-lg-min - 1) {

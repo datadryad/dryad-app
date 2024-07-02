@@ -195,7 +195,7 @@
       }
     }
     button:focus, a:focus-visible {
-      outline: 2px solid $orange;
+      outline: 2px solid $lighter-green;
       outline-offset: 0;
     }
   }
@@ -225,7 +225,7 @@
       margin: 0;
       min-width: 180px;
       white-space: nowrap;
-      border-right: thin solid $orange;
+      border-right: thin solid $lighter-green;
     }
 
     li {
@@ -257,11 +257,6 @@
             background-color: white;
             text-decoration: underline;
           }
-
-          &:hover,
-          &:focus {
-            color: $link-globalnav-hover-color;
-          }
         }
       }
     }
@@ -285,8 +280,12 @@
     text-decoration: underline;
   }
 
+  &:active {
+    color: $link-body-active-color;
+  }
+
   &:not(:last-child) {
-    border-right: thin solid $orange;
+    border-right: thin solid $lighter-green;
   }
 
   &:last-child {
@@ -315,7 +314,7 @@
 
   &.dev-only {
     text-align: right;
-    color: $orange;
+    color: $green;
     background-color: white;
     @media (max-width: $screen-lg-min - 1) {
       position: absolute;

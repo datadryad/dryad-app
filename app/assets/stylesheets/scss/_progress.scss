@@ -64,31 +64,16 @@
       }
     }
 
-    &:focus {
-      height: 34px;
-      border-width: 2px;
-      border-color: $medium-blue;
-      &:not(:last-child) {
-        &::after {
-          border-width: 2px;
-          border-color: $medium-blue;
-          @include bp(screen1) {
-            top: 3px;
-          }
-        }
-      }
-    }
-
     &[class*="--active"] {
       height: 34px;
       border-width: 2px;
-      border-color: $orange;
-      color: $orange;
+      border-color: $medium-green;
+      color: $green;
 
       &:not(:last-child) {
         &::after {
           border-width: 2px;
-          border-color: $orange;
+          border-color: $medium-green;
           // Right angle arrow using borders:
           @include bp(screen1) {
             top: 3px;
@@ -106,6 +91,21 @@
       &::after {
         border-width: 2px;
         border-color: $light-gray;
+      }
+    }
+
+    &:focus {
+      height: 34px;
+      border-width: 2px;
+      border-color: $medium-blue;
+      &:not(:last-child) {
+        &::after {
+          border-width: 2px;
+          border-color: $medium-blue;
+          @include bp(screen1) {
+            top: 3px;
+          }
+        }
       }
     }
 

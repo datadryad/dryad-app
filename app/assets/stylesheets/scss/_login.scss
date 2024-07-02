@@ -62,12 +62,12 @@
 
 .t-login__info {
   text-align: left;
-  border-top: thin solid $orange;
+  border-top: thin solid $lighter-green;
 
   @include bp(screen3) {
     grid-column: 2;
     border-top: none;
-    border-left: thin solid $orange;
+    border-left: thin solid $lighter-green;
   }
 }
 
@@ -86,7 +86,7 @@
   font-weight: bold;
   text-decoration: none;
   padding: 10px 15px;
-  border: 2px solid $orange;
+  border: 2px solid $dark-blue;
   border-radius: 35px;
   background-color: white;
   white-space: nowrap;
