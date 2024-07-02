@@ -71,7 +71,7 @@ module StashEngine
         resource_id: resource.id, url: url,
         status_code: status_code,
         file_state: 'created',
-        original_url: (translator.direct_download.nil? ? nil : @url),
+        original_url: translator.original_url,
         cloud_service: translator.service
       }
       return upload_attributes unless valid && status_code == 200

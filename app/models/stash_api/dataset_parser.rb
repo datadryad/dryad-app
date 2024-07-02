@@ -86,8 +86,10 @@ module StashApi
       if owning_user.nil?
         # check if any authors listed in the dataset have this orcid
         found_author = nil
-        @hash['authors'].each do |a|
-          found_author = a if a['orcid']&.match(@hash['userId'])
+        if @hash['authors']
+          @hash['authors'].each do |a|
+            found_author = a if a['orcid']&.match(@hash['userId'])
+          end
         end
         unless found_author
           raise ActionController::BadRequest,

@@ -180,6 +180,8 @@ module StashEngine
       before(:each) do
         stub_request(:head, 'http://ftp.datadryad.org/InCuration/test-sfisher/My%20cAT%20hAS%20FlEaS.jpg')
           .to_return(status: 200, body: 'abc', headers: { 'Content-Length' => 3 })
+        stub_request(:head, 'https://raw.githubusercontent.com/datadryad/dryad-app/main/documentation/apis/sample_dataset.json')
+          .to_return(status: 200, body: 'abc', headers: { 'Content-Length' => 3 })
       end
 
       it 'decodes and also makes prettier filenames with urlencoding' do
@@ -190,6 +192,23 @@ module StashEngine
 
         expect(result[:upload_file_name]).to eq('My_cAT_hAS_FlEaS.jpg')
         expect(result[:original_filename]).to eq('My cAT hAS FlEaS.jpg')
+      end
+
+      it 'properly sets data for Github file' do
+        file_url = 'https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json'
+        translated_url = 'https://raw.githubusercontent.com/datadryad/dryad-app/main/documentation/apis/sample_dataset.json'
+        stub_request(:head, translated_url)
+          .to_return(status: 200, body: 'abc', headers: { 'Content-Length' => 4 })
+
+        translator = Stash::UrlTranslator.new(file_url)
+        url_validator = UrlValidator.new(url: translator.direct_download)
+        resource = create(:resource)
+        result = url_validator.upload_attributes_from(translator: translator, resource: resource, association: 'data_files')
+
+        expect(result[:upload_file_name]).to eq('sample_dataset.json')
+        expect(result[:original_filename]).to eq('sample_dataset.json')
+        expect(result[:url]).to eq(translated_url)
+        expect(result[:original_url]).to eq(file_url)
       end
     end
   end

@@ -17,7 +17,7 @@ module Stash
     GOOGLE_SHEET = %r{^https://docs\.google\.com/spreadsheets/d/(\S+)/edit(?:\?usp=sharing)?$}
     DROPBOX = %r{^https://www\.dropbox\.com/s/(\S+)/([^/]+)(?:\?dl=[0-9]+)$}
     BOX = %r{^https://([^/]+box\.com)/s/(\S+)$}
-    GITHUB = %r{^https?://github.com/([^/]+/[^/]+)/blob(/[^/]+/[^/]+)$}
+    GITHUB = %r{^https?://github.com/([^/]+/[^/]+)/blob(.+)$}
 
     attr_reader :service, :direct_download, :original_url
 
