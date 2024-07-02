@@ -66,7 +66,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows correct Upload Type boxes example texts' do
-      expect(page).to have_content('e.g., csv, xsl, fasta')
+      expect(page).to have_content('e.g., .csv, .xsl, fasta, .zip')
       expect(page).to have_content('e.g., code packages, scripts')
       expect(page).to have_content('e.g., figures, supporting tables')
     end
