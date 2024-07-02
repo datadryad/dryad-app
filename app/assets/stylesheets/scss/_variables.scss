@@ -7,38 +7,31 @@ $input-height: 30px;
 
 // ***** Colors ***** //
 
-$design-dark-blue-color: #00527A;
-$design-medium-blue-color: #0071a8;
-$design-light-blue-color: rgb(55, 150, 196);
-$design-lighter-blue-color: lighten($design-light-blue-color, 25%);
-$design-lightest-blue-color: lighten($design-light-blue-color, 44%);
-$design-dark-gray-color: rgb(78, 80, 80);
-$design-light-gray-color: rgb(157, 159, 162);
-$design-extra-light-gray-color: rgb(211, 211, 211);
-$design-super-extra-light-gray-color: rgb(235, 235, 235);
-$design-orange-color: #cf4817;
-$design-light-orange-color: rgb(237, 129, 90);
-$design-black-color: rgb(0, 0, 0);
-$design-black-color-forty-percent: rgba(0, 0, 0, 0.4);
-$design-white-color: rgb(255, 255, 255);
-$design-offwhite-color: rgb(242, 242, 242);
-$design-red-color: rgb(209, 44, 29);
-$design-pink-color: rgb(249, 213, 210);
-$design-green-color: #3c763d;
-$bhavis-random-color: rgb(51, 140, 175);
-$design-standard-link: #00e;
-$design-dark-navy-color: #07364b;
-// $design-slate-color: #2c6261;
-$design-slate-color: #2f4f4f;
+$slate: #2f4f4f;
+$dark-navy: #07364b;
+$dark-blue: #00527A;
+$medium-blue: #0071a8;
+$light-blue: rgb(55, 150, 196);
+$lighter-blue: lighten($light-blue, 25%);
+$lightest-blue: lighten($light-blue, 44%);
+$dark-gray: rgb(78, 80, 80);
+$light-gray: rgb(157, 159, 162);
+$lighter-gray: rgb(211, 211, 211);
+$lightest-gray: rgb(235, 235, 235);
+$orange: #cf4817;
+$light-orange: rgb(237, 129, 90);
+$red: rgb(209, 44, 29);
+$lightest-red: rgb(249, 213, 210);
+$green: #3c763d;
 
 // ***** Link Colors ***** //
 
-$link-body-color: $design-dark-blue-color;
-$link-body-hover-color: $design-orange-color;
+$link-body-color: $dark-blue;
+$link-body-hover-color: $orange;
 $link-body-visited-color: #65007a;
 
-$link-globalnav-color: $design-black-color;
-$link-globalnav-hover-color: $design-orange-color;
+$link-globalnav-color: black;
+$link-globalnav-hover-color: $orange;
 
 // ***** Breakpoints ***** //
 

@@ -50,8 +50,8 @@ a {
   border: none;
   text-decoration: none;
   padding: 8px 12px;
-  background-color: $design-dark-blue-color;
-  color: $design-white-color;
+  background-color: $dark-blue;
+  color: white;
   white-space: nowrap;
 }
 
@@ -99,17 +99,17 @@ a {
 
 .index_title a {
   @extend %o-link__secondary;
-  color: $design-medium-blue-color;
+  color: $medium-blue;
 }
 
 .facet-label .selected {
-  color: $design-green-color;
+  color: $green;
 }
 
 // Submitted table:
 
 .c-table-submitted .o-link__primary {
-  color: $design-medium-blue-color;
+  color: $medium-blue;
   text-decoration: none;
 
   &:visited {
@@ -138,8 +138,8 @@ a {
     top: $spacing-sm;
     left: $spacing-sm;
     opacity: 1;
-    background-color: $design-dark-blue-color;
-    color: $design-white-color;
+    background-color: $dark-blue;
+    color: white;
     outline-offset: 0;
   }
 }
@@ -161,7 +161,7 @@ a {
   padding: 0 5px;
 
   i {
-    color: $design-dark-navy-color;
+    color: $dark-navy;
   }
 
   &:hover i {
@@ -169,6 +169,6 @@ a {
   }
 
   i.fa-check {
-    color: $design-green-color;
+    color: $green;
   }
 }

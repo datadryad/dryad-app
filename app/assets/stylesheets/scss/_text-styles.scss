@@ -18,7 +18,7 @@ kbd,
 samp {
   font-family: Monaco, monospace, monospace;
   font-size: .8em;
-  background-color: $design-super-extra-light-gray-color;
+  background-color: $lightest-gray;
   padding: 1px 4px;
   border-radius: 2px;
 }
@@ -55,7 +55,7 @@ blockquote {
     font-size: 2rem;
     margin-left: -2.2rem;
     position: absolute;
-    color: $design-orange-color;
+    color: $orange;
   }
 }
 
@@ -68,14 +68,14 @@ figure {
 }
 
 .callout {
-  background-color: $design-lightest-blue-color;
+  background-color: $lightest-blue;
   padding: 0 .75rem;
 
   & > *:first-child { padding-top: .75rem; }
   & > *:last-child { padding-bottom: .75rem; }
 
   kbd, samp, code {
-    background-color: $design-white-color;
+    background-color: white;
   }
 }
 

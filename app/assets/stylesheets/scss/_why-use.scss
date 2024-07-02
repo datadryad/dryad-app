@@ -8,15 +8,15 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  background: linear-gradient(rgba($design-dark-gray-color, 0.85) 100%, transparent 0), url('/images/scss/stem.jpg') top left / cover no-repeat;
-  background-color: $design-dark-gray-color;
+  background: linear-gradient(rgba($dark-gray, 0.85) 100%, transparent 0), url('/images/scss/stem.jpg') top left / cover no-repeat;
+  background-color: $dark-gray;
 }
 
 .c-why-use__blurb {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  color: $design-white-color;
+  color: white;
 }
 
 .c-why-use__icon {
@@ -35,7 +35,7 @@
 .c-why-use__strong {
   display: inline-block;
   padding: 0 0.27em 0 0;
-  color: $design-white-color;
+  color: white;
   font-size: 1.15em;
   font-weight: bold;
 
@@ -44,5 +44,5 @@
 .c-why-use__blocker {
   width: 100%;
   height: 10px;
-  background-color: $design-white-color;
+  background-color: white;
 }

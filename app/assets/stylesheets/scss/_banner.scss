@@ -19,14 +19,14 @@
 
 html.no-multiplebgs .o-banner {
 	padding: 20px 0;
-	background: $design-light-blue-color;
+	background: $light-blue;
 }
 
 .o-banner__tagline {
   width: 100%;
   text-align: center;
   padding: 16px 8px;
-  color: $design-white-color;
+  color: white;
   font-size: 1.7em;
   font-style: italic;
 
@@ -55,8 +55,8 @@ html.no-multiplebgs .o-banner {
 	display: inline-block;
   z-index: 1;
 	padding: 6px 12px;
-	background-color: $design-white-color;
-	color: $design-dark-blue-color;
+	background-color: white;
+	color: $dark-blue;
 	text-decoration: none;
 
 	@include bp(screen1) {

@@ -9,7 +9,7 @@
 }
 
 .citation-section {
-	background-color: $design-lightest-blue-color;
+	background-color: $lightest-blue;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: baseline;
@@ -62,7 +62,7 @@
     &:focus, &:hover, &:active {
 	    outline: none;
 	    text-decoration: underline;
-	    text-decoration-color: $design-orange-color;
+	    text-decoration-color: $orange;
 	    text-decoration-thickness: 2px;
 	    text-underline-offset: 4px;
 		}
