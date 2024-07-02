@@ -3,7 +3,7 @@
 %o-heading__level1 {
   margin-top: $spacing-md;
   margin-bottom: $spacing-sm;
-  color: $orange;
+  color: $dark-blue;
   font-size: 2rem;
   line-height: 2.5rem;
   font-weight: normal;
@@ -21,7 +21,7 @@ h1, *[class^="o-heading__level1"] {
 %o-heading__level2 {
   margin-top: calc(#{$spacing-base} * 3.75);
   margin-bottom: $spacing-sm;
-  color: $dark-blue;
+  color: $dark-navy;
   font-size: 1.65rem;
   line-height: 2rem;
   font-weight: normal;
@@ -38,7 +38,7 @@ h2, *[class^="o-heading__level2"] {
 %o-heading__level3 {
   margin-top: calc(#{$spacing-base} * 3.5);
   margin-bottom: calc(#{$spacing-base} * 1.5);
-  color: $orange;
+  color: $dark-blue;
   font-size: 1.4rem;
   line-height: 1.75rem;
   font-weight: normal;
@@ -72,7 +72,7 @@ h1:first-child, *[class^="o-heading__level"]:first-child {
 %o-heading__level4 {
   margin-top: calc(#{$spacing-base} * 3);
   margin-bottom: calc(#{$spacing-base} * 1.5);
-  color: $dark-blue;
+  color: $dark-navy;
   font-size: 1.25rem;
   line-height: 1.5rem;
   font-weight: 500;
@@ -85,7 +85,6 @@ h4, *[class^="o-heading__level4"]  {
 h5, h6 {
   margin-top: $spacing-sm;
   margin-bottom: $spacing-base;
-  color: $orange;
   font-size: 1.125rem;
   line-height: 1.5rem;
   font-weight: 500;
@@ -98,6 +97,7 @@ h6 {
 
 .expand-button {
   cursor: pointer;
+  border-bottom: thin solid $medium-green;
 
   &::after {
     font-family: 'Font Awesome 6 Free';
@@ -120,19 +120,17 @@ h6 {
 }
 
 h3.expand-button {
-  border-bottom: thin solid $orange;
   &:hover, &:focus-visible {
     &::after {
-      color: $link-body-color;
+      color: $medium-green;
     }
   }
 }
 
 h4.expand-button {
-  border-bottom: thin solid $dark-blue;
   &:hover, &:focus-visible {
     &::after {
-      color: $link-body-hover-color;
+      color: $medium-green;
     }
   }
 }

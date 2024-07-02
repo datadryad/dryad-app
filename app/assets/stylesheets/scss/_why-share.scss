@@ -62,7 +62,7 @@
     flex: 1 0 100%;
     padding: $spacing-sm 0;
     &:not(:last-child) {
-      border-bottom: thin solid $orange;
+      border-bottom: thin solid $lighter-green;
     }
   }
 
@@ -72,11 +72,11 @@
     padding: $spacing-sm 0 $spacing-md;
 
     &:nth-child(-n+2) {
-      border-bottom: thin solid $orange;
+      border-bottom: thin solid $lighter-green;
     }
 
     &:nth-child(odd) {
-      border-right: thin solid $orange;
+      border-right: thin solid $lighter-green;
     }
   }
 
@@ -87,7 +87,7 @@
     margin-bottom: $spacing-md;
 
     &:not(:last-child) {
-      border-right: thin solid $orange;
+      border-right: thin solid $lighter-green;
     }
   }
 }
