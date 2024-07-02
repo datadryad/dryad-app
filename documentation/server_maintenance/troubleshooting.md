@@ -267,7 +267,7 @@ embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies
 table. The zenodo_copy_id is the id from that same table.
 ```
 # the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
-RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2021-12-31 12342
+RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo -- --resource_id 97683 --deposition_id 4407065 --date 2021-12-31 --zenodo_copy_id 12342
 ```
 
 **You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
@@ -300,7 +300,8 @@ table. The zenodo_copy_id is the `stash_engine_zenodo_copies.id` from that same 
 
 ```
 # the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
-RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo 97683 4407065 2023-07-25 1234
+RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo -- --resource_id 97683 --deposition_id 4407065 --date 2023-07-25 --zenodo_copy_id 1234
+
 ```
 **You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
 will not take effect. This is probably something we can fix in the code, but it is waiting for us
@@ -386,13 +387,13 @@ it is harder to do after removal.
 
 ```
 # the parameters are 1) resource_id, 2) deposition_id (see in stash_engine_zenodo_copies), 3) date far in the future
-RAILS_ENV=production bundle exec rails dev_ops:embargo_zenodo <resource-id> <deposition-id> 2200-12-31
+RAILS_ENV=production bundle exec rails dev_ops:embargo_zenodo -- --resource_id <resource-id> --deposition_id <deposition-id> --date <YYYY-MM-DD> --zenodo_copy_id <zenodo_copy_id>
 ```
 
 
 If you need to completely remove a dataset from existence, you can run
 ```
-rails dev_ops:destroy_dataset 10.27837/dryad.catfood
+rails dev_ops:destroy_dataset -- --doi 10.27837/dryad.catfood
 ```
 
 This command will remove the dataset from Dryad, and give instructions to remove
@@ -484,7 +485,7 @@ end
 
 To update anything published between a set of dates using a task, you can use:
 ```
-RAILS_ENV=production bundle exec rails datacite_target:update_by_publication YYYY-MM-DD YYYY-MM-DD
+RAILS_ENV=production bundle exec rails datacite_target:update_by_publication -- --start YYYY-MM-DD --end YYYY-MM-DD
 ```
 
 If you need to update DataCite for *all* items in Dryad, you can use:

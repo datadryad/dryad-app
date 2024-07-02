@@ -20,6 +20,7 @@ describe 'counter:cop_manual', type: :task do
   end
 
   it 'executes the task and creates the stats in the database based on json files' do
+    ARGV.replace(['counter:cop_manual', '--', '--json_directory', @path.to_s])
     task.execute
     @test_items.each_pair do |k, v|
       doi_obj = StashEngine::Identifier.find_by_identifier(k)

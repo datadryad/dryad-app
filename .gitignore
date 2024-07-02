@@ -43,7 +43,7 @@ ui-library/bower_components
 ui-library/css/vendor/
 ui-library/js/vendor/
 stash/stash_engine/ui-library/
-*.css.map                
+*.css.map
 
 # ######################################################
 
@@ -104,6 +104,7 @@ build-iPhoneSimulator/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+.nvmrc
 
 #####=== Rails ===#####
 
