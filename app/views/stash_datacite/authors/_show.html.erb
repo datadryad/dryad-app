@@ -1,5 +1,5 @@
 <% unless authors.nil? %>
-  <% if highlight_fields.present? && current_user.min_app_admin? %>
+  <% if highlight_fields.present? && current_user&.min_app_admin? %>
   	<div class="o-metadata__group1">
 	  	<% authors.each_with_index do |author, i| %>
 	  		<% highlights = highlight_fields.detect {|h| h[:index] == i} %>
@@ -24,7 +24,7 @@
 		</div>
   <% else %>
     <% affs = authors.map(&:affiliations).flatten.uniq.each_with_object([]) do |a, arr| 
-    	smart_name = a.smart_name(show_asterisk: current_user.min_app_admin?)
+    	smart_name = a.smart_name(show_asterisk: current_user&.min_app_admin?)
   		if smart_name.present? && smart_name != ',' && smart_name != '.'
   			arr << [a.id, smart_name, a.ror_id]
 			end
