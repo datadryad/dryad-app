@@ -328,7 +328,8 @@
     }
   }
 
-  #blog-latest-posts .blog-post-heading, .c-latest__title  {
+  #blog-latest-posts .blog-post-heading,
+  #latest_tiles .c-latest__title  {
     @extend %o-heading__level4;
     font-size: 1.13rem;
     margin: 0 0 .4rem;
