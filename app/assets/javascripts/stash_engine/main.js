@@ -282,7 +282,8 @@ function joelsReady(){
         const desc = $(post.querySelector('description')).text()
         const div = document.createElement('div')
         div.classList.add('latest-post')
-        div.innerHTML = `<p class="blog-post-heading" role="heading" aria-level="3">${title}</p><p>${desc}</p>`
+        div.innerHTML = `<p class="blog-post-heading" role="heading" aria-level="3"><a href="${link}">${title}</a></p>${desc}`
+        div.removeChild(div.lastElementChild)
         sec.appendChild(div)
         return i < limit
       })

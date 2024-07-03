@@ -378,9 +378,12 @@
     font-size: 1em;
     min-width: 6ch;
     width: calc(100% - 48px);
+    margin-right: -32px;
+    padding-right: calc(32px + .5em);
   }
   .o-global-search__submit-button {
     width: 32px;
+    height: 38px;
   }
 
   @include bp(screen3) {
@@ -394,9 +397,12 @@
     .o-global-search__input {
       font-size: .9em;
       width: calc(100% - 38px);
+      margin-right: -28px;
+      padding-right: calc(28px + .5em);
     }
     .o-global-search__submit-button {
       width: 28px;
+      height: 28px;
     }
   }
 }
