@@ -302,7 +302,15 @@ module StashDatacite
         readme_md_require_date = '2022-09-28'
         readme_require_date = '2021-12-20'
 
-        no_techinfo = @resource.descriptions.where(description_type: 'technicalinfo').where.not(description: [nil, '']).count.zero?
+        techinfo = @resource.descriptions.where(description_type: 'technicalinfo').where.not(description: [nil, ''])
+
+        no_techinfo = techinfo.empty?
+        no_techinfo ||= begin
+          JSON.parse(techinfo.first.description)
+          true
+        rescue StandardError
+          false
+        end
 
         no_md = @resource.identifier.created_at > readme_md_require_date && readme_md_files.count.zero?
 

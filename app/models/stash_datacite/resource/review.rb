@@ -83,7 +83,12 @@ module StashDatacite
           content = readme_file&.file_content || ''
           @readme_content ||= content.encoding == Encoding::UTF_8 ? content : ''
         else
-          @readme_content ||= technical_info.try(:description)
+          begin
+            JSON.parse(technical_info.try(:description))
+            @readme_content ||= nil
+          rescue StandardError
+            @readme_content ||= technical_info.try(:description)
+          end
         end
       end
 
