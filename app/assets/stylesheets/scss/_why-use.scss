@@ -1,6 +1,6 @@
 .c-why-use__items {
   grid-row: 2;
-  background: linear-gradient(rgba($dark-gray, 0.8) 100%, transparent 0), url('/images/scss/stem.jpg') top left / cover no-repeat;
+  background: linear-gradient(rgba($dark-gray, 0.8) 100%, transparent 0), url('/images/scss/stem.jpg') bottom right / cover no-repeat;
   background-color: $dark-gray;
   display: flex;
   flex-direction: column;
@@ -12,6 +12,10 @@
   align-items: center;
   justify-content: flex-start;
   color: white;
+
+  &:not(:last-child) {
+    border-bottom: 10px solid white;
+  } 
 }
 
 .c-why-use__icon {
@@ -33,10 +37,4 @@
   color: white;
   font-size: 1.2em;
   font-weight: bold;
-}
-
-.c-why-use__blocker {
-  width: 100%;
-  height: 10px;
-  background-color: white;
 }
