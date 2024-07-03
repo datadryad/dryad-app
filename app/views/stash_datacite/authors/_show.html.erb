@@ -1,10 +1,10 @@
 <% unless authors.nil? %>
-  <% if highlight_fields.present? && current_user && current_user.min_app_admin? %>
+  <% if highlight_fields.present? && current_user.min_app_admin? %>
   	<div class="o-metadata__group1">
 	  	<% authors.each_with_index do |author, i| %>
 	  		<% highlights = highlight_fields.detect {|h| h[:index] == i} %>
 				<%= ([ (author.author_full_name ?
-					"<span class='o-metadata__author#{' highlight' if highlights&.key?(:author_full_name)}'>#{h(author.author_full_name)}</span>" : nil) ] +
+					"<b #{'class="highlight"' if highlights&.key?(:author_full_name)}'>#{h(author.author_full_name)}</b>" : nil) ] +
 			     author.affiliations.map{|i|
 						     if i.smart_name.present? && i.smart_name != ',' && i.smart_name != '.'
 						       "<span class='o-metadata__affiliation#{' highlight' if highlights&.key?(:affiliation)}'>#{h(i.smart_name(show_asterisk: true))}</span>"
@@ -15,6 +15,7 @@
 			     [ (author.author_orcid ? "<span class='c-orcid__icon'></span><span>#{display_author_orcid(author)}</span>" : nil) ] + [(author.author_email.present? ?
 							"<span class='#{' highlight' if highlights&.key?(:email)}'>#{author.author_email}</span>" : nil)])
 			     .flatten.reject(&:blank?).join(", ").html_safe %>
+			     <br/>
 		  <% end %>
 		  <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
 		  <% if deleted %>
@@ -23,8 +24,9 @@
 		</div>
   <% else %>
     <% affs = authors.map(&:affiliations).flatten.uniq.each_with_object([]) do |a, arr| 
-  		if a.smart_name.present? && a.smart_name != ',' && a.smart_name != '.'
-  			arr << [a.id, a.smart_name, a.ror_id]
+    	smart_name = a.smart_name(show_asterisk: current_user.min_app_admin?)
+  		if smart_name.present? && smart_name != ',' && smart_name != '.'
+  			arr << [a.id, smart_name, a.ror_id]
 			end
 			arr
 		end %>
