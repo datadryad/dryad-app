@@ -1,65 +1,16 @@
-// ##### Latest Datasets Component ##### //
+// ##### Latest blog posts Component ##### //
 
 #blog-latest-posts .blog-post-heading {
 	@extend %o-heading__level3;
+
+	a:link, a:visited {
+		text-decoration: none;
+	}
+	a:hover, a:active {
+		text-decoration: underline;
+	}
 }
 
-.c-latest__dataset, #blog-latest-posts div {
+#blog-latest-posts div {
 	border-bottom: thin solid $dark-blue;
-}
-
-#dryads-latest {
-	display: grid;
-	grid-column-gap: $spacing-lg;
-
-	h2 {
-		grid-row: 1;
-		grid-column: 2;
-	}
-
-	h2:first-of-type {
-		grid-column: 1;
-	}
-
-	#latest_tiles, #blog-latest-posts {
-		border: thin solid $dark-blue;
-		border-radius: $spacing-base;
-		grid-row: 2;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-
-		div {
-			flex: 1 1 20%;
-			padding: 0 $spacing-sm;
-
-			&:last-of-type {
-				border-bottom: none;
-			}
-		}
-		p {
-			font-size: .9em;
-			@include bp(screen2) {
-				font-size: .8em;
-			}
-		}
-	}
-
-	#blog-latest-posts{
-		.blog-post-heading {
-			@extend %o-heading__level4;
-		}
-	}
-
-	@media (max-width: $screen-md-min) {
-		display: block;
-		#latest_tiles {
-			margin-bottom: $spacing-md;
-		}
-	}
-}
-
-.c-latest__title {
-	display: block;
-	@extend %o-heading__level4;
 }
