@@ -878,6 +878,7 @@ module StashEngine
       changed.concat(changed_subjects(other_resource.subjects))
       changed.concat(changed_funders(other_resource))
       changed.concat(changed_related(other_resource.related_identifiers))
+      changed << 'internal_data' if curation_activities.map(&:note).reject(&:blank?).any? { |n| n.include?('Internal datum edited') }
 
       changed << 'data_files' if files_changed_since(other_resource: other_resource, association: 'data_files').present?
       changed << 'software_files' if files_changed_since(other_resource: other_resource, association: 'software_files').present?
