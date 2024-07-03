@@ -46,7 +46,7 @@ module StashEngine
     end
 
     def new_search
-      @properties = session[:search]
+      @properties = session[:admin_search]
       respond_to(&:js)
     end
 
@@ -54,7 +54,7 @@ module StashEngine
       existing = authorize StashEngine::AdminSearch.find_by(id: params[:id])
       return unless existing
 
-      existing.update!(properties: session[:search])
+      existing.update!(properties: session[:admin_search])
       respond_to(&:js)
     end
 
@@ -118,7 +118,7 @@ module StashEngine
         @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
         @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
       end
-      session[:search] = collect_properties
+      session[:admin_search] = collect_properties
     end
 
     # rubocop:disable Metrics/MethodLength
