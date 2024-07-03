@@ -305,6 +305,7 @@
   #latest_tiles, #blog-latest-posts {
     grid-row: 2;
     display: flex;
+    margin: 0 1rem;
     flex-direction: column;
     border-top: thin solid $lighter-green;
     border-bottom: thin solid $lighter-green;
@@ -325,10 +326,6 @@
         font-size: .88em;
       }
     }
-  }
-
-  #blog-latest-posts {
-    margin: 0 1rem;
   }
 
   .c-latest__title {
