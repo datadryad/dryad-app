@@ -13,7 +13,7 @@
     &::after {
       position: absolute;
       content: "";
-      border-bottom: 4px solid $design-extra-light-gray-color;
+      border-bottom: 4px solid $lighter-gray;
       width: 100%;
       top: .9rem;
       left: 50%;
@@ -32,7 +32,7 @@
       width: 1.8rem;
       height: 1.8rem;
       border-radius: 50%;
-      background-color: $design-extra-light-gray-color;
+      background-color: $lighter-gray;
       display: flex;
       align-items: center;
       justify-content: space-around;
@@ -41,16 +41,16 @@
 
     &.completed {
       &::after {
-        border-color: $design-medium-blue-color;
+        border-color: $medium-blue;
       }
       .step-counter {
-        background-color: $design-medium-blue-color;
-        color: $design-white-color;
+        background-color: $medium-blue;
+        color: white;
       }
     }
     &.current {
       .step-counter {
-        background-color: $design-lighter-blue-color;
+        background-color: $lighter-blue;
       }
       .step-name {
         font-weight: bold;

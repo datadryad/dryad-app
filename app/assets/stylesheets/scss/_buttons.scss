@@ -32,7 +32,7 @@ input[type=file]::file-selector-button {
 .o-button__plain-text {
   @extend %o-button__plain-text;
   padding: 8px 12px;
-  background-color: $design-lightest-blue-color
+  background-color: $lightest-blue;
 }
 
 .o-button__plain-text3 {
