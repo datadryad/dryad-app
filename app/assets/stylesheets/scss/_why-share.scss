@@ -2,6 +2,11 @@
 
 .t-home__why-share-group {
   margin: 0 1rem;
+  background: linear-gradient(rgba($lightest-gray, 0.9) 100%, transparent 0), url('/images/scss/stem.jpg') top left / cover no-repeat;
+
+  @media (max-width: 550px) {
+    margin: 0;  
+  }
 }
 
 .c-why-share {
@@ -52,16 +57,16 @@
     padding: $spacing-sm 0;
 
     &:not(:last-child) {
-      border-bottom: thin solid $lighter-green;
+      border-bottom: 10px solid white;
     }    
   }
 
   @media (min-width: $screen-md-min) and (max-width: 1050px) {
     &:first-child {
-      border-top: thin solid $lighter-green;
+      border-top: 10px solid white;
     }
     &:last-child {
-      border-bottom: thin solid $lighter-green;
+      border-bottom: 10px solid white;
     }
   }
 
@@ -71,11 +76,11 @@
     padding: $spacing-md $spacing-sm;
 
     &:nth-child(-n+2) {
-      border-bottom: thin solid $lighter-green;
+      border-bottom: 10px solid white;
     }
 
     &:nth-child(odd) {
-      border-right: thin solid $lighter-green;
+      border-right: 10px solid white;
     }
 
   }
