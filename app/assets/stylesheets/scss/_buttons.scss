@@ -9,8 +9,8 @@
   &:hover {opacity: 0.85;}
 
   &[disabled] {
-    background-color: lighten($design-light-gray-color, 20%);
-    color: $design-dark-gray-color;
+    background-color: lighten($light-gray, 20%);
+    color: $dark-gray;
     opacity: 1;
   }
 }
@@ -19,14 +19,14 @@
 input[type=file]::file-selector-button {
   @extend %o-button__plain-text;
   padding: 8px 12px;
-  background-color: $design-dark-blue-color;
-  color: $design-white-color;
+  background-color: $dark-blue;
+  color: white;
 }
 
 .o-button__plain-text2 {
   @extend %o-button__plain-text;
   padding: 8px 12px;
-  background-color: $design-lighter-blue-color;
+  background-color: $lighter-blue;
 }
 
 .o-button__plain-text {
@@ -38,26 +38,26 @@ input[type=file]::file-selector-button {
 .o-button__plain-text3 {
   @extend %o-button__plain-text;
   padding: 8px 12px;
-  border: thin solid $design-light-gray-color;
+  border: thin solid $light-gray;
   border-radius: 0;
-  background-color: $design-white-color;
+  background-color: white;
 }
 
 .o-button__plain-text5 {
   @extend %o-button__plain-text;
   padding: 4px 10px;
-  border: thin solid $design-white-color;
+  border: thin solid white;
   border-radius: 0;
-  background-color: $design-dark-blue-color;
-  color: $design-white-color;
+  background-color: $dark-blue;
+  color: white;
 }
 
 .o-button__link-dark {
   @extend %o-button__plain-text;
   margin: 8px 12px;
   padding: 12px 16px;
-  background-color: $design-dark-blue-color;
-  color: $design-white-color;
+  background-color: $dark-blue;
+  color: white;
   text-decoration: none;
 }
 
@@ -71,7 +71,7 @@ input[type=file]::file-selector-button {
   &:hover {text-decoration: underline;}
 
   &[disabled] {
-    color: $design-dark-gray-color;
+    color: $dark-gray;
     text-decoration: none;
   }
 }
@@ -79,7 +79,7 @@ input[type=file]::file-selector-button {
 .o-button__plain-text4 {
   @extend %o-button__link-style;
   padding: 5px 0;
-  color: $design-dark-blue-color;
+  color: $dark-blue;
   font-size: 0.9em;
 }
 
@@ -87,8 +87,8 @@ input[type=file]::file-selector-button {
   @extend %o-button__link-style;
   margin: 0 8px 0 0;
   padding: 0 12px 0 0;
-  border-right: 2px solid $design-light-gray-color;
-  color: $design-dark-blue-color;
+  border-right: 2px solid $light-gray;
+  color: $dark-blue;
   font-weight: bold;
 
   @include bp(screen2) {
@@ -99,14 +99,14 @@ input[type=file]::file-selector-button {
 .o-button__plain-text7 {
   @extend %o-button__link-style;
   padding: 0;
-  color: $design-dark-blue-color;
+  color: $dark-blue;
   font-weight: bold;
   text-align: left;
 
   &:hover {text-decoration: underline;}
 
   &[disabled] {
-    color: $design-dark-gray-color;
+    color: $dark-gray;
     text-decoration: none;
   }
 
@@ -122,9 +122,9 @@ input[type=file]::file-selector-button {
   display: inline-block;
   padding-top: 8px;
   padding-bottom: 8px;
-  border: thin solid $design-light-gray-color;
+  border: thin solid $light-gray;
   border-radius: 0;
-  color: $design-black-color;
+  color: black;
   text-decoration: none;
 
   &:hover,
@@ -140,7 +140,7 @@ input[type=file]::file-selector-button {
   align-items: center;
   padding-right: 12px;
   padding-left: 35px;
-  background: $design-white-color url('/images/scss/icon_left-blue-arrow.svg') left 10px center no-repeat;
+  background: white url('/images/scss/icon_left-blue-arrow.svg') left 10px center no-repeat;
 }
 
 .o-button__icon-left {
@@ -149,15 +149,15 @@ input[type=file]::file-selector-button {
 
 .o-button__icon-left--active {
   @extend %o-button__icon-left;
-  border: thin solid $design-lighter-blue-color;
-  background-color: $design-lighter-blue-color;
+  border: thin solid $lighter-blue;
+  background-color: $lighter-blue;
 }
 
 %o-button__icon-right {
   @extend %o-button__icon;
   padding-right: 35px;
   padding-left: 12px;
-  background: $design-white-color url('/images/scss/icon_right-blue-arrow.svg') right 10px center no-repeat;
+  background: white url('/images/scss/icon_right-blue-arrow.svg') right 10px center no-repeat;
 }
 
 .o-button__icon-right {
@@ -166,8 +166,8 @@ input[type=file]::file-selector-button {
 
 .o-button__icon-right--active {
   @extend %o-button__icon-right;
-  border: thin solid $design-lighter-blue-color;
-  background-color: $design-lighter-blue-color;
+  border: thin solid $lighter-blue;
+  background-color: $lighter-blue;
 }
 
 .o-button__submit {
@@ -175,7 +175,7 @@ input[type=file]::file-selector-button {
   height: 35px;
   padding: 0 12px;
   border: none;
-  background-color: $design-lighter-blue-color;
+  background-color: $lighter-blue;
   text-decoration: none;
 
   &:hover {
@@ -183,8 +183,8 @@ input[type=file]::file-selector-button {
   }
 
   &[disabled] {
-    background-color: lighten($design-light-gray-color, 20%);
-    color: $design-dark-gray-color;
+    background-color: lighten($light-gray, 20%);
+    color: $dark-gray;
     opacity: 1;
   }
 
@@ -194,7 +194,7 @@ input[type=file]::file-selector-button {
   padding: 3px 0 3px 25px;
   border: none;
   background-color: transparent;
-  color: $design-dark-blue-color;
+  color: $dark-blue;
   font-size: 0.9em;
 }
 
@@ -216,12 +216,12 @@ input[type=file]::file-selector-button {
 .o-button__undo-disabled {
   @extend %o-button__no-bg-icon-left;
   background: url('/images/scss/icon_undo-disabled.png') left center no-repeat;
-  color: $design-light-gray-color;
+  color: $light-gray;
 }
 
 %o-button__prev-next {
   border: none;
-  background-color: $design-white-color;
+  background-color: white;
   font-size: 0.9em;
 }
 
@@ -239,7 +239,7 @@ input[type=file]::file-selector-button {
 
 %o-button__text-number {
   border: none;
-  background-color: $design-white-color;
+  background-color: white;
 }
 
 .o-button__text-number {
@@ -248,7 +248,7 @@ input[type=file]::file-selector-button {
 
 .o-button__text-number--active {
   @extend %o-button__text-number;
-  color: $design-dark-blue-color;
+  color: $dark-blue;
 }
 
 .o-button__menu {
@@ -283,9 +283,9 @@ input[type=file]::file-selector-button {
 .o-button__add {
   @extend %o-button__add-remove;
   padding: 5px 8px;
-  border: thin solid $design-lighter-blue-color;
-  background-color: $design-lighter-blue-color;
-  color: $design-black-color;
+  border: thin solid $lighter-blue;
+  background-color: $lighter-blue;
+  color: black;
 
   &::before {
     content: '+';
@@ -296,9 +296,9 @@ input[type=file]::file-selector-button {
   }
 
   &[disabled] {
-    background-color: lighten($design-lighter-blue-color, 8);
-    border-color: lighten($design-lighter-blue-color, 8);
-    color: $design-dark-gray-color;
+    background-color: lighten($lighter-blue, 8);
+    border-color: lighten($lighter-blue, 8);
+    color: $dark-gray;
     opacity: 1;
   }
 }
@@ -309,9 +309,9 @@ input[type=file]::file-selector-button {
   margin: 0 0 20px;
   padding: 5px 8px;
   clear: both;
-  border: thin solid $design-lighter-blue-color;
-  background-color: $design-lighter-blue-color;
-  color: $design-black-color;
+  border: thin solid $lighter-blue;
+  background-color: $lighter-blue;
+  color: black;
 
   &:hover {
     opacity: 0.85;
@@ -319,8 +319,8 @@ input[type=file]::file-selector-button {
 
   &[disabled] {
     opacity: 1;
-    color: $design-dark-gray-color;
-    background-color: $design-extra-light-gray-color;
+    color: $dark-gray;
+    background-color: $lighter-gray;
   }
 }
 
@@ -328,19 +328,19 @@ input[type=file]::file-selector-button {
   @extend %o-button__link-style;
   @extend %o-button__add-remove;
   padding: 2px 0;
-  color: $design-dark-blue-color;
+  color: $dark-blue;
 }
 
 .o-button__connect-orcid {
   display: inline-block;
   padding: 5px 5px 5px 25px;
-  border: thin solid $design-extra-light-gray-color;
+  border: thin solid $lighter-gray;
   border-radius: 8px;
   outline: none;
-  background: $design-white-color url('/images/scss/icon_orcid.png') left 5px center no-repeat;
-  background-color: $design-white-color;
-  box-shadow: 1px 1px 3px $design-light-gray-color;
-  color: $design-light-gray-color;
+  background: white url('/images/scss/icon_orcid.png') left 5px center no-repeat;
+  background-color: white;
+  box-shadow: 1px 1px 3px $light-gray;
+  color: $light-gray;
   font-size: .8em;
   font-weight: bold;
   line-height: 24px;
@@ -350,15 +350,15 @@ input[type=file]::file-selector-button {
 }
 
 .o-button__connect-orcid:hover {
-  border: thin solid $bhavis-random-color;
-  color: $bhavis-random-color;
+  border: thin solid $medium-blue;
+  color: $medium-blue;
 }
 
 .o-button__help {
   display: inline-block;
   padding: 8px;
   border: none;
-  background: $design-white-color url('/images/scss/icon_question-mark.svg') center / 15px no-repeat;
+  background: white url('/images/scss/icon_question-mark.svg') center / 15px no-repeat;
   text-decoration: none;
 }
 

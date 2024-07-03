@@ -12,8 +12,8 @@
 	justify-content: space-between;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	border-top: thin solid $design-light-gray-color;
-	border-bottom: thin solid $design-light-gray-color;
+	border-top: thin solid $light-gray;
+	border-bottom: thin solid $light-gray;
 
 	&:not(:first-child) {
 		border-top: none;
@@ -57,7 +57,7 @@
   progress {
     border: none;
     background-color: #ddd;
-    color: $design-dark-blue-color;
+    color: $dark-blue;
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
@@ -66,18 +66,18 @@
   /* stylelint-disable selector-pseudo-element-no-unknown */
 
   /* bar color, firefox */
-  progress::-moz-progress-bar { background: $design-dark-blue-color; }
+  progress::-moz-progress-bar { background: $dark-blue; }
 
   /* foreground bar -- chrome and safari */
-  progress::-webkit-progress-value {background: $design-dark-blue-color;  }
+  progress::-webkit-progress-value {background: $dark-blue;  }
 
   /* background of unfilled bar -- chrome and safari */
-  progress::-webkit-progress-bar { background: $design-offwhite-color; }
+  progress::-webkit-progress-bar { background: $lightest-gray; }
 
   progress::-webkit-progress-bar,
   progress::-moz-progress-bar,
   progress::progress-bar {
-    background-color: $design-dark-blue-color;
+    background-color: $dark-blue;
   }
 
   /* stylelint-enable selector-pseudo-element-no-unknown */
@@ -95,14 +95,14 @@
 	padding: 0 10px;
 	border: none;
 	background-color: transparent;
-	color: $design-dark-blue-color;
+	color: $dark-blue;
 	font-weight: bold;
 	text-decoration: none;
 }
 
 .c-upload__no-files-text {
 	margin: 0 0 10px;
-	color: $design-dark-gray-color;
+	color: $dark-gray;
 	font-weight: bold;
 }
 
@@ -122,13 +122,13 @@
 
 .c-upload__upload-complete-text {
 	margin: 10px 0 0;
-	color: $design-green-color;
+	color: $green;
 	font-weight: bold;
 }
 
 .c-upload__upload-error-text {
 	margin: 10px 0 0;
-	color: $design-red-color;
+	color: $red;
 	font-weight: bold;
 }
 

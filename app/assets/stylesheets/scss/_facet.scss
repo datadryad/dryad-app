@@ -1,7 +1,7 @@
 // ##### Facet Component ##### //
 
 .c-facet {
-  border: thin solid $design-dark-blue-color;
+  border: thin solid $dark-blue;
 }
 
 .c-facet__header {
@@ -12,7 +12,7 @@
     flex-flow: row nowrap;
     justify-content: space-between;
     padding: 10px;
-    background-color: $design-dark-blue-color;
+    background-color: $dark-blue;
   }
 
 }
@@ -20,7 +20,7 @@
 .c-facet__heading {
   position: relative; // to %c-facet__toggle-button
   padding: 10px;
-  background-color: $design-dark-blue-color;
+  background-color: $dark-blue;
 
   @include bp(screen2) {
     padding: 0;
@@ -29,7 +29,7 @@
 }
 
 .c-facet__heading-text {
-  color: $design-white-color;
+  color: white;
   font-size: 1.2em;
 }
 
@@ -77,18 +77,18 @@
 %c-facet__deselect-button {
   padding: 10px;
   border: none;
-  background-color: $design-light-gray-color;
+  background-color: $light-gray;
 
   @include bp(screen2) {
     padding: 0;
     background-color: transparent;
-    color: $design-white-color;
+    color: white;
     font-size: 0.9em;
   }
 
   &[disabled] {
-    background-color: lighten($design-light-gray-color, 20%);
-    color: $design-light-gray-color;
+    background-color: lighten($light-gray, 20%);
+    color: $light-gray;
 
     @include bp(screen2) {
       display: none;
@@ -122,7 +122,7 @@
   min-height: 25px;
   margin: 10px;
   padding: 0 35px 0 5px;
-  border: thin solid $design-light-gray-color;
+  border: thin solid $light-gray;
   background: url('/images/scss/icon_magnifying-glass-blue.svg') right 5px center no-repeat;
 }
 
@@ -163,7 +163,7 @@ html.svg .c-facet__check-input {
   cursor: pointer;
 
   &:not(:first-of-type) {
-    border-top: thin solid $design-dark-blue-color;
+    border-top: thin solid $dark-blue;
   }
 
 }

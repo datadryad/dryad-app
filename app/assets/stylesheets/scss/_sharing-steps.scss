@@ -2,14 +2,14 @@
   width: 100%;
   margin: 3em 0;
   padding: 30px 0;
-  background-color: $design-dark-blue-color;
-  color: $design-offwhite-color;
+  background-color: $dark-blue;
+  color: $lightest-gray;
   line-height: 1.7;
 }
 
 .o-heading__level2-sharing-steps {
   @extend %o-heading__level2;
-  color: $design-white-color;
+  color: white;
   font-size: 2em;
   text-align: center;
 }
@@ -25,7 +25,7 @@
   padding-left: 1em;
 
   a {
-    color: $design-offwhite-color;
+    color: $lightest-gray;
     text-decoration: none;
   }
 
@@ -37,7 +37,7 @@
 .c-sharing-steps__strong {
   display: inline-block;
   padding: 0 0.27em 0 0;
-  color: $design-white-color;
+  color: white;
   font-size: 1.15em;
   font-weight: bold;
 }

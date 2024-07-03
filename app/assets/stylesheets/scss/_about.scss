@@ -1,6 +1,6 @@
 .about-bios {
   padding-top: $spacing-sm;
-  border-top: thin solid $design-dark-blue-color;
+  border-top: thin solid $dark-blue;
 
   @media (min-width: 620px) {
     columns: 2;
@@ -28,7 +28,7 @@
     }
 
     h5 {
-      color: $design-black-color;
+      color: black;
       display: inline;
     }
 
@@ -53,22 +53,22 @@ h4 + .about-bios {
   tr {
     margin: 10px;
     padding: 10px;
-    border-top: .5px solid $design-light-gray-color;
-    background-color: $design-white-color;
+    border-top: .5px solid $light-gray;
+    background-color: white;
   }
 
   th,
   td {
     margin: 10px;
     padding: 10px 18px;
-    border: .5px solid $design-light-gray-color;
+    border: .5px solid $light-gray;
     font-weight: bold;
     line-height: 1.8;
     text-align: left;
   }
 
   tr:nth-child(even) {
-    background-color: $design-super-extra-light-gray-color;
+    background-color: $lightest-gray;
   }
 }
 
@@ -109,7 +109,7 @@ dl.timeline {
     z-index: -1;
     width: 2px;
     height: calc(100% - #{$spacing-sm});
-    background-color: $design-black-color;
+    background-color: black;
   }
   div {
     display: flex;
@@ -119,8 +119,8 @@ dl.timeline {
   dt {
     flex: 0 0 80px;
     font-size: 1.5rem;
-    color: $design-white-color;
-    background-color: $design-light-blue-color;    
+    color: white;
+    background-color: $light-blue;    
     border-radius: 50%;
     width: 80px;
     height: 70px; 
@@ -133,7 +133,7 @@ dl.timeline {
     margin-left: $spacing-sm;
     padding: $spacing-sm;
     border-radius: $spacing-base;
-    border: 2px solid $design-light-blue-color;
+    border: 2px solid $light-blue;
 
     &::before {
       content: '';
@@ -144,39 +144,39 @@ dl.timeline {
       top: 50%;
       left: -($spacing-sm + $spacing-base);
       width: ($spacing-sm + $spacing-base);
-      background-color: $design-light-blue-color;
+      background-color: $light-blue;
     }
   }
   div:nth-child(5n-3) {
     dd {
-      border-color: $design-dark-blue-color;
+      border-color: $dark-blue;
     }
     dt, dd::before {
-      background-color: $design-dark-blue-color;
+      background-color: $dark-blue;
     }
   }
   div:nth-child(5n-2) {
     dd {
-      border-color: $design-dark-navy-color;
+      border-color: $dark-navy;
     }
     dt, dd::before {
-      background-color: $design-dark-navy-color;
+      background-color: $dark-navy;
     }
   } 
   div:nth-child(5n-1) {
     dd {
-      border-color: $design-black-color;
+      border-color: black;
     }
     dt, dd::before {
-      background-color: $design-black-color;
+      background-color: black;
     }
   }  
   div:nth-child(5n+5) {
     dd {
-      border-color: $design-dark-gray-color;
+      border-color: $dark-gray;
     }
     dt, dd::before {
-      background-color: $design-dark-gray-color;
+      background-color: $dark-gray;
     }
   }  
 }

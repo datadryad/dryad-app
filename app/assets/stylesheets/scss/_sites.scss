@@ -38,14 +38,14 @@
   display: block;
   margin: 0 0 2px;
   padding: 10px;
-  background-color: $design-light-blue-color;
-  color: $design-white-color;
+  background-color: $light-blue;
+  color: white;
   text-decoration: none;
 
   @include bp(screen3) {
     margin: 0;
-    background-color: $design-white-color;
-    color: $design-black-color;
+    background-color: white;
+    color: black;
 
     &:hover,
     &:focus {
@@ -97,11 +97,11 @@
 .o-sites__group-heading {
   @extend %o-sites__item;
   padding: 5px 10px;
-  background-color: $design-dark-gray-color;
+  background-color: $dark-gray;
 
   @include bp(screen3) {
-    background-color: $design-dark-blue-color;
-    color: $design-white-color;
+    background-color: $dark-blue;
+    color: white;
   }
 
 }
@@ -110,9 +110,9 @@
   @extend %o-sites__item;
 
   @include bp(screen3) {
-    border-right: thin solid $design-light-gray-color;
-    border-bottom: thin solid $design-light-gray-color;
-    border-left: thin solid $design-light-gray-color;
+    border-right: thin solid $light-gray;
+    border-bottom: thin solid $light-gray;
+    border-left: thin solid $light-gray;
 
     &:hover,
     &:focus {
@@ -127,8 +127,8 @@
   @extend %o-sites__item;
 
   @include bp(screen3) {
-    border-right: thin solid $design-light-gray-color;
-    border-left: thin solid $design-light-gray-color;
+    border-right: thin solid $light-gray;
+    border-left: thin solid $light-gray;
 
     &:hover,
     &:focus {
@@ -144,8 +144,8 @@
 
   @include bp(screen3) {
     padding: 10px 10px 10px 30px;
-    border-right: thin solid $design-light-gray-color;
-    border-left: thin solid $design-light-gray-color;
+    border-right: thin solid $light-gray;
+    border-left: thin solid $light-gray;
 
     &:hover,
     &:focus {
@@ -161,9 +161,9 @@
 
   @include bp(screen3) {
     padding: 10px 10px 10px 30px;
-    border-right: thin solid $design-light-gray-color;
-    border-bottom: thin solid $design-light-gray-color;
-    border-left: thin solid $design-light-gray-color;
+    border-right: thin solid $light-gray;
+    border-bottom: thin solid $light-gray;
+    border-left: thin solid $light-gray;
 
     &:hover,
     &:focus {
@@ -176,19 +176,19 @@
 
 .o-sites__login {
   @extend %o-sites__item;
-  background-color: $design-dark-blue-color;
+  background-color: $dark-blue;
   text-align: center;
 
   @include bp(screen3) {
     margin-left: 1em;
     padding: 0;
     background-color: transparent;
-    color: $design-dark-blue-color;
+    color: $dark-blue;
     text-align: left;
 
     &:hover,
     &:focus {
-      color: $design-light-blue-color;
+      color: $light-blue;
     }
 
   }

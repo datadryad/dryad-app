@@ -11,7 +11,7 @@
     z-index: 1; /* positioning is so that dd-menu goes in a higher order and context than some other parts of page */
     justify-content: space-between;
     padding-bottom: 10px;
-    border-bottom: thin solid $design-dark-gray-color;
+    border-bottom: thin solid $dark-gray;
   }
 
 }
@@ -39,7 +39,7 @@
     &:nth-child(2) {
       margin-left: $spacing-sm;
       padding-left: $spacing-sm;
-      border-left: 2px solid $design-dark-gray-color;
+      border-left: 2px solid $dark-gray;
     }
   }
 }
@@ -95,7 +95,7 @@
   &#mobile-nav-bar {
     align-items: baseline;
     margin: 0 -10px 2px;
-    background-color: $design-lightest-blue-color;
+    background-color: $lightest-blue;
     
     @include bp(screen1) {
       margin: 0 -20px 2px;
@@ -144,8 +144,8 @@
   &.is-open {
     padding-bottom: 6px;
     margin-bottom: -6px;
-    background-color: $design-medium-blue-color;
-    color: $design-white-color;
+    background-color: $medium-blue;
+    color: white;
   }
 
   a {
@@ -162,13 +162,13 @@
     }
 
     &:link, &:visited {
-      color: $design-dark-blue-color;
+      color: $dark-blue;
       text-decoration: none;
     }
 
     @media (max-width: $screen-lg-min - 1) {
       &:focus-visible {
-        outline: 2px solid $design-medium-blue-color;
+        outline: 2px solid $medium-blue;
         outline-offset: 0;
       }
     }
@@ -183,25 +183,25 @@
 
   @media (max-width: $screen-lg-min - 1) {
     a, button {
-      background-color: $design-medium-blue-color;
-      color: $design-white-color;
+      background-color: $medium-blue;
+      color: white;
       padding: 10px 30px;
       display: block;
       width: 100%;
       text-align: left;
 
       &:hover, &[aria-expanded="true"] {
-        background-color: $design-light-blue-color;
+        background-color: $light-blue;
       }
     }
     button:focus, a:focus-visible {
-      outline: 2px solid $design-orange-color;
+      outline: 2px solid $lighter-green;
       outline-offset: 0;
     }
   }
 
   a:link, a:visited {
-    color: $design-white-color;
+    color: white;
     text-decoration: none;
   }
 
@@ -225,7 +225,7 @@
       margin: 0;
       min-width: 180px;
       white-space: nowrap;
-      border-right: thin solid $design-orange-color;
+      border-right: thin solid $lighter-green;
     }
 
     li {
@@ -234,33 +234,28 @@
       a {
         display: block;
         padding: 10px 30px;
-        background-color: $design-white-color;
-        color: $design-dark-blue-color;
+        background-color: white;
+        color: $dark-blue;
         text-decoration: none;
-        border-top: 2px solid $design-medium-blue-color;
+        border-top: 2px solid $medium-blue;
 
         &:hover {
-          background-color: $design-lighter-blue-color;
+          background-color: $lighter-blue;
         }
 
         @include bp(screen3) {
           margin: 0;
-          background-color: $design-white-color;
-          color: $design-black-color;
+          background-color: white;
+          color: black;
           border-top: none;
-          border-left: thin solid $design-light-gray-color;
-          border-bottom: thin solid $design-light-gray-color;
+          border-left: thin solid $light-gray;
+          border-bottom: thin solid $light-gray;
 
           &:hover,
           &:focus {
             color: $link-globalnav-hover-color;
-            background-color: $design-white-color;
+            background-color: white;
             text-decoration: underline;
-          }
-
-          &:hover,
-          &:focus {
-            color: $link-globalnav-hover-color;
           }
         }
       }
@@ -272,7 +267,7 @@
   display: flex;
   margin: 0;
   padding: 0 15px;
-  background-color: $design-white-color;
+  background-color: white;
   
   a:link, a:visited {
     color: $link-body-color;
@@ -285,8 +280,12 @@
     text-decoration: underline;
   }
 
+  &:active {
+    color: $link-body-active-color;
+  }
+
   &:not(:last-child) {
-    border-right: thin solid $design-orange-color;
+    border-right: thin solid $lighter-green;
   }
 
   &:last-child {
@@ -315,8 +314,8 @@
 
   &.dev-only {
     text-align: right;
-    color: $design-orange-color;
-    background-color: $design-white-color;
+    color: $green;
+    background-color: white;
     @media (max-width: $screen-lg-min - 1) {
       position: absolute;
       top: 0;
@@ -344,7 +343,7 @@
   background-color: transparent;
 
   &::after {
-    color: $design-white-color;
+    color: white;
     font-family: 'Font Awesome 6 Free';
     content: " \f0d7";
     font-weight: 900;
@@ -356,7 +355,7 @@
 
   @include bp(screen3) {
     padding: 0;
-    color: $design-black-color;
+    color: black;
 
     &:hover,
     &:focus {
@@ -366,22 +365,25 @@
     }
 
     &::after {
-      color: $design-dark-blue-color;
+      color: $dark-blue;
     }
   }
 }
 
 .c-header__global-search {
   margin: -5px auto;
-  background-color: $design-light-blue-color;
+  background-color: $light-blue;
   height: 38px;
   .o-global-search__input {
     font-size: 1em;
     min-width: 6ch;
     width: calc(100% - 48px);
+    margin-right: -32px;
+    padding-right: calc(32px + .5em);
   }
   .o-global-search__submit-button {
     width: 32px;
+    height: 38px;
   }
 
   @include bp(screen3) {
@@ -389,15 +391,18 @@
     width: $global-search-width;
     margin: 0;
     padding: 0;
-    background-color: $design-white-color;
+    background-color: white;
     height: 28px;
 
     .o-global-search__input {
       font-size: .9em;
       width: calc(100% - 38px);
+      margin-right: -28px;
+      padding-right: calc(28px + .5em);
     }
     .o-global-search__submit-button {
       width: 28px;
+      height: 28px;
     }
   }
 }
@@ -408,7 +413,7 @@
   padding: 0 $spacing-base;
   background-color: transparent;
   border: none;
-  color: $design-dark-blue-color;
+  color: $dark-blue;
   white-space: nowrap;
 
   i {
@@ -416,6 +421,6 @@
   }
 
   &[aria-expanded="true"] {
-    color: $design-white-color;
+    color: white;
   }
 }

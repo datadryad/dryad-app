@@ -5,7 +5,7 @@
 	flex-flow: row wrap;
 	justify-content: space-between;
 	padding: 10px 0 0;
-	border-bottom: thin solid $design-dark-gray-color;
+	border-bottom: thin solid $dark-gray;
 
 	@include bp(screen2) {
 		padding: 10px 10px 0;
@@ -20,7 +20,7 @@
 .c-data-results__number {
 	flex: 0 0 auto;
 	width: 30px;
-	color: $design-dark-blue-color;
+	color: $dark-blue;
 	font-size: 1.3em;
 }
 
@@ -30,7 +30,7 @@
 
 .c-data-results__title {
 	margin: 0 0 10px;
-	color: $design-dark-blue-color;
+	color: $dark-blue;
 	font-size: 1.3em;
 }
 

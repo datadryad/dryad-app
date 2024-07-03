@@ -61,7 +61,7 @@
         <div class="c-lined-table__data"><%= p.edited_by_name_w_role %></div>
         <% if policy([:stash_engine, :admin_datasets]).activity_log? %>
           <div class="c-lined-table__actions">
-            <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: p.resource.identifier_id) %>">
+            <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: p.resource.identifier_id) %>" class="c-admin-edit-icon">
               <i class="fa fa-clock-o" aria-hidden="true"></i>
             </a>
           </div>

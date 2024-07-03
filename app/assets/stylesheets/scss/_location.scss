@@ -24,9 +24,9 @@
 	flex: 1 0 50%;
 	height: $input-height + 2px;
 	padding: 0 8px 0 30px;
-	border: thin solid $design-dark-blue-color;
+	border: thin solid $dark-blue;
 	background: left 8px center no-repeat;
-	color: $design-dark-blue-color;
+	color: $dark-blue;
 	text-align: left;
 
 	@include bp(screen2) {
@@ -46,9 +46,9 @@
 
 .c-location__point-button--active {
 	@extend %c-location__point-button;
-	background-color: $design-dark-blue-color;
+	background-color: $dark-blue;
 	background-image: url('/images/scss/icon_point-white.svg');
-	color: $design-white-color;
+	color: white;
 }
 
 %c-location__box-button {
@@ -62,9 +62,9 @@
 
 .c-location__box-button--active {
 	@extend %c-location__box-button;
-	background-color: $design-dark-blue-color;
+	background-color: $dark-blue;
 	background-image: url('/images/scss/icon_box-white.svg');
-	color: $design-white-color;
+	color: white;
 }
 
 .c-location__label {
@@ -118,7 +118,7 @@
 	width: 50px;
 	height: $input-height;
 	padding: 0 10px;
-	border: thin solid $design-dark-gray-color;
+	border: thin solid $dark-gray;
 
 	&:first-of-type {
 		margin: 0 10px 0 0;
@@ -154,7 +154,7 @@
 	align-self: center;
 	width: 25px;
 	margin: 0 5px 0 0;
-	color: $design-light-blue-color;
+	color: $light-blue;
 	text-align: right;
 }
 

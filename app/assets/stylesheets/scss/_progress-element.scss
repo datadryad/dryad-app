@@ -5,17 +5,17 @@
 progress {
   height: .7em;
   border: none;
-  background-color: $design-offwhite-color;
+  background-color: $lightest-gray;
 
   &::-webkit-progress-bar {
-    background-color: $design-offwhite-color;
+    background-color: $lightest-gray;
   }
 
   &::-moz-progress-bar {
-    background-color: $design-dark-blue-color;
+    background-color: $dark-blue;
   }
 
   &::-webkit-progress-value {
-    background-color: $design-dark-blue-color;
+    background-color: $dark-blue;
   }
 }

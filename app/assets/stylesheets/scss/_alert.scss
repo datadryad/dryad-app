@@ -15,36 +15,36 @@
 
 .c-alert--success {
 	@extend %c-alert;
-	color: $design-white-color;
-	background-color: $design-green-color;
+	color: white;
+	background-color: $green;
 	background-image: url('/images/scss/icon_success.svg');
 }
 
 .c-alert--informational {
 	@extend %c-alert;
-	color: $design-white-color;
-	background-color: $design-dark-gray-color;
+	color: white;
+	background-color: $dark-gray;
 	background-image: url('/images/scss/icon_info.svg');
 }
 
 .c-alert--notification {
   @extend %c-alert;
-  color: $design-white-color;
-  background-color: $design-slate-color;
+  color: white;
+  background-color: $slate;
   background-image: url('/images/scss/icon_info.svg');
 }
 
 .c-alert--error {
 	@extend %c-alert;
-	color: $design-white-color;
-	background-color: $design-red-color;
+	color: white;
+	background-color: $red;
 	background-image: url('/images/scss/icon_warning-white.svg');
 }
 
 .c-alert--error-lite {
 	@extend %c-alert;
-	border: 2px solid $design-red-color;
-	background-color: $design-white-color;
+	border: 2px solid $red;
+	background-color: white;
 	background-image: url('/images/scss/icon_warning.svg');
 }
 
@@ -55,7 +55,7 @@
 	background-repeat: no-repeat;
 	background-position: left 8px;
 	background-size: 20px;
-	color: $design-white-color;
+	color: white;
 }
 
 .c-alert__text {
@@ -63,7 +63,7 @@
 }
 
 .c-alert__text-lite {
-	color: $design-red-color;
+	color: $red;
 }
 
 .c-alert__close {
@@ -72,9 +72,9 @@
 
 .c-alert--migration {
   @extend %c-alert;
-  border: 2px solid $design-dark-blue-color;
-  background-color: $design-white-color;
-  color: $design-dark-blue-color;
+  border: 2px solid $dark-blue;
+  background-color: white;
+  color: $dark-blue;
 
   .c-alert__close {
 		background: transparent url('/images/scss/icon_close-blue.png') center / 15px no-repeat;
@@ -86,5 +86,5 @@
 	margin-bottom: 1em;
 	padding: 0 1em;
 	clear: both;
-	border: 2px solid $design-red-color;
+	border: 2px solid $red;
 }

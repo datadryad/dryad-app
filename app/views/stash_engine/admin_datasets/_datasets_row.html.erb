@@ -60,8 +60,8 @@
       </div>
       <% if policy([:stash_engine, :admin_datasets]).activity_log? %>
         <div class="c-lined-table__actions">
-          <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: dataset.identifier_id) %>">
-            <i class="far fa-clock" aria-hidden="true"></i>
+          <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: dataset.identifier_id) %>" class="c-admin-edit-icon">
+            <i class="fa fa-clock" aria-hidden="true"></i>
           </a>
         </div>
       <% end %>
