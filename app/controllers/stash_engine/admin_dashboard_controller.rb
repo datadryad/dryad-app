@@ -36,6 +36,7 @@ module StashEngine
       @datasets = @datasets.page(@page).per(@page_size)
 
       add_subqueries
+      collect_properties
 
       respond_to do |format|
         format.html
@@ -46,7 +47,7 @@ module StashEngine
     end
 
     def new_search
-      @properties = session[:admin_search]
+      @properties = params[:properties]
       respond_to(&:js)
     end
 
@@ -54,14 +55,14 @@ module StashEngine
       existing = authorize StashEngine::AdminSearch.find_by(id: params[:id])
       return unless existing
 
-      existing.update!(properties: session[:admin_search])
+      existing.update!(properties: params[:properties])
       respond_to(&:js)
     end
 
     private
 
     def collect_properties
-      { fields: @fields, filters: @filters, search_string: @search_string }.to_json
+      @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
     end
 
     def setup_paging
@@ -108,17 +109,16 @@ module StashEngine
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
       session[:admin_search_string] = params[:q] if params.key?(:q)
-      if @fields.blank?
-        @search_string = ''
-        @filters = {}
-        @fields = %w[doi authors metrics status submit_date publication_date]
-        @fields << 'journal' if @sponsor_limit.present?
-        @fields << 'identifiers' if @journal_limit.present?
-        @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
-        @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
-        @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
-      end
-      session[:admin_search] = collect_properties
+      return unless @fields.blank?
+
+      @search_string = ''
+      @filters = {}
+      @fields = %w[doi authors metrics status submit_date publication_date]
+      @fields << 'journal' if @sponsor_limit.present?
+      @fields << 'identifiers' if @journal_limit.present?
+      @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
+      @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
+      @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
     end
 
     # rubocop:disable Metrics/MethodLength
