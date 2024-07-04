@@ -38,10 +38,12 @@
     <% unless unaltered %>
       <% if @saved_search %>
         <%= form_with(url: save_admin_search_path(id: @saved_search&.id), method: :patch, local: false) do %>
+          <input type="hidden" name="properties" value="<%= @properties %>" />
           <button class="o-button__plain-text7" id="search_edit" aria-controls="search_form" aria-expanded="true"><i class="far fa-bookmark" aria-hidden="true"></i>Save search changes</button>
         <% end %>
       <% end %>
       <%= form_with(url: new_admin_search_path, method: :get, local: false) do %>
+        <input type="hidden" name="properties" value="<%= @properties %>" />
         <button class="o-button__plain-text7" id="search_save" aria-haspopup="true" aria-expanded="false" <% unless keepopen %>hidden<% end %>><i class="fa fa-bookmark" aria-hidden="true"></i>Save <%= @saved_search ? 'as new ' : ''%>search</button>
       <% end %>
     <% end %>
