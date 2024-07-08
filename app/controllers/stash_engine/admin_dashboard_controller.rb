@@ -3,13 +3,16 @@ module StashEngine
   class AdminDashboardController < ApplicationController
     helper SortableTableHelper
     before_action :require_admin
-    before_action :setup_paging, only: :index
-    before_action :setup_limits, only: :index
-    before_action :setup_search, only: :index
+    protect_from_forgery except: :results
+    before_action :setup_paging, only: %i[results]
+    before_action :setup_limits, only: %i[index results]
+    before_action :setup_search, only: %i[index results]
     # before_action :load, only: %i[popup note_popup edit]
 
-    def index
-      @datasets = authorize StashEngine::Resource.latest_per_dataset.select(
+    def index; end
+
+    def results
+      @datasets = StashEngine::Resource.latest_per_dataset.select(
         'distinct stash_engine_resources.id, stash_engine_resources.title, stash_engine_resources.total_file_size,
         stash_engine_resources.user_id, stash_engine_resources.tenant_id, stash_engine_resources.identifier_id,
         stash_engine_resources.last_curation_activity_id, stash_engine_resources.updated_at, stash_engine_resources.publication_date'
@@ -18,7 +21,7 @@ module StashEngine
       add_fields
       add_filters
 
-      if request.format.html? && (@page == 1 || session[:admin_search_count].blank?)
+      if request.format.js? && (@page == 1 || session[:admin_search_count].blank?)
         session[:admin_search_count] = StashEngine::Resource.select('count(*) as total').from(@datasets).map(&:total).first
       end
 
@@ -39,7 +42,7 @@ module StashEngine
       collect_properties
 
       respond_to do |format|
-        format.html
+        format.js
         format.csv do
           headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_report.csv"
         end

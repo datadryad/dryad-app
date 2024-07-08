@@ -38,12 +38,13 @@ module StashEngine
     end
 
     # Creates the clickable column heading for a sortable column
-    def sortable_column_head(sort_field:, title:)
+    def sortable_column_head(sort_field:, title:, remote: false)
       link_to(
         title,
         sort_link_url(sort_field),
         class: params[:sort] == sort_field ? "current #{params[:direction]}" : nil,
-        title: 'Click to sort'
+        title: 'Click to sort',
+        remote: remote
       )
     end
 
