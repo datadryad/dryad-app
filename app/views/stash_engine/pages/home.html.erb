@@ -1,40 +1,54 @@
 <% @page_title = 'Home - publish and preserve your data' %>
 <div class="t-home__banner o-banner" role="img" aria-label="Drug-resistant, Mycobacterium tuberculosis bacteria, the pathogen responsible for causing the disease tuberculosis (TB)" style="background-image: url(<%= asset_path 'stash_engine/splash/tuberculosis.jpg'%>)">
-  <h1 class="o-banner__tagline" style="background-color: rgba(15, 85, 129, 0.68);">Trusted, simple, community driven</h1>
+  <div class="o-banner__stretch" style="background-color: rgba(15, 85, 129, 0.68);">
+    <h1 class="o-banner__tagline">Trusted, simple, community driven</h1>
+    <div class="o-banner-search">
+      <%= link_to raw('Explore<span class="hide-mobile">&nbsp;data</span>'), '/search', class: 'o-banner-explore js-nav-out' %>
+      <form role="search" class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
+        <input name="utf8" value="✓" type="hidden">
+        <label class="o-global-search__label" for="search-field-input1">Search Dryad data</label>
+        <input class="o-global-search__input" id="search-field-input1" type="search" name="q">
+        <button aria-label="Submit search" class="o-global-search__submit-button" type="submit" id="search">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          <span>Search</span>
+        </button>
+      </form>
+    </div>
+  </div>
   <!-- Promoting scholarship through open data -->
   <!-- the above may be required for Nagios check -->
   <div class="o-banner__credit">Photo by <a href="https://unsplash.com/@cdc?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash">CDC</a> on <a href="https://unsplash.com/photos/a-close-up-of-a-bunch-of-purple-sticks-iwkcspbMWx8?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash">Unsplash</a></div>
 </div>
-<div class="t-home__quote-search-group">
+<div class="t-home__quote-group">
   <div class="t-home__quote o-quote">
     <div class="o-quote__quote">
       Over 15 years serving the community with easy, dependable data sharing solutions.
       <br>
-      <a href="<%= stash_url_helpers.join_us_path %>" class="o-quote__quote">Learn about membership</a>
+      <a href="<%= stash_url_helpers.join_us_path %>">Learn about membership</a>
     </div>
   </div>
-  <div class="t-home__search o-home-search">
-    <div class="o-home__search-group">
+  <div class="o-home-submit">
+    <div class="o-home-submit-group">
       <% lnk = current_user ? stash_url_helpers.dashboard_path : stash_url_helpers.choose_login_path %>
       <% txt = current_user ? 'Submit a new dataset' : 'Login and then submit a new dataset' %>
-      <%= button_to 'Submit now', lnk, method: :get, class: "o-home-search__submit-button", title: txt %>
+      <%= button_to 'Submit now', lnk, method: :get, class: "o-home-submit__submit-button", title: txt %>
     </div>
   </div>
 </div>
-<%= render partial: 'layouts/why_share' %>
-
-<%= render partial: 'layouts/why_use' %>
-<div id="dryads-latest">
-  <% unless @hostname == 'localhost' %>
-    <h2 class="o-heading__level1-home top-row">Most recent datasets</h2>
-    <div id="latest_tiles" data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>">
-      <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
-    </div>
-  <% end %>
+<div class="o-home__group o-home__data_group">
+  <h2 class="o-heading__level1-home top-row">Most recent datasets</h2>
+  <%# Keep unless hostname below for rspec tests to pass %>
+  <div id="latest_tiles" <% unless @hostname == 'localhost' %>data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>"<% end %>>
+    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+  </div>
+  <%= render partial: 'layouts/why_share' %>
+</div>
+<div class="o-home__group o-home__news_group">
+  <%= render partial: 'layouts/why_use' %>
   <h2 class="o-heading__level1-home">Latest news</h2>
   <div id="blog-latest-posts" data-count="5">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
 </div>
-<p style="text-align:right; font-size:.9em"><a href="https://blog.datadryad.org">More news from Dryad →</a></p>
+<p style="text-align:right; font-size:.9em; margin-top: -2rem;"><a href="https://blog.datadryad.org">More news from Dryad →</a></p>
 

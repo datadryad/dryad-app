@@ -37,7 +37,7 @@ module StashEngine
         @scope
           .joins(latest_resource: :last_curation_activity)
           .where(latest_resource: { user_id: @user&.id })
-          .select("stash_engine_identifiers.*,
+          .select("stash_engine_identifiers.id, identifier, identifier_type, pub_state, latest_resource_id,
             CASE
               WHEN status in ('in_progress', 'action_required') THEN 0
               WHEN status='peer_review' THEN 1
@@ -45,8 +45,7 @@ module StashEngine
               WHEN status='withdrawn' THEN 4
               ELSE 3
             END as sort_order")
-          .order('sort_order ASC')
-          .merge(CurationActivity.order(updated_at: :desc))
+          .order('sort_order asc, latest_resource.updated_at desc')
       end
 
       private

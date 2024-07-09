@@ -4,16 +4,15 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_admin
     before_action :setup_paging, only: :index
-    before_action :setup_limits, only: %i[index new_search save_search]
-    before_action :setup_search, only: %i[index new_search save_search]
-    before_action :collect_properties, only: %i[new_search save_search]
+    before_action :setup_limits, only: :index
+    before_action :setup_search, only: :index
     # before_action :load, only: %i[popup note_popup edit]
 
     def index
       @datasets = authorize StashEngine::Resource.latest_per_dataset.select(
         'distinct stash_engine_resources.id, stash_engine_resources.title, stash_engine_resources.total_file_size,
         stash_engine_resources.user_id, stash_engine_resources.tenant_id, stash_engine_resources.identifier_id,
-        stash_engine_resources.last_curation_activity_id, stash_engine_resources.publication_date'
+        stash_engine_resources.last_curation_activity_id, stash_engine_resources.updated_at, stash_engine_resources.publication_date'
       )
 
       add_fields
@@ -47,6 +46,7 @@ module StashEngine
     end
 
     def new_search
+      @properties = session[:admin_search]
       respond_to(&:js)
     end
 
@@ -54,14 +54,14 @@ module StashEngine
       existing = authorize StashEngine::AdminSearch.find_by(id: params[:id])
       return unless existing
 
-      existing.update(properties: @properties)
+      existing.update!(properties: session[:admin_search])
       respond_to(&:js)
     end
 
     private
 
     def collect_properties
-      @properties = { fields: @fields, filters: @filters, search_string: @search_string }.to_json
+      { fields: @fields, filters: @filters, search_string: @search_string }.to_json
     end
 
     def setup_paging
@@ -102,22 +102,23 @@ module StashEngine
 
       @search_string = params[:q] || @saved_search&.search_string || session[:admin_search_string]
       @filters = params[:filters] || @saved_search&.filters || session[:admin_search_filters]
-      @filters = @filters.deep_transform_keys(&:to_sym)
+      @filters = @filters.deep_transform_keys(&:to_sym) unless @filters.blank?
       @fields = params[:fields] || @saved_search&.fields || session[:admin_search_fields]
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
       session[:admin_search_string] = params[:q] if params.key?(:q)
-      return unless @fields.blank?
-
-      @search_string = ''
-      @filters = {}
-      @fields = %w[doi authors metrics status submit_date publication_date]
-      @fields << 'journal' if @sponsor_limit.present?
-      @fields << 'identifiers' if @journal_limit.present?
-      @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
-      @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
-      @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
+      if @fields.blank?
+        @search_string = ''
+        @filters = {}
+        @fields = %w[doi authors metrics status submit_date publication_date]
+        @fields << 'journal' if @sponsor_limit.present?
+        @fields << 'identifiers' if @journal_limit.present?
+        @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
+        @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
+        @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
+      end
+      session[:admin_search] = collect_properties
     end
 
     # rubocop:disable Metrics/MethodLength
@@ -131,10 +132,10 @@ module StashEngine
       end
       if @filters[:submit_date]&.values&.any?(&:present?)
         @datasets = @datasets.joins(:process_date)
-      elsif @sort == 'submitted'
+      elsif @sort == 'submit_date'
         @datasets = @datasets.left_outer_joins(:process_date)
       end
-      if @sort == 'submitted' || @filters[:submit_date]&.values&.any?(&:present?)
+      if @sort == 'submit_date' || @filters[:submit_date]&.values&.any?(&:present?)
         @datasets = @datasets.select('IFNULL(stash_engine_process_dates.submitted, stash_engine_process_dates.peer_review) as submit_date')
       end
       if current_user.min_curator? && (@fields.include?('curator') || @filters[:curator].present?)

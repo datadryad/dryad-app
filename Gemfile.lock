@@ -189,6 +189,9 @@ GEM
       rexml
     crass (1.0.6)
     daemons (1.4.1)
+    data_migrate (9.4.0)
+      activerecord (>= 6.1)
+      railties (>= 6.1)
     database_cleaner (2.0.2)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.1.0)
@@ -829,6 +832,7 @@ DEPENDENCIES
   colorize
   concurrent-ruby (~> 1.1.10)
   daemons (~> 1.4.1)
+  data_migrate
   database_cleaner (~> 2.0.1)
   datacite-mapping!
   delayed_job_active_record (~> 4.1.7)

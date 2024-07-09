@@ -1,5 +1,9 @@
 // ##### Select Content Object ##### //
 
+select {
+	max-width: 100%;
+}
+
 .o-select {
 	margin: 0 0 20px;
 }
@@ -13,7 +17,7 @@
 	}
 
 	&:focus-within input {
-		outline: 2px solid $design-medium-blue-color;
+		outline: 2px solid $medium-blue;
 	}
 
 	ul {
@@ -28,7 +32,7 @@
 		width: calc(100% + 4px);
 		max-height: 50vh;
 		overflow-y: auto;
-		background-color: $design-extra-light-gray-color;
+		background-color: $lighter-gray;
 
 		li {
 			padding: 6px 10px;
@@ -48,8 +52,8 @@
 				}
 			  &:hover,
 			  &:focus {
-			  	color: $design-white-color;
-			    background-color: $design-dark-blue-color;
+			  	color: white;
+			    background-color: $dark-blue;
 			  }		 
 			} 
 		}

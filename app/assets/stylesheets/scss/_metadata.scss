@@ -10,22 +10,6 @@
 	font-weight: bold;
 }
 
-.o-metadata__author {
-	// empty
-}
-
-.o-metadata__link {
-	display: inline-block;
-	min-width: 20px;
-	text-align: center;
-	font-size: .85em;
-	vertical-align: super;
-
-	&:hover i, &:hover i.fa-orcid {
-		color: $link-body-hover-color;
-	}
-}
-
 .o-metadata__affiliation {
 	font-weight: normal;
 }
@@ -35,7 +19,7 @@
 }
 
 .o-metadata__group2 {
-	// empty
+	font-size: .95em;
 }
 
 .o-metadata__group2-item {
@@ -49,5 +33,41 @@
 .o-metadata__autopopulate-message {
 	display: block;
 	margin: 0 0 0.5rem;
-	color: $design-orange-color;
+	color: $orange;
+}
+
+.o-metadata__author-list {
+	margin-bottom: 0;
+}
+
+.o-metadata__author {
+	font-size: 1.12rem;
+}
+
+.o-metadata__link {
+	display: inline-block;
+	min-width: 20px;
+	text-align: center;
+	font-size: .8em;
+	vertical-align: super;
+
+	&:hover i, &:hover i.fa-orcid {
+		color: $link-body-hover-color;
+	}
+}
+
+.o-metadata__aff-list {
+	p {
+		margin: .5rem auto;
+		i {
+			font-size: .8em;
+		}
+	}
+	ol {
+		font-size: .95em;
+		margin-top: .5rem;
+		li::marker {
+			font-size: .84em;
+		}
+	}
 }

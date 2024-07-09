@@ -14,7 +14,7 @@
   grid-template-columns: 1fr 3fr 1fr;
   gap: $spacing-sm;
   padding: $spacing-sm;
-  border: thin solid $design-light-gray-color;
+  border: thin solid $light-gray;
 
   header {
     grid-column: 1 / -1;
@@ -49,7 +49,7 @@
 }
 
 .c-uploadwidget--data {
-  --c-uploadwidget-color: #{$design-lighter-blue-color};
+  --c-uploadwidget-color: #{$lighter-blue};
 
   button {
     background-color: var(--c-uploadwidget-color);
@@ -58,7 +58,7 @@
 
 .c-uploadwidget--software,
 .c-uploadwidget--supplemental {
-  --c-uploadwidget-color: #{$design-extra-light-gray-color};
+  --c-uploadwidget-color: #{$lighter-gray};
 
   button {
     background-color: var(--c-uploadwidget-color);

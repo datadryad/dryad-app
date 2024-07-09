@@ -19,12 +19,12 @@
 
 .t-upload__choose-heading {
 	@extend %t-upload__choose-heading;
-	color: $design-light-gray-color;
+	color: $light-gray;
 }
 
 .t-upload__choose-heading--active {
 	@extend %t-upload__choose-heading;
-	color: $design-dark-blue-color;
+	color: $dark-blue;
 }
 
 .t-upload__method-section {

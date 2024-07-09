@@ -1,10 +1,10 @@
 <% unless authors.nil? %>
-  <% if highlight_fields.present? && current_user && current_user.min_app_admin? %>
+  <% if highlight_fields.present? && current_user&.min_app_admin? %>
   	<div class="o-metadata__group1">
 	  	<% authors.each_with_index do |author, i| %>
 	  		<% highlights = highlight_fields.detect {|h| h[:index] == i} %>
 				<%= ([ (author.author_full_name ?
-					"<span class='o-metadata__author#{' highlight' if highlights&.key?(:author_full_name)}'>#{h(author.author_full_name)}</span>" : nil) ] +
+					"<b #{'class="highlight"' if highlights&.key?(:author_full_name)}'>#{h(author.author_full_name)}</b>" : nil) ] +
 			     author.affiliations.map{|i|
 						     if i.smart_name.present? && i.smart_name != ',' && i.smart_name != '.'
 						       "<span class='o-metadata__affiliation#{' highlight' if highlights&.key?(:affiliation)}'>#{h(i.smart_name(show_asterisk: true))}</span>"
@@ -15,6 +15,7 @@
 			     [ (author.author_orcid ? "<span class='c-orcid__icon'></span><span>#{display_author_orcid(author)}</span>" : nil) ] + [(author.author_email.present? ?
 							"<span class='#{' highlight' if highlights&.key?(:email)}'>#{author.author_email}</span>" : nil)])
 			     .flatten.reject(&:blank?).join(", ").html_safe %>
+			     <br/>
 		  <% end %>
 		  <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
 		  <% if deleted %>
@@ -23,12 +24,13 @@
 		</div>
   <% else %>
     <% affs = authors.map(&:affiliations).flatten.uniq.each_with_object([]) do |a, arr| 
-  		if a.smart_name.present? && a.smart_name != ',' && a.smart_name != '.'
-  			arr << [a.id, a.smart_name, a.ror_id]
+    	smart_name = a.smart_name(show_asterisk: current_user&.min_app_admin?)
+  		if smart_name.present? && smart_name != ',' && smart_name != '.'
+  			arr << [a.id, smart_name, a.ror_id]
 			end
 			arr
 		end %>
-		<p>
+		<p class="o-metadata__author-list">
     <%= authors.map { |author| 
     	if author.author_full_name
 	    	str = "<span class='o-metadata__author'>#{author.author_full_name}</span>"
@@ -40,7 +42,7 @@
 			     end
 		     }.join(', ')
 		    str += af unless af.blank?
-		    str += "<a href='mailto:#{author.author_email}' class='o-metadata__link' aria-label='Email author' target='_blank'><i class='fa fa-envelope' aria-hidden='true'></i></a>" if author.author_email.present?
+		    str += "<a href='mailto:#{author.author_email}' class='o-metadata__link' aria-label='Email author' target='_blank' title='#{author.author_email}'><i class='fa fa-envelope' aria-hidden='true'></i></a>" if author.author_email.present?
 		    str += "<a href='#{author_orcid_link(author)}' class='o-metadata__link' target='_blank' aria-label='Author ORCID profile' title='ORCID: #{author.author_orcid}'><i class='fab fa-orcid' aria-hidden='true'></i></a>" if author.author_orcid.present?
 		    str
 		  end
@@ -48,13 +50,34 @@
 		</p>
   <% end %>
   <% if affs.present? %>
-	  <div>
-	  	<b>Affiliations</b>
-	  	<ol>
+	  <div class="o-metadata__aff-list">
+	  	<p role="heading" aria-level="2"><button class="o-button__plain-text4" id="affiliation-list-button" aria-expanded="false" aria-controls="affiliation-list">Author affiliations <i class="fas fa-chevron-down" aria-hidden="true"></i></button></p>
+	  	<ol id="affiliation-list" hidden>
 	  	<% affs.map do |aff| %>
 	  		<li id="aff<%= aff[0] %>"><%= aff[1] %></li>
 	  	<% end %>
 	  	</l>
 	  </div>
+	  <script type="text/javascript">
+	  	document.getElementById('affiliation-list-button').addEventListener('click', (e) => {
+	  		const list = document.getElementById('affiliation-list')
+	  		if (list.hasAttribute('hidden')) {
+		  		e.target.setAttribute('aria-expanded', 'true')
+	  		} else {
+	  			e.target.setAttribute('aria-expanded', 'false')
+		  	}
+		  	e.target.lastElementChild.classList.toggle('fa-chevron-down')
+		  	e.target.lastElementChild.classList.toggle('fa-chevron-up')
+		  	list.toggleAttribute('hidden')
+	  	})
+	  	const openHash = () => {
+	  		const hashed = document.getElementById(window.location.hash.substring(1))
+		    if (hashed.parentElement.hasAttribute('hidden')) {
+		    	document.getElementById('affiliation-list-button').click()
+		    }
+	  	}
+	  	if (window.location.hash) openHash()
+	  	window.addEventListener('hashchange', openHash)
+	  </script>
   <% end %>
 <% end %>

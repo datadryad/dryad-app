@@ -45,6 +45,12 @@ RSpec.configure do |config|
     host! 'my.example.org'
   end
 
+  config.around(:each, type: :task) do |ex|
+    ex.run
+  rescue SystemExit => e
+    puts "Got SystemExit: #{e.inspect}. Ignoring"
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

@@ -114,6 +114,20 @@ module StashEngine
       id
     end
 
+    def identifier_str
+      "#{identifier_type && identifier_type.downcase}:#{identifier}"
+    end
+
+    def identifier_uri
+      raise TypeError, "Unsupported identifier type #{identifier_type}" unless identifier_type == 'DOI'
+
+      "https://doi.org/#{identifier}"
+    end
+
+    def identifier_value
+      identifier
+    end
+
     def view_count
       ResourceUsage.joins(resource: :identifier)
         .where('stash_engine_identifiers.identifier = ? AND stash_engine_identifiers.identifier_type = ?',
@@ -412,12 +426,10 @@ module StashEngine
 
     # overrides reading the pub state so it can set it for caching if it's not set yet
     def pub_state
-      my_state = read_attribute(:pub_state)
-      return my_state unless my_state.nil?
+      return super unless super.blank?
 
-      my_state = calculated_pub_state
-      update_column(:pub_state, my_state) # avoid any callbacks and validations which will only stir up trouble
-      my_state
+      update(pub_state: calculated_pub_state)
+      calculated_pub_state
     end
 
     def embargoed_until_article_appears?
@@ -592,11 +604,11 @@ module StashEngine
     end
 
     def date_first_published
-      resources.map(&:publication_date)&.first || nil
+      resources.map(&:publication_date)&.reject(&:blank?)&.first || nil
     end
 
     def date_last_published
-      resources.map(&:publication_date)&.last || nil
+      resources.map(&:publication_date)&.reject(&:blank?)&.last || nil
     end
 
     # the first time this dataset had metadata exposed to the public

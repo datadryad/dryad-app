@@ -113,6 +113,12 @@ export default function Description({
           table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | '
                   + 'tableinsertcolbefore tableinsertcolafter tabledeletecol',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+          invalid_styles: {
+            table: 'width height',
+            tr: 'width height',
+            th: 'width height',
+            td: 'width height',
+          },
           branding: false,
           paste_block_drop: true,
           paste_preprocess,

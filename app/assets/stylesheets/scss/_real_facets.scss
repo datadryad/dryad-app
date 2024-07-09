@@ -2,8 +2,8 @@
 .c-facet-title--closed {
   margin: 5px 0;
   padding: 10px;
-  border-color: $design-extra-light-gray-color;
-  background-color: $design-offwhite-color;
+  border-color: $lighter-gray;
+  background-color: $lightest-gray;
   color: inherit;
   cursor: pointer;
 }
@@ -12,7 +12,7 @@
 .js-title-toggle>a:visited,
 .js-title-toggle>a:hover,
 .js-title-toggle>a:active {
-  color: $design-black-color;
+  color: black;
   text-decoration: none;
 }
 
@@ -20,7 +20,7 @@
 .c-facet-title--closed:after {
   content: '\f105';
   float: right;
-  color: $design-dark-gray-color;
+  color: $dark-gray;
   font-family: 'Font Awesome 6 Free';
   font-weight: 900;
   font-size: 1em;
@@ -31,7 +31,7 @@
 .c-facet-title--open:after {
   content: '\f107';
   float: right;
-  color: $design-dark-gray-color;
+  color: $dark-gray;
   font-family: 'Font Awesome 6 Free';
   font-weight: 900;
   font-size: 1em;
@@ -51,7 +51,7 @@
 
   a:visited,
   a:link,
-  a:hover { color: $design-light-blue-color; }
+  a:hover { color: $light-blue; }
 }
 
 .c-facet-li__selected {
@@ -60,7 +60,7 @@
 }
 
 .c-facet-remove {
-  color: $design-red-color;
+  color: $red;
 }
 
 .c-facet-remove-link {
