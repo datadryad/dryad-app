@@ -196,10 +196,8 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
     context :curator, js: true do
       before(:each) do
-        create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
-        @resource.resource_states.first.update(resource_state: 'submitted')
-        sign_in(create(:user, role: 'curator'))
-        visit stash_url_helpers.admin_dashboard_path(curation_status: 'curation')
+        @curator = create(:user, role: 'curator')
+        sign_in(@curator)
       end
 
       it 'has admin link', js: true do
@@ -219,10 +217,111 @@ RSpec.feature 'AdminDashboard', type: :feature do
         expect(find('thead')).to have_text('Curator')
       end
 
-      # actions
+      context :actions, js: true do
+        before(:each) do
+          visit root_path
+          click_button 'Datasets'
+          # click_link 'Admin dashboard
+          visit stash_url_helpers.admin_dashboard_path
+        end
 
-      # it 'filters on curator', js:true do; end
+        it 'allows assigning a curator to a dataset' do
+          click_button 'Update curator'
+          select(@curator.name_last_first, from: 'current_editor')
+          click_button('Submit')
+          expect(find('#search_results')).to have_text(@curator.name, count: 1)
+        end
 
+        it 'allows un-assigning a curator, keeping status if it is peer_review' do
+          create(:curation_activity, status: 'peer_review', resource_id: @resource.id, user: @resource.user)
+          visit stash_url_helpers.admin_dashboard_path
+          expect(page).to have_text('Admin dashboard')
+          click_button 'Update curator'
+          select(@curator.name_last_first, from: 'current_editor')
+          click_button('Submit')
+          expect(find('#search_results')).to have_text(@curator.name, count: 1)
+          click_button 'Update curator'
+          select('unassign', from: 'current_editor')
+          click_button('Submit')
+          expect(find('#search_results')).not_to have_text(@curator.name)
+          @resource.reload
+          expect(@resource.current_editor_id).to eq(nil)
+          expect(@resource.current_curation_status).to eq('peer_review')
+        end
+
+        context :in_curation do
+          before(:each) do
+            create(:curation_activity_no_callbacks, status: 'curation', user_id: @curator.id, resource_id: @resource.id)
+            @resource.update(current_editor_id: @curator.id)
+            visit stash_url_helpers.admin_dashboard_path
+          end
+
+          it 'filters by curator', js: true do
+            create(:resource, :submitted, user: @user, tenant_id: @admin.tenant_id, skip_datacite_update: true)
+            visit stash_url_helpers.admin_dashboard_path
+            expect(page).to have_text('Admin dashboard')
+            assert_selector('tbody tr', count: 2)
+            select(@curator.name_last_first, from: 'filter-curator')
+            click_button('Apply')
+            assert_selector('tbody tr', count: 1)
+            expect(find('#search_results')).to have_text(@curator.name, count: 1)
+          end
+
+          it 'allows un-assigning a curator, changing status if it is curation' do
+            expect(page).to have_text('Admin dashboard')
+            expect(find('#search_results')).to have_text('Curation')
+            expect(find('#search_results')).to have_text(@curator.name, count: 1)
+            click_button 'Update curator'
+            select('unassign', from: 'current_editor')
+            click_button('Submit')
+            expect(find('#search_results')).not_to have_text(@curator.name)
+            expect(find('#search_results')).to have_text('Submitted')
+            @resource.reload
+            expect(@resource.current_editor_id).to eq(nil)
+            expect(@resource.current_curation_status).to eq('submitted')
+          end
+
+          it 'submits a curation status change and reflects in the page and history afterwards' do
+            within(:css, 'tbody tr') do
+              click_button 'Update status'
+            end
+            find("#activity_status_select option[value='action_required']").select_option
+            fill_in(id: 'activity_note', with: 'My cat says hi')
+            click_button('Submit')
+            expect(find('tbody tr')).to have_text('Action required')
+            within(:css, 'tbody tr') do
+              click_link 'Activity log'
+            end
+            expect(page).to have_text('My cat says hi')
+          end
+
+          it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
+            click_button 'Edit dataset'
+            all('[id^=instit_affil_]').last.set('test institution')
+            page.send_keys(:tab)
+            page.has_css?('.use-text-entered')
+            all(:css, '.use-text-entered').each { |i| i.set(true) }
+            fill_in_keywords
+            navigate_to_readme
+            add_required_data_files
+            navigate_to_review
+            agree_to_everything
+            fill_in 'user_comment', with: Faker::Lorem.sentence
+            submit = find_button('submit_dataset', disabled: :all)
+            submit.click
+            expect(URI.parse(current_url).request_uri).to eq(stash_url_helpers.admin_dashboard_path)
+          end
+
+          it 'allows aborting curation editing of user dataset and return to list in same state afterward' do
+            click_button 'Edit dataset'
+            expect(page).to have_field('Dataset title')
+            click_on('Cancel and Discard Changes')
+            find('#railsConfirmDialogYes').click
+            expect(URI.parse(current_url).request_uri).to eq(stash_url_helpers.admin_dashboard_path)
+          end
+        end
+
+      end
     end
 
     context :tenant_curator, js: true do

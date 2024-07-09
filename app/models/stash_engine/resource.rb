@@ -99,6 +99,7 @@ module StashEngine
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
 
     after_create :create_process_date, unless: :process_date
+    after_update_commit :update_salesforce_metadata, if: [:saved_change_to_current_editor_id?, proc { |res| res.editor&.min_curator? }]
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
@@ -1121,8 +1122,10 @@ module StashEngine
       return unless target_curator
 
       update(current_editor_id: target_curator.id)
-      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
-                                                                  note: "System auto-assigned curator #{target_curator&.name}")
+      curation_activities << StashEngine::CurationActivity.create(
+        user_id: 0, status: target_status,
+        note: "System auto-assigned curator #{target_curator&.name}"
+      )
     end
   end
 end
