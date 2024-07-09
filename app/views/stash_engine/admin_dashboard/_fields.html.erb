@@ -46,7 +46,7 @@ end
   </div>
   <div>
     <%= check('size').html_safe %>
-    <span class="help" id="help-desc">Total size of the uploaded data files.</span>
+    <span class="help" id="size-desc">Total size of the uploaded data files.</span>
   </div>
   <div>
     <%= check('metrics').html_safe %>
@@ -76,7 +76,7 @@ end
     <%= check('dpc').html_safe %>
     <span class="help" id="dpc-desc">Party responsible for the <a href="/stash/requirements#cost" target="_blank">Dryad Data Publishing Charge</a>.</span>
   </div>
-  <% if current_user.min_curator? %>
+  <% if current_user.min_app_admin? %>
     <div>
       <%= check('curator').html_safe %>
       <span class="help" id="curator-desc">The curator currently editing the dataset.</span>

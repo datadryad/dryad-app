@@ -9,6 +9,9 @@ if (document.getElementById('search_edit')) {
 document.getElementById("search_head").innerHTML = 'Search results: <a href="/stash/account#saved" style="font-weight: normal;"><%= @saved_search.title %></a>';
 <% unless @saved_search.default? %>
 document.getElementById('search_form').firstElementChild.setAttribute('action', '/stash/admin_dashboard?search=<%= @index %>')
+const url = new URL(window.location.href);
+url.searchParams.set('search', '<%= @index %>');
+window.history.pushState(null, '', url.toString());
 <% end %>
 <% end %>
 document.getElementById('search_form').setAttribute('hidden', true)

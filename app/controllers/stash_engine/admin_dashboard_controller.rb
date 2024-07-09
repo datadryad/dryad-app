@@ -15,7 +15,7 @@ module StashEngine
       @datasets = StashEngine::Resource.latest_per_dataset.select(
         'distinct stash_engine_resources.id, stash_engine_resources.title, stash_engine_resources.total_file_size,
         stash_engine_resources.user_id, stash_engine_resources.tenant_id, stash_engine_resources.identifier_id,
-        stash_engine_resources.last_curation_activity_id, stash_engine_resources.updated_at, stash_engine_resources.publication_date'
+        stash_engine_resources.last_curation_activity_id, stash_engine_resources.publication_date'
       )
 
       add_fields
@@ -31,6 +31,7 @@ module StashEngine
           order_list = %w[title author_string status total_file_size unique_investigation_count curator_name
                           updated_at submit_date publication_date]
           order_string = helpers.sortable_table_order(whitelist: order_list)
+          order_string = "stash_engine_curation_activities.#{order_string}" if @sort == 'updated_at'
           order_string += ', relevance desc' if @search_string.present?
         end
         @datasets = @datasets.order(order_string)
@@ -130,7 +131,7 @@ module StashEngine
         @datasets = @datasets.joins('left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id')
           .select('stats.unique_investigation_count, stats.citation_count, stats.unique_request_count')
       end
-      if @filters[:status].present? || @sort == 'status' || @filters[:updated_at]&.values&.any?(&:present?)
+      if @filters[:status].present? || @sort == 'status' || @filters[:updated_at]&.values&.any?(&:present?) || @sort == 'updated_at'
         @datasets = @datasets.joins(:last_curation_activity)
       end
       if @filters[:submit_date]&.values&.any?(&:present?)
@@ -141,7 +142,7 @@ module StashEngine
       if @sort == 'submit_date' || @filters[:submit_date]&.values&.any?(&:present?)
         @datasets = @datasets.select('IFNULL(stash_engine_process_dates.submitted, stash_engine_process_dates.peer_review) as submit_date')
       end
-      if current_user.min_curator? && (@fields.include?('curator') || @filters[:curator].present?)
+      if current_user.min_app_admin? && (@fields.include?('curator') || @filters[:curator].present?)
         @datasets = @datasets.joins("left outer join (
             select stash_engine_users.* from stash_engine_users
             inner join stash_engine_roles on stash_engine_users.id = stash_engine_roles.user_id
@@ -156,6 +157,7 @@ module StashEngine
           ) as author_string")
       end
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
+      @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
       @datasets = @datasets.select('stash_engine_counter_stats.unique_investigation_count') if @sort == 'unique_investigation_count'
       @datasets = @datasets.select(
         "MATCH(stash_engine_identifiers.search_words) AGAINST('#{
@@ -177,7 +179,7 @@ module StashEngine
       ).present?
       @datasets = @datasets.where(
         'curator.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
-      ) if @filters[:curator].present? && current_user.min_curator?
+      ) if @filters[:curator].present? && current_user.min_app_admin?
       unless @search_string.blank?
         @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{
           %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
@@ -228,7 +230,7 @@ module StashEngine
     def journal_filter
       return unless @journal_limit.present? || @filters.dig(:journal, :value).present?
 
-      journal_ids = @filters.dig(:journal, :value)
+      journal_ids = @filters.dig(:journal, :value)&.to_i
       journal_ids = (@journal_limit.map(&:id).include?(journal_ids) ? journal_ids : @journal_limit.map(&:id)) if @journal_limit.present?
 
       return unless journal_ids.present?
@@ -242,7 +244,7 @@ module StashEngine
       sponsor_ids = @filters[:sponsor]
       sponsor_ids = (@sponsor_limit.map(&:id).include?(sponsor_ids) ? sponsor_ids : @sponsor_limit.map(&:id)) if @sponsor_limit.present?
 
-      @datasets = @datasets.where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
+      @datasets = @datasets.joins(identifier: :journal).where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
     end
 
     def funder_filter
@@ -274,8 +276,7 @@ module StashEngine
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
       @datasets = @datasets.preload(:user) if @fields.include?('submitter')
       @datasets = @datasets.preload(identifier: :counter_stat) if @fields.include?('metrics')
-      @datasets = @datasets.preload(identifier: :journal) if @fields.include?('journal') || @fields.include?('sponsor')
-      @datasets = @datasets.preload(identifier: { journal: :sponsor }) if @fields.include?('sponsor')
+      @datasets = @datasets.preload(identifier: :journal_datum) if @fields.include?('journal') || @fields.include?('sponsor')
       @datasets = @datasets.preload(:funders) if @fields.include?('funders')
       @datasets = @datasets.preload(:related_identifiers).preload(identifier: :manuscript_datum) if @fields.include?('identifiers')
     end
