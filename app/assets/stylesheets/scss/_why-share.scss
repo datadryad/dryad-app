@@ -72,6 +72,7 @@
 
   @media (min-width: 550px) and (max-width: $screen-md-min), (min-width: 1050px) {
     /* two column */
+    justify-content: flex-start;
     flex: 1 0 50%;
     padding: $spacing-md $spacing-sm;
 
