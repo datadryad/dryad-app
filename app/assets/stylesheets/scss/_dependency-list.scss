@@ -3,7 +3,7 @@
   flex-direction: column;
   margin: 5px 0 10px;
   padding: 1rem 0 1rem 1rem;
-  border: thin solid $design-black-color;
+  border: thin solid black;
   list-style: none;
 }
 
@@ -24,7 +24,7 @@
     background-color: transparent;
   }
 
-  .fa-times-circle { color: $design-red-color; }
-  .fa-question-circle { color: $design-orange-color; }
-  .fa-check-circle { color: $design-green-color; } 
+  .fa-times-circle { color: $red; }
+  .fa-question-circle { color: $orange; }
+  .fa-check-circle { color: $green; } 
 }

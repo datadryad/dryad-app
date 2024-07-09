@@ -29,11 +29,28 @@
   .c-institution__container {
     margin-bottom: 25px;
     margin-left: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    form {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      flex-wrap: wrap;
+
+      & > div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1ch;
+      }
+    }
 
     .c-auto_complete {
       width: 20rem;
-      margin-right: 10px;
-
       .c-input__text.c-ac__input_with_button, .c-ac__input-button {
         height: 45px;
       }
@@ -49,12 +66,12 @@
 
 .t-login__info {
   text-align: left;
-  border-top: thin solid $design-orange-color;
+  border-top: thin solid $lighter-green;
 
   @include bp(screen3) {
     grid-column: 2;
     border-top: none;
-    border-left: thin solid $design-orange-color;
+    border-left: thin solid $lighter-green;
   }
 }
 
@@ -69,18 +86,27 @@
 .t-login__buttonlink:visited,
 .t-login__buttonlink:hover
 .t-login__buttonlink:active {
-  color: $design-black-color;
+  color: black;
   font-weight: bold;
   text-decoration: none;
   padding: 10px 15px;
-  border: 2px solid $design-orange-color;
+  border: 2px solid $dark-blue;
   border-radius: 35px;
-  background-color: $design-white-color;
+  background-color: white;
   white-space: nowrap;
+
+  &[disabled] {
+    background-color: $lightest-gray;
+    border-color: $dark-gray;
+  }
 }
 
 .t-login__buttonlink:hover, .t-login__buttonlink:active {
-  outline: 2px solid $design-medium-blue-color;
+  outline: 2px solid $medium-blue;
+
+  &[disabled] {
+    outline: none;
+  }
 }
 
 .t-login__or-box {
@@ -133,20 +159,6 @@
   text-align: center;
 }
 
-.c-institution__container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-
-  form {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: baseline;
-    width: 100%;
-  }
-}
-
 .c-institution__column {
   margin-right: 5em;
 }
@@ -172,7 +184,7 @@
   a:visited,
   a:hover,
   a:active {
-    color: $design-dark-blue-color;
+    color: $dark-blue;
     text-decoration: none;
   }
 }

@@ -38,7 +38,7 @@
 
 	&::after {
       content: ' *';
-      color: $design-orange-color;
+      color: $orange;
 	}
 
 }
@@ -50,7 +50,7 @@
 %c-input__element {
 	@extend %fcontrol-focus;
     box-sizing: border-box;
-	border: thin solid $design-dark-gray-color;
+	border: thin solid $dark-gray;
 }
 
 .c-input__text {
@@ -79,7 +79,7 @@
 	height: $input-height;
 	padding: 0 35px 0 5px;
 	border-radius: 0;
-	background: url('/images/scss/icon_up-down-arrows.svg') right 9px center / 12px no-repeat, linear-gradient($design-light-blue-color, $design-light-blue-color) right / 30px 30px no-repeat;
+	background: url('/images/scss/icon_up-down-arrows.svg') right 9px center / 12px no-repeat, linear-gradient($light-blue, $light-blue) right / 30px 30px no-repeat;
 	appearance: none; // removes default down arrow for Chrome and FF 35 and higher
 	// background: linear-gradient(90deg, blue 50%, green 50%);
 
@@ -97,8 +97,8 @@
 %c-input__error-message {
 	display: none;
 	padding: 5px;
-	background-color: $design-red-color;
-	color: $design-white-color;
+	background-color: $red;
+	color: white;
 }
 
 .c-input__error-message {
@@ -111,7 +111,7 @@
 }
 
 .c-input__error-bg {
-	background-color: $design-pink-color;
+	background-color: $lightest-red;
 }
 
 .c-input__required-note {
@@ -119,7 +119,7 @@
 
 	&::before {
       content: '* ';
-	  color: $design-orange-color;
+	  color: $orange;
 	}
 
 }
@@ -129,7 +129,7 @@
 .c-input__file-label {
 	display: inline-block;
 	padding: 10px 20px;
-	background-color: $design-lighter-blue-color;
+	background-color: $lighter-blue;
 	font-size: 75%;
 	cursor: pointer;
 }

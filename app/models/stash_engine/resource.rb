@@ -512,26 +512,21 @@ module StashEngine
     # Identifiers
 
     def identifier_str
-      ident = identifier
-      return unless ident
+      return unless identifier
 
-      ident_type = ident.identifier_type
-      ident && "#{ident_type && ident_type.downcase}:#{ident.identifier}"
+      identifier.identifier_str
     end
 
     def identifier_uri
-      ident = identifier
-      return unless ident
+      return unless identifier
 
-      ident_type = ident.identifier_type
-      raise TypeError, "Unsupported identifier type #{ident_type}" unless ident_type == 'DOI'
-
-      "https://doi.org/#{ident.identifier}"
+      identifier.identifier_uri
     end
 
     def identifier_value
-      ident = identifier
-      ident && ident.identifier
+      return unless identifier
+
+      identifier.identifier_value
     end
 
     def ensure_identifier(doi)
@@ -883,6 +878,7 @@ module StashEngine
       changed.concat(changed_subjects(other_resource.subjects))
       changed.concat(changed_funders(other_resource))
       changed.concat(changed_related(other_resource.related_identifiers))
+      changed << 'internal_data' if curation_activities.map(&:note).reject(&:blank?).any? { |n| n.include?('Internal datum edited') }
 
       changed << 'data_files' if files_changed_since(other_resource: other_resource, association: 'data_files').present?
       changed << 'software_files' if files_changed_since(other_resource: other_resource, association: 'software_files').present?
@@ -971,7 +967,7 @@ module StashEngine
     def update_salesforce_metadata
       sf_cases = Stash::Salesforce.find_cases_by_doi(identifier&.identifier)
       sf_cases&.each do |c|
-        Stash::Salesforce.update_case_metadata(case_id: c.id, resource: self, update_timestamp: true, update_owner: c.owner)
+        Stash::Salesforce.update_case_metadata(case_id: c.id, resource: self, update_timestamp: true, update_owner: c.owner.blank?)
       end
     end
 

@@ -12,8 +12,8 @@
 	justify-content: space-between;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	border-top: thin solid $design-light-gray-color;
-	border-bottom: thin solid $design-light-gray-color;
+	border-top: thin solid $light-gray;
+	border-bottom: thin solid $light-gray;
 
 	&:not(:first-child) {
 		border-top: none;
@@ -50,6 +50,6 @@
 	padding: 0 10px;
 	border: none;
 	background-color: transparent;
-	color: $design-dark-blue-color;
+	color: $dark-blue;
 	font-weight: bold;
 }

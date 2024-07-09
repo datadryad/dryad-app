@@ -114,7 +114,7 @@ Selector pattern using above mixin:
 // Set form field focus styles
 
 %fcontrol-focus:focus {
-  outline: 2px solid $design-medium-blue-color;
+  outline: 2px solid $medium-blue;
   
   &::placeholder {
     opacity: 0.5;

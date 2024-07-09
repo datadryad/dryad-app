@@ -9,6 +9,6 @@
   <div>
     <%= text_area_tag(:description, saved_search.description, class: 'c-input__textarea', style: 'width: 100%; min-height: 2rem;', 'aria-label': 'Description') %>
   </div>
-  <button type="submit" aria-label="Save" class="c-admin-edit-icon"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+  <button type="submit" aria-label="Save" class="c-admin-edit-icon"><i class="fa fa-floppy-disk" aria-hidden="true"></i></button>
   <button type="button" aria-label="Cancel" id="cancel_save<%= saved_search.id %>" class="c-admin-edit-icon"><i class="fa fa-times" aria-hidden="true"></i></button>
 <% end %>

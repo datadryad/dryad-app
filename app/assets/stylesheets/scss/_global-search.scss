@@ -5,6 +5,10 @@ $search-field-size: 28px;
 .o-global-search {
   display: flex;
   height: $search-field-size;
+
+  &:focus-within .o-global-search__input {
+    outline: 2px solid $medium-blue;
+  }
 }
 
 .o-global-search__label {
@@ -16,18 +20,26 @@ $search-field-size: 28px;
   flex: 1 0 auto;
   padding: 0 0 0 0.5em;
   font-size: 0.9em;
-  border: solid $design-light-blue-color;
+  border: solid $light-blue;
   border-width: 1px 3px 1px 1px; // for focus styles
-
+  margin-right: -28px;
+  padding-right: calc(28px + .5em);
   &::placeholder {
     opacity: 1;
-    color: $design-black-color;
+    color: black;
   }
-
 }
 
 .o-global-search__submit-button {
   width: $search-field-size;
+  height: $search-field-size;
   border: none;
-  background: $design-light-blue-color url('/images/scss/icon_magnifying-glass.svg') center center no-repeat;
+  padding: 0;
+  background: $light-blue;
+  color: white;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-shrink: 0;
 }

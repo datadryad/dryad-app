@@ -53,6 +53,7 @@ module Stash
     it 'sets things correctly for special github software blob urls' do
       translator = Stash::UrlTranslator.new('https://github.com/tracykteal/chicken-naming/blob/master/chicken-naming.ipynb')
       expect(translator.service).to eql('github')
+      expect(translator.original_url).to eql('https://github.com/tracykteal/chicken-naming/blob/master/chicken-naming.ipynb')
       expect(translator.direct_download).to eql('https://raw.githubusercontent.com/tracykteal/chicken-naming/master/chicken-naming.ipynb')
     end
   end
