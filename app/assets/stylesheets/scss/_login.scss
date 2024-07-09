@@ -66,12 +66,12 @@
 
 .t-login__info {
   text-align: left;
-  border-top: thin solid $design-orange-color;
+  border-top: thin solid $lighter-green;
 
   @include bp(screen3) {
     grid-column: 2;
     border-top: none;
-    border-left: thin solid $design-orange-color;
+    border-left: thin solid $lighter-green;
   }
 }
 
@@ -86,23 +86,23 @@
 .t-login__buttonlink:visited,
 .t-login__buttonlink:hover
 .t-login__buttonlink:active {
-  color: $design-black-color;
+  color: black;
   font-weight: bold;
   text-decoration: none;
   padding: 10px 15px;
-  border: 2px solid $design-orange-color;
+  border: 2px solid $dark-blue;
   border-radius: 35px;
-  background-color: $design-white-color;
+  background-color: white;
   white-space: nowrap;
 
   &[disabled] {
-    background-color: $design-extra-light-gray-color;
-    border-color: $design-dark-gray-color;
+    background-color: $lightest-gray;
+    border-color: $dark-gray;
   }
 }
 
 .t-login__buttonlink:hover, .t-login__buttonlink:active {
-  outline: 2px solid $design-medium-blue-color;
+  outline: 2px solid $medium-blue;
 
   &[disabled] {
     outline: none;
@@ -184,7 +184,7 @@
   a:visited,
   a:hover,
   a:active {
-    color: $design-dark-blue-color;
+    color: $dark-blue;
     text-decoration: none;
   }
 }

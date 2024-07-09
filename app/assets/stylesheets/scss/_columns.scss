@@ -59,10 +59,10 @@
       top: 2px;
       bottom: 2px;
       width: $spacing-lg;
-      border: thick solid $design-dark-blue-color;
+      border: thick solid $dark-blue;
       border-radius: $spacing-base;
-      background-color: $design-white-color;
-      color: $design-dark-blue-color;
+      background-color: white;
+      color: $dark-blue;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -106,7 +106,7 @@
   @include bp(screen3) {
     margin: 0;
     flex: 0 1 35ch;
-    background-color: $design-lightest-blue-color;
+    background-color: $lightest-blue;
 
     #nav-mobile-buttons {
       display: none;
@@ -128,11 +128,14 @@
     a:link, a:visited {
       color: $link-body-color;
     }
+    a:active {
+      color: $link-body-active-color;
+    }
   }
   
   @media (max-width: $screen-lg-min - 1) {
     padding: 0 $spacing-sm;
-    background-color: $design-dark-blue-color;
+    background-color: $dark-blue;
     position: sticky;
     z-index: +1;
     bottom: 0;
@@ -160,7 +163,7 @@
     a {
       display: block;
       padding: $spacing-base;
-      color: $design-white-color;
+      color: white;
       max-width: 20ch;
       overflow: hidden;
       text-overflow: ellipsis;

@@ -1,22 +1,21 @@
-.c-why-use__group {
-  width: 100%;
-  margin: 1em 0 2em;
-  padding: 0;
-}
-
 .c-why-use__items {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(rgba($design-dark-gray-color, 0.85) 100%, transparent 0), url('/images/scss/stem.jpg') top left / cover no-repeat;
-  background-color: $design-dark-gray-color;
+  grid-row: 2;
+  background: linear-gradient(rgba($dark-gray, 0.8) 100%, transparent 0), url('/images/scss/stem.jpg') bottom right / cover no-repeat;
+  background-color: $dark-gray;
+  display: flex;
+  flex-direction: column;
 }
 
 .c-why-use__blurb {
+  flex: 1 1 25%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  color: $design-white-color;
+  color: white;
+
+  &:not(:last-child) {
+    border-bottom: 10px solid white;
+  } 
 }
 
 .c-why-use__icon {
@@ -26,23 +25,16 @@
 .c-why-use__text {
   margin: 1em 0;
   padding: 0 2em 0 0;
-  line-height: 1.7;
+  line-height: 1.5;
   @include bp(screen2) {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
 }
 
 .c-why-use__strong {
   display: inline-block;
   padding: 0 0.27em 0 0;
-  color: $design-white-color;
-  font-size: 1.15em;
+  color: white;
+  font-size: 1.2em;
   font-weight: bold;
-
-}
-
-.c-why-use__blocker {
-  width: 100%;
-  height: 10px;
-  background-color: $design-white-color;
 }

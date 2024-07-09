@@ -19,12 +19,12 @@
       align-items: center;
       justify-content: center;
       height: 33px;
-      border: thin solid $design-dark-gray-color;
+      border: thin solid $dark-gray;
       max-width: 33%;
     }
 
     &:link, &:visited {
-      color: $design-black-color;
+      color: black;
       text-decoration: none;
       white-space: nowrap;
     }
@@ -58,37 +58,22 @@
           border-width: 1px;
           border-top-style: solid;
           border-right-style: solid;
-          border-color: $design-dark-gray-color;
+          border-color: $dark-gray;
         }
 
-      }
-    }
-
-    &:focus {
-      height: 34px;
-      border-width: 2px;
-      border-color: $design-medium-blue-color;
-      &:not(:last-child) {
-        &::after {
-          border-width: 2px;
-          border-color: $design-medium-blue-color;
-          @include bp(screen1) {
-            top: 3px;
-          }
-        }
       }
     }
 
     &[class*="--active"] {
       height: 34px;
       border-width: 2px;
-      border-color: $design-orange-color;
-      color: $design-orange-color;
+      border-color: $medium-green;
+      color: $green;
 
       &:not(:last-child) {
         &::after {
           border-width: 2px;
-          border-color: $design-orange-color;
+          border-color: $medium-green;
           // Right angle arrow using borders:
           @include bp(screen1) {
             top: 3px;
@@ -100,12 +85,27 @@
 
     &[class*="--inactive"] {
       border-width: 2px;
-      border-color: $design-light-gray-color;
-      color: $design-light-gray-color;
+      border-color: $light-gray;
+      color: $light-gray;
 
       &::after {
         border-width: 2px;
-        border-color: $design-light-gray-color;
+        border-color: $light-gray;
+      }
+    }
+
+    &:focus {
+      height: 34px;
+      border-width: 2px;
+      border-color: $medium-blue;
+      &:not(:last-child) {
+        &::after {
+          border-width: 2px;
+          border-color: $medium-blue;
+          @include bp(screen1) {
+            top: 3px;
+          }
+        }
       }
     }
 
