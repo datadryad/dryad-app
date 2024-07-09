@@ -1,0 +1,21 @@
+// open a modal dialog
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'curation_form') %>";
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('<%= @field %>_button_<%= @identifier.id %>').setAttribute('aria-expanded', 'true');
+document.getElementById('genericModalDialog').addEventListener('close', () => {
+  document.getElementById('<%= @field %>_button_<%= @identifier.id %>').setAttribute('aria-expanded', 'false');
+});
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});
+<% if @field == 'curation_activity' %>
+  initDatePicker();
+  document.getElementById('activity_status_select').addEventListener('change', (e) => {
+    if (e.currentTarget.value === 'published' || e.currentTarget.value === 'embargoed') {
+      document.getElementById('c-input_publication_date').removeAttribute('hidden');
+    } else {
+      document.getElementById('c-input_publication_date').setAttribute('hidden', 'hidden');
+    }
+  })
+<% end %>

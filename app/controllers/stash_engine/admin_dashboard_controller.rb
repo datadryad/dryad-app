@@ -7,15 +7,17 @@ module StashEngine
     before_action :setup_paging, only: %i[results]
     before_action :setup_limits, only: %i[index results]
     before_action :setup_search, only: %i[index results]
-    # before_action :load, only: %i[popup note_popup edit]
+    before_action :load, only: %i[edit update]
 
     def index; end
 
+    # rubocop:disable Metrics/MethodLength
     def results
       @datasets = StashEngine::Resource.latest_per_dataset.select(
         'distinct stash_engine_resources.id, stash_engine_resources.title, stash_engine_resources.total_file_size,
         stash_engine_resources.user_id, stash_engine_resources.tenant_id, stash_engine_resources.identifier_id,
-        stash_engine_resources.last_curation_activity_id, stash_engine_resources.publication_date'
+        stash_engine_resources.last_curation_activity_id, stash_engine_resources.publication_date,
+        stash_engine_resources.current_editor_id, stash_engine_resources.current_resource_state_id'
       )
 
       add_fields
@@ -49,6 +51,7 @@ module StashEngine
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def new_search
       @properties = params[:properties]
@@ -60,6 +63,18 @@ module StashEngine
       return unless existing
 
       existing.update!(properties: params[:properties])
+      respond_to(&:js)
+    end
+
+    def edit
+      @desc = @field == 'curation_activity' ? 'Edit dataset status' : 'Change dataset curator'
+      @curation_activity = StashEngine::CurationActivity.new(resource_id: @resource.id)
+      respond_to(&:js)
+    end
+
+    def update
+      curation_activity_change if @field == 'curation_activity'
+      current_editor_change if @field == 'current_editor'
       respond_to(&:js)
     end
 
@@ -267,7 +282,7 @@ module StashEngine
     end
 
     def add_subqueries
-      @datasets = @datasets.preload(:identifier)
+      @datasets = @datasets.preload(:identifier).preload(:current_resource_state)
       @datasets = @datasets.preload(:process_date) if @fields.include?('submit_date')
       @datasets = @datasets.preload(:last_curation_activity) if @fields.include?('status') || @fields.include?('updated_at')
       @datasets = @datasets.preload(:subjects) if @fields.include?('keywords')
@@ -279,6 +294,98 @@ module StashEngine
       @datasets = @datasets.preload(identifier: :journal_datum) if @fields.include?('journal') || @fields.include?('sponsor')
       @datasets = @datasets.preload(:funders) if @fields.include?('funders')
       @datasets = @datasets.preload(:related_identifiers).preload(identifier: :manuscript_datum) if @fields.include?('identifiers')
+    end
+
+    def load
+      @identifier = Identifier.find(params[:id])
+      @resource = authorize @identifier.latest_resource, :curate?
+      @field = params[:field]
+      @last_state = @resource.last_curation_activity.status
+      @status = params.dig(:curation_activity, :status).presence || @last_state
+    end
+
+    def curation_activity_change
+      return publishing_error if @resource.id != @identifier.last_submitted_resource.id &&
+        %w[embargoed published].include?(params.dig(:curation_activity, :status))
+
+      return state_error unless CurationActivity.allowed_states(@last_state).include?(@status)
+
+      decipher_curation_activity
+      @note = params.dig(:curation_activity, :note)
+      @resource.publication_date = @pub_date
+      @resource.hold_for_peer_review = true if @status == 'peer_review'
+      @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
+      @resource.save
+      @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
+      @resource.reload
+    end
+
+    def decipher_curation_activity
+      @pub_date = params[:publication_date]
+      case @status
+      when 'published'
+        publish
+      when 'embargoed'
+        @status = 'published' if @pub_date.present? && @pub_date <= Date.today.to_s
+      else
+        @pub_date = nil
+      end
+    end
+
+    def publish
+      @status = 'embargoed' if @pub_date.present? && @pub_date > Date.today.to_s
+      return if @pub_date.present?
+
+      @pub_date = Date.today.to_s
+      return unless @identifier.allow_blackout?
+
+      @note = 'Adding 1-year blackout period due to journal settings.'
+      @status = 'embargoed'
+      @pub_date = (Date.today + 1.year).to_s
+    end
+
+    def publishing_error
+      @error_message = <<-HTML.chomp.html_safe
+        <p>You're attempting to embargo or publish a dataset that is being edited or hasn't successfully finished submission.</p>
+        <p>The latest version submission status is <strong>#{@last_resource.current_resource_state.resource_state}</strong> for
+        resource id #{@last_resource.id}.</p>
+        <p>You may need to wait a minute for submission to complete if this was recently edited or submitted again.</p>
+      HTML
+      render :curation_activity_error
+    end
+
+    def state_error
+      @error_message = <<-HTML.chomp.html_safe
+        <p>You're attempting to set the curation state to <strong>#{@status}</strong>,
+          which isn't an allowed state change from <strong>#{@last_state}</strong>.</p>
+        <p>This error may indicate that you are operating on stale data--such as by holding the <strong>status</strong> dialog
+        open in a separate window while making changes elsewhere (or another user has made recent changes).</p>
+        <p>The most likely ways to fix this error:</p>
+        <ul>
+          <li>Close this dialog and re-open the dialog to set the curation status again.</li>
+          <li>Or refresh the <strong>Dataset curation</strong> list by reloading the page.</li>
+          <li>In some circumstances, submissions or re-submissions of metadata and files must be completed before states can update correctly,
+           so waiting a minute or two may fix the problem.</li>
+        </ul>
+         <hr/>
+        <p>Reference information -- resource id <strong>#{@resource.id}</strong> and doi <strong>#{@resource.identifier.identifier}</strong></p>
+      HTML
+      render :curation_activity_error
+    end
+
+    def current_editor_change
+      editor_id = params.dig(:current_editor, :id)
+      if editor_id&.to_i == 0
+        @resource.update(current_editor_id: nil)
+        @status = 'submitted' if @resource.current_curation_status == 'curation'
+        @curator_name = ''
+      else
+        @resource.update(current_editor_id: editor_id)
+        @curator_name = StashEngine::User.find(editor_id)&.name
+      end
+      @note = "Changing current editor to #{@curator_name.presence || 'unassigned'}. " + params.dig(:curation_activity, :note)
+      @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
+      @resource.reload
     end
 
   end

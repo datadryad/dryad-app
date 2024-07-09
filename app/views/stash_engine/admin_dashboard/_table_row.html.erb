@@ -1,24 +1,18 @@
 <tr>
-  <td>
-    <div class="c-lined-table__with-actions">
-      <div class="c-lined-table__data">
-        <%= link_to dataset.title, stash_url_helpers.show_path(id: dataset.identifier_str), target: '_blank' %>
-        <% if @fields.include?('doi') %>
-          <div class="c-lined-table__digits">DOI: <%= dataset.identifier.identifier %></div>
-        <% end %>
-        <% if @fields.include?('keywords') && dataset.subjects.present? %>
-          <div class="c-lined-table__digits"><%= dataset.subjects.map(&:subject).join(', ') %></div>
-        <% end %>
-      </div>
-      <% if policy([:stash_engine, :admin_datasets]).activity_log? %>
-        <div class="c-lined-table__actions">
-          <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: dataset.identifier_id) %>" class="c-admin-edit-icon">
-            <i class="fa fa-clock" aria-hidden="true"></i>
-          </a>
-        </div>
+  <td><div class="c-lined-table__with-actions">
+    <div class="c-lined-table__data">
+      <%= link_to dataset.title, stash_url_helpers.show_path(id: dataset.identifier_str), target: '_blank' %>
+      <% if @fields.include?('doi') %>
+        <div class="c-lined-table__digits">DOI: <%= dataset.identifier.identifier %></div>
+      <% end %>
+      <% if @fields.include?('keywords') && dataset.subjects.present? %>
+        <div class="c-lined-table__digits"><%= dataset.subjects.map(&:subject).join(', ') %></div>
       <% end %>
     </div>
-  </td>
+    <div class="c-lined-table__actions" id="dataset_description_<%= dataset.identifier_id %>"> 
+      <%= render partial: 'table_description', locals: {dataset: dataset} %>
+    </div>
+  </div></td>
   <% if @fields.include?('authors') %>
     <td><%= dataset.author_string %></td>
   <% end %>
@@ -38,7 +32,9 @@
     </td>
   <% end %>
   <% if @fields.include?('status') %>
-    <td><%= StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) %></td>
+    <td id="dataset_status_<%= dataset.identifier_id %>">
+      <%= render partial: 'table_status', locals: {dataset: dataset} %>
+    </td>
   <% end %>
   <% if @fields.include?('size') %>
     <td class="c-lined-table__digits"><%= filesize(dataset.total_file_size) %></td>
@@ -72,15 +68,21 @@
     </td>
   <% end %>
   <% if @fields.include?('curator') %>
-    <td><%= dataset.curator_name %></td>
+    <td id="dataset_curator_<%= dataset.identifier_id %>">
+      <%= render partial: 'table_curator', locals: {dataset: dataset, curator_name: dataset.curator_name} %>
+    </td>
   <% end %>
   <% if @fields.include?('updated_at') %>
-    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.last_curation_activity.updated_at) %></span></td>
+    <td class="c-lined-table__digits" id="dataset_updated_<%= dataset.identifier_id %>">
+      <%= formatted_datetime(dataset.last_curation_activity.updated_at) %>
+    </td>
   <% end %>
   <% if @fields.include?('submit_date') %>
     <td class="c-lined-table__digits"><%= formatted_datetime(dataset.process_date.submitted || dataset.process_date.peer_review) %></td>
   <% end %>
   <% if @fields.include?('publication_date') %>
-    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.publication_date) %></td>
+    <td class="c-lined-table__digits" id="dataset_published_<%= dataset.identifier_id %>">
+      <%= formatted_datetime(dataset.publication_date) %>
+    </td>
   <% end %>
 </tr>
