@@ -11,7 +11,7 @@
   margin-top: 2em;
   padding-top: 10px;
   clear: both;
-  border-top: thin solid $design-dark-gray-color;
+  border-top: thin solid $dark-gray;
   font-size: .9em;
 
   @include bp(screen3) {

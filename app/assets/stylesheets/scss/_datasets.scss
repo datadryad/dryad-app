@@ -79,7 +79,7 @@
 	  margin-left: auto;
 
 	  i {
-	    color: $design-green-color;
+	    color: $green;
 	  }
 	}
 }
@@ -94,22 +94,22 @@
     padding: .15rem .5rem;
   }
   .error-status {
-    background-color: $design-red-color;
+    background-color: $red;
     color: #fff;
   }
   .warning-status {
     background-color: #edba5a;
   }
   .info-status {
-    background-color: $design-medium-blue-color;
+    background-color: $medium-blue;
     color: #fff;
   }
   .success-status {
-    background-color: $design-green-color;
+    background-color: $green;
     color: #fff;
   }
   .disabled-status {
-  	background-color: $design-dark-gray-color;
+  	background-color: $dark-gray;
   }
 
   .c-user-datasets-actions {
