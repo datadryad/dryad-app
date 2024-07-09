@@ -25,17 +25,16 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/sarah.jpg" alt="Headshot of Sarah Lippincott">
-  <h5>Sarah Lippincott</h5><br/>
-  <p><em>Head of Community Engagement</em><br/>
-  Sarah is a librarian and library consultant with a decade of experience supporting open access, digital scholarship, and scholarly communications through strategic planning, research, service design, facilitation, and communications work. As Head of Community Engagement at Dryad, Sarah works with institutions, funders, and researchers to increase awareness of and engagement with data sharing and data reuse.
-</p>
-</div>
-<div class="bio">
   <img src="/images/JHerzog.jpg" alt="Headshot of Jess Herzog">
   <h5>Jess Herzog</h5><br/>
   <p><em>Head of Publishing Services</em><br/>
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
+</div>
+<div class="bio">
+  <img src="/images/sarah.jpg" alt="Headshot of Sarah Lippincott">
+  <h5>Sarah Lippincott</h5><br/>
+  <p><em>Community Engagement Consultant</em><br/>
+  Sarah is a librarian and library consultant with a decade of experience supporting open access, digital scholarship, and scholarly communications through strategic planning, research, service design, facilitation, and communications work. As Community Engagement Consultant at Dryad, Sarah works with institutions, funders, and researchers to increase awareness of and engagement with data sharing and data reuse.</p>
 </div>
 <div class="bio">
   <img src="/images/rscherle.jpg" alt="Headshot of Ryan Scherle">
@@ -43,12 +42,6 @@
   <p><em>Head of Platform Development</em><br/>
   Ryan has over 30 years of experience designing and developing systems to manage collections of digital objects. He has been with Dryad since its founding, and has been involved with all aspects of the organization. He has a background in artificial intelligence research, and he believes that the best technology strikes a balance between anticipating what a user needs and allowing the user to remain in control. Ryan also manages technical development for the Covid Information Commons at the Northeast Big Data Innovation Hub. 
 </p>
-</div>
-<div class="bio">
-  <img src="/images/okubo.jpg" alt="Headshot of Donna Okubo">
-  <h5>Donna Okubo</h5><br/>
-  <p><em>Strategic Partnership Director</em><br/>
-  Donna Okubo is a nonprofit consultant with over 20 years of experience working within Open Science with expertise in community building, advocacy, and membership development. Prior to consulting, she worked for the Public Library of Science (PLOS), where she was the Senior Strategic Partnership Manager.</p>
 </div>
 <div class="bio">
   <img src="/images/angelica.jpg" alt="Headshot of Angelica Del Sette">
@@ -68,7 +61,6 @@
      Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
      </p>
    </div>
-   <div class="bio"><!-- This item was added so that when there are just 2 bios these are on the same row --></div>
    <div class="bio">
      <img src="/images/alin.jpeg" alt="Headshot of Alin Vetian">
      <h5>Alin Vetian</h5><br/>

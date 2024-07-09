@@ -31,22 +31,26 @@
     margin-left: 0;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
 
     form {
       display: flex;
       flex-direction: row;
       width: 100%;
+      flex-wrap: wrap;
 
       & > div {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1ch;
       }
     }
 
     .c-auto_complete {
       width: 20rem;
-      margin-right: 10px;
-
       .c-input__text.c-ac__input_with_button, .c-ac__input-button {
         height: 45px;
       }

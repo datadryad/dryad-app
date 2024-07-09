@@ -25,10 +25,12 @@
 
 .c-columns__content, #page-content {
   padding-left: 2px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+
   @include bp(screen3) {
     flex: 0 1 90ch;
     padding-right: 5ch;
-    overflow: visible;
   }
 }
 

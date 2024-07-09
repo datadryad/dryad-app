@@ -13,7 +13,7 @@
 <div id="edit-tenant-form" hidden>
   <p id="label_tenant_lookup">Select your Dryad member institution:</p>
   <div class="t-login__choose">
-    <div class="c-institution__container">
+    <div class="c-institution__container" style="width: 100%">
       <%= form_with(url: sso_path, method: :post, html: {style: 'justify-content: space-between;'}) do %>
         <%= react_component('components/TenantForm', {tenants: tenant_select}) %>
         <span style="flex-grow: 1"></span>

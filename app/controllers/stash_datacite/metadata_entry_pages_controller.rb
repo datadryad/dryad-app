@@ -38,7 +38,7 @@ module StashDatacite
       title = @resource.title || ''
       abstract = @metadata_entry.abstract.description || ''
       @neuro_data = false
-      bank = %w[neuro cogniti cereb memory consciousness amnesia]
+      bank = %w[neuro cogniti cereb memory consciousness amnesia psychopharmacology brain hippocampus]
       regex = bank.join('|')
       keywords = @metadata_entry.subjects.map(&:subject).join(', ')
       if !!title.match?(/#{regex}/i) || !!publication_name.match?(/#{regex}/i) || !!keywords.match?(/#{regex}/i) || !!abstract.match?(/#{regex}/i)
