@@ -7,7 +7,7 @@
     <input type="hidden" name="user_id" value="<%= current_user.id %>">
     <input type="hidden" name="properties" value="<%= @properties %>">
     <div class="c-input">
-      <label for="title">Name</label>
+      <label for="title" class="required">Name</label>
       <%= text_field_tag(:title, '', class: 'c-input__text', maxlength: '50', required: true) %>
     </div>
     <div class="c-input">

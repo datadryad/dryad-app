@@ -17,7 +17,7 @@ end
     </div>
   <% end %>
   <div class="o-admin-form-pair"><%= selecter('status', [['', '']] + status_select).html_safe %></div>
-  <% if current_user.min_curator? %>
+  <% if current_user.min_app_admin? %>
     <div class="o-admin-form-pair">
       <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
     </div>
