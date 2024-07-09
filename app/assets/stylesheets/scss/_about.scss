@@ -4,6 +4,8 @@
 
   @media (min-width: 620px) {
     columns: 2;
+    orphans: 1;
+    widows: 1;
   }
 
   @include bp(screen3) {
@@ -12,6 +14,8 @@
 
   @media (min-width: 980px) {
     columns: 2;
+    orphans: 1;
+    widows: 1;
   }
 
   .bio {

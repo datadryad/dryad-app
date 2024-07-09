@@ -25,17 +25,16 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/sarah.jpg" alt="Headshot of Sarah Lippincott">
-  <h5>Sarah Lippincott</h5><br/>
-  <p><em>Head of Community Engagement</em><br/>
-  Sarah is a librarian and library consultant with a decade of experience supporting open access, digital scholarship, and scholarly communications through strategic planning, research, service design, facilitation, and communications work. As Head of Community Engagement at Dryad, Sarah works with institutions, funders, and researchers to increase awareness of and engagement with data sharing and data reuse.
-</p>
-</div>
-<div class="bio">
   <img src="/images/JHerzog.jpg" alt="Headshot of Jess Herzog">
   <h5>Jess Herzog</h5><br/>
   <p><em>Head of Publishing Services</em><br/>
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
+</div>
+<div class="bio">
+  <img src="/images/sarah.jpg" alt="Headshot of Sarah Lippincott">
+  <h5>Sarah Lippincott</h5><br/>
+  <p><em>Community Engagement Consultant</em><br/>
+  Sarah is a librarian and library consultant with a decade of experience supporting open access, digital scholarship, and scholarly communications through strategic planning, research, service design, facilitation, and communications work. As Community Engagement Consultant at Dryad, Sarah works with institutions, funders, and researchers to increase awareness of and engagement with data sharing and data reuse.</p>
 </div>
 <div class="bio">
   <img src="/images/rscherle.jpg" alt="Headshot of Ryan Scherle">
@@ -62,7 +61,6 @@
      Audrey has many years of experience developing websites and digital repositories related to libraries and to scientific publishing, with previous roles in software development at Europe PMC, PubMed Central, and the University of Delaware Library. She holds a Master's in Library and Information Science from Drexel University. Audrey enjoys reading, traveling, and reading while traveling.
      </p>
    </div>
-   <div class="bio"><!-- This item was added so that when there are just 2 bios these are on the same row --></div>
    <div class="bio">
      <img src="/images/alin.jpeg" alt="Headshot of Alin Vetian">
      <h5>Alin Vetian</h5><br/>
