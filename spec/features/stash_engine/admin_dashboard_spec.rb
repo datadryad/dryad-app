@@ -27,9 +27,10 @@ RSpec.feature 'AdminDashboard', type: :feature do
       create(:tenant)
       @user = create(:user, tenant_id: 'test_tenant')
       @superuser = create(:user, role: 'superuser')
-      3.times do
+      Timecop.travel(Time.now.utc - 2.days)
+      2.times do
         identifier = create(:identifier)
-        create(:resource, :submitted, publication_date: nil, user: @user, identifier: identifier)
+        @resource = create(:resource, :submitted, publication_date: nil, user: @user, identifier: identifier)
       end
       sign_in(@superuser, false)
     end
@@ -74,8 +75,8 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
     context :date_and_state_filters do
       before(:each) do
-        StashEngine::Resource.submitted.first.curation_activities.last.update(updated_at: Date.today + 2.days)
-        StashEngine::Resource.submitted.last.curation_activities << StashEngine::CurationActivity.create(status: 'curation', user_id: @superuser.id)
+        create(:curation_activity, status: 'curation', user: @superuser, resource: @resource)
+        Timecop.return
         2.times do
           identifier = create(:identifier)
           create(:resource, publication_date: nil, user: @user, identifier: identifier)
@@ -93,6 +94,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       it 'filters on status', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
+        assert_selector('tbody tr', count: 10)
         select('In progress', from: 'filter-status')
         click_button('Apply')
         assert_selector('tbody tr', count: 2)
@@ -113,26 +115,26 @@ RSpec.feature 'AdminDashboard', type: :feature do
       it 'filters on last modified date', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
-        fill_in('updated_atstart', with: I18n.l(Date.today + 1.day, format: '%d-%m-%Y'))
+        fill_in('updated_atstart', with: Date.today)
         click_button('Apply')
-        assert_selector('tbody tr', count: 1)
+        assert_selector('tbody tr', count: 8)
       end
 
       it 'filters on submitted date', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
-        fill_in('submit_datestart', with: I18n.l(Date.today - 1.day, format: '%d-%m-%Y'))
+        fill_in('submit_datestart', with: Date.today)
         click_button('Apply')
-        assert_selector('tbody tr', count: 9)
+        assert_selector('tbody tr', count: 6)
       end
 
       it 'filters on published date', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
-        fill_in('publication_datestart', with: I18n.l(Date.today - 1.day, format: '%d-%m-%Y'))
+        fill_in('publication_datestart', with: Date.today)
         click_button('Apply')
         assert_selector('tbody tr', count: 6)
-        fill_in('publication_dateend', with: I18n.l(Date.today, format: '%d-%m-%Y'))
+        fill_in('publication_dateend', with: Date.today)
         click_button('Apply')
         assert_selector('tbody tr', count: 3)
       end

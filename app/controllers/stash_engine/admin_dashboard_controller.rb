@@ -275,8 +275,8 @@ module StashEngine
     def date_string(date_hash)
       from = date_hash[:start_date]
       to = date_hash[:end_date]
-      return "< '#{to}'" if from.blank?
-      return "> '#{from}'" if to.blank?
+      return "<= '#{to}'" if from.blank?
+      return ">= '#{from}'" if to.blank?
 
       "BETWEEN '#{from}' AND '#{to}'"
     end
