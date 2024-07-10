@@ -29,7 +29,7 @@ module StashEngine
     validates :data_type, presence: true
     validates :value, presence: true
 
-    after_save_commit :record_history
+    after_save_commit :record_history, if: :saved_change_to_value?
 
     def self.data_type(type)
       where('data_type = ?', type)

@@ -303,6 +303,9 @@ Rails.application.routes.draw do
 
     # admin_dashboard
     match 'admin_dashboard', to: 'admin_dashboard#index', via: %i[get post]
+    match 'admin_dashboard/results', to: 'admin_dashboard#results', via: %i[get post], as: 'admin_dashboard_results'
+    get 'admin_dashboard/:id/edit/:field', to: 'admin_dashboard#edit', as: 'admin_dash_edit'
+    post 'admin_dashboard/:id', to: 'admin_dashboard#update', as: 'admin_dash_update'
     get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'
     match 'admin_search/:id', to: 'admin_dashboard#save_search', via: %i[put patch], as: 'save_admin_search'
 

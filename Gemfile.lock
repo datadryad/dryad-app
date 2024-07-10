@@ -592,7 +592,7 @@ GEM
       railties (>= 3.2)
       tilt
     recaptcha (5.15.0)
-    redcarpet (3.5.1)
+    redcarpet (3.6.0)
     regexp_parser (2.8.1)
     reline (0.3.8)
       io-console (~> 0.5)
@@ -747,6 +747,7 @@ GEM
     tilt (2.2.0)
     time (0.3.0)
       date
+    timecop (0.9.10)
     timeout (0.4.1)
     tins (1.31.1)
       sync
@@ -893,7 +894,7 @@ DEPENDENCIES
   rdoc (~> 6.1.1)
   react-rails (~> 2.6.2)
   recaptcha (~> 5.14)
-  redcarpet (~> 3.5.1)
+  redcarpet (~> 3.6)
   responders (~> 3.0.1)
   rest-client (~> 2.1.0)
   restforce (~> 5.2.4)
@@ -919,6 +920,7 @@ DEPENDENCIES
   sprockets (~> 4.0)
   stripe (~> 5.50.0)
   sync (~> 0.5.0)
+  timecop
   tins (~> 1.31.0)
   turbolinks
   twitter-typeahead-rails (= 0.11.1)

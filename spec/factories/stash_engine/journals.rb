@@ -32,7 +32,7 @@ FactoryBot.define do
       issn { nil }
     end
 
-    title { Faker::Company.industry }
+    title { Faker::Company.unique.industry }
     journal_code { Faker::Name.initials(number: 4) }
     sponsor_id { nil }
 

@@ -99,6 +99,7 @@ td, th {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  column-gap: $spacing-base;
 }
 
 .c-lined-table__data {
@@ -107,12 +108,26 @@ td, th {
   }
 }
 
-.c-lined-table__actions {
-  padding-left: $spacing-base;
+.c-admin-edit-icon {
+  border: none;
+  padding: 0;
+  color: $medium-blue;
+  background-color: transparent;
 
-  & > *:first-child {
-    margin-bottom: $spacing-base;
+  &:link, &:visited {
+    color: $medium-blue;
   }
+
+  &:hover, &:focus, &:active {
+    color: $light-green;
+  }
+}
+
+.c-lined-table__actions {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: $spacing-base;
 }
 
 .c-user-datasets-table {

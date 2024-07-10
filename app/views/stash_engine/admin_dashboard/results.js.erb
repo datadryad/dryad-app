@@ -1,0 +1,3 @@
+document.getElementById('search_results').innerHTML = "<%= escape_javascript(render(partial: 'results')) %>";
+document.getElementById('save_buttons').innerHTML = "<%= escape_javascript(render(partial: 'save_buttons')) %>";
+document.getElementById('count_and_export').innerHTML = `<span><b><%= number_with_delimiter(session[:admin_search_count]) %></b> results</span><%= link_to "Export #{session[:admin_search_count] > 2000 ? 'first 2000' : 'all'} as CSV", stash_url_helpers.admin_dashboard_results_path(format: :csv), class: 'o-link__buttonlink' %>`;

@@ -1,5 +1,6 @@
 <%= form_with(model: StashEngine::SavedSearch, url: update_saved_search_path(saved_search.id), method: :patch, local: false, class: 'saved_search_form') do %>
   <div>
+    <%= hidden_field_tag :default, false %>
     <%= check_box_tag(:default, true, saved_search.default)%>
     <%= label_tag(:default, 'Default') %>
   </div>
@@ -9,6 +10,6 @@
   <div>
     <%= text_area_tag(:description, saved_search.description, class: 'c-input__textarea', style: 'width: 100%; min-height: 2rem;', 'aria-label': 'Description') %>
   </div>
-  <button type="submit" aria-label="Save" class="c-admin-edit-icon"><i class="fa fa-floppy-disk" aria-hidden="true"></i></button>
-  <button type="button" aria-label="Cancel" id="cancel_save<%= saved_search.id %>" class="c-admin-edit-icon"><i class="fa fa-times" aria-hidden="true"></i></button>
+  <button type="submit" aria-label="Save" class="c-admin-edit-icon" title="Save"><i class="fa fa-floppy-disk" aria-hidden="true"></i></button>
+  <button type="button" aria-label="Cancel" title="Cancel" id="cancel_save<%= saved_search.id %>" class="c-admin-edit-icon"><i class="fa fa-times" aria-hidden="true"></i></button>
 <% end %>

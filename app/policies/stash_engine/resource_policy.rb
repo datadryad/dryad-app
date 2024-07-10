@@ -13,6 +13,16 @@ module StashEngine
       create?
     end
 
+    def curate?
+      @user.min_curator?
+    end
+
+    def curator_edit?
+      (curate? &&
+      (@resource.current_resource_state.resource_state == 'submitted')) ||
+      (@resource.current_resource_state.resource_state == 'in_progress' && @resource.current_editor_id == @user.id)
+    end
+
     class Scope
       def initialize(user, scope)
         @user = user

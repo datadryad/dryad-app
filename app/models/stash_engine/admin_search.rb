@@ -23,8 +23,7 @@
 #
 module StashEngine
   class AdminSearch < SavedSearch
-    after_create :only_one_default, if: :saved_change_to_default?
-    after_update :only_one_default, if: :saved_change_to_default?
+    after_save :only_one_default, if: :saved_change_to_default?
 
     def fields
       properties['fields']
