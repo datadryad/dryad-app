@@ -1,15 +1,3 @@
-<%
-#  id          :bigint           not null, primary key
-#  default     :boolean
-#  description :string(191)
-#  properties  :json
-#  share_code  :string(191)
-#  title       :string(191)
-#  type        :string(191)
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  user_id     :integer
-%>
 <h1>Save this search</h1>
 <% if current_user.admin_searches.count == 10 %>
   <p>You have reached the limit on saved searches! Please modify or delete one of your <a href="/stash/account#saved" style="font-weight: normal;">existing saved searches</a>.</p>
@@ -19,7 +7,7 @@
     <input type="hidden" name="user_id" value="<%= current_user.id %>">
     <input type="hidden" name="properties" value="<%= @properties %>">
     <div class="c-input">
-      <label for="title">Name</label>
+      <label for="title" class="required">Name</label>
       <%= text_field_tag(:title, '', class: 'c-input__text', maxlength: '50', required: true) %>
     </div>
     <div class="c-input">

@@ -100,20 +100,6 @@
   }
 }
 
-.c-admin-edit-icon {
-  border: none;
-  color: $medium-blue;
-  background-color: transparent;
-
-  &:link, &:visited {
-    color: $medium-blue;
-  }
-
-  &:hover, &:focus, &:active {
-    color: $light-green;
-  }
-}
-
 .o-admin-form-pair.half-width {
   flex-basis: 546px;
   max-width: 546px;
