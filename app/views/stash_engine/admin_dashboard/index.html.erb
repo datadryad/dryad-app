@@ -13,7 +13,7 @@
     <button type="button" class="o-button__plain-text7" id="search_open" aria-controls="search_form" aria-expanded="<%= !unaltered %>" <% unless unaltered %>hidden<% end %>><i class="fa fa-sliders" aria-hidden="true"></i>Fields and filters</button>
   </div>
   <div id="search_form" <% if unaltered %>hidden<% end %>>
-    <%= form_with(url: admin_dashboard_results_path(format: :js, search: params[:search], page_size: @page_size), method: 'post', local: false, class: 'admin-dashboard-form') do %>
+    <%= form_with(url: admin_dashboard_results_path(format: :js, search: params[:search], page_size: params[:page_size]), method: 'post', local: false, class: 'admin-dashboard-form') do %>
       <%= render partial: 'fields' %>
       <%= render partial: 'filters' %>
       <div class="admin-dashboard-buttons" style="column-gap: 3ch; row-gap: 2ch">
@@ -41,7 +41,7 @@
   </div>
 </div>
 
-<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], page_size: @page_size) %>">
+<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], page_size: params[:page_size], page: params[:page]) %>">
   <i class="fa fa-spin fa-circle-notch" aria-hidden="true"></i>
 </div>
 

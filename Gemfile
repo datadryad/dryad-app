@@ -94,7 +94,7 @@ gem 'pundit', '~> 2.3'
 gem 'rack-attack'
 gem 'rb-readline', require: false
 gem 'recaptcha', '~> 5.14'
-gem 'redcarpet', '~> 3.5.1'  # I'm not sure we're still using markdown for others to create documents
+gem 'redcarpet', '~> 3.6'
 gem 'responders', '~> 3.0.1' # do we use this?
 gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used
 gem 'restforce', '~> 5.2.4'
@@ -172,6 +172,7 @@ group :test do
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
   gem 'simplecov-console', require: false
+  gem 'timecop'
   gem 'webmock'
 end
 

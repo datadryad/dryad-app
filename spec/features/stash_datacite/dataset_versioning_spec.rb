@@ -163,7 +163,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         visit stash_url_helpers.ds_admin_path
 
         # Edit the Dataset as an admin
-        find('button[title="Edit dataset"]').click
+        click_button 'Edit dataset'
         expect(page).to have_text("You are editing #{@author.name}'s dataset.")
         update_dataset(curator: true)
         @resource.reload
