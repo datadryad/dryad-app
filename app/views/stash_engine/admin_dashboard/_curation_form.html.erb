@@ -1,0 +1,47 @@
+<h1><%= @desc %></h1>
+<%= form_with(url: admin_dash_update_path(@identifier.id), method: :post, local: false) do |form| -%>
+  <%= hidden_field_tag :field, @field %>
+  <% case @field %>
+  <% when 'curation_activity' %>
+    <p>Edit curation status of <em><%= @resource.title %></em></p>
+    <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
+    <%# Users cannot change the status or publication date once the files are published %>
+     <% if @resource.curatable? && filter_status_select(@resource.current_curation_status) %>
+      <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
+          <div class="c-input">
+            <%= ca.label :status, 'Status', class: 'c-input__label' %>
+            <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_status)), {include_blank: true}, {id: 'activity_status_select', class: 'c-input__select'} %>
+          </div>
+      <% end %>
+    <% else %>
+      <p>Due to the state of the files, the submission status cannot be changed.<br/> Notes may be added.</p>
+    <% end %>
+    <%# User can change the publication date If the resource is published or embargoed %>
+    <div class="c-input" id="c-input_publication_date" hidden>
+      <%= form.label :publication_date, 'Publication date', class: 'c-input__label' %>
+      <%= form.date_field :publication_date, class: 'c-input__text' %>
+    </div>
+  <% when 'current_editor' %>
+    <p>Change curator for <em><%= @resource.title %></em></p>
+    <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
+    <%# Users cannot change the editor once the files are published %>
+    <% if @resource.curatable? %>
+      <%= form.fields_for :current_editor, @resource do |r| %>
+        <div class="c-input">
+          <%= r.label :id, 'Curator', class: 'c-input__label' %>
+          <%= r.select :id, options_for_select([['(unassign)', '0']] + editor_select, @resource.current_editor_id), {include_blank: true}, {class: 'c-input__select', id: 'current_editor'} %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+  <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
+    <div class="c-input">
+      <%= ca.label :note, 'Notes', class: 'c-input__label' %>
+      <%= ca.text_area :note, class: 'c-input__textarea', id: 'activity_note', style: 'width: 100%;' %>
+    </div>
+  <% end %>
+  <div class="c-modal__buttons-right">
+    <%= submit_tag 'Submit', class: 'o-button__plain-text2', id: 'popup_submit' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+  </div>
+<% end %>

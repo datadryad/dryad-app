@@ -78,4 +78,8 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   Rails.application.default_url_options = { host: 'localhost', port: 3000 }
+  config.after_initialize do
+    t = Time.now.utc
+    Timecop.travel(t)
+  end
 end
