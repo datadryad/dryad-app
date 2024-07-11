@@ -175,8 +175,8 @@ module StashEngine
         @curation_activity = create(:curation_activity, resource: @resource)
       end
 
-      it 'calls three zenodo methods to copy software, supplemental and data (3rd copy)' do
-        expect(@resource).to receive(:send_to_zenodo).and_return('test1')
+      it 'calls two zenodo methods to copy software and supplemental' do
+        # expect(@resource).to receive(:send_to_zenodo).and_return('test1')
         expect(@resource).to receive(:send_software_to_zenodo).with(publish: true).and_return('test2')
         expect(@resource).to receive(:send_supp_to_zenodo).with(publish: true).and_return('test3')
         @curation_activity.copy_to_zenodo
