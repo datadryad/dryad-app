@@ -42,7 +42,7 @@ head += ',Published' if @fields.include?('publication_date')
   row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
   row << filesize(dataset.total_file_size) if @fields.include?('size')
   if @fields.include?('metrics')
-    row << "#{dataset.unique_investigation_count.blank? || dataset.unique_investigation_count < dataset.unique_request_count ? dataset.unique_request_count || 0 : dataset.unique_investigation_count} views, #{dataset.unique_request_count || 0} downloads, #{dataset.citation_count || 0} citations"
+    row << "#{dataset.identifier.counter_stat.unique_investigation_count.blank? || dataset.identifier.counter_stat.unique_investigation_count < dataset.identifier.counter_stat.unique_request_count ? dataset.identifier.counter_stat.unique_request_count || 0 : dataset.identifier.counter_stat.unique_investigation_count} views, #{dataset.identifier.counter_stat.unique_request_count || 0} downloads, #{dataset.identifier.counter_stat.citation_count || 0} citations"
   end
   if @fields.include?('funders') || @fields.include?('awards')
     row << dataset.funders.map { |f| ([@fields.include?('funders') ? f.contributor_name : nil] + [@fields.include?('awards') ? f.award_number : nil]).reject(&:blank?).join(', ')}.uniq.reject(&:blank?).join('; ') 
