@@ -258,7 +258,7 @@ module StashEngine
     end
 
     def copy_to_zenodo
-      resource.send_to_zenodo
+      # Copy only software and supplemental files to zenodo | resource.send_to_zenodo
       resource.send_software_to_zenodo(publish: true)
       resource.send_supp_to_zenodo(publish: true)
     end
