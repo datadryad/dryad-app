@@ -142,9 +142,10 @@ module StashEngine
 
     # rubocop:disable Metrics/MethodLength
     def add_fields
-      if @fields.include?('metrics')
+      if @sort == 'unique_investigation_count'
         @datasets = @datasets.joins('left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id')
-          .select('stats.unique_investigation_count, stats.citation_count, stats.unique_request_count')
+          .select('stats.unique_investigation_count')
+
       end
       if @filters[:status].present? || @sort == 'status' || @filters[:updated_at]&.values&.any?(&:present?) || @sort == 'updated_at'
         @datasets = @datasets.joins(:last_curation_activity)
@@ -173,7 +174,6 @@ module StashEngine
       end
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
-      @datasets = @datasets.select('stash_engine_counter_stats.unique_investigation_count') if @sort == 'unique_investigation_count'
       @datasets = @datasets.select(
         "MATCH(stash_engine_identifiers.search_words) AGAINST('#{
           %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
