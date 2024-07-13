@@ -10,7 +10,7 @@ module Datacite
 
         @dc4_xml = File.read('spec/data/archive/mrt-datacite.xml')
         @dcs_resource = Datacite::Mapping::Resource.parse_xml(@dc4_xml)
-
+        Timecop.travel(Time.now.utc - 2.minutes)
         user = create(:user,
                       first_name: 'Lisa',
                       last_name: 'Muckenhaupt',
@@ -20,7 +20,7 @@ module Datacite
         @resource = create(:resource,
                            user: user,
                            tenant_id: 'dataone')
-
+        Timecop.return
         @xml_factory = DataciteXMLFactory.new(
           se_resource_id: @resource.id,
           doi_value: @resource.identifier.identifier,
@@ -113,7 +113,9 @@ module Datacite
 
         it 'sets the correct issued and available dates' do
           @resource.update(publication_date: Time.utc(2018, 1, 1), meta_view: true)
+          Timecop.travel(Time.now.utc - 1.minute)
           @res2 = create(:resource, identifier: @resource.identifier, meta_view: true, file_view: true, publication_date: Time.utc(2018, 2, 1))
+          Timecop.return
           @res3 = create(:resource, identifier: @resource.identifier, meta_view: true, file_view: true, publication_date: Time.utc(2018, 3, 1))
 
           @xml_factory = DataciteXMLFactory.new(

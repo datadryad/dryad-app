@@ -349,6 +349,7 @@ module StashApi
         resource.update(skip_emails: true)
         resource.current_state = 'submitted' # make it look like the first was successfully submitted, so this next will be new version
         resource.save
+        Timecop.travel(Time.now.utc + 1.minute)
         # this is what happens in the controller if an update to an existing identifier that has last successfully submitted (completed) version
         # I can imagine, that this might be incorporated into the DatasetParser object instead
         new_resource = resource.amoeba_dup
