@@ -326,22 +326,22 @@ module StashEngine
       when 'published'
         publish
       when 'embargoed'
-        @status = 'published' if @pub_date.present? && @pub_date <= Date.today.to_s
+        @status = 'published' if @pub_date.present? && @pub_date <= Time.now.utc.to_date.to_s
       else
         @pub_date = nil
       end
     end
 
     def publish
-      @status = 'embargoed' if @pub_date.present? && @pub_date > Date.today.to_s
+      @status = 'embargoed' if @pub_date.present? && @pub_date > Time.now.utc.to_date.to_s
       return if @pub_date.present?
 
-      @pub_date = Date.today.to_s
+      @pub_date = Time.now.utc.to_date.to_s
       return unless @identifier.allow_blackout?
 
       @note = 'Adding 1-year blackout period due to journal settings.'
       @status = 'embargoed'
-      @pub_date = (Date.today + 1.year).to_s
+      @pub_date = (Time.now.utc.to_date + 1.year).to_s
     end
 
     def publishing_error

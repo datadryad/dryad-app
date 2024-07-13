@@ -27,7 +27,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       create(:tenant)
       @user = create(:user, tenant_id: 'test_tenant')
       @superuser = create(:user, role: 'superuser')
-      Timecop.travel(Time.now.utc - 2.days)
+      Timecop.travel(Time.now.utc.to_date - 2.days)
       2.times do
         identifier = create(:identifier)
         @resource = create(:resource, :submitted, publication_date: nil, user: @user, identifier: identifier)
@@ -100,7 +100,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         assert_selector('tbody tr', count: 2)
         select('Submitted', from: 'filter-status')
         click_button('Apply')
-        assert_selector('tbody tr', count: 2)
+        assert_selector('tbody tr', count: 1)
         select('Curation', from: 'filter-status')
         click_button('Apply')
         assert_selector('tbody tr', count: 1)
@@ -115,7 +115,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       it 'filters on last modified date', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
-        fill_in('updated_atstart', with: Date.today)
+        fill_in('updated_atstart', with: Time.now.utc.to_date)
         click_button('Apply')
         assert_selector('tbody tr', count: 8)
       end
@@ -123,7 +123,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       it 'filters on submitted date', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
-        fill_in('submit_datestart', with: Date.today)
+        fill_in('submit_datestart', with: Time.now.utc.to_date)
         click_button('Apply')
         assert_selector('tbody tr', count: 6)
       end
@@ -131,10 +131,10 @@ RSpec.feature 'AdminDashboard', type: :feature do
       it 'filters on published date', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
-        fill_in('publication_datestart', with: Date.today)
+        fill_in('publication_datestart', with: Time.now.utc.to_date)
         click_button('Apply')
         assert_selector('tbody tr', count: 6)
-        fill_in('publication_dateend', with: Date.today)
+        fill_in('publication_dateend', with: Time.now.utc.to_date)
         click_button('Apply')
         assert_selector('tbody tr', count: 3)
       end
@@ -143,12 +143,14 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
   context :roles do
     before(:each) do
+      Timecop.travel(Time.now.utc - 1.minute)
       create(:tenant)
       @admin = create(:user, tenant_id: 'test_tenant')
       create(:role, user: @admin, role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, skip_datacite_update: true)
+      Timecop.return
     end
 
     context :app_admin, js: true do
