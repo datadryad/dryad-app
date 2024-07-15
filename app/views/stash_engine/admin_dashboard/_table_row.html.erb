@@ -40,9 +40,9 @@
     <td class="c-lined-table__digits"><%= filesize(dataset.total_file_size) %></td>
   <% end %>
   <% if @fields.include?('metrics') %>
-    <td class="c-lined-table__digits"><%= dataset.unique_investigation_count.blank? || dataset.unique_investigation_count < dataset.unique_request_count ? dataset.unique_request_count || 0 : dataset.unique_investigation_count %> views<br/>
-      <%= dataset.unique_request_count || 0 %> downloads<br/>
-      <%= dataset.citation_count || 0 %> citations
+    <td class="c-lined-table__digits"><%= dataset.identifier.counter_stat.unique_investigation_count.blank? || dataset.identifier.counter_stat.unique_investigation_count < dataset.identifier.counter_stat.unique_request_count ? dataset.identifier.counter_stat.unique_request_count || 0 : dataset.identifier.counter_stat.unique_investigation_count %> views<br/>
+      <%= dataset.identifier.counter_stat.unique_request_count || 0 %> downloads<br/>
+      <%= dataset.identifier.counter_stat.citation_count || 0 %> citations
     </td>
   <% end %>
   <% if @fields.include?('funders') || @fields.include?('awards') %>
@@ -60,7 +60,7 @@
   <% if @fields.include?('dpc') %>
     <td>
       <% dpc = ''
-        dpc = dataset.tenant&.short_name if dataset.identifier.payment_id = dataset.tenant_id
+        dpc = dataset.tenant&.short_name if dataset.identifier.payment_id == dataset.tenant_id
         dpc = dataset.identifier&.journal&.journal_title if dataset.identifier&.journal&.issn_array&.include?(dataset.identifier.payment_id)
         dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id.starts_with?('funder')
       %>
