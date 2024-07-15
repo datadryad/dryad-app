@@ -82,11 +82,13 @@ funder_roles = [
         <% end %>
       </ul>
     </fieldset>
-    <% unless user.tenant_id == APP_CONFIG.default_tenant %>
-      <% unless @tenant_role %>
-        <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a tenant role (for <%= user.tenant.short_name %>)</button>
+    <% if user.tenant_id.present? %>
+      <% unless user.tenant_id == APP_CONFIG.default_tenant %>
+        <% unless @tenant_role %>
+          <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a tenant role (for <%= user.tenant.short_name %>)</button>
+        <% end %>
+        <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'tenant', select_label: 'For user member institution:', roles: tenant_roles } %>
       <% end %>
-      <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'tenant', select_label: 'For user member institution:', roles: tenant_roles } %>
     <% end %>
     <% unless @publisher_role %>
       <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a publisher role</button>
