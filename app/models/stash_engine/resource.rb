@@ -33,10 +33,11 @@
 #
 # Indexes
 #
-#  index_stash_engine_resources_on_current_editor_id  (current_editor_id)
-#  index_stash_engine_resources_on_identifier_id      (identifier_id)
-#  index_stash_engine_resources_on_tenant_id          (tenant_id)
-#  index_stash_engine_resources_on_user_id            (user_id)
+#  index_stash_engine_resources_on_current_editor_id             (current_editor_id)
+#  index_stash_engine_resources_on_identifier_id                 (identifier_id)
+#  index_stash_engine_resources_on_identifier_id_and_created_at  (identifier_id,created_at) UNIQUE
+#  index_stash_engine_resources_on_tenant_id                     (tenant_id)
+#  index_stash_engine_resources_on_user_id                       (user_id)
 #
 require 'stash/aws/s3'
 # require 'stash/indexer/indexing_resource'
@@ -99,6 +100,7 @@ module StashEngine
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
 
     after_create :create_process_date, unless: :process_date
+    after_save :save_first_pub_date, if: proc { |res| res.publication_date.present? }
     after_update_commit :update_salesforce_metadata, if: [:saved_change_to_current_editor_id?, proc { |res| res.editor&.min_curator? }]
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
@@ -993,6 +995,14 @@ module StashEngine
     end
 
     private
+
+    def save_first_pub_date
+      first = identifier.resources.find { |r| r.publication_date.present? }
+      first_pub = first && first.publication_date < publication_date ? first.publication_date : publication_date
+      return if identifier.publication_date.presence == first_pub
+
+      identifier.update(publication_date: first_pub)
+    end
 
     def add_data_as_file(filename, content)
       # check content against file
