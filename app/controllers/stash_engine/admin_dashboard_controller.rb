@@ -248,15 +248,13 @@ module StashEngine
       journal_ids = @filters.dig(:journal, :value)&.to_i
       journal_ids = (@journal_limit.map(&:id).include?(journal_ids) ? journal_ids : @journal_limit.map(&:id)) if @journal_limit.present?
 
-      return unless journal_ids.present?
-
-      @datasets = @datasets.joins(identifier: :journal).where('stash_engine_journals.id': journal_ids)
+      @datasets = @datasets.joins(identifier: :journal).where('stash_engine_journals.id': journal_ids) if journal_ids.present?
     end
 
     def sponsor_filter
       return unless @sponsor_limit.present? || @filters[:sponsor].present?
 
-      sponsor_ids = @filters[:sponsor]
+      sponsor_ids = @filters[:sponsor]&.to_i
       sponsor_ids = (@sponsor_limit.map(&:id).include?(sponsor_ids) ? sponsor_ids : @sponsor_limit.map(&:id)) if @sponsor_limit.present?
 
       @datasets = @datasets.joins(identifier: :journal).where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
