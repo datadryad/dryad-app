@@ -50,11 +50,8 @@ RSpec.feature 'Admin', type: :feature do
     end
 
     it 'does not redirect to the dataset editing page when requesting an edit link for a different tenant without an edit_code', js: true do
-      @resource.tenant_id = 'dryad'
-      @resource.save
-      sleep 1
+      @resource.update(tenant_id: 'dryad')
       @resource.reload
-      sleep 1
       visit stash_url_helpers.dashboard_path
       visit "/stash/edit/#{@identifier.identifier}"
       expect(page).to have_text('does not exist')
@@ -77,6 +74,7 @@ RSpec.feature 'Admin', type: :feature do
       new_ident.save
       system_user = StashEngine::User.where(id: 0).first || create(:user, id: 0)
       expect { @resource = create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
+      Timecop.travel(Time.now.utc + 1.minute)
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page).to have_text('User settings')
       @resource.reload
