@@ -189,6 +189,7 @@ module StashApi
         r = @identifier.resources.last
         StashEngine::CurationActivity.create(resource: r, status: 'peer_review')
         r.current_resource_state.update(resource_state: 'submitted')
+        Timecop.travel(Time.now.utc + 1.minute)
         r2 = create(:resource, identifier: @identifier, user: @user,
                                current_editor_id: @user.id, title: 'The other resource')
         StashEngine::CurationActivity.create(resource: r2, status: 'in_progress')

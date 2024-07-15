@@ -79,7 +79,7 @@ FactoryBot.define do
   # Create a resource that has reached the embargoed curation status
   factory :resource_embargoed, parent: :resource, class: StashEngine::Resource do
 
-    publication_date { (Date.today + 2.days).to_s }
+    publication_date { (Time.now.utc.to_date + 2.days).to_s }
     submitted
 
     after(:create) do |resource|
@@ -94,7 +94,7 @@ FactoryBot.define do
   # Create a resource that has reached the published curation status
   factory :resource_published, parent: :resource, class: StashEngine::Resource do
 
-    publication_date { Date.today.to_s }
+    publication_date { Time.now.utc.to_date.to_s }
     submitted
 
     after(:create) do |resource|
