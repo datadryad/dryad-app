@@ -92,7 +92,7 @@ module StashEngine
       (ca.published? || ca.embargoed?) && curation_status_changed?
     }
 
-    after_create :process_dates, if: %i[curation_status_changed? first_time_in_status?]
+    after_create :process_dates, if: %i[curation_status_changed?]
 
     # the publication flags need to be set before creating datacite metadata (after create below)
     after_create :update_publication_flags, if: proc { |ca| %w[published embargoed peer_review withdrawn].include?(ca.status) }
@@ -227,7 +227,7 @@ module StashEngine
     end
 
     def process_dates
-      update_dates = {}
+      update_dates = {last_status_date: Time.current}
       if first_time_in_status?
         case status
         when 'processing', 'peer_review', 'submitted', 'withdrawn'
