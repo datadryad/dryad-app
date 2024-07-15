@@ -109,7 +109,8 @@ module StashEngine
           it "sends notification email at #{month_num} months" do
             Timecop.travel(month_num.months.from_now)
 
-            expect(StashEngine::ResourceMailer).to receive_message_chain(:action_required_delete_notification, :deliver_now).with(resource).with(no_args)
+            expect(StashEngine::ResourceMailer).to receive_message_chain(:action_required_delete_notification,
+                                                                         :deliver_now).with(resource).with(no_args)
             expect(subject).to receive(:create_activity).with('action_required_deletion_notice', resource).once
 
             subject.send_action_required_reminders
@@ -204,7 +205,7 @@ module StashEngine
             subject.send(:create_activity, 'peer_review_deletion_notice', resource)
           end
 
-          expect(ResourceMailer).to receive(:peer_review_delete_notification).once {}
+          expect(ResourceMailer).to receive(:peer_review_delete_notification).once
           Timecop.travel(7.month.from_now) do
             subject.send_peer_review_reminders
           end
@@ -230,12 +231,18 @@ module StashEngine
 
     describe '#log' do
       it 'prints message with logging true' do
-        expect { subject.class.new(true).send(:log, 'delete_notification_message_with_logs') }.to output(/delete_notification_message_with_logs/).to_stdout
+        expect do
+          subject.class.new(logging: true).send(:log, 'delete_notification_message_with_logs')
+        end.to output(/delete_notification_message_with_logs/).to_stdout
       end
 
       it 'does not print the message with logging false or missing' do
-        expect { subject.class.new(false).send(:log, 'delete_notification_message_with_logs') }.not_to output(/delete_notification_message_with_logs/).to_stdout
-        expect { subject.class.new.send(:log, 'delete_notification_message_with_logs') }.not_to output(/delete_notification_message_with_logs/).to_stdout
+        expect do
+          subject.class.new(logging: false).send(:log, 'delete_notification_message_with_logs')
+        end.not_to output(/delete_notification_message_with_logs/).to_stdout
+        expect do
+          subject.class.new.send(:log, 'delete_notification_message_with_logs')
+        end.not_to output(/delete_notification_message_with_logs/).to_stdout
       end
     end
   end
