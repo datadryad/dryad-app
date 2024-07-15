@@ -176,7 +176,7 @@ group :test do
   gem 'webmock'
 end
 
-group :development, :test, :local_dev do
+group :development, :test, :local_dev, :local do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
@@ -188,4 +188,6 @@ group :development, :test, :local_dev do
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
   gem 'spring-commands-rspec'
+  gem 'letter_opener'
+  gem 'letter_opener_web', '~> 3.0'
 end
