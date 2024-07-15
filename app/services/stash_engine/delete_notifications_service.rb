@@ -3,7 +3,7 @@ module StashEngine
   class DeleteNotificationsService
     attr_reader :logging
 
-    def initialize(logging = false)
+    def initialize(logging: false)
       @logging = logging
     end
 
@@ -21,7 +21,7 @@ module StashEngine
           resource.identifier.latest_resource_id == resource.id &&
           (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
 
-          log("Mailing submitter about deletion of in_progress dataset. Identifier: #{resource.identifier_id}, Resource: #{resource.id} updated #{resource.updated_at}")
+          log_data_for_status('in_progress', resource)
           StashEngine::ResourceMailer.in_progress_delete_notification(resource).deliver_now
           create_activity(reminder_flag, resource)
         end
@@ -47,8 +47,7 @@ module StashEngine
           resource.identifier.latest_resource_id == resource.id &&
           (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
 
-          log resource.user.email
-          log("Mailing submitter about deletion of action_required dataset. Identifier: #{resource.identifier_id}, Resource: #{resource.id} updated #{resource.updated_at}")
+          log_data_for_status('action_required', resource)
           StashEngine::ResourceMailer.action_required_delete_notification(resource).deliver_now
           create_activity(reminder_flag, resource)
         end
@@ -70,7 +69,7 @@ module StashEngine
         reminder_flag = 'peer_review_deletion_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
         if last_reminder.blank? || last_reminder.created_at <= 1.month.ago
-          log("Mailing submitter about deletion of peer_review dataset. Identifier: #{resource.identifier_id}, Resource: #{resource.id} updated #{resource.updated_at}")
+          log_data_for_status('peer_review', resource)
           StashEngine::ResourceMailer.peer_review_delete_notification(resource).deliver_now
           create_activity(reminder_flag, resource)
         end
@@ -96,6 +95,12 @@ module StashEngine
       return unless logging
 
       p message
+    end
+
+    def log_data_for_status(status, resource)
+      text = "Mailing submitter about deletion of #{status} dataset. "
+      text += " Identifier: #{resource.identifier_id}, Resource: #{resource.id} updated #{resource.updated_at}"
+      log(text)
     end
   end
 end

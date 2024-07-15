@@ -12,8 +12,7 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
-
-     end
+    end
 
     def peer_review_delete_notification(resource)
       logger.warn('Unable to send peer_review_delete_notification; nil resource') unless resource.present?
@@ -58,8 +57,6 @@ module StashEngine
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
       @page_error_emails = APP_CONFIG['page_error_email'] || [@helpdesk_email]
     end
-
-
 
     def rails_env
       return "[#{Rails.env}] " unless Rails.env.include?('production')

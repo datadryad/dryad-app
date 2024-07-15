@@ -227,7 +227,7 @@ module StashEngine
     end
 
     def process_dates
-      update_dates = {last_status_date: Time.current}
+      update_dates = { last_status_date: Time.current }
       if first_time_in_status?
         case status
         when 'processing', 'peer_review', 'submitted', 'withdrawn'
