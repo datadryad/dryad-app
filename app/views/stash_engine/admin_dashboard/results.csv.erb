@@ -55,7 +55,7 @@ head += ',Published' if @fields.include?('publication_date')
   row << dataset.curator_name if @fields.include?('curator')
   if @fields.include?('dpc')
     dpc = ''
-    dpc = dataset.tenant&.short_name if dataset.identifier.payment_id = dataset.tenant_id
+    dpc = dataset.tenant&.short_name if dataset.identifier.payment_id == dataset.tenant_id
     dpc = dataset.identifier&.journal&.journal_title if dataset.identifier&.journal&.issn_array&.include?(dataset.identifier.payment_id)
     dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id.starts_with?('funder')
     row << dpc
