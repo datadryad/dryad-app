@@ -20,8 +20,8 @@ module StashEngine
       end
 
       @users = authorize User.all
-
-      @users = @users.where('tenant_id = ?', params[:tenant_id]) if params[:tenant_id].present?
+      @users = @users.joins(:roles).where(roles: {role: params[:role]}) if params[:role].present?
+      @users = @users.where(tenant_id: params[:tenant_id]) if params[:tenant_id].present?
 
       if params[:q]
         q = params[:q]
@@ -169,7 +169,7 @@ module StashEngine
     end
 
     def setup_tenants
-      @tenants = [OpenStruct.new(id: '', name: '* Select institution *')]
+      @tenants = [OpenStruct.new(id: '', name: '')]
       @tenants << StashEngine::Tenant.enabled.map do |t|
         OpenStruct.new(id: t.id, name: t.short_name)
       end
