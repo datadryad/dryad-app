@@ -33,10 +33,11 @@
 #
 # Indexes
 #
-#  index_stash_engine_resources_on_current_editor_id  (current_editor_id)
-#  index_stash_engine_resources_on_identifier_id      (identifier_id)
-#  index_stash_engine_resources_on_tenant_id          (tenant_id)
-#  index_stash_engine_resources_on_user_id            (user_id)
+#  index_stash_engine_resources_on_current_editor_id             (current_editor_id)
+#  index_stash_engine_resources_on_identifier_id                 (identifier_id)
+#  index_stash_engine_resources_on_identifier_id_and_created_at  (identifier_id,created_at) UNIQUE
+#  index_stash_engine_resources_on_tenant_id                     (tenant_id)
+#  index_stash_engine_resources_on_user_id                       (user_id)
 #
 FactoryBot.define do
 
