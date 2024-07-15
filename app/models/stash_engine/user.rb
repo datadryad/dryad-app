@@ -116,7 +116,7 @@ module StashEngine
     end
 
     def system_admin?
-      roles.any? { |r| r.role_object_id.nil? && %w[superuser admin].include?(r.role)}
+      roles.any? { |r| r.role_object_id.nil? && %w[superuser admin].include?(r.role) }
     end
 
     def min_admin?

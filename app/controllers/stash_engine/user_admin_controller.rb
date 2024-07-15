@@ -8,7 +8,6 @@ module StashEngine
     before_action :setup_roles, only: %i[set_role user_profile]
     before_action :setup_paging, only: :index
 
-    # the admin_users main page showing users and stats
     def index
       setup_facets
       setup_tenants
@@ -20,8 +19,7 @@ module StashEngine
       end
 
       @users = authorize User.all
-      @users = @users.joins(:roles).where(roles: {role: params[:role]}) if params[:role].present?
-      @users = @users.where(tenant_id: params[:tenant_id]) if params[:tenant_id].present?
+      add_filters
 
       if params[:q]
         q = params[:q]
@@ -38,10 +36,6 @@ module StashEngine
 
       ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id last_login])
       @users = @users.order(ord)
-
-      add_institution_filter! # if they chose a facet or are only an admin
-
-      # paginate for display
       @users = @users.page(@page).per(@page_size)
     end
 
@@ -176,8 +170,9 @@ module StashEngine
       @tenants.flatten!
     end
 
-    def add_institution_filter!
-      @users = @users.where(tenant_id: params[:institution]) if params[:institution]
+    def add_filters
+      @users = @users.joins(:roles).where(roles: { role: params[:role] }) if params[:role].present?
+      @users = @users.where(tenant_id: params[:tenant_id]) if params[:tenant_id].present?
     end
 
     def edit_params
