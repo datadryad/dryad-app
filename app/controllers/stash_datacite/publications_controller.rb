@@ -92,11 +92,9 @@ module StashDatacite
 
       related_dois.each do |rd|
         bare_related_doi = Stash::Import::Crossref.bare_doi(doi_string: rd.related_identifier)
-        return nil if bare_related_doi.include?(bare_form_doi) # user is entering a DOI that we already have
-        next unless bare_form_doi.include? bare_related_doi
+        next unless bare_form_doi.include?(bare_related_doi) || bare_related_doi.include?(bare_form_doi) # user is entering a DOI that we already have
 
         standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
-
         # user is expanding on a DOI that we already have; update it in the DB (and change the work_type if needed)
         rd.update(related_identifier: standard_doi, related_identifier_type: 'doi', work_type: 'primary_article',
                   hidden: false)
