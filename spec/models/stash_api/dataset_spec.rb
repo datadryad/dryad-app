@@ -183,20 +183,20 @@ module StashApi
       end
 
       it 'has a sharingLink when the current version is in_progress, but the previous version is still peer_review' do
-        Timecop.travel(Time.now.utc - 1.minute)
         mock_datacite_gen!
         bogus_link = 'http://some.sharing.com/linkvalue'
         allow_any_instance_of(StashEngine::Share).to receive(:sharing_link).and_return(bogus_link)
         r = @identifier.resources.last
         StashEngine::CurationActivity.create(resource: r, status: 'peer_review')
         r.current_resource_state.update(resource_state: 'submitted')
-        Timecop.return
+        Timecop.travel(Time.now.utc + 1.minute)
         r2 = create(:resource, identifier: @identifier, user: @user,
                                current_editor_id: @user.id, title: 'The other resource')
         StashEngine::CurationActivity.create(resource: r2, status: 'in_progress')
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:sharingLink]).to be(bogus_link)
+        Timecop.return
       end
 
     end
