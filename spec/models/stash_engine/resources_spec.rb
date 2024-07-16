@@ -300,11 +300,12 @@ module StashEngine
       end
 
       it 'gives editor id of in progress version' do
+        Timecop.travel(Time.now.utc - 1.minute)
         identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         editor1 = create(:user)
         editor2 = create(:user)
         resource1 = create(:resource, user_id: user.id, identifier_id: identifier.id, current_editor_id: editor1.id)
-        Timecop.travel(Time.now.utc + 1.minute)
+        Timecop.return
         resource2 = create(:resource, user_id: user.id, identifier_id: identifier.id, current_editor_id: editor2.id)
         state1 = ResourceState.create(user_id: editor1.id, resource_state: 'submitted', resource_id: resource1.id)
         state2 = ResourceState.create(user_id: editor2.id, resource_state: 'in_progress', resource_id: resource2.id)
@@ -319,11 +320,12 @@ module StashEngine
       end
 
       it 'gives editor of in progress version' do
+        Timecop.travel(Time.now.utc - 1.minute)
         user1 = create(:user)
         user2 = create(:user)
         identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         resource1 = create(:resource, user_id: user1.id, identifier_id: identifier.id, current_editor_id: user1.id)
-        Timecop.travel(Time.now.utc + 1.minute)
+        Timecop.return
         resource2 = create(:resource, user_id: user1.id, identifier_id: identifier.id, current_editor_id: user2.id)
         state1 = ResourceState.create(user_id: user1.id, resource_state: 'submitted', resource_id: resource1.id)
         state2 = ResourceState.create(user_id: user2.id, resource_state: 'in_progress', resource_id: resource2.id)
@@ -675,6 +677,7 @@ module StashEngine
           ]
           @resources << res
         end
+        Timecop.return
         # disqualify all of these from the query
         @resources[0].update(publication_date: Time.new + 1.day) # get rid of time expired on first one
         @curation_activities[1][1].destroy! # get rid of embargoed on this one
@@ -790,6 +793,7 @@ module StashEngine
             expect(author.author_email).to eq(old_authors[i].author_email)
             expect(author.author_orcid).to eq(old_authors[i].author_orcid)
           end
+          Timecop.return
         end
       end
     end
@@ -923,6 +927,7 @@ module StashEngine
             orig_resource_state = resource.current_resource_state
             expect(orig_resource_state.resource_id).to eq(resource.id)
             expect(orig_resource_state.resource_state).to eq(state_value)
+            Timecop.return
           end
         end
       end
@@ -1198,12 +1203,14 @@ module StashEngine
             newer_resource = new_resource.amoeba_dup
             newer_resource.save!
             expect(newer_resource.version_number).to eq(2)
+            Timecop.return
           end
 
           it 'is incremented for the next resource' do
             Timecop.travel(Time.now.utc + 1.second)
             new_resource = create(:resource, identifier: resource.identifier)
             expect(new_resource.version_number).to eq(2)
+            Timecop.return
           end
         end
 
@@ -1217,12 +1224,14 @@ module StashEngine
             new_resource = resource.amoeba_dup
             new_resource.save!
             expect(new_resource.merritt_version).to eq(2)
+            Timecop.return
           end
 
           it 'is incremented for the next resource' do
             Timecop.travel(Time.now.utc + 1.second)
             new_resource = create(:resource, identifier: resource.identifier)
             expect(new_resource.merritt_version).to eq(2)
+            Timecop.return
           end
         end
 
@@ -1245,6 +1254,7 @@ module StashEngine
             Timecop.travel(Time.now.utc + 1.second)
             create(:resource)
             expect(Resource.latest_per_dataset.count).to eq(2)
+            Timecop.return
           end
         end
       end
@@ -1332,6 +1342,7 @@ module StashEngine
             resource.save
           end
           expect(Resource.submitted_dataset_count).to eq(3)
+          Timecop.return
         end
         it 'groups by identifier' do
           ident1 = create(:identifier)
@@ -1346,6 +1357,7 @@ module StashEngine
             res2.save
           end
           expect(Resource.submitted_dataset_count).to eq(2)
+          Timecop.return
         end
 
         it 'doesn\'t count non-published datasets' do
@@ -1635,6 +1647,7 @@ module StashEngine
         @resource2 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
         Timecop.travel(Time.now.utc + 1.second)
         @resource3 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+        Timecop.return
       end
 
       it 'has no previous resource for version 1' do

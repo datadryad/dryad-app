@@ -258,13 +258,14 @@ RSpec.feature 'AdminDatasets', type: :feature do
       end
 
       it 'allows editing a dataset' do
+        Timecop.travel(Time.now.utc - 2.minutes)
         @user = create(:user, tenant_id: @admin.tenant_id)
         @identifier = create(:identifier)
         expect { @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id) }
           .to change(StashEngine::Resource, :count).by(1)
         expect { @resource.subjects << [create(:subject), create(:subject), create(:subject)] }
           .to change(StashDatacite::Subject, :count).by(3)
-        Timecop.travel(Time.now.utc + 1.minute)
+        Timecop.return
         visit stash_url_helpers.user_admin_profile_path(@user)
         expect(page).to have_css('button[title="Edit dataset"]')
         find('button[title="Edit dataset"]').click
