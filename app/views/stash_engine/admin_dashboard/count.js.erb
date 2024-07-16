@@ -1,2 +1,2 @@
 document.getElementById('count_and_export').innerHTML = `<span><b><%= number_with_delimiter(@count) %></b> results</span><%= link_to "Export all as CSV", stash_url_helpers.admin_dashboard_results_path(format: :csv), class: 'o-link__buttonlink' %>`;
-document.getElementById('admin-pagination').innerHTML = "<%= escape_javascript(render(partial: 'pagination', locals: {count: @count, page: params[:page], page_size: params[:page_size]})) %>";
+document.getElementById('admin-pagination').innerHTML = "<%= escape_javascript(render(partial: 'pagination', locals: {count: @count, page: params[:page], page_size: params[:page_size], sort: params[:sort], direction: params[:direction]})) %>";
