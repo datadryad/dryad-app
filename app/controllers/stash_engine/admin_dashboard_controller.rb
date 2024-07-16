@@ -20,9 +20,7 @@ module StashEngine
       add_fields
       add_filters
 
-      if request.format.js? && (@page == 1 || session[:admin_search_count].blank?)
-        session[:admin_search_count] = StashEngine::Resource.select('count(*) as total').from(@datasets).map(&:total).first
-      end
+      @sql = @datasets.to_sql
 
       if params[:sort].present? || @search_string.present?
         order_string = 'relevance desc'
@@ -47,6 +45,14 @@ module StashEngine
           headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_report.csv"
         end
       end
+    end
+
+    def count
+      if session[:admin_search_count].blank?
+        session[:admin_search_count] = StashEngine::Resource.select('count(*) as total').from("(#{params[:sql]}) subquery").map(&:total).first
+      end
+      @count = session[:admin_search_count]
+      respond_to(&:js)
     end
 
     def new_search
@@ -83,7 +89,7 @@ module StashEngine
     def setup_paging
       if request.format.csv?
         @page = 1
-        @page_size = 2_000
+        @page_size = 1_000_000
         return
       end
       @page = params[:page] || 1
@@ -110,6 +116,7 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def setup_search
       @sort = params[:sort]
+      session[:admin_search_count] = nil if @page == 1
       @saved_search = current_user.admin_searches[params[:search].to_i - 1] if params[:search]
       @saved_search ||= current_user.admin_searches.find_by(default: true)
 
