@@ -69,12 +69,13 @@ RSpec.feature 'Admin', type: :feature do
     end
 
     it 'allows a user with a valid edit_code to take ownership of a dataset owned by the system user' do
+      Timecop.travel(Time.now.utc - 1.minute)
       new_ident = create(:identifier)
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
       system_user = StashEngine::User.where(id: 0).first || create(:user, id: 0)
       expect { @resource = create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
-      Timecop.travel(Time.now.utc + 1.minute)
+      Timecop.return
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page).to have_text('User settings')
       @resource.reload

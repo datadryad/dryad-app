@@ -372,6 +372,7 @@ module StashApi
 
         des = editing_resource.descriptions.first
         expect(des.description).to eq(@update_metadata[:abstract])
+        Timecop.return
       end
     end
 

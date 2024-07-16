@@ -316,6 +316,7 @@ module StashEngine
         expect(resource2.dataset_in_progress_editor_id).to eq(editor2.id)
         resource2.delete
         expect(resource1.dataset_in_progress_editor_id).to eq(nil) # no in-progress should return a nil
+        Timecop.return
       end
 
       it 'gives editor of in progress version' do
@@ -333,6 +334,7 @@ module StashEngine
         expect(resource2.dataset_in_progress_editor.id).to eq(user2.id)
         resource2.delete
         expect(resource1.dataset_in_progress_editor.id).to eq(user1.id)
+        Timecop.return
       end
     end
 
@@ -675,6 +677,7 @@ module StashEngine
           ]
           @resources << res
         end
+        Timecop.return
         # disqualify all of these from the query
         @resources[0].update(publication_date: Time.new + 1.day) # get rid of time expired on first one
         @curation_activities[1][1].destroy! # get rid of embargoed on this one
@@ -790,6 +793,7 @@ module StashEngine
             expect(author.author_email).to eq(old_authors[i].author_email)
             expect(author.author_orcid).to eq(old_authors[i].author_orcid)
           end
+          Timecop.return
         end
       end
     end
@@ -912,10 +916,9 @@ module StashEngine
         it 'is not copied or clobbered in Amoeba duplication' do
           %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
-            Timecop.travel(Time.now.utc + 1.second)
+            Timecop.travel(Time.now.utc + 1.minute)
             new_resource = resource.amoeba_dup
-            new_resource.save!
-
+            new_resource.save
             new_resource_state = new_resource.current_resource_state
             expect(new_resource_state.resource_id).to eq(new_resource.id)
             expect(new_resource_state.resource_state).to eq('in_progress')
@@ -1198,12 +1201,14 @@ module StashEngine
             newer_resource = new_resource.amoeba_dup
             newer_resource.save!
             expect(newer_resource.version_number).to eq(2)
+            Timecop.return
           end
 
           it 'is incremented for the next resource' do
             Timecop.travel(Time.now.utc + 1.second)
             new_resource = create(:resource, identifier: resource.identifier)
             expect(new_resource.version_number).to eq(2)
+            Timecop.return
           end
         end
 
@@ -1217,12 +1222,14 @@ module StashEngine
             new_resource = resource.amoeba_dup
             new_resource.save!
             expect(new_resource.merritt_version).to eq(2)
+            Timecop.return
           end
 
           it 'is incremented for the next resource' do
             Timecop.travel(Time.now.utc + 1.second)
             new_resource = create(:resource, identifier: resource.identifier)
             expect(new_resource.merritt_version).to eq(2)
+            Timecop.return
           end
         end
 
@@ -1245,6 +1252,7 @@ module StashEngine
             Timecop.travel(Time.now.utc + 1.second)
             create(:resource)
             expect(Resource.latest_per_dataset.count).to eq(2)
+            Timecop.return
           end
         end
       end
@@ -1332,6 +1340,7 @@ module StashEngine
             resource.save
           end
           expect(Resource.submitted_dataset_count).to eq(3)
+          Timecop.return
         end
         it 'groups by identifier' do
           ident1 = create(:identifier)
@@ -1346,6 +1355,7 @@ module StashEngine
             res2.save
           end
           expect(Resource.submitted_dataset_count).to eq(2)
+          Timecop.return
         end
 
         it 'doesn\'t count non-published datasets' do
@@ -1635,6 +1645,7 @@ module StashEngine
         @resource2 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
         Timecop.travel(Time.now.utc + 1.second)
         @resource3 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+        Timecop.return
       end
 
       it 'has no previous resource for version 1' do
