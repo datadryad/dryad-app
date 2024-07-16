@@ -300,12 +300,11 @@ module StashEngine
       end
 
       it 'gives editor id of in progress version' do
-        Timecop.travel(Time.now.utc - 1.minute)
         identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         editor1 = create(:user)
         editor2 = create(:user)
         resource1 = create(:resource, user_id: user.id, identifier_id: identifier.id, current_editor_id: editor1.id)
-        Timecop.return
+        Timecop.travel(Time.now.utc + 1.minute)
         resource2 = create(:resource, user_id: user.id, identifier_id: identifier.id, current_editor_id: editor2.id)
         state1 = ResourceState.create(user_id: editor1.id, resource_state: 'submitted', resource_id: resource1.id)
         state2 = ResourceState.create(user_id: editor2.id, resource_state: 'in_progress', resource_id: resource2.id)
@@ -317,15 +316,15 @@ module StashEngine
         expect(resource2.dataset_in_progress_editor_id).to eq(editor2.id)
         resource2.delete
         expect(resource1.dataset_in_progress_editor_id).to eq(nil) # no in-progress should return a nil
+        Timecop.return
       end
 
       it 'gives editor of in progress version' do
-        Timecop.travel(Time.now.utc - 1.minute)
         user1 = create(:user)
         user2 = create(:user)
         identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         resource1 = create(:resource, user_id: user1.id, identifier_id: identifier.id, current_editor_id: user1.id)
-        Timecop.return
+        Timecop.travel(Time.now.utc + 1.minute)
         resource2 = create(:resource, user_id: user1.id, identifier_id: identifier.id, current_editor_id: user2.id)
         state1 = ResourceState.create(user_id: user1.id, resource_state: 'submitted', resource_id: resource1.id)
         state2 = ResourceState.create(user_id: user2.id, resource_state: 'in_progress', resource_id: resource2.id)
@@ -335,6 +334,7 @@ module StashEngine
         expect(resource2.dataset_in_progress_editor.id).to eq(user2.id)
         resource2.delete
         expect(resource1.dataset_in_progress_editor.id).to eq(user1.id)
+        Timecop.return
       end
     end
 
@@ -916,10 +916,9 @@ module StashEngine
         it 'is not copied or clobbered in Amoeba duplication' do
           %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
-            Timecop.travel(Time.now.utc + 1.second)
+            Timecop.travel(Time.now.utc + 1.minute)  
             new_resource = resource.amoeba_dup
-            new_resource.save!
-
+            new_resource.save
             new_resource_state = new_resource.current_resource_state
             expect(new_resource_state.resource_id).to eq(new_resource.id)
             expect(new_resource_state.resource_state).to eq('in_progress')
@@ -927,7 +926,6 @@ module StashEngine
             orig_resource_state = resource.current_resource_state
             expect(orig_resource_state.resource_id).to eq(resource.id)
             expect(orig_resource_state.resource_state).to eq(state_value)
-            Timecop.return
           end
         end
       end
