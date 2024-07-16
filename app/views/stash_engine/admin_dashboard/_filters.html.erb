@@ -74,7 +74,8 @@ end
     } %>
   </div>
 
-  <%= render partial: 'filter_date', locals: { id: 'updated_at', label: 'Last modified' } %>
   <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Submitted' } %>
+  <%= render partial: 'filter_date', locals: { id: 'first_sub_date', label: 'First submitted' } %>
   <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Published' } %>
+  <%= render partial: 'filter_date', locals: { id: 'first_pub_date', label: 'First published' } %>
 </fieldset>
