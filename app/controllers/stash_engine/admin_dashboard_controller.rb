@@ -117,13 +117,16 @@ module StashEngine
     def setup_search
       @sort = params[:sort]
       session[:admin_search_count] = nil if @page == 1
+      session[:admin_search_filters] = nil if params[:clear]
+      session[:admin_search_fields] = nil if params[:clear]
+      session[:admin_search_string] = nil if params[:clear]
       @saved_search = current_user.admin_searches[params[:search].to_i - 1] if params[:search]
       @saved_search ||= current_user.admin_searches.find_by(default: true)
 
-      @search_string = params[:q] || @saved_search&.search_string || session[:admin_search_string]
-      @filters = params[:filters] || @saved_search&.filters || session[:admin_search_filters]
+      @search_string = params[:q] || session[:admin_search_string] || @saved_search&.search_string
+      @filters = params[:filters] || session[:admin_search_filters] || @saved_search&.filters
       @filters = @filters.deep_transform_keys(&:to_sym) unless @filters.blank?
-      @fields = params[:fields] || @saved_search&.fields || session[:admin_search_fields]
+      @fields = params[:fields] || session[:admin_search_fields] || @saved_search&.fields
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
