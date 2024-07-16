@@ -1001,11 +1001,11 @@ module StashEngine
     private
 
     def save_first_pub_date
-      first = identifier.resources.find { |r| r.publication_date.present? }
+      first = identifier.resources.where.not(publication_date: nil)&.first
       first_pub = first && first.publication_date < publication_date ? first.publication_date : publication_date
       return if identifier.publication_date.presence == first_pub
 
-      identifier.update(publication_date: first_pub)
+      identifier.update_columns(publication_date: first_pub)
     end
 
     def add_data_as_file(filename, content)

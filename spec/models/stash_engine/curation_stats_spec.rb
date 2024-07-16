@@ -225,6 +225,7 @@ module StashEngine
         res_new4.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day1)
         stats.recalculate
         expect(stats.new_datasets_to_submitted).to eq(3)
+        Timecop.return
       end
     end
 
@@ -296,7 +297,7 @@ module StashEngine
         @res[4].curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(4)
-
+        Timecop.return
       end
     end
 
