@@ -1,23 +1,23 @@
 <% # local: user %>
 <%
 system_roles = [
-  ['superuser', 'Superuser <span>Can access all pages and administrative menus.</span>'],
+  ['superuser', 'Superuser <span>Can access and edit all pages and administrative menus.</span>'],
   ['curator', 'Curator <span>Can view and edit all submissions. Auto curation assignment.</span>'],
-  ['admin', 'Admin <span>Can view all submissions and curation pages, without editing.</span>'],
+  ['admin', 'Admin <span>Can view all submissions and curation pages. Can manage accounts.</span>'],
   ['', 'User <span>Default user role. Can submit, view, and edit their submissions.</span>']
 ]
 tenant_roles = [
-  ['admin', 'Admin <span>Can view all tenant submissions and curation pages, without editing.</span>'],
+  ['admin', 'Admin <span>Can view all tenant submissions and curation pages, and create datasets.</span>'],
   ['curator', 'Curator <span>Can view and edit datasets with the associated tenant.</span>'],
   ['', 'Remove tenant role']
 ]
 publisher_roles = [
-  ['admin', 'Admin <span>Can view all publisher submissions and curation pages, and create and edit datasets.</span>'],
+  ['admin', 'Admin <span>Can view all publisher submissions and curation pages, and create datasets.</span>'],
   ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated publisher.'],
   ['', 'Remove publisher role']
 ]
 journal_roles = [
-  ['admin', 'Admin <span>Can view all journal submissions and curation pages, and create and edit datasets.</span>'],
+  ['admin', 'Admin <span>Can view all journal submissions and curation pages, and create datasets.</span>'],
   ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated journal.</span>'],
   ['', 'Remove journal role']
 ]
@@ -82,11 +82,13 @@ funder_roles = [
         <% end %>
       </ul>
     </fieldset>
-    <% unless user.tenant_id == APP_CONFIG.default_tenant %>
-      <% unless @tenant_role %>
-        <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a tenant role (for <%= user.tenant.short_name %>)</button>
+    <% if user.tenant_id.present? %>
+      <% unless user.tenant_id == APP_CONFIG.default_tenant %>
+        <% unless @tenant_role %>
+          <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a tenant role (for <%= user.tenant.short_name %>)</button>
+        <% end %>
+        <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'tenant', select_label: 'For user member institution:', roles: tenant_roles } %>
       <% end %>
-      <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'tenant', select_label: 'For user member institution:', roles: tenant_roles } %>
     <% end %>
     <% unless @publisher_role %>
       <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a publisher role</button>

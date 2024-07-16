@@ -39,7 +39,7 @@ module StashEngine
       mock_salesforce!
       mock_stripe!
       neuter_curation_callbacks!
-
+      Timecop.travel(Time.now.utc - 1.minute)
       @curator = create(:user, role: 'curator')
       @user = create(:user, tenant_id: 'dryad')
       @system_user = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
@@ -61,6 +61,7 @@ module StashEngine
       @day = Time.now.utc.to_date
       @day1 = @day + 1.day
       @day2 = @day + 2.days
+      Timecop.return
     end
 
     describe :status_on_date do
@@ -206,6 +207,7 @@ module StashEngine
         res_new = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
         res_new.resource_states.first.update(resource_state: 'submitted')
         res_new.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day1)
+        Timecop.travel(Time.now.utc + 1.minute)
         res_new2 = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
         res_new2.resource_states.first.update(resource_state: 'submitted')
         res_new2.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day1)
@@ -217,6 +219,7 @@ module StashEngine
         res_new3 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
         res_new3.resource_states.first.update(resource_state: 'submitted')
         res_new3.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day1 - 2.days)
+        Timecop.travel(Time.now.utc + 1.minute)
         res_new4 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
         res_new4.resource_states.first.update(resource_state: 'submitted')
         res_new4.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day1)
@@ -268,6 +271,7 @@ module StashEngine
         res_new = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
         res_new.resource_states.first.update(resource_state: 'submitted')
         res_new.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
+        Timecop.travel(Time.now.utc + 1.minute)
         res_new2 = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
         res_new2.resource_states.first.update(resource_state: 'submitted')
         res_new2.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)
@@ -279,6 +283,7 @@ module StashEngine
         res_new3 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
         res_new3.resource_states.first.update(resource_state: 'submitted')
         res_new3.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day - 2.days)
+        Timecop.travel(Time.now.utc + 1.minute)
         res_new4 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
         res_new4.resource_states.first.update(resource_state: 'submitted')
         res_new4.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: @day)

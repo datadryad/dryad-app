@@ -165,6 +165,17 @@ function joelsReady(){
   $('.js-pubdate__year1').text(year1);
   $('.js-pubdate__year1').attr('datetime', year1datetime);
 
+  var noClick = document.getElementsByClassName('prevent-click');
+  for (var i=0; i < noClick.length; i++) {
+    noClick[i].addEventListener('click', (e) => {
+      console.log(e.target)
+      console.log(e.currentTarget)
+      var icon = e.currentTarget.lastElementChild;
+      icon.className = 'fa fa-spinner fa-spin';
+      document.body.classList.add('prevent-clicks');
+    });
+  }
+
   function copyEmail(e) {
     const copyButton = e.currentTarget.firstElementChild;
     const email = e.currentTarget.previousSibling.textContent.split('').reverse().join('');
@@ -185,11 +196,11 @@ function joelsReady(){
 
   var emails = document.getElementsByClassName('emailr');
   for (var i=0; i < emails.length; i++) {
-    emails[i].onclick = e => {
+    emails[i].addEventListener('click', (e) => {
       var mailto = e.currentTarget.href
       var email = e.currentTarget.textContent.split('').reverse().join('');
       e.currentTarget.href = mailto.replace('dev@null', email);
-    }
+    });
     const newEl = document.createElement("span");
     newEl.setAttribute('class', 'copy-icon');
     newEl.setAttribute('role', 'button');
@@ -223,7 +234,7 @@ function joelsReady(){
 
   var navButtons = Array.from(document.getElementsByClassName('c-header_nav-button'));
   navButtons.forEach(button => {
-    button.onclick = e => {
+    button.addEventListener('click', (e) => {
       const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
       navButtons.forEach(nb => {
         nb.setAttribute('aria-expanded', 'false');
@@ -235,7 +246,7 @@ function joelsReady(){
         e.currentTarget.setAttribute('aria-expanded', 'true');
         e.currentTarget.nextElementSibling.removeAttribute('hidden');
       }
-    }
+    })
   });
 
   function expandButtonMenu(e) {

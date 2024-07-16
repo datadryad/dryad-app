@@ -38,11 +38,11 @@ module StashApi
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
-
+      Timecop.travel(Time.now.utc - 1.minute)
       @identifier = create(:identifier)
-
-      @resources = [create(:resource, user_id: @user1.id, identifier_id: @identifier.id),
-                    create(:resource, user_id: @user1.id, identifier_id: @identifier.id)]
+      @resources = [create(:resource, user_id: @user1.id, identifier_id: @identifier.id)]
+      Timecop.return
+      @resources.push(create(:resource, user_id: @user1.id, identifier_id: @identifier.id))
 
       @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
                                create(:curation_activity, resource: @resources[0], status: 'curation'),

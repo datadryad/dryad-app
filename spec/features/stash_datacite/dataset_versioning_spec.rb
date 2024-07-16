@@ -28,6 +28,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   describe :initial_version do
 
     before(:each, js: true) do |test|
+      Timecop.travel(Time.now.utc - 5.minutes)
       ActionMailer::Base.deliveries = []
       # Sign in and create a new dataset
       sign_in(@author)
@@ -38,6 +39,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       navigate_to_review
       agree_to_everything
       submit_form unless test.metadata[:no_submit]
+      Timecop.return
     end
 
     describe :pre_submit do
@@ -140,9 +142,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   describe :new_version do
     before(:each) do
       ActionMailer::Base.deliveries = []
+      Timecop.travel(Time.now.utc - 5.minutes)
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, identifier: @identifier, user_id: @author.id,
                                                 tenant_id: @author.tenant_id, current_editor_id: @curator.id)
+      Timecop.return
     end
 
     context :by_curator do
@@ -348,7 +352,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         click_link 'My datasets'
         create_dataset
         @resource.current_state = 'submitted'
-        @resource.publication_date { Date.today.to_s }
+        @resource.publication_date { Time.now.utc.to_date.to_s }
         @resource.save
         @resource.reload
         create(:curation_activity, :curation, user: @resource.user, resource: @resource)

@@ -75,8 +75,8 @@
             <% end %>
           <% end %>
           <% if ['submitted', 'action_required'].include?(resource&.last_curation_activity.status) || dataset.sort_order == 1 || dataset.sort_order >= 3 %>
-            <%= button_to stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: resource.id), method: :post, name: 'update', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', onclick: 'setLoading(event)' do %>
-              Revise submission <i class="fa fa-pencil" aria-hidden="true"></i>
+            <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: resource.id), method: :post, class: 'o-button__inline-form') do %>
+              <button class="o-button__plain-text7 prevent-click" name="update" title="Edit dataset" aria-label="Edit dataset">Revise submission <i class="fa fa-pencil" aria-hidden="true"></i></button>
             <% end %>
           <% end %> 
         </div>
@@ -88,17 +88,3 @@
   <% end %>
 <% end %>
 <%= paginate @datasets, params: {page_size: @page_size}, remote: true %>
-<script type="text/javascript">
-  (function () {
-    window.onpageshow = function(event) {
-      if (event.persisted) {
-          window.location.reload();
-        }
-    };
-  })();
-  function setLoading(e) {
-    var icon = e.target.lastElementChild
-    icon.className = 'fa fa-spinner fa-spin'
-    document.body.classList.add('prevent-clicks')
-  }
-</script>

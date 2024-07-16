@@ -7,7 +7,7 @@ module Stash
         before(:each) do
           @params = {
             number: 1,
-            date: Date.today,
+            date: Time.now.utc.to_date,
             note: 'I am a note'
           }
         end

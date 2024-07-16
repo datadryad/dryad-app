@@ -40,6 +40,7 @@ module StashEngine
   describe DataFile do
 
     before(:each) do
+      Timecop.travel(Time.now.utc - 3.hours)
       @user = create(:user,
                      first_name: 'Lisa',
                      last_name: 'Muckenhaupt',
@@ -52,6 +53,7 @@ module StashEngine
                        resource: @resource,
                        file_state: 'created',
                        upload_file_name: 'foo.bar')
+      Timecop.return
     end
 
     describe :version_file_created_in do
@@ -404,11 +406,11 @@ module StashEngine
 
       it 'returns the first file from a series of versions that were not changed' do
         @resource.current_resource_state.update(resource_state: 'submitted')
-
+        Timecop.travel(Time.now.utc - 1.hour)
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource2.current_resource_state.update(resource_state: 'submitted')
         @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
-
+        Timecop.return
         @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource3.current_resource_state.update(resource_state: 'submitted')
         @file3 = create(:data_file, resource: @resource3, file_state: 'copied', upload_file_name: 'foo.bar')
@@ -418,15 +420,15 @@ module StashEngine
 
       it 'returns last uploaded submission, not the original submission' do
         @resource.current_resource_state.update(resource_state: 'submitted')
-
+        Timecop.travel(Time.now.utc - 2.hours)
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource2.current_resource_state.update(resource_state: 'submitted')
         @file2 = create(:data_file, resource: @resource2, file_state: 'deleted', upload_file_name: 'foo.bar')
-
+        Timecop.travel(Time.now.utc + 1.hour)
         @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource3.current_resource_state.update(resource_state: 'submitted')
         @file3 = create(:data_file, resource: @resource3, file_state: 'created', upload_file_name: 'foo.bar')
-
+        Timecop.return
         @resource4 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource4.current_resource_state.update(resource_state: 'submitted')
         @file4 = create(:data_file, resource: @resource4, file_state: 'copied', upload_file_name: 'foo.bar')
@@ -436,15 +438,15 @@ module StashEngine
 
       it 'returns last submission if submitted last even if other stuff before' do
         @resource.current_resource_state.update(resource_state: 'submitted')
-
+        Timecop.travel(Time.now.utc - 2.hours)
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource2.current_resource_state.update(resource_state: 'submitted')
         @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
-
+        Timecop.travel(Time.now.utc + 1.hour)
         @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource3.current_resource_state.update(resource_state: 'submitted')
         @file3 = create(:data_file, resource: @resource3, file_state: 'copied', upload_file_name: 'foo.bar')
-
+        Timecop.return
         @resource4 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource4.current_resource_state.update(resource_state: 'submitted')
         @file4 = create(:data_file, resource: @resource4, file_state: 'created', upload_file_name: 'foo.bar')

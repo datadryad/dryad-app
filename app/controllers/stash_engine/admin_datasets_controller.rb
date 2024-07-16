@@ -214,7 +214,7 @@ module StashEngine
     end
 
     def publish
-      if @pub_date.present? && @pub_date > Date.today.to_s
+      if @pub_date.present? && @pub_date > Time.now.utc.to_date.to_s
         # If the user selected published but the publication date is in the future
         # revert to embargoed status. The item will publish when the date is reached
         @status = 'embargoed'
@@ -223,20 +223,20 @@ module StashEngine
       return if @pub_date.present?
 
       # If the user published but did not provide a publication date then default to today
-      @pub_date = Date.today.to_s
+      @pub_date = Time.now.utc.to_date.to_s
 
       return unless @resource.identifier.allow_blackout?
 
       # BUT, if the associated journal allows Blackout, default to a year from today
       @note = ' Adding 1-year blackout period due to journal settings.'
       @status = 'embargoed'
-      @pub_date = (Date.today + 1.year).to_s
+      @pub_date = (Time.now.utc.to_date + 1.year).to_s
     end
 
     def embargo
       # If the user also provided a publication date and the date is today then
       # revert to published status
-      @status = 'published' if @pub_date.present? && @pub_date <= Date.today.to_s
+      @status = 'published' if @pub_date.present? && @pub_date <= Time.now.utc.to_date.to_s
     end
 
     def publishing_error

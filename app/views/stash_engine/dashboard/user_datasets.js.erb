@@ -1,1 +1,8 @@
-$('#user_datasets').html("<%= escape_javascript(render(partial: 'user_datasets')) %>");
+document.getElementById('user_datasets').innerHTML = "<%= escape_javascript(render(partial: 'user_datasets')) %>";
+(function () {
+  window.onpageshow = function(event) {
+    if (event.persisted) {
+        window.location.reload();
+      }
+  };
+})();

@@ -61,7 +61,7 @@ module StashEngine
         if mailable.include?(status)
           it "should send an email when '#{status}'" do
             allow(@resource).to receive(:current_curation_status).and_return(status)
-            allow(@resource).to receive(:publication_date).and_return(Date.today)
+            allow(@resource).to receive(:publication_date).and_return(Time.now.utc.to_date)
 
             UserMailer.status_change(@resource, status).deliver_now
             delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
@@ -117,7 +117,7 @@ module StashEngine
 
       it 'should show info about zenodo software doi and zenodo supplemental info when present' do
         allow(@resource).to receive(:current_curation_status).and_return('published')
-        allow(@resource).to receive(:publication_date).and_return(Date.today)
+        allow(@resource).to receive(:publication_date).and_return(Time.now.utc.to_date)
 
         UserMailer.status_change(@resource, 'published').deliver_now
         delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
@@ -132,7 +132,7 @@ module StashEngine
     describe 'embargoed status changes' do
       it "should send an modified email when embargoed_until_article_appears'" do
         allow(@resource).to receive(:current_curation_status).and_return('embargoed')
-        allow(@resource).to receive(:publication_date).and_return(Date.today)
+        allow(@resource).to receive(:publication_date).and_return(Time.now.utc.to_date)
         allow(@identifier).to receive(:embargoed_until_article_appears?).and_return(true)
 
         UserMailer.status_change(@resource, 'embargoed').deliver_now

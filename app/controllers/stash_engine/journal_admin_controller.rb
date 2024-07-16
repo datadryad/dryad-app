@@ -58,7 +58,7 @@ module StashEngine
     end
 
     def setup_sponsors
-      @sponsors = [OpenStruct.new(id: '', name: '*Select publisher*')]
+      @sponsors = [OpenStruct.new(id: '', name: '')]
       @sponsors << StashEngine::JournalOrganization.all.order(:name).map { |o| OpenStruct.new(id: o.id, name: o.name) }
       @sponsors.flatten!
     end

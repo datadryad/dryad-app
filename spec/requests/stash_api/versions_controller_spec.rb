@@ -25,9 +25,10 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
 
       @identifier = create(:identifier)
-
-      @resources = [create(:resource, user_id: @user1.id, identifier_id: @identifier.id),
-                    create(:resource, user_id: @user1.id, identifier_id: @identifier.id)]
+      Timecop.travel(Time.now.utc - 1.hour)
+      @resources = [create(:resource, user_id: @user1.id, identifier_id: @identifier.id)]
+      Timecop.return
+      @resources.push(create(:resource, user_id: @user1.id, identifier_id: @identifier.id))
 
       @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress', user_id: @user1.id),
                                create(:curation_activity, resource: @resources[0], status: 'curation', user_id: @user1.id),

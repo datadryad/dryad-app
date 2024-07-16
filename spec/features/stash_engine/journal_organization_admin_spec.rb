@@ -8,8 +8,8 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
         @org = create(:journal_organization)
         3.times { @journal = create(:journal, sponsor_id: @org.id) }
       end
-      @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
-      sign_in(@superuser, false)
+      @system_admin = create(:user, role: 'admin')
+      sign_in(@system_admin, false)
     end
 
     it 'lists journals', js: true do
@@ -31,7 +31,7 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
       expect(page).not_to have_content(@org.name)
     end
 
-    it 'allows changing contacts as a superuser', js: true do
+    it 'allows changing contacts as a system admin', js: true do
       visit stash_url_helpers.publisher_admin_path
       expect(page).to have_content(@org.name)
       within(:css, "form[action=\"#{publisher_popup_path(id: @org.id, field: 'contact')}\"]") do
@@ -46,7 +46,7 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
       expect(changed.contact).to include('test@email.com')
     end
 
-    it 'allows changing sponsor as a superuser', js: true do
+    it 'allows changing sponsor as a system admin', js: true do
       org = create(:journal_organization)
       visit stash_url_helpers.publisher_admin_path
       expect(page).to have_content(@org.name)

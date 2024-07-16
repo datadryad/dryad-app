@@ -59,18 +59,19 @@ module StashEngine
 
     describe :simple_methods do
       before(:each) do
+        Timecop.travel(Time.now.utc - 1.hour)
         @user = create(:user,
                        first_name: 'Lisa',
                        last_name: 'Muckenhaupt',
                        email: 'lmuckenhaupt@ucop.edu',
                        tenant_id: 'ucop')
-
         @identifier = create(:identifier)
         @resource = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @upload = create(:generic_file,
                          resource: @resource,
                          file_state: 'created',
                          upload_file_name: 'foo.bar')
+        Timecop.return
       end
 
       describe :error_message do

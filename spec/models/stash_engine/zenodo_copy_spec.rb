@@ -34,7 +34,9 @@ module StashEngine
     before(:each) do
       # Mock all the mailers fired by callbacks because these tests don't load everything we need
       @identifier = create(:identifier)
+      Timecop.travel(Time.now.utc - 1.minute)
       @resource1 = create(:resource, identifier_id: @identifier.id)
+      Timecop.return
       @resource2 = create(:resource, identifier_id: @identifier.id)
 
       @zc_soft1 = create(:zenodo_copy, identifier_id: @identifier.id, resource_id: @resource1.id, copy_type: 'software',

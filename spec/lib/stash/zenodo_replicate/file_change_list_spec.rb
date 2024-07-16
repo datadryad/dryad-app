@@ -19,6 +19,7 @@ module Stash
       before(:each) do
         WebMock.disable_net_connect!(allow_localhost: true)
         mock_salesforce!
+        Timecop.travel(Time.now.utc - 1.minute)
         @resources = []
         @resources << create(:resource)
 
@@ -30,6 +31,7 @@ module Stash
           ]
         @zenodo_copy = create(:zenodo_copy, resource: @resources.first, identifier: @resources.first.identifier)
         stub_new_access_token
+        Timecop.return
       end
 
       describe '#previous_published_resource' do

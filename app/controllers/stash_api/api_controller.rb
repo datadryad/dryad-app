@@ -41,7 +41,7 @@ module StashApi
 
         f = ::File.join(REPORTS_DIR, target_report)
         if ::File.exist?(f)
-          d = Date.today
+          d = Time.now.utc.to_date
           result_filename = "#{params['report_name']}_#{d.strftime('%Y%m%d')}.csv"
           send_file f, filename: result_filename, type: 'text/plain'
           return

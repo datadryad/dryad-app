@@ -48,11 +48,14 @@ module StashEngine
       neuter_curation_callbacks!
       create(:tenant_ucop)
       @user = create(:user, tenant_id: 'dryad')
+      Timecop.travel(Time.now.utc - 3.minutes)
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
       @res1 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
+      Timecop.travel(Time.now.utc + 1.minute)
       @res2 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
+      Timecop.travel(Time.now.utc + 1.minute)
       @res3 = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
-
+      Timecop.return
       @created_files = Array.new(3) do |i|
         DataFile.create(
           resource: @res3,
@@ -924,17 +927,20 @@ module StashEngine
                         create(:identifier, identifier: '10.1072/FK2005'),
                         create(:identifier, identifier: '10.1072/FK2006'),
                         create(:identifier, identifier: '10.1072/FK2007')]
-
-        @resources = [create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[0].id),
-                      create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[0].id),
-                      create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[1].id),
-                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
-                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
-                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[3].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[4].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[5].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)]
+        Timecop.travel(Time.now.utc - 1.hour)
+        @resources = [
+          create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[0].id),
+          create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[1].id),
+          create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
+          create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[3].id),
+          create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[4].id),
+          create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[5].id),
+          create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
+          create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)
+        ]
+        Timecop.return
+        @resources.insert(1, create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[0].id))
+        @resources.insert(4, create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id))
 
         @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
                                  create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
@@ -1027,7 +1033,6 @@ module StashEngine
         user = create(:user, tenant_id: 'dryad')
         @identifier2 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/789')
         @identifier3 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/000')
-
         # Add a resource and make it 'published'
         [@identifier, @identifier2, @identifier3].each do |identifier|
           resource = create(:resource, user: user, tenant_id: user.tenant_id, identifier_id: identifier.id, skip_datacite_update: true)

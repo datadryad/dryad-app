@@ -33,17 +33,13 @@
       </p>
     <% end %>
   </div>  
-  <div class="admin-dashboard-results" id="save_buttons">
-    <i class="fa fa-spin fa-circle-notch" aria-hidden="true"></i>
-  </div>
+  <div class="admin-dashboard-results" id="save_buttons"></div>
   <div class="admin-dashboard-results" style="font-size: .9em;" id="count_and_export">
-    <i class="fa fa-spin fa-circle-notch" aria-hidden="true"></i>
+    <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
   </div>
 </div>
 
-<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], page_size: params[:page_size], page: params[:page]) %>">
-  <i class="fa fa-spin fa-circle-notch" aria-hidden="true"></i>
-</div>
+<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], page_size: params[:page_size], page: params[:page]) %>"></div>
 
 <script type="text/javascript">
   document.getElementById('search_open').addEventListener('click', (e) => {

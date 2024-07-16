@@ -15,7 +15,7 @@ describe 'checksums:validate_files', type: :task do
   it 'updates validated_at when file is valid' do
     task.invoke
     @file.reload
-    expect(@file.validated_at.to_date).to eq(Date.today)
+    expect(@file.validated_at.to_date).to eq(Time.now.utc.to_date)
   end
 
   it 'does not update when file is invalid' do

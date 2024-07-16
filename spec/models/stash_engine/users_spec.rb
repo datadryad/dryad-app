@@ -134,10 +134,12 @@ module StashEngine
         in_progress = []
         other = []
         %w[submitted processing].each_with_index do |state, index|
+          Timecop.travel(Time.now.utc - 1.hour)
           ident = create(:identifier, identifier: "10.123/#{index}")
           res1 = create(:resource, user_id: @user.id, skip_emails: true, identifier: ident)
           res1.current_state = 'in_progress'
           in_progress << res1
+          Timecop.return
           res2 = create(:resource, user_id: @user.id, skip_emails: true, identifier: ident)
           res2.current_state = state
           other << res2

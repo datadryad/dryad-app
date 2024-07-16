@@ -112,7 +112,7 @@ module StashApi
 
       return if resource.publication_date.present?
 
-      embargo_date = (params[:curation_activity][:created_at]&.to_date || Date.today) + 1.year
+      embargo_date = (params[:curation_activity][:created_at]&.to_date || Time.now.utc.to_date) + 1.year
       resource.update!(publication_date: embargo_date)
     end
 

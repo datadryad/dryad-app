@@ -5,6 +5,7 @@ module StashDatacite
       attr_reader :completions
 
       before(:each) do
+        Timecop.travel(Time.now.utc - 1.day)
         @user = create(:user)
         @resource = create(:resource, user: @user)
         @resource.save
@@ -16,6 +17,7 @@ module StashDatacite
         create(:data_file, resource: @resource)
         @resource.reload
         @completions = Completions.new(@resource)
+        Timecop.return
       end
 
       describe :duplicate_submission do

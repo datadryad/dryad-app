@@ -84,9 +84,6 @@ delimiter EndDryadContent.
 Common fields:
 - Print ISSN
 - Online ISSN
-- Journal Admin Email
-- Journal Editor
-- Journal Editor Email
 - Contact Author
 - Contact Author Email
 - Keywords: Can be included as a comma- or semicolon-delimited list.

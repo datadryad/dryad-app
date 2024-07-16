@@ -17,7 +17,7 @@ module StashEngine
     end
 
     def edit?
-      @user.superuser?
+      @user.system_admin?
     end
 
     def user_profile?
@@ -25,7 +25,7 @@ module StashEngine
     end
 
     def set_role?
-      @user.superuser?
+      @user.system_admin?
     end
   end
 end

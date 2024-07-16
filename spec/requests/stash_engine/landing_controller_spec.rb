@@ -27,7 +27,9 @@ module StashEngine
       ignore_zenodo!
       neuter_curation_callbacks!
       # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
+      Timecop.travel(Time.now.utc.to_date - 1.day)
       create_basic_dataset!
+      Timecop.return
     end
 
     it 'creates basic_dataset that is valid with required metadata with factory bot' do

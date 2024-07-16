@@ -7,8 +7,8 @@ RSpec.feature 'TenantAdmin', type: :feature do
       @dryad = create(:tenant_dryad)
       @match = create(:tenant_match)
       @ucop = create(:tenant_ucop)
-      @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
-      sign_in(@superuser, false)
+      @system_admin = create(:user, role: 'admin')
+      sign_in(@system_admin, false)
     end
 
     it 'allows filtering by sponsor', js: true do
@@ -25,7 +25,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
       expect(page).not_to have_content(@match.short_name)
     end
 
-    it 'allows changing the logo as a superuser', js: true do
+    it 'allows changing the logo as a system admin', js: true do
       visit stash_url_helpers.tenant_admin_path
       expect(page).to have_content(@match.short_name)
       within(:css, "form[action=\"#{tenant_popup_path(id: @match.id, field: 'logo')}\"]") do
@@ -41,7 +41,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
       expect(changed.logo).to eq(logo_image)
     end
 
-    it 'allows changing ROR IDs as a superuser', js: true do
+    it 'allows changing ROR IDs as a system admin', js: true do
       visit stash_url_helpers.tenant_admin_path
       expect(page).to have_content(@match.short_name)
       within(:css, "form[action=\"#{tenant_popup_path(id: @match.id, field: 'ror_orgs')}\"]") do
@@ -56,7 +56,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
       expect(changed.ror_ids).to include('https://ror.org/1234')
     end
 
-    it 'allows changing contacts as a superuser', js: true do
+    it 'allows changing contacts as a system admin', js: true do
       visit stash_url_helpers.tenant_admin_path
       expect(page).to have_content(@match.short_name)
       within(:css, "form[action=\"#{tenant_popup_path(id: @match.id, field: 'campus_contacts')}\"]") do
@@ -71,7 +71,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
       expect(changed.campus_contacts).to include('test@email.com')
     end
 
-    it 'allows changing display as a superuser', js: true do
+    it 'allows changing display as a system admin', js: true do
       visit stash_url_helpers.tenant_admin_path
       expect(page).to have_content(@match.short_name)
       within(:css, "form[action=\"#{tenant_popup_path(id: @match.id, field: 'partner_display')}\"]") do
@@ -86,7 +86,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
       expect(changed.partner_display).to be false
     end
 
-    it 'allows disabling as a superuser', js: true do
+    it 'allows disabling as a system admin', js: true do
       visit stash_url_helpers.tenant_admin_path
       expect(page).to have_content(@match.short_name)
       within(:css, "form[action=\"#{tenant_popup_path(id: @match.id, field: 'enabled')}\"]") do

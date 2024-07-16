@@ -375,17 +375,20 @@ module StashApi
         @user2 = create(:user, tenant_id: 'ucop')
         create(:role, user: @user2, role: 'admin', role_object: @user2.tenant)
         @user3 = create(:user, tenant_id: 'ucb', role: 'curator')
-
-        @resources = [create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
-                      create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
-                      create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[1].id),
-                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
-                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
-                      create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[3].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[4].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[5].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
-                      create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)]
+        Timecop.travel(Time.now.utc.to_date - 1.day)
+        @resources = [
+          create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id),
+          create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[1].id),
+          create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id),
+          create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[3].id),
+          create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[4].id),
+          create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[5].id),
+          create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[6].id),
+          create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifiers[7].id)
+        ]
+        Timecop.return
+        @resources.insert(1, create(:resource, user_id: @user1.id, tenant_id: @user1.tenant_id, identifier_id: @identifiers[0].id))
+        @resources.insert(3, create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id))
 
         # identifiers[0]
         @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
@@ -659,10 +662,11 @@ module StashApi
         @user2 = create(:user, tenant_id: @tenant_ids.first)
 
         @identifier = create(:identifier)
-
-        @resources = [create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
-                      create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id)]
-
+        Timecop.travel(Time.now.utc.to_date - 1.day)
+        @resources = [create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id)]
+        Timecop.travel(Time.now.utc + 23.hours)
+        @resources.push(create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id))
+        Timecop.return
         @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[0], status: 'curation'),
                                  create(:curation_activity, resource: @resources[0], status: 'published')]]
