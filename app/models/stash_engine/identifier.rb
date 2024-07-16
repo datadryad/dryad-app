@@ -9,6 +9,7 @@
 #  import_info         :integer          default("other")
 #  payment_type        :string(191)
 #  pub_state           :string
+#  publication_date    :datetime
 #  search_words        :text(65535)
 #  storage_size        :bigint
 #  waiver_basis        :string(191)
@@ -604,7 +605,7 @@ module StashEngine
     end
 
     def date_first_published
-      resources.map(&:publication_date)&.reject(&:blank?)&.first || nil
+      publication_date
     end
 
     def date_last_published

@@ -27,7 +27,6 @@ RSpec.feature 'AdminDashboard', type: :feature do
       create(:tenant)
       @user = create(:user, tenant_id: 'test_tenant')
       @superuser = create(:user, role: 'superuser')
-      Timecop.travel(Time.now.utc.to_date - 2.days)
       2.times do
         identifier = create(:identifier)
         @resource = create(:resource, :submitted, publication_date: nil, user: @user, identifier: identifier)
@@ -76,13 +75,15 @@ RSpec.feature 'AdminDashboard', type: :feature do
     context :date_and_state_filters do
       before(:each) do
         create(:curation_activity, status: 'curation', user: @superuser, resource: @resource)
-        Timecop.return
         2.times do
           identifier = create(:identifier)
           create(:resource, publication_date: nil, user: @user, identifier: identifier)
         end
         3.times do
+          Timecop.travel(Time.now.utc.to_date - 2.days)
           identifier = create(:identifier)
+          create(:resource_published, user: @user, identifier: identifier)
+          Timecop.return
           create(:resource_published, user: @user, identifier: identifier)
         end
         3.times do
@@ -112,20 +113,23 @@ RSpec.feature 'AdminDashboard', type: :feature do
         assert_selector('tbody tr', count: 3)
       end
 
-      it 'filters on last modified date', js: true do
-        visit stash_url_helpers.admin_dashboard_path
-        expect(page).to have_text('Admin dashboard')
-        fill_in('updated_atstart', with: Time.now.utc.to_date)
-        click_button('Apply')
-        assert_selector('tbody tr', count: 8)
-      end
-
       it 'filters on submitted date', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
         fill_in('submit_datestart', with: Time.now.utc.to_date)
         click_button('Apply')
-        assert_selector('tbody tr', count: 6)
+        assert_selector('tbody tr', count: 8)
+      end
+
+      it 'filters on first submitted date', js: true do
+        visit stash_url_helpers.admin_dashboard_path
+        expect(page).to have_text('Admin dashboard')
+        fill_in('first_sub_datestart', with: (Time.now.utc.to_date - 2.days))
+        click_button('Apply')
+        assert_selector('tbody tr', count: 8)
+        fill_in('first_sub_dateend', with: (Time.now.utc.to_date - 1.day))
+        click_button('Apply')
+        assert_selector('tbody tr', count: 3)
       end
 
       it 'filters on published date', js: true do
@@ -135,6 +139,17 @@ RSpec.feature 'AdminDashboard', type: :feature do
         click_button('Apply')
         assert_selector('tbody tr', count: 6)
         fill_in('publication_dateend', with: Time.now.utc.to_date)
+        click_button('Apply')
+        assert_selector('tbody tr', count: 3)
+      end
+
+      it 'filters on first published date', js: true do
+        visit stash_url_helpers.admin_dashboard_path
+        expect(page).to have_text('Admin dashboard')
+        fill_in('first_pub_datestart', with: (Time.now.utc.to_date - 2.days))
+        click_button('Apply')
+        assert_selector('tbody tr', count: 6)
+        fill_in('first_pub_dateend', with: Time.now.utc.to_date)
         click_button('Apply')
         assert_selector('tbody tr', count: 3)
       end
@@ -182,9 +197,10 @@ RSpec.feature 'AdminDashboard', type: :feature do
         expect(page).to have_select('filter-sponsor')
         expect(page).to have_field('searchselect-funder__input')
         expect(page).to have_field('searchselect-affiliation__input')
-        expect(page).to have_field('updated_atstart')
         expect(page).to have_field('submit_datestart')
+        expect(page).to have_field('first_sub_datestart')
         expect(page).to have_field('publication_datestart')
+        expect(page).to have_field('first_pub_datestart')
       end
 
       it 'limits options in the dashboard', js: true do

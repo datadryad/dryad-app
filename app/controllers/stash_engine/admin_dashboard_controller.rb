@@ -11,27 +11,22 @@ module StashEngine
 
     def index; end
 
-    # rubocop:disable Metrics/MethodLength
     def results
       @datasets = StashEngine::Resource.latest_per_dataset.select(
-        'distinct stash_engine_resources.id, stash_engine_resources.title, stash_engine_resources.total_file_size,
-        stash_engine_resources.user_id, stash_engine_resources.tenant_id, stash_engine_resources.identifier_id,
-        stash_engine_resources.last_curation_activity_id, stash_engine_resources.publication_date,
-        stash_engine_resources.current_editor_id, stash_engine_resources.current_resource_state_id'
-      )
+        :id, :title, :total_file_size, :user_id, :tenant_id, :identifier_id, :last_curation_activity_id, :publication_date,
+        :current_editor_id, :current_resource_state_id
+      ).distinct
 
       add_fields
       add_filters
 
-      if request.format.js? && (@page == 1 || session[:admin_search_count].blank?)
-        session[:admin_search_count] = StashEngine::Resource.select('count(*) as total').from(@datasets).map(&:total).first
-      end
+      @sql = @datasets.to_sql
 
       if params[:sort].present? || @search_string.present?
         order_string = 'relevance desc'
         if params[:sort].present?
-          order_list = %w[title author_string status total_file_size unique_investigation_count curator_name
-                          updated_at submit_date publication_date]
+          order_list = %w[title author_string status total_file_size view_count curator_name
+                          updated_at submit_date publication_date first_sub_date first_pub_date queue_date]
           order_string = helpers.sortable_table_order(whitelist: order_list)
           order_string = "stash_engine_curation_activities.#{order_string}" if @sort == 'updated_at'
           order_string += ', relevance desc' if @search_string.present?
@@ -51,7 +46,14 @@ module StashEngine
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength
+
+    def count
+      if session[:admin_search_count].blank?
+        session[:admin_search_count] = StashEngine::Resource.select('count(*) as total').from("(#{params[:sql]}) subquery").map(&:total).first
+      end
+      @count = session[:admin_search_count]
+      respond_to(&:js)
+    end
 
     def new_search
       @properties = params[:properties]
@@ -87,15 +89,12 @@ module StashEngine
     def setup_paging
       if request.format.csv?
         @page = 1
-        @page_size = 2_000
+        @page_size = 1_000_000
         return
       end
       @page = params[:page] || 1
-      @page_size = if params[:page_size].blank? || params[:page_size].to_i == 0
-                     10
-                   else
-                     params[:page_size].to_i
-                   end
+      @page_size = 10 if params[:page_size].blank? || params[:page_size].to_i == 0
+      @page_size ||= params[:page_size].to_i
     end
 
     # rubocop:disable Style/MultilineIfModifier
@@ -117,13 +116,17 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def setup_search
       @sort = params[:sort]
+      session[:admin_search_count] = nil if @page == 1
+      session[:admin_search_filters] = nil if params[:clear]
+      session[:admin_search_fields] = nil if params[:clear]
+      session[:admin_search_string] = nil if params[:clear]
       @saved_search = current_user.admin_searches[params[:search].to_i - 1] if params[:search]
       @saved_search ||= current_user.admin_searches.find_by(default: true)
 
-      @search_string = params[:q] || @saved_search&.search_string || session[:admin_search_string]
-      @filters = params[:filters] || @saved_search&.filters || session[:admin_search_filters]
+      @search_string = params[:q] || session[:admin_search_string] || @saved_search&.search_string
+      @filters = params[:filters] || session[:admin_search_filters] || @saved_search&.filters
       @filters = @filters.deep_transform_keys(&:to_sym) unless @filters.blank?
-      @fields = params[:fields] || @saved_search&.fields || session[:admin_search_fields]
+      @fields = params[:fields] || session[:admin_search_fields] || @saved_search&.fields
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
@@ -137,26 +140,17 @@ module StashEngine
       @fields << 'identifiers' if @journal_limit.present?
       @fields << 'affiliations' if @role_object.is_a?(StashEngine::Tenant)
       @fields.push('funders', 'awards') if @role_object.is_a?(StashEngine::Funder)
-      @fields.push('identifiers', 'curator').delete_at(2) if current_user.min_curator?
+      @fields.push('identifiers', 'curator', 'queue_date').delete_at(2) if current_user.min_curator?
     end
 
-    # rubocop:disable Metrics/MethodLength
     def add_fields
-      if @sort == 'unique_investigation_count'
-        @datasets = @datasets.joins('left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id')
-          .select('stats.unique_investigation_count')
-
+      if @sort == 'view_count'
+        @datasets = @datasets.joins(
+          'left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id'
+        ).select('stats.unique_investigation_count as view_count')
       end
-      if @filters[:status].present? || @sort == 'status' || @filters[:updated_at]&.values&.any?(&:present?) || @sort == 'updated_at'
+      if @filters[:status].present? || %w[status updated_at].include?(@sort) || @filters[:updated_at]&.values&.any?(&:present?)
         @datasets = @datasets.joins(:last_curation_activity)
-      end
-      if @filters[:submit_date]&.values&.any?(&:present?)
-        @datasets = @datasets.joins(:process_date)
-      elsif @sort == 'submit_date'
-        @datasets = @datasets.left_outer_joins(:process_date)
-      end
-      if @sort == 'submit_date' || @filters[:submit_date]&.values&.any?(&:present?)
-        @datasets = @datasets.select('IFNULL(stash_engine_process_dates.submitted, stash_engine_process_dates.peer_review) as submit_date')
       end
       if current_user.min_app_admin? && (@fields.include?('curator') || @filters[:curator].present?)
         @datasets = @datasets.joins("left outer join (
@@ -172,6 +166,7 @@ module StashEngine
             from stash_engine_authors sea where sea.resource_id = stash_engine_resources.id limit 6
           ) as author_string")
       end
+      date_fields
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
       @datasets = @datasets.select(
@@ -180,7 +175,17 @@ module StashEngine
         }') as relevance"
       ) if @search_string.present?
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
+
+    def date_fields
+      if @filters[:submit_date]&.values&.any?(&:present?)
+        @datasets = @datasets.joins(:process_date).select('stash_engine_process_dates.processing as submit_date')
+      elsif @sort == 'submit_date'
+        @datasets = @datasets.left_outer_joins(:process_date).select('stash_engine_process_dates.processing as submit_date')
+      end
+      return unless @sort == 'first_pub_date' || @filters[:first_pub_date]&.values&.any?(&:present?)
+
+      @datasets = @datasets.select('stash_engine_identifiers.publication_date as first_pub_date')
+    end
 
     def add_filters
       tenant_filter
@@ -216,13 +221,24 @@ module StashEngine
         "stash_engine_curation_activities.updated_at #{date_string(@filters[:updated_at])}"
       ) unless @filters[:updated_at].nil? || @filters[:updated_at].values.all?(&:blank?)
       @datasets = @datasets.where(
-        "IFNULL(stash_engine_process_dates.submitted, stash_engine_process_dates.peer_review) #{date_string(@filters[:submit_date])}"
+        "stash_engine_process_dates.processing #{date_string(@filters[:submit_date])}"
       ) unless @filters[:submit_date].nil? || @filters[:submit_date].values.all?(&:blank?)
+      if %w[first_sub_date queue_date].include?(@sort) || @filters[:first_sub_date]&.values&.any?(&:present?)
+        filter_on = @filters[:first_sub_date]&.values&.any?(&:present?)
+        @datasets = @datasets.joins(
+          "#{filter_on ? '' : 'LEFT OUTER '}JOIN stash_engine_process_dates id_dates ON id_dates.processable_type = 'StashEngine::Identifier'
+            AND id_dates.processable_id = stash_engine_identifiers.id
+          #{filter_on ? " AND IFNULL(id_dates.processing, id_dates.submitted) #{date_string(@filters[:first_sub_date])}" : ''}"
+        ).select('IFNULL(id_dates.processing, id_dates.submitted) as first_sub_date, id_dates.submitted as queue_date')
+      end
       @datasets = @datasets.where(
         "stash_engine_resources.publication_date #{date_string(@filters[:publication_date])}"
       ) unless @filters[:publication_date].nil? || @filters[:publication_date].values.all?(&:blank?)
+      @datasets = @datasets.where(
+        "stash_engine_identifiers.publication_date #{date_string(@filters[:first_pub_date])}"
+      ) unless @filters[:first_pub_date].nil? || @filters[:first_pub_date].values.all?(&:blank?)
     end
-    # rubocop:enable Style/MultilineIfModifier
+    # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
 
     def tenant_filter
       return unless @role_object.is_a?(StashEngine::Tenant) || @filters[:member].present?
@@ -282,6 +298,7 @@ module StashEngine
     def add_subqueries
       @datasets = @datasets.preload(:identifier).preload(:current_resource_state)
       @datasets = @datasets.preload(:process_date) if @fields.include?('submit_date')
+      @datasets = @datasets.preload(identifier: :process_date) if @fields.intersect?(%w[first_sub_date queue_date])
       @datasets = @datasets.preload(:last_curation_activity) if @fields.include?('status') || @fields.include?('updated_at')
       @datasets = @datasets.preload(:subjects) if @fields.include?('keywords')
       @datasets = @datasets.preload(:authors) if @fields.include?('authors')
@@ -310,6 +327,7 @@ module StashEngine
 
       decipher_curation_activity
       @note = params.dig(:curation_activity, :note)
+      @resource.current_editor_id = current_user.id
       @resource.publication_date = @pub_date
       @resource.hold_for_peer_review = true if @status == 'peer_review'
       @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'

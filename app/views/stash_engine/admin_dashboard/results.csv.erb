@@ -20,7 +20,10 @@ head += ',Curator' if @fields.include?('curator')
 head += ',DPC paid by' if @fields.include?('dpc')
 head += ',Last modified' if @fields.include?('updated_at')
 head += ',Submitted' if @fields.include?('submit_date')
+head += ',First submitted' if @fields.include?('first_sub_date')
 head += ',Published' if @fields.include?('publication_date')
+head += ',First published' if @fields.include?('first_pub_date')
+head += ',First queued' if @fields.include?('queue_date')
 %>
 <%= head %>
 <% @datasets.each do |dataset| 
@@ -61,8 +64,11 @@ head += ',Published' if @fields.include?('publication_date')
     row << dpc
   end
   row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at') 
-  row << (dataset.process_date.submitted || dataset.process_date.peer_review) if @fields.include?('submit_date')
+  row << dataset.process_date.processing if @fields.include?('submit_date')
+  row << dataset.identifier.process_date.processing || dataset.identifier.process_date.submitted if @fields.include?('first_sub_date')
   row << dataset.publication_date if @fields.include?('publication_date')
+  row << dataset.identifier.publication_date if @fields.include?('first_pub_date')
+  row << dataset.identifier.process_date.submitted if @fields.include?('queue_date')
 %>
 <%= row.to_csv(row_sep: nil).html_safe %>
 <% end %>
