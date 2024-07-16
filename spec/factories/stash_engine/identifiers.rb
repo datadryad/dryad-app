@@ -9,6 +9,7 @@
 #  import_info         :integer          default("other")
 #  payment_type        :string(191)
 #  pub_state           :string
+#  publication_date    :datetime
 #  search_words        :text(65535)
 #  storage_size        :bigint
 #  waiver_basis        :string(191)

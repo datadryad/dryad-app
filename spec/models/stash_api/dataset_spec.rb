@@ -196,6 +196,7 @@ module StashApi
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:sharingLink]).to be(bogus_link)
+        Timecop.return
       end
 
     end
