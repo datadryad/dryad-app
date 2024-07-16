@@ -25,8 +25,8 @@
       </th>
     <% end %>
     <% if @fields.include?('metrics') %>
-      <th class="c-lined-table__sort <%= sort_display('unique_investigation_count') %>">
-        <%= sortable_column_head sort_field: 'unique_investigation_count', title: 'Metrics', remote: true %>
+      <th class="c-lined-table__sort <%= sort_display('view_count') %>">
+        <%= sortable_column_head sort_field: 'view_count', title: 'Metrics', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('funders') || @fields.include?('awards') %>
@@ -59,9 +59,24 @@
         <%= sortable_column_head sort_field: 'submit_date', title: 'Submitted', remote: true %>
       </th>
     <% end %>
+    <% if @fields.include?('first_sub_date') %>
+      <th class="c-lined-table__sort <%= sort_display('first_sub_date') %>">
+        <%= sortable_column_head sort_field: 'first_sub_date', title: 'First submitted', remote: true %>
+      </th>
+    <% end %>
     <% if @fields.include?('publication_date') %>
       <th class="c-lined-table__sort <%= sort_display('publication_date') %>">
         <%= sortable_column_head sort_field: 'publication_date', title: 'Published', remote: true %>
+      </th>
+    <% end %>
+    <% if @fields.include?('first_pub_date') %>
+      <th class="c-lined-table__sort <%= sort_display('first_pub_date') %>">
+        <%= sortable_column_head sort_field: 'first_pub_date', title: 'First published', remote: true %>
+      </th>
+    <% end %>
+    <% if @fields.include?('queue_date') %>
+      <th class="c-lined-table__sort <%= sort_display('queue_date') %>">
+        <%= sortable_column_head sort_field: 'queue_date', title: 'First queued', remote: true %>
       </th>
     <% end %>
   </tr>

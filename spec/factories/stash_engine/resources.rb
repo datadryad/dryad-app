@@ -69,6 +69,7 @@ FactoryBot.define do
 
     trait :submitted do
       after(:create) do |resource|
+        create(:curation_activity, status: 'processing', user: resource.user, resource: resource)
         resource.current_state = 'submitted'
         resource.save
         resource.reload
