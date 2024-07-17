@@ -36,6 +36,28 @@ module StashEngine
            subject: "#{rails_env}REMINDER: Dryad Submission \"#{@resource.title}\"")
     end
 
+    def send_set_to_withdrawn_notification(resource)
+      logger.warn('Unable to send set_to_withdrawn_notification; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}NOTIFICATION: Dryad resource set to withdrawn \"#{@resource.title}\"")
+    end
+
+    def send_final_withdrawn_notification
+      logger.warn('Unable to send send_final_withdrawn_notification; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}FINAL NOTIFICATION: Dryad resource will be deleted \"#{@resource.title}\"")
+    end
+
     private
 
     # rubocop:disable Style/NestedTernaryOperator
