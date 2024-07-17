@@ -916,7 +916,7 @@ module StashEngine
         it 'is not copied or clobbered in Amoeba duplication' do
           %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
-            Timecop.travel(Time.now.utc + 1.minute)  
+            Timecop.travel(Time.now.utc + 1.minute)
             new_resource = resource.amoeba_dup
             new_resource.save
             new_resource_state = new_resource.current_resource_state

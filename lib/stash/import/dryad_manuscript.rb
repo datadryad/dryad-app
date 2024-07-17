@@ -26,6 +26,7 @@ module Stash
 
       def populate_authors
         return if @metadata['ms authors'].blank? || @metadata['ms authors'].first.blank?
+        return unless @metadata['ms authors'].first.is_a? Hash
 
         authors = @metadata['ms authors']
         authors.each do |ms_author|

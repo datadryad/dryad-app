@@ -36,11 +36,11 @@ module StashEngine
 
       @datasets = @datasets.page(@page).per(@page_size)
 
-      add_subqueries
-      collect_properties
-
       respond_to do |format|
-        format.js
+        format.js do
+          add_subqueries
+          collect_properties
+        end
         format.csv do
           headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_report.csv"
         end
@@ -89,7 +89,7 @@ module StashEngine
     def setup_paging
       if request.format.csv?
         @page = 1
-        @page_size = 1_000_000
+        @page_size = 10_000
         return
       end
       @page = params[:page] || 1

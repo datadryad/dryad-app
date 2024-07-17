@@ -197,7 +197,10 @@ Using Ubuntu Linux on Windows
 
 To setup Ubuntu in your account, use the Windows Subsystem for Linux. Open the
 Command Prompt (or Windows Power Shell) and run:
-`wsl --install -d Ubuntu`
+```
+wsl --update
+wsl --install -d Ubuntu
+```
 
 The first time, it will take a while to set up, and finish by asking you to
 create a user account. The Ubuntu account only exists *within* your Windows account,

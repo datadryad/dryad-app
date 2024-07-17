@@ -335,7 +335,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'action_required')
         @resource.reload
-
+        Timecop.travel(Time.now.utc + 1.minute)
         sign_in(@author)
         click_link 'My datasets'
         within(:css, "form[action=\"/stash/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
@@ -345,6 +345,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
         expect(@resource.current_curation_status).to eql('submitted')
         expect(@resource.current_editor_id).to eql(@curator.id)
+        Timecop.return
       end
 
       it 'is automatically published with simple changes', js: true do
