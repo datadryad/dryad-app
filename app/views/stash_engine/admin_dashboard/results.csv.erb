@@ -60,7 +60,7 @@ head += ',First queued' if @fields.include?('queue_date')
     dpc = ''
     dpc = dataset.tenant&.short_name if dataset.identifier.payment_id == dataset.tenant_id
     dpc = dataset.identifier&.journal&.journal_title if dataset.identifier&.journal&.issn_array&.include?(dataset.identifier.payment_id)
-    dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id.starts_with?('funder')
+    dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id&.starts_with?('funder')
     row << dpc
   end
   row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at') 
