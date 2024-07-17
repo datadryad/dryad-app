@@ -2,8 +2,11 @@ document.getElementById('search_save').remove()
 document.getElementById('search_open').removeAttribute('hidden')
 document.getElementById('search_open').setAttribute('aria-expanded', false)
 if (document.getElementById('search_edit')) {
-  document.getElementById('search_edit').setAttribute('aria-expanded', false)
   document.getElementById('search_edit').setAttribute('hidden', true)
+  document.getElementById('search_open').setAttribute('aria-expanded', false)
+}
+if (document.getElementById('search_clear')) {
+  document.getElementById('search_clear').setAttribute('hidden', true)
 }
 <% if @saved_search %>
 document.getElementById("search_head").innerHTML = 'Search results: <a href="/stash/account#saved" style="font-weight: normal;"><%= @saved_search.title %></a>';

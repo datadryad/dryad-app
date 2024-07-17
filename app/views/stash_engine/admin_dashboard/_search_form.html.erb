@@ -1,0 +1,19 @@
+<%= form_with(url: admin_dashboard_results_path(format: :js, search: params[:search], page_size: params[:page_size]), method: :post, local: false, class: 'admin-dashboard-form') do %>
+  <%= render partial: 'fields' %>
+  <%= render partial: 'filters' %>
+  <div class="admin-dashboard-buttons" style="column-gap: 3ch; row-gap: 2ch">
+    <div class="o-admin-form-pair" style="flex-grow: 2;">
+      <label for="search-string">Search terms: </label>
+      <%= search_field_tag(:q, @search_string, class: 'c-input__text', id: 'search-string', style: 'flex-grow: 2' ) %>
+    </div>
+    <div class="o-admin-form-pair" style="flex-grow: 2;">
+      <label for="related-search">Publication IDs: </label>
+      <%= search_field_tag('filters[identifiers]', @filters[:identifiers], class: 'c-input__text', id: 'related-search', style: 'flex-grow: 2' ) %>
+    </div>
+    <div class="admin-dashboard-results" style="margin-left: auto">
+      <button type="button" class="o-button__plain-text7" id="clear_filters" title="Clear search and filters"><i class="fa fa-times" aria-hidden="true"></i>Clear</button>
+      <%= submit_tag('Apply', name: nil, class: 'o-button__submit') %>
+    </div>
+  </div>
+  </p>
+<% end %>
