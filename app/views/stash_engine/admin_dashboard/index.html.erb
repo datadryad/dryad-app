@@ -52,6 +52,9 @@
     document.getElementById('edit_fields-form').classList.toggle('show-help')
   })
   document.querySelector('#search_form form').addEventListener('submit', () => {
+    const params = new URL(window.location.href).searchParams
+    params.delete('clear')
+    window.history.pushState({}, null, `${window.location.pathname}?${params.toString()}`);
     document.getElementById('count_and_export').innerHTML = '<i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>'
   })
   document.getElementById('clear_filters').addEventListener('click', (e) => {
