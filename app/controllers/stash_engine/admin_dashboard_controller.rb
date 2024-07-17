@@ -116,11 +116,12 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def setup_search
       @sort = params[:sort]
+      @search = params[:search].to_i
       session[:admin_search_count] = nil if @page == 1
       session[:admin_search_filters] = nil if params[:clear]
       session[:admin_search_fields] = nil if params[:clear]
       session[:admin_search_string] = nil if params[:clear]
-      @saved_search = current_user.admin_searches[params[:search].to_i - 1] if params[:search]
+      @saved_search = current_user.admin_searches[@search - 1] if params[:search]
       @saved_search ||= current_user.admin_searches.find_by(default: true)
 
       @search_string = params[:q] || session[:admin_search_string] || @saved_search&.search_string
