@@ -234,6 +234,15 @@
   }
 }
 
+a.o-button__plain-text7 {
+  &:link, &:visited, &:hover {
+    color: $link-body-color;
+  }
+  i {
+    margin-right: .5ch;
+  }
+}
+
 .admin-dashboard-results {
   display: flex;
   flex-wrap: wrap;
