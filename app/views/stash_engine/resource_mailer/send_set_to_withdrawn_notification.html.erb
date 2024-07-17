@@ -1,0 +1,18 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>
+  Your dataset was withdrawn due to inactivity:
+</p>
+
+<p>
+  Title: "<%= @resource.title %>"<br/>
+  DOI: <%= @resource.identifier_str %>
+</p>
+
+<p>
+  Our previous email correspondence contains specific details on the changes required. Please contact us at <a href="mailto:help@datadryad.org?subject=Dataset with DOI: <%= @resource.identifier_str %>">help@datadryad.org</a> if you have any questions or no longer wish to proceed with the publication of the dataset.
+</p>
+
+<p>We hope to hear from you shortly.</p>
+
+<p>The Dryad Team</p>
