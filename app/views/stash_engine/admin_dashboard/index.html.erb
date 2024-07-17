@@ -51,6 +51,9 @@
     e.preventDefault()
     document.getElementById('edit_fields-form').classList.toggle('show-help')
   })
+  document.querySelector('#search_form form').addEventListener('submit', () => {
+    document.getElementById('count_and_export').innerHTML = '<i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>'
+  })
   document.getElementById('clear_filters').addEventListener('click', (e) => {
     e.preventDefault()
     const inputs = document.querySelectorAll(['#edit_filters-form input', '#search_form input[type="search"]'])
