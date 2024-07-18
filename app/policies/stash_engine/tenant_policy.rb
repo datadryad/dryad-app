@@ -20,7 +20,11 @@ module StashEngine
 
       def resolve
         if @user.tenant_limited?
-          @scope.enabled.joins(:tenant_ror_orgs).where(tenant_ror_orgs: { ror_id: user.tenant.ror_ids }).distinct
+          if user.tenant.ror_ids.length == 1
+            [user.tenant]
+          else
+            @scope.enabled.joins(:tenant_ror_orgs).where(tenant_ror_orgs: { ror_id: user.tenant.ror_ids }).distinct
+          end
         elsif @user.system_user?
           @scope.all
         else
