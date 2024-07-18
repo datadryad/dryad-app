@@ -100,8 +100,8 @@ module StashEngine
     # rubocop:disable Style/MultilineIfModifier
     def setup_limits
       session[:admin_search_role] = params[:user_role] if params[:user_role].present?
-      user_role = current_user.roles.find_by(id: session[:admin_search_role]) || current_user.roles.first
-      @role_object = user_role.role_object
+      @user_role = current_user.roles.find_by(id: session[:admin_search_role]) || current_user.roles.first
+      @role_object = @user_role.role_object
       @tenant_limit = @role_object.is_a?(StashEngine::Tenant) ? policy_scope(StashEngine::Tenant) : StashEngine::Tenant.enabled
       if @role_object.is_a?(StashEngine::JournalOrganization)
         sponsor_limit = [@role_object]
