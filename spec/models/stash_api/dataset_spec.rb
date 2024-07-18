@@ -189,12 +189,14 @@ module StashApi
         r = @identifier.resources.last
         StashEngine::CurationActivity.create(resource: r, status: 'peer_review')
         r.current_resource_state.update(resource_state: 'submitted')
+        Timecop.travel(Time.now.utc + 1.minute)
         r2 = create(:resource, identifier: @identifier, user: @user,
                                current_editor_id: @user.id, title: 'The other resource')
         StashEngine::CurationActivity.create(resource: r2, status: 'in_progress')
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
         expect(@metadata[:sharingLink]).to be(bogus_link)
+        Timecop.return
       end
 
     end

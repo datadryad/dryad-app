@@ -9,7 +9,7 @@ module StashEngine
 
     before(:each) do
       mock_salesforce!
-      tomorrow = Date.today + 1
+      tomorrow = Time.now.utc.to_date + 1
       @future_date = tomorrow + 366.days
       @user = StashEngine::User.create(
         first_name: 'Lisa',
@@ -304,6 +304,7 @@ module StashEngine
         editor1 = create(:user)
         editor2 = create(:user)
         resource1 = create(:resource, user_id: user.id, identifier_id: identifier.id, current_editor_id: editor1.id)
+        Timecop.travel(Time.now.utc + 1.minute)
         resource2 = create(:resource, user_id: user.id, identifier_id: identifier.id, current_editor_id: editor2.id)
         state1 = ResourceState.create(user_id: editor1.id, resource_state: 'submitted', resource_id: resource1.id)
         state2 = ResourceState.create(user_id: editor2.id, resource_state: 'in_progress', resource_id: resource2.id)
@@ -315,6 +316,7 @@ module StashEngine
         expect(resource2.dataset_in_progress_editor_id).to eq(editor2.id)
         resource2.delete
         expect(resource1.dataset_in_progress_editor_id).to eq(nil) # no in-progress should return a nil
+        Timecop.return
       end
 
       it 'gives editor of in progress version' do
@@ -322,6 +324,7 @@ module StashEngine
         user2 = create(:user)
         identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         resource1 = create(:resource, user_id: user1.id, identifier_id: identifier.id, current_editor_id: user1.id)
+        Timecop.travel(Time.now.utc + 1.minute)
         resource2 = create(:resource, user_id: user1.id, identifier_id: identifier.id, current_editor_id: user2.id)
         state1 = ResourceState.create(user_id: user1.id, resource_state: 'submitted', resource_id: resource1.id)
         state2 = ResourceState.create(user_id: user2.id, resource_state: 'in_progress', resource_id: resource2.id)
@@ -331,6 +334,7 @@ module StashEngine
         expect(resource2.dataset_in_progress_editor.id).to eq(user2.id)
         resource2.delete
         expect(resource1.dataset_in_progress_editor.id).to eq(user1.id)
+        Timecop.return
       end
     end
 
@@ -658,11 +662,13 @@ module StashEngine
 
     describe 'self.need_publishing' do
       before(:each) do
+        Timecop.travel(Time.now.utc - 3.minutes)
         @identifier = create(:identifier)
         @resources = []
         @resource_states = []
         @curation_activities = []
         0.upto(3) do
+          Timecop.travel(Time.now.utc + 1.minute)
           res = create(:resource, publication_date: Time.new - 1.day, identifier_id: @identifier.id)
           res.current_resource_state.update(resource_state: 'submitted')
           @curation_activities << [
@@ -671,6 +677,7 @@ module StashEngine
           ]
           @resources << res
         end
+        Timecop.return
         # disqualify all of these from the query
         @resources[0].update(publication_date: Time.new + 1.day) # get rid of time expired on first one
         @curation_activities[1][1].destroy! # get rid of embargoed on this one
@@ -771,7 +778,7 @@ module StashEngine
           old_authors = resource.authors.to_a
           expect(Author.count).to eq(3) # just to be sure
           expect(old_authors.size).to eq(3) # just to be sure
-
+          Timecop.travel(Time.now.utc + 1.second)
           new_resource = resource.amoeba_dup
           new_resource.save!
           expect(Author.count).to eq(6)
@@ -786,6 +793,7 @@ module StashEngine
             expect(author.author_email).to eq(old_authors[i].author_email)
             expect(author.author_orcid).to eq(old_authors[i].author_orcid)
           end
+          Timecop.return
         end
       end
     end
@@ -833,9 +841,11 @@ module StashEngine
       attr_reader :resource
       attr_reader :state
       before(:each) do
+        Timecop.travel(Time.now.utc - 1.minute)
         allow_any_instance_of(Resource).to receive(:prepare_for_curation).and_return(true)
         @resource = create(:resource, user_id: user.id)
         @state = ResourceState.find_by(resource_id: resource.id)
+        Timecop.return
       end
 
       describe :init_state do
@@ -906,9 +916,9 @@ module StashEngine
         it 'is not copied or clobbered in Amoeba duplication' do
           %w[processing error submitted].each do |state_value|
             resource.current_state = state_value
+            Timecop.travel(Time.now.utc + 1.minute)
             new_resource = resource.amoeba_dup
-            new_resource.save!
-
+            new_resource.save
             new_resource_state = new_resource.current_resource_state
             expect(new_resource_state.resource_id).to eq(new_resource.id)
             expect(new_resource_state.resource_state).to eq('in_progress')
@@ -966,8 +976,9 @@ module StashEngine
         attr_reader :copied_files
         attr_reader :deleted_files
         before(:each) do
+          Timecop.travel(Time.now.utc - 1.minute)
           @res1 = create(:resource, user_id: user.id)
-
+          Timecop.return
           @created_files = Array.new(3) do |i|
             DataFile.create(
               resource: @res1,
@@ -1182,18 +1193,22 @@ module StashEngine
           end
 
           it 'is incremented for the next resource by Amoeba duplication' do
+            Timecop.travel(Time.now.utc + 1.second)
             new_resource = resource.amoeba_dup
             new_resource.save!
             expect(new_resource.version_number).to eq(2)
-
+            Timecop.travel(Time.now.utc + 1.second)
             newer_resource = new_resource.amoeba_dup
             newer_resource.save!
             expect(newer_resource.version_number).to eq(2)
+            Timecop.return
           end
 
           it 'is incremented for the next resource' do
+            Timecop.travel(Time.now.utc + 1.second)
             new_resource = create(:resource, identifier: resource.identifier)
             expect(new_resource.version_number).to eq(2)
+            Timecop.return
           end
         end
 
@@ -1203,14 +1218,18 @@ module StashEngine
           end
 
           it 'is incremented for the next resource by Amoeba duplication' do
+            Timecop.travel(Time.now.utc + 1.second)
             new_resource = resource.amoeba_dup
             new_resource.save!
             expect(new_resource.merritt_version).to eq(2)
+            Timecop.return
           end
 
           it 'is incremented for the next resource' do
+            Timecop.travel(Time.now.utc + 1.second)
             new_resource = create(:resource, identifier: resource.identifier)
             expect(new_resource.merritt_version).to eq(2)
+            Timecop.return
           end
         end
 
@@ -1228,9 +1247,12 @@ module StashEngine
 
         describe :latest_per_dataset do
           it 'only returns latest resources and new resources' do
+            Timecop.travel(Time.now.utc + 1.second)
             resource.dup.save
+            Timecop.travel(Time.now.utc + 1.second)
             create(:resource)
             expect(Resource.latest_per_dataset.count).to eq(2)
+            Timecop.return
           end
         end
       end
@@ -1311,26 +1333,29 @@ module StashEngine
         end
         it 'counts published current states' do
           3.times do |index|
+            Timecop.travel(Time.now.utc + 1.second)
             resource = Resource.create(user_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = 'submitted'
             resource.save
           end
           expect(Resource.submitted_dataset_count).to eq(3)
+          Timecop.return
         end
         it 'groups by identifier' do
           ident1 = create(:identifier)
           ident2 = create(:identifier)
           3.times do |_index|
-
             res1 = create(:resource, identifier: ident1, user_id: user.id)
             res1.current_state = 'submitted'
             res1.save
+            Timecop.travel(Time.now.utc + 1.second)
             res2 = create(:resource, identifier: ident2, user_id: user.id)
             res2.current_state = 'submitted'
             res2.save
           end
           expect(Resource.submitted_dataset_count).to eq(2)
+          Timecop.return
         end
 
         it 'doesn\'t count non-published datasets' do
@@ -1450,16 +1475,16 @@ module StashEngine
           create(:role, role_object: @user2.tenant, user: @user2, role: 'admin')
           @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'curator')
           @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
-          @resources = [create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
-                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
-                        create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifier.id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifier.id),
-                        create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifier.id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id),
-                        create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id)]
+          @resources = []
+          Timecop.travel(Time.now.utc - 12.seconds)
+          [@user, @user2, @user3].each do |user|
+            3.times do
+              Timecop.travel(Time.now.utc + 1.second)
+              @resources.push(create(:resource, user_id: user.id, tenant_id: user.tenant_id, identifier_id: @identifier.id))
+            end
+          end
+          Timecop.return
+          @resources.push(create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id))
 
           @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
                                    create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
@@ -1616,8 +1641,11 @@ module StashEngine
 
         @resource1 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
         @other_resource1 = Resource.create(user_id: user.id, identifier_id: @identifier2.id)
+        Timecop.travel(Time.now.utc + 1.second)
         @resource2 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+        Timecop.travel(Time.now.utc + 1.second)
         @resource3 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+        Timecop.return
       end
 
       it 'has no previous resource for version 1' do

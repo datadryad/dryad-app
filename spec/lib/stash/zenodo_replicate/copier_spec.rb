@@ -15,9 +15,11 @@ module Stash
 
       before(:each) do
         WebMock.disable_net_connect!(allow_localhost: true)
+        Timecop.travel(Time.now.utc - 2.minutes)
         @resource = create(:resource)
         @ztc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier)
         @szr = Stash::ZenodoReplicate::Copier.new(copy_id: @ztc.id)
+        Timecop.return
       end
 
       describe '#add_to_zenodo' do
@@ -58,9 +60,11 @@ module Stash
 
         it "doesn't reject earlier submission if later one has errored (but earlier is done)" do
           @ztc.update(state: 'finished')
+          Timecop.travel(Time.now.utc - 1.minutes)
           @resource2 = create(:resource, identifier_id: @resource.identifier_id)
           @ztc2 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier,
                                        deposition_id: @ztc.deposition_id)
+          Timecop.return
           @resource3 = create(:resource, identifier_id: @resource.identifier_id)
           @ztc3 = create(:zenodo_copy, resource: @resource3, identifier: @resource3.identifier,
                                        deposition_id: @ztc.deposition_id, state: 'error')

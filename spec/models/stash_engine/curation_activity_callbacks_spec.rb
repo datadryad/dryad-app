@@ -14,12 +14,13 @@ module StashEngine
       mock_datacite!
       mock_salesforce!
       mock_stripe!
-
+      Timecop.travel(Time.now.utc - 1.minute)
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/123')
       @resource = create(:resource, identifier_id: @identifier.id)
       # reload so that it picks up any associated models that are initialized
       # (e.g. CurationActivity and ResourceState)
       @resource.reload
+      Timecop.return
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
     end
 
@@ -82,7 +83,7 @@ module StashEngine
 
         # TODO: Fix this intermittently-failing test. Ticket #806.
         xit 'calls update_solr when published' do
-          @resource.update(publication_date: Date.today.to_s)
+          @resource.update(publication_date: Time.now.utc.to_date.to_s)
           ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
           expect(ca).to receive(:update_solr)
           ca.save
@@ -90,14 +91,14 @@ module StashEngine
 
         # TODO: Fix this intermittently-failing test. Ticket #806.
         xit 'calls update_solr when embargoed' do
-          @resource.update(publication_date: (Date.today + 1.day).to_s)
+          @resource.update(publication_date: (Time.now.utc.to_date + 1.day).to_s)
           ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
           expect(ca).to receive(:update_solr)
           ca.save
         end
 
         it 'does not call update_solr if not published' do
-          @resource.update(publication_date: Date.today.to_s)
+          @resource.update(publication_date: Time.now.utc.to_date.to_s)
           ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required')
           expect(ca).not_to receive(:update_solr)
           ca.save
@@ -211,7 +212,7 @@ module StashEngine
         end
 
         it 'does nothing when there are no funders' do
-          @resource.update(publication_date: Date.today.to_s)
+          @resource.update(publication_date: Time.now.utc.to_date.to_s)
           ca = StashEngine::CurationActivity.create(resource_id: @resource.id, status: 'published', user: @user)
           ca.save
           @resource.reload
@@ -221,7 +222,7 @@ module StashEngine
         it 'does nothing when there is a single non-placeholder funder' do
           funder = create(:contributor)
           @resource.contributors << funder
-          @resource.update(publication_date: Date.today.to_s)
+          @resource.update(publication_date: Time.now.utc.to_date.to_s)
           ca = StashEngine::CurationActivity.create(resource_id: @resource.id, status: 'published', user: @user)
           ca.save
           @resource.reload
@@ -231,7 +232,7 @@ module StashEngine
 
         it 'removes a placeholder funder' do
           @resource.contributors << StashDatacite::Contributor.new(contributor_name: 'N/A', contributor_type: 'funder', name_identifier_id: '0')
-          @resource.update(publication_date: Date.today.to_s)
+          @resource.update(publication_date: Time.now.utc.to_date.to_s)
           ca = StashEngine::CurationActivity.create(resource_id: @resource.id, status: 'published', user: @user)
           ca.save
           @resource.reload
@@ -240,7 +241,7 @@ module StashEngine
 
         it 'removes a differently-capitalized placeholder funder' do
           @resource.contributors << StashDatacite::Contributor.new(contributor_name: 'N/a', contributor_type: 'funder', name_identifier_id: '0')
-          @resource.update(publication_date: Date.today.to_s)
+          @resource.update(publication_date: Time.now.utc.to_date.to_s)
           ca = StashEngine::CurationActivity.create(resource_id: @resource.id, status: 'published', user: @user)
           ca.save
           @resource.reload
