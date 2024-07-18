@@ -18,8 +18,8 @@ RSpec.feature 'UserAdmin', type: :feature do
       mock_stripe!
       mock_datacite_gen!
       neuter_curation_callbacks!
-      @superuser = create(:user, role: 'superuser')
-      sign_in(@superuser, false)
+      @system_admin = create(:user, role: 'admin')
+      sign_in(@system_admin, false)
     end
 
     it 'allows filtering by institution', js: true do
@@ -34,7 +34,7 @@ RSpec.feature 'UserAdmin', type: :feature do
       expect(page).not_to have_link(@user2.name)
     end
 
-    it 'allows changing user email as a superuser', js: true do
+    it 'allows changing user email as a system admin', js: true do
       expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
       visit stash_url_helpers.user_admin_path
       expect(page).to have_link(@user.name)
@@ -50,7 +50,7 @@ RSpec.feature 'UserAdmin', type: :feature do
       expect(user_changed.email).to eq('new-email@example.org')
     end
 
-    it 'allows changing user tenant as a superuser', js: true do
+    it 'allows changing user tenant as a system admin', js: true do
       dryad = create(:tenant_dryad)
       expect { @user = create(:user) }.to change(StashEngine::User, :count).by(1)
       visit stash_url_helpers.user_admin_path
@@ -68,45 +68,59 @@ RSpec.feature 'UserAdmin', type: :feature do
       expect(user_changed.tenant_id).to eq(dryad.id)
     end
 
-    it 'allows merging users as a superuser', js: true do
-      user = create(:user)
-      user2 = create(:user)
-      user_id = user.id
-      user2_id = user2.id
-      user_after = nil
-
-      # Set some fields nil so we can test that the merge result contains the non-nil fields
-      user.update(email: nil)
-      user2.update(orcid: nil)
-      target_email = user2.email
-      target_orcid = user.orcid
-
-      visit stash_url_helpers.user_admin_path
-      expect(page).to have_link(user.name)
-      expect(page).to have_link(user2.name)
-
-      # Click each select box
-      find("#user_ids_selections_#{user.id}").click
-      find("#user_ids_selections_#{user2.id}").click
-
-      # Do the merge dialog
-      click_button('Merge selected')
-      expect(page).to have_text('Merge users')
-      click_button('Merge')
-      expect(page).to have_text('Manage users')
-
-      sleep 1 # since it takes some time for async action to reflect in db
-      if StashEngine::User.all.map(&:id).include?(user_id)
-        expect(StashEngine::User.all.map(&:id)).not_to include(user2_id)
-        user_after = StashEngine::User.find(user_id)
-      else
-        expect(StashEngine::User.all.map(&:id)).to include(user2_id)
-        user_after = StashEngine::User.find(user2_id)
+    describe 'Merging' do
+      before(:each) do
+        @user = create(:user)
+        @user2 = create(:user)
       end
 
-      # user should be updated with new values
-      expect(user_after.email).to eq(target_email)
-      expect(user_after.orcid).to eq(target_orcid)
+      it 'does not allow merging users as a system_user', js: true do
+        visit stash_url_helpers.user_admin_path
+        expect(page).to have_link(@user.name)
+        expect(page).to have_link(@user2.name)
+        expect(page).not_to have_css("#user_ids_selections_#{@user.id}")
+        expect(page).not_to have_css("#user_ids_selections_#{@user2.id}")
+        expect(page).not_to have_button('Merge selected')
+      end
+
+      it 'allows merging users as a superuser', js: true do
+        user_id = @user.id
+        user2_id = @user2.id
+        # Set some fields nil so we can test that the merge result contains the non-nil fields
+        @user.update(email: nil)
+        @user2.update(orcid: nil)
+        target_email = @user2.email
+        target_orcid = @user.orcid
+
+        sign_in(create(:user, role: 'superuser'), false)
+
+        visit stash_url_helpers.user_admin_path
+        expect(page).to have_link(@user.name)
+        expect(page).to have_link(@user2.name)
+
+        # Click each select box
+        find("#user_ids_selections_#{@user.id}").click
+        find("#user_ids_selections_#{@user2.id}").click
+
+        # Do the merge dialog
+        click_button('Merge selected')
+        expect(page).to have_text('Merge users')
+        click_button('Merge')
+        expect(page).to have_text('Manage users')
+
+        sleep 1 # since it takes some time for async action to reflect in db
+        if StashEngine::User.all.map(&:id).include?(user_id)
+          expect(StashEngine::User.all.map(&:id)).not_to include(user2_id)
+          user_after = StashEngine::User.find(user_id)
+        else
+          expect(StashEngine::User.all.map(&:id)).to include(user2_id)
+          user_after = StashEngine::User.find(user2_id)
+        end
+
+        # user should be updated with new values
+        expect(user_after.email).to eq(target_email)
+        expect(user_after.orcid).to eq(target_orcid)
+      end
     end
 
     describe 'User admin - user profile page' do
@@ -118,7 +132,7 @@ RSpec.feature 'UserAdmin', type: :feature do
           visit stash_url_helpers.user_admin_profile_path(@user.id)
         end
 
-        it 'allows changing user email as a superuser', js: true do
+        it 'allows changing user email as a system admin', js: true do
           expect(page).to have_content(@user.name)
           within(:css, "form[action=\"#{stash_url_helpers.user_popup_path(id: @user.id, field: 'email')}\"]") do
             find('.c-admin-edit-icon').click
@@ -132,7 +146,7 @@ RSpec.feature 'UserAdmin', type: :feature do
           expect(user_changed.email).to eq('new-email@example.org')
         end
 
-        it 'allows changing user tenant as a superuser', js: true do
+        it 'allows changing user tenant as a system admin', js: true do
           expect(page).to have_content(@user.name)
           within(:css, "form[action=\"#{stash_url_helpers.user_popup_path(id: @user.id, field: 'tenant_id')}\"]") do
             find('.c-admin-edit-icon').click
@@ -178,7 +192,7 @@ RSpec.feature 'UserAdmin', type: :feature do
             visit "#{stash_url_helpers.user_admin_profile_path(@user.id)}#edit_roles"
           end
 
-          it 'allows the superuser to set the system role' do
+          it 'allows the system admin to set the system role' do
             find('#role_admin').set(true)
             find('input[name=commit]').click
             expect(page.find("#user_role_#{@user.id}")).to have_text('Admin')
@@ -186,11 +200,11 @@ RSpec.feature 'UserAdmin', type: :feature do
             expect(user_changed.roles.system_roles.first.role).to eq('admin')
           end
 
-          it 'allows the superuser to add the tenant role form' do
+          it 'allows the system admin to add the tenant role form' do
             find_button('Add a tenant role').click
             expect(page).to have_text('Tenant roles')
           end
-          it 'allows the superuser to set the tenant role' do
+          it 'allows the system admin to set the tenant role' do
             find_button('Add a tenant role').click
             find('#tenant_role_admin').set(true)
             find('input[name=commit]').click
@@ -199,11 +213,11 @@ RSpec.feature 'UserAdmin', type: :feature do
             expect(user_changed.roles.tenant_roles.first.role).to eq('admin')
           end
 
-          it 'allows the superuser to add the publisher role form' do
+          it 'allows the system admin to add the publisher role form' do
             find_button('Add a publisher role').click
             expect(page).to have_text('Publisher roles')
           end
-          it 'allows the superuser to set the publisher role' do
+          it 'allows the system admin to set the publisher role' do
             find_button('Add a publisher role').click
             find('#publisher_role_admin').set(true)
             find('input[name=commit]').click
@@ -212,7 +226,7 @@ RSpec.feature 'UserAdmin', type: :feature do
             expect(user_changed.roles.journal_org_roles.first.role).to eq('admin')
           end
 
-          it 'allows the superuser to add the journal role form' do
+          it 'allows the system admin to add the journal role form' do
             find_button('Add a journal role').click
             expect(page).to have_text('Journal roles')
           end

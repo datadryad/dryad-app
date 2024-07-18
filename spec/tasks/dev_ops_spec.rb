@@ -93,10 +93,11 @@ describe 'dev_ops:download_uri', type: :task do
     end
 
     it 'updates the database download_uri and update_uri' do
+      Timecop.travel(Time.parse('2020-10-11').utc)
       resource = create(:resource)
-      old_time = Time.parse('2020-10-11').utc
+      old_time = resource.updated_at
       old_update_uri = resource.update_uri
-      resource.update(updated_at: old_time)
+      Timecop.return
       # the throwaway resource is just to obtain another download_uri and ark to test for the new_ark and transformation
       throwaway_resource = create(:resource)
       expect(resource.download_uri).not_to eq(throwaway_resource.download_uri)

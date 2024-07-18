@@ -6,7 +6,7 @@ module StashEngine
     end
 
     def popup?
-      @user.superuser?
+      @user.system_admin?
     end
 
   end

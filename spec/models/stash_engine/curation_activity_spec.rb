@@ -58,6 +58,7 @@ module StashEngine
 
     describe :submit_to_datacite do
       before(:each) do
+        Timecop.travel(Time.now.utc - 1.minute)
         @user = create(:user)
         @identifier = create(:identifier)
         @resource = create(:resource, identifier_id: @identifier.id)
@@ -70,6 +71,7 @@ module StashEngine
         allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
 
         @curation_activity1 = create(:curation_activity, resource: @resource)
+        Timecop.return
       end
 
       it 'does submit when Published is set' do

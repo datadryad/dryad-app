@@ -21,10 +21,12 @@ module Stash
       include WebmocksHelper # drops the helper methods for the class into the testing instance
 
       before(:each) do
+        Timecop.travel(Time.now.utc - 1.minute)
         @resource = create(:resource)
         @zc = create(:zenodo_copy, resource: @resource, identifier: @resource.identifier, copy_type: 'software')
         @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc.id, dataset_type: :software)
         @file = create(:software_file, resource_id: @resource.id)
+        Timecop.return
         stub_new_access_token
         WebMock.disable_net_connect!(allow_localhost: true)
       end

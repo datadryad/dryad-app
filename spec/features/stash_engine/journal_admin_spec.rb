@@ -5,8 +5,8 @@ RSpec.feature 'JournalAdmin', type: :feature do
     before(:each) do
       create(:tenant)
       3.times { @journal = create(:journal) }
-      @superuser = create(:user, role: 'superuser', tenant_id: 'dryad')
-      sign_in(@superuser, false)
+      @system_admin = create(:user, role: 'admin')
+      sign_in(@system_admin, false)
     end
 
     it 'allows filtering by sponsor', js: true do
@@ -21,7 +21,7 @@ RSpec.feature 'JournalAdmin', type: :feature do
       expect(page).not_to have_content(@journal.title)
     end
 
-    it 'allows changing ISSNs as a superuser', js: true do
+    it 'allows changing ISSNs as a system admin', js: true do
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)
       within(:css, "form[action=\"#{journal_popup_path(id: @journal.id, field: 'issn')}\"]") do
@@ -36,7 +36,7 @@ RSpec.feature 'JournalAdmin', type: :feature do
       expect(changed.issn_array).to include('1111-2222')
     end
 
-    it 'allows changing notify contacts as a superuser', js: true do
+    it 'allows changing notify contacts as a system admin', js: true do
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)
       within(:css, "form[action=\"#{journal_popup_path(id: @journal.id, field: 'notify_contacts')}\"]") do
@@ -51,7 +51,7 @@ RSpec.feature 'JournalAdmin', type: :feature do
       expect(changed.notify_contacts).to include('test@email.com')
     end
 
-    it 'allows changing review contacts as a superuser', js: true do
+    it 'allows changing review contacts as a system admin', js: true do
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)
       within(:css, "form[action=\"#{journal_popup_path(id: @journal.id, field: 'review_contacts')}\"]") do
@@ -66,7 +66,7 @@ RSpec.feature 'JournalAdmin', type: :feature do
       expect(changed.review_contacts).to include('test@email.com')
     end
 
-    it 'allows changing ppr default as a superuser', js: true do
+    it 'allows changing ppr default as a system admin', js: true do
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)
       within(:css, "form[action=\"#{journal_popup_path(id: @journal.id, field: 'default_to_ppr')}\"]") do
@@ -81,7 +81,7 @@ RSpec.feature 'JournalAdmin', type: :feature do
       expect(changed.default_to_ppr).to be true
     end
 
-    it 'allows changing sponsor as a superuser', js: true do
+    it 'allows changing sponsor as a system admin', js: true do
       org = create(:journal_organization)
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)

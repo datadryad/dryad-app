@@ -18,13 +18,14 @@ describe FixInProgressResources do
     ident_count = 3
     identifiers = Array.new(ident_count) { |i| StashEngine::Identifier.create(identifier: "10.123/#{i}") }
     identifiers.each do |ident|
+      Timecop.travel(Time.now.utc - 1.minute)
       r1 = create(:resource, identifier_id: ident.id)
       r1.current_state = 'submitted'
       r1.save
       v1 = r1.stash_version
       expect(v1.version).to eq(1) # just to be sure
       expect(v1.merritt_version).to eq(1) # just to be sure
-
+      Timecop.return
       r2 = r1.amoeba_dup
       r2.save
       expect(r2.current_state).to eq('in_progress') # just to be sure

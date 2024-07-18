@@ -9,19 +9,9 @@
   </table>
 </div>
 
-<div class="search-results-footer">
-  <div class="c-space-paginator">
-    <% pagination = Kaminari.paginate_array([], total_count: session[:admin_search_count]).page(@page).per(@page_size) %>
-    <%= paginate pagination, params: {fields: nil, filters: nil, q: nil, page_size: @page_size}, remote: true %>
-    <div class="c-paginator-page_size">
-      Page size:
-      <%[10, 50, 100].each do |ps| %>
-        <% if ps == @page_size %>
-          <span class="page-current"><%= ps %></span>
-        <% else %>
-          <%= link_to(ps, stash_url_helpers.admin_dashboard_results_path(request.parameters.except(:action, :controller, :authenticity_token, :fields, :filters, :q).merge(page_size: ps, page: 1)), remote: true) %>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
+<div class="search-results-footer" id="admin-pagination">
+  <%= form_with(url: admin_dashboard_count_path(format: :js, page: @page, page_size: @page_size, sort: @sort, direction: params[:direction], search: params[:search]), method: :post, local: false, id: 'count_form') do %>
+    <input type="hidden" name="sql" value="<%= @sql %>"/>
+    <button type="submit" id="count_form_button" hidden/>
+  <% end %>
 </div>
