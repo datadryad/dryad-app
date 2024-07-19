@@ -43,6 +43,9 @@ module StashEngine
     has_many :manuscript_datum, -> { where(data_type: 'manuscriptNumber') }, class_name: 'StashEngine::InternalDatum'
     has_many :manuscripts, through: :manuscript_datum
     has_one :journal_datum, -> { where(data_type: 'publicationISSN').order(created_at: :desc).limit(1) }, class_name: 'StashEngine::InternalDatum'
+    has_one :journal_name_datum, -> {
+                                   where(data_type: 'publicationName').order(created_at: :desc).limit(1)
+                                 }, class_name: 'StashEngine::InternalDatum'
     has_one :journal_issn, through: :journal_datum
     has_one :journal, through: :journal_issn
     has_many :external_references, class_name: 'StashEngine::ExternalReference', dependent: :destroy
