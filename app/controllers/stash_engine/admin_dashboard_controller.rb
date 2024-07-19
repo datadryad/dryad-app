@@ -90,7 +90,8 @@ module StashEngine
       delete_calculation_date = params.dig(:process_date, :delete_calculation_date)
       return error_response('Date can not be blank') if delete_calculation_date.blank?
 
-      params[:curation_activity][:note] = "Changed deletion reference date to #{delete_calculation_date}. #{params[:curation_activity][:note]}".html_safe
+      params[:curation_activity][:note] =
+        "Changed deletion reference date to #{delete_calculation_date}. #{params[:curation_activity][:note]}".html_safe
       curation_activity_change
 
       @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
