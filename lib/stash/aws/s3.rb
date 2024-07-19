@@ -58,7 +58,8 @@ module Stash
         if filename.nil?
           object.presigned_url(:get, expires_in: 1.day.to_i)
         else
-          object.presigned_url(:get, expires_in: 1.day.to_i, response_content_disposition: "attachment; filename=#{filename}")
+          object.presigned_url(:get, expires_in: 1.day.to_i,
+                                     response_content_disposition: "attachment; filename=#{URI.encode_www_form_component(filename)}")
         end
       end
 
