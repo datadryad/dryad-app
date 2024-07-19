@@ -7,7 +7,7 @@ module StashEngine
     before_action :setup_paging, only: %i[results]
     before_action :setup_limits, only: %i[index results]
     before_action :setup_search, only: %i[index results]
-    before_action :load, only: %i[edit update]
+    before_action :load, only: %i[edit update edit_delete_reference_date update_delete_reference_date]
 
     def index; end
 
@@ -77,6 +77,25 @@ module StashEngine
     def update
       curation_activity_change if @field == 'curation_activity'
       current_editor_change if @field == 'current_editor'
+      respond_to(&:js)
+    end
+
+    def edit_delete_reference_date
+      @desc = 'Edit dataset deletion date reference'
+      @process_date = @identifier.process_date
+      respond_to(&:js)
+    end
+
+    def update_delete_reference_date
+      delete_calculation_date = params.dig(:process_date, :delete_calculation_date)
+      return error_response('Date can not be blank') if delete_calculation_date.blank?
+
+      params[:curation_activity][:note] = "Changed deletion reference date to #{delete_calculation_date}. #{params[:curation_activity][:note]}".html_safe
+      curation_activity_change
+
+      @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
+      @resource.process_date.update(delete_calculation_date: delete_calculation_date)
+      @curation_activity = @resource.last_curation_activity
       respond_to(&:js)
     end
 
@@ -405,6 +424,13 @@ module StashEngine
       @resource.reload
     end
 
+  end
+
+  def error_response(message)
+    @error_message = <<-HTML.chomp.html_safe
+      #{message}
+    HTML
+    render :curation_activity_error
   end
   # rubocop:enable Metrics/ClassLength
 end

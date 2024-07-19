@@ -11,7 +11,8 @@ class PopulateLastStatusDate < ActiveRecord::Migration[7.0]
           break if status != item[0]
           date = item[1]
         end
-        res.process_date.update_column(:last_status_date, date)
+        res.process_date.update_columns(last_status_date: date, delete_calculation_date: date)
+        res.identifier.process_date.update_columns(delete_calculation_date: date)
       end
     end
   end

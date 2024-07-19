@@ -13,7 +13,7 @@ module StashEngine
     def send_in_progress_reminders
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'in_progress' })
-        .where(stash_engine_process_dates: { last_status_date: 1.year.ago.beginning_of_day..1.months.ago.end_of_day })
+        .where(stash_engine_process_dates: { delete_calculation_date: 1.year.ago.beginning_of_day..1.months.ago.end_of_day })
         .each do |resource|
         reminder_flag = 'in_progress_deletion_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
@@ -37,7 +37,7 @@ module StashEngine
     def send_action_required_reminders
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'action_required' })
-        .where(stash_engine_process_dates: { last_status_date: 1.year.ago.beginning_of_day..1.months.ago.end_of_day })
+        .where(stash_engine_process_dates: { delete_calculation_date: 1.year.ago.beginning_of_day..1.months.ago.end_of_day })
         .each do |resource|
 
         reminder_flag = 'action_required_deletion_notice'
@@ -63,7 +63,7 @@ module StashEngine
     def send_peer_review_reminders
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'peer_review' })
-        .where(stash_engine_process_dates: { last_status_date: 1.year.ago.beginning_of_day..6.months.ago.end_of_day })
+        .where(stash_engine_process_dates: { delete_calculation_date: 1.year.ago.beginning_of_day..6.months.ago.end_of_day })
         .each do |resource|
 
         reminder_flag = 'peer_review_deletion_notice'
@@ -85,7 +85,7 @@ module StashEngine
     def send_withdrawn_notification
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: %w[peer_review action_required] })
-        .where(stash_engine_process_dates: { last_status_date: 1.year.ago.beginning_of_day..1.year.ago.end_of_day })
+        .where(stash_engine_process_dates: { delete_calculation_date: 1.year.ago.beginning_of_day..1.year.ago.end_of_day })
         .each do |resource|
 
         reminder_flag = 'withdrawn_email_notice'
@@ -93,7 +93,7 @@ module StashEngine
         next if last_reminder.present?
 
         status_updated = create_activity(reminder_flag, resource, status: 'withdrawn',
-          note: "#{reminder_flag} - notification that this item was set to `withdrawn`")
+                                                                  note: "#{reminder_flag} - notification that this item was set to `withdrawn`")
 
         if status_updated
           log("Mailing submitter about setting dataset to withdrawn. #{resource_log_text(resource)}")
@@ -111,7 +111,7 @@ module StashEngine
     def send_final_withdrawn_notification
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'withdrawn' })
-        .where('stash_engine_process_dates.last_status_date <= ?', 9.months.ago.end_of_day)
+        .where('stash_engine_process_dates.delete_calculation_date <= ?', 9.months.ago.end_of_day)
         .each do |resource|
         next if resource.curation_activities.pluck(:status).uniq.include?('published')
 

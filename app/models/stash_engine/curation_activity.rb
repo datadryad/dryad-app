@@ -113,9 +113,9 @@ module StashEngine
                  if: proc { |ca| ca.published? && curation_status_changed? && !resource.skip_emails }
 
     after_create :update_salesforce_metadata, if: proc { |_ca|
-                                                    curation_status_changed? &&
-                                                         CurationActivity.where(resource_id: resource_id).count > 1
-                                                  }
+      curation_status_changed? &&
+        CurationActivity.where(resource_id: resource_id).count > 1
+    }
 
     # Class methods
     # ------------------------------------------
@@ -187,6 +187,7 @@ module StashEngine
 
     # Private methods
     # ------------------------------------------
+
     private
 
     # Callbacks
@@ -227,7 +228,10 @@ module StashEngine
     end
 
     def process_dates
-      update_dates = { last_status_date: Time.current }
+      update_dates = { last_status_date: created_at }
+      # update delete_calculation_date if the status changed after the date set by the curators
+      update_dates[:delete_calculation_date] = delete_calculation_date_value
+
       if first_time_in_status?
         case status
         when 'processing', 'peer_review', 'submitted', 'withdrawn'
@@ -406,6 +410,13 @@ module StashEngine
       return user.name unless user.nil?
 
       'System'
+    end
+
+    def delete_calculation_date_value
+      existing_date = resource.identifier.process_date[:delete_calculation_date]
+      return created_at if existing_date.blank?
+
+      [created_at, existing_date].max
     end
   end
 end

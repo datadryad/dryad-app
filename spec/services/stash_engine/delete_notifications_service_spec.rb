@@ -232,18 +232,18 @@ module StashEngine
       end
 
       context 'when status date is older then 1 year' do
-        it "creates withdrawn activity notification at 1 year" do
+        it 'creates withdrawn activity notification at 1 year' do
           Timecop.travel(1.year.from_now)
 
           expect(subject).to receive(:create_activity).with('withdrawn_email_notice', resource, {
-            note: "withdrawn_email_notice - notification that this item was set to `withdrawn`",
-            status: "withdrawn"
-          }).once
+                                                              note: 'withdrawn_email_notice - notification that this item was set to `withdrawn`',
+                                                              status: 'withdrawn'
+                                                            }).once
 
           subject.send_withdrawn_notification
         end
 
-        it "sends notification email at 1 year" do
+        it 'sends notification email at 1 year' do
           Timecop.travel(1.year.from_now)
 
           expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification, :deliver_now).with(resource).with(no_args)
@@ -286,21 +286,22 @@ module StashEngine
         end
 
         context 'when status date is older then 1 year' do
-          it "creates withdrawn activity notification at 1 year" do
+          it 'creates withdrawn activity notification at 1 year' do
             Timecop.travel(1.year.from_now)
 
             expect(subject).to receive(:create_activity).with('withdrawn_email_notice', resource, {
-              note: "withdrawn_email_notice - notification that this item was set to `withdrawn`",
-              status: "withdrawn"
-            }).once
+                                                                note: 'withdrawn_email_notice - notification that this item was set to `withdrawn`',
+                                                                status: 'withdrawn'
+                                                              }).once
 
             subject.send_withdrawn_notification
           end
 
-          it "sends notification email at 1 year" do
+          it 'sends notification email at 1 year' do
             Timecop.travel(1.year.from_now)
 
-            expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification, :deliver_now).with(resource).with(no_args)
+            expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification,
+                                                                         :deliver_now).with(resource).with(no_args)
 
             subject.send_withdrawn_notification
           end
@@ -339,21 +340,22 @@ module StashEngine
         end
 
         context 'when status date is older then 1 year' do
-          it "creates withdrawn activity notification at 1 year" do
+          it 'creates withdrawn activity notification at 1 year' do
             Timecop.travel(1.year.from_now)
 
             expect(subject).to receive(:create_activity).with('withdrawn_email_notice', resource, {
-              note: "withdrawn_email_notice - notification that this item was set to `withdrawn`",
-              status: "withdrawn"
-            }).once
+                                                                note: 'withdrawn_email_notice - notification that this item was set to `withdrawn`',
+                                                                status: 'withdrawn'
+                                                              }).once
 
             subject.send_withdrawn_notification
           end
 
-          it "sends notification email at 1 year" do
+          it 'sends notification email at 1 year' do
             Timecop.travel(1.year.from_now)
 
-            expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification, :deliver_now).with(resource).with(no_args)
+            expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification,
+                                                                         :deliver_now).with(resource).with(no_args)
 
             subject.send_withdrawn_notification
           end
@@ -384,7 +386,7 @@ module StashEngine
 
       context 'when status date is sooner then 9 months' do
         it 'does not send notification email' do
-          Timecop.travel(9.months.from_now-1.day)
+          Timecop.travel(9.months.from_now - 1.day)
           expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).never
           expect(subject).to receive(:create_activity).never
 
@@ -393,7 +395,7 @@ module StashEngine
       end
 
       context 'when status date is older then 9 months' do
-        it "sends notification email at 9 months" do
+        it 'sends notification email at 9 months' do
           Timecop.travel(9.months.from_now)
 
           expect(StashEngine::ResourceMailer).to receive_message_chain(:send_final_withdrawn_notification, :deliver_now).with(resource).with(no_args)
