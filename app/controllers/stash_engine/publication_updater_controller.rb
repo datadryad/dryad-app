@@ -4,6 +4,7 @@ module StashEngine
     before_action :require_user_login
     before_action :setup_paging, only: [:index]
     before_action :setup_filter, only: [:index]
+    before_action :check_status, only: %i[update destroy]
 
     CONCAT_FOR_SEARCH = <<~SQL.freeze
        JOIN
@@ -62,8 +63,6 @@ module StashEngine
 
     def update
       respond_to do |format|
-        @proposed_change = authorize StashEngine::ProposedChange.find(params[:id])
-        @resource = @proposed_change.identifier&.latest_resource if @proposed_change.present?
         @proposed_change.approve!(current_user: current_user, approve_type: params['stash_engine_proposed_change']['related_type'])
         @proposed_change.reload
         format.js
@@ -72,8 +71,6 @@ module StashEngine
 
     def destroy
       respond_to do |format|
-        @proposed_change = authorize StashEngine::ProposedChange.find(params[:id])
-        @resource = @proposed_change.identifier&.latest_resource if @proposed_change.present?
         @proposed_change.reject!(current_user: current_user)
         @proposed_change.reload
         format.js
@@ -104,6 +101,12 @@ module StashEngine
       @preprint_count = proposed_changes.where('stash_engine_proposed_changes.publication_issn is null').count('*')
     end
 
+    def check_status
+      @proposed_change = authorize StashEngine::ProposedChange.find(params[:id])
+      @resource = @proposed_change.identifier&.latest_resource if @proposed_change.present?
+      refresh_error if @proposed_change.approved? || @proposed_change.rejected?
+    end
+
     def add_param_filters(proposed_changes)
       if params[:list_search].present?
         proposed_changes = proposed_changes.joins(CONCAT_FOR_SEARCH)
@@ -125,6 +128,14 @@ module StashEngine
       end
 
       proposed_changes
+    end
+
+    def refresh_error
+      @error_message = <<-HTML.chomp.html_safe
+        <p>This proposed change has already been processed.</p>
+        <p>Close this dialog to refresh the publication updater results.</p>
+      HTML
+      render :refresh_error
     end
 
   end

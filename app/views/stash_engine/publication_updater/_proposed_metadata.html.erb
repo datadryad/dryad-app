@@ -1,10 +1,8 @@
 <% options = [
-  ['Primary', 'primary_no_metadata'],
-  ['Primary + metadata', 'primary'],
-  ['Related + metadata', 'related_no_metadata'],
+  ['Primary', 'primary'],
   ['Related article', 'related'],
 ]
-options.insert(params[:match_type] == 'preprints' ? 0 : 2, ['Preprint + metadata', 'preprint'], ['Preprint', 'preprint_no_metadata'])
+options.insert(params[:match_type] == 'preprints' ? 0 : 2, ['Preprint', 'preprint'])
 %>
 
 <td>

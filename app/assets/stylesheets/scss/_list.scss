@@ -1,5 +1,10 @@
 // ##### List Object ##### //
 
+li {
+	margin-top: $spacing-base;
+	margin-bottom: $spacing-base;
+}
+
 .o-list {
 	margin: 0 0 10px;
 	padding: 0;

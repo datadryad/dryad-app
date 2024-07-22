@@ -61,22 +61,30 @@ module StashEngine
     end
 
     def approve!(current_user:, approve_type:)
-      # values are primary, primary_no_metadata, preprint, preprint_no_metadata, related, related_no_metadata
-      dropdown_to_type = { primary: 'primary_article', related: 'article', preprint: 'preprint' }.with_indifferent_access
-
-      bare_approve_type = approve_type.to_s.gsub('_no_metadata', '')
-      return false if dropdown_to_type[bare_approve_type].blank?
-
-      article_type = dropdown_to_type[bare_approve_type]
-      update_type = (approve_type.to_s.end_with?('_no_metadata') ? 'relationship' : 'metadata')
-
       return false if current_user.blank? || !current_user.is_a?(StashEngine::User)
 
-      cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
-      resource = cr.populate_pub_update!(article_type: article_type, update_type: update_type)
+      dropdown_to_type = { primary: 'primary_article', related: 'article', preprint: 'preprint' }.with_indifferent_access
+      article_type = dropdown_to_type[approve_type]
+      prim_art = latest_resource.related_identifiers.primary_article.first
 
-      add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, resource)
-      release_updated_resource(resource) if resource.current_curation_status == 'peer_review' && article_type == 'primary_article'
+      if article_type == 'primary_article' && prim_art.present?
+        prim_art.update(related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(publication_doi))
+      else
+        latest_resource.related_identifiers << StashDatacite::RelatedIdentifier.create(
+          related_identifier: StashDatacite::RelatedIdentifier.standardize_doi(publication_doi),
+          related_identifier_type: 'doi',
+          work_type: article_type,
+          relation_type: 'iscitedby'
+        )
+      end
+
+      if article_type == 'primary_article'
+        cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
+        cr.populate_pub_update!
+        release_updated_resource(latest_resource) if latest_resource.current_curation_status == 'peer_review'
+      end
+
+      add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, latest_resource)
       update(approved: true, user_id: current_user.id)
       true
     end
@@ -106,6 +114,5 @@ module StashEngine
         note: "#{provenance.capitalize} #{CROSSREF_UPDATE_MESSAGE}"
       )
     end
-
   end
 end

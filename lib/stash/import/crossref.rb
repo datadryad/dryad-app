@@ -52,19 +52,12 @@ module Stash
         end
 
         def from_proposed_change(proposed_change:)
-          pro = proposed_change
-          return new(resource: nil, crossref_json: {}) unless pro.is_a?(StashEngine::ProposedChange)
+          return new(resource: nil, crossref_json: {}) unless proposed_change.is_a?(StashEngine::ProposedChange)
 
           identifier = StashEngine::Identifier.find(proposed_change.identifier_id)
           message = {
-            'DOI' => pro.publication_doi,
-            'publisher' => pro.publication_name,
-            'ISSN' => [pro.publication_issn],
-            'title' => [pro.title],
-            'URL' => pro.url,
-            'score' => pro.score,
-            'provenance_score' => pro.provenance_score,
-            'subject' => (pro.subjects.present? ? JSON.parse(pro.subjects) : [])
+            'publisher' => proposed_change.publication_name,
+            'ISSN' => [proposed_change.publication_issn]
           }
           new(resource: identifier.latest_resource, crossref_json: message)
         end
@@ -81,16 +74,11 @@ module Stash
       # populate just a few fields for pub_updater, this isn't as drastic as below and is only for pub updater.
       # to ONLY populate the relationship, use update_type: 'relationship'
       # article types accepted are 'primary_article', 'article', 'preprint'
-      def populate_pub_update!(article_type: 'primary_article', update_type: 'metadata')
+      def populate_pub_update!
         return nil unless @sm.present? && @resource.present?
 
-        populate_article_type(article_type: article_type)
-        if update_type == 'metadata'
-          populate_publication_issn
-          populate_publication_name
-          populate_subjects
-        end
-
+        populate_publication_issn
+        populate_publication_name
         @resource.reload
       end
 
@@ -394,22 +382,15 @@ module Stash
 
       def populate_publication_name
         return unless publisher.present?
-
         # We do not want to overwrite correct journal names with nonstandardized names for the same journal
         # only update the journal name if the dataset is not already set with this journal
-        if @sm['ISSN'].present? && @sm['ISSN'].first.present?
-          issndatum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
-                                                                       data_type: 'publicationISSN')
-          if issndatum.present? && StashEngine::Journal.find_by_issn(@sm['ISSN'].first).present? &&
-            (StashEngine::Journal.find_by_issn(issndatum.value).id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first).id)
-            return
-          end
-        end
+        return if @sm['ISSN'].present? && @sm['ISSN'].first.present? &&
+          @resource.identifier.journal_datum.present? && @resource.identifier.journal.present? &&
+          @resource.identifier.journal.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first)&.id
 
         datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
                                                                  data_type: 'publicationName')
         datum.update(value: publisher)
-
         journal = StashEngine::Journal.find_by_title(publisher)
         return unless journal.present?
 

@@ -4,7 +4,7 @@
   <p><strong>Status:</strong> <%= StashEngine::CurationActivity.readable_status(resource.current_curation_status) %></p>
 </td>
 <td><%= existing_pubname %></td>
-<td><%= existing_pubissn %></td>
+<td><%= existing_pubissn.is_a?(Array) ? existing_pubissn.join(', ') : existing_pubissn %></td>
 <td><%= existing_pubdoi %></td>
 <td><%= formatted_date(resource.publication_date) %></td>
 <td><%= existing_authors(resource: resource)&.join('<br/>')&.html_safe %></td>

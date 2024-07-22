@@ -2,17 +2,17 @@
 <h1 class="o-heading__level1">Publication updater</h1>
 
 <div>
-  <p>The publication updater will try to match a dataset's publication DOI (if available). If Crossref finds a match for the DOI then the 'Scores' column will display "1 (DOI match)". In the event that no publication DOI was available, the publication updater will then send the dataset's title and authors to Crossref. In this situation, the 'Scores' column will display Crossref's scoring of the closest match it found (in parenthesis) and the publication updater's internal score that is based on matching against the title and author list returned by Crossref</p>
+  <p>Matches are based on the title and author list returned by Crossref.</p>
   <h2>Instructions</h2>
   <ol>
     <li>Evaluate the relationship between the dataset and the publication</li>
     <li>If the publication should not be associated with the dataset, click "Reject"</li>
-    <li>Otherwise, decide on a related work type for the publication: primary (article), preprint, or related (article)</li>
-    <li>Decide whether to also overwrite existing dataset metadata (limited to: ISSN, publication name, and subjects)</li>
-    <li>Make your selection for type and metadata import from the dropdown, and click "Accept"</li>
+    <li>Otherwise, decide on a related work type for the publication: Primary, Related article, or Preprint
+      <br/>Note: <span class="callout" style="padding: .3rem .4rem">Choosing "Primary" will update the dataset Publication, and will release a dataset in PPR for curation</span></li>
+    <li>Make your type selection from the dropdown, and click "Accept"</li>
   </ol>
 
-  <div style="display: flex; align-items: baseline; column-gap: 30px; flex-wrap: wrap">
+  <div style="display: flex; align-items: baseline; column-gap: 30px; flex-wrap: wrap; margin-top: 2rem">
   <h2 class="o-heading__level2">Limit to</h2>
     <ul class="c-header__nav-group" style="height: 22.2667px; font-size: 1rem;">
       <% 
