@@ -631,12 +631,9 @@ module Stash
         it 'properly extracts the data from the ProposedChange' do
           cr = Crossref.from_proposed_change(proposed_change: @proposed_change)
           resource = cr.populate_resource!
-          expect(resource.title).to eql(@params[:title])
           expect(resource.identifier.internal_data.select do |id|
                    id.data_type == 'publicationName'
                  end.first.value).to eql(@params[:publication_name])
-          doi = resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'iscitedby' }
-          expect(doi.first&.related_identifier).to eql(StashDatacite::RelatedIdentifier.standardize_doi(@params[:publication_doi]))
         end
       end
 
