@@ -1,0 +1,5 @@
+document.getElementById('genericModalContent').innerHTML = '<h1>Update error!</h1><%= escape_javascript(@error_message) %>';
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('genericModalDialog').addEventListener('close', () => {
+  window.location.reload();
+});
