@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
 
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.local? || Rails.env.v3_development?
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
@@ -90,7 +92,7 @@ Rails.application.routes.draw do
     match '/search', to: 'datasets#search', via: %i[get]
     get '/reports', to: 'api#reports_index'
     get '/reports(/:report_name)', to: 'api#reports'
-    
+
     # Support for the Editorial Manager API
     match '/em_submission_metadata(/:id)', constraints: { id: /\S+/ }, to: 'datasets#em_submission_metadata', via: %i[post put]
 
@@ -113,16 +115,16 @@ Rails.application.routes.draw do
         end
         resources :processor_results, only: [:show, :index, :create, :update]
       end
-            
+
       resources :urls, shallow: true, path: '/urls', only: [:create]
     end
-  
+
     # this one doesn't follow the pattern since it gloms filename on the end, so manual route
     # supporting both POST and PUT for updating the file to ensure as many clients as possible can use this end point
     match '/datasets/:id/files/:filename', to: 'files#update', as: 'dataset_file', constraints: { id: %r{[^\s/]+?}, filename: %r{[^\s/]+?} }, format: false, via: %i[post put]
 
     resources :users, path: '/users', only: %i[index show]
-    
+
     get '/queue_length', to: 'submission_queue#length'
   end
 
@@ -136,7 +138,7 @@ Rails.application.routes.draw do
 
   ########################## StashEngine support ######################################
 
-  scope module: 'stash_engine', path: '/stash' do    
+  scope module: 'stash_engine', path: '/stash' do
 
     get 'landing/show'
 
@@ -159,21 +161,21 @@ Rails.application.routes.draw do
     end
     match 'identifier_internal_data/:identifier_id', to: 'internal_data#create', as: 'internal_data_create', via: %i[get post put]
     resources :internal_data, shallow: true, as: 'stash_engine_internal_data'
-    
+
     resources :tenants, only: %i[index show]
     resources :data_files, :software_files, :supp_files do
       member do
         patch 'destroy_manifest' # destroy file from manifest method
       end
     end
-    
+
     resources :edit_histories, only: [:index]
 
     # these are weird and different and want to get rid of these with file redesign
     match 'data_file/validate_urls/:resource_id', to: 'data_files#validate_urls', as: 'data_file_validate_urls', via: %i[get post put]
     match 'software_file/validate_urls/:resource_id', to: 'software_files#validate_urls', as: 'software_file_validate_urls', via: %i[get post put]
     match 'supp_file/validate_urls/:resource_id', to: 'supp_files#validate_urls', as: 'supp_file_validate_urls', via: %i[get post put]
-    
+
     get 'data_file/presign_upload/:resource_id', to: 'data_files#presign_upload', as: 'data_file_presign_url'
     get 'software_file/presign_upload/:resource_id', to: 'software_files#presign_upload', as: 'software_file_presign_url'
     get 'supp_file/presign_upload/:resource_id', to: 'supp_files#presign_upload', as: 'supp_file_presign_url'
@@ -191,7 +193,7 @@ Rails.application.routes.draw do
     get 'generic_file/check_frictionless/:resource_id',
         to: 'generic_files#check_frictionless',
         as: 'generic_file_check_frictionless'
-    
+
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
     get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
@@ -199,7 +201,7 @@ Rails.application.routes.draw do
     get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
     get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
     get 'react_basics', to: 'dashboard#react_basics', as: 'react_basics'
-    
+
     # download related
     match 'downloads/zip_assembly_info/:resource_id', to: 'downloads#zip_assembly_info', as: 'zip_assembly_info', via: %i[get post]
     match 'downloads/download_resource/:resource_id', to: 'downloads#download_resource', as: 'download_resource', via: %i[get post]
@@ -209,31 +211,31 @@ Rails.application.routes.draw do
     get 'downloads/preview_csv/:file_id', to: 'downloads#preview_csv', as: 'preview_csv'
     get 'share/:id', to: 'downloads#share', as: 'share'
     get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
-    
+
     get 'edit/:doi/:edit_code', to: 'metadata_entry_pages#edit_by_doi', as: 'edit', constraints: { doi: /\S+/ }
     match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
     match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
     post 'metadata_entry_pages/new_version_from_previous', to: 'metadata_entry_pages#new_version_from_previous'
     match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:delete]
     match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
-    
+
     # root 'sessions#index'
     root 'pages#home', as: 'pages_root'
-    
+
     match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: %i[get post]
     match 'auth/google_oauth2/callback', to: 'sessions#google_callback', via: %i[get post]
     match 'auth/developer/callback', to: 'sessions#developer_callback', via: %i[get post]
     match 'auth/:provider/callback', to: 'sessions#callback', via: %i[get post]
     match 'session/test_login', to: 'sessions#test_login', via: [:get, :post],  as: 'test_login'
-    
+
     match 'terms/view', to: 'dashboard#view_terms', via: %i[get post]
-    
+
     get 'auth/failure', to: redirect('/')
     match 'sessions/destroy', to: 'sessions#destroy', via: %i[get post]
     get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
     get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
     match 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner', via: [:get, :post]
-    post 'sessions/sso', to: 'sessions#sso', as: 'sso'    
+    post 'sessions/sso', to: 'sessions#sso', as: 'sso'
     get 'feedback', to: 'sessions#feedback', as: 'feedback'
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
 
@@ -274,14 +276,14 @@ Rails.application.routes.draw do
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
-    
+
     # user management
     get 'account', to: 'user_account#index', as: 'my_account'
     post 'account/edit', to: 'user_account#edit', as: 'edit_account'
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     # page for viewing a single user
-    get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile' 
+    get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile'
     post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
     # admin editing user
     get 'user_admin/merge', to: 'user_admin#merge_popup', as: 'user_merge_popup'
@@ -330,19 +332,19 @@ Rails.application.routes.draw do
 
     # admin report for dataset funders
     get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'
-    
+
     # routing for submission queue controller
     get 'submission_queue', to: 'submission_queue#index'
     get 'submission_queue/refresh_table', to: 'submission_queue#refresh_table'
     get 'submission_queue/graceful_start', to: 'submission_queue#graceful_start', as: 'graceful_start'
-    
+
     # routing for zenodo_queue
     get 'zenodo_queue', to: 'zenodo_queue#index', as: 'zenodo_queue'
     get 'zenodo_queue/item_details/:id', to: 'zenodo_queue#item_details', as: 'zenodo_queue_item_details'
     get 'zenodo_queue/identifier_details/:id', to: 'zenodo_queue#identifier_details', as: 'zenodo_queue_identifier_details'
     post 'zenodo_queue/resubmit_job', to: 'zenodo_queue#resubmit_job', as: 'zenodo_queue_resubmit_job'
     post 'zenodo_queue/set_errored', to: 'zenodo_queue#set_errored', as: 'zenodo_queue_set_errored'
-    
+
     # Administrative Status Dashboard that displays statuses of external dependencies
     get 'status_dashboard', to: 'status_dashboard#show'
 
@@ -350,10 +352,10 @@ Rails.application.routes.draw do
     get 'publication_updater', to: 'publication_updater#index'
     put 'publication_updater/:id', to: 'publication_updater#update'
     delete 'publication_updater/:id', to: 'publication_updater#destroy'
-    
+
     # Curation stats
     get 'curation_stats', to: 'curation_stats#index'
-    
+
     # Journals
     get 'journals', to: 'journals#index'
 
@@ -376,33 +378,33 @@ Rails.application.routes.draw do
 
   # this is kind of hacky, but it directs our search results to open links to the landing pages
   resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'
-  
+
   ########################## StashDatacite support ######################################
 
-  scope module: 'stash_datacite', path: '/stash_datacite' do    
+  scope module: 'stash_datacite', path: '/stash_datacite' do
     get 'titles/new', to: 'titles#new'
     post 'titles/create', to: 'titles#create'
     patch 'titles/update', to: 'titles#update'
-    
+
     get 'descriptions/new', to: 'descriptions#new'
     patch 'descriptions/update', to: 'descriptions#update'
-    
+
     get 'temporal_coverages/new', to: 'temporal_coverages#new'
     patch 'temporal_coverages/update', to: 'temporal_coverages#update'
-    
+
     get 'authors/new', to: 'authors#new'
     post 'authors/create', to: 'authors#create'
     patch 'authors/update', to: 'authors#update'
     delete 'authors/:id/delete', to: 'authors#delete', as: 'authors_delete'
     patch 'authors/reorder', to: 'authors#reorder', as: 'authors_reorder'
-    
+
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
     patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'
     delete 'contributors/:id/delete', to: 'contributors#delete', as: 'contributors_delete'
-    
+
     get 'publications/new', to: 'publications#new'
     get 'publications/autocomplete', to: 'publications#autocomplete'
     get 'publications/issn/:id', to: 'publications#issn'
@@ -410,46 +412,46 @@ Rails.application.routes.draw do
     patch 'publications/update', to: 'publications#update'
     delete 'publications/:id/delete', to: 'publications#delete', as: 'publications_delete'
     post 'publications/autofill/:id', to: 'publications#autofill_data', as: 'publications_autofill_data'
-    
+
     get 'resource_types/new', to: 'resource_types#new'
     post 'resource_types/create', to: 'resource_types#create'
     patch 'resource_types/update', to: 'resource_types#update'
-    
+
     get 'subjects/new', to: 'subjects#new'
     get 'subjects/autocomplete', to: 'subjects#autocomplete'
     post 'subjects/create', to: 'subjects#create'
     delete 'subjects/:id/delete', to: 'subjects#delete', as: 'subjects_delete'
     get 'subjects/landing', to: 'subjects#landing', as: 'subjects_landing'
-    
+
     # fos subjects are a special subject that is treated differently for the OECD Field of Science
     patch 'fos_subjects/update', to: 'fos_subjects#update'
-    
+
     get 'related_identifiers/new', to: 'related_identifiers#new'
     post 'related_identifiers/create', to: 'related_identifiers#create'
     patch 'related_identifiers/update', to: 'related_identifiers#update'
     delete 'related_identifiers/:id/delete', to: 'related_identifiers#delete', as: 'related_identifiers_delete'
     get 'related_identifiers/report', to: 'related_identifiers#report', as: 'related_identifiers_report'
     get 'related_identifiers/show', to: 'related_identifiers#show', as: 'related_identifiers_show'
-    
+
     get 'geolocation_places/new', to: 'geolocation_places#new'
     post 'geolocation_places/create', to: 'geolocation_places#create'
     delete 'geolocation_places/:id/delete', to: 'geolocation_places#delete', as: 'geolocation_places_delete'
-    
+
     get 'geolocation_points/new', to: 'geolocation_points#new'
     post 'geolocation_points/create', to: 'geolocation_points#create'
     delete 'geolocation_points/:id/delete', to: 'geolocation_points#delete', as: 'geolocation_points_delete'
-    
+
     get 'geolocation_boxes/new', to: 'geolocation_boxes#new'
     post 'geolocation_boxes/create', to: 'geolocation_boxes#create'
     delete 'geolocation_boxes/:id/delete', to: 'geolocation_boxes#delete', as: 'geolocation_boxes_delete'
-    
+
     get 'affiliations/autocomplete', to: 'affiliations#autocomplete'
     get 'affiliations/new', to: 'affiliations#new'
     post 'affiliations/create', to: 'affiliations#create'
     delete 'affiliations/:id/delete', to: 'affiliations#delete', as: 'affiliations_delete'
-    
+
     get 'licenses/details', to: 'licenses#details', as: 'license_details'
-    
+
     # Actions through Leaflet Ajax posts
     # points
     get 'geolocation_points/index', to: 'geolocation_points#index'
@@ -463,14 +465,14 @@ Rails.application.routes.draw do
     # location names/places
     get 'geolocation_places/places_coordinates', to: 'geolocation_places#places_coordinates'
     post 'geolocation_places/map_coordinates', to: 'geolocation_places#map_coordinates'
-    
+
     # get composite views or items that begin at the resource level
     get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', as: :datacite_metadata_entry_pages
     get 'metadata_entry_pages/cedar_check', to: 'metadata_entry_pages#cedar_check', as: :metadata_entry_cedar_check
     get 'resources/review', to: 'resources#review'
     match 'resources/submission' => 'resources#submission', as: :resources_submission, via: :post
     get 'resources/show', to: 'resources#show'
-    
+
     patch 'peer_review/toggle', to: 'peer_review#toggle', as: :peer_review
     patch 'peer_review/release', to: 'peer_review#release', as: :peer_review_release
   end
@@ -486,9 +488,9 @@ Rails.application.routes.draw do
 
   get '/cedar-config', to: 'cedar#json_config'
   post '/cedar-save', to: 'cedar#save'
-  
+
   ########################## Dryad v1 support ######################################
-  
+
   # Routing to redirect old Dryad URLs to their correct locations in this system
   get '/pages/faq', to: redirect('stash/requirements')
   get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
@@ -514,7 +516,7 @@ Rails.application.routes.draw do
   get '/submit', to: redirect { |params, request| "/stash/resources/new?#{request.params.to_query}" }
   get '/interested', to: redirect('/stash/contact#get-involved')
   get '/stash/interested', to: redirect('/stash/contact#get-involved')
-  
+
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
   # Dataset:            https://datadryad.org/resource/doi:10.5061/dryad.kq201
