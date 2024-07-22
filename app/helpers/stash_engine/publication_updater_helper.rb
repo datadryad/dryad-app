@@ -2,7 +2,7 @@ module StashEngine
   module PublicationUpdaterHelper
 
     def mergeable?(val1, val2)
-      return val1.include?(val2) if val1.is_a?(Array)
+      return !val1.include?(val2) if val1.is_a?(Array)
 
       val1&.strip&.downcase != val2&.strip&.downcase
     end
