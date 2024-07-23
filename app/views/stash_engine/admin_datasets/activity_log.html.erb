@@ -43,6 +43,8 @@
   </div>
 </div>
 
+<%= render partial: 'stash_engine/admin_datasets/activity_log_notifications' %>
+
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
   <div id="salesforce_links" style="clear: both">
     <div style="float: left"><h2>Salesforce cases</h2></div>
@@ -91,7 +93,7 @@
 
 <div id="internal_data" style="clear: both">
   <div style="float: left"><h2>Internal data</h2></div>
-  
+
   <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
     <div style="float: right">
       <br/>
