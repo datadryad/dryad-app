@@ -115,7 +115,7 @@ function PrelimManu({
                 <Field name="isImport" type="hidden" />
               </div>
             </div>
-            <div hidden={(hideImport || formRef?.current?.values.msId === '')}>
+            <div hidden={(hideImport || acID === '' || acText === '' || formRef?.current?.values.msId === '')}>
               <button
                 type="button"
                 name="commit"

@@ -28,7 +28,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
 
     it 'gives disable submit manuscript not filled' do
       choose('a manuscript in progress', allow_label_click: true)
-      expect(page).to have_button('Import manuscript metadata', disabled: true)
+      expect(page).not_to have_button('Import manuscript metadata')
     end
 
   end
@@ -57,6 +57,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = 'Journal of The Royal Society Interface'
       doi = '10.1098/rsif.2017.0030'
       fill_crossref_info(name: journal, doi: doi)
+      expect(page).to have_button('Import article metadata')
       click_import_article_metadata
       expect(page).to have_field('title',
                                  with: 'High-skilled labour mobility in Europe before and after the 2004 enlargement')
@@ -66,7 +67,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = ''
       doi = ''
       fill_crossref_info(name: journal, doi: doi)
-      expect(page).to have_button('Import article metadata', disabled: true)
+      expect(page).not_to have_button('Import article metadata')
     end
 
     it "gives a message when it can't find a doi" do
@@ -85,6 +86,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = 'cats'
       doi = 'scabs'
       fill_crossref_info(name: journal, doi: doi)
+      expect(page).to have_button('Import article metadata')
       click_import_article_metadata
       expect(page.find('div#population-warnings')).to have_content("We couldn't obtain information from CrossRef about this DOI", wait: 15)
     end
