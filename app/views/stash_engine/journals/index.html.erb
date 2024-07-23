@@ -2,7 +2,7 @@
 <div id="page-columns">
 <% if policy(@journals).detail? %>
 <div id="page-nav" style="display: flex; align-items: center; padding: 1rem 3rem; font-style: italic">
-  <p>You are viewing this page as a privileged user. Non-system users see only Title, ISSNs, and the green checkmark fields.</p>
+  <p>You are viewing this page as a privileged user. Non-system users see only Title, ISSNs, DPC sponsored and Integrated Data.</p>
 </div>
 <% end %>
 <div id="page-content">
@@ -37,7 +37,8 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
       <% end %>
       <th>Integrated data</th>
       <% if policy(@journals).detail? %>
-        <th>Metadata last received</th>
+        <th>Data last received</th>
+        <th>Automatic PPR</th>
       <% end %>
       </tr>
   </thead>
@@ -55,6 +56,7 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
     <td><% if @api_journals.include?(journal.id) || @metadata_journals.include?(journal.id) %><i class="fa fa-check-circle" aria-hidden="true"></i><span class="screen-reader-only">Data integrated</span><% end %></td>
     <% if policy(@journals).detail? %>
       <td class="c-lined-table__digits"><%= StashEngine::Manuscript.where(journal: journal).order(:created_at)&.last&.created_at.presence || @api_journals.include?(journal.id) ? 'API journal' : ''%></td>
+      <td><% if journal.default_to_ppr? %><i class="fa fa-check-circle" aria-hidden="true"></i><span class="screen-reader-only">Default</span><% end %></td>
     <% end %>
   </tr>
 <% end -%>
