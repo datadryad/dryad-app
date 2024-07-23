@@ -17,7 +17,8 @@
                         publication_name: @publication_name,
                         publication_issn: @publication_issn,
                         msid: @msid,
-                        related_identifier: @doi.related_identifier || ''
+                        related_identifier: @doi.related_identifier || '',
+                        api_journals: @metadata_entry.api_journals
                       }) %>
 
 <h2 class="o-heading__page-span"><%= @resource&.resource_type&.try(:resource_type_general_ui) || 'Dataset' %>: Basic information</h2>

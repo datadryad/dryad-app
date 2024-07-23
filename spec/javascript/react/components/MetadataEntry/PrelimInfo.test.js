@@ -35,6 +35,7 @@ describe('PrelimInfo', () => {
         value: '',
       },
       related_identifier: '',
+      api_journals: [],
     };
   });
 

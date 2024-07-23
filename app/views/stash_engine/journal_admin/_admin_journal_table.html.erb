@@ -21,7 +21,7 @@
         <%= sortable_column_head sort_field: 'default_to_ppr', title: 'PPR Default' %>
       </th>
       <th class="c-admin-table">
-        Sponsor
+        Parent org
       </th>
     </tr>
   </thead>
@@ -115,7 +115,9 @@
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="sponsor_id_<%= j.id %>">
-            <%= j.sponsor&.name %>
+            <% if j.sponsor.present? %>
+              <a href="<%= publisher_admin_path(q: j.sponsor.name) %>"><%= j.sponsor.name %></a>
+            <% end %>
           </div>
           <% if policy([:stash_engine, :journal]).popup? %>
           <div class="c-lined-table__actions">

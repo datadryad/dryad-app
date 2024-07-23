@@ -14,6 +14,7 @@ function PrelimArticle({
   setAcID,
   relatedIdentifier,
   setRelatedIdentifier,
+  hideImport,
 }) {
   const formRef = useRef();
 
@@ -116,7 +117,7 @@ function PrelimArticle({
                 <Field name="isImport" type="hidden" />
               </div>
             </div>
-            <div>
+            <div hidden={(hideImport || formRef?.current?.values.primary_article_doi === '')}>
               <button
                 type="button"
                 name="commit"
@@ -125,7 +126,6 @@ function PrelimArticle({
                   formRef.current.values.isImport = true;
                   formik.handleSubmit();
                 }}
-                disabled={(acText === '' || formRef?.current?.values.primary_article_doi === '')}
               >
                 Import article metadata
               </button>
@@ -151,4 +151,5 @@ PrelimArticle.propTypes = {
   setAcID: PropTypes.func.isRequired,
   relatedIdentifier: PropTypes.string.isRequired,
   setRelatedIdentifier: PropTypes.func.isRequired,
+  hideImport: PropTypes.bool.isRequired,
 };
