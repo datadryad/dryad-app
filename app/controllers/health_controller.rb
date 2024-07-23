@@ -7,7 +7,7 @@ class HealthController < ApplicationController
     begin
       StashEngine::Identifier.last
       health_status[:database] = 'connected'
-    rescue => e
+    rescue StandardError => e
       health_status[:database] = 'not connected'
       health_status[:database_error] = e.message if params[:advanced]
     end
@@ -15,9 +15,9 @@ class HealthController < ApplicationController
     # Check Solr connectivity
     begin
       solr = RSolr.connect(url: Blacklight.connection_config[:url])
-      solr.get('select', params: {fl: 'dc_identifier_s', rows: 1})
+      solr.get('select', params: { fl: 'dc_identifier_s', rows: 1 })
       health_status[:solr] = 'connected'
-    rescue => e
+    rescue StandardError => e
       health_status[:solr] = 'not connected'
       health_status[:solr_error] = e.message if params[:advanced]
     end
@@ -30,7 +30,7 @@ class HealthController < ApplicationController
         health_status[:aws_s3] = 'not connected'
         health_status[:aws_s3_error] = 'file does not exist' if params[:advanced]
       end
-    rescue => e
+    rescue StandardError => e
       health_status[:aws_s3] = 'not connected'
       health_status[:aws_s3_error] = e.message if params[:advanced]
     end
