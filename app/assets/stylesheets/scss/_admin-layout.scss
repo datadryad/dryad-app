@@ -22,6 +22,7 @@
 
     li {
       line-height: 135%;
+      margin-top: 0;
       margin-bottom: .3rem;
     }
   }
@@ -104,6 +105,27 @@
   flex-basis: 546px;
   max-width: 546px;
   flex-wrap: nowrap;
+  @media (max-width: 1215px) {
+    max-width: 100%;
+  }
+  @media (max-width: 760px) {
+    flex-wrap: wrap;
+  }
+}
+
+.o-admin-form-pair.quarter-width {
+  flex-basis: 263px;
+  max-width: 263px;
+  flex-wrap: nowrap;
+  @media (max-width: 760px) {
+    max-width: 100%;
+    flex-basis: auto;
+    flex-wrap: wrap;
+  }
+}
+
+.o-admin-form-pair.half-width,
+.o-admin-form-pair.quarter-width {
   label {
     white-space: nowrap;
   }
@@ -111,12 +133,6 @@
     flex-shrink: 1;
     flex-grow: 1;
     min-width: 0;
-  }
-  @media (max-width: 1215px) {
-    max-width: 100%;
-  }
-  @media (max-width: 760px) {
-    flex-wrap: wrap;
   }
 }
 

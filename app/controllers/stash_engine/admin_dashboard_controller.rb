@@ -120,8 +120,8 @@ module StashEngine
     # rubocop:disable Style/MultilineIfModifier
     def setup_limits
       session[:admin_search_role] = params[:user_role] if params[:user_role].present?
-      user_role = current_user.roles.find_by(id: session[:admin_search_role]) || current_user.roles.first
-      @role_object = user_role.role_object
+      @user_role = current_user.roles.find_by(id: session[:admin_search_role]) || current_user.roles.first
+      @role_object = @user_role.role_object
       @tenant_limit = @role_object.is_a?(StashEngine::Tenant) ? policy_scope(StashEngine::Tenant) : StashEngine::Tenant.enabled
       if @role_object.is_a?(StashEngine::JournalOrganization)
         sponsor_limit = [@role_object]
@@ -190,11 +190,12 @@ module StashEngine
       date_fields
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
+      return unless @search_string.present?
+
+      search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
       @datasets = @datasets.select(
-        "MATCH(stash_engine_identifiers.search_words) AGAINST('#{
-          %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
-        }') as relevance"
-      ) if @search_string.present?
+        "MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) as relevance"
+      )
     end
 
     def date_fields
@@ -222,9 +223,8 @@ module StashEngine
         'curator.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
       ) if @filters[:curator].present? && current_user.min_app_admin?
       unless @search_string.blank?
-        @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST('#{
-          %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
-        }') > 0")
+        search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
+        @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) > 0")
       end
       @datasets = @datasets.left_outer_joins(:related_identifiers)
         .joins("left outer join stash_engine_internal_data msnum on

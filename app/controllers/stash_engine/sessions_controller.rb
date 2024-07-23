@@ -70,7 +70,7 @@ module StashEngine
         params.each do |k, v|
           message = "#{message}#{k}: #{v}\n" if %w[authenticity_token commit controller action g-recaptcha-response].exclude?(k)
         end
-        StashEngine::UserMailer.feedback_signup(message).deliver_now
+        StashEngine::UserMailer.feedback_signup(message).deliver_later
         redirect_to stash_url_helpers.feedback_path, notice: 'Sign up successful. Thank you!'
       else
         redirect_to stash_url_helpers.feedback_path, flash: { alert: 'Please fill in reCAPTCHA' }
