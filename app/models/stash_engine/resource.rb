@@ -1118,7 +1118,7 @@ module StashEngine
           target_status = 'submitted'
           update(hold_for_peer_review: false, peer_review_end_date: nil)
         else
-          curation_note = "Set to Private for peer review at #{@resource.identifier.automatic_ppr? ? "journal's" : "author's"} request"
+          curation_note = "Set to Private for peer review at #{identifier.automatic_ppr? ? "journal's" : "author's"} request"
           target_status = 'peer_review'
           update(peer_review_end_date: Time.now.utc + 6.months)
         end
