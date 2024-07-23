@@ -38,7 +38,9 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
       <th>Integrated data</th>
       <% if policy(@journals).detail? %>
         <th>Data last received</th>
-        <th>Automatic PPR</th>
+        <th class="c-lined-table__sort  <%= sort_display('default_to_ppr') %>">
+          <%= sortable_column_head sort_field: 'default_to_ppr', title: 'Automatic PPR' %>
+        </th>
       <% end %>
       </tr>
   </thead>
