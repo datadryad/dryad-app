@@ -1088,6 +1088,7 @@ module StashEngine
                                                                   note: 'System set back to curation')
     end
 
+    # rubocop:disable Metrics/AbcSize
     def create_post_submission_status(prior_cur_act)
       attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
       curation_note = ''
@@ -1104,16 +1105,20 @@ module StashEngine
           target_status = previous_resource.last_curation_activity.status
           curation_note = "Auto-published with minimal changes to #{changes.join(', ')}"
         end
+
       # Determine which submission status to use, :submitted or :peer_review status
-      elsif hold_for_peer_review? && previous_curated_resource.blank? && curation_start_date.blank?
-        # Moving this logic to user facing, will not allow PPR selection by user
+      elsif hold_for_peer_review? && identifier.allow_review?
         publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
         if publication_accepted
           curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has already been accepted"
           target_status = 'submitted'
           update(hold_for_peer_review: false, peer_review_end_date: nil)
+        elsif identifier.date_last_curated.present?
+          curation_note = 'Private for peer review was requested, but the submission has already been curated'
+          target_status = 'submitted'
+          update(hold_for_peer_review: false, peer_review_end_date: nil)
         else
-          curation_note = "Set to Private for peer review at author's request"
+          curation_note = "Set to Private for peer review at #{@resource.identifier.automatic_ppr? ? "journal's" : "author's"} request"
           target_status = 'peer_review'
           update(peer_review_end_date: Time.now.utc + 6.months)
         end
@@ -1124,6 +1129,7 @@ module StashEngine
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
       target_status
     end
+    # rubocop:enable Metrics/AbcSize
 
     def auto_assign_curator(target_status:)
       target_curator = identifier.most_recent_curator
