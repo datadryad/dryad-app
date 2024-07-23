@@ -289,15 +289,15 @@ Rails.application.routes.draw do
     get 'user_admin/:id/edit/:field', to: 'user_admin#popup', as: 'user_popup'
     post 'user_admin/:id', to: 'user_admin#edit', as: 'user_admin_edit'
     # admin tenant management
-    get 'tenant_admin', to: 'tenant_admin#index' # main page for administering tenants
+    get 'tenant_admin', to: 'tenant_admin#index'
     get 'tenant_admin/:id/edit/:field', to: 'tenant_admin#popup', as: 'tenant_popup'
     post 'tenant_admin/:id', to: 'tenant_admin#edit', as: 'tenant_edit'
     # admin journal management
-    get 'journal_admin', to: 'journal_admin#index' # main page for administering tenants
+    get 'journal_admin', to: 'journal_admin#index'
     get 'journal_admin/:id/edit/:field', to: 'journal_admin#popup', as: 'journal_popup'
     post 'journal_admin/:id', to: 'journal_admin#edit', as: 'journal_edit'
     # admin publisher management
-    get 'publisher_admin', to: 'journal_organization_admin#index' # main page for administering tenants
+    get 'publisher_admin', to: 'journal_organization_admin#index', as: 'publisher_admin'
     get 'publisher_admin/:id/edit/:field', to: 'journal_organization_admin#popup', as: 'publisher_popup'
     post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
 
