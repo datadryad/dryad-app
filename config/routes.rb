@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
 
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.local?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.local? || Rails.env.v3_development?
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -533,4 +533,6 @@ Rails.application.routes.draw do
   get '/resource/:doi_prefix/:doi_suffix*file',
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
       to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
+
+  get :health_check, to: 'health#check'
 end
