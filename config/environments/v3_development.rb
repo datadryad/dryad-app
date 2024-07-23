@@ -66,8 +66,8 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  # config.active_storage.service = :local     
-  
+  # config.active_storage.service = :local
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = [I18n.default_locale]
@@ -102,21 +102,9 @@ Rails.application.configure do
                                             :ignore_crawlers => %w{Googlebot bingbot}
   end
 
-  # Email through Amazon SES
-  # Although it would be nice to read these settings from the APP_CONFIG,
-  # that hash doesn't exist at the time this file is loaded, so we need to
-  # put the configuration directly in here.
-  ActionMailer::Base.smtp_settings = {
-    :address => 'email-smtp.us-west-2.amazonaws.com',
-    :port => '587',
-    :authentication => :plain,
-    :user_name => 'AKIA2KERHV5ERJHPR552',
-    :password => Rails.application.credentials[Rails.env.to_sym][:aws_ses_password]
-  }
-
   config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.raise_delivery_errors = true
 
   Rails.application.default_url_options = { host: 'v3-dev.datadryad.org' }
-
 end
