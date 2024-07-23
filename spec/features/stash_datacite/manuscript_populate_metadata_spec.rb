@@ -28,7 +28,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
 
     it 'gives disable submit manuscript not filled' do
       choose('a manuscript in progress', allow_label_click: true)
-      expect(page).to have_button('Import manuscript metadata', disabled: true)
+      expect(page).not_to have_button('Import manuscript metadata')
     end
 
   end
@@ -66,7 +66,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = ''
       doi = ''
       fill_crossref_info(name: journal, doi: doi)
-      expect(page).to have_button('Import article metadata', disabled: true)
+      expect(page).not_to have_button('Import article metadata')
     end
 
     it "gives a message when it can't find a doi" do
