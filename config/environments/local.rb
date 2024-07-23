@@ -34,8 +34,8 @@ Rails.application.configure do
   config.active_record.migration_error = :page_load
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  # config.active_storage.service = :local     
-  
+  # config.active_storage.service = :local
+
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
@@ -53,20 +53,9 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # Email through Amazon SES
-  # Although it would be nice to read these settings from the APP_CONFIG,
-  # that hash doesn't exist at the time this file is loaded, so we need to
-  # put the configuration directly in here.
-  ActionMailer::Base.smtp_settings = {
-    :address => 'email-smtp.us-west-2.amazonaws.com',
-    :port => '587',
-    :authentication => :plain,
-    :user_name => 'AKIA2KERHV5ERJHPR552',
-    :password => Rails.application.credentials[Rails.env.to_sym][:aws_ses_password]
-  }
-
-  config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 
   Rails.application.default_url_options = { host: 'localhost', port: 3000}
 end

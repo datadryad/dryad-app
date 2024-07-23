@@ -418,6 +418,13 @@ GEM
       addressable (~> 2.8)
     leaflet-rails (1.7.0)
       rails (>= 4.2.0)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
+    letter_opener_web (3.0.0)
+      actionmailer (>= 6.1)
+      letter_opener (~> 1.9)
+      railties (>= 6.1)
+      rexml
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -866,6 +873,8 @@ DEPENDENCIES
   jwt (~> 2.3.0)
   kaminari (~> 1.2.2)
   leaflet-rails (~> 1.7.0)
+  letter_opener
+  letter_opener_web (~> 3.0)
   listen
   loofah (~> 2.19.1)
   mail (~> 2.8)
