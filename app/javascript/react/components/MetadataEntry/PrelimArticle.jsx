@@ -117,7 +117,7 @@ function PrelimArticle({
                 <Field name="isImport" type="hidden" />
               </div>
             </div>
-            <div hidden={(hideImport || formRef?.current?.values.primary_article_doi === '')}>
+            <div hidden={(hideImport || acText === '' || formRef?.current?.values.primary_article_doi === '')}>
               <button
                 type="button"
                 name="commit"

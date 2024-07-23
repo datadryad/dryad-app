@@ -35,8 +35,6 @@ function PrelimInfo(
       });
   };
 
-  const hideImport = acText === '' || acID === '' || api_journals.includes(acID);
-
   return (
     <>
       <fieldset className="c-import__fieldset">
@@ -105,7 +103,7 @@ function PrelimInfo(
               setAcID={setAcID}
               msId={msId}
               setMsId={setMsId}
-              hideImport={hideImport}
+              hideImport={api_journals.includes(acID)}
             />
           );
         case 'published':
@@ -119,7 +117,7 @@ function PrelimInfo(
               setAcID={setAcID}
               relatedIdentifier={relatedIdentifier}
               setRelatedIdentifier={setRelatedIdentifier}
-              hideImport={hideImport}
+              hideImport={api_journals.includes(acID)}
             />
           );
         default:
