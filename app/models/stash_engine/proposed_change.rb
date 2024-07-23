@@ -48,8 +48,8 @@ module StashEngine
                         ").where('`dcs_related_identifiers`.`id` IS NULL')
                       }
 
-    CROSSREF_PUBLISHED_MESSAGE = 'reported that the related journal has been published'.freeze
-    CROSSREF_UPDATE_MESSAGE = 'provided additional metadata'.freeze
+    CROSSREF_PUBLISHED_MESSAGE = 'reported that the related manuscript has been accepted'.freeze
+    CROSSREF_UPDATE_MESSAGE = 'provided information about a'.freeze
 
     # Overriding equality check to make sure we're only comparing the fields we care about
     def ==(other)
@@ -78,14 +78,15 @@ module StashEngine
         )
       end
 
+      add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, latest_resource, approve_type)
+      update(approved: true, user_id: current_user.id)
+
       if article_type == 'primary_article'
         cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
         cr.populate_pub_update!
         release_updated_resource(latest_resource) if latest_resource.current_curation_status == 'peer_review'
       end
 
-      add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, latest_resource)
-      update(approved: true, user_id: current_user.id)
       true
     end
 
@@ -102,16 +103,16 @@ module StashEngine
       resource.curation_activities << StashEngine::CurationActivity.new(
         user_id: 0, # system user
         status: 'submitted',
-        note: 'Automatically released from private for peer review'
+        note: "#{provenance.capitalize} #{CROSSREF_PUBLISHED_MESSAGE}"
       )
       StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
     end
 
-    def add_metadata_updated_curation_note(provenance, resource)
+    def add_metadata_updated_curation_note(provenance, resource, type)
       resource.curation_activities << StashEngine::CurationActivity.new(
         user_id: 0, # system user
         status: resource.current_curation_status,
-        note: "#{provenance.capitalize} #{CROSSREF_UPDATE_MESSAGE}"
+        note: "#{provenance.capitalize} #{CROSSREF_UPDATE_MESSAGE} #{type} article"
       )
     end
   end
