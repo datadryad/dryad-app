@@ -4,7 +4,7 @@ def selecter(id, options)
   label = h[id.to_sym] || id.capitalize
 
   "<label for='filter-#{id}'>#{label}:</label>" +
-  select_tag("filters[#{id}]", options_for_select(options, @filters.dig(id.to_sym)), id: "filter-#{id}", class: 'c-input__select')
+  select_tag("filters[#{id}]", options_for_select(options, @filters.dig(id.to_sym)), id: "filter-#{id}", class: "c-input__select#{@filters.dig(id.to_sym).present? ? ' selected' : ''}")
 end
 %>
 <div class="admin-dashboard-buttons">
@@ -26,7 +26,7 @@ end
     <% if @journal_limit.length > 1 %>
       <div class="o-admin-form-pair half-width">
         <label for='filter-journal'>Journal:</label>
-        <%= select_tag("filters[journal][value]", options_for_select([['', '']] + @journal_limit.map { |j| [j.title, j.id] }, @filters.dig(:journal, :value)), id: "filter-journal", class: 'c-input__select') %>
+        <%= select_tag("filters[journal][value]", options_for_select([['', '']] + @journal_limit.map { |j| [j.title, j.id] }, @filters.dig(:journal, :value)), id: "filter-journal", class: "c-input__select#{@filters.dig(:journal, :value).present? ? ' selected' : ''}") %>
       </div>
     <% end %>
   <% else %>
@@ -73,9 +73,10 @@ end
       selected: @filters.dig(:affiliation)
     } %>
   </div>
-
-  <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Submitted' } %>
-  <%= render partial: 'filter_date', locals: { id: 'first_sub_date', label: 'First submitted' } %>
-  <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Published' } %>
-  <%= render partial: 'filter_date', locals: { id: 'first_pub_date', label: 'First published' } %>
+  <div class="date-flex">
+    <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Submitted' } %>
+    <%= render partial: 'filter_date', locals: { id: 'first_sub_date', label: 'First submitted' } %>
+    <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Published' } %>
+    <%= render partial: 'filter_date', locals: { id: 'first_pub_date', label: 'First published' } %>
+  </div>
 </fieldset>

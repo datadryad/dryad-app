@@ -102,24 +102,33 @@
 }
 
 .o-admin-form-pair.half-width {
-  flex-basis: 546px;
-  max-width: 546px;
+  flex-basis: 50%;
+  max-width: calc(50% - 2ch);
   flex-wrap: nowrap;
-  @media (max-width: 1215px) {
-    max-width: 100%;
+  @media (max-width: 1050px) {
+    max-width: calc(50% - 1ch);
   }
   @media (max-width: 760px) {
+    flex-basis: 100%;
+    max-width: 100%;
     flex-wrap: wrap;
+  }
+  @media (max-width: 450px) {   
+    flex-basis: auto;
   }
 }
 
 .o-admin-form-pair.quarter-width {
-  flex-basis: 263px;
-  max-width: 263px;
+  flex-basis: 25%;
+  max-width: calc(25% - 2ch);
   flex-wrap: nowrap;
-  @media (max-width: 760px) {
-    max-width: 100%;
+  @media (max-width: 1050px) {
+    flex-basis: 50%;
+    max-width: calc(50% - 1ch);
+  }
+  @media (max-width: 450px) {   
     flex-basis: auto;
+    max-width: 100%; 
     flex-wrap: wrap;
   }
 }
@@ -179,12 +188,36 @@
   #edit_filters-form {
     display: flex;
     flex-wrap: wrap;
-    row-gap: 2ch;
-    column-gap: 2ch;
-
-    .help {
-      margin: .5rem auto 1rem;
+    gap: 2ch;
+    
+    .date-flex {
+      margin-top: 1ch;
+      display: flex;
+      justify-content: space-between;
+      gap: 3ch;
+      flex-wrap: wrap;
+      fieldset {
+        gap: 1ch;
+        flex-wrap: wrap;
+      }
+      legend {
+        display: inline;
+      }
     }
+  }
+
+  input[type='text'].selected,
+  input[type='search'].selected,
+  input[type='date'].selected,
+  select.selected {
+    border: thin solid $light-green;
+    &:not(:focus) {
+      outline: thin solid $light-green;
+    }
+  }
+
+  button[type='submit'].changed {
+    background-color: $lighter-green;
   }
 
   .help {
