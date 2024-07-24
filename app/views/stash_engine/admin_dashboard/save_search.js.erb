@@ -1,9 +1,11 @@
 document.getElementById('search_save').remove()
 document.getElementById('search_open').removeAttribute('hidden')
 document.getElementById('search_open').setAttribute('aria-expanded', false)
+document.getElementById('search_open').firstElementChild.classList.add('fa-sliders')
+document.getElementById('search_open').firstElementChild.classList.remove('fa-square-caret-up')
 if (document.getElementById('search_edit')) {
   document.getElementById('search_edit').setAttribute('hidden', true)
-  document.getElementById('search_open').setAttribute('aria-expanded', false)
+  document.getElementById('search_edit').setAttribute('aria-expanded', false)
 }
 if (document.getElementById('search_clear')) {
   document.getElementById('search_clear').setAttribute('hidden', true)
