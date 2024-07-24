@@ -60,7 +60,7 @@ a.highlight {
 		}
 	}
 	ins {
-		background-color: lighten($green, 50);
+		background-color: lighten($dark-green, 50);
 		&.ins-before::after {
 			content: ' ';
 		}

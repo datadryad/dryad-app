@@ -97,7 +97,7 @@ h6 {
 
 .expand-button {
   cursor: pointer;
-  border-bottom: thin solid $medium-green;
+  border-bottom: thin solid $green;
 
   &::after {
     font-family: 'Font Awesome 6 Free';
@@ -122,7 +122,7 @@ h6 {
 h3.expand-button {
   &:hover, &:focus-visible {
     &::after {
-      color: $medium-green;
+      color: $green;
     }
   }
 }
@@ -130,7 +130,7 @@ h3.expand-button {
 h4.expand-button {
   &:hover, &:focus-visible {
     &::after {
-      color: $medium-green;
+      color: $green;
     }
   }
 }
