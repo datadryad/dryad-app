@@ -1,10 +1,9 @@
-(function () {
-  window.onpageshow = function(event) {
-      if (event.persisted) {
-          window.location.reload();
-        }
-    };
-})();
+var urlparams = new URL(window.location.href).searchParams
+<% if params[:sort].present? %>urlparams.set('sort', '<%= params[:sort] %>')<% end %>
+<% if params[:direction].present? %>urlparams.set('direction', '<%= params[:direction] %>')<% end %>
+<% if params[:page].present? %>urlparams.set('page', '<%= params[:page] %>')<% end %>
+<% if params[:page_size].present? %>urlparams.set('page_size', '<%= params[:page_size] %>')<% end %>
+window.history.pushState({}, null, `${window.location.pathname}?${urlparams.toString()}`)
 document.getElementById('search_results').innerHTML = "<%= escape_javascript(render(partial: 'results')) %>";
 document.getElementById('save_buttons').innerHTML = "<%= escape_javascript(render(partial: 'save_buttons')) %>";
 document.getElementById('search_form').innerHTML = "<%= escape_javascript(render(partial: 'search_form')) %>";
