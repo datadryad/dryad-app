@@ -10,7 +10,7 @@
       <% end %>
     </div>
   <% end %>
-  <div class="table-wrapper" style="clear: both;" role="region" tabindex="0" aria-label="Curation table">
+  <div class="table-wrapper c-lined-table-wrapper" style="clear: both;" role="region" tabindex="0" aria-label="Curation table">
   <table class="c-lined-table" id="curation_table">
     <thead>
     <tr>
@@ -58,7 +58,7 @@
 
     <% sf_links = salesforce_links(@identifier.identifier) %>
     <% if sf_links %>
-      <div class="table-wrapper" id="sf_link_list" style="clear: both" role="region" tabindex="0" aria-labelledby="salesforce-cases">
+      <div class="table-wrapper c-lined-table-wrapper" id="sf_link_list" style="clear: both" role="region" tabindex="0" aria-labelledby="salesforce-cases">
         <table class="c-lined-table" id="curation_table">
           <thead>
           <tr>
@@ -101,14 +101,14 @@
     </div>
   <% end %>
 
-  <div id="internal_data_table" class="table-wrapper" style="clear: both" role="region" tabindex="0" aria-labelledby="internal-data">
+  <div id="internal_data_table" class="table-wrapper c-lined-table-wrapper" style="clear: both" role="region" tabindex="0" aria-labelledby="internal-data">
     <%= render partial: 'stash_engine/internal_data/table' %>
   </div>
 </div>
 
 <% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
   <div style="float: left"><h2 id="payment-info">Payment information</h2></div>
-  <div id="payment_info" class="table-wrapper" style="clear: both" role="region" tabindex="0" aria-labelledby="payment-info">
+  <div id="payment_info" class="table-wrapper c-lined-table-wrapper" style="clear: both" role="region" tabindex="0" aria-labelledby="payment-info">
     <%= render partial: 'payment_info_table' %>
   </div>
   <div id="dangerous_actions">
