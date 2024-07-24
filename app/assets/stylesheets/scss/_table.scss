@@ -5,6 +5,11 @@
 
   &.c-lined-table-wrapper {
     margin-top: $spacing-md;
+    width: 100%;
+  }
+
+  &:focus-within {
+    outline: thin solid $light-blue;
   }
 }
 
