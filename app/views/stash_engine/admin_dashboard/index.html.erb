@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], page_size: params[:page_size], page: params[:page]) %>"></div>
+<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], sort: params[:sort], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>"></div>
 
 <script type="text/javascript">
   document.getElementById('search_open').addEventListener('click', (e) => {
