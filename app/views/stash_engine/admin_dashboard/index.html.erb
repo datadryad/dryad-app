@@ -7,10 +7,10 @@
   <h1 class="o-heading__level1">Admin dashboard</h1>
   <%= render partial: 'role_select' %>
 </div>
-<div class="admin-dashboard-buttons" style="margin-top: 0; margin-bottom: -1.5rem">
-  <div class="admin-dashboard-results">
+<div class="admin-dashboard-buttons" style="margin-top: 2rem;">
+  <div class="admin-dashboard-results" style="min-height: 40px; display: flex; align-items: center;">
     <b role="heading" aria-level="2" id="search_head">Search results<% if @saved_search %>: <a href="/stash/account#saved" style="font-weight: normal;"><%= @saved_search.title %></a><% end %></b>
-    <button type="button" class="o-button__plain-text7" id="search_open" aria-controls="search_form" aria-expanded="<%= !unaltered %>" <% unless unaltered %>hidden<% end %>><i class="fa fa-sliders" aria-hidden="true"></i>Fields and filters</button>
+    <button type="button" class="o-button__plain-text7" id="search_open" aria-controls="search_form" aria-expanded="<%= !unaltered %>"><i class="fa fa-<%= unaltered ? 'sliders' : 'square-caret-up'%>" aria-hidden="true"></i>Fields and filters</button>
   </div>
   <div id="search_form" <% if unaltered %>hidden<% end %>>
     <%= render partial: 'search_form' %>
@@ -25,8 +25,10 @@
 
 <script type="text/javascript">
   document.getElementById('search_open').addEventListener('click', (e) => {
-    e.target.setAttribute('aria-expanded', true)
-    e.target.setAttribute('hidden', true)
-    document.getElementById('search_form').removeAttribute('hidden')
+    e.target.toggleAttribute('aria-expanded')
+    e.target.firstElementChild.classList.toggle('fa-sliders')
+    e.target.firstElementChild.classList.toggle('fa-square-caret-up')
+    document.getElementById('search_form').toggleAttribute('hidden')
+    document.getElementById('save_buttons').toggleAttribute('hidden')
   })
 </script>

@@ -246,6 +246,38 @@
   }
 }
 
+#search_form {
+  max-height: 10000px;
+  width: 100%;
+  transition: max-height 0.3s ease-in;
+
+  &[hidden] {
+    display: block !important;
+    overflow: hidden !important;
+    max-height: 0 !important;
+    width: 0 !important;
+    transition: max-height 0.3s cubic-bezier(0, 1, 0.5, 1), width 0s 0.3s;
+  }
+}
+
+#save_buttons {
+  width: auto;
+  height: auto;
+  transition: width 0s 0.2s, height 0s 0.2s;
+
+  &[hidden] {
+    display: block !important;
+    overflow: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    transition: width 0s 0.2s, height 0s 0.2s;
+  }
+}
+
+#count_and_export {
+  margin-left: auto;
+}
+
 .admin-dashboard-header {
   display: flex;
   align-items: baseline;
