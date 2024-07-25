@@ -77,6 +77,10 @@ figure {
   kbd, samp, code {
     background-color: white;
   }
+
+  &.alt {
+    background-color: $lightest-green;
+  }
 }
 
 pre {
