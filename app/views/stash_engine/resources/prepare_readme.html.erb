@@ -20,6 +20,12 @@
   </div>
 <% end %>
 
+<div className="c-autosave-header">
+  <h1 className="o-heading__level1" style="margin-bottom: 1rem" id="readme-label">Prepare README file</h1>
+  <div className="c-autosave__text saving_text" hidden>Saving&hellip;</div>
+  <div className="c-autosave__text saved_text" hidden>All progress saved</div>
+</div>
+
 <!-- map(&:attributes) one way for translating ActiveRecord field type to json at React side adequately -->
 <%= react_component('containers/ReadMeWizard', {
   dcsDescription: @metadata_entry.technical_info,
@@ -29,5 +35,7 @@
   title: @resource.title || 'Title of Dataset',
   doi: @resource.identifier_uri
 }) %>
+
 </div>
+
 <%= render partial: 'stash_engine/shared/dataset_steps_bottom_nav', locals: {page: 2} %>
