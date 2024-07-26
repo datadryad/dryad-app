@@ -2,7 +2,7 @@
 
 <%= render partial: 'stash_engine/shared/account_header', locals: {current: 'journals'} %>
 
-<h2>Manage journals</h2>
+<h2 id="journals-label">Manage journals</h2>
 
 <%= form_with(url: stash_url_helpers.journal_admin_path, method: 'get', id: 'search_form') do %>
   <div class="o-admin-form-inline">

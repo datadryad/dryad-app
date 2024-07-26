@@ -126,7 +126,7 @@ module StashEngine
 
       @search_string = params[:q] || session[:admin_search_string] || @saved_search&.search_string
       @filters = params[:filters] || session[:admin_search_filters] || @saved_search&.filters
-      @filters = @filters.deep_transform_keys(&:to_sym) unless @filters.blank?
+      @filters = JSON.parse(@filters.to_json, symbolize_names: true) unless @filters.blank?
       @fields = params[:fields] || session[:admin_search_fields] || @saved_search&.fields
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?

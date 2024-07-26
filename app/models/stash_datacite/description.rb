@@ -79,7 +79,7 @@ module StashDatacite
     def display_desc
       fragment = Nokogiri::HTML5.fragment(description)
       tables = fragment.css('table')
-      tables.wrap('<div class="table-wrapper"></div>')
+      tables.wrap('<div class="table-wrapper" role="region" tabindex="0" aria-label="Table"></div>')
       fragment.to_html
     end
 

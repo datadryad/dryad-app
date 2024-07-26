@@ -1,13 +1,52 @@
+var urlparams = new URL(window.location.href).searchParams
+urlparams.set('page', '<%= params[:page] %>')
+<% if params[:sort].present? %>urlparams.set('sort', '<%= params[:sort] %>')<% end %>
+<% if params[:direction].present? %>urlparams.set('direction', '<%= params[:direction] %>')<% end %>
+<% if params[:page_size].present? %>urlparams.set('page_size', '<%= params[:page_size] %>')<% end %>
+window.history.pushState({}, null, `${window.location.pathname}?${urlparams.toString()}`)
 document.getElementById('search_results').innerHTML = "<%= escape_javascript(render(partial: 'results')) %>";
 document.getElementById('save_buttons').innerHTML = "<%= escape_javascript(render(partial: 'save_buttons')) %>";
-<% if params[:clear] %>
-  document.getElementById('search_form').innerHTML = "<%= escape_javascript(render(partial: 'search_form')) %>";
-<% end %>
+document.getElementById('search_form').innerHTML = "<%= escape_javascript(render(partial: 'search_form')) %>";
+document.getElementById('edit_fields-help').addEventListener('click', (e) => {
+  e.preventDefault()
+  document.getElementById('edit_fields-form').classList.toggle('show-help')
+})
+document.querySelector('#search_form form').addEventListener('submit', () => {
+  const params = new URL(window.location.href).searchParams
+  params.delete('clear')
+  window.history.pushState({}, null, `${window.location.pathname}?${params.toString()}`);
+  document.getElementById('count_and_export').innerHTML = '<i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>'
+})
+var form = document.querySelector('#search_form form')
+var checkForm = () => {
+  for(let field of form.elements) {
+    if (field.value) {
+      field.classList.add('selected')
+    } else {
+      field.classList.remove('selected')
+    }
+  }
+  const data = JSON.stringify([...new FormData(form)].slice(1).sort(([a], [b]) => a.localeCompare(b)))
+  if (data !== form.dataset.origData) {
+    document.getElementById('apply_changes').classList.add('changed')
+  } else {
+    document.getElementById('apply_changes').classList.remove('changed')
+  }
+}
+form.dataset.origData = JSON.stringify([...new FormData(form)].slice(1).sort(([a], [b]) => a.localeCompare(b)))
+form.addEventListener('change', checkForm)
+document.getElementById('clear_filters').addEventListener('click', (e) => {
+  e.preventDefault()
+  const inputs = document.querySelectorAll(['#edit_filters-form input', '#search_form input[type="search"]'])
+  for (const input of inputs) {
+    input.value = ''
+    input.classList.remove('selected')
+  }
+  const selects = document.querySelectorAll('#edit_filters-form select')
+  for (const sel of selects) {
+    sel.selectedIndex = 0
+    sel.classList.remove('selected')
+  }
+  checkForm()
+})
 document.getElementById('count_form_button').click();
-(function () {
-  window.onpageshow = function(event) {
-      if (event.persisted) {
-          window.location.reload();
-        }
-    };
-})();

@@ -1,4 +1,4 @@
-<h1>Merge users</h1>
+<h1 id="merge-label">Merge users</h1>
 
 <%= form_with(url: user_admin_merge_path, method: :post, id: 'merge_user_form', local: false) do -%>
   <% if @user1 && @user2 %>
@@ -6,7 +6,7 @@
     <%= hidden_field_tag 'user2', @user2.id, id: "selected_users" %>
     <p>Pressing the Merge button will combine these two users into a single user, which owns all of the associated datasets. Once these users are merged, the operation cannot be reversed.</p>
 
-    <div class="table-wrapper">
+    <div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="merge-label">
     <table class="c-lined-table">
       <thead>
         <tr>

@@ -54,7 +54,7 @@ module ApplicationHelper
     end
 
     def table(header, body)
-      "<div class='table-wrapper'><table>#{header}#{body}</table></div>"
+      "<div class='table-wrapper' role='region' tabindex='0' aria-label='Table'><table>#{header}#{body}</table></div>"
     end
   end
 
