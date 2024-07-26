@@ -22,6 +22,7 @@
 
     li {
       line-height: 135%;
+      margin-top: 0;
       margin-bottom: .3rem;
     }
   }
@@ -100,24 +101,31 @@
   }
 }
 
-.c-admin-edit-icon {
-  border: none;
-  color: $medium-blue;
-  background-color: transparent;
-
-  &:link, &:visited {
-    color: $medium-blue;
-  }
-
-  &:hover, &:focus, &:active {
-    color: $light-green;
-  }
-}
-
 .o-admin-form-pair.half-width {
   flex-basis: 546px;
   max-width: 546px;
   flex-wrap: nowrap;
+  @media (max-width: 1215px) {
+    max-width: 100%;
+  }
+  @media (max-width: 760px) {
+    flex-wrap: wrap;
+  }
+}
+
+.o-admin-form-pair.quarter-width {
+  flex-basis: 263px;
+  max-width: 263px;
+  flex-wrap: nowrap;
+  @media (max-width: 760px) {
+    max-width: 100%;
+    flex-basis: auto;
+    flex-wrap: wrap;
+  }
+}
+
+.o-admin-form-pair.half-width,
+.o-admin-form-pair.quarter-width {
   label {
     white-space: nowrap;
   }
@@ -125,12 +133,6 @@
     flex-shrink: 1;
     flex-grow: 1;
     min-width: 0;
-  }
-  @media (max-width: 1215px) {
-    max-width: 100%;
-  }
-  @media (max-width: 760px) {
-    flex-wrap: wrap;
   }
 }
 
@@ -148,10 +150,14 @@
 
   #edit_fields-form {
     columns: 7;
-
-    @media (max-width: 1070px) { columns: 5 }
-    @media (max-width: 920px) { columns: 3 }
-    @media (max-width: 480px) { columns: 2 }
+    &.drop-column {
+      columns: 6;
+    }
+    &, &.drop-column {
+      @media (max-width: 1070px) { columns: 5 }
+      @media (max-width: 920px) { columns: 3 }
+      @media (max-width: 480px) { columns: 2 }
+    }
 
     div {
       margin-bottom: 4px;

@@ -29,7 +29,7 @@ module StashEngine
       end
 
       def report_outage(message)
-        UserMailer.dependency_offline(@dependency, message).deliver_now
+        UserMailer.dependency_offline(@dependency, message).deliver_later
       end
 
       def extract_log_err(log)

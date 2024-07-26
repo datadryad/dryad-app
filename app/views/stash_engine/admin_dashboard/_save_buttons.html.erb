@@ -1,0 +1,16 @@
+<% unaltered = @saved_search&.filters == @filters && @saved_search&.fields == @fields && (@saved_search&.search_string == @search_string || (@saved_search&.search_string.blank? && @search_string.blank?)) %>
+<% unless unaltered %>
+  <% if @saved_search %>
+    <%= form_with(url: save_admin_search_path(id: @saved_search&.id), method: :patch, local: false) do %>
+      <input type="hidden" name="properties" value="<%= @properties %>" />
+      <button class="o-button__plain-text7" id="search_edit" aria-controls="search_form" aria-expanded="true"><i class="far fa-bookmark" aria-hidden="true"></i>Save search changes</button>
+    <% end %>
+  <% end %>
+  <%= form_with(url: new_admin_search_path, method: :get, local: false) do %>
+    <input type="hidden" name="properties" value="<%= @properties %>" />
+    <button class="o-button__plain-text7" id="search_save" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bookmark" aria-hidden="true"></i>Save <%= @saved_search ? 'as new ' : ''%>search</button>
+  <% end %>
+  <%= form_with(url: admin_dashboard_results_path(format: :js, search: params[:search], clear: true), method: :get, local: false) do %>
+    <button class="o-button__plain-text7" id="search_clear" aria-haspopup="true" aria-expanded="false" <%= 'hidden' unless @saved_search %>><i class="fa fa-xmark" aria-hidden="true"></i>Clear search changes</button>
+  <% end %>
+<% end %>

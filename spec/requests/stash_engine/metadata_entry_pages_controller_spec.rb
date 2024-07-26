@@ -19,24 +19,26 @@ module StashEngine
 
     describe '#new_version_from_previous' do
       before(:each) do
+        Timecop.travel(Time.now.utc - 3.minutes)
         @identifier = @resource.identifier
-
         # version 1 with files
         @resource1 = @resource
         create(:data_file, resource: @resource1)
         create(:data_file, resource: @resource1)
-
+        Timecop.travel(Time.now.utc + 1.minute)
         # version 2 with files
         @resource2 = create(:resource, identifier: @identifier)
         create(:data_file, resource: @resource2)
         create(:data_file, resource: @resource2)
         sub = create(:resource_state, resource_state: 'submitted', resource: @resource2)
         @resource2.update(current_resource_state_id: sub.id)
+        Timecop.return
         @resource1.reload
         @resource2.reload
       end
 
       it 'creates new version from older version except for files' do
+        Timecop.travel(Time.now.utc + 1.minute)
         response_code = post '/stash/metadata_entry_pages/new_version_from_previous', params: { resource_id: @resource1.id }
         expect(response_code).to eq(302)
         expect(@identifier.resources.count).to eq(3)
@@ -51,6 +53,7 @@ module StashEngine
         expect(@resource2.data_files.map(&:upload_file_name)).to eq(@resource3.data_files.map(&:upload_file_name))
 
         expect(@resource2.stash_version.version + 1).to eq(@resource3.stash_version.version) # they get sequential versions
+        Timecop.return
       end
     end
 

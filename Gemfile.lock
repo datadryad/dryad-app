@@ -418,6 +418,13 @@ GEM
       addressable (~> 2.8)
     leaflet-rails (1.7.0)
       rails (>= 4.2.0)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
+    letter_opener_web (3.0.0)
+      actionmailer (>= 6.1)
+      letter_opener (~> 1.9)
+      railties (>= 6.1)
+      rexml
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -592,7 +599,7 @@ GEM
       railties (>= 3.2)
       tilt
     recaptcha (5.15.0)
-    redcarpet (3.5.1)
+    redcarpet (3.6.0)
     regexp_parser (2.8.1)
     reline (0.3.8)
       io-console (~> 0.5)
@@ -614,8 +621,8 @@ GEM
       hashie (>= 1.2.0, < 6.0)
       jwt (>= 1.5.6)
     retriable (3.1.2)
-    rexml (3.2.8)
-      strscan (>= 3.0.9)
+    rexml (3.3.2)
+      strscan
     rgeo (3.0.0)
     rgeo-geojson (2.1.1)
       rgeo (>= 1.0.0)
@@ -747,6 +754,7 @@ GEM
     tilt (2.2.0)
     time (0.3.0)
       date
+    timecop (0.9.10)
     timeout (0.4.1)
     tins (1.31.1)
       sync
@@ -865,6 +873,8 @@ DEPENDENCIES
   jwt (~> 2.3.0)
   kaminari (~> 1.2.2)
   leaflet-rails (~> 1.7.0)
+  letter_opener
+  letter_opener_web (~> 3.0)
   listen
   loofah (~> 2.19.1)
   mail (~> 2.8)
@@ -893,7 +903,7 @@ DEPENDENCIES
   rdoc (~> 6.1.1)
   react-rails (~> 2.6.2)
   recaptcha (~> 5.14)
-  redcarpet (~> 3.5.1)
+  redcarpet (~> 3.6)
   responders (~> 3.0.1)
   rest-client (~> 2.1.0)
   restforce (~> 5.2.4)
@@ -919,6 +929,7 @@ DEPENDENCIES
   sprockets (~> 4.0)
   stripe (~> 5.50.0)
   sync (~> 0.5.0)
+  timecop
   tins (~> 1.31.0)
   turbolinks
   twitter-typeahead-rails (= 0.11.1)

@@ -283,6 +283,7 @@ export default function UploadFiles({
   };
 
   const addFilesHandler = (event, uploadType) => {
+    const timestamp = Date.now();
     displayAriaMsg('Your files are being checked');
     setWarning(null);
     setSubmitDisabled(true);
@@ -294,7 +295,7 @@ export default function UploadFiles({
       displayAriaMsg('Your files were added and are pending upload.');
       // TODO: make a function?; future: unify adding file attributes
       const newFiles = files.map((file, index) => {
-        file.id = `pending${chosenFiles.length + index}`;
+        file.id = `pending${timestamp + index / 1000}`;
         file.sanitized_name = sanitize(file.name);
         file.status = 'Pending';
         file.url = null;
@@ -337,8 +338,8 @@ export default function UploadFiles({
               },
             ).then((response) => {
               const {new_file} = response.data;
-              setChosenFiles((cf) => cf.map((c, i) => {
-                if (i === index) {
+              setChosenFiles((cf) => cf.map((c) => {
+                if (c.name === new_file.original_filename) {
                   c.id = new_file.id;
                   c.sanitized_name = new_file.upload_file_name;
                   c.status = 'Uploaded';

@@ -29,7 +29,7 @@ module StashEngine
     end
 
     def tenant
-      @tenant ||= resource.tenant
+      @tenant ||= resource.tenant || StashEngine::Tenant.find(APP_CONFIG.default_tenant)
     end
 
     def landing(path)
