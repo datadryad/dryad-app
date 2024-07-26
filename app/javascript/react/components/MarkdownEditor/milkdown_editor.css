@@ -388,8 +388,8 @@
   margin-bottom: .75rem;
 }
 
-.milkdown h4, .headingMenu .h4, .cm-editor .md_h4, {
-  font-size: 1.125rem;
+.milkdown h4, .headingMenu .h4, .cm-editor .md_h4 {
+  font-size: 1.12rem !important;
   line-height: 1.5rem;
   margin-top: 1.15rem;
   margin-bottom: .75rem;
