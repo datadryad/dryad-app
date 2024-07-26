@@ -37,17 +37,21 @@ export default function ReadMe({
 
   const assembleValue = () => {
     let v = `# ${wizardContent.title}\n\n[${wizardContent.doi}](${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
-    [1, 2, 4].forEach((s) => {
-      if (wizardContent[`step${s}`]) {
-        v += `### ${secTitles[s - 1]}\n\n${wizardContent[`step${s}`]}`;
-      }
-    });
-    [3, 5].forEach((s) => {
+    if (wizardContent.step1) v += wizardContent.step1;
+    if (wizardContent.step2) v += `### ${secTitles[1]}\n\n${wizardContent.step2}`;
+    [3, 4].forEach((s) => {
       if (wizardContent[`step${s}`]) {
         v += `## ${secTitles[s - 1]}\n\n${wizardContent[`step${s}`]}`;
       }
     });
     return v;
+  };
+
+  const restartWizard = () => {
+    setInitialValue(null);
+    setWizardContent({title, doi, step: 0});
+    setWizardStep(0);
+    saveDescription(null);
   };
 
   useEffect(() => {
@@ -93,8 +97,8 @@ export default function ReadMe({
       </div>
       {initialValue ? (
         <>
-          <div className="o-admin-columns">
-            <div className="o-admin-left" style={{minWidth: '400px', flexGrow: 2}}>
+          <div className="readme-columns-final">
+            <div>
               <p style={{marginTop: 0}}>
                 To help others interpret and reuse your dataset, a README file must be included, containing
                 abbreviations and codes, file descriptions, and information about any necessary software.{' '}
@@ -107,9 +111,14 @@ export default function ReadMe({
                 You can copy and paste formatted text into the editor, or enter markdown by clicking the &apos;Markdown&apos; tab.
               </p>
             </div>
-            <div className="o-admin-right cedar-container" style={{minWidth: '500px', flexShrink: 2}}>
-              <p>You can replace the content below with a local README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
-              <ReadMeImport title="Replace README" setValue={setReplaceValue} />
+            <div>
+              <p>You can replace the content below with a local README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a>, or by deleting the content and generating a new README using our tool.</p>
+              <div className="readme-buttons">
+                <ReadMeImport title="Import new README" setValue={setReplaceValue} />
+                <button type="button" className="o-button__plain-text0" onClick={restartWizard}>
+                  <i className="fa fa-trowel-bricks" aria-hidden="true" /> Generate new README
+                </button>
+              </div>
             </div>
           </div>
           <MarkdownEditor
@@ -122,29 +131,34 @@ export default function ReadMe({
       ) : (
         wizardContent && wizardStep <= secTitles.length ? (
           wizardStep === 0 ? (
-            <div style={{maxWidth: '90ch', height: '100%'}}>
-              <p style={{marginTop: 0}}>
-                Your Dryad submission must be accompanied by a README file, to help others use and understand your
-                dataset. It should contain the details needed to interpret and reuse your data, including abbreviations
-                and codes, file descriptions, and information about any necessary software.
-              </p>
-              <p style={{textAlign: 'center'}}>
-                <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
-                  <i className="far fa-file-lines" aria-hidden="true" style={{marginRight: '.5ch'}} />Learn about README files
-                  <span className="screen-reader-only"> (opens in new window)</span>
-                </a>
-              </p>
-              <div className="o-admin-columns">
-                <div className="cedar-container o-admin-left">
+            <div style={{height: '100%'}}>
+              <div style={{maxWidth: '90ch'}}>
+                <p style={{marginTop: 0}}>
+                  Your Dryad submission must be accompanied by a README file, to help others use and understand your
+                  dataset. It should contain the details needed to interpret and reuse your data, including abbreviations
+                  and codes, file descriptions, and information about any necessary software.
+                </p>
+                <p style={{textAlign: 'center'}}>
+                  <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
+                    <i className="far fa-file-lines" aria-hidden="true" style={{marginRight: '.5ch'}} />Learn about README files
+                    <span className="screen-reader-only"> (opens in new window)</span>
+                  </a>
+                </p>
+              </div>
+              <div className="readme-columns">
+                <div>
+                  <h2 className="o-heading__level2">Need to create a README?</h2>
+                  <p>Use our step-by-step tool to generate a README file. After completion your generated README can be added to and revised.</p>
+                  <p style={{textAlign: 'center'}}>
+                    <button type="button" className="o-button__plain-text1" onClick={() => setWizardStep(1)}>
+                      Build a README <i className="fa fa-trowel-bricks fa-flip-horizontal" aria-hidden="true" />
+                    </button>
+                  </p>
+                </div>
+                <div>
                   <h2 className="o-heading__level2">Already have a README file?</h2>
                   <p>If you already have a README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a> for your dataset, you can import it here. </p>
                   <ReadMeImport setValue={setInitialValue} />
-                </div>
-                <div className="o-admin-right" style={{alignContent: 'center', marginBottom: '20px', textAlign: 'center'}}>
-                    Otherwise, please
-                  <button type="button" className="o-button__plain-text1" onClick={() => setWizardStep(1)}>
-                      Create a README using our tool <i className="fa fa-caret-right" aria-hidden="true" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -175,4 +189,5 @@ ReadMe.propTypes = {
   title: PropTypes.string.isRequired,
   doi: PropTypes.string.isRequired,
   fileContent: PropTypes.string,
+  fileList: PropTypes.array,
 };
