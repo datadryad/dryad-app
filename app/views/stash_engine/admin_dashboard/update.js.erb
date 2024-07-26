@@ -1,0 +1,16 @@
+<% if @field == 'current_editor' %>
+  if (document.getElementById('dataset_curator_<%= @identifier.id %>')) {
+    document.getElementById('dataset_curator_<%= @identifier.id %>').innerHTML = "<%= escape_javascript(render partial: 'table_curator', locals: { dataset: @resource, curator_name: @curator_name }) %>"
+  }
+<% end %>
+document.getElementById('dataset_description_<%= @identifier.id %>').innerHTML = "<%= escape_javascript(render partial: 'table_description', locals: { dataset: @resource }) %>"
+if (document.getElementById('dataset_status_<%= @identifier.id %>')) {
+  document.getElementById("dataset_status_<%= @identifier.id %>").innerHTML = "<%= escape_javascript(render partial: 'table_status', locals: { dataset: @resource }) %>"
+}
+if (document.getElementById('dataset_updated_<%= @identifier.id %>')) {
+  document.getElementById('dataset_updated_<%= @identifier.id %>').innerHTML = "<%= formatted_datetime(@resource.last_curation_activity.updated_at) %>"
+}
+if (document.getElementById('dataset_published_<%= @identifier.id %>')) {
+  document.getElementById('dataset_published_<%= @identifier.id %>').innerHTML = "<%= formatted_datetime(@resource.publication_date) %>"
+}
+document.getElementById('genericModalDialog').close();

@@ -16,7 +16,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
     before(:each) do
       mock_stripe!
       mock_salesforce!
-
+      Timecop.travel(Time.now.utc - 1.hour)
       # Create a user, identifier and 2 resources for each tenant
       %w[ucop dryad mock_tenant].each do |tenant|
         user = create(:user, tenant_id: tenant)
@@ -30,6 +30,7 @@ RSpec.feature 'AdminDatasets', type: :feature do
           @identifiers.push(identifier)
         end
       end
+      Timecop.return
     end
 
     it 'shows admins datasets for their tenant' do
@@ -119,12 +120,14 @@ RSpec.feature 'AdminDatasets', type: :feature do
       mock_datacite!
       mock_file_content!
       neuter_curation_callbacks!
+      Timecop.travel(Time.now.utc - 1.minute)
       create(:tenant)
       @admin = create(:user, tenant_id: 'test_tenant')
       create(:role, user: @admin, role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, skip_datacite_update: true)
+      Timecop.return
     end
 
     context :tenant_admin do
@@ -255,12 +258,14 @@ RSpec.feature 'AdminDatasets', type: :feature do
       end
 
       it 'allows editing a dataset' do
+        Timecop.travel(Time.now.utc - 2.minutes)
         @user = create(:user, tenant_id: @admin.tenant_id)
         @identifier = create(:identifier)
         expect { @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id) }
           .to change(StashEngine::Resource, :count).by(1)
         expect { @resource.subjects << [create(:subject), create(:subject), create(:subject)] }
           .to change(StashDatacite::Subject, :count).by(3)
+        Timecop.return
         visit stash_url_helpers.user_admin_profile_path(@user)
         expect(page).to have_css('button[title="Edit dataset"]')
         find('button[title="Edit dataset"]').click

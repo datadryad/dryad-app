@@ -2,7 +2,7 @@ module StashEngine
   module PublicationUpdaterHelper
 
     def mergeable?(val1, val2)
-      return formatted_date(val1) != formatted_date(val2) if val1.is_a?(Date) || val2.is_a?(Date)
+      return !val1.include?(val2) if val1.is_a?(Array)
 
       val1&.strip&.downcase != val2&.strip&.downcase
     end
@@ -19,12 +19,6 @@ module StashEngine
           </div>
         </td>
       HTML
-    end
-
-    def fetch_identifier_metadata(resource:, data_type:)
-      return nil unless resource.present? && data_type.present?
-
-      resource.identifier.internal_data.where(data_type: data_type).first&.value || 'Not available'
     end
 
     def fetch_related_primary_article(resource:)

@@ -1,0 +1,13 @@
+document.getElementById('search_results').innerHTML = "<%= escape_javascript(render(partial: 'results')) %>";
+document.getElementById('save_buttons').innerHTML = "<%= escape_javascript(render(partial: 'save_buttons')) %>";
+<% if params[:clear] %>
+  document.getElementById('search_form').innerHTML = "<%= escape_javascript(render(partial: 'search_form')) %>";
+<% end %>
+document.getElementById('count_form_button').click();
+(function () {
+  window.onpageshow = function(event) {
+      if (event.persisted) {
+          window.location.reload();
+        }
+    };
+})();
