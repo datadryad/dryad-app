@@ -329,14 +329,14 @@ module Stash
 
         it 'sets the publication_name' do
           @cr.send(:populate_publication_name)
-          expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
+          expect(@resource.resource_publication.publication_name).to eql(PUBLISHER)
         end
 
         it 'ignores blank publisher names' do
           @cr = Crossref.new(resource: @resource, crossref_json: { 'publisher' => nil })
           resp = @cr.send(:populate_publication_name)
           expect(resp).to eql(nil)
-          expect(@resource.identifier.internal_data.none? { |id| id.data_type == 'publicationName' }).to eql(true)
+          expect(@resource.resource_publication&.publication_name).to eql(nil)
         end
       end
 
@@ -393,7 +393,7 @@ module Stash
           expect(@resource.descriptions.select { |d| d.description_type = 'abstract' }.first.description).to eql(ABSTRACT)
           expect(@resource.contributors.length).to eql(11)
           expect(@resource.related_identifiers.first.related_identifier).to eql(StashDatacite::RelatedIdentifier.standardize_doi(URL))
-          expect(@resource.identifier.internal_data.select { |id| id.data_type == 'publicationName' }.first.value).to eql(PUBLISHER)
+          expect(@resource.resource_publication.publication_name).to eql(PUBLISHER)
           doi = @resource.related_identifiers.select { |id| id.related_identifier_type == 'doi' && id.relation_type == 'iscitedby' }
           expect(doi.first&.related_identifier).to end_with(DOI)
         end
@@ -438,10 +438,9 @@ module Stash
       describe 'Crossref query helper methods' do
 
         before(:each) do
-          identifier = StashEngine::Identifier.create(identifier: 'ABCD')
-          identifier.internal_data << StashEngine::InternalDatum.new(data_type: 'publicationISSN', value: '1234-5678')
-          identifier.save
-          @resource = StashEngine::Resource.create(title: ' Testing  Again\\', identifier: identifier)
+          identifier = create(:identifier, identifier: 'ABCD')
+          @resource = create(:resource, title: ' Testing  Again\\', identifier: identifier)
+          create(:resource_publication, publication_issn: '1234-5678', resource_id: @resource.id)
           @resource.authors = [
             StashEngine::Author.new(author_first_name: 'John', author_last_name: 'Doe', author_orcid: '12345'),
             StashEngine::Author.new(author_first_name: 'Jane', author_last_name: 'Van-jones')
@@ -631,9 +630,7 @@ module Stash
         it 'properly extracts the data from the ProposedChange' do
           cr = Crossref.from_proposed_change(proposed_change: @proposed_change)
           resource = cr.populate_resource!
-          expect(resource.identifier.internal_data.select do |id|
-                   id.data_type == 'publicationName'
-                 end.first.value).to eql(@params[:publication_name])
+          expect(resource.resource_publication.publication_name).to eql(@params[:publication_name])
         end
       end
 

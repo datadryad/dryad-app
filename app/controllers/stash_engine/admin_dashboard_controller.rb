@@ -206,11 +206,9 @@ module StashEngine
         search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
         @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) > 0")
       end
-      @datasets = @datasets.left_outer_joins(:related_identifiers)
-        .joins("left outer join stash_engine_internal_data msnum on
-          msnum.identifier_id = stash_engine_identifiers.id and msnum.data_type = 'manuscriptNumber'")
+      @datasets = @datasets.left_outer_joins(:related_identifiers).left_outer_joins(:resource_publication)
         .where(
-          'dcs_related_identifiers.related_identifier like ? or msnum.value like ?',
+          'LOWER(dcs_related_identifiers.related_identifier) like ? or LOWER(stash_engine_resource_publications.manuscript_number) like LOWER(?)',
           "%#{@filters[:identifiers]}%", "%#{@filters[:identifiers]}%"
         ) unless @filters[:identifiers].blank?
 
@@ -265,7 +263,7 @@ module StashEngine
       journal_ids = @filters.dig(:journal, :value)&.to_i
       journal_ids = (@journal_limit.map(&:id).include?(journal_ids) ? journal_ids : @journal_limit.map(&:id)) if @journal_limit.present?
 
-      @datasets = @datasets.joins(identifier: :journal).where('stash_engine_journals.id': journal_ids) if journal_ids.present?
+      @datasets = @datasets.joins(:journal).where('stash_engine_journals.id': journal_ids) if journal_ids.present?
     end
 
     def sponsor_filter
@@ -274,7 +272,7 @@ module StashEngine
       sponsor_ids = @filters[:sponsor]&.to_i
       sponsor_ids = (@sponsor_limit.map(&:id).include?(sponsor_ids) ? sponsor_ids : @sponsor_limit.map(&:id)) if @sponsor_limit.present?
 
-      @datasets = @datasets.joins(identifier: :journal).where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
+      @datasets = @datasets.joins(:journal).where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
     end
 
     def funder_filter
@@ -307,9 +305,11 @@ module StashEngine
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
       @datasets = @datasets.preload(:user) if @fields.include?('submitter')
       @datasets = @datasets.preload(identifier: :counter_stat) if @fields.include?('metrics')
-      @datasets = @datasets.preload(identifier: :journal_datum) if @fields.include?('journal') || @fields.include?('sponsor')
+      if @fields.include?('journal') || @fields.include?('sponsor') || @fields.include?('identifiers')
+        @datasets = @datasets.preload(:resource_publication)
+      end
       @datasets = @datasets.preload(:funders) if @fields.include?('funders')
-      @datasets = @datasets.preload(:related_identifiers).preload(identifier: :manuscript_datum) if @fields.include?('identifiers')
+      @datasets = @datasets.preload(:related_identifiers) if @fields.include?('identifiers')
     end
 
     def load

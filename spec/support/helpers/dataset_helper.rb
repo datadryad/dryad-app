@@ -17,7 +17,7 @@ module DatasetHelper
   def navigate_to_software_file
     # Sets this up as a page that can see the software/supp info upload page.
     se_identifier = StashEngine::Identifier.all.first
-    StashEngine::InternalDatum.create(identifier_id: se_identifier.id, data_type: 'publicationISSN', value: '1687-7667')
+    create(:resource_publication, resource_id: se_identifier.latest_resource_id, publication_issn: '1687-7667')
     se_identifier.reload
     navigate_to_upload # so the menus refresh to show newly-allowed tab for special zenodo uploads
 

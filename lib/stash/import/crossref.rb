@@ -233,15 +233,14 @@ module Stash
         end
 
         proposed_change.publication_date != @resource.publication_date ||
-          internal_datum_will_change?(proposed_change: proposed_change) ||
+          publication_will_change?(proposed_change: proposed_change) ||
           related_identifier_will_change?(proposed_change: proposed_change) ||
           (proposed_change.authors.present? && (auths & @resource.authors).any?) || subjects_changed
       end
 
-      def internal_datum_will_change?(proposed_change:)
-        internal_data = @resource.identifier.internal_data
-        proposed_change.publication_name != internal_data.select { |d| d.data_type == 'publicationName' }.first&.value ||
-          proposed_change.publication_name != internal_data.select { |d| d.data_type == 'publicationISSN' }.first&.value
+      def publication_will_change?(proposed_change:)
+        proposed_change.publication_name != @resource.resource_publication&.publication_name ||
+          proposed_change.publication_issn != @resource.resource_publication&.publication_issn
       end
 
       def related_identifier_will_change?(proposed_change:)
@@ -372,32 +371,27 @@ module Stash
         # In that case, we will save the journal name, and look up the correct ISSN from the name.
         return unless StashEngine::Journal.find_by_issn(@sm['ISSN'].first).present?
 
-        datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
-                                                                 data_type: 'publicationISSN')
+        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
 
-        return if StashEngine::Journal.find_by_issn(datum.value)&.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first).id
+        return if @resource.journal&.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first).id
 
-        datum.update(value: @sm['ISSN'].first)
+        datum.publication_issn = @sm['ISSN'].first
+        datum.save
       end
 
       def populate_publication_name
         return unless publisher.present?
         # We do not want to overwrite correct journal names with nonstandardized names for the same journal
         # only update the journal name if the dataset is not already set with this journal
-        return if @sm['ISSN'].present? && @sm['ISSN'].first.present? &&
-          @resource.identifier.journal_datum.present? && @resource.identifier.journal.present? &&
-          @resource.identifier.journal.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first)&.id
+        return if @sm['ISSN'].present? && @sm['ISSN'].first.present? && @resource.journal.present? &&
+          @resource.journal.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first)&.id
 
-        datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
-                                                                 data_type: 'publicationName')
-        datum.update(value: publisher)
-        journal = StashEngine::Journal.find_by_title(publisher)
-        return unless journal.present?
-
+        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+        datum.publication_name = publisher
         # If the publication name matches an existing journal, populate/update the ISSN
-        datum = StashEngine::InternalDatum.find_or_initialize_by(identifier_id: @resource.identifier.id,
-                                                                 data_type: 'publicationISSN')
-        datum.update(value: journal.single_issn)
+        journal = StashEngine::Journal.find_by_title(publisher)
+        datum.publication_issn = journal.single_issn if journal.present?
+        datum.save
       end
 
       def populate_title

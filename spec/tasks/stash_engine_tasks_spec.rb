@@ -7,19 +7,19 @@ describe 'identifiers:datasets_with_possible_articles_report', type: :task do
     # should not be included in the CSV
     identifier_w_article = create(:identifier, pub_state: 'published')
     resource = create(:resource, identifier_id: identifier_w_article.id)
-    create(:internal_data, data_type: 'publicationISSN', stash_identifier: identifier_w_article)
+    create(:resource_publication, resource: resource, publication_name: nil, publication_issn: '0000-000X')
     create(:related_identifier, resource: resource, related_identifier_type: 'doi', work_type: 'primary_article')
 
-    identifier_w_article
+    identifier_w_article.reload
   end
 
   let!(:identifier_wo_article) do
     # should be included in the CSV
     identifier_wo_article = create(:identifier, pub_state: 'published')
-    create(:resource, identifier_id: identifier_wo_article.id)
-    create(:internal_data, data_type: 'publicationISSN', stash_identifier: identifier_wo_article)
+    resource = create(:resource, identifier_id: identifier_wo_article.id)
+    create(:resource_publication, resource: resource, publication_name: nil, publication_issn: '0000-000X')
 
-    identifier_wo_article
+    identifier_wo_article.reload
   end
 
   before(:each) do
