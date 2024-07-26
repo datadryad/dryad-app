@@ -108,7 +108,7 @@ export default function ReadMe({
             <p>You can replace the content below with a local README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a>, or by deleting the content and generating a new README using our tool.</p>
             <div className="readme-buttons">
               <ReadMeImport title="Import new README" setValue={setReplaceValue} />
-              <button type="button" className="o-button__plain-text0" onClick={restartWizard}>
+              <button type="button" className="o-button__plain-text0" onClick={() => document.getElementById('restart-wizard-dialog').showModal()}>
                 <i className="fa fa-trowel-bricks" aria-hidden="true" /> Generate new README
               </button>
             </div>
@@ -120,6 +120,29 @@ export default function ReadMe({
           replaceValue={replaceValue}
           onChange={checkDescription}
         />
+        <dialog id="restart-wizard-dialog" className="modalDialog">
+          <div className="modalClose">
+            <button aria-label="Close" type="button" onClick={() => document.getElementById('restart-wizard-dialog').close()} />
+          </div>
+          <div>
+            <h1>Are you sure?</h1>
+            <p>Are you sure you want to delete this README and use our tool to generate a new one? This action may not be reversible.</p>
+            <div className="c-modal__buttons-right">
+              <button
+                type="button"
+                className="o-button__plain-text2"
+                onClick={() => {
+                  document.getElementById('restart-wizard-dialog').close();
+                  restartWizard();
+                }}
+              >Delete &amp; restart
+              </button>
+              <button type="button" className="o-button__plain-text7" onClick={() => document.getElementById('restart-wizard-dialog').close()}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </dialog>
       </>
     );
   } if (wizardContent && wizardStep <= secTitles.length) {
