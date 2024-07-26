@@ -425,8 +425,8 @@ RSpec.feature 'AdminDatasets', type: :feature do
         sign_in(@journal_admin, false)
         ident1 = create(:identifier)
         @res1 = create(:resource, identifier_id: ident1.id, user: @user, tenant_id: @admin.tenant_id)
-        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
-        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
+        create(:internal_datum, identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
+        create(:internal_datum, identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
         ident1.reload
       end
 

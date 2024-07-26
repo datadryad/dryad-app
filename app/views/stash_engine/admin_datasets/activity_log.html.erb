@@ -86,10 +86,33 @@
       </div>
     <% end %>
   </div>
+  <br style="clear: both;"/>
 <% end %>
 
+<div id="publication">
+  <h2>Publication information</h2>
+  <div style="display: flex; flex-wrap: wrap; gap: 2ch">
+    <div class="o-admin-form-pair">
+      <b>Publication ISSN:</b><span id="publication_issn" class="callout"><%= @identifier.publication_issn %></span>
+    </div>
+    <div class="o-admin-form-pair">
+      <b>Publication name:</b><span id="publication_name" class="callout"><%= @identifier.publication_name %></span>
+    </div>
+    <div class="o-admin-form-pair">
+      <b>Manuscript number:</b><span id="manuscript_number" class="callout"><%= @identifier.manuscript_number %></span>
+    </div>
+    <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
+      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'publication'), method: :get, local: false) do %>
+        <button class="o-button__plain-text7" aria-label="Edit publication information" title="Edit" aria-haspopup="true" aria-expanded="false" id="publication_button_<%= @identifier&.id %>"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
+      <% end %>
+    <% end %>
+  </div>
+  <% if @identifier.internal_data %>
+    <p><button class="o-button__plain-text7" onclick="document.getElementById('internal_data').toggleAttribute('hidden')"><i class="fa fa-eye" aria-hidden="true" style="margin-right: .5ch;"></i>View historical Internal data</button></p>
+  <% end %>
+</div>
 
-<div id="internal_data" style="clear: both">
+<div id="internal_data" style="clear: both" hidden>
   <div style="float: left"><h2>Internal data</h2></div>
   
   <% if policy([:stash_engine, :admin_datasets]).data_popup? %>

@@ -478,7 +478,7 @@ module StashApi
           user4 = create(:user, tenant_id: 'ucop')
           journal = create(:journal)
           create(:role, role_object: journal, user: user4)
-          create(:internal_datum, identifier_id: @identifiers[1].id, data_type: 'publicationISSN', value: journal.single_issn)
+          create(:resource_publication, publication_issn: journal.single_issn, resource: create(:resource, identifier: @identifiers[1]))
           @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                     owner_id: user4.id, owner_type: 'StashEngine::User')
           setup_access_token(doorkeeper_application: @doorkeeper_application)
@@ -555,8 +555,9 @@ module StashApi
         end
 
         it 'reduces scope to a publisher ISSN' do
-          internal_datum = create(:internal_datum, identifier_id: @identifiers[5].id, data_type: 'publicationISSN')
-          get '/api/v2/datasets', params: { 'publicationISSN' => internal_datum.value }, headers: default_authenticated_headers
+          journal = create(:journal, issn: '0001-0001')
+          create(:resource_publication, publication_issn: journal.single_issn, resource: create(:resource, identifier: @identifiers[5]))
+          get '/api/v2/datasets', params: { 'publicationISSN' => journal.single_issn }, headers: default_authenticated_headers
           output = response_body_hash
           expect(output[:count]).to eq(1)
           expect(output['_embedded']['stash:datasets'].first['identifier']).to eq(@identifiers[5].to_s)
@@ -883,6 +884,7 @@ module StashApi
           @res.authors.first.update(author_orcid: @super_user.orcid)
           @res.subjects << [create(:subject), create(:subject), create(:subject)]
           @ca = create(:curation_activity, resource: @res, status: 'peer_review')
+          @identifier.reload
         end
 
         it 'allows curationStatus to be updated' do
@@ -935,9 +937,7 @@ module StashApi
 
         it 'allows publicationISSN to be removed with a nil value' do
           new_issn = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
-          StashEngine::InternalDatum.create(identifier_id: @identifier.id,
-                                            data_type: 'publicationISSN',
-                                            value: new_issn)
+          create(:resource_publication, publication_issn: new_issn, resource: @res)
           expect(@identifier.publication_issn).to eq(new_issn)
           @patch_body = [{ op: 'replace', path: '/publicationISSN', value: '' }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",

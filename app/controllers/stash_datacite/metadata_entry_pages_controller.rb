@@ -5,10 +5,10 @@ module StashDatacite
     def find_or_create
       @metadata_entry = Resource::MetadataEntry.new(@resource, session[:resource_type] || 'dataset', current_tenant)
       @metadata_entry.resource_type
-      se_id = StashEngine::Identifier.find(@resource.identifier_id)
-      @publication_issn = StashEngine::InternalDatum.find_or_initialize_by(stash_identifier: se_id, data_type: 'publicationISSN')
-      @publication_name = StashEngine::InternalDatum.find_or_initialize_by(stash_identifier: se_id, data_type: 'publicationName')
-      @msid = StashEngine::InternalDatum.find_or_initialize_by(stash_identifier: se_id, data_type: 'manuscriptNumber')
+      pub = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+      @publication_issn = pub&.publication_issn
+      @publication_name = pub&.publication_name
+      @msid = pub&.manuscript_number
 
       # the following used a "find_or_initialize" originally, but it doesn't always load the existing record
       # some dois not identified as such, but as URLs probably from the live-checking code and crossRef and DataCite fight
@@ -33,8 +33,8 @@ module StashDatacite
     def cedar_check
       # rubocop:disable Style/DoubleNegation
       @metadata_entry = Resource::MetadataEntry.new(@resource, session[:resource_type] || 'dataset', current_tenant)
-      se_id = StashEngine::Identifier.find(@resource.identifier_id)
-      publication_name = StashEngine::InternalDatum.find_or_initialize_by(stash_identifier: se_id, data_type: 'publicationName').value || ''
+      pub = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+      publication_name = pub&.publication_name || ''
       title = @resource.title || ''
       abstract = @metadata_entry.abstract.description || ''
       @neuro_data = false

@@ -29,8 +29,6 @@ module StashEngine
     validates :data_type, presence: true
     validates :value, presence: true
 
-    after_save_commit :record_history, if: :saved_change_to_value?
-
     def self.data_type(type)
       where('data_type = ?', type)
     end
@@ -42,17 +40,6 @@ module StashEngine
       else
         false
       end
-    end
-
-    private
-
-    def record_history
-      return unless stash_identifier.latest_resource.present?
-
-      StashEngine::CurationActivity.create(
-        note: "Internal datum edited (#{data_type}: #{value})", resource_id: stash_identifier.latest_resource.id,
-        status: stash_identifier.latest_resource.current_curation_status, user_id: 0
-      )
     end
   end
 end

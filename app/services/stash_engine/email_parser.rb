@@ -112,11 +112,10 @@ module StashEngine
       # find by manuscript number
       ms_number = @hash['ms reference number']
       if ms_number && !@identifier
-        int_data = StashEngine::InternalDatum.where(value: ms_number, data_type: 'manuscriptNumber')
-        int_data.each do |datum|
-          ident = datum.stash_identifier
-          @identifier = ident if ident.journal == @journal
-        end
+        resource = StashEngine::Resource.latest_per_dataset.joins(:resource_publication)
+          .where(resource_publication: { manuscript_number: ms_number }).last
+        ident = resource&.identifier
+        @identifier = ident if ident&.journal == @journal
       end
 
       @identifier
