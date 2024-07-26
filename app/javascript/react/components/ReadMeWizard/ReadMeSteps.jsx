@@ -2,7 +2,9 @@
 import React from 'react';
 import MarkdownEditor from '../MarkdownEditor';
 
-export const secTitles = ['File list', 'Variable list', 'Code/software', 'Usage notes', 'Access information'];
+const formatList = (fileList) => fileList.map((f) => `#### File: ${f.name}\n**Description:**&nbsp;\n\n##### Variables\n${f.variables.map((v) => `* ${v}: `).join('\n')}`).join('\n\n');
+
+export const secTitles = ['Data description', 'Files and variables', 'Code/software', 'Access information'];
 
 export default function ReadMeSteps({
   step, setStep, content, fileList, save,
@@ -18,24 +20,20 @@ export default function ReadMeSteps({
 
   const sections = {
     1: {
-      desc: 'Provide a comprehensive list of file names and folders. Check that the following is accurate, and add any folders and files inside compressed archive files (.zip, .gz).',
-      content: content.step1 || fileList.map((f) => `* ${f}`).join('\n'),
+      desc: 'Provide a short description of the experimental efforts for which the data was collected.',
+      content: content.step1 || '',
     },
     2: {
-      desc: 'Define all variables and abbreviations in your data files, including units of measurement. List how you indicate missing values (blank cells, "NA", etc.) if applicable.',
-      content: content.step2 || '',
+      desc: 'Provide a comprehensive list of data files, and define all variables and abbreviations used, including units of measurement. List how you indicate missing values (blank cells, "NA", etc.) if applicable. Please add descriptions below, and add any folders and files inside compressed archives (.zip, .gz) to the list. ',
+      content: content.step2 || formatList(fileList),
     },
     3: {
       desc: 'What free or open software is needed to view your data? Describe the code software, including versions and loaded packages that you used to run files, and the workflow that you used if the relationship of files to software is not clear. If code or scripts are included with your submission, describe them here.',
       content: content.step3 || '',
     },
     4: {
-      desc: 'List any other necessary instructions for opening and viewing data types.',
-      content: content.step4 || '',
-    },
-    5: {
       desc: 'If applicable, provide links to other publicly accessible locations of the data. If your data was derived from another source(s), list the source(s) and include license information.',
-      content: content.step5 || 'Links to other publicly accessible locations of the data:\n\n* \n\nData was derived from the following sources:\n\n* ',
+      content: content.step5 || 'Other publicly accessible locations of the data:\n\n* \n\nData was derived from the following sources:\n\n* ',
     },
   };
 

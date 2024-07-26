@@ -1,8 +1,19 @@
 // ##### List Object ##### //
 
+ul, ol {
+	margin: .5rem auto;
+}
+
 li {
 	margin-top: $spacing-base;
 	margin-bottom: $spacing-base;
+}
+
+ul.c-text_styles {
+  li {
+    margin: 1.2ex 0;
+    padding: 0;
+  }
 }
 
 .o-list {

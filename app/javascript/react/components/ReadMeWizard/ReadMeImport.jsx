@@ -41,8 +41,9 @@ export default function ReadMeImport({title, setValue}) {
           style={{display: 'inline-block'}}
           htmlFor="readme_upload"
           aria-label="Upload README file"
-          className="o-button__plain-text2"
-        >{title || 'Import README'}
+          className="o-button__plain-text1"
+        >
+          <i className="fa fa-upload" aria-hidden="true" />{' '}{title || 'Import README'}
         </label>
       </div>
       <dialog id="bad-readme-modal" className="modalDialog">
