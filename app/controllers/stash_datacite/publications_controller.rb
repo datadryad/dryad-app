@@ -11,7 +11,7 @@ module StashDatacite
     def update
       @se_id = StashEngine::Identifier.find(params[:identifier_id])
       @resource = StashEngine::Resource.find(params[:resource_id])
-      save_form_to_internal_data
+      save_publications
       respond_to do |format|
         format.json do
           if params[:do_import] == 'true' || params[:do_import] == true
@@ -58,24 +58,25 @@ module StashDatacite
       render json: match
     end
 
-    def save_form_to_internal_data
+    def save_publications
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
       if @pub_issn.blank?
-        exact_matches = StashEngine::Journal.where(title: @pub_name)
-        @pub_issn = exact_matches.first.single_issn if exact_matches.count == 1
+        exact_matches = StashEngine::Journal.find_by(title: @pub_name)
+        @pub_issn = exact_matches.single_issn if exact_matches.present?
       end
       fix_removable_asterisk
-      @pub_name = manage_internal_datum(identifier: @se_id, data_type: 'publicationName', value: @pub_name)
-      @pub_issn = manage_internal_datum(identifier: @se_id, data_type: 'publicationISSN', value: @pub_issn)
-
+      publication = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+      publication.publication_name = @pub_name
+      publication.publication_issn = @pub_issn
       if params[:msid].present?
-        parsed_msid = parse_msid(issn: params[:publication_issn], msid: params[:msid])
-        @msid = manage_internal_datum(identifier: @se_id, data_type: 'manuscriptNumber', value: parsed_msid)
+        @msid = parse_msid(issn: params[:publication_issn], msid: params[:msid])
+        publication.manuscript_number = @msid
       end
+      publication.save
+      @resource.reload
 
-      if @resource.identifier.allow_review? && @resource.previous_curated_resource.blank? &&
-        @resource.curation_start_date.blank? && @se_id.journal&.default_to_ppr?
+      if @resource.identifier.allow_review? && @resource.identifier.date_last_curated.blank? && @resource.journal&.default_to_ppr?
         # if the newly-set journal wants PPR by default, and it is allowed, set the PPR value for this resource
         @resource.update(hold_for_peer_review: @se_id.journal.default_to_ppr)
       end
@@ -181,17 +182,6 @@ module StashDatacite
       @resource = @resource.previous_curated_resource.present? ? cr.populate_pub_update! : cr.populate_resource!
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
       @error = "We couldn't retrieve information from CrossRef about this DOI"
-    end
-
-    def manage_internal_datum(identifier:, data_type:, value:)
-      datum = StashEngine::InternalDatum.where(stash_identifier: identifier, data_type: data_type).first
-      if datum.present?
-        datum.destroy unless value.present?
-        datum.update(value: value) if value.present?
-      elsif value.present?
-        datum = StashEngine::InternalDatum.create(stash_identifier: identifier, data_type: data_type, value: value)
-      end
-      datum
     end
 
     def manage_pubmed_datum(identifier:, doi:)

@@ -233,7 +233,7 @@ module StashApi
         expect(des.description_type).to eq('abstract')
       end
 
-      it 'creates internal data for the publication metadata' do
+      it 'creates a record for the publication metadata' do
         expect(@stash_identifier.publication_issn).to eq('0000-1111')
         expect(@stash_identifier.publication_name).to eq('Some Great Journal')
         expect(@stash_identifier.manuscript_number).to eq('ABC123')
