@@ -3,11 +3,9 @@ document.getElementById('genericModalContent').innerHTML = "<%= escape_javascrip
 // expand the width of the default dialog to accommodate the merge table
 document.getElementById('genericModalContent').classList.add('extra-wide');
 document.getElementById('genericModalDialog').showModal();
-document.getElementById('merge_selected_button').setAttribute('aria-expanded', 'true');
 document.getElementById('genericModalDialog').addEventListener('close', () => {
   // reset the dialog to its default width
   document.getElementById('genericModalDialog').classList.remove('extra-wide');
-  document.getElementById('merge_selected_button').setAttribute('aria-expanded', 'false');
 });
 document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   e.preventDefault();

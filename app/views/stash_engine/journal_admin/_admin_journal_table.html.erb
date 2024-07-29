@@ -38,7 +38,7 @@
           <% if policy([:stash_engine, :journal]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: journal_popup_path(id: j.id, field: 'issn'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit ISSNs" aria-haspopup="dialog" aria-expanded="false" id="issn_button_<%= j.id %>">
+              <button class="c-admin-edit-icon" aria-label="Edit ISSNs" aria-haspopup="dialog" id="issn_button_<%= j.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -54,7 +54,7 @@
           <% if policy([:stash_engine, :journal]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: journal_popup_path(id: j.id, field: 'payment_plan_type'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit payment plan" aria-haspopup="dialog" aria-expanded="false" id="payment_plan_type_button_<%= j.id %>">
+              <button class="c-admin-edit-icon" aria-label="Edit payment plan" aria-haspopup="dialog" id="payment_plan_type_button_<%= j.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -70,7 +70,7 @@
           <% if policy([:stash_engine, :journal]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: journal_popup_path(id: j.id, field: 'notify_contacts'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit publication contacts" aria-haspopup="dialog" aria-expanded="false" id="notify_contacts_button_<%= j.id %>">
+              <button class="c-admin-edit-icon" aria-label="Edit publication contacts" aria-haspopup="dialog" id="notify_contacts_button_<%= j.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -86,7 +86,7 @@
           <% if policy([:stash_engine, :journal]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: journal_popup_path(id: j.id, field: 'review_contacts'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit PPR contacts" aria-haspopup="dialog" aria-expanded="false" id="review_contacts_button_<%= j.id %>">
+              <button class="c-admin-edit-icon" aria-label="Edit PPR contacts" aria-haspopup="dialog" id="review_contacts_button_<%= j.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -104,7 +104,7 @@
           <% if policy([:stash_engine, :journal]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: journal_popup_path(id: j.id, field: 'default_to_ppr'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit PPR default" aria-haspopup="dialog" aria-expanded="false" id="default_to_ppr_button_<%= j.id %>">
+              <button class="c-admin-edit-icon" aria-label="Edit PPR default" aria-haspopup="dialog" id="default_to_ppr_button_<%= j.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -120,7 +120,7 @@
           <% if policy([:stash_engine, :journal]).popup? %>
           <div class="c-lined-table__actions">
             <%= form_with(url: journal_popup_path(id: j.id, field: 'sponsor_id'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit sponsor" aria-haspopup="dialog" aria-expanded="false" id="sponsor_id_button_<%= j.id %>">
+              <button class="c-admin-edit-icon" aria-label="Edit sponsor" aria-haspopup="dialog" id="sponsor_id_button_<%= j.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
