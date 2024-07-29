@@ -10,7 +10,7 @@
 ## Benefits of membership
 <p>Dryad members champion best practice in open data sharing and commit to the health and growth of shared, open infrastructure for data curation, publishing, preservation and reuse.</p>
 
-<div class="table-wrapper">
+<div class="table-wrapper" role="region" tabindex="0" aria-labelledby="benefits-of-membership">
 <table>
   <thead>
     <th/>
@@ -83,7 +83,7 @@ Dryad is pleased to offer fee structures for consortia. Contact <a class="emailr
 ### Societies and publishers
 <p>Individual journals, publishers of all kinds, and scholarly societies join the Dryad community through publisher membership. Publisher support for Dryad was foundational in our establishment and continues to be essential in allowing us to provide open data infrastructure and simple workflows for authors. Annual membership fees are determined by the size of the publisher’s journal portfolio.</p>
 
-<div class="table-wrapper">
+<div class="table-wrapper" role="region" tabindex="0" aria-labelledby="societies-and-publishers">
   <table>
     <thead>
       <tr><td></td><th>Level 1 Membership</th><th>Level 2 Membership</th><th>Level 3 Membership</th><th>Level 4 Membership</th><th>Level 5 Membership</th></tr>
@@ -97,7 +97,7 @@ Dryad is pleased to offer fee structures for consortia. Contact <a class="emailr
 
 In addition to our annual membership fee, we assess a charge for each published dataset. Data charges decrease with volume and take effect only after the 10th data publication. Data fees are billed quarterly. Please see the current fee schedule below. Contact us at <a class="emailr" href="mailto:dev@null">gro.dayrdatad@olleh</a> for additional information and for access to our quarterly cost estimator.
 
-<div class="table-wrapper">
+<div class="table-wrapper" role="region" tabindex="0" aria-label="Additional fees">
   <table>
     <thead>
       <tr><td></td><th>1-10 datasets</th><th>11-100 datasets</th><th>101-250 datasets</th><th>250-500 datasets</th><th>500+ datasets</th></tr>

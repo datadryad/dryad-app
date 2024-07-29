@@ -22,11 +22,12 @@ $orange: #cf4817;
 $light-orange: rgb(237, 129, 90);
 $red: rgb(209, 44, 29);
 $lightest-red: rgb(249, 213, 210);
-$green: #3c763d;
-$medium-green: rgb(82, 131, 70);
+$dark-green: #3c763d;
+$green: rgb(82, 131, 70);
+$medium-green: #6e9c2c;
 $light-green: #74b736;
 $lighter-green: rgb(172, 204, 84);
-$lightest-green: lighten($green, 59%);
+$lightest-green: lighten($dark-green, 59%);
 
 // ***** Link Colors ***** //
 
