@@ -328,20 +328,22 @@ module StashDatacite
 
       end
 
+      describe :required_readme do
+        it 'requires a README file' do
+          @readme.update(upload_file_name: 'some-bogus-filename.txt')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.readme_required
+          expect(error.message).to include('README')
+
+          @readme.update(upload_file_name: 'README.md')
+          error = validations.readme_required
+          expect(error).to be_empty
+        end
+      end
+
       describe :required_data_files do
         before(:each) do
           @resource.generic_files.each { |f| f.update(url: 'http://example.com') }
-        end
-
-        it 'requires a README file, in addition to at least one data file' do
-          @readme.update(upload_file_name: 'some-bogus-filename.txt')
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.data_required
-          expect(error[0].message).to include('README')
-
-          @readme.update(upload_file_name: 'README.md')
-          error = validations.data_required
-          expect(error).to be_empty
         end
 
         it 'requires at least one data file' do
@@ -349,7 +351,7 @@ module StashDatacite
           create(:data_file, resource: @resource, upload_file_name: 'README.md')
           validations = DatasetValidations.new(resource: @resource)
           error = validations.data_required
-          expect(error[0].message).to include('one data file')
+          expect(error.message).to include('one data file')
         end
       end
 
