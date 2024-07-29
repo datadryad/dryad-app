@@ -211,6 +211,8 @@ echo "<h1>Welcome to MACHINE_NAME</h1>" > /var/www/html/index.html
 sudo setsebool -P httpd_read_user_content 1
 sudo setsebool -P httpd_can_network_connect 1
 # UPDATE the settings in datadryad.org.conf to reflect the correct server names
+# AND comment out all SSL/Shibboleth settings
+sudo nano ~/apache/conf.d/datadryad.org.conf
 sudo systemctl restart httpd
 # check that the dummy homepage renders at the Apache port
 curl http://localhost:80
@@ -278,12 +280,15 @@ sudo python3 -m venv /opt/certbot/
 sudo /opt/certbot/bin/pip install --upgrade pip
 sudo /opt/certbot/bin/pip install certbot certbot-apache
 sudo ln -s /opt/certbot/bin/certbot /usr/bin/certbot
-sudo certbot certonly --apache
+sudo certbot certonly --apache #If it complains about port 80, change the port at the top of datadryad.org.conf (temporarily) and restart apache
 sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/fullchain.pem /etc/pki/tls/certs/letsencrypt.crt
 sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/privkey.pem /etc/pki/tls/private/letsencrypt.key
 ```
 
-To get Apache using the new certificates, rebuild the Target Group (as in the section above), using HTTPS setting instead of HTTP.
+To get Apache using the new certificates:
+1. Update datadryad.org.conf to use the certificate files (and the 443 port at the top)
+2. Restart Apache
+3. In AWS, rebuild the Target Group (as in the section above), using HTTPS setting instead of HTTP.
 
 
 Set up shibboleth service provider

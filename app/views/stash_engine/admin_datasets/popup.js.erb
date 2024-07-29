@@ -15,10 +15,6 @@ else
 end %>
 document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: partial, locals: locals) %>";
 document.getElementById('genericModalDialog').showModal();
-document.getElementById('<%= params[:internal_datum_id] || '' %><%= @field %>_button_<%= @identifier.id %>').setAttribute('aria-expanded', 'true');
-document.getElementById('genericModalDialog').addEventListener('close', () => {
-  document.getElementById('<%= params[:internal_datum_id] || '' %><%= @field %>_button_<%= @identifier.id %>').setAttribute('aria-expanded', 'false');
-});
 document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('genericModalDialog').close();

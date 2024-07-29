@@ -48,7 +48,7 @@
         <% if policy([:stash_engine, :user]).popup? %>
         <div class="c-lined-table__actions">
           <%= form_with(url: user_popup_path(id: @user.id, field: 'tenant_id'), method: :get, local: false) do %>
-            <button class="c-admin-edit-icon" aria-label="Edit user tenant" aria-haspopup="dialog" aria-expanded="false" id="tenant_id_button_<%= @user.id %>">
+            <button class="c-admin-edit-icon" aria-label="Edit user tenant" aria-haspopup="dialog" id="tenant_id_button_<%= @user.id %>">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
           <% end %>
@@ -60,7 +60,7 @@
         <% if policy([:stash_engine, :user]).popup? %>
         <div class="c-lined-table__actions">
           <%= form_with(url: user_popup_path(id: @user.id, field: 'email'), method: :get, local: false) do %>
-            <button class="c-admin-edit-icon" aria-label="Edit user email" aria-haspopup="dialog" aria-expanded="false" id="email_button_<%= @user.id %>">
+            <button class="c-admin-edit-icon" aria-label="Edit user email" aria-haspopup="dialog" id="email_button_<%= @user.id %>">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
           <% end %>

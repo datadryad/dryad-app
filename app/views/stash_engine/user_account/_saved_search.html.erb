@@ -3,7 +3,7 @@
   <%= link_to saved_search.title, admin_dashboard_path(search: index + 1, clear: true)%>
   <span><%= saved_search.description %></span>
   <%= form_with(url: saved_search_edit_path(saved_search.id), method: :get, local: false) do %>
-    <button class="c-admin-edit-icon" title="Edit search description" aria-label="Edit search description" aria-haspopup="dialog" aria-expanded="false"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button class="c-admin-edit-icon" title="Edit search description" aria-label="Edit search description" aria-haspopup="menu" aria-expanded="false"><i class="fa fa-pencil" aria-hidden="true"></i></button>
   <% end %>
   <%= form_with(url: saved_search_delete_path(saved_search.id), method: :delete, local: false) do %>
     <button class="c-admin-edit-icon" title="Delete saved search" aria-label="Delete saved search"><i class="fa fa-trash-can" aria-hidden="true"></i></button>

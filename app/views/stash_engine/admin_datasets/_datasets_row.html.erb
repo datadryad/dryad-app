@@ -22,7 +22,7 @@
         <% end %>
       <% end %>
       <%= form_with(url: ds_admin_popup_path(id: dataset.identifier_id, field: 'stats'), method: :get, local: false) do %>
-        <button class="c-admin-edit-icon js-stats" title="See dataset statistics" aria-label="See dataset statistics" aria-haspopup="dialog" aria-expanded="false" id="stats_button_<%= dataset.identifier_id %>"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+        <button class="c-admin-edit-icon js-stats" title="See dataset statistics" aria-label="See dataset statistics" aria-haspopup="dialog" id="stats_button_<%= dataset.identifier_id %>"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
       <% end %>
       </div>
     </div>
@@ -36,7 +36,7 @@
       <% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
         <div class="c-lined-table__actions">
         <%= form_with(url: ds_admin_popup_path(id: dataset.identifier_id, field: 'curation_activity'), method: :get, local: false) do %>
-          <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" aria-haspopup="dialog" aria-expanded="false" id="curation_activity_button_<%= dataset.identifier_id %>">
+          <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" aria-haspopup="dialog" id="curation_activity_button_<%= dataset.identifier_id %>">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
         <% end %>
@@ -74,7 +74,7 @@
       <% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
         <div class="c-lined-table__actions">
           <%= form_with(url: ds_admin_popup_path(id: dataset.identifier_id, field: 'current_editor'), method: :get, local: false) do %>
-            <button class="c-admin-edit-icon" title="Update curator" aria-label="Update curator" aria-haspopup="dialog" aria-expanded="false" id="current_editor_button_<%= dataset.identifier_id %>">
+            <button class="c-admin-edit-icon" title="Update curator" aria-label="Update curator" aria-haspopup="dialog" id="current_editor_button_<%= dataset.identifier_id %>">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
           <% end %>

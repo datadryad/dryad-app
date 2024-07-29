@@ -3,7 +3,7 @@
   <% if policy(dataset).curate? %>
     <div class="c-lined-table__actions" id="current_editor_<%= dataset.identifier.id %>">
       <%= form_with(url: admin_dash_edit_path(id: dataset.identifier_id, field: 'current_editor'), method: :get, local: false) do %>
-        <button class="c-admin-edit-icon" title="Update curator" aria-label="Update curator" aria-haspopup="dialog" aria-expanded="false" id="current_editor_button_<%= dataset.identifier_id %>">
+        <button class="c-admin-edit-icon" title="Update curator" aria-label="Update curator" aria-haspopup="dialog" id="current_editor_button_<%= dataset.identifier_id %>">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       <% end %>
