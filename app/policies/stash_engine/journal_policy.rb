@@ -9,5 +9,9 @@ module StashEngine
       @user.system_admin?
     end
 
+    def detail?
+      @user && @user.system_user?
+    end
+
   end
 end

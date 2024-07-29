@@ -2,7 +2,7 @@
 
 <%= render partial: 'stash_engine/shared/account_header', locals: {current: 'publishers'} %>
 
-<h2>Manage publishers &amp; societies</h2>
+<h2 id="orgs-label">Manage publishers &amp; societies</h2>
 
 <%= form_with(url: stash_url_helpers.publisher_admin_path, method: 'get', id: 'search_form') do %>
   <div class="o-admin-form-inline">

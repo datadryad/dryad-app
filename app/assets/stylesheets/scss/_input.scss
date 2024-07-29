@@ -1,5 +1,9 @@
 // ##### Input Component ##### //
 
+input {
+	accent-color: $medium-green;
+}
+
 %c-input {
 	display: flex;
 	flex: 1 1 auto;

@@ -6,11 +6,11 @@
   <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
     <div style="float: right;">
       <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
-        <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="note_button_<%= @identifier&.id %>">Add note</button>
+        <button class="o-button__submit" aria-haspopup="dialog" id="note_button_<%= @identifier&.id %>">Add note</button>
       <% end %>
     </div>
   <% end %>
-  <div class="table-wrapper" style="clear: both" ;>
+  <div class="table-wrapper c-lined-table-wrapper" style="clear: both;" role="region" tabindex="0" aria-label="Curation table">
   <table class="c-lined-table" id="curation_table">
     <thead>
     <tr>
@@ -45,7 +45,7 @@
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
   <div id="salesforce_links" style="clear: both">
-    <div style="float: left"><h2>Salesforce cases</h2></div>
+    <div style="float: left"><h2 id="salesforce-cases">Salesforce cases</h2></div>
     <div style="float: right">
       <br/>
       <%= button_to "Create SF case",
@@ -58,7 +58,7 @@
 
     <% sf_links = salesforce_links(@identifier.identifier) %>
     <% if sf_links %>
-      <div class="table-wrapper" id="sf_link_list" style="clear: both">
+      <div class="table-wrapper c-lined-table-wrapper" id="sf_link_list" style="clear: both" role="region" tabindex="0" aria-labelledby="salesforce-cases">
         <table class="c-lined-table" id="curation_table">
           <thead>
           <tr>
@@ -113,25 +113,24 @@
 </div>
 
 <div id="internal_data" style="clear: both" hidden>
-  <div style="float: left"><h2>Internal data</h2></div>
-  
+  <div style="float: left"><h2>Internal data</h2></div>  
   <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
     <div style="float: right">
       <br/>
       <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'data'), method: :get, local: false) do %>
-        <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="data_button_<%= @identifier&.id %>">Add data</button>
+        <button class="o-button__submit" aria-haspopup="dialog" id="data_button_<%= @identifier&.id %>">Add data</button>
       <% end %>
     </div>
   <% end %>
 
-  <div id="internal_data_table" class="table-wrapper" style="clear: both">
+  <div id="internal_data_table" class="table-wrapper c-lined-table-wrapper" style="clear: both" role="region" tabindex="0" aria-labelledby="internal-data">
     <%= render partial: 'stash_engine/internal_data/table' %>
   </div>
 </div>
 
 <% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
-  <div id="payment_info" class="table-wrapper" style="clear: both">
-    <div style="float: left"><h2>Payment information</h2></div>
+  <div style="float: left"><h2 id="payment-info">Payment information</h2></div>
+  <div id="payment_info" class="table-wrapper c-lined-table-wrapper" style="clear: both" role="region" tabindex="0" aria-labelledby="payment-info">
     <%= render partial: 'payment_info_table' %>
   </div>
   <div id="dangerous_actions">
@@ -152,7 +151,7 @@
       <% if policy([:stash_engine, :admin_datasets]).waiver_add? && @identifier.payment_type != 'waiver' %>
         <div style="float: left" id="apply_fee_waiver">
           <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
-            <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="waiver_button_<%= @identifier&.id %>">Apply fee waiver</button>
+            <button class="o-button__submit" aria-haspopup="dialog" id="waiver_button_<%= @identifier&.id %>">Apply fee waiver</button>
           <% end %>
         </div>
       <% end %>
