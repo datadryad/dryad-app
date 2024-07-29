@@ -21,7 +21,7 @@
             <% end %>
             <%= form_with(url: ds_admin_popup_path(id: item.identifier_id, field: 'data'), method: :get, local: false) do %>
               <%= hidden_field_tag :internal_datum_id, item.id %>
-              <button class="c-admin-edit-icon" aria-label="Edit data item" title="Edit data item" aria-haspopup="dialog" aria-expanded="false" id="<%= item.id %>data_button_<%= item.identifier_id %>">
+              <button class="c-admin-edit-icon" aria-label="Edit data item" title="Edit data item" aria-haspopup="dialog" id="<%= item.id %>data_button_<%= item.identifier_id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
