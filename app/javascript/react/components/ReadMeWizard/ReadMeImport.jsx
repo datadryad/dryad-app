@@ -14,6 +14,7 @@ export default function ReadMeImport({title, setValue}) {
       if (isText(buffer)) {
         readerX.readAsText(file);
       } else {
+        document.getElementById('readme_upload').setAttribute('aria-invalid', true);
         document.getElementById('bad-readme-modal').showModal();
       }
     });
@@ -35,6 +36,8 @@ export default function ReadMeImport({title, setValue}) {
           className="c-choose__input-file"
           type="file"
           accept="text/x-markdown,text/markdown,.md"
+          aria-errormessage="bad-readme-modal"
+          aria-invalid="false"
           onChange={importFile}
         />
         <label
@@ -46,9 +49,16 @@ export default function ReadMeImport({title, setValue}) {
           <i className="fa fa-upload" aria-hidden="true" />{' '}{title || 'Import README'}
         </label>
       </div>
-      <dialog id="bad-readme-modal" className="modalDialog">
+      <dialog id="bad-readme-modal" className="modalDialog" aria-modal="true">
         <div className="modalClose">
-          <button aria-label="Close" type="button" onClick={() => document.getElementById('bad-readme-modal').close()} />
+          <button
+            aria-label="Close"
+            type="button"
+            onClick={() => {
+              document.getElementById('bad-readme-modal').close();
+              document.getElementById('readme_upload').setAttribute('aria-invalid', false);
+            }}
+          />
         </div>
         <div>
           <h1>File not accepted</h1>
