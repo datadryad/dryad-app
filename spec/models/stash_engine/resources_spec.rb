@@ -31,7 +31,7 @@ module StashEngine
     context 'cleanup_blank_models!' do
       before(:each) do
         @identifier = create(:identifier)
-        @resource = Resource.create(user_id: @user.id, identifier: @identifier)
+        @resource = create(:resource, user_id: @user.id, identifier: @identifier)
       end
 
       it 'removes unwanted related identifiers that have no identifier' do
@@ -158,7 +158,7 @@ module StashEngine
     describe :tenant do
       it 'returns the resource tenant' do
         tenant = create(:tenant_ucop)
-        resource = Resource.create(tenant_id: 'ucop')
+        resource = create(:resource, user: create(:user, tenant_id: 'ucop'))
         expect(resource.tenant).to eq(tenant)
       end
     end
@@ -182,61 +182,62 @@ module StashEngine
       before(:each) do
         create(:tenant_ucop)
         @user.update(tenant_id: 'ucop')
+        @user2 = create(:user, tenant_id: 'ucb')
       end
 
       it 'returns false if not owner' do
-        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucb')
+        resource = create(:resource, user: @user2)
         expect(resource.permission_to_edit?(user: @user)).to eq(false)
       end
 
       it 'returns true if superuser' do
-        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucb')
+        resource = create(:resource, user: @user2)
         create(:role, user: @user, role: 'superuser')
         expect(resource.permission_to_edit?(user: @user)).to eq(true)
       end
 
       it 'returns true if curator' do
-        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucb')
+        resource = create(:resource, user: @user2)
         create(:role, user: @user, role: 'curator')
         expect(resource.permission_to_edit?(user: @user)).to eq(true)
       end
 
       it 'returns false if admin for different tenant' do
-        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucb')
+        resource = create(:resource, user: @user2)
         create(:role, user: @user, role: 'admin', role_object: @user.tenant)
         expect(resource.permission_to_edit?(user: @user)).to eq(false)
       end
 
       it 'returns true if admin for same tenant' do
-        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop')
+        resource = create(:resource, user: create(:user, tenant_id: 'ucop'))
         create(:role, user: @user, role: 'admin', role_object: @user.tenant)
         expect(resource.permission_to_edit?(user: @user)).to eq(true)
       end
 
       it 'returns true if admin for same journal' do
         journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
-        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
-        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
-        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
+        identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
+        resource = create(:resource, user: create(:user, tenant_id: 'ucop'), identifier_id: identifier.id)
+        create(:resource_publication, resource_id: resource.id, publication_issn: journal.single_issn)
         create(:role, role_object: journal, user: @user, role: 'admin')
 
         expect(resource.permission_to_edit?(user: @user)).to eq(true)
       end
 
-      it 'returns true if admin for a journal, and the item has no journal set' do
+      it 'returns false if admin for a journal, and the item has no journal set' do
         journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
-        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
-        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
+        identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
+        resource = create(:resource, user: create(:user, tenant_id: 'ucop'), identifier_id: identifier.id)
         create(:role, role_object: journal, user: @user, role: 'admin')
 
-        expect(resource.permission_to_edit?(user: @user)).to eq(true)
+        expect(resource.permission_to_edit?(user: @user)).to eq(false)
       end
 
     end
 
     describe :tenant_id do
       it 'returns the user tenant ID' do
-        resource = Resource.create(tenant_id: 'ucop')
+        resource = create(:resource, user: create(:user, tenant_id: 'ucop'))
         expect(resource.tenant_id).to eq('ucop')
       end
     end
@@ -254,7 +255,7 @@ module StashEngine
       describe :merritt_protodomain_and_local_id do
         it 'returns the merritt protocol and domain and local ID' do
           download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
-          resource = Resource.create(user_id: user.id)
+          resource = create(:resource, user_id: user.id)
           resource.download_uri = download_uri
 
           merritt_protodomain, local_id = resource.merritt_protodomain_and_local_id
@@ -266,13 +267,13 @@ module StashEngine
       describe :merritt_ark do
         it 'extracts the Merritt ark from the download URI' do
           download_uri = 'https://merritt.example.edu/d/ark%3A%2Fb5072%2Ffk2736st5z'
-          resource = Resource.create(user_id: user.id)
+          resource = create(:resource, user_id: user.id)
           resource.download_uri = download_uri
           expect(resource.merritt_ark).to eq('ark:/b5072/fk2736st5z')
         end
 
         it 'returns nil if there is no ark present' do
-          resource = Resource.create(user_id: user.id)
+          resource = create(:resource, user_id: user.id)
           resource.download_uri = ''
           expect(resource.merritt_ark).to be_nil
         end
@@ -287,7 +288,7 @@ module StashEngine
 
       it 'is copied by amoeba duplication' do
         pub_date = Time.new(2015, 5, 18, 13, 25, 30)
-        r1 = Resource.create(user_id: user.id, publication_date: pub_date)
+        r1 = create(:resource, user_id: user.id, publication_date: pub_date)
         r2 = r1.amoeba_dup
         expect(r2.publication_date).to eq(pub_date)
       end
@@ -306,8 +307,8 @@ module StashEngine
         resource1 = create(:resource, user_id: user.id, identifier_id: identifier.id, current_editor_id: editor1.id)
         Timecop.travel(Time.now.utc + 1.minute)
         resource2 = create(:resource, user_id: user.id, identifier_id: identifier.id, current_editor_id: editor2.id)
-        state1 = ResourceState.create(user_id: editor1.id, resource_state: 'submitted', resource_id: resource1.id)
-        state2 = ResourceState.create(user_id: editor2.id, resource_state: 'in_progress', resource_id: resource2.id)
+        state1 = create(:resource_state, user_id: editor1.id, resource_state: 'submitted', resource_id: resource1.id)
+        state2 = create(:resource_state, user_id: editor2.id, resource_state: 'in_progress', resource_id: resource2.id)
         resource1.update(current_resource_state_id: state1.id)
         resource2.update(current_resource_state_id: state2.id)
 
@@ -326,8 +327,8 @@ module StashEngine
         resource1 = create(:resource, user_id: user1.id, identifier_id: identifier.id, current_editor_id: user1.id)
         Timecop.travel(Time.now.utc + 1.minute)
         resource2 = create(:resource, user_id: user1.id, identifier_id: identifier.id, current_editor_id: user2.id)
-        state1 = ResourceState.create(user_id: user1.id, resource_state: 'submitted', resource_id: resource1.id)
-        state2 = ResourceState.create(user_id: user2.id, resource_state: 'in_progress', resource_id: resource2.id)
+        state1 = create(:resource_state, user_id: user1.id, resource_state: 'submitted', resource_id: resource1.id)
+        state2 = create(:resource_state, user_id: user2.id, resource_state: 'in_progress', resource_id: resource2.id)
         resource1.update(current_resource_state_id: state1.id)
         resource2.update(current_resource_state_id: state2.id)
         expect(resource1.dataset_in_progress_editor.id).to eq(user2.id)
@@ -341,8 +342,8 @@ module StashEngine
     describe 'solr fun' do
       before(:each) do
         blacklight_hash = { solr_url: 'http://test.com/blah/geoblacklight' }
-        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
-        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+        @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
+        @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id)
 
         @my_indexer = instance_double('SolrIndexer')
         allow(@my_indexer).to receive(:index_document).and_return(true)
@@ -392,9 +393,9 @@ module StashEngine
 
     describe :may_download? do
       before(:each) do
-        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'published')
-        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
-        @merritt_state = ResourceState.create(user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
+        @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'published')
+        @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
+        @merritt_state = create(:resource_state, user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
         @resource.update(current_resource_state_id: @merritt_state.id)
       end
 
@@ -449,11 +450,11 @@ module StashEngine
 
       it 'returns true if being viewed by a journal admin' do
         journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
-        identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         identifier.update(pub_state: 'unpublished')
-        InternalDatum.create(identifier_id: identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
-        resource = Resource.create(user_id: @user.id + 1, tenant_id: 'ucop', identifier_id: identifier.id)
+        resource = create(:resource, user: create(:user, tenant_id: 'ucop'), identifier_id: identifier.id)
         resource.update(file_view: false)
+        create(:resource_publication, publication_issn: journal.single_issn, resource_id: resource.id)
         create(:role, role_object: journal, user: @user, role: 'admin')
 
         expect(@resource.may_download?(ui_user: @user)).to be true
@@ -464,9 +465,9 @@ module StashEngine
     # able to view based on curation state
     describe '#may_view?' do
       before(:each) do
-        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'embargoed')
-        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
-        @merritt_state = ResourceState.create(user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
+        @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'embargoed')
+        @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
+        @merritt_state = create(:resource_state, user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
         @resource.update(current_resource_state_id: @merritt_state.id)
       end
 
@@ -517,7 +518,7 @@ module StashEngine
         @resource.update(tenant_id: 'superca', meta_view: false, file_view: false)
         @user2 = create(:user, first_name: 'Gorgonzola', last_name: 'Travesty', tenant_id: user.tenant_id)
         journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
-        InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
+        create(:resource_publication, publication_issn: journal.single_issn, resource_id: @resource.id)
         create(:role, role_object: journal, user: @user2, role: 'admin')
 
         expect(@resource.may_view?(ui_user: @user2)).to be_truthy
@@ -534,8 +535,8 @@ module StashEngine
     describe :files_published? do
 
       before(:each) do
-        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: nil)
-        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: false)
+        @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI', pub_state: nil)
+        @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: false)
       end
 
       it 'defaults to false' do
@@ -573,8 +574,8 @@ module StashEngine
     describe :metadata_published? do
 
       before(:each) do
-        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: nil)
-        @resource = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: false, file_view: false)
+        @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI', pub_state: nil)
+        @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: false, file_view: false)
       end
 
       it 'defaults to false' do
@@ -605,22 +606,22 @@ module StashEngine
 
     describe '#previously_public?' do
       before(:each) do
-        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI', pub_state: nil)
+        @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI', pub_state: nil)
       end
 
       it 'returns true if a previous resource had metadata view set to true' do
-        @resource1 = Resource.create(user_id: user.id, created_at: '2020-01-03', identifier_id: @identifier.id, meta_view: true, file_view: false)
-        @resource2 = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: false, file_view: false)
+        @resource1 = create(:resource, user_id: user.id, created_at: '2020-01-03', identifier_id: @identifier.id, meta_view: true, file_view: false)
+        @resource2 = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: false, file_view: false)
         # resource for different identifier, below
-        Resource.create(user_id: user.id, meta_view: true, created_at: '2020-01-03', file_view: false)
+        create(:resource, user_id: user.id, meta_view: true, created_at: '2020-01-03', file_view: false)
         expect(@resource2.previously_public?).to eq(true)
       end
 
       it 'returns false if a previous resource had no metadata view exposed' do
-        @resource1 = Resource.create(user_id: user.id, created_at: '2020-01-03', identifier_id: @identifier.id, meta_view: false, file_view: false)
-        @resource2 = Resource.create(user_id: user.id, identifier_id: @identifier.id, meta_view: false, file_view: false)
+        @resource1 = create(:resource, user_id: user.id, created_at: '2020-01-03', identifier_id: @identifier.id, meta_view: false, file_view: false)
+        @resource2 = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: false, file_view: false)
         # resource for different identifier, below
-        Resource.create(user_id: user.id, created_at: '2020-01-03', meta_view: true, file_view: false)
+        create(:resource, user_id: user.id, created_at: '2020-01-03', meta_view: true, file_view: false)
         expect(@resource2.previously_public?).to eq(false)
       end
     end
@@ -1474,7 +1475,7 @@ module StashEngine
           @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop')
           create(:role, role_object: @user2.tenant, user: @user2, role: 'admin')
           @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'curator')
-          @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+          @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
           @resources = []
           Timecop.travel(Time.now.utc - 12.seconds)
           [@user, @user2, @user3].each do |user|
@@ -1558,10 +1559,11 @@ module StashEngine
         # their role.  I think will mostly be used for getting resources for an identifier visible to a user and their role.
         describe :visible_to_user do
           before(:each) do
-            @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+            @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
             @resources[0].update(identifier_id: @identifier.id)
             @resources[1].update(identifier_id: @identifier.id)
             @resources[2].update(identifier_id: @identifier.id)
+            @identifier.reload
           end
 
           it 'shows all resources for the identifier to the curator' do
@@ -1586,7 +1588,7 @@ module StashEngine
 
           it 'shows all resources to an admin for this journal' do
             journal = create(:journal, title: 'Test Journal', issn: '1234-4321')
-            InternalDatum.create(identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
+            create(:resource_publication, publication_issn: journal.single_issn, resource_id: @identifier.latest_resource_id)
             create(:role, role_object: journal, user: @user2, role: 'admin')
             resources = StashEngine::ResourcePolicy::VersionScope.new(@user2, @identifier.resources).resolve
             expect(resources.count).to eq(3)
@@ -1636,15 +1638,15 @@ module StashEngine
 
     describe '#previous_resource' do
       before(:each) do
-        @identifier2 = Identifier.create(identifier: 'cat/frog', identifier_type: 'DOI')
-        @identifier = Identifier.create(identifier: 'cat/dog', identifier_type: 'DOI')
+        @identifier2 = create(:identifier, identifier: 'cat/frog', identifier_type: 'DOI')
+        @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
 
-        @resource1 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
-        @other_resource1 = Resource.create(user_id: user.id, identifier_id: @identifier2.id)
+        @resource1 = create(:resource, user_id: user.id, identifier_id: @identifier.id)
+        @other_resource1 = create(:resource, user_id: user.id, identifier_id: @identifier2.id)
         Timecop.travel(Time.now.utc + 1.second)
-        @resource2 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+        @resource2 = create(:resource, user_id: user.id, identifier_id: @identifier.id)
         Timecop.travel(Time.now.utc + 1.second)
-        @resource3 = Resource.create(user_id: user.id, identifier_id: @identifier.id)
+        @resource3 = create(:resource, user_id: user.id, identifier_id: @identifier.id)
         Timecop.return
       end
 

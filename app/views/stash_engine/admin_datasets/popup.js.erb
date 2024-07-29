@@ -3,6 +3,9 @@
 when 'data'
   partial = 'stash_engine/admin_datasets/internal_data_popup'
   locals = { identifier: @identifier, title: params[:internal_datum_id] ? 'Edit datum' : 'Add datum' }
+when 'publication'
+  partial = 'stash_engine/admin_datasets/publication_popup'
+  locals = { publication: @publication, title: 'Edit publication information' }
 when 'note'
   partial = 'stash_engine/admin_datasets/curation_note_popup'
   locals = { identifier: @identifier, title: 'Add note' }

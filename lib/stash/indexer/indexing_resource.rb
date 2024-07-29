@@ -223,13 +223,15 @@ module Stash
       end
 
       def related_publication_name
-        @resource.identifier.internal_data.where(data_type: 'publicationName').first&.value
+        @resource.resource_publication&.publication_name
       end
 
       def related_publication_id
-        ids = @resource.identifier.internal_data.where(data_type: %w[manuscriptNumber pubmedID])&.map(&:value)&.join(' ')
+        ids = [@resource.resource_publication&.manuscript_number]
+        ids << @resource.identifier.internal_data.where(data_type: 'pubmedID')&.map(&:value)&.uniq
+
         pub_doi = @resource.related_identifiers.where(related_identifier_type: 'doi', work_type: 'primary_article').last
-        (pub_doi.present? ? "#{ids} #{pub_doi.related_identifier}" : ids)
+        (pub_doi.present? ? "#{ids.flatten.join(' ')} #{pub_doi.related_identifier}" : ids.flatten.join(' '))
       end
 
       # rubocop:disable Style/MultilineBlockChain

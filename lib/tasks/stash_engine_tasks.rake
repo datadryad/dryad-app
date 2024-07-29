@@ -495,7 +495,8 @@ namespace :identifiers do
     p "Writing #{outfile}..."
     CSV.open(outfile, 'w') do |csv|
       csv << %w[ID Identifier ISSN]
-      StashEngine::Identifier.publicly_viewable.joins(:internal_data).where(internal_data: { data_type: 'publicationISSN' })
+      StashEngine::Identifier.publicly_viewable.joins(latest_resource: :resource_publication)
+        .where.not(resource_publication: { publication_issn: nil })
         .where.not(
           id: StashEngine::Resource
             .joins(:related_identifiers)
@@ -666,10 +667,10 @@ namespace :identifiers do
 
       StashEngine::Manuscript.where(status: 'rejected').find_each do |ms|
         same_manuscripts = StashEngine::Manuscript.where(manuscript_number: ms.manuscript_number)
-        int_data = StashEngine::InternalDatum.where(data_type: 'manuscriptNumber', value: ms.manuscript_number)
-        next unless int_data.present?
+        pub = StashEngine::ResourcePublication.find_by(manuscript_number: ms.manuscript_number)
+        next unless pub.present?
 
-        i = StashEngine::Identifier.find(int_data.first&.identifier_id)
+        i = pub.resource.identifier
         next unless i
 
         puts "MS: #{ms.manuscript_number}  identifier #{int_data.first&.identifier_id}  same? #{same_manuscripts.size > 1}"
@@ -1157,27 +1158,25 @@ namespace :identifiers do
   desc 'populate publicationName'
   task load_publication_names: :environment do
     p "Searching CrossRef and the Journal API for publication names: #{Time.now.utc}"
-    already_loaded_ids = StashEngine::InternalDatum.where(data_type: 'publicationName').pluck(:identifier_id).uniq
     unique_issns = {}
-    StashEngine::InternalDatum.where(data_type: 'publicationISSN').where.not(identifier_id: already_loaded_ids).each do |datum|
-      if unique_issns[datum.value].present?
+    StashEngine::Identifier.joins(latest_resource: :resource_publication).where(resource_publication: { publication_name: nil })
+      .where.not(resource_publication: { publication_issn: nil }).each do |datum|
+      if unique_issns[datum.publication_issn].present?
         # We already grabbed the title for the ISSN from Crossref
-        title = unique_issns[datum.value]
+        title = unique_issns[datum.publication_issn]
       else
-        response = HTTParty.get("https://api.crossref.org/journals/#{datum.value}", headers: { 'Content-Type': 'application/json' })
+        response = HTTParty.get("https://api.crossref.org/journals/#{datum.publication_issn}", headers: { 'Content-Type': 'application/json' })
         if response.present? && response.parsed_response.present? && response.parsed_response['message'].present?
           title = response.parsed_response['message']['title']
-          unique_issns[datum.value] = title unless unique_issns[datum.value].present?
-          p "    found title, '#{title}', for #{datum.value}"
+          unique_issns[datum.publication_issn] = title unless unique_issns[datum.publication_issn].present?
+          p "    found title, '#{title}', for #{datum.publication_issn}"
         end
       end
-      StashEngine::InternalDatum.create(identifier_id: datum.identifier_id, data_type: 'publicationName', value: title) unless title.blank?
+      datum.update(publicationName: title) unless title.blank?
       # Submit the info to Solr if published/embargoed
-      identifier = StashEngine::Identifier.where(id: datum.identifier_id).first
-      if identifier.present? && identifier.latest_resource.present?
-        current_resource = identifier.latest_resource_with_public_metadata
-        current_resource.submit_to_solr if current_resource.present?
-      end
+      identifier = datum.resource.identifier
+      current_resource = identifier.latest_resource_with_public_metadata
+      current_resource.submit_to_solr if current_resource.present?
     end
     p "Finished: #{Time.now.utc}"
   end
@@ -1403,6 +1402,16 @@ namespace :journals do
   task clean_titles_with_asterisks: :environment do
     StashEngine::InternalDatum.where("data_type = 'publicationName' and value like '%*'").find_each do |d|
       name = d.value
+      next unless name.ends_with?('*')
+
+      j = StashEngine::Journal.find_by_title(name[0..-2])
+      next unless j.present?
+
+      puts "Cleaning journal: #{name}"
+      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_id: j.id)
+    end
+    StashEngine::ResourcePublication.where("publication_name like '%*'").find_each do |d|
+      name = d.publication_name
       next unless name.ends_with?('*')
 
       j = StashEngine::Journal.find_by_title(name[0..-2])
