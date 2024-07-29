@@ -5,7 +5,7 @@
   <% if policy(dataset).curate? %>
     <div class="c-lined-table__actions">
     <%= form_with(url: admin_dash_edit_path(id: dataset.identifier_id, field: 'curation_activity'), method: :get, local: false) do %>
-      <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" aria-haspopup="dialog" aria-expanded="false" id="curation_activity_button_<%= dataset.identifier_id %>">
+      <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" aria-haspopup="dialog" id="curation_activity_button_<%= dataset.identifier_id %>">
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </button>
     <% end %>
