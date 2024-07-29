@@ -95,6 +95,7 @@ module DatasetHelper
     choose('choose_published')
     fill_in 'publication', with: name
     fill_in 'primary_article_doi', with: doi
+    page.send_keys(:tab)
   end
 
   def fill_in_keywords
