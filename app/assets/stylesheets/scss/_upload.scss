@@ -48,6 +48,7 @@
 }
 .readme-columns {
   flex-wrap: wrap;
+  margin: 2rem auto;
   & > div {
     flex-basis: calc(50% - 2ch);
     flex-shrink: 1;
