@@ -7,7 +7,7 @@ import PrelimOther from './PrelimOther';
 
 function PrelimInfo(
   {
-    importInfo, resourceId, identifierId, publication_name, publication_issn, msid, related_identifier,
+    importInfo, resourceId, identifierId, publication_name, publication_issn, msid, related_identifier, api_journals,
   },
 ) {
   const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -103,6 +103,7 @@ function PrelimInfo(
               setAcID={setAcID}
               msId={msId}
               setMsId={setMsId}
+              hideImport={api_journals.includes(acID)}
             />
           );
         case 'published':
@@ -116,6 +117,7 @@ function PrelimInfo(
               setAcID={setAcID}
               relatedIdentifier={relatedIdentifier}
               setRelatedIdentifier={setRelatedIdentifier}
+              hideImport={api_journals.includes(acID)}
             />
           );
         default:
@@ -138,4 +140,5 @@ PrelimInfo.propTypes = {
   publication_issn: PropTypes.object.isRequired,
   msid: PropTypes.object.isRequired,
   related_identifier: PropTypes.string.isRequired,
+  api_journals: PropTypes.array.isRequired,
 };

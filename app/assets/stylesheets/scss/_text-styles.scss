@@ -55,7 +55,7 @@ blockquote {
     font-size: 2rem;
     margin-left: -2.2rem;
     position: absolute;
-    color: $medium-green;
+    color: $green;
   }
 }
 
@@ -76,6 +76,10 @@ figure {
 
   kbd, samp, code {
     background-color: white;
+  }
+
+  &.alt {
+    background-color: $lightest-green;
   }
 }
 

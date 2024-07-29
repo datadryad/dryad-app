@@ -82,33 +82,34 @@ RSpec.feature 'AdminPaths', type: :feature do
   end
 
   context :journals_path do
-    it 'is not accessible by regular users' do
+    it 'is not fully accessibile by regular users' do
       sign_in
       visit stash_url_helpers.journals_path
-      # User redirected
-      expect(page).to have_text('My datasets')
+      expect(page).to have_text('Journals')
+      expect(page).not_to have_text('Payment plan')
     end
 
-    it 'is not accessible by tenant admins' do
+    it 'is not fully accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.journals_path
-      # User redirected
-      expect(page).to have_text('My datasets')
+      expect(page).to have_text('Journals')
+      expect(page).not_to have_text('Payment plan')
     end
 
-    it 'is not accessible by tenant curators' do
+    it 'is not fully accessible by tenant curators' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.journals_path
-      # User redirected
-      expect(page).to have_text('My datasets')
+      expect(page).to have_text('Journals')
+      expect(page).not_to have_text('Payment plan')
     end
 
-    it 'is accessible by dryad admins' do
+    it 'is fully accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.journals_path
       expect(page).to have_text('Journals')
+      expect(page).to have_text('Payment plan')
     end
   end
 
