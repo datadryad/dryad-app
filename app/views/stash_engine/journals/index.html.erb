@@ -1,38 +1,65 @@
 <% @page_title = "Journals" %>
-<h1 class="o-heading__level1">Journals</h1>
-
+<div id="page-columns">
+<% if policy(@journals).detail? %>
+<div id="page-nav" style="display: flex; align-items: center; padding: 1rem 3rem; font-style: italic">
+  <p>You are viewing this page as a privileged user. Non-system users see only Title, ISSNs, DPC sponsored and Integrated Data.</p>
+</div>
+<% end %>
+<div id="page-content">
+<h1 class="o-heading__level1" id="journals-label">Journals</h1>
 <p>Dryad works with journals to integrate article submission with data submission, and
 encourages publishers to sponsor their authors' Data Publishing Charges (DPCs). All journals
     with integrated data submission and/or sponsored DPCs are listed below.</p>
 
-<p>If your journal is not sponsored or does not appear on this list, and your institution is not a
+<p>If your journal does not sponsor DPCs, and your institution is not a
 Dryad member, you will be responsible for paying the DPC as well as any overage fees for large files.</p>
-
-<div class="table-wrapper">
+</div>
+</div>
+<div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="journals-label">
 <table class="c-lined-table">
   <thead>
     <tr>
-        <th class="c-lined-table__sort  <%= sort_display('title') %>">
-  	  <%= sortable_column_head sort_field: 'title', title: 'Title' %>
-        </th>
-        <th>ISSN</th>
+      <th class="c-lined-table__sort  <%= sort_display('title') %>">
+        <%= sortable_column_head sort_field: 'title', title: 'Title' %>
+      </th>
+      <th>ISSNs</th>
+      <th>DPC sponsored</th>
+      <% if policy(@journals).detail? %>
         <th class="c-lined-table__sort <%= sort_display('payment_plan_type') %>">
-  	  <%= sortable_column_head sort_field: 'payment_plan_type', title: 'Payment plan' %>
+          <%= sortable_column_head sort_field: 'payment_plan_type', title: 'Payment plan' %>
         </th>
-        <th class="c-lined-table__sort  <%= sort_display('name') %>">
-  	  <%= sortable_column_head sort_field: 'name', title: 'Sponsored by' %>
+        <th class="c-lined-table__sort  <%= sort_display('sponsor_id') %>">
+          <%= sortable_column_head sort_field: 'sponsor_id', title: 'Parent org' %>
         </th>
-        <th>Metadata last received</th>
-    </tr>
+        <th class="c-lined-table__sort  <%= sort_display('parent_org_id') %>">
+          <%= sortable_column_head sort_field: 'parent_org_id', title: 'Top level org' %>
+        </th>
+      <% end %>
+      <th>Integrated data</th>
+      <% if policy(@journals).detail? %>
+        <th>Data last received</th>
+        <th class="c-lined-table__sort  <%= sort_display('default_to_ppr') %>">
+          <%= sortable_column_head sort_field: 'default_to_ppr', title: 'Automatic PPR' %>
+        </th>
+      <% end %>
+      </tr>
   </thead>
-<tbody>
+<tbody class="journals-list">
   <% @journals.each do |journal| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= journal.id %>">
-      <td><%= journal.title %></td>
-      <td class="c-lined-table__digits" style="white-space: nowrap;"><%= journal.single_issn %></span></td>
+    <td><%= journal.title %></td>
+    <td class="c-lined-table__digits" style="white-space: nowrap;"><%= journal.issn_array.join(', ') %></span></td>
+    <td><% if journal.payment_plan_type.present? %><i class="fa fa-check-circle" aria-hidden="true"></i><span class="screen-reader-only">Sponsored</span><% end %></td>
+    <% if policy(@journals).detail? %>
       <td><%= journal.payment_plan_type %></td>
+      <td><%= journal.sponsor&.name %></td>
       <td><%= journal.top_level_org&.name %></td>
-      <td class="c-lined-table__digits"><%= StashEngine::Manuscript.where(journal: journal).order(:created_at)&.last&.created_at %></td>
+    <% end %>
+    <td><% if @api_journals.include?(journal.id) || @metadata_journals.include?(journal.id) %><i class="fa fa-check-circle" aria-hidden="true"></i><span class="screen-reader-only">Data integrated</span><% end %></td>
+    <% if policy(@journals).detail? %>
+      <td class="c-lined-table__digits"><%= StashEngine::Manuscript.where(journal: journal).order(:created_at)&.last&.created_at.presence || @api_journals.include?(journal.id) ? 'API journal' : ''%></td>
+      <td><% if journal.default_to_ppr? %><i class="fa fa-check-circle" aria-hidden="true"></i><span class="screen-reader-only">Default</span><% end %></td>
+    <% end %>
   </tr>
 <% end -%>
 </tbody>  
