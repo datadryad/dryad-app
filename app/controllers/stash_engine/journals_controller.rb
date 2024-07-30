@@ -16,7 +16,8 @@ module StashEngine
       display_journals = @metadata_journals | sponsoring_journals | @api_journals
 
       ord = helpers.sortable_table_order(whitelist: %w[title issn allow_blackout payment_plan_type name parent_org_id sponsor_id default_to_ppr])
-      @journals = Journal.left_outer_joins(:sponsor).where(id: display_journals).order(ord, title: :asc)
+      @journals = Journal.left_outer_joins(:sponsor).where(id: display_journals)
+        .order(ord, title: :asc).preload(:issns).preload(:manuscripts).preload(:sponsor)
 
       respond_to do |format|
         format.html
