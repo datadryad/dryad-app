@@ -279,6 +279,7 @@ module StashEngine
     describe '#preview_file' do
       before(:each) do
         @upload2 = create(:data_file,
+                          digest: 'fake_digest',
                           resource: @resource,
                           file_state: 'created',
                           upload_file_name: 'mytest.csv')

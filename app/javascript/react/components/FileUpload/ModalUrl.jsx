@@ -5,6 +5,7 @@ const modal_url = React.forwardRef(({changedUrls, submitted, clickedClose}, ref)
   <dialog
     id="js-uploadmodal"
     className="modalDialog"
+    aria-modal="true"
     ref={ref}
   >
     <form method="dialog" onSubmit={submitted}>
