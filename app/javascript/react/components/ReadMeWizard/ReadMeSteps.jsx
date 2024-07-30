@@ -42,7 +42,7 @@ export default function ReadMeSteps({
       content: content.step2 || formatList(fileList),
     },
     3: {
-      desc: <p>What free or open software is needed to view your data? Describe the code software, including versions and loaded packages that you used to run files, and the workflow that you used if the relationship of files to software is not clear. If code or scripts are included with your submission, describe them here.</p>,
+      desc: <p>What free or open software is needed to view your data? Describe the software, including versions and loaded packages that you used to run files, and the workflow that you used if the relationship of files to software is not clear. If code or scripts are included with your submission, describe them here.</p>,
       content: content.step3 || '',
     },
     4: {
