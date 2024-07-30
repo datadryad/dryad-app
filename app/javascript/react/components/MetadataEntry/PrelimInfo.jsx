@@ -14,9 +14,9 @@ function PrelimInfo(
 
   const tempVal = importInfo;
 
-  const [acText, setAcText] = useState(publication_name?.value || '');
-  const [acID, setAcID] = useState(publication_issn?.value || '');
-  const [msId, setMsId] = useState(msid?.value || '');
+  const [acText, setAcText] = useState(publication_name || '');
+  const [acID, setAcID] = useState(publication_issn || '');
+  const [msId, setMsId] = useState(msid || '');
   const [importType, setImportType] = useState(tempVal);
   const [relatedIdentifier, setRelatedIdentifier] = useState(related_identifier);
 
@@ -136,9 +136,9 @@ PrelimInfo.propTypes = {
   importInfo: PropTypes.string.isRequired, // the type of import it is doing
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   identifierId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  publication_name: PropTypes.object.isRequired,
-  publication_issn: PropTypes.object.isRequired,
-  msid: PropTypes.object.isRequired,
+  publication_name: PropTypes.string.isRequired,
+  publication_issn: PropTypes.string.isRequired,
+  msid: PropTypes.string.isRequired,
   related_identifier: PropTypes.string.isRequired,
   api_journals: PropTypes.array.isRequired,
 };
