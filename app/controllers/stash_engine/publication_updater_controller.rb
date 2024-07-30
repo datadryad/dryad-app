@@ -103,7 +103,7 @@ module StashEngine
 
     def check_status
       @proposed_change = authorize StashEngine::ProposedChange.find(params[:id])
-      @resource = @proposed_change.identifier&.latest_resource if @proposed_change.present?
+      @resource = @proposed_change&.latest_resource if @proposed_change.present?
       refresh_error if @proposed_change.approved? || @proposed_change.rejected?
     end
 
