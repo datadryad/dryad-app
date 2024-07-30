@@ -56,6 +56,7 @@ export default function File({file, clickRemove, clickValidationReport}) {
             <button
               className="o-button__plain-text5"
               onClick={clickValidationReport}
+              aria-haspopup="dialog"
               type="button"
               style={{padding: '10px'}}
             >

@@ -186,10 +186,23 @@ export default function Cedar({
                   <strong>{template.title}</strong><br />
                   {updated && `Last modified ${moment(updated).local().format('H:mmA, MM/DD/YYYY')}`}
                 </p>
-                <button disabled={!template} type="submit" className="o-button__plain-text2" style={{margin: '0 1rem'}}>
+                <button
+                  aria-haspopup="dialog"
+                  aria-controls="cedarDialog"
+                  disabled={!template}
+                  type="submit"
+                  className="o-button__plain-text2"
+                  style={{margin: '0 1rem'}}
+                >
                   Edit form
                 </button>
-                <button type="button" className="o-button__remove" onClick={() => del.current.showModal()}>
+                <button
+                  type="button"
+                  className="o-button__remove"
+                  aria-haspopup="dialog"
+                  aria-controls="deleteCedarDialog"
+                  onClick={() => del.current.showModal()}
+                >
                   Delete form
                 </button>
               </div>
@@ -224,7 +237,7 @@ export default function Cedar({
           </Form>
         )}
       </Formik>
-      <dialog className="modalDialog" id="cedarDialog" ref={setRef}>
+      <dialog className="modalDialog" id="cedarDialog" aria-modal="true" ref={setRef}>
         <div className="modalClose">
           <button aria-label="Close" type="button" onClick={() => dialog.current.close()} />
         </div>
@@ -232,13 +245,21 @@ export default function Cedar({
           <cedar-embeddable-editor id="cedarEditor" ref={setRef} />
         </div>
       </dialog>
-      <dialog className="modalDialog" id="deleteCedarDialog" ref={setRef}>
+      <dialog
+        className="modalDialog"
+        id="deleteCedarDialog"
+        role="alertdialog"
+        aria-labelledby="cedar-alert-title"
+        aria-describedby="cedar-alert-desc"
+        aria-modal="true"
+        ref={setRef}
+      >
         <div className="modalClose">
           <button aria-label="Close" type="button" onClick={() => del.current.close()} />
         </div>
         <div className="c-modal-content__normal">
-          <h1 className="mat-card-title">Confirm Deletion</h1>
-          <p>Are you sure you want to delete this form? All answers will be lost.</p>
+          <h1 id="cedar-alert-title" className="mat-card-title">Confirm Deletion</h1>
+          <p id="cedar-alert-desc">Are you sure you want to delete this form? All answers will be lost.</p>
           <button
             type="button"
             className="o-button__plain-text2"

@@ -73,7 +73,8 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
       # Sets this up as a page that can see the software/supp info upload page. There is only one identifier created for this test.
       se_identifier = StashEngine::Identifier.all.first
-      StashEngine::InternalDatum.create(identifier_id: se_identifier.id, data_type: 'publicationISSN', value: '1687-7667')
+      pub = StashEngine::ResourcePublication.find_or_initialize(resource_id: se_identifier.latest_resource_id)
+      pub.update(publication_issn: '1687-7667')
       se_identifier.reload
       navigate_to_upload # so the menus refresh to show newly-allowed tab for special zenodo uploads
     end

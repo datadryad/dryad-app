@@ -13,7 +13,7 @@
     <li title="<%= dependency.description %>" class="o-dependency-group__list__item">
       <button <%= 'disabled' if dependency.status == 1 %> onclick="document.getElementById('<%= dependency.abbreviation %>-dialog').showModal()" title="<%= dependency.status != 1 ? 'Offline - Click for troubleshooting information' : 'Online' %>"><span class="dependency-name"><%= dependency.name %></span> <i class="fa <%= status_class %>"></i></button>
       <% if dependency.documentation.present? %>
-        <dialog class="modalDialog extra-wide" id="<%= dependency.abbreviation %>-dialog">
+        <dialog class="modalDialog extra-wide" id="<%= dependency.abbreviation %>-dialog" aria-modal="true">
           <div class="c-uploadmodal__header">
             <h1 class="o-heading__level1"><%= dependency.name %> troubleshooting information:</h1>
             <button

@@ -31,7 +31,13 @@
   dcsDescription: @metadata_entry.technical_info,
   updatePath: descriptions_update_path,
   fileContent: @file_content,
-  fileList: @resource.data_files.map {|f| {name: f.upload_file_name, variables: f.upload_file_name.end_with?('csv', 'tsv') ? f.preview_file.lines.first.chomp.delete_prefix('"').delete_suffix('"').split(Regexp.union([/"?,"?/, /"?\t"?/])) : []}},
+  fileList: @resource.data_files.map do |f| 
+    h = { name: f.upload_file_name }
+    if f.upload_file_name.end_with?('.csv', '.tsv', '.xlsx', '.xls', '.rdata', '.rda', '.mat', '.txt')
+      h[:variables] = f.upload_file_name.end_with?('.csv', '.tsv') ? f.preview_file.lines.first.chomp.delete_prefix('"').delete_suffix('"').split(Regexp.union([/"?,"?/, /"?\t"?/])) : []
+    end
+    h
+  end,
   title: @resource.title || 'Title of Dataset',
   doi: @resource.identifier_uri
 }) %>

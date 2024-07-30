@@ -39,6 +39,7 @@ function UploadType(
         id={`${type}_manifest`}
         className="js-uploadmodal__button-show-modal"
         onClick={clickedModal}
+        aria-haspopup="dialog"
       >
         {buttonURLs}
       </button>

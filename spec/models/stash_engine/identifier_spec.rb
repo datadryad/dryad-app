@@ -67,20 +67,18 @@ module StashEngine
 
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
       end
-
-      @fake_issn = '1234-000X'
-      @int_datum_issn = InternalDatum.new(identifier_id: @identifier.id, data_type: 'publicationISSN', value: @fake_issn)
-      @int_datum_issn.save!
-      @fake_manuscript_number = 'bogus-manuscript-number'
-      int_datum_manu = InternalDatum.new(identifier_id: @identifier.id, data_type: 'manuscriptNumber', value: @fake_manuscript_number)
-      int_datum_manu.save!
-
       @res1.current_state = 'submitted'
-      Version.create(resource_id: @res1.id, version: 1)
+      create(:version, resource_id: @res1.id, version: 1)
       @res2.current_state = 'submitted'
-      Version.create(resource_id: @res2.id, version: 2)
+      create(:version, resource_id: @res2.id, version: 2)
       @res3.current_state = 'in_progress'
-      Version.create(resource_id: @res3.id, version: 3)
+      create(:version, resource_id: @res3.id, version: 3)
+
+      @identifier.reload
+      @fake_issn = '1234-000X'
+      @fake_manuscript_number = 'bogus-manuscript-number'
+      @pub = create(:resource_publication, resource_id: @identifier.latest_resource_id, publication_issn: @fake_issn,
+                                           manuscript_number: @fake_manuscript_number)
 
       @identifier.reload
       WebMock.disable_net_connect!(allow_localhost: true)
@@ -476,7 +474,7 @@ module StashEngine
         create(:journal, issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/journal/)
-        @int_datum_issn.update(value: '0000-0000')
+        @pub.update(publication_issn: '0000-0000')
         @identifier.reload
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/unknown/)
@@ -544,10 +542,9 @@ module StashEngine
     describe '#publication_article_doi' do
       it 'gets publication_article_doi through convenience method' do
         @fake_article_doi = 'http://doi.org/10.1234/bogus-doi'
-        allow_any_instance_of(Resource).to receive(:related_identifiers).and_return([OpenStruct.new(related_identifier: @fake_article_doi,
-                                                                                                    related_identifier_type: 'doi',
-                                                                                                    relation_type: 'iscitedby',
-                                                                                                    work_type: 'primary_article')])
+        allow_any_instance_of(Resource).to receive(:related_identifiers).and_return([OpenStruct.new(
+          related_identifier: @fake_article_doi, related_identifier_type: 'doi', relation_type: 'iscitedby', work_type: 'primary_article'
+        )])
         expect(@identifier.publication_article_doi).to eql(@fake_article_doi)
       end
     end

@@ -113,6 +113,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         find('a[title="Activity log"]').click
 
         expect(page).to have_text('Activity log for')
+        click_button 'View historical Internal data'
         click_button 'Add data'
         select('pubmedID', from: 'stash_engine_internal_datum[data_type]')
         fill_in('stash_engine_internal_datum[value]', with: '123456')
@@ -162,8 +163,9 @@ RSpec.feature 'CurationActivity', type: :feature do
         sign_in(@journal_admin, false)
         ident1 = create(:identifier)
         @res1 = create(:resource, identifier_id: ident1.id, user: @user, tenant_id: @admin.tenant_id)
-        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
-        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
+        create(:internal_datum, identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
+        create(:internal_datum, identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
+        create(:resource_publication, resource_id: @res1.id, publication_issn: @journal.single_issn, publication_name: @journal.title)
         ident1.reload
       end
 

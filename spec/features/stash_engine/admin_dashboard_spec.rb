@@ -502,9 +502,8 @@ RSpec.feature 'AdminDashboard', type: :feature do
         sign_in(@journal_admin, false)
         ident1 = create(:identifier)
         @res1 = create(:resource, identifier_id: ident1.id, user: @user, tenant_id: @admin.tenant_id)
-        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
-        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
-        ident1.reload
+        create(:resource_publication, publication_issn: @journal.single_issn, publication_name: @journal.title, resource_id: @res1.id)
+        @res1.reload
       end
 
       it 'has admin link', js: true do
@@ -546,9 +545,8 @@ RSpec.feature 'AdminDashboard', type: :feature do
           2.times do
             ident1 = create(:identifier)
             @res1 = create(:resource, identifier_id: ident1.id, user: @user, tenant_id: @admin.tenant_id)
-            StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
-            StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
-            ident1.reload
+            create(:resource_publication, publication_issn: @journal.single_issn, publication_name: @journal.title, resource_id: @res1.id)
+            @res1.reload
           end
         end
         sign_in(@sponsor_admin, false)
