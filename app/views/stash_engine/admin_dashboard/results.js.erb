@@ -6,7 +6,7 @@ urlparams.set('page', '<%= params[:page] %>')
 window.history.pushState({}, null, `${window.location.pathname}?${urlparams.toString()}`)
 document.getElementById('search_results').innerHTML = "<%= escape_javascript(render(partial: 'results')) %>";
 document.getElementById('save_buttons').innerHTML = "<%= escape_javascript(render(partial: 'save_buttons')) %>";
-document.getElementById('search_form').innerHTML = "<%= escape_javascript(render(partial: 'search_form')) %>";
+$('#search_form').html = "<%= escape_javascript(render(partial: 'search_form')) %>";
 document.getElementById('edit_fields-help').addEventListener('click', (e) => {
   e.preventDefault()
   document.getElementById('edit_fields-form').classList.toggle('show-help')
