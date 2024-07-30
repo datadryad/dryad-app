@@ -147,15 +147,15 @@ module StashDatacite
         return
       end
       return if params[:publication].blank? # keeps the default fill-in message
-      return if @pub_issn&.value.blank?
-      return if @msid&.value.blank?
+      return if @pub_issn.blank?
+      return if @msid.blank?
 
-      journal = StashEngine::Journal.find_by_issn(@pub_issn.value)
+      journal = StashEngine::Journal.find_by_issn(@pub_issn)
       if journal.blank?
         @error = 'Journal not recognized by Dryad'
         return
       end
-      manu = StashEngine::Manuscript.where(journal: journal, manuscript_number: @msid.value).first
+      manu = StashEngine::Manuscript.where(journal: journal, manuscript_number: @msid).first
       if manu.blank?
         @error = 'We could not find metadata to import for this manuscript.'
         return
@@ -164,7 +164,7 @@ module StashDatacite
       dryad_import = Stash::Import::DryadManuscript.new(resource: @resource, manuscript: manu)
       dryad_import.populate
     rescue HTTParty::Error, SocketError => e
-      logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn.value}, MSID: #{@msid.value}\r\n #{e}")
+      logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn}, MSID: #{@msid}\r\n #{e}")
       @error = 'We could not find metadata to import for this manuscript.'
     end
 
