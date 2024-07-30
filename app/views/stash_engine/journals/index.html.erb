@@ -57,7 +57,7 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
     <% end %>
     <td><% if @api_journals.include?(journal.id) || @metadata_journals.include?(journal.id) %><i class="fa fa-check-circle" aria-hidden="true"></i><span class="screen-reader-only">Data integrated</span><% end %></td>
     <% if policy(@journals).detail? %>
-      <td class="c-lined-table__digits"><%= StashEngine::Manuscript.where(journal: journal).order(:created_at)&.last&.created_at.presence || @api_journals.include?(journal.id) ? 'API journal' : ''%></td>
+      <td class="c-lined-table__digits"><%= journal.manuscripts&.last&.created_at.presence || @api_journals.include?(journal.id) ? 'API journal' : ''%></td>
       <td><% if journal.default_to_ppr? %><i class="fa fa-check-circle" aria-hidden="true"></i><span class="screen-reader-only">Default</span><% end %></td>
     <% end %>
   </tr>
