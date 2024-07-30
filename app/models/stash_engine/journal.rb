@@ -33,7 +33,7 @@ module StashEngine
     has_many :alternate_titles, class_name: 'StashEngine::JournalTitle', dependent: :destroy
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
-    has_many :manuscripts, -> { order(created_at: :asc) }, class_name: 'StashEngine::Manuscript'
+    has_many :manuscripts, -> { order(created_at: :desc) }, class_name: 'StashEngine::Manuscript'
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
 
     def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
