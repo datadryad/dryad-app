@@ -88,6 +88,7 @@ const ModalValidationReport = React.forwardRef(({file, clickedClose}, ref) => {
   return (
     <dialog
       className="modalDialog extra-wide"
+      aria-modal="true"
       ref={ref}
     >
       <div className="c-uploadmodal__header">
