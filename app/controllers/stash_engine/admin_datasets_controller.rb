@@ -59,7 +59,7 @@ module StashEngine
         )
       when 'publication'
         authorize %i[stash_engine admin_datasets], :data_popup?
-        @publication = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @identifier.latest_resource.id)
+        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id)
       when 'data'
         authorize %i[stash_engine admin_datasets], :data_popup?
         setup_internal_data_list
