@@ -13,8 +13,8 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.left_outer_joins(:issns).distinct.where('LOWER(title) LIKE LOWER(?) OR stash_engine_journal_issns.id LIKE ?',
-                                                             "%#{q.strip}%", "%#{q.strip}%")
+        @journals = @journals.left_outer_joins(:issns).distinct
+          .where('LOWER(title) LIKE LOWER(?) OR stash_engine_journal_issns.id LIKE ?', "%#{q.strip}%", "%#{q.strip}%")
       end
 
       ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan_type default_to_ppr])
