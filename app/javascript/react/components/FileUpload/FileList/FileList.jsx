@@ -12,7 +12,7 @@ const file_list = ({
       <p>Total size: {totalSize}{readmeSize && <em> (README: {readmeSize})</em>}</p>
     </div>
     <BadList chosenFiles={chosenFiles} />
-    <div className="table-wrapper c-uploadtable-wrapper">
+    <div className="table-wrapper c-uploadtable-wrapper" role='region' tabindex='0' aria-labelledby="filelist_id">
       <table className="c-uploadtable">
         <thead>
           <tr>
