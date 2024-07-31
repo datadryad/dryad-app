@@ -78,7 +78,7 @@ module StashDatacite
 
       if @resource.identifier.allow_review? && @resource.identifier.date_last_curated.blank? && @resource.journal&.default_to_ppr?
         # if the newly-set journal wants PPR by default, and it is allowed, set the PPR value for this resource
-        @resource.update(hold_for_peer_review: @se_id.journal.default_to_ppr)
+        @resource.update(hold_for_peer_review: true)
       end
 
       save_doi
