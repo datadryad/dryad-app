@@ -180,9 +180,13 @@ module StashEngine
 
     def date_fields
       if @filters[:submit_date]&.values&.any?(&:present?)
-        @datasets = @datasets.joins(:process_date).select('stash_engine_process_dates.processing as submit_date')
+        @datasets = @datasets.joins(:process_date).select(
+          'IFNULL(stash_engine_process_dates.processing, stash_engine_process_dates.submitted) as submit_date'
+        )
       elsif @sort == 'submit_date'
-        @datasets = @datasets.left_outer_joins(:process_date).select('stash_engine_process_dates.processing as submit_date')
+        @datasets = @datasets.left_outer_joins(:process_date).select(
+          'IFNULL(stash_engine_process_dates.processing, stash_engine_process_dates.submitted) as submit_date'
+        )
       end
       return unless @sort == 'first_pub_date' || @filters[:first_pub_date]&.values&.any?(&:present?)
 
@@ -220,7 +224,7 @@ module StashEngine
         "stash_engine_curation_activities.updated_at #{date_string(@filters[:updated_at])}"
       ) unless @filters[:updated_at].nil? || @filters[:updated_at].values.all?(&:blank?)
       @datasets = @datasets.where(
-        "stash_engine_process_dates.processing #{date_string(@filters[:submit_date])}"
+        "IFNULL(stash_engine_process_dates.processing, stash_engine_process_dates.submitted) #{date_string(@filters[:submit_date])}"
       ) unless @filters[:submit_date].nil? || @filters[:submit_date].values.all?(&:blank?)
       if %w[first_sub_date queue_date].include?(@sort) || @filters[:first_sub_date]&.values&.any?(&:present?)
         filter_on = @filters[:first_sub_date]&.values&.any?(&:present?)
