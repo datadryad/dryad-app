@@ -78,7 +78,7 @@
     </td>
   <% end %>
   <% if @fields.include?('submit_date') %>
-    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.process_date.processing) %></td>
+    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.process_date.processing || dataset.process_date.submitted) %></td>
   <% end %>
   <% if @fields.include?('first_sub_date') %>
     <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.process_date.processing || dataset.identifier.process_date.submitted) %></td>

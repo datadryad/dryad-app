@@ -27,14 +27,20 @@ var checkForm = () => {
     }
   }
   const data = JSON.stringify([...new FormData(form)].slice(1).sort(([a], [b]) => a.localeCompare(b)))
-  if (data !== form.dataset.origData) {
-    document.getElementById('apply_changes').classList.add('changed')
-  } else {
+  if (data === form.dataset.origData) {
     document.getElementById('apply_changes').classList.remove('changed')
+  } else {
+    document.getElementById('apply_changes').classList.add('changed')
   }
 }
 form.dataset.origData = JSON.stringify([...new FormData(form)].slice(1).sort(([a], [b]) => a.localeCompare(b)))
+document.getElementById('apply_changes').classList.remove('changed')
 form.addEventListener('change', checkForm)
+var hidden = form.querySelectorAll('input[type="hidden"]:not([name="authenticity_token"])')
+var observer = new MutationObserver(checkForm)
+for (const input of hidden) {
+  observer.observe(input, {attributes: true, attributeFilter: ['value']})
+}
 document.getElementById('clear_filters').addEventListener('click', (e) => {
   e.preventDefault()
   const inputs = document.querySelectorAll(['#edit_filters-form input', '#search_form input[type="search"]'])

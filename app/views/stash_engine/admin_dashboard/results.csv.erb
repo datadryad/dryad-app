@@ -64,7 +64,7 @@ head += ',First queued' if @fields.include?('queue_date')
     row << dpc
   end
   row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at') 
-  row << dataset.process_date.processing if @fields.include?('submit_date')
+  row << dataset.process_date.processing || dataset.process_date.submitted if @fields.include?('submit_date')
   row << dataset.identifier.process_date.processing || dataset.identifier.process_date.submitted if @fields.include?('first_sub_date')
   row << dataset.publication_date if @fields.include?('publication_date')
   row << dataset.identifier.publication_date if @fields.include?('first_pub_date')
