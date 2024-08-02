@@ -66,7 +66,7 @@ module StashDatacite
         @pub_issn = exact_matches.single_issn if exact_matches.present?
       end
       fix_removable_asterisk
-      publication = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+      publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
       publication.publication_name = @pub_name
       publication.publication_issn = @pub_issn
       if params[:msid].present?
@@ -78,7 +78,7 @@ module StashDatacite
 
       if @resource.identifier.allow_review? && @resource.identifier.date_last_curated.blank? && @resource.journal&.default_to_ppr?
         # if the newly-set journal wants PPR by default, and it is allowed, set the PPR value for this resource
-        @resource.update(hold_for_peer_review: @se_id.journal.default_to_ppr)
+        @resource.update(hold_for_peer_review: true)
       end
 
       save_doi
