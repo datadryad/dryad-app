@@ -219,6 +219,7 @@ module StashEngine
       begin
         resp = HTTP.timeout(connect: 10, read: 10).timeout(10).headers('Range' => 'bytes=0-2048').get(s3_url)
         return nil if resp.code > 299
+        return nil if resp.to_s.encoding != Encoding::UTF_8
 
         return resp.to_s
       rescue HTTP::Error

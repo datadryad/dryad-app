@@ -66,7 +66,7 @@ module StashDatacite
         @pub_issn = exact_matches.single_issn if exact_matches.present?
       end
       fix_removable_asterisk
-      publication = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+      publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
       publication.publication_name = @pub_name
       publication.publication_issn = @pub_issn
       if params[:msid].present?
