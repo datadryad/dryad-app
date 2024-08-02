@@ -55,7 +55,7 @@
     <td><%= dataset.journal&.sponsor&.name %></td>
   <% end %>
   <% if @fields.include?('identifiers') %>
-    <td><%= ([dataset.resource_publication&.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ') %></td>
+    <td class="c-lined-table__digits"><%= ([dataset.resource_publication&.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ') %></td>
   <% end %>
   <% if @fields.include?('dpc') %>
     <td>

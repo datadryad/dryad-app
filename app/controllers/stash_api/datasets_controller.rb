@@ -493,7 +493,7 @@ module StashApi
     end
 
     def update_publication_issn(new_issn)
-      pub = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @stash_identifier.latest_resource_id)
+      pub = StashEngine::ResourcePublication.find_or_create_by(resource_id: @stash_identifier.latest_resource_id)
       if new_issn.present?
         # Ensure we have the standardized journal title and ISSN
         journal = StashEngine::Journal.find_by_issn(new_issn)

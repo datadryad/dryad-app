@@ -117,7 +117,7 @@ module StashApi
         @hash['publicationName'] = journal.title
       end
 
-      publication = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+      publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
       publication.publication_name = @hash['publicationName'] if @hash['publicationName']
       publication.publication_issn = @hash['publicationISSN'] if @hash['publicationISSN']
       publication.manuscript_number = @hash['manuscriptNumber'] if @hash['manuscriptNumber']

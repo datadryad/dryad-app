@@ -203,7 +203,7 @@ module StashEngine
       return unless j
 
       # Save the journal and manuscript information in the dataset
-      pub = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: resource.id)
+      pub = StashEngine::ResourcePublication.find_or_create_by(resource_id: resource.id)
       pub.publication_issn = j.single_issn
       pub.publication_name = j.title
       pub.manuscript_number = params['manu']
