@@ -219,9 +219,12 @@ module StashEngine
       begin
         resp = HTTP.timeout(connect: 10, read: 10).timeout(10).headers('Range' => 'bytes=0-2048').get(s3_url)
         return nil if resp.code > 299
-        return nil if resp.to_s.encoding != Encoding::UTF_8
 
-        return resp.to_s
+        str = resp.to_s
+        str = str.force_encoding(str.encoding).encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '')
+        return nil unless str.encoding == Encoding::UTF_8
+
+        return str
       rescue HTTP::Error
         logger.info("Couldn't get S3 request for preview range for #{inspect}")
       end
