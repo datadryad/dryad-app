@@ -12,7 +12,7 @@ module StashDatacite
     # POST /subjects
     def create
       params[:subject]
-        .split(/\s*,\s*/)
+        .split(/\s*[,()]\s*/)
         .map { |s| strip_subject(s) }
         .delete_if(&:blank?)
         .each { |s| ensure_subject(s) }
