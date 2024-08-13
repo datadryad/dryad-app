@@ -9,9 +9,6 @@ when 'publication'
 when 'note'
   partial = 'stash_engine/admin_datasets/curation_note_popup'
   locals = { identifier: @identifier, title: 'Add note' }
-when 'stats'
-  partial = 'stash_engine/admin_datasets/stats_popup_display'
-  locals = {}
 else
   partial = 'popup_form'
   locals = {}
@@ -33,15 +30,4 @@ document.getElementById('cancel_dialog').addEventListener('click', (e) => {
       else other.setAttribute('hidden', 'hidden')
     })
   <% end %>
-<% end %>
-
-<% if @field == 'curation_activity' %>
-  initDatePicker();
-  document.getElementById('activity_status_select').addEventListener('change', (e) => {
-    if (e.currentTarget.value === 'published' || e.currentTarget.value === 'embargoed') {
-      document.getElementById('c-input_publication_date').removeAttribute('hidden');
-    } else {
-      document.getElementById('c-input_publication_date').setAttribute('hidden', 'hidden');
-    }
-  })
 <% end %>
