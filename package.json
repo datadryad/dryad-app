@@ -71,7 +71,7 @@
     "@milkdown/utils": "^7.3.0",
     "@tinymce/tinymce-react": "^5.0.1",
     "aws-sdk": "^2.1060.0",
-    "axios": "^1.6.0",
+    "axios": "^1.7.3",
     "babel-loader": "8",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "compression-webpack-plugin": "9",

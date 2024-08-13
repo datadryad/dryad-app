@@ -52,7 +52,7 @@ gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
 gem 'blacklight'
 gem 'bootsnap', require: false
-gem 'bootstrap', '~> 4.0'
+gem 'bootstrap', '~> 5.0'
 gem 'charlock_holmes', '~> 0.7.7'
 gem 'concurrent-ruby', '~> 1.1.10'
 gem 'daemons', '~> 1.4.1'
