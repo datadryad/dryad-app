@@ -1,7 +1,3 @@
-<% if @field == 'waiver' %>
 document.getElementById("payment_info_table").outerHTML = "<%= escape_javascript(render partial: 'payment_info_table', locals: { identifier: @identifier }) %>";
 document.getElementById("apply_fee_waiver").outerHTML = "<br/>"
-<% else %>
-document.getElementById("js-dataset-row-id-<%= @resource.identifier.id %>").outerHTML = "<%= escape_javascript(render partial: 'stash_engine/admin_datasets/datasets_row', locals: { dataset: @curation_row }) %>"
-<% end %>
 document.getElementById('genericModalDialog').close();
