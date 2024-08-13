@@ -7,10 +7,10 @@ RSpec.feature 'AdminPaths', type: :feature do
     create(:tenant)
   end
 
-  context :admin_datasets_path do
+  context :admin_dashboard_path do
     it 'is not accessible by regular users' do
       sign_in
-      visit stash_url_helpers.ds_admin_path
+      visit stash_url_helpers.admin_dashboard_path
       # User should be redirected to the My datasets page
       expect(page).to have_text('My datasets')
     end
@@ -18,13 +18,13 @@ RSpec.feature 'AdminPaths', type: :feature do
     it 'is accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
-      visit stash_url_helpers.ds_admin_path
+      visit stash_url_helpers.admin_dashboard_path
       expect(page).to have_text('Admin dashboard')
     end
 
     it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
-      visit stash_url_helpers.ds_admin_path
+      visit stash_url_helpers.admin_dashboard_path
       expect(page).to have_text('Admin dashboard')
     end
   end
