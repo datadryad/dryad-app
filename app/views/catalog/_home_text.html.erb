@@ -5,14 +5,12 @@
     <div class='col-sm'>
       <%= content_tag :h3, t('geoblacklight.home.category_heading') %>
       <div class='row'>
-        <%= render(Geoblacklight::HomepageFeatureFacetComponent.new(icon: 'globe', label: 'geoblacklight.home.placename', facet_field: Settings.FIELDS.SPATIAL_COVERAGE, response: @response)) %>
-
-        <%= render(Geoblacklight::HomepageFeatureFacetComponent.new(icon: 'tags', label: 'geoblacklight.home.subject', facet_field: Settings.FIELDS.SUBJECT, response: @response)) %>
+        <%= render 'home_facet_component', icon: 'globe', label: 'geoblacklight.home.funder', facet_field: Settings.FIELDS.FUNDER, response: @response %>
+        <%= render 'home_facet_component', icon: 'tags', label: 'geoblacklight.home.subject', facet_field: Settings.FIELDS.SUBJECT, response: @response %>
       </div>
       <div class='row'>
-        <%= render(Geoblacklight::HomepageFeatureFacetComponent.new(icon: 'book', label: 'geoblacklight.home.publication', facet_field: Settings.FIELDS.RELATED_PUBLICATION_NAME, response: @response)) %>
-
-        <%= render(Geoblacklight::HomepageFeatureFacetComponent.new(icon: 'arrow-circle-down', label: 'geoblacklight.home.institution', facet_field: Settings.FIELDS.AUTHOR_AFFILIATION_NAME, response: @response)) %>
+        <%= render 'home_facet_component', icon: 'book', label: 'geoblacklight.home.publication', facet_field: Settings.FIELDS.RELATED_PUBLICATION_NAME, response: @response %>
+        <%= render 'home_facet_component', icon: 'arrow-circle-down', label: 'geoblacklight.home.institution', facet_field: Settings.FIELDS.AUTHOR_AFFILIATION_NAME, response: @response %>
       </div>
     </div>
     <div class='col-sm'>
@@ -21,6 +19,6 @@
     </div>
   </div>
   <div id="geoblacklight-version" class="text-right">
-    <%= t('geoblacklight.home.version', version: Geoblacklight::VERSION ) %>
+    <%= t('geoblacklight.home.version', version: Blacklight::VERSION ) %>
   </div>
 </div>

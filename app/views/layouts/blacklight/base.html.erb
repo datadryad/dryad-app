@@ -15,7 +15,7 @@
     <%#= WAS javascript_include_tag "application" %>
     <%# javascript_include_tag "application", media: 'all' %>
     <meta name="turbolinks-cache-control" content="no-cache">
-    <%= javascript_include_tag "geobl_application" %>
+    <%= javascript_include_tag "stash_engine/geobl_application" %>
 
     <%= content_for(:head) %>
 
@@ -29,11 +29,6 @@
     <%#= this has both banner and search box from blacklight -- render partial: 'shared/header_navbar' %>
     <!-- id below used to be "maincontent" in our main area -->
     <main id="main-container" class="<%= container_classes %>" role="main" aria-label="<%= t('blacklight.main.aria.main_container') %>">
-      <!--
-      <div class="geobl-search-spacing">
-        <%# render_search_bar  %>
-      </div>
-      -->
       <%= render 'shared/header_fluffbar' %>
 
       <%= content_for(:container_header) %>

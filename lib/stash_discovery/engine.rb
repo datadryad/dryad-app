@@ -1,14 +1,14 @@
 require 'blacklight'
-require 'geoblacklight'
-# these devise lines must be required otherwise geoblacklight barfs, but only on stage.
-require 'devise'
-require 'devise/orm/active_record'
+# require 'geoblacklight'
+# # these devise lines must be required otherwise geoblacklight barfs, but only on stage.
+# require 'devise'
+# require 'devise/orm/active_record'
 require 'rsolr'
 
 # For undocumented reasons, sass-rails won't load without an explicit require
 require 'bootstrap'
 # require 'bootstrap-sass'
-require 'twitter-typeahead-rails'
+# require 'twitter-typeahead-rails'
 
 module StashDiscovery
   class Engine < ::Rails::Engine

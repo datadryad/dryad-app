@@ -16,7 +16,7 @@ aws_db:
 
 local:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://uc3-dryadsolrx2-dev.cdlib.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/geoblacklight" %>
 
 local_dev:
   adapter: solr

@@ -366,7 +366,7 @@ Rails.application.routes.draw do
 
   # the ones below coming from new routing for geoblacklight
   #--------------------------------------------------------
-  mount Geoblacklight::Engine => 'geoblacklight'
+  # mount Geoblacklight::Engine => 'geoblacklight'
   mount Blacklight::Engine => '/'
 
   get '/search', to: 'catalog#index'
