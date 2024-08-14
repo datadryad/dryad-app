@@ -1,4 +1,4 @@
-<% if @resource.identifier.automatic_ppr? %>
+<% if @resource.identifier.automatic_ppr? && @resource.identifier.date_last_curated.blank? %>
   <div>
     <p>This dataset will remain private for peer review until we receive a notification from the journal confirming formal acceptance of the associated manuscript.</p>
   </div>
