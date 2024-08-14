@@ -12,12 +12,12 @@
       <th class="c-lined-table__sort <%= sort_display('publication_date') %>">
         <%= sortable_column_head sort_field: 'publication_date', title: 'Publication Date' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('updated_at') %>">
-        <%= sortable_column_head sort_field: 'updated_at', title: 'Last Modified' %>
-      </th>
       <th class="c-lined-table__sort <%= sort_display('size') %>">
         <%= sortable_column_head sort_field: 'size', title: 'Size' %>
       </th>
+      <th class="c-lined-table__sort <%= sort_display('updated_at') %>">
+        <%= sortable_column_head sort_field: 'updated_at', title: 'Last Modified' %>
+      </th>      
       <th class="c-lined-table__sort <%= sort_display('edited_by_name') %>">
         <%= sortable_column_head sort_field: 'edited_by_name', title: 'Edited By' %>
       </th>
@@ -29,17 +29,20 @@
       <td>
         <div class="c-lined-table__with-actions">
         <div class="c-lined-table__data">
-        <span title="<%= p.title %>"><%= link_to truncate(p.title), stash_url_helpers.show_path(id: p.resource.identifier_str), target: '_blank' %></span>
+        <span title="<%= p.title %>"><%= link_to p.title, stash_url_helpers.show_path(id: p.resource.identifier_str), target: '_blank' %></span>
         </div>
-        <% if policy([:stash_engine, :admin_datasets]).curation_actions? && ((p.resource.permission_to_edit?(user: current_user) && p.resource.last_curation_activity.status == 'submitted') || (p.resource.last_curation_activity.status == 'in_progress' && p.resource.current_editor_id == current_user.id)) %>
-          <div class="c-lined-table__actions">
+        <div class="c-lined-table__actions">
+          <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: p.resource.identifier_id) %>" class="c-admin-edit-icon">
+            <i class="fa fa-clock" aria-hidden="true"></i>
+          </a>
+          <% if policy(p.resource).curator_edit? %>
             <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post) do %>
               <%= hidden_field_tag :resource_id, p.resource.id, id: "resource_id_#{p.resource.id}" %>
               <%= hidden_field_tag :return_url, '/stash/dashboard' %>
               <button class="c-admin-edit-icon js-trap-curator-url" title="Edit dataset" aria-label="Edit dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-            <% end %>        
-          </div>
-        <% end %>
+            <% end %>
+          <% end %>
+        </div>
       </div>
       </td>
       <td>
@@ -51,22 +54,13 @@
         <% end %>
       </td>
       <td class="c-lined-table__digits">
-        <%= default_date(p.updated_at) %>
-      </td>
-      <td class="c-lined-table__digits">
         <%= filesize(p.size) %>
       </td>
+      <td class="c-lined-table__digits">
+        <%= default_date(p.updated_at) %>
+      </td>
       <td>
-        <div class="c-lined-table__with-actions">
-        <div class="c-lined-table__data"><%= p.edited_by_name_w_role %></div>
-        <% if policy([:stash_engine, :admin_datasets]).activity_log? %>
-          <div class="c-lined-table__actions">
-            <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: p.resource.identifier_id) %>" class="c-admin-edit-icon">
-              <i class="fa fa-clock-o" aria-hidden="true"></i>
-            </a>
-          </div>
-        <% end %>
-      </div>
+        <%= p.edited_by_name_w_role %>
       </td>
     </tr>
   <% end %>
