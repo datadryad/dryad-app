@@ -1,0 +1,11 @@
+<div class='more-info-area' data-turbolinks="false">
+  <div id="doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>">
+    <small>
+      <% author_string = document['dc_creator_sm'] ?
+        document[Settings.FIELDS.CREATOR].map{|i| name_reverser(i) }.reject{|i| i.blank? }.join('; ') : '' %>
+      <% desc_string = author_string + '. ' + document[Settings.FIELDS.DESCRIPTION] %>
+      <%= desc_string.truncate_words(35) %>
+    </small>
+  </div>
+</div>
+

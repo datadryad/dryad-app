@@ -13,7 +13,12 @@
 <div class='more-info-area' data-turbolinks="false">
   <div id="doc-<%= document&.id&.gsub(%r{[/:.]}, '-') %>">
     <small>
-      <%= geoblacklight_present(:index_fields_display, document) %>
+      <%= render(Blacklight::DocumentMetadataComponent.new(fields: document_presenter(document).field_presenters)) %>
+      <%= document_presenter(document).try(:index_fields_display) || '' %>
+<!--       geoblacklight_present(:index_fields_display, document) -->
+<!--      def geoblacklight_present(presenting_method, document = @document)-->
+<!--      document_presenter(document).try(presenting_method.to_sym) || ''-->
+<!--      end-->
     </small>
   </div>
 </div>
