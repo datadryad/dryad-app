@@ -29,7 +29,8 @@
       <td>
         <div class="c-lined-table__with-actions">
         <div class="c-lined-table__data">
-        <span title="<%= p.title %>"><%= link_to p.title, stash_url_helpers.show_path(id: p.resource.identifier_str), target: '_blank' %></span>
+          <%= link_to p.title, stash_url_helpers.show_path(id: p.resource.identifier_str), target: '_blank' %>
+          <div class="c-lined-table__digits">DOI: <%= p.resource.identifier.identifier %></div>
         </div>
         <div class="c-lined-table__actions">
           <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: p.resource.identifier_id) %>" class="c-admin-edit-icon">
