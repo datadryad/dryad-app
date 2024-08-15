@@ -13,7 +13,7 @@
     <p>This temporary link can be shared with the journal office or collaborators during the peer-review process to allow access only to the data files included with your submission. This link will expire upon publication of your Dryad dataset.</p>
   </li>
   <li>A unique digital object identifier (DOI): <%= @resource.identifier_str %>
-    <p>When your dataset has been approved for publication by a member of our curation team, it will be made public. This DOI link is permanent and should be provided to the journal office for inclusion in the Data Availability statement of your published article.</p> 
+    <p>When your dataset has been approved for publication by a member of our curation team, it will be made public. This DOI link is permanent and should be provided to the journal office for inclusion in the Data Availability statement of your published article.</p>
   </li>
 </ul>
 
@@ -28,3 +28,4 @@
 <p>The Dryad Team</p>
 <p>We would greatly appreciate your feedback! Please complete <a href="https://form.jotform.com/232493320676357?datasetDOI=<%= CGI.escape(@resource.identifier.identifier) %>">a short survey about your submission experience</a>.</p>
 
+<p><a href="https://docs.google.com/forms/d/e/1FAIpQLSfw9aG7WoKYan3nlxU4O61QjOEDbqyav8wGImRTQlev7LGoyQ/viewform">Subscribe to Dryad's monthly round-up of compelling datasets</a>.</p>
