@@ -1,7 +1,9 @@
 require 'blacklight/catalog'
 
-settigs = YAML::load(File.open(File.join('config', 'settings.yml')), symbolize_names: true, aliases: true)
+# rubocop:disable Security/YAMLLoad
+settigs = YAML.load(File.open(File.join('config', 'settings.yml')), symbolize_names: true, aliases: true)
 Settings = JSON.parse(settigs.to_json, object_class: OpenStruct)
+# rubocop:enable Security/YAMLLoad
 
 class CatalogController < ApplicationController
 
@@ -121,7 +123,7 @@ class CatalogController < ApplicationController
     # config.add_index_field Settings.FIELDS.SUBJECT, :label => 'Keywords:'
     config.add_index_field Settings.FIELDS.CREATOR
     config.add_index_field Settings.FIELDS.DATE, helper_method: :format_index_date
-    config.add_index_field Settings.FIELDS.DESCRIPTION #, helper_method: :snippit
+    config.add_index_field Settings.FIELDS.DESCRIPTION # , helper_method: :snippit
     # config.add_index_field Settings.FIELDS.PUBLISHER
     # config.add_index_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME
     # config.add_index_field Settings.FIELDS.DATASET_FILE_EXT
