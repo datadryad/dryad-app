@@ -9,7 +9,7 @@
 # https://github.com/mileszs/wicked_pdf/blob/master/README.md
 
 # this is a monkeypatch that fixes WickedPDF rendering in situations where another class overrides render, also.
-# Geoblacklight 3.4 also overrides rendering and without patch then no page on the site will render at all.
+# Blacklight 7.37.0 also overrides rendering and without patch then no page on the site will render at all.
 # I found this at https://github.com/mileszs/wicked_pdf/pull/919/files#diff-15fe87701d185f1a00b4bdec59bbe86bea2079adb73d7235651102e21d6da578
 # and it solves our problem.
 #

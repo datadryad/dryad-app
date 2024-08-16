@@ -9696,9 +9696,19 @@ a.catalog_startOverLink:hover {
 button[data-toggle='collapse'] {
   display:none
 }
+.category-icon .blacklight-icons {
+  height: 100px;
+  display: block;
+}
+
 .category-icon .blacklight-icons svg {
   width:4.5rem;
   margin:1rem 0 .3rem
+}
+.category-icon .blacklight-icons i {
+  height: 57px;
+  margin: 1.3rem 0 .6rem;
+  color: #6C757D;
 }
 .documents-list .document {
   padding-bottom:0.5rem

@@ -15,7 +15,7 @@ class CatalogController < ApplicationController
   helper StashEngine::ApplicationHelper
   include StashEngine::SharedController
 
-  # layout 'geoblacklight_layout'
+  # layout 'blacklight_layout'
   # layout 'stash_engine/application'
   layout :determine_layout if respond_to? :layout
 
@@ -229,7 +229,7 @@ class CatalogController < ApplicationController
     # mean") suggestion is offered.
     config.spell_max = 5
 
-    # Custom tools for GeoBlacklight
+    # Custom tools for Blacklight
     config.add_show_tools_partial :web_services,
                                   if: proc { |_context, _config, options|
                                         options[:document] &&

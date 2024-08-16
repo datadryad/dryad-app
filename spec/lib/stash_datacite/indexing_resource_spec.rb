@@ -303,7 +303,7 @@ module Stash
       end
 
       describe '#bounding_box_envelope' do
-        it 'gives a set of numbers like SOLR or Geoblacklight likes' do
+        it 'gives a set of numbers like SOLR or Blacklight likes' do
           the_box = StashDatacite::GeolocationBox.create(sw_latitude: -63.393966,
                                                          ne_latitude: -53.668786,
                                                          sw_longitude: -105.476213,
