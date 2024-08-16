@@ -1,8 +1,5 @@
 <% @page_title = "Admin dashboard" %>
 <% unaltered = @saved_search&.filters == @filters && @saved_search&.fields == @fields && (@saved_search&.search_string == @search_string || (@saved_search&.search_string.blank? && @search_string.blank?)) %>
-<div class="callout alt">
-  <p style="text-align: center;">Welcome to the beta version of the new Admin dashboard! Please send your feedback to <a href="mailto:community@datadryad.org?subject=Admin dashboard feedback">community@datadryad.org</a>.</p>
-</div>
 <div class="admin-dashboard-header">
   <h1 class="o-heading__level1">Admin dashboard</h1>
   <%= render partial: 'role_select' %>
@@ -22,6 +19,10 @@
 </div>
 
 <div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], sort: params[:sort], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>"></div>
+
+<div class="callout alt">
+  <p style="text-align: center;">Please send your Admin dashboard feedback to <a href="mailto:community@datadryad.org?subject=Admin dashboard feedback">community@datadryad.org</a>.</p>
+</div>
 
 <script type="text/javascript">
   document.getElementById('search_open').addEventListener('click', (e) => {
