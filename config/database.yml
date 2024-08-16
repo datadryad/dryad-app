@@ -1,7 +1,7 @@
 <% if Rails.env == 'test' %>
 test:
   adapter: mysql2
-  host: 127.0.0.1
+  host: localhost
   database: dashv2_test
   username: travis
   password: ""
