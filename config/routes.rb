@@ -364,9 +364,8 @@ Rails.application.routes.draw do
     get 'gmail_auth', to: 'gmail_auth#index'
   end
 
-  # the ones below coming from new routing for geoblacklight
+  # the ones below coming from new routing for blacklight
   #--------------------------------------------------------
-  # mount Geoblacklight::Engine => 'geoblacklight'
   mount Blacklight::Engine => '/'
 
   get '/search', to: 'catalog#index'

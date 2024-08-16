@@ -6,7 +6,7 @@ Right now our SOLR setup is quite manual and we manually copy over some configur
 We also manually create the core. It is fairly simple to run SOLR since it's a Java application that can
 be extracted and run.
 
-The [README.md](config/solr_config/README.md) details how to set up the geoblacklight core and schema and
+The [README.md](config/solr_config/README.md) details how to set up the blacklight core and schema and
 our additions to it, which should always be checked into our repository after we make updates to the
 schema.
 
