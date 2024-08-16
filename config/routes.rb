@@ -320,8 +320,7 @@ Rails.application.routes.draw do
     match 'saved_search/:id', to: 'saved_searches#update', via: %i[put patch], as: 'update_saved_search'
     delete 'saved_search/:id', to: 'saved_searches#destroy', as: 'saved_search_delete'
 
-    # admin_datasets, aka "Curator Dashboard"
-    get 'ds_admin', to: 'admin_datasets#index'
+    # activity log
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
@@ -516,6 +515,7 @@ Rails.application.routes.draw do
   get '/submit', to: redirect { |params, request| "/stash/resources/new?#{request.params.to_query}" }
   get '/interested', to: redirect('/stash/contact#get-involved')
   get '/stash/interested', to: redirect('/stash/contact#get-involved')
+  get '/stash/ds_admin', to: redirect('/stash/admin_dashboard')
 
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad

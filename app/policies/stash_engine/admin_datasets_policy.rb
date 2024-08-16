@@ -1,20 +1,12 @@
 module StashEngine
   class AdminDatasetsPolicy < ApplicationPolicy
 
-    def index?
+    def activity_log?
       @user.min_admin?
     end
 
-    def activity_log?
-      index?
-    end
-
-    def stats_popup?
-      index?
-    end
-
     def note_popup?
-      index?
+      @user.min_admin?
     end
 
     def data_popup?
@@ -33,30 +25,5 @@ module StashEngine
       @user.superuser?
     end
 
-    class Scope
-      def initialize(user, scope, params)
-        @user = user
-        @scope = scope
-        @params = params
-      end
-
-      def resolve
-        if @user.tenant_limited?
-          @scope.where(**@params, tenant: @user.tenant)
-        elsif @user.min_app_admin?
-          @scope.where(**@params)
-        elsif @user.journals_as_admin.present?
-          @scope.where(**@params, journals: @user.journals_as_admin.map(&:title))
-        elsif @user.funders.present?
-          @scope.where(**@params, funders: @user.funders.map(&:ror_id))
-        else
-          false
-        end
-      end
-
-      private
-
-      attr_reader :user, :scope
-    end
   end
 end
