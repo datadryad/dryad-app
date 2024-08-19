@@ -357,8 +357,11 @@ module StashEngine
 
     def automatic_ppr?
       return false unless latest_manuscript.present?
+      return false if has_accepted_manuscript?
+      return false if has_rejected_manuscript?
+      return false if publication_article_doi.present?
 
-      !has_accepted_manuscript? && !has_rejected_manuscript?
+      true
     end
 
     # rubocop:disable Naming/PredicateName

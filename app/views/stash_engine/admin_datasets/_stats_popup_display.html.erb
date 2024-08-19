@@ -1,7 +1,0 @@
-<h1>Dataset statistics</h1>
-<%= render partial: 'stash_engine/landing/metrics', locals: {identifier: @identifier, no_link: true} %>
-
-<% if @resource&.identifier&.cached_citations.count > 0 %>
-  <br/>
-  <%= render partial: 'stash_engine/landing/citations', locals: {identifier: @identifier} %>
-<% end %>

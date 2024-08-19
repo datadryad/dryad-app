@@ -14,7 +14,7 @@
     </div>
   </div>
   <div class="c-footer__link-group">
-    <span>Copyright (c) <%= Time.new.year %> Dryad</span>
+    <span>© <%= Time.new.year %> Dryad. <a href="/stash/terms#copyright">Content on this site is licensed for reuse</a>.</span>
     <% if !Rails.env.include?('production') || current_user&.superuser? %>
       <span>Version: <%= APP_CONFIG[:app_version] %></span>
       <!-- Revision: <%= APP_CONFIG[:app_revision] %>  -->

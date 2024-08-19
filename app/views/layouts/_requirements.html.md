@@ -60,7 +60,7 @@ Dryad is a nonprofit organization that provides long-term access to its contents
 
 The base DPC per data submission is $<%=  Stash::Payments::Invoicer.data_processing_charge(identifier: StashEngine::Identifier.last) / 100 %> USD. DPCs are invoiced upon curator approval for publication, unless the submitter is based at a [member institution](/stash/join_us#members) (determined by login credentials) or an [associated journal or publisher](/stash/journals) has an agreement with Dryad to sponsor the DPC.
 
-We are sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the fee, for any reason, we’ve expanded our waiver policy so that any author may request one by contacting us at <a class="emailr" href="mailto:dev@null?subject=Fee waiver request&body=DOI: (Please insert the DOI of your submission)">gro.dayrdatad@pleh</a>.
+We are sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the data publication charge, for any reason, we’ve expanded our waiver policy so that any author may request one. To submit your request for consideration, complete the [Fee Waiver Application form](https://docs.google.com/forms/d/e/1FAIpQLSekWZ4Dap7TYh0nap8JmPJ1dBTGeoBl1xnLS4xGH-REfrYCTQ/viewform).
 
 Effective June 2024, Dryad's data publication charge cannot be paid using vouchers.
 

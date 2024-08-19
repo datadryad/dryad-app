@@ -1107,7 +1107,7 @@ module StashEngine
         end
 
       # Determine which submission status to use, :submitted or :peer_review status
-      elsif hold_for_peer_review? && identifier.allow_review?
+      elsif (hold_for_peer_review? && identifier.allow_review?) || identifier.automatic_ppr?
         publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
         if publication_accepted
           curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has already been accepted"
@@ -1120,7 +1120,7 @@ module StashEngine
         else
           curation_note = "Set to Private for peer review at #{identifier.automatic_ppr? ? "journal's" : "author's"} request"
           target_status = 'peer_review'
-          update(peer_review_end_date: Time.now.utc + 6.months)
+          update(hold_for_peer_review: true, peer_review_end_date: Time.now.utc + 6.months)
         end
       end
 

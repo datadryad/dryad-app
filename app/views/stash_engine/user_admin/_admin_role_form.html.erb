@@ -2,27 +2,27 @@
 <%
 system_roles = [
   ['superuser', 'Superuser <span>Can access and edit all pages and administrative menus.</span>'],
-  ['curator', 'Curator <span>Can view and edit all submissions. Auto curation assignment.</span>'],
+  ['curator', 'Curator <span>Can view, edit, and curate all submissions. Auto curation assignment.</span>'],
   ['admin', 'Admin <span>Can view all submissions and curation pages. Can manage accounts.</span>'],
   ['', 'User <span>Default user role. Can submit, view, and edit their submissions.</span>']
 ]
 tenant_roles = [
+  ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated tenant.</span>'],
   ['admin', 'Admin <span>Can view all tenant submissions and curation pages, and create datasets.</span>'],
-  ['curator', 'Curator <span>Can view and edit datasets with the associated tenant.</span>'],
   ['', 'Remove tenant role']
 ]
 publisher_roles = [
-  ['admin', 'Admin <span>Can view all publisher submissions and curation pages, and create datasets.</span>'],
   ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated publisher.'],
+  ['admin', 'Admin <span>Can view all publisher submissions and curation pages, and create datasets.</span>'],
   ['', 'Remove publisher role']
 ]
 journal_roles = [
-  ['admin', 'Admin <span>Can view all journal submissions and curation pages, and create datasets.</span>'],
   ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated journal.</span>'],
+  ['admin', 'Admin <span>Can view all journal submissions and curation pages, and create datasets.</span>'],
   ['', 'Remove journal role']
 ]
 funder_roles = [
-  ['admin', 'Admin <span>Can view all funder submissions and curation pages, without editing.</span>'],
+  ['admin', 'Admin <span>Can view all funder submissions and curation pages, and create datasets.</span>'],
   ['', 'Remove funder role']
 ]
 %>
@@ -93,7 +93,7 @@ funder_roles = [
     <% unless @publisher_role %>
       <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a publisher role</button>
     <% end %>
-    <%= render partial: 'admin_role_fieldset', locals: { user_role: @publisher_role, label: 'publisher', select_label: 'For organization or society:', roles: publisher_roles, options: StashEngine::JournalOrganization.all.collect { |j| [ j.name, j.id ] } } %>
+    <%= render partial: 'admin_role_fieldset', locals: { user_role: @publisher_role, label: 'publisher', select_label: 'For organization or society:', roles: publisher_roles, options: StashEngine::JournalOrganization.order(:name).collect { |j| [ j.name, j.id ] } } %>
     <% unless @journal_role %>
       <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a journal role</button>
     <% end %>

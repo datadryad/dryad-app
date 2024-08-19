@@ -248,7 +248,7 @@ function MarkdownEditor(props) {
 
 MarkdownEditor.propTypes = {
   id: PropTypes.string.isRequired,
-  initialValue: PropTypes.string.isRequired,
+  initialValue: PropTypes.string,
   replaceValue: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   buttons: PropTypes.arrayOf(PropTypes.oneOf(defaultButtons)),
@@ -256,6 +256,7 @@ MarkdownEditor.propTypes = {
 
 MarkdownEditor.defaultProps = {
   buttons: defaultButtons,
+  initialValue: '',
   replaceValue: '',
 };
 

@@ -47,7 +47,10 @@ export default function ReadMe({
   };
 
   const restartWizard = () => {
+    document.getElementById('proceed_review').setAttribute('hidden', true);
+    document.querySelector('.c-autosave-footer').setAttribute('hidden', true);
     setInitialValue(null);
+    setReplaceValue(null);
     setWizardContent({title, doi, step: 0});
     setWizardStep(0);
     saveDescription(null);
@@ -87,7 +90,7 @@ export default function ReadMe({
     }
   }, []);
 
-  if (initialValue) {
+  if (initialValue || replaceValue) {
     return (
       <>
         <div className="readme-columns-final">
@@ -189,7 +192,7 @@ export default function ReadMe({
             <div>
               <h2 className="o-heading__level2">Already have a README file?</h2>
               <p>If you already have a README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a> for your dataset, you can import it here. </p>
-              <ReadMeImport setValue={setInitialValue} />
+              <ReadMeImport setValue={setReplaceValue} />
             </div>
           </div>
         </div>

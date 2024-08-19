@@ -1,5 +1,7 @@
 User-agent: *
 Disallow: /search
 Disallow: /stash/downloads
+Disallow: /stash/downloadZip
+Disallow: /stash/share
 Crawl-delay: 5
 Sitemap: https://datadryad.org/sitemap.xml
