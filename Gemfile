@@ -105,7 +105,6 @@ gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
 gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny
-gem 'twitter-typeahead-rails', '0.11.1' # this is in a generator to install blacklight
 gem 'wicked_pdf', '~> 2.1.0'
 gem 'wkhtmltopdf-binary', '~> 0.12.5.4'
 gem 'yaml', '~> 0.3.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)

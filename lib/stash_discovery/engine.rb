@@ -4,7 +4,6 @@ require 'rsolr'
 # For undocumented reasons, sass-rails won't load without an explicit require
 require 'bootstrap'
 # require 'bootstrap-sass'
-# require 'twitter-typeahead-rails'
 
 module StashDiscovery
   class Engine < ::Rails::Engine
@@ -26,6 +25,5 @@ module StashDiscovery
       end
     end
     # :nocov:
-
   end
 end
