@@ -168,11 +168,10 @@ group :test do
   gem 'webmock'
 end
 
-group :development, :v3_development, :test, :local_dev, :local do
+group :development, :v3_development, :local_dev, :local, :test do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
-  gem 'colorize'
   gem 'listen'
   gem 'parallel_tests'
   gem 'pry'
@@ -184,5 +183,9 @@ group :development, :v3_development, :test, :local_dev, :local do
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
   gem 'spring-commands-rspec'
+end
+
+group :development, :v3_development, :local_dev do
+  gem 'colorize'
   gem 'web-console'
 end
