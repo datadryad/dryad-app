@@ -693,10 +693,6 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    twitter-typeahead-rails (0.11.1)
-      actionpack (>= 3.1)
-      jquery-rails
-      railties (>= 3.1)
     typesafe_enum (0.1.9)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -862,7 +858,6 @@ DEPENDENCIES
   timecop
   tins (~> 1.31.0)
   turbolinks
-  twitter-typeahead-rails (= 0.11.1)
   uglifier (~> 4.2.0)
   web-console
   webmock
