@@ -196,17 +196,7 @@ This step is optional.
 By default, datasets that are submitted are immediately eligible for
 curation. Dryad curators may evaluate and publish `submitted` datasets at any
 time. If you wish your dataset to remain private until an associated article is
-published, you may update the dataset's `curationStatus` to indicate this.
-
-To move a dataset into `peer_review` status, the dataset must have a
-`versionStatus` of `submitted`. Make a PATCH request as described
-above. Submit to /api/v2/datasets/&lt;encoded-doi&gt; with some json patch information
-that tells the server to set the /curationStatus value to
-'peer_review': 
-
-```json
-[ { "op": "replace", "path": "/curationStatus", "value": "peer_review" } ]
-```
+published, you may want to place the dataset in the `curationStatus` of `peer_review`.
 
 Datasets in `peer_review` status will remain uncurated and unpublished until
 Dryad learns the associated article has been published. Reminders will
@@ -214,6 +204,28 @@ occasionally be sent to the submitter.
 
 For an explanation of other `curationStatus` values, see the [Submission
 flow](../submission_flow.md) document.
+
+There are two ways to put a dataset into `peer_review` status, described below.
+
+### Setting peer review during the initial submission
+
+When creating a submission, the following field may be added to the dataset's metadata document:
+```
+"holdForPeerReview": true
+```
+
+This field will instruct Dryad to move the dataset into `peer_review` status immediately when it is submitted.
+
+### Setting peer review after the initial submission
+
+If a dataset has already been submitted and has a `versionStatus` of `submitted`, make a PATCH request as described
+above. Submit to /api/v2/datasets/&lt;encoded-doi&gt; with some json patch information
+that tells the server to set the /curationStatus value to
+'peer_review': 
+
+```json
+[ { "op": "replace", "path": "/curationStatus", "value": "peer_review" } ]
+```
 
 ## Revise your metadata in a new version
 

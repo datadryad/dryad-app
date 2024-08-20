@@ -1,7 +1,17 @@
 .table-wrapper {
+  display: inline-block;
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+
+  &.c-lined-table-wrapper {
+    margin-top: $spacing-md;
+    width: 100%;
+  }
+
+  &:focus-within {
+    outline: thin solid $light-blue;
+  }
 }
 
 table {  
@@ -31,7 +41,6 @@ td, th {
 .c-lined-table {
   width: 100%;
   font-size: .9em;
-  margin-top: $spacing-md;
 
   td, th {
     border: thin solid #888;

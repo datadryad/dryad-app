@@ -105,11 +105,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         before(:each, js: true) do
           sign_in(@curator)
           find('.c-header_nav-button', text: 'Datasets').click
-          visit stash_url_helpers.ds_admin_path
+          visit stash_url_helpers.admin_dashboard_path
         end
 
         it 'displays the proper information on the Admin page', js: true do
-          within(:css, '.c-lined-table__row') do
+          within(:css, 'tbody tr') do
             # Make sure the appropriate buttons are available
             # Curators want to edit everything unless it's in progress, so enjoy
             expect(page).to have_css('button[title="Edit dataset"]')
@@ -117,7 +117,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
             # Make sure the right text is shown
             expect(page).to have_link(@resource.title)
-            within(:css, "#js-curation-state-#{@resource.id}") do
+            within(:css, "#curation_activity_#{@resource.id}") do
               expect(page).to have_text('Submitted')
             end
             expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
@@ -127,7 +127,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
 
         it 'displays the proper information on the Activity Log page', js: true do
-          within(:css, '.c-lined-table__row') do
+          within(:css, 'tbody tr') do
             find('a[aria-label="Activity log"]').click
           end
 
@@ -164,7 +164,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         sign_in(@curator)
         find('.c-header_nav-button', text: 'Datasets').click
-        visit stash_url_helpers.ds_admin_path
+        visit stash_url_helpers.admin_dashboard_path
 
         # Edit the Dataset as an admin
         click_button 'Edit dataset'
@@ -172,7 +172,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset(curator: true)
         @resource.reload
 
-        visit stash_url_helpers.ds_admin_path
+        visit stash_url_helpers.admin_dashboard_path
       end
 
       it 'has a resource_state (Merritt status) of "submitted"', js: true do
@@ -188,7 +188,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'displays the proper information on the Admin page', js: true do
-        within(:css, '.c-lined-table__row') do
+        within(:css, 'tbody tr') do
           # Make sure the appropriate buttons are available
           expect(page).to have_css('button[title="Edit dataset"]')
           expect(page).to have_css('button[aria-label="Update status"]')
@@ -205,7 +205,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'displays the proper information on the Activity Log page', js: true do
-        within(:css, '.c-lined-table__row') do
+        within(:css, 'tbody tr') do
           find('a[aria-label="Activity log"]').click
         end
 
@@ -253,9 +253,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         sign_in(@curator)
         find('.c-header_nav-button', text: 'Datasets').click
 
-        visit stash_url_helpers.ds_admin_path
+        visit stash_url_helpers.admin_dashboard_path
 
-        within(:css, '.c-lined-table__row') do
+        within(:css, 'tbody tr') do
           # Make sure the appropriate buttons are available
           # Make sure the right text is shown
           expect(page).to have_link(@resource.title)
@@ -271,9 +271,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       it 'displays the proper information on the Activity Log page', js: true do
         sign_in(@curator)
         find('.c-header_nav-button', text: 'Datasets').click
-        visit stash_url_helpers.ds_admin_path
+        visit stash_url_helpers.admin_dashboard_path
 
-        within(:css, '.c-lined-table__row') do
+        within(:css, 'tbody tr') do
           find('a[aria-label="Activity log"]').click
         end
 

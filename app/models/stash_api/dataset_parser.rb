@@ -43,14 +43,13 @@ module StashApi
         loosen_validation: @hash['loosenValidation'] || false,
         hold_for_peer_review: hold_for_peer_review # after ruby 3.1 this can be just hold_for_peer_review:
       )
-
+      parse_publication
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
       @resource.identifier.payment_type = @hash['paymentType']
       @resource.identifier.payment_id = @hash['paymentId']
       @resource.identifier.waiver_basis = @hash['waiverBasis']
-      parse_internal_data
       @resource.identifier.save
       @resource.identifier
     end
@@ -104,7 +103,7 @@ module StashApi
       owning_user.id
     end
 
-    def parse_internal_data
+    def parse_publication
       # Ensure we have the standardized journal title and ISSN
       journal = nil
       if @hash['publicationISSN'].present?
@@ -118,10 +117,11 @@ module StashApi
         @hash['publicationName'] = journal.title
       end
 
-      # Store all internal fields
-      INTERNAL_DATA_FIELDS.each do |int_field|
-        StashEngine::InternalDatum.create(data_type: int_field, stash_identifier: @resource.identifier, value: @hash[int_field]) if @hash[int_field]
-      end
+      publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
+      publication.publication_name = @hash['publicationName'] if @hash['publicationName']
+      publication.publication_issn = @hash['publicationISSN'] if @hash['publicationISSN']
+      publication.manuscript_number = @hash['manuscriptNumber'] if @hash['manuscriptNumber']
+      publication.save
     end
 
     def dynamic_parse(my_class:)

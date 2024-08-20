@@ -44,6 +44,7 @@ module StashApi
       # be sure versions are set correctly, because creating them manually like this doesn't ensure it
       @resources[0].stash_version.update(version: 1)
       @resources[1].stash_version.update(version: 2)
+      @identifier.reload
     end
 
     # test creation of a new dataset
@@ -134,7 +135,7 @@ module StashApi
         @user2 = create(:user)
         journal = create(:journal)
         create(:role, role_object: journal, user: @user2)
-        create(:internal_datum, identifier_id: @identifier.id, data_type: 'publicationISSN', value: journal.single_issn)
+        create(:resource_publication, resource_id: @identifier.latest_resource_id, publication_issn: journal.single_issn)
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
         access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)

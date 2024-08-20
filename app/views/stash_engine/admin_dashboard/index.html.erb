@@ -1,53 +1,92 @@
 <% @page_title = "Admin dashboard" %>
 <% unaltered = @saved_search&.filters == @filters && @saved_search&.fields == @fields && (@saved_search&.search_string == @search_string || (@saved_search&.search_string.blank? && @search_string.blank?)) %>
-<div class="callout">
-  <p>Welcome to the beta version of the new Admin dashboard! Please send your feedback to <a href="mailto:community@datadryad.org?subject=Admin dashboard feedback">community@datadryad.org</a>.</p>
-</div>
 <div class="admin-dashboard-header">
   <h1 class="o-heading__level1">Admin dashboard</h1>
   <%= render partial: 'role_select' %>
 </div>
-<div class="admin-dashboard-buttons" style="margin-top: 0; margin-bottom: -1.5rem">
-  <div class="admin-dashboard-results">
+<div class="admin-dashboard-buttons" style="margin-top: 2rem;">
+  <div class="admin-dashboard-results" style="min-height: 40px; display: flex; align-items: center;">
     <b role="heading" aria-level="2" id="search_head">Search results<% if @saved_search %>: <a href="/stash/account#saved" style="font-weight: normal;"><%= @saved_search.title %></a><% end %></b>
-    <button type="button" class="o-button__plain-text7" id="search_open" aria-controls="search_form" aria-expanded="<%= !unaltered %>" <% unless unaltered %>hidden<% end %>><i class="fa fa-sliders" aria-hidden="true"></i>Fields and filters</button>
+    <button type="button" class="o-button__plain-text7" id="search_open" aria-controls="search_form" aria-expanded="<%= !unaltered %>"><i class="fa fa-<%= unaltered ? 'sliders' : 'square-caret-up'%>" aria-hidden="true"></i>Fields and filters</button>
   </div>
   <div id="search_form" <% if unaltered %>hidden<% end %>>
     <%= render partial: 'search_form' %>
   </div>  
-  <div class="admin-dashboard-results" id="save_buttons"></div>
+  <div class="admin-dashboard-results" id="save_buttons" <% if unaltered %>hidden<% end %>></div>
   <div class="admin-dashboard-results" style="font-size: .9em;" id="count_and_export">
     <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
   </div>
 </div>
 
-<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], page_size: params[:page_size], page: params[:page]) %>"></div>
+<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], sort: params[:sort], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>"></div>
+
+<div class="callout alt">
+  <p style="text-align: center;">Please send your Admin dashboard feedback to <a href="mailto:community@datadryad.org?subject=Admin dashboard feedback">community@datadryad.org</a>.</p>
+</div>
 
 <script type="text/javascript">
   document.getElementById('search_open').addEventListener('click', (e) => {
-    e.target.setAttribute('aria-expanded', true)
-    e.target.setAttribute('hidden', true)
-    document.getElementById('search_form').removeAttribute('hidden')
+    e.target.toggleAttribute('aria-expanded')
+    e.target.firstElementChild.classList.toggle('fa-sliders')
+    e.target.firstElementChild.classList.toggle('fa-square-caret-up')
+    document.getElementById('search_form').toggleAttribute('hidden')
+    document.getElementById('save_buttons').toggleAttribute('hidden')
   })
-  document.getElementById('edit_fields-help').addEventListener('click', (e) => {
+  const cancelClick = (e) => {
+    e.preventDefault();
+    document.getElementById('genericModalDialog').close();
+  }
+  const statusChange = (e) => {
+    if (e.currentTarget.value === 'published' || e.currentTarget.value === 'embargoed') {
+      document.getElementById('c-input_publication_date').removeAttribute('hidden');
+    } else {
+      document.getElementById('c-input_publication_date').setAttribute('hidden', 'hidden');
+    }
+  }
+  const searchSave = () => {
+    if (document.getElementById('search_save')) {
+      document.getElementById('search_save').setAttribute('aria-expanded', 'false');
+    }
+  }
+  const fieldsHelp = (e) => {
     e.preventDefault()
     document.getElementById('edit_fields-form').classList.toggle('show-help')
-  })
-  document.querySelector('#search_form form').addEventListener('submit', () => {
+  }
+  const formSubmit = () => {
     const params = new URL(window.location.href).searchParams
     params.delete('clear')
     window.history.pushState({}, null, `${window.location.pathname}?${params.toString()}`);
     document.getElementById('count_and_export').innerHTML = '<i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>'
-  })
-  document.getElementById('clear_filters').addEventListener('click', (e) => {
+  }
+  const checkForm = () => {
+    const form = document.querySelector('#search_form form')
+    for(let field of form.elements) {
+      if (field.value) {
+        field.classList.add('selected')
+      } else {
+        field.classList.remove('selected')
+      }
+    }
+    const data = JSON.stringify([...new FormData(form)].slice(1).sort(([a], [b]) => a.localeCompare(b)))
+    if (data === form.dataset.origData) {
+      document.getElementById('apply_changes').classList.remove('changed')
+    } else {
+      document.getElementById('apply_changes').classList.add('changed')
+    }
+  }
+  const observer = new MutationObserver(checkForm)
+  const clearFilters = (e) => {
     e.preventDefault()
     const inputs = document.querySelectorAll(['#edit_filters-form input', '#search_form input[type="search"]'])
     for (const input of inputs) {
       input.value = ''
+      input.classList.remove('selected')
     }
     const selects = document.querySelectorAll('#edit_filters-form select')
     for (const sel of selects) {
-      sel.selectedIndex = -1
+      sel.selectedIndex = 0
+      sel.classList.remove('selected')
     }
-  })
+    checkForm()
+  }
 </script>

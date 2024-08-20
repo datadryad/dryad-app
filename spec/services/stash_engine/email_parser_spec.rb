@@ -47,8 +47,8 @@ module StashEngine
         ident = create(:identifier)
         journal = create(:journal)
         ms_number = "ms-#{Faker::Number.number(digits: 4)}"
-        create(:internal_data, identifier_id: ident.id, data_type: 'manuscriptNumber', value: ms_number)
-        create(:internal_data, identifier_id: ident.id, data_type: 'publicationISSN', value: journal.single_issn)
+        create(:resource_publication, resource: create(:resource, identifier: ident), manuscript_number: ms_number,
+                                      publication_issn: journal.single_issn)
         content = "Online ISSN: #{journal.single_issn}\nMS Reference Number: #{ms_number}"
         parser = EmailParser.new(content: content)
         expect(parser.identifier).to eq(ident)

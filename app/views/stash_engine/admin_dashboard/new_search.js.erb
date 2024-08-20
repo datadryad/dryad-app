@@ -2,12 +2,7 @@
 document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'new_search') %>";
 document.getElementById('genericModalDialog').showModal();
 document.getElementById('search_save').setAttribute('aria-expanded', 'true');
-document.getElementById('genericModalDialog').addEventListener('close', () => {
-  if (document.getElementById('search_save')) {
-    document.getElementById('search_save').setAttribute('aria-expanded', 'false');
-  }
-});
-document.getElementById('cancel_dialog').addEventListener('click', (e) => {
-  e.preventDefault();
-  document.getElementById('genericModalDialog').close();
-});
+document.getElementById('genericModalDialog').removeEventListener('close', searchSave);
+document.getElementById('genericModalDialog').addEventListener('close', searchSave);
+document.getElementById('cancel_dialog').removeEventListener('click', cancelClick);
+document.getElementById('cancel_dialog').addEventListener('click', cancelClick);

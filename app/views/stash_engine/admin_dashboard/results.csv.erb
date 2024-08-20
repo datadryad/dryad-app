@@ -50,21 +50,21 @@ head += ',First queued' if @fields.include?('queue_date')
   if @fields.include?('funders') || @fields.include?('awards')
     row << dataset.funders.map { |f| ([@fields.include?('funders') ? f.contributor_name : nil] + [@fields.include?('awards') ? f.award_number : nil]).reject(&:blank?).join(', ')}.uniq.reject(&:blank?).join('; ') 
   end
-  row << dataset.identifier&.journal&.title if @fields.include?('journal')
-  row << dataset.identifier&.journal&.sponsor&.name if @fields.include?('sponsor')
+  row << dataset.journal&.title if @fields.include?('journal')
+  row << dataset.journal&.sponsor&.name if @fields.include?('sponsor')
   if @fields.include?('identifiers')
-    row << ([dataset.identifier.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ')
+    row << ([dataset.resource_publication&.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ')
   end
   row << dataset.curator_name if @fields.include?('curator')
   if @fields.include?('dpc')
     dpc = ''
     dpc = dataset.tenant&.short_name if dataset.identifier.payment_id == dataset.tenant_id
-    dpc = dataset.identifier&.journal&.title if dataset.identifier&.journal&.issn_array&.include?(dataset.identifier.payment_id)
+    dpc = dataset.journal&.title if dataset.journal&.issn_array&.include?(dataset.identifier.payment_id)
     dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id&.starts_with?('funder')
     row << dpc
   end
   row << dataset.last_curation_activity.updated_at if @fields.include?('updated_at') 
-  row << dataset.process_date.processing if @fields.include?('submit_date')
+  row << dataset.process_date.processing || dataset.process_date.submitted if @fields.include?('submit_date')
   row << dataset.identifier.process_date.processing || dataset.identifier.process_date.submitted if @fields.include?('first_sub_date')
   row << dataset.publication_date if @fields.include?('publication_date')
   row << dataset.identifier.publication_date if @fields.include?('first_pub_date')

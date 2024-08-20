@@ -146,7 +146,7 @@ module StashEngine
 
       @search_string = params[:q] || session[:admin_search_string] || @saved_search&.search_string
       @filters = params[:filters] || session[:admin_search_filters] || @saved_search&.filters
-      @filters = @filters.deep_transform_keys(&:to_sym) unless @filters.blank?
+      @filters = JSON.parse(@filters.to_json, symbolize_names: true) unless @filters.blank?
       @fields = params[:fields] || session[:admin_search_fields] || @saved_search&.fields
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
@@ -200,9 +200,13 @@ module StashEngine
 
     def date_fields
       if @filters[:submit_date]&.values&.any?(&:present?)
-        @datasets = @datasets.joins(:process_date).select('stash_engine_process_dates.processing as submit_date')
+        @datasets = @datasets.joins(:process_date).select(
+          'IFNULL(stash_engine_process_dates.processing, stash_engine_process_dates.submitted) as submit_date'
+        )
       elsif @sort == 'submit_date'
-        @datasets = @datasets.left_outer_joins(:process_date).select('stash_engine_process_dates.processing as submit_date')
+        @datasets = @datasets.left_outer_joins(:process_date).select(
+          'IFNULL(stash_engine_process_dates.processing, stash_engine_process_dates.submitted) as submit_date'
+        )
       end
       return unless @sort == 'first_pub_date' || @filters[:first_pub_date]&.values&.any?(&:present?)
 
@@ -226,11 +230,9 @@ module StashEngine
         search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
         @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) > 0")
       end
-      @datasets = @datasets.left_outer_joins(:related_identifiers)
-        .joins("left outer join stash_engine_internal_data msnum on
-          msnum.identifier_id = stash_engine_identifiers.id and msnum.data_type = 'manuscriptNumber'")
+      @datasets = @datasets.left_outer_joins(:related_identifiers).left_outer_joins(:resource_publication)
         .where(
-          'dcs_related_identifiers.related_identifier like ? or msnum.value like ?',
+          'LOWER(dcs_related_identifiers.related_identifier) like ? or LOWER(stash_engine_resource_publications.manuscript_number) like LOWER(?)',
           "%#{@filters[:identifiers]}%", "%#{@filters[:identifiers]}%"
         ) unless @filters[:identifiers].blank?
 
@@ -242,7 +244,7 @@ module StashEngine
         "stash_engine_curation_activities.updated_at #{date_string(@filters[:updated_at])}"
       ) unless @filters[:updated_at].nil? || @filters[:updated_at].values.all?(&:blank?)
       @datasets = @datasets.where(
-        "stash_engine_process_dates.processing #{date_string(@filters[:submit_date])}"
+        "IFNULL(stash_engine_process_dates.processing, stash_engine_process_dates.submitted) #{date_string(@filters[:submit_date])}"
       ) unless @filters[:submit_date].nil? || @filters[:submit_date].values.all?(&:blank?)
       if %w[first_sub_date queue_date].include?(@sort) || @filters[:first_sub_date]&.values&.any?(&:present?)
         filter_on = @filters[:first_sub_date]&.values&.any?(&:present?)
@@ -285,7 +287,7 @@ module StashEngine
       journal_ids = @filters.dig(:journal, :value)&.to_i
       journal_ids = (@journal_limit.map(&:id).include?(journal_ids) ? journal_ids : @journal_limit.map(&:id)) if @journal_limit.present?
 
-      @datasets = @datasets.joins(identifier: :journal).where('stash_engine_journals.id': journal_ids) if journal_ids.present?
+      @datasets = @datasets.joins(:journal).where('stash_engine_journals.id': journal_ids) if journal_ids.present?
     end
 
     def sponsor_filter
@@ -294,13 +296,13 @@ module StashEngine
       sponsor_ids = @filters[:sponsor]&.to_i
       sponsor_ids = (@sponsor_limit.map(&:id).include?(sponsor_ids) ? sponsor_ids : @sponsor_limit.map(&:id)) if @sponsor_limit.present?
 
-      @datasets = @datasets.joins(identifier: :journal).where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
+      @datasets = @datasets.joins(:journal).where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
     end
 
     def funder_filter
       return unless @role_object.is_a?(StashEngine::Funder) || @filters.dig(:funder, :value).present?
 
-      funder_ror = @role_object&.ror_id || @filters.dig(:funder, :value)
+      funder_ror = @role_object.is_a?(StashEngine::Funder) ? @role_object.ror_id : @filters.dig(:funder, :value)
       @datasets = @datasets.joins(
         "inner join dcs_contributors on stash_engine_resources.id = dcs_contributors.resource_id
         and dcs_contributors.contributor_type = 'funder' and dcs_contributors.name_identifier_id = '#{funder_ror}'"
@@ -327,9 +329,11 @@ module StashEngine
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
       @datasets = @datasets.preload(:user) if @fields.include?('submitter')
       @datasets = @datasets.preload(identifier: :counter_stat) if @fields.include?('metrics')
-      @datasets = @datasets.preload(identifier: :journal_datum) if @fields.include?('journal') || @fields.include?('sponsor')
+      if @fields.include?('journal') || @fields.include?('sponsor') || @fields.include?('identifiers')
+        @datasets = @datasets.preload(:resource_publication)
+      end
       @datasets = @datasets.preload(:funders) if @fields.include?('funders')
-      @datasets = @datasets.preload(:related_identifiers).preload(identifier: :manuscript_datum) if @fields.include?('identifiers')
+      @datasets = @datasets.preload(:related_identifiers) if @fields.include?('identifiers')
     end
 
     def load

@@ -80,6 +80,7 @@ module StashDatacite
           err << url_error_validating
           err << over_file_count
           err << over_files_size
+          err << readme_required
           err << data_required
 
         end
@@ -296,32 +297,49 @@ module StashDatacite
         errors
       end
 
-      def data_required
-        errors = []
-
+      def readme_required
         readme_md_require_date = '2022-09-28'
         readme_require_date = '2021-12-20'
 
-        no_techinfo = @resource.descriptions.where(description_type: 'technicalinfo').where.not(description: [nil, '']).count.zero?
+        techinfo = @resource.descriptions.where(description_type: 'technicalinfo').where.not(description: [nil, ''])
+
+        no_techinfo = techinfo.empty?
+        no_techinfo ||= begin
+          JSON.parse(techinfo.first.description)
+          true
+        rescue StandardError
+          false
+        end
 
         no_md = @resource.identifier.created_at > readme_md_require_date && readme_md_files.count.zero?
 
         no_readme = @resource.identifier.created_at > readme_require_date && readme_files.count.zero?
 
         if no_techinfo && (no_md || no_readme)
-          errors << ErrorItem.new(message: '{Include a README} to describe your dataset.',
-                                  page: readme_page(@resource),
-                                  ids: ['readme_editor'])
+          return ErrorItem.new(message: '{Include a README} to describe your dataset.',
+                               page: readme_page(@resource),
+                               ids: ['readme_editor'])
         end
-
-        unless contains_data?
-          errors << ErrorItem.new(message: 'Include at least one data file in your submission. ' \
-                                           '{Add some data files to proceed}.',
-                                  page: files_page(@resource),
-                                  ids: ['filelist_id'])
+        # rubocop:disable Layout/LineLength
+        unless no_techinfo
+          unedited = %r{\A#\s.+\n\n\[https://doi\.org/.+\]\(https://doi\.org/.+\)\n\n##\sDescription of the data and file structure\n\n\Z}.match? techinfo.first.description
+          if unedited
+            return ErrorItem.new(message: 'Include required content {in your README} to describe your dataset.',
+                                 page: readme_page(@resource),
+                                 ids: ['readme_editor'])
+          end
         end
+        # rubocop:enable Layout/LineLength
+        []
+      end
 
-        errors
+      def data_required
+        return [] if contains_data?
+
+        ErrorItem.new(message: 'Include at least one data file in your submission. ' \
+                               '{Add some data files to proceed}.',
+                      page: files_page(@resource),
+                      ids: ['filelist_id'])
       end
 
       private

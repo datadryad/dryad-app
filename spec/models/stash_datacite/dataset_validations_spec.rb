@@ -123,9 +123,7 @@ module StashDatacite
 
         it 'gives error for unfilled publication doi if publication' do
           @resource.identifier.update(import_info: 'published')
-          StashEngine::InternalDatum.create(data_type: 'publicationName',
-                                            value: 'Barrel of Monkeys: the Primate Journal',
-                                            identifier_id: @resource.identifier_id)
+          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.article_id.first
@@ -136,9 +134,7 @@ module StashDatacite
 
         it 'gives error for unfilled manuscript number if manuscript' do
           @resource.identifier.update(import_info: 'manuscript')
-          StashEngine::InternalDatum.create(data_type: 'publicationName',
-                                            value: 'Barrel of Monkeys: the Primate Journal',
-                                            identifier_id: @resource.identifier_id)
+          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.article_id.first
@@ -149,11 +145,10 @@ module StashDatacite
 
         it 'gives a formatting error when someone puts in a URL instead of a DOI' do
           @resource.identifier.update(import_info: 'published')
-          StashEngine::InternalDatum.create(data_type: 'publicationName',
-                                            value: 'Barrel of Monkeys: the Primate Journal',
-                                            identifier_id: @resource.identifier_id)
+          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
           create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'url', work_type:
             'primary_article')
+
           validations = DatasetValidations.new(resource: @resource)
           error = validations.article_id.first
 
@@ -162,13 +157,10 @@ module StashDatacite
         end
 
         it "doesn't give error if manuscript filled" do
-          StashEngine::InternalDatum.create(data_type: 'publicationName',
-                                            value: 'Barrel of Monkeys: the Primate Journal',
-                                            identifier_id: @resource.identifier_id)
+          create(:resource_publication,
+                 resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal',
+                 manuscript_number: '12xu')
 
-          StashEngine::InternalDatum.create(data_type: 'manuscriptNumber',
-                                            value: '12xu',
-                                            identifier_id: @resource.identifier_id)
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.article_id
 
@@ -176,11 +168,10 @@ module StashDatacite
         end
 
         it "doesn't give error if DOI filled" do
-          StashEngine::InternalDatum.create(data_type: 'publicationName',
-                                            value: 'Barrel of Monkeys: the Primate Journal',
-                                            identifier_id: @resource.identifier_id)
-          create(:related_identifier, work_type: 'primary_article', resource_id: @resource.id,
-                                      related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
+          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
+          create(:related_identifier,
+                 work_type: 'primary_article', resource_id: @resource.id,
+                 related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
 
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.article_id
@@ -328,20 +319,22 @@ module StashDatacite
 
       end
 
+      describe :required_readme do
+        it 'requires a README file' do
+          @readme.update(upload_file_name: 'some-bogus-filename.txt')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.readme_required
+          expect(error.message).to include('README')
+
+          @readme.update(upload_file_name: 'README.md')
+          error = validations.readme_required
+          expect(error).to be_empty
+        end
+      end
+
       describe :required_data_files do
         before(:each) do
           @resource.generic_files.each { |f| f.update(url: 'http://example.com') }
-        end
-
-        it 'requires a README file, in addition to at least one data file' do
-          @readme.update(upload_file_name: 'some-bogus-filename.txt')
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.data_required
-          expect(error[0].message).to include('README')
-
-          @readme.update(upload_file_name: 'README.md')
-          error = validations.data_required
-          expect(error).to be_empty
         end
 
         it 'requires at least one data file' do
@@ -349,7 +342,7 @@ module StashDatacite
           create(:data_file, resource: @resource, upload_file_name: 'README.md')
           validations = DatasetValidations.new(resource: @resource)
           error = validations.data_required
-          expect(error[0].message).to include('one data file')
+          expect(error.message).to include('one data file')
         end
       end
 
