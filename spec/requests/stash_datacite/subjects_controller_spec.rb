@@ -13,17 +13,18 @@ module StashDatacite
     end
 
     describe 'create' do
-      let(:params_hash) { { resource_id: @resource.id, subject: ' foo, , bar ,bz , ;tag;,[this1., tag, ' } }
+      let(:params_hash) { { resource_id: @resource.id, subject: ' foo, , bar ,bz , ;tag;,[this1., tag, aa (ss) dd' } }
 
       # removes starting and ending punctuation and spaces
       # removes duplicates
       # removes empty tags
-      # does NOT remove punctuation from inside of tag
+      # removes punctuation from inside of tag
       # does not remove numbers
+      # handles round brackets as delimiters
       it 'strips subject strings and removes blanks' do
         post '/stash_datacite/subjects/create', params: params_hash, headers: default_authenticated_headers, as: :json
 
-        expected_array = %w[foo bar bz tag this1]
+        expected_array = %w[foo bar bz tag this1 aa ss dd]
         json_response = JSON.parse(response.body)
         expect(json_response.map { |a| a['subject'] } & expected_array).to match_array(expected_array)
       end

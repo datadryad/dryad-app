@@ -278,16 +278,11 @@ module StashApi
       # we want to make sure that we're only working those specified.
       if params.key?('publicationISSN')
         # add these conditions to narrow to publicationISSN
-        ds_query = ds_query
-          .joins('INNER JOIN stash_engine_internal_data ON stash_engine_identifiers.id = stash_engine_internal_data.identifier_id')
-          .where("stash_engine_internal_data.data_type = 'publicationISSN' AND stash_engine_internal_data.value = ?",
-                 params['publicationISSN'])
+        ds_query = ds_query.joins(latest_resource: :resource_publication).where(resource_publication: { publication_issn: params['publicationISSN'] })
       elsif params.key?('manuscriptNumber')
         # add these conditions to narrow to manuscriptNumber
-        ds_query = ds_query
-          .joins('INNER JOIN stash_engine_internal_data ON stash_engine_identifiers.id = stash_engine_internal_data.identifier_id')
-          .where("stash_engine_internal_data.data_type = 'manuscriptNumber' AND stash_engine_internal_data.value = ?",
-                 params['manuscriptNumber'])
+        ds_query = ds_query.joins(latest_resource: :resource_publication)
+          .where(resource_publication: { manuscript_number: params['manuscriptNumber'] })
       end
 
       # now, if a curationStatus is specified, narrow down the previous result more.
@@ -498,31 +493,20 @@ module StashApi
     end
 
     def update_publication_issn(new_issn)
-      idatum = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id, data_type: 'publicationISSN').first
+      pub = StashEngine::ResourcePublication.find_or_create_by(resource_id: @stash_identifier.latest_resource_id)
       if new_issn.present?
         # Ensure we have the standardized journal title and ISSN
         journal = StashEngine::Journal.find_by_issn(new_issn)
         return unless journal.present?
 
         # real value, update an existing value or create a new one
-        if idatum
-          idatum.update(value: journal.single_issn)
-        else
-          StashEngine::InternalDatum.create(identifier_id: @stash_identifier.id,
-                                            data_type: 'publicationISSN',
-                                            value: journal.single_issn)
-        end
-
-        # remove and create publicationName to ensure it matches the ISSN
-        pdatum = StashEngine::InternalDatum.where(identifier_id: @stash_identifier.id, data_type: 'publicationName').first
-        pdatum&.destroy
-        StashEngine::InternalDatum.create(identifier_id: @stash_identifier.id,
-                                          data_type: 'publicationName',
-                                          value: journal.title)
+        pub.publication_issn = journal.single_issn
+        pub.publication_name = journal.title
       else
         # nil/empty new_issn, remove any existing datum
-        idatum&.destroy
+        pub.publication_issn = nil
       end
+      pub.save
     end
 
     # checks the status for allowing a dataset PUT request that is an update

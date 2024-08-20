@@ -52,6 +52,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Relations
     has_one :process_date, as: :processable, dependent: :destroy
+    has_one :resource_publication, dependent: :destroy
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
@@ -98,6 +99,9 @@ module StashEngine
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
+    has_one :manuscript, through: :resource_publication
+    has_one :journal_issn, through: :resource_publication
+    has_one :journal, through: :journal_issn
 
     after_create :create_process_date, unless: :process_date
     after_update_commit :update_salesforce_metadata, if: [:saved_change_to_current_editor_id?, proc { |res| res.editor&.min_curator? }]
@@ -143,7 +147,7 @@ module StashEngine
       # see https://github.com/amoeba-rb/amoeba/issues/76
       %i[contributors datacite_dates descriptions geolocations temporal_coverages
          publication_years publisher related_identifiers resource_type rights sizes
-         subjects].each do |assoc|
+         subjects resource_publication].each do |assoc|
         include_association assoc
       end
     end
@@ -233,10 +237,6 @@ module StashEngine
     #     .where('stash_engine_resources.publication_date < ?', Time.now.utc)
     # end
 
-    JOIN_FOR_INTERNAL_DATA = 'INNER JOIN stash_engine_identifiers ON stash_engine_identifiers.id = stash_engine_resources.identifier_id ' \
-                             'LEFT OUTER JOIN stash_engine_internal_data ' \
-                             'ON stash_engine_internal_data.identifier_id = stash_engine_identifiers.id'.freeze
-
     JOIN_FOR_CONTRIBUTORS = 'LEFT OUTER JOIN dcs_contributors ON stash_engine_resources.id = dcs_contributors.resource_id'.freeze
 
     # returns the resources that are currently in a curation state you specify (not looking at obsolete states),
@@ -259,14 +259,14 @@ module StashEngine
         arr.push(tenant_id)
       end
       if journal_issns.present?
-        str += " OR (stash_engine_internal_data.data_type = 'publicationISSN' AND stash_engine_internal_data.value IN (?))"
+        str += ' OR stash_engine_resource_publications.publication_issn IN (?)'
         arr.push(journal_issns)
       end
       if funder_ids.present?
         str += " OR (dcs_contributors.contributor_type = 'funder' AND dcs_contributors.name_identifier_id IN (?))"
         arr.push(funder_ids)
       end
-      joins(:last_curation_activity).joins(JOIN_FOR_INTERNAL_DATA).joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
+      joins(:last_curation_activity).left_outer_joins(:resource_publication).joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
     end
 
     # limits to the latest resource for each dataset if added to resources
@@ -633,8 +633,7 @@ module StashEngine
       user.min_app_admin? || user_id == user.id ||
         user.tenants.map(&:id).include?(tenant_id) ||
         funders_match?(user: user) ||
-        user.journals_as_admin.include?(identifier&.journal) ||
-        (user.journals_as_admin.present? && identifier&.journal.blank?)
+        user.journals_as_admin.include?(journal)
     end
 
     def funders_match?(user:)
@@ -858,6 +857,8 @@ module StashEngine
 
       changed = []
 
+      changed << 'journal' if resource_publication&.publication_name != other_resource&.resource_publication&.publication_name
+      changed << 'manuscript' if resource_publication&.manuscript_number != other_resource&.resource_publication&.manuscript_number
       changed << 'title' if title != other_resource.title
 
       changed.concat(changed_authors(other_resource.authors))
@@ -885,7 +886,6 @@ module StashEngine
       changed.concat(changed_subjects(other_resource.subjects))
       changed.concat(changed_funders(other_resource))
       changed.concat(changed_related(other_resource.related_identifiers))
-      changed << 'internal_data' if curation_activities.map(&:note).reject(&:blank?).any? { |n| n.include?('Internal datum edited') }
 
       changed << 'data_files' if files_changed_since(other_resource: other_resource, association: 'data_files').present?
       changed << 'software_files' if files_changed_since(other_resource: other_resource, association: 'software_files').present?
@@ -1088,6 +1088,7 @@ module StashEngine
                                                                   note: 'System set back to curation')
     end
 
+    # rubocop:disable Metrics/AbcSize
     def create_post_submission_status(prior_cur_act)
       attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
       curation_note = ''
@@ -1104,18 +1105,22 @@ module StashEngine
           target_status = previous_resource.last_curation_activity.status
           curation_note = "Auto-published with minimal changes to #{changes.join(', ')}"
         end
+
       # Determine which submission status to use, :submitted or :peer_review status
-      elsif hold_for_peer_review? && previous_curated_resource.blank? && curation_start_date.blank?
-        # Moving this logic to user facing, will not allow PPR selection by user
+      elsif (hold_for_peer_review? && identifier.allow_review?) || identifier.automatic_ppr?
         publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
         if publication_accepted
           curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has already been accepted"
           target_status = 'submitted'
           update(hold_for_peer_review: false, peer_review_end_date: nil)
+        elsif identifier.date_last_curated.present?
+          curation_note = 'Private for peer review was requested, but the submission has already been curated'
+          target_status = 'submitted'
+          update(hold_for_peer_review: false, peer_review_end_date: nil)
         else
-          curation_note = "Set to Private for peer review at author's request"
+          curation_note = "Set to Private for peer review at #{identifier.automatic_ppr? ? "journal's" : "author's"} request"
           target_status = 'peer_review'
-          update(peer_review_end_date: Time.now.utc + 6.months)
+          update(hold_for_peer_review: true, peer_review_end_date: Time.now.utc + 6.months)
         end
       end
 
@@ -1124,6 +1129,7 @@ module StashEngine
       curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
       target_status
     end
+    # rubocop:enable Metrics/AbcSize
 
     def auto_assign_curator(target_status:)
       target_curator = identifier.most_recent_curator

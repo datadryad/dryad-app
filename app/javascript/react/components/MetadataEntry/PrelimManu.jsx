@@ -14,6 +14,7 @@ function PrelimManu({
   setAcID,
   msId,
   setMsId,
+  hideImport,
 }) {
   const formRef = useRef();
 
@@ -114,7 +115,7 @@ function PrelimManu({
                 <Field name="isImport" type="hidden" />
               </div>
             </div>
-            <div>
+            <div hidden={(hideImport || acID === '' || acText === '' || formRef?.current?.values.msId === '')}>
               <button
                 type="button"
                 name="commit"
@@ -123,7 +124,6 @@ function PrelimManu({
                   formRef.current.values.isImport = true;
                   formik.handleSubmit();
                 }}
-                disabled={(acText === '' || acID === '' || formRef?.current?.values.msId === '')}
               >
                 Import manuscript metadata
               </button>
@@ -149,4 +149,5 @@ PrelimManu.propTypes = {
   setAcID: PropTypes.func.isRequired,
   msId: PropTypes.string.isRequired,
   setMsId: PropTypes.func.isRequired,
+  hideImport: PropTypes.bool.isRequired,
 };

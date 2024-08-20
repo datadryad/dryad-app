@@ -116,7 +116,7 @@ Configuration
   - handlerSSL="true"
 - Copy the `inc-md-cert-mdq.pem` and `non_federation_metadata.xml` from this directory to `/etc/shibboleth`
 - Copy `PrintShibInfo.pl` from this directory to `/var/www/cgi-bin`
-- Update the apache configs (uncomment relevant sections)
+- Update the apache configs 
   - copy `shib.conf`, `shibboleth-ds.conf` to  `/etc/httpd/conf.d`
   - edit `/etc/httpd/conf.d/datadryad.org.conf` to  uncomment the shibboleth sections
 

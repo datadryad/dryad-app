@@ -171,7 +171,7 @@ module StashEngine
     end
 
     def add_filters
-      @users = @users.joins(:roles).where(roles: { role: params[:role] }) if params[:role].present?
+      @users = @users.joins(:roles).where(roles: { role: params[:role] }).distinct if params[:role].present?
       @users = @users.where(tenant_id: params[:tenant_id]) if params[:tenant_id].present?
     end
 

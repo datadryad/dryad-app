@@ -202,12 +202,12 @@ module StashEngine
       j = StashEngine::Journal.where(journal_code: params['journalID'].downcase).first
       return unless j
 
-      ident = resource.identifier.id
-
       # Save the journal and manuscript information in the dataset
-      StashEngine::InternalDatum.create(data_type: 'publicationISSN', value: j.single_issn, identifier_id: ident)
-      StashEngine::InternalDatum.create(data_type: 'publicationName', value: j.title, identifier_id: ident)
-      StashEngine::InternalDatum.create(data_type: 'manuscriptNumber', value: params['manu'], identifier_id: ident)
+      pub = StashEngine::ResourcePublication.find_or_create_by(resource_id: resource.id)
+      pub.publication_issn = j.single_issn
+      pub.publication_name = j.title
+      pub.manuscript_number = params['manu']
+      pub.save
 
       # If possible, import existing metadata from the Manuscript objects into the dataset
       manu = StashEngine::Manuscript.where(journal: j, manuscript_number: params['manu']).first

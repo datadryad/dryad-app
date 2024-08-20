@@ -18,14 +18,14 @@ RSpec.feature 'CurationActivity', type: :feature do
       create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
       @resource.resource_states.first.update(resource_state: 'submitted')
       sign_in(create(:user, role: 'curator'))
-      visit("#{stash_url_helpers.ds_admin_path}?curation_status=curation")
+      visit("#{stash_url_helpers.admin_dashboard_path}?curation_status=curation")
     end
 
-    it 'renders salesforce links in notes field' do
+    it 'renders salesforce links in notes field', js: true do
       @curation_activity = create(:curation_activity, note: 'Not a valid SF link', resource: @resource)
       @curation_activity = create(:curation_activity, note: 'SF #0001 does not exist', resource: @resource)
       @curation_activity = create(:curation_activity, note: 'SF #0002 should exist', resource: @resource)
-      within(:css, '.c-lined-table__row', wait: 10) do
+      within(:css, 'tbody tr', wait: 10) do
         find('a[title="Activity log"]').click
       end
       expect(page).to have_text('Activity log for')
@@ -37,8 +37,8 @@ RSpec.feature 'CurationActivity', type: :feature do
       expect(page).to have_link('SF 0002', href: 'https://testsalesforce.com/lightning/r/Case/abc/view')
     end
 
-    it 'renders salesforce section' do
-      within(:css, '.c-lined-table__row', wait: 10) do
+    it 'renders salesforce section', js: true do
+      within(:css, 'tbody tr', wait: 10) do
         find('a[title="Activity log"]').click
       end
       expect(page).to have_text('Activity log for')
@@ -62,10 +62,10 @@ RSpec.feature 'CurationActivity', type: :feature do
       @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
     end
 
-    context :tenant_admin do
+    context :tenant_admin, js: true do
       it 'allows adding notes to the curation activity log' do
         sign_in(@admin)
-        visit stash_url_helpers.ds_admin_path
+        visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
@@ -83,8 +83,8 @@ RSpec.feature 'CurationActivity', type: :feature do
         sign_in(@superuser, false)
       end
 
-      it 'allows adding notes to the curation activity log' do
-        visit stash_url_helpers.ds_admin_path
+      it 'allows adding notes to the curation activity log', js: true do
+        visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
@@ -94,7 +94,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'adds a note to the curation activity log', js: true do
-        visit stash_url_helpers.ds_admin_path
+        visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
@@ -107,12 +107,13 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'adds internal data', js: true do
-        visit stash_url_helpers.ds_admin_path
+        visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
 
         expect(page).to have_text('Activity log for')
+        click_button 'View historical Internal data'
         click_button 'Add data'
         select('pubmedID', from: 'stash_engine_internal_datum[data_type]')
         fill_in('stash_engine_internal_datum[value]', with: '123456')
@@ -121,7 +122,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'allows superuser to set a fee waiver', js: true do
-        visit stash_url_helpers.ds_admin_path
+        visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
@@ -142,8 +143,8 @@ RSpec.feature 'CurationActivity', type: :feature do
         sign_in(@user, false)
       end
 
-      it 'allows adding notes to the curation activity log' do
-        visit stash_url_helpers.ds_admin_path
+      it 'allows adding notes to the curation activity log', js: true do
+        visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
@@ -162,13 +163,14 @@ RSpec.feature 'CurationActivity', type: :feature do
         sign_in(@journal_admin, false)
         ident1 = create(:identifier)
         @res1 = create(:resource, identifier_id: ident1.id, user: @user, tenant_id: @admin.tenant_id)
-        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
-        StashEngine::InternalDatum.create(identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
+        create(:internal_datum, identifier_id: ident1.id, data_type: 'publicationISSN', value: @journal.single_issn)
+        create(:internal_datum, identifier_id: ident1.id, data_type: 'publicationName', value: @journal.title)
+        create(:resource_publication, resource_id: @res1.id, publication_issn: @journal.single_issn, publication_name: @journal.title)
         ident1.reload
       end
 
-      it 'allows adding notes to the curation activity log' do
-        visit stash_url_helpers.ds_admin_path
+      it 'allows adding notes to the curation activity log', js: true do
+        visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
@@ -187,8 +189,8 @@ RSpec.feature 'CurationActivity', type: :feature do
         sign_in(@tenant_curator, false)
       end
 
-      it 'allows adding notes to the curation activity log' do
-        visit stash_url_helpers.ds_admin_path
+      it 'allows adding notes to the curation activity log', js: true do
+        visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click

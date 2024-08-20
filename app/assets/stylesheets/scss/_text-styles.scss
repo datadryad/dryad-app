@@ -6,13 +6,6 @@ blockquote.c-text_styles {
   line-height: 150%;
 }
 
-ul.c-text_styles {
-  li {
-    margin: 1.2ex 0;
-    padding: 0;
-  }
-}
-
 code,
 kbd,
 samp {
@@ -55,7 +48,7 @@ blockquote {
     font-size: 2rem;
     margin-left: -2.2rem;
     position: absolute;
-    color: $medium-green;
+    color: $green;
   }
 }
 
@@ -76,6 +69,10 @@ figure {
 
   kbd, samp, code {
     background-color: white;
+  }
+
+  &.alt {
+    background-color: $lightest-green;
   }
 }
 

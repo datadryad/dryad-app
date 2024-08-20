@@ -1,13 +1,26 @@
+var urlparams = new URL(window.location.href).searchParams
+urlparams.set('page', '<%= params[:page] %>')
+<% if params[:sort].present? %>urlparams.set('sort', '<%= params[:sort] %>')<% end %>
+<% if params[:direction].present? %>urlparams.set('direction', '<%= params[:direction] %>')<% end %>
+<% if params[:page_size].present? %>urlparams.set('page_size', '<%= params[:page_size] %>')<% end %>
+window.history.pushState({}, null, `${window.location.pathname}?${urlparams.toString()}`)
 document.getElementById('search_results').innerHTML = "<%= escape_javascript(render(partial: 'results')) %>";
 document.getElementById('save_buttons').innerHTML = "<%= escape_javascript(render(partial: 'save_buttons')) %>";
-<% if params[:clear] %>
-  document.getElementById('search_form').innerHTML = "<%= escape_javascript(render(partial: 'search_form')) %>";
-<% end %>
+$('#search_form').html = "<%= escape_javascript(render(partial: 'search_form')) %>";
+document.getElementById('edit_fields-help').removeEventListener('click', fieldsHelp)
+document.getElementById('edit_fields-help').addEventListener('click', fieldsHelp)
+document.querySelector('#search_form form').removeEventListener('submit', formSubmit)
+document.querySelector('#search_form form').addEventListener('submit', formSubmit)
+var form = document.querySelector('#search_form form')
+form.dataset.origData = JSON.stringify([...new FormData(form)].slice(1).sort(([a], [b]) => a.localeCompare(b)))
+document.getElementById('apply_changes').classList.remove('changed')
+form.removeEventListener('change', checkForm)
+form.addEventListener('change', checkForm)
+var hidden = form.querySelectorAll('input[type="hidden"]:not([name="authenticity_token"])')
+observer.disconnect();
+for (const input of hidden) {
+  observer.observe(input, {attributes: true, attributeFilter: ['value']})
+}
+document.getElementById('clear_filters').removeEventListener('click', clearFilters)
+document.getElementById('clear_filters').addEventListener('click', clearFilters)
 document.getElementById('count_form_button').click();
-(function () {
-  window.onpageshow = function(event) {
-      if (event.persisted) {
-          window.location.reload();
-        }
-    };
-})();

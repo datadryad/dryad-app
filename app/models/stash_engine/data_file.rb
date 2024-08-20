@@ -208,7 +208,7 @@ module StashEngine
       # get the presigned URL
       s3_url = nil
       begin
-        s3_url = s3_permanent_presigned_url
+        s3_url = digest.present? ? s3_permanent_presigned_url : s3_staged_presigned_url
       rescue HTTP::Error, Stash::Download::S3CustomError => e
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
@@ -220,7 +220,11 @@ module StashEngine
         resp = HTTP.timeout(connect: 10, read: 10).timeout(10).headers('Range' => 'bytes=0-2048').get(s3_url)
         return nil if resp.code > 299
 
-        return resp.to_s
+        str = resp.to_s
+        str = str.force_encoding(str.encoding).encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '')
+        return nil unless str.encoding == Encoding::UTF_8
+
+        return str
       rescue HTTP::Error
         logger.info("Couldn't get S3 request for preview range for #{inspect}")
       end

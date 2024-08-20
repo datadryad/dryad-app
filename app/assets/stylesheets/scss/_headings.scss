@@ -83,6 +83,7 @@ h4, *[class^="o-heading__level4"]  {
 }
 
 h5, h6 {
+  color: $dark-blue;
   margin-top: $spacing-sm;
   margin-bottom: $spacing-base;
   font-size: 1.125rem;
@@ -91,13 +92,14 @@ h5, h6 {
 }
 
 h6 {
+  color: $dark-navy;
   font-style: italic;
 }
 
 
 .expand-button {
   cursor: pointer;
-  border-bottom: thin solid $medium-green;
+  border-bottom: thin solid $green;
 
   &::after {
     font-family: 'Font Awesome 6 Free';
@@ -122,7 +124,7 @@ h6 {
 h3.expand-button {
   &:hover, &:focus-visible {
     &::after {
-      color: $medium-green;
+      color: $green;
     }
   }
 }
@@ -130,7 +132,7 @@ h3.expand-button {
 h4.expand-button {
   &:hover, &:focus-visible {
     &::after {
-      color: $medium-green;
+      color: $green;
     }
   }
 }

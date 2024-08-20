@@ -49,19 +49,19 @@
     <td><%= dataset.funders.map { |f| ([@fields.include?('funders') ? f.contributor_name : nil] + [@fields.include?('awards') ? f.award_number : nil]).reject(&:blank?).join(', ')}.uniq.reject(&:blank?).join('; ') %></td>
   <% end %>
   <% if @fields.include?('journal') %>
-    <td><%= dataset.identifier&.journal&.title %></td>
+    <td><%= dataset.journal&.title %></td>
   <% end %>
   <% if @fields.include?('sponsor') %>
-    <td><%= dataset.identifier&.journal&.sponsor&.name %></td>
+    <td><%= dataset.journal&.sponsor&.name %></td>
   <% end %>
   <% if @fields.include?('identifiers') %>
-    <td><%= ([dataset.identifier.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ') %></td>
+    <td class="c-lined-table__digits"><%= ([dataset.resource_publication&.manuscript_number] + dataset.related_identifiers.map {|id| id.related_identifier.partition('//doi.org/').last}).reject(&:blank?).first(6).join(', ') %></td>
   <% end %>
   <% if @fields.include?('dpc') %>
     <td>
       <% dpc = ''
         dpc = dataset.tenant&.short_name if dataset.identifier.payment_id == dataset.tenant_id
-        dpc = dataset.identifier&.journal&.title if dataset.identifier&.journal&.issn_array&.include?(dataset.identifier.payment_id)
+        dpc = dataset.journal&.title if dataset.journal&.issn_array&.include?(dataset.identifier.payment_id)
         dpc = dataset.identifier.payment_id.split("funder:").last.split("|").first if dataset.identifier.payment_id&.starts_with?('funder')
       %>
       <%= dpc %>
@@ -78,7 +78,7 @@
     </td>
   <% end %>
   <% if @fields.include?('submit_date') %>
-    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.process_date.processing) %></td>
+    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.process_date.processing || dataset.process_date.submitted) %></td>
   <% end %>
   <% if @fields.include?('first_sub_date') %>
     <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.process_date.processing || dataset.identifier.process_date.submitted) %></td>

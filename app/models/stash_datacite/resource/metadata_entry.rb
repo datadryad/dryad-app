@@ -74,6 +74,12 @@ module StashDatacite
         @related_identifiers = RelatedIdentifier.where(resource_id: @resource.id)
       end
 
+      def api_journals
+        @api_journals = StashEngine::User.joins('inner join oauth_applications on owner_id = stash_engine_users.id')
+          .joins(:roles).where(roles: { role_object_type: ['StashEngine::Journal', 'StashEngine::JournalOrganization'] })
+          .distinct.map(&:journals_as_admin).flatten.uniq.map(&:issn_array).flatten.uniq
+      end
+
       def new_geolocation_point
         @geolocation = Geolocation.new(resource_id: @resource.id)
         @geolocation_point = @geolocation.build_geolocation_point
