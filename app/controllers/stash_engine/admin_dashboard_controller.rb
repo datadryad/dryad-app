@@ -117,7 +117,7 @@ module StashEngine
     def setup_search
       @sort = params[:sort]
       @search = params[:search].to_i
-      session[:admin_search_count] = nil if @page == 1
+      session[:admin_search_count] = nil if @page == 1 || params[:clear]
       session[:admin_search_filters] = nil if params[:clear]
       session[:admin_search_fields] = nil if params[:clear]
       session[:admin_search_string] = nil if params[:clear]
