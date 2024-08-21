@@ -3,11 +3,10 @@
 <p>Your data submission has been withdrawn from the Dryad platform:</p>
 
 <p>
-Title: <%= @resource.title %><br/>
-DOI: <%= @resource.identifier_str %>
+  Title: <%= @resource.title %><br/>
+  DOI: <%= @resource.identifier_str %>
 </p>
 
-<p>If you would like to reinstate your submission at any time, please contact the Dryad Helpdesk at <a href="mailto:<%= @helpdesk_email %>?subject=Reinstate <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>
+<p>Please note that this dataset will be permanently deleted after one year.</p>
 
-<p>All the best,<br/>
-The Dryad Team</p>
+<p>If you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Withdrawn <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>

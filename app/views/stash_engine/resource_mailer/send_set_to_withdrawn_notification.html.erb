@@ -1,18 +1,22 @@
 <p>Dear <%= @user_name %>,</p>
 
+<p>Your data submission has been automatically withdrawn from the Dryad platform and will be permanently deleted after one year:</p>
+
 <p>
-  Your dataset was withdrawn due to inactivity:
+  Title: <%= @resource.title %><br/>
+  <%= @resource.identifier_str %>
 </p>
 
 <p>
-  Title: "<%= @resource.title %>"<br/>
-  DOI: <%= @resource.identifier_str %>
+  You can reinstate your submission by following these steps:
+  <ol>
+    <li><a href="https://datadryad.org">Login to https://datadryad.org</a></li>
+    <li>Click on "My datasets"</li>
+    <li>Locate your submission under the header “Withdrawn” </li>
+    <li>Click "Revise submission" to access your submission</li>
+    <li>Incorporate edits, if any</li>
+    <li>Click "Submit"</li>
+  </ol>
 </p>
 
-<p>
-  Our previous email correspondence contains specific details on the changes required. Please contact us at <a href="mailto:help@datadryad.org?subject=Dataset with DOI: <%= @resource.identifier_str %>">help@datadryad.org</a> if you have any questions or no longer wish to proceed with the publication of the dataset.
-</p>
-
-<p>We hope to hear from you shortly.</p>
-
-<p>The Dryad Team</p>
+<p>If you have questions about this action, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Auto-Withdraw <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>

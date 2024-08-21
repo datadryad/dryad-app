@@ -47,7 +47,7 @@ module StashEngine
            subject: "#{rails_env}NOTIFICATION: Dryad resource set to withdrawn \"#{@resource.title}\"")
     end
 
-    def send_final_withdrawn_notification
+    def send_final_withdrawn_notification(resource)
       logger.warn('Unable to send send_final_withdrawn_notification; nil resource') unless resource.present?
       return unless resource.present?
 
@@ -56,6 +56,17 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env}FINAL NOTIFICATION: Dryad resource will be deleted \"#{@resource.title}\"")
+    end
+
+    def delete_notification(resource)
+      logger.warn('Unable to send delete_notification; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      mail(to: user_email(@user),
+        subject: "#{rails_env}DELETE NOTIFICATION: Dryad resource was deleted \"#{@resource.title}\"")
     end
 
     private
