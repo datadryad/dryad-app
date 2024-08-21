@@ -307,7 +307,6 @@ namespace :identifiers do
       end
     rescue StandardError => e
       p "    Exception! #{e.message}"
-
     end
   end
 

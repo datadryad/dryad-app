@@ -1,29 +1,30 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>
-  Your dataset titled "<%= @resource.title %>" has been reviewed by our curation team and approved for publication. It is publicly accessible via this link: <a href="https://doi.org/<%= @resource.identifier_str %>">https://doi.org/<%= @resource.identifier_str %></a>.
+  Your dataset titled "<%= @resource.title %>" has been reviewed by a curator and approved for publication.
+  It is publicly accessible via this link: <a href="https://doi.org/<%= @resource.identifier_str %>">https://doi.org/<%= @resource.identifier_str %></a>.
 </p>
 
 <% rel_sfw = @resource.related_identifiers&.where(added_by: 'zenodo')&.where(work_type: 'software')&.first %>
 <% rel_supp = @resource.related_identifiers&.where(added_by: 'zenodo')&.where(work_type: 'supplemental_information')&.first %>
 <% unless rel_sfw.nil? %>
-  <p>Your related software files are being hosted by Zenodo and are now published and publicly available here: <%= link_to rel_sfw.related_identifier, rel_sfw.related_identifier %></p>
+  <p>Your related software files are now published and publicly available on Zenodo: <%= link_to rel_sfw.related_identifier, rel_sfw.related_identifier %></p>
 <% end %>
 <% unless rel_supp.nil? %>
-  <p>Your supplemental information is being hosted by Zenodo and is now published and publicly available here: <%= link_to rel_supp.related_identifier, rel_supp.related_identifier %></p>
+  <p>Your supplemental informationis now published and publicly available on Zenodo: <%= link_to rel_supp.related_identifier, rel_supp.related_identifier %></p>
 <% end %>
 
 <p>
-  If you would like to update your dataset you may do so, at any time, by
-  clicking "Revise submission" on your "My datasets" page. Please note, any edits made
-  will create a new version of your submission, however, the DOI will remain
-  unchanged. Only the most recent version of your dataset will be packaged and available for download via the "Download dataset" button. Previous versions can be accessed via the "Data files" section.
+  You can update your dataset, at any time, by clicking "Revise submission" on your "My datasets" page.
+  Any edits to your data will create a new version, but the DOI will not change.
+  Only the most recent version of your dataset will be available via the "Download dataset" button.
+  Previous versions can be accessed via the "Data files" section. Updated versions of your dataset will be
+  re-evaluated to ensure Dryad's standards for publication are maintained.
 </p>
 
 <p>Thank you for choosing Dryad to host your data.</p>
 
-<p>The Dryad Team</p>
-
-<p>We welcome your feedback! Please share your thoughts with us at: <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>, or <a href="<%= @feedback_url %>">sign up for sneak peeks of new Dryad features</a>.</p>
-
-<p><a href="https://docs.google.com/forms/d/e/1FAIpQLSfw9aG7WoKYan3nlxU4O61QjOEDbqyav8wGImRTQlev7LGoyQ/viewform">Subscribe to Dryad's monthly round-up of compelling datasets</a>.</p>
+<p>
+  We welcome your feedback! Please share your thoughts with us at: <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>,
+  or <a href="<%= @feedback_url %>">sign up for sneak peeks of new Dryad features</a>.
+</p>
