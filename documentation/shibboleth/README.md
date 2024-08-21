@@ -177,9 +177,24 @@ These commands will test various aspects of the Shibboleth service (replace "san
   - `mdquery -e https://sandbox.datadryad.org`
   - `curl https://sandbox.datadryad.org/Shibboleth.sso/Metadata`
 - Does the end-to-end shibboleth traffic work?
-  - (in browser) https://sandbox.datadryad.org/Shibboleth.sso/Session
   - (in browser) https://sandbox.datadryad.org/cgi-bin/PrintShibInfo.pl
+  - (in browser, after a session is established) https://sandbox.datadryad.org/Shibboleth.sso/Session
 - See logs in `/var/log/shibboleth`
   - shibd.log and shibd_warn.log show issues with shibd itself
   - transaction.log shows details of the communication with InCommon
+
+
+Troubleshooting
+-----------------
+
+If Shibboleth doesn't start properly, a non-compatible Shibboleth from the OS
+may be getting in the way. In this case, find the "extra" shibd.service file and
+rename it before starting the service:
+
+```
+sudo systemctl disable shibd.service
+cd /etc/systemd/system sudo
+mv shibd.service shibd-old.service
+sudo systemctl enable shibd.service
+```
 
