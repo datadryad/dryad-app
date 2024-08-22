@@ -68,6 +68,7 @@ head += ',First queued' if @fields.include?('queue_date')
   row << dataset.identifier.process_date.processing || dataset.identifier.process_date.submitted if @fields.include?('first_sub_date')
   row << dataset.publication_date if @fields.include?('publication_date')
   row << dataset.identifier.publication_date if @fields.include?('first_pub_date')
+  row << dataset.identifier.created_at if @fields.include?('created_at') 
   row << dataset.identifier.process_date.submitted if @fields.include?('queue_date')
 %>
 <%= row.to_csv(row_sep: nil).html_safe %>

@@ -158,15 +158,10 @@
   }
 
   #edit_fields-form {
-    columns: 7;
-    &.drop-column {
-      columns: 6;
-    }
-    &, &.drop-column {
-      @media (max-width: 1070px) { columns: 5 }
-      @media (max-width: 920px) { columns: 3 }
-      @media (max-width: 480px) { columns: 2 }
-    }
+    columns: 6;
+    @media (max-width: 1070px) { columns: 5 }
+    @media (max-width: 920px) { columns: 3 }
+    @media (max-width: 480px) { columns: 2 }
 
     div {
       margin-bottom: 4px;
