@@ -4,12 +4,24 @@
 
 cd /home/ec2-user/deploy/current/
 
-bundle exec rails identifiers:publish_datasets RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/publish_datasets.log 2>&1
-bundle exec rails identifiers:peer_review_reminder RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/peer_review_reminder.log 2>&1
-bundle exec rails identifiers:doi_linking_invitation RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/doi_linking_invitation.log 2>&1
+# In Progress reminder - at 3 days
 bundle exec rails identifiers:in_progess_reminder RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/in_progess_reminder.log 2>&1
+# In Progress reminders - monthly
+bundle exec rails dataset_deletion:in_progress_reminders RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/in_progess_reminder.log 2>&1
+
+# Action required reminder - at 2 weeks
+bundle exec rails identifiers:action_required_reminder RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/action_required_reminders.log 2>&1
+# Action required reminders - monthly
+bundle exec rails dataset_deletion:in_action_required_reminders RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/action_required_reminders.log 2>&1
+
+# Peer review reminders - monthly after 6 months
+bundle exec rails dataset_deletion:in_peer_review_reminders RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/action_required_reminders.log 2>&1
+
+
+
+bundle exec rails identifiers:publish_datasets RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/publish_datasets.log 2>&1
+bundle exec rails identifiers:doi_linking_invitation RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/doi_linking_invitation.log 2>&1
 bundle exec rails identifiers:update_missing_search_words RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/update_search_words.log 2>&1
-# bundle exec rails identifiers:action_required_reminder RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/action_required_reminders.log 2>&1
 bundle exec rails dev_ops:retry_zenodo_errors RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/retry_zenodo_errors.log 2>&1
 bundle exec rails curation_stats:update_recent RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/curation_stats.log 2>&1
 bundle exec rails journal_email:clean_old_manuscripts RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/manuscripts_clean.log 2>&1
@@ -22,3 +34,4 @@ bundle exec rails identifiers:remove_abandoned_datasets DRY_RUN=false RAILS_ENV=
 
 # Download & validate file digests
 bundle exec rails checksums:validate_files >> /home/ec2-user/deploy/shared/log/validate_files.log 2>&1
+
