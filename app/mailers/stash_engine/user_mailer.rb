@@ -16,7 +16,7 @@ module StashEngine
            template_name: status,
            subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
 
-      # update_activities(resource: resource, message: 'Status change', status: status)
+      update_activities(resource: resource, message: 'Status change', status: status)
     end
 
     # Called from CurationActivity when the status is withdrawn by the system user
@@ -31,7 +31,7 @@ module StashEngine
            template_name: 'withdrawn_by_journal',
            subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
 
-      # update_activities(resource: resource, message: 'Withdrawal by journal', status: status)
+      update_activities(resource: resource, message: 'Withdrawal by journal', status: status)
     end
 
     # Called from CurationActivity when the status is published or embargoed

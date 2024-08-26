@@ -374,7 +374,7 @@ namespace :identifiers do
       next if resource.nil?
 
       # send out reminder at two weeks
-      next unless item[:set_at] < 2.weeks.ago && item[:reminder_1].nil?
+      next if item[:set_at] > 2.weeks.ago || item[:reminder_1].present?
 
       StashEngine::UserMailer.chase_action_required1(resource).deliver_now
       StashEngine::CurationActivity.create(
