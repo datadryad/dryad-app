@@ -18,7 +18,6 @@ bundle exec rails dataset_deletion:in_action_required_reminders RAILS_ENV=$1 >> 
 bundle exec rails dataset_deletion:in_peer_review_reminders RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/action_required_reminders.log 2>&1
 
 
-
 bundle exec rails identifiers:publish_datasets RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/publish_datasets.log 2>&1
 bundle exec rails identifiers:doi_linking_invitation RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/doi_linking_invitation.log 2>&1
 bundle exec rails identifiers:update_missing_search_words RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/update_search_words.log 2>&1
@@ -34,4 +33,3 @@ bundle exec rails identifiers:remove_abandoned_datasets DRY_RUN=false RAILS_ENV=
 
 # Download & validate file digests
 bundle exec rails checksums:validate_files >> /home/ec2-user/deploy/shared/log/validate_files.log 2>&1
-

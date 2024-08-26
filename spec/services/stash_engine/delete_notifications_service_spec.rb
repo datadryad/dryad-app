@@ -41,7 +41,7 @@ module StashEngine
       end
 
       context 'when status date is between 1 month and one year' do
-        [1, 7, 12].each do |month_num|
+        [1, 7, 11].each do |month_num|
           it "sends notification email at #{month_num} months" do
             Timecop.travel(month_num.months.from_now)
             expect(StashEngine::ResourceMailer).to receive_message_chain(:in_progress_delete_notification, :deliver_now).with(resource).with(no_args)
@@ -105,7 +105,7 @@ module StashEngine
       end
 
       context 'when status date is between 1 month and one year' do
-        [1, 7, 12].each do |month_num|
+        [1, 7, 11].each do |month_num|
           it "sends notification email at #{month_num} months" do
             Timecop.travel(month_num.months.from_now)
 
@@ -176,7 +176,7 @@ module StashEngine
       end
 
       context 'when status date is between 6 months and 1 year' do
-        [6, 7, 9, 12].each do |month_num|
+        [6, 7, 9, 11].each do |month_num|
           it "sends notification email at #{month_num} months" do
             Timecop.travel(month_num.months.from_now)
 

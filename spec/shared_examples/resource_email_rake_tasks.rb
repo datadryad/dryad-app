@@ -1,0 +1,14 @@
+RSpec.shared_examples('send email notifications tasks') do |count, date|
+
+  it 'should send emails' do
+    Timecop.travel(date) do
+      expect do
+        Rake::Task['identifiers:in_progess_reminder'].execute
+        Rake::Task['dataset_deletion:in_progress_reminders'].execute
+        Rake::Task['identifiers:action_required_reminder'].execute
+        Rake::Task['dataset_deletion:in_action_required_reminders'].execute
+        Rake::Task['dataset_deletion:in_peer_review_reminders'].execute
+      end.to change { ActionMailer::Base.deliveries.count }.by(count)
+    end
+  end
+end

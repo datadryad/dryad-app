@@ -43,7 +43,7 @@
   </div>
 </div>
 
-<%= render partial: 'stash_engine/admin_datasets/activity_log_notifications' %>
+<%#= render partial: 'stash_engine/admin_datasets/activity_log_notifications' %>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
   <div id="salesforce_links" style="clear: both">

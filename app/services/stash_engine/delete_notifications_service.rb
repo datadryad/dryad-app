@@ -13,7 +13,7 @@ module StashEngine
     def send_in_progress_reminders
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'in_progress' })
-        .where(stash_engine_process_dates: { delete_calculation_date: 1.year.ago.beginning_of_day..1.months.ago.end_of_day })
+        .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..1.months.ago.end_of_day })
         .each do |resource|
         reminder_flag = 'in_progress_deletion_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
@@ -37,7 +37,7 @@ module StashEngine
     def send_action_required_reminders
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'action_required' })
-        .where(stash_engine_process_dates: { delete_calculation_date: 1.year.ago.beginning_of_day..1.months.ago.end_of_day })
+        .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..1.months.ago.end_of_day })
         .each do |resource|
 
         reminder_flag = 'action_required_deletion_notice'
@@ -63,7 +63,7 @@ module StashEngine
     def send_peer_review_reminders
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'peer_review' })
-        .where(stash_engine_process_dates: { delete_calculation_date: 1.year.ago.beginning_of_day..6.months.ago.end_of_day })
+        .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..6.months.ago.end_of_day })
         .each do |resource|
 
         reminder_flag = 'peer_review_deletion_notice'
