@@ -1,17 +1,35 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Title: <%= @resource.title %><br/>
-DOI: <%= @resource.identifier_str %></p>
+<p>
+  Title: <%= @resource.title %><br/>
+  <%= @resource.identifier_str %>
+</p>
 
-<p>As a reminder, your Dryad data submission is currently in "Private for peer review" status and has not entered our curation process. If your related manuscript is still in the peer review process, you may ignore this email.</p>
+<p>
+  As a reminder, your Dryad dataset is currently in "Private for Peer Review" (PPR) status and has not entered
+  our curation process. Datasets left in PPR status are withdrawn after one year past the dataset submission date.
+  Once withdrawn, your submission can be reinstated within one year.
+</p>
 
-<p>If your related article has been accepted, or if you are ready to initiate the curation process and proceed to publication, please follow these steps:</p>
-<ol>
-  <li><a href="https://datadryad.org">Login to https://datadryad.org</a></li>
-  <li>Click on "My datasets" to view your list of data submissions.</li>
-  <li>Click "Release for curation" on your dataset.</li>
-</ol>
+<p>
+  If your manuscript is still in the peer review process, no action is required at this time. If your dataset is
+  nearing the one-year submission date, contact
+  <a href="mailto:<%= @helpdesk_email %>?subject=Extend PPR: DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>
+  to ensure your submission remains active.
+</p>
 
-<p>If your related article has been rejected, or you will not be proceeding with the submission of this dataset, kindly contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Withdraw DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>, and we will withdraw your submission.</p>
+<p>
+  If your manuscript has been accepted, or if you are ready to initiate the curation process and proceed to publication,
+  follow these steps:
+  <ol>
+    <li><a href="https://datadryad.org">Login to https://datadryad.org</a></li>
+    <li>Click on "My datasets" to view your list of data submissions.</li>
+    <li>Click "Release for curation" on your dataset.</li>
+  </ol>
+</p>
 
-<p>The Dryad Team</p>
+<p>
+  If you choose not to proceed with the submission of this dataset, contact us at
+  <a href="mailto:<%= @helpdesk_email %>?subject=Withdraw DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>,
+  and we will withdraw your submission.
+</p>
