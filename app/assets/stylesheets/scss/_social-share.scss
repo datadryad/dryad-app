@@ -1,13 +1,14 @@
 #share_buttons {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 1.5ch;
 
   a, button {
     background: transparent;
     border: none;
     padding: 0;
-    margin: 8px;
-    font-size: 2em;
+    font-size: 1.65em;
     opacity: .9;
 
     &:hover {

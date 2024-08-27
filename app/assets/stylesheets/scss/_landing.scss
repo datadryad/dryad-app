@@ -1,5 +1,68 @@
 // ##### Landing Page Theme ##### //
 
+#privilege_banner {
+	margin-top: -1rem;
+	margin-bottom: 2rem;
+
+	p {
+		text-align: center;
+
+		span {
+			display: inline-flex;
+			gap: 2ch;
+			margin-left: 2ch;
+			font-size: 1.05rem;
+			a i {
+				font-size: .98rem;
+				margin-right: .5ch;
+			}
+
+			a:link, a:visited {
+				color: $link-body-color;
+			}
+
+			a:hover {
+				color: $link-body-hover-color;
+			}
+
+			a:active {
+				color: $link-body-active-color;
+			}
+		}
+	}
+}
+
+#privilege_share {
+	margin-top: -1rem;
+	margin-bottom: 2rem;
+	text-align: center;
+
+	p {
+		margin: 0 auto;
+		font-size: 1rem;
+
+		&.share-link {
+			margin-bottom: 1ch;
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+			gap: 1ch;
+			overflow: auto;
+			overflow-wrap: anywhere;
+
+			button {
+				order: 3;
+			}
+		}
+	}
+
+	#sharing_link {
+		font-size: .8em;
+		background-color: white;
+	}
+}
+
 .t-landing__data-type {
 	margin: 0 0 $spacing-md;
 }
@@ -8,27 +71,19 @@
 	margin: 0 0 $spacing-md;
 }
 
-.citation-section {
-	background-color: $lightest-blue;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: baseline;
-	column-gap: 1ch;
-	row-gap: $spacing-base;
-	padding: .75rem;
+.data_files_section {
+	margin-bottom: calc(#{$spacing-base} * 3.75);
 
-	h2, h3, p {
-		margin: 0;
+	h2 {
+		margin: 0 0;
+		font-size: 1.35rem;
+		padding: $spacing-base 1ch;
+		background-color: $lightest-green;
 	}
-
-	.copy-icon {
-		border: none;
-		background-color: transparent;
-		box-shadow: none;
-	}
-
-	p {
-		flex-basis: 100%;
+	h2 + div {
+		border: thick solid $lightest-green;
+		border-top: none;
+		padding: 1ch;
 	}
 }
 
@@ -45,36 +100,156 @@
 	line-height: 3ex;
 }
 
-#landing_readme {
-  max-height: 35ch;
-  overflow-y: hidden;
-  position: relative;
+.c-columns__sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 2ch;
 
-  #expand-readme {
-    position: absolute;
-    width: 100%;
-    bottom: 0; right: 0; left: 0;
-    font-size: 1.1rem;
-    padding-top: 3rem;
-    border: none;
-    background: linear-gradient(rgba(255, 255, 255, .3), rgba(255, 255, 255, 1) 60%);
+	.sidebox {
+		padding: 1ch 2ch;
+		background-color: $lightest-blue;
+		display: flex;
+		flex-direction: column;
+		gap: 1ch;
 
-    &:focus, &:hover, &:active {
-	    outline: none;
-	    text-decoration: underline;
-	    text-decoration-color: $light-green;
-	    text-decoration-thickness: 2px;
-	    text-underline-offset: 4px;
+		&#sidebox-search, &#sidebox-share {
+			background-color: $lightest-green;
+		}
+
+		h2 {
+			font-size: 1.05em;
+			margin: 0;
+		}
+
+		h3 {
+			font-size: 1em;
+			margin: 0;
 		}
 	}
+}
 
-	&.expanded {
-	    max-height: none;
-	    height: auto;
-	    padding-bottom: 2rem;
-	  
-	  #expand-readme {
-    	padding-top: 8px;
+#privilege_share .copy-icon, #sidebox-cite .copy-icon {
+	border: none;
+	background-color: transparent;
+	box-shadow: none;
+	display: inline-flex;
+	align-items: baseline;
+	gap: .5ch;
+	span {
+		font-size: .9rem;
+	}
+}
+
+#sidebox-share {
+}
+
+#cite_section {
+	.cite-header {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	p {
+		font-size: .98rem;
+		margin: 0;
+	}
+}
+
+#show_metrics {
+	font-size: .98rem;
+	display: flex;
+	border-top: thin solid $lighter-green;
+	border-bottom: thin solid #accc54;
+	padding: 1ch 0;	
+
+	span {
+		padding: 0 1.25ch;
+		&:first-of-type {
+			padding-left: 0;
+		}
+		&:last-of-type {
+			padding-right: 0;
+		}
+	}
+	span:not(:last-of-type) {
+    border-right: thin solid $lighter-green;
+  }
+}
+
+#show_license {
+	display: inline-flex;
+	align-items: center;
+	gap: 1ch;
+	a {
+		font-size: .98rem;
+		i {
+			margin-right: .5ch;
+		}
+	}
+}
+
+#show_subjects {
+	ul {
+		font-size: .98rem;
+	  display: inline;
+		list-style-type: none;
+	  margin: 0;
+	  padding: 0;
+	  line-height: 2;
+	
+		li {
+		  display: inline;
+		  margin: 0;
+		  padding: 0;
+
+		  &:not(:last-child):after {
+		  	content: ',';
+		  }
+
+		  a {
+		  	padding: 4px 2px 4px 0;
+		  }
+		}
+	}
+}
+
+#show_funding {
+	ul.o-list {
+		font-size: .98rem;
+		list-style-type: none;
+		line-height: 1.75;
+		margin: 0;
+
+		li {
+			margin: 0;
+		}
+	}
+}
+
+#show_related_works {
+	.primary_article {
+		display: inline;
+	}
+	.article_journal {
+		font-size: .98rem;
+		background-color: white;
+		border-radius: 3px;
+		padding: 4px 6px;
+		margin-left: 1ch;
+	}
+	ul {
+		font-size: .98rem;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+
+		li {
+			margin:.25ch 0;
+			padding: 0;
+
+			i {
+				margin-right: .5ch;
+			}
 		}
 	}
 }

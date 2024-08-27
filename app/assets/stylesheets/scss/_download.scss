@@ -1,9 +1,16 @@
 // ##### Download Object ##### //
 
+.o-download {
+	margin-top: $spacing-sm;
+	text-align: right;
+}
+
 *[class*="o-download__"] {
-	display: flex;
+	margin-left: 0;
+	display: inline-flex;
 	align-items: center;
-	width: 100%;
+	gap: 1ch;
+	width: 300px;
 	padding: 6px 10px;
 	border: none;
 	background-color: $lighter-blue;
@@ -13,10 +20,13 @@
 		display: block;
 		width: 20px;
 		height: 20px;
-		margin-right: 1ch;
 		font-family: 'Font Awesome 6 Free';
 		font-weight: 900;
 		font-size: 20px;
+	}
+
+	span {
+		font-size: .98rem;
 	}
 
 	&:hover {

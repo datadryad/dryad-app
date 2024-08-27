@@ -1,63 +1,49 @@
-<% unless @resource&.resource_type&.resource_type == 'collection' %>
-<% if @id.may_download?(user: current_user) %>
-  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
-<% else %>
-  <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
-<% end %>
-<% end %>
+<div class="sidebox" id="sidebox-cite">
+  <div id="cite_section">
+  <%= render partial: "stash_datacite/shared/citations",
+           locals: { authors: review.authors, title: review.title_str,
+                     resource_type: review.resource_type,
+                     identifier: resource.identifier.nil? ? 'DOI' : "#{review.identifier.identifier }",
+                     publication_year: (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year) } %>
+  </div>
+
+  <div id="show_metrics"
+       data-load="<%= stash_url_helpers.show_metrics_path(identifier_id: @id.id) %>">
+    <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
+  </div>
+  
+  <% if @resource&.identifier&.pub_state == 'published' %>
+    <div id="share_section">
+      <%= render partial: 'stash_engine/landing/share', locals: {identifier: @id, resource: @resource, review: @review} %>
+    </div>
+  <% end %>
+
+  <% unless @resource&.resource_type&.resource_type == 'collection' %>
+    <div id="show_license"
+         data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
+      <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
+    </div>
+  <% end %>
+</div>
+
+<div class="sidebox" id="sidebox-search">
+  <div id="keyword_section">
+    <h2>Subject keywords</h2>
+    <div id="show_subjects"
+         data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>">
+      <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
+    </div>
+  </div>
+  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight_fields: [] } %>
+</div>
 
 <% related = @resource&.resource_type&.resource_type == 'collection' ? @resource.related_identifiers.where.not(relation_type: 'haspart') : @resource.related_identifiers %>
 <% unless related.length < 1 %>
-<div class="c-sidebox" id="related_works_section">
-  <h2 class="c-sidebox__heading">Related works</h2>
+<div class="sidebox" id="sidebox-related_works">
+  <h2>Related works</h2>
   <div id="show_related_works"
        data-load="<%= metadata_url_helpers.related_identifiers_show_path(resource_id: @resource.id, format: :js) %>">
-    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+    <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
   </div>
 </div>
 <% end %>
-
-<% if @resource&.identifier&.pub_state == 'published' %>
-<div class="c-sidebox" id="share_section">
-  <h2 class="c-sidebox__heading">Share</h2>
-  <%= render partial: 'stash_engine/landing/share', locals: {identifier: @id, resource: @resource, review: @review} %>
-</div>
-<% end %>
-
-<div class="c-sidebox">
-  <h2 class="c-sidebox__heading">Metrics</h2>
-  <div class="o-metrics">
-    <%# render partial: 'stash_engine/landing/metrics', locals: {identifier: @id} %>
-    <div id="show_metrics"
-         data-load="<%= stash_url_helpers.show_metrics_path(identifier_id: @id.id) %>">
-      <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
-    </div>
-  </div>
-
-  <div style="clear:both"></div>
-</div>
-
-<div class="c-sidebox" id="keyword_section">
-  <h2 class="c-sidebox__heading">Subject keywords</h2>
-  <div id="show_subjects"
-       data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>">
-    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
-  </div>
-</div>
-
-<% unless @resource&.resource_type&.resource_type == 'collection' %>
-<div class="c-sidebox">
-  <h2 class="c-sidebox__heading">License</h2>
-  <div id="show_license"
-       data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
-    <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
-  </div>
-</div>
-<% end %>
-
-<script>
-  $( "#citation_link" ).click(function() {
-    $('#metrics_citation_spinner').show();
-    $('#metrics_citation_count').hide();
-  });
-</script>

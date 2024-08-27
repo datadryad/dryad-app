@@ -5,8 +5,7 @@
   <%# reformat = markdown_render content %>
   <%# content = ActionView::Base.full_sanitizer.sanitize(reformat) %>
 <%# end %>
-<div id="landing_readme" class="<%='expanded' if expand_readme %>">
-  <% unless expand_readme %><button id="expand-readme" class="o-button__plain-text4" aria-expanded="false" aria-controls="landing_readme">Expand README <i class="fa fa-caret-down" aria-hidden="true"></i></button><% end %>
+<div id="landing_readme">
   <% if highlight_fields.include?('technical_info') %>
     <% old_content = @resource.previous_curated_resource.descriptions.type_technical_info&.map(&:description)&.first %>
     <p><span class="highlight" style="font-size: 1.5em; padding: 6px; margin-right: 50px">README changed</span><%if old_content %><button type="button" class="o-button__plain-text1 diff-toggle" style="margin-right: 10px" disabled>View changes</button><button type="button" class="o-button__plain-text1 diff-toggle">View final</button><% end %></p>
@@ -22,34 +21,15 @@
       </div>
     <% end %>
   <% end %>
-  <div class="t-landing__text-wall" <%= 'hidden' if hide_final %>>
-    <% if !content.match(/^# /) %>
-      <h2>README</h2>
-    <% end %>
-    <%= markdown_render content.sub(/^# /, '# README: ') %>
+  <% readme_html = markdown_render content.sub(/^# /, '# README: ') %>
+  <% readme_parsed = Nokogiri::HTML5::DocumentFragment.parse(readme_html) %>
+  <% h2 = readme_parsed.css('h2')&.first&.content %>
+  <h2 tabindex="0" id="readme" class="expand-button" role="button" aria-expanded="false" aria-controls="readme-sec"><%= h2.presence || 'README' %></h2>
+  <div id="readme-sec" class="t-landing__text-wall" <% if params[:controller].include?('landing') %>hidden<% end %>>
+    <% readme_parsed.search('h2').first.remove %>
+    <%= readme_parsed.to_html.html_safe %>
   </div>
 </div>
-<% unless expand_readme %>
-  <script type="text/javascript">
-      const readme = document.getElementById('landing_readme')
-      const button = document.getElementById("expand-readme")
-      if (readme.scrollHeight <= readme.offsetHeight ) {
-          button.setAttribute('hidden', true)
-      }
-      button.addEventListener('click', e => {
-        const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
-        if (closed) {
-          e.currentTarget.setAttribute('aria-expanded', 'true');
-          e.currentTarget.parentElement.classList.add('expanded');
-          e.currentTarget.innerHTML = 'Collapse README <i class="fa fa-caret-up" aria-hidden="true"></i>'
-        } else {
-          e.currentTarget.setAttribute('aria-expanded', 'false');
-          e.currentTarget.parentElement.classList.remove('expanded');
-          e.currentTarget.innerHTML = 'Expand README <i class="fa fa-caret-down" aria-hidden="true"></i>'
-        }
-      })
-  </script>
-<% end %>
 <% if highlight_fields.include?('technical_info') %>
   <script type="text/javascript">
     [...document.getElementsByClassName('diff-toggle')].forEach(button => {
