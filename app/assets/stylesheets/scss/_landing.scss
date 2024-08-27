@@ -140,9 +140,6 @@
 	}
 }
 
-#sidebox-share {
-}
-
 #cite_section {
 	.cite-header {
 		display: flex;
@@ -226,7 +223,15 @@
 	}
 }
 
+#sidebox-related_works {
+	gap: 0;
+}
+
 #show_related_works {
+	display: flex;
+	flex-direction: column;
+	gap: 1ch;
+
 	.primary_article {
 		display: flex;
 		align-items: baseline;

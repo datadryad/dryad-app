@@ -1,5 +1,6 @@
 <% # takes locals of article_ids and item_label (singular version of item like Article or Primary article)  %>
 <% if article_ids.present? %>
+<div>
   <% if item_label == 'Primary article' && @resource.journal.present? %><div class="primary_article"><% end %>
   <h3><%= item_label.pluralize(article_ids.count) %></h3>
   <% if item_label == 'Primary article' && @resource.journal.present? %>
@@ -21,4 +22,5 @@
       </li>
     <% end %>
   </ul>
+</div>
 <% end %>
