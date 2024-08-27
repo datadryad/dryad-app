@@ -295,6 +295,7 @@ module StashEngine
         StashEngine::UserMailer.status_change(resource, status).deliver_later unless user.min_curator?
       when 'withdrawn'
         return if note.include?('final action required reminder') # this has already gotten a special withdrawal email
+        return if note.include?('notification that this item was set to `withdrawn`') # is automatic withdrawal action, no email required
 
         if user_id == 0
           StashEngine::UserMailer.user_journal_withdrawn(resource, status).deliver_later

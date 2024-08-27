@@ -1,6 +1,6 @@
 module StashEngine
 
-  class DeleteNotificationsService
+  class AbandonedDatasetService
     attr_reader :logging
 
     def initialize(logging: false)
@@ -79,13 +79,14 @@ module StashEngine
       true
     end
 
-    # Send withdrawn email notification
-    # - email is sent once at 1 year
+    # Withdraw dataset
+    # - withdrawn email is sent once at 1 year
     # - the resource is set to Withdrawn status
-    def send_withdrawn_notification
+    # def send_withdrawn_notification
+    def auto_withdraw
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: %w[peer_review action_required] })
-        .where(stash_engine_process_dates: { delete_calculation_date: 1.year.ago.beginning_of_day..1.year.ago.end_of_day })
+        .where('stash_engine_process_dates.delete_calculation_date <= ?', 1.year.ago.end_of_day)
         .each do |resource|
 
         reminder_flag = 'withdrawn_email_notice'
@@ -107,13 +108,15 @@ module StashEngine
 
     # Send final withdrawn email notification
     # - email is sent once, 9 months after the resource was withdraw
-    # - the email is sent only if resource was never published
+    # - the email is NOT sent if resource was withdrawn by a curator
+    # - the email is NOT sent if resource was published before
     def send_final_withdrawn_notification
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'withdrawn' })
-        .where('stash_engine_process_dates.delete_calculation_date <= ?', 9.months.ago.end_of_day)
+        .where('stash_engine_process_dates.last_status_date <= ?', 9.months.ago.end_of_day)
         .each do |resource|
         next if resource.curation_activities.pluck(:status).uniq.include?('published')
+        next if resource.withdrawn_by_curator?
 
         reminder_flag = 'final_withdrawn_email_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last

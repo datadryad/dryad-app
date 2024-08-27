@@ -2,20 +2,24 @@
 <%= form_with(url: admin_dash_update_delete_reference_date_path(@identifier.id), method: :post, local: false) do |form| -%>
   <%= hidden_field_tag :field, @field %>
 
-  <p>Edit deletion date reference for <em><%= @resource.title %></em></p>
+  <p>
+    Edit start date used for calculating <b>Abandoned Dataset Schedule</b>.<br />
+    Changing this date influences:
+  </p>
+  <ol>
+    <li>Monthly reminder email</li>
+    <li>Automatically withdrawn action</li>
+    <li>Delete dataset</li>
+  </ol>
+  <p>Reference for <em><%= @resource.title %></em></p>
   <p>Current reference date is <em><%= @resource.identifier.process_date.delete_calculation_date %></em></p>
   <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
-  <%# Users cannot change the status or publication date once the files are published %>
-   <%# if @resource.curatable? && filter_status_select(@resource.current_curation_status) %>
-    <%= form.fields_for :process_date, @process_date do |ca| %>
-        <div class="c-input">
-          <%= ca.label :delete_calculation_date, 'Date', class: 'c-input__label' %>
-          <%= ca.date_field :delete_calculation_date, class: 'c-input__text' %>
-        </div>
-    <% end %>
-  <%# else %>
-<!--      <p>Due to the state of the files, the submission status cannot be changed.<br/> Notes may be added.</p>-->
-  <%# end %>
+  <%= form.fields_for :process_date, @process_date do |ca| %>
+    <div class="c-input">
+      <%= ca.label :delete_calculation_date, 'Date', class: 'c-input__label' %>
+      <%= ca.date_field :delete_calculation_date, class: 'c-input__text' %>
+    </div>
+  <% end %>
 
   <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
     <div class="c-input">

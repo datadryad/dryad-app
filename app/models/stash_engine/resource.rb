@@ -998,6 +998,13 @@ module StashEngine
       end
     end
 
+    def withdrawn_by_curator?
+      return false if last_curation_activity.status != 'withdrawn'
+
+      first_withdrawn = curation_activities.where(status: 'withdrawn').order(created_at: :asc).first
+      first_withdrawn.user_id != 0
+    end
+
     private
 
     def save_first_pub_date
