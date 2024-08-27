@@ -4,9 +4,16 @@
 <div>
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
   <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
-    <div style="float: right;">
+    <div style="float: right; display: inline-flex">
       <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
         <button class="o-button__submit" aria-haspopup="dialog" id="note_button_<%= @identifier&.id %>">Add note</button>
+      <% end %>
+
+      <%= form_with(url: admin_dash_edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
+        <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="reference_button_<%= @identifier&.id %>"
+                style="width: auto; margin-left: 10px; white-space: nowrap">
+          Change delete reference date
+        </button>
       <% end %>
     </div>
   <% end %>
@@ -42,8 +49,6 @@
   </table>
   </div>
 </div>
-
-<%#= render partial: 'stash_engine/admin_datasets/activity_log_notifications' %>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
   <div id="salesforce_links" style="clear: both">

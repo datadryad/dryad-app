@@ -1,5 +1,5 @@
 module StashEngine
-  describe DeleteNotificationsService do
+  describe AbandonedDatasetService do
     before do
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_salesforce_metadata).and_return(true)
     end
@@ -213,7 +213,7 @@ module StashEngine
       end
     end
 
-    describe '#send_withdrawn_notification' do
+    describe '#auto_withdraw' do
       let!(:curation_activity) { create(:curation_activity, status: 'peer_review', resource_id: resource.id) }
 
       before do
@@ -227,7 +227,7 @@ module StashEngine
           expect(StashEngine::ResourceMailer).to receive(:send_set_to_withdrawn_notification).never
           expect(subject).to receive(:create_activity).never
 
-          subject.send_withdrawn_notification
+          subject.auto_withdraw
         end
       end
 
@@ -240,7 +240,7 @@ module StashEngine
                                                               status: 'withdrawn'
                                                             }).once
 
-          subject.send_withdrawn_notification
+          subject.auto_withdraw
         end
 
         it 'sends notification email at 1 year' do
@@ -248,7 +248,7 @@ module StashEngine
 
           expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification, :deliver_now).with(resource).with(no_args)
 
-          subject.send_withdrawn_notification
+          subject.auto_withdraw
         end
 
         it 'sends only one email ever' do
@@ -259,14 +259,14 @@ module StashEngine
 
           [1.second, 1.day, 2.week, 1.month, 10.years].each do |period|
             Timecop.travel(1.year.from_now + period) do
-              subject.send_withdrawn_notification
+              subject.auto_withdraw
             end
           end
         end
       end
     end
 
-    describe '#send_withdrawn_notification' do
+    describe '#auto_withdraw' do
       context 'for in peer_review resource' do
         let!(:curation_activity) { create(:curation_activity, status: 'peer_review', resource_id: resource.id) }
 
@@ -281,7 +281,7 @@ module StashEngine
             expect(StashEngine::ResourceMailer).to receive(:send_set_to_withdrawn_notification).never
             expect(subject).to receive(:create_activity).never
 
-            subject.send_withdrawn_notification
+            subject.auto_withdraw
           end
         end
 
@@ -294,7 +294,7 @@ module StashEngine
                                                                 status: 'withdrawn'
                                                               }).once
 
-            subject.send_withdrawn_notification
+            subject.auto_withdraw
           end
 
           it 'sends notification email at 1 year' do
@@ -303,7 +303,7 @@ module StashEngine
             expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification,
                                                                          :deliver_now).with(resource).with(no_args)
 
-            subject.send_withdrawn_notification
+            subject.auto_withdraw
           end
 
           it 'sends only one email ever' do
@@ -314,7 +314,7 @@ module StashEngine
 
             [1.second, 1.day, 2.week, 1.month, 10.years].each do |period|
               Timecop.travel(1.year.from_now + period) do
-                subject.send_withdrawn_notification
+                subject.auto_withdraw
               end
             end
           end
@@ -335,7 +335,7 @@ module StashEngine
             expect(StashEngine::ResourceMailer).to receive(:send_set_to_withdrawn_notification).never
             expect(subject).to receive(:create_activity).never
 
-            subject.send_withdrawn_notification
+            subject.auto_withdraw
           end
         end
 
@@ -348,7 +348,7 @@ module StashEngine
                                                                 status: 'withdrawn'
                                                               }).once
 
-            subject.send_withdrawn_notification
+            subject.auto_withdraw
           end
 
           it 'sends notification email at 1 year' do
@@ -357,7 +357,7 @@ module StashEngine
             expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification,
                                                                          :deliver_now).with(resource).with(no_args)
 
-            subject.send_withdrawn_notification
+            subject.auto_withdraw
           end
 
           it 'sends only one email ever' do
@@ -368,7 +368,7 @@ module StashEngine
 
             [1.second, 1.day, 2.week, 1.month, 10.years].each do |period|
               Timecop.travel(1.year.from_now + period) do
-                subject.send_withdrawn_notification
+                subject.auto_withdraw
               end
             end
           end
@@ -377,42 +377,86 @@ module StashEngine
     end
 
     describe '#send_final_withdrawn_notification' do
-      let!(:curation_activity) { create(:curation_activity, status: 'withdrawn', resource_id: resource.id) }
+      context 'when withdrawn by curator' do
+        let!(:curation_activity) { create(:curation_activity, status: 'withdrawn', resource_id: resource.id) }
 
-      before do
-        allow(StashEngine::ResourceMailer).to receive_message_chain(:send_final_withdrawn_notification, :deliver_now).and_return(true)
-        resource.last_curation_activity.update!(status: 'withdrawn')
-      end
-
-      context 'when status date is sooner then 9 months' do
-        it 'does not send notification email' do
-          Timecop.travel(9.months.from_now - 1.day)
-          expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).never
-          expect(subject).to receive(:create_activity).never
-
-          subject.send_final_withdrawn_notification
-        end
-      end
-
-      context 'when status date is older then 9 months' do
-        it 'sends notification email at 9 months' do
-          Timecop.travel(9.months.from_now)
-
-          expect(StashEngine::ResourceMailer).to receive_message_chain(:send_final_withdrawn_notification, :deliver_now).with(resource).with(no_args)
-          expect(subject).to receive(:create_activity).with('final_withdrawn_email_notice', resource).once
-
-          subject.send_final_withdrawn_notification
+        before do
+          allow(StashEngine::ResourceMailer).to receive_message_chain(:send_final_withdrawn_notification, :deliver_now).and_return(true)
+          resource.last_curation_activity.update!(status: 'withdrawn')
         end
 
-        it 'sends only one email ever' do
-          Timecop.travel(9.months.from_now) do
-            subject.send(:create_activity, 'final_withdrawn_email_notice', resource)
+        context 'when status date is sooner then 9 months' do
+          it 'does not send notification email' do
+            Timecop.travel(9.months.from_now - 1.day)
+            expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).never
+            expect(subject).to receive(:create_activity).never
+
+            subject.send_final_withdrawn_notification
           end
-          expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).never
+        end
 
-          [1.second, 1.day, 2.week, 1.month, 10.years].each do |period|
-            Timecop.travel(9.months.from_now + period) do
-              subject.send_final_withdrawn_notification
+        context 'when status date is older then 9 months' do
+          it 'does not send final notification email at 9 months' do
+            Timecop.travel(9.months.from_now)
+
+            expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).never
+            expect(subject).to receive(:create_activity).with('final_withdrawn_email_notice', resource).never
+
+            subject.send_final_withdrawn_notification
+          end
+
+          it 'sends only one email ever' do
+            Timecop.travel(9.months.from_now) do
+              subject.send(:create_activity, 'final_withdrawn_email_notice', resource)
+            end
+            expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).never
+
+            [1.second, 1.day, 2.week, 1.month, 10.years].each do |period|
+              Timecop.travel(9.months.from_now + period) do
+                subject.send_final_withdrawn_notification
+              end
+            end
+          end
+        end
+      end
+
+      context 'when withdrawn by journal or automatically' do
+        let!(:curation_activity) { create(:curation_activity, status: 'withdrawn', resource_id: resource.id, user_id: 0) }
+
+        before do
+          allow(StashEngine::ResourceMailer).to receive_message_chain(:send_final_withdrawn_notification, :deliver_now).and_return(true)
+        end
+
+        context 'when status date is sooner then 9 months' do
+          it 'does not send notification email' do
+            Timecop.travel(9.months.from_now - 1.day)
+            expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).never
+            expect(subject).to receive(:create_activity).never
+
+            subject.send_final_withdrawn_notification
+          end
+        end
+
+        context 'when status date is older then 9 months' do
+          it 'sends notification email at 9 months' do
+            Timecop.travel(9.months.from_now)
+            expect(StashEngine::ResourceMailer).to receive_message_chain(:send_final_withdrawn_notification,
+                                                                         :deliver_now).with(resource).with(no_args)
+            expect(subject).to receive(:create_activity).with('final_withdrawn_email_notice', resource).once
+
+            subject.send_final_withdrawn_notification
+          end
+
+          it 'sends only one email ever' do
+            Timecop.travel(9.months.from_now) do
+              subject.send(:create_activity, 'final_withdrawn_email_notice', resource)
+            end
+            expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).never
+
+            [1.second, 1.day, 2.week, 1.month, 10.years].each do |period|
+              Timecop.travel(9.months.from_now + period) do
+                subject.send_final_withdrawn_notification
+              end
             end
           end
         end

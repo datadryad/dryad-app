@@ -359,7 +359,7 @@ namespace :identifiers do
     end
   end
 
-  desc "Email the submitter when a dataset is in 'action_required' 3 times"
+  desc "Email the submitter when a dataset is in 'action_required' 1 time at 2 weeks"
   task action_required_reminder: :environment do
     # require 'stash_engine/tasks/stash_engine_tasks/action_required_reminder'
     items = Stash::ActionRequiredReminder.find_action_required_items
