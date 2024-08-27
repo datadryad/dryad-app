@@ -228,14 +228,13 @@
 
 #show_related_works {
 	.primary_article {
-		display: inline;
+		display: flex;
+		align-items: baseline;
+		flex-wrap: wrap;
+		column-gap: 2ch;
 	}
 	.article_journal {
 		font-size: .98rem;
-		background-color: white;
-		border-radius: 3px;
-		padding: 4px 6px;
-		margin-left: 1ch;
 	}
 	ul {
 		font-size: .98rem;
