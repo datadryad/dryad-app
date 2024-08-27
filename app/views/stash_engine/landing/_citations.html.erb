@@ -1,11 +1,15 @@
 <%# takes a local identifier AR object #%>
-<h1>Works referencing this dataset</h1>
-<% identifier.cached_citations.each do |cite| %>
-  <p>
-    <% if cite.citation.blank? %>
-      <%= "Citation metadata for #{cite.doi} was not available from DataCite." %>
-    <% else %>
-      <%= cite.citation.html_safe %><!-- The doi: <%= cite.doi %> -->
+<h2 tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="citations-sec">Works referencing this dataset</h2>
+<div id="citations-sec" hidden>
+  <ul class="o-list">
+    <% identifier.cached_citations.each do |cite| %>
+      <li>
+        <% if cite.citation.blank? %>
+          <%= "Citation metadata for #{cite.doi} was not available from DataCite." %>
+        <% else %>
+          <%= cite.citation.html_safe %><!-- The doi: <%= cite.doi %> -->
+        <% end %>
+      </li>
     <% end %>
-  </p>
-<% end %>
+  </ul>
+</div>

@@ -4,54 +4,33 @@
     <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: resource, highlight: false } %>
   </div>
 
-  <section class="citation-section">
-  <%= render partial: "stash_datacite/shared/citations",
-             locals: { authors: review.authors, title: review.title_str,
-                       resource_type: review.resource_type,
-                       identifier: resource.identifier.nil? ? 'DOI' : "#{review.identifier.identifier }",
-                       publication_year: (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year) } %>
-  </section>
+<% if @id.may_download?(user: current_user) %>
+  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
+<% else %>
+  <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
+<% end %>
 
-  <% if @user_type == 'privileged' && @resource&.identifier&.pub_state != 'published'%>
-    <%= render partial: "stash_datacite/shares/show", locals: { share: review.share } %>
-  <% end %>
+<%= render partial: "stash_datacite/descriptions/show",
+     locals: { abstract: review.abstract, methods: '',
+   other: '', highlight_fields: [] } %>
 
-  <%= render partial: "stash_datacite/descriptions/show",
-       locals: { abstract: review.abstract, methods: '',
-     other: '', highlight_fields: [] } %>
+<% if @resource.display_readme? %>
+  <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review, highlight_fields: [] } %>
+<% end %>
 
-  <% if @resource.display_readme? %>
-    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review, highlight_fields: [], expand_readme: false } %>
-  <% end %>
+<%= render partial: "stash_datacite/descriptions/show",
+   locals: { abstract: '', methods: review.methods,
+ other: review.other, highlight_fields: [] } %>
 
-  <%= render partial: "stash_datacite/descriptions/show",
-     locals: { abstract: '', methods: review.methods,
-   other: review.other, highlight_fields: [] } %>
+<%# takes local of identifier, no_link == true means don't link metrics %>
+<% no_link = false unless defined?(no_link) %>
+<% if resource.identifier&.counter_stat&.citation_count > 0 && !no_link %>
+  <div id="citations-section"
+       data-load="<%= stash_url_helpers.show_citations_path(identifier_id: resource.identifier_id, format: :js) %>">
+    <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
+  </div>
+<% end %>
 
-  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight_fields: [] } %>
-
-  <% if review.geolocation_data? %>
-    <h2 class="o-heading__level2">Location</h2>
-
-      <%
-        has_map_meta = review.geolocation_points.count.positive? || review.geolocation_boxes.count.positive?
-        if has_map_meta %>
-        <div id="map_review" class="o-map"></div>
-      <% end %>
-      <div class="c-locations">
-        <% if has_map_meta %>
-          <%= render partial: "stash_datacite/geolocation_points/show",
-                     locals: { geolocation_points: review.geolocation_points } %>
-          <%= render partial: "stash_datacite/geolocation_boxes/show",
-                     locals: { geolocation_boxes: review.geolocation_boxes } %>
-        <% end %>
-      <%= render partial: "stash_datacite/geolocation_places/show",
-                 locals: { geolocation_places: review.geolocation_places } %>
-    </div>
-    <script>
-      $( document ).ready( loadReviewMap(<%=resource.id%>) );
-    </script>
-  <% end %>
 <script type="application/ld+json">
   <%= schema_org_ds %>
 </script>

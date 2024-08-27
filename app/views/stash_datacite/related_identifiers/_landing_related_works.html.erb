@@ -1,10 +1,21 @@
 <% # Article IDs %>
 
+<% icons = {
+	primary_article: "<i class=\"fas fa-newspaper\" aria-hidden=\"true\"></i>",
+	article: "<i class=\"far fa-newspaper\" aria-hidden=\"true\"></i>",
+	dataset: "<i class=\"fas fa-table-cells\" aria-hidden=\"true\"></i>",
+	software: "<i class=\"far fa-file-code\" aria-hidden=\"true\"></i>",
+	preprint: "<i class=\"far fa-receipt\" aria-hidden=\"true\"></i>",
+	supplemental_information: "<i class=\"far fa-file-image\" aria-hidden=\"true\"></i>",
+	data_management_plan: "<i class=\"fas fa-list-check\" aria-hidden=\"true\"></i>",
+	undefined: ''
+} %>
+
 <% prim_article_ids = @resource.related_identifiers.where(work_type: :primary_article).where(hidden: false).order(work_type: :desc) %>
-<%= render partial: 'special_article', locals: {article_ids: prim_article_ids, item_label: 'Primary article'} %>
+<%= render partial: 'special_article', locals: {article_ids: prim_article_ids, item_label: 'Primary article', icon: icons[:primary_article]} %>
 
 <% article_ids = @resource.related_identifiers.where(work_type: :article).where(hidden: false).order(work_type: :desc) %>
-<%= render partial: 'special_article', locals: {article_ids: article_ids, item_label: 'Article'} %>
+<%= render partial: 'special_article', locals: {article_ids: article_ids, item_label: 'Article', icon: icons[:article]} %>
 
 <% unpublished = @resource.identifier.latest_resource_with_public_download.nil? %>
 
@@ -16,9 +27,9 @@
 		@resource.related_identifiers.select(:work_type).where(hidden: false).where.not(work_type: [:article, :primary_article]).distinct.order(:work_type)
 	end %>
 <% other_relations.each do |orel| %>
-    <h3 class="o-heading__level3-related-works"><%= orel.work_type_friendly %></h3>
+    <h3><%= orel.work_type_friendly %></h3>
     <% other_ids = @resource.related_identifiers.where(work_type: orel.work_type).where(hidden: false) %>
-    <ul class="o-list-related">
+    <ul>
 	<% other_ids.each do |r| %>
 	    <% bad_asterisk = ( (current_user&.min_app_admin? && !r.verified?) ? ' *' : '') %>
 	    <li>
@@ -28,10 +39,10 @@
 							 my_id: r.related_identifier) %> <%= bad_asterisk %>
 				<% else %>
 					<% if r.added_by != 'zenodo' || !unpublished %>
-						<%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier, target: "_blank" %>
-						<%= bad_asterisk %><span class="screen-reader-only"> (opens in new window)</span>
+						<%= link_to "#{icons[r.work_type]}#{r.related_identifier}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, r.related_identifier, class: 'o-link__primary', title: "Go to #{orel.work_type_friendly.downcase}", target: "_blank" %>
+						<%= bad_asterisk %>
 					<% else %> <!-- not put in the zenodo queue to publish until the dataset is actually published -->
-						<span title="<%= r.related_identifier %>"><%= r.related_identifier.ellipsisize(40) %></span>
+						<span><%= r.related_identifier %></span>
 						<%= bad_asterisk %>
 					<% end %>
 				<% end %>

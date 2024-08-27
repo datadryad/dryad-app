@@ -27,11 +27,16 @@
 		});
 	});
 </script>
+<% if @user_type == 'privileged' %>
+  <%= render(partial: 'privileged_banner') %>
+  <% if @resource&.identifier&.pub_state != 'published'%>
+    <div id="privilege_share" class="callout alt">
+      <%= render partial: "stash_datacite/shares/show", locals: { share: review.share } %>
+    </div>
+  <% end %>
+<% end %>
 <div class="c-columns">
 	<main class="t-landing__main c-columns__content">
-		<% if @user_type == 'privileged' %>
-			<%= render(partial: 'priveleged_banner') %>
-		<% end %>
 		<div id="display_resource">
 		  <%# image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
       <%# render(partial: 'stash_datacite/resources/show') %>
@@ -42,10 +47,8 @@
   	  <% end %>
 		</div>
 	</main>
-	<aside class="t-landing__sidebar c-columns__sidebar2">
-		<div id="sidebar">
-		  <%= render :partial => 'sidebar' %>
-		</div>
+	<aside class="c-columns__sidebar">
+	  <%= render :partial => 'sidebar' %>
 	</aside>
 </div>
 

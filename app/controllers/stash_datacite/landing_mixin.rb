@@ -58,7 +58,7 @@ module StashDatacite
 
       str_author = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact
       return '' if str_author.blank?
-      return "#{str_author.first} et al." if str_author.length > 4
+      return "#{str_author.first(3).join(': ')} et al." if str_author.length > 4
 
       str_author.join('; ')
     end

@@ -1,10 +1,2 @@
-$('#genericModalContent').html("<%= escape_javascript(
-          render partial: 'stash_engine/landing/citations', locals: { identifier: @identifier }) %>");
-
-$('#metrics_citation_spinner').hide();
-$('#metrics_citation_count').show();
-
-// now open a jquery ui modal dialog
-$(function() {
-  $('#genericModalDialog')[0].showModal();
-});
+$('#citations-section').html("<%= escape_javascript(
+  render partial: 'stash_engine/landing/citations', locals: {identifier: @identifier}) %>");

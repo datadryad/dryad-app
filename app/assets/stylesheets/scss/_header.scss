@@ -267,7 +267,6 @@
   display: flex;
   margin: 0;
   padding: 0 15px;
-  background-color: white;
   
   a:link, a:visited {
     color: $link-body-color;
@@ -325,6 +324,7 @@
   }
 
   @include bp(screen3) {
+    background-color: white;
     @include c-header__nav-item;
 
     a:link, a:visited {

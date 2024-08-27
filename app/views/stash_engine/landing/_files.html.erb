@@ -1,7 +1,6 @@
 <%# takes local variable of dataset_identifier and resource %>
 <%
   resources = dataset_identifier.resources.files_published  # the public ones
-  res_id = -9999 # negative for no special file views
   if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
     res_id = resources.last&.id || 0
     # rails 5 has an OR we could use, but not yet in rails 4.2, so change to an array rather than an ActiveRecord Relation
@@ -10,20 +9,21 @@
     resources = resources.to_a + dataset_identifier.resources_with_file_changes.submitted.where('stash_engine_resources.id > ?', res_id).to_a
   end
 %>
-<% if resources.count.positive? %>
-  <div class="c-sidebox">
-    <h2 class="c-sidebox__heading">Data files</h2>
+<div class="data_files_section">
+  <h2>Data files</h2>
+  <div>
+  <% if resources.count.positive? %>      
     <!-- list individual files -->
     <% resources.each do |res| %>
       <details class="c-file-group" role="group">
         <summary role="button" class="o-showhide__summary c-file-group__summary">
-          <span><%= formatted_date(res.publication_date.present? && res.publication_date < Time.now.utc ? res.publication_date : res.updated_at) %> version files<%= ( res_id.positive? && res.id > res_id ? '*' : '' ) -%></span>
+          <span><%= formatted_date(res.publication_date.present? && res.publication_date < Time.now.utc ? res.publication_date : res.updated_at) %> version files</span>
           <span><%= filesize(res.total_file_size) %></span>
         </summary>
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
             <li>
-              <%= link_to fu.upload_file_name.ellipsisize(20), Rails.application.routes.url_helpers.download_stream_path(fu.id),
+              <%= link_to "<i class=\"fas fa-download\" aria-hidden=\"true\"></i>#{fu.upload_file_name.ellipsisize(200)}".html_safe, Rails.application.routes.url_helpers.download_stream_path(fu.id),
                         title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
               <span><%= filesize(fu.upload_file_size) %>
               <% if fu.upload_file_name.ends_with?('csv') %>
@@ -41,13 +41,8 @@
     <% end %>
     <!-- full download second -->
     <%= render partial: 'stash_engine/landing/download', locals: { dataset_identifier: dataset_identifier } %>
-    <% if res_id != -9999 %>
-      <em>* changes not displayed to the public</em>
-    <% end %>
-  </div>
-<% else %>
-  <div class="c-sidebox">
-    <h2 class="c-sidebox__heading">Data files</h2>
+  <% else %>
     <p>No data files are available for display.</p>
+  <% end %>
   </div>
-<% end %>
+</div>
