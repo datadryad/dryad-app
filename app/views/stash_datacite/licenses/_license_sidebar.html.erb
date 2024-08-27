@@ -2,8 +2,6 @@
 <% if license.nil? %>
   <%= render partial: 'stash_datacite/licenses/no_license_review', locals: {right: right} %>
 <% else %>
-  <p>
-    This work is licensed under a <%= link_to license['name'], license['uri'] %> license.
-  </p>
-  <%= image_tag("licenses/#{license['badge']}", alt: "#{license['name']} logo") %>
+  <h2>License:</h2>
+  <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank"><i class="fab fa-creative-commons-zero" aria-hidden="true"></i>Public domain<span class="screen-reader-only"> (opens in new window)</span></a>
 <% end %>

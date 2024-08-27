@@ -1,25 +1,27 @@
 <% unless contributors.nil? || contributors.length < 1 || (contributors.length == 1 && contributors[0].contributor_name_friendly == 'N/A') %>
-	<% if params[:controller].include?('landing') %>
-  	<h2 class="o-heading__level2">Funding</h2>
+  <% if params[:controller].include?('landing') %>
+  <div id="show_funding">
+  	<h2>Funding</h2>
 	<% else %>
 		<h3 class="o-heading__level2">Funding</h3>
 	<% end %>
-  <div>    
-  <% contributors.each_with_index do |contributor, i| %>
+  <ul class="o-list">
+    <% contributors.each_with_index do |contributor, i| %>
       <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
-      <% @desc_string = ", <span class='#{'highlight' if highlights&.key?(:desc)}'>#{contributor.award_description}</span>".html_safe %>
-      <% @award_string = ", <span class='#{'highlight' if highlights&.key?(:award)}'>Award: #{contributor.award_number}</span>".html_safe %>
+      <% @desc_string = ", <span #{'class="highlight"' if highlights&.key?(:desc)}>#{contributor.award_description}</span>".html_safe %>
+      <% @award_string = ": <span #{'class="highlight"' if highlights&.key?(:award)}>#{contributor.award_number}</span>".html_safe %>
       <% if current_user && current_user.min_app_admin? %>
-	  <p>
-	      <span class="<%= 'highlight' if highlights&.key?(:name) %>"><%= contributor.contributor_name_friendly(show_asterisk: true) %></span><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
-	  </p>
+  	  <li>
+  	    <span <%= 'class="highlight"' if highlights&.key?(:name) %>><%= contributor.contributor_name_friendly(show_asterisk: true) %></span><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
+  	  </li>
       <% else %>
-	  <p>
-	      <span class="<%= 'highlight' if highlights&.key?(:name) %>"><%= contributor.contributor_name_friendly %></span><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
-	  </p>
+  	  <li>
+  	    <%= contributor.contributor_name_friendly %><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
+  	  </li>
       <% end %>
-  <% end %>
-  </div>
+    <% end %>
+  </ul>
+  <% if params[:controller].include?('landing') %></div><% end %>
 <% end %>
 <% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
 <% if deleted %>
