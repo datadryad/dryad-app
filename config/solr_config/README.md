@@ -3,7 +3,7 @@
 Dryad adds journal information to the standard Blacklight schema so that users can search for a publication DOI, manuscript number, or Pubmed ID. We also add a facet for the publication name.
 
 Currently we have only customized two files, `schema.xml` and `solrconfig.xml` compared to the default blacklight
-configuration which is available from `https://github.com/geoblacklight/geoblacklight-schema/archive/v0.3.2.tar.gz`.
+configuration which is available from `https://github.com/projectblacklight/blacklight/archive/v7.37.0.tar.gz`.
 
 However, we're now including all the config files in the `config/solr_config` directory in our repository for ease
 of installing or copying them over to the solr server.
