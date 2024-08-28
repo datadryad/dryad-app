@@ -53,6 +53,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
     opts.args << '--no-sandbox'
     opts.args << '--disable-extensions'
     opts.args << '--disable-popup-blocking'
+    opts.args << '--disable-search-engine-choice-screen'
   end
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
