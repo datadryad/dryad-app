@@ -1,10 +1,24 @@
 <% if params[:controller].include?('landing') %>
-<div class="cite-header">
-  <h2>Citation</h2>
-  <button title="Copy citation" aria-label="Copy citation" class="copy-icon" data-item="Citation"><i class="fa fa-paste" role="status"></i><span>Copy</span></button>
-</div>
+<h2 id="expand-citation" tabindex="0" role="button" aria-expanded="false" aria-controls="dataset-citation">Citation<i class="fas fa-caret-down" aria-hidden="true"></i></h2>
+<button title="Copy citation" aria-label="Copy citation" class="copy-icon" data-item="Citation"><i class="fa fa-paste" role="status"></i><span>Copy</span></button>
 <% else %>
   <h3 class="o-heading__level2">Citation</h3>
 <% end %>
 <% publication = @resource.publication_date.blank? ? "Forthcoming #{publication_year}" : publication_year %>
-<p><%= citation(authors, title, resource_type, identifier, publication) %></p>
+<p id="dataset-citation"<% if params[:controller].include?('landing') %> hidden<% end %>><%= citation(authors, title, resource_type, identifier, publication) %></p>
+
+<% if params[:controller].include?('landing') %>
+<script type="text/javascript">
+  document.getElementById('expand-citation').addEventListener('click', (e) => {
+    const citation = document.getElementById('dataset-citation')
+    if (citation.hasAttribute('hidden')) {
+      e.target.setAttribute('aria-expanded', 'true')
+    } else {
+      e.target.setAttribute('aria-expanded', 'false')
+    }
+    e.target.lastElementChild.classList.toggle('fa-caret-down')
+    e.target.lastElementChild.classList.toggle('fa-caret-up')
+    citation.toggleAttribute('hidden')
+  })
+</script>
+<% end %>
