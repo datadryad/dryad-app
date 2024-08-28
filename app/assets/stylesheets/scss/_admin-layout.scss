@@ -204,6 +204,7 @@
   input[type='text'].selected,
   input[type='search'].selected,
   input[type='date'].selected,
+  input[type='button'].selected,
   select.selected {
     border: thin solid $light-green;
     &:not(:focus) {
