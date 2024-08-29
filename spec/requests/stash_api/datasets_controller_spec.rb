@@ -222,6 +222,38 @@ module StashApi
         expect(@resource.curation_activities.size).to eq(3)
         expect(@resource.publication_date).to be_within(10.days).of(publish_date)
       end
+
+      context 'with triggerSubmitInvitation set to true' do
+        before do
+          @meta.add_trigger_invitation(true)
+        end
+
+        it 'does not trigger email sending when owner has no email' do
+          @user.update(email: nil)
+          expect do
+            post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+          end.to raise_error(
+            ActionController::BadRequest,
+            'Dataset owner does not have an email address in order to send the Submission email.'
+          )
+        end
+
+        it 'triggers email sending when owner has email setup' do
+          expect(StashApi::ApiMailer).to receive_message_chain(:send_submit_request, :deliver_later)
+          post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        end
+      end
+
+      context 'with triggerSubmitInvitation set to true' do
+        before do
+          @meta.add_trigger_invitation(false)
+        end
+
+        it 'does not trigger email sending when owner has no email' do
+          expect(StashApi::ApiMailer).not_to receive(:send_submit_request)
+          post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        end
+      end
     end
 
     # test creation of a new dataset
