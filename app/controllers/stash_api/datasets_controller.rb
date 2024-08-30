@@ -354,9 +354,7 @@ module StashApi
         fq_array << "updated_at_dt:[* TO #{params['modifiedBefore']}]"
       end
 
-      if params['journalISSN']
-        fq_array << "dryad_related_publication_issn_s:\"#{params['journalISSN']}\""
-      end
+      fq_array << "dryad_related_publication_issn_s:\"#{params['journalISSN']}\"" if params['journalISSN']
 
       fq_array
     end
