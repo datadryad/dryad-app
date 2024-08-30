@@ -349,6 +349,14 @@ module StashApi
         # ["timestamp:[2020-10-08T10:24:53Z TO NOW]"]
         fq_array << "updated_at_dt:[#{params['modifiedSince']} TO NOW]"
       end
+      if params['modifiedBefore']
+        # ["Before timestamp:[2020-10-08T10:24:53Z]"]
+        fq_array << "updated_at_dt:[* TO #{params['modifiedBefore']}]"
+      end
+
+      if params['journalISSN']
+        fq_array << "dryad_related_publication_issn_s:\"#{params['journalISSN']}\""
+      end
 
       fq_array
     end
