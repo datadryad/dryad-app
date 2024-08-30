@@ -664,6 +664,13 @@ module StashApi
         expect(result['identifier']).to eq("doi:#{@ident.identifier}")
       end
 
+      it 'allows searches by modifiedBefore' do
+        time = 2.day.from_now.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
+        get "/api/v2/search?modifiedBefore=#{time}", headers: default_authenticated_headers
+        output = response_body_hash
+        expect(output['_embedded']['stash:datasets'].size).to eq(1)
+      end
+
       it 'passes a sanitised query to solr' do
         solr_mock = instance_double(RSolr::Client)
         allow(RSolr).to receive(:connect).and_return(solr_mock)
