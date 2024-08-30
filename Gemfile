@@ -122,14 +122,6 @@ gem 'mutex_m'
 # ############################################################
 # Development and testing
 
-gem 'parallel_tests', group: %i[development test]
-
-group :development, :local_dev do
-  gem 'colorize'
-  gem 'web-console'
-  # gem 'httplog', not needed always, but good for troubleshooting HTTP requests to outside http services from the app
-end
-
 group :test do
   # I'm not sure we're really using every one of these libraries like fuubar?, guard?, mocha?, rspec-html?, shoulda?
   # Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb (https://github.com/teamcapybara/capybara)
@@ -176,11 +168,12 @@ group :test do
   gem 'webmock'
 end
 
-group :development, :test, :local_dev, :local do
+group :development, :v3_development, :local_dev, :local, :test do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
   gem 'listen'
+  gem 'parallel_tests'
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote', require: 'pry-remote'
@@ -190,4 +183,9 @@ group :development, :test, :local_dev, :local do
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
   gem 'spring-commands-rspec'
+end
+
+group :development, :v3_development, :local_dev do
+  gem 'colorize'
+  gem 'web-console'
 end
