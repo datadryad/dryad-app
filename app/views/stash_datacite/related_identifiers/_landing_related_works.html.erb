@@ -32,19 +32,17 @@
     <% other_ids = @resource.related_identifiers.where(work_type: orel.work_type).where(hidden: false) %>
     <ul>
 	<% other_ids.each do |r| %>
-	    <% bad_asterisk = ( (current_user&.min_app_admin? && !r.verified?) ? ' *' : '') %>
+	    <% unverified = ( (current_user&.min_app_admin? && !r.verified?) ? '<i class="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link"></i>'.html_safe : '') %>
 	    <li>
 				<% if r.work_type == 'undefined' %>
 						This dataset <%= r.relation_name_english %>
 						<%= display_id(type: r.related_identifier_type,
-							 my_id: r.related_identifier) %> <%= bad_asterisk %>
+							 my_id: r.related_identifier) %> <%= unverified %>
 				<% else %>
 					<% if r.added_by != 'zenodo' || !unpublished %>
-						<%= link_to "#{icons[r.work_type]}#{r.related_identifier}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, r.related_identifier, class: 'o-link__primary', title: "Go to #{orel.work_type_friendly.downcase}", target: "_blank" %>
-						<%= bad_asterisk %>
+						<%= link_to "#{icons[r.work_type]}#{r.related_identifier}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, r.related_identifier, class: 'o-link__primary', title: "Go to #{orel.work_type_friendly.downcase}", target: "_blank" %><%= unverified %>
 					<% else %> <!-- not put in the zenodo queue to publish until the dataset is actually published -->
-						<span><%= r.related_identifier %></span>
-						<%= bad_asterisk %>
+						<span><%= r.related_identifier %></span><%= unverified %>
 					<% end %>
 				<% end %>
 				<% if r.added_by == 'zenodo' && unpublished %>

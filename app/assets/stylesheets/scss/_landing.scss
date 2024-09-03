@@ -111,6 +111,8 @@
     display: flex;
     flex-direction: column;
     gap: 1ch;
+    overflow: auto;
+    overflow-wrap: anywhere;
 
     &#sidebox-search, &#sidebox-share {
       background-color: $lightest-green;
