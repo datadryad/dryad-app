@@ -31,13 +31,20 @@ Rack::Attack.blocklist('malicious_clients') do |req|
 end
 
 
-
 # Block repeated malicious content type checks
 # After 2 requests, block all requests from that IP for 1 day.
 Rack::Attack.blocklist('malicious_content_type') do |req|
   Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 2, findtime: 1.day, bantime: 1.day) do
-    (req.env["HTTP_ACCEPT"].present? && req.env["HTTP_ACCEPT"].include?('$')) || 
+    (req.env["HTTP_ACCEPT"].present? && req.env["HTTP_ACCEPT"].include?('$')) ||
     (req.content_type.present? && req.content_type.include?('$'))
+  end
+end
+
+
+# Set a long block period for any client that access (honey)pot pages
+Rack::Attack.blocklist('allow2ban honeypot') do |req|
+  Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 1, findtime: 1.minute, bantime: 1.month) do
+    req.path.include?('/stash/pots')
   end
 end
 

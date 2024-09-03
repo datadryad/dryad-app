@@ -361,6 +361,8 @@ Rails.application.routes.draw do
 
     # GMail authentication page for journals
     get 'gmail_auth', to: 'gmail_auth#index'
+
+    resource :pots, only: [:show]
   end
 
   # the ones below coming from new routing for geoblacklight

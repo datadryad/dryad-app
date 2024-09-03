@@ -1,5 +1,6 @@
 <nav class="c-header__nav js-header__nav" aria-label="Main">
   <ul class="c-header__nav-group" id="mobile-nav-bar">
+    <li class="c-header__nav-item c-pot-item"><%= link_to raw('Explore'), pots_path, class: 'js-nav-out' %>
     <% if current_user && %w[development test local_dev local].include?(Rails.env) %>
       <li class="c-header__nav-item dev-only" title="<%= current_user.email %>">[<%= current_user.name %>
         @<%= current_tenant&.id %>]</li>
@@ -27,7 +28,7 @@
     </li>
   </ul>
 
-  <ul class="c-header__nav-group" id="site-menu">    
+  <ul class="c-header__nav-group" id="site-menu">
 
     <li class="c-header__nav-item"><%= link_to 'Who we are', stash_url_helpers.about_path %></li>
 
@@ -53,7 +54,7 @@
 
     <% if current_user %>
       <li class="c-header__nav-item">
-        <% if current_user.min_admin? %>        
+        <% if current_user.min_admin? %>
           <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
             <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
