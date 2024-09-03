@@ -31,8 +31,13 @@ Any combination of the following parameters may be used in a search:
   Dryad. This will automatically search all affiliations associated
   with the given tenant. If both a **tenant** and **affiliation** are
   specified, the tenant will be ignored.
+- **journalISSN** -- the journal ISSN.
 - **modifiedSince** -- a timestamp for limiting results. Datasets will
   only be returned that have been modified since the given
+  time. The time must be specified in ISO 8601 format, and the time
+  zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+- **modifiedBefore** -- a timestamp for limiting results. Datasets will
+  only be returned that have been modified before the given
   time. The time must be specified in ISO 8601 format, and the time
   zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
 
