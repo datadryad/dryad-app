@@ -26,18 +26,25 @@ self.addEventListener('fetch', (event) => {
           messagePorts[event.request.url].postMessage({type: 'DOWNLOAD_STATUS', msg: 'Download started'});
         }
         const metadata = data.getAll('size').map((s, i) => ({name: data.getAll('filename')[i], size: s}));
+        const total = predictLength(metadata);
         const headers = {
           'Content-Type': 'application/zip',
           'Content-Disposition': `attachment;filename="${name}"`,
-          'Content-Length': predictLength([{name, size: 0}].concat(metadata)),
+          'Content-Length': total,
         };
+        if (messagePorts[event.request.url]) {
+          messagePorts[event.request.url].postMessage({type: 'DOWNLOAD_STATUS', msg: 'Headers', size: total, filename: name});
+        }
         const [checkStream, printStream] = makeZip(new DownloadStream(urls), {metadata}).tee();
         const reader = checkStream.getReader();
-        reader.read().then(function processText({done}) {
-          if (done && messagePorts[event.request.url]) {
-            messagePorts[event.request.url].postMessage({type: 'DOWNLOAD_STATUS', msg: 'Stream complete'});
+        let bytes = 0;
+        reader.read().then(function processText({done, value}) {
+          if (done) {
+            if (messagePorts[event.request.url]) messagePorts[event.request.url].postMessage({type: 'DOWNLOAD_STATUS', msg: 'Stream complete'});
             return;
           }
+          bytes += value.length;
+          if (messagePorts[event.request.url]) messagePorts[event.request.url].postMessage({type: 'DOWNLOAD_STATUS', msg: 'Streaming', complete: bytes/Number(total)});
           return reader.read().then(processText);
         });
         return new Response(printStream, {headers});

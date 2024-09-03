@@ -10,7 +10,7 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 1ch;
-	width: 300px;
+	width: 220px;
 	padding: 6px 10px;
 	border: none;
 	background-color: $lighter-blue;
@@ -61,4 +61,11 @@
 
 .o-download__docs::before {
 	content: url('/images/scss/icon_pdf.svg');
+}
+
+#dl_filename {
+	font-weight: bold;
+}
+#dl_filesize {
+	font-size: .98rem;
 }
