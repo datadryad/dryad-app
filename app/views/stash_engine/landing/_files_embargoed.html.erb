@@ -1,20 +1,22 @@
 <%# takes local variable of resource %>
-<div class="c-sidebox">
-    <h2 class="c-sidebox__heading">Data files</h2>
+<div class="data_files_section">
+  <h2>Data files</h2>
+  <div>
     <p>
-	<% if @resource.identifier.embargoed_until_article_appears? %>
-	    This dataset is embargoed and will be released when the associated article is published.
-	    Contact <a class="emailr" href="mailto:dev@null?subject=Article published for <%= @resource.identifier.to_s %>">gro.dayrdatad@pleh</a> to notify us of article publication.
-	<% else %>
-	    This dataset is embargoed <% if @resource.publication_date.present? && @resource.publication_date > Time.new.utc -%>
-	    and will be released on <%= formatted_date(@resource.publication_date) %>
-	    <% end -%>.
-	    <% auth = @resource.authors.first %>
-	    <% if auth&.author_email&.present? %>
-		Please contact <%= auth.author_standard_name %> at <a class="emailr" href="mailto:dev@null"><%= auth.author_email.reverse! %></a>
-		with any questions.
-	    <% end %>
-	<% end %>
+      <% if @resource.identifier.embargoed_until_article_appears? %>
+      This dataset is embargoed and will be released when the associated article is published.
+      Contact <a class="emailr" href="mailto:dev@null?subject=Article published for <%= @resource.identifier.to_s %>">gro.dayrdatad@pleh</a> to notify us of article publication.
+      <% else %>
+      This dataset is embargoed <% if @resource.publication_date.present? && @resource.publication_date > Time.new.utc -%>
+      and will be released on <%= formatted_date(@resource.publication_date) %>
+      <% end -%>.
+      <% auth = @resource.authors.first %>
+      <% if auth&.author_email&.present? %>
+      Please contact <%= auth.author_standard_name %> at <a class="emailr" href="mailto:dev@null"><%= auth.author_email.reverse! %></a>
+      with any questions.
+      <% end %>
+      <% end %>
     </p>
     <p>Lists of files and downloads will become available to the public when released.</p>
+  </div>
 </div>

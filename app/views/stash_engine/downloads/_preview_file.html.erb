@@ -1,0 +1,35 @@
+<div class="file_preview preview_<%= @file_type %>" role="region" tabindex="0" aria-labelledby="preview_file_name">
+<p role="heading" level="3" id="preview_file_name"><span>Preview: <%= @file.upload_file_name %></span><button class="o-button__plain-text7" aria-label="Close preview" onclick="close_preview()"><i class="fas fa-times" aria-hidden="true"></i></button></p>
+<% if @preview %>
+  <% case @file_type %>
+  <% when 'img' %>
+    <img src="<%= @file.digest.present? ? @file.s3_permanent_presigned_url : @file.s3_staged_presigned_url %>"/>
+  <% when 'csv' %>
+    <% lines = @preview.split("\n") %>
+    <table>
+      <thead><tr>
+        <% lines.first.split(@sep).map {|c| c.delete_prefix('"').delete_suffix('"') }.each do |th| %>
+          <th><%= th %></th>
+        <% end %>
+      </tr></thead>
+      <tbody>
+        <% lines.drop(1).each do |tr| %>
+          <tr>
+            <% tr.split(@sep).map {|c| c.delete_prefix('"').delete_suffix('"') }.each do |td| %>
+              <td><%= td %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% when 'txt' %>
+    <% if @file.upload_file_name.ends_with('.md') %>
+      <div><%= markdown_render @preview %></div>
+    <% else %>
+      <pre><%= @preview %></pre>
+    <% end %>
+  <% end %>
+<% else %>
+  <p>Preview is currently unavailable.</p>
+<% end %>
+</div>

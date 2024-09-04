@@ -4,6 +4,7 @@ require 'http'
 module StashEngine
   class DownloadsController < ApplicationController
     include ActionView::Helpers::DateHelper
+    include StashEngine::LandingHelper
 
     before_action :check_user_agent, :check_ip, :setup_streaming
 
@@ -122,15 +123,25 @@ module StashEngine
       end
     end
 
-    def preview_csv
-      @data_file = DataFile.find(params[:file_id])
-      @preview = (@data_file.preview_file if @data_file&.resource&.may_download?(ui_user: current_user))
+    def preview_check
+      @file = DataFile.find(params[:file_id])
+    end
 
-      # limit to only 5 lines at most and make unix line endings
-      return unless @preview.instance_of?(String)
+    def preview_file
+      @file = DataFile.find(params[:file_id])
+      # @preview = (@data_file.preview_file if @data_file&.resource&.may_download?(ui_user: current_user))
+      @file_type = 'img'
+      @file_type = 'csv' if @file.upload_file_name.end_with?('.csv', '.tsv') ||
+        ['text/csv', 'text/tab-separated-values'].include?(@file.upload_content_type)
+      @file_type = 'txt' if @file.upload_file_name.end_with?('.txt', '.md') ||
+        @file.upload_content_type == 'text/plain'
 
-      @preview = @preview.encode('UTF-8', invalid: :replace, undef: :replace, replace: '?') # replace bad chars
-      @preview = @preview.split(/[\r\n|]+/).map(&:strip)[0..5].join("\n") # only 5 lines, please
+      if %w[csv txt].include?(@file_type)
+        @preview = @file.text_preview
+        @sep = SniffColSeparator.find(@file.sniff_file) if @file_type == 'csv'
+      else
+        @preview = true
+      end
     end
 
     private

@@ -85,6 +85,63 @@
     border-top: none;
     padding: 1ch;
   }
+
+  .file_preview {
+    border: thick solid $lightest-blue;
+    max-width: 100%;
+    min-height: 250px;
+    max-height: 450px;
+    overflow: auto;
+    font-size: .98rem;
+
+    @media (max-width: $screen-sm-min) {
+      max-height: 80vh;
+    }
+
+    &.preview_img {
+      text-align: center;
+      height: auto;
+      max-height: none;
+      img {
+        margin: 0 auto;
+        vertical-align: middle;
+        max-width: 100%;
+      }
+    }
+    &.preview_txt {
+      pre {
+        font-size: .85rem;
+        margin: 1ch;
+      }
+    }
+    &.preview_csv {
+      table {
+        min-width: 100%;
+      }
+    }
+  }
+  #preview_file_name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    position: sticky;
+    left: 0; right: 0; top: 0;
+    margin: 0;
+    padding: .75ch .5ch;
+    background-color: $lightest-blue;
+    span {
+      max-width: calc(100% - 20px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-right: 1ch;
+    }
+    button {
+      font-size: 1.4rem;
+      width: 20px;
+    }
+  }
 }
 
 .t-landing__pdftable {

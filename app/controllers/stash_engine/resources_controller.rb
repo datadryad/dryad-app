@@ -1,5 +1,6 @@
 module StashEngine
   class ResourcesController < ApplicationController
+    include StashEngine::LandingHelper
 
     before_action :require_login
     before_action :require_modify_permission, except: %i[index new]
@@ -120,8 +121,19 @@ module StashEngine
     # Submission of the resource to the repository
     def submission; end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
     def prepare_readme
       @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, @resource.resource_type.resource_type, current_tenant)
+      @file_list = @resource.data_files.map do |f|
+        h = { name: f.upload_file_name }
+        if f.upload_file_name.end_with?('.csv', '.tsv', '.xlsx', '.xls', '.rdata', '.rda', '.mat', '.txt')
+          h[:variables] = []
+          if f.previewable? && (sep = SniffColSeparator.find(f.sniff_file))
+            h[:variables] = f.sniff_file.lines.first.chomp.split(sep).map { |c| c.delete_prefix('"').delete_suffix('"') }
+          end
+        end
+        h
+      end
       if @metadata_entry&.technical_info.try(:description) && !@metadata_entry&.technical_info.try(:description).empty?
         @file_content = nil
       else
@@ -140,6 +152,7 @@ module StashEngine
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
     # Upload files view for resource
     def upload
