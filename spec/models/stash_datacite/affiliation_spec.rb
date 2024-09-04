@@ -42,10 +42,6 @@ module StashDatacite
         affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group')
         expect(affil.smart_name).to eq('Bertelsmann Music Group')
       end
-      it 'shows the asterisk when asked' do
-        affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group*')
-        expect(affil.smart_name(show_asterisk: true)).to eq('Bertelsmann Music Group*')
-      end
       it 'suppresses the asterisk by default' do
         affil = StashDatacite::Affiliation.create(long_name: 'Bertelsmann Music Group*')
         expect(affil.smart_name).to eq('Bertelsmann Music Group')
@@ -83,12 +79,6 @@ module StashDatacite
         affil = StashDatacite::Affiliation.create(long_name: 'Test Affiliation', ror_id: '123')
         expect(StashDatacite::Affiliation).not_to receive(:find_by_ror_long_name)
         expect(StashDatacite::Affiliation.from_long_name(long_name: 'test affiliation')).to eql(affil)
-      end
-
-      it 'does a ROR lookup if the caller requests' do
-        expect(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).with(long_name: 'test affiliation')
-        test_affil = StashDatacite::Affiliation.from_long_name(long_name: 'test affiliation', check_ror: true)
-        expect(test_affil.long_name).to eql('test affiliation*')
       end
 
     end

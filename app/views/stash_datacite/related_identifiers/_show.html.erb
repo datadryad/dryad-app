@@ -4,12 +4,12 @@
 	    <% related_identifiers.each do |r| %>
 	    <% highlights = highlight_fields.detect {|h| h[:id] == r.related_identifier} %>
 		<% if r.work_type == 'undefined' %>
-		    <% bad_asterisk = ( (current_user&.min_app_admin? && !r.verified?) ? ' *' : '') %>
+		    <% unverified = ( (current_user&.min_app_admin? && !r.verified?) ? '<i class="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link"></i>'.html_safe : '') %>
 		    <li><span class="<%= 'highlight' if highlights&.key?(:type) %>">This dataset <%= r.relation_name_english %></span>
 			<span class="<%= 'highlight' if highlights&.key?(:id) %>"><%= display_id(type: r.related_identifier_type,
-				       my_id: r.related_identifier) %><%= bad_asterisk %></span></li>
+				       my_id: r.related_identifier) %><%= unverified %></span></li>
 		<% else %>
-		    <li><span class="<%= 'highlight' if highlights&.key?(:type) %>"><%= r.work_type_friendly %></span>:  <%= link_to "#{r.related_identifier}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, r.related_identifier, class: highlights&.key?(:id) ? 'highlight' : '', target: "_blank" %><%= bad_asterisk %>
+		    <li><span class="<%= 'highlight' if highlights&.key?(:type) %>"><%= r.work_type_friendly %></span>:  <%= link_to "#{r.related_identifier}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, r.related_identifier, class: highlights&.key?(:id) ? 'highlight' : '', target: "_blank" %><%= unverified %>
 		    	<% if r.work_type == 'primary_article' && journal.present? %>
 		    	 (<%= journal.title %>)
 		    	<% end %>

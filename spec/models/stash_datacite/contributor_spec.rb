@@ -81,10 +81,6 @@ module StashDatacite
     end
 
     describe 'contributor_name_friendly' do
-      it 'shows the asterisk when asked' do
-        c = create(:contributor, contributor_name: 'Bertelsmann Music Group*')
-        expect(c.contributor_name_friendly(show_asterisk: true)).to eq('Bertelsmann Music Group*')
-      end
       it 'suppresses the asterisk by default' do
         c = create(:contributor, contributor_name: 'Bertelsmann Music Group*')
         expect(c.contributor_name_friendly).to eq('Bertelsmann Music Group')

@@ -18,4 +18,8 @@ progress {
   &::-webkit-progress-value {
     background-color: $dark-blue;
   }
+  &#dl_progressbar {
+    width: 100%;
+    height: 1.5em;
+  }
 }

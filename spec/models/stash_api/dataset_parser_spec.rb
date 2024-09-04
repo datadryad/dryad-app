@@ -85,8 +85,7 @@ module StashApi
         expect(author.author_last_name).to eq(@basic_metadata[:authors].first['lastName'])
         expect(author.author_email).to eq(@basic_metadata[:authors].first['email'])
         expect(author.author_orcid).to eq(@basic_metadata[:authors].first['orcid'])
-        # Since default affiliation doesn't match ROR, it should have an asterisk appended
-        expect(author.affiliation.long_name).to eq("#{@basic_metadata[:authors].first['affiliation']}*")
+        expect(author.affiliation.long_name).to eq(@basic_metadata[:authors].first['affiliation'])
       end
 
       it 'allows bad (not blank, but invalid) emails' do

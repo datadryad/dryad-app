@@ -10,9 +10,9 @@
       <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
       <% @desc_string = ", <span #{'class="highlight"' if highlights&.key?(:desc)}>#{contributor.award_description}</span>".html_safe %>
       <% @award_string = ": <span #{'class="highlight"' if highlights&.key?(:award)}>#{contributor.award_number}</span>".html_safe %>
-      <% if current_user && current_user.min_app_admin? %>
+      <% if current_user&.min_app_admin? %>
   	  <li>
-  	    <span <%= 'class="highlight"' if highlights&.key?(:name) %>><%= contributor.contributor_name_friendly(show_asterisk: true) %></span><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
+  	    <span <%= 'class="highlight"' if highlights&.key?(:name) %>><%= contributor.contributor_name_friendly%><%unless contributor.name_identifier_id.present? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched funder" title="Unmatched funder"></i><%end%></span><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
   	  </li>
       <% else %>
   	  <li>

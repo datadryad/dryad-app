@@ -18,7 +18,7 @@
     <% if highlight_fields.intersect?(['journal', 'manuscript'])%>
       <% prev = @resource.previous_curated_resource&.resource_publication %>
       <% curr = @resource&.resource_publication %>
-      <p><b>Journal:</b> <%if prev&.publication_name != curr&.publication_name %><del><%= prev&.publication_name %></del> <%end%><span<%if prev&.publication_name != curr&.publication_name %> class="highlight"<%end%>><%= curr&.publication_name %></span>
+      <p><b>Journal:</b> <%if prev&.publication_name != curr&.publication_name %><del><%= prev&.publication_name %></del> <%end%><span<%if prev&.publication_name != curr&.publication_name %> class="highlight"<%end%>><%= curr&.publication_name %><% unless @resource.journal %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched journal" title="Unmatched journal"></i><%end%></span>
         <b style="margin-left: 2ch">Manuscript:</b> <%if prev&.manuscript_number != curr&.manuscript_number %><del><%= prev&.manuscript_number %></del> <%end%><span<%if prev&.manuscript_number != curr&.manuscript_number %> class="highlight"<%end%>><%= curr&.manuscript_number %></span>
       </p>
     <% end %>
