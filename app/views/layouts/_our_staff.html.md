@@ -76,14 +76,14 @@
 <div class="bio">
   <img src="/images/laura.jpg" alt="Headshot of Laura Bowman">
   <h5>Laura Bowman</h5><br/>
-  <p><em>Senior Data Curator</em><br/>
+  <p><em>Senior Data Curator II</em><br/>
   Laura has a B.S. and M.S. in Accounting from Penn State and worked as a public accountant for several years before transitioning to librarianship. She holds an MLIS from the University of Pittsburgh and has worked in academic and public librarianship, but found her niche in data librarianship. Laura is an avid reader, loves taking walks and exploring new places, and playing with her two cats.
   </p>
 </div>
 <div class="bio">
   <img src="/images/mollyhirst.jpg" alt="Headshot of Molly Hirst">
   <h5>Molly Hirst</h5><br/>
-  <p><em>Data Curator</em><br/>
+  <p><em>Senior Data Curator I</em><br/>
   Molly holds a Ph.D. in Ecology and Evolutionary Biology from the University of Michigan, where she studied genomics and sperm biology in hybridizing Platyrrhine primates. She gained extensive experience and a passion for curation as a graduate student curatorial assistant for nearly all UM Museum of Zoology and Herbarium divisions. Molly can be found cuddling her cats, reading, traveling the world as a naturalist, gardening, ice skating, and spoiling her nephew.
   </p>
 </div>
