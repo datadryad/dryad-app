@@ -1,6 +1,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Have to include this because the v3_development env name is elaborate and unexpected
+  config.web_console.development_only = false
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 

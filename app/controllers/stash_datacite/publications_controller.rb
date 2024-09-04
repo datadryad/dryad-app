@@ -61,19 +61,22 @@ module StashDatacite
     def save_publications
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
+      @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
       if @pub_issn.blank?
         exact_matches = StashEngine::Journal.find_by(title: @pub_name)
         @pub_issn = exact_matches.single_issn if exact_matches.present?
       end
       fix_removable_asterisk
-      publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
-      publication.publication_name = @pub_name
-      publication.publication_issn = @pub_issn
-      if params[:msid].present?
-        @msid = parse_msid(issn: params[:publication_issn], msid: params[:msid])
+      begin
+        publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
+        publication.publication_name = @pub_name
+        publication.publication_issn = @pub_issn
         publication.manuscript_number = @msid
+        publication.save
+      rescue ActiveRecord::RecordNotUnique
+        publication = StashEngine::ResourcePublication.find_by(resource_id: @resource.id)
+        publication.update(publication_name: @pub_name, publication_issn: @pub_issn, manuscript_number: @msid)
       end
-      publication.save
       @resource.reload
 
       if @resource.identifier.allow_review? && @resource.identifier.date_last_curated.blank? && @resource.journal&.default_to_ppr?

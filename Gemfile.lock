@@ -621,7 +621,7 @@ GEM
       hashie (>= 1.2.0, < 6.0)
       jwt (>= 1.5.6)
     retriable (3.1.2)
-    rexml (3.3.3)
+    rexml (3.3.6)
       strscan
     rgeo (3.0.0)
     rgeo-geojson (2.1.1)
