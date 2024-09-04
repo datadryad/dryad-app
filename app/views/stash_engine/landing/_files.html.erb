@@ -15,7 +15,7 @@
   <% if resources.count.positive? %>      
     <!-- list individual files -->
     <% resources.each do |res| %>
-      <details class="c-file-group" role="group">
+      <details class="c-file-group" role="group"<%if res.id === resources.last.id && (res.current_file_uploads.count < 10 || res.total_file_size > APP_CONFIG.maximums.zip_size) %>open<%end%>>
         <summary role="button" class="o-showhide__summary c-file-group__summary">
           <span><%= formatted_date(res.publication_date.present? && res.publication_date < Time.now.utc ? res.publication_date : res.updated_at) %> version files</span>
           <span><%= filesize(res.total_file_size) %></span>
@@ -23,17 +23,18 @@
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
             <li>
+              <span>
               <%= link_to "<i class=\"fas fa-download\" aria-hidden=\"true\"></i>#{fu.upload_file_name.ellipsisize(200)}".html_safe, Rails.application.routes.url_helpers.download_stream_path(fu.id),
                         title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
-              <span><%= filesize(fu.upload_file_size) %>
               <% if fu.upload_file_name.ends_with?('csv') %>
-                <%= button_to preview_csv_path(fu.id), remote: true, class: 'c-file-group__preview',
+                <%= button_to preview_csv_path(fu.id), remote: true, class: 'o-button__plain-text7',
                       title: "Preview #{fu.upload_file_name}", 'aria-label': "Preview #{fu.upload_file_name}",
                       method: 'get' do %>
-                  <i class="fa fa-search-plus c-file-group__preview" aria-hidden="true"></i>
+                  <i class="fa fa-eye c-file-group__preview" aria-hidden="true"></i>Preview
                 <% end %>
               <% end %>
               </span>
+              <%= filesize(fu.upload_file_size) %>
             </li>
           <% end %>
         </ul>

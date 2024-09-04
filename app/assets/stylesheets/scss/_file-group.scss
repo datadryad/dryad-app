@@ -1,7 +1,7 @@
 // ##### File Group Component ##### //
 
 .c-file-group {
-  margin-bottom: $spacing-base;
+  margin-bottom: .75rem;
 
   &[open] .c-file-group__summary {
 
@@ -72,32 +72,34 @@
 
   li {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: .5ch;
     margin: 0;
     padding: 6px;
-
-    * {
-      max-width: 100%;
-    }
-
-    a i {
-      margin-right: .5ch;
-    }
 
     &:nth-child(odd) {
       background-color: #f6f6f6;
     }
 
-    form {
-      display: inline-block;
+    * {
+      max-width: 100%;
     }
 
-    .c-file-group__preview {
-      border: none;
-      background: none;
-      margin-left: .5ch;
+    span {
+      flex-basis: calc(100% - 100px);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1ch;
+    }
+
+    a i, button i {
+      margin-right: .5ch;
+    }    
+
+    form {
+      display: inline-block;
     }
   }
 }
