@@ -93,6 +93,9 @@
       <%= formatted_date(dataset.identifier.publication_date) %>
     </td>
   <% end %>
+  <% if @fields.include?('created_at') %>
+    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.created_at) %></td>
+  <% end %>
   <% if @fields.include?('queue_date') %>
     <td class="c-lined-table__digits">
       <%= formatted_datetime(dataset.identifier.process_date.submitted) %>
