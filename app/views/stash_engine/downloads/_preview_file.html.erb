@@ -23,7 +23,7 @@
       </tbody>
     </table>
   <% when 'txt' %>
-    <% if @file.upload_file_name.ends_with('.md') %>
+    <% if @file.upload_file_name.end_with?('.md') %>
       <div><%= markdown_render @preview %></div>
     <% else %>
       <pre><%= @preview %></pre>
