@@ -25,10 +25,11 @@ module StashEngine
       if params[:sort].present? || @search_string.present?
         order_string = 'relevance desc'
         if params[:sort].present?
-          order_list = %w[title author_string status total_file_size view_count curator_name
+          order_list = %w[title author_string status total_file_size view_count curator_name created_at
                           updated_at submit_date publication_date first_sub_date first_pub_date queue_date]
           order_string = helpers.sortable_table_order(whitelist: order_list)
           order_string = "stash_engine_curation_activities.#{order_string}" if @sort == 'updated_at'
+          order_string = "stash_engine_identifiers.#{order_string}" if @sort == 'created_at'
           order_string += ', relevance desc' if @search_string.present?
         end
         @datasets = @datasets.order(order_string)
@@ -43,6 +44,7 @@ module StashEngine
         end
         format.csv do
           headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_report.csv"
+          render stream: true
         end
       end
     end
@@ -113,11 +115,11 @@ module StashEngine
       @journal_limit = journal_limit || []
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def setup_search
       @sort = params[:sort]
       @search = params[:search].to_i
-      session[:admin_search_count] = nil if @page == 1
+      session[:admin_search_count] = nil if @page == 1 || params[:clear]
       session[:admin_search_filters] = nil if params[:clear]
       session[:admin_search_fields] = nil if params[:clear]
       session[:admin_search_string] = nil if params[:clear]
@@ -170,6 +172,7 @@ module StashEngine
       date_fields
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
+      @datasets = @datasets.select('stash_engine_identifiers.created_at') if @sort == 'created_at'
       return unless @search_string.present?
 
       search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
@@ -241,7 +244,7 @@ module StashEngine
         "stash_engine_identifiers.publication_date #{date_string(@filters[:first_pub_date])}"
       ) unless @filters[:first_pub_date].nil? || @filters[:first_pub_date].values.all?(&:blank?)
     end
-    # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength, Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
 
     def tenant_filter
       return unless @role_object.is_a?(StashEngine::Tenant) || @filters[:member].present?

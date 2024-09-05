@@ -72,20 +72,28 @@ class ComboboxAutocomplete {
         }
         break
       case 'ArrowDown':
-      case 'ArrowRight':
+        e.preventDefault()
         if (e.target.id === this.textbox.id) {
           if (this.list.hasAttribute('hidden')) this.open()
           this.list.firstChild.focus()
-          e.preventDefault()
         } else if (e.target.nextSibling) {
           e.target.nextSibling.focus()
+        }
+        break
+      case 'ArrowRight':
+        if (e.target.id !== this.textbox.id) {
           e.preventDefault()
+          if (e.target.nextSibling) {
+            e.target.nextSibling.focus()
+          }
         }
         break
       case 'ArrowUp':
-        if (e.target.id !== this.textbox.id && e.target.previousSibling) {
-          e.target.previousSibling.focus()
+        if (e.target.id !== this.textbox.id) {
           e.preventDefault()
+          if (e.target.previousSibling) {
+            e.target.previousSibling.focus()      
+          }
         }
         break
       case 'Home':

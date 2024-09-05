@@ -74,6 +74,11 @@
         <%= sortable_column_head sort_field: 'first_pub_date', title: 'First published', remote: true %>
       </th>
     <% end %>
+    <% if @fields.include?('created_at') %>
+      <th class="c-lined-table__sort <%= sort_display('created_at') %>">
+        <%= sortable_column_head sort_field: 'created_at', title: 'First created', remote: true %>
+      </th>
+    <% end %>
     <% if @fields.include?('queue_date') %>
       <th class="c-lined-table__sort <%= sort_display('queue_date') %>">
         <%= sortable_column_head sort_field: 'queue_date', title: 'First queued', remote: true %>
