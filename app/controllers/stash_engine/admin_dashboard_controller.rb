@@ -2,6 +2,7 @@ module StashEngine
   # rubocop:disable Metrics/ClassLength
   class AdminDashboardController < ApplicationController
     helper SortableTableHelper
+    helper AdminDashboardHelper
     before_action :require_admin
     protect_from_forgery except: :results
     before_action :setup_paging, only: %i[results]
@@ -35,16 +36,15 @@ module StashEngine
         @datasets = @datasets.order(order_string)
       end
 
-      @datasets = @datasets.page(@page).per(@page_size)
-
       respond_to do |format|
         format.js do
+          @datasets = @datasets.page(@page).per(@page_size)
           add_subqueries
           collect_properties
         end
         format.csv do
-          headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_report.csv"
-          render stream: true
+          helpers.csv_headers
+          self.response_body = helpers.csv_enumerator
         end
       end
     end
@@ -89,11 +89,6 @@ module StashEngine
     end
 
     def setup_paging
-      if request.format.csv?
-        @page = 1
-        @page_size = 10_000
-        return
-      end
       @page = params[:page] || 1
       @page_size = 10 if params[:page_size].blank? || params[:page_size].to_i == 0
       @page_size ||= params[:page_size].to_i
