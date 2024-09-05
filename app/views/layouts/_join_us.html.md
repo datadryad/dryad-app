@@ -68,15 +68,11 @@
 
 ### Institutions
 
-Our institutional member dues are tiered in relation to your institution’s anticipated research output. Contact us directly at <a href="mailto:dev@null?subject=Institutional+membership" class="emailr">gro.dayrdatad@spihsrentrap</a> for more information.
-
-### Consortia
-
-Dryad is pleased to offer fee structures for consortia. Contact us directly at <a class="emailr" href="mailto:dev@null?subject=Consortial+membership">gro.dayrdatad@spihsrentrap</a> for more information.
+Our institutional member dues are tiered in relation to your institution’s anticipated research output. Contact us directly at <a href="mailto:dev@null?subject=Institutional+membership" class="emailr">gro.dayrdatad@spihsrentrap</a> if you are interested in an institutional membership.
 
 ### Societies and publishers
 
-Individual journals, publishers of all kinds, and scholarly societies join the Dryad community through publisher membership. Publisher support for Dryad was foundational in our establishment and continues to be essential in allowing us to provide open data infrastructure and simple workflows for authors. Annual membership fees are determined by the size of the publisher’s journal portfolio.
+Individual journals, publishers of all kinds, and scholarly societies join the Dryad community through publisher membership. Publisher support for Dryad was foundational in our establishment and continues to be essential in allowing us to provide open data infrastructure and simple workflows for authors.
 
 Contact us at <a class="emailr" href="mailto:dev@null?subject=Publisher+membership">gro.dayrdatad@spihsrentrap</a> for more information.
 
