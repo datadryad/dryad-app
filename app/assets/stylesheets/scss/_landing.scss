@@ -74,13 +74,13 @@
 .data_files_section {
   margin-bottom: calc(#{$spacing-base} * 3.75);
 
-  h2 {
+  & > h2 {
     margin: 0 0;
     font-size: 1.35rem;
     padding: $spacing-base 1ch;
     background-color: $lightest-green;
   }
-  h2 + div {
+  & > h2 + div {
     border: thick solid $lightest-green;
     border-top: none;
     padding: 1ch;
@@ -112,6 +112,24 @@
       pre {
         font-size: .85rem;
         margin: 1ch;
+      }
+      .preview_markdown {
+        font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        padding: 1ch;
+        *:first-child {
+          margin-top: 0;
+        }
+        h1, h2, h3, h4, h5, h6 {
+          color: black;
+          font-weight: semi-bold;
+          margin-top: 1.1rem;
+          margin-bottom: 1rem;
+        }
+        h1 {font-size: 1.45rem}
+        h2 {font-size: 1.25rem}
+        h3 {font-size: 1.1rem}
+        h4 {font-size: 1.05rem }
+        h5, h6 {font-size: 1rem}
       }
     }
     &.preview_csv {

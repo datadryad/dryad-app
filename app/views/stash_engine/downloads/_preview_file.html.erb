@@ -24,7 +24,7 @@
     </table>
   <% when 'txt' %>
     <% if @file.upload_file_name.end_with?('.md') %>
-      <div><%= markdown_render @preview %></div>
+      <div class="preview_markdown"><%= markdown_render @preview %></div>
     <% else %>
       <pre><%= @preview %></pre>
     <% end %>
