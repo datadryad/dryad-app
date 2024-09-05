@@ -44,6 +44,7 @@ module StashEngine
         end
         format.csv do
           headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_report.csv"
+          render stream: true
         end
       end
     end
