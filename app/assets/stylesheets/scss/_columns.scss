@@ -29,6 +29,10 @@
   overflow-wrap: anywhere;
 
   @include bp(screen3) {
+    flex: 0 1 80ch;
+    padding-right: 4ch;
+  }
+  @media (min-width: $screen-lg-min + 200) {
     flex: 0 1 90ch;
     padding-right: 5ch;
   }
@@ -38,6 +42,10 @@
   margin: $spacing-sm 0 0;
 
   @include bp(screen3) {
+    margin: 0;
+    flex: 0 1 40ch;
+  }
+  @media (min-width: $screen-lg-min + 200) {
     margin: 0;
     flex: 0 1 35ch;
   }
