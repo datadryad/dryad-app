@@ -59,7 +59,7 @@ def lambda_handler(event, context):
 
     update(token=event["token"], status=lint_status, report=json.dumps({'report': report.to_dict()}), callback=event['callback_url'])
 
-    return report
+    return report.to_dict()
 
 # tries to upload it to our API
 def update(token, status, report, callback):
