@@ -209,8 +209,8 @@ Rails.application.routes.draw do
     match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
     get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
     get 'downloads/zenodo_file/:file_id', to: 'downloads#zenodo_file', as: 'download_zenodo'
-    get 'downloads/preview_check/:file_id', to: 'downloads#preview_check', as: 'preview_check'
-    get 'downloads/preview/:file_id', to: 'downloads#preview_file', as: 'preview_file'
+    get 'data_file/preview_check/:file_id', to: 'downloads#preview_check', as: 'preview_check'
+    get 'data_file/preview/:file_id', to: 'downloads#preview_file', as: 'preview_file'
     get 'share/:id', to: 'downloads#share', as: 'share'
     get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
 
