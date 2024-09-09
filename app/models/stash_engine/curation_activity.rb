@@ -279,13 +279,9 @@ module StashEngine
 
       case status
       when 'published', 'embargoed'
-        # These messages deliver_later because we don't want to slow down the curators, who
-        # would have to wait for the thread to finish in a deliver_now situation
-        StashEngine::UserMailer.status_change(resource, status).deliver_later
-        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_later
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
       when 'peer_review'
-        # These messages deliver_now because the status change to peer_review typically happens in the
-        # status_updater, and we don't want its thread to be killed before the message delivers
         StashEngine::UserMailer.status_change(resource, status).deliver_now
         StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now
       when 'submitted'
@@ -334,7 +330,7 @@ module StashEngine
             secret: SecureRandom.urlsafe_base64,
             invited_at: Time.new.utc
           )
-        ).deliver_later
+        ).deliver_now
       end
     end
 
