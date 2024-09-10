@@ -63,7 +63,9 @@ end
 # But don't return anything for /assets, which are just part of each page and should not be tracked.
 # Also, don't throttle AWS presign requests for upload chunks that will be sent to S3 for files
 Rack::Attack.throttle('all_requests_by_IP', limit: APP_CONFIG[:rate_limit][:all_requests], period: 1.minute) do |req|
-  req.ip unless req.path.start_with?('/assets') || req.path.match(%r{^/stash/[a-z]+_file/presign_upload/\d+})
+  req.ip unless req.path.start_with?('/assets') ||
+                req.path.match(%r{^/stash/[a-z]+_file/presign_upload/\d+}) ||
+                req.path.start_with?('/data_file/preview_check')
 end
 
 # File download throttling
