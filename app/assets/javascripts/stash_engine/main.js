@@ -251,23 +251,25 @@ function joelsReady(){
 
   function expandButtonMenu(e) {
     const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
+    const section = document.getElementById(e.currentTarget.getAttribute('aria-controls'))
     const baseURL = window.location.pathname + window.location.search
     if (closed) {
       const newHash = '#' + e.currentTarget.id
       history.replaceState('', '', baseURL + newHash);
       e.currentTarget.setAttribute('aria-expanded', 'true');
-      e.currentTarget.nextElementSibling.removeAttribute('hidden');
+      section.removeAttribute('hidden');
     } else {
       history.replaceState('', '', baseURL);
       e.currentTarget.setAttribute('aria-expanded', 'false');
-      e.currentTarget.nextElementSibling.setAttribute('hidden', true);
+      section.setAttribute('hidden', true);
     }
   }
   var expandButtons = Array.from(document.getElementsByClassName('expand-button'));
   expandButtons.forEach(button => {
     button.addEventListener('click', expandButtonMenu)
     button.addEventListener('keydown', (e) => {
-      if (event.key === ' ' || event.key === 'Enter') {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault()
         expandButtonMenu(e)
       }
     });
@@ -277,7 +279,8 @@ function joelsReady(){
     const hashed = document.getElementById(window.location.hash.substring(1))
     if (hashed.getAttribute('aria-expanded') === 'false') {
       hashed.setAttribute('aria-expanded', 'true');
-      hashed.nextElementSibling.removeAttribute('hidden');
+      const section = document.getElementById(hashed.getAttribute('aria-controls'))
+      section.removeAttribute('hidden');
     }
   }
 
