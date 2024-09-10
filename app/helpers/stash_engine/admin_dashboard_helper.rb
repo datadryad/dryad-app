@@ -26,6 +26,7 @@ module StashEngine
       head << 'First submitted' if @fields.include?('first_sub_date')
       head << 'Published' if @fields.include?('publication_date')
       head << 'First published' if @fields.include?('first_pub_date')
+      head << 'First created' if @fields.include?('created_at')
       head << 'First queued' if @fields.include?('queue_date')
       head.to_csv(row_sep: "\r\n")
     end
