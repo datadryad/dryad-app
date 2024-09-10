@@ -168,15 +168,12 @@ export default function ReadMe({
         <div style={{height: '100%'}}>
           <div style={{maxWidth: '90ch'}}>
             <p style={{marginTop: 0}}>
-              Your Dryad submission must be accompanied by a README file, to help others use and understand your
+              Your Dryad submission must be accompanied by a{' '}
+              <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
+                README file<span className="screen-reader-only"> (opens in new window)</span>
+              </a>, to help others use and understand your
               dataset. It should contain the details needed to interpret and reuse your data, including abbreviations
               and codes, file descriptions, and information about any necessary software.
-            </p>
-            <p style={{textAlign: 'center'}}>
-              <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
-                <i className="far fa-file-lines" aria-hidden="true" style={{marginRight: '.5ch'}} />Learn about README files
-                <span className="screen-reader-only"> (opens in new window)</span>
-              </a>
             </p>
           </div>
           <div className="readme-columns">
@@ -194,6 +191,37 @@ export default function ReadMe({
               <p>If you already have a README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a> for your dataset, you can import it here. </p>
               <ReadMeImport setValue={setReplaceValue} />
             </div>
+          </div>
+          <div style={{maxWidth: '90ch', marginBottom: '2rem'}}>
+            <h2>Need an example?</h2>
+            <p>Here are some outstanding READMEs from Dryad submissions, which show the following:</p>
+            <ul className="readme-examples" style={{paddingLeft: '2ch'}}>
+              <li>
+                <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.h70rxwdq5#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+                  Chromatographic and mass spectrometric analysis data<span className="screen-reader-only"> (opens in new window)</span>
+                </a>
+              </li>
+              <li>
+                <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.rr4xgxdg6#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+                MATLAB files<span className="screen-reader-only"> (opens in new window)</span>
+                </a>
+              </li>
+              <li>
+                <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.nzs7h44xg#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+                Genomic data<span className="screen-reader-only"> (opens in new window)</span>
+                </a>
+              </li>
+              <li>
+                <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.jdfn2z3j3#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+                Neural network deep learning code<span className="screen-reader-only"> (opens in new window)</span>
+                </a>
+              </li>
+              <li>
+                <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.18931zd25#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+                Genomic VCF and companion scripts<span className="screen-reader-only"> (opens in new window)</span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       );
