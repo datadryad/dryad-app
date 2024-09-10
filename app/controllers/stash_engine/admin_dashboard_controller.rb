@@ -177,9 +177,9 @@ module StashEngine
 
     def author_field
       @datasets = @datasets.select("(
-        select GROUP_CONCAT(CONCAT_WS(', ', sea.author_last_name, sea.author_first_name) ORDER BY sea.author_order, sea.id separator '; ')
-          from (select sa.author_last_name, sa.author_first_name, sa.author_order, sa.id
-          from stash_engine_authors sa where sa.resource_id = stash_engine_resources.id limit 6) sea
+        select GROUP_CONCAT(CONCAT_WS(', ', sea.author_last_name, sea.author_first_name) separator '; ')
+          from (select sa.author_last_name, sa.author_first_name
+          from stash_engine_authors sa where sa.resource_id = stash_engine_resources.id ORDER BY sa.author_order, sa.id LIMIT 6) sea
         ) as author_string")
     end
 
