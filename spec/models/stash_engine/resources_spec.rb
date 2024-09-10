@@ -286,11 +286,11 @@ module StashEngine
         expect(resource.publication_date).to be_nil
       end
 
-      it 'is copied by amoeba duplication' do
+      it 'is not copied by amoeba duplication' do
         pub_date = Time.new(2015, 5, 18, 13, 25, 30)
         r1 = create(:resource, user_id: user.id, publication_date: pub_date)
         r2 = r1.amoeba_dup
-        expect(r2.publication_date).to eq(pub_date)
+        expect(r2.publication_date).to be_nil
       end
     end
 

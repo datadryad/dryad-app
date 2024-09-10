@@ -135,5 +135,25 @@ RSpec.describe 'Rack::Attack', type: :request do
       end
     end
 
+    # honeypot for bad robots
+    it 'blocks access for 1 month to whole site after 1 requests' do
+      freeze_time do
+        get pots_url, headers: headers
+        expect(response).to have_http_status(:success)
+
+        get pots_url, headers: headers
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      travel_to(25.days.from_now) do
+        get pots_url, headers: headers
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      travel_to(35.days.from_now) do
+        get pots_url, headers: headers
+        expect(response).to have_http_status(:success)
+      end
+    end
   end
 end

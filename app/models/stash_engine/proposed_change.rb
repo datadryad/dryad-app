@@ -105,7 +105,7 @@ module StashEngine
         status: 'submitted',
         note: "#{provenance.capitalize} #{CROSSREF_PUBLISHED_MESSAGE}"
       )
-      StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_later
+      StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
     end
 
     def add_metadata_updated_curation_note(provenance, resource, type)

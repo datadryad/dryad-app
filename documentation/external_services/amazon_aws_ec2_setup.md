@@ -325,3 +325,59 @@ Load balancer intermittently reports server as unhealthy
   `config/blacklight.yml` -- Note that receiving an error is fine, since this
   is only the base URL. If the call hangs, there is likely a problem with the
   SOLR server's security group not letting the Rails server connect.
+
+Set up AWS CloudWatch Agent
+======================================
+
+AWS CloudWatch Agent is installed on all servers and is serving metrics related to disk usage.
+```
+sudo yum install amazon-cloudwatch-agent
+cd /opt/aws/amazon-cloudwatch-agent/
+sudo vim etc/amazon-cloudwatch-agent.d/file_amazon-cloudwatch-agent.json
+```
+The content of configuration file is:
+```
+{
+  "agent": {
+    "metrics_collection_interval": 60,
+    "run_as_user": "cwagent"
+  },
+  "metrics": {
+    "append_dimensions": {
+      "AutoScalingGroupName": "${aws:AutoScalingGroupName}",
+      "InstanceId": "${aws:InstanceId}",
+      "InstanceType": "${aws:InstanceType}"
+    },
+    "aggregation_dimensions" : [["InstanceId"]],
+    "metrics_collected": {
+      "mem": {
+        "measurement": [
+          "mem_used_percent"
+        ]
+      },
+      "disk": {
+        "measurement": [
+          "disk_used_percent"
+        ],
+        "resources": [
+          "*"
+        ]
+      }
+    }
+  }
+}
+```
+
+Change ownership to files. The service will run as `cwagent` user.
+```
+sudo chown cwagent:cwagent -R etc
+sudo chown cwagent:cwagent -R logs
+sudo chown cwagent:cwagent -R var
+
+sudo systemctl restart amazon-cloudwatch-agent
+```
+
+For verification, there should be no errors:
+```
+tail -f logs/amazon-cloudwatch-agent.log 
+```
