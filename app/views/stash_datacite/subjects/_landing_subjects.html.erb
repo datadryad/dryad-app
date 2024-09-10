@@ -1,4 +1,4 @@
-<ul class="o-list">
+<ul>
 <% @resource.subjects.order(subject_scheme: :desc, subject: :asc).each do |s| %>
   <li><%= link_to s.subject, subject_facet(s.subject), class: 'o-link__primary' %></li>
 <% end %>

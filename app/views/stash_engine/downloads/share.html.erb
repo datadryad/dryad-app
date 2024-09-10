@@ -10,7 +10,7 @@
   <div id="withzip">
     <%= form_with url: "/stash/downloadZip/#{"doi_#{@resource.identifier_value}__v#{minimal_date(@resource.publication_date.present? && @resource.publication_date < Time.now.utc ? @resource.publication_date : @resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
         <div id="file_downloads"></div>
-        <button type="button" class="o-download__files js-download" id="download_zip_button" style="max-width: 250px"><span id="download_icon"></span>Download full dataset</button>
+        <button type="button" class="o-download__files js-download" id="download_zip_button"><span id="download_icon"></span>Download full dataset</button>
     <% end %>
     <p>Click the button above to start the download.</p>
   </div>
@@ -25,15 +25,7 @@
         <li>
           <%= link_to fu.upload_file_name, Rails.application.routes.url_helpers.download_stream_path(fu.id, share: params[:id]),
                     title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
-          <span><%= filesize(fu.upload_file_size) %>
-          <% if fu.upload_file_name.ends_with?('csv') %>
-            <%= button_to preview_csv_path(fu.id), remote: true, class: 'c-file-group__preview',
-                  title: "Preview #{fu.upload_file_name}", 'aria-label': "Preview #{fu.upload_file_name}",
-                  method: 'get' do %>
-              <i class="fa fa-search-plus c-file-group__preview" aria-hidden="true"></i>
-            <% end %>
-          <% end %>
-          </span>
+          <span><%= filesize(fu.upload_file_size) %></span>
         </li>
       <% end %>
     </ul>

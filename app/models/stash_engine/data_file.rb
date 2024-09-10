@@ -202,9 +202,33 @@ module StashEngine
       s3_permanent_presigned_url
     end
 
-    # gets the S3 presigned and loads in only the first few kilobytes of the file rather than all of it and returns
-    # the bytes
-    def preview_file
+    # check if file may be previewed
+    def previewable?
+      return false if upload_file_name == 'README.md'
+
+      # Plain text and CSV
+      if upload_file_name.end_with?('.csv', '.tsv', '.txt', '.md') ||
+        ['text/plain', 'text/csv', 'text/tab-separated-values'].include?(upload_content_type)
+        return true if sniff_file(512)
+
+        return false
+      end
+
+      # Images < 5MB
+      return false if upload_file_size > 5 * 1024 * 1024
+
+      if upload_file_name.end_with?('.png', '.gif', '.jpg', '.jpeg') ||
+        ['image/png', 'image/gif', 'image/jpeg'].include?(upload_content_type)
+        return false unless (number = sniff_file(4, encode: false))
+        return true if number[0, 4] == "\x89PNG".b || number[0, 4] == 'GIF8'.b || number[0, 2] == "\xFF\xD8".b
+      end
+      return true if upload_file_name.end_with?('svg') || ['image/svg+xml'].include?(upload_content_type)
+
+      false
+    end
+
+    # for testing CSV delimiters & file validity
+    def sniff_file(bytes = 2048, encode: true)
       # get the presigned URL
       s3_url = nil
       begin
@@ -213,40 +237,36 @@ module StashEngine
         logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
 
-      return nil if s3_url.nil?
-
-      # now try to get actual file by range and return it
       begin
-        resp = HTTP.timeout(connect: 10, read: 10).timeout(10).headers('Range' => 'bytes=0-2048').get(s3_url)
+        resp = HTTP.timeout(connect: 10, read: 10).timeout(10).headers('Range' => "bytes=0-#{bytes}").get(s3_url)
         return nil if resp.code > 299
 
         str = resp.to_s
-        str = str.force_encoding(str.encoding).encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '')
-        return nil unless str.encoding == Encoding::UTF_8
+        if encode
+          str = str.force_encoding(str.encoding).encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '')
+          return nil unless str.encoding == Encoding::UTF_8
+        end
 
         return str
       rescue HTTP::Error
-        logger.info("Couldn't get S3 request for preview range for #{inspect}")
+        logger.info("Couldn't get S3 request for #{inspect}")
       end
       nil
     end
 
-    # gets the S3 presigned and loads the content (for READMEs)
+    # gets the S3 presigned URL and loads in only the first 5KB of the text file
+    def text_preview
+      sniff_file(1024 * 5)
+    end
+
+    # gets the S3 presigned URL and loads the content
     def file_content
       # get the presigned URL
       s3_url = nil
-      if file_state == 'copied' && last_version_file
-        begin
-          s3_url = last_version_file.s3_permanent_presigned_url || nil
-        rescue HTTP::Error, Stash::Download::S3CustomError => e
-          logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
-        end
-      else
-        begin
-          s3_url = s3_staged_presigned_url
-        rescue HTTP::Error, Stash::Download::S3CustomError => e
-          logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
-        end
+      begin
+        s3_url = digest.present? ? s3_permanent_presigned_url : s3_staged_presigned_url
+      rescue HTTP::Error, Stash::Download::S3CustomError => e
+        logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
       end
 
       return nil if s3_url.nil?

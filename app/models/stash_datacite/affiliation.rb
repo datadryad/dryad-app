@@ -31,11 +31,11 @@ module StashDatacite
     before_save :strip_whitespace
 
     # prefer short_name if it is set over long name and make string
-    def smart_name(show_asterisk: false)
+    def smart_name
       return '' if short_name.blank? && long_name.blank?
 
       chosen_name = (short_name.blank? ? long_name.strip : short_name.strip)
-      if chosen_name&.end_with?('*') && !show_asterisk
+      if chosen_name&.end_with?('*')
         chosen_name[0..-2]
       else
         chosen_name
@@ -62,7 +62,7 @@ module StashDatacite
     # Get an affiliation by long_name.
     # Our first preference is to reuse an existing affiliation from our DB.
     # Otherwise, if check_ror is true, search for a name match in ROR.
-    # As a last resort, create a new affiliation with an asterisk on the name, so we know it has not been validated.
+    # As a last resort, create a new affiliation without a ror ID.
     def self.from_long_name(long_name:, check_ror: false)
       return nil if long_name.blank?
 
@@ -75,7 +75,7 @@ module StashDatacite
         return ror_affil if ror_affil.present?
       end
 
-      Affiliation.new(long_name: "#{long_name}*")
+      Affiliation.new(long_name: long_name)
     end
 
     # Get an affiliation by ror_id. We prefer to reuse an existing affiliation
