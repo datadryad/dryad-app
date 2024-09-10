@@ -9,7 +9,7 @@
 
 <% if params[:controller].include?('landing') %>
 <script type="text/javascript">
-  document.getElementById('expand-citation').addEventListener('click', (e) => {
+  const expandCitation = (e) => {
     const citation = document.getElementById('dataset-citation')
     if (citation.hasAttribute('hidden')) {
       e.target.setAttribute('aria-expanded', 'true')
@@ -19,6 +19,13 @@
     e.target.lastElementChild.classList.toggle('fa-caret-down')
     e.target.lastElementChild.classList.toggle('fa-caret-up')
     citation.toggleAttribute('hidden')
-  })
+  }
+  document.getElementById('expand-citation').addEventListener('click', expandCitation)
+  document.getElementById('expand-citation').addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault()
+      expandCitation(e)
+    }
+  });
 </script>
 <% end %>
