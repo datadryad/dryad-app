@@ -110,7 +110,7 @@ module StashEngine
       @journal_limit = journal_limit || []
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def setup_search
       @sort = params[:sort]
       @search = params[:search].to_i
@@ -142,28 +142,12 @@ module StashEngine
     end
 
     def add_fields
-      if @sort == 'view_count'
-        @datasets = @datasets.joins(
-          'left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id'
-        ).select('stats.unique_investigation_count as view_count')
-      end
+      view_field if @sort == 'view_count'
       if @filters[:status].present? || %w[status updated_at].include?(@sort) || @filters[:updated_at]&.values&.any?(&:present?)
         @datasets = @datasets.joins(:last_curation_activity)
       end
-      if current_user.min_app_admin? && (@fields.include?('curator') || @filters[:curator].present?)
-        @datasets = @datasets.joins("left outer join (
-            select stash_engine_users.* from stash_engine_users
-            inner join stash_engine_roles on stash_engine_users.id = stash_engine_roles.user_id
-              and role in ('curator', 'superuser')
-          ) curator on curator.id = stash_engine_resources.current_editor_id")
-          .select("CONCAT_WS(' ', curator.first_name, curator.last_name) as curator_name")
-      end
-      if @fields.include?('authors') || @sort == 'author_string'
-        @datasets = @datasets.select("(
-          select GROUP_CONCAT(CONCAT_WS(', ', sea.author_last_name, sea.author_first_name) ORDER BY sea.author_order, sea.id separator '; ')
-            from stash_engine_authors sea where sea.resource_id = stash_engine_resources.id limit 6
-          ) as author_string")
-      end
+      curator_field if current_user.min_app_admin? && (@fields.include?('curator') || @filters[:curator].present?)
+      author_field if @fields.include?('authors') || @sort == 'author_string'
       date_fields
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
@@ -174,6 +158,29 @@ module StashEngine
       @datasets = @datasets.select(
         "MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) as relevance"
       )
+    end
+
+    def view_field
+      @datasets = @datasets.joins(
+        'left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id'
+      ).select('stats.unique_investigation_count as view_count')
+    end
+
+    def curator_field
+      @datasets = @datasets.joins("left outer join (
+          select stash_engine_users.* from stash_engine_users
+          inner join stash_engine_roles on stash_engine_users.id = stash_engine_roles.user_id
+            and role in ('curator', 'superuser')
+        ) curator on curator.id = stash_engine_resources.current_editor_id")
+        .select("CONCAT_WS(' ', curator.first_name, curator.last_name) as curator_name")
+    end
+
+    def author_field
+      @datasets = @datasets.select("(
+        select GROUP_CONCAT(CONCAT_WS(', ', sea.author_last_name, sea.author_first_name) ORDER BY sea.author_order, sea.id separator '; ')
+          from (select sa.author_last_name, sa.author_first_name, sa.author_order, sa.id
+          from stash_engine_authors sa where sa.resource_id = stash_engine_resources.id limit 6) sea
+        ) as author_string")
     end
 
     def date_fields
@@ -239,7 +246,7 @@ module StashEngine
         "stash_engine_identifiers.publication_date #{date_string(@filters[:first_pub_date])}"
       ) unless @filters[:first_pub_date].nil? || @filters[:first_pub_date].values.all?(&:blank?)
     end
-    # rubocop:enable Metrics/MethodLength, Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
+    # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
 
     def tenant_filter
       return unless @role_object.is_a?(StashEngine::Tenant) || @filters[:member].present?
