@@ -44,7 +44,7 @@
   gap: 16px;
 
    // Blue, semi-transparent bar over banner image:
-  background-color: rgba(0, 85, 129, 0.6);
+  background-color: rgba($dark-blue, .85);
 
   @include bp(screen1) {
     font-size: 1.7em;
@@ -172,13 +172,19 @@
   margin-top: auto;
 
   @media (min-width: $screen-md-min) {
-    color: white;
+    &.light {
+      color: white;
+    }
     a:link, a:visited {
       color: currentColor;
     }
-
     a:hover, a:focus {
-      color: $light-green;
+      color: $medium-blue;
+    }
+    &.light {
+      a:hover, a:focus {
+        color: $light-green;
+      }
     }
   }
 
@@ -260,7 +266,7 @@
 .o-home-submit {
   flex: 1 0 0%; // 0% instead of 0 fixes ie bug
   padding: 10px;
-  background-color: $dark-blue;
+  background-color: $lighter-blue;
 
   @media (max-width: $screen-sm-min - 1) {
     padding: 20px 10px;

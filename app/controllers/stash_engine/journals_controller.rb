@@ -12,7 +12,7 @@ module StashEngine
       sponsoring_journals = StashEngine::Journal.where.not(payment_plan_type: [nil, '']).select(:id).map(&:id)
       display_journals = @metadata_journals | sponsoring_journals | @api_journals
 
-      ord = helpers.sortable_table_order(whitelist: %w[title issn allow_blackout payment_plan_type name parent_org_id sponsor_id default_to_ppr])
+      ord = helpers.sortable_table_order(whitelist: %w[title payment_plan_type sponsor_id parent_org_id default_to_ppr])
       @journals = Journal.left_outer_joins(:sponsor).where(id: display_journals).order(ord, title: :asc)
         .preload(:sponsor).preload(:issns)
 

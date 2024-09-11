@@ -119,18 +119,10 @@ h6 {
   &[aria-expanded=true]::after {
     content: " \f0d8";
   }
-}
 
-h3.expand-button {
   &:hover, &:focus-visible {
-    &::after {
-      color: $green;
-    }
-  }
-}
-
-h4.expand-button {
-  &:hover, &:focus-visible {
+    color: $link-body-hover-color;
+    
     &::after {
       color: $green;
     }

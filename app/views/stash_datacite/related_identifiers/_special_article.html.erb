@@ -1,19 +1,25 @@
 <% # takes locals of article_ids and item_label (singular version of item like Article or Primary article)  %>
 <% if article_ids.present? %>
-  <h3 class="o-heading__level3-related-works"><%= item_label.pluralize(article_ids.count) %></h3>
-  <ul class="o-list-related">
+<div>
+  <% if item_label == 'Primary article' && @resource.journal.present? %><div class="primary_article"><% end %>
+  <h3><%= item_label.pluralize(article_ids.count) %></h3>
+  <% if item_label == 'Primary article' && @resource.journal.present? %>
+    <span class="article_journal">From: <a href="/search?f%5Bdryad_related_publication_name_s%5D%5B%5D=<%= URI.encode_www_form_component(@resource.journal.title) %>"><%= @resource.journal.title %></a></span>
+    </div>
+  <% end %>
+  <ul>
     <% article_ids.each do |r| %>
-      <% bad_asterisk = ( (current_user&.min_app_admin? && !r.verified?) ? ' *' : '') %>
+      <% unverified = ( (current_user&.min_app_admin? && !r.verified?) ? '<i class="fas fa-ban unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link"></i>'.html_safe : '') %>
       <li>
         <% if r.work_type == 'undefined' %>
           This dataset <%= r.relation_name_english %>
           <%= display_id(type: r.related_identifier_type,
-                         my_id: r.related_identifier) %> <%= bad_asterisk %>
+                         my_id: r.related_identifier) %><%= unverified %>
         <% else %>
-          <%= link_to r.related_identifier.ellipsisize(40), r.related_identifier, class: 'o-link__primary', title: r.related_identifier, target: "_blank" %>
-          <%= bad_asterisk %><span class="screen-reader-only"> (opens in new window)</span>
+          <%= link_to "#{icon}#{r.related_identifier}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, r.related_identifier, title: "Go to #{item_label.downcase}", target: "_blank" %><%= unverified %>
         <% end %>
       </li>
     <% end %>
   </ul>
+</div>
 <% end %>
