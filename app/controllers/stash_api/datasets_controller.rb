@@ -36,7 +36,7 @@ module StashApi
       respond_to do |format|
         format.json do
           dp = DatasetParser.new(hash: params['dataset'], id: nil, user: @user)
-          render json: { error: 'A dataset with same information already exists.' }, status: :unprocessable_entity and return unless dp.is_resource_uniq?
+          render json: { error: 'A dataset with same information already exists.' }, status: :unprocessable_entity and return unless dp.resource_uniq?
 
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user, post: true) # sets up display objects

@@ -55,7 +55,7 @@ module StashApi
     end
     # rubocop:enable
 
-    def is_resource_uniq?
+    def resource_uniq?
       return true if @id
 
       query = StashEngine::Resource.joins(:user).where(
