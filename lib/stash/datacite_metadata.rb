@@ -63,7 +63,7 @@ module Stash
     end
 
     def resource_type
-      return ' [Preprint]' if ('posted-content', 'preprint').include?(raw_metadata['type'])
+      return ' [Preprint]' if %w[posted-content preprint].include?(raw_metadata['type'])
       return ' [Dataset]' if raw_metadata['type'] == 'dataset'
       return ' [Software]' if raw_metadata['type'] == 'software'
 
@@ -87,7 +87,7 @@ module Stash
 
       # html_safe when concatenated with other stuff makes non-html-safe escaped
       citation_array = []
-      citation_array << "#{author_names} #{year_published ? "(#{year_published})" : ''}"
+      citation_array << "#{author_names}#{year_published ? " (#{year_published})" : ''}"
       citation_array << "#{title.html_safe}#{resource_type}"
       citation_array << journal
       citation_array << publisher unless raw_metadata['type'].include?('journal')
