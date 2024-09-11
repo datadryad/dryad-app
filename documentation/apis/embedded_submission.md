@@ -58,6 +58,12 @@ summary of the deposit, including:
 - the DOI for the dataset (`identifier`)
 - a URL for making edits to the dataset (`editLink`)
 
+In case a dataset with the same API user, `title` and `manuscriptNumber` already exists,
+an error is returned.
+```json
+{"error": "A dataset with same information already exists."}
+```
+
 A sample call using the [sample dataset file](sample_dataset.json), with results abbreviated for readability:
 ```bash
 > curl --data "@sample_dataset.json" -i -X POST https://datadryad.org/api/v2/datasets -H "Authorization: Bearer <token>" -H "Content-Type: application/json"

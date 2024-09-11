@@ -55,6 +55,23 @@ module StashApi
     end
     # rubocop:enable
 
+    def is_resource_uniq?
+      return true if @id
+
+      query = StashEngine::Resource.joins(:user).where(
+        stash_engine_resources: { title: @hash[:title] },
+        stash_engine_users: { orcid: @user.orcid }
+      )
+
+      if @hash[:manuscriptNumber].present?
+        query = query.joins(:resource_publication).where(
+          stash_engine_resource_publications: { manuscript_number: @hash[:manuscriptNumber] }
+        )
+      end
+
+      !query.exists?
+    end
+
     private
 
     def remove_html(in_string)
