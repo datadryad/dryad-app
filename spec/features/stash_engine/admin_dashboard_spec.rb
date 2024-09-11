@@ -96,21 +96,26 @@ RSpec.feature 'AdminDashboard', type: :feature do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
         assert_selector('tbody tr', count: 10)
-        select('In progress', from: 'filter-status')
+        click_button('multiselect-status__input')
+        check 'status-in_progress'
         click_button('Apply')
         assert_selector('tbody tr', count: 2)
-        select('Submitted', from: 'filter-status')
-        click_button('Apply')
-        assert_selector('tbody tr', count: 1)
-        select('Curation', from: 'filter-status')
-        click_button('Apply')
-        assert_selector('tbody tr', count: 1)
-        select('Published', from: 'filter-status')
+        click_button('multiselect-status__input')
+        check 'status-submitted'
         click_button('Apply')
         assert_selector('tbody tr', count: 3)
-        select('Embargoed', from: 'filter-status')
+        click_button('multiselect-status__input')
+        check 'status-curation'
         click_button('Apply')
-        assert_selector('tbody tr', count: 3)
+        assert_selector('tbody tr', count: 4)
+        click_button('multiselect-status__input')
+        check 'status-published'
+        click_button('Apply')
+        assert_selector('tbody tr', count: 7)
+        click_button('multiselect-status__input')
+        check 'status-embargoed'
+        click_button('Apply')
+        assert_selector('tbody tr', count: 10)
       end
 
       it 'filters on submitted date', js: true do
@@ -191,7 +196,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_select('filter-member')
-        expect(page).to have_select('filter-status')
+        expect(page).to have_button('multiselect-status__input')
         expect(page).to have_select('filter-curator')
         expect(page).to have_field('searchselect-journal__input')
         expect(page).to have_select('filter-sponsor')

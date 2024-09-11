@@ -325,6 +325,7 @@
   }
 
   @include bp(screen3) {
+    background-color: white;
     @include c-header__nav-item;
 
     a:link, a:visited {

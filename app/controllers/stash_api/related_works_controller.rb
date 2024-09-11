@@ -58,7 +58,7 @@ module StashApi
       last_note = last_cur&.note || ''
       return if last_note.match(/Related .+ added with http.+ from the API/) && last_cur.created_at > 1.day.ago
 
-      StashEngine::UserMailer.related_work_updated(@resource).deliver_later
+      StashEngine::UserMailer.related_work_updated(@resource).deliver_now
     end
   end
 end

@@ -1,13 +1,12 @@
 // ##### File Group Component ##### //
 
 .c-file-group {
-
-  margin-bottom: 6px;
+  margin-bottom: .75rem;
 
   &[open] .c-file-group__summary {
 
     &::before {
-      content: '\f078';
+      content: '\f0d8';
     }
 
   }
@@ -21,16 +20,37 @@
   display: inline-flex;
   min-width: 100%;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
+  border-bottom: thin solid $green;
+  padding: 6px 0 3px;
 
   &::before {
     display: inline-block;
     font-family: 'Font Awesome 6 Free';
-    content: '\f054';
+    content: '\f0d7';
     font-weight: 900;
     color: currentColor;
     margin-right: .5ch;
+  }
+
+  &:focus {
+    outline: 0;
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    border-color: $medium-blue;
+    box-shadow: 0 4px 0px -0px $medium-blue;
+  }
+
+  &:hover, &:focus-visible  {
+    text-decoration: none;
+    color: $link-body-hover-color;
+
+    &::before {
+      color: $green;
+    }
   }
 
   span:first-of-type {
@@ -49,32 +69,37 @@
   font-size: .98rem;
   margin: 0;
   padding: 0;
-  margin-left: $spacing-base;
 
   li {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: .5ch;
     margin: 0;
-    padding: 4px 2px;
-
-    * {
-      max-width: 100%;
-    }
+    padding: 6px;
 
     &:nth-child(odd) {
       background-color: #f6f6f6;
     }
 
-    form {
-      display: inline-block;
+    * {
+      max-width: 100%;
     }
 
-    .c-file-group__preview {
-      border: none;
-      background: none;
-      margin-left: .5ch;
+    span {
+      flex-basis: calc(100% - 100px);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1ch;
+    }
+
+    a i, button i {
+      margin-right: .5ch;
+    }    
+
+    form {
+      display: inline-block;
     }
   }
 }

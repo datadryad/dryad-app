@@ -127,6 +127,7 @@ module StashEngine
                   # let init_version do its job
                   new_resource.current_resource_state_id = nil
                   # do not mark these resources for public view until they've been re-curated and embargoed/published again
+                  new_resource.publication_date = nil
                   new_resource.meta_view = false
                   new_resource.file_view = false
 

@@ -6,7 +6,7 @@ export default function OrcidInfo({
 }) {
   let orcidInfo = null;
   if (dryadAuthor.author_orcid) {
-    orcidInfo = (window.location.hostname.includes('datadryad.org')
+    orcidInfo = (window.location.hostname === 'datadryad.org'
       ? `https://orcid.org/${dryadAuthor.author_orcid}`
       : `https://sandbox.orcid.org/${dryadAuthor.author_orcid}`);
   }

@@ -16,7 +16,8 @@ Rack::Attack.safelist_ip('::1')
 # Rack::Attack.blocklist_ip("17.31.15.82")
 
 
-# Set a long block period for any client that is explicitly looking for security holes
+# Set a long block period for any client that is explicitly looking for security holes,
+# or crawling every link they can find with no regard to our servers
 Rack::Attack.blocklist('malicious_clients') do |req|
   Rack::Attack::Fail2Ban.filter("fail2ban_malicious_#{req.ip}", maxretry: 1, findtime: 1.day, bantime: 1.month) do
     CGI.unescape(req.query_string) =~ %r{/etc/passwd} ||
@@ -26,21 +27,26 @@ Rack::Attack.blocklist('malicious_clients') do |req|
       (req.ip.start_with?('172.31') && req.path.start_with?('/stash/downloads')) ||
       (req.ip.start_with?('64.233') && req.path.start_with?('/stash/downloads')) ||
       (req.ip.start_with?('47.76') && req.path.start_with?('/stash/downloads')) ||
+      (req.ip.start_with?('43.1') && req.path.start_with?('/search')) || 
       /\S+\.php/.match?(req.path)
   end
 end
 
-
+# Set a long block period for any client that access (honey)pot pages
+Rack::Attack.blocklist('allow2ban_honeypot') do |req|
+  Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 2, findtime: 1.day, bantime: 1.month) do
+    req.path.include?('/pots')
+  end
+end
 
 # Block repeated malicious content type checks
 # After 2 requests, block all requests from that IP for 1 day.
 Rack::Attack.blocklist('malicious_content_type') do |req|
   Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 2, findtime: 1.day, bantime: 1.day) do
-    (req.env["HTTP_ACCEPT"].present? && req.env["HTTP_ACCEPT"].include?('$')) || 
+    (req.env["HTTP_ACCEPT"].present? && req.env["HTTP_ACCEPT"].include?('$')) ||
     (req.content_type.present? && req.content_type.include?('$'))
   end
 end
-
 
 # Throttling
 # -------------------
@@ -57,7 +63,9 @@ end
 # But don't return anything for /assets, which are just part of each page and should not be tracked.
 # Also, don't throttle AWS presign requests for upload chunks that will be sent to S3 for files
 Rack::Attack.throttle('all_requests_by_IP', limit: APP_CONFIG[:rate_limit][:all_requests], period: 1.minute) do |req|
-  req.ip unless req.path.start_with?('/assets') || req.path.match(%r{^/stash/[a-z]+_file/presign_upload/\d+})
+  req.ip unless req.path.start_with?('/assets') ||
+                req.path.match(%r{^/stash/[a-z]+_file/presign_upload/\d+}) ||
+                req.path.start_with?('/stash/data_file/preview_check')
 end
 
 # File download throttling
