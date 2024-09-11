@@ -215,7 +215,7 @@ module StashEngine
       end
 
       # Images < 5MB
-      return false if upload_file_size > 5 * 1024 * 1024
+      return false if upload_file_size && upload_file_size > 5 * 1024 * 1024
 
       if upload_file_name.end_with?('.png', '.gif', '.jpg', '.jpeg') ||
         ['image/png', 'image/gif', 'image/jpeg'].include?(upload_content_type)
