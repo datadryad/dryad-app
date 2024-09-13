@@ -87,7 +87,7 @@ Rails.application.configure do
       :email => {
           # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
           :email_prefix => "[Dash Exception]",
-          :sender_address => %{"Dash Notifier" <no-reply-dash2@ucop.edu>},
+          :sender_address => %{"Dash Notifier" <no-reply-dryad@datadryad.org>},
           :exception_recipients => ac['page_error_email']
       },
       :error_grouping => true,
@@ -97,7 +97,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  Rails.application.default_url_options = { host: 'dryad-demo.cdlib.org' }
-  config.action_mailer.default_url_options = { host: 'dryad-demo.cdlib.org' }
+  Rails.application.default_url_options = { host: 'dryad-demo.datadryad.org' }
+  config.action_mailer.default_url_options = { host: 'dryad-demo.datadryad.org' }
 
 end

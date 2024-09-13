@@ -147,7 +147,7 @@ defaults: &DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com]
   submission_bc_emails: [""]
-  contact_email: ["uc3@ucop.edu", "help@datadryad.org"]
+  contact_email: help@datadryad.org
   helpdesk_email: dryad.helpdesk@mailinator.com
   send_journal_published_notices: false
   default_tenant: dryad
