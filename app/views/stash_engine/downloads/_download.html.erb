@@ -2,7 +2,6 @@
 <% content_for(:head) do %>
 <script type="text/javascript" src="https://16077a4ae659.us-west-2.captcha-sdk.awswaf.com/16077a4ae659/jsapi.js" defer></script>
 <% end %>
-<% resource = dataset_identifier.latest_downloadable_resource(user: current_user) %>
 <% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>
   <div class="o-download">
     <%= form_with url: "/stash/downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{minimal_date(resource.publication_date.present? && resource.publication_date < Time.now.utc ? resource.publication_date : resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
