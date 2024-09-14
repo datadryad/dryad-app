@@ -5,7 +5,14 @@
   </div>
 
 <% if @id.may_download?(user: current_user) %>
-  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
+<%
+  resources = @id.resources.files_published  # the public ones
+  if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
+    res_id = resources.last&.id || 0
+    resources = resources.to_a + @id.resources_with_file_changes.submitted.where('stash_engine_resources.id > ?', res_id).to_a
+  end
+%>
+  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resources: resources} %>
 <% else %>
   <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
 <% end %>
