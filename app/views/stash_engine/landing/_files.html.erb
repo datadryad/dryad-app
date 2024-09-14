@@ -1,4 +1,16 @@
-<%# takes local variable of dataset_identifier and resources %>
+<%
+  if resource.present?
+    resources = [resource]
+    dl_resource = resource
+  else
+    resources = dataset_identifier.resources.files_published  # the public ones
+    if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
+      res_id = resources.last&.id || 0
+      resources = resources.to_a + dataset_identifier.resources_with_file_changes.submitted.where('stash_engine_resources.id > ?', res_id).to_a
+    end
+    dl_resource = dataset_identifier.latest_downloadable_resource(user: current_user)
+  end
+%>
 <div class="data_files_section">
   <h2>Data files</h2>
   <div>
@@ -28,7 +40,7 @@
     <% end %>
     <div id="file_preview_box"></div>
     <!-- full download second -->
-    <%= render partial: 'stash_engine/downloads/download', locals: { dataset_identifier: dataset_identifier } %>
+    <%= render partial: 'stash_engine/downloads/download', locals: { dataset_identifier: dataset_identifier, resource: dl_resource } %>
   <% else %>
     <p>No data files are available for display.</p>
   <% end %>
