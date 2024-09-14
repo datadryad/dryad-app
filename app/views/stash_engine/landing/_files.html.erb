@@ -1,14 +1,4 @@
-<%# takes local variable of dataset_identifier and resource %>
-<%
-  resources = dataset_identifier.resources.files_published  # the public ones
-  if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
-    res_id = resources.last&.id || 0
-    # rails 5 has an OR we could use, but not yet in rails 4.2, so change to an array rather than an ActiveRecord Relation
-    # note: resources_with_file_changes is a method and not a scope, so must come first
-    # The rest are scopes on resources, greater than the last ID means submitted after the last version shown to public
-    resources = resources.to_a + dataset_identifier.resources_with_file_changes.submitted.where('stash_engine_resources.id > ?', res_id).to_a
-  end
-%>
+<%# takes local variable of dataset_identifier and resources %>
 <div class="data_files_section">
   <h2>Data files</h2>
   <div>
