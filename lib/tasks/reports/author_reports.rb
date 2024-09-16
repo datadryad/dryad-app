@@ -4,9 +4,8 @@ require 'csv'
 module Tasks
   module Reports
     class AuthorReports
-      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       def self.repeat_customers
-
         CSV.open(File.join(Rails.root.join('tmp'), "Repeat_Customers_Report-#{Time.now.strftime('%Y-%m-%d')}.csv"), 'wb') do |csv|
           csv << ['Report', 'Submitters', ' Multiple times Submitters', 'Coauthors', 'Multiple times Coauthors', 'Percent', 'Average']
 
@@ -23,35 +22,62 @@ module Tasks
 
           # 2. Submitting authors who coauthored in the past
 
+          res = ActiveRecord::Base.connection.execute <<~SQL
+            select  count(distinct(users.orcid))
+            from stash_engine_users as users
+            inner join stash_engine_resources as user_res on user_res.user_id = users.id
+            INNER JOIN stash_engine_identifiers ON user_res.id = stash_engine_identifiers.latest_resource_id
+            inner join stash_engine_authors as user_author on user_author.author_orcid = users.orcid and user_res.id != user_author.resource_id
+            inner join stash_engine_resources as author_res on user_author.resource_id=author_res.id
+            where user_res.created_at > author_res.created_at
+          SQL
+          submitters_as_coauthors = res.first[0]
           submitters_orcid = StashEngine::Resource.latest_per_dataset.joins(:user).distinct.select(:orcid).count
-          submitters_as_coauthors = StashEngine::Author.joins(resource: :user).
-            where('stash_engine_authors.author_orcid in (?)', StashEngine::Resource.latest_per_dataset.joins(:user).distinct.select(:orcid)).
-            where('orcid != author_orcid').
-            distinct.select(:author_orcid).
-            count
 
           percent_submissions_per_author = (submitters_as_coauthors * 100) / submitters_orcid.to_f
 
-          csv << ['Submitting authors who coauthored in the past', submitters_orcid, nil, submitters_as_coauthors, nil, percent_submissions_per_author.round(2)]
+          csv << ['Submitting authors who coauthored in the past', submitters_orcid, nil, submitters_as_coauthors, nil,
+                  percent_submissions_per_author.round(2)]
 
           # 3. Coauthors who submitted in the past
+          # Same as above with different date condition direction
+
+          res = ActiveRecord::Base.connection.execute <<~SQL
+            select  count(distinct(users.orcid))
+            from stash_engine_users as users
+            inner join stash_engine_resources as user_res on user_res.user_id = users.id
+            INNER JOIN stash_engine_identifiers ON user_res.id = stash_engine_identifiers.latest_resource_id
+            inner join stash_engine_authors as user_author on user_author.author_orcid = users.orcid and user_res.id != user_author.resource_id
+            inner join stash_engine_resources as author_res on user_author.resource_id=author_res.id
+            where user_res.created_at < author_res.created_at
+          SQL
+          submitters_as_coauthors = res.first[0]
+          submitters_orcid = StashEngine::Resource.latest_per_dataset.joins(:user).distinct.select(:orcid).count
+
+          percent_submissions_per_author = (submitters_as_coauthors * 100) / submitters_orcid.to_f
 
           csv << ['Coauthors who submitted in the past', submitters_orcid, nil, submitters_as_coauthors, nil, percent_submissions_per_author.round(2)]
 
           # 4. Coauthors who coauthored in the past
 
-          coauthors = StashEngine::Author.unscoped.joins(resource: [:user, :identifier]).where('orcid != author_orcid').distinct.select(:author_orcid, :identifier).group(:author_orcid, :identifier).count
+          coauthors = StashEngine::Author.unscoped.joins(resource: %i[user identifier])
+            .where('orcid != author_orcid')
+            .distinct.select(:author_orcid, :identifier)
+            .group(
+              :author_orcid, :identifier
+            ).count
           multiple_times_coauthors = coauthors.keys.map(&:first).tally.select { |_k, val| val > 1 }.count
           percent_multiple_times_coauthors = (multiple_times_coauthors * 100) / coauthors.count.to_f
 
-          csv << ['Coauthors who coauthored in the past', nil, nil, coauthors.count, multiple_times_coauthors, percent_multiple_times_coauthors.round(2)]
+          csv << ['Coauthors who coauthored in the past', nil, nil, coauthors.count, multiple_times_coauthors,
+                  percent_multiple_times_coauthors.round(2)]
 
           csv << ['Average number of submissions per author (submitting author)', nil, nil, nil, nil, nil, avg_submissions_per_submitter.round(2)]
           csv << ['Average number of submissions per author (resubmitting author)', nil, nil, nil, nil, nil, avg_submissions_per_resubmitter.round(2)]
         end
       end
 
-      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
     end
   end
 end
