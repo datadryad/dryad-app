@@ -95,7 +95,7 @@ module StashEngine
       existing.update(first_name: params[:first_name], last_name: params[:last_name], email: params[:email],
                       tenant_id: params[:tenant_id])
       session[:user_id] = existing.id
-      redirect_to stash_url_helpers.dashboard_path, status: :found
+      redirect_to stash_url_helpers.choose_dashboard_path, status: :found
     end
 
     def choose_sso
@@ -179,7 +179,7 @@ module StashEngine
       user = @users.first
       session[:user_id] = user.id
       # tenant = Tenant.find(user.tenant_id) # this was used to redirect to correct tenant, now not needed
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     # get orcid emails as returned by API
@@ -297,7 +297,7 @@ module StashEngine
       when 'resource'
         redirect_to stash_url_helpers.review_resource_path(session[:redirect_resource_id])
       else
-        redirect_to stash_url_helpers.dashboard_path
+        redirect_to stash_url_helpers.choose_dashboard_path
       end
     end
 
