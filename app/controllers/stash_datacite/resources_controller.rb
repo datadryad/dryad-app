@@ -38,8 +38,7 @@ module StashDatacite
           @resource.save!
           @resource.reload
           if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown'
-            session[:origin] = 'resource'
-            session[:redirect_resource_id] = @resource.id
+            @target_page = stash_url_helpers.review_resource_path(@resource.id)
             @aff_tenant = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id).partner_list.first
           end
         end

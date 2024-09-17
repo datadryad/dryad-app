@@ -24,15 +24,14 @@ module StashEngine
           # to the login page. Now that they are logged in, we will redirect to the target_page,
           # but first clear it from the session so we don't continually redirect to it.
           session[:target_page] = nil
-          redirect_to target_page
+          redirect_to target_page and return
         end
         return
       end
 
       return if valid_edit_code?
 
-      flash[:alert] = 'You must be logged in.'
-      session[:target_page] = request.fullpath
+      flash[:alert] = 'You must log in and select an institution (or none).'
       redirect_to stash_url_helpers.choose_login_path
     end
 
