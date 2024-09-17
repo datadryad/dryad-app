@@ -47,21 +47,21 @@ module StashEngine
       return if @resource&.current_resource_state&.resource_state == 'in_progress'
 
       flash[:alert] = 'You may not edit a submitted version of your dataset by using the back button. Please open your dataset from the editing link'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def require_superuser
       return if current_user && current_user.superuser?
 
       flash[:alert] = 'You must be a superuser to view this information.'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def require_curator
       return if current_user && current_user.min_curator?
 
       flash[:alert] = 'You must be a curator to view this information.'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def ajax_require_curator
@@ -72,7 +72,7 @@ module StashEngine
       return if current_user && current_user.min_app_admin?
 
       flash[:alert] = 'You must be a curator to view this information.'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def ajax_require_min_app_admin
@@ -83,7 +83,7 @@ module StashEngine
       return if current_user && current_user.min_admin?
 
       flash[:alert] = 'You must be an administrator to view this information.'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     # this requires a method called resource in the controller that returns the current resource (usually @resource)
