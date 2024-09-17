@@ -26,9 +26,9 @@
   <% end %>
   <% if @fields.include?('submitter') %>
     <td>
-      <% if dataset.user.orcid %><a href="<%= dataset.user.orcid_link %>" target="blank"><% end %>
-      <%= "#{dataset.user.first_name} #{dataset.user.last_name}" %>
-      <% if dataset.user.orcid %></a><% end %>
+      <% if dataset.submitter&.orcid %><a href="<%= dataset.submitter&.orcid_link %>" target="blank"><% end %>
+      <%= "#{dataset.submitter&.first_name} #{dataset.submitter&.last_name}" %>
+      <% if dataset.submitter&.orcid %></a><% end %>
     </td>
   <% end %>
   <% if @fields.include?('status') %>
