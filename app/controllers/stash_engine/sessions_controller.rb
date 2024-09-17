@@ -117,6 +117,7 @@ module StashEngine
 
     # send the user to the tenant's SSO url
     def sso
+      session[:target_page] = params[:target_page] if params[:target_page]
       if StashEngine::Tenant.exists?(params[:tenant_id])
         tenant = StashEngine::Tenant.find(params[:tenant_id])
         case tenant&.authentication&.strategy
@@ -157,9 +158,7 @@ module StashEngine
       @auth_hash = request.env['omniauth.auth']
       @params = request.env['omniauth.params']
       if @params['origin'] == 'feedback'
-        session[:origin] = @params['origin']
-        session[:contact_method] = @params['m']
-        session[:link_location] = @params['l']
+        session[:target_page] = stash_url_helpers.feedback_path(m: @params['m'], l: @params['l'])
       elsif @params['origin'] == 'metadata'
         metadata_callback
       elsif @params['invitation'] && @params['identifier_id']
@@ -288,17 +287,12 @@ module StashEngine
     end
 
     def do_redirect
-      case session[:origin]
-      when 'feedback'
-        redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
-        session[:origin] = session[:contact_method] = session[:link_location] = nil
-      when 'account'
-        redirect_to stash_url_helpers.my_account_path
-      when 'resource'
-        redirect_to stash_url_helpers.review_resource_path(session[:redirect_resource_id])
-      else
-        redirect_to stash_url_helpers.choose_dashboard_path
+      target_page = session[:target_page]
+      if target_page.present?
+        session[:target_page] = nil
+        redirect_to target_page and return
       end
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def set_default_tenant
