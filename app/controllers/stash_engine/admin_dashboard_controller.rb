@@ -15,7 +15,7 @@ module StashEngine
     def results
       @datasets = StashEngine::Resource.latest_per_dataset.select(
         :id, :title, :total_file_size, :user_id, :tenant_id, :identifier_id, :last_curation_activity_id, :publication_date,
-        :current_editor_id, :current_resource_state_id
+        :user_id, :current_resource_state_id
       ).distinct
 
       add_fields
@@ -97,7 +97,7 @@ module StashEngine
     # rubocop:disable Style/MultilineIfModifier
     def setup_limits
       session[:admin_search_role] = params[:user_role] if params[:user_role].present?
-      @user_role = current_user.roles.find_by(id: session[:admin_search_role]) || current_user.roles.first
+      @user_role = current_user.roles.admin_roles.find_by(id: session[:admin_search_role]) || current_user.roles.admin_roles.first
       @role_object = @user_role.role_object
       @tenant_limit = @role_object.is_a?(StashEngine::Tenant) ? policy_scope(StashEngine::Tenant) : StashEngine::Tenant.enabled
       if @role_object.is_a?(StashEngine::JournalOrganization)
@@ -167,12 +167,8 @@ module StashEngine
     end
 
     def curator_field
-      @datasets = @datasets.joins("left outer join (
-          select stash_engine_users.* from stash_engine_users
-          inner join stash_engine_roles on stash_engine_users.id = stash_engine_roles.user_id
-            and role in ('curator', 'superuser')
-        ) curator on curator.id = stash_engine_resources.current_editor_id")
-        .select("CONCAT_WS(' ', curator.first_name, curator.last_name) as curator_name")
+      @datasets = @datasets.left_outer_joins(:curator)
+        .select("CONCAT_WS(' ', stash_engine_users.first_name, stash_engine_users.last_name) as curator_name")
     end
 
     def author_field
@@ -209,7 +205,7 @@ module StashEngine
         :affiliation, :value
       ).present?
       @datasets = @datasets.where(
-        'curator.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
+        'stash_engine_users.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
       ) if @filters[:curator].present? && current_user.min_app_admin?
       unless @search_string.blank?
         search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
@@ -312,7 +308,7 @@ module StashEngine
       @datasets = @datasets.preload(:authors) if @fields.include?('authors')
       @datasets = @datasets.preload(:tenant).preload(authors: :affiliations) if @fields.include?('affiliations')
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
-      @datasets = @datasets.preload(:user) if @fields.include?('submitter')
+      @datasets = @datasets.preload(:roles) if @fields.include?('submitter')
       @datasets = @datasets.preload(identifier: :counter_stat) if @fields.include?('metrics')
       if @fields.include?('journal') || @fields.include?('sponsor') || @fields.include?('identifiers')
         @datasets = @datasets.preload(:resource_publication)
@@ -337,7 +333,7 @@ module StashEngine
 
       decipher_curation_activity
       @note = params.dig(:curation_activity, :note)
-      @resource.current_editor_id = current_user.id
+      @resource.user_id = current_user.id
       @resource.publication_date = @pub_date
       @resource.hold_for_peer_review = true if @status == 'peer_review'
       @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
@@ -402,11 +398,11 @@ module StashEngine
     def current_editor_change
       editor_id = params.dig(:current_editor, :id)
       if editor_id&.to_i == 0
-        @resource.update(current_editor_id: nil)
+        @resource.update(user_id: nil)
         @status = 'submitted' if @resource.current_curation_status == 'curation'
         @curator_name = ''
       else
-        @resource.update(current_editor_id: editor_id)
+        @resource.update(user_id: editor_id)
         @curator_name = StashEngine::User.find(editor_id)&.name
       end
       @note = "Changing current editor to #{@curator_name.presence || 'unassigned'}. " + params.dig(:curation_activity, :note)

@@ -81,7 +81,7 @@ module StashEngine
     # user can set their own ORCiD
     def init_user_orcid
       return unless author_orcid
-      return unless (user = resource&.user)
+      return unless (user = resource&.submitter)
       return if user&.orcid
 
       user.orcid = author_orcid

@@ -53,12 +53,15 @@ module StashEngine
     # POST /resources
     # POST /resources.json
     def create
-      resource = authorize Resource.new(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
+      resource = authorize Resource.new(current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Stash::Doi::DataciteGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
       db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase, import_info: 'manuscript')
       resource.identifier_id = db_id_obj.id
       resource.save
+      resource.creator = current_user.id
+      resource.submitter = current_user.id
+      resource.reload
       resource.fill_blank_author!
       import_manuscript_using_params(resource) if params['journalID']
       session[:resource_type] = current_user.min_app_admin? && params.key?(:collection) ? 'collection' : 'dataset'
@@ -115,7 +118,7 @@ module StashEngine
 
     # Review responds as a get request to review the resource before saving
     def review
-      resource.update(tenant_id: resource.user.tenant_id) unless resource.tenant_id == resource.user.tenant_id
+      resource.update(tenant_id: resource.submitter.tenant_id) unless resource.tenant_id == resource.submitter.tenant_id
     end
 
     # Submission of the resource to the repository

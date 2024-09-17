@@ -140,7 +140,7 @@ module Stash
           tenant_id: 'ucop'
         )
         @identifier = StashEngine::Identifier.create(identifier: '10.1234/abcd123')
-        @resource = StashEngine::Resource.create(user_id: @user.id, tenant_id: 'ucop', identifier_id: @identifier.id)
+        @resource = StashEngine::Resource.create(current_editor_id: @user.id, tenant_id: 'ucop', identifier_id: @identifier.id)
 
         allow(StashDatacite::Affiliation).to receive(:find_by_ror_long_name).and_return(nil)
         allow(Serrano).to receive(:works).and_return([CROSSREF_WORK_RESPONSE])
