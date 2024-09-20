@@ -46,10 +46,10 @@ module StashEngine
 
       if ownership_transfer_needed?
         if current_user
-          ca = CurationActivity.create(status: @resource.current_curation_status || 'in_progress',
-                                       user_id: 0,
-                                       resource_id: @resource.id,
-                                       note: "Transferring ownership to #{current_user.name} (#{current_user.id}) using an edit code")
+          ca = CurationActivity.create(
+            status: @resource.current_curation_status || 'in_progress', user_id: 0, resource_id: @resource.id,
+            note: "Transferring ownership to #{current_user.name} (#{current_user.id}) using an edit code"
+          )
           @resource.curation_activities << ca
           @resource.user_id = current_user.id
           @resource.current_editor_id = current_user.id
@@ -74,12 +74,11 @@ module StashEngine
           redirect_to stash_url_helpers.choose_sso_path and return
         end
       end
-
       if @resource&.current_resource_state&.resource_state == 'in_progress'
-        redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id))
-      else
-        new_version
+        redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)) and return
       end
+
+      new_version
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
@@ -167,7 +166,7 @@ module StashEngine
         redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @identifier.in_progress_resource.id))
         false
       elsif @identifier.processing? || @identifier.error?
-        redirect_to stash_url_helpers.dashboard_path,
+        redirect_to stash_url_helpers.choose_dashboard_path,
                     alert: 'You may not create a new version of the dataset until processing completes or any errors are resolved'
         false
       end
