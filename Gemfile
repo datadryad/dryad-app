@@ -70,6 +70,7 @@ gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-sass', '~> 6.1.0'
 gem 'geoblacklight', '~> 3.0'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
+gem 'grover'
 gem 'http', '~> 5.0.4'
 gem 'httparty', '~> 0.21.0'
 gem 'httpclient', '~> 2.8.3'
@@ -107,7 +108,6 @@ gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny
 gem 'twitter-typeahead-rails', '0.11.1' # this is in a generator to install blacklight
-gem 'grover'
 gem 'yaml', '~> 0.3.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
