@@ -111,6 +111,7 @@ module StashEngine
 
     # no partner, so set as generic dryad tenant without membership benefits
     def no_partner
+      session[:target_page] = params[:target_page] if params[:target_page]
       set_default_tenant
       do_redirect
     end
