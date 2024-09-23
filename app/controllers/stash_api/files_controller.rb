@@ -52,7 +52,7 @@ module StashApi
     # DELETE /files/<id>
     def destroy
       unless @resource.current_state == 'in_progress'
-        api_logger.error("version is not in_progress")
+        api_logger.error('version is not in_progress')
         render json: { error: 'This file must be part of an an in-progress version' }.to_json, status: 403
         return
       end
@@ -212,10 +212,10 @@ module StashApi
 
     def require_viewable_file
       f = StashEngine::DataFile.where(id: params[:id]).first
-      if f.nil? || !f.resource.may_view?(ui_user: @user)
-        api_logger.error('require_viewable_file')
-        render json: { error: 'not-found' }.to_json, status: 404
-      end
+      return unless (f.nil? || !f.resource.may_view?(ui_user: @user))
+      
+      api_logger.error('require_viewable_file')
+      render json: { error: 'not-found' }.to_json, status: 404
     end
   end
 end

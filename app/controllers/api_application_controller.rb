@@ -43,21 +43,21 @@ class ApiApplicationController < StashEngine::ApplicationController
     # check to see if the identifier is actually an id and not a DOI first
     @stash_identifier = StashEngine::Identifier.where(id: doi).first
 
-    if @stash_identifier.blank?
-      api_logger.error('require_stash_identifier')
-      @stash_identifier = StashEngine::Identifier.find_with_id(doi)
-      render json: { error: 'not-found' }.to_json, status: 404
-    end
+    return unless @stash_identifier.blank?
+
+    api_logger.error('require_stash_identifier')
+    @stash_identifier = StashEngine::Identifier.find_with_id(doi)
+    render json: { error: 'not-found' }.to_json, status: 404
   end
 
   def require_resource_id(resource_id:)
     @stash_resources = StashEngine::Resource.where(id: resource_id)
     @resource = @stash_resources&.first if @stash_resources.count.positive?
 
-    if @stash_resources.count < 1
-      api_logger.error('require_resource_id')
-      render json: { error: 'not-found' }.to_json, status: 404
-    end
+    return unless @stash_resources.count < 1
+
+    api_logger.error('require_resource_id')
+    render json: { error: 'not-found' }.to_json, status: 404
   end
 
   def require_file_id(file_id:)
@@ -73,10 +73,10 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   def require_api_user
     optional_api_user
-    if @user.blank?
-      api_logger.error('require_api_user')
-      render json: { error: 'Unauthorized, must have current bearer token' }.to_json, status: 401
-    end
+    return unless @user.blank?
+
+    api_logger.error('require_api_user')
+    render json: { error: 'Unauthorized, must have current bearer token' }.to_json, status: 401    
   end
 
   def optional_api_user
@@ -98,7 +98,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   def require_in_progress_resource
     unless @stash_identifier.in_progress?
-      api_logger.error("require_in_progress_resource")
+      api_logger.error('require_in_progress_resource')
       render json: { error: 'You must have an in_progress version to perform this operation' }.to_json, status: 403
     end
     @resource = @stash_identifier.in_progress_resource
