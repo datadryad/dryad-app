@@ -76,7 +76,7 @@ class ApiApplicationController < StashEngine::ApplicationController
     return unless @user.blank?
 
     api_logger.error('require_api_user')
-    render json: { error: 'Unauthorized, must have current bearer token' }.to_json, status: 401    
+    render json: { error: 'Unauthorized, must have current bearer token' }.to_json, status: 401
   end
 
   def optional_api_user

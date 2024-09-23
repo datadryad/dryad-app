@@ -212,8 +212,8 @@ module StashApi
 
     def require_viewable_file
       f = StashEngine::DataFile.where(id: params[:id]).first
-      return unless (f.nil? || !f.resource.may_view?(ui_user: @user))
-      
+      return unless f.nil? || !f.resource.may_view?(ui_user: @user)
+
       api_logger.error('require_viewable_file')
       render json: { error: 'not-found' }.to_json, status: 404
     end
