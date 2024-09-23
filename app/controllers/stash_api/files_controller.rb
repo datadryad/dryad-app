@@ -101,7 +101,7 @@ module StashApi
       the_type = @resource.upload_type
       return if %i[files unknown].include?(the_type)
 
-      api_logger.error("duplicating files via URL and direct upload")
+      api_logger.error('duplicating files via URL and direct upload')
       render json: { error:
           'You may not submit a file by direct upload in the same version when you have submitted files by URL' }.to_json, status: 409
     end
@@ -109,7 +109,7 @@ module StashApi
     def check_header_file_size
       return if request.headers['CONTENT-LENGTH'].blank? || request.headers['CONTENT-LENGTH'].to_i <= APP_CONFIG.maximums.merritt_size
 
-      api_logger.error("file too large")
+      api_logger.error('file too large')
       (render json: { error:
                          "Your file size is larger than the maximum submission size of #{APP_CONFIG.maximums.merritt_size} bytes" }.to_json,
               status: 403) && yield
@@ -118,7 +118,7 @@ module StashApi
     def check_file_size
       return if Stash::Aws::S3.new.size(s3_key: @file_path) <= APP_CONFIG.maximums.merritt_size
 
-      api_logger.error("file too large")
+      api_logger.error('file too large')
       (render json: { error:
           "Your file size is larger than the maximum submission size of #{view_context.filesize(APP_CONFIG.maximums.merritt_size)}" }.to_json,
               status: 403) && yield
@@ -161,7 +161,7 @@ module StashApi
     def check_total_size_violations
       return if @resource.new_size <= APP_CONFIG.maximums.merritt_size && @resource.size <= APP_CONFIG.maximums.merritt_size
 
-      api_logger.error("file too large")
+      api_logger.error('file too large')
       (render json: { error:
                           'The files for this dataset are larger than the allowed version or total object size' }.to_json,
               status: 403) && yield
@@ -213,7 +213,7 @@ module StashApi
     def require_viewable_file
       f = StashEngine::DataFile.where(id: params[:id]).first
       if f.nil? || !f.resource.may_view?(ui_user: @user)
-        api_logger.error("require_viewable_file")
+        api_logger.error('require_viewable_file')
         render json: { error: 'not-found' }.to_json, status: 404
       end
     end

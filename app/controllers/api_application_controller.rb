@@ -35,7 +35,7 @@ class ApiApplicationController < StashEngine::ApplicationController
     accept_ok = accept.nil? || (accept.include?('*/*') || accept.include?('application/json'))
     return if ct_ok && accept_ok
 
-    api_logger.error("require_json_headers")
+    api_logger.error('require_json_headers')
     render json: { error: UNACCEPTABLE_MSG }.to_json, status: 406
   end
 
@@ -44,7 +44,7 @@ class ApiApplicationController < StashEngine::ApplicationController
     @stash_identifier = StashEngine::Identifier.where(id: doi).first
 
     if @stash_identifier.blank?
-      api_logger.error("require_resource_id")
+      api_logger.error('require_stash_identifier')
       @stash_identifier = StashEngine::Identifier.find_with_id(doi)
       render json: { error: 'not-found' }.to_json, status: 404
     end
@@ -55,7 +55,7 @@ class ApiApplicationController < StashEngine::ApplicationController
     @resource = @stash_resources&.first if @stash_resources.count.positive?
 
     if @stash_resources.count < 1
-      api_logger.error("require_resource_id")
+      api_logger.error('require_resource_id')
       render json: { error: 'not-found' }.to_json, status: 404
     end
   end
@@ -63,7 +63,7 @@ class ApiApplicationController < StashEngine::ApplicationController
   def require_file_id(file_id:)
     @stash_files = StashEngine::DataFile.where(id: file_id)
     if @stash_files.count < 1
-      api_logger.error("require_file_id")
+      api_logger.error('require_file_id')
       render json: { error: 'not-found' }.to_json, status: 404
     else
       @stash_file = @stash_files.first
@@ -74,7 +74,7 @@ class ApiApplicationController < StashEngine::ApplicationController
   def require_api_user
     optional_api_user
     if @user.blank?
-      api_logger.error("require_api_user")
+      api_logger.error('require_api_user')
       render json: { error: 'Unauthorized, must have current bearer token' }.to_json, status: 401
     end
   end
@@ -106,7 +106,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
   def require_viewable_resource(resource_id:)
     res = StashEngine::Resource.where(id: resource_id).first
-    api_logger.error("require_viewable_resource")
+    api_logger.error('require_viewable_resource')
     render json: { error: 'not-found' }.to_json, status: 404 if res.nil? || !res.may_view?(ui_user: @user)
   end
 
@@ -114,35 +114,35 @@ class ApiApplicationController < StashEngine::ApplicationController
   def require_permission
     return if @resource.nil? # this not needed for dataset upsert with identifier
 
-    api_logger.error("require_permission")
+    api_logger.error('require_permission')
     render json: { error: 'unauthorized' }.to_json, status: 401 unless @resource.permission_to_edit?(user: @user)
   end
 
   def require_superuser
     return if @user.superuser?
 
-    api_logger.error("require_superuser")
+    api_logger.error('require_superuser')
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
   def require_min_app_admin
     return if @user.min_app_admin?
 
-    api_logger.error("require_min_app_admin")
+    api_logger.error('require_min_app_admin')
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
   def require_curator
     return if @user.min_curator?
 
-    api_logger.error("require_curator")
+    api_logger.error('require_curator')
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
   def require_admin
     return if current_user && current_user.min_admin?
 
-    api_logger.error("require_admin")
+    api_logger.error('require_admin')
     render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
