@@ -47,7 +47,7 @@ test:
     large_file_size: 5.0e+10
     additional_storage_chunk_size: 1.0e+10 # 10 GB
     additional_storage_chunk_cost: 5000 # in cents  
-  merritt_base_url: https://merritt-stage.cdlib.org
+  merritt_base_url: https://storage-test.datadryad.org
   merritt_max_submission_threads: 5
   crossref_base_url: https://api.crossref.org
   crossref_mailto: test.dude@example.edu
@@ -131,8 +131,8 @@ defaults: &DEFAULTS
     port: 443
   contact_us_uri: help@datadryad.org
   repository:
-    domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryaddev_3043"
+    domain: https://storage-test.datadryad.org
+    endpoint: "http://storage-test.datadryad.org"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryaddev_password] %>
   orcid:
@@ -147,7 +147,7 @@ defaults: &DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com]
   submission_bc_emails: [""]
-  contact_email: ["uc3@ucop.edu", "help@datadryad.org"]
+  contact_email: help@datadryad.org
   helpdesk_email: dryad.helpdesk@mailinator.com
   send_journal_published_notices: false
   default_tenant: dryad
@@ -171,7 +171,7 @@ defaults: &DEFAULTS
     large_file_size: 5.0e+10 # 50 GB
     additional_storage_chunk_size: 1.0e+10 # 10 GB
     additional_storage_chunk_cost: 5000 # in cents
-  merritt_base_url: https://merritt-stage.cdlib.org
+  merritt_base_url: https://storage-test.datadryad.org
   merritt_max_submission_threads: 5
   crossref_base_url: https://api.crossref.org
   crossref_mailto: ryan@datadryad.org
@@ -280,11 +280,11 @@ development: &DEVELOPMENT
     application_id: 5
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_id] %>
     client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_secret] %>
-  shib_sp_host: dryad-dev.cdlib.org
+  shib_sp_host: v3-dev.datadryad.org
   page_error_email: ~
   feedback_email_from: no-reply-dryad-dev@datadryad.org
   send_journal_published_notices: false
-  collection_uri: http://mrtsword-stg.cdlib.org:39001/mrtsword/
+  collection_uri: http://storage-test.datadryad.org
   google_analytics_id: UA-145629338-2
   matomo_analytics_id: datadryad-dev
   payments:
@@ -324,8 +324,8 @@ stage: &STAGE
   matomo_analytics_id: datadryad-stg
   send_journal_published_notices: true
   repository:
-    domain: https://merritt-stage.cdlib.org
-    endpoint: "http://mrtsword-stg.cdlib.org:39001/mrtsword/collection/cdl_dryadstg"
+    domain: https://storage-test.datadryad.org
+    endpoint: "http://storage-test.datadryad.org"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryadstg_password] %>
   s3:
@@ -348,11 +348,11 @@ migration:
 
 demo:
   <<: *DEFAULTS
-  shib_sp_host: dryaddemo.cdlib.org
-  page_error_email: [ryan@datadryad.org]
-  submission_error_email: [ryan@datadryad.org]
-  zenodo_error_email: [ryan@datadryad.org]
-  feedback_email_from: no-reply-dryaddemo@cdlib.org
+  shib_sp_host: dryaddemo.datadryad.org
+  page_error_email: [devs@datadryad.org]
+  submission_error_email: [devs@datadryad.org]
+  zenodo_error_email: [devs@datadryad.org]
+  feedback_email_from: no-reply-dryaddemo@datadryad.org
 
 production: &PRODUCTION
   <<: *DEFAULTS
@@ -363,8 +363,8 @@ production: &PRODUCTION
   helpdesk_email: help@datadryad.org
   feedback_email_from: no-reply-dryad@datadryad.org
   repository:
-    domain: https://merritt.cdlib.org
-    endpoint: "http://mrtsword.cdlib.org:39001/mrtsword/collection/cdl_dryad"
+    domain: https://storage-test.datadryad.org
+    endpoint: "http://storage-test.datadryad.org"
     username: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:merritt_dryad_password] %>
   # orcid production credentials
@@ -386,7 +386,7 @@ production: &PRODUCTION
     client_id: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_id] %>
     client_secret: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_client_secret] %>
     access_token: <%= Rails.application.credentials[Rails.env.to_sym][:zenodo_access_token] %>
-  merritt_base_url: https://merritt.cdlib.org
+  merritt_base_url: https://storage-test.datadryad.org
   payments:
     service: stripe
     key: <%= Rails.application.credentials[Rails.env.to_sym][:stripe_key] %>
