@@ -75,12 +75,26 @@ input[type=file]::file-selector-button {
   text-decoration: none;
   background-color: transparent;
 
-  &:hover {text-decoration: underline;}
+  &:hover, &:focus  {
+    text-decoration: underline;
+    color: $link-body-hover-color;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:active {
+    color: $link-body-active-color;
+  }
 
   &[disabled] {
     color: $dark-gray;
     text-decoration: none;
   }
+  &:focus-visible {
+    outline: 2px solid $medium-blue;
+  }  
 }
 
 .o-button__plain-text4 {

@@ -81,8 +81,8 @@ module StashDatacite
       Contributor.contributor_type_mapping_obj(contributor_type_friendly)
     end
 
-    def contributor_name_friendly(show_asterisk: false)
-      if contributor_name&.end_with?('*') && !show_asterisk
+    def contributor_name_friendly
+      if contributor_name&.end_with?('*')
         contributor_name[0..-2]
       else
         contributor_name
