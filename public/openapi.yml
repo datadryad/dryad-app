@@ -67,7 +67,8 @@ paths:
       summary: Test OAuth2 and bearer authentication
       tags:
         - root 
-      description: "Test your <a href='/stash/api#api-accounts'>API account authentication</a> by sending authenticated headers:  **'Accept: application/json'**, **'Content-Type: application/json'**, **'Authorization: Bearer {your-token}'**."
+      description: "Test your <a href='/stash/api#api-accounts'>API account authentication</a> by sending authenticated headers:  **'Accept: application/json'**, **'Content-Type: application/json'**, **'Authorization: Bearer {your-token}'**. \n\n **Accept** header is optional if you are using **'Content-Type: application/json'**."
+
       responses:
         '200':
           description: a welcome message if successful
@@ -767,7 +768,7 @@ components:
   responses:
 
     Unacceptable:
-      description: '406 - unacceptable: please set your Content-Type and Accept headers for application/json'
+      description: "406 - unacceptable: please set your Content-Type or Accept headers for application/json. **Accept** header is optional if you are using **'Content-Type: application/json'**."
       $ref: '#/components/content/Error'
 
     NotFound:
