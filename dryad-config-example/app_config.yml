@@ -5,7 +5,7 @@ defaults: &DEFAULTS
   ezid:
     host: ezid.cdlib.org
     port: 443
-  contact_us_uri: http://www.cdlib.org/services/uc3/contact.html
+  contact_us_uri: https://datadryad.org/stash/contact
   repository:
     domain: https://merritt-test.example.org
     endpoint: "https://merritt-test.example.org:39001/mrtsword/collection/cdl_dryaddev"
@@ -204,7 +204,7 @@ development: &DEVELOPMENT
   shib_sp_host: <fill-me-in>
   page_error_email: ~
   feedback_email_from: no-reply@example.org
-  collection_uri: http://uc3-mrtsword-dev.cdlib.org:39001/mrtsword/
+  collection_uri: http://storage-dev.datadryad.org
   google_analytics_id: <fill-me-in>
 
 local:
