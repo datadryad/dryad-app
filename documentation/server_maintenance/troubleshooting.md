@@ -426,22 +426,12 @@ To actually remove a version and it is gone forever:
   versions of them and overwriting the old versions.
 - Review the history of any offending files in the `stash_engine_generic_files`
   and identify which resources have files that need to be removed from
-  Merritt/Zenodo. You will need to manually request that these versions be
+  Zenodo. You will need to manually request that these versions be
   removed. 
-  -  What needs to happen in Merritt is documented at
-     [Removing older versions of a Dash/Dryad dataset object in Merritt](https://confluence.ucop.edu/pages/viewpage.action?pageId=221218281)
-- Merritt may give us a new ARK for the new dataset.  We will edit the
-  `stash_engine_resource.download_url` to contain the new ARK, encoded for the new
-  dataset.
-- For any resources that have been removed from Merritt, also remove them from Dryad
 - For the remaining resources, go into the `stash_engine_generic_files` and edit
   the file uploads to match the files that are actually in Merritt.
   Essentially change any files that appear for the first time to a
   `file_state` of "created" and delete the rows for any files that have been removed.
-- Go into `stash_engine_versions` and change the version and merritt_version to
-  match the actual versions in Merritt. Check the downloads of both the full
-  version and the individual files in the Dryad UI to be sure they still work.
-  They should work if things were changed correctly.
 
 
 Error message: Maybe you tried to change something you didn't have access to

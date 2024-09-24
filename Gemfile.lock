@@ -179,6 +179,9 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     colorize (1.1.0)
+    combine_pdf (1.0.26)
+      matrix
+      ruby-rc4 (>= 0.1.5)
     concurrent-ruby (1.1.10)
     config (4.2.1)
       deep_merge (~> 1.2, >= 1.2.1)
@@ -349,6 +352,9 @@ GEM
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
       signet (>= 0.16, < 2.a)
+    grover (1.1.10)
+      combine_pdf (~> 1.0)
+      nokogiri (~> 1.0)
     guard (2.18.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -673,6 +679,7 @@ GEM
     rubocop-ast (1.31.3)
       parser (>= 3.3.1.0)
     ruby-progressbar (1.13.0)
+    ruby-rc4 (0.1.5)
     ruby2_keywords (0.0.5)
     ruby_dig (0.0.2)
     ruby_parser (3.20.3)
@@ -793,14 +800,11 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webrick (1.8.1)
+    webrick (1.8.2)
     websocket (1.2.9)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    wicked_pdf (2.1.0)
-      activesupport
-    wkhtmltopdf-binary (0.12.5.4)
     xml-mapping (0.10.1)
     xml-mapping_extensions (0.4.9)
       mime-types (~> 3.0)
@@ -861,6 +865,7 @@ DEPENDENCIES
   fuubar
   geoblacklight (~> 3.0)
   google-apis-gmail_v1 (~> 0.14.0)
+  grover
   guard
   guard-rspec
   http (~> 5.0.4)
@@ -937,8 +942,6 @@ DEPENDENCIES
   uglifier (~> 4.2.0)
   web-console
   webmock
-  wicked_pdf (~> 2.1.0)
-  wkhtmltopdf-binary (~> 0.12.5.4)
   yaml (~> 0.3.0)
   zaru (~> 0.3.0)
 

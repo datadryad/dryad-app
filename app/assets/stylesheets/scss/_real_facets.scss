@@ -19,6 +19,7 @@
 /* open drop-down */
 .c-facet-title--closed:after {
   content: '\f105';
+  content: '\f105' / '';
   float: right;
   color: $dark-gray;
   font-family: 'Font Awesome 6 Free';
@@ -30,6 +31,7 @@
 /* this one is closed */
 .c-facet-title--open:after {
   content: '\f107';
+  content: '\f107' / '';
   float: right;
   color: $dark-gray;
   font-family: 'Font Awesome 6 Free';

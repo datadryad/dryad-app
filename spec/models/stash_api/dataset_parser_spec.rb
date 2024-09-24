@@ -13,7 +13,7 @@ module StashApi
       @user = create(:user,
                      first_name: 'Lisa',
                      last_name: 'Muckenhaupt',
-                     email: 'lmuckenhaupt@ucop.edu',
+                     email: 'lmuckenhaupt@datadryad.org',
                      tenant_id: 'exemplia',
                      orcid: '1234-5678-9876-5432')
 
@@ -325,7 +325,7 @@ module StashApi
       it 'sets the owner to an existing user from an ORCID' do
         test_user = StashEngine::User.create(first_name: 'Lena',
                                              last_name: 'Jarre',
-                                             email: 'lj123@ucop.edu',
+                                             email: 'lj123@datadryad.org',
                                              orcid: '1234-5678-0000-1111')
         test_metadata = {
           'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',

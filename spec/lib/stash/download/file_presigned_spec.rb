@@ -27,7 +27,7 @@ module Stash
             .with(
               headers: {
                 'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
-                'Host' => 'merritt-fake.cdlib.org'
+                'Host' => 'storage-fake.datadryad.org'
               }
             )
             .to_return(status: 200, body: '{"url":"https://my.testing.url.example.com"}',
