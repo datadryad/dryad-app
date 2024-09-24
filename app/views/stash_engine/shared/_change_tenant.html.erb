@@ -26,6 +26,7 @@
     <br/><br/>
     <p>Is your institution not a member of Dryad?</p>
     <%= form_with(url: no_partner_path, method: :post) do |f| %>
+      <% if @target_page %><input type="hidden" name="target_page" value="<%= @target_page %>"><% end %>
       <%= f.button type: 'submit', class: 'o-button__plain-text7' do %>
          <i class="fa fa-minus-circle" aria-hidden="true"></i> Remove member affiliation (<%= current_tenant.short_name %>)
       <% end %>
