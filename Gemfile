@@ -24,7 +24,7 @@ gem 'ed25519', '1.3.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.64', require: false
 # Use Puma as the app server
-gem 'puma', '6.4.2', group: :puma, require: false
+gem 'puma', '6.4.3', group: :puma, require: false
 
 # ############################################################
 # UI
@@ -52,7 +52,7 @@ gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
 gem 'blacklight'
 gem 'bootsnap', require: false
-gem 'bootstrap', '~> 4.0'
+gem 'bootstrap', '~> 4.6'
 gem 'charlock_holmes', '~> 0.7.7'
 gem 'concurrent-ruby', '~> 1.1.10'
 gem 'daemons', '~> 1.4.1'
