@@ -48,7 +48,11 @@ a:focus-visible {
 
 a[role='button']:focus-visible, a[class*='button']:focus-visible {
 	outline-offset: 0;
-} 
+}
+
+.c-pot-item {
+	display: none !important;
+}
 
 // ***** Objects ***** //
 
@@ -65,7 +69,6 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 @import 'scss/logout';
 @import 'scss/map';
 @import 'scss/metadata';
-@import 'scss/metrics';
 @import 'scss/modal';
 @import 'scss/proposed-change';
 @import 'scss/section';
@@ -104,7 +107,6 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 @import 'scss/progress';
 @import 'scss/pubdate';
 @import 'scss/review-files';
-@import 'scss/sidebox';
 @import 'scss/table-heading';
 @import 'scss/text-styles';
 @import 'scss/upload-file';

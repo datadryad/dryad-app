@@ -41,7 +41,7 @@
 }
 
 .o-metadata__author {
-	font-size: 1.12rem;
+	font-size: 1.125rem;
 }
 
 .o-metadata__link {
@@ -57,11 +57,22 @@
 }
 
 .o-metadata__aff-list {
+	button {
+		text-decoration: none;
+
+		i {
+			margin-left: .5ch;
+		}
+
+		&:hover, &:focus {
+			text-decoration: none;
+			i {
+				color: $green;
+			}
+		}
+	}
 	p {
 		margin: .5rem auto;
-		i {
-			font-size: .8em;
-		}
 	}
 	ol {
 		font-size: .95em;
@@ -70,4 +81,11 @@
 			font-size: .84em;
 		}
 	}
+}
+
+.unmatched-icon {
+	font-size: .8em;
+	color: $light-orange;
+	margin-left: .5ch;
+	vertical-align: text-top;
 }

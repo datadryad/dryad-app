@@ -195,6 +195,7 @@ Rails.application.routes.draw do
         to: 'generic_files#check_frictionless',
         as: 'generic_file_check_frictionless'
 
+    get 'choose_dashboard', to: 'dashboard#choose', as: 'choose_dashboard'
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
     get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
@@ -209,7 +210,8 @@ Rails.application.routes.draw do
     match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
     get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
     get 'downloads/zenodo_file/:file_id', to: 'downloads#zenodo_file', as: 'download_zenodo'
-    get 'downloads/preview_csv/:file_id', to: 'downloads#preview_csv', as: 'preview_csv'
+    get 'data_file/preview_check/:file_id', to: 'downloads#preview_check', as: 'preview_check'
+    get 'data_file/preview/:file_id', to: 'downloads#preview_file', as: 'preview_file'
     get 'share/:id', to: 'downloads#share', as: 'share'
     get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
 
@@ -361,6 +363,8 @@ Rails.application.routes.draw do
 
     # GMail authentication page for journals
     get 'gmail_auth', to: 'gmail_auth#index'
+
+    resource :pots, only: [:show]
   end
 
   # the ones below coming from new routing for geoblacklight

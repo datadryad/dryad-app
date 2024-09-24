@@ -70,7 +70,7 @@ module StashEngine
         params.each do |k, v|
           message = "#{message}#{k}: #{v}\n" if %w[authenticity_token commit controller action g-recaptcha-response].exclude?(k)
         end
-        StashEngine::UserMailer.feedback_signup(message).deliver_later
+        StashEngine::UserMailer.feedback_signup(message).deliver_now
         redirect_to stash_url_helpers.feedback_path, notice: 'Sign up successful. Thank you!'
       else
         redirect_to stash_url_helpers.feedback_path, flash: { alert: 'Please fill in reCAPTCHA' }
@@ -95,10 +95,11 @@ module StashEngine
       existing.update(first_name: params[:first_name], last_name: params[:last_name], email: params[:email],
                       tenant_id: params[:tenant_id])
       session[:user_id] = existing.id
-      redirect_to stash_url_helpers.dashboard_path, status: :found
+      redirect_to stash_url_helpers.choose_dashboard_path, status: :found
     end
 
     def choose_sso
+      set_default_tenant
       tenants = StashEngine::Tenant.partner_list.map { |t| { id: t.id, name: t.short_name } }
       # If no tenants are defined redirect to the no_parter path
       if tenants.empty?
@@ -110,15 +111,13 @@ module StashEngine
 
     # no partner, so set as generic dryad tenant without membership benefits
     def no_partner
-      if current_user.present?
-        current_user.tenant_id = APP_CONFIG.default_tenant
-        current_user.save!
-      end
+      set_default_tenant
       do_redirect
     end
 
     # send the user to the tenant's SSO url
     def sso
+      session[:target_page] = params[:target_page] if params[:target_page]
       if StashEngine::Tenant.exists?(params[:tenant_id])
         tenant = StashEngine::Tenant.find(params[:tenant_id])
         case tenant&.authentication&.strategy
@@ -159,9 +158,7 @@ module StashEngine
       @auth_hash = request.env['omniauth.auth']
       @params = request.env['omniauth.params']
       if @params['origin'] == 'feedback'
-        session[:origin] = @params['origin']
-        session[:contact_method] = @params['m']
-        session[:link_location] = @params['l']
+        session[:target_page] = stash_url_helpers.feedback_path(m: @params['m'], l: @params['l'])
       elsif @params['origin'] == 'metadata'
         metadata_callback
       elsif @params['invitation'] && @params['identifier_id']
@@ -181,7 +178,7 @@ module StashEngine
       user = @users.first
       session[:user_id] = user.id
       # tenant = Tenant.find(user.tenant_id) # this was used to redirect to correct tenant, now not needed
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     # get orcid emails as returned by API
@@ -290,19 +287,19 @@ module StashEngine
     end
 
     def do_redirect
-      case session[:origin]
-      when 'feedback'
-        redirect_to stash_url_helpers.feedback_path(m: session[:contact_method], l: session[:link_location])
-        session[:origin] = session[:contact_method] = session[:link_location] = nil
-      when 'account'
-        redirect_to stash_url_helpers.my_account_path
-      when 'resource'
-        redirect_to stash_url_helpers.review_resource_path(session[:redirect_resource_id])
-      else
-        redirect_to stash_url_helpers.dashboard_path
+      target_page = session[:target_page]
+      if target_page.present?
+        session[:target_page] = nil
+        redirect_to target_page and return
       end
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
+    def set_default_tenant
+      return unless current_user.present?
+
+      current_user.update(tenant_id: APP_CONFIG.default_tenant)
+    end
   end
 end
 # rubocop:enable Metrics/ClassLength

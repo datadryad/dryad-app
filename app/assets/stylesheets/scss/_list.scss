@@ -27,36 +27,20 @@ ul.c-text_styles {
 
 }
 
-.o-list-related {
-	margin: 8px 0 6px;
-	padding: 0;
-
-	li {
-		line-height: 1.25;
-		list-style: none;
-	}
-
-	li:last-child {
-		padding-bottom: 6px;
-		list-style: none;
-	}
-
-}
-
 .saved_searches_list {
 	counter-reset: li;
 	padding-left: 0;
 	display: grid;
-	grid-template-columns: 16px 20px 1fr 3fr 40px 40px;
+	grid-template-columns: 18px 20px 1fr 3fr 40px 40px;
 
 	&.with_form {
-		grid-template-columns: 16px 60px 2fr 3fr 40px 40px;
+		grid-template-columns: 18px 60px 2fr 3fr 40px 40px;
 	}
 
 	li:before {
 		counter-increment: li;
 		content: counter(li);
-		padding: 5px 0 5px 3px;
+		padding: 5px 0 5px 5px;
 	}
 
 	li {
@@ -64,6 +48,8 @@ ul.c-text_styles {
 		grid-template-columns: subgrid;
 		grid-column-start: 1;
 		grid-column-end: 7;
+		margin: 0;
+		padding: 6px 0;
 
 		&:nth-child(odd) {
 		  background-color: #f6f6f6;

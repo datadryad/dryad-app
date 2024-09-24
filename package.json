@@ -71,7 +71,7 @@
     "@milkdown/utils": "^7.3.0",
     "@tinymce/tinymce-react": "^5.0.1",
     "aws-sdk": "^2.1060.0",
-    "axios": "^1.6.0",
+    "axios": "^1.7.4",
     "babel-loader": "8",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "compression-webpack-plugin": "9",
@@ -149,7 +149,9 @@
     "stylelint": "^16.0.0",
     "stylelint-config-property-sort-order-smacss": "^10.0.0",
     "stylelint-config-recommended-scss": "^14.0.0",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-dev-server": "^5.1.0",
+    "express": "^4.20.0",
+    "serve-static": "^1.16.1"
   },
   "resolutions": {
     "nanoid": "<4.0.0"
