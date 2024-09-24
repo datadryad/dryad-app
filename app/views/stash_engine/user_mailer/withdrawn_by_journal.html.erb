@@ -7,7 +7,7 @@
 
 <p>
   Title: <%= @resource.title %><br/>
-  <%= @resource.identifier_str %>
+  DOI: <%= @resource.identifier_uri %>
 </p>
 
 <p>
@@ -28,7 +28,7 @@
 
 <p>
   Contact us at
-  <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>
+  <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>
   if you have any questions.
 </p>
 
