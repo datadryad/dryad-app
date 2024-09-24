@@ -216,8 +216,12 @@ that tells the server to set the /curationStatus value:
 
 ```json
 [
-	{ "op": "replace", "path": "/curationStatus", "value": "submitted" }
+  { "op": "replace", "path": "/curationStatus", "value": "submitted" }
 ]
+```
+OR directly
+```json
+{ "op": "replace", "path": "/curationStatus", "value": "submitted" }
 ```
 
 The value may be:
@@ -232,6 +236,8 @@ For the cURL example, please save a file called my_patch.json with the patch con
 curl --data "@my_patch.json" -i -X PATCH "https://<domain-name>/api/v2/datasets/<encoded-doi>" -H "Authorization: Bearer <token>" -H "Content-Type: application/json-patch+json" -H "Accept: application/json"
 ```
 
+`Accept` header is optional if you are using JSON format.
+
 Linking a dataset to a journal, or unlinking a dataset from a journal
 ---------------------------------------------------------------------
 
@@ -242,4 +248,7 @@ To link/unlink a dataset and a journal, use a similar approach to the status upd
 	{ "op": "replace", "path": "/publicationISSN", "value": "1234-5678" }
 ]
 ```
-
+OR directly
+```json
+{ "op": "replace", "path": "/publicationISSN", "value": "1234-5678" }
+```
