@@ -718,12 +718,28 @@ paths:
             with the given tenant. If both a *tenant* and *affiliation* are
             specified, the tenant will be ignored.
         - in: query
+          name: journalISSN
+          schema:
+            type: string
+          description:
+            The journal ISSN.
+        - in: query
           name: modifiedSince
           schema:
             type: string
           description:
             A timestamp for limiting results. Datasets will
             only be returned that have been modified since the given
+            time. The time must be specified in ISO 8601 format, and the time
+            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`. Shortened versions
+            of the time string are acceptable, e.g., `2020-10`.
+        - in: query
+          name: modifiedBefore
+          schema:
+            type: string
+          description:
+            A timestamp for limiting results. Datasets will
+            only be returned that have been modified before the given
             time. The time must be specified in ISO 8601 format, and the time
             zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`. Shortened versions
             of the time string are acceptable, e.g., `2020-10`.
