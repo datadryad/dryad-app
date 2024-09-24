@@ -19,26 +19,26 @@ Dryad member, you will be responsible for paying the DPC as well as any overage 
 <table class="c-lined-table" style="max-width: 100%; overflow-wrap: anywhere;">
   <thead>
     <tr>
-      <th class="c-lined-table__sort  <%= sort_display('title') %>">
+      <th class="c-lined-table__sort" <%= sort_display('title') %>>
         <%= sortable_column_head sort_field: 'title', title: 'Title' %>
       </th>
       <th>ISSNs</th>
       <th>DPC sponsored</th>
       <% if policy(@journals).detail? %>
-        <th class="c-lined-table__sort <%= sort_display('payment_plan_type') %>">
+        <th class="c-lined-table__sort" <%= sort_display('payment_plan_type') %>>
           <%= sortable_column_head sort_field: 'payment_plan_type', title: 'Payment plan' %>
         </th>
-        <th class="c-lined-table__sort  <%= sort_display('sponsor_id') %>">
+        <th class="c-lined-table__sort" <%= sort_display('sponsor_id') %>>
           <%= sortable_column_head sort_field: 'sponsor_id', title: 'Parent org' %>
         </th>
-        <th class="c-lined-table__sort  <%= sort_display('parent_org_id') %>">
+        <th class="c-lined-table__sort" <%= sort_display('parent_org_id') %>>
           <%= sortable_column_head sort_field: 'parent_org_id', title: 'Top level org' %>
         </th>
       <% end %>
       <th>Integrated data</th>
       <% if policy(@journals).detail? %>
         <th>Data last received</th>
-        <th class="c-lined-table__sort  <%= sort_display('default_to_ppr') %>">
+        <th class="c-lined-table__sort" <%= sort_display('default_to_ppr') %>>
           <%= sortable_column_head sort_field: 'default_to_ppr', title: 'Auto PPR' %>
         </th>
       <% end %>

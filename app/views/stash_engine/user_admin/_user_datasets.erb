@@ -3,22 +3,22 @@
 <table class="c-lined-table" style="margin-top: 0">
   <thead>
     <tr>
-      <th class="c-lined-table__sort <%= sort_display('title') %>">
+      <th class="c-lined-table__sort" <%= sort_display('title') %>>
         <%= sortable_column_head sort_field: 'title', title: 'Dataset title' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('embargo_status') %>">
+      <th class="c-lined-table__sort" <%= sort_display('embargo_status') %>>
         <%= sortable_column_head sort_field: 'embargo_status', title: 'Status' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('publication_date') %>">
+      <th class="c-lined-table__sort" <%= sort_display('publication_date') %>>
         <%= sortable_column_head sort_field: 'publication_date', title: 'Publication Date' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('size') %>">
+      <th class="c-lined-table__sort" <%= sort_display('size') %>>
         <%= sortable_column_head sort_field: 'size', title: 'Size' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('updated_at') %>">
+      <th class="c-lined-table__sort" <%= sort_display('updated_at') %>>
         <%= sortable_column_head sort_field: 'updated_at', title: 'Last Modified' %>
       </th>      
-      <th class="c-lined-table__sort <%= sort_display('edited_by_name') %>">
+      <th class="c-lined-table__sort" <%= sort_display('edited_by_name') %>>
         <%= sortable_column_head sort_field: 'edited_by_name', title: 'Edited By' %>
       </th>
     </tr>
