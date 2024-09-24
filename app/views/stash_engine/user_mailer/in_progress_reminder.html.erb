@@ -2,7 +2,7 @@
 
 <p>
   The Dryad dataset submission you’ve initiated titled, “<%= @resource.title %>” with the
-  DOI “<%= @resource.identifier_str %>”, is currently "In Progress". It has not yet been submitted for evaluation
+  DOI “<%= @resource.identifier_value %>”, is currently "In Progress". It has not yet been submitted for evaluation
   by a member of our curation team.
 </p>
 
@@ -26,6 +26,6 @@
 <p>
   If you do not intend to proceed with the publication of this dataset, you may either select "Delete" from your
   dashboard if this option is available to you, or contact us with your dataset DOI at
-  <a href="mailto:<%= @helpdesk_email %>?subject=Withdraw <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>
+  <a href="mailto:<%= @helpdesk_email %>?subject=Withdraw <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>
   to request that it is withdrawn.
 </p>

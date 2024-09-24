@@ -11,14 +11,14 @@
 </p>
 
 <p>If you do not intend for your data to be publicly available yet, contact us at
-  <a href="mailto:<%= @helpdesk_email %>?subject=PPR for DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>
+  <a href="mailto:<%= @helpdesk_email %>?subject=PPR for DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>
   and we will place your submission in ‘Private for Peer Review’ status.
 </p>
 
 <p>Your dataset has been assigned an important link:</p>
 <ul>
   <li>
-    A unique digital object identifier (DOI): <%= @resource.identifier_str %>.<br/>
+    A unique digital object identifier (DOI): <%= @resource.identifier_uri %><br/>
     <p>This DOI link is permanent and should included in the Data Availability Statement of your published article.</p>
   </li>
 </ul>
@@ -39,13 +39,13 @@
 
 <p>
   If you have any questions, please contact us at
-  <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.
+  <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>.
 </p>
 
 <p>Thank you for choosing Dryad to host your data. We appreciate your support.</p>
 
 <p>
   We would greatly appreciate your feedback! Please complete
-  <a href="https://form.jotform.com/232493320676357?datasetDOI=<%= CGI.escape(@resource.identifier.identifier) %>">
+  <a href="https://form.jotform.com/232493320676357?datasetDOI=<%= CGI.escape(@resource.identifier_value) %>">
     a short survey about your submission experience</a>.
 </p>

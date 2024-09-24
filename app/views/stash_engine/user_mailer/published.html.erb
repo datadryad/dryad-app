@@ -3,7 +3,7 @@
 <p>
   Your dataset titled "<%= @resource.title %>" has been reviewed by a curator and approved for publication.
   It is publicly accessible via this link:
-  <a href="https://doi.org/<%= @resource.identifier_str %>">https://doi.org/<%= @resource.identifier_str %></a>.
+  <a href="<%= @resource.identifier_uri %>"><%= @resource.identifier_uri %></a>.
 </p>
 
 <% rel_sfw = @resource.related_identifiers&.where(added_by: 'zenodo')&.where(work_type: 'software')&.first %>

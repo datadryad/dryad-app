@@ -2,7 +2,7 @@
 
 <p>
   Title: <%= @resource.title %><br/>
-  <%= @resource.identifier_str %>
+  DOI: <%= @resource.identifier_uri %>
 </p>
 
 <p>
@@ -30,6 +30,6 @@
 
 <p>
   If you choose not to proceed with the submission of this dataset, contact us at
-  <a href="mailto:<%= @helpdesk_email %>?subject=Withdraw DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>,
+  <a href="mailto:<%= @helpdesk_email %>?subject=Withdraw DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>,
   and we will withdraw your submission.
 </p>

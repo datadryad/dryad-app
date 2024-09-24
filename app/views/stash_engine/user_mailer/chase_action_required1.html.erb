@@ -7,7 +7,7 @@
 
 <p>
   Title: "<%= @resource.title %>"<br/>
-  <%= @resource.identifier_str %>
+  DOI: <%= @resource.identifier_uri %>
 </p>
 
 <p>
@@ -18,7 +18,7 @@
 
 <p>
   Our previous email correspondence contains specific details on the changes required. Contact us
-  at <a href="mailto:help@datadryad.org?subject=Dataset with DOI: <%= @resource.identifier_str %>">help@datadryad.org</a>
+  at <a href="mailto:help@datadryad.org?subject=Dataset with DOI: <%= @resource.identifier_value %>">help@datadryad.org</a>
   if you have any questions or no longer wish to proceed with the publication of this dataset.
 </p>
 
