@@ -107,7 +107,7 @@ module StashEngine
             session[:returnURL] = nil
             redirect_to(return_url, allow_other_host: true, notice: notice)
           elsif current_user
-            redirect_to return_to_path_or(dashboard_path), notice: notice
+            redirect_to return_to_path_or(choose_dashboard_path), notice: notice
           else
             redirect_to root_path, notice: notice
           end
@@ -241,7 +241,7 @@ module StashEngine
     end
 
     def require_in_progress
-      redirect_to dashboard_path, alert: 'You may only edit the current version of the dataset' unless resource.current_state == 'in_progress'
+      redirect_to choose_dashboard_path, alert: 'You may only edit the current version of the dataset' unless resource.current_state == 'in_progress'
       false
     end
 

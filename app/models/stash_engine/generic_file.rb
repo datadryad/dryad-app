@@ -216,7 +216,7 @@ module StashEngine
                                 download_url: url || s3_staged_presigned_url,
                                 file_mime_type: upload_content_type,
                                 callback_url: h.file_frictionless_report_url(id)
-                                               .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
+                                               .gsub('http://localhost:3000', 'https://v3-dev.datadryad.org')
                                                .gsub(/^http:/, 'https:'),
                                 token: StashEngine::ApiToken.token
                               })
@@ -258,7 +258,7 @@ module StashEngine
       payload = JSON.generate({ download_url: url || s3_staged_presigned_url,
                                 filename: upload_file_name,
                                 callback_url: h.processor_result_url(pr.id)
-                                               .gsub('http://localhost:3000', 'https://dryad-dev.cdlib.org')
+                                               .gsub('http://localhost:3000', 'https://v3-dev.datadryad.org')
                                                .gsub(/^http:/, 'https:'),
                                 token: StashEngine::ApiToken.token,
                                 doi: resource.identifier.to_s,

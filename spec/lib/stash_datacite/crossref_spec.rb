@@ -136,7 +136,7 @@ module Stash
         @user = StashEngine::User.create(
           first_name: 'Lisa',
           last_name: 'Muckenhaupt',
-          email: 'lmuckenhaupt@ucop.edu',
+          email: 'lmuckenhaupt@datadryad.org',
           tenant_id: 'ucop'
         )
         @identifier = StashEngine::Identifier.create(identifier: '10.1234/abcd123')

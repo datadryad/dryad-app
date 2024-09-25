@@ -42,22 +42,22 @@
     <table class="c-lined-table c-proposed-change-table">
       <thead>
       <tr>
-        <th class="c-lined-table__sort <%= sort_display('stash_engine_proposed_changes.title') %> c-proposed-change-table__column-large">
+        <th class="c-lined-table__sort c-proposed-change-table__column-large" <%= sort_display('stash_engine_proposed_changes.title') %> >
           <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.title', title: 'Title' %>
         </th>
-        <th class="c-lined-table__sort <%= sort_display('publication_name') %> c-proposed-change-table__column-small">
+        <th class="c-lined-table__sort c-proposed-change-table__column-small" <%= sort_display('publication_name') %>>
           <%= sortable_column_head sort_field: 'publication_name', title: 'Publication' %>
         </th>
-        <th class="c-lined-table__sort <%= sort_display('publication_issn') %> c-proposed-change-table__column-small">
+        <th class="c-lined-table__sort c-proposed-change-table__column-small" <%= sort_display('publication_issn') %>>
           <%= sortable_column_head sort_field: 'publication_issn', title: 'ISSN' %>
         </th>
-        <th class="c-lined-table__sort <%= sort_display('publication_doi') %> c-proposed-change-table__column">
+        <th class="c-lined-table__sort c-proposed-change-table__column" <%= sort_display('publication_doi') %>>
           <%= sortable_column_head sort_field: 'publication_doi', title: 'DOI' %>
         </th>
-        <th class="c-lined-table__sort <%= sort_display('stash_engine_proposed_changes.publication_date') %> c-proposed-change-table__column-small">
+        <th class="c-lined-table__sort c-proposed-change-table__column-small" <%= sort_display('stash_engine_proposed_changes.publication_date') %>>
           <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.publication_date', title: 'Published' %>
         </th>
-        <th class="c-lined-table__sort <%= sort_display('authors') %> c-proposed-change-table__column-medium">
+        <th class="c-lined-table__sort c-proposed-change-table__column-medium" <%= sort_display('authors') %>>
           <%= sortable_column_head sort_field: 'authors', title: 'Authors' %>
         </th>
       </tr>
