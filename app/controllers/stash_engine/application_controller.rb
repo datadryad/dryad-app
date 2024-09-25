@@ -29,14 +29,14 @@ module StashEngine
 
     def user_not_authorized
       flash[:alert] = 'You are not authorized to view this information.'
-      redirect_back(fallback_location: '/stash/dashboard')
+      redirect_back(fallback_location: choose_dashboard_path)
     end
 
     def display_authorization_failure
       Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user IDs are #{resource.users&.map(&:id)&.join(', ')} but " \
                         "current user is #{current_user.id || 'nil'}")
       flash[:alert] = 'You do not have permission to modify this dataset.'
-      redirect_back(fallback_location: '/stash/dashboard')
+      redirect_back(fallback_location: choose_dashboard_path)
     end
 
     def redirect_url_for(original_url, host, port)

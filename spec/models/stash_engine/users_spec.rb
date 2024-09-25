@@ -52,7 +52,7 @@ module StashEngine
         @user = create(:user,
                        first_name: 'Lisa',
                        last_name: 'Muckenhaupt',
-                       email: 'lmuckenhaupt@ucop.edu',
+                       email: 'lmuckenhaupt@datadryad.org',
                        tenant_id: 'ucop')
         @affiliation = create(:affiliation,
                               short_name: 'Testing',
@@ -74,7 +74,7 @@ module StashEngine
           provider: 'orcid',
           uid: '12345-678',
           info: {
-            email: 'lmuckenhaupt@ucop.edu',
+            email: 'lmuckenhaupt@datadryad.org',
             name: 'Morta McWhorter'
           },
           extra: {
@@ -87,20 +87,20 @@ module StashEngine
       end
 
       it 'creates a user' do
-        user = User.from_omniauth_orcid(auth_hash: @auth, emails: ['lmuckenhaupt@ucop.edu'])
+        user = User.from_omniauth_orcid(auth_hash: @auth, emails: ['lmuckenhaupt@datadryad.org'])
         expect(user).to be_a(User)
         expect(user).to be_persisted
         expect(user.orcid).to eq('12345-678')
         expect(user.first_name).to eq('Morta')
         expect(user.last_name).to eq('McWhorter')
-        expect(user.email).to eq('lmuckenhaupt@ucop.edu')
+        expect(user.email).to eq('lmuckenhaupt@datadryad.org')
       end
 
       it "finds by email and updates a user's orcid" do
         # this creates the user, as tested above
-        User.from_omniauth_orcid(auth_hash: @auth, emails: ['lmuckenhaupt@ucop.edu'])
+        User.from_omniauth_orcid(auth_hash: @auth, emails: ['lmuckenhaupt@datadryad.org'])
         @auth[:uid] = '987-654-321'
-        user2 = User.from_omniauth_orcid(auth_hash: @auth, emails: ['lmuckenhaupt@ucop.edu'])
+        user2 = User.from_omniauth_orcid(auth_hash: @auth, emails: ['lmuckenhaupt@datadryad.org'])
         expect(user2.orcid).to eq('987-654-321')
       end
 
@@ -140,7 +140,7 @@ module StashEngine
     describe 'find_by_orcid_or_emails' do
       before(:each) do
         create(:user,
-               email: 'lmuckenhaupt@ucop.edu')
+               email: 'lmuckenhaupt@datadryad.org')
         create(:user,
                orcid: '12345678')
         create(:user,
@@ -154,7 +154,7 @@ module StashEngine
       end
 
       it 'finds by emails only' do
-        users = User.find_by_orcid_or_emails(orcid: nil, emails: ['lmuckenhaupt@ucop.edu', 'grover@example.org'])
+        users = User.find_by_orcid_or_emails(orcid: nil, emails: ['lmuckenhaupt@datadryad.org', 'grover@example.org'])
         expect(users.count).to eq(2)
       end
 
@@ -170,7 +170,7 @@ module StashEngine
       end
 
       it 'combines results for orcids and emails' do
-        users = User.find_by_orcid_or_emails(orcid: '12345678', emails: ['lmuckenhaupt@ucop.edu', 'grover@example.org'])
+        users = User.find_by_orcid_or_emails(orcid: '12345678', emails: ['lmuckenhaupt@datadryad.org', 'grover@example.org'])
         expect(users.count).to eq(3)
       end
     end

@@ -115,7 +115,7 @@ module StashEngine
         @user = create(:user,
                        first_name: 'Lisa',
                        last_name: 'Muckenhaupt',
-                       email: 'lmuckenhaupt@ucop.edu',
+                       email: 'lmuckenhaupt@datadryad.org',
                        tenant_id: 'ucop',
                        orcid: nil)
         @resource.submitter = @user.id

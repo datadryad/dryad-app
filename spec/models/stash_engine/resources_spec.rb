@@ -14,7 +14,7 @@ module StashEngine
       @user = StashEngine::User.create(
         first_name: 'Lisa',
         last_name: 'Muckenhaupt',
-        email: 'lmuckenhaupt@ucop.edu',
+        email: 'lmuckenhaupt@datadryad.org',
         tenant_id: 'ucop'
       )
       allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
@@ -168,7 +168,7 @@ module StashEngine
         identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         editor = create(:user, first_name: 'L',
                                last_name: 'Mu',
-                               email: 'lm@ucop.edu',
+                               email: 'lm@datadryad.org',
                                tenant_id: 'ucop')
         resource = create(:resource, user_id: @user.id, identifier_id: identifier.id,
                                      current_editor_id: editor.id, tenant_id: 'ucop')
@@ -1471,9 +1471,9 @@ module StashEngine
 
         before(:each) do
           # user has only user permission and is part of the UCOP tenant
-          @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop')
+          @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@datadryad.org', tenant_id: 'ucop')
           create(:role, role_object: @user2.tenant, user: @user2, role: 'admin')
-          @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'curator')
+          @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@datadryad.org', tenant_id: 'ucb', role: 'curator')
           @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
           @resources = []
           Timecop.travel(Time.now.utc - 12.seconds)
@@ -1594,7 +1594,7 @@ module StashEngine
           end
 
           it 'only shows curated-visible resources to a random user' do
-            @user4 = create(:user, first_name: 'Gorgon', last_name: 'Grup', email: 'st38p@ucop.edu', tenant_id: 'ucb')
+            @user4 = create(:user, first_name: 'Gorgon', last_name: 'Grup', email: 'st38p@datadryad.org', tenant_id: 'ucb')
             resources = StashEngine::ResourcePolicy::VersionScope.new(@user4, @identifier.resources).resolve
             expect(resources.count).to eq(2)
           end

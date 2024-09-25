@@ -6,6 +6,12 @@ module StashEngine
 
     MAX_VALIDATION_TRIES = 5
 
+    def choose
+      return redirect_to admin_dashboard_path if current_user.min_admin?
+
+      redirect_to dashboard_path
+    end
+
     def show
       @doi = CGI.escape(params[:doi] || '')
     end
