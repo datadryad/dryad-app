@@ -275,6 +275,41 @@ will not take effect. This is probably something we can fix in the code, but it 
 to revisit the Zenodo integration.**
 
 
+Removing a unpublished datasets and versions
+============================================
+
+Removing an unsubmitted (and unpublished) dataset
+-------------------------------------------------
+
+Datasets that are unsubmitted and unpublished will be removed by automatic
+processes after the time is up. If you want to speed the process, you can find
+the resource_id and simply destroy it in Rails console.
+
+
+Removing an unpublished dataset
+-------------------------------
+
+Simply set the dataset to status `withdrawn`. The automatic cleanup processes will remove it after the time expires.
+
+
+Removing an unpublished (most recent) version of a published dataset
+--------------------------------------------------------------------
+
+If there is a request to remove the latest version of a dataset, and that
+version has not been published, you can find the resource_id and simply destroy
+it in Rails console.
+
+
+Other removal situations
+------------------------
+
+If you have a request to remove a version that is in the middle of the revision
+history for a dataset, DON'T. This will mess up the revision chain, and data
+files will not be correctly found. You can make this version invisible (`file_view=false` and/or `meta_view=false`).
+
+For published datasets, see the sections below.
+
+
 Setting "Private For Peer Review" (PPR) on dataset that was accidentally published
 ==================================================================================
 ```sql
