@@ -256,7 +256,7 @@ module StashApi
               }],
               'abstract' => 'Cyberneticists agree that concurrent models are fun.',
               'userId' => 'BOGUS-junk',
-              'triggerSubmitInvitation' => 'true'
+              'triggerSubmitInvitation' => true
             }.with_indifferent_access
 
             dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
@@ -277,7 +277,7 @@ module StashApi
               }],
               'abstract' => 'Cyberneticists agree that concurrent models are fun.',
               'userId' => 'BOGUS-junk',
-              'triggerSubmitInvitation' => 'true'
+              'triggerSubmitInvitation' => true
             }.with_indifferent_access
 
             dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
@@ -301,7 +301,7 @@ module StashApi
               }],
               'abstract' => 'Cyberneticists agree that concurrent models are fun.',
               'userId' => 'BOGUS-junk',
-              'triggerSubmitInvitation' => 'false'
+              'triggerSubmitInvitation' => false
             }.with_indifferent_access
 
             dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
