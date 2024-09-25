@@ -1,15 +1,20 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Thank you for your submission to Dryad titled, "<%= @resource.title %>".</p>
-
 <p>
-  Your data submission will soon be evaluated by a member of our curation team. Keep in mind that datasets are evaluated in the order they are received.
+<% if journal_name = @resource.journal&.title %>
+  <%= journal_name %> has informed us of your recent manuscript titled "<%= @resource.title %>", and you are invited to deposit data associated with the manuscript to Dryad.
+<% else %>
+  You are invited to deposit data associated with the manuscript "<%= @resource.title %>" to Dryad.
+<% end %>
 </p>
 
-<% shr = @resource.identifier.shares.first.sharing_link %>
+<p>
+  Please visit the Dryad site to <a href="https://datadryad.org/stash/requirements">review our instructions</a> for preparing your data and uploading files prior to initiating your data submission. To upload your data to Dryad, you may use the following link:<br />
+  <a href="<%= @edit_url %>"><%= @edit_url %></a>
+</p>
 
-<p>Your dataset has been assigned one important links:</p>
-<p>Reviewer URL: <a href="<%= @edit_url %>"><%= @edit_url %></a>. </p>
-<%= @resource.identifier_str %>
+<p>You may be prompted to log into Dryad. Follow the prompts in the submission form and select to either keep your dataset private during peer review, which will prevent it from being curated and published, or submit it to our curation queue to have it published.</p>
 
-<p><a href="https://docs.google.com/forms/d/e/1FAIpQLSfw9aG7WoKYan3nlxU4O61QjOEDbqyav8wGImRTQlev7LGoyQ/viewform">Subscribe to Dryad's monthly round-up of compelling datasets</a>.</p>
+<p>After submission, Dryad will send you an email acknowledgment of your data submission that includes important links and further instructions.</p>
+
+<p>If you have any questions, please contact Dryad at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>

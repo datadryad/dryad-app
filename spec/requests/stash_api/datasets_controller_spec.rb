@@ -239,7 +239,7 @@ module StashApi
         end
 
         it 'triggers email sending when owner has email setup' do
-          expect(StashApi::ApiMailer).to receive_message_chain(:send_submit_request, :deliver_later)
+          expect(StashApi::ApiMailer).to receive_message_chain(:send_submit_request, :deliver_now)
           post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
         end
       end

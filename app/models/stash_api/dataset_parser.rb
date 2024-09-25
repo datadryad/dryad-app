@@ -62,9 +62,9 @@ module StashApi
     end
 
     def send_submit_invitation_email(metadata)
-      return if @hash['triggerSubmitInvitation'].to_s != 'true' || @resource.user.email.blank?
+      return if @hash['triggerSubmitInvitation'] != true || @resource.user.email.blank?
 
-      StashApi::ApiMailer.send_submit_request(@resource, metadata).deliver_later
+      StashApi::ApiMailer.send_submit_request(@resource, metadata).deliver_now
     end
 
     private
@@ -234,7 +234,7 @@ module StashApi
     end
 
     def validate_submit_invitation(owning_user)
-      return if @hash['triggerSubmitInvitation'].to_s != 'true' || owning_user.email.present?
+      return if @hash['triggerSubmitInvitation'] != true || owning_user.email.present?
 
       raise ActionController::BadRequest, 'Dataset owner does not have an email address in order to send the Submission email.'
     end
