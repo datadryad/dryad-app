@@ -97,7 +97,6 @@ module StashEngine
     has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject', through: 'StashDatacite::ResourceSubject', dependent: :destroy
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
-    has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
     has_one :manuscript, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
