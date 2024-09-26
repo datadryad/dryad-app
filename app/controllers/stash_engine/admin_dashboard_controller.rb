@@ -371,10 +371,11 @@ module StashEngine
     end
 
     def publishing_error
+      last_resource = @identifier.last_submitted_resource
       @error_message = <<-HTML.chomp.html_safe
         <p>You're attempting to embargo or publish a dataset that is being edited or hasn't successfully finished submission.</p>
-        <p>The latest version submission status is <strong>#{@last_resource.current_resource_state.resource_state}</strong> for
-        resource id #{@last_resource.id}.</p>
+        <p>The latest version submission status is <strong>#{last_resource.current_resource_state.resource_state}</strong> for
+        resource id #{last_resource.id}.</p>
         <p>You may need to wait a minute for submission to complete if this was recently edited or submitted again.</p>
       HTML
       render :curation_activity_error
