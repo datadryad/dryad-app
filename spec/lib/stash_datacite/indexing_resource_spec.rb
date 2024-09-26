@@ -49,7 +49,8 @@ module Stash
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'manuscriptNumber', value: 'manuscript123')
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'pubmedID', value: 'pubmed123')
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'mismatchedDOI', value: 'doi987')
-        create(:resource_publication, resource_id: @resource.id, publication_name: 'Journal of Testing Fun', manuscript_number: 'manuscript123')
+        create(:resource_publication, resource_id: @resource.id, publication_name: 'Journal of Testing Fun', manuscript_number: 'manuscript123',
+                                      publication_issn: 'manuscript123issn')
         @resource_state = create(:resource_state, resource_id: @resource.id)
         @resource.update(current_resource_state_id: @resource_state.id)
         create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'doi', relation_type: 'iscitedby',
@@ -345,6 +346,7 @@ module Stash
                                                @affil2.long_name],
             dryad_related_publication_name_s: 'Journal of Testing Fun',
             dryad_related_publication_id_s: 'manuscript123 pubmed123 doi123',
+            dryad_related_publication_issn_s: 'manuscript123issn',
             dryad_dataset_file_ext_sm: df,
             updated_at_dt: @resource.updated_at.iso8601
           }
