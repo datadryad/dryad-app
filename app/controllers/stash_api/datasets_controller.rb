@@ -545,6 +545,7 @@ module StashApi
                @user.journals_as_admin.map(&:issn_array)&.flatten&.reject(&:blank?)&.include?(params['dataset']['publicationISSN'])
           render json: { error: "Unauthorized: only curators, superusers, and journal administrators may set #{attr} to true" }.to_json, status: 401
           return false
+        end
       end
 
       # superuser restrictions
