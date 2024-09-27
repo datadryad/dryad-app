@@ -531,14 +531,24 @@ module StashApi
     # some parameters would be locked down for only admins or superusers to set
     def lock_down_admin_only_params
       # all this bogus return false stuff is to prevent double render errors in some circumstances
-      return if check_superuser_restricted_params == false
+      return if check_restricted_params == false
       return if check_may_set_user_id == false
 
       nil if check_may_set_payment_id == false
     end
 
-    def check_superuser_restricted_params
-      %w[skipDataciteUpdate skipEmails preserveCurationStatus loosenValidation].each do |attr|
+    def check_restricted_params
+      # admin restrictions
+      %w[skipEmails preserveCurationStatus].each do |attr|
+        unless @user.min_curator? ||
+               # or you admin the target journal
+               @user.journals_as_admin.map(&:issn_array)&.flatten&.reject(&:blank?)&.include?(params['dataset']['publicationISSN'])
+          render json: { error: "Unauthorized: only curators, superusers, and journal administrators may set #{attr} to true" }.to_json, status: 401
+          return false
+      end
+
+      # superuser restrictions
+      %w[skipDataciteUpdate loosenValidation].each do |attr|
         item_value = params[attr]
         unless item_value.nil? || item_value.instance_of?(TrueClass) || item_value.instance_of?(FalseClass)
           render json: { error: "Bad Request: #{attr} must be true or false" }.to_json, status: 400
