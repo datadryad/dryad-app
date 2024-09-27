@@ -539,6 +539,7 @@ module StashApi
 
     def check_restricted_params
       # admin restrictions
+      # rubocop:disable Style/Next
       %w[skipEmails preserveCurationStatus].each do |attr|
         unless @user.min_curator? ||
                # or you admin the target journal
@@ -547,6 +548,7 @@ module StashApi
           return false
         end
       end
+      # rubocop:enable Style/Next
 
       # superuser restrictions
       %w[skipDataciteUpdate loosenValidation].each do |attr|
