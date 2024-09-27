@@ -97,7 +97,7 @@ have access to the fields that are appropriate for your needs:
 Rarely-used options
 -------------------
 
-Superusers and have access to some extra options that control a dataset's
+Superusers have access to some extra options that control a dataset's
 behavior:
 - `invoiceId` - Indicates the ID of an invoice that has already been
   applied to this dataset. Dryad will not attempt to generate a
