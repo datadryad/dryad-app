@@ -90,7 +90,7 @@ export default function ReadMeSteps({
       <div className="steps-wrapper">
         {Object.keys(sections).map((i) => (
           /* eslint-disable-next-line eqeqeq */
-          <div key={`step${i}`} className={`step${i < step ? ' completed' : ''}${i == step ? ' current' : ''}`} aria-current={step == i}>
+          <div key={`step${i}`} className={`step${i < step ? ' completed' : ''}${i == step ? ' current' : ''}`} aria-current={step == i ? 'step' : null}>
             <span className="step-counter">{i}</span><span className="step-name">{secTitles[i - 1]}</span>
           </div>
         ))}
@@ -113,16 +113,16 @@ export default function ReadMeSteps({
         {...(step === 1 ? {initialValue: '', replaceValue: sections[step].content} : {initialValue: sections[step].content})}
         onChange={saveContent}
       />
-      <div className="o-dataset-nav" style={{marginBottom: '4rem'}}>
-        <button type="button" className="o-button__plain-text" onClick={() => setStep(step - 1)}>
-          <i className="fa fa-caret-left" aria-hidden="true" /> Previous
-        </button>
+      <div className="o-dataset-nav">
         <button type="button" className="o-button__plain-text2" onClick={() => setStep(step + 1)}>
           {step === secTitles.length ? (
             <>Complete &amp; generate README</>
           ) : (
             <>Next <i className="fa fa-caret-right" aria-hidden="true" /></>
           )}
+        </button>
+        <button type="button" className="o-button__plain-text" onClick={() => setStep(step - 1)}>
+          <i className="fa fa-caret-left" aria-hidden="true" /> Previous
         </button>
       </div>
     </>

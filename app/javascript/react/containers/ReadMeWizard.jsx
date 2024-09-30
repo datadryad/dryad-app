@@ -7,13 +7,13 @@ import ReadMeSteps, {secTitles} from '../components/ReadMeWizard/ReadMeSteps';
 import MarkdownEditor from '../components/MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../lib/utils';
 
-export default function ReadMe({
-  dcsDescription, title, doi, fileList, updatePath, fileContent,
-}) {
+export default function ReadMe({resource, setResource}) {
   const [initialValue, setInitialValue] = useState(null);
   const [replaceValue, setReplaceValue] = useState(null);
+  const [fileList, setFileList] = useState([]);
   const [wizardContent, setWizardContent] = useState(null);
   const [wizardStep, setWizardStep] = useState(0);
+  const dcsDescription = resource.descriptions.find((d) => d.description_type === 'technicalinfo') || {};
 
   const saveDescription = (markdown) => {
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -26,8 +26,18 @@ export default function ReadMe({
       },
     };
     showSavingMsg();
-    axios.patch(updatePath, data, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+    axios.patch(
+      '/stash_datacite/descriptions/update',
+      data,
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    )
       .then(() => {
+        const {description_type} = data.description;
+        setResource((r) => {
+          const des = r.descriptions.filter((d) => d.description_type !== description_type);
+          r.descriptions = [data.description, ...des];
+          return r;
+        });
         showSavedMsg();
       });
   };
@@ -51,7 +61,7 @@ export default function ReadMe({
     document.querySelector('.c-autosave-footer').setAttribute('hidden', true);
     setInitialValue(null);
     setReplaceValue(null);
-    setWizardContent({title, doi, step: 0});
+    setWizardContent({title: resource.title, doi: resource.identifier.identifier, step: 0});
     setWizardStep(0);
     saveDescription(null);
   };
@@ -75,6 +85,17 @@ export default function ReadMe({
   }, [wizardStep]);
 
   useEffect(() => {
+    async function getFiles() {
+      axios.get(`/stash/resources/${resource.id}/prepare_readme`).then((data) => {
+        const {file_list, readme_file} = data.data;
+        setFileList(file_list);
+        if (readme_file) {
+          setInitialValue(readme_file);
+        } else if (!dcsDescription.description) {
+          setWizardContent({title: resource.title, doi: resource.identifier.identifier, step: 0});
+        }
+      });
+    }
     if (dcsDescription.description) {
       try {
         const template = JSON.parse(dcsDescription.description);
@@ -83,11 +104,8 @@ export default function ReadMe({
       } catch {
         setInitialValue(dcsDescription.description);
       }
-    } else if (fileContent) {
-      setInitialValue(fileContent);
-    } else {
-      setWizardContent({title, doi, step: 0});
     }
+    getFiles();
   }, []);
 
   if (initialValue || replaceValue) {
@@ -246,10 +264,6 @@ export default function ReadMe({
 }
 
 ReadMe.propTypes = {
-  dcsDescription: PropTypes.object.isRequired,
-  updatePath: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  doi: PropTypes.string.isRequired,
-  fileContent: PropTypes.string,
-  fileList: PropTypes.array,
+  resource: PropTypes.object.isRequired,
+  setResource: PropTypes.func.isRequired,
 };

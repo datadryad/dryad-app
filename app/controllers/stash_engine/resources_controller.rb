@@ -121,9 +121,8 @@ module StashEngine
     # Submission of the resource to the repository
     def submission; end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize
     def prepare_readme
-      @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, @resource.resource_type.resource_type, current_tenant)
       @file_list = @resource.data_files.map do |f|
         next if f.upload_file_name == 'README.md'
 
@@ -136,7 +135,7 @@ module StashEngine
         end
         h
       end
-      if @metadata_entry&.technical_info.try(:description) && !@metadata_entry&.technical_info.try(:description).empty?
+      if @resource.descriptions.type_technical_info.try(:description) && !@resource.descriptions.type_technical_info.try(:description).empty?
         @file_content = nil
       else
         readme_file = @resource&.data_files&.present_files&.where(upload_file_name: 'README.md')&.first
@@ -153,8 +152,9 @@ module StashEngine
           @file_content = nil
         end
       end
+      render json: { readme_file: @file_content, file_list: @file_list }
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize
 
     # Upload files view for resource
     def upload

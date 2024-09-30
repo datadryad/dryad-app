@@ -6,7 +6,7 @@ import sanitize from '../../lib/sanitize_filename';
 import {maxFiles, pollingDelay} from './maximums';
 
 import {
-  ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, UploadSelect, ValidateFiles, WarningMessage, TrackChanges,
+  ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, UploadSelect, ValidateFiles, WarningMessage, // TrackChanges,
 } from '../components/FileUpload';
 /**
  * Constants
@@ -22,7 +22,7 @@ const AllowedUploadFileTypes = {
   supp: 'supp',
 };
 const Messages = {
-  fileReadme: 'Please prepare your README on the previous page.',
+  fileReadme: 'Please prepare your README on the README page.',
   fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
   filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
   tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
@@ -80,7 +80,7 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  file_uploads, resource_id, frictionless, app_config_s3, s3_dir_name, readme_size, previous_version, file_note,
+  resource, setResource, config_frictionless, config_s3, s3_dir_name,
 }) {
   const [chosenFiles, setChosenFiles] = useState([]);
   const [validating, setValidating] = useState([]);
@@ -99,7 +99,7 @@ export default function UploadFiles({
 
   const isValidTabular = (file) => (ValidTabular.extensions.includes(file.sanitized_name.split('.').pop())
             || ValidTabular.mime_types.includes(file.upload_content_type))
-            && (file.upload_file_size <= frictionless.size_limit);
+            && (file.upload_file_size <= config_frictionless.size_limit);
 
   const labelNonTabular = (files) => {
     files.map((file) => {
@@ -108,12 +108,12 @@ export default function UploadFiles({
     });
   };
 
-  // set status based on contents of frictionless report
+  // set status based on contents of config_frictionless report
   const setTabularCheckStatus = (file) => {
     if (!isValidTabular(file)) {
       return TabularCheckStatus.na;
-    } if (file.frictionless_report) {
-      return TabularCheckStatus[file.frictionless_report.status];
+    } if (file.config_frictionless_report) {
+      return TabularCheckStatus[file.config_frictionless_report.status];
     }
     return TabularCheckStatus.error;
   };
@@ -124,7 +124,7 @@ export default function UploadFiles({
     tabularCheckStatus: setTabularCheckStatus(file),
   }));
 
-  // updates to checking (if during validation phase) or n/a or a status based on frictionless report from database
+  // updates to checking (if during validation phase) or n/a or a status based on config_frictionless report from database
   const updateTabularCheckStatus = (files) => {
     if (validating.length) {
       return files.reduce((arr, file) => {
@@ -137,7 +137,7 @@ export default function UploadFiles({
   };
 
   useEffect(() => {
-    const files = file_uploads;
+    const files = resource.generic_files;
     const transformed = transformData(files);
     const withTabularCheckStatus = updateTabularCheckStatus(transformed);
     setChosenFiles(withTabularCheckStatus);
@@ -190,7 +190,7 @@ export default function UploadFiles({
       if (checkPollingDone(toCheck)) return;
 
       axios.get(
-        `/stash/generic_file/check_frictionless/${resource_id}`,
+        `/stash/generic_file/check_config_frictionless/${resource.id}`,
         {params: {file_ids: toCheck.map((file) => file.id)}},
       ).then((response) => {
         const transformed = transformData(response.data);
@@ -200,7 +200,7 @@ export default function UploadFiles({
     }
   }, [pollingCount]);
 
-  // this is a tick for polling of frictionless reports had results put into database
+  // this is a tick for polling of config_frictionless reports had results put into database
   const tick = () => {
     setPollingCount((p) => p + 1);
   };
@@ -211,9 +211,9 @@ export default function UploadFiles({
       const files = updateTabularCheckStatus(validating);
       // I think these are files that are being uploaded now????  IDK what it means.
       updateAlreadyChosenById(files);
-      // post to the method to trigger frictionless validation in AWS Lambda
+      // post to the method to trigger config_frictionless validation in AWS Lambda
       axios.post(
-        `/stash/generic_file/trigger_frictionless/${resource_id}`,
+        `/stash/generic_file/trigger_config_frictionless/${resource.id}`,
         {file_ids: files.map((file) => file.id)},
       ).then(() => {
         if (!interval.current) {
@@ -280,6 +280,10 @@ export default function UploadFiles({
   const updateFileList = (files) => {
     labelNonTabular(files);
     setChosenFiles((c) => [...c, ...files]);
+    setResource((r) => {
+      r.files = [...chosenFiles, ...files];
+      return r;
+    });
   };
 
   const addFilesHandler = (event, uploadType) => {
@@ -328,9 +332,9 @@ export default function UploadFiles({
           },
           complete: () => {
             axios.post(
-              `/stash/${file.uploadType}_file/upload_complete/${resource_id}`,
+              `/stash/${file.uploadType}_file/upload_complete/${resource.id}`,
               {
-                resource_id,
+                resource_id: resource.id,
                 name: file.sanitized_name,
                 size: file.size,
                 type: file.type,
@@ -356,7 +360,7 @@ export default function UploadFiles({
         // Before start uploading, change file status cell to a progress bar
         changeStatusToProgressBar(file.id);
 
-        const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${resource_id}`;
+        const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${resource.id}`;
         evaporate.add(addConfig, {signerUrl})
           .then(
             (awsObjectKey) => console.log('File successfully uploaded to: ', awsObjectKey),
@@ -368,7 +372,7 @@ export default function UploadFiles({
   };
 
   const uploadFilesHandler = () => {
-    const {key, bucket, region} = app_config_s3.table;
+    const {key, bucket, region} = config_s3.table;
     // AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
     let partSize = 5 * 1024 * 1024;
     const maxSize = chosenFiles.reduce((p, c) => (p > c.size ? p : c.size), 0);
@@ -380,7 +384,7 @@ export default function UploadFiles({
       awsRegion: region,
       // Assign any first signerUrl, but it changes for each upload file type
       // when call evaporate object add method bellow
-      signerUrl: `/stash/generic_file/presign_upload/${resource_id}`,
+      signerUrl: `/stash/generic_file/presign_upload/${resource.id}`,
       awsSignatureVersion: '4',
       computeContentMd5: true,
       cryptoMd5Method: (data) => AWS.util.crypto.md5(data, 'base64'),
@@ -465,7 +469,7 @@ export default function UploadFiles({
     if (urlsObject.url.length) {
       setLoading(true);
       const typeFilePartialRoute = `${manFileType}_file`;
-      axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${resource_id}`, urlsObject)
+      axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${resource.id}`, urlsObject)
         .then((response) => {
           updateManifestFiles(response.data);
           setLoading(false);
@@ -484,7 +488,7 @@ export default function UploadFiles({
   return (
     <div className="c-upload">
       <div className="c-autosave-header">
-        <h1 className="o-heading__level1">Upload your files</h1>
+        <h2 className="o-heading__level2">Files</h2>
         <div className="c-autosave__text saving_text" hidden>Saving&hellip;</div>
         <div className="c-autosave__text saved_text" hidden>All progress saved</div>
       </div>
@@ -496,8 +500,7 @@ export default function UploadFiles({
             chosenFiles={chosenFiles}
             clickedRemove={removeFileHandler}
             clickedValidationReport={(file) => setValFile(file)}
-            totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0) + readme_size)}
-            readmeSize={readme_size && formatSizeUnits(readme_size)}
+            totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0))}
           />
           {loading && (
             <div className="c-upload__loading-spinner">
@@ -526,9 +529,9 @@ export default function UploadFiles({
           ) : <p>No files have been selected.</p> }
         </div>
       )}
-      {(previous_version && chosenFiles.some((f) => f.status !== 'Pending' && f.file_state !== 'copied')) && (
-        <TrackChanges id={resource_id} file_note={file_note} />
-      )}
+      {/* (prev && chosenFiles.some((f) => f.status !== 'Pending' && f.file_state !== 'copied')) && (
+        <TrackChanges id={resource.id} file_note={file_note} />
+      ) */}
       <ModalUrl
         ref={modalRef}
         key={manFileType}

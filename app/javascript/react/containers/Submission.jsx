@@ -6,11 +6,11 @@ import Authors from '../components/MetadataEntry/Authors';
 import Support from '../components/MetadataEntry/Support';
 import Subjects from '../components/MetadataEntry/Subjects';
 import Description from '../components/MetadataEntry/Description';
-// import UploadFiles from './UploadFiles'
-// import ReadMeWizard from './ReadMeWizard'
+import UploadFiles from './UploadFiles';
+import ReadMeWizard from './ReadMeWizard';
 
 export default function Submission({
-  submission, ownerId, admin, // prev, s3_dir_name, config_s3, config_frictionless,
+  submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless,
 }) {
   const [resource, setResource] = useState(JSON.parse(submission));
   const [step, setStep] = useState({name: 'Start'});
@@ -45,19 +45,25 @@ export default function Submission({
       name: 'Description',
       pass: !!resource.descriptions.find((d) => d.description_type === 'abstract')?.description,
       fail: false,
-      component: <Description resource={resource} admin={admin} />,
+      component: <Description resource={resource} setResource={setResource} admin={admin} />,
     },
     {
       name: 'Files',
       pass: resource.generic_files.filter((f) => f.type === 'StashEngine::DataFile').length > 0,
       fail: false,
-      // component: <UploadFiles resource={resource} setResource={setResource} prev={prev}
-      //  s3_dir_name={s3_dir_name} config_s3={config_s3} config_frictionless={config_frictionless} />
+      component: <UploadFiles
+        resource={resource}
+        setResource={setResource}
+        s3_dir_name={s3_dir_name}
+        config_s3={config_s3}
+        config_frictionless={config_frictionless}
+      />,
     },
     {
       name: 'README',
       pass: !!resource.descriptions.find((d) => d.description_type === 'technical_info')?.description,
       fail: false,
+      component: <ReadMeWizard resource={resource} setResource={setResource} />,
     },
     {
       name: 'Related works',
