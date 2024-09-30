@@ -1,5 +1,11 @@
-<div id="submission-wizard">
-<%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
-<%= render partial: 'stash_datacite/metadata_entry_pages/metadata_entry_form' %>
-</div>
-<%= render partial: 'stash_engine/shared/dataset_steps_bottom_nav', locals: {page: 1} %>
+<%= javascript_pack_tag 'application' %>
+<%= stylesheet_pack_tag 'application' %>
+<%= react_component('containers/Submission', {
+  submission: @submission,
+  ownerId: @resource.owner_author&.id,
+  admin: current_user.min_app_admin?,
+  #prev: @resource.previous_curated_resource.present?
+  #s3_dir_name: @resource.s3_dir_name(type: 'base'),
+  #config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
+  #config_frictionless: APP_CONFIG[:frictionless].to_h,
+}) %>

@@ -1,26 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import KeywordAutocomplete from './KeywordAutocomplete';
 
-function Keywords({
-  resourceId, subjects, createPath, deletePath,
-}) {
-  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-
+function Keywords({resource, setResource}) {
+  const subjects = resource.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme));
   const [subjs, setSubjs] = useState(subjects);
 
-  // passing this in as a normal function below caused some eslint issues.  But probably not really a problem for it being used once.
-  // See https://dmitripavlutin.com/dont-overuse-react-usecallback/  .  Good to switch to "useCallback" for long lists
-  // of items where function may be recreated multiple times.  Probably not needed here.
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const saveKeyword = (strKeyword) => {
     // the controller for this is a bit weird since it may accept one keyword or multiple separated by commas and it returns
     // the full list of keywords again after adding one or more
     showSavingMsg();
     axios.post(
-      createPath,
-      {authenticity_token: csrf, subject: strKeyword, resource_id: resourceId},
+      '/stash_datacite/subjects/create',
+      {authenticity_token, subject: strKeyword, resource_id: resource.id},
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     ).then((data) => {
       if (data.status !== 200) {
@@ -34,10 +29,8 @@ function Keywords({
   };
 
   function deleteKeyword(id) {
-    // takes the params id and deletes the subject, subj_xoxo
-    const trueDelPath = deletePath.replace('subj_xoxo', id);
-    axios.delete(trueDelPath, {
-      data: {authenticity_token: csrf},
+    axios.delete(`/stash_datacite/subjects/${id}/create`, {
+      data: {authenticity_token},
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     }).then((data) => {
       if (data.status !== 200) {
@@ -47,6 +40,14 @@ function Keywords({
       setSubjs(subjs.filter((item) => (item.id !== data.data.id)));
     });
   }
+
+  useEffect(() => {
+    setResource((r) => {
+      const sub = r.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme));
+      r.subjects = [...subjs, ...sub];
+      return r;
+    });
+  }, [subjs]);
 
   return (
     <div className="c-keywords">
@@ -89,8 +90,6 @@ function Keywords({
 export default Keywords;
 
 Keywords.propTypes = {
-  resourceId: PropTypes.number.isRequired,
-  subjects: PropTypes.array.isRequired,
-  createPath: PropTypes.string.isRequired,
-  deletePath: PropTypes.string.isRequired,
+  resource: PropTypes.object.isRequired,
+  setResource: PropTypes.func.isRequired,
 };

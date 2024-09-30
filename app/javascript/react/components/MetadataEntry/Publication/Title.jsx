@@ -3,7 +3,7 @@ import React, {useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showSavedMsg, showSavingMsg, upCase} from '../../../../lib/utils';
 
 /* Formik makes it difficult to get a hold of some of the context to do some things manually unless you make the forms very
    verbose like the initial, "building Formik" ones at https://formik.org/docs/tutorial .  If you use the compact and less
@@ -19,19 +19,20 @@ import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
   but the variables were then not accessible within my onBlur handler.
  */
 
-function Title({resource, path, type}) {
-  // see https://stackoverflow.com/questions/54808071/cant-verify-csrf-token-authenticity-rails-react for other options
-  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-
+function Title({resource}) {
   const formRef = useRef();
-
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   return (
     <Formik
-      initialValues={{title: (resource.title || ''), id: resource.id, authenticity_token: (csrf || '')}}
+      initialValues={{title: (resource.title || ''), id: resource.id, authenticity_token}}
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
         showSavingMsg();
-        axios.patch(path, values, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+        axios.patch(
+          '/stash_datacite/titles/update',
+          values,
+          {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+        )
           .then((data) => {
             if (data.status !== 200) {
               console.log('Not a 200 response while saving Title form');
@@ -42,13 +43,14 @@ function Title({resource, path, type}) {
       }}
     >
       {(formik) => (
-        <Form className="c-input">
-          <label className="required c-input__label" htmlFor={`title__${resource.id}`}>{type} title</label>
+        <Form style={{margin: '1em auto'}} className="input-stack">
+          <label className="required c-input__label upcase" htmlFor={`title__${resource.id}`}>
+            {upCase(resource.resource_type.resource_type)} title
+          </label>
           <Field
             name="title"
             type="text"
             className="title c-input__text"
-            size="130"
             id={`title__${resource.id}`}
             onBlur={() => { // formRef.current.handleSubmit();
               formik.handleSubmit();
@@ -65,8 +67,6 @@ function Title({resource, path, type}) {
 // This has some info https://blog.logrocket.com/validating-react-component-props-with-prop-types-ef14b29963fc/
 Title.propTypes = {
   resource: PropTypes.object.isRequired,
-  path: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
 };
 
 export default Title;

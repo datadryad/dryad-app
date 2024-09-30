@@ -47,13 +47,17 @@ Selector pattern using above mixin:
 %pull-borders {
 
   @include bp(screen1) {
-    margin: 0 -10px;
-    padding: 0 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   @include bp(screen2) {
-    margin: 0 -20px;
-    padding: 0 20px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
 }
@@ -61,32 +65,40 @@ Selector pattern using above mixin:
 // Pull component/object container over responsive body margins to viewport edge. Reset content to mirror responsive body margins by adding padding. Typically used for bleeding background to page edge, like with table heading component
 
 %pull-background {
-  margin: 0 -10px;
-  padding: 0 10px;
+  margin-left: -10px;
+  margin-right: -10px;
+  padding-left: 10px;
+  padding-right: 10px;
 
   @include bp(screen1) {
-    margin: 0 -20px;
-    padding: 0 20px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
   @include bp(screen2) {
-    margin: 0 -30px;
-    padding: 0 30px;
+    margin-left: -30px;
+    margin-right: -30px;
+    padding-left: 30px;
+    padding-right: 30px;
   }
-
 }
 
 // Pull component/object container over responsive body margins to viewport edge without adding padding. Typically used for bleeding components to page edge, like with banner object on home theme
 
 %pull-full-bleed {
-  margin: 0 -10px;
+  margin-left: -10px;
+  margin-right: -10px;
 
   @include bp(screen1) {
-    margin: 0 -20px;
+    margin-left: -20px;
+    margin-right: -20px;
   }
 
   @include bp(screen2) {
-    margin: 0 -30px;
+    margin-left: -30px;
+    margin-right: -30px;
   }
 
 }

@@ -404,6 +404,7 @@ Rails.application.routes.draw do
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
+    get 'contributors/groupings', to: 'contributors#groupings'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
     patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'
@@ -411,6 +412,7 @@ Rails.application.routes.draw do
 
     get 'publications/new', to: 'publications#new'
     get 'publications/autocomplete', to: 'publications#autocomplete'
+    get 'publications/api_list', to: 'publications#api_list'
     get 'publications/issn/:id', to: 'publications#issn'
     post 'publications/create', to: 'publications#create'
     patch 'publications/update', to: 'publications#update'
@@ -428,6 +430,7 @@ Rails.application.routes.draw do
     get 'subjects/landing', to: 'subjects#landing', as: 'subjects_landing'
 
     # fos subjects are a special subject that is treated differently for the OECD Field of Science
+    get 'fos_subjects', to: 'fos_subjects#index'
     patch 'fos_subjects/update', to: 'fos_subjects#update'
 
     get 'related_identifiers/new', to: 'related_identifiers#new'

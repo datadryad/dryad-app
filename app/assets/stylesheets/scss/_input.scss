@@ -4,6 +4,30 @@ input {
 	accent-color: $medium-green;
 }
 
+.input-stack {
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+.input-line {
+	display: flex;
+	align-items: last baseline;
+	flex-wrap: wrap;
+	column-gap: 2ch;
+	row-gap: 1ch;
+}
+
+label.optional {
+	&:after {
+		display: inline-block;
+		font-size: .98rem;
+		font-weight: normal;
+		margin-left: .25ch;
+		content: '(optional)';
+		color: $dark-gray;
+	}
+}
+
 %c-input {
 	display: flex;
 	flex: 1 1 auto;
@@ -83,7 +107,7 @@ input {
 	height: $input-height;
 	padding: 0 35px 0 5px;
 	border-radius: 0;
-	background: url('/images/scss/icon_up-down-arrows.svg') right 9px center / 12px no-repeat, linear-gradient($light-blue, $light-blue) right / 30px 30px no-repeat;
+	background: url('/images/scss/icon_up-down-arrows.svg') right 9px center / 12px no-repeat, linear-gradient($light-blue, $light-blue) right / $input-height $input-height no-repeat;
 	appearance: none; // removes default down arrow for Chrome and FF 35 and higher
 	// background: linear-gradient(90deg, blue 50%, green 50%);
 

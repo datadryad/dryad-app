@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import GenericNameIdAutocomplete from './MetadataEntry/GenericNameIdAutocomplete';
+import Autocomplete from './MetadataEntry/Autocomplete';
 
 // the autocomplete name, autocomplete id (like ROR), get/set autocomplete Text, get/set autocomplete ID
 export default function TenantForm({tenants}) {
@@ -24,7 +24,7 @@ export default function TenantForm({tenants}) {
 
   return (
     <>
-      <GenericNameIdAutocomplete
+      <Autocomplete
         acText={acText || ''}
         setAcText={setAcText}
         acID={acID}

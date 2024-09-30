@@ -3,7 +3,7 @@ import {Editor} from '@tinymce/tinymce-react';
 import axios from 'axios';
 import {debounce} from 'lodash';
 import PropTypes from 'prop-types';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 /* eslint-disable no-param-reassign */
 const removeStyle = (el) => {
@@ -55,11 +55,10 @@ const paste_preprocess = (_editor, args) => {
 const curatorTools = '| code strikethrough forecolor backcolor';
 
 export default function Description({
-  dcsDescription, path, mceLabel, isCurator,
+  setResource, dcsDescription, mceLabel, admin,
 }) {
-  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-
   const editorRef = useRef(null);
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const submit = () => {
     if (editorRef.current) {
@@ -72,19 +71,24 @@ export default function Description({
         },
       };
       showSavingMsg();
-      axios.patch(path, subJson, {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}})
+      axios.patch(
+        'stash_datacite/descriptions/update',
+        subJson,
+        {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+      )
         .then((data) => {
-          if (data.status !== 200) {
-            // console.log('Response failure not a 200 response');
-          }
+          const {description_type} = data.description;
+          setResource((r) => {
+            const des = r.descriptions.filter((d) => d.description_type !== description_type);
+            r.descriptions = [data.description, ...des];
+            return r;
+          });
           showSavedMsg();
         });
     }
   };
 
   const checkSubmit = useCallback(debounce(submit, 900), []);
-
-  // remove registration nag https://medium.com/@petehouston/remove-tinymce-warning-notification-on-cloud-api-key-70a4a352b8b0
 
   return (
     <div style={{width: '100%'}}>
@@ -109,7 +113,7 @@ export default function Description({
           plugins: 'advlist anchor autolink charmap code directionality help lists link table',
           toolbar: 'help | undo redo | blocks paste | bold italic superscript subscript removeformat '
                   + '| table link charmap | bullist numlist outdent indent | ltr rtl '
-                  + `${(isCurator ? curatorTools : '')}`,
+                  + `${(admin ? curatorTools : '')}`,
           table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | '
                   + 'tableinsertcolbefore tableinsertcolafter tabledeletecol',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -132,8 +136,8 @@ export default function Description({
 }
 
 Description.propTypes = {
+  setResource: PropTypes.func.isRequired,
   dcsDescription: PropTypes.object.isRequired,
-  path: PropTypes.string.isRequired,
   mceLabel: PropTypes.object.isRequired,
-  isCurator: PropTypes.bool.isRequired,
+  admin: PropTypes.bool.isRequired,
 };

@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
-import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
+import Autocomplete from '../Autocomplete';
 
 export default function KeywordAutocomplete({
   name, id, saveFunction, controlOptions,
@@ -69,7 +69,7 @@ export default function KeywordAutocomplete({
 
   return (
     <>
-      <GenericNameIdAutocomplete
+      <Autocomplete
         acText={acText || ''}
         setAcText={setAcText}
         acID={acID}

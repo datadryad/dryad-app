@@ -76,6 +76,12 @@ module StashDatacite
       end
     end
 
+    # GET /contributors/groupings
+    def groupings
+      groupings = StashDatacite::ContributorGrouping.all
+      render json: groupings
+    end
+
     private
 
     def resource

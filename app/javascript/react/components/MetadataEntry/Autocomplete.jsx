@@ -25,7 +25,7 @@ import PropTypes from 'prop-types';
 
        See the file RorAutocomplete.js for a real example.
  */
-export default function GenericNameIdAutocomplete(
+export default function Autocomplete(
   {
     acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc,
     controlOptions: {
@@ -107,7 +107,7 @@ export default function GenericNameIdAutocomplete(
             id={`label_${htmlId}`}
             htmlFor={htmlId}
           >
-            {labelText}:
+            {labelText}
           </label>
         ) : '' }
       <div
@@ -116,7 +116,7 @@ export default function GenericNameIdAutocomplete(
         className="c-auto_complete"
       >
         <input
-          className={`c-input__text c-ac__input ${showDropdown ? 'c-ac__input_with_button' : ''}`}
+          className={`c-input__select c-ac__input ${showDropdown ? 'c-ac__input_with_button' : ''}`}
           {...getInputProps(
             {
               onFocus: () => {
@@ -163,6 +163,7 @@ export default function GenericNameIdAutocomplete(
           aria-labelledby={`label_${htmlId}`}
           aria-invalid={showError && !textEnter}
           aria-errormessage={`error_${htmlId}`}
+          placeholder="Find as you type..."
         />
         {showDropdown && (
           <button
@@ -205,7 +206,7 @@ export default function GenericNameIdAutocomplete(
         <>
           {!textEnter && (
             <span className="c-ac__error_message" id={`error_${htmlId}`}>
-              Please type above to search and select from the dropdown list, or check the box below
+              Search and select from the dropdown list, or check the box below
             </span>
           )}
           <label className="c-input__label c-ac__checkbox">
@@ -218,7 +219,7 @@ export default function GenericNameIdAutocomplete(
   );
 }
 
-GenericNameIdAutocomplete.propTypes = {
+Autocomplete.propTypes = {
   acText: PropTypes.string.isRequired,
   setAcText: PropTypes.func.isRequired,
   acID: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,

@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import GenericNameIdAutocomplete from './GenericNameIdAutocomplete';
+import Autocomplete from './Autocomplete';
 
 export default function RorAutocomplete({
   formRef, acText, setAcText, acID, setAcID, autoBlur = true, controlOptions,
@@ -63,7 +63,7 @@ export default function RorAutocomplete({
   const idFunc = (item) => item.id;
 
   return (
-    <GenericNameIdAutocomplete
+    <Autocomplete
       acText={acText || ''}
       setAcText={setAcText}
       acID={acID}

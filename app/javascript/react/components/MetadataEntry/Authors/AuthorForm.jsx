@@ -2,8 +2,8 @@ import React, {useState, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
-import RorAutocomplete from './RorAutocomplete';
+import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import RorAutocomplete from '../RorAutocomplete';
 
 // dryadAuthor below has nested affiliation
 export default function AuthorForm({dryadAuthor, removeFunction, correspondingAuthorId}) {

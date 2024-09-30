@@ -1,4 +1,4 @@
-$('#find_or_create').html("<%= escape_javascript(render(partial: 'find_or_create', formats: [:html])) %>");
+$('#maincontent').html("<%= escape_javascript(render(partial: 'find_or_create', formats: [:html])) %>");
 
 // TODO: Clean the ones of these no longer needed
 loadAccordion();
@@ -16,4 +16,4 @@ var observer = new MutationObserver(function (mutations) {
     debounce($('#cedar_check').load("<%= stash_url_helpers.metadata_entry_cedar_check_path(resource_id: params[:resource_id])%>"))
   }
 });
-observer.observe(document.querySelector('.saved_text'), { attributes: true });
+//observer.observe(document.querySelector('.saved_text'), { attributes: true });

@@ -48,6 +48,14 @@ module StashDatacite
       end
     end
 
+    # GET /publications/api_list
+    def api_list
+      @api_journals = StashEngine::User.joins('inner join oauth_applications on owner_id = stash_engine_users.id')
+        .joins(:roles).where(roles: { role_object_type: ['StashEngine::Journal', 'StashEngine::JournalOrganization'] })
+        .distinct.map(&:journals_as_admin).flatten.uniq.map(&:issn_array).flatten.uniq
+      render json: { api_journals: @api_journals }
+    end
+
     # GET /publications/issn/{id}
     def issn
       target_issn = params['id']

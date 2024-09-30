@@ -5,29 +5,25 @@ module StashDatacite
     def find_or_create
       @metadata_entry = Resource::MetadataEntry.new(@resource, session[:resource_type] || 'dataset', current_tenant)
       @metadata_entry.resource_type
-      pub = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
-      @publication_issn = pub&.publication_issn
-      @publication_name = pub&.publication_name
-      @msid = pub&.manuscript_number
+      @metadata_entry.resource_publications
+      @metadata_entry.descriptions
 
-      # the following used a "find_or_initialize" originally, but it doesn't always load the existing record
-      # some dois not identified as such, but as URLs probably from the live-checking code and crossRef and DataCite fight
-      @doi = @resource.related_identifiers.where(work_type: 'primary_article').first
-      if @doi.blank?
-        @doi = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id, related_identifier_type: 'doi',
-                                                    work_type: 'primary_article')
-      end
+      @submission = @resource.as_json(include: %i[identifier authors subjects descriptions resource_publication related_identifiers
+                                                  contributors resource_type])
+      @submission[:generic_files] = @resource.generic_files.validated_table.as_json(
+        methods: :type, include: { frictionless_report: { only: %i[report status] } }
+      )
+      @submission = @submission.to_json
+
       @resource.update(updated_at: Time.current)
-      respond_to(&:js)
 
       # If the most recent Curation Activity was from the "Dryad System", add an entry for the
       # current_user so the history makes more sense.
-      # rubocop:disable Style/GuardClause
       last_activity = @resource.curation_activities.last
       if last_activity&.user_id == 0
         @resource.curation_activities << StashEngine::CurationActivity.create(status: last_activity.status, user_id: current_user.id, note: 'Editing')
       end
-      # rubocop:enable Style/GuardClause
+      respond_to(&:js)
     end
 
     def cedar_check

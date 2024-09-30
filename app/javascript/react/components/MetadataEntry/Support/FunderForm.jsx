@@ -3,11 +3,11 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import RorAutocomplete from './RorAutocomplete';
-import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import RorAutocomplete from '../RorAutocomplete';
+import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function FunderForm({
-  resourceId, contributor, updatePath, removeFunction, updateFunder, groupings,
+  resourceId, contributor, removeFunction, updateFunder, groupings,
 }) {
   const formRef = useRef();
 
@@ -46,7 +46,7 @@ function FunderForm({
 
     // submit by json
     return axios.patch(
-      updatePath,
+      '/stash_datacite/contributors/update',
       submitVals,
       {
         headers: {
@@ -166,7 +166,6 @@ export default FunderForm;
 FunderForm.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   contributor: PropTypes.object.isRequired,
-  updatePath: PropTypes.string.isRequired,
   removeFunction: PropTypes.func.isRequired,
   updateFunder: PropTypes.func.isRequired,
 };

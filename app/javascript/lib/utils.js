@@ -12,6 +12,11 @@ export function showSavedMsg(){
   return true;
 }
 
+export function upCase(str, locale=navigator.language) {
+  return str.replace(/^\p{CWU}/u, char => char.toLocaleUpperCase(locale));
+}
+
+
 // if an id is null then make one for a form, etc
 export function makeId(id){
   return id || nanoid();

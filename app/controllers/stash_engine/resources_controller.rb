@@ -56,7 +56,7 @@ module StashEngine
       resource = authorize Resource.new(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Stash::Doi::DataciteGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
-      db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase, import_info: 'manuscript')
+      db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
       resource.identifier_id = db_id_obj.id
       resource.save
       resource.fill_blank_author!

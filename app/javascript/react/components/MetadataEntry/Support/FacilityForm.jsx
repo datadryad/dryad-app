@@ -1,0 +1,86 @@
+import React, {useRef, useState} from 'react';
+import axios from 'axios';
+import {Form, Formik} from 'formik';
+import PropTypes from 'prop-types';
+import RorAutocomplete from '../RorAutocomplete';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+
+export default function FacilityForm({resource, setResource}) {
+  const formRef = useRef(0);
+  const nameRef = useRef(null);
+  const sponsor = resource.contributors.find((r) => r.contributor_type === 'sponsor') || {};
+  const [name, setName] = useState(sponsor.contributor_name);
+  const [nameId, setNameId] = useState(sponsor.name_identifier_id);
+
+  const submitData = () => {
+    showSavingMsg();
+    const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+    const contributor = {
+      resource_id: resource.id,
+      identifier_type: 'ror',
+      contributor_type: 'sponsor',
+      contributor_name: name,
+      name_identifier_id: nameId,
+    };
+
+    const method = sponsor.id ? 'patch' : 'post';
+    const path = sponsor.id ? 'update' : 'create';
+    if (sponsor.id) contributor.id = sponsor.id;
+
+    return axios({
+      method,
+      url: `/stash_datacite/contributors/${path}`,
+      data: {authenticity_token, contributor},
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json',
+      },
+    }).then((data) => {
+      if (data.status !== 200) {
+        console.log('Response failure from research facility save');
+      }
+      showSavedMsg();
+      setResource((r) => {
+        const c = r.contributors;
+        contributor.id = data.data.id;
+        r.contributors = [contributor, ...c];
+        return r;
+      });
+    });
+  };
+
+  return (
+    <Formik
+      initialValues={{}}
+      innerRef={formRef}
+      onSubmit={(_v, {setSubmitting}) => {
+        submitData().then(() => { setSubmitting(false); });
+      }}
+    >
+      {(formik) => (
+        <Form className="c-input" onSubmit={() => formik.handleSubmit()}>
+          <RorAutocomplete
+            formRef={formRef}
+            acText={name || ''}
+            setAcText={setName}
+            acID={nameId || ''}
+            setAcID={setNameId}
+            controlOptions={{
+              htmlId: 'research_facility',
+              labelText: 'Research facility',
+              isRequired: false,
+            }}
+          />
+          <input ref={nameRef} type="hidden" value={name} className="js-affil-longname" name="contributor[name_identifier_id]" />
+          <input type="hidden" value={nameId} className="js-affil-id" name="author[affiliation][ror_id]" />
+        </Form>
+      )}
+    </Formik>
+  );
+  /* eslint-enable react/jsx-no-bind */
+}
+
+FacilityForm.propTypes = {
+  resource: PropTypes.object.isRequired,
+  setResource: PropTypes.func.isRequired,
+};

@@ -5,7 +5,7 @@ import React, {
 import {Form, Formik} from 'formik';
 import moment from 'moment';
 import {isEqual} from 'lodash';
-import {showSavingMsg, showSavedMsg} from '../../../lib/utils';
+import {showSavingMsg, showSavedMsg} from '../../../../lib/utils';
 
 export default function Cedar({
   resource, editorUrl, templates, singleTemplate = null,
