@@ -4,7 +4,7 @@ import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import RelatedWorksErrors from './RelatedWorksErrors';
-import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function RelatedWorkForm(
   {

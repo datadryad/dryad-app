@@ -6,6 +6,7 @@ import Authors from '../components/MetadataEntry/Authors';
 import Support from '../components/MetadataEntry/Support';
 import Subjects from '../components/MetadataEntry/Subjects';
 import Description from '../components/MetadataEntry/Description';
+import RelatedWorks from '../components/MetadataEntry/RelatedWorks';
 import UploadFiles from './UploadFiles';
 import ReadMeWizard from './ReadMeWizard';
 
@@ -69,6 +70,7 @@ export default function Submission({
       name: 'Related works',
       pass: false,
       fail: false,
+      component: <RelatedWorks resource={resource} setResource={setResource} />,
     },
     {
       name: 'Agreements',

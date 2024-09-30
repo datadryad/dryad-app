@@ -439,6 +439,7 @@ Rails.application.routes.draw do
     delete 'related_identifiers/:id/delete', to: 'related_identifiers#delete', as: 'related_identifiers_delete'
     get 'related_identifiers/report', to: 'related_identifiers#report', as: 'related_identifiers_report'
     get 'related_identifiers/show', to: 'related_identifiers#show', as: 'related_identifiers_show'
+    get 'related_identifiers/types', to: 'related_identifiers#types'
 
     get 'geolocation_places/new', to: 'geolocation_places#new'
     post 'geolocation_places/create', to: 'geolocation_places#create'

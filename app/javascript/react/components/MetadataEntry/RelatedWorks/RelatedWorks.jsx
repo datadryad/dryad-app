@@ -1,32 +1,26 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import RelatedWorkForm from './RelatedWorkForm';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-function RelatedWorks(
-  {
-    resourceId,
-    relatedIdentifiers,
-    workTypes,
-    resourceType,
-  },
-) {
-  const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+function RelatedWorks({resource, setResource}) {
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+  const resourceType = resource.resource_type.resource_type;
+  const [workTypes, setWorkTypes] = useState([]);
+  const [works, setWorks] = useState(resource.related_identifiers);
 
   const blankRelated = {
     related_identifier: '',
     related_identifier_type: 'doi',
     relation_type: resourceType === 'collection' ? 'haspart' : 'iscitedby',
-    resource_id: resourceId,
+    resource_id: resource.id,
     work_type: resourceType === 'collection' ? 'dataset' : 'article',
   };
 
-  const [works, setWorks] = useState(relatedIdentifiers);
-
   const addNewWork = () => {
     const contribJson = {
-      authenticity_token: csrf,
+      authenticity_token,
       stash_datacite_related_identifier: blankRelated,
     };
 
@@ -52,7 +46,7 @@ function RelatedWorks(
     showSavingMsg();
 
     const submitVals = {
-      authenticity_token: csrf,
+      authenticity_token,
     };
     axios.delete(trueDelPath, {
       data: submitVals,
@@ -73,8 +67,31 @@ function RelatedWorks(
     setWorks((prevState) => prevState.map((tempRel) => (updatedRelatedId.id === tempRel.id ? updatedRelatedId : tempRel)));
   };
 
+  useEffect(() => {
+    setResource((r) => {
+      r.related_identifiers = works;
+      return r;
+    });
+  }, [works]);
+
+  useEffect(() => {
+    async function getTypes() {
+      axios.get('/stash_datacite/related_identifiers/types').then((data) => {
+        const worktypes = data.data;
+        if (resourceType === 'collection') {
+          const [zero, one] = workTypes;
+          workTypes[0] = one;
+          worktypes[1] = zero;
+        }
+        setWorkTypes(worktypes);
+      });
+    }
+    getTypes();
+  }, []);
+
   return (
     <fieldset className="c-fieldset">
+      <h2>Related works</h2>
       <legend className="c-fieldset__legend">
         <span className="c-input__hint">
           {resourceType === 'collection'
@@ -109,8 +126,6 @@ function RelatedWorks(
 export default RelatedWorks;
 
 RelatedWorks.propTypes = {
-  resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  relatedIdentifiers: PropTypes.array.isRequired,
-  workTypes: PropTypes.array.isRequired,
-  resourceType: PropTypes.string.isRequired,
+  resource: PropTypes.object.isRequired,
+  setResource: PropTypes.func.isRequired,
 };
