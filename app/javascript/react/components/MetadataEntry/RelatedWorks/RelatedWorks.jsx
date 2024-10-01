@@ -33,7 +33,7 @@ function RelatedWorks({resource, setResource}) {
         if (data.status !== 200) {
           console.log("couldn't add new relatedWork to the remote server");
         }
-        setWorks((prevState) => [...prevState, data.data]);
+        setWorks((w) => [...w, data.data]);
       });
   };
 
@@ -58,20 +58,17 @@ function RelatedWorks({resource, setResource}) {
         }
         showSavedMsg();
       });
-    setWorks((prevState) => prevState.filter((item) => (item.id !== id)));
+    setWorks((w) => w.filter((item) => (item.id !== id)));
   };
 
   // update the work in the list from old to new values
   const updateWork = (updatedRelatedId) => {
     // replace item in the funder list if it has changed
-    setWorks((prevState) => prevState.map((tempRel) => (updatedRelatedId.id === tempRel.id ? updatedRelatedId : tempRel)));
+    setWorks((w) => w.map((tempRel) => (updatedRelatedId.id === tempRel.id ? updatedRelatedId : tempRel)));
   };
 
   useEffect(() => {
-    setResource((r) => {
-      r.related_identifiers = works;
-      return r;
-    });
+    setResource((r) => ({...r, related_identifiers: works}));
   }, [works]);
 
   useEffect(() => {

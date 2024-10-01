@@ -8,10 +8,7 @@ export default function Publication({resource, setResource}) {
 
   const optionChange = (choice) => {
     setImportType(choice);
-    setResource((r) => {
-      r.identifier.import_info = choice;
-      return r;
-    });
+    setResource((r) => ({...r, identifier: {...r.identifier, import_info: choice}}));
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
     axios.patch(
       `/stash/resources/${resource.id}/import_type`,

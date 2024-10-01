@@ -32,7 +32,7 @@ export default function Authors({
       if (data.status !== 200) {
         console.log('Response failure from authors create');
       }
-      setAuthors((prevState) => [...prevState, data.data]);
+      setAuthors((a) => [...a, data.data]);
     });
   };
 
@@ -48,14 +48,11 @@ export default function Authors({
       }
       showSavedMsg();
     });
-    setAuthors((prevState) => prevState.filter((item) => (item.id !== id)));
+    setAuthors((a) => a.filter((item) => (item.id !== id)));
   };
 
   useEffect(() => {
-    setResource((r) => {
-      r.authors = authors;
-      return r;
-    });
+    setResource((r) => ({...r, authors}));
   }, [authors]);
 
   return (

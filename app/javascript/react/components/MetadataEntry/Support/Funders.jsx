@@ -35,7 +35,7 @@ function Funders({resource, setResource}) {
         if (data.status !== 200) {
           console.log("Couldn't add new funder");
         }
-        setFunders((prevState) => [...prevState, data.data]);
+        setFunders((f) => [...f, data.data]);
       });
   };
 
@@ -58,12 +58,12 @@ function Funders({resource, setResource}) {
           showSavedMsg();
         });
     }
-    setFunders((prevState) => prevState.filter((item) => (item.id !== id)));
+    setFunders((f) => f.filter((item) => (item.id !== id)));
   };
 
   // update the funder in the list from old to new values
   const updateFunder = (updated) => {
-    setFunders((prevState) => prevState.map((funder) => (updated.id === funder.id ? updated : funder)));
+    setFunders((f) => f.map((funder) => (updated.id === funder.id ? updated : funder)));
   };
 
   const setNoFunders = async (e) => {
@@ -91,11 +91,7 @@ function Funders({resource, setResource}) {
   };
 
   useEffect(() => {
-    setResource((r) => {
-      const c = r.contributors.filter((con) => con.contributor_type !== 'funder');
-      r.contributors = [...funders, ...c];
-      return r;
-    });
+    setResource((r) => ({...r, contributors: [...funders, ...r.contributors.filter((con) => con.contributor_type !== 'funder')]}));
   }, [funders]);
 
   useEffect(() => {

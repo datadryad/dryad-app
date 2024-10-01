@@ -19,7 +19,7 @@ import {showSavedMsg, showSavingMsg, upCase} from '../../../../lib/utils';
   but the variables were then not accessible within my onBlur handler.
  */
 
-function Title({resource}) {
+function Title({resource, setResource}) {
   const formRef = useRef();
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   return (
@@ -37,6 +37,7 @@ function Title({resource}) {
             if (data.status !== 200) {
               console.log('Not a 200 response while saving Title form');
             }
+            setResource((r) => ({...r, title: values.title}));
             showSavedMsg();
             setSubmitting(false);
           });
@@ -67,6 +68,7 @@ function Title({resource}) {
 // This has some info https://blog.logrocket.com/validating-react-component-props-with-prop-types-ef14b29963fc/
 Title.propTypes = {
   resource: PropTypes.object.isRequired,
+  setResource: PropTypes.func.isRequired,
 };
 
 export default Title;

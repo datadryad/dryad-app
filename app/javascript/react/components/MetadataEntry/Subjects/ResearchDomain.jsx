@@ -40,11 +40,13 @@ function ResearchDomain({resource, setResource}) {
               // console.log('Response failure not a 200 response');
             }
             showSavedMsg();
-            setResource((r) => {
-              const sub = r.subjects.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme));
-              r.subjects = [values.fos_subjects, ...sub];
-              return r;
-            });
+            setResource((r) => ({
+              ...r,
+              subjects: [
+                ...values.fos_subjects,
+                ...r.subjects.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)),
+              ],
+            }));
             setSubmitting(false);
           });
       }}

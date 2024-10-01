@@ -40,12 +40,8 @@ export default function FacilityForm({resource, setResource}) {
         console.log('Response failure from research facility save');
       }
       showSavedMsg();
-      setResource((r) => {
-        const c = r.contributors;
-        contributor.id = data.data.id;
-        r.contributors = [contributor, ...c];
-        return r;
-      });
+      contributor.id = data.data.id;
+      setResource((r) => ({...r, contributors: [contributor, ...r.contributors]}));
     });
   };
 

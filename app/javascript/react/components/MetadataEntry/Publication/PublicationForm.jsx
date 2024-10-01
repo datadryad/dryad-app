@@ -35,19 +35,18 @@ function PublicationForm({resource, setResource, importType}) {
   const submitForm = (values) => {
     showSavingMsg();
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-    setResource((r) => {
-      r.resource_publication = {
+    setResource((r) => ({
+      ...r,
+      resource_publication: {
         publication_name: journal,
         publication_issn: issn,
         manuscript_number: values.msid || null,
-      };
-      const {related_identifiers} = r;
-      r.related_identifiers = [
+      },
+      related_identifiers: [
         {work_type: 'primary_article', doi: values.primary_article_doi || null},
-        ...related_identifiers,
-      ];
-      return r;
-    });
+        ...r.related_identifiers,
+      ],
+    }));
     const submitVals = {
       authenticity_token,
       import_type: importType,

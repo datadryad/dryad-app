@@ -280,10 +280,7 @@ export default function UploadFiles({
   const updateFileList = (files) => {
     labelNonTabular(files);
     setChosenFiles((c) => [...c, ...files]);
-    setResource((r) => {
-      r.files = [...chosenFiles, ...files];
-      return r;
-    });
+    setResource((r) => ({...r, files: [...chosenFiles, ...files]}));
   };
 
   const addFilesHandler = (event, uploadType) => {

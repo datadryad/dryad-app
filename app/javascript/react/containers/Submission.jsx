@@ -90,6 +90,9 @@ export default function Submission({
           <div>
             <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
             {step.component}
+            {step.name === 'Start' && (
+              <p>Complete the checklist, and submit your data for publication.</p>
+            )}
           </div>
           <div className="o-dataset-nav">
             <div className="o-dataset-nav">

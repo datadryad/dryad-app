@@ -17,10 +17,10 @@ function RelatedWorkForm(
     showSavingMsg();
 
     // set up values
-    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+    const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
     const submitVals = {
-      authenticity_token: csrf,
+      authenticity_token,
       stash_datacite_related_identifier: {
         id: values.id,
         resource_id: relatedIdentifier.resource_id,

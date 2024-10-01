@@ -33,11 +33,7 @@ export default function ReadMe({resource, setResource}) {
     )
       .then(() => {
         const {description_type} = data.description;
-        setResource((r) => {
-          const des = r.descriptions.filter((d) => d.description_type !== description_type);
-          r.descriptions = [data.description, ...des];
-          return r;
-        });
+        setResource((r) => ({...r, descriptions: [data.description, ...r.descriptions.filter((d) => d.description_type !== description_type)]}));
         showSavedMsg();
       });
   };
