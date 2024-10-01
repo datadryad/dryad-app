@@ -74,6 +74,7 @@
     "axios": "^1.7.4",
     "babel-loader": "8",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "change-case": "^5.4.4",
     "compression-webpack-plugin": "9",
     "copy-webpack-plugin": "^11.0.0",
     "copyfiles": "^2.4.1",
@@ -139,6 +140,7 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "express": "^4.20.0",
     "jest": "^29.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-fail-on-console": "^2.2.3",
@@ -147,12 +149,11 @@
     "normalize-scss": "^7.0.1",
     "postcss": "^8.4.31",
     "react-test-renderer": "^18.0.0",
+    "serve-static": "^1.16.1",
     "stylelint": "^16.0.0",
     "stylelint-config-property-sort-order-smacss": "^10.0.0",
     "stylelint-config-recommended-scss": "^14.0.0",
-    "webpack-dev-server": "^5.1.0",
-    "express": "^4.20.0",
-    "serve-static": "^1.16.1"
+    "webpack-dev-server": "^5.1.0"
   },
   "resolutions": {
     "nanoid": "<4.0.0"

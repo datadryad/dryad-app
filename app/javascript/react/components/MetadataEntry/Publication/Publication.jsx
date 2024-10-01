@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import PublicationForm from './PublicationForm';
 import Title from './Title';
 
 export default function Publication({resource, setResource}) {
   const [importType, setImportType] = useState(resource.identifier.import_info);
+  const [checks, setChecks] = useState({published: false, manuscript: false, showTitle: false});
 
   const optionChange = (choice) => {
     setImportType(choice);
@@ -24,46 +25,49 @@ export default function Publication({resource, setResource}) {
   const setOption = (e) => {
     const n = e.target.name;
     const v = e.target.value;
-    if (v === '1') {
-      if (n === 'published') document.getElementById('manuscript').setAttribute('hidden', true);
-      optionChange(n);
-    }
-    if (v === '0') {
-      if (n === 'published') document.getElementById('manuscript').removeAttribute('hidden');
-      optionChange('other');
-    }
+    setChecks((s) => ({...s, [n]: v}));
+    if (v === 'yes') optionChange(n);
+    if (v === 'no') optionChange('other');
   };
 
-  if (resource.title) {
-    return (
-      <>
-        <h2>Title/Import</h2>
-        <Title resource={resource} setResource={setResource} />
-        <PublicationForm resource={resource} setResource={setResource} />
-      </>
-    );
-  }
+  useEffect(() => {
+    const {publication_name, manuscript_number} = resource.resource_publication;
+    const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article');
+    if (publication_name && (manuscript_number || primary_article)) {
+      setChecks((s) => ({...s, showTitle: 'yes'}));
+    } else if (!resource.title) {
+      setChecks((s) => ({...s, showTitle: 'no'}));
+    }
+  }, [resource]);
+
+  useEffect(() => {
+    const it = resource.identifier.import_info;
+    if (it === 'published') setChecks({published: 'yes', manuscript: false, showTitle: resource.title ? 'yes' : 'no'});
+    if (it === 'manuscript') setChecks({published: 'no', manuscript: 'yes', showTitle: resource.title ? 'yes' : 'no'});
+    if (it === 'other' && resource.title) setChecks({published: 'no', manuscript: 'no', showTitle: 'yes'});
+  }, []);
+
   return (
     <>
       <h2>Title/Import</h2>
       <fieldset onChange={setOption}>
         <p><legend>Is your data used in a published article?</legend></p>
         <p className="radio_choice">
-          <label><input name="published" type="radio" value="1" defaultChecked={importType === 'published'} />Yes</label>
-          <label><input name="published" type="radio" value="0" required defaultChecked={importType === 'manuscript'} />No</label>
+          <label><input name="published" type="radio" value="yes" defaultChecked={checks.published === 'yes' ? 'checked' : null} />Yes</label>
+          <label><input name="published" type="radio" value="no" required defaultChecked={checks.published === 'no' ? 'checked' : null} />No</label>
         </p>
       </fieldset>
-      <fieldset id="manuscript" onChange={setOption} hidden={importType !== 'manuscript'}>
+      <fieldset id="manuscript" onChange={setOption} hidden={!checks.published || checks.published === 'yes'}>
         <p><legend>Is your data used in a submitted manuscript?</legend></p>
         <p className="radio_choice">
-          <label className="required"><input name="manuscript" type="radio" value="1" defaultChecked={importType === 'manuscript'} />Yes</label>
-          <label className="required">
-            <input name="manuscript" type="radio" value="0" required defaultChecked={importType === 'published'} />No
-          </label>
+          <label><input name="manuscript" type="radio" value="yes" defaultChecked={checks.manuscript === 'yes' ? 'checked' : null} />Yes</label>
+          <label><input name="manuscript" type="radio" value="no" required defaultChecked={checks.manuscript === 'no' ? 'checked' : null} />No</label>
         </p>
       </fieldset>
       {importType !== 'other' && <PublicationForm resource={resource} setResource={setResource} importType={importType} />}
-      {importType === 'other' && <Title resource={resource} setResource={setResource} />}
+      {((checks.published === 'no' && checks.manuscript === 'no') || checks.showTitle === 'yes') && (
+        <Title resource={resource} setResource={setResource} />
+      )}
     </>
   );
 }

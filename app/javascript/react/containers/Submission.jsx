@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {upCase} from '../../lib/utils';
 import Checklist from '../components/Checklist';
-import Publication from '../components/MetadataEntry/Publication';
+import Publication, {publicationCheck} from '../components/MetadataEntry/Publication';
 import Authors from '../components/MetadataEntry/Authors';
 import Support from '../components/MetadataEntry/Support';
 import Subjects from '../components/MetadataEntry/Subjects';
@@ -13,6 +13,7 @@ import ReadMeWizard from './ReadMeWizard';
 export default function Submission({
   submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless,
 }) {
+  const subRef = useRef();
   const [resource, setResource] = useState(JSON.parse(submission));
   const [step, setStep] = useState({name: 'Start'});
   const [open, setOpen] = useState(false);
@@ -21,7 +22,7 @@ export default function Submission({
     {
       name: 'Title/Import',
       pass: !!resource.title,
-      fail: false,
+      fail: publicationCheck(resource),
       component: <Publication resource={resource} setResource={setResource} />,
     },
     {
@@ -79,19 +80,35 @@ export default function Submission({
     },
   ];
 
-  useEffect(() => setStep(steps.findLast((c) => c.pass) || {name: 'Start'}), []);
-  // useEffect(() => setDisabled(false), [step])
+  useEffect(() => {
+    if (subRef.current) {
+      const observer = new MutationObserver(() => {
+        const et = document.querySelector('.error-text');
+        if (et) {
+          const inv = document.querySelector(`*[aria-errormessage="${et.id}"]`);
+          if (inv) inv.setAttribute('aria-invalid', true);
+        } else {
+          document.querySelector('*[aria-invalid]').removeAttribute('aria-invalid');
+        }
+      });
+      observer.observe(subRef.current, {subtree: true, childList: true});
+    }
+  }, []);
+
+  useEffect(() => setStep(steps.find((c) => c.fail) || steps.findLast((c) => c.pass) || {name: 'Start'}), []);
 
   return (
     <>
       <Checklist steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
       <div id="submission-wizard" className={(step.name === 'Start' && 'start') || (open && 'open') || ''}>
         <div>
-          <div>
+          <div ref={subRef}>
             <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
             {step.component}
-            {step.name === 'Start' && (
+            {step.name === 'Start' ? (
               <p>Complete the checklist, and submit your data for publication.</p>
+            ) : (
+              steps.find((s) => s.name === step.name).pass && steps.find((s) => s.name === step.name).fail
             )}
           </div>
           <div className="o-dataset-nav">

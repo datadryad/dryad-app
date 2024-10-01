@@ -44,8 +44,8 @@ function Title({resource, setResource}) {
       }}
     >
       {(formik) => (
-        <Form style={{margin: '1em auto'}} className="input-stack">
-          <label className="required c-input__label upcase" htmlFor={`title__${resource.id}`}>
+        <Form style={{margin: '2em auto 1em'}} className="input-stack">
+          <label className="required o-heading__level4 upcase" htmlFor={`title__${resource.id}`}>
             {upCase(resource.resource_type.resource_type)} title
           </label>
           <Field
@@ -56,6 +56,8 @@ function Title({resource, setResource}) {
             onBlur={() => { // formRef.current.handleSubmit();
               formik.handleSubmit();
             }}
+            required
+            aria-errormessage="title_error"
           />
           <Field name="id" type="hidden" />
           <Field name="authenticity_token" type="hidden" />

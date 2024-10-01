@@ -50,6 +50,7 @@
   flex: 1 0 90px;
   padding-top: 2rem;
   padding-bottom: 2rem;
+  transition: flex-basis .3s ease-in-out;
 
   & > div {
     margin-left: auto;
@@ -58,9 +59,22 @@
   }
 
   &.start {
-    flex: 1 1 400px;
+    flex: 1 1 510px;
     & > div {
-      max-width: 400px;
+      max-width: 510px;
+      padding-top: 5rem;
+    }
+    @include bp(screen2) {
+      ul {
+        padding-left: 3.5rem;
+        font-size: 1.65rem;
+      }
+      .checklist-icon {
+        font-size: 1.5rem;
+        .fa-square {
+          font-size: 1.9rem;
+        }
+      }
     }
   }
   &.open {
@@ -163,9 +177,9 @@
   }
 
   &.start {
-    flex: 1 1 820px;
+    flex: 1 1 710px;
     & > div {
-      max-width: 820px;
+      max-width: 710px;
     }
   }
   &.open {
@@ -179,6 +193,10 @@
     border: none;
     padding: 0;
     margin: -1em 0;
+  }
+
+  .error-text {
+    color: $red;
   }
 }
 

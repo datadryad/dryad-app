@@ -29,7 +29,7 @@ export default function Autocomplete(
   {
     acText, setAcText, acID, setAcID, setAutoBlurred, supplyLookupList, nameFunc, idFunc,
     controlOptions: {
-      htmlId, labelText, isRequired, saveOnEnter, showDropdown,
+      htmlId, labelText, isRequired, errorId, saveOnEnter, showDropdown,
     },
   },
 ) {
@@ -114,6 +114,7 @@ export default function Autocomplete(
         {...getComboboxProps()}
         aria-owns={`menu_${htmlId}`}
         className="c-auto_complete"
+        aria-errormessage={errorId || null}
       >
         <input
           className={`c-input__select c-ac__input ${showDropdown ? 'c-ac__input_with_button' : ''}`}

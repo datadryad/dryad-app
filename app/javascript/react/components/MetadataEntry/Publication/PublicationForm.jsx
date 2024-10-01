@@ -109,13 +109,14 @@ function PublicationForm({resource, setResource, importType}) {
                     htmlId: 'publication',
                     labelText: 'Journal name',
                     isRequired: true,
+                    errorId: 'journal_error',
                   }
                 }
               />
             </div>
             {importType !== 'manuscript' && (
               <div className="input-stack">
-                <label className="c-input__label required" htmlFor="primary_article_doi">
+                <label className="o-heading-level4 required" htmlFor="primary_article_doi">
                   DOI
                 </label>
                 <Field
@@ -128,12 +129,14 @@ function PublicationForm({resource, setResource, importType}) {
                     formRef.current.values.isImport = false;
                     formik.handleSubmit();
                   }}
+                  aria-errormessage="doi_error"
+                  required
                 />
               </div>
             )}
             {importType !== 'published' && (
               <div className="input-stack">
-                <label className="c-input__label required" htmlFor="msid">
+                <label className="o-heading-level4" htmlFor="msid">
                   Manuscript number
                 </label>
                 <Field
@@ -146,6 +149,8 @@ function PublicationForm({resource, setResource, importType}) {
                     formRef.current.values.isImport = false;
                     formik.handleSubmit();
                   }}
+                  aria-errormessage="msid_error"
+                  required
                 />
               </div>
             )}
