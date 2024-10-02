@@ -905,6 +905,7 @@ namespace :identifiers do
   # Write a PDF that Dryad can send to the sponsor, summarizing the datasets published
   # rubocop:disable Metrics/MethodLength
   def write_deferred_sponsor_summary(name:, file_prefix:, report_period:, table:)
+    name ||= 'aaaa'
     return if name.blank? || table.blank?
 
     filename = "#{file_prefix}deferred_submissions_#{StashEngine::GenericFile.sanitize_file_name(name)}_#{report_period}.pdf"
@@ -940,7 +941,7 @@ namespace :identifiers do
       </table>
     HTMLEND
 
-    pdf = WickedPdf.new.pdf_from_string(html_content)
+    pdf = Grover.new(html_content).to_pdf
     File.open(filename, 'wb') do |file|
       file << pdf
     end
@@ -982,7 +983,7 @@ namespace :identifiers do
       </table>
     HTMLEND
 
-    pdf = WickedPdf.new.pdf_from_string(html_content)
+    pdf = Grover.new(html_content).to_pdf
     File.open(filename, 'wb') do |file|
       file << pdf
     end

@@ -1,5 +1,5 @@
 const messageChannel = new MessageChannel();
-navigator.serviceWorker.register('/stash/service-worker.js');
+navigator.serviceWorker.register('/stash/service-worker.js', { scope });
 let keepAlive = null;
 const dialog = document.getElementById('genericModalDialog');
 const dialogContent = document.getElementById('genericModalContent');

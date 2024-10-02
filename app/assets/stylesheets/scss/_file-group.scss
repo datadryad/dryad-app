@@ -7,6 +7,7 @@
 
     &::before {
       content: '\f0d8';
+      content: '\f0d8' / '';
     }
 
   }
@@ -29,6 +30,7 @@
     display: inline-block;
     font-family: 'Font Awesome 6 Free';
     content: '\f0d7';
+    content: '\f0d7' / '';
     font-weight: 900;
     color: currentColor;
     margin-right: .5ch;

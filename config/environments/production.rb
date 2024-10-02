@@ -134,7 +134,7 @@ Rails.application.configure do
       :email => {
           # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
           :email_prefix => "[Dryad Exception]",
-          :sender_address => %{"Dryad Notifier" <no-reply-dryad@dryad-prd.cdlib.org>},
+          :sender_address => %{"Dryad Notifier" <no-reply-dryad@datadryad.org>},
           :exception_recipients => ac['page_error_email']
       },
       :error_grouping => true,

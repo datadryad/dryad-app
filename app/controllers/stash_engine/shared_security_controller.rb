@@ -24,15 +24,14 @@ module StashEngine
           # to the login page. Now that they are logged in, we will redirect to the target_page,
           # but first clear it from the session so we don't continually redirect to it.
           session[:target_page] = nil
-          redirect_to target_page
+          redirect_to target_page and return
         end
         return
       end
 
       return if valid_edit_code?
 
-      flash[:alert] = 'You must be logged in.'
-      session[:target_page] = request.fullpath
+      flash[:alert] = 'You must log in and select an institution (or none).'
       redirect_to stash_url_helpers.choose_login_path
     end
 
@@ -47,21 +46,21 @@ module StashEngine
       return if @resource&.current_resource_state&.resource_state == 'in_progress'
 
       flash[:alert] = 'You may not edit a submitted version of your dataset by using the back button. Please open your dataset from the editing link'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def require_superuser
       return if current_user && current_user.superuser?
 
       flash[:alert] = 'You must be a superuser to view this information.'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def require_curator
       return if current_user && current_user.min_curator?
 
       flash[:alert] = 'You must be a curator to view this information.'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def ajax_require_curator
@@ -72,7 +71,7 @@ module StashEngine
       return if current_user && current_user.min_app_admin?
 
       flash[:alert] = 'You must be a curator to view this information.'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     def ajax_require_min_app_admin
@@ -83,7 +82,7 @@ module StashEngine
       return if current_user && current_user.min_admin?
 
       flash[:alert] = 'You must be an administrator to view this information.'
-      redirect_to stash_url_helpers.dashboard_path
+      redirect_to stash_url_helpers.choose_dashboard_path
     end
 
     # this requires a method called resource in the controller that returns the current resource (usually @resource)

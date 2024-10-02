@@ -177,6 +177,9 @@ module Fixtures
         @metadata[:keywords] = Faker::Lorem.words(number: number)
       end
 
+      def add_trigger_invitation(flag)
+        @metadata[:triggerSubmitInvitation] = flag
+      end
     end
   end
 end

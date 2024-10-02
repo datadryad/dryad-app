@@ -358,10 +358,14 @@
 
     li {
       margin:.25ch 0;
-      padding: 0;
-
-      i {
-        margin-right: .5ch;
+      padding-left: 2ch;
+      a {
+        overflow-wrap: anywhere;
+        word-break: break-all;
+        i {
+          margin-left: -2ch;
+          margin-right: .5ch;
+        }
       }
     }
   }

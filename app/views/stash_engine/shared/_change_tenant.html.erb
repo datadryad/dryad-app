@@ -15,6 +15,7 @@
   <div class="t-login__choose">
     <div class="c-institution__container" style="width: 100%">
       <%= form_with(url: sso_path, method: :post, html: {style: 'justify-content: space-between;'}) do %>
+        <% if @target_page %><input type="hidden" name="target_page" value="<%= @target_page %>"><% end %>
         <%= react_component('components/TenantForm', {tenants: tenant_select}) %>
         <span style="flex-grow: 1"></span>
         <button class="o-button__plain-text7" id="keep_tenant" aria-expanded="true" aria-controls="edit_tenant-form"><i class="fas fa-times" aria-hidden="true"></i> Cancel</button>
@@ -25,6 +26,7 @@
     <br/><br/>
     <p>Is your institution not a member of Dryad?</p>
     <%= form_with(url: no_partner_path, method: :post) do |f| %>
+      <% if @target_page %><input type="hidden" name="target_page" value="<%= @target_page %>"><% end %>
       <%= f.button type: 'submit', class: 'o-button__plain-text7' do %>
          <i class="fa fa-minus-circle" aria-hidden="true"></i> Remove member affiliation (<%= current_tenant.short_name %>)
       <% end %>

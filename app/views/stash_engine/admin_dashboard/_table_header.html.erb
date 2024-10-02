@@ -1,10 +1,10 @@
 <thead>
   <tr>
-    <th class="c-lined-table__sort <%= sort_display('title') %>">
+    <th class="c-lined-table__sort" <%= sort_display('title') %>>
       <%= sortable_column_head sort_field: 'title', title: 'Description', remote: true %> 
     </th>
     <% if @fields.include?('authors') %>
-      <th class="c-lined-table__sort <%= sort_display('author_string') %>">
+      <th class="c-lined-table__sort" <%= sort_display('author_string') %>>
         <%= sortable_column_head sort_field: 'author_string', title: 'Authors', remote: true %>
       </th>
     <% end %>
@@ -15,17 +15,17 @@
       <th>Submitter</th>
     <% end %>
     <% if @fields.include?('status') %>
-      <th class="c-lined-table__sort <%= sort_display('status') %>">
+      <th class="c-lined-table__sort" <%= sort_display('status') %>>
         <%= sortable_column_head sort_field: 'status', title: 'Status', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('size') %>
-      <th class="c-lined-table__sort <%= sort_display('total_file_size') %>">
+      <th class="c-lined-table__sort" <%= sort_display('total_file_size') %>>
         <%= sortable_column_head sort_field: 'total_file_size', title: 'Size', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('metrics') %>
-      <th class="c-lined-table__sort <%= sort_display('view_count') %>">
+      <th class="c-lined-table__sort" <%= sort_display('view_count') %>>
         <%= sortable_column_head sort_field: 'view_count', title: 'Metrics', remote: true %>
       </th>
     <% end %>
@@ -45,42 +45,42 @@
       <th>DPC paid by</th>
     <% end %>
     <% if @fields.include?('curator') %>
-      <th class="c-lined-table__sort <%= sort_display('curator_name') %>">
+      <th class="c-lined-table__sort" <%= sort_display('curator_name') %>>
         <%= sortable_column_head sort_field: 'curator_name', title: 'Curator', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('updated_at') %>
-      <th class="c-lined-table__sort <%= sort_display('updated_at') %>">
+      <th class="c-lined-table__sort" <%= sort_display('updated_at') %>>
         <%= sortable_column_head sort_field: 'updated_at', title: 'Last modified', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('submit_date') %>
-      <th class="c-lined-table__sort <%= sort_display('submit_date') %>">
+      <th class="c-lined-table__sort" <%= sort_display('submit_date') %>>
         <%= sortable_column_head sort_field: 'submit_date', title: 'Submitted', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('first_sub_date') %>
-      <th class="c-lined-table__sort <%= sort_display('first_sub_date') %>">
+      <th class="c-lined-table__sort" <%= sort_display('first_sub_date') %>>
         <%= sortable_column_head sort_field: 'first_sub_date', title: 'First submitted', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('publication_date') %>
-      <th class="c-lined-table__sort <%= sort_display('publication_date') %>">
+      <th class="c-lined-table__sort" <%= sort_display('publication_date') %>>
         <%= sortable_column_head sort_field: 'publication_date', title: 'Published', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('first_pub_date') %>
-      <th class="c-lined-table__sort <%= sort_display('first_pub_date') %>">
+      <th class="c-lined-table__sort" <%= sort_display('first_pub_date') %>>
         <%= sortable_column_head sort_field: 'first_pub_date', title: 'First published', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('created_at') %>
-      <th class="c-lined-table__sort <%= sort_display('created_at') %>">
+      <th class="c-lined-table__sort" <%= sort_display('created_at') %>>
         <%= sortable_column_head sort_field: 'created_at', title: 'First created', remote: true %>
       </th>
     <% end %>
     <% if @fields.include?('queue_date') %>
-      <th class="c-lined-table__sort <%= sort_display('queue_date') %>">
+      <th class="c-lined-table__sort" <%= sort_display('queue_date') %>>
         <%= sortable_column_head sort_field: 'queue_date', title: 'First queued', remote: true %>
       </th>
     <% end %>

@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# info about endpoints at https://github.com/CDLUC3/mrt-doc/blob/main/endopoints/pre-signed-urls.md#phase-2
+
 require 'byebug'
 require 'http'
 require 'active_support/all'
@@ -9,7 +9,7 @@ require 'rack/utils'
 include ERB::Util
 # allows url_encode(thing)
 
-mrt_domain = 'merritt-stage.cdlib.org'
+mrt_domain = 'storage-test.datadryad.org'
 username = '<fill-me>'
 password = '<fill-me>'
 

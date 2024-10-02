@@ -150,6 +150,7 @@
       <str name="facet.field">layer_geom_type_s</str>
       <str name="facet.field">solr_year_i</str>
       <str name="facet.field">dryad_related_publication_name_s</str>
+      <str name="facet.field">dryad_related_publication_issn_s</str>
     </lst>
   </requestHandler>
 

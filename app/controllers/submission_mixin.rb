@@ -5,6 +5,7 @@ module SubmissionMixin
   def check_patch_prerequisites
     begin
       @json = JSON.parse(request.raw_post)
+      @json = [@json] if @json.is_a?(Hash)
     rescue JSON::ParserError
       return_error(messages: 'You must send a JSON Patch request with a valid JSON operation.', status: 400) { yield }
     end

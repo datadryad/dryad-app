@@ -24,8 +24,12 @@
   <% readme_html = markdown_render content.sub(/^# /, '# README: ') %>
   <% readme_parsed = Nokogiri::HTML5::DocumentFragment.parse(readme_html) %>
   <% h2 = readme_parsed.css('h2')&.first&.content %>
-  <h2 tabindex="0" id="readme" class="expand-button" role="button" aria-expanded="false" aria-controls="readme-sec"><%= h2.presence || 'README' %></h2>
-  <div id="readme-sec" class="t-landing__text-wall" <% if params[:controller].include?('landing') %>hidden<% end %>>
+  <% if params[:controller].include?('resources') %>
+    <h2><%= h2.presence || 'README' %></h2>
+  <% else %>
+    <h2 tabindex="0" id="readme" class="expand-button" role="button" aria-expanded="false" aria-controls="readme-sec"><%= h2.presence || 'README' %></h2>
+  <% end %>
+  <div id="readme-sec" class="t-landing__text-wall" <% unless params[:controller].include?('resources') %>hidden<% end %>>
     <% readme_parsed.search('h2')&.first&.remove %>
     <%= readme_parsed.to_html.html_safe %>
   </div>

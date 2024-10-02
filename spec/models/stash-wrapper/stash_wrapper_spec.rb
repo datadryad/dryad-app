@@ -106,18 +106,6 @@ module Stash
           expect(wrapper.license_name).to eq('Creative Commons Attribution 4.0 International (CC BY 4.0)')
           expect(wrapper.license_uri).to eq(URI('https://creativecommons.org/licenses/by/4.0/'))
         end
-
-        it 'works with the old (cdlib.org) schema location' do
-          xml_str_old_schema_location = File.read('spec/data/wrapper/mrtoai-wrapper-old-schema-location.xml')
-          expect(xml_str_old_schema_location).not_to include('ucop.edu') # just to be sure
-
-          wrapper = StashWrapper.parse_xml(xml_str_old_schema_location)
-          roundtrip_xml = wrapper.write_xml
-
-          xml_str_new_schema_location = File.read('spec/data/wrapper/mrtoai-wrapper.xml')
-          expect(xml_str_new_schema_location).not_to include('cdlib.org') # just to be sure
-          expect(roundtrip_xml).to be_xml(xml_str_new_schema_location)
-        end
       end
 
       describe '#initialize' do

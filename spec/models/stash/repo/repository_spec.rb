@@ -407,8 +407,8 @@ module Stash
           )
 
           repo_config = OpenStruct.new(
-            domain: 'http://merritt.cdlib.org',
-            endpoint: 'http://uc3-mrtsword-prd.cdlib.org:39001/mrtsword/collection/dataone_dash'
+            domain: 'http://storagetest.datadryad.org',
+            endpoint: 'http://storagetest.datadryad.org:39001/test/collection/dataone_dash'
           )
 
           @tenant = double(StashEngine::Tenant)

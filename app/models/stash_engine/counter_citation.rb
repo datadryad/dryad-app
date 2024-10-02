@@ -5,6 +5,7 @@
 #  id            :integer          not null, primary key
 #  citation      :text(65535)
 #  doi           :text(65535)
+#  metadata      :json
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  identifier_id :integer
@@ -39,10 +40,11 @@ module StashEngine
       return cites.first unless cites.blank?
 
       datacite_metadata = Stash::DataciteMetadata.new(doi: doi)
+      raw_metadata = datacite_metadata.raw_metadata
       html_citation = datacite_metadata.html_citation
       return nil if html_citation.blank? # do not save to database and return nil early
 
-      create(citation: html_citation, doi: doi, identifier_id: stash_identifier.id)
+      create(citation: html_citation, metadata: raw_metadata.to_json, doi: doi, identifier_id: stash_identifier.id)
     end
   end
 end

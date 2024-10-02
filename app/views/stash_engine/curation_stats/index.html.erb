@@ -15,7 +15,6 @@
 <h2>Curation stats table</h2>
 <p>Recent statistics are available in the table below (mouseover any table heading for a more complete description), or the complete stats history can be downloaded as a CSV: <%= link_to 'Get full stats as CSV', curation_stats_path(format: :csv) %></p>
 
-<p id="timezone">Timezone: UTC</p>
 <div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="stats-label">
 <table class="c-lined-table">
   <thead style="cursor: help">
@@ -44,7 +43,7 @@
 <tbody>
   <% @current_stats.each do |stat| %>
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= stat.id %>">
-      <td title="<%= formatted_datetime(stat.date) %>"><span class="local-date" data-dt="<%= stat.date.iso8601 %>"><%= formatted_datetime(stat.date) %></span></td>
+      <td><%= formatted_datetime(stat.date) %></td>
       <td><%= stat.datasets_to_be_curated %></td>
       <td><%= stat.new_datasets_to_submitted %></td>
       <td><%= stat.new_datasets_to_peer_review %></td>

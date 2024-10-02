@@ -61,42 +61,47 @@ td, th {
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
     content: '\f176\f175';
+    content: '\f176\f175' / '';
     margin-left: .5ch;
     color: $light-gray;
     letter-spacing: .2ch;
   }
-}
 
-.c-lined-table__sort-asc {
-  a::after {
-    display: inline-block;
-    font-size: .8rem;
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    content: '\f176';
-    margin-left: .7ch;
-    color: $dark-blue;
+  &[aria-sort="ascending"] {
+    a::after {
+      display: inline-block;
+      font-size: .8rem;
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      content: '\f176';
+      content: '\f176' / '';
+      margin-left: .7ch;
+      color: $dark-blue;
+    }
+    &::after {
+      margin-left: -.3ch;
+      content: '\f175';
+      content: '\f175' / '';
+    }
   }
-  &::after {
-    margin-left: -.3ch;
-    content: '\f175';
-  }
-}
 
-.c-lined-table__sort-desc {
-  a::after {
-    display: inline-block;
-    font-size: .8rem;
-    font-family: 'Font Awesome 6 Free';
-    content: '\f176';
-    font-weight: 900;
-    margin-left: .7ch;
-    color: $light-gray;
-  }
-  &::after {
-    margin-left: -.3ch;
-    content: '\f175';
-    color: $dark-blue;
+  &[aria-sort="descending"] {
+    a::after {
+      display: inline-block;
+      font-size: .8rem;
+      font-family: 'Font Awesome 6 Free';
+      content: '\f176';
+      content: '\f176' / '';
+      font-weight: 900;
+      margin-left: .7ch;
+      color: $light-gray;
+    }
+    &::after {
+      margin-left: -.3ch;
+      content: '\f175';
+      content: '\f175' / '';
+      color: $dark-blue;
+    }
   }
 }
 

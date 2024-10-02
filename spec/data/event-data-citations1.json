@@ -84,6 +84,6 @@
     ]
   },
   "links": {
-    "self": "https://api.datacite.org/events?mailto=scott.fisher%40ucop.edu&page%5Bsize%5D=10000&obj-id=https%3A%2F%2Fdoi.org%2F10.6071%2Fm3rp49&relation-type-id=cites%2Cdescribes%2Cis-supplemented-by%2Creferences%2Ccompiles%2Creviews%2Crequires%2Chas-metadata%2Cdocuments%2Cis-source-of"
+    "self": "https://api.datacite.org/events?mailto=admin%40datadryad.org&page%5Bsize%5D=10000&obj-id=https%3A%2F%2Fdoi.org%2F10.6071%2Fm3rp49&relation-type-id=cites%2Cdescribes%2Cis-supplemented-by%2Creferences%2Ccompiles%2Creviews%2Crequires%2Chas-metadata%2Cdocuments%2Cis-source-of"
   }
 }

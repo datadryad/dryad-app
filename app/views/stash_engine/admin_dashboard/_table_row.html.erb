@@ -1,7 +1,7 @@
 <tr>
   <td><div class="c-lined-table__with-actions">
     <div class="c-lined-table__data">
-      <%= link_to dataset.title, stash_url_helpers.show_path(id: dataset.identifier_str), target: '_blank' %>
+      <%= link_to "#{dataset.title}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, stash_url_helpers.show_path(id: dataset.identifier_str), target: '_blank' %>
       <% if @fields.include?('doi') %>
         <div class="c-lined-table__digits">DOI: <%= dataset.identifier.identifier %></div>
       <% end %>

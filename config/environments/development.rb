@@ -40,7 +40,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_url_options = { host: 'dryad-dev.cdlib.org' }
+  config.action_mailer.default_url_options = { host: 'v3-dev.datadryad.org' }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -78,7 +78,7 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  config.hosts << 'dryad-dev.cdlib.org'
-  Rails.application.default_url_options = { host: 'dryad-dev.cdlib.org' }
+  config.hosts << 'v3-dev.datadryad.org'
+  Rails.application.default_url_options = { host: 'v3-dev.datadryad.org' }
 
 end

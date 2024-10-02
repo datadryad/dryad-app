@@ -8,7 +8,7 @@ module Stash
         @user = create(:user,
                        first_name: 'Lisa',
                        last_name: 'Muckenhaupt',
-                       email: 'lmuckenhaupt@ucop.edu',
+                       email: 'lmuckenhaupt@datadryad.org',
                        tenant_id: 'ucop')
         @resource = create(:resource, user_id: @user.id, tenant_id: 'ucop')
         @resource.subjects = []

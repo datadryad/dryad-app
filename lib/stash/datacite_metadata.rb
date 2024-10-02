@@ -38,7 +38,7 @@ module Stash
       return '' if names.blank?
 
       names = names.map { |i| name_finder(i) }
-      return "#{names.first} et al." if names.length > 4
+      return "#{names.first(3).join('; ')} et al." if names.length > 4
 
       names.join('; ')
     end
@@ -63,7 +63,9 @@ module Stash
     end
 
     def resource_type
-      return raw_metadata['type'].capitalize if raw_metadata['type']
+      return ' [Preprint]' if %w[posted-content preprint].include?(raw_metadata['type'])
+      return ' [Dataset]' if raw_metadata['type'] == 'dataset'
+      return ' [Software]' if raw_metadata['type'] == 'software'
 
       ''
     end
@@ -84,8 +86,13 @@ module Stash
       return nil if raw_metadata.nil?
 
       # html_safe when concatenated with other stuff makes non-html-safe escaped
-      ''.html_safe + "#{author_names} (#{year_published}), #{title}, #{journal}, #{resource_type}, " +
-          "<a href=\"#{doi_link}\" target=\"_blank\">#{doi_link}</a>".html_safe
+      citation_array = []
+      citation_array << "#{author_names}#{year_published ? " (#{year_published})" : ''}"
+      citation_array << "#{title.html_safe}#{resource_type}"
+      citation_array << journal
+      citation_array << publisher unless raw_metadata['type'].include?('journal')
+      citation_array << "<a href=\"#{doi_link}\" target=\"_blank\">#{doi_link}</a>".html_safe
+      citation_array.reject(&:blank?).join('. ')
     end
 
     def logger

@@ -195,6 +195,7 @@ Rails.application.routes.draw do
         to: 'generic_files#check_frictionless',
         as: 'generic_file_check_frictionless'
 
+    get 'choose_dashboard', to: 'dashboard#choose', as: 'choose_dashboard'
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
     get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'

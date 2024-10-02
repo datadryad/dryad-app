@@ -51,7 +51,7 @@
 </div>
 </div>
 
-#### Product development team
+#### Platform development team
 
 <div class="about-bios">
    <div class="bio">

@@ -21,10 +21,6 @@
 #  by checking for EUID==0 (root).
 ### END INIT INFO
 
-# This script is managed by Puppet. If you change this, be sure to update the
-# copy at uc3puppet@cdl-aws-puppet.cdlib.org:/apps/puppet/environments/uc3 and
-# push it to the git main branch
-
 ROLE_ACCT=dryad
 
 PROG=delayed_job.dryad

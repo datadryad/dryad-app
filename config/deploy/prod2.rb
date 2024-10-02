@@ -20,7 +20,7 @@ end
 
 # To override the default host, set $SERVER_HOSTS, e.g.
 #    $ SERVER_HOSTS='localhost' bundle exec cap development deploy
-set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || ['uc3-dryaduix2-prd-2c.cdlib.org']
+set :server_hosts, ENV["SERVER_HOSTS"]&.split(' ') || ['datadryad.org']
 role %i[app web], fetch(:server_hosts), user: 'dryad'
 
 set :aws_region, 'us-west-2'

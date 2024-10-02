@@ -142,7 +142,7 @@ Sample `sequencelinkout000001.xml` file:
   <Link>
     <LinkId>dryad.seq.2019-05-30.0</LinkId>
     <ProviderId>1234</ProviderId>
-    <IconUrl>http://dryad-dev.cdlib.org/images/DryadLogo-Button.png</IconUrl>
+    <IconUrl>https://v3-dev.datadryad.org/images/DryadLogo-Button.png</IconUrl>
     <ObjectSelector>
       <Database>bioproject</Database>
       <ObjectList>
@@ -150,7 +150,7 @@ Sample `sequencelinkout000001.xml` file:
       </ObjectList>
     </ObjectSelector>
     <ObjectUrl>
-      <Base>http://dryad-dev.cdlib.org/stash/dataset/</Base>
+      <Base>https://v3-dev.datadryad.org/stash/dataset/</Base>
       <Rule>doi:12.1234/dryad.12345a</Rule>
       <SubjectType>supplemental materials</SubjectType>
     </ObjectUrl>
@@ -158,7 +158,7 @@ Sample `sequencelinkout000001.xml` file:
   <Link>
     <LinkId>dryad.seq.2019-05-30.0</LinkId>
     <ProviderId>1234</ProviderId>
-    <IconUrl>http://dryad-dev.cdlib.org/images/DryadLogo-Button.png</IconUrl>
+    <IconUrl>https://v3-dev.datadryad.org/images/DryadLogo-Button.png</IconUrl>
     <ObjectSelector>
       <Database>gene</Database>
       <ObjectList>
@@ -174,7 +174,7 @@ Sample `sequencelinkout000001.xml` file:
       </ObjectList>
     </ObjectSelector>
     <ObjectUrl>
-      <Base>http://dryad-dev.cdlib.org/stash/dataset/</Base>
+      <Base>https://v3-dev.datadryad.org/stash/dataset/</Base>
       <Rule>doi:12.1234/dryad.12345a</Rule>
       <SubjectType>supplemental materials</SubjectType>
     </ObjectUrl>
@@ -182,7 +182,7 @@ Sample `sequencelinkout000001.xml` file:
   <Link>
     <LinkId>dryad.seq.2019-05-30.1</LinkId>
     <ProviderId>1234</ProviderId>
-    <IconUrl>http://dryad-dev.cdlib.org/images/DryadLogo-Button.png</IconUrl>
+    <IconUrl>https://v3-dev.datadryad.org/images/DryadLogo-Button.png</IconUrl>
     <ObjectSelector>
       <Database>gene</Database>
       <ObjectList>
@@ -191,7 +191,7 @@ Sample `sequencelinkout000001.xml` file:
       </ObjectList>
     </ObjectSelector>
     <ObjectUrl>
-      <Base>http://dryad-dev.cdlib.org/stash/dataset/</Base>
+      <Base>https://v3-dev.datadryad.org/stash/dataset/</Base>
       <Rule>doi:12.1234/dryad.12345b</Rule>
       <SubjectType>supplemental materials</SubjectType>
     </ObjectUrl>

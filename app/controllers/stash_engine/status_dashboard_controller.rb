@@ -14,7 +14,7 @@ module StashEngine
     # app/services/stash_engine/status_dashboard/<service-name>.rb that does the actual check and sets a value for it.
     def show
       authorize StashEngine::ExternalDependency.all
-      @main_documentation = 'https://confluence.ucop.edu/display/Stash/Dryad+Operations'
+      @main_documentation = 'https://github.com/datadryad/dryad-app/tree/main/documentation'
       @managed_dependencies = StashEngine::ExternalDependency.where(internally_managed: true).order(:name)
       @unmanaged_dependencies = StashEngine::ExternalDependency.where(internally_managed: false).order(:name)
       @latest_check = StashEngine::ExternalDependency.where.not(status: 2).limit(1).first

@@ -84,6 +84,6 @@
     ]
   },
   "links": {
-    "self": "https://api.datacite.org/events?mailto=scott.fisher%40ucop.edu&page%5Bsize%5D=10000&subj-id=https%3A%2F%2Fdoi.org%2F10.6071%2Fm3rp49&relation-type-id=is-cited-by%2Cis-supplement-to%2Cis-described-by%2Cis-metadata-for%2Cis-referenced-by%2Cis-documented-by%2Cis-compiled-by%2Cis-reviewed-by%2Cis-derived-from%2Cis-required-by"
+    "self": "https://api.datacite.org/events?mailto=admin%40datadryad.org&page%5Bsize%5D=10000&subj-id=https%3A%2F%2Fdoi.org%2F10.6071%2Fm3rp49&relation-type-id=is-cited-by%2Cis-supplement-to%2Cis-described-by%2Cis-metadata-for%2Cis-referenced-by%2Cis-documented-by%2Cis-compiled-by%2Cis-reviewed-by%2Cis-derived-from%2Cis-required-by"
   }
 }

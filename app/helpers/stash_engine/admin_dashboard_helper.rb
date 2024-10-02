@@ -7,14 +7,14 @@ module StashEngine
       head << 'Keywords' if @fields.include?('keywords')
       head << 'Authors' if @fields.include?('authors')
       if @fields.include?('affiliations') || @fields.include?('countries')
-        head += @fields.include?('affiliations') ? ',Affiliations' : ',Countries'
+        head << @fields.include?('affiliations') ? 'Affiliations' : 'Countries'
       end
       head << 'Submitter' if @fields.include?('submitter')
       head << 'Status' if @fields.include?('status')
       head << 'Size' if @fields.include?('size')
       head << 'Metrics' if @fields.include?('metrics')
       if @fields.include?('funders') || @fields.include?('awards')
-        head += @fields.include?('funders') ? ',Grant funders' : ',Award IDs'
+        head << @fields.include?('funders') ? 'Grant funders' : 'Award IDs'
       end
       head << 'Journal' if @fields.include?('journal')
       head << 'Journal sponsor' if @fields.include?('sponsor')

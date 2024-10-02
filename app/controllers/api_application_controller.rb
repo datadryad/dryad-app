@@ -28,6 +28,8 @@ class ApiApplicationController < StashEngine::ApplicationController
   end
 
   def require_json_headers
+    request.format = :json unless params[:format]
+
     accept = request.headers['accept']
     content_type = request.headers['content-type']
     # check that content_type and accept headers are as expected

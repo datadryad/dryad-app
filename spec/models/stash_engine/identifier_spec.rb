@@ -912,10 +912,10 @@ module StashEngine
     describe :with_visibility do
       before(:each) do
         Identifier.destroy_all
-        @user = create(:user, first_name: 'Lisa', last_name: 'Muckenhaupt', email: 'lmuckenhaupt@ucop.edu', tenant_id: 'ucop')
-        @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop')
+        @user = create(:user, first_name: 'Lisa', last_name: 'Muckenhaupt', email: 'lmuckenhaupt@datadryad.org', tenant_id: 'ucop')
+        @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@datadryad.org', tenant_id: 'ucop')
         create(:role, user: @user2, role: 'admin', role_object: @user2.tenant)
-        @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'curator')
+        @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@datadryad.org', tenant_id: 'ucb', role: 'curator')
 
         @identifiers = [create(:identifier, identifier: '10.1072/FK2000'),
                         create(:identifier, identifier: '10.1072/FK2001'),

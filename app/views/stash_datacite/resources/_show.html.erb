@@ -5,7 +5,7 @@
   </div>
 
 <% if @id.may_download?(user: current_user) %>
-  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id, resource: @resource} %>
+  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @id} %>
 <% else %>
   <%= render partial: 'stash_engine/landing/files_embargoed', locals: {resource: @resource} %>
 <% end %>

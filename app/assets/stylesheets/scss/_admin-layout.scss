@@ -86,21 +86,6 @@
   }
 }
 
-#timezone {
-  text-align: right;
-  font-size: .9em;
-  margin-bottom: 0;
-
-  &:before {
-    display: inline;
-    font-size: .9rem;
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    content: '\f0ac';
-    margin-right: .5ch;
-  }
-}
-
 .o-admin-form-pair.half-width {
   flex-basis: 50%;
   max-width: calc(50% - 2ch);
