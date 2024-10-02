@@ -103,7 +103,7 @@ export default function Autocomplete(
         ? (
           <label
             {...getLabelProps()}
-            className={`c-input__label ${(isRequired ? 'required' : '')}`}
+            className={`o-heading-level4 ${(isRequired ? 'required' : '')}`}
             id={`label_${htmlId}`}
             htmlFor={htmlId}
           >
@@ -162,7 +162,7 @@ export default function Autocomplete(
           value={acText || ''}
           aria-controls={`menu_${htmlId}`}
           aria-labelledby={`label_${htmlId}`}
-          aria-invalid={showError && !textEnter}
+          aria-invalid={showError && !textEnter ? 'true' : null}
           aria-errormessage={`error_${htmlId}`}
           placeholder="Find as you type..."
         />

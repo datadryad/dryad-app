@@ -19,7 +19,7 @@ module StashDatacite
         process_affiliation unless params[:affiliation].nil?
         @author.reload
         format.js
-        format.json { render json: @author.as_json.merge(affiliation: @author.affiliation.as_json) }
+        format.json { render json: @author.as_json(include: :affiliations) }
       end
     end
 
@@ -29,7 +29,7 @@ module StashDatacite
         @author.update(author_params)
         process_affiliation
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
-        format.json { render json: @author.as_json.merge(affiliation: @author.affiliation.as_json) }
+        format.json { render json: @author.as_json(include: :affiliations) }
       end
     end
 

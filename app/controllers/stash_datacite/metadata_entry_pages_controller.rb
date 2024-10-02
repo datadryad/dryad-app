@@ -8,8 +8,7 @@ module StashDatacite
       @metadata_entry.resource_publications
       @metadata_entry.descriptions
 
-      @submission = @resource.as_json(include: %i[identifier authors subjects descriptions resource_publication related_identifiers
-                                                  contributors resource_type])
+      @submission = @resource.as_json(include: [:identifier, :subjects, :descriptions, :resource_publication, :related_identifiers, :contributors, :resource_type, authors: {include: [:affiliations]}])
       @submission[:generic_files] = @resource.generic_files.validated_table.as_json(
         methods: :type, include: { frictionless_report: { only: %i[report status] } }
       )

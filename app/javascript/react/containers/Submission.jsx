@@ -2,7 +2,7 @@ import React, {useRef, useState, useEffect} from 'react';
 import {upCase} from '../../lib/utils';
 import Checklist from '../components/Checklist';
 import Publication, {publicationCheck} from '../components/MetadataEntry/Publication';
-import Authors from '../components/MetadataEntry/Authors';
+import Authors, {authorCheck} from '../components/MetadataEntry/Authors';
 import Support from '../components/MetadataEntry/Support';
 import Subjects from '../components/MetadataEntry/Subjects';
 import Description from '../components/MetadataEntry/Description';
@@ -28,7 +28,7 @@ export default function Submission({
     {
       name: 'Authors',
       pass: !!resource.title && resource.authors.length > 0,
-      fail: false,
+      fail: authorCheck(resource.authors, ownerId),
       component: <Authors resource={resource} setResource={setResource} admin={admin} ownerId={ownerId} />,
     },
     {
@@ -84,11 +84,16 @@ export default function Submission({
     if (subRef.current) {
       const observer = new MutationObserver(() => {
         const et = document.querySelector('.error-text');
+        const old = document.querySelector('*[aria-invalid]');
+        if (old) old.removeAttribute('aria-invalid');
         if (et) {
-          const inv = document.querySelector(`*[aria-errormessage="${et.id}"]`);
-          if (inv) inv.setAttribute('aria-invalid', true);
-        } else {
-          document.querySelector('*[aria-invalid]').removeAttribute('aria-invalid');
+          const ind = et.dataset.index;
+          const inv = ind
+            ? document.querySelectorAll(`*[aria-errormessage="${et.id}"]`)[ind]
+            : document.querySelector(`*[aria-errormessage="${et.id}"]`);
+          if (inv) {
+            inv.setAttribute('aria-invalid', true);
+          }
         }
       });
       observer.observe(subRef.current, {subtree: true, childList: true});

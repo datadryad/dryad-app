@@ -61,18 +61,20 @@ export default function Authors({
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
           <DragonListItem key={author.id} item={author} typeName="funder">
-            <AuthorForm dryadAuthor={author} removeFunction={removeItem} correspondingAuthorId={ownerId} />
-            <OrcidInfo dryadAuthor={author} curator={admin} correspondingAuthorId={ownerId} />
+            <AuthorForm author={author} update={setAuthors} remove={removeItem} ownerId={ownerId} />
+            <OrcidInfo author={author} curator={admin} ownerId={ownerId} />
           </DragonListItem>
         ))}
       </DragonDropList>
-      <button
-        className="t-describe__add-button o-button__add"
-        type="button"
-        onClick={addNewAuthor}
-      >
-        Add author
-      </button>
+      <div style={{textAlign: 'right'}}>
+        <button
+          className="o-button__plain-text1"
+          type="button"
+          onClick={addNewAuthor}
+        >
+          + Add author
+        </button>
+      </div>
     </>
   );
 }

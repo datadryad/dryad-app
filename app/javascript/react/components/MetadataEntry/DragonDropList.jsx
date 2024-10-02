@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import DragonDrop from 'drag-on-drop';
-import './Dragon.css';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 export const orderedItems = ({items, typeName}) => items.slice(0).sort((a, b) => {
@@ -19,13 +18,10 @@ export function DragonListItem({item, typeName, children}) {
       <button
         aria-describedby={`${typeName}s-global-help`}
         type="button"
-        className="fa-workaround handle c-input"
+        className="fa-workaround handle"
         aria-label={`Drag to reorder this ${typeName}`}
         id={`${typeName}-button-${item.id}`}
-        style={{background: 'url(\'/images/fa-barfs.svg\') no-repeat', boxShadow: 'none'}}
-      >
-        <div className="offscreen">Reorder</div>
-      </button>
+      />
       {children}
     </li>
   );
@@ -158,10 +154,9 @@ export default function DragonDropList({
   }, [items]);
   return (
     <section {...props}>
-      <p id={`${typeName}s-global-help`} className="offscreen">
-        Activate the reorder button and use the arrow keys to reorder the list or use your mouse to
-        drag/reorder. Press escape to cancel the reordering.
-        <span>Ensure screen reader is in focus mode.</span>
+      <p id={`${typeName}s-global-help`} className="screen-reader-only">
+        Activate the reorder button and use the arrow keys to reorder the list or use your mouse to{' '}
+        drag/reorder. Press escape to cancel the reordering. Ensure screen reader is in focus mode.
       </p>
       <ul className="dragon-drop-list" aria-labelledby={`${typeName}s-head`} ref={dragonRef}>
         {children}

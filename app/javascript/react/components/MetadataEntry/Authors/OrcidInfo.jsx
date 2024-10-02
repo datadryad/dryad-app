@@ -2,39 +2,39 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function OrcidInfo({
-  dryadAuthor, curator, correspondingAuthorId,
+  author, curator, ownerId,
 }) {
   let orcidInfo = null;
-  if (dryadAuthor.author_orcid) {
+  if (author.author_orcid) {
     orcidInfo = (window.location.hostname === 'datadryad.org'
-      ? `https://orcid.org/${dryadAuthor.author_orcid}`
-      : `https://sandbox.orcid.org/${dryadAuthor.author_orcid}`);
+      ? `https://orcid.org/${author.author_orcid}`
+      : `https://sandbox.orcid.org/${author.author_orcid}`);
   }
 
   return (
-    <div className="c-orcid">
+    <p className="input-line" style={{marginLeft: '38px', marginBottom: 0}}>
       {orcidInfo && (
-        <div className="c-orcid__div" style={{marginRight: '2em'}}>
-          <i className="fab fa-orcid" aria-hidden="true" />
-          <a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{orcidInfo}</a>
-        </div>
+        <span>
+          <i className="fab fa-orcid" aria-hidden="true" />&nbsp;
+          <a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{author.author_orcid}</a>
+        </span>
       )}
-      {correspondingAuthorId === dryadAuthor.id && (
-        <div className="c-orcid__div" style={{marginLeft: '2em'}}><i className="fa fa-address-card-o" aria-hidden="true" />
-          &nbsp;&nbsp;Corresponding author
-        </div>
+      {ownerId === author.id && (
+        <span>
+          <i className="fas fa-address-card" aria-hidden="true" />&nbsp;Corresponding author
+        </span>
       )}
-      {(curator && !orcidInfo && dryadAuthor.orcid_invite_path) ? (
-        <div className="c-orcid__div">
-          Associate &nbsp;<i className="fab fa-orcid" aria-hidden="true" />&nbsp;at {dryadAuthor.orcid_invite_path}
-        </div>
+      {(curator && !orcidInfo && author.orcid_invite_path) ? (
+        <span>
+          Associate &nbsp;<i className="fab fa-orcid" aria-hidden="true" />&nbsp;at {author.orcid_invite_path}
+        </span>
       ) : ''}
-    </div>
+    </p>
   );
 }
 
 OrcidInfo.propTypes = {
-  dryadAuthor: PropTypes.object.isRequired,
+  author: PropTypes.object.isRequired,
   curator: PropTypes.bool.isRequired,
-  correspondingAuthorId: PropTypes.number.isRequired,
+  ownerId: PropTypes.number.isRequired,
 };

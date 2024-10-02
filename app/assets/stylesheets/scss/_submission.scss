@@ -198,6 +198,10 @@
   .error-text {
     color: $red;
   }
+
+  *[aria-invalid] {
+    border: thin solid $orange;
+  }
 }
 
 .radio_choice {
@@ -207,5 +211,30 @@
     display: inline-flex;
     gap: .5ch;
     align-items: baseline;
+  }
+}
+
+.author-form {
+  display: flex;
+  align-items: last baseline;
+  flex-wrap: wrap;
+  column-gap: 1.5ch;
+  row-gap: 1ch;
+
+  & > div {
+    flex-basis: 25%;
+    max-width: calc(25% - 2.2ch);
+    * {
+      max-width: 100%;
+      text-overflow: ellipsis;
+    }
+    @media (max-width: $screen-lg-min) {
+      flex-basis: 50%;
+      max-width: calc(50% - 2.2ch);
+    }
+    @media (max-width: 600px) {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
   }
 }
