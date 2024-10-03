@@ -18,7 +18,6 @@ The example file contains code to:
     * Authorize API connection and retrieve access token
     * Create dataset
     * Update dataset and set missing information
-    * Embed a file on the dataset using file
-    * Upload a file on the dataset
+    * Embed/Upload a file on the dataset using file URL
     * Submit dataset
 
