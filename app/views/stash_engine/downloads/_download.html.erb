@@ -12,10 +12,12 @@
     <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
   </div>
   <% content_for :doc_end do %>
+  <% params = {resource_id: @resource.id} %>
+  <% params[:share] = share if share.present? %>
   <script type="text/javascript" async>
     const dlbutton = document.getElementById('download_zip_button');
     if ("serviceWorker" in navigator) {
-      const zip_url = '<%= stash_url_helpers.zip_assembly_info_path(resource_id: @resource.id)%>';    
+      const zip_url = '<%= stash_url_helpers.zip_assembly_info_path(params)%>';    
       const scope = '<%= worker_scope %>';
       <%= render partial: 'stash_engine/downloads/download_zip', formats: :js %>
     } else {
