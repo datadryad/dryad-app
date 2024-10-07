@@ -1,7 +1,7 @@
 <%
-  if resource.present?
-    resources = [resource]
-    dl_resource = resource
+  if share.present?
+    resources = [share[:resource]]
+    dl_resource = share[:resource]
   else
     resources = dataset_identifier.resources.files_published  # the public ones
     if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
@@ -24,9 +24,11 @@
         </summary>
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
+          <% params = {file_id: fu.id} %>
+          <% params[:share] = share[:code] if share.present? %>
             <li>
               <span>
-              <%= link_to "<i class=\"fas fa-download\" aria-hidden=\"true\"></i>#{fu.upload_file_name.ellipsisize(200)}".html_safe, Rails.application.routes.url_helpers.download_stream_path(fu.id),
+              <%= link_to "<i class=\"fas fa-download\" aria-hidden=\"true\"></i>#{fu.upload_file_name.ellipsisize(200)}".html_safe, Rails.application.routes.url_helpers.download_stream_path(params),
                         title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
               <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, format: :js) %>">
                 <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
@@ -40,7 +42,7 @@
     <% end %>
     <div id="file_preview_box"></div>
     <!-- full download second -->
-    <%= render partial: 'stash_engine/downloads/download', locals: { dataset_identifier: dataset_identifier, resource: dl_resource } %>
+    <%= render partial: 'stash_engine/downloads/download', locals: { dataset_identifier: dataset_identifier, resource: dl_resource, share: share.present? ? share[:code] : nil } %>
   <% else %>
     <p>No data files are available for display.</p>
   <% end %>
