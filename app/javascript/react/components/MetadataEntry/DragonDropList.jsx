@@ -18,7 +18,7 @@ export function DragonListItem({item, typeName, children}) {
       <button
         aria-describedby={`${typeName}s-global-help`}
         type="button"
-        className="fa-workaround handle"
+        className="handle"
         aria-label={`Drag to reorder this ${typeName}`}
         id={`${typeName}-button-${item.id}`}
       />

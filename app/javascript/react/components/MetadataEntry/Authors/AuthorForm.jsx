@@ -116,7 +116,7 @@ export default function AuthorForm({
             />
           </div>
           <div className="input-stack">
-            <label className={`o-heading-level4 ${(author.author_orcid ? 'required' : '')}`} htmlFor={`author_email__${author.id}`}>
+            <label className={`o-heading-level4 ${(author.author_orcid ? 'required' : 'optional')}`} htmlFor={`author_email__${author.id}`}>
               Author email
             </label>
             <Field
@@ -131,19 +131,21 @@ export default function AuthorForm({
             />
           </div>
           { ownerId !== author.id && (
-            <button
-              type="button"
-              className="remove-record"
-              onClick={() => {
-                showModalYNDialog('Are you sure you want to remove this author?', () => {
-                  remove(author.id, author.resource_id);
-                  // deleteItem(auth.id);
-                });
-              }}
-              aria-label="Remove author"
-            >
-              <i className="fas fa-trash-can" aria-hidden="true" />
-            </button>
+            <span>
+              <button
+                type="button"
+                className="remove-record"
+                onClick={() => {
+                  showModalYNDialog('Are you sure you want to remove this author?', () => {
+                    remove(author.id, author.resource_id);
+                    // deleteItem(auth.id);
+                  });
+                }}
+                aria-label="Remove author"
+              >
+                <i className="fas fa-trash-can" aria-hidden="true" />
+              </button>
+            </span>
           )}
         </Form>
       )}

@@ -73,6 +73,8 @@ function Funders({resource, setResource}) {
     contributor.contributor_name = noFunders ? 'N/A' : '';
     contributor.name_identifier_id = noFunders ? '0' : '';
     // submit by json
+    const dels = funders.slice(1);
+    dels.forEach((f) => removeItem(f.id));
     return axios.patch(
       '/stash_datacite/contributors/update',
       {authenticity_token, contributor},
@@ -124,16 +126,18 @@ function Funders({resource, setResource}) {
           ))}
         </DragonDropList>
       )}
-      <button
-        className="t-describe__add-funder-button o-button__add"
-        type="button"
-        disabled={disabled}
-        onClick={addNewFunder}
-        style={{marginRight: '2em'}}
-      >
-        Add another funder
-      </button>
-      <label><input type="checkbox" checked={disabled} onChange={setNoFunders} /> No funding received</label>
+      <div className="funder-buttons">
+        {!disabled && <div />}
+        <label><input type="checkbox" checked={disabled} onChange={setNoFunders} /> No funding received</label>
+        <button
+          className="o-button__plain-text1"
+          type="button"
+          disabled={disabled}
+          onClick={addNewFunder}
+        >
+          + Add another funder
+        </button>
+      </div>
     </div>
   );
 }

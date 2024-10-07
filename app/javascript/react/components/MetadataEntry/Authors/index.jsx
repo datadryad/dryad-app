@@ -1,18 +1,7 @@
 import React from 'react';
-import {upCase} from '../../../../lib/utils';
+import {upCase, ordinalNumber} from '../../../../lib/utils';
 
 export {default} from './Authors';
-
-const ordinal = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth',
-  'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth',
-  'seventeenth', 'eighteenth', 'nineteenth'];
-const deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
-
-const ordinalNumber = (n) => {
-  if (n < 20) return ordinal[n];
-  if (n % 10 === 0) return `${deca[Math.floor(n / 10) - 2]}ieth`;
-  return `${deca[Math.floor(n / 10) - 2]}y-${ordinal[n % 10]}`;
-};
 
 export const authorCheck = (authors, id) => {
   if (!authors.find((a) => a.id === id)?.author_email) {

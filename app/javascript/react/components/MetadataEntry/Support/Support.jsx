@@ -7,6 +7,7 @@ export default function Support({resource, setResource}) {
     <>
       <h2>Support</h2>
       <FacilityForm resource={resource} setResource={setResource} />
+      <h3>Funding</h3>
       <Funders resource={resource} setResource={setResource} />
     </>
   );

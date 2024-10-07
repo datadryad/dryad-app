@@ -35,7 +35,9 @@
   .handle {
 	  @extend %o-button__link-style;
 	  cursor: ns-resize;
+	  float: left;
 	  margin-right: 1.5ch;
+	  margin-top: 28px;
 	  &:before {
 		  font-family: 'Font Awesome 6 Free';
 		  font-weight: 900;
@@ -47,14 +49,6 @@
 
 	label {
 	  vertical-align: middle;
-	}
-	button.fa-workaround {
-	  display: block;
-	  width: 1.5rem;
-	  height: 1.5rem;
-	  float: left;
-	  transform: translateY(1.4em);
-	  border: none;
 	}
 
 	button[aria-pressed="true"] {
@@ -69,10 +63,6 @@
 	pre {
 	  overflow-y: auto;
 	  text-align: left;
-	}
-
-	.remove-record {
-		@extend %o-button__link-style;
 	}
 }
 

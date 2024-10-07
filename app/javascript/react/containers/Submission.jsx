@@ -3,7 +3,7 @@ import {upCase} from '../../lib/utils';
 import Checklist from '../components/Checklist';
 import Publication, {publicationCheck} from '../components/MetadataEntry/Publication';
 import Authors, {authorCheck} from '../components/MetadataEntry/Authors';
-import Support from '../components/MetadataEntry/Support';
+import Support, {fundingCheck} from '../components/MetadataEntry/Support';
 import Subjects from '../components/MetadataEntry/Subjects';
 import Description from '../components/MetadataEntry/Description';
 import RelatedWorks from '../components/MetadataEntry/RelatedWorks';
@@ -28,13 +28,13 @@ export default function Submission({
     {
       name: 'Authors',
       pass: !!resource.title && resource.authors.length > 0,
-      fail: authorCheck(resource.authors, ownerId),
+      fail: !!resource.title && authorCheck(resource.authors, ownerId),
       component: <Authors resource={resource} setResource={setResource} admin={admin} ownerId={ownerId} />,
     },
     {
       name: 'Support',
-      pass: resource.contributors.find((c) => c.contributor_type === 'funder' && !!c.name_identifier_id),
-      fail: false,
+      pass: resource.contributors.find((c) => c.contributor_type === 'funder'),
+      fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support resource={resource} setResource={setResource} />,
     },
     {
@@ -100,7 +100,11 @@ export default function Submission({
     }
   }, []);
 
-  useEffect(() => setStep(steps.find((c) => c.fail) || steps.findLast((c) => c.pass) || {name: 'Start'}), []);
+  useEffect(() => setStep(
+    steps.find((c) => c.fail)
+    || (steps.findLast((c) => c.pass) && steps[steps.findLastIndex((c) => c.pass) + 1])
+    || {name: 'Start'},
+  ), []);
 
   return (
     <>

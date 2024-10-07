@@ -16,6 +16,18 @@ export function upCase(str, locale=navigator.language) {
   return str.replace(/^\p{CWU}/u, char => char.toLocaleUpperCase(locale));
 }
 
+const ordinal = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth',
+  'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth',
+  'seventeenth', 'eighteenth', 'nineteenth'];
+
+const deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
+
+export function ordinalNumber(n) {
+  if (n < 20) return ordinal[n];
+  if (n % 10 === 0) return `${deca[Math.floor(n / 10) - 2]}ieth`;
+  return `${deca[Math.floor(n / 10) - 2]}y-${ordinal[n % 10]}`;
+};
+
 
 // if an id is null then make one for a form, etc
 export function makeId(id){

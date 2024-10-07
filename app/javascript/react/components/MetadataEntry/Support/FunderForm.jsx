@@ -89,9 +89,9 @@ function FunderForm({
       }}
     >
       {(formik) => (
-        <Form className="c-input__inline">
+        <Form className="funder-form">
           <Field name="id" type="hidden" />
-          <div className="c-input">
+          <div className="input-stack">
             <RorAutocomplete
               formRef={formRef}
               acText={acText}
@@ -103,6 +103,7 @@ function FunderForm({
                   htmlId: `contrib_${contributor.id}`,
                   labelText: 'Granting organization',
                   isRequired: true,
+                  errorId: 'funder_error',
                 }
               }
             />
@@ -116,9 +117,8 @@ function FunderForm({
               </>
             )}
           </div>
-          <div className="c-input">
-            <label className="c-input__label" htmlFor={`contributor_award_number__${contributor.id}`}>Award
-              number
+          <div className="input-stack">
+            <label className="o-heading-level4 optional" htmlFor={`contributor_award_number__${contributor.id}`}>Award number
             </label>
             <Field
               id={`contributor_award_number__${contributor.id}`}
@@ -130,8 +130,8 @@ function FunderForm({
               }}
             />
           </div>
-          <div className="c-input">
-            <label className="c-input__label" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
+          <div className="input-stack">
+            <label className="o-heading-level4 optional" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
             </label>
             <Field
               id={`contributor_award_description__${contributor.id}`}
@@ -143,16 +143,20 @@ function FunderForm({
               }}
             />
           </div>
-          <button
-            type="button"
-            className="t-describe__remove-button o-button__remove"
-            onClick={() => {
-              showModalYNDialog('Are you sure you want to remove this funder?', () => {
-                removeFunction(contributor.id);
-              });
-            }}
-          >remove
-          </button>
+          <span>
+            <button
+              type="button"
+              className="remove-record"
+              onClick={() => {
+                showModalYNDialog('Are you sure you want to remove this funder?', () => {
+                  removeFunction(contributor.id);
+                });
+              }}
+              aria-label="Remove funding"
+            >
+              <i className="fas fa-trash-can" aria-hidden="true" />
+            </button>
+          </span>
         </Form>
       )}
     </Formik>
