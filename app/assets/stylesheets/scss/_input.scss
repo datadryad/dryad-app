@@ -17,15 +17,16 @@ input {
 	row-gap: 1ch;
 }
 
-label.optional {
-	&:after {
-		display: inline-block;
-		font-size: .98rem;
-		font-weight: normal;
-		margin-left: .25ch;
-		content: '(optional)';
-		color: $dark-gray;
-	}
+label.optional:after, label span.details {
+	display: inline-block;
+	font-size: .98rem;
+	font-weight: normal;
+	margin-left: .25ch;
+	color: $dark-gray;
+}
+
+label.optional:after {
+	content: '(optional)';
 }
 
 %c-input {

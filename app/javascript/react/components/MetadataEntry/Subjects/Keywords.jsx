@@ -29,8 +29,8 @@ function Keywords({resource, setResource}) {
   };
 
   function deleteKeyword(id) {
-    axios.delete(`/stash_datacite/subjects/${id}/create`, {
-      data: {authenticity_token},
+    axios.delete(`/stash_datacite/subjects/${id}/delete`, {
+      data: {authenticity_token, resource_id: resource.id},
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     }).then((data) => {
       if (data.status !== 200) {
@@ -42,26 +42,29 @@ function Keywords({resource, setResource}) {
   }
 
   useEffect(() => {
-    setResource((r) => ({...r, subjects: [...subjs, ...r.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme))]}));
+    setResource((r) => ({...r, subjects: [...subjs, ...r.subjects.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme))]}));
   }, [subjs]);
 
   return (
     <div className="c-keywords">
-      <label className="c-input__label required" id="label_keyword_ac" htmlFor="keyword_ac">Subject keywords:</label>
-        &nbsp;&nbsp;Adding keywords improves the findability of your dataset. E.g. scientific names, method type
-
-      <div id="js-keywords__container" className="c-keywords__container c-keywords__container--has-blur">
+      <label className="c-input__label required" id="label_keyword_ac" htmlFor="keyword_ac">
+        Subject keywords
+        <span className="details">(at least 3 required)</span>
+      </label>
+      <div id="js-keywords__container" className="c-keywords__container">
         {subjs.map((subj) => (
           <span className="c-keywords__keyword" key={subj.id}>
             {subj.subject}
             <span className="delete_keyword">
               <button
                 id={`sub_remove_${subj.id}`}
-                aria-label="Remove this keyword"
+                aria-label={`Remove keyword ${subj.subject}`}
                 type="button"
                 className="c-keywords__keyword-remove"
                 onClick={() => deleteKeyword(subj.id)}
-              />
+              >
+                <i className="fas fa-times" aria-hidden="true" />
+              </button>
             </span>
           </span>
         ))}
@@ -75,6 +78,7 @@ function Keywords({resource, setResource}) {
               labelText: '',
               isRequired: false,
               saveOnEnter: true,
+              errorId: 'subj_error',
             }
           }
         />

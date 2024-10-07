@@ -22,7 +22,7 @@ function ResearchDomain({resource, setResource}) {
 
   return (
     <Formik
-      initialValues={{fos_subjects: (subject || '')}}
+      initialValues={{fos_subjects: (subject?.subject || '')}}
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
         showSavingMsg();
@@ -36,15 +36,16 @@ function ResearchDomain({resource, setResource}) {
           {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
         )
           .then((data) => {
-            if (data.status !== 200) {
+            if (data.status === 200) {
               // console.log('Response failure not a 200 response');
             }
             showSavedMsg();
+            console.log(data.data);
             setResource((r) => ({
               ...r,
               subjects: [
-                ...values.fos_subjects,
-                ...r.subjects.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)),
+                ...data.data,
+                ...r.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme)),
               ],
             }));
             setSubmitting(false);
@@ -61,10 +62,12 @@ function ResearchDomain({resource, setResource}) {
             name="fos_subjects"
             id={`fos_subjects__${resource.id}`}
             list={`fos_subject__${resource.id}`}
-            className="fos-subjects js-change-submit c-input__text"
+            className="fos-subjects js-change-submit c-input__select"
+            placeholder="Find as you type..."
             onBlur={() => { // formRef.current.handleSubmit();
               formik.handleSubmit();
             }}
+            aria-errormessage="domain_error"
           />
           <datalist id={`fos_subject__${resource.id}`} className="c-input__text">
             {subjectList.map((subj, index) => {

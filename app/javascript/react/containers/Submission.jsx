@@ -4,7 +4,7 @@ import Checklist from '../components/Checklist';
 import Publication, {publicationCheck} from '../components/MetadataEntry/Publication';
 import Authors, {authorCheck} from '../components/MetadataEntry/Authors';
 import Support, {fundingCheck} from '../components/MetadataEntry/Support';
-import Subjects from '../components/MetadataEntry/Subjects';
+import Subjects, {keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
 import Description from '../components/MetadataEntry/Description';
 import RelatedWorks from '../components/MetadataEntry/RelatedWorks';
 import UploadFiles from './UploadFiles';
@@ -39,8 +39,8 @@ export default function Submission({
     },
     {
       name: 'Subjects',
-      pass: resource.subjects.length > 3,
-      fail: false,
+      pass: keywordPass(resource.subjects),
+      fail: keywordFail(resource.subjects),
       component: <Subjects resource={resource} setResource={setResource} />,
     },
     {
