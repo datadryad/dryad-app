@@ -72,13 +72,13 @@ export default function Description({
       };
       showSavingMsg();
       axios.patch(
-        'stash_datacite/descriptions/update',
+        '/stash_datacite/descriptions/update',
         subJson,
         {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
       )
         .then((data) => {
-          const {description_type} = data.description;
-          setResource((r) => ({...r, descriptions: [data.description, ...r.descriptions.filter((d) => d.description_type !== description_type)]}));
+          const {description_type} = data.data;
+          setResource((r) => ({...r, descriptions: [data.data, ...r.descriptions.filter((d) => d.description_type !== description_type)]}));
           showSavedMsg();
         });
     }
@@ -87,15 +87,16 @@ export default function Description({
   const checkSubmit = useCallback(debounce(submit, 900), []);
 
   return (
-    <div style={{width: '100%'}}>
-      <label
-        className={`c-input__label ${(mceLabel.required ? 'required' : '')}`}
-        id={`${dcsDescription.description_type}_label`}
-        htmlFor={`editor_${dcsDescription.description_type}`}
-      >
-        {mceLabel.label}
-      </label>
-      {mceLabel.describe}
+    <>
+      <div className="o-heading__level3">
+        <label
+          className={`${(mceLabel.required ? 'required' : 'optional')}`}
+          id={`${dcsDescription.description_type}_label`}
+          htmlFor={`editor_${dcsDescription.description_type}`}
+        >
+          {mceLabel.label}
+        </label>
+      </div>
       <Editor
         id={`editor_${dcsDescription.description_type}`}
         onInit={(evt, editor) => { editorRef.current = editor; }}
@@ -126,8 +127,8 @@ export default function Description({
         onBlur={submit}
         onEditorChange={checkSubmit}
       />
-      <p>Press Alt 0 or Option 0 for help using the rich text editor with keyboard only.</p>
-    </div>
+      <p style={{fontSize: '.98rem'}}>Press Alt 0 or Option 0 for help using the rich text editor with keyboard only.</p>
+    </>
   );
 }
 

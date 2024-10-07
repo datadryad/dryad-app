@@ -8,7 +8,7 @@ import {isEqual} from 'lodash';
 import {showSavingMsg, showSavedMsg} from '../../../../lib/utils';
 
 export default function Cedar({
-  resource, editorUrl, templates, singleTemplate = null,
+  resource, setResource, editorUrl, templates, singleTemplate = null,
 }) {
   const [template, setTemplate] = useState(singleTemplate);
   const [csrf, setCsrf] = useState(null);
@@ -71,6 +71,7 @@ export default function Cedar({
       xhr.send(JSON.stringify(wrappedMeta, null, 2));
       setUpdated(info.updated);
       setMetadata(currMeta);
+      setResource((r) => ({...r, cedar_json: JSON.stringify({template, updated: info.updated, metadata: currMeta})}));
       if (editor.current) editor.current.templateInfo = info;
       showSavedMsg();
     }
@@ -88,6 +89,7 @@ export default function Cedar({
         setCurrMeta(null);
         setUpdated(null);
         setMetadata(null);
+        setResource((r) => ({...r, cedar_json: null}));
         if (singleTemplate) setTemplate(singleTemplate);
       }
     }
@@ -171,7 +173,7 @@ export default function Cedar({
 
   return (
     <div className="cedar-container">
-      <h3 className="cedar-heading__level3">Standardized metadata</h3>
+      <h3 className="o-heading__level3">Standardized metadata</h3>
       <p>Fill out a standardized metadata form for your discipline to make your data more useful to others.</p>
       <Formik
         initialValues={{resource_id, authenticity_token: (csrf || '')}}

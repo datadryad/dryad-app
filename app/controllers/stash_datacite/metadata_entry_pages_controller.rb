@@ -25,24 +25,6 @@ module StashDatacite
       respond_to(&:js)
     end
 
-    def cedar_check
-      # rubocop:disable Style/DoubleNegation
-      @metadata_entry = Resource::MetadataEntry.new(@resource, session[:resource_type] || 'dataset', current_tenant)
-      pub = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
-      publication_name = pub&.publication_name || ''
-      title = @resource.title || ''
-      abstract = @metadata_entry.abstract.description || ''
-      @neuro_data = false
-      bank = %w[neuro cogniti cereb memory consciousness amnesia psychopharmacology brain hippocampus]
-      regex = bank.join('|')
-      keywords = @metadata_entry.subjects.map(&:subject).join(', ')
-      if !!title.match?(/#{regex}/i) || !!publication_name.match?(/#{regex}/i) || !!keywords.match?(/#{regex}/i) || !!abstract.match?(/#{regex}/i)
-        @neuro_data = true
-      end
-      respond_to(&:html)
-      # rubocop:enable Style/DoubleNegation
-    end
-
     private
 
     def find_resource

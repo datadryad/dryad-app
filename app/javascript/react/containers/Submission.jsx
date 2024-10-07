@@ -5,13 +5,13 @@ import Publication, {publicationCheck} from '../components/MetadataEntry/Publica
 import Authors, {authorCheck} from '../components/MetadataEntry/Authors';
 import Support, {fundingCheck} from '../components/MetadataEntry/Support';
 import Subjects, {keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
-import Description from '../components/MetadataEntry/Description';
+import Description, {abstractCheck} from '../components/MetadataEntry/Description';
 import RelatedWorks from '../components/MetadataEntry/RelatedWorks';
 import UploadFiles from './UploadFiles';
 import ReadMeWizard from './ReadMeWizard';
 
 export default function Submission({
-  submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless,
+  submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar,
 }) {
   const subRef = useRef();
   const [resource, setResource] = useState(JSON.parse(submission));
@@ -45,9 +45,9 @@ export default function Submission({
     },
     {
       name: 'Description',
-      pass: !!resource.descriptions.find((d) => d.description_type === 'abstract')?.description,
-      fail: false,
-      component: <Description resource={resource} setResource={setResource} admin={admin} />,
+      pass: resource.descriptions.some((d) => !!d.description),
+      fail: abstractCheck(resource),
+      component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
     },
     {
       name: 'Files',
@@ -140,7 +140,10 @@ export default function Submission({
               <button
                 type="button"
                 className="o-button__plain-text"
-                onClick={() => setStep(steps[steps.findIndex((l) => l.name === step.name) - 1] || {name: 'Start'})}
+                onClick={() => {
+                  setStep(steps[steps.findIndex((l) => l.name === step.name) - 1] || {name: 'Start'});
+                  if (open === 'start') setOpen(false);
+                }}
               >
                 <i className="fa fa-caret-left" aria-hidden="true" /> Previous
               </button>
