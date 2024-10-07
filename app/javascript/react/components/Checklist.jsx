@@ -4,7 +4,7 @@ export default function Checklist({
   steps, step, setStep, open, setOpen,
 }) {
   return (
-    <nav id="submission-nav" className={(open && 'open') || (step.name === 'Start' && 'start') || ''}>
+    <nav id="submission-nav" className={(step.name === 'Start' && 'start') || (open && 'open') || ''}>
       <div>
         {step.name !== 'Start' && (
           <button

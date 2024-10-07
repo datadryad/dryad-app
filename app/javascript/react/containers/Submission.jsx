@@ -100,11 +100,12 @@ export default function Submission({
     }
   }, []);
 
-  useEffect(() => setStep(
-    steps.find((c) => c.fail)
-    || (steps.findLast((c) => c.pass) && steps[steps.findLastIndex((c) => c.pass) + 1])
-    || {name: 'Start'},
-  ), []);
+  useEffect(() => {
+    if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
+      setStep(steps.find((c) => c.fail) || steps[steps.findLastIndex((c) => c.pass) + 1]);
+      setOpen('start');
+    }
+  }, []);
 
   return (
     <>
@@ -125,7 +126,10 @@ export default function Submission({
               <button
                 type="button"
                 className="o-button__plain-text2"
-                onClick={() => setStep(steps[steps.findIndex((l) => l.name === step.name) + 1])}
+                onClick={() => {
+                  setStep(steps[steps.findIndex((l) => l.name === step.name) + 1]);
+                  if (open === 'start') setOpen(false);
+                }}
               >
                 Next <i className="fa fa-caret-right" aria-hidden="true" />
               </button>

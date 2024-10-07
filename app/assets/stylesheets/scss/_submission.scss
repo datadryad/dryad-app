@@ -58,6 +58,18 @@
     padding-right: 1.4rem;
   }
 
+  ul {    
+    list-style-type: none;
+    margin: 0;
+    padding: 0;    
+    font-size: 1.35rem;
+    line-height: 150%;
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
   &.start {
     flex: 1 1 510px;
     & > div {
@@ -77,6 +89,7 @@
       }
     }
   }
+  
   &.open {
     flex: 1 1 300px;
     & > div {
@@ -98,23 +111,15 @@
 
   @media (max-width: $screen-lg-min) {
     &.start, &.open {
-      flex: 1 0 210px;
+      flex: 1 0 200px;
       & > div {
-        max-width: 210px;
+        max-width: 200px;
+      }
+
+      ul {
+        font-size: 1.1rem;
       }
     }
-  }
-
-  ul {    
-    list-style-type: none;
-    margin: 0;
-    padding: 0;    
-    font-size: 1.35rem;
-    line-height: 150%;
-    position: sticky;
-    top: 0;
-    max-height: 100vh;
-    overflow-y: auto;
   }
 
   .checklist-link {
