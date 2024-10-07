@@ -61,7 +61,7 @@ module StashApi
     end
 
     def send_submit_invitation_email(metadata)
-      return if @hash['triggerSubmitInvitation'] != true || @resource.user.email.blank?
+      return if @hash['triggerSubmitInvitation'] != true || @resource.submitter.email.blank?
 
       StashApi::ApiMailer.send_submit_request(@resource, metadata).deliver_now
     end
