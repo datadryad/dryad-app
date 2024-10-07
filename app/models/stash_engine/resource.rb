@@ -727,8 +727,11 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Publication
+
+    # some previous resource with published files
     def files_published?
-      identifier&.pub_state == 'published' && file_view == true
+      file_true = self.class.where(identifier_id: identifier_id).where('created_at <= ?', created_at).where(file_view: true)
+      identifier&.pub_state == 'published' && file_true.count.positive?
     end
 
     # Metadata is published when the curator sets the status to published or embargoed
