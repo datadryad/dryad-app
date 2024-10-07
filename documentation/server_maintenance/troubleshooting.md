@@ -256,21 +256,41 @@ update stash_engine_curation_activities set status='embargoed' where id=;
 update stash_engine_resources set file_view=false where identifier_id=;
 update stash_engine_resources set publication_date='2020-07-25 01:01:01' where id=;
 update stash_engine_identifiers set pub_state='embargoed' where id=;
-select id,state,deposition_id,resource_id, copy_type from stash_engine_zenodo_copies where identifier_id=;
 ```
 
-Now run a command like the one one below if it has been published to Zenodo.  It will
-re-open the published record, set embargo and publish it again with the
-embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies
-table. The zenodo_copy_id is the id from that same table.
-```
-# the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
-RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo -- --resource_id 97683 --deposition_id 4407065 --date 2021-12-31 --zenodo_copy_id 12342
-```
+Removing a unpublished datasets and versions
+============================================
 
-**You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
-will not take effect. This is probably something we can fix in the code, but it is waiting for us
-to revisit the Zenodo integration.**
+Removing an unsubmitted (and unpublished) dataset
+-------------------------------------------------
+
+Datasets that are unsubmitted and unpublished will be removed by automatic
+processes after the time is up. If you want to speed the process, you can find
+the resource_id and simply destroy it in Rails console.
+
+
+Removing an unpublished dataset
+-------------------------------
+
+Simply set the dataset to status `withdrawn`. The automatic cleanup processes will remove it after the time expires.
+
+
+Removing an unpublished (most recent) version of a published dataset
+--------------------------------------------------------------------
+
+If there is a request to remove the latest version of a dataset, and that
+version has not been published, you can find the resource_id and simply destroy
+it in Rails console.
+
+
+Other removal situations
+------------------------
+
+If you have a request to remove a version that is in the middle of the revision
+history for a dataset, DON'T. This will mess up the revision chain, and data
+files will not be correctly found. You can make this version invisible (`file_view=false` and/or `meta_view=false`).
+
+For published datasets, see the sections below.
 
 
 Setting "Private For Peer Review" (PPR) on dataset that was accidentally published
@@ -322,7 +342,6 @@ What to do at datacite?
 - You cannot change this back to a draft now because it was published
 - Under state, choose `Registered` instead of `Findable` and hopefully this is good enough since not a lot of other choices.
 - Click `Update DOI`
-- (if it's EZID, you may have to do this a different way, but most are datacite dois)
 
 # This dataset was accidentally published early (unpublish now and likely again published later)
 
