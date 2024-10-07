@@ -22,8 +22,10 @@ module StashApi
     # this is the basic required metadata
     def parse
       owning_user_id = establish_owning_user_id
-      clear_previous_metadata
       owning_user = StashEngine::User.find(owning_user_id)
+      validate_submit_invitation(owning_user)
+
+      clear_previous_metadata
       user_note = "Created by API user, assigned ownership to #{owning_user&.name} (#{owning_user_id})"
       hold_for_peer_review = @hash['holdForPeerReview']
       @resource.curation_activities << StashEngine::CurationActivity.create(
@@ -46,13 +48,23 @@ module StashApi
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
+      save_identifier
+    end
+    # rubocop:enable
+
+    def save_identifier
       @resource.identifier.payment_type = @hash['paymentType']
       @resource.identifier.payment_id = @hash['paymentId']
       @resource.identifier.waiver_basis = @hash['waiverBasis']
       @resource.identifier.save
       @resource.identifier
     end
-    # rubocop:enable
+
+    def send_submit_invitation_email(metadata)
+      return if @hash['triggerSubmitInvitation'] != true || @resource.user.email.blank?
+
+      StashApi::ApiMailer.send_submit_request(@resource, metadata).deliver_now
+    end
 
     private
 
@@ -220,5 +232,10 @@ module StashApi
       email_string
     end
 
+    def validate_submit_invitation(owning_user)
+      return if @hash['triggerSubmitInvitation'] != true || owning_user.email.present?
+
+      raise ActionController::BadRequest, 'Dataset owner does not have an email address in order to send the Submission email.'
+    end
   end
 end
