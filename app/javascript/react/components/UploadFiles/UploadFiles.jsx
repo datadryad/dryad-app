@@ -2,12 +2,17 @@ import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
-import sanitize from '../../lib/sanitize_filename';
+import sanitize from '../../../lib/sanitize_filename';
 import {maxFiles, pollingDelay} from './maximums';
-
-import {
-  ModalUrl, ModalValidationReport, FileList, TabularCheckStatus, FailedUrlList, UploadSelect, ValidateFiles, WarningMessage, // TrackChanges,
-} from '../components/FileUpload';
+import FailedUrlList from './FailedUrlList/FailedUrlList';
+import FileList from './FileList/FileList';
+import {TabularCheckStatus} from './FileList/File';
+import ModalUrl from './ModalUrl';
+import ModalValidationReport from './ModalValidationReport/ModalValidationReport';
+import UploadSelect from './UploadSelect/UploadSelect';
+import ValidateFiles from './ValidateFiles';
+import WarningMessage from './WarningMessage';
+// import {default as TrackChanges} from './TrackChanges';
 /**
  * Constants
  */

@@ -6,9 +6,9 @@ import Authors, {authorCheck} from '../components/MetadataEntry/Authors';
 import Support, {fundingCheck} from '../components/MetadataEntry/Support';
 import Subjects, {keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
 import Description, {abstractCheck} from '../components/MetadataEntry/Description';
-import ReadMeWizard, {readmeCheck} from '../components/ReadMeWizard';
 import RelatedWorks, {worksCheck} from '../components/MetadataEntry/RelatedWorks';
-import UploadFiles from './UploadFiles';
+import UploadFiles from '../components/UploadFiles';
+import ReadMeWizard, {readmeCheck} from '../components/ReadMeWizard';
 
 export default function Submission({
   submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar,
