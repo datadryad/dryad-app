@@ -7,13 +7,13 @@
 #  campus_contacts :json
 #  covers_dpc      :boolean          default(TRUE)
 #  enabled         :boolean          default(TRUE)
-#  logo            :text(4294967295)
 #  long_name       :string(191)
 #  partner_display :boolean          default(TRUE)
 #  payment_plan    :integer
 #  short_name      :string(191)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  logo_id         :text(4294967295)
 #  sponsor_id      :string(191)
 #
 # Indexes
@@ -80,11 +80,16 @@ FactoryBot.define do
       else false end
     end
     sponsor_id { nil }
-    logo { id == 'ucop' ? logo_ucop : nil }
 
     after(:create) do |tenant|
       ror = create(:tenant_ror_org, tenant_id: tenant.id)
       create(:tenant_ror_org, tenant_id: tenant.sponsor_id, ror_id: ror.ror_id) if tenant.sponsor_id.present?
+      if tenant.id == 'ucop'
+        tenant.logo = StashEngine::Logo.new unless tenant.logo.present?
+        tenant.logo.data = logo_ucop
+        tenant.logo.save
+        tenant.reload
+      end
     end
   end
 
