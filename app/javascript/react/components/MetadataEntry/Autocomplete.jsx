@@ -103,7 +103,7 @@ export default function Autocomplete(
         ? (
           <label
             {...getLabelProps()}
-            className={`o-heading-level4 ${(isRequired ? 'required' : 'optional')}`}
+            className={`input-label ${(isRequired ? 'required' : 'optional')}`}
             id={`label_${htmlId}`}
             htmlFor={htmlId}
           >

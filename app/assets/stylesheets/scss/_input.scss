@@ -17,6 +17,10 @@ input {
 	row-gap: 1ch;
 }
 
+.input-label {
+	color: $dark-navy;
+}
+
 label.optional:after, label span.details {
 	display: inline-block;
 	font-size: .98rem;

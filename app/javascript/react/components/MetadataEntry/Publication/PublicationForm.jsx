@@ -116,7 +116,7 @@ function PublicationForm({resource, setResource, importType}) {
             </div>
             {importType !== 'manuscript' && (
               <div className="input-stack">
-                <label className="o-heading-level4 required" htmlFor="primary_article_doi">
+                <label className="input-label required" htmlFor="primary_article_doi">
                   DOI
                 </label>
                 <Field
@@ -136,7 +136,7 @@ function PublicationForm({resource, setResource, importType}) {
             )}
             {importType !== 'published' && (
               <div className="input-stack">
-                <label className="o-heading-level4" htmlFor="msid">
+                <label className="input-label" htmlFor="msid">
                   Manuscript number
                 </label>
                 <Field

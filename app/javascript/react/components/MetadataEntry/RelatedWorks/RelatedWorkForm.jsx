@@ -73,7 +73,7 @@ function RelatedWorkForm(
           <Form className={`work-form${urlCheck(relatedIdentifier.related_identifier) && relatedIdentifier.verified ? '' : ' warn'}`}>
             <Field name="id" type="hidden" />
             <div className="input-stack">
-              <label className="o-heading-level4" htmlFor={`work_type__${relatedIdentifier.id}`}>
+              <label className="input-label" htmlFor={`work_type__${relatedIdentifier.id}`}>
                 Work type
               </label>
               <Field
@@ -93,7 +93,7 @@ function RelatedWorkForm(
               </Field>
             </div>
             <div className="input-stack">
-              <label className="o-heading-level4" htmlFor={`related_identifier__${relatedIdentifier.id}`}>
+              <label className="input-label" htmlFor={`related_identifier__${relatedIdentifier.id}`}>
                 DOI or other URL
               </label>
               <Field

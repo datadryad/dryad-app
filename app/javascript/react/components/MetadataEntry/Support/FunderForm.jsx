@@ -118,7 +118,7 @@ function FunderForm({
             )}
           </div>
           <div className="input-stack">
-            <label className="o-heading-level4 optional" htmlFor={`contributor_award_number__${contributor.id}`}>Award number
+            <label className="input-label optional" htmlFor={`contributor_award_number__${contributor.id}`}>Award number
             </label>
             <Field
               id={`contributor_award_number__${contributor.id}`}
@@ -131,7 +131,7 @@ function FunderForm({
             />
           </div>
           <div className="input-stack">
-            <label className="o-heading-level4 optional" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
+            <label className="input-label optional" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
             </label>
             <Field
               id={`contributor_award_description__${contributor.id}`}

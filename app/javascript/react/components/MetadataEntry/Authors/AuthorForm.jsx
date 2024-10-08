@@ -71,7 +71,7 @@ export default function AuthorForm({
         <Form className="author-form">
           <Field name="id" type="hidden" />
           <div className="input-stack">
-            <label className="o-heading-level4" htmlFor={`author_first_name__${author.id}`}>
+            <label className="input-label" htmlFor={`author_first_name__${author.id}`}>
               First name
             </label>
             <Field
@@ -86,7 +86,7 @@ export default function AuthorForm({
             />
           </div>
           <div className="input-stack">
-            <label className="o-heading-level4" htmlFor={`author_last_name__${author.id}`}>
+            <label className="input-label" htmlFor={`author_last_name__${author.id}`}>
               Last name
             </label>
             <Field
@@ -116,7 +116,7 @@ export default function AuthorForm({
             />
           </div>
           <div className="input-stack">
-            <label className={`o-heading-level4 ${(author.author_orcid ? 'required' : 'optional')}`} htmlFor={`author_email__${author.id}`}>
+            <label className={`input-label ${(author.author_orcid ? 'required' : 'optional')}`} htmlFor={`author_email__${author.id}`}>
               Author email
             </label>
             <Field

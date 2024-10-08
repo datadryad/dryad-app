@@ -89,6 +89,9 @@ function RelatedWorks({resource, setResource}) {
   return (
     <>
       <h2>Related works</h2>
+      {works.find(w => w.work_type === 'primary_article') && (
+        <p><span class="input-label">Primary article:</span> {works.find(w => w.work_type === 'primary_article').related_identifier}</p> 
+      )}
       <p>
         {resourceType === 'collection'
           ? `Please list all the datasets in the collection, as well as any identifiable related or resulting articles, 
@@ -97,12 +100,12 @@ function RelatedWorks({resource, setResource}) {
             resulted from or are related to this Data Publication?`}
       </p>
       <div className="related-works">
-        {works.map((relatedIdentifier) => {
-          if (relatedIdentifier.work_type === 'primary_article') return null;
+        {works.map((work) => {
+          if (work.work_type === 'primary_article') return null;
           return (
             <RelatedWorkForm
-              key={relatedIdentifier.id}
-              relatedIdentifier={relatedIdentifier}
+              key={work.id}
+              relatedIdentifier={work}
               workTypes={workTypes}
               removeFunction={removeItem}
               updateWork={updateWork}
