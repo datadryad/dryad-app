@@ -85,6 +85,7 @@ module Stash
           dct_temporal_sm: dct_temporal_dates,
           dryad_related_publication_name_s: related_publication_name,
           dryad_related_publication_id_s: related_publication_id,
+          dryad_related_publication_issn_s: related_publication_issn,
           dryad_author_affiliation_name_sm: author_affiliations,
           dryad_author_affiliation_id_sm: author_affiliation_ids,
           dryad_dataset_file_ext_sm: dataset_file_exts,
@@ -224,6 +225,10 @@ module Stash
 
       def related_publication_name
         @resource.resource_publication&.publication_name
+      end
+
+      def related_publication_issn
+        @resource.resource_publication&.publication_issn
       end
 
       def related_publication_id

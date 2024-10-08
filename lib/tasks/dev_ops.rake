@@ -251,7 +251,7 @@ namespace :dev_ops do
       test_file = resource.data_files.present_files.first
 
       # the preview_file will attempt a download of the first 2k of the file from the repo and returns nil if not able
-      if test_file.nil? || test_file.preview_file.nil?
+      if test_file.nil? || test_file.sniff_file(2048, encode: false).nil?
         puts "Removing identifier #{ident}"
         # delete this dataset with no useful files
         puts '  Deleting from SOLR'

@@ -23,7 +23,7 @@ module Tasks
             citations_per_dataset: datasets[:citations_count_per_dataset]
           )
 
-          pdf = WickedPdf.new.pdf_from_string(Rails.root.join(rendered_html), no_header: true, no_footer: true)
+          pdf = Grover.new(rendered_html).to_pdf
 
           FileUtils.mkdir_p(REPORTS_DIR)
           outpath = File.join(REPORTS_DIR, "GREI_monthly_report_#{Time.now.strftime('%Y_%m_%d')}.pdf")

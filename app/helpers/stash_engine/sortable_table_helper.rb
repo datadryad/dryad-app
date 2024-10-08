@@ -31,9 +31,9 @@ module StashEngine
       return unless col == params[:sort]
 
       if params[:direction] == 'asc'
-        'c-lined-table__sort-asc'
+        'aria-sort="ascending"'.html_safe
       else
-        'c-lined-table__sort-desc'
+        'aria-sort="descending"'.html_safe
       end
     end
 
@@ -43,7 +43,7 @@ module StashEngine
         title,
         sort_link_url(sort_field),
         class: params[:sort] == sort_field ? "current #{params[:direction]}" : nil,
-        title: 'Click to sort',
+        'aria-label': "Sort on #{title}",
         remote: remote
       )
     end

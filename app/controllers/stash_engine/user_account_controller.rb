@@ -3,7 +3,7 @@ module StashEngine
     before_action :require_user_login
 
     def index
-      session[:origin] = 'account'
+      @target_page = stash_url_helpers.my_account_path
     end
 
     def edit

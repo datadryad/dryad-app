@@ -47,11 +47,11 @@
 
 
 .c-header__dash-logo-svg {
-  /* Blacklight/geoblacklight resets */
+  /* Blacklight resets */
   box-sizing: content-box;
   max-height: 2rem;
 
-  @include bp(screen3) {  
+  @include bp(screen3) {
     max-height: 3rem;
   }
 }
@@ -64,7 +64,7 @@
   @media (max-width: $screen-lg-min) {
     .hide-mobile {
       display: none !important;
-    } 
+    }
   }
   @include bp(screen3) {
     display: flex;
@@ -96,7 +96,7 @@
     align-items: baseline;
     margin: 0 -10px 2px;
     background-color: $lightest-blue;
-    
+
     @include bp(screen1) {
       margin: 0 -20px 2px;
     }
@@ -134,7 +134,7 @@
   text-align: center;
   text-decoration: none;
 
-  
+
 
   @include bp(screen3) {
     flex: 0 1 auto;
@@ -268,7 +268,7 @@
   margin: 0;
   padding: 0 15px;
   background-color: white;
-  
+
   a:link, a:visited {
     color: $link-body-color;
     text-decoration: none;
@@ -300,7 +300,7 @@
   &.is-open {
     padding-bottom: 10px;
     margin-bottom: -10px;
-  }    
+  }
 }
 
 .c-second__nav-item {
@@ -308,7 +308,7 @@
   @include c-header__nav-item;
 }
 
-#mobile-nav-bar .c-header__nav-item, 
+#mobile-nav-bar .c-header__nav-item,
 #site-menu .c-header__nav-item {
   position: relative;
 
@@ -325,6 +325,7 @@
   }
 
   @include bp(screen3) {
+    background-color: white;
     @include c-header__nav-item;
 
     a:link, a:visited {
@@ -346,11 +347,13 @@
     color: white;
     font-family: 'Font Awesome 6 Free';
     content: " \f0d7";
+    content: " \f0d7" / '';
     font-weight: 900;
   }
 
   &[aria-expanded=true]::after {
     content: " \f0d8";
+    content: " \f0d8" / '';
   }
 
   @include bp(screen3) {

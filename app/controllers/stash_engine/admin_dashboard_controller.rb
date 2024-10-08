@@ -2,6 +2,7 @@ module StashEngine
   # rubocop:disable Metrics/ClassLength
   class AdminDashboardController < ApplicationController
     helper SortableTableHelper
+    helper AdminDashboardHelper
     before_action :require_admin
     protect_from_forgery except: :results
     before_action :setup_paging, only: %i[results]
@@ -25,24 +26,25 @@ module StashEngine
       if params[:sort].present? || @search_string.present?
         order_string = 'relevance desc'
         if params[:sort].present?
-          order_list = %w[title author_string status total_file_size view_count curator_name
+          order_list = %w[title author_string status total_file_size view_count curator_name created_at
                           updated_at submit_date publication_date first_sub_date first_pub_date queue_date]
           order_string = helpers.sortable_table_order(whitelist: order_list)
           order_string = "stash_engine_curation_activities.#{order_string}" if @sort == 'updated_at'
+          order_string = "stash_engine_identifiers.#{order_string}" if @sort == 'created_at'
           order_string += ', relevance desc' if @search_string.present?
         end
         @datasets = @datasets.order(order_string)
       end
 
-      @datasets = @datasets.page(@page).per(@page_size)
-
       respond_to do |format|
         format.js do
+          @datasets = @datasets.page(@page).per(@page_size)
           add_subqueries
           collect_properties
         end
         format.csv do
-          headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_report.csv"
+          helpers.csv_headers
+          self.response_body = helpers.csv_enumerator
         end
       end
     end
@@ -107,11 +109,6 @@ module StashEngine
     end
 
     def setup_paging
-      if request.format.csv?
-        @page = 1
-        @page_size = 10_000
-        return
-      end
       @page = params[:page] || 1
       @page_size = 10 if params[:page_size].blank? || params[:page_size].to_i == 0
       @page_size ||= params[:page_size].to_i
@@ -137,7 +134,7 @@ module StashEngine
     def setup_search
       @sort = params[:sort]
       @search = params[:search].to_i
-      session[:admin_search_count] = nil if @page == 1
+      session[:admin_search_count] = nil if @page == 1 || params[:clear]
       session[:admin_search_filters] = nil if params[:clear]
       session[:admin_search_fields] = nil if params[:clear]
       session[:admin_search_string] = nil if params[:clear]
@@ -165,37 +162,45 @@ module StashEngine
     end
 
     def add_fields
-      if @sort == 'view_count'
-        @datasets = @datasets.joins(
-          'left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id'
-        ).select('stats.unique_investigation_count as view_count')
-      end
+      view_field if @sort == 'view_count'
       if @filters[:status].present? || %w[status updated_at].include?(@sort) || @filters[:updated_at]&.values&.any?(&:present?)
         @datasets = @datasets.joins(:last_curation_activity)
       end
-      if current_user.min_app_admin? && (@fields.include?('curator') || @filters[:curator].present?)
-        @datasets = @datasets.joins("left outer join (
-            select stash_engine_users.* from stash_engine_users
-            inner join stash_engine_roles on stash_engine_users.id = stash_engine_roles.user_id
-              and role in ('curator', 'superuser')
-          ) curator on curator.id = stash_engine_resources.current_editor_id")
-          .select("CONCAT_WS(' ', curator.first_name, curator.last_name) as curator_name")
-      end
-      if @fields.include?('authors') || @sort == 'author_string'
-        @datasets = @datasets.select("(
-          select GROUP_CONCAT(CONCAT_WS(', ', sea.author_last_name, sea.author_first_name) ORDER BY sea.author_order, sea.id separator '; ')
-            from stash_engine_authors sea where sea.resource_id = stash_engine_resources.id limit 6
-          ) as author_string")
-      end
+      curator_field if current_user.min_app_admin? && (@fields.include?('curator') || @filters[:curator].present?)
+      author_field if @fields.include?('authors') || @sort == 'author_string'
       date_fields
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
       @datasets = @datasets.select('stash_engine_curation_activities.updated_at') if @sort == 'updated_at'
+      @datasets = @datasets.select('stash_engine_identifiers.created_at') if @sort == 'created_at'
       return unless @search_string.present?
 
       search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
       @datasets = @datasets.select(
         "MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) as relevance"
       )
+    end
+
+    def view_field
+      @datasets = @datasets.joins(
+        'left outer join stash_engine_counter_stats stats ON stats.identifier_id = stash_engine_identifiers.id'
+      ).select('stats.unique_investigation_count as view_count')
+    end
+
+    def curator_field
+      @datasets = @datasets.joins("left outer join (
+          select stash_engine_users.* from stash_engine_users
+          inner join stash_engine_roles on stash_engine_users.id = stash_engine_roles.user_id
+            and role in ('curator', 'superuser')
+        ) curator on curator.id = stash_engine_resources.current_editor_id")
+        .select("CONCAT_WS(' ', curator.first_name, curator.last_name) as curator_name")
+    end
+
+    def author_field
+      @datasets = @datasets.select("(
+        select GROUP_CONCAT(CONCAT_WS(', ', sea.author_last_name, sea.author_first_name) separator '; ')
+          from (select sa.author_last_name, sa.author_first_name
+          from stash_engine_authors sa where sa.resource_id = stash_engine_resources.id ORDER BY sa.author_order, sa.id LIMIT 6) sea
+        ) as author_string")
     end
 
     def date_fields
@@ -386,10 +391,11 @@ module StashEngine
     end
 
     def publishing_error
+      last_resource = @identifier.last_submitted_resource
       @error_message = <<-HTML.chomp.html_safe
         <p>You're attempting to embargo or publish a dataset that is being edited or hasn't successfully finished submission.</p>
-        <p>The latest version submission status is <strong>#{@last_resource.current_resource_state.resource_state}</strong> for
-        resource id #{@last_resource.id}.</p>
+        <p>The latest version submission status is <strong>#{last_resource.current_resource_state.resource_state}</strong> for
+        resource id #{last_resource.id}.</p>
         <p>You may need to wait a minute for submission to complete if this was recently edited or submitted again.</p>
       HTML
       render :curation_activity_error

@@ -283,24 +283,24 @@ module StashEngine
 
       case status
       when 'published', 'embargoed'
-        StashEngine::UserMailer.status_change(resource, status).deliver_later
-        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_later
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_published_notice(resource, status).deliver_now
       when 'peer_review'
-        StashEngine::UserMailer.status_change(resource, status).deliver_later
-        StashEngine::UserMailer.journal_review_notice(resource, status).deliver_later
+        StashEngine::UserMailer.status_change(resource, status).deliver_now
+        StashEngine::UserMailer.journal_review_notice(resource, status).deliver_now
       when 'submitted'
         # Don't send multiple emails for the same resource, or for submission made by curator
         return unless first_time_in_status?
 
-        StashEngine::UserMailer.status_change(resource, status).deliver_later unless user.min_curator?
+        StashEngine::UserMailer.status_change(resource, status).deliver_now unless user.min_curator?
       when 'withdrawn'
         return if note.include?('final action required reminder') # this has already gotten a special withdrawal email
         return if note.include?('notification that this item was set to `withdrawn`') # is automatic withdrawal action, no email required
 
         if user_id == 0
-          StashEngine::UserMailer.user_journal_withdrawn(resource, status).deliver_later
+          StashEngine::UserMailer.user_journal_withdrawn(resource, status).deliver_now
         else
-          StashEngine::UserMailer.status_change(resource, status).deliver_later
+          StashEngine::UserMailer.status_change(resource, status).deliver_now
         end
       end
     end
@@ -335,7 +335,7 @@ module StashEngine
             secret: SecureRandom.urlsafe_base64,
             invited_at: Time.new.utc
           )
-        ).deliver_later
+        ).deliver_now
       end
     end
 

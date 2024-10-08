@@ -26,7 +26,7 @@
       <th>
         Resource ID
       </th>
-      <th class="c-lined-table__sort <%= sort_display('created_at') %>">
+      <th class="c-lined-table__sort" <%= sort_display('created_at') %>>
         <%= sortable_column_head sort_field: 'created_at', title: 'Timestamp' %>
       </th>
       <th>
@@ -151,7 +151,6 @@
                       method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
           <button class="o-button__submit">Forcibly edit dataset</button>
           <%= hidden_field_tag :resource_id, res&.id, id: "resource_id_#{res&.id}" %>
-          <%= hidden_field_tag :return_url, '/stash/dashboard' %>
         <% end %>
         <p>Forcibly editing a dataset will assign it to you, and begin an editing session.
           Please only do this if you know the author is unable/unwilling to submit it.</p>
