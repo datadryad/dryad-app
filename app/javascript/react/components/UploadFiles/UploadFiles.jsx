@@ -21,6 +21,11 @@ const RailsActiveRecordToUploadType = {
   'StashEngine::SoftwareFile': 'software',
   'StashEngine::SuppFile': 'supp',
 };
+const UploadTypetoRailsActiveRecord = {
+  data: 'StashEngine::DataFile',
+  software: 'StashEngine::SoftwareFile',
+  supp: 'StashEngine::SuppFile',
+};
 const AllowedUploadFileTypes = {
   data: 'data',
   software: 'sfw',
@@ -113,12 +118,12 @@ export default function UploadFiles({
     });
   };
 
-  // set status based on contents of config_frictionless report
+  // set status based on contents of frictionless report
   const setTabularCheckStatus = (file) => {
     if (!isValidTabular(file)) {
       return TabularCheckStatus.na;
-    } if (file.config_frictionless_report) {
-      return TabularCheckStatus[file.config_frictionless_report.status];
+    } if (file.frictionless_report) {
+      return TabularCheckStatus[file.frictionless_report.status];
     }
     return TabularCheckStatus.error;
   };
@@ -129,7 +134,7 @@ export default function UploadFiles({
     tabularCheckStatus: setTabularCheckStatus(file),
   }));
 
-  // updates to checking (if during validation phase) or n/a or a status based on config_frictionless report from database
+  // updates to checking (if during validation phase) or n/a or a status based on frictionless report from database
   const updateTabularCheckStatus = (files) => {
     if (validating.length) {
       return files.reduce((arr, file) => {
@@ -140,6 +145,15 @@ export default function UploadFiles({
     }
     return simpleTabularCheckStatus(files);
   };
+
+  useEffect(() => {
+    const generic_files = chosenFiles.map((f) => ({
+      ...f,
+      upload_file_name: f.sanitized_name,
+      type: UploadTypetoRailsActiveRecord[f.uploadType],
+    }));
+    setResource((r) => ({...r, generic_files}));
+  }, [chosenFiles]);
 
   useEffect(() => {
     const files = resource.generic_files;
@@ -195,7 +209,7 @@ export default function UploadFiles({
       if (checkPollingDone(toCheck)) return;
 
       axios.get(
-        `/stash/generic_file/check_config_frictionless/${resource.id}`,
+        `/stash/generic_file/check_frictionless/${resource.id}`,
         {params: {file_ids: toCheck.map((file) => file.id)}},
       ).then((response) => {
         const transformed = transformData(response.data);
@@ -205,7 +219,7 @@ export default function UploadFiles({
     }
   }, [pollingCount]);
 
-  // this is a tick for polling of config_frictionless reports had results put into database
+  // this is a tick for polling of frictionless reports had results put into database
   const tick = () => {
     setPollingCount((p) => p + 1);
   };
@@ -216,9 +230,9 @@ export default function UploadFiles({
       const files = updateTabularCheckStatus(validating);
       // I think these are files that are being uploaded now????  IDK what it means.
       updateAlreadyChosenById(files);
-      // post to the method to trigger config_frictionless validation in AWS Lambda
+      // post to the method to trigger frictionless validation in AWS Lambda
       axios.post(
-        `/stash/generic_file/trigger_config_frictionless/${resource.id}`,
+        `/stash/generic_file/trigger_frictionless/${resource.id}`,
         {file_ids: files.map((file) => file.id)},
       ).then(() => {
         if (!interval.current) {
@@ -285,7 +299,6 @@ export default function UploadFiles({
   const updateFileList = (files) => {
     labelNonTabular(files);
     setChosenFiles((c) => [...c, ...files]);
-    setResource((r) => ({...r, files: [...chosenFiles, ...files]}));
   };
 
   const addFilesHandler = (event, uploadType) => {
@@ -546,6 +559,7 @@ export default function UploadFiles({
         ref={modalValidationRef}
         clickedClose={hideValidationReport}
       />
+      <div id="aria-info" className="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text" />
     </div>
   );
 }
