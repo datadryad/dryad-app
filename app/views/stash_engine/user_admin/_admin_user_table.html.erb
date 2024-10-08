@@ -67,7 +67,7 @@
       <td>
         <div class="c-lined-table__with-actions">
         <div class="c-lined-table__data" id="user_role_<%= u.id %>">
-          <%= u.roles.present? ? u.roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>
+          <%= u.roles.present? ? u.roles.admin_roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>
         </div>
         <% if policy([:stash_engine, :user]).set_role? %>
         <div class="c-lined-table__actions">

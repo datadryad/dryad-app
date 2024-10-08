@@ -54,12 +54,12 @@ module StashDatacite
 
       def edited_by_name
         u = resource.editor
-        u = resource.user if u.nil?
+        u = resource.submitter if u.nil?
         "#{u.first_name} #{u.last_name}"
       end
 
       def edited_by_name_w_role
-        return edited_by_name if resource.current_editor_id.nil? || resource.user_id == resource.current_editor_id
+        return edited_by_name if resource.current_editor_id.nil? || resource.users.pluck(&:id).include?(resource.current_editor_id)
 
         "#{edited_by_name} (admin)"
       end

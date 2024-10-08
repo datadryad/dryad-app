@@ -115,7 +115,7 @@ module StashEngine
 
     # these owner/admin need to be in controller since they address the current_user from session, not easily available from model
     def owner?(resource:)
-      current_user.present? && resource&.user_id == current_user.id
+      current_user.present? && resource&.users&.include?(current_user)
     end
 
     def admin?(resource:)

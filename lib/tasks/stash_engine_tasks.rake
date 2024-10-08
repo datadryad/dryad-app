@@ -57,7 +57,7 @@ namespace :identifiers do
       # Create an initial 'in_progress' curation activity for each identifier
       StashEngine::CurationActivity.create(
         resource_id: resource.id,
-        user_id: resource.user_id,
+        user_id: resource.submitter.id,
         created_at: resource.created_at,
         updated_at: resource.created_at
       )
@@ -73,7 +73,7 @@ namespace :identifiers do
 
       StashEngine::CurationActivity.create(
         resource_id: resource.id,
-        user_id: resource.user_id,
+        user_id: resource.submitter.id,
         status: resource.identifier.internal_data.empty? ? 'submitted' : 'peer_review',
         created_at: resource.updated_at,
         updated_at: resource.updated_at

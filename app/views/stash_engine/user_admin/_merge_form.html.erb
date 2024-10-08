@@ -25,7 +25,7 @@
           <td><nobr><%= @user1.orcid %></nobr></td>
           <td><nobr><%= @user1.tenant&.short_name %></nobr></td>
           <td><nobr><%= @user1.last_login %></nobr></td>
-          <td><%= StashEngine::Resource.where(user_id: @user1.id).map(&:identifier).uniq.size %></td>
+          <td><%= @user1.resources.map(&:identifier).uniq.size %></td>
         </tr>
         <tr class="c-lined-table__digits">
           <td><nobr><%= "#{@user2.first_name} #{@user2.last_name}" %></nobr></td>
@@ -33,7 +33,7 @@
           <td><nobr><%= @user2.orcid %></nobr></td>
           <td><nobr><%= @user2.tenant&.short_name %></nobr></td>
           <td><nobr><%= @user2.last_login %></nobr></td>
-          <td><%= StashEngine::Resource.where(user_id: @user2.id).map(&:identifier).uniq.size %></td>
+          <td><%= @user2.resources.map(&:identifier).uniq.size %></td>
         </tr>
       </tbody>
     </table>

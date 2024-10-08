@@ -16,7 +16,7 @@ module DatabaseHelper
   # this essentially creates a new resource (version) to start working on for a user
   def duplicate_resource!(resource:, user: nil)
     new_res = resource.amoeba_dup
-    new_res.current_editor_id = (user ? user.id : resource.user_id)
+    new_res.current_editor_id = (user ? user.id : resource.submitter.id)
 
     new_res.curation_activities.update_all(user_id: user.id) if user
     new_res.save!

@@ -241,7 +241,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'does not have an automatically-assigned curator', js: true do
-        expect(@resource.current_editor_id).to eq(@author.id)
+        expect(@resource.user_id).to eq(nil)
       end
 
       # TODO: This is no longer tested the same way... may need to install capybara-email
@@ -308,7 +308,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
 
         expect(@resource.current_curation_status).to eql('submitted')
-        expect(@resource.current_editor_id).to eql(@curator.id)
+        expect(@resource.user_id).to eql(@curator.id)
       end
 
       it 'has an assigned curator when prior version was :withdrawn', js: true do
@@ -324,7 +324,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
 
         expect(@resource.current_curation_status).to eql('submitted')
-        expect(@resource.current_editor_id).to eql(@curator.id)
+        expect(@resource.user_id).to eql(@curator.id)
       end
 
       it 'does not go to ppr when prior version was curated', js: true do
@@ -344,7 +344,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
         expect(@resource.current_curation_status).to eql('submitted')
-        expect(@resource.current_editor_id).to eql(@curator.id)
+        expect(@resource.user_id).to eql(@curator.id)
         Timecop.return
       end
 
@@ -356,11 +356,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.publication_date { Time.now.utc.to_date.to_s }
         @resource.save
         @resource.reload
-        create(:curation_activity, :curation, user: @resource.user, resource: @resource)
-        create(
-          :curation_activity, :published, resource: @resource,
-                                          user: create(:user, role: 'admin', role_object: @resource.user.tenant, tenant_id: @resource.user.tenant_id)
-        )
+        create(:curation_activity, :curation, user: @resource.submitter, resource: @resource)
+        user = create(:user, role: 'admin', role_object: @resource.submitter.tenant, tenant_id: @resource.submitter.tenant_id)
+        create(:curation_activity, :published, resource: @resource, user: user)
         click_link 'My datasets'
         within(:css, "form[action=\"/stash/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
           find('button[name="update"]').click
@@ -395,7 +393,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           expect(@resource.current_curation_status).to eql('submitted')
-          expect(@resource.current_editor_id).to eql(curator2.id)
+          expect(@resource.user_id).to eql(curator2.id)
         end
 
         it 'does not use the backup curator when the previous curator is a tenant_curator', js: true do
@@ -414,7 +412,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           expect(@resource.current_curation_status).to eql('submitted')
-          expect(@resource.current_editor_id).to eql(@curator.id)
+          expect(@resource.user_id).to eql(@curator.id)
         end
 
       end

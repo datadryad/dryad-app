@@ -17,7 +17,7 @@ module StashDatacite
       def duplicate_submission
         return unless @resource.title && @resource.title.split.size > 3
 
-        other_submissions = StashEngine::Resource.where(user_id: @resource.user_id)
+        other_submissions = @resource.submitter.resources
         found_dup = nil
         other_submissions.each do |sub|
           next if sub.identifier_id == @resource.identifier_id

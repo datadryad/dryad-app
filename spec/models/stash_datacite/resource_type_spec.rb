@@ -24,7 +24,7 @@ module StashDatacite
         email: 'lmuckenhaupt@example.edu',
         tenant_id: 'dataone'
       )
-      @resource = StashEngine::Resource.create(user_id: user.id)
+      @resource = create(:resource, user: user)
     end
 
     describe 'resource_type_general_ui' do

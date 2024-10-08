@@ -40,7 +40,7 @@ module StashApi
           loosenValidation: @resource.loosen_validation || nil
         }
         vals[:changedFields] = changed_fields if @item_view
-        vals[:userId] = @resource.user_id if @post
+        vals[:userId] = @resource&.submitter&.id if @post
         vals
       end
       # rubocop:enable Metrics/AbcSize

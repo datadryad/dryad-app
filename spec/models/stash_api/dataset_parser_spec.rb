@@ -318,7 +318,7 @@ module StashApi
     describe 'dataset ownership' do
       it 'sets the owner' do
         resource = @stash_identifier.resources.first
-        expect(resource.user_id).to eq(@user2.id)
+        expect(resource.submitter).to eq(@user2)
         expect(resource.current_editor_id).to eq(@user2.id)
       end
 
@@ -342,7 +342,7 @@ module StashApi
         test_identifier = dp.parse
 
         resource = test_identifier.resources.first
-        expect(resource.user_id).to eq(test_user.id)
+        expect(resource.submitter).to eq(test_user)
       end
 
       it 'sets the owner to user specified in the metadata with an ORCID' do
@@ -362,7 +362,7 @@ module StashApi
         dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
         test_identifier = dp.parse
         resource = test_identifier.resources.first
-        expect(resource.user.first_name).to eq('Wanda')
+        expect(resource.submitter.first_name).to eq('Wanda')
       end
 
       it 'defaults ownership to the submitter when the userId is invalid' do
@@ -380,7 +380,7 @@ module StashApi
         dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
         test_identifier = dp.parse
         resource = test_identifier.resources.first
-        expect(resource.user).to eq(@user)
+        expect(resource.submitter).to eq(@user)
       end
 
       it 'errors when the userId is an ORCID, but does not match one set in the author list' do
@@ -433,7 +433,7 @@ module StashApi
         editing_resource = @stash_identifier.in_progress_resource
 
         expect(editing_resource.title).to eq(@update_metadata[:title])
-        expect(@user.id).to eq(editing_resource.user_id)
+        expect(@user.id).to eq(editing_resource.submitter.id)
 
         author = editing_resource.authors.first
         expect(author.author_first_name).to eq(@update_metadata[:authors].first['firstName'])
