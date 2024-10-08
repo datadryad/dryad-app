@@ -50,7 +50,7 @@ gem 'amoeba', '~> 3.2.0'
 gem 'annotate', '~> 3.2'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
-gem 'blacklight'
+gem 'blacklight', '= 7.37.0'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.6'
 gem 'charlock_holmes', '~> 0.7.7'
@@ -68,7 +68,6 @@ gem 'exception_notification'
 gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-sass', '~> 6.1.0'
-gem 'geoblacklight', '~> 3.0'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'grover'
 gem 'http', '~> 5.0.4'
@@ -107,7 +106,6 @@ gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
 gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny
-gem 'twitter-typeahead-rails', '0.11.1' # this is in a generator to install blacklight
 gem 'yaml', '~> 0.3.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
 

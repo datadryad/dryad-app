@@ -84,10 +84,11 @@ a {
   @extend %o-link__secondary;
 }
 
-// Links in Geoblacklight UI:
+// Links in Blacklight UI:
 
 .category-block .more_facets_link {
   @extend %o-link__primary;
+  white-space: nowrap;
 }
 
 .facet-values .more_facets_link {
@@ -139,7 +140,7 @@ a {
   z-index: 15;
   padding: $spacing-sm;
   transition: opacity 0.5s;
-  opacity: 0;  
+  opacity: 0;
 
   &:focus {
     top: $spacing-sm;

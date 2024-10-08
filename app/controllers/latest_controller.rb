@@ -1,4 +1,4 @@
-require 'geoblacklight'
+require 'blacklight'
 class LatestController < ApplicationController
   helper StashEngine::ApplicationHelper
   include StashEngine::SharedController

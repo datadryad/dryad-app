@@ -22,7 +22,6 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 Rails.application.config.assets.precompile += %w( geobl_application.js )
-# Rails.application.config.assets.precompile += %w( geoblacklight.js )
 
 # Add node_modules folder to the asset load path.
 Rails.application.config.assets.paths << Rails.root.join("node_modules")

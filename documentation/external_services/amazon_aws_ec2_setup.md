@@ -381,3 +381,13 @@ For verification, there should be no errors:
 ```
 tail -f logs/amazon-cloudwatch-agent.log 
 ```
+
+Install Google Chrome Driver
+======================================
+
+In order to be able to generate PDF files with Grover gem we need chrome driver.
+```
+cd /tmp
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+sudo yum localinstall google-chrome-stable_current_x86_64.rpm
+```

@@ -1,7 +1,7 @@
-# settings.yml provides configuration for GeoBlacklight
+# settings.yml provides configuration for Blacklight
 
 # Configurable Logo Used for CartoDB export
-APPLICATION_LOGO_URL: 'http://geoblacklight.org/images/geoblacklight-logo.png'
+APPLICATION_LOGO_URL: 'https://projectblacklight.org/images/blacklight-logo-h50-transparent-white-text.png'
 
 # Carto OneClick Service https://carto.com/engine/open-in-carto/
 CARTO_ONECLICK_LINK: 'http://oneclick.cartodb.com/'
