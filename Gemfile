@@ -24,7 +24,7 @@ gem 'ed25519', '1.3.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.64', require: false
 # Use Puma as the app server
-gem 'puma', '6.4.2', group: :puma, require: false
+gem 'puma', '6.4.3', group: :puma, require: false
 
 # ############################################################
 # UI
@@ -50,9 +50,9 @@ gem 'amoeba', '~> 3.2.0'
 gem 'annotate', '~> 3.2'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
-gem 'blacklight'
+gem 'blacklight', '= 7.37.0'
 gem 'bootsnap', require: false
-gem 'bootstrap', '~> 4.0'
+gem 'bootstrap', '~> 4.6'
 gem 'charlock_holmes', '~> 0.7.7'
 gem 'concurrent-ruby', '~> 1.1.10'
 gem 'daemons', '~> 1.4.1'
@@ -68,8 +68,8 @@ gem 'exception_notification'
 gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-sass', '~> 6.1.0'
-gem 'geoblacklight', '~> 3.0'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
+gem 'grover'
 gem 'http', '~> 5.0.4'
 gem 'httparty', '~> 0.21.0'
 gem 'httpclient', '~> 2.8.3'
@@ -106,9 +106,6 @@ gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
 gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny
-gem 'twitter-typeahead-rails', '0.11.1' # this is in a generator to install blacklight
-gem 'wicked_pdf', '~> 2.1.0'
-gem 'wkhtmltopdf-binary', '~> 0.12.5.4'
 gem 'yaml', '~> 0.3.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
@@ -121,14 +118,6 @@ gem 'mutex_m'
 
 # ############################################################
 # Development and testing
-
-gem 'parallel_tests', group: %i[development test]
-
-group :development, :local_dev do
-  gem 'colorize'
-  gem 'web-console'
-  # gem 'httplog', not needed always, but good for troubleshooting HTTP requests to outside http services from the app
-end
 
 group :test do
   # I'm not sure we're really using every one of these libraries like fuubar?, guard?, mocha?, rspec-html?, shoulda?
@@ -176,11 +165,12 @@ group :test do
   gem 'webmock'
 end
 
-group :development, :test, :local_dev, :local do
+group :development, :v3_development, :local_dev, :local, :test do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
   gem 'listen'
+  gem 'parallel_tests'
   gem 'pry'
   gem 'pry-rails'
   gem 'pry-remote', require: 'pry-remote'
@@ -190,4 +180,9 @@ group :development, :test, :local_dev, :local do
   gem 'letter_opener'
   gem 'letter_opener_web', '~> 3.0'
   gem 'spring-commands-rspec'
+end
+
+group :development, :v3_development, :local_dev do
+  gem 'colorize'
+  gem 'web-console'
 end

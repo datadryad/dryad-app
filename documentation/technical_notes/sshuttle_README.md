@@ -63,7 +63,7 @@ $
 
 Example of connecting to an ssh server:
 ```bash
-$ ssh uc3-dryaduix2-stg-2c.cdlib.org
+$ ssh v3-dev.datadryad.org
 Last login: Wed Mar 18 10:58:01 2020 from ec2-52-204-33-247.compute-1.amazonaws.com
 
        __|  __|_  )

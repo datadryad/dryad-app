@@ -104,6 +104,7 @@ h6 {
   &::after {
     font-family: 'Font Awesome 6 Free';
     content: " \f0d7";
+    content: " \f0d7" / '';
     font-weight: 900;
   }
 
@@ -118,19 +119,12 @@ h6 {
 
   &[aria-expanded=true]::after {
     content: " \f0d8";
+    content: " \f0d8" / '';
   }
-}
 
-h3.expand-button {
   &:hover, &:focus-visible {
-    &::after {
-      color: $green;
-    }
-  }
-}
-
-h4.expand-button {
-  &:hover, &:focus-visible {
+    color: $link-body-hover-color;
+    
     &::after {
       color: $green;
     }

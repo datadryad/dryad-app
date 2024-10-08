@@ -44,7 +44,7 @@ module StashEngine
       @user = create(:user,
                      first_name: 'Lisa',
                      last_name: 'Muckenhaupt',
-                     email: 'lmuckenhaupt@ucop.edu',
+                     email: 'lmuckenhaupt@datadryad.org',
                      tenant_id: 'ucop')
 
       @identifier = create(:identifier)
@@ -276,7 +276,7 @@ module StashEngine
       end
     end
 
-    describe '#preview_file' do
+    describe '#text_preview' do
       before(:each) do
         @upload2 = create(:data_file,
                           digest: 'fake_digest',
@@ -293,7 +293,7 @@ module StashEngine
         stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.})
           .to_return(status: 404, body: '', headers: {})
 
-        expect(@upload2.preview_file).to be_nil
+        expect(@upload2.text_preview).to be_nil
       end
 
       it 'returns content if successful request for http URL' do
@@ -303,7 +303,7 @@ module StashEngine
           .to_return(status: 200, body: "This,is,my,great,csv\n0,1,2,3,4", headers: {})
         allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
 
-        expect(@upload2.preview_file).to eql("This,is,my,great,csv\n0,1,2,3,4")
+        expect(@upload2.text_preview).to eql("This,is,my,great,csv\n0,1,2,3,4")
       end
     end
 

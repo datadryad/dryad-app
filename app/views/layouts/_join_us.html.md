@@ -66,47 +66,7 @@
 
 ## Fees
 
-### Institutions
-<p>Our institutional member dues are tiered in relation to your institution’s anticipated research output. All tiers include the benefits listed above. Fees are annual and in USD.</p>
-<ul>
-<li>Level 1 Membership: $13,000 &ndash; Large, research-intensive institutions</li>
-<li>Level 2 Membership: $7,500 &ndash; Medium, research-intensive institutions</li>
-<li>Level 3 Membership: $3,000 &ndash; Primarily teaching institutions or small research output</li>
-</ul>
-
-<p><strong>We need your input!</strong> From April to November 2023 we are piloting and gathering input on a new approach to fees for institutional members. The fee pilot includes an annual membership fee based on level of research activity and volume-based data publication fees. Contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@olleh</a> for more information.</p>
-
-### Consortia
-
-Dryad is pleased to offer fee structures for consortia. Contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@olleh</a> for additional information.
-
-### Societies and publishers
-<p>Individual journals, publishers of all kinds, and scholarly societies join the Dryad community through publisher membership. Publisher support for Dryad was foundational in our establishment and continues to be essential in allowing us to provide open data infrastructure and simple workflows for authors. Annual membership fees are determined by the size of the publisher’s journal portfolio.</p>
-
-<div class="table-wrapper" role="region" tabindex="0" aria-labelledby="societies-and-publishers">
-  <table>
-    <thead>
-      <tr><td></td><th>Level 1 Membership</th><th>Level 2 Membership</th><th>Level 3 Membership</th><th>Level 4 Membership</th><th>Level 5 Membership</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>Annual membership fee</th><td>$20,000</td><td>$15,000</td><td>$10,000</td><td>$5,000</td><td>$1,000</td></tr>
-      <tr><th>Eligibility</th><td>Publishing more than 500 journals</td><td>Publishing 101-500 journals</td><td>Publishing 51-100 journals</td><td>Publishing 11-50 journals</td><td>Publishing 10 or fewer journals</td></tr>
-    </tbody>
-  </table>
-</div>
-
-In addition to our annual membership fee, we assess a charge for each published dataset. Data charges decrease with volume and take effect only after the 10th data publication. Data fees are billed quarterly. Please see the current fee schedule below. Contact us at <a class="emailr" href="mailto:dev@null">gro.dayrdatad@olleh</a> for additional information and for access to our quarterly cost estimator.
-
-<div class="table-wrapper" role="region" tabindex="0" aria-label="Additional fees">
-  <table>
-    <thead>
-      <tr><td></td><th>1-10 datasets</th><th>11-100 datasets</th><th>101-250 datasets</th><th>250-500 datasets</th><th>500+ datasets</th></tr>
-    </thead>
-    <tbody>
-      <tr><th>Fee per dataset</th><td>$0</td><td>$135</td><td>$100</td><td>$85</td><td>$55</td></tr>
-    </tbody>
-  </table>
-</div>
+Dryad’s fees are currently under review and will be available in Spring 2025. In the meantime, contact us at <a class="emailr" href="mailto:dev@null?subject=Membership">gro.dayrdatad@spihsrentrap</a> for more information.
 
 ## Members
 

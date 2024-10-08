@@ -86,21 +86,6 @@
   }
 }
 
-#timezone {
-  text-align: right;
-  font-size: .9em;
-  margin-bottom: 0;
-
-  &:before {
-    display: inline;
-    font-size: .9rem;
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    content: '\f0ac';
-    margin-right: .5ch;
-  }
-}
-
 .o-admin-form-pair.half-width {
   flex-basis: 50%;
   max-width: calc(50% - 2ch);
@@ -158,15 +143,10 @@
   }
 
   #edit_fields-form {
-    columns: 7;
-    &.drop-column {
-      columns: 6;
-    }
-    &, &.drop-column {
-      @media (max-width: 1070px) { columns: 5 }
-      @media (max-width: 920px) { columns: 3 }
-      @media (max-width: 480px) { columns: 2 }
-    }
+    columns: 6;
+    @media (max-width: 1070px) { columns: 5 }
+    @media (max-width: 920px) { columns: 3 }
+    @media (max-width: 480px) { columns: 2 }
 
     div {
       margin-bottom: 4px;
@@ -209,6 +189,7 @@
   input[type='text'].selected,
   input[type='search'].selected,
   input[type='date'].selected,
+  input[type='button'].selected,
   select.selected {
     border: thin solid $light-green;
     &:not(:focus) {

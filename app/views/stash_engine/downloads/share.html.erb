@@ -1,43 +1,11 @@
 <% @page_title = "Pre-publication dataset sharing" %>
-<% content_for(:head) do %>
-<script type="text/javascript" src="https://16077a4ae659.us-west-2.captcha-sdk.awswaf.com/16077a4ae659/jsapi.js" defer></script>
-<% end %>
 <div id="page-columns">
   <div id="page-content">
   <h1 class="c-datasets-heading__heading o-heading__level1"><%= @resource.title %></h1>
   <p>This dataset is currently private for peer review. You have been invited to download this dataset.</p>
-<% if @resource.total_file_size < APP_CONFIG.maximums.zip_size %>
-  <div id="withzip">
-    <%= form_with url: "/stash/downloadZip/#{"doi_#{@resource.identifier_value}__v#{minimal_date(@resource.publication_date.present? && @resource.publication_date < Time.now.utc ? @resource.publication_date : @resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
-        <div id="file_downloads"></div>
-        <button type="button" class="o-download__files js-download" id="download_zip_button" style="max-width: 250px"><span id="download_icon"></span>Download full dataset</button>
-    <% end %>
-    <p>Click the button above to start the download.</p>
-  </div>
-  <div id="nozip" hidden>
-    <p>Your browser does not allow for generation of a dataset package. Please download the individual dataset files:</p>
-<% else %>
-  <div>
-    <p>Dataset files for download:</p>
-<% end %>
-    <ul class="c-file-group__list" style="margin-left: 0; font-size: 1rem;">
-      <% @resource.current_file_uploads.each do |fu| %>
-        <li>
-          <%= link_to fu.upload_file_name, Rails.application.routes.url_helpers.download_stream_path(fu.id, share: params[:id]),
-                    title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
-          <span><%= filesize(fu.upload_file_size) %>
-          <% if fu.upload_file_name.ends_with?('csv') %>
-            <%= button_to preview_csv_path(fu.id), remote: true, class: 'c-file-group__preview',
-                  title: "Preview #{fu.upload_file_name}", 'aria-label': "Preview #{fu.upload_file_name}",
-                  method: 'get' do %>
-              <i class="fa fa-search-plus c-file-group__preview" aria-hidden="true"></i>
-            <% end %>
-          <% end %>
-          </span>
-        </li>
-      <% end %>
-    </ul>
-  </div>
+
+  <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @resource.identifier, share: {resource: @resource, code: params[:id]}} %>
+
   <%
       sfw = @resource.software_files.present_files
       supp = @resource.supp_files.present_files
@@ -60,19 +28,9 @@
       <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
     <% end %>
   <% end %>
+
+  <% if @resource.display_readme? %>
+    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: StashDatacite::Resource::Review.new(@resource), highlight_fields: [] } %>
+  <% end %>
   </div>
 </div>
-<% if @resource.total_file_size < APP_CONFIG.maximums.zip_size %>
-<% content_for :doc_end do %>
-  <script type="text/javascript" async>    
-    if ("serviceWorker" in navigator) {
-      const zip_url = '<%= stash_url_helpers.zip_assembly_info_path(resource_id: @resource.id, share: params[:id])%>';
-      const dlbutton = document.getElementById('download_zip_button');
-      <%= render partial: 'stash_engine/downloads/download_zip', formats: :js %>
-    } else {
-      document.getElementById('nozip').removeAttribute('hidden');
-      document.getElementById('withzip').hidden = true;
-    }
-  </script>
-<% end %>
-<% end %>
