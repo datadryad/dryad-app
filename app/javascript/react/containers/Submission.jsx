@@ -6,7 +6,7 @@ import Authors, {authorCheck} from '../components/MetadataEntry/Authors';
 import Support, {fundingCheck} from '../components/MetadataEntry/Support';
 import Subjects, {keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
 import Description, {abstractCheck} from '../components/MetadataEntry/Description';
-import RelatedWorks from '../components/MetadataEntry/RelatedWorks';
+import RelatedWorks, {worksCheck} from '../components/MetadataEntry/RelatedWorks';
 import UploadFiles from './UploadFiles';
 import ReadMeWizard from './ReadMeWizard';
 
@@ -70,7 +70,7 @@ export default function Submission({
     {
       name: 'Related works',
       pass: false,
-      fail: false,
+      fail: worksCheck(resource),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
     },
     {

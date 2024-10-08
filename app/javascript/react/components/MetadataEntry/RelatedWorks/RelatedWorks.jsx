@@ -87,18 +87,16 @@ function RelatedWorks({resource, setResource}) {
   }, []);
 
   return (
-    <fieldset className="c-fieldset">
+    <>
       <h2>Related works</h2>
-      <legend className="c-fieldset__legend">
-        <span className="c-input__hint">
-          {resourceType === 'collection'
-            ? `Please list all the datasets in the collection, as well as any identifiable related or resulting articles, 
-              preprints, software packages, or supplemental information.`
-            : `Are there any preprints, articles, datasets, software packages, or supplemental information that have 
-              resulted from or are related to this Data Publication?`}
-        </span>
-      </legend>
-      <div className="replaceme-related-works">
+      <p>
+        {resourceType === 'collection'
+          ? `Please list all the datasets in the collection, as well as any identifiable related or resulting articles, 
+            preprints, software packages, or supplemental information.`
+          : `Are there any preprints, articles, datasets, software packages, or supplemental information that have 
+            resulted from or are related to this Data Publication?`}
+      </p>
+      <div className="related-works">
         {works.map((relatedIdentifier) => (
           <RelatedWorkForm
             key={relatedIdentifier.id}
@@ -109,14 +107,16 @@ function RelatedWorks({resource, setResource}) {
           />
         ))}
       </div>
-      <button
-        className="o-button__add"
-        type="button"
-        onClick={addNewWork}
-      >
-        Add another related work
-      </button>
-    </fieldset>
+      <div style={{textAlign: 'right'}}>
+        <button
+          className="o-button__plain-text1"
+          type="button"
+          onClick={addNewWork}
+        >
+          + Add work
+        </button>
+      </div>
+    </>
   );
 }
 

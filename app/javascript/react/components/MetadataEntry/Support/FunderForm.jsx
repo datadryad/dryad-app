@@ -153,6 +153,7 @@ function FunderForm({
                 });
               }}
               aria-label="Remove funding"
+              title="Remove"
             >
               <i className="fas fa-trash-can" aria-hidden="true" />
             </button>

@@ -59,6 +59,7 @@ function Keywords({resource, setResource}) {
               <button
                 id={`sub_remove_${subj.id}`}
                 aria-label={`Remove keyword ${subj.subject}`}
+                title="Remove"
                 type="button"
                 className="c-keywords__keyword-remove"
                 onClick={() => deleteKeyword(subj.id)}

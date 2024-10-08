@@ -3,7 +3,7 @@ import React, {useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import RelatedWorksErrors from './RelatedWorksErrors';
+import RelatedWorksErrors, {urlCheck} from './RelatedWorksErrors';
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function RelatedWorkForm(
@@ -19,20 +19,24 @@ function RelatedWorkForm(
     // set up values
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-    const submitVals = {
-      authenticity_token,
-      stash_datacite_related_identifier: {
-        id: values.id,
-        resource_id: relatedIdentifier.resource_id,
-        work_type: values.work_type,
-        related_identifier: values.related_identifier,
-      },
+    const sdri = {
+      id: values.id,
+      resource_id: relatedIdentifier.resource_id,
+      work_type: values.work_type,
+      related_identifier: values.related_identifier,
     };
+
+    if (urlCheck(values.related_identifier)) {
+      fetch(values.related_identifier, {method: 'HEAD', mode: 'cors'})
+        .then((res) => {
+          if (res.ok) sdri.verified = true;
+        }).catch();
+    }
 
     // submit by json
     return axios.patch(
       '/stash_datacite/related_identifiers/update',
-      submitVals,
+      {authenticity_token, stash_datacite_related_identifier: sdri},
       {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -66,10 +70,10 @@ function RelatedWorkForm(
         }}
       >
         {(formik) => (
-          <Form className="c-input__inline">
+          <Form className={`work-form${urlCheck(relatedIdentifier.related_identifier) && relatedIdentifier.verified ? '' : ' warn'}`}>
             <Field name="id" type="hidden" />
-            <div className="c-input">
-              <label className="c-input__label" htmlFor={`work_type__${relatedIdentifier.id}`}>
+            <div className="input-stack">
+              <label className="o-heading-level4" htmlFor={`work_type__${relatedIdentifier.id}`}>
                 Work type
               </label>
               <Field
@@ -88,9 +92,9 @@ function RelatedWorkForm(
                 ))}
               </Field>
             </div>
-            <div className="c-input">
-              <label className="c-input__label" htmlFor={`related_identifier__${relatedIdentifier.id}`}>
-                Identifier or external url
+            <div className="input-stack">
+              <label className="o-heading-level4" htmlFor={`related_identifier__${relatedIdentifier.id}`}>
+                DOI or other URL
               </label>
               <Field
                 id={`related_identifier__${relatedIdentifier.id}`}
@@ -98,23 +102,28 @@ function RelatedWorkForm(
                 type="text"
                 size="40"
                 placeholder="example: https://doi.org/10.1594/PANGAEA.726855"
+                aria-errormessage="works_error"
                 className="c-input__text"
                 onBlur={() => { // defaults to formik.handleBlur
                   formik.handleSubmit();
                 }}
               />
             </div>
-
-            <button
-              type="button"
-              className="t-describe__remove-button o-button__remove"
-              onClick={() => {
-                showModalYNDialog('Are you sure you want to remove this related work?', () => {
-                  removeFunction(relatedIdentifier.id);
-                });
-              }}
-            >remove
-            </button>
+            <span>
+              <button
+                type="button"
+                className="remove-record"
+                onClick={() => {
+                  showModalYNDialog('Are you sure you want to remove this work?', () => {
+                    removeFunction(relatedIdentifier.id);
+                  });
+                }}
+                aria-label="Remove work"
+                title="Remove"
+              >
+                <i className="fas fa-trash-can" aria-hidden="true" />
+              </button>
+            </span>
           </Form>
         )}
       </Formik>

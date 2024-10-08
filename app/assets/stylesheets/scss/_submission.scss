@@ -220,7 +220,7 @@
   }
 }
 
-.author-form, .funder-form {
+.author-form, .funder-form, .work-form {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
@@ -284,5 +284,23 @@
 
   div {
     flex: 1;
+  }
+}
+
+.related-works .callout {
+  font-size: .98rem;
+  margin-top: -2.5ch;
+  margin-bottom: 2ch;
+}
+
+.work-form {
+  margin-bottom: 2ch;
+  background-color: $lightest-gray;
+  padding: .6ch 1ch 1.2ch;
+  & > div:last-of-type {
+    flex: 1
+  }
+  &.warn {
+    background-color: $lightest-orange;
   }
 }

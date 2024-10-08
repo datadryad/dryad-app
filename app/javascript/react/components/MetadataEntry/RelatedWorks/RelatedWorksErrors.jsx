@@ -1,33 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+export const urlCheck = (url) => {
+  if (!url) return true;
+  return URL.canParse(url);
+};
+
 function RelatedWorksErrors(
   {relatedIdentifier},
 ) {
-  // empty related identifier
-  if (!relatedIdentifier.related_identifier) {
-    return (null);
+  if (relatedIdentifier.related_identifier) {
+    if (!urlCheck(relatedIdentifier.related_identifier)) {
+      return (
+        <div className="callout warn" role="alert">
+          <p>The URL is not valid. Make sure your URL is correct and complete.</p>
+        </div>
+      );
+    }
+    if (!relatedIdentifier.verified) {
+      return (
+        <div className="callout warn" role="alert">
+          <p>The web page cannot be verified. Make sure your URL is correct.</p>
+        </div>
+      );
+    }
   }
-
-  return (
-    <div>
-      {!relatedIdentifier.valid_url_format
-        && (
-          <div className="o-metadata__autopopulate-message">
-            We can&apos;t match the identifier provided with any known repository or publisher. Please make sure you have
-            included the correct URL or DOI.
-          </div>
-        )}
-
-      {!relatedIdentifier.verified
-        && (
-          <div className="o-metadata__autopopulate-message">
-            The identifier provided could not be verified. Please make sure you have included the correct DOI
-            for your related work.
-          </div>
-        )}
-    </div>
-  );
+  return null;
 }
 
 export default RelatedWorksErrors;

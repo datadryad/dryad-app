@@ -135,7 +135,7 @@ function Funders({resource, setResource}) {
           disabled={disabled}
           onClick={addNewFunder}
         >
-          + Add another funder
+          + Add funder
         </button>
       </div>
     </div>

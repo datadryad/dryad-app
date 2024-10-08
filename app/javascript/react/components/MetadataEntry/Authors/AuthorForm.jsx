@@ -142,6 +142,7 @@ export default function AuthorForm({
                   });
                 }}
                 aria-label="Remove author"
+                title="Remove"
               >
                 <i className="fas fa-trash-can" aria-hidden="true" />
               </button>
