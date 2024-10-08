@@ -6,9 +6,9 @@ import Authors, {authorCheck} from '../components/MetadataEntry/Authors';
 import Support, {fundingCheck} from '../components/MetadataEntry/Support';
 import Subjects, {keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
 import Description, {abstractCheck} from '../components/MetadataEntry/Description';
+import ReadMeWizard, {readmeCheck} from '../components/ReadMeWizard';
 import RelatedWorks, {worksCheck} from '../components/MetadataEntry/RelatedWorks';
 import UploadFiles from './UploadFiles';
-import ReadMeWizard from './ReadMeWizard';
 
 export default function Submission({
   submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar,
@@ -63,13 +63,18 @@ export default function Submission({
     },
     {
       name: 'README',
-      pass: !!resource.descriptions.find((d) => d.description_type === 'technical_info')?.description,
-      fail: false,
-      component: <ReadMeWizard resource={resource} setResource={setResource} />,
+      pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
+      fail: readmeCheck(resource),
+      component: <ReadMeWizard
+        dcsDescription={resource.descriptions.find((d) => d.description_type === 'technicalinfo')}
+        resource={resource}
+        setResource={setResource}
+        // errors={readmeCheck(resource)}
+      />,
     },
     {
       name: 'Related works',
-      pass: false,
+      pass: resource.related_identifiers.some((rid) => !!rid.related_identifier) || resource.accepted_agreement,
       fail: worksCheck(resource),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
     },
@@ -115,9 +120,10 @@ export default function Submission({
           <div ref={subRef}>
             <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
             {step.component}
-            {step.name === 'Start' ? (
+            {step.name === 'Start' && (
               <p>Complete the checklist, and submit your data for publication.</p>
-            ) : (
+            )}
+            {!['Start', 'README'].includes(step.name) && (
               steps.find((s) => s.name === step.name).pass && steps.find((s) => s.name === step.name).fail
             )}
           </div>

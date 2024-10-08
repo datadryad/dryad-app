@@ -2,22 +2,21 @@ import React, {useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import {debounce} from 'lodash';
-import ReadMeImport from '../components/ReadMeWizard/ReadMeImport';
-import ReadMeSteps, {secTitles} from '../components/ReadMeWizard/ReadMeSteps';
-import MarkdownEditor from '../components/MarkdownEditor';
-import {showSavedMsg, showSavingMsg} from '../../lib/utils';
+import ReadMeImport from './ReadMeImport';
+import ReadMeSteps, {secTitles} from './ReadMeSteps';
+import MarkdownEditor from '../MarkdownEditor';
+import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
-export default function ReadMe({resource, setResource}) {
+export default function ReadMe({dcsDescription, resource, setResource}) {
   const [initialValue, setInitialValue] = useState(null);
   const [replaceValue, setReplaceValue] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [wizardContent, setWizardContent] = useState(null);
   const [wizardStep, setWizardStep] = useState(0);
-  const dcsDescription = resource.descriptions.find((d) => d.description_type === 'technicalinfo') || {};
 
   const saveDescription = (markdown) => {
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-    const data = {
+    const subJson = {
       authenticity_token,
       description: {
         description: markdown,
@@ -28,12 +27,12 @@ export default function ReadMe({resource, setResource}) {
     showSavingMsg();
     axios.patch(
       '/stash_datacite/descriptions/update',
-      data,
+      subJson,
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
-      .then(() => {
-        const {description_type} = data.description;
-        setResource((r) => ({...r, descriptions: [data.description, ...r.descriptions.filter((d) => d.description_type !== description_type)]}));
+      .then((data) => {
+        const {description_type} = data.data;
+        setResource((r) => ({...r, descriptions: [data.data, ...r.descriptions.filter((d) => d.description_type !== description_type)]}));
         showSavedMsg();
       });
   };
@@ -53,8 +52,7 @@ export default function ReadMe({resource, setResource}) {
   };
 
   const restartWizard = () => {
-    document.getElementById('proceed_review').setAttribute('hidden', true);
-    document.querySelector('.c-autosave-footer').setAttribute('hidden', true);
+    // deal with arrows?
     setInitialValue(null);
     setReplaceValue(null);
     setWizardContent({title: resource.title, doi: resource.identifier.identifier, step: 0});
@@ -64,8 +62,7 @@ export default function ReadMe({resource, setResource}) {
 
   useEffect(() => {
     if (initialValue) {
-      document.getElementById('proceed_review').removeAttribute('hidden');
-      document.querySelector('.c-autosave-footer').removeAttribute('hidden');
+      // deal with arrows?
     }
   }, [initialValue]);
 
@@ -107,6 +104,7 @@ export default function ReadMe({resource, setResource}) {
   if (initialValue || replaceValue) {
     return (
       <>
+        <h2>README</h2>
         <div className="readme-columns-final">
           <div>
             <p style={{marginTop: 0}}>

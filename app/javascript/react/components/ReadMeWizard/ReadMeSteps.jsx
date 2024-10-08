@@ -87,6 +87,7 @@ export default function ReadMeSteps({
 
   return (
     <>
+      <h2>README</h2>
       <div className="steps-wrapper">
         {Object.keys(sections).map((i) => (
           /* eslint-disable-next-line eqeqeq */

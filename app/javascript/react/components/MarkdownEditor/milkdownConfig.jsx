@@ -8,6 +8,7 @@ const dryadConfig = (ctx) => {
     ...prev,
     attributes: {
       class: 'milkdown dryad-milkdown-theme',
+      'aria-errormessage': 'readme_error',
     },
   }));
 };
