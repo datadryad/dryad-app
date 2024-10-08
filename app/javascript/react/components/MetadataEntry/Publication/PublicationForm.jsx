@@ -82,7 +82,7 @@ function PublicationForm({resource, setResource, importType}) {
     <Formik
       initialValues={
         {
-          primary_article_doi: primary_article?.doi || '',
+          primary_article_doi: primary_article?.related_identifier || '',
           msid: manuscript_number || '',
           isImport: false,
         }

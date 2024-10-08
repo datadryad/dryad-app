@@ -17,9 +17,9 @@ const capitals = (t) => {
 };
 
 const validPrimary = (r) => {
-  const p = r.related_identifiers.find((a) => a.work_type === 'primary_article');
+  const p = r.related_identifiers.find((ri) => ri.work_type === 'primary_article');
   if (!p) return false;
-  return /^https:\/\/doi\.org\/10\.d{4,9}\/[-._;()/:a-zA-Z0-9]+$/.test(p);
+  return /^https:\/\/doi\.org\/10\.\d{4,9}\/[-._;()/:a-zA-Z0-9]+$/.test(p.related_identifier);
 };
 
 const copyTitle = (e) => {

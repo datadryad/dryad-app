@@ -97,15 +97,18 @@ function RelatedWorks({resource, setResource}) {
             resulted from or are related to this Data Publication?`}
       </p>
       <div className="related-works">
-        {works.map((relatedIdentifier) => (
-          <RelatedWorkForm
-            key={relatedIdentifier.id}
-            relatedIdentifier={relatedIdentifier}
-            workTypes={workTypes}
-            removeFunction={removeItem}
-            updateWork={updateWork}
-          />
-        ))}
+        {works.map((relatedIdentifier) => {
+          if (relatedIdentifier.work_type === 'primary_article') return null;
+          return (
+            <RelatedWorkForm
+              key={relatedIdentifier.id}
+              relatedIdentifier={relatedIdentifier}
+              workTypes={workTypes}
+              removeFunction={removeItem}
+              updateWork={updateWork}
+            />
+          );
+        })}
       </div>
       <div style={{textAlign: 'right'}}>
         <button

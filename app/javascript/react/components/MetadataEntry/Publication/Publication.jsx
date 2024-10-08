@@ -27,12 +27,12 @@ export default function Publication({resource, setResource}) {
     const v = e.target.value;
     setChecks((s) => ({...s, [n]: v}));
     if (v === 'yes') optionChange(n);
-    if (v === 'no') optionChange('other');
+    if (v === 'no') optionChange(n === 'published' && checks.manuscript === 'yes' ? 'manuscript' : 'other');
   };
 
   useEffect(() => {
     const {publication_name, manuscript_number} = resource.resource_publication;
-    const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article');
+    const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
     if (publication_name && (manuscript_number || primary_article)) {
       setChecks((s) => ({...s, showTitle: 'yes'}));
     } else if (!resource.title) {
