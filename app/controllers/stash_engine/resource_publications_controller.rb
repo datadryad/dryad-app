@@ -8,7 +8,7 @@ module StashEngine
 
     def update
       @publication = authorize StashEngine::ResourcePublication.find(params[:id])
-      @publication.update(up_params.compact)
+      @publication.update(up_params)
       respond_to(&:js)
     end
 
