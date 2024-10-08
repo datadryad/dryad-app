@@ -61,7 +61,7 @@ module StashDatacite
     def save_publications
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
-      if params.key?[:msid]
+      if params.key?('msid')
         @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
       end
       if @pub_issn.blank?
@@ -73,7 +73,7 @@ module StashDatacite
         publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
         publication.publication_name = @pub_name
         publication.publication_issn = @pub_issn
-        publication.manuscript_number = @msid if params.key?[:msid]
+        publication.manuscript_number = @msid if params.key?('msid')
         publication.save
       rescue ActiveRecord::RecordNotUnique
         publication = StashEngine::ResourcePublication.find_by(resource_id: @resource.id)
