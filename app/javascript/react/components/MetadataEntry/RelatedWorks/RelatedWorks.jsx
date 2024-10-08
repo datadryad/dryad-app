@@ -89,8 +89,8 @@ function RelatedWorks({resource, setResource}) {
   return (
     <>
       <h2>Related works</h2>
-      {works.find(w => w.work_type === 'primary_article') && (
-        <p><span class="input-label">Primary article:</span> {works.find(w => w.work_type === 'primary_article').related_identifier}</p> 
+      {works.find((w) => w.work_type === 'primary_article') && (
+        <p><span className="input-label">Primary article:</span> {works.find((w) => w.work_type === 'primary_article').related_identifier}</p>
       )}
       <p>
         {resourceType === 'collection'

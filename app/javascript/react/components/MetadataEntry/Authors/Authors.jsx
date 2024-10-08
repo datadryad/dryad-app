@@ -57,10 +57,10 @@ export default function Authors({
 
   return (
     <>
-      <h2>Authors</h2>
+      <h2 id="authors-head">Authors</h2>
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
-          <DragonListItem key={author.id} item={author} typeName="funder">
+          <DragonListItem key={author.id} item={author} typeName="author">
             <AuthorForm author={author} update={setAuthors} remove={removeItem} ownerId={ownerId} />
             <OrcidInfo author={author} curator={admin} ownerId={ownerId} />
           </DragonListItem>
