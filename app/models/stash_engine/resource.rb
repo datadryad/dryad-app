@@ -97,7 +97,6 @@ module StashEngine
     has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject', through: 'StashDatacite::ResourceSubject', dependent: :destroy
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
-    has_one :version, class_name: 'StashDatacite::Version', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
     has_one :manuscript, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
@@ -487,7 +486,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Curation helpers
     def curatable?
-      (submitted? && !files_published?) || last_curation_activity&.embargoed?
+      (submitted? && !file_view) || last_curation_activity&.embargoed?
     end
 
     # Shortcut to the current curation activity's status
@@ -728,8 +727,11 @@ module StashEngine
 
     # -----------------------------------------------------------
     # Publication
+
+    # some previous resource with published files
     def files_published?
-      identifier&.pub_state == 'published' && file_view == true
+      file_true = self.class.where(identifier_id: identifier_id).where('created_at <= ?', created_at).where(file_view: true)
+      identifier&.pub_state == 'published' && file_true.count.positive?
     end
 
     # Metadata is published when the curator sets the status to published or embargoed
