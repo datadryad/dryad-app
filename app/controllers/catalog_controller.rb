@@ -1,5 +1,10 @@
 require 'blacklight/catalog'
 
+# rubocop:disable Security/YAMLLoad
+settigs = YAML.load(File.open(File.join('config', 'settings.yml')), symbolize_names: true, aliases: true)
+Settings = JSON.parse(settigs.to_json, object_class: OpenStruct)
+# rubocop:enable Security/YAMLLoad
+
 class CatalogController < ApplicationController
 
   # these were in application controller for sample app
@@ -10,7 +15,7 @@ class CatalogController < ApplicationController
   helper StashEngine::ApplicationHelper
   include StashEngine::SharedController
 
-  # layout 'geoblacklight_layout'
+  # layout 'blacklight_layout'
   # layout 'stash_engine/application'
   layout :determine_layout if respond_to? :layout
 
@@ -42,7 +47,7 @@ class CatalogController < ApplicationController
 
     ##
     # Configure the index document presenter.
-    config.index.document_presenter_class = Geoblacklight::DocumentPresenter
+    config.index.document_presenter_class = Blacklight::IndexPresenter
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
@@ -118,7 +123,7 @@ class CatalogController < ApplicationController
     # config.add_index_field Settings.FIELDS.SUBJECT, :label => 'Keywords:'
     config.add_index_field Settings.FIELDS.CREATOR
     config.add_index_field Settings.FIELDS.DATE, helper_method: :format_index_date
-    config.add_index_field Settings.FIELDS.DESCRIPTION, helper_method: :snippit
+    config.add_index_field Settings.FIELDS.DESCRIPTION # , helper_method: :snippit
     # config.add_index_field Settings.FIELDS.PUBLISHER
     # config.add_index_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME
     # config.add_index_field Settings.FIELDS.DATASET_FILE_EXT
@@ -224,7 +229,7 @@ class CatalogController < ApplicationController
     # mean") suggestion is offered.
     config.spell_max = 5
 
-    # Custom tools for GeoBlacklight
+    # Custom tools for Blacklight
     config.add_show_tools_partial :web_services,
                                   if: proc { |_context, _config, options|
                                         options[:document] &&

@@ -66,15 +66,7 @@
 
 ## Fees
 
-### Institutions
-
-Our institutional member dues are tiered in relation to your institution’s anticipated research output. Contact us directly at <a href="mailto:dev@null?subject=Institutional+membership" class="emailr">gro.dayrdatad@spihsrentrap</a> if you are interested in an institutional membership.
-
-### Societies and publishers
-
-Individual journals, publishers of all kinds, and scholarly societies join the Dryad community through publisher membership. Publisher support for Dryad was foundational in our establishment and continues to be essential in allowing us to provide open data infrastructure and simple workflows for authors.
-
-Contact us at <a class="emailr" href="mailto:dev@null?subject=Publisher+membership">gro.dayrdatad@spihsrentrap</a> for more information.
+Dryad’s fees are currently under review and will be available in Spring 2025. In the meantime, contact us at <a class="emailr" href="mailto:dev@null?subject=Membership">gro.dayrdatad@spihsrentrap</a> for more information.
 
 ## Members
 
