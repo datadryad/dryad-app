@@ -1,9 +1,9 @@
-<% # locals: field_name, label, id, selected, options_path, options_label, options_value %>
+<% # locals: field_name, label, id, selected, options, options_path, options_label, options_value %>
 <label for="searchselect-<%= id %>__input"><%= label %>:</label>
 <div class="searchselect" id="searchselect-<%= id %>" tabindex="-1">
   <input type="hidden" name="<%= field_name %>[value]" id="searchselect-<%= id %>__value" value="<%= selected&.dig(:value) %>">
   <input type="hidden" name="<%= field_name %>[label]" id="searchselect-<%= id %>__label" value="<%= selected&.dig(:label) %>">
-  <%= text_field_tag(nil, selected&.dig(:label), id: "searchselect-#{id}__input", class: "c-input__select#{selected&.dig(:value).present? ? ' selected' : ''}", placeholder: 'Find as you type...', 'aria-autocomplete': 'both', 'aria-controls': "searchselect-#{id}__list", 'aria-expanded': 'false', role: 'combobox', autocomplete: 'off' ) %>
+  <%= text_field_tag(nil, selected&.dig(:label), id: "searchselect-#{id}__input", class: "c-input__select#{selected&.dig(:value).present? ? ' selected' : ''}", placeholder: 'Find as you type...', 'aria-autocomplete': 'both', 'aria-controls': "searchselect-#{id}__list", 'aria-expanded': 'false', role: 'combobox', autocomplete: 'off', required: local_assigns.key?(:required) && required ) %>
   <ul id="searchselect-<%= id %>__list" role="listbox" aria-label="<%= label %>" tabindex="-1" hidden></ul>
   <span id="searchselect-<%= id %>__status" class="screen-reader-only" role="status"></span>
 </div>
@@ -16,27 +16,43 @@
     const status = document.getElementById(itemId + '__status')
     const v = document.getElementById(itemId + '__value')
     const l = document.getElementById(itemId + '__label')
+    <% unless local_assigns.key?(:options_path) %>
+    const optionsFill = (val) => new Promise((resolve) => {
+      const options = <%= options %>
+      if (val) {
+        const lower = val.toLowerCase();
+        resolve(options.filter((o) => o['<%= options_label %>'].toLowerCase().includes(lower)));
+      } else {
+        resolve(options);
+      }
+    });
+    <% end %>
     const fill = async () => {
-      if (textbox.value.length > 2) {
+      let json = []
+      <% if local_assigns.key?(:options_path) %>
+      if (textbox.value.length > 2) {        
         const response = await fetch('<%= options_path %>' + textbox.value)
-        const json = await response.json()
-        if (json.length > 0) {
-          list.innerHTML = `<li role="option" data-value="" data-label="" tabindex="-1" ${!v.value ? 'class="selected-option" aria-selected="true"' : ''}>&nbsp;</li>`
-          for (const i of json) {
-            if (!list.querySelector(`li[data-value='${i['<%= options_value %>']}']`)) {
-              const li = list.appendChild(document.createElement('li'))
-              let htmlString = i['<%= options_label %>']
-              if (i['country'] || i['acronyms']) {
-                htmlString += `<br/><small>${i.acronyms.length > 0 ? `(${i.acronyms.join(', ')}) ` : ''}${i.country}</small>`
-              }
-              li.innerHTML = htmlString;
-              li.setAttribute('role', 'option');
-              li.setAttribute('aria-selected', i['<%= options_value %>'] == v.value);
-              li.setAttribute('data-value', i['<%= options_value %>'])
-              li.setAttribute('data-label', i['<%= options_label %>'])
-              li.setAttribute('tabindex', '-1')
-              if (i['<%= options_value %>'] == v.value) li.classList.add('selected-option')
+        json = await response.json()
+      }
+      <% else %>
+      json = await optionsFill(textbox.value)
+      <% end %>
+      if (json.length > 0) {
+        list.innerHTML = `<li role="option" data-value="" data-label="" tabindex="-1" ${!v.value ? 'class="selected-option" aria-selected="true"' : ''}>&nbsp;</li>`
+        for (const i of json) {
+          if (!list.querySelector(`li[data-value='${i['<%= options_value %>']}']`)) {
+            const li = list.appendChild(document.createElement('li'))
+            let htmlString = i['<%= options_label %>']
+            if (i['country'] || i['acronyms']) {
+              htmlString += `<br/><small>${i.acronyms.length > 0 ? `(${i.acronyms.join(', ')}) ` : ''}${i.country}</small>`
             }
+            li.innerHTML = htmlString;
+            li.setAttribute('role', 'option');
+            li.setAttribute('aria-selected', i['<%= options_value %>'] == v.value);
+            li.setAttribute('data-value', i['<%= options_value %>'])
+            li.setAttribute('data-label', i['<%= options_label %>'])
+            li.setAttribute('tabindex', '-1')
+            if (i['<%= options_value %>'] == v.value) li.classList.add('selected-option')
           }
         }
         status.innerHTML = 'Results loaded'

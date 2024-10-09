@@ -120,8 +120,8 @@ module StashEngine
     # send the user to the tenant's SSO url
     def sso
       session[:target_page] = params[:target_page] if params[:target_page]
-      if StashEngine::Tenant.exists?(params[:tenant_id])
-        tenant = StashEngine::Tenant.find(params[:tenant_id])
+      if StashEngine::Tenant.exists?(params[:tenant_id]&.dig(:value))
+        tenant = StashEngine::Tenant.find(params[:tenant_id]&.dig(:value))
         case tenant&.authentication&.strategy
         when 'author_match'
           current_user.roles.tenant_roles.delete_all
