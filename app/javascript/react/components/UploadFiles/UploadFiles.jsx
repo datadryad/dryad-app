@@ -3,7 +3,7 @@ import axios from 'axios';
 import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
 import sanitize from '../../../lib/sanitize_filename';
-import {maxFiles, pollingDelay} from './maximums';
+import {maxFiles, pollingDelay, formatSizeUnits} from './maximums';
 import FailedUrlList from './FailedUrlList/FailedUrlList';
 import FileList from './FileList/FileList';
 import {TabularCheckStatus} from './FileList/File';
@@ -49,20 +49,6 @@ export const displayAriaMsg = (msg) => {
   const content = document.createTextNode(msg);
   el.innerHTML = '';
   el.appendChild(content);
-};
-
-const formatSizeUnits = (bytes) => {
-  if (bytes < 1000) {
-    return `${bytes} B`;
-  }
-
-  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  for (let i = 0; i < units.length; i += 1) {
-    if (bytes / 10 ** (3 * (i + 1)) < 1) {
-      return `${(bytes / 10 ** (3 * i)).toFixed(2)} ${units[i]}`;
-    }
-  }
-  return true;
 };
 
 const transformData = (files) => files.map((file) => ({

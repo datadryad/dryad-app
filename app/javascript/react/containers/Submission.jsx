@@ -7,7 +7,7 @@ import Support, {fundingCheck} from '../components/MetadataEntry/Support';
 import Subjects, {keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
 import Description, {abstractCheck} from '../components/MetadataEntry/Description';
 import RelatedWorks, {worksCheck} from '../components/MetadataEntry/RelatedWorks';
-import UploadFiles from '../components/UploadFiles';
+import UploadFiles, {filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {readmeCheck} from '../components/ReadMeWizard';
 
 export default function Submission({
@@ -51,8 +51,8 @@ export default function Submission({
     },
     {
       name: 'Files',
-      pass: resource.generic_files.filter((f) => f.type === 'StashEngine::DataFile').length > 0,
-      fail: false,
+      pass: resource.generic_files.length > 0,
+      fail: filesCheck(resource.generic_files),
       component: <UploadFiles
         resource={resource}
         setResource={setResource}

@@ -63,12 +63,12 @@
 }
 .readme-columns-final {
   & > div:first-child {
-    min-width: 400px;
+    flex-basis: 48%;
     flex-grow: 2;
   }
   & > div:last-child {
     padding: 0 1rem 1rem;
-    min-width: 500px;
+    flex-basis: 53%;
     background-color: $lightest-blue;
     flex-shrink: 2;
   }
