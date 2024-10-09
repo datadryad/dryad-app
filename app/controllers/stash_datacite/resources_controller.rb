@@ -38,8 +38,7 @@ module StashDatacite
           @resource.save!
           @resource.reload
           if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown'
-            session[:origin] = 'resource'
-            session[:redirect_resource_id] = @resource.id
+            @target_page = stash_url_helpers.review_resource_path(@resource.id)
             @aff_tenant = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id).partner_list.first
           end
         end
@@ -56,8 +55,9 @@ module StashDatacite
 
       StashEngine.repository.submit(resource_id: @resource_id)
 
-      @resource.curation_activities << StashEngine::CurationActivity.create(status: 'processing', note: 'Repository processing data',
-                                                                            user_id: current_user.id)
+      @resource.curation_activities << StashEngine::CurationActivity.create(
+        status: 'processing', note: 'Repository processing data', user_id: current_user&.id || 0
+      )
 
       @resource.reload
 
@@ -73,7 +73,7 @@ module StashDatacite
         session[:returnURL] = nil
         redirect_to(return_url, notice: "Submitted updates for #{@resource.identifier}, title: #{@resource.title}", allow_other_host: true)
       else
-        redirect_to(stash_url_helpers.dashboard_path(doi: @resource.identifier.identifier), notice: resource_submitted_message(@resource))
+        redirect_to(stash_url_helpers.choose_dashboard_path(doi: @resource.identifier.identifier), notice: resource_submitted_message(@resource))
       end
     end
 

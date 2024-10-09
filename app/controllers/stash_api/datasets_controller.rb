@@ -40,6 +40,8 @@ module StashApi
 
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user, post: true) # sets up display objects
+
+          dp.send_submit_invitation_email(ds.metadata)
           render json: ds.metadata, status: 201
         end
       end
@@ -350,6 +352,12 @@ module StashApi
         # ["timestamp:[2020-10-08T10:24:53Z TO NOW]"]
         fq_array << "updated_at_dt:[#{params['modifiedSince']} TO NOW]"
       end
+      if params['modifiedBefore']
+        # ["Before timestamp:[2020-10-08T10:24:53Z]"]
+        fq_array << "updated_at_dt:[* TO #{params['modifiedBefore']}]"
+      end
+
+      fq_array << "dryad_related_publication_issn_s:\"#{params['journalISSN']}\"" if params['journalISSN']
 
       fq_array
     end

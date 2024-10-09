@@ -242,6 +242,38 @@ module StashApi
           expect(output).to eq({ 'error' => 'A dataset with same information already exists.' })
         end
       end
+
+      context 'with triggerSubmitInvitation set to true' do
+        before do
+          @meta.add_trigger_invitation(true)
+        end
+
+        it 'does not trigger email sending when owner has no email' do
+          @user.update(email: nil)
+          expect do
+            post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+          end.to raise_error(
+            ActionController::BadRequest,
+            'Dataset owner does not have an email address in order to send the Submission email.'
+          )
+        end
+
+        it 'triggers email sending when owner has email setup' do
+          expect(StashApi::ApiMailer).to receive_message_chain(:send_submit_request, :deliver_now)
+          post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        end
+      end
+
+      context 'with triggerSubmitInvitation set to false' do
+        before do
+          @meta.add_trigger_invitation(false)
+        end
+
+        it 'does not trigger email sending when owner has no email' do
+          expect(StashApi::ApiMailer).not_to receive(:send_submit_request)
+          post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        end
+      end
     end
 
     # test creation of a new dataset
@@ -650,6 +682,13 @@ module StashApi
         output = response_body_hash
         result = output['_embedded']['stash:datasets'].last
         expect(result['identifier']).to eq("doi:#{@ident.identifier}")
+      end
+
+      it 'allows searches by modifiedBefore' do
+        time = 2.day.from_now.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
+        get "/api/v2/search?modifiedBefore=#{time}", headers: default_authenticated_headers
+        output = response_body_hash
+        expect(output['_embedded']['stash:datasets'].size).to eq(1)
       end
 
       it 'passes a sanitised query to solr' do
