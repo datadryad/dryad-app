@@ -118,8 +118,10 @@ module StashEngine
 
     def reject_agreement
       respond_to do |format|
-        format.js do
-          resource.destroy if resource.title.nil? && resource.descriptions.first.description.nil?
+        format.json do
+          resource.update(accepted_agreement: false)
+          # resource.destroy if resource.title.nil? && resource.descriptions.first.description.nil?
+          render json: resource
         end
       end
     end

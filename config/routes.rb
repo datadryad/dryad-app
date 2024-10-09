@@ -147,9 +147,7 @@ Rails.application.routes.draw do
         get 'review'
         get 'upload'
         get 'prepare_readme'
-        get 'upload_manifest'
-        get 'up_code'
-        get 'up_code_manifest'
+        get 'dpc_status'
         get 'submission'
         get 'show_files'
         patch 'import_type'
@@ -219,7 +217,7 @@ Rails.application.routes.draw do
     match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
     match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
     post 'metadata_entry_pages/new_version_from_previous', to: 'metadata_entry_pages#new_version_from_previous'
-    match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:delete]
+    match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:post]
     match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
 
     # root 'sessions#index'

@@ -9,9 +9,10 @@ import Description, {abstractCheck} from '../components/MetadataEntry/Descriptio
 import RelatedWorks, {worksCheck} from '../components/MetadataEntry/RelatedWorks';
 import UploadFiles, {filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {readmeCheck} from '../components/ReadMeWizard';
+import Agreements from '../components/MetadataEntry/Agreements';
 
 export default function Submission({
-  submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar,
+  submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar, change_tenant,
 }) {
   const subRef = useRef();
   const [resource, setResource] = useState(JSON.parse(submission));
@@ -82,6 +83,7 @@ export default function Submission({
       name: 'Agreements',
       pass: resource.accepted_agreement,
       fail: false,
+      component: <Agreements resource={resource} setResource={setResource} form={change_tenant} />,
     },
   ];
 
@@ -107,7 +109,8 @@ export default function Submission({
 
   useEffect(() => {
     if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
-      setStep(steps.find((c) => c.fail) || steps[steps.findLastIndex((c) => c.pass) + 1]);
+      const stop = steps.findLastIndex((c) => c.pass) + 1 > steps.length - 1;
+      setStep(steps.find((c) => c.fail) || stop ? steps.findLast((c) => c.pass) : steps[steps.findLastIndex((c) => c.pass) + 1]);
       setOpen('start');
     }
   }, []);

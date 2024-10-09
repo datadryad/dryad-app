@@ -16,7 +16,7 @@ module StashDatacite
         @error = 'Unable to enable peer review status at this time.'
       end
 
-      respond_to(&:js)
+      render json: { hold_for_peer_review: peer_review_params[:hold_for_peer_review], error: @error }
     end
 
     def release
@@ -50,7 +50,7 @@ module StashDatacite
     private
 
     def peer_review_params
-      params.require(:stash_engine_resource).permit(:id, :hold_for_peer_review)
+      params.permit(:id, :hold_for_peer_review)
     end
 
   end

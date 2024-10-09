@@ -8,13 +8,18 @@ module StashDatacite
       @metadata_entry.resource_publications
       @metadata_entry.descriptions
 
-      @submission = @resource.as_json(include: [:identifier, :subjects, :descriptions, :resource_publication, :related_identifiers, :contributors, :resource_type, authors: {include: [:affiliations]}])
+      @submission = @resource.as_json(
+        include: [:tenant, :subjects, :descriptions, :resource_publication, :related_identifiers,
+                  :contributors, :resource_type, :previous_curated_resource,
+                  { authors: { include: [:affiliations] }, identifier: { include: [:process_date] } }]
+      )
       @submission[:generic_files] = @resource.generic_files.validated_table.as_json(
         methods: :type, include: { frictionless_report: { only: %i[report status] } }
       )
       @submission = @submission.to_json
 
       @resource.update(updated_at: Time.current)
+      @target_page = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
 
       # If the most recent Curation Activity was from the "Dryad System", add an entry for the
       # current_user so the history makes more sense.

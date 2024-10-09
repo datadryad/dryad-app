@@ -156,6 +156,22 @@ module StashEngine
     end
     # rubocop:enable Metrics/AbcSize
 
+    def dpc_status
+      dpc_checks = {
+        dpc: Stash::Payments::Invoicer.data_processing_charge(identifier: @resource.identifier) / 100,
+        journal_will_pay: @resource.identifier.journal&.will_pay?,
+        institution_will_pay: @resource.identifier.institution_will_pay?,
+        funder_will_pay: @resource.identifier.funder_will_pay?,
+        user_must_pay: @resource.identifier.user_must_pay?,
+        payment_type: @resource.identifier.payment_type,
+        paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
+        aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.partner_list&.first,
+        large_file_size: APP_CONFIG.payments.large_file_size,
+        large_files: @resource.identifier.large_files?
+      }
+      render json: dpc_checks
+    end
+
     # Upload files view for resource
     def upload
       @file_model = StashEngine::DataFile
@@ -167,33 +183,6 @@ module StashEngine
       @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
       @file_note = resource.curation_activities.where(user_id: current_user.id).where("note like 'User described file changes:%'").first
       @uploads = resource.latest_file_states
-    end
-
-    # upload by manifest view for resource
-    def upload_manifest
-      @file_model = StashEngine::DataFile
-      @resource_assoc = :data_files
-    end
-
-    # Upload files view for resource
-    def up_code
-      @file_model = StashEngine::SoftwareFile
-      @resource_assoc = :software_files
-
-      @file = SoftwareFile.new(resource_id: resource.id) # this seems needed for the upload control
-      @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareFile')
-      if resource.upload_type(association: 'software_files') == :manifest
-        render 'upload_manifest'
-      else
-        render 'upload'
-      end
-    end
-
-    # upload by manifest view for resource
-    def up_code_manifest
-      @file_model = StashEngine::SoftwareFile
-      @resource_assoc = :software_files
-      render 'upload_manifest'
     end
 
     # patch request
