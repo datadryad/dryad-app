@@ -8,7 +8,7 @@ module StashEngine
 
         response_code = post '/stash/sessions/sso', params: { 'tenant_id' => 'dryad_ip' }
         expect(response_code).to eql(302) # redirect
-        expect(response.headers['Location']).to include('/stash/dashboard')
+        expect(response.headers['Location']).to include('/stash/choose_dashboard')
       end
 
       it 'blocks user from non-allowed IP address' do

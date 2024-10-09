@@ -1,7 +1,6 @@
 <script type="text/javascript">
   ReactRailsUJS.mountComponents();
 </script>
-<% if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown' %>
 <div>
   <h3>Payment</h3>
   <% submitter_affiliation = @resource.identifier.submitter_affiliation %>
@@ -32,7 +31,7 @@
   <% else %>
     <p>This submission does not require a payment.</p>
   <% end %>
-  <% if @resource.identifier.user_must_pay? || @resource.identifier.institution_will_pay? %>
+  <% if (@resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown') && (@resource.identifier.user_must_pay? || @resource.identifier.institution_will_pay?) %>
     <% if @resource.identifier.user_must_pay? %>
       <h4 style="color:#cf4817">Are you affiliated with a Dryad member institution that could sponsor this fee?</h4>
       <% if @aff_tenant.present? %>
@@ -50,4 +49,3 @@
     <% end %>
   <% end %>
 </div>
-<% end %>

@@ -51,7 +51,7 @@
 </div>
 </div>
 
-#### Product development team
+#### Platform development team
 
 <div class="about-bios">
    <div class="bio">
@@ -97,12 +97,6 @@
   <img src="/images/kathiyayini.jpg" alt="Headshot of Kathiyayini Jayaraman">
   <h5>Kathiyayini Jayaraman</h5><br/>
   <p><em>Data Curator</em><br/>Kathiyayini holds an M.Sc. in Biochemistry. She has three years of experience as a curator of life science literature and has previously worked for two different companies as a research analyst and scientific analyst. In her role as a scientific analyst, Kathiyayini coordinated interviews, served as a trainer, and oversaw quality control. In her free time, she enjoys pencil drawing, painting, and listening to music.</p>
-</div>
-<div class="bio">
-  <img src="/images/kailasha.jpg" alt="Headshot of Kailasha Purushothaman">
-  <h5>Kailasha Purushothaman</h5><br/>
-  <p><em>Data Curator</em><br/>
-  Kailasha has a diverse range of experiences and expertise in the fields of medical physics, teaching, biophysics imaging and copyediting. She earned her Master of Medical Physics degree from RMIT University and began her career as a Physicist at Peter MacCallum Cancer Center in Australia, where she gained valuable experience in radiation therapy. She has also taught medical physics and biomedical imaging to undergraduate students. In her free time, Kailasha enjoys pursuing creative outlets such as cooking and painting.</p>
 </div>
 <div class="bio">
   <img src="/images/jwalter.png" alt="Headshot of Jeremy Walter">
