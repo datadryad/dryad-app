@@ -51,7 +51,7 @@ class CedarController < ApplicationController
 
     merged = params['info'].merge(metadata: params['metadata'])
     cedar_json = merged.to_json(except: %i[resource_id csrf])
-    resource.update(cedar_json: cedar_json)
+    resource.update(cedar_json: params['metadata'].present? ? cedar_json : nil)
     resource.reload
 
     render json: { message: 'Save value received in the Cedar Save method' }
