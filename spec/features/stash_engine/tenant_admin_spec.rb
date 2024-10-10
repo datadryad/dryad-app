@@ -38,7 +38,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
       end
       expect(page.find("#logo_#{@match.id} img")[:src]).to eq(logo_image)
       changed = StashEngine::Tenant.find(@match.id)
-      expect(changed.logo).to eq(logo_image)
+      expect(changed.logo.data).to eq(logo_image)
     end
 
     it 'allows changing ROR IDs as a system admin', js: true do

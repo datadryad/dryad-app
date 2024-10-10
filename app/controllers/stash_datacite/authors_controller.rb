@@ -104,7 +104,7 @@ module StashDatacite
       else
         # - find by name otherwise
         affil = StashDatacite::Affiliation.where(long_name: name).first
-        affil = StashDatacite::Affiliation.where(long_name: "#{name}*").first unless affil.present?
+        affil = StashDatacite::Affiliation.where(long_name: name.to_s).first unless affil.present?
       end
 
       # if no matching affils found, make a new affil
@@ -112,7 +112,7 @@ module StashDatacite
         affil = if ror_val.present?
                   StashDatacite::Affiliation.create(long_name: name, ror_id: ror_val)
                 else
-                  StashDatacite::Affiliation.create(long_name: "#{name}*", ror_id: nil)
+                  StashDatacite::Affiliation.create(long_name: name.to_s, ror_id: nil)
                 end
       end
       return if @author.affiliation == affil

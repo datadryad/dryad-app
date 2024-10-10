@@ -12,6 +12,6 @@ when 'ror_orgs'
     "<a href='#{r}' target='_blank'>#{org ? org.name : r}</a>"
   }.join(', ').html_safe
 when 'logo'
-  @tenant.logo.blank? ? '' : "<img src='#{@tenant.logo}' alt='#{@tenant.short_name} logo'/>".html_safe
+  @tenant.logo&.data&.present? ? "<img src='#{@tenant.logo.data}' alt='#{@tenant.short_name} logo'/>".html_safe : ''
 end %>";
 document.getElementById('genericModalDialog').close();

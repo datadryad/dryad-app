@@ -49,7 +49,7 @@ module StashEngine
 
     # make logo_string for image_tag per tenant
     def logo_path(hsh)
-      view_context.image_tag current_tenant.logo, hsh.merge(alt: " #{current_tenant.short_name}")
+      view_context.image_tag current_tenant.logo.data, hsh.merge(alt: " #{current_tenant.short_name}")
     end
 
     # ----------------------

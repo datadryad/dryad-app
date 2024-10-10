@@ -42,7 +42,7 @@
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="logo_<%= t.id %>">
-            <%= "<img src='#{t.logo}' style='min-width: 40px;' alt='#{t.short_name} logo'/>".html_safe unless t.logo.blank? %>
+            <%= "<img src='#{t.logo.data}' style='min-width: 40px;' alt='#{t.short_name} logo'/>".html_safe if t.logo&.data&.present? %>
           </div>
           <% if policy([:stash_engine, :tenant]).popup? %>
           <div class="c-lined-table__actions">
