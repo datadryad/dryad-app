@@ -42,11 +42,11 @@
       display: grid;
       row-gap: 1.5rem;
       grid-template-columns: 1fr 2fr;
-      grid-template-rows: repeat(10, minmax(auto, auto));
+      grid-template-rows: repeat(11, minmax(auto, auto));
       @media (max-width: 811px) {
         row-gap: .75rem;
         grid-template-columns: 100%;
-        grid-template-rows: repeat(19, minmax(auto, auto));
+        grid-template-rows: repeat(20, minmax(auto, auto));
         grid-template-areas:
           "head"
           "label1"
@@ -67,6 +67,7 @@
           "area8"
           "label9"
           "area9"
+          "submit"
       }
       @media (min-width: 1220px){
         grid-template-columns: calc(50vw - 300px) 1fr;
@@ -232,6 +233,26 @@
             }
           }
         }
+      }
+
+      #submission-submit {
+        position: sticky;
+        bottom: 0;
+        background-color: $lightest-blue;
+        padding: 1rem;
+        grid-column: span 2;
+        margin: -1.5rem auto 0;
+        width: 100%;
+        display: flex;
+        gap: 2ch;
+        align-items: center;
+        justify-content: flex-end;
+        box-shadow: $light-blue 0px -4px 4px -6px;
+        @media (max-width: 811px){
+          grid-area: submit;
+          grid-column: 1;
+          margin-top: -.75rem;
+        }        
       }
     }
   }

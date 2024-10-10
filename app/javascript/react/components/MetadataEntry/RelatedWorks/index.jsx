@@ -25,7 +25,7 @@ const nameit = (name, arr) => {
 };
 
 export function WorksPreview({resource, admin}) {
-  const ris = resource.related_identifiers.filter((ri) => ri.work_type !== 'primary_article');
+  const ris = resource.related_identifiers.filter((ri) => ri.work_type !== 'primary_article' && !!ri.related_identifier);
   const works = Object.groupBy(ris, ({work_type}) => work_type);
   const icons = {
     article: 'far fa-newspaper',

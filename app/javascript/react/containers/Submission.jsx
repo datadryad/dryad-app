@@ -21,6 +21,7 @@ export default function Submission({
   const [step, setStep] = useState({name: 'Start'});
   const [open, setOpen] = useState(false);
   const [review, setReview] = useState(!!resource.identifier.process_date.submitted);
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const steps = [
     {
@@ -185,6 +186,27 @@ export default function Submission({
               {s.fail}
             </section>
           ))}
+        </div>
+        <div id="submission-submit">
+          {steps.some((s) => s.fail) ? (
+            <div className="callout err">
+              <p>Fix the errors above to complete your submission</p>
+            </div>
+          ) : (
+            <p>Ready to complete your submission?</p>
+          )}
+          <form action="/stash_datacite/resources/submission" method="post">
+            {!steps.some((s) => s.fail) && (
+              <>
+                <input type="hidden" name="authenticity_token" value={authenticity_token} />
+                <input type="hidden" name="resource_id" value={resource.id} />
+                <input type="hidden" name="software_license" value={resource.identifier?.software_license?.identifier || 'MIT'} />
+              </>
+            )}
+            <button type="submit" className="o-button__plain-text1" disabled={steps.some((s) => s.fail)}>
+              Submit for {resource.hold_for_peer_review ? 'peer review' : 'curation and publication'}
+            </button>
+          </form>
         </div>
       </>
     );
