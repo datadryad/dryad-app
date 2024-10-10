@@ -15,7 +15,24 @@
     & > div {
       min-height: 100%;
       display: flex;
-      justify-content: stretch;
+      flex-direction: column;
+      align-items: stretch;
+      & > h1 {
+        margin: 0 auto;
+        width: 100%;
+        padding: .5rem 1rem;
+        background-color: $lightest-blue;
+        box-sizing: border-box;
+        text-align: center;
+        font-size: 1.3rem;
+      }
+      .submission-edit {
+        display: flex;
+        flex: 1;
+        @media (max-width: 600px) {
+          flex-direction: column;
+        }
+      }
     }
     div, section {
       box-sizing: border-box;
@@ -55,16 +72,10 @@
         grid-template-columns: calc(50vw - 300px) 1fr;
       }
 
-      h1 {
+      & > h1 {
         grid-row: 1;
         grid-column: span 2;
         margin: 0 auto -1.5rem;
-        padding: .5rem 1rem;
-        background-color: $lightest-blue;
-        width: 100%;
-        box-sizing: border-box;
-        text-align: center;
-        font-size: 1.3rem;
         @media (max-width: 811px){
           grid-area: head;
           grid-column: 1;
@@ -343,7 +354,7 @@
     }
   }
 
-  @media (max-width: $screen-lg-min) {
+  @media (min-width: 601px) and (max-width: $screen-lg-min) {
     &.start, &.open {
       flex: 1 0 200px;
       & > div {
@@ -352,6 +363,16 @@
 
       ul {
         font-size: 1.1rem;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    &, &.start, &.open {
+      flex: 1 1 auto;
+      & > div {
+        padding-top: 0;
+        max-width: 100%;
       }
     }
   }
@@ -371,6 +392,10 @@
     min-height: 100%;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 600px) {
+      flex: 1 1 auto;
+    }
 
     @include bp(screen1) {
       padding-right: 20px;
@@ -402,6 +427,10 @@
     border: none;
     padding: 0;
     margin: -1em 0;
+  }
+
+  div > div > *:first-child {
+    margin-top: 0;
   }
 
   .error-text {

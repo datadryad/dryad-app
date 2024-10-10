@@ -100,11 +100,13 @@ export default function Submission({
   ];
 
   useEffect(() => {
-    if (review) {
-      const main = document.getElementById('maincontent');
+    const main = document.getElementById('maincontent');
+    if (review && step.name === 'Start') {
       main.classList.add('submission-review');
+    } else if (review) {
+      main.classList.remove('submission-review');
     }
-  }, [review]);
+  }, [review, step]);
 
   useEffect(() => {
     if (resource.accepted_agreement) setReview(true);
@@ -127,18 +129,54 @@ export default function Submission({
     }
   }, []);
 
-  useEffect(() => {
-    if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
-      const stop = steps.findLastIndex((c) => c.pass) + 1 > steps.length - 1;
-      setStep(steps.find((c) => c.fail) || stop ? steps.findLast((c) => c.pass) : steps[steps.findLastIndex((c) => c.pass) + 1]);
-      setOpen('start');
-    }
-  }, []);
-
   if (review) {
+    if (step.name !== 'Start') {
+      return (
+        <>
+          <h1>{upCase(resource.resource_type.resource_type)} submission preview editor</h1>
+          <div className="submission-edit">
+            <div id="submission-nav" className="open">
+              <div style={{textAlign: 'right', fontSize: '1.3rem'}}>
+                <button type="button" className="checklist-link" onClick={() => setStep({name: 'Start'})}>
+                  <span className="checklist-icon">
+                    <i className="fas fa-chevron-left" aria-hidden="true" />
+                  </span>Back to preview
+                </button>
+              </div>
+            </div>
+            <div id="submission-wizard" className="open">
+              <div>
+                <div ref={subRef}>
+                  {step.component}
+                  {step.name === 'Start' && (
+                    <p>Complete the checklist, and submit your data for publication.</p>
+                  )}
+                  {!['Start', 'README'].includes(step.name) && (
+                    steps.find((s) => s.name === step.name).pass && steps.find((s) => s.name === step.name).fail
+                  )}
+                </div>
+                <div className="o-dataset-nav">
+                  <div className="o-dataset-nav">
+                    <button
+                      type="button"
+                      className="o-button__plain-text2"
+                      onClick={() => setStep({name: 'Start'})}
+                    >
+                      Preview changes
+                    </button>
+                    <div className="saving_text" hidden>Saving&hellip;</div>
+                    <div className="saved_text" hidden>All progress saved</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    }
     return (
       <>
-        <h1>Dataset submission preview</h1>
+        <h1>{upCase(resource.resource_type.resource_type)} submission preview</h1>
         <Checklist steps={steps} step={{}} setStep={setStep} open />
         <div id="submission-wizard">
           {steps.map((s) => (
@@ -153,7 +191,7 @@ export default function Submission({
   }
 
   return (
-    <>
+    <div className="submission-edit">
       <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
       <div id="submission-wizard" className={(step.name === 'Start' && 'start') || (open && 'open') || ''}>
         <div>
@@ -211,6 +249,6 @@ export default function Submission({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
