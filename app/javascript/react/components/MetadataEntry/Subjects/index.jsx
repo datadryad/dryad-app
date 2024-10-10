@@ -26,3 +26,14 @@ export const keywordFail = (subjects) => {
   }
   return false;
 };
+
+export function SubjPreview({resource}) {
+  if (resource.subjects && resource.subjects.length > 0) {
+    return (
+      <>
+        <h3 className="o-heading__level2" style={{marginBottom: '-.5rem'}}>Subject keywords</h3>
+        <p>{resource.subjects.map((s) => s.subject).join(', ')}</p>
+      </>
+    );
+  }
+}

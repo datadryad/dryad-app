@@ -147,6 +147,7 @@ Rails.application.routes.draw do
         get 'review'
         get 'upload'
         get 'prepare_readme'
+        get 'display_readme'
         get 'dpc_status'
         get 'submission'
         get 'show_files'

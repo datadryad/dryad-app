@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
+import axios from 'axios';
 
 export {default} from './ReadMeWizard';
 
@@ -18,3 +19,27 @@ export const readmeCheck = (resource) => {
   }
   return false;
 };
+
+export function ReadMePreview({resource}) {
+  const readmeRef = useRef(null);
+
+  const getREADME = () => {
+    axios.get(`/stash/resources/${resource.id}/display_readme`).then((data) => {
+      const active_readme = document.createRange().createContextualFragment(data.data);
+      readmeRef.current.append(active_readme);
+    });
+  };
+
+  useEffect(() => {
+    if (readmeRef.current) {
+      getREADME();
+    }
+  }, [resource, readmeRef]);
+
+  if (resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description) {
+    return (
+      <div ref={readmeRef} />
+    );
+  }
+  return null;
+}

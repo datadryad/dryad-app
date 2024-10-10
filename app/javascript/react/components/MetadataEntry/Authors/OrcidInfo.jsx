@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+export const orcidURL = (orcid) => (window.location.hostname === 'datadryad.org'
+  ? `https://orcid.org/${orcid}`
+  : `https://sandbox.orcid.org/${orcid}`);
+
 export default function OrcidInfo({
   author, curator, ownerId,
 }) {
-  let orcidInfo = null;
-  if (author.author_orcid) {
-    orcidInfo = (window.location.hostname === 'datadryad.org'
-      ? `https://orcid.org/${author.author_orcid}`
-      : `https://sandbox.orcid.org/${author.author_orcid}`);
-  }
-
+  const orcidInfo = author.author_orcid ? orcidURL(author.author_orcid) : null;
   return (
     <p className="input-line" style={{marginLeft: '38px', marginBottom: 0}}>
       {orcidInfo && (

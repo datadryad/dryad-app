@@ -96,3 +96,32 @@ export const publicationCheck = (resource) => {
   }
   return false;
 };
+
+export function PubPreview({resource, admin}) {
+  const {publication_name, manuscript_number} = resource.resource_publication;
+  const primary = resource.related_identifiers.find((ri) => ri.work_type === 'primary_article');
+  const primary_article = primary?.related_identifier;
+  return (
+    <>
+      <h2 className="o-heading__level1">{resource.title}</h2>
+      {publication_name && (
+        <p>
+          <b>Journal:</b> {publication_name}
+          {manuscript_number && (<><b>Manuscript:</b> {manuscript_number}</>)}
+          {primary_article && (
+            <>
+              <b>Primary article:</b>{' '}
+              <a href={primary_article} target="_blank" rel="noreferrer">
+                <i className="fas fa-newspaper" aria-hidden="true" style={{marginRight: '.5ch'}} />{primary_article}
+                <span className="screen-reader-only"> (opens in new window)</span>
+              </a>
+              {admin && !primary.verified && (
+                <i className="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link" />
+              )}
+            </>
+          )}
+        </p>
+      )}
+    </>
+  );
+}

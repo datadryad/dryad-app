@@ -28,6 +28,19 @@ export function ordinalNumber(n) {
   return `${deca[Math.floor(n / 10) - 2]}y-${ordinal[n % 10]}`;
 };
 
+export function formatSizeUnits(bytes) {
+  if (bytes < 1000) {
+    return `${bytes} B`;
+  }
+
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  for (let i = 0; i < units.length; i += 1) {
+    if (bytes / 10 ** (3 * (i + 1)) < 1) {
+      return `${(bytes / 10 ** (3 * i)).toFixed(2)} ${units[i]}`;
+    }
+  }
+  return true;
+};
 
 // if an id is null then make one for a form, etc
 export function makeId(id){

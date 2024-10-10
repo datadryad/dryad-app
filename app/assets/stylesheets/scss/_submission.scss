@@ -17,8 +17,211 @@
       display: flex;
       justify-content: stretch;
     }
-    div {
+    div, section {
       box-sizing: border-box;
+    }
+
+    &.submission-review > div {
+      display: grid;
+      row-gap: 1.5rem;
+      grid-template-columns: 1fr 2fr;
+      grid-template-rows: repeat(10, minmax(auto, auto));
+      @media (max-width: 811px) {
+        row-gap: .75rem;
+        grid-template-columns: 100%;
+        grid-template-rows: repeat(19, minmax(auto, auto));
+        grid-template-areas:
+          "head"
+          "label1"
+          "area1"
+          "label2"
+          "area2"
+          "label3"
+          "area3"
+          "label4"
+          "area4"
+          "label5"
+          "area5"
+          "label6"
+          "area6"
+          "label7"
+          "area7"
+          "label8"
+          "area8"
+          "label9"
+          "area9"
+      }
+      @media (min-width: 1220px){
+        grid-template-columns: calc(50vw - 300px) 1fr;
+      }
+
+      h1 {
+        grid-row: 1;
+        grid-column: span 2;
+        margin: 0 auto -1.5rem;
+        padding: .5rem 1rem;
+        background-color: $lightest-blue;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        font-size: 1.3rem;
+        @media (max-width: 811px){
+          grid-area: head;
+          grid-column: 1;
+          margin-bottom: -.75rem;
+        }
+      }
+
+      #submission-checklist, #submission-wizard {
+        display: grid;
+        grid-row: 2/span 10;
+        grid-template-rows: subgrid;
+        max-width: 100%;
+        box-sizing: border-box;
+        @media (max-width: 811px) {
+          grid-row: 2/span 19;
+          grid-template-columns: subgrid;
+          grid-column: 1;
+        }
+      }
+
+      #submission-checklist {
+        background-color: $lightest-green;
+        list-style-type: none;
+        margin: auto;
+        padding: 2rem 0;
+        width: 100%;
+        font-size: 1.25rem;
+        li {          
+          display: block;
+          margin: 0 0 0 auto;
+          box-sizing: border-box;
+        }
+        @media (max-width: 811px) {
+          width: 100vw;
+          padding: 0;
+          background-color: transparent;
+          li {
+            width: 100%;
+            padding: .5rem 1rem;
+            background-color: $lightest-green;
+            &:first-child {
+              grid-area: label1;
+              margin-top: 0;
+            }
+            &:nth-child(2) {
+              grid-area: label2;
+            }
+            &:nth-child(3) {
+              grid-area: label3;
+            }
+            &:nth-child(4) {
+              grid-area: label4;
+            }
+            &:nth-child(5) {
+              grid-area: label5;
+            }
+            &:nth-child(6) {
+              grid-area: label6;
+            }
+            &:nth-child(7) {
+              grid-area: label7;
+            }
+            &:nth-child(8) {
+              grid-area: label8;
+            }
+            &:nth-child(9) {
+              grid-area: label9;
+            }
+          }
+        }
+        @media (min-width: 811px) {
+          li {
+            max-width: 26vw;
+            padding-right: 1rem;
+          }
+        }
+        @media (min-width: 811px) and (max-width: 1219px){
+          li {
+            width: 180px;
+          }
+        }
+        @media (min-width: 1220px){
+          font-size: 1.50rem;
+          li {
+            width: 220px;
+          }
+        }        
+      }
+
+      .checklist-link:after {
+        font-family: 'Font Awesome 6 Free';
+        content: '\f303';
+        font-weight: 900;
+        display: inline-block;
+        margin-left: .5ch;
+        font-size: .65em;
+        color: $medium-blue;
+        vertical-align: 2px;
+      }
+
+      #submission-wizard {
+        section {
+          display: block;
+          padding: 0 2rem;
+          width: 920px;
+          max-width: calc(100vw - 350px);
+          *:first-child {
+            margin-top: 0;
+          }
+          &:empty:after {
+            content: 'None';
+            display: block;
+            padding: .5rem 1ch;
+            font-style: italic;
+            background-color: $lightest-gray;
+          }
+        }
+        @media (min-width: 811px) and (max-width: 1219px){
+          section {
+            max-width: calc(100vw - 275px);
+          }
+        }
+        @media (max-width: 811px) {
+          padding: 0;
+          section {
+            padding: .5rem 1rem;
+            max-width: 100%;
+            &:first-child {
+              grid-area: area1;
+            }
+            &:nth-child(2) {
+              grid-area: area2;
+            }
+            &:nth-child(3) {
+              grid-area: area3;
+            }
+            &:nth-child(4) {
+              grid-area: area4;
+            }
+            &:nth-child(5) {
+              grid-area: area5;
+            }
+            &:nth-child(6) {
+              grid-area: area6;
+            }
+            &:nth-child(7) {
+              grid-area: area7;
+            }
+            &:nth-child(8) {
+              grid-area: area8;
+            }
+            &:nth-child(9) {
+              grid-area: area9;
+            }
+          }
+        }
+      }
     }
   }
   .c-header, #page-footer {
@@ -44,6 +247,36 @@
   margin-right: 0;
   margin-left: auto;  
   font-size: 2rem;
+}
+
+.checklist-link {
+  @extend %o-button__link-style;
+}
+
+.checklist-icon {
+  font-size: 1.1rem;
+  margin-right: .5ch;    
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+  justify-items: center;
+  * {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .fa-square {
+    font-size: 1.5rem;
+    &.fas {
+      color: white;
+    }
+  }
+  .fa-check {
+    color: $dark-green;
+  }
+  .fa-xmark {
+    color: $red;
+  }
 }
 
 #submission-nav {
@@ -72,14 +305,14 @@
   }
 
   &.start {
-    flex: 1 1 510px;
+    flex: 1 1 520px;
     & > div {
-      max-width: 510px;
-      padding-top: 5rem;
+      max-width: 520px;
+      padding-top: 7rem;
     }
-    @include bp(screen2) {
+    @include bp(screen3) {
       ul {
-        padding-left: 3.5rem;
+        padding-left: 7rem;
         font-size: 1.65rem;
       }
       .checklist-icon {
@@ -122,36 +355,6 @@
       }
     }
   }
-
-  .checklist-link {
-    @extend %o-button__link-style;
-  }
-
-  .checklist-icon {
-    font-size: 1.1rem;
-    margin-right: .5ch;    
-    display: inline-grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    align-items: center;
-    justify-items: center;
-    * {
-      grid-column: 1;
-      grid-row: 1;
-    }
-    .fa-square {
-      font-size: 1.5rem;
-      &.fas {
-        color: white;
-      }
-    }
-    .fa-check {
-      color: $dark-green;
-    }
-    .fa-xmark {
-      color: $red;
-    }
-  }
 }
 
 #submission-wizard {
@@ -183,9 +386,9 @@
   }
 
   &.start {
-    flex: 1 1 710px;
+    flex: 1 1 700px;
     & > div {
-      max-width: 710px;
+      max-width: 700px;
     }
   }
   &.open {
@@ -218,6 +421,12 @@
     gap: .5ch;
     align-items: baseline;
   }
+}
+
+.file_size {
+  font-size: .98rem;
+  margin: 0 .5ch;
+  color: $dark-gray;
 }
 
 .author-form, .funder-form, .work-form {

@@ -3,7 +3,9 @@ import axios from 'axios';
 
 // TBD: Add no-peer-review-allowed stuff!!
 
-export default function Agreements({resource, setResource, form}) {
+export default function Agreements({
+  resource, setResource, form, preview = false,
+}) {
   const formRef = useRef(null);
   const [dpc, setDPC] = useState({});
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
@@ -61,21 +63,34 @@ export default function Agreements({resource, setResource, form}) {
   return (
     <>
       <h2>Agreements</h2>
-      <fieldset onChange={togglePPR}>
-        <h3><legend>Publication of your files</legend></h3>
-        <p className="radio_choice">
-          <label style={!ppr ? {fontWeight: 'bold'} : {}}>
-            <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
-            My files should be available for public download as soon as possible
-          </label>
-        </p>
-        <p className="radio_choice">
-          <label style={ppr ? {fontWeight: 'bold'} : {}}>
-            <input type="radio" name="peer_review" value="1" defaultChecked={ppr} />
-            Keep my files private while my manuscript is in peer review
-          </label>
-        </p>
-      </fieldset>
+      {preview ? (
+        <>
+          <h3>Publication of your files</h3>
+          <div className="callout alt">
+            {ppr ? (
+              <p>These files <b>will be available for public download</b> as soon as possible</p>
+            ) : (
+              <p>These files will be kept private while your manuscript is in peer review</p>
+            )}
+          </div>
+        </>
+      ) : (
+        <fieldset onChange={togglePPR}>
+          <h3><legend>Publication of your files</legend></h3>
+          <p className="radio_choice">
+            <label style={!ppr ? {fontWeight: 'bold'} : {}}>
+              <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
+              My files should be available for public download as soon as possible
+            </label>
+          </p>
+          <p className="radio_choice">
+            <label style={ppr ? {fontWeight: 'bold'} : {}}>
+              <input type="radio" name="peer_review" value="1" defaultChecked={ppr} />
+              Keep my files private while my manuscript is in peer review
+            </label>
+          </p>
+        </fieldset>
+      )}
       <h3>Payment and terms</h3>
       {dpc.journal_will_pay && (
         <div className="callout">
@@ -107,29 +122,47 @@ export default function Agreements({resource, setResource, form}) {
           )}
         </>
       )}
-      <p className="radio_choice">
-        <label>
-          <input required type="checkbox" defaultChecked={agree} onChange={toggleTerms} />
-          I agree to Dryad&apos;s {dpc.user_must_pay ? 'payment terms and ' : ''}
-          <a href="/stash/terms">terms of submission</a>
-        </label>
-      </p>
-      {(!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay) && (
+      {preview ? (
+        <div>
+          {resource.accepted_agreement ? (
+            <p>
+              <i className="fas fa-check-square" aria-hidden="true" />{' '}
+              The submitter has agreed to Dryad&apos;s{' '}
+              <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
+            </p>
+          ) : (
+            <div className="callout err">
+              <p style={{fontStyle: 'italic'}}>Terms not yet accepted</p>
+            </div>
+          )}
+        </div>
+      ) : (
         <>
-          {dpc.user_must_pay && (
+          <p className="radio_choice">
+            <label>
+              <input required type="checkbox" defaultChecked={agree} onChange={toggleTerms} />
+              I agree to Dryad&apos;s {dpc.user_must_pay ? 'payment terms and ' : ''}
+              <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
+            </label>
+          </p>
+          {(!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay) && (
             <>
-              <div className="callout warn"><p>Are you affiliated with a Dryad member institution that could sponsor this fee?</p></div>
-              {!!dpc.aff_tenant && (
-                <p>Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad member.</p>
+              {dpc.user_must_pay && (
+                <>
+                  <div className="callout warn"><p>Are you affiliated with a Dryad member institution that could sponsor this fee?</p></div>
+                  {!!dpc.aff_tenant && (
+                    <p>Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad member.</p>
+                  )}
+                </>
+              )}
+              <div style={{maxWidth: '700px'}} ref={formRef} />
+              {dpc.user_must_pay && resource.tenant.authentication?.strategy === 'author_match' && (
+                <p><em>For sponsorship, {resource.tenant.short_name} must appear as your author list affiliation for this submission.</em>.</p>
+              )}
+              {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
+                <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad member.</p>
               )}
             </>
-          )}
-          <div style={{maxWidth: '700px'}} ref={formRef} />
-          {dpc.user_must_pay && resource.tenant.authentication?.strategy === 'author_match' && (
-            <p><em>For sponsorship, {resource.tenant.short_name} must appear as your author list affiliation for this submission.</em>.</p>
-          )}
-          {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
-            <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad member.</p>
           )}
         </>
       )}

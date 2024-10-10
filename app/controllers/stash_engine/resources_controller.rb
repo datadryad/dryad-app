@@ -156,6 +156,11 @@ module StashEngine
     end
     # rubocop:enable Metrics/AbcSize
 
+    def display_readme
+      review = StashDatacite::Resource::Review.new(@resource)
+      render partial: 'stash_datacite/descriptions/readme', locals: { review: review, highlight_fields: [] }
+    end
+
     def dpc_status
       dpc_checks = {
         dpc: Stash::Payments::Invoicer.data_processing_charge(identifier: @resource.identifier) / 100,
