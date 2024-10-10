@@ -122,6 +122,8 @@ mysql_stg.sh < myfile.sql
 SOLR setup
 ============
 
+For general SOLR information, see [solr.md](../solr.md)
+
 SOLR should be installed on a separate machine from the Rails server!
 
 All of these tools are outdated. To make SOLR work with Dryad's old
