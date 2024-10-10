@@ -3,7 +3,7 @@
 
 <p>
 Title: <%= @resource.title %><br/>
-Data DOI: <%= @resource.identifier_str %><br/>
+Data DOI: <%= @resource.identifier_value %><br/>
 Journal: <%= @resource.identifier.publication_name %>
 <% if @resource.identifier.manuscript_number.present? %>
   <br/>Journal manuscript number: <%= @resource.identifier.manuscript_number %>
@@ -13,6 +13,6 @@ Journal: <%= @resource.identifier.publication_name %>
 <% end %>
 </p>
 
-<p>Thank you for choosing Dryad to host your data. If you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>
+<p>Thank you for choosing Dryad to host your data. If you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>.</p>
 
 <p>The Dryad Team</p>
