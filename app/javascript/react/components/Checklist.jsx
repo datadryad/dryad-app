@@ -35,7 +35,9 @@ export default function ChecklistNav({
   return (
     <nav id="submission-nav" className={(step.name === 'Start' && 'start') || (open && 'open') || ''}>
       <div>
-        {step.name !== 'Start' && (
+        {step.name == 'Start' ? (
+          <p>Submission checklist</p>
+        ) : (
           <button
             type="button"
             id="checklist-button"

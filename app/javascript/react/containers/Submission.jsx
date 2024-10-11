@@ -12,6 +12,9 @@ import RelatedWorks, {WorksPreview, worksCheck} from '../components/MetadataEntr
 import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
 import Agreements from '../components/MetadataEntry/Agreements';
+import SubmissionHelp, {
+  PublicationHelp, AuthHelp, SuppHelp, SubjHelp, DescHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
+} from '../components/SubmissionHelp';
 
 export default function Submission({
   submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar, change_tenant,
@@ -20,7 +23,7 @@ export default function Submission({
   const [resource, setResource] = useState(JSON.parse(submission));
   const [step, setStep] = useState({name: 'Start'});
   const [open, setOpen] = useState(false);
-  const [review, setReview] = useState(!!resource.identifier.process_date.submitted);
+  const [review, setReview] = useState(!!resource.identifier.process_date.submitted || !!resource.accepted_agreement);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const steps = [
@@ -29,6 +32,7 @@ export default function Submission({
       pass: !!resource.title,
       fail: publicationCheck(resource),
       component: <Publication resource={resource} setResource={setResource} />,
+      help: <PublicationHelp />,
       preview: <PubPreview resource={resource} admin={admin} />,
     },
     {
@@ -36,6 +40,7 @@ export default function Submission({
       pass: !!resource.title && resource.authors.length > 0,
       fail: !!resource.title && authorCheck(resource.authors, ownerId),
       component: <Authors resource={resource} setResource={setResource} admin={admin} ownerId={ownerId} />,
+      help: <AuthHelp />,
       preview: <AuthPreview resource={resource} admin={admin} />,
     },
     {
@@ -43,6 +48,7 @@ export default function Submission({
       pass: resource.contributors.find((c) => c.contributor_type === 'funder'),
       fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support resource={resource} setResource={setResource} />,
+      help: <SuppHelp />,
       preview: <SuppPreview resource={resource} admin={admin} />,
     },
     {
@@ -50,6 +56,7 @@ export default function Submission({
       pass: keywordPass(resource.subjects),
       fail: keywordFail(resource.subjects),
       component: <Subjects resource={resource} setResource={setResource} />,
+      help: <SubjHelp />,
       preview: <SubjPreview resource={resource} />,
     },
     {
@@ -57,6 +64,7 @@ export default function Submission({
       pass: resource.descriptions.some((d) => !!d.description),
       fail: abstractCheck(resource),
       component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
+      help: <DescHelp />,
       preview: <DescPreview resource={resource} />,
     },
     {
@@ -70,6 +78,7 @@ export default function Submission({
         config_s3={config_s3}
         config_frictionless={config_frictionless}
       />,
+      help: <FilesHelp />,
       preview: <FilesPreview resource={resource} />,
     },
     {
@@ -82,6 +91,7 @@ export default function Submission({
         setResource={setResource}
         // errors={readmeCheck(resource)}
       />,
+      help: <ReadMeHelp />,
       preview: <ReadMePreview resource={resource} />,
     },
     {
@@ -89,13 +99,15 @@ export default function Submission({
       pass: resource.related_identifiers.some((rid) => !!rid.related_identifier) || resource.accepted_agreement,
       fail: worksCheck(resource),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
+      help: <WorksHelp setTitleStep={() => setStep(steps[steps.findIndex((l) => l.name === 'Title/Import')])} />,
       preview: <WorksPreview resource={resource} admin={admin} />,
     },
     {
       name: 'Agreements',
-      pass: review || resource.accepted_agreement,
+      pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
       component: <Agreements resource={resource} setResource={setResource} form={change_tenant} />,
+      help: <AgreeHelp />,
       preview: <Agreements resource={resource} preview />,
     },
   ];
@@ -110,7 +122,13 @@ export default function Submission({
   }, [review, step]);
 
   useEffect(() => {
-    if (resource.accepted_agreement) setReview(true);
+    if (!review) {
+      if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
+        const stop = steps.findLastIndex((c) => c.pass) + 1 > steps.length - 1;
+        setStep(steps.find((c) => c.fail) || stop ? steps.findLast((c) => c.pass) : steps[steps.findLastIndex((c) => c.pass) + 1]);
+        setOpen('start');
+      }
+    }
     if (subRef.current) {
       const observer = new MutationObserver(() => {
         const et = document.querySelector('.error-text');
@@ -153,10 +171,10 @@ export default function Submission({
                     <p>Complete the checklist, and submit your data for publication.</p>
                   )}
                   {!['Start', 'README'].includes(step.name) && (
-                    steps.find((s) => s.name === step.name).pass && steps.find((s) => s.name === step.name).fail
+                    steps.find((s) => s.name === step.name).fail
                   )}
                 </div>
-                <div className="o-dataset-nav">
+                <div id="submission-help">
                   <div className="o-dataset-nav">
                     <button
                       type="button"
@@ -167,6 +185,9 @@ export default function Submission({
                     </button>
                     <div className="saving_text" hidden>Saving&hellip;</div>
                     <div className="saved_text" hidden>All progress saved</div>
+                  </div>
+                  <div>
+                    {step.help}
                   </div>
                 </div>
               </div>
@@ -190,7 +211,7 @@ export default function Submission({
         <div id="submission-submit">
           {steps.some((s) => s.fail) ? (
             <div className="callout err">
-              <p>Fix the errors above to complete your submission</p>
+              <p>Fix the errors above in order to complete your submission</p>
             </div>
           ) : (
             <p>Ready to complete your submission?</p>
@@ -218,16 +239,18 @@ export default function Submission({
       <div id="submission-wizard" className={(step.name === 'Start' && 'start') || (open && 'open') || ''}>
         <div>
           <div ref={subRef}>
-            <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
+            <div style={{display: 'flex', alignItems: 'baseline', justifyContent: 'space-between'}}>
+              <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
+              <div className="saving_text" hidden>Saving&hellip;</div>
+              <div className="saved_text" hidden>All progress saved</div>
+            </div>
+            {step.name === 'Start' && (<SubmissionHelp type={resource.resource_type.resource_type} />)}
             {step.component}
-            {step.name === 'Start' && (
-              <p>Complete the checklist, and submit your data for publication.</p>
-            )}
             {!['Start', 'README'].includes(step.name) && (
               steps.find((s) => s.name === step.name).pass && steps.find((s) => s.name === step.name).fail
             )}
           </div>
-          <div className="o-dataset-nav">
+          <div id="submission-help">
             <div className="o-dataset-nav">
               {step.name === 'Agreements' ? (
                 <button
@@ -239,7 +262,7 @@ export default function Submission({
                     setReview(true);
                   }}
                 >
-                  Preview dataset submission
+                  Preview submission
                 </button>
               ) : (
                 <button
@@ -253,21 +276,25 @@ export default function Submission({
                   Next <i className="fa fa-caret-right" aria-hidden="true" />
                 </button>
               )}
-              <div className="saving_text" hidden>Saving&hellip;</div>
-              <div className="saved_text" hidden>All progress saved</div>
+              {step.name !== 'Start' && (
+                <button
+                  type="button"
+                  className="o-button__plain-text"
+                  onClick={() => {
+                    setStep(steps[steps.findIndex((l) => l.name === step.name) - 1] || {name: 'Start'});
+                    if (open === 'start') setOpen(false);
+                  }}
+                >
+                  <i className="fa fa-caret-left" aria-hidden="true" /> Previous
+                </button>
+              )}
             </div>
-            {step.name !== 'Start' && (
-              <button
-                type="button"
-                className="o-button__plain-text"
-                onClick={() => {
-                  setStep(steps[steps.findIndex((l) => l.name === step.name) - 1] || {name: 'Start'});
-                  if (open === 'start') setOpen(false);
-                }}
-              >
-                <i className="fa fa-caret-left" aria-hidden="true" /> Previous
-              </button>
-            )}
+            <div id="submission-help-text">
+              {step.name === 'Start' && (
+                <p>Questions? Check this spot for helpful information about each step!</p>
+              )}
+              {step.help}
+            </div>
           </div>
         </div>
       </div>

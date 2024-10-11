@@ -337,20 +337,20 @@
   }
 
   &.start {
-    flex: 1 1 520px;
+    flex: 1 1 400px;
     & > div {
-      max-width: 520px;
-      padding-top: 7rem;
-    }
-    @include bp(screen3) {
-      ul {
-        padding-left: 7rem;
-        font-size: 1.65rem;
-      }
-      .checklist-icon {
-        font-size: 1.5rem;
-        .fa-square {
-          font-size: 1.9rem;
+      max-width: 300px;
+      padding-top: 4rem;
+      margin-right: 0;
+      @include bp(screen3) {
+        ul {
+          font-size: 1.65rem;
+        }
+        .checklist-icon {
+          font-size: 1.5rem;
+          .fa-square {
+            font-size: 1.9rem;
+          }
         }
       }
     }
@@ -403,38 +403,44 @@
   flex: 1 1 1130px;
   margin-right: auto;
   padding-top: 2rem;
-  padding-bottom: 2rem;
+
+  @media (max-width: 600px) {
+    flex: 1 1 auto;
+    margin-right: 0;
+  }
 
   & > div {
     margin-right: auto;
     max-width: 1130px;
-    padding-left: 30px;
-    padding-right: 30px;
     min-height: 100%;
     display: flex;
     flex-direction: column;
 
-    @media (max-width: 600px) {
-      flex: 1 1 auto;
-    }
+    & > div {
+      padding-left: 10px;
+      padding-right: 10px;
 
-    @include bp(screen1) {
-      padding-right: 20px;
-    }
+      @include bp(screen1) {
+        padding-left: 30px;
+        padding-right: 20px;
+      }
 
-    @include bp(screen2) {
-      padding-right: 30px;
+      @include bp(screen2) {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
     }
 
     & > div:first-child {
       flex: 1;
+      padding-bottom: 2rem;
     }
   }
 
   &.start {
-    flex: 1 1 700px;
+    flex: 1 1 820px;
     & > div {
-      max-width: 700px;
+      max-width: 820px;
     }
   }
   &.open {
@@ -450,7 +456,7 @@
     margin: -1em 0;
   }
 
-  div > div > *:first-child {
+  & > div > div > *:first-child {
     margin-top: 0;
   }
 
@@ -460,6 +466,36 @@
 
   *[aria-invalid] {
     border: thin solid $orange;
+  }
+}
+
+#submission-help {
+  //position: sticky;
+  //bottom: 0;
+  //box-shadow: $lightest-green 0px -4px 4px -6px;
+  border-top: thick solid $lightest-green;
+  background-color: white;
+  padding: 2rem;
+  padding-left: 30px;
+  width: 100%;
+  display: flex;
+  gap: 2ch;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: row-reverse; 
+
+  #submission-help-text {
+    font-size: 1rem;
+    *:first-child {
+      margin-top: 0;
+    }
+    *:last-child {
+      margin-top: 0;
+    }
+  }
+
+  button {
+    white-space: nowrap;
   }
 }
 

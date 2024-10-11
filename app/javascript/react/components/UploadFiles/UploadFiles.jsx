@@ -523,7 +523,6 @@ export default function UploadFiles({
         </div>
       ) : (
         <div>
-          <h2 className="o-heading__level2">Files</h2>
           {loading ? (
             <div className="c-upload__loading-spinner">
               <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />

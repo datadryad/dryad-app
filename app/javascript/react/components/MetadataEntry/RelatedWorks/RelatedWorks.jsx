@@ -97,7 +97,7 @@ function RelatedWorks({resource, setResource}) {
           ? `Please list all the datasets in the collection, as well as any identifiable related or resulting articles, 
             preprints, software packages, or supplemental information.`
           : `Are there any preprints, articles, datasets, software packages, or supplemental information that have 
-            resulted from or are related to this Data Publication?`}
+            resulted from or are related to this submission?`}
       </p>
       <div className="related-works">
         {works.map((work) => {
