@@ -1,29 +1,50 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Thank you for submitting your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) to Dryad.</p>
+<p>
+  Thank you for your dataset submission to Dryad. Please note, you have selected to keep your submission in
+  "Private for peer review" status. While in this status,
+  your submission will not enter our curation process for review and publication.
+</p>
 
-<p>Your dataset has been assigned two important links:</p>
+<p>Your Dryad dataset titled, "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been assigned two important links:</p>
+
 <% shr = @resource.identifier.shares.first.sharing_link %>
-<ul>
-  <li>Reviewer URL: <a href="<%= shr %>"><%= shr %></a>.
-    <p>This temporary link can be shared with the journal office or collaborators during the peer-review process to allow access only to the data files included with your submission. This link will expire upon publication of your Dryad dataset.</p>
-  </li>
-  <li>A unique digital object identifier (DOI): <%= @resource.identifier_str %>
-    <p>When your dataset has been approved for publication by a member of our curation team, it will be made public. This DOI link is permanent and should be provided to the journal office for inclusion in the Data Availability statement of your published article.</p> 
-  </li>
-</ul>
+<p>
+  <ul>
+    <li>
+      A unique, permanent digital object identifier: <%= @resource.identifier_uri %><br />
+      <br />
+      After your dataset has been approved for publication by a member of our curation team, this link will become
+      active and your dataset will be made public. This DOI link is permanent and should be included in the
+      Data Availability Statement of your published articles.
+    </li>
+    <li>
+      Reviewer URL: <a href="<%= shr %>"><%= shr %></a>.<br /><br />
+      This temporary link can be shared with the journal office or collaborators during the peer-review process to
+      allow access only to the data files included with your submission. This link will only work while your dataset
+      is in the Private for Peer Review status and should not be used in the
+      Data Availability Statement in any related manuscript.
+    </li>
+  </ul>
+</p>
 
-<p>Please note, you have selected to keep your Dryad data submission in "Private for peer review" status. While in this status, your submission will not enter our curation process for review and publication.</p>
+<p>
+  When your related manuscript has been accepted, or when you are ready to initiate the curation process
+  and proceed to publication, follow these steps:
+  <ol>
+    <li><a href="https://datadryad.org">Login to https://datadryad.org</a></li>
+    <li>Click on "My datasets" to view your list of data submissions.</li>
+    <li>Click "Release for curation" on your dataset.</li>
+  </ol>
+</p>
 
-<p>When your related manuscript has been accepted, or when you are ready to initiate the curation process and proceed to publication, follow these steps:</p>
-<ol>
-  <li><a href="https://datadryad.org">Login to https://datadryad.org</a></li>
-  <li>Click on "My datasets" to view your list of data submissions.</li>
-  <li>Click "Release for curation" on your dataset.</li>
-</ol>
+<p>If you have any questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>.</p>
 
-<p>If you have any questions, please contact Dryad's Helpdesk at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>
 <p>Thank you for choosing Dryad to host your data. We appreciate your support.</p>
-<p>The Dryad Team</p>
-<p>We would greatly appreciate your feedback! Please complete <a href="https://form.jotform.com/232493320676357?datasetDOI=<%= CGI.escape(@resource.identifier.identifier) %>">a short survey about your submission experience</a>.</p>
 
+<p>
+  We would greatly appreciate your feedback! Please complete
+  <a href="https://form.jotform.com/232493320676357?datasetDOI=<%= CGI.escape(@resource.identifier.identifier) %>">
+    a short survey about your submission experience
+  </a>.
+</p>

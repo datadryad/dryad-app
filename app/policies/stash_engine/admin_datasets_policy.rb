@@ -25,5 +25,8 @@ module StashEngine
       @user.superuser?
     end
 
+    def change_delete_schedule?
+      @user.superuser?
+    end
   end
 end
