@@ -11,8 +11,6 @@ module StashEngine
     end
 
     def trigger_call(function_name)
-      pp payload
-      # aaa
       response = @client.invoke(
         {
           function_name: function_name,
