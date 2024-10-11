@@ -38,7 +38,6 @@ module StashEngine
           file_mime_type: data_file.upload_content_type,
           callback_url: callback_url,
           token: StashEngine::ApiToken.token
-          # token: '"mkWwoQIH-rSibaiutr-bl6ZBA5cX5EWQHCZsNq3DqxE"'
         }
       )
     end
