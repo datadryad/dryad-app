@@ -4,7 +4,7 @@ import stringSimilarity from 'string-similarity';
 import Autocomplete from '../Autocomplete';
 
 export default function Journal({
-  formRef, title, setTitle, issn, setIssn, setHideImport, controlOptions,
+  formRef, title, setTitle, issn, setIssn, setAPIJournal, controlOptions,
 }) {
   const [prevTitle, setPrevTitle] = useState(title);
   const [prevISSN, setPrevISSN] = useState(issn);
@@ -12,9 +12,7 @@ export default function Journal({
   const [api_journals, setAPIJournals] = useState([]);
 
   useEffect(() => {
-    if (issn) {
-      if (api_journals.includes(issn)) setHideImport(true);
-    }
+    setAPIJournal(api_journals.includes(issn));
   }, [issn, api_journals]);
 
   useEffect(() => {

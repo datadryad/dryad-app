@@ -5,56 +5,48 @@ import RelatedWorkForm from './RelatedWorkForm';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function RelatedWorks({resource, setResource}) {
-  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const resourceType = resource.resource_type.resource_type;
+  const related_works = resource.related_identifiers.filter((ri) => ri.work_type !== 'primary_article');
+  const [works, setWorks] = useState(related_works);
   const [workTypes, setWorkTypes] = useState([]);
-  const [works, setWorks] = useState(resource.related_identifiers);
 
-  const blankRelated = {
-    related_identifier: '',
-    related_identifier_type: 'doi',
-    relation_type: resourceType === 'collection' ? 'haspart' : 'iscitedby',
-    resource_id: resource.id,
-    work_type: resourceType === 'collection' ? 'dataset' : 'article',
-  };
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const addNewWork = () => {
-    const contribJson = {
-      authenticity_token,
-      stash_datacite_related_identifier: blankRelated,
+    const stash_datacite_related_identifier = {
+      related_identifier: '',
+      related_identifier_type: 'doi',
+      relation_type: resourceType === 'collection' ? 'haspart' : 'iscitedby',
+      resource_id: resource.id,
+      work_type: resourceType === 'collection' ? 'dataset' : 'article',
     };
+    const workJson = {authenticity_token, stash_datacite_related_identifier};
 
     axios.post(
       '/stash_datacite/related_identifiers/create',
-      contribJson,
+      workJson,
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
       .then((data) => {
         if (data.status !== 200) {
-          console.log("couldn't add new relatedWork to the remote server");
+          console.log("Couldn't add new related work");
         }
         setWorks((w) => [...w, data.data]);
       });
   };
 
-  if (works.length < 1) {
-    addNewWork();
-  }
-
   const removeItem = (id) => {
-    const trueDelPath = `/stash_datacite/related_identifiers/${id}/delete`;
     showSavingMsg();
-
     const submitVals = {
       authenticity_token,
     };
-    axios.delete(trueDelPath, {
+    axios.delete(`/stash_datacite/related_identifiers/${id}/delete`, {
       data: submitVals,
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
     })
       .then((data) => {
         if (data.status !== 200) {
-          console.log('Response failure not a 200 response from related works deletion');
+          console.log('Response failure from related works deletion');
         }
         showSavedMsg();
       });
@@ -63,12 +55,12 @@ function RelatedWorks({resource, setResource}) {
 
   // update the work in the list from old to new values
   const updateWork = (updatedRelatedId) => {
-    // replace item in the funder list if it has changed
     setWorks((w) => w.map((tempRel) => (updatedRelatedId.id === tempRel.id ? updatedRelatedId : tempRel)));
   };
 
   useEffect(() => {
-    setResource((r) => ({...r, related_identifiers: works}));
+    setResource((r) => ({...r, related_identifiers: [...works, ...r.related_identifiers.filter((ri) => ri.work_type === 'primary_article')]}));
+    if (works.length < 1) addNewWork();
   }, [works]);
 
   useEffect(() => {
@@ -89,8 +81,19 @@ function RelatedWorks({resource, setResource}) {
   return (
     <>
       <h2>Related works</h2>
-      {works.find((w) => w.work_type === 'primary_article') && (
-        <p><span className="input-label">Primary article:</span> {works.find((w) => w.work_type === 'primary_article').related_identifier}</p>
+      {resource.related_identifiers.find((w) => w.work_type === 'primary_article') && (
+        <div className="callout alt">
+          <p>
+            <span className="input-label" style={{marginRight: '2ch'}}>Primary article:</span>
+            <span style={{fontSize: '1rem'}}>
+              <i className="fas fa-newspaper" aria-hidden="true" style={{marginRight: '.5ch'}} />
+              {resource.related_identifiers.find((w) => w.work_type === 'primary_article').related_identifier}
+              {resource.resource_publication.publication_name && (
+                <> from <b>{resource.resource_publication.publication_name}</b></>
+              )}
+            </span>
+          </p>
+        </div>
       )}
       <p>
         {resourceType === 'collection'
@@ -100,18 +103,15 @@ function RelatedWorks({resource, setResource}) {
             resulted from or are related to this submission?`}
       </p>
       <div className="related-works">
-        {works.map((work) => {
-          if (work.work_type === 'primary_article') return null;
-          return (
-            <RelatedWorkForm
-              key={work.id}
-              relatedIdentifier={work}
-              workTypes={workTypes}
-              removeFunction={removeItem}
-              updateWork={updateWork}
-            />
-          );
-        })}
+        {works.map((work) => (
+          <RelatedWorkForm
+            key={work.id}
+            relatedIdentifier={work}
+            workTypes={workTypes}
+            removeFunction={removeItem}
+            updateWork={updateWork}
+          />
+        ))}
       </div>
       <div style={{textAlign: 'right'}}>
         <button

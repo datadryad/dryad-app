@@ -94,6 +94,7 @@ function Funders({resource, setResource}) {
 
   useEffect(() => {
     setResource((r) => ({...r, contributors: [...funders, ...r.contributors.filter((con) => con.contributor_type !== 'funder')]}));
+    if (funders.length < 1) addNewFunder();
   }, [funders]);
 
   useEffect(() => {
@@ -104,8 +105,6 @@ function Funders({resource, setResource}) {
     }
     getList();
   }, []);
-
-  if (funders.length < 1) addNewFunder();
 
   return (
     <div style={{marginBottom: '20px'}}>

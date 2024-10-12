@@ -344,16 +344,16 @@
     flex: 1 1 400px;
     & > div {
       max-width: 300px;
-      padding-top: 4rem;
+      padding-top: 2.5rem;
       margin-right: 0;
       @include bp(screen3) {
         ul {
-          font-size: 1.65rem;
+          font-size: 1.5rem;
         }
         .checklist-icon {
-          font-size: 1.5rem;
+          font-size: 1.2rem;
           .fa-square {
-            font-size: 1.9rem;
+            font-size: 1.6rem;
           }
         }
       }
@@ -470,6 +470,18 @@
 
   *[aria-invalid] {
     border: thin solid $orange;
+  }
+}
+
+#submission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  h1 {
+    margin-bottom: 0;
+  }
+  & + h2 {
+    margin-top: 1.1rem;
   }
 }
 

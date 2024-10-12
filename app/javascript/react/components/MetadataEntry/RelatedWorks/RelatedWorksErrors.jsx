@@ -6,6 +6,11 @@ export const urlCheck = (url) => {
   return URL.canParse(url);
 };
 
+export const verifiedCheck = (id) => {
+  if (!id.related_identifier) return true;
+  return id.verified;
+};
+
 function RelatedWorksErrors(
   {relatedIdentifier},
 ) {

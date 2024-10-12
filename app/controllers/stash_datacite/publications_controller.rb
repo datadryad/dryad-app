@@ -5,12 +5,12 @@ require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
 
-# rubocop:disable Metrics/ClassLength
+# rubocop:disable Metrics/ClassLength, Metrics/AbcSize
 module StashDatacite
   class PublicationsController < ApplicationController
     def update
-      @se_id = StashEngine::Identifier.find(params[:identifier_id])
       @resource = StashEngine::Resource.find(params[:resource_id])
+      @se_id = @resource.identifier
       save_publications
       respond_to do |format|
         format.json do
@@ -21,13 +21,26 @@ module StashDatacite
             if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
               manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier)
             end
-            render json: { error: @error, reloadPage: @error.blank? }
+            import_data = {
+              title: @resource.title,
+              authors: @resource.authors,
+              descriptions: @resource.descriptions,
+              subjects: @resource.subjects,
+              contributors: @resource.contributors
+            }
+            render json: {
+              error: @error,
+              journal: @resource.journal,
+              related_identifiers: @resource.related_identifiers,
+              import_data: @error ? false : import_data
+            }
           else
-            render json: { error: @error, reloadPage: false }
+            render json: { error: @error, journal: @resource.journal, related_identifiers: @resource.related_identifiers, import_data: false }
           end
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # GET /publications/autocomplete?term={query_term}
     def autocomplete
@@ -69,9 +82,8 @@ module StashDatacite
     def save_publications
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
-      if params.key?('msid')
-        @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
-      end
+      @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
+      @resource.related_identifiers.where(work_type: 'primary_article').destroy_all if params[:primary_article_doi].blank?
       if @pub_issn.blank?
         exact_matches = StashEngine::Journal.find_by(title: @pub_name)
         @pub_issn = exact_matches.single_issn if exact_matches.present?
@@ -81,7 +93,7 @@ module StashDatacite
         publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
         publication.publication_name = @pub_name
         publication.publication_issn = @pub_issn
-        publication.manuscript_number = @msid if params.key?('msid')
+        publication.manuscript_number = @msid
         publication.save
       rescue ActiveRecord::RecordNotUnique
         publication = StashEngine::ResourcePublication.find_by(resource_id: @resource.id)
@@ -165,12 +177,12 @@ module StashDatacite
 
       journal = StashEngine::Journal.find_by_issn(@pub_issn)
       if journal.blank?
-        @error = 'Journal not recognized by Dryad'
+        @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
         return
       end
       manu = StashEngine::Manuscript.where(journal: journal, manuscript_number: @msid).first
       if manu.blank?
-        @error = 'We could not find metadata to import for this manuscript.'
+        @error = 'We could not find metadata to import for this manuscript. Please fill in your title manually.'
         return
       end
 
@@ -178,7 +190,7 @@ module StashDatacite
       dryad_import.populate
     rescue HTTParty::Error, SocketError => e
       logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn}, MSID: #{@msid}\r\n #{e}")
-      @error = 'We could not find metadata to import for this manuscript.'
+      @error = 'We could not find metadata to import for this manuscript. Please fill in your title manually.'
     end
 
     def update_doi_metadata
@@ -188,13 +200,13 @@ module StashDatacite
       end
       cr = Stash::Import::Crossref.query_by_doi(resource: @resource, doi: params[:primary_article_doi])
       unless cr.present?
-        @error = "We couldn't obtain information from CrossRef about this DOI: #{params[:primary_article_doi]}"
+        @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
         return
       end
 
       @resource = @resource.previous_curated_resource.present? ? cr.populate_pub_update! : cr.populate_resource!
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
-      @error = "We couldn't retrieve information from CrossRef about this DOI"
+      @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
     end
 
     def manage_pubmed_datum(identifier:, doi:)

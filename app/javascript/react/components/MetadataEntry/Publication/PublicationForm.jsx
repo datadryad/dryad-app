@@ -1,78 +1,106 @@
-import React, {useState, useRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import axios from 'axios';
-import {Field, Form, Formik} from 'formik';
+import {
+  Field, Form, Formik, useFormikContext,
+} from 'formik';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import Journal from './Journal';
 
-function PublicationForm({resource, setResource, importType}) {
+function ImportCheck({importType, journal, setDisable}) {
+  const {values} = useFormikContext();
+
+  useEffect(() => {
+    if (importType === 'manuscript' && (!journal || !values.msid)) {
+      setDisable(true);
+    } else if (importType === 'published' && (!journal || !values.primary_article_doi)) {
+      setDisable(true);
+    } else {
+      setDisable(false);
+    }
+  }, [importType, values, journal]);
+}
+
+function PublicationForm({
+  resource, setResource, setSponsored, importType,
+}) {
   const formRef = useRef();
-  const {identifier, resource_publication} = resource;
+  const {resource_publication} = resource;
   const {publication_name, publication_issn, manuscript_number} = resource_publication;
   const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article');
   const [importError, setImportError] = useState('');
   const [journal, setJournal] = useState(publication_name);
   const [issn, setIssn] = useState(publication_issn);
-  const [hideImport, setHideImport] = useState(false);
+  const [apiJournal, setAPIJournal] = useState(false);
+  const [hide, setHide] = useState(false);
+  const [disable, setDisable] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const hideImportButton = () => {
-    if (importType === 'manuscript') {
-      if (!journal) return true;
-      if (hideImport) return true;
-    }
-    return false;
-  };
+  const apiError = 'To import metadata, this journal requires that you start your Dryad submission from within their manuscript system.';
 
-  const disableImportButton = () => {
-    if (importType === 'manuscript') {
-      if (!formRef?.current?.values.msid) return true;
-    } else if (importType === 'published') {
-      if (!journal) return true;
-      if (!formRef?.current?.values.primary_article_doi) return true;
-    }
-    return false;
-  };
+  useEffect(() => {
+    setSponsored(false);
+  }, [journal]);
+
+  useEffect(() => {
+    setHide(importType === 'manuscript' && apiJournal);
+    setImportError(importType === 'manuscript' && apiJournal ? apiError : '');
+  }, [importType, apiJournal]);
 
   const submitForm = (values) => {
     showSavingMsg();
     const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-    setResource((r) => ({
-      ...r,
-      resource_publication: {
-        publication_name: journal,
-        publication_issn: issn,
-        manuscript_number: values.msid || null,
-      },
-      related_identifiers: [
-        {work_type: 'primary_article', doi: values.primary_article_doi || null},
-        ...r.related_identifiers,
-      ],
-    }));
     const submitVals = {
       authenticity_token,
       import_type: importType,
       publication_name: journal,
-      identifier_id: identifier.id,
       resource_id: resource.id,
       publication_issn: issn,
       do_import: values.isImport,
       primary_article_doi: values.primary_article_doi || null,
       msid: values.msid || null,
     };
-
+    if (values.isImport) setLoading(true);
     axios.patch(
       '/stash_datacite/publications/update',
       submitVals,
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     ).then((data) => {
-      if (data.status !== 200) {
-        console.log('Response failure from publication information save/import');
-      }
-      setImportError(data.data.error || '');
-      showSavedMsg();
+      if (data.status === 200) {
+        const res_pub = {
+          publication_name: journal,
+          publication_issn: issn,
+          manuscript_number: values.msid || null,
+        };
+        const {
+          error, journal: j, related_identifiers, import_data,
+        } = data.data;
+        if (import_data) {
+          const {
+            title, authors, descriptions, subjects, contributors,
+          } = import_data;
+          setResource((r) => ({
+            ...r,
+            title,
+            authors,
+            subjects,
+            contributors,
+            descriptions,
+            journal: j,
+            resource_publication: res_pub,
+            related_identifiers,
+          }));
+        } else if (error || apiJournal) {
+          setResource((r) => ({
+            ...r,
+            journal: j,
+            resource_publication: res_pub,
+            related_identifiers,
+          }));
+        }
 
-      if (data.data.reloadPage) {
-        setImportError('Reloading imported data...');
-        window.location.reload(true);
+        setImportError(error || ((importType === 'manuscript' && apiJournal) && apiError) || '');
+        showSavedMsg();
+        setLoading(false);
       }
     });
   };
@@ -93,6 +121,7 @@ function PublicationForm({resource, setResource, importType}) {
     >
       {(formik) => (
         <Form style={{margin: '1em auto'}}>
+          <ImportCheck importType={importType} journal={journal} setDisable={setDisable} />
           <Field name="isImport" type="hidden" />
           <div className="input-line">
             <div className="input-stack">
@@ -102,7 +131,7 @@ function PublicationForm({resource, setResource, importType}) {
                 setTitle={setJournal}
                 issn={issn}
                 setIssn={setIssn}
-                setHideImport={setHideImport}
+                setAPIJournal={setAPIJournal}
                 controlOptions={
                   {
                     htmlId: 'publication',
@@ -157,8 +186,8 @@ function PublicationForm({resource, setResource, importType}) {
               type="button"
               name="commit"
               className="o-button__plain-text2"
-              hidden={hideImportButton()}
-              disabled={disableImportButton()}
+              hidden={hide}
+              disabled={disable}
               onClick={() => {
                 formRef.current.values.isImport = true;
                 formik.handleSubmit();
@@ -170,6 +199,7 @@ function PublicationForm({resource, setResource, importType}) {
           <div id="population-warnings" className="o-metadata__autopopulate-message">
             {importError}
           </div>
+          {loading && <p><i className="fa fa fa-spinner fa-spin" aria-hidden="true" /><span className="screen-reader-only">Loading...</span></p>}
         </Form>
       )}
     </Formik>

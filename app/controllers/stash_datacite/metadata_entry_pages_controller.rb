@@ -9,7 +9,7 @@ module StashDatacite
       @metadata_entry.descriptions
 
       @submission = @resource.as_json(
-        include: [:tenant, :subjects, :descriptions, :resource_publication, :related_identifiers,
+        include: [:tenant, :subjects, :descriptions, :resource_publication, :journal, :related_identifiers,
                   :contributors, :resource_type, :previous_curated_resource,
                   { authors: { include: [:affiliations] }, identifier: { include: [:process_date] } }]
       )

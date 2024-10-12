@@ -3,7 +3,7 @@ import React, {useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import RelatedWorksErrors, {urlCheck} from './RelatedWorksErrors';
+import RelatedWorksErrors, {urlCheck, verifiedCheck} from './RelatedWorksErrors';
 import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function RelatedWorkForm(
@@ -70,7 +70,7 @@ function RelatedWorkForm(
         }}
       >
         {(formik) => (
-          <Form className={`work-form${urlCheck(relatedIdentifier.related_identifier) && relatedIdentifier.verified ? '' : ' warn'}`}>
+          <Form className={`work-form${urlCheck(relatedIdentifier.related_identifier) && verifiedCheck(relatedIdentifier) ? '' : ' warn'}`}>
             <Field name="id" type="hidden" />
             <div className="input-stack">
               <label className="input-label" htmlFor={`work_type__${relatedIdentifier.id}`}>

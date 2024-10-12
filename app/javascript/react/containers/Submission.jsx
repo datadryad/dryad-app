@@ -96,7 +96,7 @@ export default function Submission({
     },
     {
       name: 'Related works',
-      pass: resource.related_identifiers.some((rid) => !!rid.related_identifier) || resource.accepted_agreement,
+      pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps[steps.findIndex((l) => l.name === 'Title/Import')])} />,
@@ -245,10 +245,12 @@ export default function Submission({
       <div id="submission-wizard" className={(step.name === 'Start' && 'start') || (open && 'open') || ''}>
         <div>
           <div ref={subRef}>
-            <div style={{display: 'flex', alignItems: 'baseline', justifyContent: 'space-between'}}>
+            <div id="submission-header">
               <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
-              <div className="saving_text" hidden>Saving&hellip;</div>
-              <div className="saved_text" hidden>All progress saved</div>
+              <div role="status">
+                <div className="saving_text" hidden>Saving&hellip;</div>
+                <div className="saved_text" hidden>All progress saved</div>
+              </div>
             </div>
             {step.name === 'Start' && (<SubmissionHelp type={resource.resource_type.resource_type} />)}
             {step.component}
