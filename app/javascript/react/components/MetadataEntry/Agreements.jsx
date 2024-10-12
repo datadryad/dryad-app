@@ -1,5 +1,6 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
+import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 // TBD: Add no-peer-review-allowed stuff!!
 
@@ -15,6 +16,7 @@ export default function Agreements({
 
   const togglePPR = (e) => {
     const v = e.target.value;
+    showSavingMsg();
     axios.patch(
       '/stash_datacite/peer_review/toggle',
       {authenticity_token, id: resource.id, hold_for_peer_review: v === '1'},
@@ -25,6 +27,7 @@ export default function Agreements({
           const {hold_for_peer_review} = data.data;
           setPPR(hold_for_peer_review);
           setResource((r) => ({...r, hold_for_peer_review}));
+          showSavedMsg();
         }
       });
   };

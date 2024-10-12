@@ -181,7 +181,7 @@ export default function Submission({
                   )}
                 </div>
                 <div id="submission-help">
-                  <div className="o-dataset-nav">
+                  <div>
                     <button
                       type="button"
                       className="o-button__plain-text2"
@@ -189,8 +189,10 @@ export default function Submission({
                     >
                       Preview changes
                     </button>
-                    <div className="saving_text" hidden>Saving&hellip;</div>
-                    <div className="saved_text" hidden>All progress saved</div>
+                    <div role="status">
+                      <div className="saving_text" hidden>Saving&hellip;</div>
+                      <div className="saved_text" hidden>All progress saved</div>
+                    </div>
                   </div>
                   <div id="submission-help-text">
                     {step.help}

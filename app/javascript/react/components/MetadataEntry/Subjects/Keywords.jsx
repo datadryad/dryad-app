@@ -29,6 +29,7 @@ function Keywords({resource, setResource}) {
   };
 
   function deleteKeyword(id) {
+    showSavingMsg();
     axios.delete(`/stash_datacite/subjects/${id}/delete`, {
       data: {authenticity_token, resource_id: resource.id},
       headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
@@ -36,6 +37,7 @@ function Keywords({resource, setResource}) {
       if (data.status !== 200) {
         return;
       }
+      showSavedMsg();
       // removes the item we just deleted from the list based on id
       setSubjs(subjs.filter((item) => (item.id !== data.data.id)));
     });
