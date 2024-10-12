@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 
 export default function SubmissionHelp({type}) {
@@ -25,8 +26,8 @@ export default function SubmissionHelp({type}) {
 export function PublicationHelp() {
   return (
     <>
-      <p>A descriptive title is required for your submission. If your submission is associated with an article or manuscript, including that information can aid in connecting your data with that work, and some <a href="/stash/journals" target="_blank">integrated journals<span className="screen-reader-only"> (opens in new window)</span></a> cover the Dryad <a href="/stash/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
-      <p>The title, author list, and subjects can be imported from many published articles, or from submitted manuscripts for some integrated journals.</p>
+      <p>If your submission is associated with an article or manuscript, including that information can aid in connecting your data with that work, and some <a href="/stash/journals" target="_blank">integrated journals<span className="screen-reader-only"> (opens in new window)</span></a> cover the Dryad <a href="/stash/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
+      <p>A descriptive title is required for your submission. The title, author list, and subjects can be imported from many published articles, or from submitted manuscripts for some integrated journals.</p>
     </>
   );
 }
@@ -112,7 +113,21 @@ export function ReadMeHelp() {
 
 export function WorksHelp({setTitleStep}) {
   return (
-    <p>The primary publication associated with your submission can be entered on the <span role="button" tabIndex="0" className="o-link__primary" onClick={setTitleStep}>Title/Import screen</span>.</p>
+    <p>
+      The primary publication associated with your submission can be entered on the{' '}
+      <span
+        role="button"
+        tabIndex="0"
+        className="o-link__primary"
+        onClick={setTitleStep}
+        onKeyDown={(e) => {
+          if (['Enter', 'Space'].includes(e.key)) {
+            setTitleStep();
+          }
+        }}
+      >Title/Import screen
+      </span>.
+    </p>
   );
 }
 
@@ -125,3 +140,4 @@ export function AgreeHelp() {
     </>
   );
 }
+/* eslint-enable max-len */

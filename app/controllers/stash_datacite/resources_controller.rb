@@ -46,6 +46,7 @@ module StashDatacite
     end
 
     def submission
+      @resource.cleanup_blank_models!
       @resource.current_state = 'processing'
       @resource.identifier.record_payment
       @resource.check_add_readme_file

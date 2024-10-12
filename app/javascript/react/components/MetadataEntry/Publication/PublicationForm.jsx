@@ -64,7 +64,6 @@ function PublicationForm({resource, setResource, importType}) {
       submitVals,
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     ).then((data) => {
-      console.log(data);
       if (data.status !== 200) {
         console.log('Response failure from publication information save/import');
       }

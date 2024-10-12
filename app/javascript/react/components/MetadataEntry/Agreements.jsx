@@ -131,16 +131,14 @@ export default function Agreements({
               <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
             </p>
           ) : (
-            <div className="callout err">
-              <p style={{fontStyle: 'italic'}}>Terms not yet accepted</p>
-            </div>
+            <p style={{fontStyle: 'italic'}}><i className="fas fa-square" aria-hidden="true" />{' '} Terms not yet accepted</p>
           )}
         </div>
       ) : (
         <>
           <p className="radio_choice">
             <label>
-              <input required type="checkbox" defaultChecked={agree} onChange={toggleTerms} />
+              <input type="checkbox" defaultChecked={agree} onChange={toggleTerms} required disabled={resource.identifier.process_date.processing} />
               I agree to Dryad&apos;s {dpc.user_must_pay ? 'payment terms and ' : ''}
               <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
             </label>

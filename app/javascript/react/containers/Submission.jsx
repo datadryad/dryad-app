@@ -23,7 +23,7 @@ export default function Submission({
   const [resource, setResource] = useState(JSON.parse(submission));
   const [step, setStep] = useState({name: 'Start'});
   const [open, setOpen] = useState(false);
-  const [review, setReview] = useState(!!resource.identifier.process_date.submitted || !!resource.accepted_agreement);
+  const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const steps = [
@@ -124,10 +124,16 @@ export default function Submission({
   useEffect(() => {
     if (!review) {
       if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
-        const stop = steps.findLastIndex((c) => c.pass) + 1 > steps.length - 1;
-        setStep(steps.find((c) => c.fail) || stop ? steps.findLast((c) => c.pass) : steps[steps.findLastIndex((c) => c.pass) + 1]);
+        if (steps.find((c) => c.fail)) {
+          setStep(steps.find((c) => c.fail));
+        } else {
+          const stop = (steps.findLastIndex((c) => c.pass) + 1) > (steps.length - 1);
+          setStep(stop ? steps.findLast((c) => c.pass) : steps[steps.findLastIndex((c) => c.pass) + 1]);
+        }
         setOpen('start');
       }
+    } else if (resource.identifier.publication_date) {
+      document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
     }
     if (subRef.current) {
       const observer = new MutationObserver(() => {
@@ -186,7 +192,7 @@ export default function Submission({
                     <div className="saving_text" hidden>Saving&hellip;</div>
                     <div className="saved_text" hidden>All progress saved</div>
                   </div>
-                  <div>
+                  <div id="submission-help-text">
                     {step.help}
                   </div>
                 </div>
@@ -212,9 +218,7 @@ export default function Submission({
         </div>
         <div id="submission-submit">
           {steps.some((s) => s.fail) ? (
-            <div className="callout err">
-              <p>Fix the errors above in order to complete your submission</p>
-            </div>
+            <p>Edit sections and fix the errors above in order to complete your submission</p>
           ) : (
             <p>Ready to complete your submission?</p>
           )}

@@ -155,7 +155,7 @@
         }
         @media (min-width: 811px) and (max-width: 1219px){
           li {
-            width: 180px;
+            width: 185px;
           }
         }
         @media (min-width: 1220px){
@@ -166,7 +166,7 @@
         }        
       }
 
-      .checklist-link:after {
+      .checklist-link:not([disabled]):after {
         font-family: 'Font Awesome 6 Free';
         content: '\f303';
         font-weight: 900;
@@ -175,6 +175,10 @@
         font-size: .65em;
         color: $medium-blue;
         vertical-align: 2px;
+      }
+
+      .checklist-link[disabled] {
+        color: black;
       }
 
       #submission-wizard {

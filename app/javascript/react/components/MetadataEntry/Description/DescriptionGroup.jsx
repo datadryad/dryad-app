@@ -33,7 +33,6 @@ export default function DescriptionGroup({
   }, []);
 
   useEffect(() => {
-    console.log(res.cedar_json);
     setResource(res);
     const abst = res.descriptions.find((d) => d.description_type === 'abstract')?.description;
     const {title, resource_publication, subjects} = res;

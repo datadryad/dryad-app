@@ -40,7 +40,6 @@ function ResearchDomain({resource, setResource}) {
               // console.log('Response failure not a 200 response');
             }
             showSavedMsg();
-            console.log(data.data);
             setResource((r) => ({
               ...r,
               subjects: [
