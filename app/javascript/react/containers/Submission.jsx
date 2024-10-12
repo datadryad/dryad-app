@@ -154,7 +154,7 @@ export default function Submission({
         <>
           <h1>{upCase(resource.resource_type.resource_type)} submission preview editor</h1>
           <div className="submission-edit">
-            <div id="submission-nav" className="open">
+            <nav id="submission-nav" className="open" aria-label="Back">
               <div style={{textAlign: 'right', fontSize: '1.3rem'}}>
                 <button type="button" className="checklist-link" onClick={() => setStep({name: 'Start'})}>
                   <span className="checklist-icon">
@@ -162,7 +162,7 @@ export default function Submission({
                   </span>Back to preview
                 </button>
               </div>
-            </div>
+            </nav>
             <div id="submission-wizard" className="open">
               <div>
                 <div ref={subRef}>
@@ -199,7 +199,9 @@ export default function Submission({
     return (
       <>
         <h1>{upCase(resource.resource_type.resource_type)} submission preview</h1>
-        <Checklist steps={steps} step={{}} setStep={setStep} open />
+        <nav aria-label="Submission editng" style={{display: 'contents'}}>
+          <Checklist steps={steps} step={{}} setStep={setStep} open />
+        </nav>
         <div id="submission-wizard">
           {steps.map((s) => (
             <section key={s.name} aria-label={s.name}>

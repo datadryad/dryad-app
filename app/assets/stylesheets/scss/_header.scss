@@ -78,7 +78,7 @@
 }
 
 .c-header__nav-group {
-  list-style-type: none;
+  list-style: "";
   margin: 0;
   padding: 0;
   display: flex;
@@ -214,7 +214,7 @@
   }
 
   .c-header__nav-submenu {
-    list-style-type: none;
+    list-style: "";
     margin: 0;
     padding: 0;
 

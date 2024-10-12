@@ -7,7 +7,7 @@ table.c-table_institutions td {
   vertical-align: top;
 }
 
-table.c-table_institutions ul li {
-  list-style-type: none;
-  line-height: 1.7ex;
+table.c-table_institutions ul {
+  list-style: "";
+  li { line-height: 1.7ex; }
 }

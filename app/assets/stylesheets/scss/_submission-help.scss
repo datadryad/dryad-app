@@ -23,7 +23,10 @@
   }
 
   ol {
-    list-style-type: none;
+    ::marker {
+      font-size: 1px;
+      color: white;
+    }
     margin: 0;
     padding: 0;
     gap: 4px;

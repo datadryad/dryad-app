@@ -298,7 +298,7 @@
   ul {
     font-size: .98rem;
     display: inline;
-    list-style-type: none;
+    list-style: "";
     margin: 0;
     padding: 0;
     line-height: 2;
@@ -322,7 +322,7 @@
 #show_funding {
   ul.o-list {
     font-size: .98rem;
-    list-style-type: none;
+    list-style: "";
     line-height: 1.75;
     margin: 0;
 
@@ -352,7 +352,7 @@
   }
   ul {
     font-size: .98rem;
-    list-style-type: none;
+    list-style: "";
     margin: 0;
     padding: 0;
 
