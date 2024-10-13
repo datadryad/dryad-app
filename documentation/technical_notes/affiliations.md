@@ -23,12 +23,12 @@ When an affiliation name is not recognized by the system, it is stored without a
 
 Search for affiliations that are candidates to fix, in the database:
 ```ruby
-StashDatacite::Affiliation.where(ror_id: nil).select(:long_name).distinct
+StashDatacite::Affiliation.where(ror_id: [nil, '']).select(:long_name).distinct
 ```
 
 Determine whether there is a corresponding ROR entry in our database.
 
-IF there is a corresponding ROR, update the associated authors to use the correct affiliations and destroy the unmatched ones, using a process like:
+If there is a corresponding ROR, update the associated authors to use the correct affiliations and destroy the unmatched ones, using a process like:
 
 ```ruby
 #see if there is a correct affiliation

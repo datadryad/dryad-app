@@ -69,10 +69,10 @@ module StashDatacite
       if partial_term.blank?
         render json: nil
       else
-        @affiliations = StashEngine::RorOrg.distinct.joins(
+        @contributors = StashEngine::RorOrg.distinct.joins(
           "inner join dcs_contributors on identifier_type = 'ror' and contributor_type = 'funder' and name_identifier_id = ror_id"
         ).find_by_ror_name(partial_term)
-        render json: @affiliations
+        render json: @contributors
       end
     end
 
