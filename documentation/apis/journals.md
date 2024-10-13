@@ -90,53 +90,54 @@ The `show_in_autocomplete` can be adjusted to false when adding a misspelling or
 other journal name that should not be listed for public selection.
 
 
-Cleaning journal names
-=======================
+Cleaning journals
+=================
 
-When a journal name is not recognized by the system, the title is stored with an
-asterisk appended. Periodically, new journals should be added to the system, and
+When a journal name is not recognized by the system, it is stored in the resource's `resource publication.publication_name` without an accompanying `publication_issn`. ISSNs may also be added to this table by curators, without an accompanying entry in the `journal_issns`. Periodically, new journals should be added to the system, and
 old datasets should be updated to link them to the new journals.
 
-Process all journal titles in the system, converting any with an asterisk to
-the corresponding journal that has the same name:
+Look at all unmatched publication_names in the system, adding a publication_issn if one exists in the table.
+
+```ruby
+StashEngine::Resource.joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).where.not(resource_publication: {publication_name: [nil, '']}).pluck('resource_publication.publication_name').uniq
+```
+
+For each title that is not a clear data error (like gibberish, or an ISSN entered in the title field), determine whether there is a corresponding journal in our database.
+
+If there's a corresponding journal, check the ISSNs:
+
+```ruby
+j = StashEngine.find_by_title(<title>)
+StashEngine::ResourcePublication.where(publication_name: <title>).where.not(publication_issn: j.issn_array).first
+``` 
+
+If the ISSN listed is correct for the journal, add it to our database:
+
+```ruby
+StashEngine::JournalIssn.create(id: <issn>, journal: j)
+```
+
+If there's a corresponding journal under a different title, add the title as an
+alternate_title to the journal.
+
+```ruby
+StashEngine::JournalTitle.create(title: 'Some new title', journal_id: <the journal id>, show_in_autocomplete: false)
+```
+
+If there is no corresponding journal, you can create an entry for a new journal in the system. You must also create entries for each of the journal's ISSNs.
+```ruby
+j = StashEngine::Journal.create(title: <journal title>)
+StashEngine::JournalIssn.create(id: <issn>, journal: j)
+```
+
+To automatically replace or match publication_names with the journals you've created, throughout the system, you can run the following task. This will only update publications without ISSNs listed.
+
+`rails journals:match_titles_to_issns`
+
+Previously, journals that were unmatched were recorded with asterisks in their name. Some of these still exist in the database. They can also be automatically checked against added journal names, and updated with:
+
 `rails journals:clean_titles_with_asterisks`
 
-Search for journals that are candidates to fix, in the database:
-```sql
-SELECT value, COUNT(value)
-FROM stash_engine_internal_data
-WHERE value like '%*%'
-GROUP BY value
-ORDER BY COUNT(value);
-```
-
-You can delete titles that are obviously junk or placeholders (e.g., "to be determined").
-
-For each title, determine whether there is a corresponding journal in our
-database.
-
-IF there is no corresponding journal, create an entry for a new journal in the
-system, using a command like the the one below. Edit any
-of the relevant fields, but the most critical are `title` and `issn`. Note that `issn` may contain
-either a single ISSN or an array of them. 
-```ruby
-j = StashEngine::Journal.create(title: '', issn: '',
-                                notify_contacts: ["automated-messages@datadryad.org"], allow_review_workflow: true,
-								allow_embargo: false, allow_blackout: false, sponsor_id: nil)
-```
-
-IF a new journal does not need to be created, add the new title as an
-alternate_title to the journal.
-```
-StashEngine::JournalTitle.create(title: 'Some new title', journal: j, show_in_autocomplete: false)
-```
-
-Finally, replace the title throughout the system:
-```ruby
-old_name = 'The Greatest Journal*'
-new_id = 123
-StashEngine::Journal.replace_uncontrolled_journal(old_name: old_name, new_id: new_id)
-```
 
 Updating journals for payment plans and integrations
 ====================================================
