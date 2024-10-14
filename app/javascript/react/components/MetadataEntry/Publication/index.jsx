@@ -105,11 +105,11 @@ export function PubPreview({resource, admin}) {
     <>
       <h2 className="o-heading__level1">{resource.title}</h2>
       {publication_name && (
-        <p>
-          <b>Journal:</b> {publication_name}
-          {manuscript_number && (<><b>Manuscript:</b> {manuscript_number}</>)}
+        <p style={{display: 'flex', columnGap: '2ch', rowGap: '1ch'}}>
+          <span><b>Journal:</b> {publication_name}</span>
+          {manuscript_number && (<span><b>Manuscript:</b> {manuscript_number}</span>)}
           {primary_article && (
-            <>
+            <span>
               <b>Primary article:</b>{' '}
               <a href={primary_article} target="_blank" rel="noreferrer">
                 <i className="fas fa-newspaper" aria-hidden="true" style={{marginRight: '.5ch'}} />{primary_article}
@@ -118,7 +118,7 @@ export function PubPreview({resource, admin}) {
               {admin && !primary.verified && (
                 <i className="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link" />
               )}
-            </>
+            </span>
           )}
         </p>
       )}

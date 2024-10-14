@@ -12,7 +12,12 @@ export function Checklist({
             aria-current={step.name === s.name ? 'step' : null}
             aria-describedby={(s.fail && 'step-error') || (s.pass && 'step-complete') || 'step-todo'}
           >
-            <button type="button" className="checklist-link" onClick={() => setStep(s)}>
+            <button
+              type="button"
+              className="checklist-link"
+              onClick={() => setStep(s)}
+              aria-controls="submission-step"
+            >
               <span className="checklist-icon">
                 <i className="fas fa-square" aria-hidden="true" />
                 <i className="far fa-square" aria-hidden="true" />

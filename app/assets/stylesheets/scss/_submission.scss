@@ -26,13 +26,6 @@
         text-align: center;
         font-size: 1.3rem;
       }
-      .submission-edit {
-        display: flex;
-        flex: 1;
-        @media (max-width: 600px) {
-          flex-direction: column;
-        }
-      }
     }
     div, section {
       box-sizing: border-box;
@@ -84,7 +77,11 @@
         }
       }
 
-      #submission-checklist, #submission-wizard {
+      nav:not(.screen-reader-only) {
+        display: contents;
+      }
+
+      #submission-checklist, #submission-preview {
         display: grid;
         grid-row: 2/span 10;
         grid-template-rows: subgrid;
@@ -181,7 +178,8 @@
         color: black;
       }
 
-      #submission-wizard {
+      #submission-preview {
+        padding-top: 2rem;
         section {
           display: block;
           padding: 0 2rem;
@@ -312,6 +310,24 @@
   }
   .fa-xmark {
     color: $red;
+  }
+}
+
+dialog#submission-step[open] {
+  position: relative;
+  border: 0;
+  padding: 0;
+  width: 100%;
+  flex: 1;
+  align-self: stretch;
+  display: flex;
+}
+
+.submission-edit {
+  display: flex;
+  flex: 1;
+  @media (max-width: 600px) {
+    flex-direction: column;
   }
 }
 
@@ -464,10 +480,6 @@
     margin-top: 0;
   }
 
-  .error-text {
-    color: $red;
-  }
-
   *[aria-invalid] {
     border: thin solid $orange;
   }
@@ -513,6 +525,10 @@
   button {
     white-space: nowrap;
   }
+}
+
+.error-text {
+  color: $red;
 }
 
 .radio_choice {

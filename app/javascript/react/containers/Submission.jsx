@@ -15,6 +15,7 @@ import Agreements from '../components/MetadataEntry/Agreements';
 import SubmissionHelp, {
   PublicationHelp, AuthHelp, SuppHelp, SubjHelp, DescHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
+/* eslint-disable jsx-a11y/no-autofocus */
 
 export default function Submission({
   submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar, change_tenant,
@@ -155,88 +156,96 @@ export default function Submission({
   }, []);
 
   if (review) {
-    if (step.name !== 'Start') {
-      return (
-        <>
-          <h1>{upCase(resource.resource_type.resource_type)} submission preview editor</h1>
-          <div className="submission-edit">
-            <nav id="submission-nav" className="open" aria-label="Back">
-              <div style={{textAlign: 'right', fontSize: '1.3rem'}}>
-                <button type="button" className="checklist-link" onClick={() => setStep({name: 'Start'})}>
-                  <span className="checklist-icon">
-                    <i className="fas fa-chevron-left" aria-hidden="true" />
-                  </span>Back to preview
+    return (
+      <>
+        <h1>{upCase(resource.resource_type.resource_type)} submission preview{step.name !== 'Start' ? ' editor' : ''}</h1>
+        <nav aria-label="Submission editing" className={step.name !== 'Start' ? 'screen-reader-only' : null}>
+          <Checklist steps={steps} step={{}} setStep={setStep} open />
+        </nav>
+        {step.name === 'Start' && (
+          <>
+            <div id="submission-preview">
+              {steps.map((s) => (
+                <section key={s.name} aria-label={s.name}>
+                  {s.preview}
+                  {s.fail}
+                </section>
+              ))}
+            </div>
+            <div id="submission-submit">
+              {steps.some((s) => s.fail) ? (
+                <p>Edit sections and fix the errors above in order to complete your submission</p>
+              ) : (
+                <p>Ready to complete your submission?</p>
+              )}
+              <form action="/stash_datacite/resources/submission" method="post">
+                {!steps.some((s) => s.fail) && (
+                  <>
+                    <input type="hidden" name="authenticity_token" value={authenticity_token} />
+                    <input type="hidden" name="resource_id" value={resource.id} />
+                    <input type="hidden" name="software_license" value={resource.identifier?.software_license?.identifier || 'MIT'} />
+                  </>
+                )}
+                <button type="submit" className="o-button__plain-text1" disabled={steps.some((s) => s.fail)}>
+                  Submit for {resource.hold_for_peer_review ? 'peer review' : 'curation and publication'}
                 </button>
-              </div>
-            </nav>
-            <div id="submission-wizard" className="open">
-              <div>
-                <div ref={subRef}>
-                  {step.component}
-                  {step.name === 'Start' && (
-                    <p>Complete the checklist, and submit your data for publication.</p>
-                  )}
-                  {!['Start', 'README'].includes(step.name) && (
-                    steps.find((s) => s.name === step.name).fail
-                  )}
+              </form>
+            </div>
+          </>
+        )}
+        <dialog id="submission-step" open={step.name !== 'Start' || null}>
+          {step.name !== 'Start' && (
+            <div className="submission-edit">
+              <nav id="submission-nav" className="open" aria-label="Back">
+                <div style={{textAlign: 'right', fontSize: '1.3rem'}}>
+                  <button
+                    type="button"
+                    className="checklist-link"
+                    autoFocus
+                    aria-controls="submission-step"
+                    aria-expanded="true"
+                    onClick={() => setStep({name: 'Start'})}
+                  >
+                    <span className="checklist-icon">
+                      <i className="fas fa-chevron-left" aria-hidden="true" />
+                    </span>Back to preview
+                  </button>
                 </div>
-                <div id="submission-help">
+              </nav>
+              <div id="submission-wizard" className="open">
+                <div ref={subRef}>
                   <div>
-                    <button
-                      type="button"
-                      className="o-button__plain-text2"
-                      onClick={() => setStep({name: 'Start'})}
-                    >
-                      Preview changes
-                    </button>
-                    <div role="status">
-                      <div className="saving_text" hidden>Saving&hellip;</div>
-                      <div className="saved_text" hidden>All progress saved</div>
-                    </div>
+                    {step.component}
+                    {step.name === 'Start' && (
+                      <p>Complete the checklist, and submit your data for publication.</p>
+                    )}
+                    {!['Start', 'README'].includes(step.name) && (
+                      steps.find((s) => s.name === step.name).fail
+                    )}
                   </div>
-                  <div id="submission-help-text">
-                    {step.help}
+                  <div id="submission-help">
+                    <div>
+                      <button
+                        type="button"
+                        className="o-button__plain-text2"
+                        onClick={() => setStep({name: 'Start'})}
+                      >
+                          Preview changes
+                      </button>
+                      <div role="status">
+                        <div className="saving_text" hidden>Saving&hellip;</div>
+                        <div className="saved_text" hidden>All progress saved</div>
+                      </div>
+                    </div>
+                    <div id="submission-help-text">
+                      {step.help}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      );
-    }
-    return (
-      <>
-        <h1>{upCase(resource.resource_type.resource_type)} submission preview</h1>
-        <nav aria-label="Submission editng" style={{display: 'contents'}}>
-          <Checklist steps={steps} step={{}} setStep={setStep} open />
-        </nav>
-        <div id="submission-wizard">
-          {steps.map((s) => (
-            <section key={s.name} aria-label={s.name}>
-              {s.preview}
-              {s.fail}
-            </section>
-          ))}
-        </div>
-        <div id="submission-submit">
-          {steps.some((s) => s.fail) ? (
-            <p>Edit sections and fix the errors above in order to complete your submission</p>
-          ) : (
-            <p>Ready to complete your submission?</p>
           )}
-          <form action="/stash_datacite/resources/submission" method="post">
-            {!steps.some((s) => s.fail) && (
-              <>
-                <input type="hidden" name="authenticity_token" value={authenticity_token} />
-                <input type="hidden" name="resource_id" value={resource.id} />
-                <input type="hidden" name="software_license" value={resource.identifier?.software_license?.identifier || 'MIT'} />
-              </>
-            )}
-            <button type="submit" className="o-button__plain-text1" disabled={steps.some((s) => s.fail)}>
-              Submit for {resource.hold_for_peer_review ? 'peer review' : 'curation and publication'}
-            </button>
-          </form>
-        </div>
+        </dialog>
       </>
     );
   }
@@ -245,7 +254,7 @@ export default function Submission({
     <div className="submission-edit">
       <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
       <div id="submission-wizard" className={(step.name === 'Start' && 'start') || (open && 'open') || ''}>
-        <div>
+        <div id="submission-step" role="region" aria-label={step.name} aria-live="polite">
           <div ref={subRef}>
             <div id="submission-header">
               <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
@@ -278,6 +287,7 @@ export default function Submission({
                 <button
                   type="button"
                   className="o-button__plain-text2"
+                  aria-controls="submission-step"
                   onClick={() => {
                     setStep(steps[steps.findIndex((l) => l.name === step.name) + 1]);
                     if (open === 'start') setOpen(false);
@@ -290,6 +300,7 @@ export default function Submission({
                 <button
                   type="button"
                   className="o-button__plain-text"
+                  aria-controls="submission-step"
                   onClick={() => {
                     setStep(steps[steps.findIndex((l) => l.name === step.name) - 1] || {name: 'Start'});
                     if (open === 'start') setOpen(false);
