@@ -97,7 +97,7 @@ This is primarily used for related primary articles. Look at unmatched primary a
 ### Unmatched primary articles
 
 ```ruby
-# primary articles with no matched journal, a relavant subset of all unmatched publications
+# primary articles with no matched journal, a relevant subset of all unmatched publications
 StashEngine::Resource.latest_per_dataset.joins('join dcs_related_identifiers r on r.resource_id = stash_engine_resources.id and r.work_type = 6 and r.related_identifier is not null').joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'r.related_identifier', 'stash_engine_resource_publications.publication_name', 'stash_engine_resource_publications.publication_issn')
 ```
 
