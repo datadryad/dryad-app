@@ -80,10 +80,7 @@ Each journal has a primary title, but may have multiple `alternate_titles`.
 
 To add an alternate title to a journal:
 ```ruby
-# Find the target journal and assign it to j
-
-# Then create the alternate title
-StashEngine::JournalTitle.create(title: 'Some new title', journal: j, show_in_autocomplete: true)
+StashEngine::JournalTitle.create(title: 'Some new title', journal_id: <the journal id>, show_in_autocomplete: false)
 ```
 
 The `show_in_autocomplete` can be adjusted to false when adding a misspelling or
@@ -93,50 +90,43 @@ other journal name that should not be listed for public selection.
 Cleaning journals
 =================
 
-When a journal name is not recognized by the system, it is stored in the resource's `resource publication.publication_name` without an accompanying `publication_issn`. ISSNs may also be added to this table by curators, without an accompanying entry in the `journal_issns`. Periodically, new journals should be added to the system, and
-old datasets should be updated to link them to the new journals.
+When a journal name is not recognized by the system, it is stored in the resource's `resource publication.publication_name` without an accompanying `publication_issn`. ISSNs may also be added to this table by curators, without an accompanying entry in the `journal_issns`. Periodically, new journals should be added to the system, and old datasets should be updated to link them to the new journals.
 
-Look at all unmatched publication_names in the system, adding a publication_issn if one exists in the table.
+This is primarily used for related primary articles. Look at unmatched primary articles in the system, adding a publication_issn if one exists.
+
+### Unmatched primary articles
 
 ```ruby
-StashEngine::Resource.joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).where.not(resource_publication: {publication_name: [nil, '']}).pluck('resource_publication.publication_name').uniq
+# primary articles with no matched journal, a relavant subset of all unmatched publications
+StashEngine::Resource.latest_per_dataset.joins('join dcs_related_identifiers r on r.resource_id = stash_engine_resources.id and r.work_type = 6 and r.related_identifier is not null').joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'r.related_identifier', 'stash_engine_resource_publications.publication_name', 'stash_engine_resource_publications.publication_issn')
 ```
 
-For each title that is not a clear data error (like gibberish, or an ISSN entered in the title field), determine whether there is a corresponding journal in our database.
+Add something like `.first(10)` to get smaller chunks to deal with. This returns an array of arrays of the following format:
 
-If there's a corresponding journal, check the ISSNs:
+`[<resource ID>, <dryad DOI>, <primary article DOI>, <unmatched publication_name (or nil)>, <unmatched publication_issn (or nil)>]`
+
+Visit the primary article DOI. Determine if it is from a journal already in our system, and add the journal information to the resource_publications table. You can also easily do this from the activity log UI for the dataset.
 
 ```ruby
-j = StashEngine.find_by_title(<title>)
-StashEngine::ResourcePublication.where(publication_name: <title>).where.not(publication_issn: j.issn_array).first
-``` 
+j = StashEngine::Journal #get your journal
+StashEngine::Resource.find(<id>).resource_publication.update(publication_name: j.title, publication_issn: j.single_issn)
+```
 
-If the ISSN listed is correct for the journal, add it to our database:
-
+If a journal ISSN is already listed as the publication_issn, and is correct for the journal, you should add the ISSN to the journal. You can also easily do this from the journal admin UI.
 ```ruby
 StashEngine::JournalIssn.create(id: <issn>, journal: j)
 ```
 
-If there's a corresponding journal under a different title, add the title as an
-alternate_title to the journal.
-
+If the journal name is already listed and is a reasonable variation for the journal, consider if it should be added as an alternate title:
 ```ruby
 StashEngine::JournalTitle.create(title: 'Some new title', journal_id: <the journal id>, show_in_autocomplete: false)
 ```
 
-If there is no corresponding journal, you can create an entry for a new journal in the system. You must also create entries for each of the journal's ISSNs.
+If there is no corresponding journal, you can create an entry for a new journal in the system. You must also create entries for each of the journal's ISSNs:
 ```ruby
 j = StashEngine::Journal.create(title: <journal title>)
 StashEngine::JournalIssn.create(id: <issn>, journal: j)
 ```
-
-To automatically replace or match publication_names with the journals you've created, throughout the system, you can run the following task. This will only update publications without ISSNs listed.
-
-`rails journals:match_titles_to_issns`
-
-Previously, journals that were unmatched were recorded with asterisks in their name. Some of these still exist in the database. They can also be automatically checked against added journal names, and updated with:
-
-`rails journals:clean_titles_with_asterisks`
 
 
 Updating journals for payment plans and integrations
