@@ -1,24 +1,18 @@
 import re
 import json
-from document_scanner import DocumentScanner
+import time
 import pandas as pd
-import magic
-
+import requests
+from document_scanner import DocumentScanner
 
 # event json has these params passed in: download_url, callback_url, file_mime_type, token
 def lambda_handler(event, context):
-  print(event)
   file_path = event["download_url"]
   ftype = event.get("file_mime_type", '')
 
   xml_doublecheck = ftype == 'text/plain' and event["download_url"].endswith('.xml')
   json_doublecheck = ftype == 'text/plain' and event["download_url"].endswith('.json')
   file_path = event["download_url"]
-  print(' ')
-  mime_type = magic.from_file(file_path, mime=True)
-  print(mime_type)
-  print(ftype)
-  print(' ')
 
 
   if ftype.endswith('/xml') or xml_doublecheck:
@@ -28,14 +22,21 @@ def lambda_handler(event, context):
   else:
     scanner = DocumentScanner(file_path)
 
-  print(scanner)
   response = scanner.scan()
-  print(response)
-  return response
+  response.process_data()
 
-#   update(token=event["token"], status=True, report=json.dumps({'report': report.to_dict()}), callback=event['callback_url'])
+  report_status = "noissues"
+  if not response.valid:
+    if response.has_errors():
+      print(f"Errors: {response.errors}")
+      report_status = "error"
+    else:
+      report_status = "issues"
 
-#   return report.to_dict()
+  update(token=event["token"], status=report_status, report=json.dumps({'report': response.__dict__}), callback=event['callback_url'])
+
+  json_report = json.dumps(response.__dict__)
+  return json_report
 
 # tries to upload it to our API
 def update(token, status, report, callback):
@@ -52,49 +53,48 @@ def update(token, status, report, callback):
 
 
 def print_response(response):
-  for pattern_name, pattern_occurrences in response.__dict__.items():
+  response = json.loads(response)
+  for pattern in response:
+    pattern_occurrences = response[pattern]
     if pattern_occurrences:
-      print(f"{pattern_name.capitalize()} found in the file:")
-      for line_number, matches in pattern_occurrences:
-        print(f"Line {line_number}: {matches}")
-
+      print(f"{pattern} issues")
+      for issue in pattern_occurrences:
+        print(f"Line {issue['line_number']}: {issue['matches']}")
 
 
 
 # Example usage:
-file_path = "/Users/alin/work/dryad-app/script/sensitive_data/example.txt"  # Path to the file
-event = {"download_url": file_path, "callback_url": "https://api.example.com/callback", "file_mime_type": "text/plain", "token": "my_secret_token"}
-
+file_path = "./example.txt"  # Path to the file
+event = {"download_url": file_path, "callback_url": "http://localhost:3000/api/v2/files/39/piiScanReport", "file_mime_type": "text/plain", "token": "_4qxQn4D0ROVKJ93geZro2dSq49Mn-7C5w_GDFvrxxs"}
+# print(file_path, event)
 response  = lambda_handler(event, context=None)
-print_response(response)
+# print_response(response)
 
 
-file_path = "/Users/alin/work/dryad-app/script/sensitive_data/example.csv"  # Path to the file
-event = {"download_url": file_path, "callback_url": "https://api.example.com/callback", "file_mime_type": "text/plain", "token": "my_secret_token"}
-
-response  = lambda_handler(event, context=None)
-print_response(response)
-
-
-
-file_path = "/Users/alin/work/dryad-app/script/sensitive_data/example.xlsx"  # Path to the file
-event = {"download_url": file_path, "callback_url": "https://api.example.com/callback", "file_mime_type": "text/plain", "token": "my_secret_token"}
-
-response  = lambda_handler(event, context=None)
-print_response(response)
-
-# scanner = Scanner(file_path)
-# response = scanner.scan()
+# file_path = "./example.csv"  # Path to the file
+# event = {"download_url": file_path, "callback_url": "https://api.example.com/callback", "file_mime_type": "text/plain", "token": "my_secret_token"}
 #
-# scanner.check_extension
+# response  = lambda_handler(event, context=None)
+# print_response(response)
+
+
+
+# file_path = "./example.xlsx"  # Path to the file
+# event = {"download_url": file_path, "callback_url": "https://api.example.com/callback", "file_mime_type": "text/plain", "token": "my_secret_token"}
 #
-# for pattern_name, pattern_occurrences in response.__dict__.items():
-#   if pattern_occurrences:
-#     print(f"{pattern_name.capitalize()} found in the file:")
-#     for line_number, matches in pattern_occurrences:
-#       print(f"Line {line_number}: {matches}")
-#
-# # print(f"SSNs: {response.ssns}")
-# print(f"Addresses: {response.addresses}")
-# # print(f"Emails: {response.emails}")
-# # print(f"URLs: {response.urls}")
+# response  = lambda_handler(event, context=None)
+# print_response(response)
+
+
+def check_extension(file_name):
+  _, file_extension = os.path.splitext(self.file_path)
+  file_extension = file_extension.lower()
+
+  if file_extension in ['.xls', '.xlsx']:
+    print(f"'{self.file_path}' is an Excel file.")
+  elif file_extension == '.csv':
+    print(f"'{self.file_path}' is a CSV file.")
+  elif file_extension in ['.txt', '.log']:
+    print(f"'{self.file_path}' is a text file.")
+  else:
+    print(f"'{self.file_path}' has an unrecognized file type.")

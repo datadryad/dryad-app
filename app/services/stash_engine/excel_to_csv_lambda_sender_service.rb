@@ -16,10 +16,10 @@ module StashEngine
       res = JSON.parse(super)
       JSON.generate(
         res.merge({
-          filename: data_file.upload_file_name,
-          doi: resource.identifier.to_s,
-          processor_obj: @pr.as_json
-        })
+                    filename: data_file.upload_file_name,
+                    doi: resource.identifier.to_s,
+                    processor_obj: @pr.as_json
+                  })
       )
     end
 

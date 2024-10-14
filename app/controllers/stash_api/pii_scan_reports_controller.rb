@@ -8,7 +8,7 @@ module StashApi
   class PiiScanReportsController < ExternalReportsController
     # GET
     def show
-      @api_report = StashApi::FrictionlessReport.new(file_obj: @stash_file, result_obj: @report)
+      @api_report = StashApi::PiiScanReport.new(file_obj: @stash_file, result_obj: @report)
       render json: @api_report.metadata
     end
 
@@ -16,9 +16,9 @@ module StashApi
     def update
       # only json for report and status will be updated, the rest is automatically updated
       report = @stash_file.pii_scan_report
-      report = StashEngine::FrictionlessReport.new(generic_file_id: @stash_file.id) if report.nil?
+      report = StashEngine::PiiScanReport.new(generic_file_id: @stash_file.id) if report.nil?
       report.update(report: params[:report], status: params[:status])
-      @api_report = StashApi::FrictionlessReport.new(file_obj: @stash_file, result_obj: report)
+      @api_report = StashApi::PiiScanReport.new(file_obj: @stash_file, result_obj: report)
       render json: @api_report.metadata
     end
 

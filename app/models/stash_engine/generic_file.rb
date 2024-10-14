@@ -147,6 +147,7 @@ module StashEngine
 
       # get rid of dependent report
       FrictionlessReport.where(generic_file_id: id).destroy_all
+      PiiScanReport.where(generic_file_id: id).destroy_all
 
       # destroy previous state for this filename
       self.class.where(resource_id: resource_id).where('lower(upload_file_name) = ?', upload_file_name.downcase).destroy_all
