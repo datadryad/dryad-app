@@ -1,6 +1,7 @@
 import re
 from response import Response
 import constants as const
+import requests
 
 class DocumentScanner:
   def __init__(self, file_path):
@@ -19,15 +20,22 @@ class DocumentScanner:
 
   def read_file(self):
     try:
-      with open(self.file_path, 'r') as file:
-        return file.read()
+      response = requests.get(self.file_path)
+
+      # Check if the request was successful
+      if response.status_code == 200:
+        # Decode the content to a string (assuming it's text)
+        return response.text
+      else:
+        print(f"Failed to retrieve the file. Status code: {response.status_code}")
+        return None
 
     except FileNotFoundError:
       self.response.errors.append(f"File not found: {self.file_path}")
     except Exception as e:
       self.response.errors.append(f"An error occurred: {e}")
 
-  def scan_for_pattern(self, pattern):
+  def scan_for_pattern(self, pattern, pattern_name):
     if self.file_contents is None:
       print("File content is empty.")
       return False
@@ -35,21 +43,22 @@ class DocumentScanner:
     line_number = 0
     occurrences = []
 
-    # Open the file and read line by line
-    with open(self.file_path, 'r') as file:
-      for line in file:
-        line_number += 1
-        # Search for for matches in the current line
-        matches = re.findall(pattern, line)
+    # Loop through each line in the file
+    for line in self.file_contents.splitlines():
+      line_number += 1
+      # Search for for matches in the current line
+      matches = re.findall(pattern, line)
 
-        if matches:
-          # Store the line number and matches for each occurrence
-          occurrences.append({"line_number": line_number, "matches": matches})
+      if matches:
+        # Store the line number and matches for each occurrence
+        occurrences.append({"line_number": line_number, "matches": matches, "pattern": pattern_name})
 
     return occurrences
 
   def scan(self):
     if not self.response.errors:
       for pattern_name, pattern in self.patterns().items():
-        self.response.__setattr__(pattern_name, self.scan_for_pattern(pattern))
+        issues = self.scan_for_pattern(pattern, pattern_name)
+        if issues:
+          self.response.issues.extend(issues)
     return self.response

@@ -203,7 +203,8 @@ module StashEngine
     end
 
     def set_checking_status
-      @report = FrictionlessReport.create(generic_file_id: id, status: 'checking')
+      @report = StashEngine::FrictionlessReport.create(generic_file_id: id, status: 'checking')
+      @report = StashEngine::PiiScanReport.create(generic_file_id: id, status: 'checking')
     end
 
     # triggers frictionless validation but results are async and may not appear in database until AWS Lambda completes
