@@ -101,7 +101,7 @@ This is primarily used for related primary articles. Look at unmatched primary a
 StashEngine::Resource.latest_per_dataset.joins('join dcs_related_identifiers r on r.resource_id = stash_engine_resources.id and r.work_type = 6 and r.related_identifier is not null').joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'r.related_identifier', 'stash_engine_resource_publications.publication_name', 'stash_engine_resource_publications.publication_issn')
 ```
 
-You can sort by the entered publication to see which are most often used and urgent to add: `.sort_by {|s| [s[3] ? 1 : 0, s[3]]}`Add something like `.first(20)` to get smaller chunks to deal with. This returns an array of arrays of the following format:
+You can sort by the entered publication to group them in order of title and see which are used more than once: `.sort_by {|s| [s[3] ? 1 : 0, s[3]]}`. This returns an array of arrays of the following format:
 
 `[<resource ID>, <dryad DOI>, <primary article DOI>, <unmatched publication_name (or nil)>, <unmatched publication_issn (or nil)>]`
 
@@ -122,6 +122,8 @@ If the journal name is present and is a reasonable variation for the journal, co
 StashEngine::JournalTitle.create(title: 'Some new title', journal_id: <the journal id>, show_in_autocomplete: false)
 ```
 
+**NOTE: ONLY add journals that have more than 1 deposit in Dryad.**
+
 If there is no corresponding journal, you can create an entry for a new journal in the system. You must also create entries for each of the journal's ISSNs:
 ```ruby
 j = StashEngine::Journal.create(title: <journal title>)
@@ -137,11 +139,13 @@ If all primary articles are processed, you can do a similar process for results 
 StashEngine::Resource.latest_per_dataset.joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).where.not(resource_publication: {manuscript_number: [nil, ''], publication_name: [nil, '']}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'resource_publication.manuscript_number', 'resource_publication.publication_name', 'resource_publication.publication_issn')
 ```
 
-Add something like `.first(10)` to get smaller chunks to deal with. This returns an array of arrays of the following format:
+You can sort by the entered publication to group them in order of title and see which are used more than once: `.sort_by {|s| [s[3] ? 1 : 0, s[3]]}`. This returns an array of arrays of the following format:
 
 `[<resource ID>, <dryad DOI>, <manuscript number>, <unmatched publication_name>, <unmatched publication_issn (or nil)>]`
 
 Ignore any results for which the manuscript number or publication name are gibberish, or otherwise wrong. If they seem real and relevant, you can check and add journals as above.
+
+**NOTE: ONLY add journals that have more than 1 deposit in Dryad.**
 
 
 Updating journals for payment plans and integrations
