@@ -101,11 +101,11 @@ This is primarily used for related primary articles. Look at unmatched primary a
 StashEngine::Resource.latest_per_dataset.joins('join dcs_related_identifiers r on r.resource_id = stash_engine_resources.id and r.work_type = 6 and r.related_identifier is not null').joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'r.related_identifier', 'stash_engine_resource_publications.publication_name', 'stash_engine_resource_publications.publication_issn')
 ```
 
-Add something like `.first(10)` to get smaller chunks to deal with. This returns an array of arrays of the following format:
+You can sort by the entered publication to see which are most often used and urgent to add: `.sort_by {|s| [s[3] ? 1 : 0, s[3]]}`Add something like `.first(20)` to get smaller chunks to deal with. This returns an array of arrays of the following format:
 
 `[<resource ID>, <dryad DOI>, <primary article DOI>, <unmatched publication_name (or nil)>, <unmatched publication_issn (or nil)>]`
 
-Visit the primary article DOI. Determine if it is from a journal already in our system, and add the journal information to the resource_publications table. You can also easily do this from the activity log UI for the dataset.
+Visit a primary article DOI. Determine if it is from a journal already in our system, and add the journal information to the resource_publications table. You can also easily do this from the activity log UI for each dataset.
 
 ```ruby
 j = StashEngine::Journal #get your journal
@@ -117,7 +117,7 @@ If a journal ISSN is already listed as the publication_issn, and is correct for 
 StashEngine::JournalIssn.create(id: <issn>, journal: j)
 ```
 
-If the journal name is already listed and is a reasonable variation for the journal, consider if it should be added as an alternate title:
+If the journal name is present and is a reasonable variation for the journal, consider if it should be added as an alternate title:
 ```ruby
 StashEngine::JournalTitle.create(title: 'Some new title', journal_id: <the journal id>, show_in_autocomplete: false)
 ```
