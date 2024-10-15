@@ -128,6 +128,21 @@ j = StashEngine::Journal.create(title: <journal title>)
 StashEngine::JournalIssn.create(id: <issn>, journal: j)
 ```
 
+### Unmatched manuscripts
+
+If all primary articles are processed, you can do a similar process for results where users have entered a publication_name and a manuscript_number but no ISSN was found.
+
+```ruby
+# manuscripts with no matched journal, a relevant subset of all unmatched publications
+StashEngine::Resource.latest_per_dataset.joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).where.not(resource_publication: {manuscript_number: [nil, ''], publication_name: [nil, '']}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'resource_publication.manuscript_number', 'resource_publication.publication_name', 'resource_publication.publication_issn')
+```
+
+Add something like `.first(10)` to get smaller chunks to deal with. This returns an array of arrays of the following format:
+
+`[<resource ID>, <dryad DOI>, <manuscript number>, <unmatched publication_name>, <unmatched publication_issn (or nil)>]`
+
+Ignore any results for which the manuscript number or publication name are gibberish, or otherwise wrong. If they seem real and relevant, you can check and add journals as above.
+
 
 Updating journals for payment plans and integrations
 ====================================================
