@@ -17,14 +17,12 @@
 #
 #  fk_rails_...  (generic_file_id => stash_engine_generic_files.id)
 #
-module StashEngine
-  class PiiScanReport < ApplicationRecord
-    self.table_name = 'stash_engine_pii_scan_reports'
-    belongs_to :generic_file, class_name: 'StashEngine::GenericFile'
+FactoryBot.define do
 
-    validates_presence_of :generic_file
-    validates_presence_of :status
+  factory :pii_scan_report, class: StashEngine::PiiScanReport do
+    generic_file
 
-    enum status: %w[issues noissues checking error].to_h { |i| [i.to_sym, i] }
+    report { Faker::Json.shallow_json }
+    status { %w[issues noissues checking error][rand(4)] }
   end
 end
