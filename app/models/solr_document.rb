@@ -1,6 +1,5 @@
 class SolrDocument
   include Blacklight::Solr::Document
-  include Geoblacklight::SolrDocument
 
   # self.unique_key = 'id'
   self.unique_key = 'uuid'

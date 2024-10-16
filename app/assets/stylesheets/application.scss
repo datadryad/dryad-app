@@ -25,7 +25,7 @@ body, body#yes-really {
 	padding: 10px;
 	font-family: 'KievitWeb', sans-serif;
 
-	/* Blacklight/geoblacklight resets */
+	/* Blacklight resets */
 	font-size: initial;
 	font-size: 1.1rem;
 
@@ -142,4 +142,4 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 @import 'scss/review';
 @import 'scss/search-results';
 @import 'scss/upload';
-@import 'scss/geoblacklight-icons';
+@import 'scss/blacklight-icons';
