@@ -9,8 +9,8 @@ export const keywordPass = (subjects) => {
   return false;
 };
 
-export const keywordFail = (subjects) => {
-  if (keywordPass(subjects)) {
+export const keywordFail = (subjects, review) => {
+  if (review || keywordPass(subjects)) {
     const keywords = subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme));
     const subject = subjects.find((s) => ['fos', 'bad_fos'].includes(s.subject_scheme));
     if (keywords.length < 3) {

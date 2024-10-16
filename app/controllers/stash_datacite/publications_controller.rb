@@ -85,10 +85,9 @@ module StashDatacite
       @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
       @resource.related_identifiers.where(work_type: 'primary_article').destroy_all if params[:primary_article_doi].blank?
       if @pub_issn.blank?
-        exact_matches = StashEngine::Journal.find_by(title: @pub_name)
+        exact_matches = StashEngine::Journal.find_by_title(title: @pub_name)
         @pub_issn = exact_matches.single_issn if exact_matches.present?
       end
-      fix_removable_asterisk
       begin
         publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
         publication.publication_name = @pub_name
@@ -247,18 +246,6 @@ module StashDatacite
     end
 
     private
-
-    # Check whether the journal name ends with an asterisk that can be removed, because the journal name
-    # exactly matches a name we have in the database
-    def fix_removable_asterisk
-      return unless @pub_name&.end_with?('*')
-
-      journal = StashEngine::Journal.find_by_title(@pub_name)
-      return unless journal.present?
-
-      @pub_issn = journal.single_issn
-      @pub_name = journal.title
-    end
 
     # Re-order a journal list to prioritize exact matches at the beginning of the string, then
     # exact matches within the string, otherwise leaving the order unchanged

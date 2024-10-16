@@ -68,8 +68,8 @@ function RelatedWorks({resource, setResource}) {
       axios.get('/stash_datacite/related_identifiers/types').then((data) => {
         const worktypes = data.data;
         if (resourceType === 'collection') {
-          const [zero, one] = workTypes;
-          workTypes[0] = one;
+          const [zero, one] = worktypes;
+          worktypes[0] = one;
           worktypes[1] = zero;
         }
         setWorkTypes(worktypes);

@@ -30,6 +30,7 @@ function UploadType(
           type="file"
           onClick={clickedFiles}
           onChange={changed}
+          aria-errormessage={`${type}_error`}
           multiple
         />
         <label htmlFor={type} aria-label={`upload ${type} files`} className="c-choose__input-file-label">{buttonFiles}</label>

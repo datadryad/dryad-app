@@ -40,7 +40,7 @@ const copyTitle = (e) => {
   });
 };
 
-export const publicationCheck = (resource) => {
+export const publicationCheck = (resource, review) => {
   if (resource.title) {
     if (nondescript(resource.title)) {
       return (
@@ -74,6 +74,8 @@ export const publicationCheck = (resource) => {
         </>
       );
     }
+  } else if (review) {
+    return <p className="error-text" id="title_error">Title is required</p>;
   }
   const {import_info} = resource.identifier;
   if (import_info !== 'other') {

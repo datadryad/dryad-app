@@ -31,7 +31,7 @@ export default function Submission({
     {
       name: 'Title/Import',
       pass: !!resource.title,
-      fail: publicationCheck(resource),
+      fail: publicationCheck(resource, review),
       component: <Publication resource={resource} setResource={setResource} />,
       help: <PublicationHelp />,
       preview: <PubPreview resource={resource} admin={admin} />,
@@ -39,7 +39,7 @@ export default function Submission({
     {
       name: 'Authors',
       pass: !!resource.title && resource.authors.length > 0,
-      fail: !!resource.title && authorCheck(resource.authors, ownerId),
+      fail: (review || !!resource.title) && authorCheck(resource.authors, ownerId),
       component: <Authors resource={resource} setResource={setResource} admin={admin} ownerId={ownerId} />,
       help: <AuthHelp />,
       preview: <AuthPreview resource={resource} admin={admin} />,
@@ -55,7 +55,7 @@ export default function Submission({
     {
       name: 'Subjects',
       pass: keywordPass(resource.subjects),
-      fail: keywordFail(resource.subjects),
+      fail: keywordFail(resource.subjects, review),
       component: <Subjects resource={resource} setResource={setResource} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} />,
@@ -63,7 +63,7 @@ export default function Submission({
     {
       name: 'Description',
       pass: resource.descriptions.some((d) => !!d.description),
-      fail: abstractCheck(resource),
+      fail: abstractCheck(resource, review),
       component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
       help: <DescHelp />,
       preview: <DescPreview resource={resource} />,
@@ -71,7 +71,7 @@ export default function Submission({
     {
       name: 'Files',
       pass: resource.generic_files.length > 0,
-      fail: ((review && resource.generic_files.length < 1) && <p className="error-text">Files are required</p>) || filesCheck(resource.generic_files),
+      fail: filesCheck(resource.generic_files, review),
       component: <UploadFiles
         resource={resource}
         setResource={setResource}
@@ -85,7 +85,7 @@ export default function Submission({
     {
       name: 'README',
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
-      fail: readmeCheck(resource),
+      fail: readmeCheck(resource, review),
       component: <ReadMeWizard
         dcsDescription={resource.descriptions.find((d) => d.description_type === 'technicalinfo')}
         resource={resource}
@@ -98,7 +98,7 @@ export default function Submission({
     {
       name: 'Related works',
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
-      fail: worksCheck(resource),
+      fail: worksCheck(resource, review),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps[steps.findIndex((l) => l.name === 'Title/Import')])} />,
       preview: <WorksPreview resource={resource} admin={admin} />,
@@ -113,6 +113,19 @@ export default function Submission({
     },
   ];
 
+  const markInvalid = () => {
+    const et = document.querySelector('.error-text');
+    if (et) {
+      const ind = et.dataset.index;
+      const inv = ind
+        ? document.querySelectorAll(`*[aria-errormessage="${et.id}"]`)[ind]
+        : document.querySelector(`*[aria-errormessage="${et.id}"]`);
+      if (inv) {
+        inv.setAttribute('aria-invalid', true);
+      }
+    }
+  };
+
   useEffect(() => {
     const main = document.getElementById('maincontent');
     if (review && step.name === 'Start') {
@@ -121,6 +134,18 @@ export default function Submission({
       main.classList.remove('submission-review');
     }
   }, [review, step]);
+
+  useEffect(() => {
+    if (subRef.current) {
+      markInvalid();
+      const observer = new MutationObserver(() => {
+        const old = document.querySelector('*[aria-invalid]');
+        if (old) old.removeAttribute('aria-invalid');
+        markInvalid();
+      });
+      observer.observe(subRef.current, {subtree: true, childList: true});
+    }
+  }, [subRef.current]);
 
   useEffect(() => {
     if (!review) {
@@ -135,23 +160,6 @@ export default function Submission({
       }
     } else if (resource.identifier.publication_date) {
       document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
-    }
-    if (subRef.current) {
-      const observer = new MutationObserver(() => {
-        const et = document.querySelector('.error-text');
-        const old = document.querySelector('*[aria-invalid]');
-        if (old) old.removeAttribute('aria-invalid');
-        if (et) {
-          const ind = et.dataset.index;
-          const inv = ind
-            ? document.querySelectorAll(`*[aria-errormessage="${et.id}"]`)[ind]
-            : document.querySelector(`*[aria-errormessage="${et.id}"]`);
-          if (inv) {
-            inv.setAttribute('aria-invalid', true);
-          }
-        }
-      });
-      observer.observe(subRef.current, {subtree: true, childList: true});
     }
   }, []);
 
@@ -278,6 +286,7 @@ export default function Submission({
                   disabled={!resource.accepted_agreement}
                   onClick={() => {
                     if (open === 'start') setOpen(false);
+                    setStep({name: 'Start'});
                     setReview(true);
                   }}
                 >

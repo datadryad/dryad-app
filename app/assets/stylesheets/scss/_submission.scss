@@ -630,4 +630,7 @@ dialog#submission-step[open] {
   &.warn {
     background-color: $lightest-orange;
   }
+  &.err {
+    background-color: $lightest-red;
+  }
 }

@@ -70,7 +70,10 @@ function RelatedWorkForm(
         }}
       >
         {(formik) => (
-          <Form className={`work-form${urlCheck(relatedIdentifier.related_identifier) && verifiedCheck(relatedIdentifier) ? '' : ' warn'}`}>
+          <Form
+            className={`work-form${(!urlCheck(relatedIdentifier.related_identifier) && ' err')
+              || (!verifiedCheck(relatedIdentifier) && ' warn') || ''}`}
+          >
             <Field name="id" type="hidden" />
             <div className="input-stack">
               <label className="input-label" htmlFor={`work_type__${relatedIdentifier.id}`}>
