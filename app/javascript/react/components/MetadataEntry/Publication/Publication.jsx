@@ -5,6 +5,7 @@ import PublicationForm from './PublicationForm';
 import Title from './Title';
 
 export default function Publication({resource, setResource}) {
+  const subType = resource.resource_type.resource_type;
   const [res, setRes] = useState(resource);
   const [importType, setImportType] = useState(resource.identifier.import_info);
   const [checks, setChecks] = useState({published: false, manuscript: false, showTitle: false});
@@ -58,14 +59,14 @@ export default function Publication({resource, setResource}) {
     <>
       <h2>Title/Import</h2>
       <fieldset onChange={setOption}>
-        <p><legend>Is your data used in a published article?</legend></p>
+        <p><legend>Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} in a published article?</legend></p>
         <p className="radio_choice">
           <label><input name="published" type="radio" value="yes" defaultChecked={checks.published === 'yes' ? 'checked' : null} />Yes</label>
           <label><input name="published" type="radio" value="no" required defaultChecked={checks.published === 'no' ? 'checked' : null} />No</label>
         </p>
       </fieldset>
       <fieldset id="manuscript" onChange={setOption} hidden={!checks.published || checks.published === 'yes'}>
-        <p><legend>Is your data used in a submitted manuscript?</legend></p>
+        <p><legend>Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} a submitted manuscript?</legend></p>
         <p className="radio_choice">
           <label><input name="manuscript" type="radio" value="yes" defaultChecked={checks.manuscript === 'yes' ? 'checked' : null} />Yes</label>
           <label><input name="manuscript" type="radio" value="no" required defaultChecked={checks.manuscript === 'no' ? 'checked' : null} />No</label>

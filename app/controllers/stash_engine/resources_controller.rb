@@ -177,6 +177,11 @@ module StashEngine
       render json: dpc_checks
     end
 
+    def display_collection
+      review = StashDatacite::Resource::Review.new(@resource)
+      render partial: 'stash_datacite/related_identifiers/collection', locals: { review: review, highlight_fields: [] }
+    end
+
     # Upload files view for resource
     def upload
       @file_model = StashEngine::DataFile

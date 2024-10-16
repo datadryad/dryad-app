@@ -1,12 +1,13 @@
 /* eslint-disable max-len */
 import React from 'react';
+import {upCase} from '../../lib/utils';
 
 export default function SubmissionHelp({type}) {
   return (
     <>
       <p>An average submission follows this process:</p>
       <div id="infographic">
-        <span id="user" className="user">Dataset authors</span>
+        <span id="user" className="user">{upCase(type)} authors</span>
         <span id="journal" className="journal">Journal publisher</span>
         <span id="curator" className="curator">Dryad curators</span>
         <ol>
@@ -41,10 +42,10 @@ export function AuthHelp() {
   );
 }
 
-export function SuppHelp() {
+export function SuppHelp({type}) {
   return (
     <>
-      <p>Adding the institutions that supported this data can aid in connections between your data and other systems and works.</p>
+      <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can aid in connections between your data and other systems and works.</p>
       <p>Your funder may cover the Dryad <a href="/stash/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
     </>
   );
@@ -56,9 +57,9 @@ export function SubjHelp() {
   );
 }
 
-export function DescHelp() {
+export function DescHelp({type}) {
   return (
-    <p>An abstract is required. You may also add a methods section to describe how your data was collected and processed.</p>
+    <p>An abstract is required.{type !== 'collection' && ' You may also add a methods section to describe how your data was collected and processed.'}</p>
   );
 }
 
@@ -131,11 +132,11 @@ export function WorksHelp({setTitleStep}) {
   );
 }
 
-export function AgreeHelp() {
+export function AgreeHelp({type}) {
   return (
     <>
       <p>After curation, <b>Dryad submissions are made publicly available unless otherwise specified</b>. If your submission needs to be kept private during the review of an associated manuscript, indicate that on this page.</p>
-      <p>Many <a href="/join_us#members">Dryad members</a> sponsor the cost of submission to Dryad. If you belong to a Dryad member institution, make sure that is reflected here.</p>
+      {type !== 'collection' && <p>Many <a href="/join_us#members">Dryad members</a> sponsor the cost of submission to Dryad. If you belong to a Dryad member institution, make sure that is reflected here.</p>}
       <p>You may continue to edit your submission from the submission preview.</p>
     </>
   );

@@ -149,6 +149,7 @@ Rails.application.routes.draw do
         get 'prepare_readme'
         get 'display_readme'
         get 'dpc_status'
+        get 'display_collection'
         get 'submission'
         get 'show_files'
         patch 'import_type'

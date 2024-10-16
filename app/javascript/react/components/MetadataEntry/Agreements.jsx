@@ -7,6 +7,7 @@ import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 export default function Agreements({
   resource, setResource, form, preview = false,
 }) {
+  const subType = resource.resource_type.resource_type;
   const formRef = useRef(null);
   const [dpc, setDPC] = useState({});
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
@@ -68,60 +69,71 @@ export default function Agreements({
       <h2>Agreements</h2>
       {preview ? (
         <>
-          <h3>Publication of your files</h3>
+          <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
           <div className="callout alt">
             {ppr ? (
-              <p>These files <b>will be available for public download</b> as soon as possible</p>
+              <p>
+                {subType === 'collection'
+                  ? 'This collection will be publically viewable '
+                  : <>These files <b>will be available for public download</b> </>}as soon as possible
+              </p>
             ) : (
-              <p>These files will be kept private while your manuscript is in peer review</p>
+              <p>
+                {subType === 'collection' ? 'This collection will be ' : 'These files will be '}kept private while your manuscript is in peer review
+              </p>
             )}
           </div>
         </>
       ) : (
         <fieldset onChange={togglePPR}>
-          <h3><legend>Publication of your files</legend></h3>
+          <h3><legend>Publication{subType === 'collection' ? '' : ' of your files'}</legend></h3>
           <p className="radio_choice">
             <label style={!ppr ? {fontWeight: 'bold'} : {}}>
               <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
-              My files should be available for public download as soon as possible
+              My {subType === 'collection' ? 'collection should be publically viewable ' : 'files should be available for public download '}
+              as soon as possible
             </label>
           </p>
           <p className="radio_choice">
             <label style={ppr ? {fontWeight: 'bold'} : {}}>
               <input type="radio" name="peer_review" value="1" defaultChecked={ppr} />
-              Keep my files private while my manuscript is in peer review
+              Keep my {subType === 'collection' ? 'collection' : 'files'} private while my manuscript is in peer review
             </label>
           </p>
         </fieldset>
       )}
-      <h3>Payment and terms</h3>
-      {dpc.journal_will_pay && (
-        <div className="callout">
-          <p>Payment for this submission is sponsored by <b>{resource.resource_publication.publication_name}</b></p>
-        </div>
-      )}
-      {!dpc.journal_will_pay && dpc.funder_will_pay && (
-        <div className="callout">
-          <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
-        </div>
-      )}
-      {!dpc.journal_will_pay && !dpc.funder_will_pay && dpc.institution_will_pay && (
-        <div className="callout">
-          <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
-        </div>
-      )}
-      {dpc.user_must_pay && (
+      {subType === 'collection' ? <h3>Terms</h3> : (
         <>
-          <p>
-            Dryad charges a fee for data publication that covers curation and preservation of published
-            datasets. Upon publication of your dataset, you will receive an invoice for ${dpc.dpc} USD.
-          </p>
-          {!!dpc.large_files && (
-            <p>
-              For data packages in excess of {dpc.large_file_size}, submitters will be charged $50 USD for
-              each additional 10GB, or part thereof. Submissions between 50 and 60GB = $50 USD, between 60
-              and 70GB = $100 USD, and so on.
-            </p>
+          <h3>Payment and terms</h3>
+          {dpc.journal_will_pay && (
+            <div className="callout">
+              <p>Payment for this submission is sponsored by <b>{resource.resource_publication.publication_name}</b></p>
+            </div>
+          )}
+          {!dpc.journal_will_pay && dpc.funder_will_pay && (
+            <div className="callout">
+              <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
+            </div>
+          )}
+          {!dpc.journal_will_pay && !dpc.funder_will_pay && dpc.institution_will_pay && (
+            <div className="callout">
+              <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
+            </div>
+          )}
+          {dpc.user_must_pay && (
+            <>
+              <p>
+                Dryad charges a fee for data publication that covers curation and preservation of published
+                datasets. Upon publication of your dataset, you will receive an invoice for ${dpc.dpc} USD.
+              </p>
+              {!!dpc.large_files && (
+                <p>
+                  For data packages in excess of {dpc.large_file_size}, submitters will be charged $50 USD for
+                  each additional 10GB, or part thereof. Submissions between 50 and 60GB = $50 USD, between 60
+                  and 70GB = $100 USD, and so on.
+                </p>
+              )}
+            </>
           )}
         </>
       )}
@@ -142,11 +154,11 @@ export default function Agreements({
           <p className="radio_choice">
             <label>
               <input type="checkbox" defaultChecked={agree} onChange={toggleTerms} required disabled={resource.identifier.process_date.processing} />
-              I agree to Dryad&apos;s {dpc.user_must_pay ? 'payment terms and ' : ''}
+              I agree to Dryad&apos;s {subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}
               <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
             </label>
           </p>
-          {(!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay) && (
+          {(subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay)) && (
             <>
               {dpc.user_must_pay && (
                 <>

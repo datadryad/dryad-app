@@ -1,22 +1,26 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useRef, useEffect} from 'react';
+import axios from 'axios';
 import {sentenceCase} from 'change-case';
 import {upCase, ordinalNumber} from '../../../../lib/utils';
 import {urlCheck} from './RelatedWorksErrors';
 
 export {default} from './RelatedWorks';
 
-export const worksCheck = (resource) => {
+export const worksCheck = (resource, review) => {
   if (resource.resource_type.resource_type === 'collection') {
     const collection = resource.related_identifiers.filter((ri) => ri.relation_type === 'haspart');
-    if (collection.length === 0) {
-      return (
-        <p className="error-text" id="works_error">The related works in the collection are required</p>
-      );
-    }
-    if (collection.length < 2) {
-      return (
-        <p className="error-text" id="works_error">More than one dataset must be included in a collection</p>
-      );
+    if (resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article')
+      || resource.accepted_agreement || review) {
+      if (collection.length === 0) {
+        return (
+          <p className="error-text" id="works_error">The related works in the collection are required</p>
+        );
+      }
+      if (collection.length < 2) {
+        return (
+          <p className="error-text" id="works_error">More than one dataset must be included in a collection</p>
+        );
+      }
     }
   } else {
     const urlError = resource.related_identifiers.findIndex((ri) => !urlCheck(ri.related_identifier));
@@ -36,9 +40,8 @@ const nameit = (name, arr) => {
   return `${sentenceCase(name)}${plural}`;
 };
 
-export function WorksPreview({resource, admin}) {
-  const ris = resource.related_identifiers.filter((ri) => ri.work_type !== 'primary_article' && !!ri.related_identifier);
-  const works = Object.groupBy(ris, ({work_type}) => work_type);
+function WorksList({identifiers, admin}) {
+  const works = Object.groupBy(identifiers, ({work_type}) => work_type);
   const icons = {
     article: 'far fa-newspaper',
     dataset: 'fas fa-table',
@@ -47,7 +50,7 @@ export function WorksPreview({resource, admin}) {
     supplemental_information: 'far fa-file-lines',
     data_management_plan: 'fas fa-list-check',
   };
-  if (ris.length > 0) {
+  if (identifiers.length > 0) {
     return (
       <>
         <h3 className="o-heading__level2" style={{marginBottom: '-1rem'}}>Related works</h3>
@@ -73,4 +76,35 @@ export function WorksPreview({resource, admin}) {
     );
   }
   return null;
+}
+
+export function WorksPreview({resource, admin}) {
+  const ris = resource.related_identifiers.filter((ri) => ri.work_type !== 'primary_article' && !!ri.related_identifier);
+  const colRef = useRef(null);
+
+  if (resource.resource_type.resource_type === 'collection') {
+    const other = ris.filter((r) => r.relation_type !== 'haspart');
+
+    const getCollection = () => {
+      axios.get(`/stash/resources/${resource.id}/display_collection`).then((data) => {
+        colRef.current.innerHTML = data.data;
+        colRef.current.querySelectorAll('a').forEach((l) => l.setAttribute('target', '_blank'));
+      });
+    };
+
+    useEffect(() => {
+      if (colRef.current) {
+        getCollection();
+      }
+    }, [resource, colRef]);
+
+    return (
+      <>
+        <h3 className="o-heading__level2">Collected datasets</h3>
+        <div ref={colRef} />
+        <WorksList identifiers={other} admin={admin} />
+      </>
+    );
+  }
+  return <WorksList identifiers={ris} admin={admin} />;
 }

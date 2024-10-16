@@ -49,7 +49,7 @@ export default function Submission({
       pass: resource.contributors.find((c) => c.contributor_type === 'funder'),
       fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support resource={resource} setResource={setResource} />,
-      help: <SuppHelp />,
+      help: <SuppHelp type={resource.resource_type.resource_type} />,
       preview: <SuppPreview resource={resource} admin={admin} />,
     },
     {
@@ -65,7 +65,7 @@ export default function Submission({
       pass: resource.descriptions.some((d) => !!d.description),
       fail: abstractCheck(resource, review),
       component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
-      help: <DescHelp />,
+      help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} />,
     },
     {
@@ -108,10 +108,14 @@ export default function Submission({
       pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
       component: <Agreements resource={resource} setResource={setResource} form={change_tenant} />,
-      help: <AgreeHelp />,
+      help: <AgreeHelp type={resource.resource_type.resource_type} />,
       preview: <Agreements resource={resource} preview />,
     },
   ];
+
+  if (resource.resource_type.resource_type === 'collection') {
+    steps.splice(5, 2);
+  }
 
   const markInvalid = () => {
     const et = document.querySelector('.error-text');

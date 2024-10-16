@@ -48,16 +48,20 @@ export default function DescriptionGroup({
     <>
       <h2>Description</h2>
       <Description dcsDescription={abstract} setResource={setRes} mceLabel={abstractLabel} admin={admin} />
-      {openMethods ? (
-        <Description dcsDescription={methods} setResource={setRes} mceLabel={methodsLabel} admin={admin} />
-      ) : (
-        <p><button type="button" className="o-button__plain-text1" onClick={() => setOpenMethods(true)}>+ Add methods section</button></p>
-      )}
-      {usage?.description && (
-        <Description dcsDescription={usage} setResource={setRes} mceLabel={usageLabel} admin={admin} />
-      )}
-      {showCedar && template && (
-        <Cedar resource={res} setResource={setRes} editorUrl={cedar.editorUrl} templates={cedar.templates} singleTemplate={template} />
+      {resource.resource_type.resource_type !== 'collection' && (
+        <>
+          {openMethods ? (
+            <Description dcsDescription={methods} setResource={setRes} mceLabel={methodsLabel} admin={admin} />
+          ) : (
+            <p><button type="button" className="o-button__plain-text1" onClick={() => setOpenMethods(true)}>+ Add methods section</button></p>
+          )}
+          {usage?.description && (
+            <Description dcsDescription={usage} setResource={setRes} mceLabel={usageLabel} admin={admin} />
+          )}
+          {showCedar && template && (
+            <Cedar resource={res} setResource={setRes} editorUrl={cedar.editorUrl} templates={cedar.templates} singleTemplate={template} />
+          )}
+        </>
       )}
     </>
   );
