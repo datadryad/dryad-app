@@ -39,10 +39,6 @@
     of American and Mineralogical Society of America.</p>
 </div>
 <div class="bio">
-  <img src="/images/holmes.jpg" alt="Headshot of Kristi Holmes">
-  <h5>Kristi Holmes (2022-2025)</h5><p> is the Director of Galter Health Sciences Library & Learning Center and Professor of Preventive Medicine (Health & Biomedical Informatics) at Northwestern University. Her research is focused on the development and application of information standards to support interoperability and data exchange to enhance discovery across basic science, clinical, and community-based research and ultimately, develop new methods for understanding translational impact. Operationalized workflows for the library and beyond have been developed, including a robust evaluation infrastructure for the campus in NUCATS. Holmes is especially enthusiastic about new roles and opportunities for modern biomedical research libraries in an increasingly informatics and data-driven environment.</p>  
-</div>
-<div class="bio">
   <img src="/images/madalli.jpg" alt="Headshot of Devika Madalli">
   <h5>Devika Madalli (2022-2025)</h5><p> is a Professor of the Documentation Research and Training Centre, Indian Statistical Institute (faculty since 1996), India and Adjunct faculty, DISI, University of Trento, Italy. Her interest lies in the area of OERs and Educational resources repositories, Open Data Repositories and Data Management, Knowledge Organization and application of facetization in Information Systems, Information Infrastructures, Digital Libraries, Semantic Web technologies, Faceted Ontologies, Content Management System, Agrisemantics, multilingual information services. She is a member of the Karnataka Evaluation Authority(KEA). Dr.Madalli has extensive experience in capacity building, training on e-learning, MOOCs (moodle) and digital repositories. Dr. Madalli is a member of the Technical Advisory Board of Research Data Alliance and Prof.Madalli is a founding member of and served as the co-chair of the Agriculture Data Interest Group [IGAD], Research Data Alliance [RDA][2013-2016] and present co-chair of the Global Research Commons and RDA for UNSDGs Interest groups.</p>  
 </div>
@@ -108,6 +104,6 @@
   We’d like to thank all the talented individuals who have dedicated their time and expertise to the Dryad board of directors for at least one term from 2012 to 2024:
 </p>
 
-Lynn Baird, Theo Bloom,\* Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson,\* Chuck Fox, Simon Hodson,\* Brian Hole, Marcel Holyoak,\* Wolfram Horstmann, Brian Lavoie,\* Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore,\* Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone,\* Eefke Smit,\* Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Günter Waibel, Mike Whitlock,\* and Todd Vision\* (Dryad’s founding PI and long-serving Board member).
+Lynn Baird, Theo Bloom,\* Emilio Bruna, Ingrid Dillo, Lee Dirks, Alf Eaton, Martin Fenner, Liz Ferguson,\* Chuck Fox, Simon Hodson,\* Brian Hole, Kristi Holmes, Marcel Holyoak,\* Wolfram Horstmann, Brian Lavoie,\* Jennifer Lin, Catriona MacCallum, Paolo Mangiafico, Bill Michener, Allen Moore,\* Fiona Murphy, Johan Nilsson, Naomi Penfold, Iratxe Puebla, Allen Rodrigo, Judy Ruttenberg, Susanna Assunta Sansone,\* Eefke Smit,\* Kevin Smith, Carly Strasser, Caroline Sutton, Carol Tenopir, Paul Uhlir, Günter Waibel, Mike Whitlock,\* and Todd Vision\* (Dryad’s founding PI and long-serving Board member).
 
 <p>* Founding Board members, 2012.</p>
