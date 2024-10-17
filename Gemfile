@@ -22,7 +22,7 @@ gem 'capistrano-rails', '~> 1.6.2'
 gem 'capistrano-yarn'
 gem 'ed25519', '1.3.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
-gem 'rubocop', '~> 1.64', require: false
+gem 'rubocop', '~> 1.67.0', require: false
 # Use Puma as the app server
 gem 'puma', '6.4.3', group: :puma, require: false
 
@@ -71,7 +71,7 @@ gem 'font-awesome-sass', '~> 6.1.0'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'grover'
 gem 'http', '~> 5.0.4'
-gem 'httparty', '~> 0.21.0'
+gem 'httparty', '~> 0.22.0'
 gem 'httpclient', '~> 2.8.3'
 gem 'jbuilder' # is this used?
 gem 'jquery-turbolinks', '~> 2.1.0'
@@ -97,7 +97,7 @@ gem 'recaptcha', '~> 5.14'
 gem 'redcarpet', '~> 3.6'
 gem 'responders', '~> 3.0.1' # do we use this?
 gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used
-gem 'restforce', '~> 5.2.4'
+gem 'restforce', '~> 7.5.0'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
 gem 'rsolr', '~> 2.5.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
@@ -114,6 +114,7 @@ gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
 gem 'base64'
 gem 'bigdecimal'
+gem 'faraday', '~> 2.11.0'
 gem 'mutex_m'
 
 # ############################################################
@@ -169,11 +170,11 @@ group :development, :v3_development, :local_dev, :local, :test do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
+  gem 'drb'
   gem 'listen'
   gem 'parallel_tests'
   gem 'pry'
   gem 'pry-rails'
-  gem 'pry-remote', require: 'pry-remote'
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
   gem 'letter_opener'
   gem 'letter_opener_web', '~> 3.0'

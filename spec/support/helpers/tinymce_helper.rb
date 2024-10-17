@@ -9,7 +9,6 @@ module TinymceHelper
     # this is tricky since it's an iframe and has custom controls that exist in js on the page but don't load immediately
     field = "editor_#{field}"
     content.gsub!('"', '\"')
-    # binding.remote_pry
 
     # https://github.com/tinymce/tinymce/issues/3782
     #
