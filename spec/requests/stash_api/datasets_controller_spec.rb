@@ -223,6 +223,26 @@ module StashApi
         expect(@resource.publication_date).to be_within(10.days).of(publish_date)
       end
 
+      context 'when submitted twice' do
+        it 'does not create duplicates' do
+          expect do
+            response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+            expect(response_code).to eq(201)
+
+            response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+            expect(response_code).to eq(422)
+          end.to change { StashEngine::Resource.count }.by(1)
+        end
+
+        it 'returns error' do
+          post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+          response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+          expect(response_code).to eq(422)
+          output = response_body_hash
+          expect(output).to eq({ 'error' => 'A dataset with same information already exists.' })
+        end
+      end
+
       context 'with triggerSubmitInvitation set to true' do
         before do
           @meta.add_trigger_invitation(true)
@@ -244,7 +264,7 @@ module StashApi
         end
       end
 
-      context 'with triggerSubmitInvitation set to true' do
+      context 'with triggerSubmitInvitation set to false' do
         before do
           @meta.add_trigger_invitation(false)
         end
