@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'pry-remote'
 
 RSpec.feature 'ReviewDataset', type: :feature do
 

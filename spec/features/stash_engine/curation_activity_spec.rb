@@ -1,5 +1,3 @@
-require 'pry-remote'
-
 RSpec.feature 'CurationActivity', type: :feature do
   include Mocks::Stripe
   include Mocks::RSolr
