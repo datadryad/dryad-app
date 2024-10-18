@@ -187,7 +187,7 @@ export default function Submission({
                 </section>
               ))}
             </div>
-            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} authenticityToken={authenticity_token} />
+            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} authenticityToken={authenticity_token} admin={admin} />
           </>
         )}
         <dialog id="submission-step" open={step.name !== 'Start' || null}>
