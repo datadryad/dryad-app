@@ -156,7 +156,8 @@ module StashEngine
 
     def display_readme
       review = StashDatacite::Resource::Review.new(@resource)
-      render partial: 'stash_datacite/descriptions/readme', locals: { review: review, highlight_fields: [] }
+      render partial: 'stash_datacite/descriptions/readme',
+             locals: { review: review, highlight_fields: params.key?(:admin) ? ['technical_info'] : [] }
     end
 
     def dpc_status

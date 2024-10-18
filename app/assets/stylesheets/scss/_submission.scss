@@ -188,13 +188,6 @@
           *:first-child {
             margin-top: 0;
           }
-          &:empty:after {
-            content: 'None';
-            display: block;
-            padding: .5rem 1ch;
-            font-style: italic;
-            background-color: $lightest-gray;
-          }
         }
         @media (min-width: 811px) and (max-width: 1219px){
           section {
@@ -632,5 +625,57 @@ dialog#submission-step[open] {
   }
   &.err {
     background-color: $lightest-red;
+  }
+}
+
+#submission-preview {
+  section:empty:before,
+  section:not(:has(*:not(del, ins, .del, .ins))):before {
+    content: 'None';
+    display: block;
+    padding: .5rem 1ch;
+    font-style: italic;
+    background-color: $lightest-gray;
+  }
+  ins {
+    text-decoration: none;
+  }
+
+  del, .del {
+    display: none;
+  }
+
+  &.track-changes {
+    ins, .ins, del {
+      padding: 4px 0 2px;
+    }
+    .ins {
+      background-color: lighten($lightest-orange, 5);
+    }
+    ins {
+      text-decoration: none;
+      background-color: lighten($lightest-orange, 5);
+    }
+    .del {
+      display: block;
+    }
+    del {
+      display: inline;
+      background-color: $lightest-red;
+      text-decoration: line-through;
+    }
+
+    .highlight-readme {
+      .del {
+        display: inline;
+        background-color: $lightest-red;
+      }
+      del p, ins p {
+        display: inline;
+      }
+      ins.ins-before::after {
+        content: ' ';
+      }
+    }
   }
 }

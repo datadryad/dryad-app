@@ -22,11 +22,14 @@ export const readmeCheck = (resource, review) => {
   return false;
 };
 
-export function ReadMePreview({resource}) {
+export function ReadMePreview({resource, previous, admin}) {
   const readmeRef = useRef(null);
+  const readme = resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
+  const prev = previous?.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
+  const diff = admin && previous && readme !== prev;
 
   const getREADME = () => {
-    axios.get(`/stash/resources/${resource.id}/display_readme`).then((data) => {
+    axios.get(`/stash/resources/${resource.id}/display_readme${diff ? '?admin' : ''}`).then((data) => {
       const active_readme = document.createRange().createContextualFragment(data.data);
       readmeRef.current.append(active_readme);
     });
@@ -38,10 +41,13 @@ export function ReadMePreview({resource}) {
     }
   }, [resource, readmeRef]);
 
-  if (resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description) {
+  if (readme || diff) {
     return (
-      <div ref={readmeRef} />
+      <div ref={readmeRef}>{diff && <ins />}</div>
     );
+  }
+  if (prev) {
+    return <del>README removed</del>;
   }
   return null;
 }

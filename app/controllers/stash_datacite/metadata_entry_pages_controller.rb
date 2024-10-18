@@ -9,13 +9,22 @@ module StashDatacite
       @metadata_entry.descriptions
 
       @submission = @resource.as_json(
-        include: [:tenant, :subjects, :descriptions, :resource_publication, :journal, :related_identifiers,
-                  :contributors, :resource_type, :previous_curated_resource,
-                  { authors: { include: [:affiliations] }, identifier: { include: [:process_date] } }]
+        include: [:tenant, :subjects, :descriptions, :resource_publication, :journal, :related_identifiers, :contributors, :resource_type,
+                  { authors: { include: [:affiliations] },
+                    identifier: { include: [:process_date] },
+                    previous_curated_resource: {
+                      include: [:tenant, :subjects, :descriptions, :resource_publication, :journal, :related_identifiers, :contributors,
+                                { authors: { include: [:affiliations] } }]
+                    } }]
       )
       @submission[:generic_files] = @resource.generic_files.validated_table.as_json(
         methods: :type, include: { frictionless_report: { only: %i[report status] } }
       )
+      if @resource.previous_curated_resource.present?
+        @submission['previous_curated_resource'][:generic_files] = @resource.previous_curated_resource.generic_files.validated_table.as_json(
+          methods: :type, include: { frictionless_report: { only: %i[report status] } }
+        )
+      end
       @submission = @submission.to_json
 
       @resource.update(updated_at: Time.current)

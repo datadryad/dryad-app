@@ -26,6 +26,7 @@ export default function Submission({
   const [open, setOpen] = useState(false);
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+  const previous = resource.previous_curated_resource;
 
   const steps = [
     {
@@ -34,7 +35,7 @@ export default function Submission({
       fail: publicationCheck(resource, review),
       component: <Publication resource={resource} setResource={setResource} />,
       help: <PublicationHelp />,
-      preview: <PubPreview resource={resource} admin={admin} />,
+      preview: <PubPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Authors',
@@ -42,7 +43,7 @@ export default function Submission({
       fail: (review || !!resource.title) && authorCheck(resource.authors, ownerId),
       component: <Authors resource={resource} setResource={setResource} admin={admin} ownerId={ownerId} />,
       help: <AuthHelp />,
-      preview: <AuthPreview resource={resource} admin={admin} />,
+      preview: <AuthPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Support',
@@ -50,7 +51,7 @@ export default function Submission({
       fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support resource={resource} setResource={setResource} />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
-      preview: <SuppPreview resource={resource} admin={admin} />,
+      preview: <SuppPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Subjects',
@@ -58,7 +59,7 @@ export default function Submission({
       fail: keywordFail(resource.subjects, review),
       component: <Subjects resource={resource} setResource={setResource} />,
       help: <SubjHelp />,
-      preview: <SubjPreview resource={resource} />,
+      preview: <SubjPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Description',
@@ -66,7 +67,7 @@ export default function Submission({
       fail: abstractCheck(resource, review),
       component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
-      preview: <DescPreview resource={resource} />,
+      preview: <DescPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Files',
@@ -80,7 +81,7 @@ export default function Submission({
         config_frictionless={config_frictionless}
       />,
       help: <FilesHelp />,
-      preview: <FilesPreview resource={resource} />,
+      preview: <FilesPreview resource={resource} previous={previous} />,
     },
     {
       name: 'README',
@@ -93,7 +94,7 @@ export default function Submission({
         // errors={readmeCheck(resource)}
       />,
       help: <ReadMeHelp />,
-      preview: <ReadMePreview resource={resource} />,
+      preview: <ReadMePreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Related works',
@@ -101,7 +102,7 @@ export default function Submission({
       fail: worksCheck(resource, review),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps[steps.findIndex((l) => l.name === 'Title/Import')])} />,
-      preview: <WorksPreview resource={resource} admin={admin} />,
+      preview: <WorksPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Agreements',
@@ -109,7 +110,7 @@ export default function Submission({
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
       component: <Agreements resource={resource} setResource={setResource} form={change_tenant} />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
-      preview: <Agreements resource={resource} preview />,
+      preview: <Agreements resource={resource} previous={previous} preview />,
     },
   ];
 
@@ -176,7 +177,7 @@ export default function Submission({
         </nav>
         {step.name === 'Start' && (
           <>
-            <div id="submission-preview">
+            <div id="submission-preview" className={admin ? 'track-changes' : null}>
               {steps.map((s) => (
                 <section key={s.name} aria-label={s.name}>
                   {s.preview}

@@ -27,13 +27,26 @@ export const keywordFail = (subjects, review) => {
   return false;
 };
 
-export function SubjPreview({resource}) {
+export function SubjPreview({resource, previous}) {
+  const prev = previous?.subjects.map((s) => s.subject).join(', ');
   if (resource.subjects && resource.subjects.length > 0) {
+    const str = resource.subjects.map((s) => s.subject).join(', ');
     return (
       <>
         <h3 className="o-heading__level2" style={{marginBottom: '-.5rem'}}>Subject keywords</h3>
-        <p>{resource.subjects.map((s) => s.subject).join(', ')}</p>
+        <p>
+          {previous && prev !== str ? <><ins>{str}</ins>{prev && <del>{prev}</del>}</> : str}
+        </p>
       </>
     );
   }
+  if (previous && previous.subjects && previous.subjects.length > 0) {
+    return (
+      <div className="del">
+        <h3 className="o-heading__level2" style={{marginBottom: '-.5rem'}}><del>Subject keywords</del></h3>
+        <p><del>{prev}</del></p>
+      </div>
+    );
+  }
+  return null;
 }

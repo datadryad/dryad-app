@@ -5,7 +5,7 @@ import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 // TBD: Add no-peer-review-allowed stuff!!
 
 export default function Agreements({
-  resource, setResource, form, preview = false,
+  resource, setResource, form, previous, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const formRef = useRef(null);
@@ -73,16 +73,17 @@ export default function Agreements({
           <div className="callout alt">
             {ppr ? (
               <p>
+                {subType === 'collection' ? 'This collection will be ' : 'These files will be '}kept private while your manuscript is in peer review
+              </p>
+            ) : (
+              <p>
                 {subType === 'collection'
                   ? 'This collection will be publically viewable '
                   : <>These files <b>will be available for public download</b> </>}as soon as possible
               </p>
-            ) : (
-              <p>
-                {subType === 'collection' ? 'This collection will be ' : 'These files will be '}kept private while your manuscript is in peer review
-              </p>
             )}
           </div>
+          {previous && ppr !== previous.hold_for_peer_review && <p className="del ins">PPR setting changed</p>}
         </>
       ) : (
         <fieldset onChange={togglePPR}>
@@ -116,9 +117,12 @@ export default function Agreements({
             </div>
           )}
           {!dpc.journal_will_pay && !dpc.funder_will_pay && dpc.institution_will_pay && (
-            <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
-            </div>
+            <>
+              <div className="callout">
+                <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
+              </div>
+              {previous && resource.tenant !== previous.tenant && <p className="del ins">Member institution changed</p>}
+            </>
           )}
           {dpc.user_must_pay && (
             <>
