@@ -36,7 +36,7 @@ export function formatSizeUnits(bytes) {
   const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   for (let i = 0; i < units.length; i += 1) {
     if (bytes / 10 ** (3 * (i + 1)) < 1) {
-      return `${(bytes / 10 ** (3 * i)).toFixed(2)} ${units[i]}`;
+      return `${parseFloat((bytes / 10 ** (3 * i)).toFixed(2))} ${units[i]}`;
     }
   }
   return true;

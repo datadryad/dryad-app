@@ -47,9 +47,6 @@ module StashEngine
       create
     end
 
-    # GET /resources/1/edit
-    def edit; end
-
     # POST /resources
     # POST /resources.json
     def create
@@ -113,14 +110,6 @@ module StashEngine
       end
     end
 
-    # Review responds as a get request to review the resource before saving
-    def review
-      resource.update(tenant_id: resource.user.tenant_id) unless resource.tenant_id == resource.user.tenant_id
-    end
-
-    # Submission of the resource to the repository
-    def submission; end
-
     # rubocop:disable Metrics/AbcSize
     def prepare_readme
       @file_list = @resource.data_files.reject { |f| f.upload_file_name == 'README.md' }.map do |f|
@@ -181,17 +170,25 @@ module StashEngine
       render partial: 'stash_datacite/related_identifiers/collection', locals: { review: review, highlight_fields: [] }
     end
 
-    # Upload files view for resource
-    def upload
-      @file_model = StashEngine::DataFile
-      @resource_assoc = :data_files
-      @readme_size = (resource.descriptions.type_technical_info.first&.description.present? &&
-              resource.descriptions.type_technical_info.first&.description&.bytesize) ||
-              resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size
-
-      @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
-      @file_note = resource.curation_activities.where(user_id: current_user.id).where("note like 'User described file changes:%'").first
-      @uploads = resource.latest_file_states
+    def dupe_check
+      dupes = nil
+      if @resource.title && @resource.title.length > 3
+        other_submissions = params.key?(:admin) ? StashEngine::Resources.all : @resource.user.resources
+        other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
+        primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
+        manuscript = @resource.resource_publication.manuscript_number
+        dupes = other_submissions.where(title: @resource.title).select(:id, :title).to_a
+        if primary_article.present?
+          dupes.concat(other_submissions.joins(:related_identifiers)
+              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article }).select(:id, :title).to_a)
+        end
+        if manuscript.present?
+          dupes.concat(
+            other_submissions.joins(:resource_publication).find_by(resource_publication: { manuscript_number: manuscript }).select(:id, :title).to_a
+          )
+        end
+      end
+      render json: dupes.uniq
     end
 
     # patch request

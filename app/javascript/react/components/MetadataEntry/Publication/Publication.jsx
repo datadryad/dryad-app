@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import {showSavedMsg, showSavingMsg, formatSizeUnits} from '../../../../lib/utils';
+import {maxSize} from '../../UploadFiles/maximums';
 import PublicationForm from './PublicationForm';
 import Title from './Title';
 
@@ -10,12 +11,13 @@ export default function Publication({resource, setResource}) {
   const [importType, setImportType] = useState(resource.identifier.import_info);
   const [checks, setChecks] = useState({published: false, manuscript: false, showTitle: false});
   const [sponsored, setSponsored] = useState(false);
+  const [dupeWarning, setDupeWarning] = useState(false);
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const optionChange = (choice) => {
     showSavingMsg();
     setImportType(choice);
     setResource((r) => ({...r, identifier: {...r.identifier, import_info: choice}}));
-    const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
     axios.patch(
       `/stash/resources/${resource.id}/import_type`,
       {authenticity_token, import_info: choice},
@@ -46,6 +48,13 @@ export default function Publication({resource, setResource}) {
       setChecks((s) => ({...s, showTitle: 'no'}));
     }
     setSponsored(!!res.journal?.payment_plan_type && (manuscript_number || primary_article) ? res.journal.title : false);
+    if (res.title && !resource.previous_curated_resource) {
+      axios.get(`/stash/resources/${resource.id}/dupe_check`).then((data) => {
+        setDupeWarning(data.data?.[0]?.title || false);
+      });
+    } else {
+      setDupeWarning(false);
+    }
   }, [res]);
 
   useEffect(() => {
@@ -79,7 +88,28 @@ export default function Publication({resource, setResource}) {
       )}
       {importType !== 'other' && <PublicationForm resource={res} setResource={setRes} setSponsored={setSponsored} importType={importType} />}
       {((checks.published === 'no' && checks.manuscript === 'no') || checks.showTitle === 'yes') && (
-        <Title resource={resource} setResource={setResource} />
+        <Title resource={res} setResource={setRes} />
+      )}
+      {dupeWarning && (
+        <div className="callout warn">
+          <p>
+            This is the same title or primary publication as your existing submission:
+            <b style={{display: 'block', marginTop: '.5ch'}}>{dupeWarning}</b>
+          </p>
+          <p>
+            <form action={`/stash/resources/${resource.id}`} method="post" style={{display: 'inline'}}>
+              <input type="hidden" name="_method" value="delete" />
+              <input type="hidden" name="authenticity_token" value={authenticity_token} />
+              <button type="submit" className="o-link__primary" style={{border: 0, padding: 0, background: 'transparent'}}>
+                Delete this new submission
+              </button>
+            </form> if you did not intend to create it.
+          </p>
+          <p>
+            Do you have more than {formatSizeUnits(maxSize)} of files and need to split a dataset into multiple submissions?
+            Please ensure the title of this submission distinguishes it, or marks it as part of a series.
+          </p>
+        </div>
       )}
     </>
   );

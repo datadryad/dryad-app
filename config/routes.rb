@@ -144,13 +144,11 @@ Rails.application.routes.draw do
 
     resources :resources do
       member do
-        get 'review'
-        get 'upload'
         get 'prepare_readme'
         get 'display_readme'
         get 'dpc_status'
+        get 'dupe_check'
         get 'display_collection'
-        get 'submission'
         get 'show_files'
         patch 'import_type'
       end
