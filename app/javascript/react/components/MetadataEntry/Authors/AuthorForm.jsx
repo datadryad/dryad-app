@@ -47,7 +47,7 @@ export default function AuthorForm({
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from author save');
       }
-      update((authors) => [data.data, ...authors.filter((a) => a.id !== values.id)].sort((a, b) => a.author_order - b.author_order));
+      update((authors) => authors.map((a) => (a.id === values.id ? data.data : a)));
       showSavedMsg();
     });
   };

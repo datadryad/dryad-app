@@ -44,7 +44,7 @@ function Keywords({resource, setResource}) {
   }
 
   useEffect(() => {
-    setResource((r) => ({...r, subjects: [...subjs, ...r.subjects.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme))]}));
+    setResource((r) => ({...r, subjects: [...r.subjects.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)), ...subjs]}));
   }, [subjs]);
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 
 export {default} from './Subjects';
 
@@ -28,23 +28,32 @@ export const keywordFail = (subjects, review) => {
 };
 
 export function SubjPreview({resource, previous}) {
-  const prev = previous?.subjects.map((s) => s.subject).join(', ');
   if (resource.subjects && resource.subjects.length > 0) {
-    const str = resource.subjects.map((s) => s.subject).join(', ');
     return (
       <>
         <h3 className="o-heading__level2" style={{marginBottom: '-.5rem'}}>Subject keywords</h3>
         <p>
-          {previous && prev !== str ? <><ins>{str}</ins>{prev && <del>{prev}</del>}</> : str}
+          {resource.subjects.map((s, i) => {
+            const prev = previous?.subjects?.[i]?.subject;
+            return (
+              <Fragment key={s.id}>
+                {previous && prev !== s.subject ? <ins>{s.subject}</ins> : s.subject}
+                {previous && prev !== s.subject && prev && <del>{prev}</del>}
+                {i === resource.subjects.length - 1 ? '' : ', '}
+              </Fragment>
+            );
+          })}
+          {previous && previous.subjects.length > resource.subjects.length
+            && previous.subjects.slice(resource.subjects.length).map((s) => <Fragment key={s.id}>, <del>{s.subject}</del></Fragment>)}
         </p>
       </>
     );
   }
-  if (previous && previous.subjects && previous.subjects.length > 0) {
+  if (previous && previous.subjects?.length) {
     return (
       <div className="del">
         <h3 className="o-heading__level2" style={{marginBottom: '-.5rem'}}><del>Subject keywords</del></h3>
-        <p><del>{prev}</del></p>
+        <p><del>{previous?.subjects.map((s) => s.subject).join(', ')}</del></p>
       </div>
     );
   }

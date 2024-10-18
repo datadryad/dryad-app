@@ -26,7 +26,7 @@ export default function AuthPreview({resource, previous, admin}) {
   return (
     <>
       <p className="o-metadata__author-list">
-        {authors.map((author, i) => {
+        {authors.sort((a, b) => a.author_order - b.author_order).map((author, i) => {
           const prev = prev_auth[i];
           return (
             <Fragment key={author.id}>

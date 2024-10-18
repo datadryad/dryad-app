@@ -6,8 +6,9 @@ export {default as AuthPreview} from './AuthPreview';
 
 export const authorCheck = (authors, id) => {
   if (!authors.find((a) => a.id === id)?.author_email) {
+    const ind = authors.findIndex((a) => a.id === id);
     return (
-      <p className="error-text" id="author_email_error">Submitting author email is required</p>
+      <p className="error-text" id="author_email_error" data-index={ind}>Submitting author email is required</p>
     );
   }
   const fnameErr = authors.findIndex((a) => !a.author_first_name);
@@ -26,7 +27,7 @@ export const authorCheck = (authors, id) => {
       </p>
     );
   }
-  const affErr = authors.findIndex((a) => !a.affiliations[0]?.long_name);
+  const affErr = authors.findIndex((a) => !a.affiliations?.[0]?.long_name);
   if (affErr >= 0) {
     return (
       <p className="error-text" id="author_aff_error" data-index={affErr}>{upCase(ordinalNumber(affErr + 1))} author affiliation is required</p>

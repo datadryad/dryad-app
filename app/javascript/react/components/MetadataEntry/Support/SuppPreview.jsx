@@ -25,7 +25,7 @@ export default function SuppPreview({resource, previous, admin}) {
         <>
           <h3>Funding</h3>
           <ul className="o-list">
-            {funders.map((funder, i) => {
+            {funders.sort((a, b) => a.funder_order - b.funder_order).map((funder, i) => {
               const prev = pFunders[i];
               return (
                 <li key={funder.id}>
