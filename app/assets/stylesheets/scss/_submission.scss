@@ -247,7 +247,16 @@
           grid-area: submit;
           grid-column: 1;
           margin-top: -.75rem;
-        }        
+          flex-wrap: wrap;
+          justify-content: center;
+          padding: 2rem 1rem;
+          *:first-child {
+            margin: 0;
+          }
+        }
+        form button {
+          white-space: nowrap;
+        }
       }
     }
   }

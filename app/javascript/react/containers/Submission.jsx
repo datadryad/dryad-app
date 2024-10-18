@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import {upCase} from '../../lib/utils';
 import ChecklistNav, {Checklist} from '../components/Checklist';
+import SubmissionForm from '../components/SubmissionForm';
 import Publication, {PubPreview, publicationCheck} from '../components/MetadataEntry/Publication';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
 import Support, {SuppPreview, fundingCheck} from '../components/MetadataEntry/Support';
@@ -20,13 +21,14 @@ import SubmissionHelp, {
 export default function Submission({
   submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar, change_tenant,
 }) {
-  const subRef = useRef();
+  const subRef = useRef(null);
+  const previewRef = useRef(null);
   const [resource, setResource] = useState(JSON.parse(submission));
   const [step, setStep] = useState({name: 'Start'});
   const [open, setOpen] = useState(false);
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
-  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const previous = resource.previous_curated_resource;
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const steps = [
     {
@@ -177,7 +179,7 @@ export default function Submission({
         </nav>
         {step.name === 'Start' && (
           <>
-            <div id="submission-preview" className={admin ? 'track-changes' : null}>
+            <div id="submission-preview" ref={previewRef} className={admin ? 'track-changes' : null}>
               {steps.map((s) => (
                 <section key={s.name} aria-label={s.name}>
                   {s.preview}
@@ -185,25 +187,7 @@ export default function Submission({
                 </section>
               ))}
             </div>
-            <div id="submission-submit">
-              {steps.some((s) => s.fail) ? (
-                <p>Edit sections and fix the errors above in order to complete your submission</p>
-              ) : (
-                <p>Ready to complete your submission?</p>
-              )}
-              <form action="/stash_datacite/resources/submission" method="post">
-                {!steps.some((s) => s.fail) && (
-                  <>
-                    <input type="hidden" name="authenticity_token" value={authenticity_token} />
-                    <input type="hidden" name="resource_id" value={resource.id} />
-                    <input type="hidden" name="software_license" value={resource.identifier?.software_license?.identifier || 'MIT'} />
-                  </>
-                )}
-                <button type="submit" className="o-button__plain-text1" disabled={steps.some((s) => s.fail)}>
-                  Submit for {resource.hold_for_peer_review ? 'peer review' : 'curation and publication'}
-                </button>
-              </form>
-            </div>
+            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} authenticityToken={authenticity_token} />
           </>
         )}
         <dialog id="submission-step" open={step.name !== 'Start' || null}>
@@ -229,12 +213,7 @@ export default function Submission({
                 <div ref={subRef}>
                   <div>
                     {step.component}
-                    {step.name === 'Start' && (
-                      <p>Complete the checklist, and submit your data for publication.</p>
-                    )}
-                    {!['Start', 'README'].includes(step.name) && (
-                      steps.find((s) => s.name === step.name).fail
-                    )}
+                    {steps.find((s) => s.name === step.name).fail}
                   </div>
                   <div id="submission-help">
                     <div>
@@ -243,7 +222,7 @@ export default function Submission({
                         className="o-button__plain-text2"
                         onClick={() => setStep({name: 'Start'})}
                       >
-                          Preview changes
+                        Preview changes
                       </button>
                       <div role="status">
                         <div className="saving_text" hidden>Saving&hellip;</div>
