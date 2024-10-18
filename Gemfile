@@ -99,7 +99,7 @@ gem 'responders', '~> 3.0.1' # do we use this?
 gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used
 gem 'restforce', '~> 7.5.0'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
-gem 'rsolr', '~> 2.5.0'
+gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'serrano', '~> 1.0' # this is a gem from datacite(?) and not sure it's actively used
 gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
@@ -114,7 +114,7 @@ gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
 gem 'base64'
 gem 'bigdecimal'
-gem 'faraday', '~> 2.11.0'
+gem 'faraday', '~> 1.10.4'
 gem 'mutex_m'
 
 # ############################################################
