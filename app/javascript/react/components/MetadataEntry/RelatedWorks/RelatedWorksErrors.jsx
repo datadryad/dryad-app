@@ -18,7 +18,7 @@ function RelatedWorksErrors(
     if (!urlCheck(relatedIdentifier.related_identifier)) {
       return (
         <div className="callout err" role="alert">
-          <p>The URL is not valid. Make sure your URL is correct and complete.</p>
+          <p>The URL is not valid. Make sure your URL is correct and begins with <code>http://</code> or <code>https://</code>.</p>
         </div>
       );
     }

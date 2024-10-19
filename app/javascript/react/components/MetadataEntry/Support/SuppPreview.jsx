@@ -1,6 +1,6 @@
 import React from 'react';
 
-const cName = (name) => (name.endsWith('*') ? name.slice(0, -1) : name);
+const cName = (name) => (name?.endsWith('*') ? name.slice(0, -1) : name);
 
 export default function SuppPreview({resource, previous, admin}) {
   const facility = resource.contributors.find((c) => c.contributor_type === 'sponsor');
@@ -26,7 +26,7 @@ export default function SuppPreview({resource, previous, admin}) {
           <h3>Funding</h3>
           <ul className="o-list">
             {funders.sort((a, b) => a.funder_order - b.funder_order).map((funder, i) => {
-              const prev = pFunders[i];
+              const prev = pFunders?.[i];
               return (
                 <li key={funder.id}>
                   <span>

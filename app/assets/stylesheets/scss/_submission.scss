@@ -110,6 +110,7 @@
           width: 100vw;
           padding: 0;
           background-color: transparent;
+          z-index: 2;
           li {
             width: 100%;
             padding: .5rem 1rem;
@@ -232,6 +233,7 @@
 
       #submission-submit {
         position: sticky;
+        z-index: 3;
         bottom: 0;
         background-color: $lightest-blue;
         padding: 1rem;
@@ -323,6 +325,9 @@ dialog#submission-step[open] {
   flex: 1;
   align-self: stretch;
   display: flex;
+  & > div {
+    max-width: 100%;
+  }
 }
 
 .submission-edit {

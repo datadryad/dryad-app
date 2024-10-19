@@ -1,10 +1,10 @@
 import React, {Fragment, useRef, useEffect} from 'react';
 import axios from 'axios';
-import {sentenceCase} from 'change-case';
 
 const nameit = (name, arr) => {
   const plural = !['software', 'supplemental_information'].includes(name) && arr.length > 1 ? 's' : '';
-  return `${sentenceCase(name)}${plural}`;
+  const upper = name.charAt(0).toUpperCase() + name.slice(1);
+  return `${upper.replace('_', ' ')}${plural}`;
 };
 
 function WorksList({identifiers, previous, admin}) {

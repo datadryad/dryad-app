@@ -96,7 +96,7 @@ export default function Publication({resource, setResource}) {
             This is the same title or primary publication as your existing submission:
             <b style={{display: 'block', marginTop: '.5ch'}}>{dupeWarning}</b>
           </p>
-          <p>
+          <div>
             <form action={`/stash/resources/${resource.id}`} method="post" style={{display: 'inline'}}>
               <input type="hidden" name="_method" value="delete" />
               <input type="hidden" name="authenticity_token" value={authenticity_token} />
@@ -104,7 +104,7 @@ export default function Publication({resource, setResource}) {
                 Delete this new submission
               </button>
             </form> if you did not intend to create it.
-          </p>
+          </div>
           <p>
             Do you have more than {formatSizeUnits(maxSize)} of files and need to split a dataset into multiple submissions?
             Please ensure the title of this submission distinguishes it, or marks it as part of a series.

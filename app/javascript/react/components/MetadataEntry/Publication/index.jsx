@@ -1,5 +1,5 @@
 import React from 'react';
-import {sentenceCase} from 'change-case';
+import {titleCase} from '../../../../lib/title-case';
 
 export {default} from './Publication';
 export {default as PubPreview} from './PubPreview';
@@ -13,7 +13,7 @@ const nondescript = (t) => {
 
 const capitals = (t) => {
   if (t === t.toUpperCase()) return 'All-caps titles are not allowed.';
-  if (t.match(/\b[A-Z].*?\b/).length > t.split(/\s/).length / 2) return 'Sentence casing of titles is preferred.';
+  if (t.match(/\b[A-Z].*?\b/g).length > t.split(/\s/).length / 2) return 'Sentence casing of titles is preferred.';
   return false;
 };
 
@@ -55,7 +55,7 @@ export const publicationCheck = (resource, review) => {
         <>
           <p className="error-text" id="title_error">{capitals(resource.title)} Please correct your dataset title to sentence case:</p>
           <div className="callout warn">
-            <p><span>{sentenceCase(resource.title)}</span>
+            <p><span>{titleCase(resource.title, {sentenceCase: true})}</span>
               <span
                 className="copy-icon"
                 role="button"
