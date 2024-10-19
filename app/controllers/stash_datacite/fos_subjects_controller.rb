@@ -19,7 +19,21 @@ module StashDatacite
 
     # GET /fos_subjects
     def index
-      render json: StashDatacite::Subject.fos.pluck(:subject).uniq.sort
+      subjects = StashDatacite::Subject.fos.pluck(:subject).uniq.sort
+      if params.key?(:select)
+        selected = CGI.unescape(params[:select])
+        render partial: 'stash_engine/shared/search_select', locals: {
+          id: 'fos_subjects',
+          label: 'Research domain',
+          field_name: 'domain',
+          options: subjects.map { |i| { value: i, label: i } }.to_json.html_safe,
+          options_label: 'label',
+          options_value: 'value',
+          selected: { value: selected, label: selected }
+        }
+      else
+        render json: subjects
+      end
     end
 
     def resource

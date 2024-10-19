@@ -1,5 +1,5 @@
 <% # locals: field_name, label, id, selected, options, options_path, options_label, options_value %>
-<label for="searchselect-<%= id %>__input"><%= label %>:</label>
+<label for="searchselect-<%= id %>__input"><%= label %></label>
 <div class="searchselect" id="searchselect-<%= id %>" tabindex="-1">
   <input type="hidden" name="<%= field_name %>[value]" id="searchselect-<%= id %>__value" value="<%= selected&.dig(:value) %>">
   <input type="hidden" name="<%= field_name %>[label]" id="searchselect-<%= id %>__label" value="<%= selected&.dig(:label) %>">

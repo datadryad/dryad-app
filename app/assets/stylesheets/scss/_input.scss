@@ -11,7 +11,7 @@ input {
 
 .input-line {
 	display: flex;
-	align-items: last baseline;
+	align-items: flex-start;
 	flex-wrap: wrap;
 	column-gap: 2ch;
 	row-gap: 1ch;

@@ -49,7 +49,7 @@ function Keywords({resource, setResource}) {
 
   return (
     <div className="c-keywords">
-      <label className="c-input__label required" id="label_keyword_ac" htmlFor="keyword_ac">
+      <label className="input__label required" id="label_keyword_ac" htmlFor="keyword_ac">
         Subject keywords
         <span className="details">(at least 3 required)</span>
       </label>

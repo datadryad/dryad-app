@@ -177,18 +177,16 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
   } if (wizardContent && wizardStep <= secTitles.length) {
     if (wizardStep === 0) {
       return (
-        <div style={{height: '100%'}}>
-          <div style={{maxWidth: '90ch'}}>
-            <h2 style={{marginTop: 0}}>README</h2>
-            <p>
-              Your Dryad submission must be accompanied by a{' '}
-              <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
-                README file<span className="screen-reader-only"> (opens in new window)</span>
-              </a>, to help others use and understand your
-              dataset. It should contain the details needed to interpret and reuse your data, including abbreviations
-              and codes, file descriptions, and information about any necessary software.
-            </p>
-          </div>
+        <>
+          <h2>README</h2>
+          <p>
+            Your Dryad submission must be accompanied by a{' '}
+            <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
+              README file<span className="screen-reader-only"> (opens in new window)</span>
+            </a>, to help others use and understand your
+            dataset. It should contain the details needed to interpret and reuse your data, including abbreviations
+            and codes, file descriptions, and information about any necessary software.
+          </p>
           <div className="readme-columns">
             <div>
               <h2 className="o-heading__level2">Need to create a README?</h2>
@@ -205,7 +203,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
               <ReadMeImport setValue={setReplaceValue} />
             </div>
           </div>
-        </div>
+        </>
       );
     }
     return (

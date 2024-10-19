@@ -1,83 +1,56 @@
-import React, {useRef, useState, useEffect} from 'react';
-// see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
-import {Field, Form, Formik} from 'formik';
+import React, {useRef, useEffect} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function ResearchDomain({resource, setResource}) {
-  const formRef = useRef();
+  const fieldRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const subject = resource.subjects.find((s) => ['fos', 'bad_fos'].includes(s.subject_scheme));
-  const [subjectList, setSubjectList] = useState([]);
+
+  const submit = (e) => {
+    showSavingMsg();
+    axios.patch(
+      '/stash_datacite/fos_subjects/update',
+      {
+        authenticity_token,
+        fos_subjects: e.target.value,
+        id: resource.id,
+      },
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    )
+      .then((data) => {
+        if (data.status === 200) {
+        // console.log('Response failure not a 200 response');
+        }
+        showSavedMsg();
+        setResource((r) => ({
+          ...r,
+          subjects: [
+            ...data.data,
+            ...r.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme)),
+          ],
+        }));
+      });
+  };
 
   useEffect(() => {
     async function getList() {
-      axios.get('/stash_datacite/fos_subjects').then((data) => {
-        setSubjectList(data.data);
+      axios.get(`/stash_datacite/fos_subjects?select=${encodeURI(subject.subject)}`).then((data) => {
+        const active_form = document.createRange().createContextualFragment(data.data);
+        fieldRef.current.append(active_form);
+        document.getElementById('searchselect-fos_subjects__input').setAttribute('aria-errormessage', 'domain_error');
+        document.getElementById('searchselect-fos_subjects__input').addEventListener('blur', submit);
+        document.querySelector("label[for='searchselect-fos_subjects__input']").classList.add('input-label');
       });
     }
-    getList();
-  }, []);
+    if (fieldRef.current) getList();
+  }, [fieldRef]);
 
   return (
-    <Formik
-      initialValues={{fos_subjects: (subject?.subject || '')}}
-      innerRef={formRef}
-      onSubmit={(values, {setSubmitting}) => {
-        showSavingMsg();
-        axios.patch(
-          '/stash_datacite/fos_subjects/update',
-          {
-            authenticity_token,
-            fos_subjects: values.fos_subjects,
-            id: resource.id,
-          },
-          {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
-        )
-          .then((data) => {
-            if (data.status === 200) {
-              // console.log('Response failure not a 200 response');
-            }
-            showSavedMsg();
-            setResource((r) => ({
-              ...r,
-              subjects: [
-                ...data.data,
-                ...r.subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme)),
-              ],
-            }));
-            setSubmitting(false);
-          });
-      }}
-    >
-      {(formik) => (
-        <Form className="c-input" id={`dc_fos_subjects_${resource.id}`}>
-          <label className="c-input__label required" htmlFor={`fos_subjects__${resource.id}`}>
-            Research domain
-          </label>
-          <Field
-            type="text"
-            name="fos_subjects"
-            id={`fos_subjects__${resource.id}`}
-            list={`fos_subject__${resource.id}`}
-            className="fos-subjects js-change-submit c-input__select"
-            placeholder="Find as you type..."
-            onBlur={() => { // formRef.current.handleSubmit();
-              formik.handleSubmit();
-            }}
-            aria-errormessage="domain_error"
-          />
-          <datalist id={`fos_subject__${resource.id}`} className="c-input__text">
-            {subjectList.map((subj, index) => {
-              // key made from subj + count of preceding duplicates
-              const key = subj + subjectList.slice(0, index).filter((s) => s === subj).length;
-              return <option value={subj} key={key}>{subj}</option>;
-            })}
-          </datalist>
-        </Form>
-      )}
-    </Formik>
+    <form className="input-stack" style={{marginBottom: '1.5em'}}>
+      <div ref={fieldRef} />
+    </form>
   );
 }
 

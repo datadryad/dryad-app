@@ -124,7 +124,7 @@ function PublicationForm({
           <ImportCheck importType={importType} journal={journal} setDisable={setDisable} />
           <Field name="isImport" type="hidden" />
           <div className="input-line">
-            <div className="input-stack">
+            <div className="input-stack" style={{flex: 0}}>
               <Journal
                 formRef={formRef}
                 title={journal}
@@ -182,19 +182,22 @@ function PublicationForm({
                 />
               </div>
             )}
-            <button
-              type="button"
-              name="commit"
-              className="o-button__plain-text2"
-              hidden={hide}
-              disabled={disable}
-              onClick={() => {
-                formRef.current.values.isImport = true;
-                formik.handleSubmit();
-              }}
-            >
-              Import metadata
-            </button>
+            <div className="input-stack">
+              <span style={{height: '21px'}} />
+              <button
+                type="button"
+                name="commit"
+                className="o-button__plain-text2"
+                hidden={hide}
+                disabled={disable}
+                onClick={() => {
+                  formRef.current.values.isImport = true;
+                  formik.handleSubmit();
+                }}
+              >
+                Import metadata
+              </button>
+            </div>
           </div>
           <div id="population-warnings" className="o-metadata__autopopulate-message">
             {importError}
