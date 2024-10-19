@@ -12,7 +12,7 @@ module StashDatacite
         include: [:tenant, :resource_type, :resource_publication, :journal,
                   :related_identifiers, :edit_histories, :contributors, :subjects, :descriptions,
                   { authors: { include: [:affiliations] },
-                    identifier: { include: [:process_date] },
+                    identifier: { include: %i[process_date software_license] },
                     previous_curated_resource: {
                       include: [:tenant, :subjects, :descriptions, :resource_publication, :journal, :related_identifiers, :contributors,
                                 { authors: { include: [:affiliations] } }]

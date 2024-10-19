@@ -59,7 +59,6 @@ export default function SubmissionForm({
           <>
             <input type="hidden" name="authenticity_token" value={authenticityToken} />
             <input type="hidden" name="resource_id" value={resource.id} />
-            <input type="hidden" name="software_license" value={resource.identifier?.software_license?.identifier || 'MIT'} />
             {!showR && <input type="hidden" name="hide_readme" value="true" />}
             {userComment && <input type="hidden" name="user_comment" value={userComment} />}
           </>

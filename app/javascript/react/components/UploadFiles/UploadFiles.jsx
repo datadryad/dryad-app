@@ -10,6 +10,7 @@ import FileList from './FileList/FileList';
 import {TabularCheckStatus} from './FileList/File';
 import ModalUrl from './ModalUrl';
 import ModalValidationReport from './ModalValidationReport/ModalValidationReport';
+import UploadData from './UploadSelect/UploadData';
 import UploadSelect from './UploadSelect/UploadSelect';
 import ValidateFiles from './ValidateFiles';
 import WarningMessage from './WarningMessage';
@@ -89,6 +90,7 @@ export default function UploadFiles({
   const [valFile, setValFile] = useState(null);
   const [warning, setWarning] = useState(null);
   const [pollingCount, setPollingCount] = useState(0);
+  const [zenodo, setZenodo] = useState(false);
 
   const modalRef = useRef(null);
   const modalValidationRef = useRef(null);
@@ -134,6 +136,7 @@ export default function UploadFiles({
   };
 
   useEffect(() => {
+    if (chosenFiles.some((f) => f.type !== 'data')) setZenodo(true);
     const generic_files = chosenFiles.map((f) => ({
       ...f,
       upload_file_name: f.sanitized_name,
@@ -487,65 +490,97 @@ export default function UploadFiles({
   // checks the file list if any files are pending and if so returns true (or false)
   const hasPendingFiles = () => chosenFiles.filter((file) => file.status === 'Pending').length > 0;
 
+  //
+
   return (
-    <div className="c-upload">
-      <div className="c-autosave-header">
-        <h2 className="o-heading__level2">Files</h2>
-        <div className="c-autosave__text saving_text" hidden>Saving&hellip;</div>
-        <div className="c-autosave__text saved_text" hidden>All progress saved</div>
-      </div>
-      <UploadSelect changed={addFilesHandler} clickedModal={showModalHandler} />
-      {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={removeFailedUrlHandler} />}
-      {chosenFiles.length > 0 ? (
-        <div>
-          <FileList
-            chosenFiles={chosenFiles}
-            clickedRemove={removeFileHandler}
-            clickedValidationReport={(file) => setValFile(file)}
-            totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0))}
-          />
-          {loading && (
-            <div className="c-upload__loading-spinner">
-              <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-            </div>
-          )}
-          {warning && <WarningMessage message={warning} />}
-          {hasPendingFiles() && (
-            <ValidateFiles
-              id="confirm_to_validate_files"
-              buttonLabel="Upload pending files"
-              checkConfirmed
-              disabled={submitDisabled}
-              changed={(e) => setSubmitDisabled(!e.target.checked)}
-              clicked={uploadFilesHandler}
+    <>
+      <h2>Files</h2>
+      <div className="c-upload">
+        <UploadData changed={addFilesHandler} clickedModal={showModalHandler} />
+        <p style={{fontSize: '.98rem'}}>
+          By uploading files to Dryad, you agree they will be licensed as{' '}
+          <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">
+            <i className="fab fa-creative-commons-zero" aria-hidden="true" style={{marginRight: '.5ch'}} />
+            Public domain<span className="screen-reader-only"> (opens in new window)</span>
+          </a>
+        </p>
+        <p style={{fontSize: '.98rem'}} hidden={zenodo}>
+          Do you have files that require other licensing?{' '}
+          <span
+            className="o-link__primary"
+            role="button"
+            aria-expanded={zenodo}
+            aria-controls="zenodo-widget"
+            tabIndex="0"
+            onClick={() => setZenodo(true)}
+            onKeyDown={(e) => {
+              if (['Enter', 'Space'].includes(e.key)) {
+                setZenodo(true);
+              }
+            }}
+          >
+            + Add files for simultaneous publication at Zenodo
+          </span>
+        </p>
+        <div id="zenodo-widget" hidden={!zenodo}>
+          <p style={{fontSize: '.98rem'}}>
+            Files that require other licensing can be published at Zenodo.
+            The license for software (e.g. &apos;MIT&apos;, &apos;GNU&apos;) can be specified:
+          </p>
+          <UploadSelect resource={resource} setResource={setResource} changed={addFilesHandler} clickedModal={showModalHandler} />
+        </div>
+        {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={removeFailedUrlHandler} />}
+        {chosenFiles.length > 0 ? (
+          <div>
+            <FileList
+              chosenFiles={chosenFiles}
+              clickedRemove={removeFileHandler}
+              clickedValidationReport={(file) => setValFile(file)}
+              totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0))}
             />
-          )}
-        </div>
-      ) : (
-        <div>
-          {loading ? (
-            <div className="c-upload__loading-spinner">
-              <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-            </div>
-          ) : <p>No files have been selected.</p> }
-        </div>
-      )}
-      {/* (prev && chosenFiles.some((f) => f.status !== 'Pending' && f.file_state !== 'copied')) && (
-        <TrackChanges id={resource.id} file_note={file_note} />
-      ) */}
-      <ModalUrl
-        ref={modalRef}
-        key={manFileType}
-        submitted={submitUrlsHandler}
-        changedUrls={(e) => setUrls(e.target.value)}
-        clickedClose={hideModal}
-      />
-      <ModalValidationReport
-        file={valFile}
-        ref={modalValidationRef}
-        clickedClose={hideValidationReport}
-      />
-      <div id="aria-info" className="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text" />
-    </div>
+            {loading && (
+              <div className="c-upload__loading-spinner">
+                <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
+              </div>
+            )}
+            {warning && <WarningMessage message={warning} />}
+            {hasPendingFiles() && (
+              <ValidateFiles
+                id="confirm_to_validate_files"
+                buttonLabel="Upload pending files"
+                checkConfirmed
+                disabled={submitDisabled}
+                changed={(e) => setSubmitDisabled(!e.target.checked)}
+                clicked={uploadFilesHandler}
+              />
+            )}
+          </div>
+        ) : (
+          <div>
+            {loading ? (
+              <div className="c-upload__loading-spinner">
+                <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
+              </div>
+            ) : <div className="callout"><p>No files have been selected.</p></div> }
+          </div>
+        )}
+        {/* (prev && chosenFiles.some((f) => f.status !== 'Pending' && f.file_state !== 'copied')) && (
+          <TrackChanges id={resource.id} file_note={file_note} />
+        ) */}
+        <ModalUrl
+          ref={modalRef}
+          key={manFileType}
+          submitted={submitUrlsHandler}
+          changedUrls={(e) => setUrls(e.target.value)}
+          clickedClose={hideModal}
+        />
+        <ModalValidationReport
+          file={valFile}
+          ref={modalValidationRef}
+          clickedClose={hideValidationReport}
+        />
+        <div id="aria-info" className="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text" />
+      </div>
+    </>
   );
 }

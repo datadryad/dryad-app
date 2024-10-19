@@ -1,51 +1,50 @@
 import React from 'react';
+import License from './License';
 
-function UploadType(
+export default function UploadType(
   {
-    logo, alt, name, description, description2, type, buttonFiles, clickedFiles, changed, clickedModal, buttonURLs,
+    name, description, type, changed, clickedModal, licenses, resource, setResource,
   },
 ) {
-  /*
-  const {
-    logo, alt, name, description, description2, type, buttonFiles, clickedFiles, changed, clickedModal, buttonURLs,
-  } = props;
-   */
-
+  const dragover = (e) => {
+    e.preventDefault();
+    document.getElementById(`${type}file_drop`).classList.add('dragover');
+  };
+  const dragleave = () => {
+    document.getElementById(`${type}file_drop`).classList.remove('dragover');
+  };
   return (
-    <section className="c-uploadwidget--data">
-      <header>
-        <img src={logo} alt={alt} />
-        <h2>{name}</h2>
-      </header>
-      <b style={{textAlign: 'center'}}>
-        {description}
-        <br />
-        {description2}
-      </b>
-
-      <div className="c-choose">
+    <div>
+      <div id={`${type}file_drop`} className="c-uploadwidget" onDragOver={dragover} onDrop={dragleave} onDragLeave={dragleave}>
         <input
           id={type}
-          className="c-choose__input-file"
           type="file"
-          onClick={clickedFiles}
+          onClick={(e) => { e.target.value = null; }}
           onChange={changed}
           aria-errormessage={`${type}_error`}
           multiple
         />
-        <label htmlFor={type} aria-label={`upload ${type} files`} className="c-choose__input-file-label">{buttonFiles}</label>
+        <h4>
+          <img src="../../../images/logo_zenodo.svg" alt="Zenodo" />
+          {name}
+        </h4>
+        <p>{description}</p>
+        <label htmlFor={type} aria-label={`upload ${type} files`} className="c-choose__input-file-label">Choose files</label>
+        <button
+          type="button"
+          id={`${type}_manifest`}
+          className="js-uploadmodal__button-show-modal"
+          onClick={clickedModal}
+          aria-haspopup="dialog"
+        >
+          Enter URLs
+        </button>
       </div>
-      <button
-        type="button"
-        id={`${type}_manifest`}
-        className="js-uploadmodal__button-show-modal"
-        onClick={clickedModal}
-        aria-haspopup="dialog"
-      >
-        {buttonURLs}
-      </button>
-    </section>
+      {licenses.length === 1 ? (
+        <p>{name} license: {licenses[0]}</p>
+      ) : (
+        <License license={resource.identifier.software_license} resourceId={resource.id} setResource={setResource} />
+      )}
+    </div>
   );
 }
-
-export default UploadType;

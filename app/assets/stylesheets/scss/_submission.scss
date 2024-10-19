@@ -529,6 +529,13 @@ dialog#submission-step[open] {
     }
   }
 
+  @media (max-width: 811px){
+    flex-direction: column-reverse;
+    *:first-child {
+      margin-left: auto;
+    }
+  }
+
   button {
     white-space: nowrap;
   }

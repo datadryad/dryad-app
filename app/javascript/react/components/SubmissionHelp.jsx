@@ -67,8 +67,19 @@ export function FilesHelp() {
   return (
     <>
       <p>Files may be uploaded from your computer, or by entering a publically accessible, individual URL for each file (for files hosted on e.g. Box, Dropbox, AWS, or your lab server).</p>
-      <p>Upload packaged or compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
-      <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<span className="screen-reader-only"> (opens in new window)</span></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at Zenodo.</p>
+      <p>Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
+      <p>
+        Any human subjects data or species data must be properly anonymized and prepared under applicable legal and ethical guidelines. Please see our{' '}
+        <a href="/docs/HumanSubjectsData.pdf" target="_blank">
+          human subjects guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" />
+          <span className="screen-reader-only"> (opens in new window)</span>
+        </a> and{' '}
+        <a href="/docs/EndangeredSpeciesData.pdf" target="_blank">
+          species conservation guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" />
+          <span className="screen-reader-only"> (opens in new window)</span>
+        </a>.
+      </p>
+      <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<span className="screen-reader-only"> (opens in new window)</span></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at <a href="https://zenodo.org/" target="_blank" rel="noreferrer">Zenodo<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
     </>
   );
 }

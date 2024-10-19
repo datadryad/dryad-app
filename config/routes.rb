@@ -193,6 +193,10 @@ Rails.application.routes.draw do
         to: 'generic_files#check_frictionless',
         as: 'generic_file_check_frictionless'
 
+    get 'software_license_select', to: 'software_files#licenses'
+    get 'software_licenses', to: 'software_files#licenses_autocomplete'
+    post 'software_license', to: 'software_files#license'
+
     get 'choose_dashboard', to: 'dashboard#choose', as: 'choose_dashboard'
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'

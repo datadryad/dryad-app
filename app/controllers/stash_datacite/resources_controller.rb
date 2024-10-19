@@ -96,11 +96,6 @@ module StashDatacite
         resource.update(display_readme: true)
       end
 
-      # write the software license to the database
-      license_id = (params[:software_license].blank? ? 'MIT' : params[:software_license])
-      id_for_license = StashEngine::SoftwareLicense.where(identifier: license_id).first&.id
-      resource.identifier.update(software_license_id: id_for_license)
-
       # TODO: put this somewhere more reliable
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
 
