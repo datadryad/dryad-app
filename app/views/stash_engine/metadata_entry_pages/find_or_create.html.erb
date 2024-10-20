@@ -1,7 +1,9 @@
 <% @page_title = 'Describe your datasets - publish and preserve your data' %>
+<% content_for(:head) do %>
 <!-- needed for react -->
 <%= javascript_pack_tag 'application' %>
 <%= stylesheet_pack_tag 'application' %>
+<% end %>
 <div id="find_or_create"
     data-load="<%= stash_url_helpers.datacite_metadata_entry_pages_path(resource_id: params[:resource_id], display_validation: params[:display_validation], format: :js) %>">
   <p><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p>

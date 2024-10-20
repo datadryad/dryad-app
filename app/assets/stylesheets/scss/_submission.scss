@@ -12,8 +12,11 @@
     flex: 1;
     border-top: thin solid black;
     border-bottom: thin solid black;
-    & > div {
-      min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    & > div:not(.c-admin-editing-banner) {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -31,7 +34,7 @@
       box-sizing: border-box;
     }
 
-    &.submission-review > div {
+    &.submission-review > div:not(.c-admin-editing-banner) {
       display: grid;
       row-gap: 1.5rem;
       grid-template-columns: 1fr 2fr;

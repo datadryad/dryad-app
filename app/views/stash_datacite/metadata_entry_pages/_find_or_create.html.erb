@@ -1,5 +1,4 @@
-<%= javascript_pack_tag 'application' %>
-<%= stylesheet_pack_tag 'application' %>
+<%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
 <%= react_component('containers/Submission', {
   submission: @submission,
   ownerId: @resource.owner_author&.id,
