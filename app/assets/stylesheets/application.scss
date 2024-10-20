@@ -89,6 +89,7 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 @import 'scss/alert';
 @import 'scss/autosave';
 @import 'scss/auto-complete';
+@import 'scss/cedar';
 @import 'scss/columns';
 @import 'scss/datasets-heading';
 @import 'scss/data-results';
@@ -109,6 +110,7 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 @import 'scss/pagination';
 @import 'scss/progress';
 @import 'scss/pubdate';
+@import 'scss/readme';
 @import 'scss/review-files';
 @import 'scss/submission';
 @import 'scss/submission-help';
@@ -116,7 +118,6 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 @import 'scss/text-styles';
 @import 'scss/upload-file';
 @import 'scss/upload-manifest';
-@import 'scss/upload-cedar';
 @import 'scss/upload-table';
 @import 'scss/upload-widgets';
 @import 'scss/why-share';

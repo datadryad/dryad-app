@@ -122,14 +122,14 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
           <div>
             <p>You can replace the content below with a local README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a>, or by deleting the content and generating a new README using our tool.</p>
             <div className="readme-buttons">
-              <ReadMeImport title="Import new README" setValue={setReplaceValue} />
+              <ReadMeImport title="Import README" setValue={setReplaceValue} />
               <button
                 type="button"
                 className="o-button__plain-text0"
                 aria-controls="restart-wizard-dialog"
                 onClick={() => document.getElementById('restart-wizard-dialog').showModal()}
               >
-                <i className="fa fa-trowel-bricks" aria-hidden="true" /> Generate new README
+                <i className="fa fa-trowel-bricks" aria-hidden="true" /> Generate README
               </button>
             </div>
           </div>
@@ -174,7 +174,8 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
         </dialog>
       </>
     );
-  } if (wizardContent && wizardStep <= secTitles.length) {
+  }
+  if (wizardContent && wizardStep <= secTitles.length) {
     if (wizardStep === 0) {
       return (
         <>
@@ -191,11 +192,11 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
             <div>
               <h2 className="o-heading__level2">Need to create a README?</h2>
               <p>Use our step-by-step tool to generate a README file. After completion your generated README can be added to and revised.</p>
-              <p style={{textAlign: 'center'}}>
+              <div style={{textAlign: 'center'}}>
                 <button type="button" className="o-button__plain-text1" onClick={() => setWizardStep(1)}>
                   Build a README <i className="fa fa-trowel-bricks fa-flip-horizontal" aria-hidden="true" />
                 </button>
-              </p>
+              </div>
             </div>
             <div>
               <h2 className="o-heading__level2">Already have a README file?</h2>
