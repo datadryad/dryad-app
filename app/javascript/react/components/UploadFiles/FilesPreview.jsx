@@ -20,7 +20,7 @@ const fileList = (list, previous) => {
           );
         })}
       </ul>
-      {deleted && deleted.length && (
+      {deleted && deleted.length > 0 && (
         <ul className="c-review-files__list del">
           {deleted.map((d) => (
             <li key={d.id}>

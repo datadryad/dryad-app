@@ -78,6 +78,7 @@ export default function Submission({
       component: <UploadFiles
         resource={resource}
         setResource={setResource}
+        previous={previous}
         s3_dir_name={s3_dir_name}
         config_s3={config_s3}
         config_frictionless={config_frictionless}

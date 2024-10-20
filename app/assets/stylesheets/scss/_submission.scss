@@ -430,6 +430,7 @@ dialog#submission-step[open] {
   flex: 1 1 1130px;
   margin-right: auto;
   padding-top: 2rem;
+  min-width: 0;
 
   @media (max-width: 600px) {
     flex: 1 1 auto;

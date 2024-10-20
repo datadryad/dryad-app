@@ -333,6 +333,7 @@ Rails.application.routes.draw do
     # curation notes
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
     post 'file_note/:id', to: 'curation_activity#file_note', as: 'file_note'
+    get 'file_note/:resource_id', to: 'curation_activity#make_file_note'
 
     # admin report for dataset funders
     get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'

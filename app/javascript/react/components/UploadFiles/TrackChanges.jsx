@@ -1,35 +1,38 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
-export default function TrackChanges({id, file_note}) {
-  const [note, setNote] = useState(file_note);
-  const [value, setValue] = useState(note?.note.split('User described file changes: ')[1]);
+export default function TrackChanges({resource}) {
+  const [note, setNote] = useState({});
+  const [value, setValue] = useState('');
 
   const postNote = (e) => {
-    axios.post(
-      `/stash/file_note/${id}`,
-      {
-        id,
-        note: e.currentTarget.value,
-        note_id: note?.id,
-      },
-    ).then((response) => {
-      setNote(response.data.note);
-    });
+    axios.post(`/stash/file_note/${note.id}`, {note: e.currentTarget.value});
   };
 
-  return (
-    <form className="c-upload__changes-form">
-      <div>
-        <label className="c-input__label" htmlFor="file-note-area">Please describe your file changes</label><br />
+  useEffect(() => {
+    async function getNote() {
+      axios.get(`/stash/file_note/${resource.id}`).then((data) => {
+        setNote(data.data);
+        setValue(data.data.note);
+      });
+    }
+    getNote();
+  }, []);
+
+  if (note) {
+    return (
+      <form className="c-upload__changes-form">
+        <label className="input-label" htmlFor="file-note-area">Describe your file changes</label>
         <textarea
           className="c-input__textarea"
           id="file-note-area"
-          value={value}
+          rows={3}
+          value={value || ''}
           onBlur={postNote}
           onChange={(e) => setValue(e.currentTarget.value)}
         />
-      </div>
-    </form>
-  );
+      </form>
+    );
+  }
+  return null;
 }
