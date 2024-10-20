@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
 import groupings from './funderGroupings.json';
-import FunderForm from '../../../../../app/javascript/react/components/MetadataEntry/FunderForm';
+import FunderForm from '../../../../../../app/javascript/react/components/MetadataEntry/Support/FunderForm';
 
 jest.mock('axios');
 

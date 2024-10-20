@@ -5,7 +5,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
-import Keywords from '../../../../../app/javascript/react/components/MetadataEntry/Keywords';
+import Keywords from '../../../../../../app/javascript/react/components/MetadataEntry/Subjects/Keywords';
 
 jest.mock('axios');
 

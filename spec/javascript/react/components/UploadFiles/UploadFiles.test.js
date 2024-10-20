@@ -24,7 +24,7 @@ import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
 import errorFiles from './errorFiles.json';
-import UploadFiles from '../../../../app/javascript/react/containers/UploadFiles';
+import UploadFiles from '../../../../../app/javascript/react/components/UploadFiles';
 
 jest.mock('axios');
 jest.mock('aws-sdk');
@@ -36,7 +36,7 @@ jest.mock('evaporate', () => ({
     }),
   })),
 }));
-jest.mock('../../../../app/javascript/react/containers/maximums', () => ({
+jest.mock('../../../../../app/javascript/react/components/UploadFiles/maximums', () => ({
   maxFiles: 3,
   pollingDelay: 100,
 }));

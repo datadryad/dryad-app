@@ -3,7 +3,7 @@ import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
-import Authors from '../../../../../app/javascript/react/components/MetadataEntry/Authors';
+import Authors from '../../../../../../app/javascript/react/components/MetadataEntry/Authors';
 
 jest.mock('axios');
 

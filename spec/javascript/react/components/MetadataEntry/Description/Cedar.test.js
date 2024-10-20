@@ -2,7 +2,7 @@ import React from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
-import Cedar from '../../../../../app/javascript/react/components/MetadataEntry/Cedar';
+import Cedar from '../../../../../../app/javascript/react/components/MetadataEntry/Description/Cedar';
 
 const xhrMockClass = () => ({
   open: jest.fn(),

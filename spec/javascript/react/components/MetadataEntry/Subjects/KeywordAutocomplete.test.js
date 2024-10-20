@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import KeywordAutocomplete from '../../../../../app/javascript/react/components/MetadataEntry/KeywordAutocomplete';
+import KeywordAutocomplete from '../../../../../../app/javascript/react/components/MetadataEntry/Subjects/KeywordAutocomplete';
 
 describe('KeywordAutocomplete', () => {
   let info;

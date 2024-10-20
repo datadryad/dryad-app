@@ -3,7 +3,7 @@ import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
-import FacilityForm from '../../../../../app/javascript/react/components/MetadataEntry/FacilityForm';
+import FacilityForm from '../../../../../../app/javascript/react/components/MetadataEntry/Support/FacilityForm';
 
 jest.mock('axios');
 

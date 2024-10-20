@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import BadList from '../../../../../app/javascript/react/components/FileUpload/FileList/BadList';
+import BadList from '../../../../../../app/javascript/react/components/UploadFiles/FileList/BadList';
 
 describe('BadList', () => {
   it("displays if couldn't read a file", () => {

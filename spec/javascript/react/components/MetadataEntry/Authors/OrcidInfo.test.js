@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
 import {faker} from '@faker-js/faker';
-import OrcidInfo from '../../../../../app/javascript/react/components/MetadataEntry/OrcidInfo';
+import OrcidInfo from '../../../../../../app/javascript/react/components/MetadataEntry/Authors/OrcidInfo';
 
 describe('OrcidInfo', () => {
   const makeAuthor = (resource_id = null, author_order = null) => {

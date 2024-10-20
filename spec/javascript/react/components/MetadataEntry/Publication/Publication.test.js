@@ -3,12 +3,12 @@ import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
-import PrelimInfo from '../../../../../app/javascript/react/components/MetadataEntry/PrelimInfo';
+import Publication from '../../../../../../app/javascript/react/components/MetadataEntry/Publication';
 import journals from './prelimjournals.json';
 
 jest.mock('axios');
 
-describe('PrelimInfo', () => {
+describe('Publication', () => {
   let info;
 
   beforeEach(() => {
@@ -40,7 +40,7 @@ describe('PrelimInfo', () => {
   });
 
   it('renders the preliminary information section', () => {
-    render(<PrelimInfo importInfo="other" {...info} />);
+    render(<Publication importInfo="other" {...info} />);
 
     expect(screen.getByLabelText('a manuscript in progress')).toBeInTheDocument();
     expect(screen.getByLabelText('a published article')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('PrelimInfo', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<PrelimInfo importInfo="other" {...info} />);
+    render(<Publication importInfo="other" {...info} />);
 
     expect(screen.getByLabelText('other or not applicable')).toHaveAttribute('checked');
     expect(screen.getByLabelText('a published article')).not.toHaveAttribute('checked');
@@ -68,7 +68,7 @@ describe('PrelimInfo', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<PrelimInfo importInfo="published" {...info} />);
+    render(<Publication importInfo="published" {...info} />);
 
     expect(screen.getByLabelText('a published article')).toHaveAttribute('checked');
     expect(screen.getByLabelText('a manuscript in progress')).not.toHaveAttribute('checked');
@@ -84,7 +84,7 @@ describe('PrelimInfo', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<PrelimInfo importInfo="manuscript" {...info} />);
+    render(<Publication importInfo="manuscript" {...info} />);
 
     expect(screen.getByLabelText('other or not applicable')).not.toHaveAttribute('checked');
     expect(screen.getByLabelText('a manuscript in progress')).toHaveAttribute('checked');
@@ -99,7 +99,7 @@ describe('PrelimInfo', () => {
     const options = Promise.resolve({status: 200, data: journals});
     axios.get.mockImplementationOnce(() => options);
 
-    render(<PrelimInfo importInfo="published" {...info} />);
+    render(<Publication importInfo="published" {...info} />);
 
     const input = screen.getByLabelText('Journal name:', {exact: true});
 
@@ -130,7 +130,7 @@ describe('PrelimInfo', () => {
     const options = Promise.resolve({status: 200, data: journals});
     axios.get.mockImplementationOnce(() => options);
 
-    render(<PrelimInfo importInfo="published" {...info} />);
+    render(<Publication importInfo="published" {...info} />);
 
     const input = screen.getByLabelText('Journal name:', {exact: true});
 
@@ -158,7 +158,7 @@ describe('PrelimInfo', () => {
     const options = Promise.resolve({status: 200, data: journals});
     axios.get.mockImplementationOnce(() => options);
 
-    render(<PrelimInfo importInfo="manuscript" {...info} />);
+    render(<Publication importInfo="manuscript" {...info} />);
 
     const input = screen.getByLabelText('Journal name:', {exact: true});
 

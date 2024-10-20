@@ -1,8 +1,8 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import PrelimAutocomplete from '../../../../../app/javascript/react/components/MetadataEntry/PrelimAutocomplete';
+import Journal from '../../../../../../app/javascript/react/components/MetadataEntry/Publication/Journal';
 
-describe('PrelimAutocomplete', () => {
+describe('Journal', () => {
   // very similar to the rest of the autocompletes
 
   let acText; let setAcText; let acID; let setAcID; let formRef; let
@@ -29,7 +29,7 @@ describe('PrelimAutocomplete', () => {
   it('renders the basic autocomplete form for Journal name', () => {
     /* mocks for use/set state, these don't really do the functionality, but just give dummy objects */
 
-    render(<PrelimAutocomplete {...info} />);
+    render(<Journal {...info} />);
 
     const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
     expect(labeledElements.length).toBe(2);
