@@ -42,6 +42,16 @@ export const filesCheck = (files, review) => {
         </p>
       );
     }
+    const urlErrors = present.filter((f) => !!f.url && f.status_code !== 200);
+    if (urlErrors.length > 0) {
+      return (
+        <p className="error-text" id="data_error">
+          Individual files cannot be retrieved from the URLs for the following URL upload files.
+          Please check that the URLs are valid, publically accessible, and point to individual file downloads:<br />
+          {urlErrors.map((f) => f.upload_file_name).join(', ')}
+        </p>
+      );
+    }
   } else if (review) {
     return <p className="error-text" id="data_error">Files are required</p>;
   }

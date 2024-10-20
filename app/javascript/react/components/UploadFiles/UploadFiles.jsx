@@ -93,6 +93,7 @@ export default function UploadFiles({
   const [pollingCount, setPollingCount] = useState(0);
   const [zenodo, setZenodo] = useState(false);
 
+  const uploadRef = useRef(null);
   const modalRef = useRef(null);
   const modalValidationRef = useRef(null);
   const interval = useRef(null);
@@ -331,7 +332,7 @@ export default function UploadFiles({
           progress: (progressValue) => {
             document.getElementById(
               `progressbar_${file.id}`,
-            ).setAttribute('value', progressValue);
+            )?.setAttribute('value', progressValue);
           },
           error(msg) {
             console.log(msg);
@@ -491,10 +492,32 @@ export default function UploadFiles({
   // checks the file list if any files are pending and if so returns true (or false)
   const hasPendingFiles = () => chosenFiles.filter((file) => file.status === 'Pending').length > 0;
 
-  //
+  useEffect(() => {
+    if (uploadRef.current) {
+      const observer = new MutationObserver(() => {
+        const pending = document.querySelector('*[id^="status_pending"]');
+        const progress = document.querySelector('progress');
+        if (!!pending || !!progress) {
+          document.body.style.pointerEvents = 'none';
+          uploadRef.current.style.pointerEvents = 'auto';
+          document.getElementById('leave-warning').removeAttribute('hidden');
+          document.getElementById('submission-help').querySelectorAll('button').forEach((b) => {
+            b.setAttribute('disabled', 'true');
+          });
+        } else {
+          document.body.style.pointerEvents = 'auto';
+          document.getElementById('leave-warning').setAttribute('hidden', true);
+          document.getElementById('submission-help').querySelectorAll('button').forEach((b) => {
+            b.removeAttribute('disabled');
+          });
+        }
+      });
+      observer.observe(uploadRef.current, {subtree: true, childList: true});
+    }
+  }, [uploadRef.current]);
 
   return (
-    <>
+    <div ref={uploadRef}>
       <h2>Files</h2>
       <UploadData changed={addFilesHandler} clickedModal={showModalHandler} />
       <p style={{fontSize: '.98rem'}}>
@@ -580,6 +603,9 @@ export default function UploadFiles({
         clickedClose={hideValidationReport}
       />
       <div id="aria-info" className="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text" />
-    </>
+      <div className="callout warn" role="status">
+        <p id="leave-warning" hidden>Wait for file uploads to complete before leaving this page</p>
+      </div>
+    </div>
   );
 }
