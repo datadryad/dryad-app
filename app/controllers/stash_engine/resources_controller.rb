@@ -160,7 +160,10 @@ module StashEngine
         paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
         aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.partner_list&.first,
         large_file_size: APP_CONFIG.payments.large_file_size,
-        large_files: @resource.identifier.large_files?
+        large_files: @resource.identifier.large_files?,
+        allow_review: @resource.identifier.allow_review?,
+        automatic_ppr: @resource.identifier.automatic_ppr?,
+        man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
       }
       render json: dpc_checks
     end
@@ -195,12 +198,8 @@ module StashEngine
     # Saves the setting of the import type (manuscript, published, other).  While this is set on the identifier, put it
     # here because we already have the resource controller, including permission checking and no identifier controller.
     def import_type
-      respond_to do |format|
-        format.json do
-          @resource.identifier.update(import_info: params[:import_info])
-          render json: { import_info: params[:import_info] }, status: :ok
-        end
-      end
+      @resource.identifier.update(import_info: params[:import_info])
+      render json: { import_info: params[:import_info] }, status: :ok
     end
 
     private

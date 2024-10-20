@@ -2,25 +2,24 @@ import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
-// TBD: Add no-peer-review-allowed stuff!!
-
 export default function Agreements({
   resource, setResource, form, previous, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
+  const curated = !!resource.identifier.process_date.curation_end;
   const formRef = useRef(null);
   const [dpc, setDPC] = useState({});
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
   const [agree, setAgree] = useState(resource.accepted_agreement);
+  const [reason, setReason] = useState('');
 
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-  const togglePPR = (e) => {
-    const v = e.target.value;
+  const postPPR = (bool) => {
     showSavingMsg();
     axios.patch(
       '/stash_datacite/peer_review/toggle',
-      {authenticity_token, id: resource.id, hold_for_peer_review: v === '1'},
+      {authenticity_token, id: resource.id, hold_for_peer_review: bool},
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
       .then((data) => {
@@ -31,6 +30,11 @@ export default function Agreements({
           showSavedMsg();
         }
       });
+  };
+
+  const togglePPR = (e) => {
+    const v = e.target.value;
+    postPPR(v === '1');
   };
 
   const toggleTerms = (e) => {
@@ -56,8 +60,24 @@ export default function Agreements({
   }, [dpc, formRef]);
 
   useEffect(() => {
+    if (resource.identifier.pub_state === 'published') {
+      setReason(', because the data has been previously published');
+    } else if (dpc.man_decision_made) {
+      setReason(', because the journal has made a decision on the associated manuscript');
+    } else if (resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier) {
+      setReason(', because the associated primary publication is not in peer review');
+    } else if (curated) {
+      setReason(', because the dataset has previously been submitted and entered curation');
+    }
+  }, [dpc]);
+
+  useEffect(() => {
     async function getPaymentInfo() {
       axios.get(`/stash/resources/${resource.id}/dpc_status`).then((data) => {
+        if (!preview && !curated) {
+          if (data.data.automatic_ppr && !ppr) postPPR(true);
+          else if (!data.data.allow_review && ppr) postPPR(false);
+        }
         setDPC(data.data);
       });
     }
@@ -67,7 +87,7 @@ export default function Agreements({
   return (
     <>
       <h2>Agreements</h2>
-      {preview ? (
+      {preview && (
         <>
           <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
           <div className="callout alt">
@@ -85,23 +105,46 @@ export default function Agreements({
           </div>
           {previous && ppr !== previous.hold_for_peer_review && <p className="del ins">PPR setting changed</p>}
         </>
-      ) : (
-        <fieldset onChange={togglePPR}>
-          <h3><legend>Publication{subType === 'collection' ? '' : ' of your files'}</legend></h3>
-          <p className="radio_choice">
-            <label style={!ppr ? {fontWeight: 'bold'} : {}}>
-              <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
-              My {subType === 'collection' ? 'collection should be publically viewable ' : 'files should be available for public download '}
-              as soon as possible
-            </label>
-          </p>
-          <p className="radio_choice">
-            <label style={ppr ? {fontWeight: 'bold'} : {}}>
-              <input type="radio" name="peer_review" value="1" defaultChecked={ppr} />
-              Keep my {subType === 'collection' ? 'collection' : 'files'} private while my manuscript is in peer review
-            </label>
-          </p>
-        </fieldset>
+      )}
+      {!preview && (
+        <>
+          {!curated && dpc.automatic_ppr && (
+            <>
+              <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
+              <p>
+                This submission is associated with a manuscript from an{' '}
+                <a href="/stash/journals" target="_blank">integrated journal<span className="screen-reader-only"> (opens in new window)</span></a>.
+                It will remain private for peer review until formal acceptance of the associated manuscript.
+              </p>
+            </>
+          )}
+          {!curated && dpc.allow_review ? (
+            <fieldset onChange={togglePPR}>
+              <h3><legend>Publication{subType === 'collection' ? '' : ' of your files'}</legend></h3>
+              <p className="radio_choice">
+                <label style={!ppr ? {fontWeight: 'bold'} : {}}>
+                  <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
+                  My {subType === 'collection' ? 'collection should be publically viewable ' : 'files should be available for public download '}
+                  as soon as possible
+                </label>
+              </p>
+              <p className="radio_choice">
+                <label style={ppr ? {fontWeight: 'bold'} : {}}>
+                  <input type="radio" name="peer_review" value="1" defaultChecked={ppr} />
+                  Keep my {subType === 'collection' ? 'collection' : 'files'} private while my manuscript is in peer review
+                </label>
+              </p>
+            </fieldset>
+          ) : (
+            <>
+              <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
+              <p>
+                The private for peer review option is not available for this submission{reason}.
+                The submission will proceed to our curation process for evaluation and publication.
+              </p>
+            </>
+          )}
+        </>
       )}
       {subType === 'collection' ? <h3>Terms</h3> : (
         <>
