@@ -301,6 +301,13 @@ module Stash
         it 'gets those dates' do
           expect(@ir.dct_temporal_dates).to eql(['2018-11-14'])
         end
+
+        context 'with bad date' do
+          it 'does not fail' do
+            allow(@resource).to receive(:datacite_dates).and_return [OpenStruct.new(date: 'bad date'), OpenStruct.new(date: '2024-10-21T00:00:00Z')]
+            expect(@ir.dct_temporal_dates).to eq(["2024-10-21"])
+          end
+        end
       end
 
       describe '#bounding_box_envelope' do
@@ -348,7 +355,11 @@ module Stash
             dryad_related_publication_id_s: 'manuscript123 pubmed123 doi123',
             dryad_related_publication_issn_s: 'manuscript123issn',
             dryad_dataset_file_ext_sm: df,
-            updated_at_dt: @resource.updated_at.iso8601
+            updated_at_dt: @resource.updated_at.iso8601,
+            author_orcids_sm: @resource.authors.map(&:author_orcid).reject(&:blank?).uniq,
+            funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
+            funder_ror_ids_sm: @resource.funders.ror.map(&:name_identifier_id).reject(&:blank?).uniq,
+            sponsor_ror_ids_sm: @resource.contributors.sponsors.ror.map(&:name_identifier_id).reject(&:blank?).uniq
           }
           expect(mega_hash).to eql(expected_mega_hash)
         end

@@ -15,13 +15,6 @@ require 'cgi'
 module Datacite
   module Mapping
 
-    DATACITE_NAMESPACES = [DATACITE_3_NAMESPACE, DATACITE_4_NAMESPACE].freeze
-    DATACITE_NAMESPACE_URIS = DATACITE_NAMESPACES.map(&:uri).freeze
-
-    def self.datacite_namespace?(elem)
-      (ns = elem.namespace) && DATACITE_NAMESPACE_URIS.include?(ns)
-    end
-
     class Description
       def funding?
         # TODO: Make 'data were created with' etc. a constant or something and move it to Datacite::Mapping
@@ -40,12 +33,6 @@ module Datacite
       # @return [String] the coordinates of this box as a WKT `ENVELOPE`
       def to_envelope
         "ENVELOPE(#{west_longitude}, #{east_longitude}, #{north_latitude}, #{south_latitude})"
-      end
-    end
-
-    class Identifier
-      def to_doi
-        "doi:#{value}"
       end
     end
   end
@@ -90,7 +77,11 @@ module Stash
           dryad_author_affiliation_id_sm: author_affiliation_ids,
           dryad_dataset_file_ext_sm: dataset_file_exts,
           dcs_funder_sm: dataset_funders,
-          updated_at_dt: updated_at_str
+          updated_at_dt: updated_at_str,
+          author_orcids_sm: @resource.authors.map(&:author_orcid).reject(&:blank?).uniq,
+          funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
+          funder_ror_ids_sm: @resource.funders.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
+          sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq
         }
       end
 
@@ -174,7 +165,6 @@ module Stash
 
       def self.datacite?
         true
-        # elem.name == 'resource' && Datacite::Mapping.datacite_namespace?(elem)
       end
 
       def calc_bounding_box
