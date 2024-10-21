@@ -79,21 +79,21 @@ module Tasks
 
       def self.random_submitters
         submitters = StashEngine::Resource.latest_per_dataset
-                                          .select(:user_id).distinct
-                                          .where(stash_engine_resources: { created_at: 2.year.ago..Time.now })
-                                          .sample(250)
+          .select(:user_id).distinct
+          .where(stash_engine_resources: { created_at: 2.year.ago..Time.now })
+          .sample(250)
 
         CSV.open(File.join(Rails.root.join('tmp'), "Random_Submitters_Report-#{Time.now.strftime('%Y-%m-%d')}.csv"), 'wb') do |csv|
-          csv << ['First Name', 'Last Name', 'Email', 'Orcid ID', 'Tenant ID', 'Number of Submissions', 'First Submission Date', 'Last Submission Date']
+          csv << ['First Name', 'Last Name', 'Email', 'Orcid ID', 'Tenant ID', 'Number of Submissions', 'First Submission Date',
+                  'Last Submission Date']
           submitters.each do |submitter|
             user = StashEngine::User.find(submitter.user_id)
             submission_dates = StashEngine::Resource.where(user_id: user.id)
-                                                    .select('MAX(created_at) as last_submission_date, MIN(created_at) as first_submission_date')
-                                                    .first
+              .select('MAX(created_at) as last_submission_date, MIN(created_at) as first_submission_date')
+              .first
             csv << [user.first_name, user.last_name, user.email, user.orcid, user.tenant_id,
                     StashEngine::Resource.latest_per_dataset.where(user_id: user.id).count,
-                    submission_dates.first_submission_date, submission_dates.last_submission_date
-            ]
+                    submission_dates.first_submission_date, submission_dates.last_submission_date]
           end
         end
         true
