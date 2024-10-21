@@ -195,6 +195,11 @@
   <copyField source="dryad_dataset_file_ext_sm" dest="dryad_dataset_file_ext_tmi" maxChars="100"/>
   <copyField source="dcs_funder_sm" dest="dcs_funder_tmi" maxChars="1000"/>
 
+  <copyField source="author_orcids_sm" dest="author_orcids_tmi" maxChars="10000"/>
+  <copyField source="funder_awd_ids_sm" dest="funder_awd_ids_tmi" maxChars="1000"/>
+  <copyField source="funder_ror_ids_sm" dest="funder_ror_ids_tmi" maxChars="1000"/>
+  <copyField source="sponsor_ror_ids_sm" dest="sponsor_ror_ids_tmi" maxChars="1000"/>
+
   <!-- core text search -->
   <copyField source="*_ti"               dest="text" />
   <copyField source="*_tmi"              dest="text" />
