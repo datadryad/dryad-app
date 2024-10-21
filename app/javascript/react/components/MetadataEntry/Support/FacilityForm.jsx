@@ -9,7 +9,7 @@ export default function FacilityForm({resource, setResource}) {
   const formRef = useRef(0);
   const nameRef = useRef(null);
   const sponsor = resource.contributors.find((r) => r.contributor_type === 'sponsor') || {};
-  const [name, setName] = useState(sponsor.contributor_name);
+  const [name, setName] = useState(sponsor.contributor_name || '');
   const [nameId, setNameId] = useState(sponsor.name_identifier_id);
 
   const submitData = () => {

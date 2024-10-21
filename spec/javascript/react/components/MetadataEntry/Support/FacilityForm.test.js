@@ -9,25 +9,23 @@ jest.mock('axios');
 
 describe('FacilityForm', () => {
   let info;
+  const setResource = () => {};
 
   beforeEach(() => {
+    const resourceId = faker.datatype.number();
     info = {
-      name: '',
-      rorId: '',
-      contribId: faker.datatype.number(),
-      resourceId: 123,
-      createPath: faker.system.directoryPath(),
-      updatePath: faker.system.directoryPath(),
-      controlOptions: {htmlId: 'research_facility', labelText: 'Research facility', isRequired: false},
+      setResource,
+      resource: {
+        id: resourceId,
+        contributors: [{
+          resource_id: resourceId,
+          name: faker.company.companyName(),
+          contributor_type: 'sponsor',
+          identifier_type: 'ror',
+          name_identifier_id: 'https://ror.org/1323',
+        }],
+      },
     };
-  });
-
-  it('renders the basic autocomplete form under facility', () => {
-    render(<FacilityForm {...info} />);
-
-    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
-    expect(labeledElements.length).toBe(2);
-    expect(labeledElements[0]).toHaveAttribute('value', info.name);
   });
 
   it('selects from autocomplete options shown while typing', async () => {
@@ -58,7 +56,7 @@ describe('FacilityForm', () => {
 
     render(<FacilityForm {...info} />);
 
-    const input = screen.getByLabelText('Research facility:', {exact: true});
+    const input = screen.getByLabelText('Research facility');
 
     userEvent.clear(input);
     userEvent.type(input, 'Drya');

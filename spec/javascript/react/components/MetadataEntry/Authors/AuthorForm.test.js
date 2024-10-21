@@ -17,24 +17,28 @@ const makeAuthor = (resource_id = null, author_order = null) => {
     resource_id: resource_id || faker.datatype.number({min: 1, max: 32767}),
     author_order: author_order || faker.datatype.number({min: 1, max: 32767}),
     orcid_invite_path: faker.internet.url(),
+    affiliations: [],
   };
 };
 
 describe('AuthorForm', () => {
-  let dryadAuthor;
+  let author; let ownerId;
+  const update = () => {};
+  const remove = () => {};
   beforeEach(() => {
-    dryadAuthor = makeAuthor();
+    author = makeAuthor();
+    ownerId = 27;
   });
 
   it('renders the basic author form', () => {
-    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} correspondingAuthorId={27} />);
+    render(<AuthorForm author={author} update={update} remove={remove} ownerId={ownerId} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
     expect(labeledElements.length).toBe(2);
 
-    expect(screen.getByLabelText('First name')).toHaveValue(dryadAuthor.author_first_name);
-    expect(screen.getByLabelText('Last name')).toHaveValue(dryadAuthor.author_last_name);
-    expect(screen.getByLabelText('Author email')).toHaveValue(dryadAuthor.author_email);
+    expect(screen.getByLabelText('First name')).toHaveValue(author.author_first_name);
+    expect(screen.getByLabelText('Last name')).toHaveValue(author.author_last_name);
+    expect(screen.getByLabelText('Author email')).toHaveValue(author.author_email);
   });
 
   // gives some pointers and info about act and async examples
@@ -42,12 +46,12 @@ describe('AuthorForm', () => {
   it('checks that updating author triggers the save event and does axios call', async () => {
     const promise = Promise.resolve({
       status: 200,
-      data: dryadAuthor,
+      data: author,
     });
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} correspondingAuthorId={27} />);
+    render(<AuthorForm author={author} update={update} remove={remove} ownerId={ownerId} />);
 
     userEvent.clear(screen.getByLabelText('First name'));
     userEvent.type(screen.getByLabelText('First name'), 'Alphred');
@@ -64,12 +68,12 @@ describe('AuthorForm', () => {
   it('checks that updating author triggers the save event and does axios call', async () => {
     const promise = Promise.resolve({
       status: 200,
-      data: dryadAuthor,
+      data: author,
     });
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} correspondingAuthorId={27} />);
+    render(<AuthorForm author={author} update={update} remove={remove} ownerId={ownerId} />);
 
     userEvent.clear(screen.getByLabelText('Last name'));
     userEvent.type(screen.getByLabelText('Last name'), 'Dryadsson');
@@ -83,12 +87,12 @@ describe('AuthorForm', () => {
   it('checks that updating author triggers the save event and does axios call', async () => {
     const promise = Promise.resolve({
       status: 200,
-      data: dryadAuthor,
+      data: author,
     });
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm dryadAuthor={dryadAuthor} removeFunction={() => {}} correspondingAuthorId={27} />);
+    render(<AuthorForm author={author} update={update} remove={remove} ownerId={ownerId} />);
 
     userEvent.clear(screen.getByLabelText('Author email'));
     userEvent.type(screen.getByLabelText('Author email'), 'email@email.edu');

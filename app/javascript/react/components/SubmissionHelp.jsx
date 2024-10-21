@@ -35,10 +35,7 @@ export function PublicationHelp() {
 
 export function AuthHelp() {
   return (
-    <>
-      <p>Authors can be reordered.</p>
-      <p><em>Information about marking corresponding authors, linking ORCIDs, and inviting editors will go here.</em></p>
-    </>
+    <p>Affiliations are required for all authors, and an email address is required for the submitting author. Authors can be reordered.</p>
   );
 }
 

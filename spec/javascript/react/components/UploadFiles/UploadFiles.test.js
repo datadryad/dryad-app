@@ -43,7 +43,19 @@ jest.mock('../../../../../app/javascript/react/components/UploadFiles/maximums',
 
 describe('UploadFiles', () => {
   let info; let files; let datafile; let loaded;
-
+  const setResource = () => {};
+  const form = {
+    data: `<label for="searchselect-license__input">Software license</label>
+    <input type="hidden" name="license[value]" id="searchselect-license__value" value=""/>
+    <input type="text" id="searchselect-license__input"/>`,
+  };
+  const software_data = {
+    data: {
+      name: 'MIT License',
+      identifier: 'MIT',
+      details_url: 'https://spdx.org/licenses/MIT.json',
+    },
+  };
   beforeEach(() => {
     HTMLDialogElement.prototype.show = jest.fn(function mock() { this.open = true; });
     HTMLDialogElement.prototype.showModal = jest.fn(function mock() { this.open = true; });
@@ -51,17 +63,6 @@ describe('UploadFiles', () => {
     document.body.innerHTML = '<div id="aria-info" class="screen-reader-only" aria-live="polite" aria-atomic="true"></div>';
 
     const resourceId = faker.datatype.number(9999);
-
-    info = {
-      resource_id: resourceId,
-      readme_size: 480,
-      file_uploads: [],
-      app_config_s3: {table: {region: 'us-west-2', bucket: 'a-test-bucket', key: 'abcdefg'}},
-      s3_dir_name: 'b759e787-333',
-      frictionless: {},
-      previous_version: false,
-      file_note: null,
-    };
 
     files = [
       new File(['data1'], 'data.csv', {type: 'text/csv'}),
@@ -74,7 +75,7 @@ describe('UploadFiles', () => {
       upload_file_name: 'data.csv',
       upload_content_type: 'text/csv',
       upload_file_size: 180000,
-      resource_id: info.resource_id,
+      resource_id: resourceId,
       file_state: 'created',
       original_filename: 'data.csv',
       compressed_try: 0,
@@ -85,15 +86,34 @@ describe('UploadFiles', () => {
       report: '{}',
       status: 'noissues',
     };
+
+    info = {
+      setResource,
+      resource: {
+        id: resourceId,
+        identifier: {},
+        generic_files: [],
+      },
+      config_s3: {table: {region: 'us-west-2', bucket: 'a-test-bucket', key: 'abcdefg'}},
+      s3_dir_name: 'b759e787-333',
+      config_frictionless: {},
+    };
   });
 
-  it('loads and does not show the file note', () => {
+  it('loads and does not show the file note', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
     render(<UploadFiles {...info} />);
+    await waitFor(() => form);
+    await waitFor(() => software_data);
+
     expect(screen.getByText('No files have been selected.')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Please describe your file changes')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Describe your file changes')).not.toBeInTheDocument();
   });
 
   it('loads pending data files', () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
     render(<UploadFiles {...info} />);
 
     const [input] = screen.getAllByLabelText('Choose files');
@@ -107,9 +127,13 @@ describe('UploadFiles', () => {
     expect(screen.getByText('data.csv')).toBeInTheDocument();
   });
 
-  it('loads pending software files', () => {
+  it('loads pending software files', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
     render(<UploadFiles {...info} />);
 
+    const button = screen.getByText('+ Add files for simultaneous publication at Zenodo');
+    await waitFor(() => userEvent.click(button));
     const input = screen.getAllByLabelText('Choose files')[1];
     expect(input).toHaveAttribute('id', 'software');
 
@@ -121,9 +145,13 @@ describe('UploadFiles', () => {
     expect(screen.getByText('data.csv')).toBeInTheDocument();
   });
 
-  it('loads pending supp files', () => {
+  it('loads pending supp files', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
     render(<UploadFiles {...info} />);
 
+    const button = screen.getByText('+ Add files for simultaneous publication at Zenodo');
+    await waitFor(() => userEvent.click(button));
     const input = screen.getAllByLabelText('Choose files')[2];
     expect(input).toHaveAttribute('id', 'supp');
 
@@ -135,11 +163,13 @@ describe('UploadFiles', () => {
     expect(screen.getByText('data.csv')).toBeInTheDocument();
   });
 
-  it('removes a pending file', () => {
+  it('removes a pending file', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
     render(<UploadFiles {...info} />);
 
     const [input] = screen.getAllByLabelText('Choose files');
-    userEvent.upload(input, [files[1]]);
+    await waitFor(() => userEvent.upload(input, [files[1]]));
 
     const button = screen.getByText('Remove');
     userEvent.click(button);
@@ -149,10 +179,12 @@ describe('UploadFiles', () => {
   });
 
   it('uploads a data file and shows the size', async () => {
-    const promise = Promise.resolve({status: 200, data: {new_file: datafile}});
-    axios.post.mockImplementationOnce(() => promise);
-
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
     render(<UploadFiles {...info} />);
+
+    const newfile = {status: 200, data: {new_file: datafile}};
+    axios.post.mockResolvedValueOnce(newfile);
 
     const [input] = screen.getAllByLabelText('Choose files');
     expect(input).toHaveAttribute('id', 'data');
@@ -171,28 +203,30 @@ describe('UploadFiles', () => {
       expect(checkbox.checked).toEqual(true);
     });
 
-    userEvent.click(screen.getByText('Upload pending files'));
-
-    await waitFor(() => promise);
+    await waitFor(() => userEvent.click(screen.getByText('Upload pending files')));
+    await waitFor(() => newfile);
 
     await waitFor(() => {
       expect(screen.getByText('data.csv')).toBeInTheDocument();
       expect(screen.queryByText('Pending')).not.toBeInTheDocument();
       expect(screen.getByText('Uploaded')).toBeInTheDocument();
-      expect(screen.getByText('180.00 KB')).toBeInTheDocument();
+      expect(screen.getByText('180 KB')).toBeInTheDocument();
     });
   });
 
   it('starts and runs frictionless checks', async () => {
-    const promiseA = Promise.resolve({status: 200, data: {new_file: datafile}});
-    const promiseB = Promise.resolve({status: 200, data: [{file_id: datafile.id, triggered: true}]});
-    const promiseC = Promise.resolve({status: 200, data: [loaded]});
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
 
-    axios.post.mockImplementationOnce(() => promiseA);
-    axios.post.mockImplementationOnce(() => promiseB);
-    axios.get.mockImplementationOnce(() => promiseC);
+    const postA = {status: 200, data: {new_file: datafile}};
+    const postB = {status: 200, data: [{file_id: datafile.id, triggered: true}]};
+    const get = {status: 200, data: [loaded]};
 
-    info.frictionless = {size_limit: 200000};
+    axios.post.mockResolvedValueOnce(postA);
+    axios.post.mockResolvedValueOnce(postB);
+    axios.get.mockResolvedValueOnce(get);
+
+    info.config_frictionless = {size_limit: 200000};
     render(<UploadFiles {...info} />);
 
     const [input] = screen.getAllByLabelText('Choose files');
@@ -201,15 +235,15 @@ describe('UploadFiles', () => {
     userEvent.click(checkbox);
     userEvent.click(screen.getByText('Upload pending files'));
 
-    await waitFor(() => promiseA);
-    await waitFor(() => promiseB);
+    await waitFor(() => postA);
+    await waitFor(() => postB);
 
     await waitFor(() => {
       expect(screen.getByText('Uploaded')).toBeInTheDocument();
     });
     expect(screen.getByText('Validating...')).toBeInTheDocument();
 
-    await waitFor(() => promiseC);
+    await waitFor(() => get);
 
     await waitFor(() => {
       expect(screen.getByText('Passed')).toBeInTheDocument();
@@ -217,8 +251,11 @@ describe('UploadFiles', () => {
   });
 
   it('shows frictionless errors', async () => {
-    info.file_uploads = errorFiles;
-    info.frictionless = {size_limit: 200000};
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+
+    info.resource.generic_files = errorFiles;
+    info.config_frictionless = {size_limit: 200000};
     render(<UploadFiles {...info} />);
 
     const buttons = screen.getAllByText(/View \d*\s?alerts/);
@@ -232,8 +269,11 @@ describe('UploadFiles', () => {
   });
 
   it('closes the frictionless errors', async () => {
-    info.file_uploads = errorFiles;
-    info.frictionless = {size_limit: 200000};
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+
+    info.resource.generic_files = errorFiles;
+    info.config_frictionless = {size_limit: 200000};
     render(<UploadFiles {...info} />);
 
     const buttons = screen.getAllByText(/View \d*\s?alerts/);
@@ -252,10 +292,11 @@ describe('UploadFiles', () => {
   });
 
   it('removes an uploaded file', async () => {
-    const promise = Promise.resolve('OK');
-    axios.patch.mockImplementationOnce(() => promise);
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+    axios.patch.mockResolvedValueOnce('OK');
 
-    info.file_uploads = [loaded];
+    info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
 
     const button = screen.getByText('Remove');
@@ -264,7 +305,7 @@ describe('UploadFiles', () => {
     expect(screen.queryByText('Remove')).not.toBeInTheDocument();
     expect(screen.getByText('Removing...')).toBeInTheDocument();
 
-    await waitFor(() => promise);
+    await waitFor(() => 'OK');
 
     await waitFor(() => {
       expect(screen.getByText('No files have been selected.')).toBeInTheDocument();
@@ -272,7 +313,10 @@ describe('UploadFiles', () => {
   });
 
   it('does not allow duplicate files', () => {
-    info.file_uploads = [loaded];
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+
+    info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
 
     const [input] = screen.getAllByLabelText('Choose files');
@@ -281,10 +325,15 @@ describe('UploadFiles', () => {
     expect(screen.getByText('A file of the same name is already in the table, and was not added.')).toBeInTheDocument();
   });
 
-  it('allows duplicate files for zenodo', () => {
-    info.file_uploads = [loaded];
+  it('allows duplicate files for zenodo', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+
+    info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
 
+    const button = screen.getByText('+ Add files for simultaneous publication at Zenodo');
+    await waitFor(() => userEvent.click(button));
     const input = screen.getAllByLabelText('Choose files')[1];
     expect(input).toHaveAttribute('id', 'software');
 
@@ -293,53 +342,60 @@ describe('UploadFiles', () => {
     expect(screen.queryByText('A file of the same name is already in the table, and was not added.')).not.toBeInTheDocument();
   });
 
-  it('does not allow more than the max allowed files', () => {
-    info.file_uploads = [loaded];
+  it('does not allow more than the max allowed files', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+
+    info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
 
     const [data, soft] = screen.getAllByLabelText('Choose files');
-    userEvent.upload(data, [files[1]]);
+    await waitFor(() => userEvent.upload(data, [files[1]]));
     userEvent.upload(soft, files);
     expect(screen.getByText('You may not upload more than 3 individual files.')).toBeInTheDocument();
   });
 
   it('does not show the file note when files are not edited', () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+
+    info.previous = {generic_files: [loaded]};
     loaded.file_state = 'copied';
-    info.file_uploads = [loaded];
-    info.previous_version = true;
+    info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
-    expect(screen.queryByLabelText('Please describe your file changes')).not.toBeInTheDocument();
+
+    expect(screen.queryByLabelText('Describe your file changes')).not.toBeInTheDocument();
   });
 
   it('shows and changes the file note when files are edited', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+
     const note = faker.lorem.sentence();
-
-    const file_note = {
-      note: {
-        id: faker.datatype.number(),
-        note: `User described file changes: ${note}`,
-      },
+    const data = {
+      id: faker.datatype.number(),
+      note: '',
     };
-    const promise = Promise.resolve({status: 200, data: file_note});
+    axios.get.mockResolvedValueOnce({data});
+    axios.post.mockResolvedValueOnce({note});
 
-    axios.post.mockImplementationOnce(() => promise);
-
-    info.file_uploads = [loaded];
-    info.previous_version = true;
+    info.resource.generic_files = [loaded];
+    info.previous = {generic_files: []};
     render(<UploadFiles {...info} />);
 
-    const notebox = screen.getByLabelText('Please describe your file changes');
+    const notebox = screen.getByLabelText('Describe your file changes');
 
     userEvent.type(notebox, note);
     userEvent.tab();
 
-    await waitFor(() => promise);
-
-    expect(notebox).toHaveValue(note);
+    await waitFor(() => note);
   });
 
   it('loads and opens the URL dialog', () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
     render(<UploadFiles {...info} />);
+
     const [button] = screen.getAllByText('Enter URLs');
 
     expect(button).toHaveAttribute('id', 'data_manifest');
@@ -348,16 +404,20 @@ describe('UploadFiles', () => {
   });
 
   it('enters URLs and uploads', async () => {
+    axios.get.mockResolvedValueOnce(form);
     const file_url = `${faker.internet.url()}/data.csv`;
     datafile.url = file_url;
     datafile.status_code = 200;
     datafile.type = 'StashEngine::DataFile';
     const data = {
-      valid_urls: [datafile],
-      invalid_urls: [],
+      status: 200,
+      data: {
+        valid_urls: [datafile],
+        invalid_urls: [],
+      },
     };
-    const promise = Promise.resolve({status: 200, data});
-    axios.post.mockImplementationOnce(() => promise);
+    axios.post.mockResolvedValueOnce(data);
+    axios.post.mockResolvedValueOnce(software_data);
 
     render(<UploadFiles {...info} />);
     const [button] = screen.getAllByText('Enter URLs');
@@ -369,13 +429,14 @@ describe('UploadFiles', () => {
     userEvent.type(input, file_url);
     userEvent.click(validate);
 
-    await waitFor(() => promise);
+    await waitFor(() => data);
 
     expect(screen.getByText('data.csv')).toBeInTheDocument();
     expect(screen.getByText('Uploaded')).toBeInTheDocument();
   });
 
   it('enters URLs and shows failures', async () => {
+    axios.get.mockResolvedValueOnce(form);
     const filenames = ['badUrl.csv', 'unAuth.csv', 'notFound.csv', 'unavail.csv', 'please.csv', 'accept.csv', 'timeout.csv', 'dupe.csv'];
     const codes = [400, 401, 403, 410, 411, 414, 408, 409];
     const urls = filenames.map((name) => faker.internet.url() + name);
@@ -391,11 +452,14 @@ describe('UploadFiles', () => {
       return file;
     });
     const data = {
-      valid_urls: [],
-      invalid_urls: badfiles,
+      status: 200,
+      data: {
+        valid_urls: [],
+        invalid_urls: badfiles,
+      },
     };
-    const promise = Promise.resolve({status: 200, data});
-    axios.post.mockImplementationOnce(() => promise);
+    axios.post.mockResolvedValueOnce(data);
+    axios.post.mockResolvedValueOnce(software_data);
 
     render(<UploadFiles {...info} />);
     const [button] = screen.getAllByText('Enter URLs');
@@ -407,7 +471,7 @@ describe('UploadFiles', () => {
     userEvent.type(input, urls.join('\n'));
     userEvent.click(validate);
 
-    await waitFor(() => promise);
+    await waitFor(() => data);
 
     expect(screen.getByText('The URL was not entered correctly. Be sure to use http:// or https:// to start all URLS')).toBeInTheDocument();
     expect(screen.getByText('The URL was not authorized for download.')).toBeInTheDocument();

@@ -84,8 +84,8 @@ module StashDatacite
       @pub_issn = params[:publication_issn]
       @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
       @resource.related_identifiers.where(work_type: 'primary_article').destroy_all if params[:primary_article_doi].blank?
-      if @pub_issn.blank?
-        exact_matches = StashEngine::Journal.find_by_title(title: @pub_name)
+      if @pub_issn.blank? && @pub_name.present?
+        exact_matches = StashEngine::Journal.find_by_title(@pub_name)
         @pub_issn = exact_matches.single_issn if exact_matches.present?
       end
       begin

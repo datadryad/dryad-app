@@ -1,6 +1,5 @@
 import React from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
 import ResearchDomain from '../../../../../../app/javascript/react/components/MetadataEntry/Subjects/ResearchDomain';
@@ -8,59 +7,34 @@ import ResearchDomain from '../../../../../../app/javascript/react/components/Me
 jest.mock('axios');
 
 describe('ResearchDomain', () => {
-  let resourceId; let subject; let subjectList; let
-    updatePath;
+  let resource; let subject; let subjectList; let form;
+  const setResource = () => {};
 
   beforeEach(() => {
-    resourceId = faker.datatype.number();
-    updatePath = faker.system.directoryPath();
-
     subjectList = [];
     // make fake list of names
     for (let i = 0; i < 30; i += 1) {
-      subjectList.push(faker.company.companyName());
+      subjectList.push({subject: faker.company.companyName(), subject_scheme: 'fos'});
     }
-
     subject = subjectList[10]; /* eslint-disable-line */
+    resource = {
+      id: faker.datatype.number(),
+      subjects: [
+        subject,
+      ],
+    };
+    form = {
+      data: `<label for="searchselect-fos_subjects__input">Research domain</label>
+    <input type="text" id="searchselect-fos_subjects__input"/>`,
+    };
   });
 
   // {resourceId, subject, subjectList, updatePath}
-  it('renders basic Research domain form', () => {
-    render(<ResearchDomain
-      resourceId={resourceId}
-      subject={subject}
-      subjectList={subjectList}
-      updatePath={updatePath}
-    />);
+  it('renders basic Research domain form', async () => {
+    axios.get.mockResolvedValue(form);
+    render(<ResearchDomain resource={resource} setResource={setResource} />);
 
-    const resDomain = screen.getByLabelText('Research domain', {exact: false});
-    expect(resDomain).toHaveValue(subject);
-  });
-
-  it('calls axios to update from server on change', async () => {
-    const promise = Promise.resolve({
-      data: subjectList[20],
-    });
-
-    axios.patch.mockImplementationOnce(() => promise);
-
-    render(<ResearchDomain
-      resourceId={resourceId}
-      subject={subject}
-      subjectList={subjectList}
-      updatePath={updatePath}
-    />);
-
-    const resDomain = screen.getByLabelText('Research domain', {exact: false});
-    expect(resDomain).toHaveValue(subject);
-
-    userEvent.clear(screen.getByLabelText('Research domain'));
-    userEvent.type(screen.getByLabelText('Research domain'), subjectList[20]);
-
-    await waitFor(() => expect(screen.getByLabelText('Research domain')).toHaveValue(subjectList[20]));
-
-    userEvent.tab(); // tab out of element, should trigger save on blur
-
-    await waitFor(() => promise); // waits for the axios promise to fulfil
+    await waitFor(() => form);
+    expect(screen.getByLabelText('Research domain', {exact: false})).toBeVisible();
   });
 });

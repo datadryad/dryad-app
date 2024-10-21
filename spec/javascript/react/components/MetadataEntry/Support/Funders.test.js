@@ -4,15 +4,16 @@ import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
 import Funders from '../../../../../../app/javascript/react/components/MetadataEntry/Support/Funders';
+import groupings from './funderGroupings.json';
 
 jest.mock('axios');
 
 describe('Funders', () => {
-  let contributors; let resourceId; let createPath; let updatePath; let deletePath; let
-    reorderPath;
+  let contributors; let resource;
+  const setResource = () => {};
 
   beforeEach(() => {
-    resourceId = faker.datatype.number();
+    const resourceId = faker.datatype.number();
     contributors = [];
     // add 3 contributors
     for (let i = 0; i < 3; i += 1) {
@@ -23,7 +24,7 @@ describe('Funders', () => {
           contributor_type: 'funder',
           identifier_type: null,
           name_identifier_id: null,
-          resourceId,
+          resource_id: resourceId,
           award_number: faker.datatype.string(5),
           award_description: faker.datatype.string(10),
           funder_order: i,
@@ -31,22 +32,18 @@ describe('Funders', () => {
       );
     }
 
-    createPath = faker.system.directoryPath();
-    updatePath = faker.system.directoryPath();
-    deletePath = faker.system.directoryPath();
-    reorderPath = faker.system.directoryPath();
+    resource = {
+      id: resourceId,
+      contributors,
+    };
   });
 
-  it('renders multiple funder forms as funder section', () => {
-    render(<Funders
-      contributors={contributors}
-      resourceId={resourceId}
-      createPath={createPath}
-      updatePath={updatePath}
-      deletePath={deletePath}
-      reorderPath={reorderPath}
-    />);
+  it('renders multiple funder forms as funder section', async () => {
+    const options = {status: 200, data: groupings};
+    axios.get.mockResolvedValue(options);
+    render(<Funders resource={resource} setResource={setResource} />);
 
+    await waitFor(() => options);
     const labeledElements = screen.getAllByLabelText('Granting organization', {exact: false});
     expect(labeledElements.length).toBe(9); // three for each autocomplete list
     const awardNums = screen.getAllByLabelText('Award number', {exact: false});
@@ -54,7 +51,7 @@ describe('Funders', () => {
     expect(awardNums[0]).toHaveValue(contributors[0].award_number);
     expect(awardNums[2]).toHaveValue(contributors[2].award_number);
 
-    expect(screen.getByText('Add another funder')).toBeInTheDocument();
+    expect(screen.getByText('+ Add funder')).toBeInTheDocument();
   });
 
   it('removes a funder from the document', async () => {
@@ -65,23 +62,16 @@ describe('Funders', () => {
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Funders
-      contributors={contributors}
-      resourceId={resourceId}
-      createPath={createPath}
-      updatePath={updatePath}
-      deletePath={deletePath}
-      reorderPath={reorderPath}
-    />);
+    render(<Funders resource={resource} setResource={setResource} />);
 
-    let removes = screen.getAllByText('remove');
+    let removes = screen.getAllByLabelText('Remove funding');
     expect(removes.length).toBe(3);
 
     userEvent.click(removes[2]);
 
     await waitFor(() => promise); // waits for the axios promise to fulfill
 
-    removes = screen.getAllByText('remove');
+    removes = screen.getAllByLabelText('Remove funding');
     expect(removes.length).toBe(2);
   });
 
@@ -92,30 +82,23 @@ describe('Funders', () => {
         id: faker.datatype.number(),
         contributor_name: '',
         contributor_type: 'funder',
-        identifier_type: 'crossref_funder_id',
+        identifier_type: 'ror',
         name_identifier_id: '',
-        resource_id: resourceId,
+        resource_id: resource.id,
       },
     });
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Funders
-      contributors={contributors}
-      resourceId={resourceId}
-      createPath={createPath}
-      updatePath={updatePath}
-      deletePath={deletePath}
-      reorderPath={reorderPath}
-    />);
+    render(<Funders resource={resource} setResource={setResource} />);
 
-    const removes = screen.getAllByText('remove');
+    const removes = screen.getAllByLabelText('Remove funding');
     expect(removes.length).toBe(3);
 
-    userEvent.click(screen.getByText('Add another funder'));
+    userEvent.click(screen.getByText('+ Add funder'));
 
     await waitFor(() => {
-      expect(screen.getAllByText('remove').length).toBe(4);
+      expect(screen.getAllByLabelText('Remove funding').length).toBe(4);
     });
   });
 
@@ -126,9 +109,9 @@ describe('Funders', () => {
         id: faker.datatype.number(),
         contributor_name: '',
         contributor_type: 'funder',
-        identifier_type: 'crossref_funder_id',
+        identifier_type: 'ror',
         name_identifier_id: '',
-        resource_id: resourceId,
+        resource_id: resource.id,
       },
     });
     const nofunder = Promise.resolve({
@@ -137,26 +120,20 @@ describe('Funders', () => {
         id: faker.datatype.number(),
         contributor_name: 'N/A',
         contributor_type: 'funder',
-        identifier_type: 'crossref_funder_id',
+        identifier_type: 'ror',
         name_identifier_id: '0',
-        resource_id: resourceId,
+        resource_id: resource.id,
       },
     });
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Funders
-      contributors={[]}
-      resourceId={resourceId}
-      createPath={createPath}
-      updatePath={updatePath}
-      deletePath={deletePath}
-      reorderPath={reorderPath}
-    />);
+    resource.contributors = [];
+    render(<Funders resource={resource} setResource={setResource} />);
 
     await waitFor(() => promise); // waits for the axios promise to fulfil
 
-    const removes = screen.getAllByText('remove');
+    const removes = screen.getAllByLabelText('Remove funding');
     expect(removes.length).toBe(1);
 
     axios.patch.mockImplementationOnce(() => nofunder);

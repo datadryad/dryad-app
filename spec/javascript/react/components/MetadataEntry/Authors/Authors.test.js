@@ -18,36 +18,26 @@ const makeAuthor = (resource_id, myOrder) => {
     resource_id: resource_id || faker.datatype.number({min: 1, max: 32767}),
     author_order: myOrder,
     orcid_invite_path: faker.internet.url(),
-    affiliation: null,
+    affiliations: [],
   };
 };
 
 describe('Authors', () => {
-  let resource; let dryadAuthors; let curator; let createPath; let deletePath; let
-    reorderPath;
-
+  let resource; let admin; let ownerId; let dryadAuthors;
+  const setResource = (item) => { resource = item; };
   beforeEach(() => {
-    resource = {id: faker.datatype.number()};
-
-    // add 3 authors
-    dryadAuthors = (new Array(3).fill(null)).map((_item, idx) => makeAuthor(resource.id, (2 - idx)));
-
-    curator = false;
-    createPath = faker.system.directoryPath();
-    deletePath = faker.system.directoryPath();
-    reorderPath = faker.system.directoryPath();
+    const rid = faker.datatype.number();
+    dryadAuthors = (new Array(3).fill(null)).map((_item, idx) => makeAuthor(rid, (2 - idx)));
+    resource = {
+      id: rid,
+      authors: dryadAuthors,
+    };
+    admin = false;
+    ownerId = faker.datatype.number();
   });
 
   it('renders multiple authors in authors section', () => {
-    render(<Authors
-      resource={resource}
-      dryadAuthors={dryadAuthors}
-      curator={curator}
-      correspondingAuthorId={27}
-      createPath={createPath}
-      deletePath={deletePath}
-      reorderPath={reorderPath}
-    />);
+    render(<Authors resource={resource} setResource={setResource} ownerId={ownerId} admin={admin} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
     expect(labeledElements.length).toBe(6); // two for each autocomplete list
@@ -56,35 +46,27 @@ describe('Authors', () => {
     expect(firsts[0]).toHaveValue(dryadAuthors[2].author_first_name);
     expect(firsts[2]).toHaveValue(dryadAuthors[0].author_first_name);
 
-    expect(screen.getByText('Add author')).toBeInTheDocument();
+    expect(screen.getByText('+ Add author')).toBeInTheDocument();
   });
 
   it('removes an author from the document', async () => {
     const promise = Promise.resolve({
       status: 200,
-      data: dryadAuthors[2],
+      data: resource.authors[2],
     });
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Authors
-      resource={resource}
-      dryadAuthors={dryadAuthors}
-      curator={curator}
-      correspondingAuthorId={27}
-      createPath={createPath}
-      deletePath={deletePath}
-      reorderPath={reorderPath}
-    />);
+    render(<Authors resource={resource} setResource={setResource} ownerId={ownerId} admin={admin} />);
 
-    let removes = screen.getAllByText('remove');
+    let removes = screen.getAllByLabelText('Remove author');
     expect(removes.length).toBe(3);
 
     userEvent.click(removes[2]);
 
     await waitFor(() => promise); // waits for the axios promise to fulfill
 
-    removes = screen.getAllByText('remove');
+    removes = screen.getAllByLabelText('Remove author');
     expect(removes.length).toBe(2);
   });
 
@@ -100,29 +82,21 @@ describe('Authors', () => {
         resource_id: resource.id,
         author_order: 33333,
         orcid_invite_path: '',
-        affiliation: null,
+        affiliations: [],
       },
     });
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Authors
-      resource={resource}
-      dryadAuthors={dryadAuthors}
-      curator={curator}
-      correspondingAuthorId={27}
-      createPath={createPath}
-      deletePath={deletePath}
-      reorderPath={reorderPath}
-    />);
+    render(<Authors resource={resource} setResource={setResource} ownerId={ownerId} admin={admin} />);
 
-    const removes = screen.getAllByText('remove');
+    const removes = screen.getAllByLabelText('Remove author');
     expect(removes.length).toBe(3);
 
-    userEvent.click(screen.getByText('Add author'));
+    userEvent.click(screen.getByText('+ Add author'));
 
     await waitFor(() => {
-      expect(screen.getAllByText('remove').length).toBe(4);
+      expect(screen.getAllByLabelText('Remove author').length).toBe(4);
     });
   });
 
@@ -130,15 +104,7 @@ describe('Authors', () => {
     const promise = Promise.resolve({status: 200, data: []});
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<Authors
-      resource={resource}
-      dryadAuthors={dryadAuthors}
-      curator={curator}
-      correspondingAuthorId={27}
-      createPath={createPath}
-      deletePath={deletePath}
-      reorderPath={reorderPath}
-    />);
+    render(<Authors resource={resource} setResource={setResource} ownerId={ownerId} admin={admin} />);
 
     await waitFor(() => {
       expect(screen.getAllByRole('listitem').length).toBe(3);

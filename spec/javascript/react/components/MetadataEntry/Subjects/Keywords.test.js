@@ -10,30 +10,31 @@ import Keywords from '../../../../../../app/javascript/react/components/Metadata
 jest.mock('axios');
 
 describe('Keywords', () => {
-  let resourceId; let subjects; let createPath; let deletePath;
+  let resource; let subjects;
+  const setResource = () => {};
 
   beforeEach(() => {
     subjects = [];
-
-    resourceId = faker.datatype.number();
+    const words = faker.helpers.uniqueArray(faker.lorem.words, 3);
     // add 3 subjects
     for (let i = 0; i < 3; i += 1) {
       subjects.push(
         {
           id: faker.datatype.number(),
-          subject: faker.lorem.word(),
+          subject: words[i],
           subject_scheme: null,
           scheme_uri: null,
         },
       );
     }
-
-    createPath = faker.system.directoryPath();
-    deletePath = faker.system.directoryPath();
+    resource = {
+      id: faker.datatype.number(),
+      subjects,
+    };
   });
 
   it('renders the existing keywords', () => {
-    render(<Keywords subjects={subjects} resourceId={resourceId} createPath={createPath} deletePath={deletePath} />);
+    render(<Keywords resource={resource} setResource={setResource} />);
 
     subjects.forEach((subj) => {
       expect(screen.getAllByText(subj.subject).length).toBeGreaterThanOrEqual(1);
@@ -54,9 +55,9 @@ describe('Keywords', () => {
 
     axios.get.mockImplementationOnce(() => options);
 
-    render(<Keywords subjects={subjects} resourceId={resourceId} createPath={createPath} deletePath={deletePath} />);
+    render(<Keywords resource={resource} setResource={setResource} />);
 
-    const input = screen.getByLabelText('Subject keywords:', {exact: false});
+    const input = screen.getByLabelText('Subject keywords', {exact: false});
     userEvent.type(input, 'Eco');
 
     await waitFor(() => options);
@@ -92,7 +93,7 @@ describe('Keywords', () => {
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    const result = render(<Keywords subjects={subjects} resourceId={resourceId} createPath={createPath} deletePath={deletePath} />);
+    const result = render(<Keywords resource={resource} setResource={setResource} />);
     const firstKeyword = result.container.querySelector(`#sub_remove_${subjects[0].id}`);
     userEvent.click(firstKeyword);
 
@@ -117,7 +118,7 @@ describe('Keywords', () => {
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Keywords subjects={subjects} resourceId={resourceId} createPath={createPath} deletePath={deletePath} />);
+    render(<Keywords resource={resource} setResource={setResource} />);
 
     const labeledElements = screen.getAllByLabelText('', {exact: false});
 

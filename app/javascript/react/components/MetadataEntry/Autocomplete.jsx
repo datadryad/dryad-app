@@ -112,7 +112,7 @@ export default function Autocomplete(
         ) : '' }
       <div
         {...getComboboxProps()}
-        aria-owns={`menu_${htmlId}`}
+        aria-controls={`menu_${htmlId}`}
         className="c-auto_complete"
         aria-errormessage={errorId || null}
       >

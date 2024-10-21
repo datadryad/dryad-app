@@ -6,6 +6,10 @@ import axios from 'axios';
 import RelatedWorkForm from '../../../../../../app/javascript/react/components/MetadataEntry/RelatedWorks/RelatedWorkForm';
 
 jest.mock('axios');
+global.fetch = jest.fn(() => Promise.resolve({
+  json: () => Promise.resolve({data: 100}),
+}));
+global.URL.canParse = () => true;
 
 describe('RelatedWorkForm', () => {
   let relatedIdentifier; let
@@ -46,7 +50,7 @@ describe('RelatedWorkForm', () => {
 
     expect(screen.getByLabelText('Work type')).toHaveValue('article');
 
-    expect(screen.getByLabelText('Identifier or external url')).toHaveValue(info.relatedIdentifier.related_identifier);
+    expect(screen.getByLabelText('DOI or other URL')).toHaveValue(info.relatedIdentifier.related_identifier);
   });
 
   // gives some pointers and info about act and async examples
@@ -61,14 +65,14 @@ describe('RelatedWorkForm', () => {
 
     render(<RelatedWorkForm {...info} />);
 
-    userEvent.clear(screen.getByLabelText('Identifier or external url'));
-    userEvent.type(screen.getByLabelText('Identifier or external url'), 'http://example.com');
+    userEvent.clear(screen.getByLabelText('DOI or other URL'));
+    userEvent.type(screen.getByLabelText('DOI or other URL'), 'http://example.com');
 
-    await waitFor(() => expect(screen.getByLabelText('Identifier or external url')).toHaveValue('http://example.com'));
+    await waitFor(() => expect(screen.getByLabelText('DOI or other URL')).toHaveValue('http://example.com'));
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 
-    await waitFor(() => expect(screen.getByText('remove')).toHaveFocus());
+    await waitFor(() => expect(screen.getByLabelText('Remove work')).toHaveFocus());
     await waitFor(() => promise); // waits for the axios promise to fulfil
     // This gives a warning when it runs in the console since we don't have the global JS items we use to display saving message
     // but it doesn't fail and test passes.
@@ -90,7 +94,7 @@ describe('RelatedWorkForm', () => {
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 
-    await waitFor(() => expect(screen.getByLabelText('Identifier or external url')).toHaveFocus());
+    await waitFor(() => expect(screen.getByLabelText('DOI or other URL')).toHaveFocus());
     await waitFor(() => promise); // waits for the axios promise to fulfil
   });
 });

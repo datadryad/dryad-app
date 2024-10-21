@@ -4,135 +4,61 @@ import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
 import PublicationForm from '../../../../../../app/javascript/react/components/MetadataEntry/Publication/PublicationForm';
+import journals from './prelimjournals.json';
 
 jest.mock('axios');
 
-describe('PublicationForm', () => {
-  let info; let publication_name; let publication_issn;
+describe('PublicationFormManuscript', () => {
+  let resource_publication; let info; let api_journals;
+  let api; let update;
+  const setResource = () => {};
+  const setSponsored = () => {};
 
   beforeEach(() => {
-    const identifierId = faker.datatype.number();
-    publication_name = {
-      id: faker.datatype.number(),
-      identifier_id: identifierId,
-      data_type: 'publicationName',
-      value: faker.company.companyName(),
-    };
-    publication_issn = {
-      id: faker.datatype.number(),
-      identifier_id: identifierId,
-      data_type: 'publicationISSN',
-      value: `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`,
+    const resourceId = faker.datatype.number();
+    const makeIssn = () => `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`;
+    api_journals = (new Array(3).fill(null)).map(() => makeIssn());
+    resource_publication = {
+      publication_name: faker.company.companyName(),
+      publication_issn: makeIssn(),
+      manuscript_number: 'TEST-MAN-NUM',
     };
     info = {
-      resourceId: faker.datatype.number(),
-      identifierId,
-      acText: publication_name.value,
-      setAcText: jest.fn(),
-      acID: publication_issn.value,
-      setAcID: jest.fn(),
-      relatedIdentifier: faker.internet.url(),
-      setRelatedIdentifier: jest.fn(),
+      setResource,
+      setSponsored,
+      importType: 'manuscript',
+      resource: {
+        id: resourceId,
+        title: '',
+        resource_publication,
+        related_identifiers: [],
+      },
+    };
+    api = {data: {api_journals}};
+    update = {
+      status: 200,
+      data: {
+        journal: null,
+        resource_publication,
+        related_identifiers: [],
+      },
     };
   });
 
-  it('renders the basic article and doi form', () => {
+  it('renders the basic article and manuscript id form', async () => {
+    axios.get.mockResolvedValueOnce(api);
     render(<PublicationForm {...info} />);
 
+    await waitFor(() => api);
     const labeledElements = screen.getAllByLabelText('Journal name', {exact: false});
     expect(labeledElements.length).toBe(2);
-    expect(labeledElements[0]).toHaveAttribute('value', publication_name.value);
-    expect(screen.getByLabelText('DOI')).toHaveValue(info.relatedIdentifier);
+    expect(labeledElements[0]).toHaveAttribute('value', resource_publication.publication_name);
+    expect(screen.getByLabelText('Manuscript number')).toHaveValue(resource_publication.manuscript_number);
   });
 
   it('checks that updating fields triggers axios save on blur', async () => {
-    const promise = Promise.resolve({
-      status: 200,
-      data: {},
-    });
-
-    axios.patch.mockImplementationOnce(() => promise);
-
-    render(<PublicationForm {...info} />);
-
-    userEvent.clear(screen.getByLabelText('DOI'));
-    userEvent.type(screen.getByLabelText('DOI'), '12345.dryad/fa387gek');
-
-    await waitFor(() => expect(screen.getByLabelText('DOI')).toHaveValue('12345.dryad/fa387gek'));
-
-    userEvent.tab(); // tab out of element, should trigger save on blur
-
-    await waitFor(() => expect(screen.getByText('Import article metadata')).toHaveFocus());
-    await waitFor(() => promise); // waits for the axios promise to fulfil
-  });
-
-  it('checks that clicking button triggers axios save', async () => {
-    const promise = Promise.resolve({
-      status: 200,
-      data: {},
-    });
-
-    axios.patch.mockImplementationOnce(() => promise);
-
-    render(<PublicationForm {...info} />);
-
-    userEvent.click(screen.getByText('Import article metadata'));
-    await waitFor(() => promise); // waits for the axios promise to fulfil
-  });
-});
-
-describe('PublicationForm', () => {
-  let publication_name; let publication_issn; let msid; let info;
-
-  beforeEach(() => {
-    const identifierId = faker.datatype.number();
-    publication_name = {
-      id: faker.datatype.number(),
-      identifier_id: identifierId,
-      data_type: 'publicationName',
-      value: faker.company.companyName(),
-    };
-    publication_issn = {
-      id: faker.datatype.number(),
-      identifier_id: identifierId,
-      data_type: 'publicationISSN',
-      value: `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`,
-    };
-    msid = {
-      id: faker.datatype.number(),
-      identifier_id: identifierId,
-      data_type: 'manuscriptNumber',
-      value: `CROM-${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`,
-    };
-    info = {
-      resourceId: faker.datatype.number(),
-      identifierId,
-      acText: publication_name.value,
-      setAcText: jest.fn(),
-      acID: publication_issn.value,
-      setAcID: jest.fn(),
-      msId: msid.value,
-      setMsId: jest.fn(),
-    };
-  });
-
-  it('renders the basic article and manuscript id form', () => {
-    render(<PublicationForm {...info} />);
-
-    const labeledElements = screen.getAllByLabelText('Journal name', {exact: false});
-    expect(labeledElements.length).toBe(2);
-    expect(labeledElements[0]).toHaveAttribute('value', publication_name.value);
-    expect(screen.getByLabelText('Manuscript number')).toHaveValue(msid.value);
-  });
-
-  it('checks that updating fields triggers axios save on blur', async () => {
-    const promise = Promise.resolve({
-      status: 200,
-      data: {},
-    });
-
-    axios.patch.mockImplementationOnce(() => promise);
-
+    axios.get.mockResolvedValueOnce(api);
+    axios.patch.mockResolvedValueOnce(update);
     render(<PublicationForm {...info} />);
 
     userEvent.clear(screen.getByLabelText('Manuscript number'));
@@ -142,21 +68,197 @@ describe('PublicationForm', () => {
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 
-    await waitFor(() => expect(screen.getByText('Import manuscript metadata')).toHaveFocus());
-    await waitFor(() => promise); // waits for the axios promise to fulfil
+    await waitFor(() => expect(screen.getByText('Import metadata')).toHaveFocus());
+    await waitFor(() => update); // waits for the axios promise to fulfil
   });
 
   it('checks that clicking button triggers axios save', async () => {
-    const promise = Promise.resolve({
-      status: 200,
-      data: {},
-    });
-
-    axios.patch.mockImplementationOnce(() => promise);
-
+    axios.get.mockResolvedValueOnce(api);
+    axios.patch.mockResolvedValueOnce(update);
     render(<PublicationForm {...info} />);
 
-    userEvent.click(screen.getByText('Import manuscript metadata'));
-    await waitFor(() => promise); // waits for the axios promise to fulfil
+    userEvent.click(screen.getByText('Import metadata'));
+    await waitFor(() => update); // waits for the axios promise to fulfil
+  });
+});
+
+describe('PublicationForm', () => {
+  let resource_publication; let info; let primary_article; let related_identifiers;
+  let api_journals; let api; let update;
+  const setResource = () => {};
+  const setSponsored = () => {};
+
+  beforeEach(() => {
+    const resourceId = faker.datatype.number();
+    const makeIssn = () => `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`;
+    api_journals = (new Array(3).fill(null)).map(() => makeIssn());
+    resource_publication = {
+      publication_name: faker.company.companyName(),
+      publication_issn: makeIssn(),
+      manuscript_number: '',
+    };
+    primary_article = 'https://doi.org/10.111/Adahdjshf';
+    related_identifiers = [{
+      related_identifier: primary_article,
+      work_type: 'primary_article',
+    }];
+    info = {
+      setResource,
+      setSponsored,
+      importType: 'published',
+      resource: {
+        id: resourceId,
+        title: '',
+        resource_publication,
+        related_identifiers,
+      },
+    };
+    api = {data: {api_journals}};
+    update = {
+      status: 200,
+      data: {
+        journal: null,
+        resource_publication,
+        related_identifiers,
+      },
+    };
+  });
+
+  it('renders the basic article and doi form', async () => {
+    axios.get.mockResolvedValueOnce(api);
+    render(<PublicationForm {...info} />);
+
+    await waitFor(() => api);
+    const labeledElements = screen.getAllByLabelText('Journal name', {exact: false});
+    expect(labeledElements.length).toBe(2);
+    expect(labeledElements[0]).toHaveAttribute('value', resource_publication.publication_name);
+    expect(screen.getByLabelText('DOI')).toHaveValue(primary_article);
+  });
+
+  it('checks that updating fields triggers axios save on blur', async () => {
+    axios.get.mockResolvedValueOnce(api);
+    axios.patch.mockResolvedValueOnce(update);
+    render(<PublicationForm {...info} />);
+
+    userEvent.clear(screen.getByLabelText('DOI'));
+    userEvent.type(screen.getByLabelText('DOI'), '12345.dryad/fa387gek');
+
+    await waitFor(() => expect(screen.getByLabelText('DOI')).toHaveValue('12345.dryad/fa387gek'));
+
+    userEvent.tab(); // tab out of element, should trigger save on blur
+
+    await waitFor(() => expect(screen.getByText('Import metadata')).toHaveFocus());
+    await waitFor(() => update); // waits for the axios promise to fulfil
+  });
+
+  it('checks that clicking button triggers axios save', async () => {
+    axios.get.mockResolvedValueOnce(api);
+    axios.patch.mockResolvedValueOnce(update);
+    render(<PublicationForm {...info} />);
+
+    userEvent.click(screen.getByText('Import metadata'));
+    await waitFor(() => update); // waits for the axios promise to fulfil
+  });
+
+  it('selects from journal autocomplete options shown while typing', async () => {
+    axios.get.mockResolvedValueOnce(api);
+    render(<PublicationForm {...info} />);
+
+    const options = {status: 200, data: journals};
+    axios.get.mockResolvedValueOnce(options);
+
+    const input = screen.getByLabelText('Journal name');
+
+    userEvent.clear(input);
+    userEvent.type(input, 'PLOS');
+
+    await waitFor(() => options);
+
+    const data = {status: 200, data: {error: null}};
+    axios.patch.mockResolvedValueOnce(data);
+
+    const menu = screen.getByLabelText('Journal name autocomplete list');
+    expect(menu).toBeVisible();
+
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(8));
+
+    userEvent.selectOptions(menu, 'PLOS ONE');
+
+    await waitFor(() => data);
+
+    await waitFor(() => {
+      expect(input).toHaveAttribute('value', 'PLOS ONE');
+    });
+  });
+
+  it('saves journal that matches an autocomplete option', async () => {
+    axios.get.mockResolvedValueOnce(api);
+    render(<PublicationForm {...info} />);
+
+    await waitFor(() => api);
+
+    const options = {status: 200, data: journals};
+    axios.get.mockResolvedValueOnce(options);
+
+    const input = screen.getByLabelText('Journal name');
+
+    userEvent.clear(input);
+    userEvent.type(input, 'PLOS ONE');
+
+    await waitFor(() => options);
+
+    const data = {status: 200, data: {error: null}};
+    axios.patch.mockResolvedValueOnce(data);
+
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(8));
+
+    userEvent.tab();
+
+    await waitFor(() => data);
+
+    await waitFor(() => {
+      expect(input).toHaveAttribute('value', 'PLOS ONE');
+    });
+  });
+
+  it('saves text that does not match an autocomplete option', async () => {
+    axios.get.mockResolvedValueOnce(api);
+    render(<PublicationForm {...info} />);
+
+    await waitFor(() => api);
+
+    const options = {status: 200, data: journals};
+    axios.get.mockResolvedValueOnce(options);
+
+    const input = screen.getByLabelText('Journal name');
+
+    userEvent.clear(input);
+    userEvent.type(input, 'PLOS NEW');
+
+    await waitFor(() => options);
+
+    const data = {status: 200, data: {error: null}};
+    axios.patch.mockResolvedValueOnce(data);
+
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(8));
+
+    userEvent.click(document.body);
+
+    const checkbox = screen.getByLabelText('I cannot find my journal name, "PLOS NEW", in the list');
+
+    await waitFor(() => {
+      expect(checkbox).toBeInTheDocument();
+    });
+
+    userEvent.click(checkbox);
+    await waitFor(() => {
+      expect(checkbox.checked).toEqual(true);
+    });
+
+    await waitFor(() => data);
+
+    await waitFor(() => {
+      expect(input).toHaveAttribute('value', 'PLOS NEW');
+    });
   });
 });

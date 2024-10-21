@@ -501,13 +501,13 @@ export default function UploadFiles({
           document.body.style.pointerEvents = 'none';
           uploadRef.current.style.pointerEvents = 'auto';
           document.getElementById('leave-warning').removeAttribute('hidden');
-          document.getElementById('submission-help').querySelectorAll('button').forEach((b) => {
+          document.getElementById('submission-help')?.querySelectorAll('button').forEach((b) => {
             b.setAttribute('disabled', 'true');
           });
         } else {
           document.body.style.pointerEvents = 'auto';
           document.getElementById('leave-warning').setAttribute('hidden', true);
-          document.getElementById('submission-help').querySelectorAll('button').forEach((b) => {
+          document.getElementById('submission-help')?.querySelectorAll('button').forEach((b) => {
             b.removeAttribute('disabled');
           });
         }

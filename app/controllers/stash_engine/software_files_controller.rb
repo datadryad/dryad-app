@@ -27,7 +27,7 @@ module StashEngine
       render partial: 'stash_engine/shared/search_select', locals: {
         id: 'license',
         label: 'Software license:',
-        field_name: 'filters[journal]',
+        field_name: 'license',
         options_path: '/stash/software_licenses?term=',
         options_label: 'name',
         options_value: 'id',

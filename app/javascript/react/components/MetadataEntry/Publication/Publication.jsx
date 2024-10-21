@@ -68,14 +68,18 @@ export default function Publication({resource, setResource}) {
     <>
       <h2>Title/Import</h2>
       <fieldset onChange={setOption}>
-        <p><legend>Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} in a published article?</legend></p>
+        <legend style={{margin: '1em 0 0'}}>
+          Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} a published article?
+        </legend>
         <p className="radio_choice">
           <label><input name="published" type="radio" value="yes" defaultChecked={checks.published === 'yes' ? 'checked' : null} />Yes</label>
           <label><input name="published" type="radio" value="no" required defaultChecked={checks.published === 'no' ? 'checked' : null} />No</label>
         </p>
       </fieldset>
       <fieldset id="manuscript" onChange={setOption} hidden={!checks.published || checks.published === 'yes'}>
-        <p><legend>Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} a submitted manuscript?</legend></p>
+        <legend style={{margin: '1em 0 0'}}>
+          Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} a submitted manuscript?
+        </legend>
         <p className="radio_choice">
           <label><input name="manuscript" type="radio" value="yes" defaultChecked={checks.manuscript === 'yes' ? 'checked' : null} />Yes</label>
           <label><input name="manuscript" type="radio" value="no" required defaultChecked={checks.manuscript === 'no' ? 'checked' : null} />No</label>

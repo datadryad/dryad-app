@@ -11,18 +11,17 @@ import Title from '../../../../../../app/javascript/react/components/MetadataEnt
 jest.mock('axios');
 
 describe('Title', () => {
-  let resource; let path; let
-    type;
+  let resource; let setResource;
 
   beforeEach(() => {
-    // setup a DOM element as a render target
-    resource = {id: 27, title: 'My test of rendering title', token: '12xu'};
-    path = '/stash_datacite/titles/update';
-    type = 'Dataset';
+    resource = {
+      id: 27, title: 'My test of rendering title', token: '12xu', resource_type: {resource_type: 'dataset'},
+    };
+    setResource = () => {};
   });
 
   it('renders a basic title', () => {
-    render(<Title resource={resource} path={path} type={type} />);
+    render(<Title resource={resource} setResource={setResource} />);
 
     const input = screen.getByLabelText('Dataset title', {exact: false});
     expect(input).toHaveValue(resource.title);
@@ -38,11 +37,7 @@ describe('Title', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<Title
-      resource={resource}
-      path={path}
-      type={type}
-    />);
+    render(<Title resource={resource} setResource={setResource} />);
 
     const title = screen.getByLabelText('Dataset title', {exact: false});
     expect(title).toHaveValue(resource.title);

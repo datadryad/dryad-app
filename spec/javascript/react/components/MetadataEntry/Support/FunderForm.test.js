@@ -67,7 +67,7 @@ describe('FunderForm', () => {
 
     render(<FunderForm {...info} />);
 
-    const input = screen.getByLabelText('Granting organization:', {exact: false});
+    const input = screen.getByLabelText('Granting organization');
 
     userEvent.clear(input);
     userEvent.type(input, 'Well');
@@ -120,7 +120,7 @@ describe('FunderForm', () => {
 
     userEvent.selectOptions(select, group[8].contributor_name);
 
-    const input = screen.getByLabelText('Granting organization:', {exact: false});
+    const input = screen.getByLabelText('Granting organization');
 
     await waitFor(() => promise);
 

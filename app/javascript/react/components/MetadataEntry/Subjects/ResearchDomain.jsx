@@ -36,7 +36,7 @@ function ResearchDomain({resource, setResource}) {
 
   useEffect(() => {
     async function getList() {
-      axios.get(`/stash_datacite/fos_subjects?select=${encodeURI(subject.subject)}`).then((data) => {
+      axios.get(`/stash_datacite/fos_subjects?select=${subject?.subject ? encodeURI(subject.subject) : ''}`).then((data) => {
         const active_form = document.createRange().createContextualFragment(data.data);
         fieldRef.current.append(active_form);
         document.getElementById('searchselect-fos_subjects__input').setAttribute('aria-errormessage', 'domain_error');

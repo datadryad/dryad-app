@@ -67,8 +67,8 @@ function PublicationForm({
     ).then((data) => {
       if (data.status === 200) {
         const res_pub = {
-          publication_name: journal,
-          publication_issn: issn,
+          publication_name: journal || null,
+          publication_issn: issn || null,
           manuscript_number: values.msid || null,
         };
         const {
@@ -89,7 +89,7 @@ function PublicationForm({
             resource_publication: res_pub,
             related_identifiers,
           }));
-        } else if (error || apiJournal) {
+        } else if (error || apiJournal || !journal) {
           setResource((r) => ({
             ...r,
             journal: j,
@@ -116,7 +116,8 @@ function PublicationForm({
       }
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
-        submitForm(values).then(() => { setSubmitting(false); });
+        submitForm(values);
+        setSubmitting(false);
       }}
     >
       {(formik) => (

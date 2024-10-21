@@ -3,21 +3,20 @@ import {render, screen} from '@testing-library/react';
 import Journal from '../../../../../../app/javascript/react/components/MetadataEntry/Publication/Journal';
 
 describe('Journal', () => {
-  // very similar to the rest of the autocompletes
-
-  let acText; let setAcText; let acID; let setAcID; let formRef; let
-    info;
+  let formRef; let title; let setTitle; let issn; let setIssn; let setAPIJournal;
+  let info;
   beforeEach(() => {
-    [acText, setAcText] = ['Nature Conservation', (i) => { acText = i; }];
-    [acID, setAcID] = ['1314-6947', (i) => { acID = i; }];
+    [title, setTitle] = ['Nature Conservation', (i) => { title = i; }];
+    [issn, setIssn] = ['1314-6947', (i) => { issn = i; }];
     formRef = {};
-
+    setAPIJournal = () => {};
     info = {
       formRef,
-      acText,
-      setAcText,
-      acID,
-      setAcID,
+      title,
+      setTitle,
+      issn,
+      setIssn,
+      setAPIJournal,
       controlOptions: {
         htmlId: 'publication',
         labelText: 'Journal name',
@@ -33,6 +32,6 @@ describe('Journal', () => {
 
     const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
     expect(labeledElements.length).toBe(2);
-    expect(labeledElements[0]).toHaveAttribute('value', acText);
+    expect(labeledElements[0]).toHaveAttribute('value', title);
   });
 });
