@@ -96,7 +96,7 @@ export function titleCase(input, options = {}) {
         isSentenceEnd = terminators.has(nextChar);
         // Always the capitalize first word and reset "new sentence".
         if (isNewSentence) {
-          value = upperAt(value, wordIndex, locale);
+          value = upperAt(lowerAt(value, locale), wordIndex, locale);
           isNewSentence = false;
           continue
         }
@@ -109,7 +109,7 @@ export function titleCase(input, options = {}) {
           if (smallWords.has(word)) {
             // unless sentenceCase
             if (sentenceCase) {
-              value = lowerAt(value, wordIndex, locale)
+              value = lowerAt(value, locale)
             }
             const isFinalToken = index + token.length === input.length;
             if (!isFinalToken && !isSentenceEnd) {
@@ -127,7 +127,7 @@ export function titleCase(input, options = {}) {
           if (smallWords.has(word) && wordSeparators.has(nextChar)) {
             // unless sentenceCase
             if (sentenceCase) {
-              value = lowerAt(value, wordIndex, locale)
+              value = lowerAt(value, locale)
             }
             continue
           }
@@ -137,7 +137,7 @@ export function titleCase(input, options = {}) {
           if (tag && tag.startsWith('NNP')) {
             value = upperAt(value, wordIndex, locale);
           } else {
-            value = lowerAt(value, wordIndex, locale)
+            value = lowerAt(value, locale)
           }
         } else {
           value = upperAt(value, wordIndex, locale);
@@ -155,8 +155,6 @@ function upperAt(input, index, locale) {
     input.charAt(index).toLocaleUpperCase(locale) +
     input.slice(index + 1));
 }
-function lowerAt(input, index, locale) {
-  return (input.slice(0, index) +
-    input.charAt(index).toLocaleLowerCase(locale) +
-    input.slice(index + 1));
+function lowerAt(input, locale) {
+  return input.toLocaleLowerCase(locale)
 }

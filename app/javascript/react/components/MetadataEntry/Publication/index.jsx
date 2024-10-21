@@ -13,7 +13,7 @@ const nondescript = (t) => {
 
 const capitals = (t) => {
   if (t === t.toUpperCase()) return 'All-caps titles are not allowed.';
-  if (t.match(/\b[A-Z].*?\b/g).length > t.split(/\s/).length / 2) return 'Sentence casing of titles is preferred.';
+  if (t.match(/\b[A-Z].*?\b/g).length > t.split(/\s/).length * 0.6) return 'Sentence casing of titles is preferred.';
   return false;
 };
 
@@ -53,7 +53,9 @@ export const publicationCheck = (resource, review) => {
     if (capitals(resource.title)) {
       return (
         <>
-          <p className="error-text" id="title_error">{capitals(resource.title)} Please correct your dataset title to sentence case:</p>
+          <p className="error-text" id="title_error">
+            {capitals(resource.title)} Please correct your dataset title to sentence case, which could look like:
+          </p>
           <div className="callout warn">
             <p><span>{titleCase(resource.title, {sentenceCase: true})}</span>
               <span
