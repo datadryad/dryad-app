@@ -305,7 +305,7 @@ module Stash
         context 'with bad date' do
           it 'does not fail' do
             allow(@resource).to receive(:datacite_dates).and_return [OpenStruct.new(date: 'bad date'), OpenStruct.new(date: '2024-10-21T00:00:00Z')]
-            expect(@ir.dct_temporal_dates).to eq(["2024-10-21"])
+            expect(@ir.dct_temporal_dates).to eq(['2024-10-21'])
           end
         end
       end
