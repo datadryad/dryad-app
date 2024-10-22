@@ -3,7 +3,7 @@ if (!hasGroup) {
   const groupBy = (arr, callback) => {
     return arr.reduce((acc = {}, ...args) => {
       const key = callback(...args);
-      acc[key] ??= []
+      if(!acc[key]) acc[key] = []
       acc[key].push(args[0]);
       return acc;
     }, {});
