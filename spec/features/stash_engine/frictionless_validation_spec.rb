@@ -11,6 +11,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include DatabaseHelper
   include GenericFilesHelper
   include Mocks::Datacite
+  include Mocks::DataFile
   include Mocks::Repository
   include Mocks::RSolr
   include Mocks::Salesforce
@@ -25,6 +26,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     mock_salesforce!
     mock_stripe!
     mock_aws!
+    mock_file_content!
     ignore_zenodo!
     create(:tenant)
     @author = create(:user, tenant_id: 'dryad')
@@ -68,8 +70,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'shows nothing For Validation for non-tabular files' do
       @file.update(upload_file_name: 'non_tabular', upload_content_type: 'application/pdf', original_filename: 'non_tabular')
-      sleep 1
-      click_link 'Upload files'
+      refresh
+      navigate_to_upload
 
       within('table') do
         expect(page).not_to have_content('Uploaded Too large for validation')
@@ -78,8 +80,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'shows Uploaded Too Large For Validation for tabular files greater than the size limit' do
       @file.update(upload_file_size: APP_CONFIG[:frictionless][:size_limit] + 1, upload_file_name: 'tabular.csv', original_filename: 'tabular.csv')
-      sleep 1
-      click_link 'Upload files'
+      refresh
+      navigate_to_upload
 
       within('table') do
         expect(page).to have_content('Uploaded Too large for validation')
@@ -91,7 +93,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         report: '[{errors: errors}]', generic_file: @file, status: 'issues'
       )
       sleep 1
-      click_link 'Upload files'
+      navigate_to_upload
 
       within(:xpath, '//table/tbody/tr/td[2]') do
         expect(text).to include('alerts')
@@ -101,7 +103,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     xit 'shows "Passed" if file is tabular, and the status is "noissues"' do
       @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'noissues')
       sleep 1
-      click_link 'Upload files'
+      navigate_to_upload
 
       within(:xpath, '//table/tbody/tr/td[2]') do
         expect(text).to eq('Passed')
@@ -111,7 +113,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     xit 'shows "Validation Error" if file is plain-text and tabular, and the status is "error"' do
       @report = StashEngine::FrictionlessReport.create!(generic_file: @file, status: 'error')
       sleep 1
-      click_link 'Upload files'
+      navigate_to_upload
 
       within(:xpath, '//table/tbody/tr/td[2]') do
         expect(text).to eq("Couldn't read tabular data")
@@ -122,7 +124,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   describe 'Tabular data check Validation' do
     before(:each) do
       @upload_type = %w[data software supp].sample
-      click_link 'Upload files'
+      navigate_to_upload
     end
     # TODO: xit: skipping until intermittently capybara tests been solved or
     #   else forget about and move tests from here to React only tests

@@ -16,11 +16,13 @@ RSpec.feature 'ResearchFacilityAutofill', type: :feature do
 
     before(:each) do
       start_new_dataset
+      navigate_to_metadata
+      click_button 'Support'
     end
 
     it 'saves a non-selected, typed item to the database', js: true do
-      fill_in 'research_facility', with: "Calling All Cats\t"
-      click_link 'Review and submit'
+      fill_in 'Research facility', with: "Calling All Cats\t"
+      navigate_to_review
       expect(page).to have_text('Research facility: Calling All Cats')
     end
 

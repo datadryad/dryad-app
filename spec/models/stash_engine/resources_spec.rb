@@ -11,12 +11,11 @@ module StashEngine
       mock_salesforce!
       tomorrow = Time.now.utc.to_date + 1
       @future_date = tomorrow + 366.days
-      @user = StashEngine::User.create(
-        first_name: 'Lisa',
-        last_name: 'Muckenhaupt',
-        email: 'lmuckenhaupt@datadryad.org',
-        tenant_id: 'ucop'
-      )
+      @user = create(:user,
+                     first_name: 'Lisa',
+                     last_name: 'Muckenhaupt',
+                     email: 'lmuckenhaupt@datadryad.org',
+                     tenant_id: 'ucop')
       allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
       allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
       allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
@@ -157,9 +156,8 @@ module StashEngine
 
     describe :tenant do
       it 'returns the resource tenant' do
-        tenant = create(:tenant_ucop)
         resource = create(:resource, user: create(:user, tenant_id: 'ucop'))
-        expect(resource.tenant).to eq(tenant)
+        expect(resource.tenant).to eq(StashEngine::Tenant.find('ucop'))
       end
     end
 
@@ -180,8 +178,6 @@ module StashEngine
 
     describe :permission_to_edit do
       before(:each) do
-        create(:tenant_ucop)
-        @user.update(tenant_id: 'ucop')
         @user2 = create(:user, tenant_id: 'ucb')
       end
 
@@ -1441,7 +1437,6 @@ module StashEngine
 
         it 'returns the correct dates when an item went straight from peer_review to curation' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
-          p res.id
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'peer_review')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'curation')

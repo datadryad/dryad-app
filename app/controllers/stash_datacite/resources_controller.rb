@@ -38,7 +38,7 @@ module StashDatacite
           @resource.save!
           @resource.reload
           if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown'
-            @target_page = stash_url_helpers.review_resource_path(@resource.id)
+            @target_page = stash_url_helpers.metadata_entry_pages_find_or_create_path(@resource.id)
             @aff_tenant = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id).partner_list.first
           end
         end
@@ -144,7 +144,7 @@ module StashDatacite
       @resource.identifier.update_search_words!
 
       error_items = Resource::DatasetValidations.new(resource: @resource).errors
-      redirect_to stash_url_helpers.review_resource_path(@resource) and return if error_items.count.positive?
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(@resource) and return if error_items.count.positive?
 
       redirect_to stash_url_helpers.dashboard_path, alert: 'Dataset is already being submitted' if processing?(@resource)
     end

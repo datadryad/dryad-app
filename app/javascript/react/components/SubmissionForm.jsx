@@ -59,11 +59,16 @@ export default function SubmissionForm({
           <>
             <input type="hidden" name="authenticity_token" value={authenticityToken} />
             <input type="hidden" name="resource_id" value={resource.id} />
+            <input type="hidden" name="user_comment" value={userComment} />
             {!showR && <input type="hidden" name="hide_readme" value="true" />}
-            {userComment && <input type="hidden" name="user_comment" value={userComment} />}
           </>
         )}
-        <button type="submit" className="o-button__plain-text1" disabled={!hasChanges || steps.some((s) => s.fail)}>
+        <button
+          type="submit"
+          className="o-button__plain-text1"
+          name="submit_button"
+          disabled={!hasChanges || steps.some((s) => s.fail) || (admin && !userComment)}
+        >
           {admin ? 'Submit changes' : `Submit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
         </button>
       </form>

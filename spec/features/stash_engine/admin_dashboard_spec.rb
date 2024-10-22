@@ -273,7 +273,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         context :in_curation do
           before(:each) do
             create(:curation_activity_no_callbacks, status: 'curation', user_id: @curator.id, resource_id: @resource.id)
-            @resource.update(current_editor_id: @curator.id)
+            @resource.update(current_editor_id: @curator.id, accepted_agreement: true)
             visit stash_url_helpers.admin_dashboard_path
           end
 
@@ -318,24 +318,24 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
           it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
             click_button 'Edit dataset'
+            click_button 'Authors'
             all('[id^=instit_affil_]').last.set('test institution')
             page.send_keys(:tab)
             page.has_css?('.use-text-entered')
             all(:css, '.use-text-entered').each { |i| i.set(true) }
+            click_button 'Preview changes'
+            click_button 'Subjects'
             fill_in_keywords
-            navigate_to_readme
             add_required_data_files
-            navigate_to_review
-            agree_to_everything
+            add_required_readme
             fill_in 'user_comment', with: Faker::Lorem.sentence
-            submit = find_button('submit_dataset', disabled: :all)
-            submit.click
+            submit_form
             expect(URI.parse(current_url).request_uri).to eq(stash_url_helpers.admin_dashboard_path)
           end
 
           it 'allows aborting curation editing of user dataset and return to list in same state afterward' do
             click_button 'Edit dataset'
-            expect(page).to have_field('Dataset title')
+            expect(page).to have_text('Dataset submission')
             click_on('Cancel and Discard Changes')
             find('#railsConfirmDialogYes').click
             expect(URI.parse(current_url).request_uri).to eq(stash_url_helpers.admin_dashboard_path)

@@ -874,20 +874,20 @@ module StashEngine
       that_facility = other_resource.contributors.where(contributor_type: 'sponsor').first&.contributor_name
       changed << 'facility' if this_facility != that_facility
 
-      this_abstract = descriptions.type_abstract.map(&:description)
-      that_abstract = other_resource.descriptions.type_abstract.map(&:description)
+      this_abstract = descriptions.type_abstract&.first&.description
+      that_abstract = other_resource.descriptions.type_abstract&.first&.description
       changed << 'abstract' if this_abstract != that_abstract
 
-      this_methods = descriptions.type_methods.map(&:description)
-      that_methods = other_resource.descriptions.type_methods.map(&:description)
+      this_methods = descriptions.type_methods&.first&.description
+      that_methods = other_resource.descriptions.type_methods&.first&.description
       changed << 'methods' if this_methods != that_methods
 
-      this_technical_info = descriptions.type_technical_info.map(&:description)
-      that_technical_info = other_resource.descriptions.type_technical_info.map(&:description)
-      changed << 'technical_info' if !this_technical_info.compact.empty? && this_technical_info != that_technical_info
+      this_technical_info = descriptions.type_technical_info&.first&.description
+      that_technical_info = other_resource.descriptions.type_technical_info&.first&.description
+      changed << 'technical_info' if this_technical_info != that_technical_info
 
-      this_other_desc = descriptions.type_other.map(&:description)
-      that_other_desc = other_resource.descriptions.type_other.map(&:description)
+      this_other_desc = descriptions.type_other.map(&:description).reject(&:blank)
+      that_other_desc = other_resource.descriptions.type_other.map(&:description).reject(&:blank)
       changed << 'usage_notes' if this_other_desc != that_other_desc
 
       changed.concat(changed_subjects(other_resource.subjects))

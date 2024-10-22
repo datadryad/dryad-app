@@ -34,7 +34,7 @@ module StashDatacite
             redirect_to dashboard_path, notice: 'Dataset released from private for peer review and submitted for curation'
           else
             duplicate_resource
-            redirect_to stash_url_helpers.review_resource_path(@new_res.id),
+            redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(@new_res.id),
                         alert: 'Unable to submit dataset for curation. Please correct submission errors.'
           end
         rescue ActiveRecord::RecordInvalid

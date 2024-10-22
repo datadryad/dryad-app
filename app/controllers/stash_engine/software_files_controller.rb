@@ -31,7 +31,7 @@ module StashEngine
         options_path: '/stash/software_licenses?term=',
         options_label: 'name',
         options_value: 'id',
-        selected: { label: selected.name, value: selected.id }
+        selected: { label: selected&.name, value: selected&.id }
       }
     end
 

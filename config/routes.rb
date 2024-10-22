@@ -218,7 +218,7 @@ Rails.application.routes.draw do
     get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
 
     get 'edit/:doi/:edit_code', to: 'metadata_entry_pages#edit_by_doi', as: 'edit', constraints: { doi: /\S+/ }
-    match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
+    match 'submission/:resource_id', to: 'metadata_entry_pages#find_or_create', via: %i[get post put], as: 'metadata_entry_pages_find_or_create'
     match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
     post 'metadata_entry_pages/new_version_from_previous', to: 'metadata_entry_pages#new_version_from_previous'
     match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:post]

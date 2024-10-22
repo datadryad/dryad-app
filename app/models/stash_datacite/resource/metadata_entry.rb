@@ -43,10 +43,6 @@ module StashDatacite
         @authors = StashEngine::Author.where(resource_id: @resource.id)
       end
 
-      def other
-        @other = Description.type_other.find_or_create_by(resource_id: @resource.id)
-      end
-
       def new_subject
         @subject = Subject.new
       end

@@ -22,13 +22,19 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
     xit "gives message when journal isn't selected" do
       find('input[value="manuscript"]').click
       fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: nil, msid: nil)
-      click_button 'Import manuscript metadata'
+      click_button 'Import metadata'
       expect(page.find('div#population-warnings')).to have_content('Please select your journal from the autocomplete drop-down list')
     end
 
     it 'gives disable submit manuscript not filled' do
-      choose('a manuscript in progress', allow_label_click: true)
-      expect(page).not_to have_button('Import manuscript metadata')
+      navigate_to_metadata
+      within_fieldset('Is your data used in a published article?') do
+        choose('No')
+      end
+      within_fieldset('Is your data used in a submitted manuscript?') do
+        choose('Yes')
+      end
+      expect(page).not_to have_button('Import metadata')
     end
 
   end
@@ -50,14 +56,14 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
                    body: File.new(File.join(Rails.root, 'spec', 'fixtures', 'http_responses', 'crossref_response.json')),
                    headers: {})
 
-      stub_request(:get, 'https://doi.org/10.1098/rsif.2017.0030').with(
+      stub_request(:head, 'https://doi.org/10.1098/rsif.2017.0030').with(
         headers: { 'Host' => 'doi.org' }
       ).to_return(status: 200, body: '', headers: {})
 
       journal = 'Journal of The Royal Society Interface'
       doi = '10.1098/rsif.2017.0030'
       fill_crossref_info(name: journal, doi: doi)
-      expect(page).to have_button('Import article metadata')
+      expect(page).to have_button('Import metadata')
       click_import_article_metadata
       expect(page).to have_field('title',
                                  with: 'High-skilled labour mobility in Europe before and after the 2004 enlargement')
@@ -67,7 +73,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = ''
       doi = ''
       fill_crossref_info(name: journal, doi: doi)
-      expect(page).not_to have_button('Import article metadata')
+      expect(page).not_to have_button('Import metadata')
     end
 
     it "gives a message when it can't find a doi" do
@@ -86,9 +92,11 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       journal = 'cats'
       doi = 'scabs'
       fill_crossref_info(name: journal, doi: doi)
-      expect(page).to have_button('Import article metadata')
+      expect(page).to have_button('Import metadata')
       click_import_article_metadata
-      expect(page.find('div#population-warnings')).to have_content("We couldn't obtain information from CrossRef about this DOI", wait: 15)
+      expect(page.find('div#population-warnings')).to have_content(
+        "We couldn't find metadata to import for this DOI. Please fill in your title manually", wait: 15
+      )
     end
 
     def click_import_article_metadata
@@ -97,7 +105,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       # so we force it here.
       page.execute_script("$('#do_import').val('true')")
 
-      click_button 'Import article metadata'
+      click_button 'Import metadata'
     end
 
   end

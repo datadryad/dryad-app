@@ -6,6 +6,7 @@ export default function Agreements({
   resource, setResource, form, previous, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
+  const submitted = !!resource.identifier.process_date.processing;
   const curated = !!resource.identifier.process_date.curation_end;
   const formRef = useRef(null);
   const [dpc, setDPC] = useState({});
@@ -200,7 +201,7 @@ export default function Agreements({
         <>
           <p className="radio_choice">
             <label>
-              <input type="checkbox" defaultChecked={agree} onChange={toggleTerms} required disabled={resource.identifier.process_date.processing} />
+              <input type="checkbox" name="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
               I agree to Dryad&apos;s {subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}
               <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
             </label>

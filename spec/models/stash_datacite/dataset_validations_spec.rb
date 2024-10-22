@@ -9,12 +9,7 @@ module StashDatacite
         create(:resource_type, resource: @resource)
         @author1 = @resource.authors.first
         @author2 = create(:author, resource: @resource)
-        @author3 = create(:author,
-                          author_first_name: @user.first_name,
-                          author_last_name: @user.last_name,
-                          author_email: @user.email,
-                          author_orcid: @user.orcid,
-                          resource_id: @resource.id)
+        @author3 = create(:author, resource: @resource)
         @resource.subjects << [create(:subject), create(:subject), create(:subject)]
         create(:data_file, resource: @resource)
         @readme = create(:data_file, resource: @resource, upload_file_name: 'README.md')
@@ -79,7 +74,7 @@ module StashDatacite
         end
 
         it 'returns error for missing corresponding author email' do
-          @author3.update(author_email: '')
+          @author1.update(author_email: '')
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.authors
           error = errors.first
@@ -187,12 +182,7 @@ module StashDatacite
           create(:resource_type_collection, resource: @collection)
           @author1 = @collection.authors.first
           @author2 = create(:author, resource: @collection)
-          @author3 = create(:author,
-                            author_first_name: @user.first_name,
-                            author_last_name: @user.last_name,
-                            author_email: @user.email,
-                            author_orcid: @user.orcid,
-                            resource_id: @collection.id)
+          @author3 = create(:author, resource: @collection)
           @collection.subjects << [create(:subject), create(:subject), create(:subject)]
           @collection.reload
         end

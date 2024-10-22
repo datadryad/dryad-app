@@ -9,7 +9,7 @@ module StashEngine
       @metadata_journals = StashEngine::Journal.joins(:manuscripts)
         .where("stash_engine_manuscripts.created_at > '#{1.year.ago.iso8601}'").select(:id).distinct.map(&:id)
       setup_api_journals
-      sponsoring_journals = StashEngine::Journal.where(payment_plan_type: StashEngine::Journal.payment_plans).select(:id).map(&:id)
+      sponsoring_journals = StashEngine::Journal.where(payment_plan_type: %w[SUBSCRIPTION PREPAID DEFERRED TIERED]).select(:id).map(&:id)
       display_journals = @metadata_journals | sponsoring_journals | @api_journals
 
       ord = helpers.sortable_table_order(whitelist: %w[title payment_plan_type sponsor_id parent_org_id default_to_ppr])

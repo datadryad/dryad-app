@@ -4,87 +4,110 @@ module DatasetHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     click_button 'Start new dataset'
-    navigate_to_metadata
+    expect(page).to have_content('Dataset submission')
   end
 
   def navigate_to_metadata
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Describe dataset', wait: 15
-    expect(page).to have_content('Dataset: Basic information')
-  end
-
-  def navigate_to_software_file
-    # Sets this up as a page that can see the software/supp info upload page.
-    se_identifier = StashEngine::Identifier.all.first
-    create(:resource_publication, resource_id: se_identifier.latest_resource_id, publication_issn: '1687-7667')
-    se_identifier.reload
-    navigate_to_upload # so the menus refresh to show newly-allowed tab for special zenodo uploads
-
-    click_link 'Upload Software'
-    click_link 'Upload directly'
-    expect(page).to have_content('Choose files')
+    click_button 'Next'
+    page.find('#checklist-button').click unless page.has_button?('Title/Import')
+    click_button 'Title/Import'
+    expect(page).to have_content('Is your data used in a published article?')
   end
 
   def navigate_to_readme
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Prepare README'
-    expect(page).to have_content('Prepare README file')
+    click_button 'README'
+    expect(page).to have_content('See these example READMES from previous Dryad submissions')
   end
 
   def navigate_to_upload
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Upload files'
-    expect(page).to have_content('Choose files', count: 3)
-    expect(page).to have_content('Enter URLs', count: 3)
+    click_button 'Files'
+    expect(page).to have_content('Choose files')
+    expect(page).to have_content('Enter URLs')
   end
 
   def navigate_to_review
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Review and submit'
-    expect(page).to have_content('Review description')
+    click_button 'Agreements'
+    expect(page).to have_content('Publication of your files')
+    agree_to_everything
+    click_button 'Preview submission'
+    expect(page).to have_content('Dataset submission preview')
   end
 
   def fill_required_fields
     fill_required_metadata
-    navigate_to_readme
     add_required_data_files
+    add_required_readme
   end
 
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-
-    choose('choose_other')
+    within_fieldset('Is your data used in a published article?') do
+      choose('No')
+    end
+    expect(page).to have_content('Is your data used in a submitted manuscript?')
+    within_fieldset('Is your data used in a submitted manuscript?') do
+      choose('No')
+    end
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 5)
+    click_button 'Next'
     fill_in_author
-    fill_in_research_domain
+    click_button 'Next'
     fill_in_funder
-    page.send_keys(:tab)
-    page.has_css?('.use-text-entered')
-    all(:css, '.use-text-entered').each { |i| i.set(true) }
-    # fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
-    create(:description, resource: StashEngine::Resource.last)
+    click_button 'Next'
     fill_in_keywords
+    fill_in_research_domain
+    click_button 'Files'
+    add_required_abstract
+  end
+
+  def add_required_abstract
+    # fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
+    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
+    ab = res.descriptions.find_by(description_type: 'abstract')
+    ab.update(description: Faker::Lorem.paragraph)
+    refresh
+    expect(page).to have_content('Dataset submission')
   end
 
   def add_required_data_files
-    navigate_to_upload
-    resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-    @resource = StashEngine::Resource.find(resource_id)
-    create(:data_file, resource: @resource, file_state: 'copied')
-    create(:data_file, resource: @resource, file_state: 'copied', upload_file_name: 'README.md')
+    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
+    # file must be copied; since it will not appear in AWS dataset_validations
+    create(:data_file, resource: res, file_state: 'copied')
+    refresh
+    expect(page).to have_content('Dataset submission')
+  end
+
+  def add_required_readme
+    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
+    ab = res.descriptions.find_by(description_type: 'technicalinfo')
+    ab.update(description: Faker::Lorem.paragraph)
+    refresh
+    expect(page).to have_content('Dataset submission')
   end
 
   def submit_form
-    click_button 'Submit', wait: 5
+    click_button 'Preview submission' if page.has_button?('Preview submission')
+    click_button 'submit_button'
   end
 
   def fill_manuscript_info(name:, issn:, msid:)
-    choose('choose_manuscript')
+    navigate_to_metadata
+    within_fieldset('Is your data used in a published article?') do
+      choose('No')
+    end
+    expect(page).to have_content('Is your data used in a submitted manuscript?')
+    within_fieldset('Is your data used in a submitted manuscript?') do
+      choose('Yes')
+    end
     page.execute_script("$('#publication').val('#{name}')")
     page.execute_script("$('#publication_issn').val('#{issn}')") # must do to fill hidden field
     page.execute_script("$('#publication_name').val('#{name}')") # must do to fill hidden field
@@ -92,7 +115,8 @@ module DatasetHelper
   end
 
   def fill_crossref_info(name:, doi:)
-    choose('choose_published')
+    navigate_to_metadata
+    choose('Yes')
     fill_in 'publication', with: name
     fill_in 'primary_article_doi', with: doi
     page.send_keys(:tab)
@@ -109,44 +133,44 @@ module DatasetHelper
     fill_in 'author_last_name', with: Faker::Name.unique.last_name
     fill_in 'author_email', with: Faker::Internet.email
     # just fill in results of name dropdown (react) in hidden field and test this separately
-    page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{Faker::Educator.university}'")
+    fill_in 'Institutional affiliation', with: Faker::Educator.university
+    page.send_keys(:tab)
+    page.has_css?('.use-text-entered')
+    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
   end
 
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
-    res = StashEngine::Resource.last
-    res.update(contributors: [create(:contributor, contributor_name: name, award_number: value, resource: res)])
+    fill_in 'Granting organization', with: name
+    fill_in 'award_number', with: value
+    page.has_css?('.use-text-entered')
+    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
   end
 
   def fill_in_research_domain
-    # Should work with:
-    #    fill_in 'fos_subjects', with: 'Biological sciences'
-    # Or at least:
-    #    fos_field = page.find('input.fos-subjects', match: :first)
-    #    fos_field.send_keys 'Bio', :down, :down, :tab
-    # But Capybara is not cooperating with the datalist, so we will fake it....
     fos = 'Biological sciences'
-    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist in the database to be recognized
-    res = StashEngine::Resource.last
-    res.subjects << create(:subject, subject: fos, subject_scheme: 'fos')
+    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
+    refresh
+    expect(page).to have_content('Research domain')
+    fill_in 'Research domain', with: fos
+    page.send_keys(:tab)
   end
 
   def agree_to_everything
-    # navigate_to_review  # do we really have to re-navigate each time?
-    all(:css, '.js-agrees').each { |i| i.click unless i.checked? } # this does the same if they're present, but doesn't always wait
+    check 'agreement'
   end
 
   def attach_files
     attach_file(
       'data',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
     )
     attach_file(
       'software',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { opacity: 1 }
     )
     attach_file(
       'supp',
-      "#{Rails.root}/spec/fixtures/stash_engine/file_1000.ods", make_visible: { left: 0 }
+      "#{Rails.root}/spec/fixtures/stash_engine/file_1000.ods", make_visible: { opacity: 1 }
     )
   end
 
