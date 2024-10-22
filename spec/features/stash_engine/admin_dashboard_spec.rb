@@ -1,5 +1,3 @@
-require 'pry-remote'
-
 RSpec.feature 'AdminDashboard', type: :feature do
   include DatasetHelper
   include Mocks::Aws
