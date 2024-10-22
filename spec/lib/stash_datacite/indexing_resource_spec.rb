@@ -358,8 +358,8 @@ module Stash
             updated_at_dt: @resource.updated_at.iso8601,
             author_orcids_sm: @resource.authors.map(&:author_orcid).reject(&:blank?).uniq,
             funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
-            funder_ror_ids_sm: @resource.funders.ror.map(&:name_identifier_id).reject(&:blank?).uniq,
-            sponsor_ror_ids_sm: @resource.contributors.sponsors.ror.map(&:name_identifier_id).reject(&:blank?).uniq
+            funder_ror_ids_sm: @resource.funders.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
+            sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq
           }
           expect(mega_hash).to eql(expected_mega_hash)
         end
