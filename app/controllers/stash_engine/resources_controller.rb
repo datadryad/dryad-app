@@ -127,9 +127,7 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
     def prepare_readme
       @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, @resource.resource_type.resource_type, current_tenant)
-      @file_list = @resource.data_files.map do |f|
-        next if f.upload_file_name == 'README.md'
-
+      @file_list = @resource.data_files.reject { |f| f.upload_file_name == 'README.md' }.map do |f|
         h = { name: f.upload_file_name }
         if f.upload_file_name.end_with?('.csv', '.tsv', '.xlsx', '.xls', '.rdata', '.rda', '.mat', '.txt')
           h[:variables] = []
