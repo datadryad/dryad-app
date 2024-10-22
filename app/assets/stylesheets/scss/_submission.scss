@@ -585,14 +585,14 @@ dialog#submission-step[open] {
 
 .author-form > div {
   flex-basis: 25%;
-  max-width: calc(25% - 2.2ch);
+  max-width: calc(25% - 1.25ch);
   * {
     max-width: 100%;
     text-overflow: ellipsis;
   }
   @media (max-width: $screen-lg-min) {
     flex-basis: 50%;
-    max-width: calc(50% - 2.2ch);
+    max-width: calc(50% - 1.25ch);
   }
   @media (max-width: 600px) {
     flex-basis: 100%;

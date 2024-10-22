@@ -1,8 +1,7 @@
 import React, {useState, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
-import axios from 'axios';
 import PropTypes from 'prop-types';
-import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import {showModalYNDialog} from '../../../../lib/utils';
 import RorAutocomplete from '../RorAutocomplete';
 
 // author below has nested affiliation
@@ -16,40 +15,15 @@ export default function AuthorForm({
   const [acID, setAcID] = useState(author?.affiliations[0]?.ror_id || '');
 
   const submitForm = (values) => {
-    showSavingMsg();
-
-    // set up values
-    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-
-    const submitVals = {
-      authenticity_token: csrf,
-      author: {
-        id: values.id,
-        author_first_name: values.author_first_name,
-        author_last_name: values.author_last_name,
-        author_email: values.author_email,
-        resource_id: author.resource_id,
-        affiliation: {long_name: acText, ror_id: acID},
-      },
+    const submit = {
+      id: values.id,
+      author_first_name: values.author_first_name,
+      author_last_name: values.author_last_name,
+      author_email: values.author_email,
+      resource_id: author.resource_id,
+      affiliation: {long_name: acText, ror_id: acID},
     };
-
-    // submit by json
-    return axios.patch(
-      '/stash_datacite/authors/update',
-      submitVals,
-      {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          Accept: 'application/json',
-        },
-      },
-    ).then((data) => {
-      if (data.status !== 200) {
-        console.log('Response failure not a 200 response from author save');
-      }
-      update((authors) => authors.map((a) => (a.id === values.id ? data.data : a)));
-      showSavedMsg();
-    });
+    return update(submit);
   };
 
   return (

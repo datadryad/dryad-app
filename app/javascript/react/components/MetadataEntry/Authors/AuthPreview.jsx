@@ -56,37 +56,40 @@ export default function AuthPreview({resource, previous, admin}) {
               })}
               {author.author_email && (
                 <>
-                  <a
-                    href={`mailto:${author.author_email}`}
-                    className={`o-metadata__link ${previous && author.author_email !== prev?.author_email ? 'ins' : ''}`}
-                    aria-label={`Email ${fullname(author)}`}
-                    target="_blank"
-                    title={author.author_email}
-                    rel="noreferrer"
-                  >
-                    <i className="fa fa-envelope" aria-hidden="true" />
-                  </a>
-                  {previous && author.author_email !== prev?.author_email && prev?.author_email && (
-                    <sup><del>{prev.author_email}</del></sup>
+                  {author.corresp && (
+                    <a
+                      href={`mailto:${author.author_email}`}
+                      className={`o-metadata__link ${previous && author.author_email !== prev?.author_email ? 'ins' : ''}`}
+                      aria-label={`Email ${fullname(author)}`}
+                      target="_blank"
+                      title={author.author_email}
+                      rel="noreferrer"
+                    >
+                      <i className="fa fa-envelope" aria-hidden="true" />
+                    </a>
+                  )}
+                  {admin && !author.corresp && (
+                    <sup>{previous && author.author_email !== prev?.author_email ? <ins>{author.author_email}</ins> : author.author_email}</sup>
                   )}
                 </>
               )}
+              {previous && author.author_email !== prev?.author_email && prev?.author_email && (
+                <sup><del>{prev.author_email}</del></sup>
+              )}
               {author.author_orcid && (
-                <>
-                  <a
-                    href={orcidURL(author.author_orcid)}
-                    className={`o-metadata__link ${previous && author.author_orcid !== prev?.author_orcid ? 'ins' : ''}`}
-                    target="_blank"
-                    aria-label={`${fullname(author)} ORCID profile (opens in new window)`}
-                    title={`ORCID: ${author.author_orcid}`}
-                    rel="noreferrer"
-                  >
-                    <i className="fab fa-orcid" aria-hidden="true" />
-                  </a>
-                  {previous && author.author_orcid !== prev?.author_orcid && prev?.author_orcid && (
-                    <sup><del>{prev.author_orcid}</del></sup>
-                  )}
-                </>
+                <a
+                  href={orcidURL(author.author_orcid)}
+                  className={`o-metadata__link ${previous && author.author_orcid !== prev?.author_orcid ? 'ins' : ''}`}
+                  target="_blank"
+                  aria-label={`${fullname(author)} ORCID profile (opens in new window)`}
+                  title={`ORCID: ${author.author_orcid}`}
+                  rel="noreferrer"
+                >
+                  <i className="fab fa-orcid" aria-hidden="true" />
+                </a>
+              )}
+              {previous && author.author_orcid !== prev?.author_orcid && prev?.author_orcid && (
+                <sup><del>{prev.author_orcid}</del></sup>
               )}
               {i < authors.length - 1 && '; '}
             </Fragment>

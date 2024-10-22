@@ -36,6 +36,21 @@ export default function Authors({
     });
   };
 
+  const updateItem = (author) => {
+    showSavingMsg();
+    return axios.patch(
+      '/stash_datacite/authors/update',
+      {authenticity_token, author},
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    ).then((data) => {
+      if (data.status !== 200) {
+        console.log('Response failure not a 200 response from author save');
+      }
+      setAuthors((as) => as.map((a) => (a.id === author.id ? data.data : a)));
+      showSavedMsg();
+    });
+  };
+
   const removeItem = (id, resource_id) => {
     showSavingMsg();
     const submitVals = {authenticity_token, author: {id, resource_id}};
@@ -61,8 +76,21 @@ export default function Authors({
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
           <DragonListItem key={author.id} item={author} typeName="author">
-            <AuthorForm author={author} update={setAuthors} remove={removeItem} ownerId={ownerId} />
-            <OrcidInfo author={author} curator={admin} ownerId={ownerId} />
+            <AuthorForm author={author} update={updateItem} remove={removeItem} ownerId={ownerId} />
+            <div className="input-line" style={{marginLeft: '38px', marginTop: '1em'}}>
+              <OrcidInfo author={author} curator={admin} ownerId={ownerId} />
+              <div className="radio_choice" style={{marginLeft: 'auto'}}>
+                <label title={!author.email ? 'Author email must be entered' : null}>
+                  <input
+                    type="checkbox"
+                    defaultChecked={author.corresp}
+                    disabled={!author.author_email}
+                    onChange={(e) => updateItem({...author, corresp: e.target.checked})}
+                  />
+                  Display email
+                </label>
+              </div>
+            </div>
           </DragonListItem>
         ))}
       </DragonDropList>

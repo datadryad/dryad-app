@@ -35,7 +35,10 @@ export function PublicationHelp() {
 
 export function AuthHelp() {
   return (
-    <p>Affiliations are required for all authors, and an email address is required for the submitting author. Authors can be reordered.</p>
+    <>
+      <p>Affiliations are required for all authors. An email address is required for the submitter, who will be the point of contact for Dryad, and for any corresponding authors.</p>
+      <p>Check <b>Display email</b> to mark someone as a corresponding author on the published dataset.</p>
+    </>
   );
 }
 
