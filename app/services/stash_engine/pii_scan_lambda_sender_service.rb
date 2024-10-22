@@ -2,7 +2,7 @@ module StashEngine
   class PiiScanLambdaSenderService < BaseSenderService
 
     def call
-      trigger_call('excelToCsv')
+      trigger_call('sensitive_data_scan')
     end
 
     private
