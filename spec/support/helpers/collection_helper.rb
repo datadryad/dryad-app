@@ -11,21 +11,26 @@ module CollectionHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     visit('/stash/resources/new?collection')
-    navigate_to_metadata
+    expect(page).to have_content('Collection submission')
   end
 
   def navigate_to_metadata
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Describe collection', wait: 15
-    expect(page).to have_content('Collection: Basic information')
+    click_button 'Next'
+    page.find('#checklist-button').click unless page.has_button?('Title/Import')
+    click_button 'Title/Import'
+    expect(page).to have_content('Is your collection associated with a published article?')
   end
 
   def navigate_to_review
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Review and submit', wait: 15
-    expect(page).to have_content('Review description')
+    click_button 'Agreements'
+    expect(page).to have_content('Publication')
+    agree_to_everything
+    click_button 'Preview submission'
+    expect(page).to have_content('Collection submission preview')
   end
 
   def fill_required_fields
@@ -35,22 +40,42 @@ module CollectionHelper
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-    choose('choose_other')
+    within_fieldset('Is your collection associated with a published article?') do
+      choose('No')
+    end
+    expect(page).to have_content('Is your collection associated with a submitted manuscript?')
+    within_fieldset('Is your collection associated with a submitted manuscript?') do
+      choose('No')
+    end
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 5)
+    click_button 'Next'
     fill_in_author
-    fill_in_research_domain
+    click_button 'Next'
     fill_in_funder
+    fill_in_research_domain
+    fill_in_keywords
+    click_button 'Next'
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.set(true) }
-    fill_in_keywords
-    # fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
-    create(:description, resource: StashEngine::Resource.last)
+    add_required_abstract
+    expect(page).to have_content('Please list all the datasets in the collection')
     fill_in_collection
   end
 
+  def add_required_abstract
+    # fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
+    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
+    ab = res.descriptions.find_by(description_type: 'abstract')
+    ab.update(description: Faker::Lorem.paragraph)
+    refresh
+    expect(page).to have_content('Collection submission')
+  end
+
   def submit_form
-    click_button 'Submit', wait: 5
+    click_button 'Preview submission' if page.has_button?('Preview submission')
+    expect(page).to have_content('Collection submission preview')
+    click_button 'submit_button'
   end
 
   def fill_in_keywords
@@ -63,40 +88,41 @@ module CollectionHelper
     fill_in 'author_last_name', with: Faker::Name.unique.last_name
     fill_in 'author_email', with: Faker::Internet.email
     # just fill in results of name dropdown (react) in hidden field and test this separately
-    page.execute_script("document.getElementsByClassName('js-affil-longname')[0].value = '#{Faker::Educator.university}'")
+    fill_in 'Institutional affiliation', with: Faker::Educator.university
+    page.send_keys(:tab)
+    page.has_css?('.use-text-entered')
+    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
   end
 
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
-    res = StashEngine::Resource.last
-    res.update(contributors: [create(:contributor, contributor_name: name, award_number: value, resource: res)])
+    fill_in 'Granting organization', with: name
+    fill_in 'award_number', with: value
+    page.has_css?('.use-text-entered')
+    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
   end
 
   def fill_in_research_domain
-    # Should work with:
-    #    fill_in 'fos_subjects', with: 'Biological sciences'
-    # Or at least:
-    #    fos_field = page.find('input.fos-subjects', match: :first)
-    #    fos_field.send_keys 'Bio', :down, :down, :tab
-    # But Capybara is not cooperating with the datalist, so we will fake it....
     fos = 'Biological sciences'
-    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist in the database to be recognized
-    res = StashEngine::Resource.last
-    res.subjects << create(:subject, subject: fos, subject_scheme: 'fos')
+    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
+    refresh
+    expect(page).to have_content('Research domain')
+    fill_in 'Research domain', with: fos
+    page.send_keys(:tab)
   end
 
   def fill_in_collection
-    res = StashEngine::Resource.last
+    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
     sets = StashEngine::Resource.where.not(id: res.id).limit(3)
-    sets.each do |set|
-      create(:related_identifier, relation_type: 'haspart', work_type: 'dataset', resource_id: res.id,
-                                  related_identifier: set.identifier_uri, related_identifier_type: 'doi')
-
+    sets.each_with_index do |set, i|
+      within(".work-form:nth-of-type(#{i + 1})") do
+        fill_in 'DOI or other URL', with: set.identifier_uri
+      end
+      click_button '+ Add work' unless i == sets.length - 1
     end
   end
 
   def agree_to_everything
-    # navigate_to_review  # do we really have to re-navigate each time?
-    all(:css, '.js-agrees').each { |i| i.click unless i.checked? } # this does the same if they're present, but doesn't always wait
+    check 'agreement'
   end
 
   def build_valid_stub_request(url, mime_type = 'text/plain')

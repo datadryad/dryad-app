@@ -1,5 +1,3 @@
-require 'pry-remote'
-
 RSpec.feature 'Admin', type: :feature do
 
   include DatasetHelper
@@ -37,7 +35,7 @@ RSpec.feature 'Admin', type: :feature do
       @identifier.save
       @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
       visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
-      expect(page).to have_text('Describe your dataset')
+      expect(page).to have_text('Dataset submission preview')
       expect(page).to have_text('User settings')
     end
 

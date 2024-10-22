@@ -5,13 +5,6 @@
   @media (max-width: 968px) { min-height: calc(100vh - 280px); } 
   @media (max-width: 870px) { min-height: calc(100vh - 306px); } 
   @media (max-width: 640px) { min-height: calc(100vh - 346px); } 
-
-  #submission-wizard {
-    min-height: calc(100vh - 320px);
-    @media (max-width: 968px) { min-height: calc(100vh - 360px); } 
-    @media (max-width: 870px) { min-height: calc(100vh - 386px); } 
-    @media (max-width: 640px) { min-height: calc(100vh - 426px); } 
-  }
 }
 
 .c-footer {

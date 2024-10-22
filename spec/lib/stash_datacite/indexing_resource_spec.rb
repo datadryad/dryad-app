@@ -117,7 +117,7 @@ module Stash
 
       describe '#general_type' do
         it 'returns the correct value' do
-          expect(@ir.general_type.to_s.end_with?('Dataset')).to be_truthy
+          expect(@ir.general_type.to_s.end_with?('"Dataset"')).to be_truthy
         end
       end
 

@@ -12,13 +12,13 @@
 }
 
 .md_editor_textarea {
-  height: 65vh;
+  height: 55vh;
   position: relative;
   overflow: auto;
 }
 
 #readme_step_editor .md_editor_textarea {
-  height: 400px;
+  height: 350px;
   max-height: 65vh;
 }
 
