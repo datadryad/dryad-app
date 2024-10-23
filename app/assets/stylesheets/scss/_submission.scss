@@ -640,6 +640,17 @@ dialog#submission-step[open] {
   }
 }
 
+.auth-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+
+  i {
+    transform: rotate(75deg);
+    color: $dark-gray;
+  }
+}
+
 .funder-form {
   padding-bottom: 1ch;
   & > div {

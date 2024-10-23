@@ -16,12 +16,14 @@ export default function Authors({
   const blankAuthor = {
     author_first_name: '',
     author_last_name: '',
+    author_org_name: null,
     author_email: '',
     author_orcid: null,
     resource_id: resource.id,
   };
 
-  const addNewAuthor = () => {
+  const addNewAuthor = (org) => {
+    if (org) blankAuthor.author_org_name = '';
     const authorJson = {authenticity_token, author: {...blankAuthor, author_order: lastOrder()}};
     axios.post(
       '/stash_datacite/authors/create',
@@ -76,7 +78,7 @@ export default function Authors({
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
           <DragonListItem key={author.id} item={author} typeName="author">
             <AuthorForm author={author} update={updateItem} admin={admin} ownerId={ownerId} />
-            { ownerId !== author.id && (
+            {ownerId !== author.id && (
               <button
                 type="button"
                 className="remove-record"
@@ -95,13 +97,13 @@ export default function Authors({
           </DragonListItem>
         ))}
       </DragonDropList>
-      <div style={{textAlign: 'right'}}>
-        <button
-          className="o-button__plain-text1"
-          type="button"
-          onClick={addNewAuthor}
-        >
+      <div className="auth-buttons">
+        <button type="button" className="o-button__plain-text1" onClick={() => addNewAuthor(false)}>
           + Add author
+        </button>
+        <i className="fas fa-slash" role="img" alt=" or " />
+        <button type="button" className="o-button__plain-text4" onClick={() => addNewAuthor(true)}>
+          + Add group author
         </button>
       </div>
     </>

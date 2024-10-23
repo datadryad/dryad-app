@@ -16,7 +16,10 @@ export default function Affiliations({
   const updateID = (i, v) => {
     setAffs((afs) => afs.map((a, x) => (i === x ? {...a, ror_id: v} : a)));
   };
-  const newAff = () => setAffs((afs) => afs.concat([{long_name: '', ror_id: ''}]));
+  const newAff = (e) => {
+    setAffs((afs) => afs.concat([{long_name: '', ror_id: ''}]));
+    e.target.blur();
+  };
   const removeAff = (i) => {
     affs.splice(i, 1);
     setAffs(affs);

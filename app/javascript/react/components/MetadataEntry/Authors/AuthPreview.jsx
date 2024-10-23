@@ -14,7 +14,10 @@ const getAffs = (ar) => ar.map((a) => a.affiliations).flat().reduce((arr, aff) =
 }, []);
 
 const fullname = (author) => [author?.author_first_name, author?.author_last_name].filter(Boolean).join(' ');
-const citename = (author) => [author?.author_last_name, author?.author_first_name].filter(Boolean).join(', ');
+const citename = (author) => {
+  if (author?.author_org_name) return author.author_org_name;
+  return [author?.author_last_name, author?.author_first_name].filter(Boolean).join(', ');
+};
 
 export default function AuthPreview({resource, previous, admin}) {
   const {authors} = resource;
@@ -69,7 +72,9 @@ export default function AuthPreview({resource, previous, admin}) {
                     </a>
                   )}
                   {admin && !author.corresp && (
-                    <sup>{previous && author.author_email !== prev?.author_email ? <ins>{author.author_email}</ins> : author.author_email}</sup>
+                    <sup title="Shown for admin">
+                      {previous && author.author_email !== prev?.author_email ? <ins>{author.author_email}</ins> : author.author_email}
+                    </sup>
                   )}
                 </>
               )}
