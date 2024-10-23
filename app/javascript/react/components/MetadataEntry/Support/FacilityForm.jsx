@@ -6,8 +6,7 @@ import RorAutocomplete from '../RorAutocomplete';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 export default function FacilityForm({resource, setResource}) {
-  const formRef = useRef(0);
-  const nameRef = useRef(null);
+  const formRef = useRef(null);
   const sponsor = resource.contributors.find((r) => r.contributor_type === 'sponsor') || {};
   const [name, setName] = useState(sponsor.contributor_name || '');
   const [nameId, setNameId] = useState(sponsor.name_identifier_id);
@@ -65,10 +64,12 @@ export default function FacilityForm({resource, setResource}) {
               htmlId: 'research_facility',
               labelText: 'Research facility',
               isRequired: false,
+              desBy: 'facility-ex',
             }}
           />
-          <input ref={nameRef} type="hidden" value={name} className="js-affil-longname" name="contributor[name_identifier_id]" />
-          <input type="hidden" value={nameId} className="js-affil-id" name="author[affiliation][ror_id]" />
+          <div id="facility-ex">
+            <i className="hint" />A field or other station or organization where research was conducted, apart from affiliations
+          </div>
         </Form>
       )}
     </Formik>

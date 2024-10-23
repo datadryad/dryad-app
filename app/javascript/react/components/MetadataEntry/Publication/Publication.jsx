@@ -77,7 +77,7 @@ export default function Publication({resource, setResource}) {
         </p>
       </fieldset>
       <fieldset id="manuscript" onChange={setOption} hidden={!checks.published || checks.published === 'yes'}>
-        <legend style={{margin: '1em 0 0'}}>
+        <legend style={{margin: '1.5em 0 0'}}>
           Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} a submitted manuscript?
         </legend>
         <p className="radio_choice">

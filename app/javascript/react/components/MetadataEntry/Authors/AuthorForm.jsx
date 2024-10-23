@@ -54,10 +54,12 @@ export default function AuthorForm({
                 type="text"
                 className="c-input__text"
                 aria-errormessage="author_fname_error"
+                aria-describedby={`${author.id}org-ex`}
                 onBlur={() => { // defaults to formik.handleBlur
                   formik.handleSubmit();
                 }}
               />
+              <div id={`${author.id}org-ex`}><i className="ie" />Committee, agency, working group, etc.</div>
             </div>
           ) : (
             <>
@@ -71,10 +73,12 @@ export default function AuthorForm({
                   type="text"
                   className="c-input__text"
                   aria-errormessage="author_fname_error"
+                  aria-describedby={`${author.id}name-ex`}
                   onBlur={() => { // defaults to formik.handleBlur
                     formik.handleSubmit();
                   }}
                 />
+                <div id={`${author.id}name-ex`}><i className="ie" />Given name</div>
               </div>
               <div className="input-stack">
                 <label className="input-label" htmlFor={`author_last_name__${author.id}`}>
@@ -85,10 +89,12 @@ export default function AuthorForm({
                   name="author_last_name"
                   type="text"
                   className="c-input__text"
+                  aria-describedby={`${author.id}lname-ex`}
                   onBlur={() => { // defaults to formik.handleBlur
                     formik.handleSubmit();
                   }}
                 />
+                <div id={`${author.id}lname-ex`}><i className="ie" />Family name</div>
               </div>
               <div className="input-stack">
                 <div
@@ -118,10 +124,12 @@ export default function AuthorForm({
                   type="text"
                   className="c-input__text"
                   aria-errormessage="author_email_error"
+                  aria-describedby={`${author.id}email-ex`}
                   onBlur={() => { // defaults to formik.handleBlur
                     formik.handleSubmit();
                   }}
                 />
+                <div id={`${author.id}email-ex`}><i />help@datadryad.org</div>
               </div>
               <Affiliations formRef={formRef} id={author.id} affiliations={affiliations} setAffiliations={setAffiliations} />
               <div className="input-line" style={{flexBasis: '100%', maxWidth: '100%', marginTop: '.5em'}}>
