@@ -1,0 +1,10 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>Your data submission has been automatically deleted from the Dryad platform after being “In progress” for one year with no action:</p>
+
+<p>
+  Title: <%= @resource.title %><br/>
+  <%= @resource.identifier_str %>
+</p>
+
+<p>If you have questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Auto-Withdraw <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>
