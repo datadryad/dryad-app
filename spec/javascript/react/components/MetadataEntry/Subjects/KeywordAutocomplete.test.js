@@ -18,7 +18,7 @@ describe('KeywordAutocomplete', () => {
   it('renders a basic autocomplete form', () => {
     render(<KeywordAutocomplete {...info} />);
 
-    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
-    expect(labeledElements.length).toBe(2);
+    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText);
+    expect(labeledElements.length).toBe(1);
   });
 });
