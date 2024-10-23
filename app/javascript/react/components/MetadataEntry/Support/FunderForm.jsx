@@ -74,8 +74,6 @@ function FunderForm({
     }
   }, [acID]);
 
-  console.log(groupings);
-
   return (
     <Formik
       initialValues={

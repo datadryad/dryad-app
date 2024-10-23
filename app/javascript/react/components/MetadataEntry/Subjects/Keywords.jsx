@@ -57,7 +57,7 @@ function Keywords({resource, setResource}) {
         id="js-keywords__container"
         className="c-keywords__container"
         role="listbox"
-        aria-labelledby="label_keyword_ac"
+        aria-label="Subject keywords and search"
         aria-multiselectable="true"
         aria-describedby="keywords-ex"
       >
