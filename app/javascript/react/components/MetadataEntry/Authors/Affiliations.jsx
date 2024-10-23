@@ -31,7 +31,7 @@ export default function Affiliations({
       {affs.map((aff, i) => (
         <div className="input-stack affiliation-input" key={`aff${i}`}>
           <div className="input-line">
-            <label htmlFor={`instit_affil_${id}-${i}`} className="input-label">
+            <label id={`label_instit_affil_${id}-${i}`} htmlFor={`instit_affil_${id}-${i}`} className="input-label">
               Institutional affiliation
             </label>
             {i !== 0 && (

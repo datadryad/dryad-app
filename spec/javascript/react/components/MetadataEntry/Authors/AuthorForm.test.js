@@ -12,6 +12,7 @@ const makeAuthor = (resource_id = null, author_order = null) => {
   return {
     author_first_name: faker.name.firstName(),
     author_last_name: faker.name.lastName(),
+    author_org_name: null,
     author_email: faker.internet.email(),
     author_orcid: `${sect()}-${sect()}-${sect()}-${sect()}`,
     resource_id: resource_id || faker.datatype.number({min: 1, max: 32767}),
@@ -31,14 +32,14 @@ describe('AuthorForm', () => {
   });
 
   it('renders the basic author form', () => {
-    render(<AuthorForm author={author} update={update} remove={remove} ownerId={ownerId} />);
+    render(<AuthorForm author={author} update={update} remove={remove} admin={false} ownerId={ownerId} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
-    expect(labeledElements.length).toBe(2);
+    expect(labeledElements.length).toBe(1);
 
     expect(screen.getByLabelText('First name')).toHaveValue(author.author_first_name);
     expect(screen.getByLabelText('Last name')).toHaveValue(author.author_last_name);
-    expect(screen.getByLabelText('Author email')).toHaveValue(author.author_email);
+    expect(screen.getByLabelText('Email')).toHaveValue(author.author_email);
   });
 
   // gives some pointers and info about act and async examples
@@ -51,7 +52,7 @@ describe('AuthorForm', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm author={author} update={update} remove={remove} ownerId={ownerId} />);
+    render(<AuthorForm author={author} update={update} remove={remove} admin={false} ownerId={ownerId} />);
 
     userEvent.clear(screen.getByLabelText('First name'));
     userEvent.type(screen.getByLabelText('First name'), 'Alphred');
@@ -73,7 +74,7 @@ describe('AuthorForm', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm author={author} update={update} remove={remove} ownerId={ownerId} />);
+    render(<AuthorForm author={author} update={update} remove={remove} admin={false} ownerId={ownerId} />);
 
     userEvent.clear(screen.getByLabelText('Last name'));
     userEvent.type(screen.getByLabelText('Last name'), 'Dryadsson');
@@ -92,12 +93,12 @@ describe('AuthorForm', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm author={author} update={update} remove={remove} ownerId={ownerId} />);
+    render(<AuthorForm author={author} update={update} remove={remove} admin={false} ownerId={ownerId} />);
 
-    userEvent.clear(screen.getByLabelText('Author email'));
-    userEvent.type(screen.getByLabelText('Author email'), 'email@email.edu');
+    userEvent.clear(screen.getByLabelText('Email'));
+    userEvent.type(screen.getByLabelText('Email'), 'email@email.edu');
 
-    await waitFor(() => expect(screen.getByLabelText('Author email')).toHaveValue('email@email.edu'));
+    await waitFor(() => expect(screen.getByLabelText('Email')).toHaveValue('email@email.edu'));
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 

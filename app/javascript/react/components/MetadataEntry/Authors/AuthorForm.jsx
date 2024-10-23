@@ -36,7 +36,8 @@ export default function AuthorForm({
       }
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
-        submitForm(values).then(() => { setSubmitting(false); });
+        submitForm(values);
+        setSubmitting(false);
       }}
     >
       {(formik) => (
