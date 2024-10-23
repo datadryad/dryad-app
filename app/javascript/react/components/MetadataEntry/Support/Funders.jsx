@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/utils';
 import DragonDropList, {DragonListItem, orderedItems} from '../DragonDropList';
 import FunderForm from './FunderForm';
 
@@ -112,15 +112,20 @@ function Funders({resource, setResource}) {
         <DragonDropList model="contributor" typeName="funder" items={funders} path="/stash_datacite/contributors/reorder" setItems={setFunders}>
           {orderedItems({items: funders, typeName: 'funder'}).map((contrib) => (
             <DragonListItem key={contrib.id} item={contrib} typeName="funder">
-              <FunderForm
-                key={contrib.id}
-                resourceId={resource.id}
-                contributor={contrib}
-                groupings={groupings}
-                disabled={disabled}
-                removeFunction={removeItem}
-                updateFunder={updateFunder}
-              />
+              <FunderForm resourceId={resource.id} contributor={contrib} groupings={groupings} disabled={disabled} updateFunder={updateFunder} />
+              <button
+                type="button"
+                className="remove-record"
+                onClick={() => {
+                  showModalYNDialog('Are you sure you want to remove this funder?', () => {
+                    removeItem(contrib.id);
+                  });
+                }}
+                aria-label="Remove funding"
+                title="Remove"
+              >
+                <i className="fas fa-trash-can" aria-hidden="true" />
+              </button>
             </DragonListItem>
           ))}
         </DragonDropList>

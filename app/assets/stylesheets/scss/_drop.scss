@@ -25,9 +25,12 @@
 .dd-list-item {
 	list-style: "";
 	margin: 1rem auto;
-  padding: 1rem;		
+  padding: 1rem;
 	background-color: $lightest-blue;
-  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1.5ch;
 
   &.dragon-inactive {
   }
@@ -36,7 +39,6 @@
 	  @extend %o-button__link-style;
 	  cursor: ns-resize;
 	  float: left;
-	  margin-right: 1.5ch;
 	  margin-top: 28px;
 	  &:before {
 		  font-family: 'Font Awesome 6 Free';
