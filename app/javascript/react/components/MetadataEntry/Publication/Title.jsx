@@ -57,10 +57,10 @@ function Title({resource, setResource}) {
               formik.handleSubmit();
             }}
             required
+            aria-describedby="title-ex"
             aria-errormessage="title_error"
           />
-          <Field name="id" type="hidden" />
-          <Field name="authenticity_token" type="hidden" />
+          <div id="title-ex"><i className="hint" />The title should be a succinct summary of the data and its purpose or use</div>
         </Form>
       )}
     </Formik>

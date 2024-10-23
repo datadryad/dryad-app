@@ -74,6 +74,8 @@ function FunderForm({
     }
   }, [acID]);
 
+  console.log(groupings);
+
   return (
     <Formik
       initialValues={
@@ -104,9 +106,11 @@ function FunderForm({
                   labelText: 'Granting organization',
                   isRequired: true,
                   errorId: 'funder_error',
+                  desBy: `${contributor.id}funder-ex`,
                 }
               }
             />
+            <div id={`${contributor.id}funder-ex`}><i />National Institutes of Health</div>
             {showSelect && (
               <>
                 <label htmlFor="subfunder_select" className="c-input__label" style={{marginTop: '1em'}}>{showSelect.group_label}</label>
@@ -125,10 +129,12 @@ function FunderForm({
               name="award_number"
               type="text"
               className="js-award_number c-input__text"
+              aria-describedby={`${contributor.id}award-ex`}
               onBlur={() => { // defaults to formik.handleBlur
                 formik.handleSubmit();
               }}
             />
+            <div id={`${contributor.id}award-ex`}><i />CA 123456-01A1</div>
           </div>
           <div className="input-stack">
             <label className="input-label optional" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
@@ -138,10 +144,12 @@ function FunderForm({
               name="award_description"
               type="text"
               className="js-award_description c-input__text"
+              aria-describedby={`${contributor.id}desc-ex`}
               onBlur={() => { // defaults to formik.handleBlur
                 formik.handleSubmit();
               }}
             />
+            <div id={`${contributor.id}desc-ex`}><i className="ie" />Section of the funder</div>
           </div>
         </Form>
       )}

@@ -50,6 +50,7 @@ function ResearchDomain({resource, setResource}) {
   return (
     <form className="input-stack" style={{marginBottom: '1.5em'}}>
       <div ref={fieldRef} />
+      <div className="input-example"><i className="ie" />The main scholarly or technical field for the data or project</div>
     </form>
   );
 }

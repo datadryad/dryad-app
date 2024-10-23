@@ -50,8 +50,10 @@ export default function Affiliations({
               htmlId: `instit_affil_${id}-${i}`,
               isRequired: true,
               errorId: 'author_aff_error',
+              desBy: `${id}-${`aff${i}`}-ex`,
             }}
           />
+          <div id={`${id}-${`aff${i}`}-ex`}><i className="ie" />Employer or sponsor</div>
         </div>
       ))}
       <span><button type="button" onClick={newAff}>+ Add affiliation</button></span>
