@@ -64,7 +64,6 @@ export default function AuthorForm({
               name="author_last_name"
               type="text"
               className="c-input__text"
-              aria-errormessage="author_lname_error"
               onBlur={() => { // defaults to formik.handleBlur
                 formik.handleSubmit();
               }}

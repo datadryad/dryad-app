@@ -19,14 +19,6 @@ export const authorCheck = (authors, id) => {
       </p>
     );
   }
-  const lnameErr = authors.findIndex((a) => !a.author_last_name);
-  if (lnameErr >= 0) {
-    return (
-      <p className="error-text" id="author_lname_error" data-index={lnameErr}>
-        {upCase(ordinalNumber(lnameErr + 1))} author last name is required
-      </p>
-    );
-  }
   const affErr = authors.findIndex((a) => !a.affiliations?.[0]?.long_name);
   if (affErr >= 0) {
     return (
