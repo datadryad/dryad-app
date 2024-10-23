@@ -80,63 +80,73 @@ Each journal has a primary title, but may have multiple `alternate_titles`.
 
 To add an alternate title to a journal:
 ```ruby
-# Find the target journal and assign it to j
-
-# Then create the alternate title
-StashEngine::JournalTitle.create(title: 'Some new title', journal: j, show_in_autocomplete: true)
+StashEngine::JournalTitle.create(title: 'Some new title', journal_id: <the journal id>, show_in_autocomplete: false)
 ```
 
 The `show_in_autocomplete` can be adjusted to false when adding a misspelling or
 other journal name that should not be listed for public selection.
 
 
-Cleaning journal names
-=======================
+Cleaning journals
+=================
 
-When a journal name is not recognized by the system, the title is stored with an
-asterisk appended. Periodically, new journals should be added to the system, and
-old datasets should be updated to link them to the new journals.
+When a journal name is not recognized by the system, it is stored in the resource's `resource publication.publication_name` without an accompanying `publication_issn`. ISSNs may also be added to this table by curators, without an accompanying entry in the `journal_issns`. Periodically, new journals should be added to the system, and old datasets should be updated to link them to the new journals.
 
-Process all journal titles in the system, converting any with an asterisk to
-the corresponding journal that has the same name:
-`rails journals:clean_titles_with_asterisks`
+This is primarily used for related primary articles. Look at unmatched primary articles in the system, adding a publication_issn if one exists.
 
-Search for journals that are candidates to fix, in the database:
-```sql
-SELECT value, COUNT(value)
-FROM stash_engine_internal_data
-WHERE value like '%*%'
-GROUP BY value
-ORDER BY COUNT(value);
-```
+### Unmatched primary articles
 
-You can delete titles that are obviously junk or placeholders (e.g., "to be determined").
-
-For each title, determine whether there is a corresponding journal in our
-database.
-
-IF there is no corresponding journal, create an entry for a new journal in the
-system, using a command like the the one below. Edit any
-of the relevant fields, but the most critical are `title` and `issn`. Note that `issn` may contain
-either a single ISSN or an array of them. 
 ```ruby
-j = StashEngine::Journal.create(title: '', issn: '',
-                                notify_contacts: ["automated-messages@datadryad.org"], allow_review_workflow: true,
-								allow_embargo: false, allow_blackout: false, sponsor_id: nil)
+# primary articles with no matched journal, a relevant subset of all unmatched publications
+StashEngine::Resource.latest_per_dataset.joins('join dcs_related_identifiers r on r.resource_id = stash_engine_resources.id and r.work_type = 6 and r.related_identifier is not null').joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'r.related_identifier', 'stash_engine_resource_publications.publication_name', 'stash_engine_resource_publications.publication_issn')
 ```
 
-IF a new journal does not need to be created, add the new title as an
-alternate_title to the journal.
-```
-StashEngine::JournalTitle.create(title: 'Some new title', journal: j, show_in_autocomplete: false)
-```
+You can sort by the entered publication to group them in order of title and see which are used more than once: `.sort_by {|s| [s[3] ? 1 : 0, s[3]]}`. This returns an array of arrays of the following format:
 
-Finally, replace the title throughout the system:
+`[<resource ID>, <dryad DOI>, <primary article DOI>, <unmatched publication_name (or nil)>, <unmatched publication_issn (or nil)>]`
+
+Visit a primary article DOI. Determine if it is from a journal already in our system, and add the journal information to the resource_publications table. You can also easily do this from the activity log UI for each dataset.
+
 ```ruby
-old_name = 'The Greatest Journal*'
-new_id = 123
-StashEngine::Journal.replace_uncontrolled_journal(old_name: old_name, new_id: new_id)
+j = StashEngine::Journal #get your journal
+StashEngine::Resource.find(<id>).resource_publication.update(publication_name: j.title, publication_issn: j.single_issn)
 ```
+
+If a journal ISSN is already listed as the publication_issn, and is correct for the journal, you should add the ISSN to the journal. You can also easily do this from the journal admin UI.
+```ruby
+StashEngine::JournalIssn.create(id: <issn>, journal: j)
+```
+
+If the journal name is present and is a reasonable variation for the journal, consider if it should be added as an alternate title:
+```ruby
+StashEngine::JournalTitle.create(title: 'Some new title', journal_id: <the journal id>, show_in_autocomplete: false)
+```
+
+**NOTE: ONLY add journals that have more than 1 deposit in Dryad.**
+
+If there is no corresponding journal, you can create an entry for a new journal in the system. You must also create entries for each of the journal's ISSNs:
+```ruby
+j = StashEngine::Journal.create(title: <journal title>)
+StashEngine::JournalIssn.create(id: <issn>, journal: j)
+```
+
+### Unmatched manuscripts
+
+If all primary articles are processed, you can do a similar process for results where users have entered a publication_name and a manuscript_number but no ISSN was found.
+
+```ruby
+# manuscripts with no matched journal, a relevant subset of all unmatched publications
+StashEngine::Resource.latest_per_dataset.joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).where.not(resource_publication: {manuscript_number: [nil, ''], publication_name: [nil, '']}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'resource_publication.manuscript_number', 'resource_publication.publication_name', 'resource_publication.publication_issn')
+```
+
+You can sort by the entered publication to group them in order of title and see which are used more than once: `.sort_by {|s| [s[3] ? 1 : 0, s[3]]}`. This returns an array of arrays of the following format:
+
+`[<resource ID>, <dryad DOI>, <manuscript number>, <unmatched publication_name>, <unmatched publication_issn (or nil)>]`
+
+Ignore any results for which the manuscript number or publication name are gibberish, or otherwise wrong. If they seem real and relevant, you can check and add journals as above.
+
+**NOTE: ONLY add journals that have more than 1 deposit in Dryad.**
+
 
 Updating journals for payment plans and integrations
 ====================================================
