@@ -4,10 +4,10 @@ import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import RorAutocomplete from '../RorAutocomplete';
-import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function FunderForm({
-  resourceId, contributor, removeFunction, updateFunder, groupings,
+  resourceId, contributor, updateFunder, groupings,
 }) {
   const formRef = useRef();
 
@@ -143,21 +143,6 @@ function FunderForm({
               }}
             />
           </div>
-          <span>
-            <button
-              type="button"
-              className="remove-record"
-              onClick={() => {
-                showModalYNDialog('Are you sure you want to remove this funder?', () => {
-                  removeFunction(contributor.id);
-                });
-              }}
-              aria-label="Remove funding"
-              title="Remove"
-            >
-              <i className="fas fa-trash-can" aria-hidden="true" />
-            </button>
-          </span>
         </Form>
       )}
     </Formik>
@@ -171,6 +156,5 @@ export default FunderForm;
 FunderForm.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   contributor: PropTypes.object.isRequired,
-  removeFunction: PropTypes.func.isRequired,
   updateFunder: PropTypes.func.isRequired,
 };

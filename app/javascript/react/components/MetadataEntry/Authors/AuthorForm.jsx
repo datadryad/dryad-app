@@ -1,18 +1,14 @@
 import React, {useState, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import PropTypes from 'prop-types';
-import {showModalYNDialog} from '../../../../lib/utils';
-import RorAutocomplete from '../RorAutocomplete';
+import Affiliations from './Affiliations';
+import OrcidInfo from './OrcidInfo';
 
-// author below has nested affiliation
 export default function AuthorForm({
-  author, update, remove, ownerId,
+  author, update, ownerId, admin,
 }) {
   const formRef = useRef(0);
-
-  // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
-  const [acText, setAcText] = useState(author?.affiliations[0]?.long_name || '');
-  const [acID, setAcID] = useState(author?.affiliations[0]?.ror_id || '');
+  const [affiliations, setAffiliations] = useState(author?.affiliations);
 
   const submitForm = (values) => {
     const submit = {
@@ -21,7 +17,7 @@ export default function AuthorForm({
       author_last_name: values.author_last_name,
       author_email: values.author_email,
       resource_id: author.resource_id,
-      affiliation: {long_name: acText, ror_id: acID},
+      affiliations,
     };
     return update(submit);
   };
@@ -75,24 +71,27 @@ export default function AuthorForm({
             />
           </div>
           <div className="input-stack">
-            <RorAutocomplete
-              formRef={formRef}
-              acText={acText}
-              setAcText={setAcText}
-              acID={acID}
-              setAcID={setAcID}
-              controlOptions={{
-                htmlId: `instit_affil_${author.id}`,
-                labelText: 'Institutional affiliation',
-                isRequired: true,
-                errorId: 'author_aff_error',
+            <div
+              className="input-line"
+              style={{
+                gap: '1ch', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'nowrap',
               }}
-            />
-          </div>
-          <div className="input-stack">
-            <label className={`input-label ${(author.author_orcid ? 'required' : 'optional')}`} htmlFor={`author_email__${author.id}`}>
-              Author email
-            </label>
+            >
+              <label className={`input-label ${(author.author_orcid ? 'required' : '')}`} htmlFor={`author_email__${author.id}`}>
+                Email
+              </label>
+              <span className="radio_choice" style={{fontSize: '.98rem'}}>
+                <label title={!author.email ? 'Author email must be entered' : null}>
+                  <input
+                    type="checkbox"
+                    defaultChecked={author.corresp}
+                    disabled={!author.author_email}
+                    onChange={(e) => update({...author, corresp: e.target.checked})}
+                  />
+                  Corresponding
+                </label>
+              </span>
+            </div>
             <Field
               id={`author_email__${author.id}`}
               name="author_email"
@@ -104,24 +103,10 @@ export default function AuthorForm({
               }}
             />
           </div>
-          { ownerId !== author.id && (
-            <span>
-              <button
-                type="button"
-                className="remove-record"
-                onClick={() => {
-                  showModalYNDialog('Are you sure you want to remove this author?', () => {
-                    remove(author.id, author.resource_id);
-                    // deleteItem(auth.id);
-                  });
-                }}
-                aria-label="Remove author"
-                title="Remove"
-              >
-                <i className="fas fa-trash-can" aria-hidden="true" />
-              </button>
-            </span>
-          )}
+          <Affiliations formRef={formRef} id={author.id} affiliations={affiliations} setAffiliations={setAffiliations} />
+          <div className="input-line" style={{flexBasis: '100%', maxWidth: '100%', marginTop: '.5em'}}>
+            <OrcidInfo author={author} curator={admin} ownerId={ownerId} />
+          </div>
         </Form>
       )}
     </Formik>
@@ -131,6 +116,6 @@ export default function AuthorForm({
 AuthorForm.propTypes = {
   author: PropTypes.object.isRequired,
   update: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired,
+  admin: PropTypes.bool.isRequired,
   ownerId: PropTypes.number.isRequired,
 };

@@ -571,51 +571,83 @@ dialog#submission-step[open] {
   flex-wrap: wrap;
   column-gap: 1.5ch;
   row-gap: 1ch;
+  flex: 1;
 
-  & > span {
-    display: block;
-    align-self: start;
-  }
-
-  .remove-record {
+  .remove-record, & + .remove-record {
     @extend %o-button__link-style;
     margin-top: 28px;
   }
 }
 
+%author-form-button {
+  color: $dark-blue;
+  background-color: white;
+  border: thin solid $medium-blue;
+  padding: 2px 5px;
+  &:hover, &:active, &:focus {
+    background-color: $dark-blue;
+    color: white;
+  }
+}
+
 .author-form > div {
-  flex-basis: 25%;
-  max-width: calc(25% - 1.25ch);
+  flex-basis: calc(33% - 1ch);
+  flex-shrink: 1;
+  flex-grow: 0;
+  max-width: 100%;
+  min-width: 165px;
   * {
     max-width: 100%;
     text-overflow: ellipsis;
   }
-  @media (max-width: $screen-lg-min) {
-    flex-basis: 50%;
-    max-width: calc(50% - 1.25ch);
+  &.affiliation-input {
+    flex: 1;
+    min-width: 200px;
+
+    .input-line {
+      align-items: baseline;
+      gap: 1ch;
+      flex-wrap: nowrap;
+      button {
+        @extend %author-form-button;
+        line-height: 0;
+        font-size: .9rem;
+      }
+    }
+
+    & + span {
+      display: block;
+      align-self: start;
+      button {
+        @extend %author-form-button;
+        margin-top: 28px;
+        font-size: .98rem;
+        padding-bottom: 0;
+      }
+    }
   }
-  @media (max-width: 600px) {
+  @media (max-width: $screen-lg-min) {
+    flex-basis: calc(50% - 1ch);
+  }
+  @media (max-width: 520px) {
     flex-basis: 100%;
-    max-width: 100%;
+  }
+}
+
+.open .author-form > div {
+  @media (max-width: 710px) {
+    flex-basis: 100%;
   }
 }
 
 .funder-form {
   padding-bottom: 1ch;
   & > div {
-    flex-basis: 33%;
-    max-width: calc(33% - 2.2ch);
+    flex-basis: 25%;
+    flex: 1;
     * {
       max-width: 100%;
       text-overflow: ellipsis;
-    }
-    @media (max-width: 800px) {
-      flex-basis: 50%;
-      max-width: calc(50% - 2.2ch);
-    }
-    @media (max-width: 600px) {
-      flex-basis: 100%;
-      max-width: 100%;
     }
   }
 }

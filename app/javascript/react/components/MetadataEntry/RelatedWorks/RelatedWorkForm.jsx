@@ -112,7 +112,7 @@ function RelatedWorkForm(
                 }}
               />
             </div>
-            <span>
+            <span style={{display: 'block', alignSelf: 'start'}}>
               <button
                 type="button"
                 className="remove-record"

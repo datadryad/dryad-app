@@ -212,7 +212,7 @@ export default function Autocomplete(
           )}
           <label className="c-input__label c-ac__checkbox">
             <input type="checkbox" className="use-text-entered" checked={textEnter} onChange={saveText} />
-            {` I cannot find my ${labelText.toLowerCase()}, "${acText}", in the list`}
+            {` I cannot find my ${labelText?.toLowerCase() || 'item'}, "${acText}", in the list`}
           </label>
         </>
       )}
