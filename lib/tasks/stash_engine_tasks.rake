@@ -1399,6 +1399,17 @@ namespace :curation_stats do
 end
 
 namespace :journals do
+  task match_titles_to_issns: :environment do
+    StashEngine::ResourcePublication.where.not(publication_name: [nil, '']).where(publication_issn: [nil, '']).find_each do |d|
+
+      journal = StashEngine::Journal.find_by_title(d.publication_name)
+      next unless j.present?
+
+      puts "Cleaning journal: #{name}"
+      StashEngine::Journal.replace_uncontrolled_journal(old_name: d.publication_name, new_journal: journal)
+    end
+    nil
+  end
   desc 'Clean journals that have exact name matches except for an asterisk'
   task clean_titles_with_asterisks: :environment do
     StashEngine::InternalDatum.where("data_type = 'publicationName' and value like '%*'").find_each do |d|
@@ -1409,7 +1420,7 @@ namespace :journals do
       next unless j.present?
 
       puts "Cleaning journal: #{name}"
-      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_id: j.id)
+      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_journal: j)
     end
     StashEngine::ResourcePublication.where("publication_name like '%*'").find_each do |d|
       name = d.publication_name
@@ -1419,7 +1430,7 @@ namespace :journals do
       next unless j.present?
 
       puts "Cleaning journal: #{name}"
-      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_id: j.id)
+      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_journal: j)
     end
     nil
   end
