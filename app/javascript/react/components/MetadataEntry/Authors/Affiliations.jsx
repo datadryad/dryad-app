@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import RorAutocomplete from '../RorAutocomplete';
+/* eslint-disable react/no-array-index-key */
 
 export default function Affiliations({
   formRef, id, affiliations, setAffiliations,
@@ -28,7 +29,7 @@ export default function Affiliations({
   return (
     <>
       {affs.map((aff, i) => (
-        <div className="input-stack affiliation-input" key={aff.id || aff.ror_id || affs.length + i}>
+        <div className="input-stack affiliation-input" key={`aff${i}`}>
           <div className="input-line">
             <label htmlFor={`instit_affil_${id}-${i}`} className="input-label">
               Institutional affiliation
@@ -40,7 +41,6 @@ export default function Affiliations({
             )}
           </div>
           <RorAutocomplete
-            key={aff?.id || `affTEMP${aff.length + i}`}
             formRef={formRef}
             acText={aff.long_name || ''}
             setAcText={(v) => updateName(i, v)}
