@@ -7,7 +7,10 @@ export default function Support({resource, setResource}) {
     <>
       <h2>Support</h2>
       <FacilityForm resource={resource} setResource={setResource} />
-      <h3 id="funders-head">Funding</h3>
+      <div className="drag-instruct">
+        <h3 id="funders-head">Funding</h3>
+        <p>Drag <i className="fa-solid fa-bars-staggered" role="img" aria-label="handle button" /> to reorder</p>
+      </div>
       <Funders resource={resource} setResource={setResource} />
     </>
   );

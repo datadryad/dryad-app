@@ -503,45 +503,22 @@ dialog#submission-step[open] {
   h1 {
     margin-bottom: 0;
   }
-  & + h2 {
+  & + h2, & + div > h2:first-child {
     margin-top: 1.1rem;
   }
 }
 
-#submission-help {
-  //position: sticky;
-  //bottom: 0;
-  //box-shadow: $lightest-green 0px -4px 4px -6px;
-  border-top: thick solid $lightest-green;
-  background-color: white;
-  padding: 2rem;
-  padding-left: 30px;
-  width: 100%;
+.drag-instruct {
+  font-size: .98rem;
   display: flex;
+  align-items: baseline;
   gap: 2ch;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-direction: row-reverse; 
-
-  #submission-help-text {
-    font-size: 1rem;
-    *:first-child {
-      margin-top: 0;
-    }
-    *:last-child {
-      margin-top: 0;
-    }
+  flex-wrap: wrap;
+  i {
+    margin: 0 .5ch;
   }
-
-  @media (max-width: 811px){
-    flex-direction: column-reverse;
-    *:first-child {
-      margin-left: auto;
-    }
-  }
-
-  button {
-    white-space: nowrap;
+  & > * {
+    margin-bottom: 0;
   }
 }
 
