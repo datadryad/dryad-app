@@ -17,7 +17,7 @@ export default function Publication({resource, setResource}) {
   const optionChange = (choice) => {
     showSavingMsg();
     setImportType(choice);
-    setResource((r) => ({...r, identifier: {...r.identifier, import_info: choice}}));
+    setRes((r) => ({...r, identifier: {...r.identifier, import_info: choice}}));
     axios.patch(
       `/stash/resources/${resource.id}/import_type`,
       {authenticity_token, import_info: choice},
