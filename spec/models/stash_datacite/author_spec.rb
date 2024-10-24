@@ -53,11 +53,11 @@ module StashEngine # TODO: are we testing Author or Affiliation? (Or AuthorPatch
       end
 
       describe '#affiliation=' do
-        it 'replaces the entire affiliation list' do
+        it 'does not replace the entire affiliation list' do
+          count = @author.affiliations.count
           new_affil = StashDatacite::Affiliation.create(long_name: 'Metro-Goldwyn-Mayer')
           @author.affiliation = new_affil
-          expect(@author.affiliations.count).to eq(1)
-          expect(@author.affiliation).to eq(new_affil)
+          expect(@author.affiliations.count).to eq(count + 1)
         end
       end
 

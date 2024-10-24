@@ -10,7 +10,7 @@ export default function OrcidInfo({
 }) {
   const orcidInfo = author.author_orcid ? orcidURL(author.author_orcid) : null;
   return (
-    <p className="input-line" style={{marginLeft: '38px', marginBottom: 0}}>
+    <>
       {orcidInfo && (
         <span>
           <i className="fab fa-orcid" aria-hidden="true" />&nbsp;
@@ -19,7 +19,7 @@ export default function OrcidInfo({
       )}
       {ownerId === author.id && (
         <span>
-          <i className="fas fa-address-card" aria-hidden="true" />&nbsp;Corresponding author
+          <i className="fas fa-address-card" aria-hidden="true" />&nbsp;Submitter
         </span>
       )}
       {(curator && !orcidInfo && author.orcid_invite_path) ? (
@@ -27,7 +27,7 @@ export default function OrcidInfo({
           Associate &nbsp;<i className="fab fa-orcid" aria-hidden="true" />&nbsp;at {author.orcid_invite_path}
         </span>
       ) : ''}
-    </p>
+    </>
   );
 }
 

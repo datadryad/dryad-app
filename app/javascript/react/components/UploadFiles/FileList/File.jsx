@@ -51,19 +51,20 @@ export default function File({file, clickRemove, clickValidationReport}) {
         // console.log(e);
       }
       return (
-        <div style={{display: 'flex', alignItems: 'center'}}>
-          <div className="c-alert--error-icon">
-            <button
-              className="o-button__plain-text5"
-              onClick={clickValidationReport}
-              aria-haspopup="dialog"
-              type="button"
-              style={{padding: '10px'}}
-            >
-              View {jsReport?.report?.stats?.errors} alerts
-            </button>
-          </div>
-        </div>
+        <button
+          className="o-button__plain-textlink"
+          onClick={clickValidationReport}
+          aria-haspopup="dialog"
+          type="button"
+        >
+          <i
+            className="fa-solid fa-triangle-exclamation"
+            style={{color: 'rgb(209, 44, 29)', marginRight: '.5ch'}}
+            role="img"
+            aria-label="Has alerts"
+          />
+          View {jsReport?.report?.stats?.errors} alerts
+        </button>
       );
     }
     case TabularCheckStatus.na:
@@ -81,10 +82,8 @@ export default function File({file, clickRemove, clickValidationReport}) {
     <tr>
       <th scope="row">{file.sanitized_name}</th>
       <td id={`status_${file.id}`} className="c-uploadtable__status">{file.status}</td>
-      <td>
-        <span className={statusCss(file.tabularCheckStatus)}>
-          {tabularInfo}
-        </span>
+      <td className={statusCss(file.tabularCheckStatus)}>
+        {tabularInfo}
       </td>
       <td>
         {file.url && (
@@ -99,8 +98,8 @@ export default function File({file, clickRemove, clickValidationReport}) {
         {removing ? (
           <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" />
         ) : (
-          <button onClick={removeClick} type="button" className="c-upload__button">
-            Remove
+          <button onClick={removeClick} type="button" className="o-button__plain-textlink">
+            <i className="fas fa-trash-can" aria-hidden="true" style={{marginRight: '.5ch'}} />Remove
           </button>
         )}
       </td>

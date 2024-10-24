@@ -51,14 +51,14 @@ module StashDatacite
       end
 
       describe :authors do
-        it 'returns error for missing first or last name' do
+        it 'returns error for missing firstname' do
           @author2.update(author_first_name: '')
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.authors
           error = errors.first
           expect(errors.count).to eq(1)
           expect(error.message).to include('2nd')
-          expect(error.message).to include('first and last name')
+          expect(error.message).to include('first name')
           expect(error.ids.first).to include('author_first_name__')
         end
 

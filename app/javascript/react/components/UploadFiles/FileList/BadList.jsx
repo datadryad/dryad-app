@@ -22,7 +22,7 @@ const makeAndString = (arr) => {
   return `${firsts.join(', ')} and ${last}`;
 };
 
-const badList = (props) => {
+export default function BadList(props) {
   const errorFiles = filterForStatus('error', props.chosenFiles);
   const issueFiles = filterForStatus('issues', props.chosenFiles);
   if (errorFiles.length + issueFiles.length < 1) return (null);
@@ -32,52 +32,49 @@ const badList = (props) => {
 
   if (errorFiles.length > 0) {
     errorMsg = (
-      <div className="c-alert__text-lite">
-        Our tabular data checker couldn&apos;t read tabular data from {makeAndString(errorFiles)}.
-        If you expect them to have consistent tabular data, check that they are readable and formatted correctly.
+      <div className="callout err" role="alert">
+        <p>
+          Our tabular data checker couldn&apos;t read tabular data from {makeAndString(errorFiles)}.
+          If you expect them to have consistent tabular data, check that they are readable and formatted correctly.
+        </p>
       </div>
     );
   }
 
   if (issueFiles.length > 0) {
     issueMsg = (
-      <div>
-        <span className="c-alert__text-lite">
-          Our automated tabular data checker identified potential inconsistencies in the format and structure of {issueFiles.length} of your files.
-        </span>
-        <p>
-          <a href="/stash/data_check_guide" target="_blank">
-            A detailed report is available<span className="screen-reader-only"> (opens in new window)</span>
-          </a>
-          {' '}for each file. To address the identified alerts:
+      <div className="callout err" role="alert" style={{paddingBottom: '.75rem', marginBottom: '1em'}}>
+        <p style={{marginBottom: '.5rem'}}>
+          Tabular data checker found inconsistencies in the format and structure of {issueFiles.length} of your files
         </p>
-        <ol>
-          <li>
-            Click the alert button in the
-            {' '}<em>Tabular data check</em>{' '}
-            column to see what has been highlighted for your review.
-          </li>
-          <li>Review the local copy of your file and make any desired changes.</li>
-          <li>
-            If you would like to replace the file, click &quot;Remove&quot; in the <em>Actions</em> column to delete the current upload.
-          </li>
-          <li>
-            Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.
-          </li>
-        </ol>
+        <div style={{backgroundColor: 'white', padding: '.75rem', fontSize: '.98rem'}}>
+          <p style={{marginTop: 0}}>
+            <a href="/stash/data_check_guide" target="_blank">
+              A detailed report<span className="screen-reader-only"> (opens in new window)</span>
+            </a>
+            {' '}is available for each file. To address the identified alerts:
+          </p>
+          <ol style={{marginBottom: 0}}>
+            <li>
+              Click the alert button in the <em>Tabular data check</em> column to see what has been highlighted for your review.
+            </li>
+            <li>Review the local copy of your file and make any desired changes.</li>
+            <li>
+              If you would like to replace the file, click &quot;Remove&quot; in the <em>Actions</em> column to delete the current upload.
+            </li>
+            <li>
+              Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.
+            </li>
+          </ol>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="js-alert c-alert--error-lite" role="alert">
-      <div className="c-alert__text">
-        {errorMsg}
-        {issueMsg}
-      </div>
-      <button type="button" aria-label="close" className="js-alert__close o-button__close-lite c-alert__close-lite" />
-    </div>
+    <>
+      {errorMsg}
+      {issueMsg}
+    </>
   );
-};
-
-export default badList;
+}

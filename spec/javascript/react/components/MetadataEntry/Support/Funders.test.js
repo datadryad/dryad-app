@@ -44,8 +44,8 @@ describe('Funders', () => {
     render(<Funders resource={resource} setResource={setResource} />);
 
     await waitFor(() => options);
-    const labeledElements = screen.getAllByLabelText('Granting organization', {exact: false});
-    expect(labeledElements.length).toBe(9); // three for each autocomplete list
+    const labeledElements = screen.getAllByLabelText('Granting organization');
+    expect(labeledElements.length).toBe(3);
     const awardNums = screen.getAllByLabelText('Award number', {exact: false});
     expect(awardNums.length).toBe(3);
     expect(awardNums[0]).toHaveValue(contributors[0].award_number);
