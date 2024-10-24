@@ -48,7 +48,7 @@ RSpec.feature 'NewCollection', type: :feature do
 
   context :requirements_not_met, js: true do
     it 'should disable submit button', js: true do
-      start_new_collection
+      visit('/stash/resources/new?collection')
       navigate_to_review
       submit = find_button('submit_button', disabled: :all)
       expect(submit).not_to be_nil
@@ -59,7 +59,7 @@ RSpec.feature 'NewCollection', type: :feature do
   context :requirements_met, js: true do
     before(:each, js: true) do
       create_datasets
-      start_new_collection
+      visit('/stash/resources/new?collection')
       fill_required_fields
       navigate_to_review
       fill_in 'user_comment', with: Faker::Lorem.sentence

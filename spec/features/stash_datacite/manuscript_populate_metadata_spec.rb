@@ -29,10 +29,10 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
     it 'gives disable submit manuscript not filled' do
       navigate_to_metadata
       within_fieldset('Is your data used in a published article?') do
-        choose('No')
+        find(:label, 'No').click
       end
       within_fieldset('Is your data used in a submitted manuscript?') do
-        choose('Yes')
+        find(:label, 'Yes').click
       end
       expect(page).not_to have_button('Import metadata')
     end

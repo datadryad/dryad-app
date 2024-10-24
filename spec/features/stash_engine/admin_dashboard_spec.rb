@@ -326,6 +326,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
             fill_in_keywords
             add_required_data_files
             add_required_readme
+            refresh
             fill_in 'user_comment', with: Faker::Lorem.sentence
             submit_form
             expect(URI.parse(current_url).request_uri).to eq(stash_url_helpers.admin_dashboard_path)
