@@ -51,9 +51,9 @@ module StashEngine
             note: "Transferring ownership to #{current_user.name} (#{current_user.id}) using an edit code"
           )
           @resource.curation_activities << ca
-          @resource.user_id = current_user.id
-          @resource.current_editor_id = current_user.id
-          @resource.save
+          @resource.submitter = current_user.id
+          @resource.update(current_editor_id: current_user.id)
+          @resource.reload
         else
           # The user will need to login (possibly creating an
           # account), and then they will be redirected back to this
@@ -68,7 +68,7 @@ module StashEngine
       # that they have access to edit this dataset. But if they were not logged in,
       # log them in as the dataset owner, and ensure the tenant_id is set correctly.
       unless current_user
-        session[:user_id] = resource.user_id
+        session[:user_id] = resource.submitter.id
         if current_user.tenant_id.blank?
           session[:target_page] = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
           redirect_to stash_url_helpers.choose_sso_path and return
@@ -136,7 +136,7 @@ module StashEngine
     private
 
     def ownership_transfer_needed?
-      valid_edit_code? && (resource.user_id == 0)
+      (valid_edit_code? && resource.submitter.id == 0) || resource.submitter.blank?
     end
 
     def resource_exist

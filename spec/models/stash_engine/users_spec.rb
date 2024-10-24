@@ -17,6 +17,12 @@ module StashEngine
     end
 
     describe 'name should return "[first_name] [last_name]"' do
+      it 'returns a user\'s name' do
+        user = create(:user, first_name: 'Johann', last_name: 'Jones')
+        expect(user.name).to eq('Johann Jones')
+        user2 = create(:user, first_name: 'Bob', last_name: nil)
+        expect(user2.name).to eq('Bob')
+      end
 
       it 'returns the right value when first and last name are both available' do
         expect(@user.name).to eql("#{@user.first_name} #{@user.last_name}")
@@ -100,75 +106,12 @@ module StashEngine
 
     end
 
-    describe '#tenant' do
+    describe 'roles' do
       it 'finds the tenant' do
         tenant = instance_double(Tenant)
         allow(Tenant).to receive(:find).with('ucop').and_return(tenant)
         user = create(:user, tenant_id: 'ucop')
         expect(user.tenant).to eq(tenant)
-      end
-    end
-
-    describe '#latest_completed_resource_per_identifier' do
-
-      before(:each) do
-        @user = create(:user,
-                       first_name: 'Lisa',
-                       last_name: 'Muckenhaupt',
-                       email: 'lmuckenhaupt@datadryad.org',
-                       tenant_id: 'ucop')
-      end
-
-      it 'finds the user\'s resources' do
-        resources = Array.new(5) do |index|
-          ident = create(:identifier, identifier: "10.123/#{index}")
-          resource = create(:resource, user_id: @user.id, skip_emails: true, identifier: ident)
-          resource.current_state = 'submitted'
-          resource
-        end
-        latest = @user.latest_completed_resource_per_identifier
-        expect(latest).to contain_exactly(*resources)
-      end
-
-      it 'ignores "in progress" resources' do
-        in_progress = []
-        other = []
-        %w[submitted processing].each_with_index do |state, index|
-          Timecop.travel(Time.now.utc - 1.hour)
-          ident = create(:identifier, identifier: "10.123/#{index}")
-          res1 = create(:resource, user_id: @user.id, skip_emails: true, identifier: ident)
-          res1.current_state = 'in_progress'
-          in_progress << res1
-          Timecop.return
-          res2 = create(:resource, user_id: @user.id, skip_emails: true, identifier: ident)
-          res2.current_state = state
-          other << res2
-        end
-        latest = @user.latest_completed_resource_per_identifier
-        expect(latest).to contain_exactly(*other)
-        in_progress.each do |res|
-          expect(latest).not_to include(res)
-        end
-      end
-
-      it 'finds only the latest for each identifier' do
-        user = create(:user)
-        ident = create(:identifier, identifier: '10.123/1234')
-        resources = Array.new(5) do |_|
-          sleep 1
-          resource = create(:resource, user: user, skip_emails: true, identifier: ident)
-          resource.current_state = 'submitted'
-          resource
-        end
-        latest = user.latest_completed_resource_per_identifier
-        expect(latest).to contain_exactly(resources.last)
-      end
-
-      it 'returns a user\'s name' do
-        user = create(:user, first_name: 'Johann', last_name: 'Jones')
-        expect(user.name).to eq('Johann Jones')
-        user2 = create(:user, first_name: 'Bob', last_name: nil)
-        expect(user2.name).to eq('Bob')
       end
 
       it 'returns correct role information more generous roles contain lesser roles)' do
@@ -268,9 +211,9 @@ module StashEngine
         @user2.reload
         @user3.reload
 
-        expect(@user1.resources.count).to eq(2) # this user owns both for user 1 & 2
-        expect(@user2.resources.count).to eq(0) # this user owns none of the resources
-        expect(@user3.resources.count).to eq(1) # this user still only owns his own resource and it hasn't changed
+        expect(@user1.resources.distinct.count).to eq(2) # this user owns both for user 1 & 2
+        expect(@user2.resources.distinct.count).to eq(0) # this user owns none of the resources
+        expect(@user3.resources.distinct.count).to eq(1) # this user still only owns his own resource and it hasn't changed
       end
 
       it 'moves the dependendent resource states from user2 to user1 and leaves others alone' do

@@ -41,7 +41,7 @@ module StashDatacite
     private
 
     def se_resource
-      @se_resource ||= StashEngine::Resource.create(user_id: user_id, tenant_id: tenant_id)
+      @se_resource ||= StashEngine::Resource.new(current_editor_id: user_id, tenant_id: tenant_id)
     end
 
     def se_resource_id
@@ -51,6 +51,9 @@ module StashDatacite
     # rubocop:disable Metrics/AbcSize
     def populate_se_resource!
       set_sd_identifier(dcs_resource.identifier)
+      se_resource.save
+      @se_resource.submitter = user_id
+      @se_resource.creator = user_id
       stash_files.each { |stash_file| add_stash_file(stash_file) }
       dcs_resource.contributors.each { |dcs_creator| add_se_author(dcs_creator) }
       dcs_resource.titles.each { |dcs_title| add_se_title(dcs_title) }

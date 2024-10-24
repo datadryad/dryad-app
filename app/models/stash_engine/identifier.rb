@@ -160,7 +160,7 @@ module StashEngine
       return latest_resource_with_public_metadata if user.nil?
 
       lr = latest_resource
-      return lr if lr&.admin_for_this_item?(user: user)
+      return lr if lr&.permission_to_edit?(user: user)
 
       latest_resource_with_public_metadata
     end
@@ -173,7 +173,7 @@ module StashEngine
       return latest_resource_with_public_download if user.nil?
 
       lr = resources.submitted_only.by_version_desc.first
-      return lr if lr&.admin_for_this_item?(user: user)
+      return lr if lr&.permission_to_edit?(user: user)
 
       latest_resource_with_public_download
     end
