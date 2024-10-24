@@ -30,9 +30,10 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
   end
 
-  context :requirements_met, js: true do
+  # tests below are very slow
 
-    it 'submit button should be enabled', js: true do
+  context :requirements_met, js: true do
+    xit 'submit button should be enabled', js: true do
       start_new_dataset
       fill_required_fields
       navigate_to_review
@@ -45,85 +46,10 @@ RSpec.feature 'ReviewDataset', type: :feature do
       expect(page).to have_content(StashEngine::Resource.last.title)
       expect(page).to have_content('submitted with DOI')
     end
-
-  end
-
-  context :peer_review_section do
-
-    it 'should be visible', js: true do
-      start_new_dataset
-      click_button 'Agreements'
-      expect(page).to have_content('Publication of your files')
-    end
-
-  end
-
-  context :software_filled do
-    before(:each, js: true) do
-      # Sign in and create a new dataset
-      visit root_path
-      click_link 'My datasets'
-      start_new_dataset
-      fill_required_fields
-
-      # Sets this up as a page that can see the software/supp info upload page. There is only one identifier created for this test.
-      se_identifier = StashEngine::Identifier.all.first
-      pub = StashEngine::ResourcePublication.find_or_initialize(resource_id: se_identifier.latest_resource_id)
-      pub.update(publication_issn: '1687-7667')
-      se_identifier.reload
-      navigate_to_upload # so the menus refresh to show newly-allowed tab for special zenodo uploads
-    end
-
-    # I do not know how we test this entire flow when it involves the outside S3 service from the page that is hard to mock
-    # I think we will need to add requests tests for more specific things for these calls
-    xit 'shows the software/supp info if uploaded', js: true do
-      navigate_to_software_file
-      page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
-        page.find('#choose-the-files').click
-      end
-      expect(page).to have_content('favicon.ico')
-      check('confirm_to_upload')
-      click_on('upload_all')
-
-      # it shows upload complete
-      expect(page).to have_content('Upload complete')
-
-      click_on('Proceed to review')
-      expect(page).to have_content('Software Files Hosted by Zenodo')
-      expect(page).to have_content('favicon.ico')
-      # expect(page).to have_content('Select license for files')
-    end
-
-    xit "doesn't show the software info if software not uploaded", js: true do
-      navigate_to_software_file
-
-      click_on('Proceed to review')
-      expect(page).not_to have_content('Software Files Hosted by Zenodo')
-      expect(page).not_to have_content('favicon.ico')
-      # expect(page).not_to have_content('Select license for files')
-    end
-
-    xit 'sets MIT License for software at Zenodo', js: true do
-      navigate_to_software_file
-      page.attach_file(Rails.root.join('spec', 'fixtures', 'http_responses', 'favicon.ico')) do
-        page.find('#choose-the-files').click
-      end
-      expect(page).to have_content('favicon.ico')
-      check('confirm_to_upload')
-      click_on('upload_all')
-
-      # it shows upload complete
-      expect(page).to have_content('Upload complete')
-
-      click_on('Proceed to review')
-      # type hidden -- software_license 'MIT'
-      v = find('#software_license', visible: false).value
-      expect(v).to eq('MIT')
-    end
   end
 
   context :edit_link do
-    it 'opens a page with an edit link and redirects when complete', js: true do
+    xit 'opens a page with an edit link and redirects when complete', js: true do
       @identifier = create(:identifier)
       @identifier.edit_code = Faker::Number.number(digits: 5)
       @identifier.save

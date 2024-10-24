@@ -48,7 +48,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @file4 = create_data_file(@resource_id)
       @file4.update(original_filename: 'file_deleted.txt', file_state: 'deleted')
       refresh
-      navigate_to_metadata
       navigate_to_upload
     end
 
@@ -95,7 +94,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
   describe 'Select files to upload' do
     before(:each) do
-      navigate_to_metadata
       navigate_to_upload
       find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       attach_files
@@ -164,7 +162,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @invalid_url_manifest = "http://example.org/#{@file_name2}"
       build_valid_stub_request(@valid_url_manifest)
       build_invalid_stub_request(@invalid_url_manifest)
-      navigate_to_metadata
       navigate_to_upload
     end
 
@@ -505,14 +502,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
   describe 'Destroy file uploaded and manifest file' do
     before(:each) do
-      navigate_to_upload
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
       @file1 = create_data_file(@resource_id)
       @file2 = create_software_file(@resource_id)
       @file2.url = 'http://example.com/example.csv'
       @file2.save
       @file3 = create_supplemental_file(@resource_id)
+      refresh
       navigate_to_upload # refresh the page to show the table with the file
     end
 

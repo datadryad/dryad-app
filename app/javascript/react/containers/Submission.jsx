@@ -1,6 +1,7 @@
 import React, {
   Fragment, useRef, useState, useEffect,
 } from 'react';
+import {BrowserRouter, useLocation} from 'react-router-dom';
 import {upCase} from '../../lib/utils';
 import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
@@ -18,9 +19,10 @@ import SubmissionHelp, {
 } from '../components/SubmissionHelp';
 /* eslint-disable jsx-a11y/no-autofocus */
 
-export default function Submission({
+function Submission({
   submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar, change_tenant,
 }) {
+  const location = useLocation();
   const subRef = useRef(null);
   const previewRef = useRef(null);
   const [resource, setResource] = useState(JSON.parse(submission));
@@ -135,11 +137,23 @@ export default function Submission({
   };
 
   useEffect(() => {
+    const url = location.search.slice(1);
+    if (url) {
+      const n = steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
+      if (n.name !== step.name) setStep(n);
+    }
+  }, [location]);
+
+  useEffect(() => {
     const main = document.getElementById('maincontent');
     if (review && step.name === 'Start') {
       main.classList.add('submission-review');
     } else if (review) {
       main.classList.remove('submission-review');
+    } else if (step.name !== 'Start') {
+      const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
+      const url = window.location.search.slice(1);
+      if (slug !== url) window.history.pushState(null, null, `?${slug}`);
     }
   }, [review, step]);
 
@@ -157,7 +171,10 @@ export default function Submission({
 
   useEffect(() => {
     if (!review) {
-      if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
+      const url = window.location.search.slice(1);
+      if (url) {
+        setStep(steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
+      } else if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
         if (steps.find((c) => c.fail)) {
           setStep(steps.find((c) => c.fail));
         } else {
@@ -315,4 +332,8 @@ export default function Submission({
       </div>
     </div>
   );
+}
+
+export default function SubmissionWrapper(props) {
+  return <BrowserRouter><Submission {...props} /></BrowserRouter>;
 }

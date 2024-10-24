@@ -43,23 +43,23 @@ export default function SuppPreview({resource, previous, admin}) {
                   {funder.award_number && (
                     <>,{' '}
                       <span>
-                        {previous && funder.award_number !== prev.award_number ? (
-                          <><ins>{funder.award_number}</ins>{prev.award_number && <del>{prev.award_number}</del>}</>
+                        {previous && funder.award_number !== prev?.award_number ? (
+                          <><ins>{funder.award_number}</ins>{prev?.award_number && <del>{prev?.award_number}</del>}</>
                         ) : funder.award_number}
                       </span>
                     </>
                   )}
-                  {!funder.award_number && previous && prev.award_number && <del>prev.award_number</del>}
+                  {!funder.award_number && previous && prev?.award_number && <del>prev.award_number</del>}
                   {funder.award_description && (
                     <>:{' '}
                       <span>
-                        {previous && funder.award_description !== prev.award_description ? (
-                          <><ins>{funder.award_description}</ins>{prev.award_description && <del>{prev.award_description}</del>}</>
+                        {previous && funder.award_description !== prev?.award_description ? (
+                          <><ins>{funder.award_description}</ins>{prev?.award_description && <del>{prev?.award_description}</del>}</>
                         ) : funder.award_description}
                       </span>
                     </>
                   )}
-                  {!funder.award_description && previous && prev.award_description && <del>prev.award_description</del>}
+                  {!funder.award_description && previous && prev?.award_description && <del>prev.award_description</del>}
                 </li>
               );
             })}

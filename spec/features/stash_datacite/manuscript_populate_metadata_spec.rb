@@ -19,20 +19,13 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       start_new_dataset
     end
 
-    xit "gives message when journal isn't selected" do
-      find('input[value="manuscript"]').click
-      fill_manuscript_info(name: 'European Journal of Plant Pathology', issn: nil, msid: nil)
-      click_button 'Import metadata'
-      expect(page.find('div#population-warnings')).to have_content('Please select your journal from the autocomplete drop-down list')
-    end
-
     it 'gives disable submit manuscript not filled' do
       navigate_to_metadata
       within_fieldset('Is your data used in a published article?') do
-        choose('No')
+        find(:label, 'No').click
       end
       within_fieldset('Is your data used in a submitted manuscript?') do
-        choose('Yes')
+        find(:label, 'Yes').click
       end
       expect(page).not_to have_button('Import metadata')
     end
@@ -64,7 +57,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       doi = '10.1098/rsif.2017.0030'
       fill_crossref_info(name: journal, doi: doi)
       expect(page).to have_button('Import metadata')
-      click_import_article_metadata
+      click_button('Import metadata')
       expect(page).to have_field('title',
                                  with: 'High-skilled labour mobility in Europe before and after the 2004 enlargement')
     end
@@ -93,19 +86,10 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       doi = 'scabs'
       fill_crossref_info(name: journal, doi: doi)
       expect(page).to have_button('Import metadata')
-      click_import_article_metadata
+      click_button('Import metadata')
       expect(page.find('div#population-warnings')).to have_content(
         "We couldn't find metadata to import for this DOI. Please fill in your title manually", wait: 15
       )
-    end
-
-    def click_import_article_metadata
-      # Tell the form that we're really doing the import and not just an ajax autocomplete.
-      # For normal use, this is set by javascript, but within rspec, it wasn't working properly,
-      # so we force it here.
-      page.execute_script("$('#do_import').val('true')")
-
-      click_button 'Import metadata'
     end
 
   end

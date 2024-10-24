@@ -201,7 +201,7 @@ export default function Agreements({
         <>
           <p className="radio_choice">
             <label>
-              <input type="checkbox" name="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
+              <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
               I agree to Dryad&apos;s {subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}
               <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
             </label>
