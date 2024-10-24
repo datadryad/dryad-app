@@ -45,22 +45,3 @@ span.highlight,
 a.highlight {
 	padding: 3px 0 2px;
 }
-
-.highlight-readme {
-	ins, del {
-		padding: 3px 0 2px;
-
-		p {
-			display: inline;
-		}
-	}
-	ins {
-		background-color: lighten($dark-green, 50);
-		&.ins-before::after {
-			content: ' ';
-		}
-	}
-	del {
-		background-color: $lightest-red;
-	}
-}

@@ -59,7 +59,8 @@ FactoryBot.define do
     end
 
     after(:create) do |resource|
-      create(:author, resource: resource)
+      create(:author, resource: resource, author_first_name: resource.user.first_name, author_last_name: resource.user.last_name,
+                      author_orcid: resource.user.orcid, author_email: resource.user.email)
       create(:description, resource_id: resource.id)
       create(:right, resource: resource)
       create(:contributor, resource: resource)

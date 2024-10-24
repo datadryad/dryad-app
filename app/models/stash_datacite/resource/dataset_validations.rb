@@ -47,14 +47,6 @@ module StashDatacite
         url_help.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
       end
 
-      def readme_page(resource)
-        url_help.prepare_readme_resource_path(id: resource.id)
-      end
-
-      def files_page(resource)
-        url_help.upload_resource_path(id: resource.id)
-      end
-
       # the metadata entry items are:
       # title, abstract, article_id/doi for journal article, full_author name, author affiliation for all,
       # author email for the first author
@@ -241,7 +233,7 @@ module StashDatacite
               'If this state persists for more than a few minutes, please remove and upload the file(s) again.'
 
         ErrorItem.new(message: msg,
-                      page: files_page(@resource),
+                      page: metadata_page(@resource),
                       ids: ['filelist_id'])
       end
 
@@ -257,7 +249,7 @@ module StashDatacite
               'adding an HTML file will only retrieve the HTML and not all referenced images or other assets.'
 
         ErrorItem.new(message: msg,
-                      page: files_page(@resource),
+                      page: metadata_page(@resource),
                       ids: ['filelist_id'])
       end
 
@@ -266,7 +258,7 @@ module StashDatacite
 
         ErrorItem.new(message: "{Please limit the number of files to #{APP_CONFIG.maximums.files}} " \
                                'or package your files in a container such as a zip archive',
-                      page: files_page(@resource),
+                      page: metadata_page(@resource),
                       ids: ['filelist_id'])
       end
 
@@ -276,21 +268,21 @@ module StashDatacite
         if @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size
           errors << ErrorItem.new(message: "Data uploads are limited to #{filesize(APP_CONFIG.maximums.merritt_size, 0)}. " \
                                            '{Remove some data files to proceed}.',
-                                  page: files_page(@resource),
+                                  page: metadata_page(@resource),
                                   ids: ['filelist_id'])
         end
 
         if @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
           errors << ErrorItem.new(message: "Software uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}. " \
                                            '{Remove some software files to proceed}.',
-                                  page: files_page(@resource),
+                                  page: metadata_page(@resource),
                                   ids: ['filelist_id'])
         end
 
         if @resource.supp_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
           errors << ErrorItem.new(message: "Supplemental uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}. " \
                                            '{Remove some supplemental files to proceed}.',
-                                  page: files_page(@resource),
+                                  page: metadata_page(@resource),
                                   ids: ['filelist_id'])
         end
 
@@ -317,7 +309,7 @@ module StashDatacite
 
         if no_techinfo && (no_md || no_readme)
           return ErrorItem.new(message: '{Include a README} to describe your dataset.',
-                               page: readme_page(@resource),
+                               page: metadata_page(@resource),
                                ids: ['readme_editor'])
         end
         # rubocop:disable Layout/LineLength
@@ -325,7 +317,7 @@ module StashDatacite
           unedited = %r{\A#\s.+\n\n\[https://doi\.org/.+\]\(https://doi\.org/.+\)\n\n##\sDescription of the data and file structure\n\n\Z}.match? techinfo.first.description
           if unedited
             return ErrorItem.new(message: 'Include required content {in your README} to describe your dataset.',
-                                 page: readme_page(@resource),
+                                 page: metadata_page(@resource),
                                  ids: ['readme_editor'])
           end
         end
@@ -338,7 +330,7 @@ module StashDatacite
 
         ErrorItem.new(message: 'Include at least one data file in your submission. ' \
                                '{Add some data files to proceed}.',
-                      page: files_page(@resource),
+                      page: metadata_page(@resource),
                       ids: ['filelist_id'])
       end
 

@@ -1,8 +1,4 @@
 // ##### Keywords Component ##### //
-
-$keywords-height: 25px;
-$keywords-spacing: 5px;
-
 .c-keywords {
 	margin: 0 0 20px;
 }
@@ -15,43 +11,35 @@ $keywords-spacing: 5px;
 	display: flex;
 	flex-flow: row wrap;
 	align-items: center;
-	padding: $keywords-spacing $keywords-spacing 0;
-	border: thin solid $dark-gray;
+	gap: .75ch;
+	padding: 6px;
+	background-color: $lightest-blue;
 	cursor: text;
 }
 
 .c-keywords__container,
-.c-keywords__container--has-blur {
-	@extend %c-keywords__container;
-}
-
+.c-keywords__container--has-blur,
 .c-keywords__container--has-focus {
 	@extend %c-keywords__container;
-	border: 2px solid $medium-blue;
 }
 
 .c-keywords__keyword {
 	display: inline-flex;
 	align-items: center;
-	min-height: $keywords-height;
-	margin: 0 $keywords-spacing $keywords-spacing 0;
-	padding: 0 6px;
+	justify-content: space-between;
+	gap: .75ch;
+	padding: 5px 6px 3px;
+	min-height: 0;
 	background-color: $dark-green;
 	color: white;
 }
 
 .c-keywords__keyword-remove {
-	margin: 0 0 0 8px;
-	padding: 6px;
-	background: url('/images/scss/icon_close.svg') center / 10px no-repeat;
-	color: inherit;
-}
-
-.c-keywords__input {
- 	width: 500px;
-	height: $keywords-height - $keywords-spacing;
-	margin: 0 0 $keywords-spacing;
-	padding: 0;
 	border: none;
-	outline: none;
+	background-color: $medium-green;
+	color: white;
+	line-height: 0;
+	&:hover, &:active, &:focus {
+		background-color: $dark-blue;
+	}
 }
