@@ -15,7 +15,7 @@ export const keywordFail = (subjects, review) => {
     const subject = subjects.find((s) => ['fos', 'bad_fos'].includes(s.subject_scheme));
     if (keywords.length < 3) {
       return (
-        <p className="error-text" id="subj_error">At least 3 keywords are required</p>
+        <p className="error-text" id="subj_error">At least 3 subject keywords are required</p>
       );
     }
     if (!subject) {
@@ -31,7 +31,7 @@ export function SubjPreview({resource, previous}) {
   if (resource.subjects && resource.subjects.length > 0) {
     return (
       <>
-        <h3 className="o-heading__level2" style={{marginBottom: '-.5rem'}}>Subject keywords</h3>
+        <h3 className="o-heading__level2" style={{marginBottom: '-.5rem'}}>Subjects</h3>
         <p>
           {resource.subjects.map((s, i) => {
             const prev = previous?.subjects?.[i]?.subject;
