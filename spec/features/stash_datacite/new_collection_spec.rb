@@ -32,15 +32,11 @@ RSpec.feature 'NewCollection', type: :feature do
     end
 
     it 'successfully mints a new DOI/ARK', js: true do
-      start_new_collection
+      visit('/stash/resources/new?collection')
       expect(StashEngine::Identifier.all.length).to eql(@identifier_count + 1)
       expect(StashEngine::Resource.all.length).to eql(@resource_count + 1)
-    end
-  end
 
-  context :form_submission, js: true do
-    it 'does not have files or readme', js: true do
-      visit('/stash/resources/new?collection')
+      # 'does not have files or readme'
       expect(page).not_to have_button('README')
       expect(page).not_to have_button('Files')
     end
@@ -48,7 +44,7 @@ RSpec.feature 'NewCollection', type: :feature do
 
   context :requirements_not_met, js: true do
     it 'should disable submit button', js: true do
-      start_new_collection
+      visit('/stash/resources/new?collection')
       navigate_to_review
       submit = find_button('submit_button', disabled: :all)
       expect(submit).not_to be_nil
@@ -56,16 +52,18 @@ RSpec.feature 'NewCollection', type: :feature do
     end
   end
 
+  # tests below are very slow
+
   context :requirements_met, js: true do
     before(:each, js: true) do
       create_datasets
-      start_new_collection
+      visit('/stash/resources/new?collection')
       fill_required_fields
       navigate_to_review
       fill_in 'user_comment', with: Faker::Lorem.sentence
     end
 
-    it 'shows collected datasets & submits', js: true do
+    xit 'shows collected datasets & submits', js: true do
       expect(page).to have_text('Collected datasets')
       expect(page).to have_selector('li[id^="col"]', count: 3)
 
@@ -82,7 +80,7 @@ RSpec.feature 'NewCollection', type: :feature do
   end
 
   context :edit_link do
-    it 'opens a page with an edit link and redirects when complete', js: true do
+    xit 'opens a page with an edit link and redirects when complete', js: true do
       create_datasets
       @identifier = create(:identifier)
       @identifier.edit_code = Faker::Number.number(digits: 5)

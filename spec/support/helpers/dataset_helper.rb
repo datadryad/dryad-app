@@ -19,6 +19,7 @@ module DatasetHelper
   def navigate_to_readme
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
+    page.find('#checklist-button').click unless page.has_button?('README')
     click_button 'README'
     expect(page).to have_content('See these example READMES from previous Dryad submissions')
   end
@@ -26,6 +27,7 @@ module DatasetHelper
   def navigate_to_upload
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
+    page.find('#checklist-button').click unless page.has_button?('Files')
     click_button 'Files'
     expect(page).to have_content('Choose files')
     expect(page).to have_content('Enter URLs')
@@ -34,6 +36,7 @@ module DatasetHelper
   def navigate_to_review
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
+    page.find('#checklist-button').click unless page.has_button?('Agreements')
     click_button 'Agreements'
     expect(page).to have_content('Publication of your files')
     agree_to_everything
@@ -43,30 +46,29 @@ module DatasetHelper
 
   def fill_required_fields
     fill_required_metadata
+    add_required_abstract
     add_required_data_files
     add_required_readme
+    refresh
   end
 
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
     within_fieldset('Is your data used in a published article?') do
-      choose('No')
+      find(:label, 'No').click
     end
     expect(page).to have_content('Is your data used in a submitted manuscript?')
     within_fieldset('Is your data used in a submitted manuscript?') do
-      choose('No')
+      find(:label, 'No').click
     end
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 5)
     click_button 'Next'
     fill_in_author
     click_button 'Next'
     fill_in_funder
-    click_button 'Next'
-    fill_in_keywords
     fill_in_research_domain
-    click_button 'Files'
-    add_required_abstract
+    fill_in_keywords
   end
 
   def add_required_abstract
@@ -74,24 +76,18 @@ module DatasetHelper
     res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
     ab = res.descriptions.find_by(description_type: 'abstract')
     ab.update(description: Faker::Lorem.paragraph)
-    refresh
-    expect(page).to have_content('Dataset submission')
   end
 
   def add_required_data_files
     res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
     # file must be copied; since it will not appear in AWS dataset_validations
     create(:data_file, resource: res, file_state: 'copied')
-    refresh
-    expect(page).to have_content('Dataset submission')
   end
 
   def add_required_readme
     res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
     ab = res.descriptions.find_by(description_type: 'technicalinfo')
     ab.update(description: Faker::Lorem.paragraph)
-    refresh
-    expect(page).to have_content('Dataset submission')
   end
 
   def submit_form
@@ -102,11 +98,11 @@ module DatasetHelper
   def fill_manuscript_info(name:, issn:, msid:)
     navigate_to_metadata
     within_fieldset('Is your data used in a published article?') do
-      choose('No')
+      find(:label, 'No').click
     end
     expect(page).to have_content('Is your data used in a submitted manuscript?')
     within_fieldset('Is your data used in a submitted manuscript?') do
-      choose('Yes')
+      find(:label, 'Yes').click
     end
     page.execute_script("$('#publication').val('#{name}')")
     page.execute_script("$('#publication_issn').val('#{issn}')") # must do to fill hidden field
@@ -116,7 +112,7 @@ module DatasetHelper
 
   def fill_crossref_info(name:, doi:)
     navigate_to_metadata
-    choose('Yes')
+    find(:label, 'Yes').click
     fill_in 'publication', with: name
     fill_in 'primary_article_doi', with: doi
     page.send_keys(:tab)
@@ -149,14 +145,14 @@ module DatasetHelper
   def fill_in_research_domain
     fos = 'Biological sciences'
     StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
-    refresh
+    click_button 'Next'
     expect(page).to have_content('Research domain')
     fill_in 'Research domain', with: fos
     page.send_keys(:tab)
   end
 
   def agree_to_everything
-    check 'agreement'
+    find('#agreement').click
   end
 
   def attach_files

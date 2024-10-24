@@ -13,7 +13,7 @@ const nondescript = (t) => {
 
 const capitals = (t) => {
   if (t === t.toUpperCase()) return 'All-caps titles are not allowed.';
-  if (t.match(/\b[A-Z].*?\b/g).length > t.split(/\s/).length * 0.6) return 'Sentence casing of titles is preferred.';
+  if (t.match(/\b[A-Z].*?\b/g)?.length > t.split(/\s/).length * 0.6) return 'Sentence casing of titles is preferred.';
   return false;
 };
 

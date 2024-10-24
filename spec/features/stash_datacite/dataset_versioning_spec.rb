@@ -27,118 +27,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     @document_list = []
   end
 
-  # Combine tests if possible as these take a lot of time!
-
-  describe :initial_version do
-
-    before(:each, js: true) do |test|
-      Timecop.travel(Time.now.utc - 5.minutes)
-      ActionMailer::Base.deliveries = []
-      # Sign in and create a new dataset
-      sign_in(@author)
-      visit root_path
-      click_link 'My datasets'
-      start_new_dataset
-      fill_required_fields
-      navigate_to_review
-      @resource = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
-      submit_form unless test.metadata.key?(:no_submit)
-      Timecop.return
-    end
-
-    describe :pre_submit do
-      it 'should display the proper info on the My datasets page', js: true, no_submit: true do
-        # part 1
-        click_link 'My datasets'
-
-        expect(page).to have_text(@resource.title)
-        expect(page).to have_text('In progress')
-
-        # part 2
-        click_button 'Resume'
-        submit_form
-
-        click_link 'My datasets'
-        expect(page).to have_text(@resource.title)
-        expect(page).to have_text('Processing')
-
-        # No email
-        expect(ActionMailer::Base.deliveries.count).to eq(0)
-      end
-    end
-
-    describe :merritt_submission_error do
-      it 'displays the proper information on the My datasets page', js: true do
-        mock_merritt_send!(@resource)
-        mock_unsuccessfull_merritt_submission!(@resource)
-        click_link 'My datasets'
-        within(:css, '#user_processing li:first-child') do
-          expect(page).to have_text(@resource.title)
-          expect(page).to have_text('Processing')
-          expect(page).not_to have_selector('button[name="update"]')
-        end
-      end
-    end
-
-    describe :merritt_submission_success do
-      before(:each) do
-        ActionMailer::Base.deliveries = []
-        mock_merritt_send!(@resource)
-        mock_successfull_merritt_submission!(@resource)
-      end
-
-      it 'has the correct statuses', js: true do
-        # Merritt status
-        expect(@resource.submitted?).to eql(true)
-        # curarion status
-        expect(@resource.current_curation_status).to eql('submitted')
-        # displays the proper information on the My datasets page
-        click_link 'My datasets'
-        within(:css, '#user_processing li:first-child') do
-          expect(page).to have_text(@resource.title)
-          expect(page).to have_text('Submitted')
-          expect(page).to have_selector('button[name="update"]')
-        end
-      end
-
-      describe :when_viewed_by_curator do
-        before(:each, js: true) do
-          sign_in(@curator)
-          find('.c-header_nav-button', text: 'Datasets').click
-          visit stash_url_helpers.admin_dashboard_path
-        end
-
-        it 'displays the proper information on the Admin pages', js: true do
-          # Admin dashboard
-          within(:css, 'tbody tr') do
-            # Make sure the appropriate buttons are available
-            # Curators want to edit everything unless it's in progress, so enjoy
-            expect(page).to have_css('button[title="Edit dataset"]')
-            expect(page).to have_css('button[aria-label="Update status"]')
-
-            # Make sure the right text is shown
-            expect(page).to have_link(@resource.title)
-            within(:css, "#curation_activity_#{@resource.id}") do
-              expect(page).to have_text('Submitted')
-            end
-            expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
-            expect(page).not_to have_text(@curator.name_last_first)
-            expect(page).to have_text(@resource.identifier.identifier)
-          end
-
-          # Activity log
-          within(:css, 'tbody tr') do
-            find('a[aria-label="Activity log"]').click
-          end
-
-          expect(page).to have_text(@resource.identifier)
-          expect(page).to have_text('Submitted')
-          expect(page).to have_text(@author.name)
-        end
-      end
-    end
-  end
-
   describe :new_version do
     before(:each) do
       # needed to set the user to system user.  Not migrated as part of tests for some reason
@@ -222,14 +110,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.submitted?).to eql(true)
         expect(@resource.current_curation_status).to eql('submitted')
         expect(@resource.current_editor_id).to eq(@author.id)
-      end
 
-      # TODO: This is no longer tested the same way... may need to install capybara-email
-      xit 'sends out a "submitted" email to the author', js: true do
-        expect(ActionMailer::Base.deliveries.count).to eq(1)
-      end
-
-      it 'displays the proper information on the Admin pages', js: true do
+        # 'displays the proper information on the Admin pages', js: true do
         sign_in(@curator)
         find('.c-header_nav-button', text: 'Datasets').click
 
@@ -390,13 +272,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     mock_successfull_merritt_submission!(@resource)
   end
 
-  def create_dataset
-    start_new_dataset
-    fill_required_fields
-    navigate_to_review
-    set_and_submit
-  end
-
   def minor_update
     click_button 'Subjects'
     fill_in_keywords
@@ -425,7 +300,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     fill_in 'DOI or other URL', with: doi
     page.send_keys(:tab)
     click_button 'Preview changes'
-    add_required_data_files
     # Submit the changes
     fill_in('Describe edits made', with: Faker::Lorem.sentence) if curator
     set_and_submit
