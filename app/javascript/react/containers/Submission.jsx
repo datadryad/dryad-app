@@ -136,6 +136,13 @@ function Submission({
     }
   };
 
+  const move = async (dir) => {
+    /* eslint-disable-next-line no-undef */
+    await awaitSelector('.saving_text[hidden]');
+    setStep(steps[steps.findIndex((l) => l.name === step.name) + dir] || (dir === -1 && {name: 'Start'}));
+    if (open === 'start') setOpen(false);
+  };
+
   useEffect(() => {
     const url = location.search.slice(1);
     if (url) {
@@ -299,10 +306,7 @@ function Submission({
                   type="button"
                   className="o-button__plain-text2"
                   aria-controls="submission-step"
-                  onClick={() => {
-                    setStep(steps[steps.findIndex((l) => l.name === step.name) + 1]);
-                    if (open === 'start') setOpen(false);
-                  }}
+                  onClick={() => move(1)}
                 >
                   Next <i className="fa fa-caret-right" aria-hidden="true" />
                 </button>
@@ -312,10 +316,7 @@ function Submission({
                   type="button"
                   className="o-button__plain-text"
                   aria-controls="submission-step"
-                  onClick={() => {
-                    setStep(steps[steps.findIndex((l) => l.name === step.name) - 1] || {name: 'Start'});
-                    if (open === 'start') setOpen(false);
-                  }}
+                  onClick={() => move(-1)}
                 >
                   <i className="fa fa-caret-left" aria-hidden="true" /> Previous
                 </button>

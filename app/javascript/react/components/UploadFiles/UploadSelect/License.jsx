@@ -1,10 +1,12 @@
 import React, {useEffect, useRef} from 'react';
 import axios from 'axios';
+import {showSavingMsg, showSavedMsg} from '../../../../lib/utils';
 
 export default function License({license, resourceId, setResource}) {
   const divRef = useRef(null);
 
   const submit = () => {
+    showSavingMsg();
     const {value} = document.getElementById('searchselect-license__value');
     axios.post(
       '/stash/software_license',
@@ -12,6 +14,7 @@ export default function License({license, resourceId, setResource}) {
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     ).then((data) => {
       setResource((r) => ({...r, identifier: {software_license: data.data, ...r.identifier}}));
+      showSavedMsg();
     });
   };
 

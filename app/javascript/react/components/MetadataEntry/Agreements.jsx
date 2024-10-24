@@ -39,6 +39,7 @@ export default function Agreements({
   };
 
   const toggleTerms = (e) => {
+    showSavingMsg();
     const accept = e.target.checked;
     axios.post(
       `/stash/metadata_entry_pages/${accept ? 'accept' : 'reject'}_agreement`,
@@ -49,6 +50,7 @@ export default function Agreements({
         if (data.status === 200) {
           setAgree(accept);
           setResource((r) => ({...r, accepted_agreement: accept}));
+          showSavedMsg();
         }
       });
   };

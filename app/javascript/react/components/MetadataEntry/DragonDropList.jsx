@@ -121,7 +121,7 @@ export default function DragonDropList({
         // Sorry, this is really hacky, but I don't have time to rewrite their library.
         setTimeout(() => {
           const newOrderObj = toOrderObj(oldOrderRef.current);
-
+          showSavingMsg();
           axios.patch(
             path,
             {[model]: newOrderObj, authenticity_token},
@@ -134,6 +134,7 @@ export default function DragonDropList({
           ).then((data) => {
             if (data.status !== 200) {
               console.log(`Response failure not a 200 response from ${typeName}s reversion save for canceling drag and drop`);
+              showSavedMsg();
             }
           });
 
