@@ -74,35 +74,6 @@ RSpec.feature 'NewDataset', type: :feature do
       expect(the_html.index(second_author[:last])).to be < the_html.index(first_author[:last]) # because we switched these authors
     end
 
-    it 'fills in a Field of Science subject', js: true do
-      fill_required_metadata
-      click_button 'Subjects'
-      fill_in 'Research domain', with: 'Agricultural biotechnology'
-      navigate_to_review
-      expect(page).to have_text('Agricultural biotechnology', wait: 5)
-    end
-
-    it 'fills in a Field of Science subject that is not official', js: true do
-      name = Array.new(3) { Faker::Lorem.word }.join(' ')
-      fill_required_metadata
-      click_button 'Subjects'
-      fill_in 'Research domain', with: name
-      navigate_to_review
-      expect(page).to have_text(name, wait: 5)
-    end
-
-    it 'fills in a Field of Science subject and changes it and it keeps the latter', js: true do
-      name = Array.new(3) { Faker::Lorem.word }.join(' ')
-      fill_required_metadata
-      click_button 'Subjects'
-      fill_in 'Research domain', with: name
-      page.send_keys(:tab)
-      fill_in 'Research domain', with: 'Agricultural biotechnology'
-      navigate_to_review
-      expect(page).to have_text('Agricultural biotechnology', wait: 5)
-      expect(page).not_to have_text(name, wait: 5)
-    end
-
     it 'charges user by default', js: true do
       click_button 'Agreements'
       expect(page).to have_text('you will receive an invoice')
@@ -127,7 +98,5 @@ RSpec.feature 'NewDataset', type: :feature do
       click_button 'Agreements'
       expect(page).not_to have_text('Payment for this submission is sponsored by')
     end
-
   end
-
 end

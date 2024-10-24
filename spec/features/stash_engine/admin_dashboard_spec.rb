@@ -315,6 +315,8 @@ RSpec.feature 'AdminDashboard', type: :feature do
           end
 
           it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
+            create(:description, resource: @resource, description_type: 'technicalinfo')
+            create(:data_file, resource: @resource)
             click_button 'Edit dataset'
             click_button 'Authors'
             all('[id^=instit_affil_]').last.set('test institution')
@@ -324,8 +326,6 @@ RSpec.feature 'AdminDashboard', type: :feature do
             click_button 'Preview changes'
             click_button 'Subjects'
             fill_in_keywords
-            add_required_data_files
-            add_required_readme
             refresh
             fill_in 'user_comment', with: Faker::Lorem.sentence
             submit_form

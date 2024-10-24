@@ -36,7 +36,7 @@ module CollectionHelper
   def fill_required_fields
     fill_required_metadata
     add_required_abstract
-    fill_in_research_domain
+    refresh
   end
 
   def fill_required_metadata
@@ -53,8 +53,8 @@ module CollectionHelper
     click_button 'Next'
     fill_in_author
     click_button 'Next'
-    fill_in_funder
-    click_button 'Next'
+    check('No funding received')
+    fill_in_research_domain
     fill_in_keywords
     fill_in_collection
   end
@@ -81,7 +81,6 @@ module CollectionHelper
     fill_in 'author_first_name', with: Faker::Name.unique.first_name
     fill_in 'author_last_name', with: Faker::Name.unique.last_name
     fill_in 'author_email', with: Faker::Internet.email
-    # just fill in results of name dropdown (react) in hidden field and test this separately
     fill_in 'Institutional affiliation', with: Faker::Educator.university
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
@@ -98,13 +97,10 @@ module CollectionHelper
   def fill_in_research_domain
     fos = 'Biological sciences'
     StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
-    refresh
-    page.find('#checklist-button').click unless page.has_button?('Subjects')
-    click_button 'Subjects'
+    click_button 'Next'
+    expect(page).to have_content('Research domain')
     fill_in 'Research domain', with: fos
     page.send_keys(:tab)
-    page.has_css?('.use-text-entered')
-    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
   end
 
   def fill_in_collection
@@ -123,7 +119,7 @@ module CollectionHelper
   end
 
   def agree_to_everything
-    check 'agreement'
+    find('#agreement').click
   end
 
   def build_valid_stub_request(url, mime_type = 'text/plain')

@@ -49,7 +49,7 @@ module DatasetHelper
     add_required_abstract
     add_required_data_files
     add_required_readme
-    fill_in_research_domain
+    refresh
   end
 
   def fill_required_metadata
@@ -67,7 +67,7 @@ module DatasetHelper
     fill_in_author
     click_button 'Next'
     fill_in_funder
-    click_button 'Next'
+    fill_in_research_domain
     fill_in_keywords
   end
 
@@ -112,7 +112,7 @@ module DatasetHelper
 
   def fill_crossref_info(name:, doi:)
     navigate_to_metadata
-    choose('Yes')
+    find(:label, 'Yes').click
     fill_in 'publication', with: name
     fill_in 'primary_article_doi', with: doi
     page.send_keys(:tab)
@@ -145,14 +145,14 @@ module DatasetHelper
   def fill_in_research_domain
     fos = 'Biological sciences'
     StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
-    refresh
+    click_button 'Next'
     expect(page).to have_content('Research domain')
     fill_in 'Research domain', with: fos
     page.send_keys(:tab)
   end
 
   def agree_to_everything
-    check 'agreement'
+    find('#agreement').click
   end
 
   def attach_files
