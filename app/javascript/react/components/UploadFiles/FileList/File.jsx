@@ -99,8 +99,8 @@ export default function File({file, clickRemove, clickValidationReport}) {
         {removing ? (
           <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" />
         ) : (
-          <button onClick={removeClick} type="button" className="c-upload__button">
-            Remove
+          <button onClick={removeClick} type="button" className="o-button__plain-textlink">
+            <i className="fas fa-trash-can" aria-hidden="true" style={{marginRight: '.5ch'}} />Remove
           </button>
         )}
       </td>

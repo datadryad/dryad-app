@@ -7,11 +7,11 @@ const file_list = ({
   chosenFiles, clickedRemove, clickedValidationReport, totalSize,
 }) => (
   <>
+    <BadList chosenFiles={chosenFiles} />
     <div className="c-uploadtable-header">
-      <h2 className="o-heading__level2" id="filelist_id">Files</h2>
+      <h3 className="o-heading__level3" id="filelist_id">Selected files</h3>
       <p>Total size: {totalSize}</p>
     </div>
-    <BadList chosenFiles={chosenFiles} />
     <div className="table-wrapper c-uploadtable-wrapper" role="region" aria-labelledby="filelist_id">
       <table className="c-uploadtable">
         <thead>

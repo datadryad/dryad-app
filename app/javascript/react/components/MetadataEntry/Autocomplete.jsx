@@ -115,7 +115,7 @@ export default function Autocomplete(
         aria-controls={`menu_${htmlId}`}
         className="c-auto_complete"
         aria-errormessage={errorId || null}
-        aria-label={`${labelText} search + select`}
+        aria-label={`${labelText ? `${labelText} s` : 'S'}earch + select`}
         aria-describedby={desBy || null}
       >
         <input

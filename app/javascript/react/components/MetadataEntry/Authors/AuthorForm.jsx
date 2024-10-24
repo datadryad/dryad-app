@@ -129,7 +129,7 @@ export default function AuthorForm({
                     formik.handleSubmit();
                   }}
                 />
-                <div id={`${author.id}email-ex`}><i />help@datadryad.org</div>
+                <div id={`${author.id}email-ex`}><i />name@institution.org</div>
               </div>
               <Affiliations formRef={formRef} id={author.id} affiliations={affiliations} setAffiliations={setAffiliations} />
               <div className="input-line" style={{flexBasis: '100%', maxWidth: '100%', marginTop: '.5em'}}>

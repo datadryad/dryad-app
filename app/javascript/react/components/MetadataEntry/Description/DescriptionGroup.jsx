@@ -57,7 +57,7 @@ export default function DescriptionGroup({
           {openMethods ? (
             <Description dcsDescription={methods} setResource={setRes} mceLabel={methodsLabel} admin={admin} />
           ) : (
-            <p><button type="button" className="o-button__plain-text1" onClick={() => setOpenMethods(true)}>+ Add methods section</button></p>
+            <p><button type="button" className="o-button__plain-text2" onClick={() => setOpenMethods(true)}>+ Add methods section</button></p>
           )}
           {usage?.description && (
             <Description dcsDescription={usage} setResource={setRes} mceLabel={usageLabel} admin={admin} />
