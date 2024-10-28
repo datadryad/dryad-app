@@ -1,5 +1,3 @@
-require 'pry-remote'
-
 RSpec.feature 'UserAdmin', type: :feature do
 
   include DatasetHelper

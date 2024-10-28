@@ -383,11 +383,6 @@ module StashEngine
       return if @pub_date.present?
 
       @pub_date = Time.now.utc.to_date.to_s
-      return unless @identifier.allow_blackout?
-
-      @note = 'Adding 1-year blackout period due to journal settings.'
-      @status = 'embargoed'
-      @pub_date = (Time.now.utc.to_date + 1.year).to_s
     end
 
     def publishing_error

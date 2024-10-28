@@ -35,12 +35,19 @@ module StashEngine
     end
 
     def edit
-      valid = %i[partner_display enabled logo]
+      valid = %i[partner_display enabled]
       update = edit_params.slice(*valid)
-      update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params[:campus_contacts].present?
+      update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:campus_contacts)
       @tenant.update(update)
 
-      if edit_params[:ror_orgs]&.present?
+      if edit_params.key?(:logo)
+        @tenant.logo = StashEngine::Logo.new unless @tenant.logo.present?
+        @tenant.logo.data = edit_params[:logo]
+        @tenant.logo.save
+        @tenant.reload
+      end
+
+      if edit_params.key?(:ror_orgs)
         @tenant.tenant_ror_orgs.destroy_all
         orgs = edit_params[:ror_orgs].split("\n")
         orgs.each { |o| StashEngine::TenantRorOrg.create(ror_id: o.strip, tenant_id: @tenant.id) }

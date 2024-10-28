@@ -1,5 +1,3 @@
-require 'pry-remote'
-
 RSpec.feature 'AdminPaths', type: :feature do
   include Mocks::Salesforce
 
