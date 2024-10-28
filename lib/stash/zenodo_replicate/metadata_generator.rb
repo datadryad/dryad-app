@@ -78,7 +78,7 @@ module Stash
       end
 
       def license_for_data
-        if @resource.rights.first&.rights_uri&.include?('/zero')
+        if @resource.rights.first&.rights_uri&.include?('/CC0')
           'cc-zero'
         else
           'cc-by'
