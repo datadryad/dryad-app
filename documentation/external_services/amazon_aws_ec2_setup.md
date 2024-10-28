@@ -122,6 +122,8 @@ mysql_stg.sh < myfile.sql
 SOLR setup
 ============
 
+For general SOLR information, see [solr.md](../solr.md)
+
 SOLR should be installed on a separate machine from the Rails server!
 
 All of these tools are outdated. To make SOLR work with Dryad's old
@@ -380,4 +382,14 @@ sudo systemctl restart amazon-cloudwatch-agent
 For verification, there should be no errors:
 ```
 tail -f logs/amazon-cloudwatch-agent.log 
+```
+
+Install Google Chrome Driver
+======================================
+
+In order to be able to generate PDF files with Grover gem we need chrome driver.
+```
+cd /tmp
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+sudo yum localinstall google-chrome-stable_current_x86_64.rpm
 ```

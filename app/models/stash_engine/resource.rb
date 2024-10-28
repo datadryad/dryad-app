@@ -486,7 +486,7 @@ module StashEngine
     # ------------------------------------------------------------
     # Curation helpers
     def curatable?
-      (submitted? && !files_published?) || last_curation_activity&.embargoed?
+      (submitted? && !file_view) || last_curation_activity&.embargoed?
     end
 
     # Shortcut to the current curation activity's status
