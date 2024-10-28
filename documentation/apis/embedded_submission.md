@@ -106,7 +106,7 @@ A sample call using the [sample dataset file](sample_dataset.json), with results
   "lastModificationDate": "2020-10-02",
   "visibility": "restricted",
   "userId": "0000-0003-0597-4085",
-  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "license": "https://spdx.org/licenses/CC0-1.0.html",
   "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
   }
 ```
@@ -197,7 +197,7 @@ Sample call and (abbreviated) response:
   "visibility": "restricted",
   "sharingLink":"https://datadryad.org/stash/share/OI-tU-WmoT3I2KCOqX7Of624",
   "userId": 37182,
-  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "license": "https://spdx.org/licenses/CC0-1.0.html",
   "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
   }
 ```

@@ -11,7 +11,7 @@
         "total": 67,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-02-01T00:00:00.000Z",
         "timestamp": "2019-09-07T23:53:57.716Z"
       }
@@ -27,7 +27,7 @@
         "total": 79,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-02-01T00:00:00.000Z",
         "timestamp": "2019-09-07T23:53:58.040Z"
       }
@@ -43,7 +43,7 @@
         "total": 13,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-02-01T00:00:00.000Z",
         "timestamp": "2019-09-07T23:54:00.286Z"
       }
@@ -59,7 +59,7 @@
         "total": 13,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-02-01T00:00:00.000Z",
         "timestamp": "2019-09-07T23:54:00.317Z"
       }
@@ -75,7 +75,7 @@
         "total": 10,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-05-01T00:00:00.000Z",
         "timestamp": "2019-09-08T00:03:44.227Z"
       }
@@ -91,7 +91,7 @@
         "total": 112,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-05-01T00:00:00.000Z",
         "timestamp": "2019-09-08T00:03:44.295Z"
       }
@@ -107,7 +107,7 @@
         "total": 127,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-05-01T00:00:00.000Z",
         "timestamp": "2019-09-08T00:03:44.316Z"
       }
@@ -123,7 +123,7 @@
         "total": 10,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-05-01T00:00:00.000Z",
         "timestamp": "2019-09-08T00:03:46.687Z"
       }
@@ -139,7 +139,7 @@
         "total": 107,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-08-01T00:00:00.000Z",
         "timestamp": "2019-09-08T00:15:23.123Z"
       }
@@ -155,7 +155,7 @@
         "total": 119,
         "message-action": "create",
         "source-token": "43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "license": "https://spdx.org/licenses/CC0-1.0.html",
         "occurred-at": "2011-08-01T00:00:00.000Z",
         "timestamp": "2019-09-08T00:15:23.481Z"
       }

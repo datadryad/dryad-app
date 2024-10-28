@@ -64,7 +64,7 @@
   ],
   "license": {
     "@type": "CreativeWork",
-    "name": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
-    "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+    "name": "Creative Commons Zero v1.0 Universal",
+    "license": "https://spdx.org/licenses/CC0-1.0.html"
   }
 }
