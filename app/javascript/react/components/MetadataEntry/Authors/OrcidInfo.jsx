@@ -33,6 +33,9 @@ export default function OrcidInfo({
 
 OrcidInfo.propTypes = {
   author: PropTypes.object.isRequired,
-  curator: PropTypes.bool.isRequired,
+  curator: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+  ]).isRequired,
   ownerId: PropTypes.number.isRequired,
 };

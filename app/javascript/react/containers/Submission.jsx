@@ -76,7 +76,7 @@ function Submission({
     {
       name: 'Files',
       pass: resource.generic_files.length > 0,
-      fail: filesCheck(resource.generic_files, review),
+      fail: filesCheck(resource.generic_files, review, admin),
       component: <UploadFiles
         resource={resource}
         setResource={setResource}
@@ -86,7 +86,7 @@ function Submission({
         config_frictionless={config_frictionless}
       />,
       help: <FilesHelp />,
-      preview: <FilesPreview resource={resource} previous={previous} />,
+      preview: <FilesPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'README',

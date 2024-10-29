@@ -136,5 +136,8 @@ Description.propTypes = {
   setResource: PropTypes.func.isRequired,
   dcsDescription: PropTypes.object.isRequired,
   mceLabel: PropTypes.object.isRequired,
-  admin: PropTypes.bool.isRequired,
+  admin: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+  ]).isRequired,
 };
