@@ -23,7 +23,7 @@ module StashDatacite
             end
             import_data = {
               title: @resource.title,
-              authors: @resource.authors,
+              authors: @resource.authors.as_json(include: [:affiliations]),
               descriptions: @resource.descriptions,
               subjects: @resource.subjects,
               contributors: @resource.contributors

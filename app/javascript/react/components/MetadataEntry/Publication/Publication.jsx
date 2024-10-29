@@ -92,7 +92,7 @@ export default function Publication({resource, setResource}) {
       )}
       {importType !== 'other' && <PublicationForm resource={res} setResource={setRes} setSponsored={setSponsored} importType={importType} />}
       {((checks.published === 'no' && checks.manuscript === 'no') || checks.showTitle === 'yes') && (
-        <Title resource={res} setResource={setRes} />
+        <Title key={res.title} resource={res} setResource={setRes} />
       )}
       {dupeWarning && (
         <div className="callout warn">

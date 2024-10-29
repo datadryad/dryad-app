@@ -28,7 +28,7 @@ export function PublicationHelp() {
   return (
     <>
       <p>If your submission is associated with an article or manuscript, including that information can aid in connecting your data with that work, and some <a href="/stash/journals" target="_blank">integrated journals<span className="screen-reader-only"> (opens in new window)</span></a> cover the Dryad <a href="/stash/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
-      <p>A descriptive title is required for your submission. The title, author list, and subjects can be imported from many published articles, or from submitted manuscripts for some integrated journals.</p>
+      <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some integrated journals.</p>
     </>
   );
 }
