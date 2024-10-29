@@ -9,7 +9,7 @@ const affName = (aff) => {
 };
 
 const getAffs = (ar) => ar.map((a) => a.affiliations).flat().reduce((arr, aff) => {
-  if (affName(aff)) arr.push([aff.id, affName(aff), aff.ror_id]);
+  if (affName(aff) && !arr.some((c) => aff.id === c[0])) arr.push([aff.id, affName(aff), aff.ror_id]);
   return arr;
 }, []);
 
