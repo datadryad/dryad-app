@@ -174,7 +174,7 @@ module StashEngine
     end
 
     def dupe_check
-      dupes = nil
+      dupes = []
       if @resource.title && @resource.title.length > 3
         other_submissions = params.key?(:admin) ? StashEngine::Resources.all : @resource.user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
