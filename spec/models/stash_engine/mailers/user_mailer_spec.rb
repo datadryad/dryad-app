@@ -5,6 +5,7 @@ module StashEngine
   describe UserMailer do
     include MailerSpecHelper
     let(:journal) { create(:journal) }
+    let(:journal_issn) { create(:journal_issn, journal: journal) }
 
     before(:each) do
 
@@ -17,7 +18,7 @@ module StashEngine
       @request_port = 80
 
       @user = create(:user)
-      @resource = create(:resource, user: @user, identifier: create(:identifier), journal: journal)
+      @resource = create(:resource, user: @user, identifier: create(:identifier), journal_issn: journal.issns.first)
       @identifier = @resource.identifier
 
       @tenant = double(Tenant)
