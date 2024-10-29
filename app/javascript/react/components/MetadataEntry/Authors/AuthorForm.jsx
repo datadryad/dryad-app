@@ -23,6 +23,13 @@ export default function AuthorForm({
     return update(submit);
   };
 
+  const validateEmail = (value) => {
+    if (value && !/^[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+$/i.test(value)) {
+      return 'Invalid email address';
+    }
+    return null;
+  };
+
   return (
     <Formik
       initialValues={
@@ -39,8 +46,9 @@ export default function AuthorForm({
         submitForm(values);
         setSubmitting(false);
       }}
+      validateOnChange={false}
     >
-      {(formik) => (
+      {({handleSubmit, errors, touched}) => (
         <Form className="author-form">
           <Field name="id" type="hidden" />
           {author.author_org_name !== null ? (
@@ -55,9 +63,7 @@ export default function AuthorForm({
                 className="c-input__text"
                 aria-errormessage="author_fname_error"
                 aria-describedby={`${author.id}org-ex`}
-                onBlur={() => { // defaults to formik.handleBlur
-                  formik.handleSubmit();
-                }}
+                onBlur={handleSubmit}
               />
               <div id={`${author.id}org-ex`}><i className="ie" />Committee, agency, working group, etc.</div>
             </div>
@@ -74,9 +80,7 @@ export default function AuthorForm({
                   className="c-input__text"
                   aria-errormessage="author_fname_error"
                   aria-describedby={`${author.id}name-ex`}
-                  onBlur={() => { // defaults to formik.handleBlur
-                    formik.handleSubmit();
-                  }}
+                  onBlur={handleSubmit}
                 />
                 <div id={`${author.id}name-ex`}><i className="ie" />Given name</div>
               </div>
@@ -90,9 +94,7 @@ export default function AuthorForm({
                   type="text"
                   className="c-input__text"
                   aria-describedby={`${author.id}lname-ex`}
-                  onBlur={() => { // defaults to formik.handleBlur
-                    formik.handleSubmit();
-                  }}
+                  onBlur={handleSubmit}
                 />
                 <div id={`${author.id}lname-ex`}><i className="ie" />Family name</div>
               </div>
@@ -125,10 +127,10 @@ export default function AuthorForm({
                   className="c-input__text"
                   aria-errormessage="author_email_error"
                   aria-describedby={`${author.id}email-ex`}
-                  onBlur={() => { // defaults to formik.handleBlur
-                    formik.handleSubmit();
-                  }}
+                  validate={validateEmail}
+                  onBlur={handleSubmit}
                 />
+                {errors.author_email && touched.author_email && <span className="c-ac__error_message">{errors.author_email}</span>}
                 <div id={`${author.id}email-ex`}><i />name@institution.org</div>
               </div>
               <Affiliations formRef={formRef} id={author.id} affiliations={affiliations} setAffiliations={setAffiliations} />

@@ -128,9 +128,7 @@ function FunderForm({
               type="text"
               className="js-award_number c-input__text"
               aria-describedby={`${contributor.id}award-ex`}
-              onBlur={() => { // defaults to formik.handleBlur
-                formik.handleSubmit();
-              }}
+              onBlur={formik.handleSubmit}
             />
             <div id={`${contributor.id}award-ex`}><i />CA 123456-01A1</div>
           </div>
@@ -143,9 +141,7 @@ function FunderForm({
               type="text"
               className="js-award_description c-input__text"
               aria-describedby={`${contributor.id}desc-ex`}
-              onBlur={() => { // defaults to formik.handleBlur
-                formik.handleSubmit();
-              }}
+              onBlur={formik.handleSubmit}
             />
             <div id={`${contributor.id}desc-ex`}><i className="ie" />Section of the funder</div>
           </div>
