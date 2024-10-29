@@ -1,6 +1,6 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showSavedMsg, showSavingMsg, formatSizeUnits} from '../../../lib/utils';
 
 export default function Agreements({
   resource, setResource, form, previous, preview = false,
@@ -87,6 +87,18 @@ export default function Agreements({
     getPaymentInfo();
   }, []);
 
+  const large_files = resource.total_file_size > dpc.large_file_size;
+  const over = resource.total_file_size - dpc.large_file_size;
+  const chunks = Math.ceil(over / dpc.chunk_size);
+
+  if (!dpc.dpc) {
+    return (
+      <>
+        <h2>Agreements</h2>
+        <p><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
+      </>
+    );
+  }
   return (
     <>
       <h2>Agreements</h2>
@@ -173,14 +185,20 @@ export default function Agreements({
           {dpc.user_must_pay && (
             <>
               <p>
-                Dryad charges a fee for data publication that covers curation and preservation of published
-                datasets. Upon publication of your dataset, you will receive an invoice for ${dpc.dpc} USD.
+                Dryad charges a{large_files ? <> ${dpc.dpc} </> : ''}fee for the curation and preservation of published datasets.{' '}
+                {large_files ? (
+                  <>
+                    For data packages in excess of {formatSizeUnits(dpc.large_file_size)}, submitters will be charged{' '}
+                    an additional ${dpc.chunk_cost} for each additional {formatSizeUnits(dpc.chunk_size)}, or part thereof.
+                  </>
+                ) : (
+                  <>Upon publication of your dataset, you will receive an invoice for ${dpc.dpc}.</>
+                )}
               </p>
-              {!!dpc.large_files && (
+              {large_files && (
                 <p>
-                  For data packages in excess of {dpc.large_file_size}, submitters will be charged $50 USD for
-                  each additional 10GB, or part thereof. Submissions between 50 and 60GB = $50 USD, between 60
-                  and 70GB = $100 USD, and so on.
+                  Upon publication of your {formatSizeUnits(resource.total_file_size)} dataset,
+                  you will receive an invoice for <b>${dpc.dpc + (chunks * (dpc.chunk_cost))}</b>.
                 </p>
               )}
             </>

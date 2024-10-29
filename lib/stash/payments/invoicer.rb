@@ -64,7 +64,7 @@ module Stash
 
       def ds_size
         # Only charge based on the files present in the item at time of publication
-        StashEngine::DataFile.where(resource_id: resource.id).where(file_state: %w[created copied]).sum(:upload_file_size)
+        resource.total_file_size
       end
 
       def overage_bytes
