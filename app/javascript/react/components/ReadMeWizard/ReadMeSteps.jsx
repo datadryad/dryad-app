@@ -32,7 +32,7 @@ export default function ReadMeSteps({
     2: {
       desc:
       <>
-        <p>Provide a comprehensive list of data files and variables. Starting information has been imported from your uploaded files.</p>
+        <p style={{marginBottom: 0}}>Provide a comprehensive list of data files and variables. Starting information has been imported from your uploaded files.</p>
         <ul>
           <li>Add any folders and data files inside compressed archives (.zip, .gz), and any missing variables</li>
           <li>Describe files and define all variables and abbreviations used, including units of measurement</li>
@@ -73,8 +73,8 @@ export default function ReadMeSteps({
           </div>
         ))}
       </div>
-      <label className="input-label xl" htmlFor="readme_step_editor">{secTitles[step - 1]}</label>
-      <div style={{margin: '-.5em 0', fontSize: '1rem'}}>
+      <h3 id="md_editor_label">{secTitles[step - 1]}</h3>
+      <div style={{margin: '-.5em 0'}}>
         {sections[step].desc}
       </div>
       <MarkdownEditor
@@ -82,17 +82,17 @@ export default function ReadMeSteps({
         {...(step === 1 ? {initialValue: '', replaceValue: sections[step].content} : {initialValue: sections[step].content})}
         onChange={saveContent}
       />
-      <div className="o-dataset-nav" style={{marginBottom: '2rem'}}>
-        <button type="button" className={step === secTitles.length ? 'o-button__plain-text1' : 'o-button__plain-textlink'} onClick={() => setStep(step + 1)}>
+      <div className="o-dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
+        <button type="button" className="o-button__plain-text1" onClick={() => setStep(step + 1)}>
           {step === secTitles.length ? (
             <>Complete &amp; generate README</>
           ) : (
-            <>{secTitles[step]} <i className="fa fa-caret-right" aria-hidden="true" /></>
+            <>Next <i className="fa fa-caret-right" aria-hidden="true" /></>
           )}
         </button>
         {step > 1 && (
-          <button type="button" className="o-button__plain-textlink" onClick={() => setStep(step - 1)}>
-            <i className="fa fa-caret-left" aria-hidden="true" /> {secTitles[step - 2]}
+          <button type="button" className="o-button__plain-text0" onClick={() => setStep(step - 1)}>
+            <i className="fa fa-caret-left" aria-hidden="true" /> Previous
           </button>
         )}
       </div>
