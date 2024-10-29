@@ -144,12 +144,14 @@ function Submission({
   };
 
   useEffect(() => {
-    const url = location.search.slice(1);
-    if (url) {
-      const n = steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
-      if (n.name !== step.name) setStep(n);
+    if (!review) {
+      const url = location.search.slice(1);
+      if (url) {
+        const n = steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
+        if (n.name !== step.name) setStep(n);
+      }
     }
-  }, [location]);
+  }, [review, location]);
 
   useEffect(() => {
     const main = document.getElementById('maincontent');
