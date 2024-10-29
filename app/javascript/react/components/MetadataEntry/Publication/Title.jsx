@@ -53,9 +53,7 @@ function Title({resource, setResource}) {
             type="text"
             className="title c-input__text"
             id={`title__${resource.id}`}
-            onBlur={() => { // formRef.current.handleSubmit();
-              formik.handleSubmit();
-            }}
+            onBlur={formik.handleSubmit}
             required
             aria-describedby="title-ex"
             aria-errormessage="title_error"

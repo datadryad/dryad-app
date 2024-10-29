@@ -95,7 +95,7 @@ module StashDatacite
 
       @author.affiliations.destroy_all
       args = aff_params
-      affs = args['affiliations'].reject { |a| a['long_name'].blank? }
+      affs = args['affiliations']&.reject { |a| a['long_name'].blank? }
       affs.each do |aff|
         process_affiliation(aff['long_name'], aff['ror_id'])
       end
