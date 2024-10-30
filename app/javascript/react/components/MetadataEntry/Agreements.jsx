@@ -2,6 +2,61 @@ import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg, formatSizeUnits} from '../../../lib/utils';
 
+function Calculations({resource, previous, dpc}) {
+  const published = resource.identifier.pub_state === 'published';
+  const large_files = resource.total_file_size > dpc.large_file_size;
+  let over = resource.total_file_size - dpc.large_file_size;
+  if (published) {
+    over = 0;
+    if (large_files
+        && resource.total_file_size > previous.total_file_size
+        && Math.floor(resource.total_file_size / 10) !== Math.floor(previous.total_file_size / 10)) {
+      over = resource.total_file_size - Math.max(previous.total_file_size, dpc.large_file_size);
+    }
+  }
+  const chunks = Math.ceil(over / dpc.chunk_size);
+  if (published) {
+    return (
+      <>
+        <p>Your dataset has already been published, and you will not receive a new invoice for Dryad&apos;s data publishing charge.</p>
+        {chunks > 0 && (
+          <>
+            <p>
+              For data packages in excess of {formatSizeUnits(dpc.large_file_size)}, submitters will be charged{' '}
+              an additional ${dpc.chunk_cost} for each additional {formatSizeUnits(dpc.chunk_size)}, or part thereof.
+            </p>
+            <p>
+              For the addition of {formatSizeUnits(over)} to your published dataset,
+              you will receive a new invoice for <b>${chunks * (dpc.chunk_cost)}</b>.
+            </p>
+          </>
+        )}
+      </>
+    );
+  }
+  return (
+    <>
+      <p>
+        Dryad charges a{large_files ? <> ${dpc.dpc} </> : ''}fee for the curation and preservation of published datasets.{' '}
+        {large_files ? (
+          <>
+            For data packages in excess of {formatSizeUnits(dpc.large_file_size)}, submitters will be charged{' '}
+            an additional ${dpc.chunk_cost} for each additional {formatSizeUnits(dpc.chunk_size)}, or part thereof.
+          </>
+        ) : (
+          <>Upon publication of your dataset, you will receive an invoice for ${dpc.dpc}.</>
+        )}
+      </p>
+      {large_files && (
+        <p>
+          Upon publication of your {formatSizeUnits(resource.total_file_size)} dataset,
+          you will receive an invoice for <b>${dpc.dpc + (chunks * (dpc.chunk_cost))}</b>.
+        </p>
+      )}
+    </>
+  );
+}
+
 export default function Agreements({
   resource, setResource, form, previous, preview = false,
 }) {
@@ -86,10 +141,6 @@ export default function Agreements({
     }
     getPaymentInfo();
   }, []);
-
-  const large_files = resource.total_file_size > dpc.large_file_size;
-  const over = resource.total_file_size - dpc.large_file_size;
-  const chunks = Math.ceil(over / dpc.chunk_size);
 
   if (!dpc.dpc) {
     return (
@@ -182,27 +233,7 @@ export default function Agreements({
               {previous && resource.tenant !== previous.tenant && <p className="del ins">Member institution changed</p>}
             </>
           )}
-          {dpc.user_must_pay && (
-            <>
-              <p>
-                Dryad charges a{large_files ? <> ${dpc.dpc} </> : ''}fee for the curation and preservation of published datasets.{' '}
-                {large_files ? (
-                  <>
-                    For data packages in excess of {formatSizeUnits(dpc.large_file_size)}, submitters will be charged{' '}
-                    an additional ${dpc.chunk_cost} for each additional {formatSizeUnits(dpc.chunk_size)}, or part thereof.
-                  </>
-                ) : (
-                  <>Upon publication of your dataset, you will receive an invoice for ${dpc.dpc}.</>
-                )}
-              </p>
-              {large_files && (
-                <p>
-                  Upon publication of your {formatSizeUnits(resource.total_file_size)} dataset,
-                  you will receive an invoice for <b>${dpc.dpc + (chunks * (dpc.chunk_cost))}</b>.
-                </p>
-              )}
-            </>
-          )}
+          {dpc.user_must_pay && <Calculations resource={resource} previous={previous} dpc={dpc} />}
         </>
       )}
       {preview ? (

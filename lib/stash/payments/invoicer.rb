@@ -50,16 +50,26 @@ module Stash
         invoice.send_invoice
       end
 
+      def check_new_overages(prev_size)
+        customer_id = stripe_user_customer_id
+        return unless customer_id.present?
+
+        lfs = APP_CONFIG.payments.large_file_size
+        return unless ds_size > lfs && ds_size > prev_size && (ds_size / 10).floor != (prev_size / 10).floor
+
+        over = ds_size - [prev_size, lfs].max
+        invoice = create_invoice(customer_id)
+        create_invoice_overages(over)
+        resource.identifier.payment_id = invoice.id
+        resource.identifier.save
+        invoice.send_invoice
+      end
+
       def external_service_online?
         latest = StashEngine::Identifier.where.not(payment_id: nil).order(updated_at: :desc).first
         return false unless latest.present?
 
         Stripe::Charge.retrieve(latest.payment_id).present?
-      end
-
-      # takes a size and returns overage charges in cents
-      def overage_charges
-        overage_chunks * APP_CONFIG.payments.additional_storage_chunk_cost
       end
 
       def ds_size
@@ -68,22 +78,20 @@ module Stash
       end
 
       def overage_bytes
-        size_in_bytes = ds_size
-        return 0 if size_in_bytes <= APP_CONFIG.payments.large_file_size
+        return 0 if ds_size <= APP_CONFIG.payments.large_file_size
 
-        size_in_bytes - APP_CONFIG.payments.large_file_size
+        ds_size - APP_CONFIG.payments.large_file_size
       end
 
-      def overage_chunks
-        over_bytes = overage_bytes
+      def overage_chunks(over_bytes)
         return 0 if over_bytes == 0
 
         (over_bytes / APP_CONFIG.payments.additional_storage_chunk_size).ceil
       end
 
-      def overage_message
+      def overage_message(over_bytes)
         msg = <<~MESSAGE
-          Oversize submission charges for #{resource.identifier}. Overage amount is #{filesize(overage_bytes)} @
+          Oversize submission charges for #{resource.identifier}. Overage amount is #{filesize(over_bytes)} @
           #{ActionController::Base.helpers.number_to_currency(APP_CONFIG.payments.additional_storage_chunk_cost / 100)}
           per #{filesize(APP_CONFIG.payments.additional_storage_chunk_size)} or part thereof
           over #{filesize(APP_CONFIG.payments.large_file_size)} (see https://datadryad.org/stash/publishing_charges for details)
@@ -104,17 +112,7 @@ module Stash
           currency: 'usd',
           description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
         )]
-        over_chunks = overage_chunks
-        if over_chunks.positive?
-          items.push(Stripe::InvoiceItem.create(
-                       customer: customer_id,
-                       invoice: invoice_id,
-                       unit_amount: APP_CONFIG.payments.additional_storage_chunk_cost,
-                       currency: 'usd',
-                       quantity: over_chunks,
-                       description: overage_message
-                     ))
-        end
+        items.concat(create_invoice_overages(overage_bytes))
         # For users with a waiver, add line waiving invoice amount
         if stripe_user_waiver?
           overcharge = over_chunks.positive? ? APP_CONFIG.payments.additional_storage_chunk_cost * over_chunks : 0
@@ -124,6 +122,22 @@ module Stash
                        amount: -(dpc + overcharge),
                        currency: 'usd',
                        description: "Waiver of charges for #{resource.identifier} (#{filesize(ds_size)})"
+                     ))
+        end
+        items
+      end
+
+      def create_invoice_overages(over_bytes)
+        over_chunks = overage_chunks(over_bytes)
+        items = []
+        if over_chunks.positive?
+          items.push(Stripe::InvoiceItem.create(
+                       customer: customer_id,
+                       invoice: invoice_id,
+                       unit_amount: APP_CONFIG.payments.additional_storage_chunk_cost,
+                       currency: 'usd',
+                       quantity: over_chunks,
+                       description: overage_message(over_bytes)
                      ))
         end
         items
