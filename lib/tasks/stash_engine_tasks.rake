@@ -307,7 +307,6 @@ namespace :identifiers do
       end
     rescue StandardError => e
       p "    Exception! #{e.message}"
-
     end
   end
 
@@ -360,7 +359,7 @@ namespace :identifiers do
     end
   end
 
-  desc "Email the submitter when a dataset is in 'action_required' 3 times"
+  desc "Email the submitter when a dataset is in 'action_required' 1 time at 2 weeks"
   task action_required_reminder: :environment do
     # require 'stash_engine/tasks/stash_engine_tasks/action_required_reminder'
     items = Stash::ActionRequiredReminder.find_action_required_items
@@ -374,38 +373,16 @@ namespace :identifiers do
       resource = item[:identifier]&.latest_resource
       next if resource.nil?
 
-      # send out reminder 1 at two weeks
-      if item[:set_at] < 2.weeks.ago && item[:reminder_1].nil?
-        StashEngine::UserMailer.chase_action_required1(resource).deliver_now
-        StashEngine::CurationActivity.create(
-          resource_id: resource.id,
-          user_id: 0,
-          status: resource.last_curation_activity.status,
-          note: 'CRON: mailed action required reminder 1'
-        )
-      # send out reminder 2 at 2 weeks after reminder 1
-      elsif item[:reminder_1].present? && item[:reminder_1] < 2.weeks.ago && item[:reminder_2].nil?
-        StashEngine::UserMailer.chase_action_required2(resource).deliver_now
-        StashEngine::CurationActivity.create(
-          resource_id: resource.id,
-          user_id: 0,
-          status: resource.last_curation_activity.status,
-          note: 'CRON: mailed action required reminder 2'
-        )
-      # send out reminder 3 (final) at 2 weeks after reminder 2, it sets withdrawn on this so shouldn't be picked up as action_required again
-      elsif item[:reminder_2].present? && item[:reminder_2] < 2.weeks.ago
-        StashEngine::UserMailer.chase_action_required3(resource).deliver_now
-        StashEngine::CurationActivity.create(
-          resource_id: resource.id,
-          user_id: 0,
-          status: resource.last_curation_activity.status,
-          note: 'CRON: mailed action required final reminder (reminder 3)'
-        )
-        resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
-                                                                             status: 'withdrawn',
-                                                                             note: 'withdrawing on final action required reminder')
-        # NOTE: there is a callback on CurationActivity that seems to automatically update salesforce on withdrawn status
-      end
+      # send out reminder at two weeks
+      next if item[:set_at] > 2.weeks.ago || item[:reminder_1].present?
+
+      StashEngine::UserMailer.chase_action_required1(resource).deliver_now
+      StashEngine::CurationActivity.create(
+        resource_id: resource.id,
+        user_id: 0,
+        status: resource.last_curation_activity.status,
+        note: 'CRON: mailed action required reminder 1'
+      )
     end
   end
 
@@ -1399,6 +1376,17 @@ namespace :curation_stats do
 end
 
 namespace :journals do
+  task match_titles_to_issns: :environment do
+    StashEngine::ResourcePublication.where.not(publication_name: [nil, '']).where(publication_issn: [nil, '']).find_each do |d|
+
+      journal = StashEngine::Journal.find_by_title(d.publication_name)
+      next unless j.present?
+
+      puts "Cleaning journal: #{name}"
+      StashEngine::Journal.replace_uncontrolled_journal(old_name: d.publication_name, new_journal: journal)
+    end
+    nil
+  end
   desc 'Clean journals that have exact name matches except for an asterisk'
   task clean_titles_with_asterisks: :environment do
     StashEngine::InternalDatum.where("data_type = 'publicationName' and value like '%*'").find_each do |d|
@@ -1409,7 +1397,7 @@ namespace :journals do
       next unless j.present?
 
       puts "Cleaning journal: #{name}"
-      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_id: j.id)
+      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_journal: j)
     end
     StashEngine::ResourcePublication.where("publication_name like '%*'").find_each do |d|
       name = d.publication_name
@@ -1419,7 +1407,7 @@ namespace :journals do
       next unless j.present?
 
       puts "Cleaning journal: #{name}"
-      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_id: j.id)
+      StashEngine::Journal.replace_uncontrolled_journal(old_name: name, new_journal: j)
     end
     nil
   end
