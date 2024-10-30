@@ -3,7 +3,7 @@
 
 <p>
 Title: <%= @resource.title %><br/>
-Data DOI: <%= @resource.identifier_str %><br/>
+Data DOI: <%= @resource.identifier_value %><br/>
 Submitted by: <%= @user_name %><br/>
 Journal: <%= @resource.identifier.publication_name %>
 <% if @resource.identifier.manuscript_number.present? %>
