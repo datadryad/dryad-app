@@ -124,6 +124,7 @@ function PublicationForm({
         <Form style={{margin: '1em auto'}}>
           <ImportCheck importType={importType} journal={journal} setDisable={setDisable} />
           <Field name="isImport" type="hidden" />
+          <p style={{marginTop: '2em'}}>Enter your publication information and import the title and other metadata:</p>
           <div className="input-line">
             <div className="input-stack" style={{flex: 0}}>
               <Journal
@@ -184,11 +185,11 @@ function PublicationForm({
               </div>
             )}
             <div className="input-stack">
-              <span style={{height: '21px'}} />
+              <span style={{height: '23px'}} />
               <button
                 type="button"
                 name="commit"
-                className="o-button__plain-text2"
+                className="o-button__plain-text5"
                 hidden={hide}
                 disabled={disable}
                 onClick={() => {
