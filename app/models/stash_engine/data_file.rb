@@ -40,7 +40,7 @@ module StashEngine
     after_commit :recalculate_total
 
     def recalculate_total
-      resource.update(total_file_size: resource.data_files.present_files.sum(:upload_file_size))
+      StashEngine::Resource.find_by(id: resource.id)&.update(total_file_size: resource.data_files.present_files.sum(:upload_file_size))
     end
 
     def s3_staged_path

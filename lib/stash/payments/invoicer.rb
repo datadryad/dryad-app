@@ -86,8 +86,6 @@ module Stash
         StashEngine::Author.where(author_email: email).where.not(stripe_customer_id: nil).order(:id).first&.stripe_customer_id
       end
 
-      private
-
       def ds_size
         # Only charge based on the files present in the item at time of publication
         resource.total_file_size || 0
@@ -114,6 +112,8 @@ module Stash
         MESSAGE
         msg.strip.gsub(/\s+/, ' ')
       end
+
+      private
 
       def create_invoice_items_for_dpc(customer_id, invoice_id)
         dpc = Invoicer.data_processing_charge(identifier: resource.identifier)
