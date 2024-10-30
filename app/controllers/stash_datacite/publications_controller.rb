@@ -166,14 +166,18 @@ module StashDatacite
     end
 
     def update_manuscript_metadata
-      if !params[:publication].blank? && params[:publication_issn].blank?
-        @error = 'Please select your journal from the autocomplete drop-down list'
+      if @pub_name.blank? && @pub_issn.blank?
+        @error = 'Please select your journal from the autocomplete list.'
         return
       end
-      return if params[:publication].blank? # keeps the default fill-in message
-      return if @pub_issn.blank?
-      return if @msid.blank?
-
+      if @msid.blank?
+        @error = 'Please enter your manuscript number.'
+        return
+      end
+      if @pub_issn.blank?
+        @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
+        return
+      end
       journal = StashEngine::Journal.find_by_issn(@pub_issn)
       if journal.blank?
         @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
@@ -184,7 +188,6 @@ module StashDatacite
         @error = 'We could not find metadata to import for this manuscript. Please fill in your title manually.'
         return
       end
-
       dryad_import = Stash::Import::DryadManuscript.new(resource: @resource, manuscript: manu)
       dryad_import.populate
     rescue HTTParty::Error, SocketError => e
