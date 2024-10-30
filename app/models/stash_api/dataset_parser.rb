@@ -69,7 +69,7 @@ module StashApi
     def resource_uniq?
       return true if @id
 
-      query = StashEngine::Resource.joins(:user).where(
+      query = StashEngine::Resource.joins(:users).where(
         stash_engine_resources: { title: @hash[:title] },
         stash_engine_users: { orcid: @user.orcid }
       )
