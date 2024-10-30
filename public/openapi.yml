@@ -159,6 +159,8 @@ paths:
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
 
   '/datasets/{doi}':
     get:
@@ -776,7 +778,14 @@ components:
     Unauthorized:
       description: 'Unauthorized, must have current bearer token'
       $ref: '#/components/content/Error'
-  
+
+    UnprocessableEntity:
+      description: "422 - Unprocessable Content: the server understood the content type of the request,
+        and the syntax of the request content was correct, but it was unable to process the contained instructions.
+        \n\n
+        Example: _A dataset with same information already exists._"
+      $ref: '#/components/content/Error'
+
   content:
 
     Error:

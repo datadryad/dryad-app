@@ -16,7 +16,7 @@ describe FixInProgressResources do
 
     @in_progress_resources = []
     ident_count = 3
-    identifiers = Array.new(ident_count) { |i| StashEngine::Identifier.create(identifier: "10.123/#{i}") }
+    identifiers = Array.new(ident_count) { |i| create(:identifier, identifier: "10.123/#{i}") }
     identifiers.each do |ident|
       Timecop.travel(Time.now.utc - 1.minute)
       r1 = create(:resource, identifier_id: ident.id)
