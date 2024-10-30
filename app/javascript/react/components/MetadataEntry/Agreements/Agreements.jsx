@@ -1,64 +1,11 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg, formatSizeUnits} from '../../../lib/utils';
-
-function Calculations({resource, previous, dpc}) {
-  const published = resource.identifier.pub_state === 'published';
-  const large_files = resource.total_file_size > dpc.large_file_size;
-  let over = resource.total_file_size - dpc.large_file_size;
-  if (published) {
-    over = 0;
-    if (large_files
-        && resource.total_file_size > previous.total_file_size
-        && Math.floor(resource.total_file_size / 10) !== Math.floor(previous.total_file_size / 10)) {
-      over = resource.total_file_size - Math.max(previous.total_file_size, dpc.large_file_size);
-    }
-  }
-  const chunks = Math.ceil(over / dpc.chunk_size);
-  if (published) {
-    return (
-      <>
-        <p>Your dataset has already been published, and you will not receive a new invoice for Dryad&apos;s data publishing charge.</p>
-        {chunks > 0 && (
-          <>
-            <p>
-              For data packages in excess of {formatSizeUnits(dpc.large_file_size)}, submitters will be charged{' '}
-              an additional ${dpc.chunk_cost} for each additional {formatSizeUnits(dpc.chunk_size)}, or part thereof.
-            </p>
-            <p>
-              For the addition of {formatSizeUnits(over)} to your published dataset,
-              you will receive a new invoice for <b>${chunks * (dpc.chunk_cost)}</b>.
-            </p>
-          </>
-        )}
-      </>
-    );
-  }
-  return (
-    <>
-      <p>
-        Dryad charges a{large_files ? <> ${dpc.dpc} </> : ''}fee for the curation and preservation of published datasets.{' '}
-        {large_files ? (
-          <>
-            For data packages in excess of {formatSizeUnits(dpc.large_file_size)}, submitters will be charged{' '}
-            an additional ${dpc.chunk_cost} for each additional {formatSizeUnits(dpc.chunk_size)}, or part thereof.
-          </>
-        ) : (
-          <>Upon publication of your dataset, you will receive an invoice for ${dpc.dpc}.</>
-        )}
-      </p>
-      {large_files && (
-        <p>
-          Upon publication of your {formatSizeUnits(resource.total_file_size)} dataset,
-          you will receive an invoice for <b>${dpc.dpc + (chunks * (dpc.chunk_cost))}</b>.
-        </p>
-      )}
-    </>
-  );
-}
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import Calculations from './Calculations';
+import InvoiceForm from './InvoiceForm';
 
 export default function Agreements({
-  resource, setResource, form, previous, preview = false,
+  resource, setResource, form, previous, ownerId, setAuthorStep, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -250,18 +197,19 @@ export default function Agreements({
         </div>
       ) : (
         <>
-          <p className="radio_choice">
-            <label>
-              <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
-              I agree to Dryad&apos;s {subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}
-              <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
-            </label>
-          </p>
+          {subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && dpc.user_must_pay && (
+            <InvoiceForm resource={resource} setResource={setResource} ownerId={ownerId} />
+          )}
           {(subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay)) && (
             <>
+              {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
+                <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad member.</p>
+              )}
               {dpc.user_must_pay && (
                 <>
-                  <div className="callout warn"><p>Are you affiliated with a Dryad member institution that could sponsor this fee?</p></div>
+                  <div className="callout warn" style={{marginTop: '2em'}}>
+                    <p>Are you affiliated with a Dryad member institution that could sponsor this fee?</p>
+                  </div>
                   {!!dpc.aff_tenant && (
                     <p>Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad member.</p>
                   )}
@@ -269,13 +217,31 @@ export default function Agreements({
               )}
               <div style={{maxWidth: '700px'}} ref={formRef} />
               {dpc.user_must_pay && resource.tenant.authentication?.strategy === 'author_match' && (
-                <p><em>For sponsorship, {resource.tenant.short_name} must appear as your author list affiliation for this submission.</em>.</p>
-              )}
-              {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
-                <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad member.</p>
+                <p>
+                  <em>For sponsorship, {resource.tenant.short_name} must appear as your author list affiliation for this submission.</em>.{' '}
+                  <span
+                    role="button"
+                    tabIndex="0"
+                    className="o-link__primary"
+                    onClick={setAuthorStep}
+                    onKeyDown={(e) => {
+                      if (['Enter', 'Space'].includes(e.key)) {
+                        setAuthorStep();
+                      }
+                    }}
+                  ><i className="fa fa-pencil" aria-hidden="true" /> Edit the author list
+                  </span>
+                </p>
               )}
             </>
           )}
+          <p className="radio_choice" style={{marginTop: '2em'}}>
+            <label>
+              <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
+              <span className="input-label">I agree</span> to Dryad&apos;s {subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}
+              <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
+            </label>
+          </p>
         </>
       )}
     </>

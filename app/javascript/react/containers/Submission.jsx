@@ -106,14 +106,20 @@ function Submission({
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource, review),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
-      help: <WorksHelp setTitleStep={() => setStep(steps[steps.findIndex((l) => l.name === 'Title/Import')])} />,
+      help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title/Import'))} />,
       preview: <WorksPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Agreements',
       pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
-      component: <Agreements resource={resource} setResource={setResource} form={change_tenant} />,
+      component: <Agreements
+        resource={resource}
+        setResource={setResource}
+        form={change_tenant}
+        ownerId={ownerId}
+        setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
+      />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
       preview: <Agreements resource={resource} previous={previous} preview />,
     },

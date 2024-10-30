@@ -1,7 +1,7 @@
 module StashDatacite
   class AuthorsController < ApplicationController
     before_action :check_reorder_valid, only: %i[reorder]
-    before_action :set_author, only: %i[update delete]
+    before_action :set_author, only: %i[update delete check_invoice set_invoice]
     before_action :ajax_require_modifiable, only: %i[update create delete reorder]
 
     respond_to :json
@@ -55,6 +55,24 @@ module StashDatacite
           grouped_authors = js.index_by { |author| author[:id] }
           resp = StashEngine::Author.update(grouped_authors.keys, grouped_authors.values)
           render json: resp, status: :ok
+        end
+      end
+    end
+
+    def check_invoice
+      inv = Stash::Payments::Invoicer.new(resource: resource, curator: nil)
+      customer = inv.retrieve_customer(@author.stripe_customer_id)
+      render json: { name: customer&.name, email: customer&.email }
+    end
+
+    def set_invoice
+      respond_to do |format|
+        format.json do
+          inv = Stash::Payments::Invoicer.new(resource: @author.resource, curator: nil)
+          customer_id = inv.lookup_prior_stripe_customer_id(params[:customer_email])
+          customer_id = inv.create_customer(params[:customer_name], params[:customer_email]).id unless customer_id.present?
+          @author.update(stripe_customer_id: customer_id)
+          render json: @author.as_json(include: [:affiliations])
         end
       end
     end
