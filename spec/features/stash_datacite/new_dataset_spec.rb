@@ -76,7 +76,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
     it 'charges user by default', js: true do
       click_button 'Agreements'
-      expect(page).to have_text('you will receive an invoice')
+      expect(page).to have_text('an invoice will be sent')
     end
 
     it 'waives the fee when funder has agreed to pay', js: true do

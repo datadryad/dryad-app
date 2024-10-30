@@ -90,7 +90,7 @@ module Stash
 
       def ds_size
         # Only charge based on the files present in the item at time of publication
-        resource.total_file_size
+        resource.total_file_size || 0
       end
 
       def overage_bytes

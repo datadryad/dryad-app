@@ -37,6 +37,12 @@ module StashEngine
   class DataFile < GenericFile
     has_many :container_files, class_name: 'StashEngine::ContainerFile', dependent: :delete_all
 
+    after_commit :recalculate_total
+
+    def recalculate_total
+      resource.update(total_file_size: resource.data_files.present_files.sum(:upload_file_size))
+    end
+
     def s3_staged_path
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
 
