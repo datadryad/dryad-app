@@ -385,6 +385,7 @@ module StashEngine
 
     def ready_for_payment?
       return false unless resource
+      return false unless first_time_in_status?
 
       resource.identifier.reload
       APP_CONFIG&.payments&.service == 'stripe' &&

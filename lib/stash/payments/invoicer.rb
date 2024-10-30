@@ -60,9 +60,9 @@ module Stash
         over = ds_size - [prev_size, lfs].max
         invoice = create_invoice(customer_id)
         create_invoice_overages(over)
-        resource.identifier.payment_id = invoice.id
-        resource.identifier.save
         invoice.send_invoice
+        resource.curation_activities << StashEngine::CurationActivity(note: "New overage invoice sent with ID: #{invoice.id}",
+                                                                      status: resource.current_curation_status, user_id: 0)
       end
 
       def external_service_online?
