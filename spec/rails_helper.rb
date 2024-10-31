@@ -38,6 +38,7 @@ Dir[Rails.root.join('spec/mocks/*.rb')].each { |f| require f }
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 Dir[Rails.root.join('spec/mixins/*.rb')].each { |f| require f }
 Dir[Rails.root.join('lib/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/shared_examples/*.rb')].each { |f| require f }
 
 # if you have precompiled assets, the tests will use them without telling you and they might be out of date
 # this burned me with out of date and non-working javascript for an entire afternoon of aggravating debugging.  :evil-asset-pipeline:
