@@ -344,7 +344,9 @@ namespace :identifiers do
 
       reminder_flag = 'in_progress_reminder CRON'
       if r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
-        log "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}" if Rails.env.production?
+        if Rails.env.production?
+          log "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
+        end
         StashEngine::UserMailer.in_progress_reminder(r).deliver_now
         StashEngine::CurationActivity.create(
           resource_id: r.id,
