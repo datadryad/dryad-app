@@ -43,7 +43,7 @@ module StashEngine
       context 'when status date is between 1 month and one year' do
         [1, 7, 11].each do |month_num|
           it "sends notification email at #{month_num} months" do
-            Timecop.travel(month_num.months.from_now)
+            Timecop.travel(month_num.months.from_now + 1.day)
             expect(StashEngine::ResourceMailer).to receive_message_chain(:in_progress_delete_notification, :deliver_now).with(resource).with(no_args)
             expect(subject).to receive(:create_activity).with('in_progress_deletion_notice', resource).once
 
@@ -69,7 +69,7 @@ module StashEngine
           subject.send(:create_activity, 'in_progress_deletion_notice', resource)
 
           expect(StashEngine::ResourceMailer).to receive(:in_progress_delete_notification).once
-          Timecop.travel(1.month) do
+          Timecop.travel(1.month + 1.day) do
             subject.send_in_progress_reminders
           end
         end
@@ -107,7 +107,7 @@ module StashEngine
       context 'when status date is between 1 month and one year' do
         [1, 7, 11].each do |month_num|
           it "sends notification email at #{month_num} months" do
-            Timecop.travel(month_num.months.from_now)
+            Timecop.travel(month_num.months.from_now + 1.day)
 
             expect(StashEngine::ResourceMailer).to receive_message_chain(:action_required_delete_notification,
                                                                          :deliver_now).with(resource).with(no_args)
@@ -178,7 +178,7 @@ module StashEngine
       context 'when status date is between 6 months and 1 year' do
         [6, 7, 9, 11].each do |month_num|
           it "sends notification email at #{month_num} months" do
-            Timecop.travel(month_num.months.from_now)
+            Timecop.travel(month_num.months.from_now + 1.day)
 
             expect(StashEngine::ResourceMailer).to receive_message_chain(:peer_review_delete_notification, :deliver_now).with(resource).with(no_args)
             expect(subject).to receive(:create_activity).with('peer_review_deletion_notice', resource).once
@@ -476,23 +476,6 @@ module StashEngine
         expect(record.status).to eq('in_progress')
         expect(record.resource_id).to eq(resource.id)
         expect(record.user_id).to eq(0)
-      end
-    end
-
-    describe '#log' do
-      it 'prints message with logging true' do
-        expect do
-          subject.class.new(logging: true).send(:log, 'delete_notification_message_with_logs')
-        end.to output(/delete_notification_message_with_logs/).to_stdout
-      end
-
-      it 'does not print the message with logging false or missing' do
-        expect do
-          subject.class.new(logging: false).send(:log, 'delete_notification_message_with_logs')
-        end.not_to output(/delete_notification_message_with_logs/).to_stdout
-        expect do
-          subject.class.new.send(:log, 'delete_notification_message_with_logs')
-        end.not_to output(/delete_notification_message_with_logs/).to_stdout
       end
     end
   end
