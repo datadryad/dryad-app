@@ -74,7 +74,7 @@ module StashEngine
           create_activity(reminder_flag, resource)
         end
       rescue StandardError => e
-        p "    Exception! #{e.message}"
+        log "    Exception! #{e.message}"
       end
       true
     end
@@ -126,7 +126,7 @@ module StashEngine
         StashEngine::ResourceMailer.send_final_withdrawn_notification(resource).deliver_now
         create_activity(reminder_flag, resource)
       rescue StandardError => e
-        p "    Exception! #{e.message}"
+        log "    Exception! #{e.message}"
       end
       true
     end
@@ -145,8 +145,9 @@ module StashEngine
 
     def log(message)
       return unless logging
+      return if Rails.env.test?
 
-      p message
+      puts message
     end
 
     def log_data_for_status(status, resource)
