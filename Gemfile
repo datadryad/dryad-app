@@ -176,10 +176,10 @@ group :development, :v3_development, :local_dev, :local, :test do
   gem 'pry'
   gem 'pry-rails'
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
-  gem 'letter_opener'
-  gem 'letter_opener_web', '~> 3.0'
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
+  gem 'letter_opener'
+  gem 'letter_opener_web', '~> 3.0'
   gem 'spring-commands-rspec'
 end
 
