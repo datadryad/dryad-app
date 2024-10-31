@@ -382,7 +382,8 @@ module Stash
         return unless @sm['ISSN'].present? && @sm['ISSN'].first.present?
 
         # Do not change the ISSN if one for this journal is already set
-        return if @resource.journal&.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first).id
+        found = StashEngine::Journal.find_by_issn(@sm['ISSN'].first)
+        return if found && @resource.journal&.id == found&.id
 
         # First look up the ISSN from the journal name (populate_publication_name).
         # If we do not know the ISSN, save it for quarterly checking and addition to our db
