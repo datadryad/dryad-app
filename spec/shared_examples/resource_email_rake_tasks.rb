@@ -1,7 +1,7 @@
 RSpec.shared_examples('send email notifications tasks') do |count, date|
 
   it 'should send emails' do
-    Timecop.travel(date) do
+    Timecop.travel(date + 1.day) do
       expect do
         Rake::Task['identifiers:in_progess_reminder'].execute
         Rake::Task['dataset_deletion:in_progress_reminders'].execute
