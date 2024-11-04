@@ -579,7 +579,7 @@ module StashApi
     def duplicate_resource
       nr = @resource.amoeba_dup
       nr.curation_activities&.update_all(user_id: @user.id)
-      nr.current_editor_id = @resource.user_id
+      nr.current_editor_id = @user.id
       nr.save!
       @resource = nr
     end
