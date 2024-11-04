@@ -197,7 +197,7 @@ namespace :identifiers do
               perm_bucket.delete_dir(s3_key: "v3/#{s3_dir}")
             end
 
-            # Important! Retain the metadata for this dataset, so curators can determine what happened to it       
+            # Important! Retain the metadata for this dataset, so curators can determine what happened to it
           end
         end
       end
