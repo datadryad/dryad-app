@@ -12,6 +12,7 @@ AllCops:
     - 'ui-library/**/*'
     - 'node_modules/**/*'
     - 'tmp/**/*'
+    - 'ruby/**/*'
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 3.0
 
@@ -124,6 +125,10 @@ Style/NumericPredicate:
 
 # The semantics of `foo&.bar` are a lot less interchangeable with `foo && foo.bar` than RuboCop thinks
 Style/SafeNavigation:
+  Enabled: false
+
+# SafeNavigation is always good, even in a long chain
+Style/SafeNavigationChainLength:
   Enabled: false
 
 # Unclear why it's a good idea to give parameters semantically meaningless names
