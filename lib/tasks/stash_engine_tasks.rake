@@ -143,7 +143,7 @@ namespace :identifiers do
       log ' ##### remove_abandoned_datasets -- Deleting old versions of datasets that are still in progress'
     end
 
-    removed_files_note='remove_abandoned_datasets CRON - removing data files from abandoned dataset'
+    removed_files_note = 'remove_abandoned_datasets CRON - removing data files from abandoned dataset'
     
     StashEngine::Identifier.where(pub_state: [nil, 'withdrawn', 'unpublished']).find_each do |i|
       next if i.date_first_published.present?
