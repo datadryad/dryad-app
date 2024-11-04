@@ -1,3 +1,5 @@
+require 'csv'
+
 module StashEngine
   # rubocop:disable Metrics/AbcSize, Metrics/ModuleLength, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   module AdminDashboardHelper
