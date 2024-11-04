@@ -144,7 +144,7 @@ namespace :identifiers do
     end
 
     removed_files_note = 'remove_abandoned_datasets CRON - removing data files from abandoned dataset'
-    
+
     StashEngine::Identifier.where(pub_state: [nil, 'withdrawn', 'unpublished']).find_each do |i|
       next if i.date_first_published.present?
       next unless %w[in_progress withdrawn].include?(i.latest_resource&.current_curation_status)
@@ -178,7 +178,7 @@ namespace :identifiers do
             status: 'withdrawn',
             note: removed_files_note
           )
-          
+
           # Perform the actual removal
           i.resources.each do |r|
             # Delete files from temp upload directory, if it exists
