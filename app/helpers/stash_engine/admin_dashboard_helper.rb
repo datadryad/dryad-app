@@ -60,7 +60,9 @@ module StashEngine
                 end].flatten.concat(affs).uniq.reject(&:blank?).first(6).join('; ')
       end
       if @fields.include?('submitter')
-        row << "#{dataset.user.first_name} #{dataset.user.last_name}#{dataset.user.orcid ? " ORCID: #{dataset.user.orcid}" : ''}"
+        row << "#{dataset.submitter&.first_name} #{dataset.submitter&.last_name}#{
+          dataset.submitter.orcid.present? ? " ORCID: #{dataset.submitter.orcid}" : ''
+        }"
       end
       row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
       row << filesize(dataset.total_file_size) if @fields.include?('size')

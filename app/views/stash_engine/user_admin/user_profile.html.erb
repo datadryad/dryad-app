@@ -72,7 +72,7 @@
   <div class="o-admin-head-right">
     <h2 class="o-heading__level3">Roles</h2>
     <ul>
-      <li id="user_role_<%= @user.id %>"><%= @user.roles.present? ? @user.roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %></li>
+      <li id="user_role_<%= @user.id %>"><%= @user.roles.admin_roles.present? ? @user.roles.admin_roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %></li>
       <li id="user_role_details"><%= @user.journal_organizations.map(&:name).join(", ") %> <%= @user.journals.map(&:title).join(", ") %> <%= @user.funders.map(&:name).join(", ") %></li>
     </ul>
   </div>
@@ -89,10 +89,10 @@
   <div class="o-admin-right">
     <h2>Datasets</h2>
     <!-- table and paging here -->
-    <%= render partial: 'stash_engine/user_admin/user_datasets', locals: { presenters: @page_presenters } %>
+    <%= render partial: 'stash_engine/user_admin/user_datasets' %>
 
     <div class="c-space-paginator">
-      <%= paginate @page_presenters, params: { page_size: @page_size } %>
+      <%= paginate @resources, params: { page_size: @page_size } %>
     </div>
   </div>
   <div class="o-admin-left">

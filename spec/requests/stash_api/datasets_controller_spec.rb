@@ -310,7 +310,7 @@ module StashApi
         res = ident.latest_resource
 
         expect(ident).to be
-        expect(res.user_id).to eq(@system_user.id)
+        expect(res.submitter.id).to eq(@system_user.id)
       end
 
       it 'creates a new dataset from EM submission metadata' do
@@ -858,7 +858,8 @@ module StashApi
           access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
 
           # HACK: in update to make this regular user the owner/editor of this item
-          @res.update(current_editor_id: user2.id, user_id: user2.id)
+          @res.update(current_editor_id: user2.id)
+          @res.submitter = user2.id
 
           response_code = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
                                 params: @patch_body,

@@ -1,4 +1,4 @@
-<% roles = current_user.roles.map { |r| 
+<% roles = current_user.roles.admin_roles.map { |r| 
   obj = r.role_object
   label = nil
   label = obj.title if defined?(obj.title)
