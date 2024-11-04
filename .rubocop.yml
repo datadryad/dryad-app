@@ -127,10 +127,6 @@ Style/NumericPredicate:
 Style/SafeNavigation:
   Enabled: false
 
-# SafeNavigation is always good, even in a long chain
-Style/SafeNavigationChainLength:
-  Enabled: false
-
 # Unclear why it's a good idea to give parameters semantically meaningless names
 Style/SingleLineBlockParams:
   Enabled: false
