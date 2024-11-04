@@ -16,8 +16,11 @@
 #
 # Indexes
 #
-#  index_dcs_contributors_on_name_identifier_id  (name_identifier_id)
-#  index_dcs_contributors_on_resource_id         (resource_id)
+#  index_dcs_contributors_on_contributor_type     (contributor_type)
+#  index_dcs_contributors_on_funder_order         (funder_order)
+#  index_dcs_contributors_on_identifier_type      (identifier_type)
+#  index_dcs_contributors_on_name_identifier_id   (name_identifier_id)
+#  index_dcs_contributors_on_resource_id          (resource_id)
 #
 require 'rails_helper'
 

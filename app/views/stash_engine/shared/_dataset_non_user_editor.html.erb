@@ -1,9 +1,9 @@
 <% # takes resource as local %>
-<% unless current_user&.id == resource.user_id %>
+<% unless resource&.users&.include?(current_user) %>
   <% revertible = resource.identifier.resources.count > 1 %>
   <div class="c-admin-editing-banner">
     <div class="o-div__editing_msg">
-      You are editing <%= resource.user.name %>'s dataset.
+      You are editing <%= resource.submitter.name %>'s dataset.
       <% unless revertible %>
         <p>This dataset has never been submitted, so no checkpoints have been created.  Any changes you make are permanent.</p>
       <% end %>
