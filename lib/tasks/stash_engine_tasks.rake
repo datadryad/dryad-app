@@ -147,7 +147,7 @@ namespace :identifiers do
     
     StashEngine::Identifier.where(pub_state: [nil, 'withdrawn', 'unpublished']).find_each do |i|
       next if i.date_first_published.present?
-      next unless %w[in_progress withdrawn].include?(i.latest_resource&.current_curation_status)      
+      next unless %w[in_progress withdrawn].include?(i.latest_resource&.current_curation_status)
       next if i.latest_resource.curation_activities&.map(&:note)&.include?(removed_files_note)
 
       # Double-check whether it was ever published -- even though we checked the date_first_published,
