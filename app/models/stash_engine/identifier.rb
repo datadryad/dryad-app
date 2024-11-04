@@ -284,9 +284,8 @@ module StashEngine
     end
 
     def record_payment
-      # once we have assigned payment to an entity, keep that entity,
-      # unless it was a journal that the submission is no longer affiliated with
-      # (in general, we don't want to tell a user their payment is covered and then later take it away)
+      # once we have assigned payment to an entity, keep that entity
+      # unless it was a journal that was removed or a new journal covers the dpc
       clear_payment_for_changed_journal
       return if payment_type.present? && payment_type != 'unknown'
 
@@ -637,7 +636,7 @@ module StashEngine
 
     def clear_payment_for_changed_journal
       return unless payment_type.present?
-      return unless payment_type.include?('journal')
+      return unless payment_type.include?('journal') || journal&.will_pay?
       return if payment_id == journal&.single_issn
 
       self.payment_type = nil
