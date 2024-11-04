@@ -135,7 +135,7 @@ namespace :identifiers do
   desc 'remove abandoned, unpublished datasets that will never be published'
   task remove_abandoned_datasets: :environment do
     args = Tasks::ArgsParser.parse :dry_run
-    # This task cleans up datasets that may have had some activity, but they have no real chance of being published.
+    # This task cleans up files from datasets that may have had some activity, but they have no real chance of being published.
     dry_run = args.dry_run == 'true'
     if dry_run
       log ' ##### remove_abandoned_datasets DRY RUN -- not actually running delete commands'
@@ -143,9 +143,12 @@ namespace :identifiers do
       log ' ##### remove_abandoned_datasets -- Deleting old versions of datasets that are still in progress'
     end
 
+    removed_files_note="remove_abandoned_datasets CRON - removing data files from abandoned dataset"
+    
     StashEngine::Identifier.where(pub_state: [nil, 'withdrawn', 'unpublished']).find_each do |i|
       next if i.date_first_published.present?
-      next unless %w[in_progress withdrawn].include?(i.latest_resource&.current_curation_status)
+      next unless %w[in_progress withdrawn].include?(i.latest_resource&.current_curation_status)      
+      next if i.latest_resource.curation_activities&.map(&:note)&.include?(removed_files_note)
 
       # Double-check whether it was ever published -- even though we checked the date_first_published,
       # some older datasets did not have this date set properly in the internal metadata before they were
@@ -167,13 +170,21 @@ namespace :identifiers do
         if dry_run
           log ' -- skipping deletion due to DRY_RUN setting'
         else
-          log ' -- deleting'
+          log ' -- deleting data files'
+          # Record the file deletion
+          StashEngine::CurationActivity.create(
+            resource_id: i.latest_resource.id,
+            user_id: 0,
+            status: 'withdrawn',
+            note: removed_files_note
+          )
+          
           # Perform the actual removal
           i.resources.each do |r|
-            # Delete temp upload directory, if it exists
+            # Delete files from temp upload directory, if it exists
             s3_dir = r.s3_dir_name(type: 'base')
             Stash::Aws::S3.new.delete_dir(s3_key: s3_dir)
-            # Delete permanent storage, if it exists
+            # Delete files from permanent storage, if it exists
             perm_bucket = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
             if r.download_uri&.include?('ark%3A%2F')
               m = /ark.*/.match(r.download_uri)
@@ -186,9 +197,7 @@ namespace :identifiers do
               perm_bucket.delete_dir(s3_key: "v3/#{s3_dir}")
             end
 
-            # Metadata
-            # Note that when the last resource is destroyed, the Identifier is automatically destroyed
-            r.destroy
+            # Important! Retain the metadata for this dataset, so curators can determine what happened to it       
           end
         end
       end
