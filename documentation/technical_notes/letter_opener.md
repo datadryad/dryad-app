@@ -8,6 +8,22 @@ viewing.
 When a non-production Dryad server is running, view the emails at http://<server_name>/letter_opener/
 
 
+Testing code with Letter Opener and Timecop
+-------------------------------------------
+
+Many activities that use letter_opener are tasks that run at specific times. To
+test them, you will need to use Timecop to manipulate the passage of time.
+
+In Rails Console, this will look something like:
+
+```
+require 'rake'
+require 'timecop'
+Timecop.travel(2.months.from_now)
+Rails.application.load_tasks
+Rake::Task['identifiers:in_progess_reminder'].execute
+```
+
 Issues
 -------
 
