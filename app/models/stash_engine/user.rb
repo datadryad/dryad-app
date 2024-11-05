@@ -27,8 +27,8 @@
 module StashEngine
   class User < ApplicationRecord
     self.table_name = 'stash_engine_users'
-    has_many :resources
-    has_many :roles, -> { order(role_object_type: :asc) }, dependent: :destroy
+    has_many :roles, dependent: :destroy
+    has_many :resources, through: :roles, source: :role_object, source_type: 'StashEngine::Resource'
     has_many :journals, through: :roles, source: :role_object, source_type: 'StashEngine::Journal'
     has_many :journal_organizations, through: :roles, source: :role_object, source_type: 'StashEngine::JournalOrganization'
     has_many :funders, through: :roles, source: :role_object, source_type: 'StashEngine::Funder'
@@ -175,32 +175,6 @@ module StashEngine
 
     def tenant
       Tenant.find(tenant_id)
-    end
-
-    # gets the latest completed resources by user, a lot of SQL since this becomes complicated
-    def latest_completed_resource_per_identifier
-      # Joining on version is messy, so we just assume the latest version in a
-      # group is the one with the highest resource_id.
-      #
-      # Note that resources with null identifiers (resources not yet assigned
-      # a DOI) are assumed to be different from one another. This is a little
-      # hacky, but should be OK since most of the time this will be a transient
-      # state immediately after submission. However, if we reach an error state
-      # before a DOI is reserved, we could end up with multiple instances of the
-      # "same" resource appearing in the table.
-      query = <<-SQL
-        id IN
-          (SELECT MAX(resources.id) AS resources_id
-             FROM stash_engine_resources resources
-                  JOIN stash_engine_resource_states AS states
-                  ON resources.current_resource_state_id = states.id
-            WHERE resources.user_id = ?
-              AND states.resource_state IN ('submitted', 'processing', 'error')
-         GROUP BY resources.identifier_id,
-                  IF(resources.identifier_id IS NULL, resources.id, 0))
-      SQL
-
-      Resource.where(query, id)
     end
 
     def self.init_user_from_auth(user, auth)
