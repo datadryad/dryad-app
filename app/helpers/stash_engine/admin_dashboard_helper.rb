@@ -101,17 +101,8 @@ module StashEngine
       row << dataset.identifier.process_date.submitted if @fields.include?('queue_date')
       row.to_csv(row_sep: "\r\n")
     end
+
     # rubocop:enable Metrics/AbcSize, Metrics/ModuleLength, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-
-    def csv_headers
-      headers.delete('Content-Length')
-      headers['X-Accel-Buffering'] = 'no'
-      headers['Cache-Control'] = 'no-cache'
-      headers['Content-Type'] = 'text/csv; charset=utf-8'
-      headers['Last-Modified'] = Time.now.ctime.to_s
-      headers['Content-Disposition'] = "attachment; filename=\"DryadAdminReport_#{Time.new.strftime('%F')}.csv\""
-    end
-
     def csv_enumerator
       Enumerator.new do |rows|
         rows << csv_report_head
