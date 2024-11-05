@@ -104,6 +104,22 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_text('This is a test of the note functionality')
       end
 
+      it 'change delete reference date', js: true do
+        visit stash_url_helpers.admin_dashboard_path
+
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
+
+        expect(page).to have_text('Activity log for')
+        click_button 'Change delete reference date'
+        fill_in('[process_date][delete_calculation_date]', with: '01.08.2024')
+        fill_in('[curation_activity][note]', with: 'Some Note')
+        click_button('Submit')
+
+        expect(page).to have_text('Changed deletion reference date to 2024-01-08.')
+        expect(page).to have_text('Some Note')
+      end
+
       it 'adds internal data', js: true do
         visit stash_url_helpers.admin_dashboard_path
 
