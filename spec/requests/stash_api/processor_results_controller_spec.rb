@@ -9,7 +9,7 @@ module StashApi
       @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                 owner_id: @user.id, owner_type: 'StashEngine::User')
       setup_access_token(doorkeeper_application: @doorkeeper_application)
-      @resource = create(:resource)
+      @resource = create(:resource, user: @user)
       @file = create(:data_file, resource: @resource)
       @processor_result = create(:processor_result, resource: @resource, parent_id: @file.id)
     end

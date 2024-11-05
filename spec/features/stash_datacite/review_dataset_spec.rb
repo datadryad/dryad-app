@@ -143,7 +143,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
       fill_in_keywords
       navigate_to_review
       agree_to_everything
-      fill_in 'user_comment', with: Faker::Lorem.sentence
       submit = find_button('submit_dataset', disabled: :all)
       submit.click
       expect(page.current_path).to eq('/stash/submission_process')
