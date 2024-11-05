@@ -50,6 +50,8 @@ module StashEngine
 
     scope :curators, -> { joins(:roles).where('stash_engine_roles' => { role: 'curator', role_object_id: nil }) }
 
+    scope :all_curators,  -> { joins(:roles).where('stash_engine_roles' => { role: 'curator' }) }
+
     scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
 
     EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
