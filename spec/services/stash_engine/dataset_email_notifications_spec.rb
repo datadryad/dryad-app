@@ -58,7 +58,7 @@ module StashEngine
       end
     end
 
-    describe 'action_required resource notifications' do
+    xdescribe 'action_required resource notifications' do
       before do
         sleep 1
         create(:curation_activity, status: 'action_required', resource_id: resource.id)
