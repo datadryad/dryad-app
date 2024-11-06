@@ -69,7 +69,7 @@
             <% end %>
           <% end %>
           <% if dataset.sort_order == 1 %>
-            <%= button_to stash_url_helpers.peer_review_release_path, method: :patch, params: {stash_engine_resource: { id: daatset.id }}, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
+            <%= button_to stash_url_helpers.peer_review_release_path, method: :patch, params: {stash_engine_resource: { id: dataset.id }}, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
               Release for curation <i class="fa fa-paper-plane" aria-hidden="true"></i>
             <% end %>
           <% end %>
