@@ -1,26 +1,26 @@
-<p>Set authentication strategy <%= @tenant.short_name %></p>
+<p><%= @tenant.short_name %></p>
 <%
 radios = [ ['author_match', 'Author affiliation match'], ['shibboleth', 'Shibboleth (InCommon)'], ['ip_address', 'IP address match'] ]
 %>
 <fieldset class="c-fieldset" id="strategy" style="margin-bottom: 1rem;">
-  <legend class="c-fieldset__legend">Strategies:</legend>
+  <legend class="c-fieldset__legend">Authentication strategies:</legend>
   <% radios.each do |s| %>
-      <label><%= radio_button_tag('authentication[strategy]', s.first, @tenant.authentication.strategy == s.first) %> <%= s.last %></label></br>
+      <label><%= radio_button_tag('authentication[strategy]', s.first, @tenant.authentication&.strategy == s.first, required: true) %> <%= s.last %></label></br>
   <% end %>
 </fieldset>
-<div id="shibboleth" <% unless @tenant.authentication.strategy == 'shibboleth'%>hidden<%end%>>
+<div id="shibboleth" <% unless @tenant.authentication&.strategy == 'shibboleth'%>hidden<%end%>>
   <div class="c-input">
     <%= form.label 'authentication[entity_id]', "The Shibboleth entity ID (usually found on InCommon)"%>
-    <%= form.text_field('authentication[entity_id]', value: @tenant.authentication.entity_id, class: 'c-input__text', style: 'width:100%') %>
+    <%= form.text_field('authentication[entity_id]', value: @tenant.authentication&.entity_id, class: 'c-input__text', style: 'width:100%') %>
   </div>
   <div class="c-input">
     <%= form.label 'authentication[entity_domain]', "The domain portion of the entity ID"%>
-    <%= form.text_field('authentication[entity_domain]', value: @tenant.authentication.entity_domain, class: 'c-input__text', style: 'width:100%') %>
+    <%= form.text_field('authentication[entity_domain]', value: @tenant.authentication&.entity_domain, class: 'c-input__text', style: 'width:100%') %>
   </div>
 </div>
-<div class="c-input" id="ip_address" <% unless @tenant.authentication.strategy == 'ip_address'%>hidden<%end%>>
+<div class="c-input" id="ip_address" <% unless @tenant.authentication&.strategy == 'ip_address'%>hidden<%end%>>
   <%= form.label 'authentication[ranges]', "Place each IP address range on a new line:"%>
-  <%= form.text_area('authentication[ranges]', value: @tenant.authentication.ranges&.join("\n"), class: 'c-input__textarea', style: 'width:100%; min-height:200px') %>
+  <%= form.text_area('authentication[ranges]', value: @tenant.authentication&.ranges&.join("\n"), class: 'c-input__textarea', style: 'width:100%; min-height:200px') %>
 </div>
 <script type="text/javascript">
   document.getElementById('strategy').addEventListener('change', e => {
