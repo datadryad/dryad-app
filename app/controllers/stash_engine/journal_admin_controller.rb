@@ -28,13 +28,13 @@ module StashEngine
 
     def popup
       strings = { issn: 'ISSN(s)', payment_plan_type: 'payment plan type', notify_contacts: 'publication contacts',
-                  review_contacts: 'PPR contacts', default_to_ppr: 'PPR by default', sponsor_id: 'journal sponsor' }
+                  review_contacts: 'PPR contacts', default_to_ppr: 'PPR by default', sponsor_id: 'journal sponsor', title: 'title' }
       @desc = strings[@field.to_sym]
       respond_to(&:js)
     end
 
     def edit
-      valid = %i[default_to_ppr payment_plan_type sponsor_id]
+      valid = %i[title default_to_ppr payment_plan_type sponsor_id]
       update = edit_params.slice(*valid)
       update[:sponsor_id] = nil if edit_params.key?(:sponsor_id) && edit_params[:sponsor_id].blank?
       update[:payment_plan_type] = nil if edit_params.key?(:payment_plan_type) && edit_params[:payment_plan_type].blank?
@@ -79,7 +79,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :field, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id)
+      params.permit(:id, :field, :title, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id)
     end
 
   end
