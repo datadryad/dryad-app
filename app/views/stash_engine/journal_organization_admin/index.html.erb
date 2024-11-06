@@ -4,7 +4,8 @@
 
 <h2 id="orgs-label">Manage publishers &amp; societies</h2>
 
-<%= form_with(url: stash_url_helpers.publisher_admin_path, method: 'get', id: 'search_form') do %>
+<div class="o-admin-form-inline">
+<%= form_with(url: stash_url_helpers.publisher_admin_path, method: 'get', id: 'admin_search') do %>
   <div class="o-admin-form-inline">
     <div class="o-admin-form-pair">
       <label for="search-terms">Organization search:</label>
@@ -12,11 +13,15 @@
     </div>
     <div class="o-admin-form-pair">
       <label for="sponsor">Parent org:</label>
-      <%= select_tag :sponsor, options_from_collection_for_select(@sponsors, "id", "name", params[:sponsor]), class: 'c-input__text' %>
+      <%= select_tag :sponsor, options_from_collection_for_select(@sponsors, "id", "name", params[:sponsor]), class: 'c-input__select' %>
     </div>
-    <%= submit_tag('Search', name: nil, class: 'o-button__submit' ) %>
+    <%= submit_tag('Search', name: nil, class: 'o-button__plain-text2' ) %>
   </div>
 <% end %>
+<%= form_with(url: publisher_new_path, method: :get, local: false, html: {style: "margin-left: auto"}) do %>
+  <button class="o-button__plain-text7"><i class="fa fa-plus" aria-hidden="true"></i> Add new</button>
+<% end %>
+</div>
 
 <%= render partial: 'admin_org_table', locals: { orgs: @orgs } %>
 

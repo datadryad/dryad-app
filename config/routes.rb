@@ -297,14 +297,20 @@ Rails.application.routes.draw do
     get 'tenant_admin', to: 'tenant_admin#index'
     get 'tenant_admin/:id/edit/:field', to: 'tenant_admin#popup', as: 'tenant_popup'
     post 'tenant_admin/:id', to: 'tenant_admin#edit', as: 'tenant_edit'
+    get 'tenant_admin/new', to: 'tenant_admin#new', as: 'tenant_new'
+    post 'tenant_admin', to: 'tenant_admin#create', as: 'tenant_create'
     # admin journal management
     get 'journal_admin', to: 'journal_admin#index'
     get 'journal_admin/:id/edit/:field', to: 'journal_admin#popup', as: 'journal_popup'
     post 'journal_admin/:id', to: 'journal_admin#edit', as: 'journal_edit'
+    get 'journal_admin/new', to: 'journal_admin#new', as: 'journal_new'
+    post 'journal_admin', to: 'journal_admin#create', as: 'journal_create'
     # admin publisher management
     get 'publisher_admin', to: 'journal_organization_admin#index', as: 'publisher_admin'
     get 'publisher_admin/:id/edit/:field', to: 'journal_organization_admin#popup', as: 'publisher_popup'
     post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
+    get 'publisher_admin/new', to: 'journal_organization_admin#new', as: 'publisher_new'
+    post 'publisher_admin', to: 'journal_organization_admin#create', as: 'publisher_create'
 
     # admin_dashboard
     match 'admin_dashboard', to: 'admin_dashboard#index', via: %i[get post]
