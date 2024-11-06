@@ -2,9 +2,10 @@
 
 class ResourceRoles < ActiveRecord::Migration[7.0]
   def up
-    StashEngine::Identifier.joins(:latest_resource).find_each do |idt|
-      creator = idt.resources.first.curation_activities.first.user_id
-      submitter = idt.latest_resource.user_id
+    StashEngine::Resource.latest_per_dataset.left_outer_joins(:roles).where.not(roles: {role: 'submitter'}).distinct.find_each do |res|
+      idt = res.identifier
+      submitter = res.user_id
+      creator = idt.resources.first.curation_activities.first.user_id  
       curator = idt.most_recent_curator&.id || nil
       idt.resources.update_all(user_id: curator)
       idt.resources.each do |r|
