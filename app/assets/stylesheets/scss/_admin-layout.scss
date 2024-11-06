@@ -70,6 +70,20 @@
   align-items: center;
 }
 
+#admin_search {
+  select {
+    flex-shrink: 1;
+    flex-grow: 1;
+    min-width: 0;
+    max-width: 300px;
+    text-overflow: ellipsis;
+  }
+  input[type="submit"] {
+    padding-right: $spacing-md;
+    padding-left: $spacing-md;
+  }
+}
+
 .o-admin-form-pair {
   display: inline-flex;
   gap: $spacing-base/2;
