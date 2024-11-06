@@ -1,4 +1,4 @@
 <div class="c-input">
-<%= form.label :title, "Update title for #{@journal.title}"%>
-<%= form.text_field(:title, value: @journal.title, class: 'c-input__text', style: 'width:100%') %>
+<%= form.label :title, "Title"%>
+<%= form.text_field(:title, required: true, value: @journal.title, class: 'c-input__text', style: 'width:100%') %>
 </div>
