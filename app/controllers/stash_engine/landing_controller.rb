@@ -82,7 +82,7 @@ module StashEngine
     end
 
     def identifier_from(params)
-      logger.error("Can't parse identifier from nil id param'") && return unless params[:id].present?
+      logger.error("Can't parse identifier from nil id param") && return unless params[:id].present?
 
       params.require(:id)
       id_param = params[:id].upcase
