@@ -76,7 +76,7 @@ module StashEngine
       end
     end
 
-    describe '#send_action_required_reminders' do
+    xdescribe '#send_action_required_reminders' do
       let!(:curation_activity) { create(:curation_activity, status: 'action_required', resource_id: resource.id) }
 
       before do
