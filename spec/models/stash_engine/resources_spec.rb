@@ -278,7 +278,7 @@ module StashEngine
 
     describe :publication_date do
       it 'defaults to nil' do
-        resource = Resource.create(user_id: user.id)
+        resource = Resource.create(current_editor_id: @user.id)
         expect(resource.publication_date).to be_nil
       end
 
@@ -292,7 +292,7 @@ module StashEngine
 
     describe :dataset_in_progress_editor_id do
       it 'defaults to current_editor for no identifier' do
-        resource = Resource.create(user_id: user.id, current_editor_id: 1)
+        resource = Resource.create(current_editor_id: 1)
         expect(resource.dataset_in_progress_editor_id).to eq(1)
       end
 
@@ -391,7 +391,7 @@ module StashEngine
       before(:each) do
         @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'published')
         @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
-        @merritt_state = create(:resource_state, user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
+        @merritt_state = create(:resource_state, user_id: @resource.submitter.id, resource_state: 'submitted', resource_id: @resource.id)
         @resource.update(current_resource_state_id: @merritt_state.id)
       end
 
@@ -433,7 +433,7 @@ module StashEngine
         @resource.identifier.update(pub_state: 'unpublished')
         @resource.update(file_view: false)
         @resource.reload
-        expect(@resource.may_download?(ui_user: @resource.user)).to be true
+        expect(@resource.may_download?(ui_user: @resource.submitter)).to be true
       end
 
       it 'returns true if being viewed by a curator' do
@@ -463,7 +463,7 @@ module StashEngine
       before(:each) do
         @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'embargoed')
         @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
-        @merritt_state = create(:resource_state, user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
+        @merritt_state = create(:resource_state, user_id: @resource.submitter.id, resource_state: 'submitted', resource_id: @resource.id)
         @resource.update(current_resource_state_id: @merritt_state.id)
       end
 
@@ -723,7 +723,7 @@ module StashEngine
     describe 'author' do
       attr_reader :resource
       before(:each) do
-        @resource = create(:resource, user_id: user.id)
+        @resource = create(:resource, user: user)
       end
 
       it 'allows multiple authors' do
@@ -1331,7 +1331,7 @@ module StashEngine
         it 'counts published current states' do
           3.times do |index|
             Timecop.travel(Time.now.utc + 1.second)
-            resource = Resource.create(user_id: user.id)
+            resource = Resource.create(current_editor_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = 'submitted'
             resource.save
@@ -1357,7 +1357,7 @@ module StashEngine
 
         it 'doesn\'t count non-published datasets' do
           %w[in_progress processing error].each_with_index do |state, index|
-            resource = Resource.create(user_id: user.id)
+            resource = Resource.create(current_editor_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = state
             resource.save
@@ -1366,7 +1366,7 @@ module StashEngine
         end
         it 'doesn\'t count non-current states' do
           %w[in_progress processing error].each_with_index do |state, index|
-            resource = Resource.create(user_id: user.id)
+            resource = Resource.create(current_editor_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = 'submitted'
             resource.current_state = state

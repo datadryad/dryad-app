@@ -420,7 +420,7 @@ module StashEngine
         before(:each) do
           @identifier2 = Identifier.create(identifier_type: 'DOI', identifier: '10.123/450')
           u = create(:user)
-          @res5 = Resource.create(identifier_id: @identifier2.id, title: 'Frolicks with the seahorses', user: u)
+          @res5 = Resource.create(identifier_id: @identifier2.id, title: 'Frolicks with the seahorses', current_editor_id: u.id)
           Author.create(author_first_name: 'Joanna', author_last_name: 'Jones', author_orcid: '33-22-4838-3322', resource: @res5)
           Author.create(author_first_name: 'Marcus', author_last_name: 'Lee', author_orcid: '88-11-1138-2233', resource: @res5)
           @identifier2.save!

@@ -186,41 +186,39 @@ that user has logged in and has a record in the users table.
 
 Look up the dataset to see what you're dealing with and the resources involved.
 
-```sql
-SELECT res.* FROM stash_engine_resources res
-JOIN stash_engine_identifiers ids
-ON res.identifier_id = ids.id
-WHERE ids.identifier = '<bare-doi>'
+```ruby
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources
 ```
 
-Make a note of the user_id that owns the dataset and also note the last couple of resource.ids.
+Note the last couple of resource.ids.
 
-Lookup the desired user_id to transfer ownership to.  Curator should've given the ORCID.  Note their user.id.
-```sql
-SELECT * FROM `stash_engine_users` WHERE `orcid` = '<new-owner-orcid>';
+Lookup the current user and note the ORCID, name (you already have their user.id).
+```ruby
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last.submitter
 ```
 
-Lookup the current user_id and note the ORCID, name (you already have their user.id).
-```sql
-SELECT * FROM `stash_engine_users` WHERE `id` = '<old-owner-id>'
+Lookup the desired user to transfer ownership to.  Curator should've given the ORCID.  Note their user.id.
+```ruby
+StashEngine::User.find_by(orcid: '<new-owner-orcid>');
 ```
 
-Update both the user_id and current_editor_id for the last couple versions to match the new owner.
-```sql
-UPDATE stash_engine_resources SET user_id=<new-id>, current_editor_id=<new-id> WHERE id IN (<id1, id2>);
+Update both the submitter and current_editor_id for the last couple versions to match the new owner.
+```ruby
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last.submitter = '<noted_user_id>'
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last(2).update(current_editor_id: '<noted_user_id>')
 ```
 
 Often, a user or curator has completely destroyed the correct association between the
 author and their ORCID by retyping someone else's name for the author that
 had a verified ORCID.  Check to see.
 
-```sql
-SELECT * FROM `stash_engine_authors` WHERE `resource_id` IN (<id1, id2>);
+```ruby
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last.authors
 ```
 
-If necessary, change the two authors so they have the same
-ORCIDs associated with the names as in the user accounts 
-(which will have names and ORCIDS correct).
+If necessary, change the two authors `author_orcid` so they have the correct
+ORCIDs, which should be those associated with the names as in the user accounts.
+You should also check that the `author_email` for each author is correct.
 
 If you don't update the authors to be sure authors/orcids are correct then the
 "corresponding author" may not appear correctly and it also plays havok with data consistency

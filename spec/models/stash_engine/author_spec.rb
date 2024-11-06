@@ -120,8 +120,7 @@ module StashEngine
                        email: 'lmuckenhaupt@datadryad.org',
                        tenant_id: 'ucop',
                        orcid: nil)
-        @resource.user = @user
-        @resource.save
+        @resource.submitter = @user.id
       end
 
       describe 'with no user ORCiD' do
@@ -134,7 +133,7 @@ module StashEngine
           author.save
           @resource.reload
 
-          user = User.find(@resource.user_id)
+          user = @resource.submitter
           expect(user.orcid).to eq(author.author_orcid)
         end
 
@@ -148,7 +147,7 @@ module StashEngine
           author.author_orcid = '8078-2361-3000-0000'
           author.save
 
-          user = User.find(@resource.user_id)
+          user = @resource.submitter
           expect(user.orcid).to eq(author.author_orcid)
         end
       end
@@ -156,7 +155,7 @@ module StashEngine
       describe 'with existing user ORCiD' do
         before(:each) do
           @orcid = '8078-2361-3000-0000'
-          @user = User.find(@resource.user_id)
+          @user = @resource.submitter
           @user.orcid = @orcid
           @user.save
         end
@@ -191,7 +190,7 @@ module StashEngine
               author_last_name: 'Meitner'
             )
 
-            user = User.find(@resource.user_id)
+            user = @resource.submitter
             expect(user.orcid).to eq(@orcid)
           end
 
@@ -203,7 +202,7 @@ module StashEngine
             )
             author.save
 
-            user = User.find(@resource.user_id)
+            user = @resource.submitter
             expect(user.orcid).to eq(@orcid)
           end
         end

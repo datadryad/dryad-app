@@ -316,6 +316,8 @@ Rails.application.routes.draw do
     post 'admin_dashboard/:id', to: 'admin_dashboard#update', as: 'admin_dash_update'
     get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'
     match 'admin_search/:id', to: 'admin_dashboard#save_search', via: %i[put patch], as: 'save_admin_search'
+    get 'admin_dashboard/:id/edit_delete_reference_date', to: 'admin_dashboard#edit_delete_reference_date', as: 'admin_dash_edit_delete_reference_date'
+    post 'admin_dashboard/:id/update_delete_reference_date', to: 'admin_dashboard#update_delete_reference_date', as: 'admin_dash_update_delete_reference_date'
 
     # saved_searches
     # get 'account/saved_searches/:type', to: 'saved_searches#index'

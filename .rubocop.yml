@@ -12,6 +12,7 @@ AllCops:
     - 'ui-library/**/*'
     - 'node_modules/**/*'
     - 'tmp/**/*'
+    - 'ruby/**/*'
   # Suppress complaints about post-2.0 syntax
   TargetRubyVersion: 3.0
 

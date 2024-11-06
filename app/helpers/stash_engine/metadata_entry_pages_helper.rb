@@ -4,7 +4,7 @@ module StashEngine
       begin
         @new_res = @resource.amoeba_dup
       rescue ActiveRecord::RecordNotUnique
-        @new_res = @resource.identifier.lastest_resource unless @resource.identifier.lastest_resource_id == @resource.id
+        @new_res = @resource.identifier.latest_resource unless @resource.identifier.latest_resource_id == @resource.id
         @new_res ||= @resource.amoeba_dup
       end
       @new_res.current_editor_id = current_user&.id

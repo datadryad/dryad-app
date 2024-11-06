@@ -48,7 +48,7 @@ module StashDatacite
     def submission
       @resource.cleanup_blank_models!
       @resource.current_state = 'processing'
-      @resource.identifier.record_payment
+      @resource.identifier.record_payment unless @resource.identifier.publication_date.present?
       @resource.check_add_readme_file
       @resource.check_add_cedar_json
 

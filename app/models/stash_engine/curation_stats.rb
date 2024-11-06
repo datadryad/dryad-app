@@ -11,7 +11,9 @@
 #  datasets_to_embargoed       :integer
 #  datasets_to_published       :integer
 #  datasets_to_withdrawn       :integer
+#  datasets_unclaimed          :integer
 #  date                        :datetime
+#  new_datasets                :integer
 #  new_datasets_to_peer_review :integer
 #  new_datasets_to_submitted   :integer
 #  ppr_to_curation             :integer
@@ -33,6 +35,8 @@ module StashEngine
     def complete?
       datasets_curated.present? &&
         datasets_to_be_curated.present? &&
+        datasets_unclaimed.present? &&
+        new_datasets.present? &&
         new_datasets_to_submitted.present? &&
         new_datasets_to_peer_review.present? &&
         ppr_to_curation.present? &&
@@ -49,6 +53,7 @@ module StashEngine
 
       populate_datasets_curated
       populate_datasets_to_be_curated
+      populate_new_datasets
       populate_new_datasets_to_submitted
       populate_new_datasets_to_peer_review
       populate_ppr_to_curation
@@ -94,6 +99,7 @@ module StashEngine
     # including any held over from before (either have status 'curation' or 'submitted')
     def populate_datasets_to_be_curated
       datasets_found = 0
+      unclaimed = 0
 
       # for each dataset that was in the target status on the given day
       launch_day = Date.new(2019, 9, 17)
@@ -101,9 +107,23 @@ module StashEngine
       StashEngine::Identifier.where(created_at: launch_day..(date + 1.day)).find_each do |i|
         # check the actual status on that date...if it was 'curation' or 'submitted', count it
         s = status_on_date(i)
-        datasets_found += 1 if %w[submitted curation].include?(s)
+        next unless %w[submitted curation].include?(s)
+
+        datasets_found += 1
+
+        next unless s == 'submitted'
+
+        # count as unclaimed unless a curator posted a curation activity on the same day
+        unclaimed += 1 unless StashEngine::CurationActivity.find_by(
+          resource_id: i.resources.pluck(:id), created_at: date..(date + 1.day), user_id: StashEngine::User.all_curators.pluck(:id)
+        ).present?
       end
       update(datasets_to_be_curated: datasets_found)
+      update(datasets_unclaimed: unclaimed)
+    end
+
+    def populate_new_datasets
+      update(new_datasets: StashEngine::Identifier.where(created_at: date..(date + 1.day)).count)
     end
 
     # The number of new submissions that day (so the first time we see them as 'submitted' in the system)

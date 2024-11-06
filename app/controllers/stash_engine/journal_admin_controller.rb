@@ -73,6 +73,9 @@ module StashEngine
       @journal.issns.where.not(id: issns).destroy_all
       issns.reject { |id| @journal.issns.map(&:id).include?(id) }.each { |issn| StashEngine::JournalIssn.create(id: issn, journal_id: @journal.id) }
       @journal.reload
+    rescue ActiveRecord::RecordNotUnique
+      @error_message = 'Journal ISSN is already in use'
+      render :update_error
     end
 
     def edit_params
