@@ -11,7 +11,9 @@
 #  datasets_to_embargoed       :integer
 #  datasets_to_published       :integer
 #  datasets_to_withdrawn       :integer
+#  datasets_unclaimed          :integer
 #  date                        :datetime
+#  new_datasets                :integer
 #  new_datasets_to_peer_review :integer
 #  new_datasets_to_submitted   :integer
 #  ppr_to_curation             :integer
