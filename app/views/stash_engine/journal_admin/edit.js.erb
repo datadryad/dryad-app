@@ -1,5 +1,7 @@
 document.getElementById("<%= @field %>_<%= @journal.id %>").innerHTML = "<%=
 case @field
+when 'title'
+  @journal.title
 when 'sponsor_id'
   @journal.sponsor&.name
 when 'default_to_ppr'
