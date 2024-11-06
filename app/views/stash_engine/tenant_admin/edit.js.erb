@@ -1,5 +1,11 @@
 document.getElementById("<%= @field %>_<%= @tenant.id %>").innerHTML = "<%=
 case @field
+when 'short_name'
+  @tenant.short_name
+when 'long_name'
+  @tenant.long_name
+when 'authentication'
+  @tenant.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP')
 when 'partner_display'
   "<span style='color: #{@tenant.partner_display ? '#3c763d' : 'rgb(209, 44, 29)'}'>#{@tenant.partner_display ? 'Shown' : 'Hidden'}</span>".html_safe
 when 'enabled'
