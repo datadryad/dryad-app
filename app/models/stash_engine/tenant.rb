@@ -49,11 +49,11 @@ module StashEngine
     end
 
     def authentication
-      JSON.parse(super, object_class: OpenStruct)
+      JSON.parse(super, object_class: OpenStruct) if super.present?
     end
 
     def campus_contacts
-      JSON.parse(super)
+      JSON.parse(super) if super.present?
     end
 
     def consortium

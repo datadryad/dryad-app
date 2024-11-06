@@ -35,21 +35,22 @@ module StashEngine
     end
 
     def edit
-      valid = %i[partner_display enabled short_name long_name]
-      update = edit_params.slice(*valid)
-      update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:campus_contacts)
-      if edit_params.key?(:authentication)
-        auth = {
-          strategy: edit_params[:authentication][:strategy],
-          ranges: edit_params[:authentication][:ranges].present? ? edit_params[:authentication][:ranges].split("\n").map(&:strip) : nil,
-          entity_id: edit_params[:authentication][:entity_id].presence || nil,
-          entity_domain: edit_params[:authentication][:entity_domain].presence || nil
-        }
-        update[:authentication] = auth.compact.to_json
-      end
-      @tenant.update(update)
+      @tenant.update(update_hash)
       update_associations
       respond_to(&:js)
+    end
+
+    def new
+      @tenant = authorize StashEngine::Tenant.new
+      respond_to(&:js)
+    end
+
+    def create
+      h = update_hash
+      h[:id] = edit_params[:id]
+      @tenant = StashEngine::Tenant.create(h)
+      update_associations
+      redirect_to action: 'index', q: edit_params[:id]
     end
 
     private
@@ -70,8 +71,24 @@ module StashEngine
     end
 
     def load
-      @tenant = authorize Tenant.find(params[:id]), :popup?
+      @tenant = authorize StashEngine::Tenant.find(params[:id]), :popup?
       @field = params[:field]
+    end
+
+    def update_hash
+      valid = %i[partner_display enabled short_name long_name]
+      update = edit_params.slice(*valid)
+      update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:campus_contacts)
+      if edit_params.key?(:authentication)
+        auth = {
+          strategy: edit_params[:authentication][:strategy],
+          ranges: edit_params[:authentication][:ranges].present? ? edit_params[:authentication][:ranges].split("\n").map(&:strip) : nil,
+          entity_id: edit_params[:authentication][:entity_id].presence || nil,
+          entity_domain: edit_params[:authentication][:entity_domain].presence || nil
+        }
+        update[:authentication] = auth.compact.to_json
+      end
+      update
     end
 
     def update_associations
