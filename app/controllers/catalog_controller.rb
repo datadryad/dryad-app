@@ -21,6 +21,7 @@ class CatalogController < ApplicationController
 
   configure_blacklight do |config|
     config.bootstrap_version = 5
+    config.track_search_session.storage = false
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
     config.default_solr_params = {
@@ -30,7 +31,7 @@ class CatalogController < ApplicationController
     }
 
     # items to show per page, each number in the array represent another option to choose from.
-    #config.per_page = [10,20,50,100]
+    # config.per_page = [10,20,50,100]
 
     # solr field configuration for search results/index views
     config.index.title_field = Settings.FIELDS.TITLE
@@ -101,7 +102,6 @@ class CatalogController < ApplicationController
     config.add_sort_field "#{Settings.FIELDS.YEAR} desc, dc_title_sort asc", label: 'year'
     config.add_sort_field "#{Settings.FIELDS.PUBLISHER} asc, dc_title_sort asc", label: 'institution'
     config.add_sort_field 'dc_title_sort asc', label: 'title'
-
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
