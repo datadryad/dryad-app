@@ -8,6 +8,8 @@ class ResourceRoles < ActiveRecord::Migration[7.0]
       curator = idt.most_recent_curator&.id || nil
       idt.resources.update_all(user_id: curator)
       idt.resources.each do |r|
+        next if r.submitter.present?
+        
         StashEngine::Role.create(user_id: creator, role: 'creator', role_object: r)
         StashEngine::Role.create(user_id: submitter, role: 'submitter', role_object: r)
       end
