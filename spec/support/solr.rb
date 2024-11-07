@@ -10,7 +10,7 @@ class SolrInstance
   SOLR_VERSION = '5.2.1'.freeze
   CONF_DIR = 'spec/config/solr/conf'.freeze
   BLACKLIGHT_YML = 'config/blacklight.yml'.freeze # this setting is just used for testing, only
-  COLLECTION_NAME = 'geoblacklight'.freeze
+  COLLECTION_NAME = 'dryad'.freeze
 
   def initialize
     start
