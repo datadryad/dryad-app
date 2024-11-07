@@ -1,13 +1,9 @@
 <% fs ||= '70px' %>
 <div class='category-block col-sm'>
   <div class='category-icon'>
-    <% if defined?(icon) == 'local-variable' %>
-      <%= blacklight_icon(icon) %>
-    <% elsif defined?(faicon) == 'local-variable' %>
-      <span class="blacklight-icons blacklight-icon-tags">
+    <span class="blacklight-icons blacklight-icon-tags">
       <i class="fa fa-<%= faicon %> fa-fw" aria-hidden="true" style="font-size: <%= fs %>"></i>
-        </span>
-    <%end %>
+    </span>
   </div>
 
   <%= content_tag :h4, t(label) %>

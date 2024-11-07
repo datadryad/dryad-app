@@ -1,6 +1,6 @@
 require 'colorize'
 require 'singleton'
-require 'solr_wrapper'
+# require 'solr_wrapper'
 require 'uri'
 
 class SolrInstance
