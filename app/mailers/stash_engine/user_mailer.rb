@@ -23,6 +23,10 @@ module StashEngine
     def user_journal_withdrawn(resource, status)
       return unless status == 'withdrawn'
 
+      # Don't send if this was an abandoned dataset
+      removed_files_note = 'remove_abandoned_datasets CRON - removing data files from abandoned dataset'
+      return if resource.curation_activities&.map(&:note)&.include?(removed_files_note)
+
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
 
