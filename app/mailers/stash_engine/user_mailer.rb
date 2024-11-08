@@ -25,7 +25,7 @@ module StashEngine
 
       # Don't send if this was an abandoned dataset
       removed_files_note = 'remove_abandoned_datasets CRON - removing data files from abandoned dataset'
-      return if resource.curation_activities&.map(&:note)&.include?(removed_files_note) 
+      return if resource.curation_activities&.map(&:note)&.include?(removed_files_note)
 
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
