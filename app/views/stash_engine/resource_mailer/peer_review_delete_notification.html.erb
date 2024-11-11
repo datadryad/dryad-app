@@ -1,7 +1,8 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>Title: <%= @resource.title %><br/>
-  DOI: <%= @resource.identifier_str %></p>
+  DOI: <%= @resource.identifier_uri %>
+</p>
 
 <p>As a reminder, your Dryad data submission is currently in "Private for peer review" status and has not entered our curation process. If your related manuscript is still in the peer review process, you may ignore this email.</p>
 
@@ -13,5 +14,3 @@
 </ol>
 
 <p>If your related article has been rejected, or you will not be proceeding with the submission of this dataset, kindly contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Withdraw DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>, and we will withdraw your submission.</p>
-
-<p>The Dryad Team</p>
