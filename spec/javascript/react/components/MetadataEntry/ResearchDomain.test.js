@@ -54,8 +54,7 @@ describe('ResearchDomain', () => {
     const resDomain = screen.getByLabelText('Research domain', {exact: false});
     expect(resDomain).toHaveValue(subject);
 
-    userEvent.clear(screen.getByLabelText('Research domain'));
-    userEvent.type(screen.getByLabelText('Research domain'), subjectList[20]);
+    await userEvent.selectOptions(screen.getByLabelText('Research domain'), subjectList[20]);
 
     await waitFor(() => expect(screen.getByLabelText('Research domain')).toHaveValue(subjectList[20]));
 

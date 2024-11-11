@@ -2,6 +2,7 @@ module StashEngine
   # rubocop:disable Metrics/ClassLength
   class AdminDashboardController < ApplicationController
     helper SortableTableHelper
+    helper AdminHelper
     helper AdminDashboardHelper
     before_action :require_admin
     protect_from_forgery except: :results
@@ -43,7 +44,7 @@ module StashEngine
           collect_properties
         end
         format.csv do
-          helpers.csv_headers
+          helpers.csv_headers('DryadAdminReport')
           self.response_body = helpers.csv_enumerator
         end
       end
@@ -328,7 +329,7 @@ module StashEngine
       @datasets = @datasets.preload(:authors) if @fields.include?('authors')
       @datasets = @datasets.preload(:tenant).preload(authors: :affiliations) if @fields.include?('affiliations')
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
-      @datasets = @datasets.preload(:roles) if @fields.include?('submitter')
+      @datasets = @datasets.preload(roles: :user) if @fields.include?('submitter')
       @datasets = @datasets.preload(identifier: :counter_stat) if @fields.include?('metrics')
       if @fields.include?('journal') || @fields.include?('sponsor') || @fields.include?('identifiers')
         @datasets = @datasets.preload(:resource_publication)
@@ -421,7 +422,7 @@ module StashEngine
         @resource.update(user_id: editor_id)
         @curator_name = StashEngine::User.find(editor_id)&.name
       end
-      @note = "Changing current editor to #{@curator_name.presence || 'unassigned'}. " + params.dig(:curation_activity, :note)
+      @note = "Changing curator to #{@curator_name.presence || 'unassigned'}. " + params.dig(:curation_activity, :note)
       @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
       @resource.reload
     end

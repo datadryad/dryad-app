@@ -7,7 +7,7 @@ module StashEngine
     MAX_VALIDATION_TRIES = 5
 
     def choose
-      return redirect_to admin_dashboard_path if current_user.min_admin?
+      return redirect_to admin_dashboard_path if current_user&.min_admin?
 
       redirect_to dashboard_path
     end
@@ -25,6 +25,8 @@ module StashEngine
     def react_basics; end
 
     def user_datasets
+      return nil unless current_user.present?
+
       @page = params[:page] || '1'
       @page_size = params[:page_size] || '10'
       respond_to do |format|
