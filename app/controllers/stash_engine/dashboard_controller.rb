@@ -25,6 +25,8 @@ module StashEngine
     def react_basics; end
 
     def user_datasets
+      return nil unless current_user.present?
+      
       @page = params[:page] || '1'
       @page_size = params[:page_size] || '10'
       respond_to do |format|
