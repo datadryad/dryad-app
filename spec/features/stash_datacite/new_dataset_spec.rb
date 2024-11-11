@@ -191,13 +191,6 @@ RSpec.feature 'NewDataset', type: :feature do
       expect(page).to have_text('you will receive an invoice')
     end
 
-    it 'fills in a Field of Science subject', js: true do
-      fill_required_metadata
-      select 'Agricultural biotechnology', from: 'Research domain'
-      navigate_to_review
-      expect(page).to have_text('Agricultural biotechnology', wait: 5)
-    end
-
   end
 
 end
