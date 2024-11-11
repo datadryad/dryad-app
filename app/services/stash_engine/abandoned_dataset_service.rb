@@ -40,6 +40,9 @@ module StashEngine
         .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..1.months.ago.end_of_day })
         .each do |resource|
 
+        # Only send for resources where the ID ends in 00, so we can stagger the load on the curators
+        next if (resource.id % 100) > 0
+
         reminder_flag = 'action_required_deletion_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
 
@@ -88,6 +91,9 @@ module StashEngine
         .where(stash_engine_curation_activities: { status: %w[peer_review action_required] })
         .where('stash_engine_process_dates.delete_calculation_date <= ?', 1.year.ago.end_of_day)
         .each do |resource|
+
+        # Do not withdraw if this dataset has ever been published
+        next if %w[published embargoed].include?(resource.identifier&.calculated_pub_state)
 
         reminder_flag = 'withdrawn_email_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last

@@ -58,6 +58,13 @@ resource_ids.each do |res_id|
 end
 ```
 
+Alternatively, you may sometimes complete a submission by getting a copy of the RepoQueueState object and forcing it to complete.
+```
+r=StashEngine::RepoQueueState.find(<id_num>)
+r.possibly_set_as_completed
+```
+
+
 Async download check
 ----------------------------
 

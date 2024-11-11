@@ -384,6 +384,9 @@ namespace :identifiers do
       resource = item[:identifier]&.latest_resource
       next if resource.nil?
 
+      # Only send for resources where the ID ends in 00, so we can stagger the load on the curators
+      next if (resource.id % 100) > 0
+
       # send out reminder at two weeks
       next if item[:set_at] > 2.weeks.ago || item[:reminder_1].present?
 
@@ -1195,7 +1198,7 @@ namespace :curation_stats do
   desc 'Calculate any curation stats that are missing from v2 launch day until yesterday'
   task recalculate_all: :environment do
     launch_day = Date.new(2019, 9, 17)
-    (launch_day..Time.now.utc.to_date - 1.day).each do |date|
+    (launch_day..Time.now.utc.to_date - 1.day).find_each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago
@@ -1204,7 +1207,7 @@ namespace :curation_stats do
 
   desc 'Recalculate any curation stats from the past three days, not counting today'
   task update_recent: :environment do
-    (Time.now.utc.to_date - 4.days..Time.now.utc.to_date - 1.day).each do |date|
+    (Time.now.utc.to_date - 4.days..Time.now.utc.to_date - 1.day).find_each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago

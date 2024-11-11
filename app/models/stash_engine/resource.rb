@@ -1176,7 +1176,7 @@ module StashEngine
       update(user_id: target_curator.id) unless curator == target_curator
 
       curation_activities << StashEngine::CurationActivity.create(
-        user_id: 0, status: target_status,
+        user_id: target_curator.id, status: target_status,
         note: "System auto-assigned curator #{target_curator&.name}"
       )
     end
