@@ -3,7 +3,7 @@
 Dryad adds journal information to the standard Blacklight schema so that users can search for a publication DOI, manuscript number, or Pubmed ID. We also add a facet for the publication name.
 
 Currently we have only customized two files, `schema.xml` and `solrconfig.xml` compared to the default blacklight
-configuration which is available from `https://github.com/projectblacklight/blacklight/archive/v7.37.0.tar.gz`.
+configuration which is available from `https://github.com/projectblacklight/blacklight/archive/refs/tags/v8.6.1.tar.gz`.
 
 However, we're now including all the config files in the `config/solr_config` directory in our repository for ease
 of installing or copying them over to the solr server.
@@ -26,7 +26,7 @@ bin/solr create -c dryad
 ```
 # get access to our github files like
 git clone git@github.com:datadryad/dryad-app.git
-cp dryad-app/config/solr_config/* ~/apps/solr/server/solr/dryad/conf
+cp dryad-app/config/solr_9_config/* ~/apps/solr/server/solr/dryad/conf
 # remove the cloned repo if you wish like rm -rf dryad-app
 
 # not sure this is needed, but those were permissions the solr script made when creating original schema.xml

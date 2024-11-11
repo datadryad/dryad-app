@@ -128,14 +128,6 @@ Rails.application.routes.draw do
     get '/queue_length', to: 'submission_queue#length'
   end
 
-  ############################# Discovery support ######################################
-
-  get '/latest', to: 'latest#index', as: 'latest_index'
-  # blacklight_for :catalog
-
-  # Endpoint for LinkOut
-  get :discover, to: 'catalog#discover'
-
   ########################## StashEngine support ######################################
 
   scope module: 'stash_engine', path: '/stash' do
@@ -383,6 +375,13 @@ Rails.application.routes.draw do
 
   # this is kind of hacky, but it directs our search results to open links to the landing pages
   resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'
+
+  ############################# Discovery support ######################################
+
+  get '/latest', to: 'latest#index', as: 'latest_index'
+
+  # Endpoint for LinkOut
+  get :discover, to: 'catalog#discover'
 
   ########################## StashDatacite support ######################################
 

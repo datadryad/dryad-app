@@ -116,7 +116,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         fill_in('[curation_activity][note]', with: 'Some Note')
         click_button('Submit')
 
-        expect(page).to have_text('Changed deletion reference date to 2024-01-08.')
+        expect(page).to have_text('Changed deletion reference date to 2024-08-01.')
         expect(page).to have_text('Some Note')
       end
 

@@ -18,7 +18,7 @@ class LatestController < ApplicationController
       :start => 0,
       :rows => 20,
       'q.alt' => '*:*',
-      :sort => 'timestamp desc'
+      :sort    => 'timestamp desc'
     }
 
     ## Default parameters to send on single-document requests to Solr. These settings are the Blackligt defaults (see SolrHelper#solr_doc_params) or
@@ -40,10 +40,6 @@ class LatestController < ApplicationController
     # solr field configuration for document/show views
 
     config.show.display_type_field = 'format'
-
-    # Custom GeoBlacklight fields which currently map to GeoBlacklight-Schema
-    # v0.3.2
-    config.wxs_identifier_field = 'layer_id_s'
 
     # solr fields to be displayed in the show (single result) view
     #  The ordering of the field names is the order of the display
@@ -93,6 +89,7 @@ class LatestController < ApplicationController
 
   def set_cached_latest
     key = "#{floor_stamp(Time.new)}_latest_datasets"
+    pp search_service.search_results
     Rails.cache.write(key, search_service.search_results) unless Rails.cache.exist?(key)
     (@response, @document_list) = Rails.cache.fetch(key)
   end

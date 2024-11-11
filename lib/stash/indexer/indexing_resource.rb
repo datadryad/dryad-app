@@ -186,8 +186,7 @@ module Stash
         Datacite::Mapping::GeoLocationBox.new(lat_min, long_min, lat_max, long_max) if lat_min && long_min && lat_max && long_max
       end
 
-      # converts to DublinCore Terms, temporal, see http://journal.code4lib.org/articles/9710 or
-      # https://github.com/geoblacklight/geoblacklight-schema and seems very similar to the annotation going
+      # converts to DublinCore Terms, temporal, see http://journal.code4lib.org/articles/9710,
       # into the original DataCite element.  https://terms.tdwg.org/wiki/dcterms:temporal
       #
       # method takes the values supplied and also adds every year for a range so people can search for
