@@ -48,3 +48,7 @@
     a short survey about your submission experience
   </a>.
 </p>
+
+<% if @resource.journal&.peer_review_custom_text.present? %>
+  <%= @resource.journal.peer_review_custom_text.html_safe %>
+<% end %>
