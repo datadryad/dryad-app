@@ -20,13 +20,13 @@ Extract SOLR to an appropriate directory like `tar zxf solr-x.y.z.tgz`.
 
 ```
 # Create a generic core in SOLR (inside base solr directory)
-bin/solr create -c geoblacklight
+bin/solr create -c dryad
 ```
 
 ```
 # get access to our github files like
 git clone git@github.com:datadryad/dryad-app.git
-cp dryad-app/config/solr_config/* ~/apps/solr/server/solr/geoblacklight/conf
+cp dryad-app/config/solr_config/* ~/apps/solr/server/solr/dryad/conf
 # remove the cloned repo if you wish like rm -rf dryad-app
 
 # not sure this is needed, but those were permissions the solr script made when creating original schema.xml

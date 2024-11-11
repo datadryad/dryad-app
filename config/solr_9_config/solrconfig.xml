@@ -22,10 +22,8 @@
 <config>
   <luceneMatchVersion>9.11</luceneMatchVersion>
 
-<!--  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lib" />-->
-<!--  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lucene-libs" />-->
-  <lib dir="/opt/solr/contrib/analysis-extras/lib" />
-  <lib dir="/opt/solr/contrib/analysis-extras/lucene-libs" />
+  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lib" />
+  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lucene-libs" />
 
   <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}" />
 
@@ -199,38 +197,31 @@
     </arr>
   </requestHandler>
 
-  <!-- ping/healthcheck -->
-  <!--  <requestHandler name="/admin/ping" class="solr.PingRequestHandler">-->
-  <!--    <lst name="invariants">-->
-  <!--      <str name="q">solrpingquery</str>-->
-  <!--    </lst>-->
-  <!--    <lst name="defaults">-->
-  <!--      <str name="echoParams">all</str>-->
-  <!--    </lst>-->
-  <!--    &lt;!&ndash; An optional feature of the PingRequestHandler is to configure the-->
-  <!--         handler with a "healthcheckFile" which can be used to enable/disable-->
-  <!--         the PingRequestHandler.-->
-  <!--         relative paths are resolved against the data dir-->
-  <!--      &ndash;&gt;-->
-  <!--    <str name="healthcheckFile">server-enabled.txt</str>-->
-  <!--  </requestHandler>-->
+  <!--   ping/healthcheck-->
+  <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
+    <lst name="invariants">
+      <str name="q">solrpingquery</str>
+    </lst>
+    <lst name="defaults">
+      <str name="echoParams">all</str>
+    </lst>
+    <str name="healthcheckFile">server-enabled.txt</str>
+  </requestHandler>
 
   <requestHandler name="/analysis/field"
     startup="lazy"
     class="solr.FieldAnalysisRequestHandler" />
 
   <!-- Shared parameters for multiple Request Handlers -->
-  <!--  <initParams path="/update/**,/query,/select,/spell">-->
-  <!--    <lst name="defaults">-->
-  <!--      <str name="df">_text_</str>-->
-  <!--    </lst>-->
-  <!--  </initParams>-->
+  <initParams path="/update/**,/query,/select,/spell">
+    <lst name="defaults">
+      <str name="df">_text_</str>
+    </lst>
+  </initParams>
 
   <!-- Spell Check
-
        The spell check component can return a list of alternative spelling
        suggestions.
-
        https://solr.apache.org/guide/solr/latest/query-guide/spell-checking.html
     -->
   <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
