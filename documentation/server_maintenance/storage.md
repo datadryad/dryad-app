@@ -122,3 +122,19 @@ Checker process
       2. Registers the job in the queue as completed
       3. Deletes temporary files
    2. If the job has been processing for a full day, mark it as errored and email the admins
+
+
+Download process
+----------------
+
+1. `DownloadsController.file_stream` starts the process.
+2. Passes to `Stash::Download::FilePresigned.download`
+3. Gets the actual download URL from `DataFile.s3_permanent_presigned_path`
+   1. Locates the original DataFile object (the one with this filename that was `created`)
+   2. Checks for the file in the v3 hierarchy (v3/<resource_id>/<filename>)
+   3. Tries to find older files in the Merritt hierarchy using `DataFile.mrt_bucket_path`
+
+Note: If the Resource has a Merritt location for `download_uri`, but the code
+isn't able to find it, the Resource might have the wrong Merritt version number,
+in which case you can update the `merritt_version` in the `stash_engine_versions` table.
+
