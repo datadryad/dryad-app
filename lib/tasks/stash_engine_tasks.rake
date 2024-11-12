@@ -164,7 +164,7 @@ namespace :identifiers do
         end
       end
 
-      if last_user_activity.present? && last_user_activity < 1.year.ago
+      if last_user_activity.present? && last_user_activity < 2.years.ago
         log "ABANDONED #{i.identifier} -- #{i.id} -- size #{i.latest_resource.size}"
 
         if dry_run
