@@ -164,8 +164,8 @@ namespace :identifiers do
         end
       end
 
-      # Only remove the files if two years have passed since the last user activity 
-      if last_user_activity.present? && last_user_activity < 2.years.ago 
+      # Only remove the files if two years have passed since the last user activity
+      if last_user_activity.present? && last_user_activity < 2.years.ago
         log "ABANDONED #{i.identifier} -- #{i.id} -- size #{i.latest_resource.size}"
 
         if dry_run
