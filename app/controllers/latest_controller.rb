@@ -61,36 +61,22 @@ class LatestController < ApplicationController
 
   # get search results from the solr index
   def index
-    # (@response, @document_list) = search_results(params)
     set_cached_latest
 
     respond_to do |format|
       format.html { store_preferred_view }
-      format.rss  { render layout: false }
-      format.atom { render layout: false }
       format.js
-      format.json do
-        render json: render_search_results_as_json
-        # @presenter = Blacklight::JsonPresenter.new(@response,
-        #                                           @document_list,
-        #                                           facets_from_request,
-        #                                           blacklight_config)
-      end
-      # additional_response_formats(format)
-      # document_export_formats(format)
     end
   end
 
   private
 
-  def floor_stamp(time, seconds = 10.minutes)
-    Time.at((time.to_f / seconds).floor * seconds).utc.strftime('%Y%m%dT%H%M%S')
-  end
-
   def set_cached_latest
-    key = "#{floor_stamp(Time.new)}_latest_datasets"
-    pp search_service.search_results
-    Rails.cache.write(key, search_service.search_results) unless Rails.cache.exist?(key)
-    (@response, @document_list) = Rails.cache.fetch(key)
+    @document_list = JSON.parse(
+      Rails.cache.fetch('latest_datasets', expires_in: 10.minutes) do
+        response = search_service.search_results
+        response.documents.to_json
+      end
+    )
   end
 end
