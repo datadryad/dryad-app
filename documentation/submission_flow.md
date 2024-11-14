@@ -14,7 +14,7 @@ Basic Dryad Submission Flow
     * Accept license
 4. Submission
     * Update metadata with DataCite for the submitted item
-    * Submits to the storage system in a background process
+    * Submits to the storage system in a background process -- See [storage details](server_maintenance/storage.md)
     * Package sent contains manifest (for URLs) or zip file with metadata files and data files
       * Mrt-datacite.xml, mrt-dataone-manifest.txt, mrt-embargo.txt, mrt-oaidc.xml, stash-wrapper.xml
 5. Notifying of completion

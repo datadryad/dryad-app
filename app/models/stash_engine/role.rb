@@ -30,6 +30,7 @@ module StashEngine
     belongs_to :journal, class_name: 'StashEngine::Journal', foreign_key: 'role_object_id', optional: true
     belongs_to :journal_organization, class_name: 'StashEngine::JournalOrganization', foreign_key: 'role_object_id', optional: true
     belongs_to :funder, class_name: 'StashEngine::Funder', foreign_key: 'role_object_id', optional: true
+    belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'role_object_id', optional: true
 
     scope :submission_roles, -> { where(role_object_type: 'StashEngine::Resource') }
     scope :admin_roles, -> { where("role_object_type is null or role_object_type != 'StashEngine::Resource'") }

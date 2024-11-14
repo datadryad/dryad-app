@@ -322,7 +322,7 @@ module StashDatacite
 
     def self.valid_url?(string)
       uri = URI.parse(string)
-      uri.is_a?(URI::HTTP) && !uri.host.nil?
+      uri.is_a?(URI::HTTP) && uri.host.present?
     rescue URI::InvalidURIError
       false
     end

@@ -92,6 +92,9 @@ module StashEngine
         .where('stash_engine_process_dates.delete_calculation_date <= ?', 1.year.ago.end_of_day)
         .each do |resource|
 
+        # Do not withdraw if this dataset has ever been published
+        next if %w[published embargoed].include?(resource.identifier&.calculated_pub_state)
+
         reminder_flag = 'withdrawn_email_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
         next if last_reminder.present?
