@@ -1,7 +1,7 @@
 module StashEngine
   class DashboardController < ApplicationController
-    before_action :require_login, only: :show
-    before_action :ensure_tenant, only: :show
+    before_action :require_login, only: %i[show user_datasets]
+    before_action :ensure_tenant, only: %i[show user_datasets]
     protect_from_forgery except: :user_datasets
 
     MAX_VALIDATION_TRIES = 5
@@ -25,8 +25,6 @@ module StashEngine
     def react_basics; end
 
     def user_datasets
-      return nil unless current_user.present?
-
       @page = params[:page] || '1'
       @page_size = params[:page_size] || '10'
       respond_to do |format|
