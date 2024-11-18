@@ -1,6 +1,6 @@
 module StashApi
   class SolrSearchService
-    attr_reader :query, :filters, :error
+    attr_reader :query, :filters
     attr_accessor :error
 
     def initialize(query:, filters:)
@@ -63,7 +63,8 @@ module StashApi
     end
 
     def add_text_filter(solr_field, value)
-      @fq_array << "#{solr_field}:#{value}" if value
+      @fq_array << "#{solr_field}:\"#{value}\"" if value
+      # @fq_array << "#{solr_field}:\"#{CGI.escape(value)}\"" if value
     end
 
     def add_date_filter(solr_field, start_value, end_value)
