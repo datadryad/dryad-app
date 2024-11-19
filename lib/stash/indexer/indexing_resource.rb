@@ -84,7 +84,7 @@ module Stash
           funder_ror_ids_sm: @resource.funders.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
           sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
           rw_identifier_sim: @resource.related_identifiers.map(&:related_identifier).reject(&:blank?).uniq,
-          rw_type_sim: @resource.related_identifiers.map(&:related_identifier_type).reject(&:blank?).uniq
+          rw_type_sim: @resource.related_identifiers.map(&:work_type).reject(&:blank?).uniq
         }
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
