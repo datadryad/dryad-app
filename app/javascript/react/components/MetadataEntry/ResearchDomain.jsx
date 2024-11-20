@@ -43,22 +43,22 @@ function ResearchDomain({
             Research domain
           </label>
           <Field
-            type="text"
+            as="select"
             name="fos_subjects"
             id={`fos_subjects__${frmSuffix}`}
             list={`fos_subject__${frmSuffix}`}
-            className="fos-subjects js-change-submit c-input__text"
+            className="fos-subjects js-change-submit c-input__select"
             onBlur={() => { // formRef.current.handleSubmit();
               formik.handleSubmit();
             }}
-          />
-          <datalist id={`fos_subject__${frmSuffix}`} className="c-input__text">
+          >
+            <option value="" aria-label="Choose a research domain" />
             {subjectList.map((subj, index) => {
               // key made from subj + count of preceding duplicates
               const key = subj + subjectList.slice(0, index).filter((s) => s === subj).length;
               return <option value={subj} key={key}>{subj}</option>;
             })}
-          </datalist>
+          </Field>
         </Form>
       )}
     </Formik>

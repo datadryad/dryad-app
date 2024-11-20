@@ -5,6 +5,7 @@ Dryad's REST API allows detailed interaction and programmatic interfacing with D
 Examples:
 
 - [List datasets](https://datadryad.org/api/v2/datasets)
+- [Search for datasets](https://datadryad.org/api/v2/search?q=carbon)
 - [Get information about a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7)
 - [See versions of a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/versions)
 - [Get files from a version](https://datadryad.org/api/v2/versions/26724/files)
@@ -12,6 +13,12 @@ Examples:
 
 When using the API, any DOI included must be <a href="https://www.w3schools.com/tags/ref_urlencode.ASP" target="blank">URL-encoded<span class="screen-reader-only"> (opens in new window)</span></a> to ensure correct processing. Anonymous users of the API are limited to 30 requests per minute, with a lower limit for downloads of data files.
 
+
+## Detailed documentation
+
+- Basic REST API (see below)
+- [Search API](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/search.md)
+- [Submission API](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md)
 
 ## API accounts
 

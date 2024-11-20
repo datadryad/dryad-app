@@ -329,7 +329,7 @@ module StashEngine
       @datasets = @datasets.preload(:authors) if @fields.include?('authors')
       @datasets = @datasets.preload(:tenant).preload(authors: :affiliations) if @fields.include?('affiliations')
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
-      @datasets = @datasets.preload(:roles) if @fields.include?('submitter')
+      @datasets = @datasets.preload(roles: :user) if @fields.include?('submitter')
       @datasets = @datasets.preload(identifier: :counter_stat) if @fields.include?('metrics')
       if @fields.include?('journal') || @fields.include?('sponsor') || @fields.include?('identifiers')
         @datasets = @datasets.preload(:resource_publication)

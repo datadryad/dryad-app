@@ -20,6 +20,7 @@
 #  updated_at              :datetime
 #  sponsor_id              :integer
 #  stripe_customer_id      :string(191)
+#  peer_review_custom_text :text(65535)
 #
 # Indexes
 #
