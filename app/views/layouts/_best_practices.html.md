@@ -127,9 +127,9 @@ Ready to get started? [Log in](/stash/sessions/choose_login) and go to the "My d
 ### Additional resources
 
 * Institutional data librarians are an outstanding resource. Check with your university library's data management services team.
-* [Cornell University Research Data Management Service Group's Guide to writing "readme" style metadata](https://data.research.cornell.edu/content/readme)
-* [Why Dryad uses Creative Commons Zero](https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/)
-* <a href="https://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf">DataONE Primer on Data Management Best Practices<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>
+* <a href="https://data.research.cornell.edu/content/readme" target="_blank">Cornell University Research Data Management Service Group's Guide to writing "readme" style metadata<span class="screen-reader-only"> (opens in new window)</span></a>
+* <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/" target="_blank">Why Dryad uses Creative Commons Zero<span class="screen-reader-only"> (opens in new window)</span></a>
+* <a href="https://dataoneorg.github.io/Education/bestpractices/" target="_blank">DataONE Primer on Data Management Best Practices<span class="screen-reader-only"> (opens in new window)</span></a>
 * [Introduction to Open Science: Why data versioning and data care practices are key for science and social science](http://blogs.lse.ac.uk/impactofsocialsciences/2015/02/09/data-versioning-open-science/)
-* [Making data Findable, Accessible, Interoperable, and Reusable (FAIR)](https://www.force11.org/group/fairgroup/fairprinciples)
-* [Data organization in spreadsheets](http://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989)
+* <a href="https://www.force11.org/group/fairgroup/fairprinciples" target="_blank">Making data Findable, Accessible, Interoperable, and Reusable (FAIR)<span class="screen-reader-only"> (opens in new window)</span></a>
+* <a href="http://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989" target="_blank">Data organization in spreadsheets<span class="screen-reader-only"> (opens in new window)</span></a>
