@@ -4,7 +4,7 @@ class HealthController < ApplicationController
     @health_status = {}
     populate_statuses
 
-    status_code = @health_status.map{|_k, v| v[:status]}.include?('not connected') ? :service_unavailable : :ok
+    status_code = @health_status.map { |_k, v| v[:status] }.include?('not connected') ? :service_unavailable : :ok
     notify_health_status_change(status_code, @health_status)
 
     render json: { status: status_code }.merge(@health_status), status: status_code and return if params.key?(:advanced)
