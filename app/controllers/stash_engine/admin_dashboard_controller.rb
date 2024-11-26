@@ -347,10 +347,10 @@ module StashEngine
     end
 
     def curation_activity_change
-      return publishing_error if @resource.id != @identifier.last_submitted_resource.id &&
+      return publishing_error if @resource.id != @identifier.last_submitted_resource&.id &&
         %w[embargoed published].include?(params.dig(:curation_activity, :status))
 
-      return state_error unless CurationActivity.allowed_states(@last_state).include?(@status)
+      return state_error unless CurationActivity.allowed_states(@last_state, current_user).include?(@status)
 
       decipher_curation_activity
       @note = params.dig(:curation_activity, :note)

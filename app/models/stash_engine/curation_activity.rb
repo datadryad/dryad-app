@@ -181,8 +181,10 @@ module StashEngine
       resource.curation_activities.where('id < ?', id).where(status: status).empty?
     end
 
-    def self.allowed_states(current_state)
-      CURATOR_ALLOWED_STATES[current_state].dup
+    def self.allowed_states(current_state, current_user)
+      statuses = CURATOR_ALLOWED_STATES[current_state].dup
+      statuses << 'withdrawn' if current_user.superuser? # superusers can withdraw a datasets from any status
+      statuses.uniq
     end
 
     # Private methods
