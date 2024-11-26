@@ -203,7 +203,7 @@ module StashEngine
       context 'when user is an superuser' do
         let(:user) { create(:user, role: 'superuser') }
 
-        CurationActivity::CURATOR_ALLOWED_STATES.keys.each do |status|
+        CurationActivity::CURATOR_ALLOWED_STATES.each_key do |status|
           it "allows withdrawn for #{status} status" do
             expect(CurationActivity.allowed_states(status, user)).to include('withdrawn')
           end
