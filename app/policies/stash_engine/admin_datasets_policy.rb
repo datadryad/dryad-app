@@ -28,5 +28,9 @@ module StashEngine
     def change_delete_schedule?
       @user.superuser?
     end
+
+    def delete_dataset?
+      @user.superuser?
+    end
   end
 end

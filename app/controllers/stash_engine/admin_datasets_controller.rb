@@ -58,6 +58,21 @@ module StashEngine
       redirect_to(sf_url, allow_other_host: true)
     end
 
+    def destroy
+      pp current_user
+      authorize %i[stash_engine admin_datasets], :delete_dataset?
+      identifier = Identifier.find(params[:id])
+      unless helpers.can_user_delete_identifier?(identifier)
+        redirect_to activity_log_path(identifier.id), alert: 'This dataset can not be deleted.' and return
+      end
+
+      # if identifier.destroy
+      #   redirect_to admin_dashboard_path, notice: "Dataset #{identifier.identifier} has been deleted."
+      # else
+        redirect_to activity_log_path(identifier.id), alert: 'Dataset could not be deleted.'
+      # end
+    end
+
     private
 
     def load
