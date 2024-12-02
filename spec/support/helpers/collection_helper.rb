@@ -16,8 +16,6 @@ module CollectionHelper
     navigate_to_metadata
   end
 
-
-
   def navigate_to_metadata
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
