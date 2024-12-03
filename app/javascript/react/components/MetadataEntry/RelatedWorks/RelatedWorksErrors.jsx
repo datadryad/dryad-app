@@ -17,14 +17,14 @@ function RelatedWorksErrors(
   if (relatedIdentifier.related_identifier) {
     if (!urlCheck(relatedIdentifier.related_identifier)) {
       return (
-        <div className="callout err" role="alert">
+        <div className="callout err">
           <p>The URL is not valid. Make sure your URL is correct and begins with <code>http://</code> or <code>https://</code>.</p>
         </div>
       );
     }
     if (!relatedIdentifier.verified) {
       return (
-        <div className="callout warn" role="alert">
+        <div className="callout warn">
           <p>The web page cannot be verified. Make sure your URL is correct.</p>
         </div>
       );

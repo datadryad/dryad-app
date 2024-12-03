@@ -51,11 +51,18 @@ function Keywords({resource, setResource}) {
     <div className="c-keywords">
       <label className="input__label required" id="label_keyword_ac" htmlFor="keyword_ac">
         Subject keywords
-        <span className="details">(at least 3 required)</span>
+        <span className="details">(at least 3)</span>
       </label>
-      <div id="js-keywords__container" className="c-keywords__container">
+      <div
+        id="js-keywords__container"
+        className="c-keywords__container"
+        role="listbox"
+        aria-label="Subject keywords and search"
+        aria-multiselectable="true"
+        aria-describedby="keywords-ex"
+      >
         {subjs.map((subj) => (
-          <span className="c-keywords__keyword" key={subj.id}>
+          <span className="c-keywords__keyword" aria-selected="true" key={subj.id}>
             {subj.subject}
             <span className="delete_keyword">
               <button
@@ -86,6 +93,7 @@ function Keywords({resource, setResource}) {
           }
         />
       </div>
+      <div id="keywords-ex"><i className="ie" />Scientific names, method types, or keywords from your related article</div>
     </div>
   );
 }

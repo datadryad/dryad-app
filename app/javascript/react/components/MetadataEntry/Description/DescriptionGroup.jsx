@@ -15,16 +15,20 @@ export default function DescriptionGroup({
   const [showCedar, setShowCedar] = useState(!!res.cedar_json);
   const [template, setTemplate] = useState(null);
 
-  const abstractLabel = {label: 'Abstract', required: true, describe: ''};
+  const abstractLabel = {
+    label: 'Abstract',
+    required: true,
+    describe: <><i className="hint" />An introductory description of your dataset</>,
+  };
   const methodsLabel = {
     label: 'Methods',
     required: false,
-    describe: 'How was this dataset collected? How has it been processed?',
+    describe: <><i className="hint" />A description of the collection and processing of the data</>,
   };
   const usageLabel = {
     label: 'Usage notes',
     required: false,
-    describe: 'What programs and/or software are required to open the data files included with your submission?',
+    describe: <><i className="ie" />Programs and software required to open the data files</>,
   };
 
   useEffect(() => {
@@ -53,7 +57,7 @@ export default function DescriptionGroup({
           {openMethods ? (
             <Description dcsDescription={methods} setResource={setRes} mceLabel={methodsLabel} admin={admin} />
           ) : (
-            <p><button type="button" className="o-button__plain-text1" onClick={() => setOpenMethods(true)}>+ Add methods section</button></p>
+            <p><button type="button" className="o-button__plain-text2" onClick={() => setOpenMethods(true)}>+ Add methods section</button></p>
           )}
           {usage?.description && (
             <Description dcsDescription={usage} setResource={setRes} mceLabel={usageLabel} admin={admin} />

@@ -88,14 +88,15 @@ export default function Description({
 
   return (
     <>
-      <div className="o-heading__level3">
+      <div className="input-line spaced" style={{marginTop: '2rem'}}>
         <label
-          className={`${(mceLabel.required ? 'required' : 'optional')}`}
+          className={`input-label xl${(mceLabel.required ? ' required' : ' optional')}`}
           id={`${dcsDescription.description_type}_label`}
           htmlFor={`editor_${dcsDescription.description_type}`}
         >
           {mceLabel.label}
         </label>
+        {mceLabel.describe && <div id={`${mceLabel.label}-ex`}>{mceLabel.describe}</div>}
       </div>
       <Editor
         id={`editor_${dcsDescription.description_type}`}
@@ -127,7 +128,6 @@ export default function Description({
         onBlur={submit}
         onEditorChange={checkSubmit}
       />
-      <p style={{fontSize: '.98rem'}}>Press Alt 0 or Option 0 for help using the rich text editor with keyboard only.</p>
     </>
   );
 }

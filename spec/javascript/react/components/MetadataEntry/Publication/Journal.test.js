@@ -30,8 +30,8 @@ describe('Journal', () => {
 
     render(<Journal {...info} />);
 
-    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText, {exact: false});
-    expect(labeledElements.length).toBe(2);
+    const labeledElements = screen.getAllByLabelText(info.controlOptions.labelText);
+    expect(labeledElements.length).toBe(1);
     expect(labeledElements[0]).toHaveAttribute('value', title);
   });
 });

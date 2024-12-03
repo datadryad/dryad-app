@@ -100,7 +100,12 @@ input[type=file]::file-selector-button {
   @extend %o-button__link-style;
   padding: 5px 0;
   color: $dark-blue;
-  font-size: 0.9em;
+  font-size: 0.98rem;
+}
+
+.o-button__plain-textlink {
+  @extend %o-button__link-style;
+  color: $dark-blue;
 }
 
 .o-button__plain-text6 {

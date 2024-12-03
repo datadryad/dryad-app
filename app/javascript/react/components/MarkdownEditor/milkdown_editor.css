@@ -15,6 +15,7 @@
   height: 55vh;
   position: relative;
   overflow: auto;
+  background-color: white;
 }
 
 #readme_step_editor .md_editor_textarea {

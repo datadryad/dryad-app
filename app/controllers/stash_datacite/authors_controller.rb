@@ -16,7 +16,6 @@ module StashDatacite
     def create
       respond_to do |format|
         @author = StashEngine::Author.create(author_params)
-        process_affiliation unless params[:affiliation].nil?
         @author.reload
         format.js
         format.json { render json: @author.as_json(include: :affiliations) }
@@ -27,7 +26,7 @@ module StashDatacite
     def update
       respond_to do |format|
         @author.update(author_params)
-        process_affiliation
+        process_affiliations
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
         format.json { render json: @author.as_json(include: :affiliations) }
       end
@@ -75,9 +74,15 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def author_params
-      params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_middle_name,
-                                     :author_email, :resource_id, :author_orcid, :author_order,
+      params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_org_name,
+                                     :author_email, :resource_id, :author_orcid, :author_order, :corresp,
                                      affiliation: %i[id ror_id long_name])
+    end
+
+    def aff_params
+      params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_org_name,
+                                     :author_email, :resource_id, :author_orcid, :author_order, :corresp,
+                                     affiliations: %i[id ror_id long_name])
     end
 
     def check_for_orcid(author)
@@ -85,19 +90,22 @@ module StashDatacite
     end
 
     # find correct affiliation based on long_name and ror_id and set it, create one if needed.
-    def process_affiliation
+    def process_affiliations
       return nil unless @author.present?
 
-      args = author_params
-      if args['affiliation']['long_name'].blank?
-        @author.affiliations.destroy_all
-        return
+      @author.affiliations.destroy_all
+      args = aff_params
+      affs = args['affiliations']&.reject { |a| a['long_name'].blank? }
+      affs.each do |aff|
+        process_affiliation(aff['long_name'], aff['ror_id'])
       end
+    end
+
+    def process_affiliation(name, ror_val)
+      return nil unless @author.present?
 
       # find a matching pre-existing affiliation
       affil = nil
-      name = args['affiliation']['long_name']
-      ror_val = args['affiliation']['ror_id']
       if ror_val.present?
         # - find by ror_id if avaialable
         affil = StashDatacite::Affiliation.where(ror_id: ror_val).first
@@ -115,10 +123,9 @@ module StashDatacite
                   StashDatacite::Affiliation.create(long_name: name.to_s, ror_id: nil)
                 end
       end
-      return if @author.affiliation == affil
+      return if @author.affiliations.pluck(:ror_id).include?(affil.ror_id)
 
       @author.affiliation = affil
-      @author.save
     end
 
     def check_reorder_valid
