@@ -39,6 +39,7 @@ RSpec.feature 'NewCollection', type: :feature do
   context :form_submission, js: true do
 
     before(:each) do
+      StashDatacite::Subject.create(subject: 'Agricultural biotechnology', subject_scheme: 'fos')
       create_datasets
       start_new_collection
     end
@@ -53,7 +54,7 @@ RSpec.feature 'NewCollection', type: :feature do
     it 'fills in submission form', js: true do
 
       # subjects
-      fill_in 'fos_subjects', with: 'Agricultural biotechnology'
+      select 'Agricultural biotechnology', from: 'Research domain'
 
       # ##############################
       # Title
