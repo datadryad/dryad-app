@@ -1,0 +1,21 @@
+<p>Server status changed is <%= @status_code.upcase %></p>
+
+<p>Services status: </p>
+<table>
+  <% @health_status.each do |k, v| %>
+    <tr>
+      <td style="width:80px;vertical-align: top"><%= k %></td>
+      <td>
+        <b>status:</b>&nbsp;<%= v[:status] %>
+      <tr>
+    </tr>
+    <% if v[:error] %>
+      <tr>
+        <td></td>
+        <td>
+          <b>error: </b>&nbsp;<%= v[:error] %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>

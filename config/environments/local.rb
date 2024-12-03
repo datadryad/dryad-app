@@ -59,4 +59,5 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
 
   Rails.application.default_url_options = { host: 'localhost', port: 3000}
+  # Rack::Attack.enabled = false
 end
