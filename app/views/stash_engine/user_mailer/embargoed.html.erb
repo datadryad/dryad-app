@@ -1,15 +1,13 @@
 <p>Dear <%= @user_name %>,</p>
 
 <% if @resource.publication_date.blank? %>
-  <p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) is now embargoed. <% if @resource.identifier.embargoed_until_article_appears? %>The embargo will be released when the associated article is published.<% end %></p>
+  <p>Your dataset "<%= @resource.title %>" is now embargoed. <% if @resource.identifier.embargoed_until_article_appears? %>The embargo will be released when the associated article is published.<% end %></p>
 <% else %>
-  <p>Your dataset "<%= @resource.title %>" (<%= @resource.identifier_str %>) will be embargoed until <%= @resource.publication_date.strftime('%B %d, %Y') %><% if @resource.identifier.embargoed_until_article_appears? %>, or until the associated article appears, whichever happens first<% end %>.</p>
+  <p>Your dataset "<%= @resource.title %>" will be embargoed until <%= @resource.publication_date.strftime('%B %d, %Y') %><% if @resource.identifier.embargoed_until_article_appears? %>, or until the associated article appears, whichever happens first<% end %>.</p>
 <% end %>
 
-<p>Your DOI has been registered and the landing page for your dataset is publicly available. However, the data files cannot be viewed or downloaded. <%= 'When your embargo has lifted we will notify you.' if @resource.publication_date.present? %></p>
+<p>Your DOI has been registered and <a href="<%= @resource.identifier_uri %>">the landing page for your dataset</a> is publicly available. However, the data files cannot be viewed or downloaded. <%= 'When your embargo has lifted we will notify you.' if @resource.publication_date.present? %></p>
 
 <p>Thank you for choosing Dryad to host your data.</p>
-
-<p>The Dryad Team</p>
 
 <p>We welcome your feedback! Please share your thoughts with us at: <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>, or <a href="<%= @feedback_url %>">sign up for sneak peeks of new Dryad features</a>.</p>

@@ -1,10 +1,9 @@
 <% @datasets.each_with_index do |dataset, i| %>
-  <% resource = dataset&.latest_resource %>
-  <% title = resource.title.blank? ? '[No title supplied]' : resource.title %>
+  <% title = dataset.title.blank? ? '[No title supplied]' : dataset.title %>
   <% delete_confirm = 'Are you sure you want to remove this dataset'
-    if resource&.stash_version.version > 1
+    if dataset&.stash_version.version > 1
       delete_confirm << ' version?'
-      if dataset.pub_state == 'published'
+      if dataset.identifier.pub_state == 'published'
         delete_confirm << ' The published version will still be available.'
       end
     else
@@ -34,13 +33,13 @@
   <li>
     <div>
       <p class="c-user-dataset-title">
-        <% if resource.submitted? # merritt state %>
-          <%= link_to title, stash_url_helpers.show_path(dataset.identifier_str) %>
+        <% if dataset.submitted? # merritt state %>
+          <%= link_to title, stash_url_helpers.show_path(dataset.identifier.identifier_str) %>
         <% else %>
           <%= title %>
         <% end %>
       </p>
-      <p class="c-user-dataset-details"><span>DOI: <%= dataset.identifier %></span><span>Version <%= resource&.stash_version.version%></span><span><%= time_ago_in_words(resource.updated_at, include_seconds: true) %> since last update</span><% if dataset.pub_state == 'published' %><span>Published: <%= formatted_date(dataset.date_last_published) %></span><% if dataset.sort_order != 3 %><span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span><% end %><% end %></p>
+      <p class="c-user-dataset-details"><span>DOI: <%= dataset.identifier.identifier %></span><span>Version <%= dataset&.stash_version.version%></span><span><%= time_ago_in_words(dataset.updated_at, include_seconds: true) %> since last update</span><% if dataset.identifier.pub_state == 'published' %><span>Published: <%= formatted_date(dataset.identifier.date_last_published) %></span><% if dataset.sort_order != 3 %><span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span><% end %><% end %></p>
     </div>
       <div>
       <div class="c-user-datasets-status">
@@ -55,27 +54,27 @@
           <%when 3%>
             success-status
           <%end%>
-        "><%= resource&.last_curation_activity&.readable_status %></span>
+        "><%= dataset&.last_curation_activity&.readable_status %></span>
         <div class="c-user-datasets-actions">
-          <% if resource&.last_curation_activity.status == 'in_progress' %>
-            <% if resource.current_editor_id == current_user&.id %>
-              <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
+          <% if dataset&.last_curation_activity.status == 'in_progress' %>
+            <% if dataset.current_editor_id == current_user&.id %>
+              <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
                 Resume <i class="fa fa-pencil" aria-hidden="true"></i>
               <% end %>
-              <%= button_to stash_url_helpers.resource_path(resource), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: resource&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
-                <%= resource&.stash_version.version > 1 ? 'Revert' : 'Delete' %> <i class="fa fa-trash-can" aria-hidden="true"></i>
+              <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
+                <%= dataset&.stash_version.version > 1 ? 'Revert' : 'Delete' %> <i class="fa fa-trash-can" aria-hidden="true"></i>
               <% end %>
-            <% elsif resource.current_editor_id.present? %>
-              Dataset being edited by <%= resource.editor.name %>
+            <% elsif dataset.current_editor_id.present? %>
+              Dataset being edited by <%= dataset.editor.name %>
             <% end %>
           <% end %>
           <% if dataset.sort_order == 1 %>
-            <%= button_to stash_url_helpers.peer_review_release_path, method: :patch, params: {stash_engine_resource: { id: resource.id }}, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
+            <%= button_to stash_url_helpers.peer_review_release_path, method: :patch, params: {stash_engine_resource: { id: dataset.id }}, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
               Release for curation <i class="fa fa-paper-plane" aria-hidden="true"></i>
             <% end %>
           <% end %>
-          <% if ['submitted', 'action_required'].include?(resource&.last_curation_activity.status) || dataset.sort_order == 1 || dataset.sort_order >= 3 %>
-            <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: resource.id), method: :post, class: 'o-button__inline-form') do %>
+          <% if ['submitted', 'action_required'].include?(dataset&.last_curation_activity.status) || dataset.sort_order == 1 || dataset.sort_order >= 3 %>
+            <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: dataset.id), method: :post, class: 'o-button__inline-form') do %>
               <button class="o-button__plain-text7 prevent-click" name="update" title="Edit dataset" aria-label="Edit dataset">Revise submission <i class="fa fa-pencil" aria-hidden="true"></i></button>
             <% end %>
           <% end %> 

@@ -59,10 +59,12 @@ module StashEngine
     has_many :software_files, class_name: 'StashEngine::SoftwareFile', dependent: :destroy
     has_many :supp_files, class_name: 'StashEngine::SuppFile', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
+    has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
+    has_many :users, through: :roles, class_name: 'StashEngine::User'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
-    belongs_to :user, class_name: 'StashEngine::User'
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
+    has_one :curator, class_name: 'StashEngine::User', primary_key: 'user_id', foreign_key: 'id'
     has_one :current_resource_state,
             class_name: 'StashEngine::ResourceState',
             primary_key: 'current_resource_state_id',
@@ -147,7 +149,7 @@ module StashEngine
       # see https://github.com/amoeba-rb/amoeba/issues/76
       %i[contributors datacite_dates descriptions geolocations temporal_coverages
          publication_years publisher related_identifiers resource_type rights sizes
-         subjects resource_publication].each do |assoc|
+         subjects resource_publication roles].each do |assoc|
         include_association assoc
       end
     end
@@ -251,7 +253,7 @@ module StashEngine
       str = 'stash_engine_curation_activities.status IN (?)'
       arr = [my_states]
       if user_id
-        str += ' OR stash_engine_resources.user_id = ?'
+        str += ' OR stash_engine_roles.user_id = ?'
         arr.push(user_id)
       end
       if tenant_id
@@ -266,7 +268,8 @@ module StashEngine
         str += " OR (dcs_contributors.contributor_type = 'funder' AND dcs_contributors.name_identifier_id IN (?))"
         arr.push(funder_ids)
       end
-      joins(:last_curation_activity).left_outer_joins(:resource_publication).joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
+      joins(:last_curation_activity).left_outer_joins(:resource_publication).left_outer_joins(:roles)
+        .joins(JOIN_FOR_CONTRIBUTORS).distinct.where(str, *arr)
     end
 
     # limits to the latest resource for each dataset if added to resources
@@ -479,7 +482,7 @@ module StashEngine
     end
 
     def init_state
-      self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: user_id).id
+      self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: current_editor_id).id
     end
     private :init_state
 
@@ -621,6 +624,22 @@ module StashEngine
     # -----------------------------------------------------------
     # Permissions
 
+    def creator
+      roles.find_by(role: 'creator')&.user
+    end
+
+    def submitter
+      roles.find_by(role: 'submitter')&.user
+    end
+
+    def creator=(user_id)
+      roles.find_or_create_by(role: 'creator').update(user_id: user_id)
+    end
+
+    def submitter=(user_id)
+      roles.find_or_create_by(role: 'submitter').update(user_id: user_id)
+    end
+
     # can edit means they are not locked out because edits in progress and have permission
     def can_edit?(user:)
       # only curators and above (not limited curators) have permission to edit
@@ -649,21 +668,24 @@ module StashEngine
     def permission_to_edit?(user:)
       return false unless user
 
-      # curator, dataset owner or admin for the same tenant
+      # collaborators
+      return true if users.include?(user)
+
+      # curator or admin for the memebr institution
       admin_for_this_item?(user: user)
     end
 
     # Checks if someone may download files for this resource
     # 1. Repo's status, resource_state = 'submitted', meaning they are available to download from the repo
     # 2. Curation state of files_public? means anyone may download
-    # 3. if not public then users with admin privileges over the item can still download
+    # 3. if not public then users with edit/admin privileges over the item can still download
     # Note: the special download links mean anyone with that link may download and this doesn't apply
     def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
       return false unless current_resource_state&.resource_state == 'submitted' # is available in the repo
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
 
-      admin_for_this_item?(user: ui_user)
+      permission_to_edit?(user: ui_user)
     end
 
     # see if the user may view based on curation status & roles and etc.  I don't see this as being particularly complex for Rubocop
@@ -671,7 +693,7 @@ module StashEngine
       return true if metadata_published? # anyone can view
       return false if ui_user.blank? # otherwise unknown person can't view and this prevents later nil checks
 
-      admin_for_this_item?(user: ui_user)
+      permission_to_edit?(user: ui_user)
     end
 
     # ------------------------------------------------------------
@@ -694,13 +716,13 @@ module StashEngine
 
     # may not be able to match one up
     def owner_author
-      return nil unless user&.orcid.present? # apparently there are cases where user doesn't have an orcid
+      return nil unless submitter&.orcid.present? # apparently there are cases where user doesn't have an orcid
 
-      authors.where(author_orcid: user.orcid).first
+      authors.where(author_orcid: submitter.orcid).first
     end
 
     def fill_blank_author!
-      return if authors.count > 0 || user.blank? # already has some authors filled in or no user to know about
+      return if authors.count > 0 || submitter.blank? # already has some authors filled in or no user to know about
 
       fill_author_from_user!
     end
@@ -708,21 +730,21 @@ module StashEngine
     # TODO: Move this to the Author model as `Author.from_user` perhaps so that we do not need to comingle
     # StashDatacite objects directly here.
     def fill_author_from_user!
-      f_name = user.first_name
-      l_name = user.last_name
-      orcid = (user.orcid.blank? ? nil : user.orcid)
-      email = user.email
+      f_name = submitter.first_name
+      l_name = submitter.last_name
+      orcid = (submitter.orcid.blank? ? nil : submitter.orcid)
+      email = submitter.email
 
       # TODO: This probably belongs somewhere else, but without it here, the affiliation sometimes doesn't exist
       StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
 
-      affiliation = user.affiliation
-      affiliation = StashDatacite::Affiliation.from_long_name(long_name: user.tenant.long_name) if affiliation.blank? &&
-        user.tenant.present? && !%w[dryad localhost].include?(user.tenant.id)
+      affiliation = submitter.affiliation
+      affiliation = StashDatacite::Affiliation.from_long_name(long_name: submitter.tenant.long_name) if affiliation.blank? &&
+        submitter.tenant.present? && !%w[dryad localhost].include?(submitter.tenant.id)
       StashEngine::Author.create(resource_id: id, author_orcid: orcid, affiliation: affiliation,
                                  author_first_name: f_name, author_last_name: l_name, author_email: email)
       # disabling because we no longer wnat this with UC Press
-      # author.affiliation_by_name(user.tenant.short_name) if user.try(:tenant)
+      # author.affiliation_by_name(submitter.tenant.short_name) if submitter.try(:tenant)
     end
 
     # -----------------------------------------------------------
@@ -766,7 +788,7 @@ module StashEngine
 
     # calculated current editor name, ignores nil current editor as current logged in user
     def dataset_in_progress_editor
-      return user if dataset_in_progress_editor_id.nil?
+      return submitter if dataset_in_progress_editor_id.nil?
 
       User.where(id: dataset_in_progress_editor_id).first
     end
@@ -1001,6 +1023,13 @@ module StashEngine
       end
     end
 
+    def withdrawn_by_curator?
+      return false if last_curation_activity.status != 'withdrawn'
+
+      first_withdrawn = curation_activities.where(status: 'withdrawn').order(created_at: :asc).first
+      first_withdrawn.user_id != 0
+    end
+
     private
 
     def save_first_pub_date
@@ -1084,8 +1113,8 @@ module StashEngine
       # so assign it to the previous curator, with a fallback process
       auto_assign_curator(target_status: target_status)
 
-      # If the last user to edit it was the current_editor return it to curation status
-      return unless last_curation_activity.user_id == current_editor_id
+      # If the last user to edit it was the curator return it to curation status
+      return unless last_curation_activity.user_id == user_id
 
       curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
                                                                   note: 'System set back to curation')
@@ -1135,19 +1164,19 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def auto_assign_curator(target_status:)
-      target_curator = identifier.most_recent_curator
+      target_curator = curator&.min_curator? ? curator : identifier.most_recent_curator
       if target_curator.nil? || !target_curator.min_curator?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to a random current curator , but not a superuser
         cur_list = StashEngine::User.curators.to_a
         target_curator = cur_list[rand(cur_list.length)]
       end
-
       return unless target_curator
 
-      update(current_editor_id: target_curator.id)
+      update(user_id: target_curator.id) unless curator == target_curator
+
       curation_activities << StashEngine::CurationActivity.create(
-        user_id: 0, status: target_status,
+        user_id: target_curator.id, status: target_status,
         note: "System auto-assigned curator #{target_curator&.name}"
       )
     end
