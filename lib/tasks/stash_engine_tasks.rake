@@ -164,7 +164,8 @@ namespace :identifiers do
         end
       end
 
-      if last_user_activity.present? && last_user_activity < 1.year.ago
+      # Only remove the files if two years have passed since the last user activity
+      if last_user_activity.present? && last_user_activity < 2.years.ago
         log "ABANDONED #{i.identifier} -- #{i.id} -- size #{i.latest_resource.size}"
 
         if dry_run
@@ -383,6 +384,9 @@ namespace :identifiers do
     items.each do |item|
       resource = item[:identifier]&.latest_resource
       next if resource.nil?
+
+      # Only send for resources where the ID ends in 00, so we can stagger the load on the curators
+      next if (resource.id % 100) > 0
 
       # send out reminder at two weeks
       next if item[:set_at] > 2.weeks.ago || item[:reminder_1].present?
@@ -1195,7 +1199,7 @@ namespace :curation_stats do
   desc 'Calculate any curation stats that are missing from v2 launch day until yesterday'
   task recalculate_all: :environment do
     launch_day = Date.new(2019, 9, 17)
-    (launch_day..Time.now.utc.to_date - 1.day).each do |date|
+    (launch_day..Time.now.utc.to_date - 1.day).find_each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago

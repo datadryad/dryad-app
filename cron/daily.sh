@@ -15,7 +15,7 @@ bundle exec rails identifiers:action_required_reminder RAILS_ENV=$1 >> /home/ec2
 bundle exec rails dataset_deletion:in_action_required_reminders RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/action_required_reminders.log 2>&1
 
 # Peer review reminders - monthly after 6 months
-bundle exec rails dataset_deletion:in_peer_review_reminders RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/action_required_reminders.log 2>&1
+bundle exec rails dataset_deletion:in_peer_review_reminders RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/peer_review_reminders.log 2>&1
 
 # Automatically withdraw dataset
 bundle exec rails dataset_deletion:auto_withdraw RAILS_ENV=$1 >> /home/ec2-user/deploy/shared/log/automatic_dataset_widrawn.log 2>&1

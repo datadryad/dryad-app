@@ -1,10 +1,12 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Your data submission has been automatically withdrawn from the Dryad platform and will be permanently deleted after one year:</p>
+<p>Your data submission has been automatically withdrawn from the Dryad platform
+  due to inactivity for more than one year. Your data will be permanently
+  deleted after one year with further inactivity:</p>
 
 <p>
   Title: <%= @resource.title %><br/>
-  <%= @resource.identifier_str %>
+  DOI: <%= @resource.identifier_uri %>
 </p>
 
 <p>
@@ -19,4 +21,10 @@
   </ol>
 </p>
 
-<p>If you have questions about this action, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Auto-Withdraw <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>
+<p>Please note that your dataset never completed the curation process and,
+  therefore, was not published. You should have received an email from us
+  outlining the changes required to have your dataset published.</p>
+
+<p>If you do not have access to the email or if you have any questions about the
+  action taken to withdraw your dataset, please contact us at
+  <a href="mailto:<%= @helpdesk_email %>?subject=Auto-Withdraw <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>

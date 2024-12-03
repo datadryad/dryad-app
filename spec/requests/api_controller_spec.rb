@@ -35,5 +35,53 @@ module StashApi
         expect(hsh['_links']['stash:datasets']['href']).to eql('/api/v2/datasets')
       end
     end
+
+    describe '#versioning' do
+      before { post '/api/v2/test', headers: request_headers }
+
+      context 'with no X-API-Version header' do
+        context 'with current API version' do
+          let(:request_headers) { default_authenticated_headers }
+
+          it 'is successful and has correct response headers' do
+            expect(response).to be_successful
+            expect(response.headers['X-API-Version']).to eql('2.1.0')
+            expect(response.headers['X-API-deprecation']).to be_nil
+          end
+        end
+      end
+
+      context 'with X-API-Version header' do
+        context 'with current API version' do
+          let(:request_headers) { default_authenticated_headers.merge('X-API-Version' => '2.1.0') }
+
+          it 'is successful and has correct response headers' do
+            expect(response).to be_successful
+            expect(response.headers['X-API-Version']).to eql('2.1.0')
+            expect(response.headers['X-API-Deprecation']).to be_nil
+          end
+        end
+
+        context 'with old API version' do
+          let(:request_headers) { default_authenticated_headers.merge('X-API-Version' => '1.0.0') }
+
+          it 'returns 400 and has correct response headers' do
+            expect(response.status).to eql(400)
+            expect(response.headers['X-API-Version']).to eql('1.0.0')
+            expect(response.headers['X-API-Deprecation']).to be_truthy
+          end
+        end
+
+        context 'with bad API version' do
+          let(:request_headers) { default_authenticated_headers.merge('X-API-Version' => 'bad version') }
+
+          it 'returns 400 and has correct response headers' do
+            expect(response.status).to eql(400)
+            expect(response.headers['X-API-Version']).to eql('bad version')
+            expect(response.headers['X-API-Deprecation']).to be_truthy
+          end
+        end
+      end
+    end
   end
 end

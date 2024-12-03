@@ -203,8 +203,8 @@ module StashEngine
       resources.reverse.each do |r|
         next unless r.current_editor_id
 
-        user = StashEngine::User.find(r.current_editor_id)
-        return user if user.min_curator?
+        user = StashEngine::User.find_by(id: r.current_editor_id)
+        return user if user&.min_curator?
       end
       nil
     end
