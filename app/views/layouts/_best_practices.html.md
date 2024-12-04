@@ -19,7 +19,7 @@ Additionally, if applicable, please do not include any data visualizations that 
 
 ## Make sure your data are shareable
 
-* **All files submitted to Dryad must abide by the terms of the [Creative Commons Zero (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/) waiver**. Under these terms, the author releases the data to the public domain.
+* **All files submitted to Dryad must abide by the terms of the [Creative Commons Zero v1.0 Universal](https://spdx.org/licenses/CC0-1.0.html) waiver**. Under these terms, the author releases the data to the public domain.
     * Review all files and ensure they conform to `CC0` terms and are not covered by copyright claims or other terms-of-use. We cannot archive any files that contain licenses incompatible with `CC0` (`GNU GPL, MIT, CC-BY,` etc.), but we can link to content in a dedicated software repository (Github, Zenodo, Bitbucket, or CRAN, etc.).
     * For more information see [Good data practices: Removing barriers to data reuse with CC0 licensing](https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/), [Why Does Dryad Use CC0](https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/), and [Some dos and don'ts for CC0](https://blog.datadryad.org/2017/09/11/some-dos-and-donts-for-cc0/).
 * Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines (see <a href="/docs/HumanSubjectsData.pdf">tips for human subjects data<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>).
