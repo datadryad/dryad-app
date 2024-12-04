@@ -200,6 +200,10 @@
   <copyField source="funder_ror_ids_sm" dest="funder_ror_ids_tmi" maxChars="1000"/>
   <copyField source="sponsor_ror_ids_sm" dest="sponsor_ror_ids_tmi" maxChars="1000"/>
 
+  <!-- related work -->
+  <copyField source="rw_identifier_sim" dest="rw_identifier_tmi"/>
+  <copyField source="rw_type_sim" dest="rw_type_tmi"/>
+
   <!-- core text search -->
   <copyField source="*_ti"               dest="text" />
   <copyField source="*_tmi"              dest="text" />
