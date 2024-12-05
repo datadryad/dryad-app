@@ -112,6 +112,7 @@ Rails.application.routes.draw do
         resources :files, shallow: true, path: '/files' do
           get :download, on: :member
           resource :frictionless_report, path: '/frictionlessReport'
+          resource :pii_scan_report, path: '/piiScanReport', only: %i[show create update]
         end
         resources :processor_results, only: [:show, :index, :create, :update]
       end
