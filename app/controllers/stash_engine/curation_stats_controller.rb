@@ -8,8 +8,6 @@ module StashEngine
 
     def index
       params.permit(:format)
-
-      @all_stats = authorize CurationStats.all
       @current_stats = authorize CurationStats.where(date: 1.month.ago..Time.now.utc.to_date).order('date DESC')
 
       @admin_stats = authorize StashEngine::AdminDatasetsController::Stats.new, policy_class: CurationStatsPolicy
@@ -30,7 +28,7 @@ module StashEngine
       Enumerator.new do |rows|
         rows << ['Date', 'Queue size', 'Unclaimed', 'Created', 'New to queue', 'New to PPR', 'PPR to Queue',
                  'Curation to AAR', 'Curation to published', 'Withdrawn', 'Author revised', 'Author versioned'].to_csv(row_sep: "\r\n")
-        @all_stats.order(:date).find_each do |stat|
+        CurationStats.order(:date).find_each do |stat|
           row = [
             stat.date,
             stat.datasets_to_be_curated,
