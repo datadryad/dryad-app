@@ -32,13 +32,18 @@ module StashEngine
     end
 
     def edit
-      valid = %i[name parent_org_id]
-      update = edit_params.slice(*valid)
-      update[:parent_org_id] = nil if edit_params.key?(:parent_org_id) && edit_params[:parent_org_id].blank?
-      update[:contact] = edit_params[:contact].split("\n").map(&:strip).to_json if edit_params[:contact]
-      @org.update(update)
-
+      @org.update(update_hash)
       respond_to(&:js)
+    end
+
+    def new
+      @org = authorize StashEngine::JournalOrganization.new
+      respond_to(&:js)
+    end
+
+    def create
+      @org = StashEngine::JournalOrganization.create(update_hash)
+      redirect_to action: 'index', q: @org.name
     end
 
     private
@@ -56,6 +61,14 @@ module StashEngine
       @sponsors = [OpenStruct.new(id: '', name: '')]
       @sponsors << StashEngine::JournalOrganization.has_children.order(:name).map { |o| OpenStruct.new(id: o.id, name: o.name) }
       @sponsors.flatten!
+    end
+
+    def update_hash
+      valid = %i[name parent_org_id]
+      update = edit_params.slice(*valid)
+      update[:parent_org_id] = nil if edit_params.key?(:parent_org_id) && edit_params[:parent_org_id].blank?
+      update[:contact] = edit_params[:contact].split("\n").map(&:strip).to_json if edit_params[:contact]
+      update
     end
 
     def load

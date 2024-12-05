@@ -1,2 +1,2 @@
-<p>Change PPR by default setting of <%= @journal.title %></p>
+<p><%= @journal.title %></p>
 <p><%= form.check_box :default_to_ppr, {checked: @journal.default_to_ppr}, 1, 0 %> <%= form.label :default_to_ppr, "Submissions enter PPR by default", class: 'c-input__label' %></p>

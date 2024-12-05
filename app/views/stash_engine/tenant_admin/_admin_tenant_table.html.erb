@@ -36,9 +36,48 @@
   <% tenants.each do |t| %>
     <tr class="c-lined-table__row">
       <td><%= t.id %></td>
-      <td><%= t.short_name %></td>
-      <td><%= t.long_name %></td>
-      <td><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="short_name_<%= t.id %>"><%= t.short_name %></div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'short_name'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member name" aria-haspopup="dialog" id="short_name_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="long_name_<%= t.id %>"><%= t.long_name %></div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'long_name'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member long name" aria-haspopup="dialog" id="long_name_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="authentication_<%= t.id %>"><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'authentication'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member authentication" aria-haspopup="dialog" id="authentication_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="logo_<%= t.id %>">
