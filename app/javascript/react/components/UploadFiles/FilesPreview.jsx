@@ -1,4 +1,5 @@
 import React from 'react';
+import {maxSize} from './maximums';
 import {formatSizeUnits} from '../../../lib/utils';
 
 const fileList = (list, previous) => {
@@ -33,7 +34,7 @@ const fileList = (list, previous) => {
   );
 };
 
-export default function FilesPreview({resource, previous}) {
+export default function FilesPreview({resource, previous, admin}) {
   const present = resource.generic_files.filter((f) => f.file_state !== 'deleted');
   const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.upload_file_name !== 'README.md');
   const software = present.filter((f) => f.type === 'StashEngine::SoftwareFile');
@@ -49,6 +50,14 @@ export default function FilesPreview({resource, previous}) {
       <>
         {data.length > 0 && (
           <>
+            {admin && resource.total_file_size > maxSize && (
+              <div className="callout warn">
+                <p>
+                  This dataset&apos;s total file size is {formatSizeUnits(resource.total_file_size)} (max {formatSizeUnits(maxSize)}).
+                  It can only be submitted by a superuser.
+                </p>
+              </div>
+            )}
             <h3 className="o-heading__level2">Data files hosted by Dryad</h3>
             {fileList(data, prev_data)}
           </>
