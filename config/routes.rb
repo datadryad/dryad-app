@@ -329,6 +329,7 @@ Rails.application.routes.draw do
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     post 'ds_admin/:id', to: 'admin_datasets#edit', as: 'ds_admin_edit'
+    delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
 
     # curation notes
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
