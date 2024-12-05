@@ -57,7 +57,7 @@ describe('Keywords', () => {
 
     render(<Keywords resource={resource} setResource={setResource} />);
 
-    const input = screen.getByLabelText('Subject keywords', {exact: false});
+    const input = screen.getAllByLabelText('Subject keywords', {exact: false})[0];
     userEvent.type(input, 'Eco');
 
     await waitFor(() => options);

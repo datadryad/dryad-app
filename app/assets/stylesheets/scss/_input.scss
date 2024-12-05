@@ -15,13 +15,40 @@ input {
 	flex-wrap: wrap;
 	column-gap: 2ch;
 	row-gap: 1ch;
+
+	&.spaced {
+		justify-content: space-between;
+  	align-items: baseline;
+  }
 }
 
 .input-label {
 	color: $dark-navy;
 }
 
-label.optional:after, label span.details {
+.input-example, [id$='-ex'] {
+	font-size: .98rem;
+	color: $medium-gray;
+	margin-top: .35ch;
+	i:not(.fas, .far) {
+		 &:before {
+			font-style: normal;
+			display: inline-block;
+			content: 'e.g.';
+			color: $dark-gray;
+			margin-right: .5ch;
+		}
+		&.hint:before {
+			content: 'Hint:';
+		}
+		&.ie:before {
+			content: 'i.e.'
+		}
+	}
+}
+
+label.optional:after,
+label span.details {
 	display: inline-block;
 	font-size: .98rem;
 	font-weight: normal;

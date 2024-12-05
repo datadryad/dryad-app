@@ -32,7 +32,7 @@ export default function ReadMeSteps({
     2: {
       desc:
       <>
-        <p>Provide a comprehensive list of data files and variables. Starting information has been imported from your uploaded files.</p>
+        <p style={{marginBottom: 0}}>Provide a comprehensive list of data files and variables. Starting information has been imported from your uploaded files.</p>
         <ul>
           <li>Add any folders and data files inside compressed archives (.zip, .gz), and any missing variables</li>
           <li>Describe files and define all variables and abbreviations used, including units of measurement</li>
@@ -55,30 +55,46 @@ export default function ReadMeSteps({
     <>
       <div className="steps-wrapper">
         {Object.keys(sections).map((i) => (
-          /* eslint-disable-next-line eqeqeq */
-          <div key={`step${i}`} className={`step${i < step ? ' completed' : ''}${i == step ? ' current' : ''}`} aria-current={step == i ? 'step' : null}>
+          /* eslint-disable eqeqeq */
+          <div
+            key={`step${i}`}
+            className={`step${i < step ? ' completed' : ''}${i == step ? ' current' : ''}`}
+            aria-current={step == i ? 'step' : null}
+            role="button"
+            tabIndex={0}
+            onClick={() => setStep(i)}
+            onKeyDown={(e) => {
+              if (['Enter', 'Space'].includes(e.key)) {
+                setStep(i);
+              }
+            }}
+          >
             <span className="step-counter">{i}</span><span className="step-name">{secTitles[i - 1]}</span>
           </div>
         ))}
       </div>
-      <h2><label htmlFor="readme_step_editor">{secTitles[step - 1]}</label></h2>
-      <div>{sections[step].desc}</div>
+      <h3 id="md_editor_label">{secTitles[step - 1]}</h3>
+      <div style={{margin: '-.5em 0'}}>
+        {sections[step].desc}
+      </div>
       <MarkdownEditor
         id="readme_step_editor"
         {...(step === 1 ? {initialValue: '', replaceValue: sections[step].content} : {initialValue: sections[step].content})}
         onChange={saveContent}
       />
-      <div className="o-dataset-nav">
-        <button type="button" className="o-button__plain-text2" onClick={() => setStep(step + 1)}>
+      <div className="o-dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
+        <button type="button" className="o-button__plain-text1" onClick={() => setStep(step + 1)}>
           {step === secTitles.length ? (
             <>Complete &amp; generate README</>
           ) : (
             <>Next <i className="fa fa-caret-right" aria-hidden="true" /></>
           )}
         </button>
-        <button type="button" className="o-button__plain-text" onClick={() => setStep(step - 1)}>
-          <i className="fa fa-caret-left" aria-hidden="true" /> Previous
-        </button>
+        {step > 1 && (
+          <button type="button" className="o-button__plain-text0" onClick={() => setStep(step - 1)}>
+            <i className="fa fa-caret-left" aria-hidden="true" /> Previous
+          </button>
+        )}
       </div>
     </>
   );

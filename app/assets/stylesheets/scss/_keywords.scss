@@ -37,7 +37,9 @@
 .c-keywords__keyword-remove {
 	border: none;
 	background-color: $medium-green;
+	border: thin solid $light-green;
 	color: white;
+	font-size: .98rem;
 	line-height: 0;
 	&:hover, &:active, &:focus {
 		background-color: $dark-blue;

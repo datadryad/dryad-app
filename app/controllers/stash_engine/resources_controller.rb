@@ -50,12 +50,13 @@ module StashEngine
     # POST /resources
     # POST /resources.json
     def create
-      resource = authorize Resource.new(user_id: current_user.id, current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
+      resource = authorize Resource.new(current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Stash::Doi::DataciteGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
       db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
-      resource.identifier_id = db_id_obj.id
-      resource.save
+      resource.update(identifier_id: db_id_obj.id)
+      resource.creator = current_user.id
+      resource.submitter = current_user.id
       resource.fill_blank_author!
       import_manuscript_using_params(resource) if params['journalID']
       session[:resource_type] = current_user.min_app_admin? && params.key?(:collection) ? 'collection' : 'dataset'
@@ -175,20 +176,20 @@ module StashEngine
     end
 
     def dupe_check
-      dupes = nil
+      dupes = []
       if @resource.title && @resource.title.length > 3
-        other_submissions = params.key?(:admin) ? StashEngine::Resources.all : @resource.user.resources
+        other_submissions = params.key?(:admin) ? StashEngine::Resources.all : current_user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
         manuscript = @resource.resource_publication.manuscript_number
-        dupes = other_submissions.where(title: @resource.title).select(:id, :title).to_a
+        dupes = other_submissions.where(title: @resource.title)&.select(:id, :title).to_a
         if primary_article.present?
           dupes.concat(other_submissions.joins(:related_identifiers)
-              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article }).select(:id, :title).to_a)
+              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })&.select(:id, :title).to_a)
         end
         if manuscript.present?
           dupes.concat(
-            other_submissions.joins(:resource_publication).find_by(resource_publication: { manuscript_number: manuscript }).select(:id, :title).to_a
+            other_submissions.joins(:resource_publication).find_by(resource_publication: { manuscript_number: manuscript })&.select(:id, :title).to_a
           )
         end
       end

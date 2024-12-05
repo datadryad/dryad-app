@@ -124,6 +124,7 @@ function PublicationForm({
         <Form style={{margin: '1em auto'}}>
           <ImportCheck importType={importType} journal={journal} setDisable={setDisable} />
           <Field name="isImport" type="hidden" />
+          <p style={{marginTop: '2em'}}>Enter your publication information and import the title and other metadata:</p>
           <div className="input-line">
             <div className="input-stack" style={{flex: 0}}>
               <Journal
@@ -135,13 +136,15 @@ function PublicationForm({
                 setAPIJournal={setAPIJournal}
                 controlOptions={
                   {
-                    htmlId: 'publication',
                     labelText: 'Journal name',
+                    htmlId: 'publication',
                     isRequired: true,
                     errorId: 'journal_error',
+                    desBy: 'journal-ex',
                   }
                 }
               />
+              <div id="journal-ex"><i />Nature, Science</div>
             </div>
             {importType !== 'manuscript' && (
               <div className="input-stack">
@@ -150,7 +153,6 @@ function PublicationForm({
                 </label>
                 <Field
                   className="c-input__text"
-                  placeholder="10.5702/qlm.1266rr"
                   type="text"
                   name="primary_article_doi"
                   id="primary_article_doi"
@@ -158,9 +160,11 @@ function PublicationForm({
                     formRef.current.values.isImport = false;
                     formik.handleSubmit();
                   }}
+                  aria-describedby="doi-ex"
                   aria-errormessage="doi_error"
                   required
                 />
+                <div id="doi-ex"><i />10.5702/qlm.1266rr</div>
               </div>
             )}
             {importType !== 'published' && (
@@ -170,7 +174,6 @@ function PublicationForm({
                 </label>
                 <Field
                   className="c-input__text"
-                  placeholder="APPS-D-17-00113"
                   type="text"
                   name="msid"
                   id="msid"
@@ -178,17 +181,19 @@ function PublicationForm({
                     formRef.current.values.isImport = false;
                     formik.handleSubmit();
                   }}
+                  aria-describedby="man-ex"
                   aria-errormessage="msid_error"
                   required
                 />
+                <div id="man-ex"><i />APPS-D-17-00113</div>
               </div>
             )}
             <div className="input-stack">
-              <span style={{height: '21px'}} />
+              <span style={{height: '23px'}} />
               <button
                 type="button"
                 name="commit"
-                className="o-button__plain-text2"
+                className="o-button__plain-text5"
                 hidden={hide}
                 disabled={disable}
                 onClick={() => {

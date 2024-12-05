@@ -4,10 +4,10 @@ import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import RorAutocomplete from '../RorAutocomplete';
-import {showModalYNDialog, showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function FunderForm({
-  resourceId, contributor, removeFunction, updateFunder, groupings,
+  resourceId, contributor, updateFunder, groupings,
 }) {
   const formRef = useRef();
 
@@ -104,9 +104,11 @@ function FunderForm({
                   labelText: 'Granting organization',
                   isRequired: true,
                   errorId: 'funder_error',
+                  desBy: `${contributor.id}funder-ex`,
                 }
               }
             />
+            <div id={`${contributor.id}funder-ex`}><i />National Institutes of Health</div>
             {showSelect && (
               <>
                 <label htmlFor="subfunder_select" className="c-input__label" style={{marginTop: '1em'}}>{showSelect.group_label}</label>
@@ -125,10 +127,10 @@ function FunderForm({
               name="award_number"
               type="text"
               className="js-award_number c-input__text"
-              onBlur={() => { // defaults to formik.handleBlur
-                formik.handleSubmit();
-              }}
+              aria-describedby={`${contributor.id}award-ex`}
+              onBlur={formik.handleSubmit}
             />
+            <div id={`${contributor.id}award-ex`}><i />CA 123456-01A1</div>
           </div>
           <div className="input-stack">
             <label className="input-label optional" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
@@ -138,26 +140,11 @@ function FunderForm({
               name="award_description"
               type="text"
               className="js-award_description c-input__text"
-              onBlur={() => { // defaults to formik.handleBlur
-                formik.handleSubmit();
-              }}
+              aria-describedby={`${contributor.id}desc-ex`}
+              onBlur={formik.handleSubmit}
             />
+            <div id={`${contributor.id}desc-ex`}><i className="ie" />Section of the funder</div>
           </div>
-          <span>
-            <button
-              type="button"
-              className="remove-record"
-              onClick={() => {
-                showModalYNDialog('Are you sure you want to remove this funder?', () => {
-                  removeFunction(contributor.id);
-                });
-              }}
-              aria-label="Remove funding"
-              title="Remove"
-            >
-              <i className="fas fa-trash-can" aria-hidden="true" />
-            </button>
-          </span>
         </Form>
       )}
     </Formik>
@@ -171,6 +158,5 @@ export default FunderForm;
 FunderForm.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   contributor: PropTypes.object.isRequired,
-  removeFunction: PropTypes.func.isRequired,
   updateFunder: PropTypes.func.isRequired,
 };

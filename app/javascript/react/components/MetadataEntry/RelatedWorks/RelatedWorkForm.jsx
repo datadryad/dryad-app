@@ -84,9 +84,7 @@ function RelatedWorkForm(
                 name="work_type"
                 as="select"
                 className="c-input__select"
-                onBlur={() => { // defaults to formik.handleBlur
-                  formik.handleSubmit();
-                }}
+                onBlur={formik.handleSubmit}
               >
                 {workTypes.map((opt) => (
                   <option key={opt[1]} value={opt[1]}>
@@ -103,16 +101,14 @@ function RelatedWorkForm(
                 id={`related_identifier__${relatedIdentifier.id}`}
                 name="related_identifier"
                 type="text"
-                size="40"
-                placeholder="example: https://doi.org/10.1594/PANGAEA.726855"
                 aria-errormessage="works_error"
+                aria-describedby={`${relatedIdentifier.id}url-ex`}
                 className="c-input__text"
-                onBlur={() => { // defaults to formik.handleBlur
-                  formik.handleSubmit();
-                }}
+                onBlur={formik.handleSubmit}
               />
+              <div id={`${relatedIdentifier.id}url-ex`}><i />https://doi.org/10.1594/PANGAEA.726855</div>
             </div>
-            <span>
+            <span style={{display: 'block', alignSelf: 'start'}}>
               <button
                 type="button"
                 className="remove-record"
@@ -130,7 +126,9 @@ function RelatedWorkForm(
           </Form>
         )}
       </Formik>
-      <RelatedWorksErrors relatedIdentifier={relatedIdentifier} />
+      <div role="status">
+        <RelatedWorksErrors relatedIdentifier={relatedIdentifier} />
+      </div>
     </>
   );
 }

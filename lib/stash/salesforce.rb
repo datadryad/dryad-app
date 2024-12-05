@@ -80,7 +80,7 @@ module Stash
     def self.create_case(identifier:, owner:)
       return unless identifier && owner && sf_client
 
-      case_user = identifier.latest_resource&.owner_author || identifier.latest_resource&.user
+      case_user = identifier.latest_resource&.owner_author || identifier.latest_resource&.submitter
 
       case_id = sf_client.create('Case',
                                  Subject: "Your Dryad data submission - DOI:#{identifier.identifier}",
@@ -90,7 +90,7 @@ module Stash
                                  SuppliedName: user_name(case_user),
                                  SuppliedEmail: user_email(case_user),
                                  Journal__c: find_account_by_name(identifier.journal&.title),
-                                 Institutional_Affiliation__c: find_account_by_name(identifier.latest_resource&.user&.tenant&.long_name))
+                                 Institutional_Affiliation__c: find_account_by_name(identifier.latest_resource&.submitter&.tenant&.long_name))
 
       # Update the OwnerId after the case is created, because if the Id does not match
       # an existing SF user with the correct permissions, it would prevent the case from being created.
@@ -121,7 +121,7 @@ module Stash
                kv_hash: { Journal__c: find_account_by_name(resource.identifier.journal&.title) })
       end
 
-      tenant = resource.identifier.latest_resource&.user&.tenant
+      tenant = resource.identifier.latest_resource&.submitter&.tenant
       if tenant.present?
         update(obj_type: 'Case', obj_id: case_id,
                kv_hash: { Institutional_Affiliation__c: find_account_by_tenant(tenant) })

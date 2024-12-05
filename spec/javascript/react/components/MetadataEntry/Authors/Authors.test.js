@@ -13,6 +13,7 @@ const makeAuthor = (resource_id, myOrder) => {
     id: faker.datatype.number({min: 1, max: 32767}),
     author_first_name: faker.name.firstName(),
     author_last_name: faker.name.lastName(),
+    author_org_name: null,
     author_email: faker.internet.email(),
     author_orcid: `${sect()}-${sect()}-${sect()}-${sect()}`,
     resource_id: resource_id || faker.datatype.number({min: 1, max: 32767}),
@@ -40,7 +41,7 @@ describe('Authors', () => {
     render(<Authors resource={resource} setResource={setResource} ownerId={ownerId} admin={admin} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
-    expect(labeledElements.length).toBe(6); // two for each autocomplete list
+    expect(labeledElements.length).toBe(3);
     const firsts = screen.getAllByLabelText('First name', {exact: false});
     expect(firsts.length).toBe(3);
     expect(firsts[0]).toHaveValue(dryadAuthors[2].author_first_name);

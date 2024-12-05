@@ -160,7 +160,7 @@ module StashEngine
       return latest_resource_with_public_metadata if user.nil?
 
       lr = latest_resource
-      return lr if lr&.admin_for_this_item?(user: user)
+      return lr if lr&.permission_to_edit?(user: user)
 
       latest_resource_with_public_metadata
     end
@@ -173,7 +173,7 @@ module StashEngine
       return latest_resource_with_public_download if user.nil?
 
       lr = resources.submitted_only.by_version_desc.first
-      return lr if lr&.admin_for_this_item?(user: user)
+      return lr if lr&.permission_to_edit?(user: user)
 
       latest_resource_with_public_download
     end
@@ -203,8 +203,8 @@ module StashEngine
       resources.reverse.each do |r|
         next unless r.current_editor_id
 
-        user = StashEngine::User.find(r.current_editor_id)
-        return user if user.min_curator?
+        user = StashEngine::User.find_by(id: r.current_editor_id)
+        return user if user&.min_curator?
       end
       nil
     end
@@ -284,9 +284,8 @@ module StashEngine
     end
 
     def record_payment
-      # once we have assigned payment to an entity, keep that entity,
-      # unless it was a journal that the submission is no longer affiliated with
-      # (in general, we don't want to tell a user their payment is covered and then later take it away)
+      # once we have assigned payment to an entity, keep that entity
+      # unless it was a journal that was removed or a new journal covers the dpc
       clear_payment_for_changed_journal
       return if payment_type.present? && payment_type != 'unknown'
 
@@ -635,7 +634,7 @@ module StashEngine
 
     def clear_payment_for_changed_journal
       return unless payment_type.present?
-      return unless payment_type.include?('journal')
+      return unless payment_type.include?('journal') || journal&.will_pay?
       return if payment_id == journal&.single_issn
 
       self.payment_type = nil

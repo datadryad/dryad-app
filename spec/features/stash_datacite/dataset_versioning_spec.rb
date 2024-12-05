@@ -34,7 +34,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       ActionMailer::Base.deliveries = []
       Timecop.travel(Time.now.utc - 5.minutes)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, identifier: @identifier, user_id: @author.id,
+      @resource = create(:resource, :submitted, identifier: @identifier, user: @author,
                                                 tenant_id: @author.tenant_id, accepted_agreement: true)
       create(:description, resource: @resource, description_type: 'technicalinfo')
       create(:data_file, resource: @resource)
@@ -157,7 +157,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
         expect(@resource.current_curation_status).to eql('submitted')
-        expect(@resource.current_editor_id).to eql(@curator.id)
+        expect(@resource.user_id).to eql(@curator.id)
         Timecop.return
       end
     end
@@ -184,7 +184,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
 
         expect(@resource.current_curation_status).to eql('submitted')
-        expect(@resource.current_editor_id).to eql(@curator.id)
+        expect(@resource.user_id).to eql(@curator.id)
       end
 
       it 'has an assigned curator when prior version was :withdrawn', js: true do
@@ -200,7 +200,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
 
         expect(@resource.current_curation_status).to eql('submitted')
-        expect(@resource.current_editor_id).to eql(@curator.id)
+        expect(@resource.user_id).to eql(@curator.id)
       end
 
       it 'is automatically published with simple changes', js: true do
@@ -239,7 +239,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           expect(@resource.current_curation_status).to eql('submitted')
-          expect(@resource.current_editor_id).to eql(curator2.id)
+          expect(@resource.user_id).to eql(curator2.id)
         end
 
         it 'does not use the backup curator when the previous curator is a tenant_curator', js: true do
@@ -259,7 +259,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @resource.reload
 
           expect(@resource.current_curation_status).to eql('submitted')
-          expect(@resource.current_editor_id).to eql(@curator.id)
+          expect(@resource.user_id).to eql(@curator.id)
         end
 
       end

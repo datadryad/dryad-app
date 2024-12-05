@@ -104,7 +104,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
   if (initialValue || replaceValue) {
     return (
       <>
-        <h2>README</h2>
+        <h2 id="md_editor_label">README</h2>
         <div className="readme-columns-final">
           <div>
             <p style={{marginTop: 0}}>
@@ -188,10 +188,14 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
             dataset. It should contain the details needed to interpret and reuse your data, including abbreviations
             and codes, file descriptions, and information about any necessary software.
           </p>
+          <p>Once you&apos;ve uploaded or generated a README, you may continue to revise it in our editor.</p>
           <div className="readme-columns">
             <div>
               <h2 className="o-heading__level2">Need to create a README?</h2>
-              <p>Use our step-by-step tool to generate a README file. After completion your generated README can be added to and revised.</p>
+              <p>
+                Use our step-by-step tool to generate a README file.
+                Some information will be imported from your uploaded files, so make sure your file list is complete.
+              </p>
               <div style={{textAlign: 'center'}}>
                 <button type="button" className="o-button__plain-text1" onClick={() => setWizardStep(1)}>
                   Build a README <i className="fa fa-trowel-bricks fa-flip-horizontal" aria-hidden="true" />
@@ -200,7 +204,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
             </div>
             <div>
               <h2 className="o-heading__level2">Already have a README file?</h2>
-              <p>If you already have a README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a> for your dataset, you can import it here. </p>
+              <p>If you already have a README file in <a href="https://commonmark.org/help/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a> for your dataset, you can import it here. </p>
               <ReadMeImport setValue={setReplaceValue} />
             </div>
           </div>

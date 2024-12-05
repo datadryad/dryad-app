@@ -1,13 +1,13 @@
 module StashEngine
   class DashboardController < ApplicationController
-    before_action :require_login, only: :show
-    before_action :ensure_tenant, only: :show
+    before_action :require_login, only: %i[show user_datasets]
+    before_action :ensure_tenant, only: %i[show user_datasets]
     protect_from_forgery except: :user_datasets
 
     MAX_VALIDATION_TRIES = 5
 
     def choose
-      return redirect_to admin_dashboard_path if current_user.min_admin?
+      return redirect_to admin_dashboard_path if current_user&.min_admin?
 
       redirect_to dashboard_path
     end
@@ -29,8 +29,18 @@ module StashEngine
       @page_size = params[:page_size] || '10'
       respond_to do |format|
         format.js do
-          @datasets = policy_scope(Identifier, policy_scope_class: IdentifierPolicy::DashboardScope).page(@page).per(@page_size)
-          @datasets = @datasets.preload(latest_resource: %i[last_curation_activity stash_version current_resource_state])
+          @datasets = current_user.resources.latest_per_dataset.distinct
+            .joins(:last_curation_activity)
+            .select("stash_engine_resources.*,
+            CASE
+              WHEN status in ('in_progress', 'action_required') THEN 0
+              WHEN status='peer_review' THEN 1
+              WHEN status in ('submitted', 'curation', 'processing') THEN 2
+              WHEN status='withdrawn' THEN 4
+              ELSE 3
+            END as sort_order")
+            .order('sort_order asc, stash_engine_resources.updated_at desc').page(@page).per(@page_size)
+          @datasets = @datasets.preload(%i[last_curation_activity stash_version current_resource_state])
         end
       end
     end

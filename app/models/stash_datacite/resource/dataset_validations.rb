@@ -151,10 +151,10 @@ module StashDatacite
         temp_err = []
         @resource.authors.each_with_index do |author, idx|
 
-          if author.author_first_name.blank? || author.author_last_name.blank?
-            temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {first and last name}",
+          if author.author_first_name.blank?
+            temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {first name}",
                                       page: metadata_page(@resource),
-                                      ids: ["author_first_name__#{author.id}", "author_last_name__#{author.id}"])
+                                      ids: ["author_first_name__#{author.id}"])
           end
 
           affil = author.affiliation || StashDatacite::Affiliation.new # there is always an affiliation this way

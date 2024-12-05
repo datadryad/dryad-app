@@ -252,7 +252,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         end
 
         it 'allows un-assigning a curator, keeping status if it is peer_review' do
-          create(:curation_activity, status: 'peer_review', resource_id: @resource.id, user: @resource.user)
+          create(:curation_activity, status: 'peer_review', resource_id: @resource.id, user: @resource.submitter)
           visit stash_url_helpers.admin_dashboard_path
           expect(page).to have_text('Admin dashboard')
           click_button 'Update curator'
@@ -264,14 +264,14 @@ RSpec.feature 'AdminDashboard', type: :feature do
           click_button('Submit')
           expect(find('#search_results')).not_to have_text(@curator.name)
           @resource.reload
-          expect(@resource.current_editor_id).to eq(nil)
+          expect(@resource.user_id).to eq(nil)
           expect(@resource.current_curation_status).to eq('peer_review')
         end
 
         context :in_curation do
           before(:each) do
             create(:curation_activity_no_callbacks, status: 'curation', user_id: @curator.id, resource_id: @resource.id)
-            @resource.update(current_editor_id: @curator.id, accepted_agreement: true)
+            @resource.update(user_id: @curator.id, accepted_agreement: true)
             visit stash_url_helpers.admin_dashboard_path
           end
 
@@ -296,7 +296,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
             expect(find('#search_results')).not_to have_text(@curator.name)
             expect(find('#search_results')).to have_text('Submitted')
             @resource.reload
-            expect(@resource.current_editor_id).to eq(nil)
+            expect(@resource.user_id).to eq(nil)
             expect(@resource.current_curation_status).to eq('submitted')
           end
 

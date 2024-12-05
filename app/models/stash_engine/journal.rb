@@ -20,6 +20,7 @@
 #  updated_at              :datetime
 #  sponsor_id              :integer
 #  stripe_customer_id      :string(191)
+#  peer_review_custom_text :text(65535)
 #
 # Indexes
 #
@@ -98,16 +99,16 @@ module StashEngine
 
     # Replace an uncontrolled journal name (typically containing '*')
     # with a controlled journal reference, using an id
-    def self.replace_uncontrolled_journal(old_name:, new_id:)
-      j = StashEngine::Journal.find(new_id)
+    def self.replace_uncontrolled_journal(old_name:, new_journal:)
+      j = new_journal
       data = StashEngine::InternalDatum.where(value: old_name)
       idents = data.map(&:identifier_id)
       idents.each do |ident|
         puts "  converting journal for identifier #{ident}"
         update_journal_for_identifier(new_title: j.title, new_issn: j.single_issn, identifier_id: ident)
       end
-      pubs = StashEngine::ResourcePublication.where(publication_name: old_name)
-      pubs.each do |pub|
+      pubs = StashEngine::ResourcePublication.where(publication_name: old_name, publication_issn: [nil, ''])
+      pubs.find_each do |pub|
         puts "  converting journal for resource #{pub.resource_id}"
         update_journal_for_resource(new_title: j.title, new_issn: j.single_issn, resource_id: pub.resource_id)
       end

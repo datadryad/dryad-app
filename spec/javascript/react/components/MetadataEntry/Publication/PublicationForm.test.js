@@ -50,8 +50,8 @@ describe('PublicationFormManuscript', () => {
     render(<PublicationForm {...info} />);
 
     await waitFor(() => api);
-    const labeledElements = screen.getAllByLabelText('Journal name', {exact: false});
-    expect(labeledElements.length).toBe(2);
+    const labeledElements = screen.getAllByLabelText('Journal name');
+    expect(labeledElements.length).toBe(1);
     expect(labeledElements[0]).toHaveAttribute('value', resource_publication.publication_name);
     expect(screen.getByLabelText('Manuscript number')).toHaveValue(resource_publication.manuscript_number);
   });
@@ -129,8 +129,8 @@ describe('PublicationForm', () => {
     render(<PublicationForm {...info} />);
 
     await waitFor(() => api);
-    const labeledElements = screen.getAllByLabelText('Journal name', {exact: false});
-    expect(labeledElements.length).toBe(2);
+    const labeledElements = screen.getAllByLabelText('Journal name');
+    expect(labeledElements.length).toBe(1);
     expect(labeledElements[0]).toHaveAttribute('value', resource_publication.publication_name);
     expect(screen.getByLabelText('DOI')).toHaveValue(primary_article);
   });
