@@ -42,8 +42,8 @@ module StashDatacite
           @metadata_entry = MetadataEntry.new(resource, 'dataset', tenant)
           rights = resource.rights.first
           expect(rights).not_to be_nil
-          expect(rights.rights).to eq('CC0 1.0 Universal (CC0 1.0) Public Domain Dedication')
-          expect(rights.rights_uri).to eq('https://creativecommons.org/publicdomain/zero/1.0/')
+          expect(rights.rights).to eq('Creative Commons Zero v1.0 Universal')
+          expect(rights.rights_uri).to eq('https://spdx.org/licenses/CC0-1.0.html')
         end
 
         it 'creates a publisher if needed' do

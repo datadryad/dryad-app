@@ -198,3 +198,27 @@ mv shibd.service shibd-old.service
 sudo systemctl enable shibd.service
 ```
 
+Renewing certificats for Shibboleth
+===================================
+
+To test the certificate, log in to the machine you are testing and run:
+
+`echo | openssl s_client -showcerts -servername localhost -connect localhost:443 2>/dev/null | openssl x509 -inform pem -noout -text`
+
+The certificate should state that it's from "Let's Encrypt", and it should have valid dates.
+
+To renew a certificate:
+- On the server where you will generate the certificate, update the Apache to respond on port 80 as well as 443. Copy the `datadryad.org.conf` file, and change the new file to respond to port 80.
+- Restart Apache: `apache_restart.sh`
+- In the load balancer, disable servers other than the one you are using to generate the certificate
+- On the server, generate the certificate and install (change the server name in the directories):
+```
+sudo certbot renew
+sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/fullchain.pem /etc/pki/tls/certs/letsencrypt.crt
+sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/privkey.pem /etc/pki/tls/private/letsencrypt.key
+apache_restart.sh
+```
+- Copy the certificate files to other servers and restart Apache on those servers as well
+- Re-enable all servers in the load balancer
+- Remove the "extra" configuration file for Apache
+- If the server is also running Shibboleth services, restart them: `sudo systemctl restart shibd` and verify that Shibboleth is working through Apache `curl -k https://localhost/Shibboleth.sso/Status`
