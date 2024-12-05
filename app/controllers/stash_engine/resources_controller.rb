@@ -1,4 +1,5 @@
 module StashEngine
+  # rubocop:disable Metrics/ClassLength
   class ResourcesController < ApplicationController
     include StashEngine::LandingHelper
 
@@ -258,6 +259,6 @@ module StashEngine
     def update_internal_search
       @resource&.identifier&.update_search_words!
     end
-
   end
+  # rubocop:enable Metrics/ClassLength
 end
