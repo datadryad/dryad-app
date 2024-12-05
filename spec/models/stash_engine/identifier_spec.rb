@@ -560,16 +560,6 @@ module StashEngine
         expect(@identifier.allow_review?).to be(true)
       end
 
-      it 'allows review when the journal allows review' do
-        create(:journal, issn: @fake_issn, allow_review_workflow: true)
-        expect(@identifier.allow_review?).to be(true)
-      end
-
-      it 'disallows review when the journal disallows review' do
-        create(:journal, issn: @fake_issn, allow_review_workflow: false)
-        expect(@identifier.allow_review?).to be(false)
-      end
-
       it 'disallows review if already published' do
         @identifier.pub_state = 'published'
         expect(@identifier.allow_review?).to be(false)

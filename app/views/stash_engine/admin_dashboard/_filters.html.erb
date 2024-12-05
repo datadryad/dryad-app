@@ -19,7 +19,7 @@ end
   <div class="o-admin-form-pair <%= @role_object.blank? || @user_role.role == 'curator' ? 'quarter-width' : 'half-width' %>">
     <%= render partial: 'stash_engine/shared/multi_select', locals: {
       id: 'status',
-      label: 'Status',
+      label: 'Status:',
       field_name: 'filters[status]',
       options: status_select,
       selected: @filters.dig(:status)
@@ -41,7 +41,7 @@ end
     <div class="o-admin-form-pair half-width">
       <%= render partial: 'stash_engine/shared/search_select', locals: {
         id: 'journal',
-        label: 'Journal',
+        label: 'Journal:',
         field_name: 'filters[journal]',
         options_path: '/stash_datacite/publications/autocomplete?term=',
         options_label: 'title',
@@ -62,7 +62,7 @@ end
   <div class="o-admin-form-pair half-width">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
       id: 'funder',
-      label: 'Funder',
+      label: 'Funder:',
       field_name: 'filters[funder]',
       options_path: '/stash_datacite/contributors/autocomplete?query=',
       options_label: 'name',
@@ -73,7 +73,7 @@ end
   <div class="o-admin-form-pair half-width">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
       id: 'affiliation',
-      label: 'Affiliation',
+      label: 'Affiliation:',
       field_name: 'filters[affiliation]',
       options_path: '/stash_datacite/affiliations/autocomplete?query=',
       options_label: 'name',

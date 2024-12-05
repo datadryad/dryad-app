@@ -8,6 +8,7 @@ class ComboboxAutocomplete {
     this.fill = fill
     this.selection = selection
 
+    this.textbox.addEventListener('click', this.open.bind(this))
     this.textbox.addEventListener('beforeinput', this.open.bind(this))
     this.textbox.addEventListener('input', this.enter.bind(this))
 
