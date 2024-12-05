@@ -52,6 +52,7 @@ function ResearchDomain({
               formik.handleSubmit();
             }}
           >
+            <option value="" aria-label="Choose a research domain" />
             {subjectList.map((subj, index) => {
               // key made from subj + count of preceding duplicates
               const key = subj + subjectList.slice(0, index).filter((s) => s === subj).length;

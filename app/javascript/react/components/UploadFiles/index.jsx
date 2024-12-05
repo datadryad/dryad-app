@@ -5,7 +5,7 @@ import {maxFiles, maxSize, maxZenodo} from './maximums';
 export {default} from './UploadFiles';
 export {default as FilesPreview} from './FilesPreview';
 
-export const filesCheck = (files, review) => {
+export const filesCheck = (files, review, admin) => {
   if (files.length > 0) {
     const present = files.filter((f) => f.file_state !== 'deleted');
     const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.upload_file_name !== 'README.md');
@@ -21,7 +21,7 @@ export const filesCheck = (files, review) => {
         <p className="error-text" id="data_error">A maximum of {maxFiles} files can be uploaded per submission. Remove files to proceed</p>
       );
     }
-    if (data.reduce((sum, f) => sum + f.upload_file_size, 0) > maxSize) {
+    if (admin !== 'superuser' && data.reduce((sum, f) => sum + f.upload_file_size, 0) > maxSize) {
       return (
         <p className="error-text" id="data_error">
         Total data file uploads are limited to {formatSizeUnits(maxSize)} per submission. Remove files to proceed

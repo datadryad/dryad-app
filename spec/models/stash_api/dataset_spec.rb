@@ -133,7 +133,7 @@ module StashApi
       end
 
       it 'defaults to the correct license' do
-        expect(@metadata[:license]).to eq('https://creativecommons.org/publicdomain/zero/1.0/')
+        expect(@metadata[:license]).to eq('https://spdx.org/licenses/CC0-1.0.html')
       end
 
       it 'has public visibility when metadata is viewable' do

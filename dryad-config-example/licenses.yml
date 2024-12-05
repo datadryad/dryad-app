@@ -2,8 +2,8 @@
 # and then uri and name
 
 cc0:
-  uri: https://creativecommons.org/publicdomain/zero/1.0/
-  name: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+  uri: https://spdx.org/licenses/CC0-1.0.html
+  name: Creative Commons Zero v1.0 Universal
   explanation: >
     This releases your work to the public domain for any use.
   badge: icon_cc-zero.svg

@@ -30,11 +30,11 @@ module Stash
         uri: URI('https://creativecommons.org/licenses/by/4.0/')
       )
 
-      # Convenience instance for the [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
+      # Convenience instance for the [CC0](https://spdx.org/licenses/CC0-1.0.html)
       # public domain declaration
       CC_ZERO = License.new(
-        name: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
-        uri: URI('https://creativecommons.org/publicdomain/zero/1.0/')
+        name: 'Creative Commons Zero v1.0 Universal',
+        uri: URI('https://spdx.org/licenses/CC0-1.0.html')
       )
     end
   end

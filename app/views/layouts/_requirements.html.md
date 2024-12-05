@@ -23,6 +23,10 @@ Most types of files can be submitted (e.g., text, spreadsheets, video, photograp
 * **Video**: `AVI, MPEG, MP4`
 * **Compressed file archive**: `TAR.GZ, 7Z, ZIP`
 
+<div class="callout">
+<p><span style="background-color: white; border-radius: 3px; padding: 4px 4px 2px">Note:</span> RAR (Roshal ARchive) is a proprietary compression format. Because users may not have access to the necessary tools to open RAR files, we cannot accept them for publication. Please use open, widely supported, and easily accessible formats like those listed above.</p>
+</div>
+
 
 ## File size
 

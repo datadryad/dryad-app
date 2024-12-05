@@ -345,7 +345,7 @@ module Stash
             solr_geom: nil,
             solr_year_i: 2019,
             dct_issued_dt: @resource.publication_date.utc.iso8601,
-            dc_rights_s: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
+            dc_rights_s: 'Creative Commons Zero v1.0 Universal',
             dc_publisher_s: @resource.publisher.publisher,
             dct_temporal_sm: ['2018-11-14'],
             dryad_author_affiliation_id_sm: ['https://ror.example.org/16xx22bs', 'https://ror.example.org/18dl67sn1'],

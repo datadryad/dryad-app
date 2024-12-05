@@ -6,7 +6,7 @@ module StashEngine
 
     before(:each) do
       @uris_by_id = {
-        cc0: 'https://creativecommons.org/publicdomain/zero/1.0/',
+        cc0: 'https://spdx.org/licenses/CC0-1.0.html',
         cc_by: 'https://creativecommons.org/licenses/by/4.0/'
       }.freeze
     end

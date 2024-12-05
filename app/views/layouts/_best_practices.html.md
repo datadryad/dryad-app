@@ -19,7 +19,7 @@ Additionally, if applicable, please do not include any data visualizations that 
 
 ## Make sure your data are shareable
 
-* **All files submitted to Dryad must abide by the terms of the [Creative Commons Zero (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/) waiver**. Under these terms, the author releases the data to the public domain.
+* **All files submitted to Dryad must abide by the terms of the [Creative Commons Zero v1.0 Universal](https://spdx.org/licenses/CC0-1.0.html) waiver**. Under these terms, the author releases the data to the public domain.
     * Review all files and ensure they conform to `CC0` terms and are not covered by copyright claims or other terms-of-use. We cannot archive any files that contain licenses incompatible with `CC0` (`GNU GPL, MIT, CC-BY,` etc.), but we can link to content in a dedicated software repository (Github, Zenodo, Bitbucket, or CRAN, etc.).
     * For more information see [Good data practices: Removing barriers to data reuse with CC0 licensing](https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/), [Why Does Dryad Use CC0](https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/), and [Some dos and don'ts for CC0](https://blog.datadryad.org/2017/09/11/some-dos-and-donts-for-cc0/).
 * Human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines (see <a href="/docs/HumanSubjectsData.pdf">tips for human subjects data<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>).
@@ -127,9 +127,9 @@ Ready to get started? [Log in](/stash/sessions/choose_login) and go to the "My d
 ### Additional resources
 
 * Institutional data librarians are an outstanding resource. Check with your university library's data management services team.
-* [Cornell University Research Data Management Service Group's Guide to writing "readme" style metadata](https://data.research.cornell.edu/content/readme)
-* [Why Dryad uses Creative Commons Zero](https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/)
-* <a href="https://www.dataone.org/sites/all/documents/DataONE_BP_Primer_020212.pdf">DataONE Primer on Data Management Best Practices<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>
-* [Introduction to Open Science: Why data versioning and data care practices are key for science and social science](http://blogs.lse.ac.uk/impactofsocialsciences/2015/02/09/data-versioning-open-science/)
-* [Making data Findable, Accessible, Interoperable, and Reusable (FAIR)](https://www.force11.org/group/fairgroup/fairprinciples)
-* [Data organization in spreadsheets](http://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989)
+* <a href="https://data.research.cornell.edu/content/readme" target="_blank">Cornell University Research Data Management Service Group's Guide to writing "readme" style metadata<span class="screen-reader-only"> (opens in new window)</span></a>
+* <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/" target="_blank">Why Dryad uses Creative Commons Zero<span class="screen-reader-only"> (opens in new window)</span></a>
+* <a href="https://dataoneorg.github.io/Education/bestpractices/" target="_blank">DataONE Primer on Data Management Best Practices<span class="screen-reader-only"> (opens in new window)</span></a>
+* <a href="https://blogs.lse.ac.uk/impactofsocialsciences/2015/02/09/data-versioning-open-science/" target="_blank">Introduction to Open Science: Why data versioning and data care practices are key for science and social science<span class="screen-reader-only"> (opens in new window)</span></a>
+* <a href="https://www.force11.org/group/fairgroup/fairprinciples" target="_blank">Making data Findable, Accessible, Interoperable, and Reusable (FAIR)<span class="screen-reader-only"> (opens in new window)</span></a>
+* <a href="https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989" target="_blank">Data organization in spreadsheets<span class="screen-reader-only"> (opens in new window)</span></a>
