@@ -39,7 +39,7 @@ export default function File({file, clickRemove, clickValidationReport}) {
     case TabularCheckStatus.checking:
       return (
         <>
-          <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" />
+          <i className="fas fa-circle-notch fa-spin" aria-hidden="true" />
           <span className="screen-reader-only">Validating...</span>
         </>
       );

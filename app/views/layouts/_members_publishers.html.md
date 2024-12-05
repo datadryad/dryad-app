@@ -22,6 +22,7 @@
   <li>Oxford University Press</li>
   <li>The Palaeontological Association</li>
   <li>The Paleontological Society</li>
+  <li>PLOS</li>
   <li>Rockefeller University Press</li>
   <li>Royal Entomological Society</li>
   <li>The Royal Society</li>
