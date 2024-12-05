@@ -164,7 +164,8 @@ namespace :identifiers do
         end
       end
 
-      if last_user_activity.present? && last_user_activity < 1.year.ago
+      # Only remove the files if two years have passed since the last user activity
+      if last_user_activity.present? && last_user_activity < 2.years.ago
         log "ABANDONED #{i.identifier} -- #{i.id} -- size #{i.latest_resource.size}"
 
         if dry_run
@@ -1206,7 +1207,7 @@ namespace :curation_stats do
 
   desc 'Recalculate any curation stats from the past three days, not counting today'
   task update_recent: :environment do
-    (Time.now.utc.to_date - 4.days..Time.now.utc.to_date - 1.day).find_each do |date|
+    (Time.now.utc.to_date - 4.days..Time.now.utc.to_date - 1.day).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago
