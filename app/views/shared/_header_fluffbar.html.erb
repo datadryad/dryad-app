@@ -6,7 +6,7 @@
 
 <% if controller_name == 'catalog' && (has_search_parameters? || params[:action] == 'show') %>
   <div class="geobl-search-spacing">
-    <%= render_search_bar  %>
+    <%= render blacklight_config.view_config(document_index_view_type).search_bar_component.new(url: '/search', params: params)  %>
   </div>
 <% else %>
   <div class='geobl-homepage-masthead jumbotron'>
@@ -19,7 +19,7 @@
     <div class='row justify-content-md-center'>
       <div class='col-md-6 col-sm-12'>
         <div class='navbar-search'>
-          <%= render_search_bar %>
+          <%= render blacklight_config.view_config(document_index_view_type).search_bar_component.new(url: '/search', params: params)  %>
         </div>
       </div>
     </div>
