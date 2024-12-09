@@ -9,7 +9,7 @@ require 'cgi'
 # came from another class, but it's the only method we need from that class.
 #
 # The Datacite::Mapping patches extra methods into an external gem David wrote to make classes for every enum and they
-# are used to special-sauce output for SOLR and geoblacklight's schema.
+# are used to special-sauce output for SOLR and blacklight's schema.
 
 # these patch datacite mapping modules for some extra stuff David added
 module Datacite
@@ -188,8 +188,7 @@ module Stash
         Datacite::Mapping::GeoLocationBox.new(lat_min, long_min, lat_max, long_max) if lat_min && long_min && lat_max && long_max
       end
 
-      # converts to DublinCore Terms, temporal, see http://journal.code4lib.org/articles/9710 or
-      # https://github.com/geoblacklight/geoblacklight-schema and seems very similar to the annotation going
+      # converts to DublinCore Terms, temporal, see http://journal.code4lib.org/articles/9710,
       # into the original DataCite element.  https://terms.tdwg.org/wiki/dcterms:temporal
       #
       # method takes the values supplied and also adds every year for a range so people can search for

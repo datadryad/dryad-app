@@ -118,12 +118,6 @@ We welcome collaborations to develop additional modules for additional metadata 
 <td style="text-align: left">Self-depositing made easy. Simple workflow, drag-and-drop upload, simple navigation, clean data publication pages, user dashboards</td>
 </tr>
 <tr>
-<td style="text-align: left">Geolocation - Search</td>
-<td style="text-align: center"></td>
-<td style="text-align: center">X</td>
-<td style="text-align: left">With GeoBlacklight, we can offer search by location</td>
-</tr>
-<tr>
 <td style="text-align: left">Robust Search</td>
 <td style="text-align: center"></td>
 <td style="text-align: center">X</td>
