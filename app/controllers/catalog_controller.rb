@@ -141,7 +141,7 @@ class CatalogController < ApplicationController
         'relatedWorkRelationship' => 'primary_article'
       }
     ).search['docs']
-    related_dois = related_dois.map{|a| a['dc_identifier_s'].gsub('doi:', '')} if related_dois.any?
+    related_dois = related_dois.map { |a| a['dc_identifier_s'].gsub('doi:', '') } if related_dois.any?
     related_ids = StashEngine::Identifier.where(identifier: related_dois)
 
     identifiers = internal_data + related_ids

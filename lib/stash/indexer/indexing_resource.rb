@@ -89,7 +89,7 @@ module Stash
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def formatted_related_works
-        @resource.related_identifiers.map{|rw| "id=#{rw.related_identifier},type=#{rw.work_type}" if rw.related_identifier.present? }.uniq.compact
+        @resource.related_identifiers.map { |rw| "id=#{rw.related_identifier},type=#{rw.work_type}" if rw.related_identifier.present? }.uniq.compact
       end
 
       def default_title

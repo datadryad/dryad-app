@@ -692,7 +692,7 @@ module StashApi
       end
 
       it 'allows searches by relatedWorkIdentifier' do
-        get "/api/v2/search?relatedWorkIdentifier=*123*", headers: default_authenticated_headers
+        get '/api/v2/search?relatedWorkIdentifier=*123*', headers: default_authenticated_headers
         output = response_body_hash
         expect(output['_embedded']['stash:datasets'].size).to eq(1)
       end
