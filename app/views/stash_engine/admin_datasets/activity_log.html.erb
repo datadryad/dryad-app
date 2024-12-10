@@ -156,6 +156,18 @@
           Please only do this if you know the author is unable/unwilling to submit it.</p>
       </div>
 
+      <% if policy([:stash_engine, :admin_datasets]).delete_dataset? && can_user_delete_identifier?(@identifier) %>
+        <div style="float: left">
+          <%= form_with(url: stash_url_helpers.ds_admin_destroy_path(id: @identifier&.id),
+                        method: :delete, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
+            <button class="o-button__submit" data-confirm="Are you sure you want to permanently delete this dataset? This action cannot be undone.">Remove dataset</button>
+            <%= hidden_field_tag :id, @identifier.id, id: "identifier_id_#{@identifier.id}" %>
+          <% end %>
+          <p>Deleting a dataset will delete all its data and files.</p>
+        </div>
+        <div style="clear: both"></div>
+      <% end %>
+
       <% if policy([:stash_engine, :admin_datasets]).waiver_add? && @identifier.payment_type != 'waiver' %>
         <div style="float: left" id="apply_fee_waiver">
           <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
