@@ -360,8 +360,7 @@ module Stash
             funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
             funder_ror_ids_sm: @resource.funders.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
             sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
-            rw_identifier_sim: @resource.related_identifiers.map(&:related_identifier).reject(&:blank?).uniq,
-            rw_type_sim: @resource.related_identifiers.map(&:related_identifier_type).reject(&:blank?).uniq
+            rw_sim: ['id=doi123,type=primary_article']
           }
           expect(mega_hash).to eql(expected_mega_hash)
         end
