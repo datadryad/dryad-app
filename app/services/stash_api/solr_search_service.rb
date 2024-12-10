@@ -54,21 +54,27 @@ module StashApi
 
       add_date_filter('updated_at_dt', filters['modifiedSince'], 'NOW') if filters['modifiedSince']
       add_date_filter('updated_at_dt', '*', filters['modifiedBefore']) if filters['modifiedBefore']
-
       add_text_filter('dryad_related_publication_issn_s', filters['journalISSN'])
-      add_text_filter('rw_identifier_tmi', filters['relatedWorkIdentifier'])
-      add_text_filter('rw_type_tmi', filters['relatedWorkRelationship'])
+      add_related_work_filter(filters['relatedWorkIdentifier'], filters['relatedWorkRelationship'])
 
       @fq_array
     end
 
     def add_text_filter(solr_field, value)
       @fq_array << "#{solr_field}:\"#{value}\"" if value
-      # @fq_array << "#{solr_field}:\"#{CGI.escape(value)}\"" if value
     end
 
     def add_date_filter(solr_field, start_value, end_value)
       @fq_array << "#{solr_field}:[#{start_value} TO #{end_value}]"
+    end
+
+    def add_related_work_filter(id, relationship)
+      return if id.blank? && relationship.blank?
+
+      query = id.present? ? "id=#{id}" : '*'
+      query += relationship.present? ? ",type=#{relationship}" : ',*'
+
+      @fq_array << "rw_sim:#{query}"
     end
   end
 end
