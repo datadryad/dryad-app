@@ -133,10 +133,16 @@ class CatalogController < ApplicationController
     internal_data = StashEngine::Identifier
       .publicly_viewable.distinct.joins(:internal_data)
       .where(where_clause, internal_datum_types, params[:query])
-    related_ids = StashEngine::Identifier
-      .publicly_viewable.distinct.joins(resources: :related_identifiers)
-      .where(related_identifiers: { work_type: StashDatacite::RelatedIdentifier.work_types[:primary_article] })
-      .where("related_identifier like '%#{params[:query]}'")
+
+    related_dois = StashApi::SolrSearchService.new(
+      query: nil,
+      filters: {
+        'relatedWorkIdentifier' => "*#{params[:query]}",
+        'relatedWorkRelationship' => 'primary_article'
+      }
+    ).search['docs']
+    related_dois = related_dois.map { |a| a['dc_identifier_s'].gsub('doi:', '') } if related_dois.any?
+    related_ids = StashEngine::Identifier.where(identifier: related_dois)
 
     identifiers = internal_data + related_ids
 
