@@ -1,6 +1,12 @@
 module StashEngine
   class IdentifierPolicy < ApplicationPolicy
 
+    def destroy?
+      @user.superuser? &&
+        @record.resources.count == 1 &&
+        @record.resources.first.curation_activities.pluck(:status).uniq == ['in_progress']
+    end
+
     class Scope
       def initialize(user, scope)
         @user = user

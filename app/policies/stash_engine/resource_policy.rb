@@ -19,8 +19,8 @@ module StashEngine
 
     def curator_edit?
       (curate? &&
-      (@resource.current_resource_state&.resource_state == 'submitted')) ||
-      (@resource.current_resource_state&.resource_state == 'in_progress' && @resource&.user_id == @user.id)
+      (@record.current_resource_state&.resource_state == 'submitted')) ||
+      (@record.current_resource_state&.resource_state == 'in_progress' && @record&.user_id == @user.id)
     end
 
     class VersionScope
