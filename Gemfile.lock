@@ -835,7 +835,7 @@ DEPENDENCIES
   puma (= 6.4.3)
   pundit (~> 2.3)
   rack-attack
-  rails (~> 7.0.8.5)
+  rails (~> 7.0.8.7)
   rb-readline
   rdoc (~> 6.1.1)
   react-rails (~> 2.6.2)
