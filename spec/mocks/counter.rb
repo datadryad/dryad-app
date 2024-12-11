@@ -15,7 +15,7 @@ module Mocks
                 total: 67,
                 'message-action': 'create',
                 'source-token': '43ba99ae-5cf0-11e8-9c2d-fa7ae01bbebc',
-                license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+                license: 'https://spdx.org/licenses/CC0-1.0.html',
                 'occurred-at': '2011-02-01T00:00:00.000Z',
                 timestamp: '2019-09-07T23:53:57.716Z'
               } }
