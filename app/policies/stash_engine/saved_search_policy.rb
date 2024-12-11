@@ -2,7 +2,7 @@ module StashEngine
   class SavedSearchPolicy < ApplicationPolicy
 
     def index?
-      @user.id == @resource.user_id
+      @user.id == @record.user_id
     end
 
     def create?
