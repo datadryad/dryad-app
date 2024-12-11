@@ -22,19 +22,19 @@ module StashEngine
 
     # Search the RorOrgs for the given string. This will search name, acronyms, aliases, etc.
     # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }
-    def self.find_by_ror_name(query)
+    def self.find_by_ror_name(query, max_results = ROR_MAX_RESULTS)
       return [] unless query.present?
 
       query = query.downcase
       # First, find matches at the beginning of the name string, and exact matches in the acronyms/aliases
       resp = where("LOWER(name) LIKE ? OR JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-                   "#{query}%", query.to_s, query.to_s).limit(ROR_MAX_RESULTS)
+                   "#{query}%", query.to_s, query.to_s).limit(max_results)
       results = resp.map do |r|
         { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
       end
 
       # If we don't have enough results, find matches at the beginning of the acronyms/aliases
-      if results.size < ROR_MAX_RESULTS
+      if results.size < max_results
         resp = where("JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
                      "#{query}%", "#{query}%").limit(ROR_MAX_RESULTS - results.size)
         resp.each do |r|
@@ -43,8 +43,8 @@ module StashEngine
       end
 
       # If we don't have enough results, find matches elsewhere in the name string
-      if results.size < ROR_MAX_RESULTS
-        resp = where('LOWER(name) LIKE ?', "%#{query}%").limit(ROR_MAX_RESULTS - results.size)
+      if results.size < max_results
+        resp = where('LOWER(name) LIKE ?', "%#{query}%").limit(max_results - results.size)
         resp.each do |r|
           results << { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
         end
