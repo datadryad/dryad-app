@@ -4,6 +4,7 @@ import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
 import sanitize from '../../../lib/sanitize_filename';
 import {formatSizeUnits} from '../../../lib/utils';
+import {pollingDelay} from './pollingDelay';
 import FailedUrlList from './FailedUrlList/FailedUrlList';
 import FileList from './FileList/FileList';
 import {TabularCheckStatus} from './FileList/File';
@@ -91,13 +92,12 @@ export default function UploadFiles({
   const modalValidationRef = useRef(null);
   const interval = useRef(null);
 
-  const pollingDelay = 10000;
   const maxFiles = config_maximums.files;
   const Messages = {
     fileReadme: 'Please prepare your README on the README page.',
     fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
     filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
-    tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
+    tooManyFiles: `You may not upload more than ${maxFiles} individual files of this type.`,
   };
 
   const isValidTabular = (file) => (ValidTabular.extensions.includes(file.sanitized_name.split('.').pop())
@@ -301,7 +301,7 @@ export default function UploadFiles({
     setWarning(null);
     setSubmitDisabled(true);
     const files = discardFilesAlreadyChosen([...event.target.files], uploadType);
-    const fileCount = chosenFiles.length + files.length;
+    const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
     if (fileCount > maxFiles) {
       setWarning(Messages.tooManyFiles);
     } else {
