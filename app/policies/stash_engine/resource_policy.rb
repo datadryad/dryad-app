@@ -24,7 +24,7 @@ module StashEngine
     end
 
     def change_status?
-      @resource.curatable? || @user.superuser?
+      @record.curatable? || @user.superuser?
     end
 
     class VersionScope
