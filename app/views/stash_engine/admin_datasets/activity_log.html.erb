@@ -156,7 +156,7 @@
           Please only do this if you know the author is unable/unwilling to submit it.</p>
       </div>
 
-      <% if policy([:stash_engine, :admin_datasets]).delete_dataset? && can_user_delete_identifier?(@identifier) %>
+      <% if policy(@identifier).destroy? %>
         <div style="float: left">
           <%= form_with(url: stash_url_helpers.ds_admin_destroy_path(id: @identifier&.id),
                         method: :delete, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>

@@ -43,8 +43,8 @@ module StashEngine
             subject
 
             expect(response).to have_http_status(302)
-            expect(response.headers['Location']).to eq(activity_log_url(identifier.id))
-            expect(controller.flash[:alert]).to eq('This dataset can not be deleted.')
+            expect(response.headers['Location']).to include(choose_dashboard_url)
+            expect(controller.flash[:alert]).to eq('You are not authorized to view this information.')
           end
         end
 
