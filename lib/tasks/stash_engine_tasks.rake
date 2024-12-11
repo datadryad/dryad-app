@@ -1199,7 +1199,7 @@ namespace :curation_stats do
   desc 'Calculate any curation stats that are missing from v2 launch day until yesterday'
   task recalculate_all: :environment do
     launch_day = Date.new(2019, 9, 17)
-    (launch_day..Time.now.utc.to_date - 1.day).find_each do |date|
+    (launch_day..Time.now.utc.to_date - 1.day).each do |date|
       print '.'
       stats = StashEngine::CurationStats.find_or_create_by(date: date)
       stats.recalculate unless stats.created_at > 2.seconds.ago

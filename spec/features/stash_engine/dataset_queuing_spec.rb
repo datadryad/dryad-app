@@ -10,7 +10,6 @@ RSpec.feature 'DatasetQueuing', type: :feature do
   include Mocks::RSolr
   include Mocks::Stripe
   include Mocks::Salesforce
-  include AjaxHelper
 
   before(:each) do
     FileUtils.rm_f(hold_submissions_path)
