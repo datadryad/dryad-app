@@ -107,4 +107,5 @@ RSpec.configure do |config|
   end
 
   config.include React::Rails::TestHelper
+  config.include Rails.application.routes.url_helpers, type: :request
 end

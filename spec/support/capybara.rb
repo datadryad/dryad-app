@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'solr'
-require_relative 'helpers/ajax_helper'
+require_relative 'helpers/page_load_helper'
 require_relative 'helpers/capybara_helper'
 require_relative 'helpers/tinymce_helper'
 require_relative 'helpers/routes_helper'
@@ -73,7 +73,7 @@ Capybara.configure do |config|
 end
 
 RSpec.configure do |config|
-  # config.include(AjaxHelper, type: :feature)
+  config.include(PageLoadHelper, type: :feature)
   config.include(CapybaraHelper, type: :feature)
 
   config.before(:all, type: :feature) do

@@ -6,7 +6,7 @@ module StashEngine
     end
 
     def save_search?
-      @user.id == @resource.user_id
+      @user.id == @record.user_id
     end
 
   end
