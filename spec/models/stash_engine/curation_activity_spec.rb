@@ -186,14 +186,29 @@ module StashEngine
     end
 
     describe 'self.allowed_states(current_state)' do
-      it 'indicates the states that are allowed from each' do
-        expect(CurationActivity.allowed_states('curation')).to \
-          eq(%w[processing peer_review curation action_required withdrawn embargoed published])
+      context 'when user is an admin' do
+        let(:user) { create(:user, role: 'admin') }
 
-        expect(CurationActivity.allowed_states('withdrawn')).to \
-          eq(%w[withdrawn curation])
+        it 'indicates the states that are allowed from each' do
+          expect(CurationActivity.allowed_states('in_progress', user)).to eq(%w[in_progress])
+
+          expect(CurationActivity.allowed_states('curation', user)).to \
+            eq(%w[processing peer_review curation action_required withdrawn embargoed published])
+
+          expect(CurationActivity.allowed_states('withdrawn', user)).to \
+            eq(%w[withdrawn curation])
+        end
+      end
+
+      context 'when user is an superuser' do
+        let(:user) { create(:user, role: 'superuser') }
+
+        CurationActivity::CURATOR_ALLOWED_STATES.each_key do |status|
+          it "allows withdrawn for #{status} status" do
+            expect(CurationActivity.allowed_states(status, user)).to include('withdrawn')
+          end
+        end
       end
     end
-
   end
 end
