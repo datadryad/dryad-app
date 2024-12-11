@@ -11,6 +11,9 @@ module CollectionHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     visit('/stash/resources/new?collection')
+    wait_for_ajax
+    wait_for_page_load('Describe collection')
+    navigate_to_metadata
   end
 
   def navigate_to_metadata

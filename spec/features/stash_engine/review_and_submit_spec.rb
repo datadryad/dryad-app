@@ -13,7 +13,6 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
   include Mocks::Stripe
   include Mocks::Aws
   include Mocks::Salesforce
-  include AjaxHelper
 
   before(:each) do
     mock_repository!

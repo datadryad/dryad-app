@@ -1,4 +1,4 @@
-module AjaxHelper
+module PageLoadHelper
 
   def wait_for_ajax(seconds = Capybara.default_max_wait_time)
     Timeout.timeout(seconds) do
@@ -10,8 +10,7 @@ module AjaxHelper
     page.evaluate_script('jQuery.active').zero?
   end
 
-end
-
-RSpec.configure do |config|
-  config.include(AjaxHelper, type: :system)
+  def wait_for_page_load(text)
+    expect(page).to have_content text
+  end
 end

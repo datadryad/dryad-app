@@ -101,7 +101,7 @@
     "puppeteer": "^23.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.27.0",
+    "react-router-dom": "^7.0.2",
     "react_ujs": "^2.6.1",
     "sass": "^1.49.10",
     "shakapacker": "6.6.0",
@@ -141,7 +141,6 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "express": "^4.21.0",
     "jest": "^29.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-fail-on-console": "^2.2.3",
@@ -154,7 +153,7 @@
     "stylelint": "^16.0.0",
     "stylelint-config-property-sort-order-smacss": "^10.0.0",
     "stylelint-config-recommended-scss": "^14.0.0",
-    "webpack-dev-server": "^5.1.0"
+    "webpack-dev-server": "^5.2.0"
   },
   "resolutions": {
     "nanoid": "<4.0.0"

@@ -11,7 +11,7 @@ module StashEngine
 
     def file_note?
       @user.min_app_admin? ||
-      @resource.users.include?(@user)
+      @record.users.include?(@user)
     end
 
   end

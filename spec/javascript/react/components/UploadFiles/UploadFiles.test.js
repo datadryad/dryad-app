@@ -36,8 +36,7 @@ jest.mock('evaporate', () => ({
     }),
   })),
 }));
-jest.mock('../../../../../app/javascript/react/components/UploadFiles/maximums', () => ({
-  maxFiles: 3,
+jest.mock('../../../../../app/javascript/react/components/UploadFiles/pollingDelay', () => ({
   pollingDelay: 100,
 }));
 
@@ -96,7 +95,8 @@ describe('UploadFiles', () => {
       },
       config_s3: {table: {region: 'us-west-2', bucket: 'a-test-bucket', key: 'abcdefg'}},
       s3_dir_name: 'b759e787-333',
-      config_frictionless: {},
+      config_maximums: {files: 3},
+      config_payments: {large_file_size: 500000},
     };
   });
 
@@ -210,7 +210,7 @@ describe('UploadFiles', () => {
       expect(screen.getByText('data.csv')).toBeInTheDocument();
       expect(screen.queryByText('Pending')).not.toBeInTheDocument();
       expect(screen.getByText('Uploaded')).toBeInTheDocument();
-      expect(screen.getByText('180 KB')).toBeInTheDocument();
+      expect(screen.getAllByText('180 KB')[0]).toBeInTheDocument();
     });
   });
 
@@ -226,7 +226,7 @@ describe('UploadFiles', () => {
     axios.post.mockResolvedValueOnce(postB);
     axios.get.mockResolvedValueOnce(get);
 
-    info.config_frictionless = {size_limit: 200000};
+    info.config_maximums.frictionless = 200000;
     render(<UploadFiles {...info} />);
 
     const [input] = screen.getAllByLabelText('Choose files');
@@ -255,7 +255,7 @@ describe('UploadFiles', () => {
     axios.post.mockResolvedValueOnce(software_data);
 
     info.resource.generic_files = errorFiles;
-    info.config_frictionless = {size_limit: 200000};
+    info.config_maximums.frictionless = 200000;
     render(<UploadFiles {...info} />);
 
     const buttons = screen.getAllByText(/View \d*\s?alerts/);
@@ -273,7 +273,7 @@ describe('UploadFiles', () => {
     axios.post.mockResolvedValueOnce(software_data);
 
     info.resource.generic_files = errorFiles;
-    info.config_frictionless = {size_limit: 200000};
+    info.config_maximums.frictionless = 200000;
     render(<UploadFiles {...info} />);
 
     const buttons = screen.getAllByText(/View \d*\s?alerts/);
@@ -345,14 +345,13 @@ describe('UploadFiles', () => {
   it('does not allow more than the max allowed files', async () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
-
+    info.config_maximums.files = 1;
     info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
 
-    const [data, soft] = screen.getAllByLabelText('Choose files');
+    const [data] = screen.getAllByLabelText('Choose files');
     await waitFor(() => userEvent.upload(data, [files[1]]));
-    userEvent.upload(soft, files);
-    expect(screen.getByText('You may not upload more than 3 individual files.')).toBeInTheDocument();
+    expect(screen.getByText('You may not upload more than 1 individual files of this type.')).toBeInTheDocument();
   });
 
   it('does not show the file note when files are not edited', () => {

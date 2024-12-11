@@ -68,7 +68,7 @@ export default function FacilityForm({resource, setResource}) {
             }}
           />
           <div id="facility-ex">
-            <i className="hint" />A field or other station or organization where research was conducted, apart from affiliations
+            <i />A field or other station or organization where research was conducted, apart from affiliations
           </div>
         </Form>
       )}

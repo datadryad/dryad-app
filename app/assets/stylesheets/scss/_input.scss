@@ -32,17 +32,15 @@ input {
 	margin-top: .35ch;
 	i:not(.fas, .far) {
 		 &:before {
+		 	font-family: 'Font Awesome 6 Free';
 			font-style: normal;
+			font-size: .75rem;
 			display: inline-block;
-			content: 'e.g.';
+			line-height: 0;
+			vertical-align: 1px;
+			content: '\f059' / 'Hint:';
 			color: $dark-gray;
 			margin-right: .5ch;
-		}
-		&.hint:before {
-			content: 'Hint:';
-		}
-		&.ie:before {
-			content: 'i.e.'
 		}
 	}
 }

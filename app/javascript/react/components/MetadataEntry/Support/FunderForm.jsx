@@ -143,7 +143,7 @@ function FunderForm({
               aria-describedby={`${contributor.id}desc-ex`}
               onBlur={formik.handleSubmit}
             />
-            <div id={`${contributor.id}desc-ex`}><i className="ie" />Section of the funder</div>
+            <div id={`${contributor.id}desc-ex`}><i />Section of the funder</div>
           </div>
         </Form>
       )}
