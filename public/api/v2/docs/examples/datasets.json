@@ -63,7 +63,7 @@
         "publicationDate": "2020-01-01",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2HM58Q3S",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
         "_links": {
@@ -194,7 +194,7 @@
         "publicationDate": "2020-02-01",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2474DX0J",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
         "id": "doi:10.5072/FK22N55P2B",
@@ -245,7 +245,7 @@
         "publicationDate": "2020-01-07",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK28W3G720",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
         "_links": {
@@ -290,7 +290,7 @@
         "publicationDate": "2020-01-07",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2MK6CD6D",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
         "identifier": "doi:10.5072/FK2C82BM6C",
@@ -359,7 +359,7 @@
         "publicationDate": "2020-04-17",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK24T6N929",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
         "_links": {
@@ -410,7 +410,7 @@
         "publicationDate": "2020-04-19",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2QJ7G49H",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
         "_links": {
@@ -455,7 +455,7 @@
         "publicationDate": "2020-05-01",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2J966H3B",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
         "_links": {
@@ -500,7 +500,7 @@
         "publicationDate": "2020-05-10",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2T151W7S",
-        "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license": "https://spdx.org/licenses/CC0-1.0.html"
       }
     ]
   }
