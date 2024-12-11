@@ -9,8 +9,8 @@
     <dc:subject>Epithelium</dc:subject>
     <dc:subject>Barrett's esophagus</dc:subject>
     <dc:type>dataset</dc:type>
-    <dc:rights>CC0 1.0 Universal (CC0 1.0) Public Domain Dedication</dc:rights>
-    <dcterms:license xsi:type="dcterms:URI">https://creativecommons.org/publicdomain/zero/1.0/</dcterms:license>
+    <dc:rights>Creative Commons Zero v1.0 Universal</dc:rights>
+    <dcterms:license xsi:type="dcterms:URI">https://spdx.org/licenses/CC0-1.0.html</dcterms:license>
     <dc:description>Mammalian esophagus exhibits a remarkable change in epithelial structure
         during the transition from embryo to adult. However, the molecular
         mechanisms of esophageal epithelial development are not well understood.

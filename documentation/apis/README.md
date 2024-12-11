@@ -50,3 +50,24 @@ Dryad maintains a variety of reports regarding its content.
 - Reports that are automatically generated on a regular basis are available at `https://datadryad.org/api/v2/reports`
 - Reports that are generated less frequently are available through our [Data about Dryad](https://github.com/datadryad/dryad-data/) repository
 
+
+API Versioning
+============
+
+The Dryad API uses [Semantic Versioning](https://semver.org/) to track changes to the API. 
+
+The current version of our API is `2.1.0`. This is also the only supported API versions, at the moment.
+
+In order to use the latest API version, you can:
+- Use `https://datadryad.org/api/v2/` as the base URL for all API requests.
+- You can also send send the `X-API-Version: 2.1.0`
+
+We added 2 new response headers:
+- The `X-API-Version` header to allow clients to specify the version of the API they are using.
+- The `X-API-Deprecation` header to notify clients if the version they are using is deprecated and will be removed in the future.
+
+In case a bad version number is used, the API will respond with:
+- `400` error status.
+- `{ "error": "Unsupported API version: {requested-version}, latest version is: 2.1.0" }` in the response body.
+- The `X-API-Version` header set to the version of the API you requested.
+- The `X-API-Deprecation` header set `true`. This header will not be returned in case the version you are using is not deprecated.
