@@ -5,7 +5,7 @@ import Calculations from './Calculations';
 import InvoiceForm from './InvoiceForm';
 
 export default function Agreements({
-  resource, setResource, form, previous, ownerId, setAuthorStep, preview = false,
+  resource, setResource, form, previous, ownerId, setAuthorStep, config, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -180,7 +180,7 @@ export default function Agreements({
               {previous && resource.tenant !== previous.tenant && <p className="del ins">Member institution changed</p>}
             </>
           )}
-          {dpc.user_must_pay && <Calculations resource={resource} previous={previous} dpc={dpc} />}
+          {dpc.user_must_pay && <Calculations resource={resource} previous={previous} dpc={dpc.dpc} config={config} />}
         </>
       )}
       {preview ? (

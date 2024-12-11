@@ -4,7 +4,6 @@ import Evaporate from 'evaporate';
 import AWS from 'aws-sdk';
 import sanitize from '../../../lib/sanitize_filename';
 import {formatSizeUnits} from '../../../lib/utils';
-import {maxFiles, pollingDelay} from './maximums';
 import FailedUrlList from './FailedUrlList/FailedUrlList';
 import FileList from './FileList/FileList';
 import {TabularCheckStatus} from './FileList/File';
@@ -33,12 +32,6 @@ const AllowedUploadFileTypes = {
   data: 'data',
   software: 'sfw',
   supp: 'supp',
-};
-const Messages = {
-  fileReadme: 'Please prepare your README on the README page.',
-  fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
-  filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
-  tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
 };
 const ValidTabular = {
   extensions: ['csv', 'tsv', 'xls', 'xlsx', 'json', 'xml'],
@@ -79,7 +72,7 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  resource, setResource, previous, config_frictionless, config_s3, s3_dir_name,
+  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name,
 }) {
   const [chosenFiles, setChosenFiles] = useState([]);
   const [validating, setValidating] = useState([]);
@@ -98,9 +91,18 @@ export default function UploadFiles({
   const modalValidationRef = useRef(null);
   const interval = useRef(null);
 
+  const pollingDelay = 10000;
+  const maxFiles = config_maximums.files;
+  const Messages = {
+    fileReadme: 'Please prepare your README on the README page.',
+    fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
+    filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
+    tooManyFiles: `You may not upload more than ${maxFiles} individual files.`,
+  };
+
   const isValidTabular = (file) => (ValidTabular.extensions.includes(file.sanitized_name.split('.').pop())
             || ValidTabular.mime_types.includes(file.upload_content_type))
-            && (file.upload_file_size <= config_frictionless.size_limit);
+            && (file.upload_file_size <= config_maximums.frictionless);
 
   const labelNonTabular = (files) => {
     files.map((file) => {
@@ -556,10 +558,11 @@ export default function UploadFiles({
       {chosenFiles.length > 0 ? (
         <>
           <FileList
+            config={config_payments}
             chosenFiles={chosenFiles}
             clickedRemove={removeFileHandler}
             clickedValidationReport={(file) => setValFile(file)}
-            totalSize={formatSizeUnits(chosenFiles.reduce((s, f) => s + f.upload_file_size, 0))}
+            totalSize={chosenFiles.reduce((s, f) => s + f.upload_file_size, 0)}
           />
           {loading && (
             <div className="c-upload__loading-spinner">

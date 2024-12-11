@@ -1,5 +1,4 @@
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
   class ResourcesController < ApplicationController
     include StashEngine::LandingHelper
 
@@ -161,9 +160,6 @@ module StashEngine
         payment_type: @resource.identifier.payment_type,
         paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
         aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.partner_list&.first,
-        large_file_size: APP_CONFIG.payments.large_file_size,
-        chunk_size: APP_CONFIG.payments.additional_storage_chunk_size,
-        chunk_cost: APP_CONFIG.payments.additional_storage_chunk_cost / 100,
         allow_review: @resource.identifier.allow_review?,
         automatic_ppr: @resource.identifier.automatic_ppr?,
         man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
@@ -260,5 +256,4 @@ module StashEngine
       @resource&.identifier&.update_search_words!
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end

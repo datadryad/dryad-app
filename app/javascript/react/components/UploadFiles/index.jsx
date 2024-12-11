@@ -1,11 +1,11 @@
 import React from 'react';
 import {formatSizeUnits} from '../../../lib/utils';
-import {maxFiles, maxSize, maxZenodo} from './maximums';
 
 export {default} from './UploadFiles';
 export {default as FilesPreview} from './FilesPreview';
 
-export const filesCheck = (files, review, admin) => {
+export const filesCheck = (files, review, admin, maximums) => {
+  const {files: maxFiles, zenodo_size: maxZenodo, merritt_size: maxSize} = maximums;
   if (files.length > 0) {
     const present = files.filter((f) => f.file_state !== 'deleted');
     const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.upload_file_name !== 'README.md');

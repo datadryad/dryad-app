@@ -14,6 +14,8 @@ const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
 const statusCss = (status) => {
   switch (status) {
+  case 'Pending':
+    return classes.Blinking;
   case TabularCheckStatus.checking:
     return classes.Blinking;
   case TabularCheckStatus.noissues:
@@ -81,7 +83,7 @@ export default function File({file, clickRemove, clickValidationReport}) {
   return (
     <tr>
       <th scope="row">{file.sanitized_name}</th>
-      <td id={`status_${file.id}`} className="c-uploadtable__status">{file.status}</td>
+      <td id={`status_${file.id}`} className={`c-uploadtable__status ${statusCss(file.status)}`}>{file.status}</td>
       <td className={statusCss(file.tabularCheckStatus)}>
         {tabularInfo}
       </td>

@@ -1,5 +1,4 @@
 import React from 'react';
-import {maxSize} from './maximums';
 import {formatSizeUnits} from '../../../lib/utils';
 
 const fileList = (list, previous) => {
@@ -34,7 +33,9 @@ const fileList = (list, previous) => {
   );
 };
 
-export default function FilesPreview({resource, previous, admin}) {
+export default function FilesPreview({
+  resource, previous, admin, maxSize,
+}) {
   const present = resource.generic_files.filter((f) => f.file_state !== 'deleted');
   const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.upload_file_name !== 'README.md');
   const software = present.filter((f) => f.type === 'StashEngine::SoftwareFile');

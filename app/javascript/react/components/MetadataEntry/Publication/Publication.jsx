@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg, formatSizeUnits} from '../../../../lib/utils';
-import {maxSize} from '../../UploadFiles/maximums';
 import PublicationForm from './PublicationForm';
 import Title from './Title';
 
-export default function Publication({resource, setResource}) {
+export default function Publication({resource, setResource, maxSize}) {
   const subType = resource.resource_type.resource_type;
   const [res, setRes] = useState(resource);
   const [importType, setImportType] = useState(resource.identifier.import_info);
