@@ -53,7 +53,7 @@ export default function Affiliations({
               desBy: `${id}-${`aff${i}`}-ex`,
             }}
           />
-          <div id={`${id}-${`aff${i}`}-ex`}><i className="ie" />Employer or sponsor</div>
+          <div id={`${id}-${`aff${i}`}-ex`}><i />Employer or sponsor</div>
         </div>
       ))}
       <span><button type="button" onClick={newAff}>+ Add affiliation</button></span>

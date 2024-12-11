@@ -65,7 +65,7 @@ export default function AuthorForm({
                 aria-describedby={`${author.id}org-ex`}
                 onBlur={handleSubmit}
               />
-              <div id={`${author.id}org-ex`}><i className="ie" />Committee, agency, working group, etc.</div>
+              <div id={`${author.id}org-ex`}><i />Committee, agency, working group, etc.</div>
             </div>
           ) : (
             <>
@@ -82,7 +82,7 @@ export default function AuthorForm({
                   aria-describedby={`${author.id}name-ex`}
                   onBlur={handleSubmit}
                 />
-                <div id={`${author.id}name-ex`}><i className="ie" />Given name</div>
+                <div id={`${author.id}name-ex`}><i />Given name</div>
               </div>
               <div className="input-stack">
                 <label className="input-label" htmlFor={`author_last_name__${author.id}`}>
@@ -96,7 +96,7 @@ export default function AuthorForm({
                   aria-describedby={`${author.id}lname-ex`}
                   onBlur={handleSubmit}
                 />
-                <div id={`${author.id}lname-ex`}><i className="ie" />Family name</div>
+                <div id={`${author.id}lname-ex`}><i />Family name</div>
               </div>
               <div className="input-stack">
                 <div
