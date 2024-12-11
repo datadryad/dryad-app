@@ -162,8 +162,7 @@ defaults: &DEFAULTS
     zip_size: 11.0e+9
     api_zip_size: 200
     files: 100
-  frictionless:
-    size_limit: 6291456
+    frictionless: 6291456
   rate_limit:
     # number of requests allowed per minute
     # these rates are low to facilitate quick testing of the rate limiter,
