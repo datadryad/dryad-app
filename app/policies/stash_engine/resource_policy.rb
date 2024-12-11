@@ -23,6 +23,10 @@ module StashEngine
       (@resource.current_resource_state&.resource_state == 'in_progress' && @resource&.user_id == @user.id)
     end
 
+    def change_status?
+      @resource.curatable? || @user.superuser?
+    end
+
     class VersionScope
       def initialize(user, scope)
         @user = user
