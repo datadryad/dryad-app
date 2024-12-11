@@ -15,7 +15,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::Aws
-  include AjaxHelper
 
   before(:each) do
     mock_repository!
