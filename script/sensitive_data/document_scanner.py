@@ -1,4 +1,5 @@
 import re
+import time
 from response import Response
 import constants as const
 import requests
@@ -7,6 +8,7 @@ class DocumentScanner:
   def __init__(self, file_path):
     self.file_path = file_path
     self.response = Response()
+    self.start_time = time.time()
     self.file_contents = self.read_file()
 
   def patterns(self):
@@ -52,6 +54,8 @@ class DocumentScanner:
       if matches:
         # Store the line number and matches for each occurrence
         occurrences.append({"line_number": line_number, "matches": matches, "pattern": pattern_name})
+      if const.CUTOFF_ERROR_COUNT <= len(self.response.issues) + len(occurrences):
+        return occurrences
 
     return occurrences
 
@@ -61,4 +65,11 @@ class DocumentScanner:
         issues = self.scan_for_pattern(pattern, pattern_name)
         if issues:
           self.response.issues.extend(issues)
+        if const.CUTOFF_ERROR_COUNT <= len(self.response.issues):
+          return self.end_scan(False)
+    return self.end_scan()
+
+  def end_scan(self, finished=True):
+    self.response.run_time = float("%.2f" % (time.time() - self.start_time))
+    self.response.finished = finished
     return self.response

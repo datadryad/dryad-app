@@ -15,3 +15,5 @@ URL_PATTERN = r'(?:(?:https?|ftp)://)?(?:www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:/
 # Latitude: -90.0000 to 90.0000
 # Longitude: -180.0000 to 180.0000
 COORD_PATTERN = r"\(?(-?\d{1,2}(?:\.\d+)?),\s*(-?\d{1,3}(?:\.\d+)?)\)?"
+
+CUTOFF_ERROR_COUNT = 20

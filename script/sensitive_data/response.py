@@ -3,6 +3,8 @@ class Response:
     self.errors = list()
     self.valid = True
     self.issues = list()
+    self.run_time = 0
+    self.finished = False
 
   def process_data(self):
     self.issues = sorted(self.issues, key=lambda x: x['line_number'])
