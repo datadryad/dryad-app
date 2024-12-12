@@ -173,7 +173,7 @@ module StashEngine
       describe 'amoeba duplication' do
         before(:each) do
           create(:frictionless_report, generic_file: @upload)
-          create(:pii_scan_report, generic_file: @upload)
+          create(:sensitive_data_report, generic_file: @upload)
           @resource2 = @resource.amoeba_dup
           @resource2.save
           @upload2 = GenericFile.last
@@ -183,8 +183,8 @@ module StashEngine
           expect(@upload2.frictionless_report.id).not_to eq(@upload.frictionless_report.id)
           expect(@upload2.frictionless_report.report).to eq(@upload.frictionless_report.report)
 
-          expect(@upload2.pii_scan_report.id).not_to eq(@upload.pii_scan_report.id)
-          expect(@upload2.pii_scan_report.report).to eq(@upload.pii_scan_report.report)
+          expect(@upload2.sensitive_data_report.id).not_to eq(@upload.sensitive_data_report.id)
+          expect(@upload2.sensitive_data_report.report).to eq(@upload.sensitive_data_report.report)
         end
       end
     end

@@ -44,10 +44,10 @@ module StashEngine
     self.table_name = 'stash_engine_generic_files'
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_one :frictionless_report, dependent: :destroy
-    has_one :pii_scan_report, dependent: :destroy
+    has_one :sensitive_data_report, dependent: :destroy
     amoeba do
       include_association :frictionless_report
-      include_association :pii_scan_report
+      include_association :sensitive_data_report
       propagate
     end
 
@@ -147,7 +147,7 @@ module StashEngine
 
       # get rid of dependent report
       FrictionlessReport.where(generic_file_id: id).destroy_all
-      PiiScanReport.where(generic_file_id: id).destroy_all
+      SensitiveDataReport.where(generic_file_id: id).destroy_all
 
       # destroy previous state for this filename
       self.class.where(resource_id: resource_id).where('lower(upload_file_name) = ?', upload_file_name.downcase).destroy_all
@@ -215,7 +215,7 @@ module StashEngine
     # triggers PII sensitive data scan validation
     # results are async and may not appear in database until AWS Lambda completes and calls back with results
     def trigger_sensitive_data_scan
-      StashEngine::PiiScanLambdaSenderService.new(self).call
+      StashEngine::SensitiveDataLambdaSenderService.new(self).call
     end
 
     def trigger_excel_to_csv

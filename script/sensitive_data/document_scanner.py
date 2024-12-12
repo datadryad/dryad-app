@@ -15,7 +15,7 @@ class DocumentScanner:
       "addresses": const.ADDRESS_PATTERN,
       "emails": const.EMAIL_PATTERN,
       "urls": const.URL_PATTERN,
-      "coordinates": const.COORD_PATTERN
+      # "coordinates": const.COORD_PATTERN
     }
 
   def read_file(self):

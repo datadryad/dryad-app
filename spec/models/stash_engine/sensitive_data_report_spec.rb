@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: stash_engine_frictionless_reports
+# Table name: stash_engine_sensitive_data_reports
 #
 #  id              :bigint           not null, primary key
 #  report          :text(4294967295)
@@ -11,7 +11,7 @@
 #
 # Indexes
 #
-#  index_stash_engine_frictionless_reports_on_generic_file_id  (generic_file_id)
+#  index_stash_engine_sensitive_data_reports_on_generic_file_id  (generic_file_id)
 #
 # Foreign Keys
 #
@@ -20,7 +20,7 @@
 require 'rails_helper'
 
 module StashEngine
-  RSpec.describe PiiScanReport, type: :model do
+  RSpec.describe SensitiveDataReport, type: :model do
 
     before(:each) do
       @resource = create(:resource)
@@ -34,7 +34,7 @@ module StashEngine
     describe 'validations' do
       it { should validate_presence_of(:generic_file) }
       it 'is not valid without a status' do
-        fr = PiiScanReport.new(generic_file: @file, status: nil)
+        fr = SensitiveDataReport.new(generic_file: @file, status: nil)
         expect(fr).to_not be_valid
       end
       it {
@@ -43,7 +43,7 @@ module StashEngine
         ).backed_by_column_of_type(:string)
       }
       it 'is valid with valid attributes' do
-        expect(PiiScanReport.new(generic_file: @file, status: 'checking')).to be_valid
+        expect(SensitiveDataReport.new(generic_file: @file, status: 'checking')).to be_valid
       end
     end
   end

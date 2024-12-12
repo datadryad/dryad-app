@@ -142,8 +142,8 @@ module StashEngine
       it 'clears PII scan reports' do
         allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(false)
 
-        create(:pii_scan_report, generic_file: @files2[1])
-        expect { @files2[1].smart_destroy! }.to change(PiiScanReport, :count).by(-1)
+        create(:sensitive_data_report, generic_file: @files2[1])
+        expect { @files2[1].smart_destroy! }.to change(SensitiveDataReport, :count).by(-1)
       end
     end
 

@@ -2,7 +2,7 @@
 
 require_relative 'presenter'
 module StashApi
-  class PiiScanReport
+  class SensitiveDataReport
     include Presenter
 
     def initialize(file_obj:, result_obj:)
@@ -30,7 +30,7 @@ module StashApi
 
     def basic_links
       {
-        self: { href: api_url_helper.file_pii_scan_report_path(@se_data_file.id) },
+        self: { href: api_url_helper.file_sensitive_data_report_path(@se_data_file.id) },
         'stash:dataset': { href: parent_version.parent_dataset.self_path },
         'stash:version': { href: parent_version.self_path },
         'stash:files': { href: parent_version.files_path }
