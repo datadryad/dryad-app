@@ -58,6 +58,17 @@ module StashEngine
       redirect_to(sf_url, allow_other_host: true)
     end
 
+    def destroy
+      identifier = Identifier.find(params[:id])
+      authorize identifier
+
+      if identifier.destroy
+        redirect_to admin_dashboard_path, notice: "Dataset with DOI #{identifier.identifier} has been deleted."
+      else
+        redirect_to activity_log_path(identifier.id), alert: 'Dataset could not be deleted. Please try again later.'
+      end
+    end
+
     private
 
     def load
