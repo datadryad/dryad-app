@@ -24,3 +24,4 @@ bundle exec rails link_out:publish >> /home/ec2-user/deploy/shared/log/link_out_
 
 # Update ROR organizations
 bundle exec rails affiliation_import:update_ror_orgs >>/home/ec2-user/deploy/shared/log/ror_update.log 2>&1
+bundle exec rails affiliation_import:update_affiliations_names >>/home/ec2-user/deploy/shared/log/affiliations_name_updates.log 2>&1
