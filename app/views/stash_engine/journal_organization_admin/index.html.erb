@@ -18,7 +18,7 @@
     <%= submit_tag('Search', name: nil, class: 'o-button__plain-text2' ) %>
   </div>
 <% end %>
-<% if policy(@orgs.first).new? %>
+<% if policy([:stash_engine, :journal_organization]).new? %>
   <%= form_with(url: publisher_new_path, method: :get, local: false, html: {style: "margin-left: auto"}) do %>
     <button class="o-button__plain-text7"><i class="fa fa-plus" aria-hidden="true"></i> Add new</button>
   <% end %>
