@@ -28,7 +28,8 @@
 module StashEngine
   class Journal < ApplicationRecord
     self.table_name = 'stash_engine_journals'
-    # validates :issn, uniqueness: { case_sensitive: false }
+    validates :title, presence: true
+
     has_many :issns, -> { order(created_at: :asc) }, class_name: 'StashEngine::JournalIssn', dependent: :destroy
     has_many :alternate_titles, class_name: 'StashEngine::JournalTitle', dependent: :destroy
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
