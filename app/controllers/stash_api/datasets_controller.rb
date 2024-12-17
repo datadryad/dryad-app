@@ -579,13 +579,16 @@ module StashApi
     def duplicate_resource
       begin
         nr = @resource.amoeba_dup
+        nr.current_editor_id = @user.id
+        nr.save!
       rescue ActiveRecord::RecordNotUnique
         nr = @resource.identifier.latest_resource unless @resource.identifier.latest_resource_id == @resource.id
         nr ||= @resource.amoeba_dup
+        nr.current_editor_id = @user.id
+        nr.save!
       end
       nr.curation_activities&.update_all(user_id: @user.id)
-      nr.current_editor_id = @user.id
-      nr.save!
+      nr.data_files.each(&:populate_container_files_from_last)
       @resource = nr
     end
 
