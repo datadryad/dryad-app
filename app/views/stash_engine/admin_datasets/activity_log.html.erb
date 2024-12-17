@@ -10,7 +10,7 @@
       <% end %>
 
       <% if policy([:stash_engine, :admin_datasets]).change_delete_schedule? %>
-        <%= form_with(url: admin_dash_edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
+        <%= form_with(url: edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
           <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="reference_button_<%= @identifier&.id %>"
                   style="width: auto; margin-left: 10px; white-space: nowrap">
             Change delete reference date
