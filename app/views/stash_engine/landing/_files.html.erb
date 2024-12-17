@@ -17,12 +17,12 @@
   <% if resources.count.positive? %>
     <!-- list individual files -->
     <% resources.each do |res| %>
-      <details <% if dl_resource == resource %>id="download_resource"<% end %> class="c-file-group<% if dl_resource == resource && resource.total_file_size > APP_CONFIG.maximums.zip_size %> large_download<% end %>" role="group"<%if res.id === resources.last.id && (res.current_file_uploads.count < 10 || res.total_file_size > APP_CONFIG.maximums.zip_size) %> open<%end%>>
+      <details <% if dl_resource == res %>id="download_resource"<% end %> class="c-file-group<% if dl_resource == res && res.total_file_size > APP_CONFIG.maximums.zip_size %> large_download<% end %>" role="group"<%if res.id == resources.last.id && (res.current_file_uploads.count < 10 || res.total_file_size > APP_CONFIG.maximums.zip_size) %> open<%end%>>
         <summary role="button" class="o-showhide__summary c-file-group__summary">
           <span><%= formatted_date(res.publication_date.present? && res.publication_date < Time.now.utc ? res.publication_date : res.updated_at) %> version files</span>
           <span><%= filesize(res.total_file_size) %><i id="download-select" class="fas fa-download" title="Select up to <%= filesize(APP_CONFIG.maximums.zip_size) %> of files for download"></i></span>
         </summary>
-        <% if dl_resource == resource %><form id="download-select-form" aria-labelledby="download-select-label"><% end %>
+        <% if dl_resource == res %><form id="download-select-form" aria-labelledby="download-select-label"><% end %>
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
           <% params = {file_id: fu.id} %>
@@ -37,9 +37,9 @@
               </span>
               <div>
                 <%= filesize(fu.upload_file_size) %>
-                <% if dl_resource == resource %>
+                <% if dl_resource == res %>
                 <% if fu.upload_file_size < APP_CONFIG.maximums.zip_size %>
-                  <input class="select-file-download" data-size="<%= fu.upload_file_size %>" type="checkbox" name="<%= fu.upload_file_name%>" <%if resource.total_file_size < APP_CONFIG.maximums.zip_size %>checked<% end %> aria-label="Select <%= fu.upload_file_name%> for download">
+                  <input class="select-file-download" data-size="<%= fu.upload_file_size %>" type="checkbox" name="<%= fu.upload_file_name%>" <%if res.total_file_size < APP_CONFIG.maximums.zip_size %>checked<% end %> aria-label="Select <%= fu.upload_file_name%> for download">
                 <% else %>
                   <span class="select-file-download" title="Too big for zip download" aria-label="Too big for zip download"></span>
                 <% end %>
@@ -48,7 +48,7 @@
             </li>
           <% end %>
         </ul>
-        <% if dl_resource == resource %></form><% end %>
+        <% if dl_resource == res %></form><% end %>
       </details>
     <% end %>
     <div id="file_preview_box"></div>
