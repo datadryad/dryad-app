@@ -23,5 +23,9 @@ bundle exec rails link_out:seed_genbank_ids >> /home/ec2-user/deploy/shared/log/
 bundle exec rails link_out:publish >> /home/ec2-user/deploy/shared/log/link_out_publish.log 2>&1
 
 # Update ROR organizations
-bundle exec rails affiliation_import:update_ror_orgs >>/home/ec2-user/deploy/shared/log/ror_update.log 2>&1
-bundle exec rails affiliation_import:update_affiliations_names >>/home/ec2-user/deploy/shared/log/affiliations_name_updates.log 2>&1
+bundle exec rails affiliation_import:update_ror_orgs >> /home/ec2-user/deploy/shared/log/ror_update.log 2>&1
+bundle exec rails affiliation_import:update_affiliations_names >> /home/ec2-user/deploy/shared/log/affiliations_name_updates.log 2>&1
+
+# Cleanup affiliation/contributor records
+bundle exec rails cleanup:affiliations_wo_ror >> /home/ec2-user/deploy/shared/log/affiliations_wo_ror_cleanup.log 2>&1
+bundle exec rails cleanup:contributors_wo_ror >> /home/ec2-user/deploy/shared/log/contributors_wo_ror_cleanup.log 2>&1

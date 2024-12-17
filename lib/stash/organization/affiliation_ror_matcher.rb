@@ -16,7 +16,7 @@ module Stash
         rep ||= StashDatacite::Affiliation.from_ror_id(ror_id: ror_id)
         to_fix = StashDatacite::Affiliation.where(ror_id: nil, long_name: item.long_name)
 
-        update_affiliation_name(rep, ror) if ror[:name] != rep.long_name
+        update_affiliation_name(rep, ror)
 
         message = 'Replacing affiliations with'
         puts " - #{message} name \"#{item.long_name}\" (ids: #{to_fix.ids}) with \"#{ror[:name]}\" (id: #{rep.id || 'new'})"
@@ -25,11 +25,6 @@ module Stash
         return unless perform_updates
 
         to_fix.each do |aff|
-          # updating contributors affiliation with new affiliation
-          aff.contributors.each do |contributor|
-            contributor.affiliations << rep unless contributor.affiliations.include?(rep)
-          end
-
           # updating authors affiliation with new affiliation
           aff.authors.each do |author|
             author.affiliation = rep
@@ -39,8 +34,10 @@ module Stash
       end
 
       def update_affiliation_name(rep, ror)
+        return if ror[:name] == rep.long_name
+
         rep.update(long_name: ror[:name]) if perform_updates
-        message = 'Updating existing affiliation name with'
+        message = 'Updating existing affiliation name'
         puts " - #{message} \"#{rep.long_name}\" (id: #{rep.id}) with \"#{ror[:name]}\""
         @csv_rows << [rep.id, rep.long_name, rep.authors.count, message, ror[:name]]
       end
