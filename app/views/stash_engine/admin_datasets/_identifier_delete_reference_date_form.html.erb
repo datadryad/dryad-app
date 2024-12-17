@@ -1,5 +1,5 @@
 <h1><%= @desc %></h1>
-<%= form_with(url: admin_dash_update_delete_reference_date_path(@identifier.id), method: :post, local: false) do |form| -%>
+<%= form_with(url: update_delete_reference_date_path(@identifier.id), method: :post, local: false) do |form| -%>
   <%= hidden_field_tag :field, @field %>
 
   <p>
