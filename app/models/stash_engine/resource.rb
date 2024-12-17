@@ -1134,6 +1134,7 @@ module StashEngine
           # create submitted status
           curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
           # immediately create published status
+          update(publication_date: previous_resource.publication_date)
           target_status = previous_resource.last_curation_activity.status
           curation_note = "Auto-published with minimal changes to #{changes.join(', ')}"
         end
