@@ -11,9 +11,22 @@
     <h2 id="label_tenant_lookup">Is your institution a Dryad member?</h2>
     <p style="margin-top: 0"><span id="label_tenant_id">Member institutions</span> cover the fees for their researchers to use Dryad.<br/>
     <div class="c-institution__container">
-      <%= form_with(url: 'sso/', method: :post) do %>
-        <%= react_component('components/TenantForm', {tenants: @tenants}) %>
-      <% end %>      
+      <%= form_with(url: sso_path, method: :post) do %>
+        <% if @target_page %><input type="hidden" name="target_page" value="<%= @target_page %>"><% end %>
+        <div style="text-align: left;">
+          <%= render partial: 'stash_engine/shared/search_select', locals: {
+            id: 'tenant',
+            label: 'Select your Dryad member institution',
+            field_name: 'tenant_id',
+            options: tenant_select.to_json.html_safe,
+            options_label: 'name',
+            options_value: 'id',
+            selected: {},
+            required: true,
+          } %>
+        </div>
+        <button type="submit" class="t-login__buttonlink" style="padding: 5px 15px">Login to verify</button>
+      <% end %>
     </div>
     
     <br/>
