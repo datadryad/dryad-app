@@ -8,12 +8,12 @@ module Stash
 
       private
 
-      def connect_to_ror(item, ror, messages)
+      def connect_to_ror(item, ror)
         # puts '------------- connect_to_ror -------------'
         ror_id = ror[:id]
         message = 'Updating contributor with'
         puts " - #{message} name \"#{item.contributor_name}\" (ids: #{item.id}) with \"#{ror[:name]}\" (ror_id: #{ror_id})"
-        messages << [item.id, item.contributor_name, message, ror[:name], ror[:id]]
+        @csv_rows << [item.id, item.contributor_name, message, ror[:name], ror[:id]]
         @updates_count += 1
 
         return unless perform_updates

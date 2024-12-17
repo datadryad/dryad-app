@@ -18,6 +18,7 @@ module Stash
         @updates_count = 0
         @multiple_ror_found_count = 0
         @no_ror_found_count = 0
+        @csv_rows = []
       end
 
       def perform
@@ -58,7 +59,7 @@ module Stash
           [@text.gsub('Processing', 'From')],
           [" - Updated: #{@updates_count} records."],
           [" - No ROR found: #{@no_ror_found_count} records."],
-          [" - Multiple RORs found: #{@multiple_ror_found_count} records."],
+          [" - Multiple RORs found: #{@multiple_ror_found_count} records."]
         ]
         update_csv_report(messages)
 
@@ -91,15 +92,18 @@ module Stash
 
         items_to_be_mapped.find_each do |item|
           index += 1
-          sleep 2 if index % 100 == 0
+          if index % 100 == 0
+            sleep 2
+            update_csv_report(@csv_rows)
+            @csv_rows = []
+          end
 
           handle_item(item, record_name(item), index)
         end
+        update_csv_report(@csv_rows)
       end
 
       def handle_item(item, item_name, index)
-        csv_rows = []
-
         puts ''
         puts "#{index}. Processing record \"#{item_name}\" (id: #{item.id}, created_at: #{item.created_at})"
 
@@ -112,18 +116,17 @@ module Stash
         case rors.count
         when 0
           @no_ror_found_count += 1
-          message = "Could not find ROR"
-          csv_rows << [item.id, item_name, message]
+          message = 'Could not find ROR'
+          @csv_rows << [item.id, item_name, message]
           puts " - #{message} for \"#{item_name}\""
         when 1
-          connect_to_ror(item, rors.first, csv_rows)
+          connect_to_ror(item, rors.first)
         else
           @multiple_ror_found_count += 1
-          message = "Found multiple RORs"
-          csv_rows << [item.id, item_name, message, rors.map { |ror| ror[:name] }.join("\n"), rors.map { |ror| ror[:id] }.join("\n")]
+          message = 'Found multiple RORs'
+          @csv_rows << [item.id, item_name, message, rors.map { |ror| ror[:name] }.join("\n"), rors.map { |ror| ror[:id] }.join("\n")]
           puts " - #{message} for \"#{item_name}\""
         end
-        update_csv_report(csv_rows)
       end
 
       def base_items_query
@@ -138,7 +141,7 @@ module Stash
         raise NotImplementedError, 'Subclasses must implement record_ror_id'
       end
 
-      def connect_to_ror(affiliation, ror, messages)
+      def connect_to_ror(affiliation, ror)
         raise NotImplementedError, 'Subclasses must implement connect_to_ror'
       end
 
