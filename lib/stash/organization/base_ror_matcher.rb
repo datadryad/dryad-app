@@ -8,7 +8,7 @@ module Stash
 
       attr_reader :perform_updates
 
-      def initialize(perform_updates: false, start_id: nil, end_id: nil, start_created_at: nil, end_created_at: nil)
+      def initialize(perform_updates: true, start_id: nil, end_id: nil, start_created_at: nil, end_created_at: nil)
         @perform_updates = perform_updates
         @end_id = end_id
         @start_id = start_id
@@ -58,8 +58,8 @@ module Stash
           [],
           [@text.gsub('Processing', 'From')],
           [" - Updated: #{@updates_count} records."],
-          [" - No ROR found: #{@no_ror_found_count} records."],
-          [" - Multiple RORs found: #{@multiple_ror_found_count} records."]
+          [" - Multiple RORs found: #{@multiple_ror_found_count} records."],
+          [" - No ROR found: #{@no_ror_found_count} records."]
         ]
         update_csv_report(messages)
 
@@ -112,13 +112,14 @@ module Stash
           return
         end
 
-        rors = StashEngine::RorOrg.find_by_ror_name(item_name, 1)
+        rors = StashEngine::RorOrg.find_by_name_for_auto_matching(item_name)
         case rors.count
         when 0
           @no_ror_found_count += 1
-          message = 'Could not find ROR'
-          @csv_rows << [item.id, item_name, message]
-          puts " - #{message} for \"#{item_name}\""
+          # Do not add to CSV report, nor log file, as it will increase the file size too much
+          # message = 'Could not find ROR'
+          # @csv_rows << [item.id, item_name, message]
+          # puts " - #{message} for \"#{item_name}\""
         when 1
           connect_to_ror(item, rors.first)
         else
