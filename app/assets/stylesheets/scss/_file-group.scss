@@ -69,23 +69,6 @@
   }
 }
 
-.select-file-download, #download-select {
-  display: none;
-}
-.large_download {
-  #download-select {
-    display: inline-block;
-  }
-  .select-file-download {
-    display: inline-block;
-    margin-left: .5ch;
-  }
-  span.select-file-download {
-    display: inline-block;
-    width: 1.4ch;
-  }
-}
-
 .c-file-group__list {
   list-style-type: none;
   font-size: .98rem;
@@ -123,5 +106,14 @@
     form {
       display: inline-block;
     }
+  }
+
+  .select-file-download {
+    display: inline-block;
+    margin-left: .5ch;
+  }
+  span.select-file-download {
+    display: inline-block;
+    width: 1.4ch;
   }
 }
