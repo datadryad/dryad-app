@@ -133,6 +133,8 @@ module StashDatacite
       def ensure_author_orcid
         return if @resource.owner_author # the owner is already represented by an author with their orcid
 
+        # ensure resource submitter exists
+        @resource.submitter = @resource.creator.id unless @resource.submitter.present?
         user = @resource.submitter
 
         this_author = @resource.authors.where(author_first_name: user.first_name, author_last_name: user.last_name).first
