@@ -9,13 +9,16 @@ navigator.serviceWorker.ready.then(worker => {
   worker.active.postMessage({type: 'PORT_INITIALIZATION', url: form.action}, [messageChannel.port2]); 
 });
 const insertFiles = async (files) => {
+  const selectForm = document.getElementById('download-select-form').elements
   for (const f of files) {
-    for (const k of Object.keys(f)) {
-      const i = document.createElement('input');
-      i.setAttribute('type', 'hidden');
-      i.setAttribute('name', k);
-      i.setAttribute('value', f[k]);
-      inputs.appendChild(i);
+    if (selectForm[f.filename].checked) {
+      for (const k of Object.keys(f)) {
+        const i = document.createElement('input');
+        i.setAttribute('type', 'hidden');
+        i.setAttribute('name', k);
+        i.setAttribute('value', f[k]);
+        inputs.appendChild(i);
+      }
     }
   }
   return true;
