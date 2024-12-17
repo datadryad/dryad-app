@@ -314,8 +314,6 @@ Rails.application.routes.draw do
     post 'admin_dashboard/:id', to: 'admin_dashboard#update', as: 'admin_dash_update'
     get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'
     match 'admin_search/:id', to: 'admin_dashboard#save_search', via: %i[put patch], as: 'save_admin_search'
-    get 'admin_dashboard/:id/edit_delete_reference_date', to: 'admin_dashboard#edit_delete_reference_date', as: 'admin_dash_edit_delete_reference_date'
-    post 'admin_dashboard/:id/update_delete_reference_date', to: 'admin_dashboard#update_delete_reference_date', as: 'admin_dash_update_delete_reference_date'
 
     # saved_searches
     # get 'account/saved_searches/:type', to: 'saved_searches#index'
@@ -326,6 +324,8 @@ Rails.application.routes.draw do
 
     # activity log
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
+    get 'ds_admin/:id/edit_delete_reference_date', to: 'admin_datasets#edit_delete_reference_date', as: 'edit_delete_reference_date'
+    post 'ds_admin/:id/update_delete_reference_date', to: 'admin_datasets#update_delete_reference_date', as: 'update_delete_reference_date'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     post 'ds_admin/:id', to: 'admin_datasets#edit', as: 'ds_admin_edit'
