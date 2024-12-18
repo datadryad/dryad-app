@@ -47,11 +47,6 @@ module StashEngine
     scope :tiered, -> { enabled.where(payment_plan: :tiered) }
     scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 
-    def data_deposit_agreement?
-      dda = File.join(Rails.root, 'app', 'views', 'tenants', id, '_dda.html.erb')
-      File.exist?(dda)
-    end
-
     def authentication
       JSON.parse(super, object_class: OpenStruct) if super.present?
     end
