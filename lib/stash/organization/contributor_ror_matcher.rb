@@ -30,7 +30,7 @@ module Stash
       end
 
       def base_items_query
-        StashDatacite::Contributor.where(name_identifier_id: [nil, ''], identifier_type: ['ror', nil])
+        StashDatacite::Contributor.where(name_identifier_id: [nil, ''])
       end
 
       def report_file_name(filters_text)
