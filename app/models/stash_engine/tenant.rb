@@ -25,6 +25,10 @@ require 'ostruct'
 module StashEngine
   class Tenant < ApplicationRecord
     self.table_name = 'stash_engine_tenants'
+    validates :id, presence: true, uniqueness: true
+    validates :short_name, presence: true
+    validates :long_name, presence: true
+
     belongs_to :logo, class_name: 'StashEngine::Logo', dependent: :destroy, optional: true
     belongs_to :sponsor, class_name: 'Tenant', inverse_of: :sponsored, optional: true
     has_many :sponsored, class_name: 'Tenant', primary_key: :id, foreign_key: :sponsor_id, inverse_of: :sponsor
@@ -49,11 +53,11 @@ module StashEngine
     end
 
     def authentication
-      JSON.parse(super, object_class: OpenStruct)
+      JSON.parse(super, object_class: OpenStruct) if super.present?
     end
 
     def campus_contacts
-      JSON.parse(super)
+      JSON.parse(super) if super.present?
     end
 
     def consortium
