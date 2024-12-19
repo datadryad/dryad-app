@@ -31,12 +31,6 @@
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
 </div>
 <div class="bio">
-  <img src="/images/sarah.jpg" alt="Headshot of Sarah Lippincott">
-  <h5>Sarah Lippincott</h5><br/>
-  <p><em>Community Engagement Consultant</em><br/>
-  Sarah is a librarian and library consultant with a decade of experience supporting open access, digital scholarship, and scholarly communications through strategic planning, research, service design, facilitation, and communications work. As Community Engagement Consultant at Dryad, Sarah works with institutions, funders, and researchers to increase awareness of and engagement with data sharing and data reuse.</p>
-</div>
-<div class="bio">
   <img src="/images/rscherle.jpg" alt="Headshot of Ryan Scherle">
   <h5>Ryan Scherle</h5><br/>
   <p><em>Head of Platform Development</em><br/>

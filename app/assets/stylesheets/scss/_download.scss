@@ -3,6 +3,10 @@
 .o-download {
 	margin-top: $spacing-sm;
 	text-align: right;
+
+	#download-select-label {
+		font-size: .98rem; margin-left: 1ch;
+	}
 }
 
 *[class*="o-download__"] {
@@ -10,7 +14,6 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 1ch;
-	width: 220px;
 	padding: 6px 10px;
 	border: none;
 	background-color: $lighter-blue;
@@ -30,8 +33,12 @@
 	}
 
 	&:hover {
-    opacity: 0.85;
-  }
+		opacity: 0.85;
+	}
+
+	&:disabled, &.disabled {
+		background-color: $lighter-gray;
+	}
 }
 
 .o-download__files #download_icon::before {
@@ -52,9 +59,9 @@
 			content: '\f1ce';
 			color: $medium-blue;
 			position: absolute;
-		  top: -3px; left: 0;
-		  -webkit-animation: fa-spin 2s infinite linear;
-  		animation: fa-spin 2s infinite linear;
+			top: -3px; left: 0;
+			-webkit-animation: fa-spin 2s infinite linear;
+			animation: fa-spin 2s infinite linear;
 		}	
 	}
 }

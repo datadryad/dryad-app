@@ -299,14 +299,20 @@ Rails.application.routes.draw do
     get 'tenant_admin', to: 'tenant_admin#index'
     get 'tenant_admin/:id/edit/:field', to: 'tenant_admin#popup', as: 'tenant_popup'
     post 'tenant_admin/:id', to: 'tenant_admin#edit', as: 'tenant_edit'
+    get 'tenant_admin/new', to: 'tenant_admin#new', as: 'tenant_new'
+    post 'tenant_admin', to: 'tenant_admin#create', as: 'tenant_create'
     # admin journal management
     get 'journal_admin', to: 'journal_admin#index'
     get 'journal_admin/:id/edit/:field', to: 'journal_admin#popup', as: 'journal_popup'
     post 'journal_admin/:id', to: 'journal_admin#edit', as: 'journal_edit'
+    get 'journal_admin/new', to: 'journal_admin#new', as: 'journal_new'
+    post 'journal_admin', to: 'journal_admin#create', as: 'journal_create'
     # admin publisher management
     get 'publisher_admin', to: 'journal_organization_admin#index', as: 'publisher_admin'
     get 'publisher_admin/:id/edit/:field', to: 'journal_organization_admin#popup', as: 'publisher_popup'
     post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
+    get 'publisher_admin/new', to: 'journal_organization_admin#new', as: 'publisher_new'
+    post 'publisher_admin', to: 'journal_organization_admin#create', as: 'publisher_create'
 
     # admin_dashboard
     match 'admin_dashboard', to: 'admin_dashboard#index', via: %i[get post]
@@ -316,8 +322,6 @@ Rails.application.routes.draw do
     post 'admin_dashboard/:id', to: 'admin_dashboard#update', as: 'admin_dash_update'
     get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'
     match 'admin_search/:id', to: 'admin_dashboard#save_search', via: %i[put patch], as: 'save_admin_search'
-    get 'admin_dashboard/:id/edit_delete_reference_date', to: 'admin_dashboard#edit_delete_reference_date', as: 'admin_dash_edit_delete_reference_date'
-    post 'admin_dashboard/:id/update_delete_reference_date', to: 'admin_dashboard#update_delete_reference_date', as: 'admin_dash_update_delete_reference_date'
 
     # saved_searches
     # get 'account/saved_searches/:type', to: 'saved_searches#index'
@@ -328,6 +332,8 @@ Rails.application.routes.draw do
 
     # activity log
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
+    get 'ds_admin/:id/edit_delete_reference_date', to: 'admin_datasets#edit_delete_reference_date', as: 'edit_delete_reference_date'
+    post 'ds_admin/:id/update_delete_reference_date', to: 'admin_datasets#update_delete_reference_date', as: 'update_delete_reference_date'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     post 'ds_admin/:id', to: 'admin_datasets#edit', as: 'ds_admin_edit'

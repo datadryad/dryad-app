@@ -1017,6 +1017,7 @@ module StashEngine
         describe 'amoeba duplication' do
           before(:each) do
             @res2 = @res1.amoeba_dup
+            @res2.save
           end
 
           it 'copies the non-deleted records' do

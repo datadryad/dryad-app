@@ -1,1 +1,0 @@
-<%= render partial: "layouts/about", language: :markdown %>
