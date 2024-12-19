@@ -65,9 +65,10 @@ FactoryBot.define do
         user = e.user || create(:user)
         create(:role, user_id: resource.user_id || user.id, role_object: resource, role: 'creator')
         create(:role, user_id: resource.user_id || user.id, role_object: resource, role: 'submitter')
+        create(:author, resource: resource, author_first_name: user.first_name, author_last_name: user.last_name,
+                        author_orcid: user.orcid, author_email: user.email)
         resource.update_columns(user_id: nil)
       end
-      create(:author, resource: resource)
       create(:description, resource_id: resource.id)
       create(:right, resource: resource)
       create(:contributor, resource: resource)

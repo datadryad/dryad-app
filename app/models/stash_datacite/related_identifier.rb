@@ -272,7 +272,7 @@ module StashDatacite
       http = HTTP.timeout(connect: 10, read: 10).timeout(10).follow(max_hops: 10)
       begin
         retries ||= 0
-        resp = http.get(related_identifier)
+        resp = http.head(related_identifier)
         return true if resp.status.code > 199 && resp.status.code < 300 # 200 range status code
 
         # If we hit a CloudFlare server that wants to use complex JS to verify we are a "real" browser,

@@ -33,8 +33,8 @@ export default function ReadMeImport({title, setValue}) {
       <div style={{textAlign: 'center'}}>
         <input
           id="readme_upload"
-          className="c-choose__input-file"
           type="file"
+          className="screen-reader-only"
           accept="text/x-markdown,text/markdown,.md"
           aria-errormessage="bad-readme-modal"
           aria-invalid="false"
