@@ -1,1 +1,3 @@
-$('#show_related_works').html("<%= escape_javascript(render(partial: 'landing_related_works')) %>");
+<% if @resource.present? %>
+  $('#show_related_works').html("<%= escape_javascript(render(partial: 'landing_related_works')) %>");
+<% end %>

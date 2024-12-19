@@ -44,7 +44,7 @@ module StashEngine
       end
 
       def first
-        @first ||= @string.split("\n").first
+        @first ||= @string&.split("\n")&.first
       end
     end
   end

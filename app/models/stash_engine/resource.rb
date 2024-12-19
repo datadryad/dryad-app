@@ -120,38 +120,26 @@ module StashEngine
     end
 
     amoeba do
-      include_association :authors
-      include_association :generic_files
-      customize(->(_, new_resource) do
-                  # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
-                  # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
-                  # let init_version do its job
-                  new_resource.current_resource_state_id = nil
-                  # do not mark these resources for public view until they've been re-curated and embargoed/published again
-                  new_resource.publication_date = nil
-                  new_resource.meta_view = false
-                  new_resource.file_view = false
+      include_association %i[authors generic_files contributors datacite_dates descriptions geolocations temporal_coverages publication_years
+                             publisher related_identifiers resource_type rights sizes subjects resource_publication roles]
+      customize(->(_, new_resource) {
+        # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
+        new_resource.current_resource_state_id = nil
+        # do not mark these resources for public view until they've been re-curated and embargoed/published again
+        new_resource.publication_date = nil
+        new_resource.meta_view = false
+        new_resource.file_view = false
 
-                  new_resource.generic_files.each do |file|
-                    raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+        new_resource.generic_files.each do |file|
+          raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
-                    file.file_state = 'copied' if file.file_state == 'created'
-                    file.save # if not saved first then some other queries that depend on id or resource_id will fail
-                    file.populate_container_files_from_last if file.type == 'StashEngine::DataFile'
-                  end
+          file.file_state = 'copied' if file.file_state == 'created'
+        end
 
-                  # I think there was something weird about Amoeba that required this approach
-                  deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-                  deleted_files.each(&:destroy)
-                end)
-
-      # can't just pass the array to include_association() or it clobbers the ones defined in stash_engine
-      # see https://github.com/amoeba-rb/amoeba/issues/76
-      %i[contributors datacite_dates descriptions geolocations temporal_coverages
-         publication_years publisher related_identifiers resource_type rights sizes
-         subjects resource_publication roles].each do |assoc|
-        include_association assoc
-      end
+        # I think there was something weird about Amoeba that required this approach
+        deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
+        deleted_files.each(&:destroy)
+      })
     end
 
     # ------------------------------------------------------------
@@ -1138,6 +1126,7 @@ module StashEngine
           # create submitted status
           curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
           # immediately create published status
+          update(publication_date: previous_resource.publication_date)
           target_status = previous_resource.last_curation_activity.status
           curation_note = "Auto-published with minimal changes to #{changes.join(', ')}"
         end

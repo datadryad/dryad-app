@@ -1,28 +1,8 @@
 // open a modal dialog
-document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'popup_form') %>";
+document.getElementById('genericModalContent').innerHTML = '';
+document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'popup_form') %>"));
 document.getElementById('genericModalDialog').showModal();
 document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('genericModalDialog').close();
 });
-
-<% if @field == 'logo' %>
-document.getElementById('file-select').addEventListener('change', () => {
-  const file = document.getElementById('file-select').files[0];
-  const reader = new FileReader();
-  reader.addEventListener('load', () => {
-    document.getElementById('logo_input').value = reader.result;
-    document.getElementById('file-preview').innerHTML = `<img src="${reader.result}" style="max-height: 60px;" aria-hidden="true"/>`;
-  });
-  if (file) {
-    reader.readAsDataURL(file);
-  }
-})
-if (document.getElementById('remove-file')) {
-  document.getElementById('remove-file').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('logo_input').removeAttribute('value');
-    document.getElementById('current-logo').setAttribute('hidden', true);
-  })
-}
-<% end %>

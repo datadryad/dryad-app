@@ -112,11 +112,11 @@ RSpec.feature 'CurationActivity', type: :feature do
 
         expect(page).to have_text('Activity log for')
         click_button 'Change delete reference date'
-        fill_in('[process_date][delete_calculation_date]', with: '01.08.2024')
+        fill_in('[process_date][delete_calculation_date]', with: Date.new(2024, 1, 8))
         fill_in('[curation_activity][note]', with: 'Some Note')
         click_button('Submit')
 
-        expect(page).to have_text('Changed deletion reference date to 2024-01-08.')
+        expect(page).to have_text('Changed deletion reference date to Jan 08, 2024.')
         expect(page).to have_text('Some Note')
       end
 

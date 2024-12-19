@@ -36,13 +36,14 @@
   <script type="text/javascript">
   	document.getElementById('affiliation-list-button').addEventListener('click', (e) => {
   		const list = document.getElementById('affiliation-list')
+  		const button = document.getElementById('affiliation-list-button')
   		if (list.hasAttribute('hidden')) {
-	  		e.target.setAttribute('aria-expanded', 'true')
+	  		button.setAttribute('aria-expanded', 'true')
   		} else {
-  			e.target.setAttribute('aria-expanded', 'false')
+  			button.setAttribute('aria-expanded', 'false')
 	  	}
-	  	e.target.lastElementChild?.classList.toggle('fa-caret-down')
-	  	e.target.lastElementChild?.classList.toggle('fa-caret-up')
+	  	button.lastElementChild?.classList.toggle('fa-caret-down')
+	  	button.lastElementChild?.classList.toggle('fa-caret-up')
 	  	list.toggleAttribute('hidden')
   	})
   	const openHash = () => {

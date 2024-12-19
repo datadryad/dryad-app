@@ -6,8 +6,6 @@ require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
 require_relative '../stash/action_required_reminder'
 
-REPORTS_DIR = 'reports'.freeze
-
 # rubocop:disable Metrics/BlockLength
 namespace :identifiers do
   desc 'Give resources missing a stash_engine_identifier one (run from main app, not engine)'

@@ -7,6 +7,6 @@ when 'tenant_id'
 end %>";
 <% if @field == 'tenant_id' %>
 $('#edit_roles_form').html("<%= escape_javascript(render partial: 'admin_role_form', locals: { user: @user }) %>");
-document.getElementById('user_role_<%= @user.id %>').innerHTML = "<%= @user.roles.present? ? @user.roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>";
+document.getElementById('user_role_<%= @user.id %>').innerHTML = "<%= @user.roles&.admin_roles.present? ? @user.roles.admin_roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>";
 <% end %>
 document.getElementById('genericModalDialog').close();

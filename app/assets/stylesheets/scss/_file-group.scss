@@ -11,7 +11,6 @@
     }
 
   }
-
 }
 
 .c-file-group__summary {
@@ -64,6 +63,10 @@
     margin-left: 1ch;
   }
 
+  #download-select {
+    margin-left: .75ch;
+    margin-right: .5ch;
+  }
 }
 
 .c-file-group__list {
@@ -88,8 +91,8 @@
       max-width: 100%;
     }
 
-    span {
-      flex-basis: calc(100% - 100px);
+    & > span {
+      flex-basis: calc(100% - 106px);
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
@@ -103,5 +106,14 @@
     form {
       display: inline-block;
     }
+  }
+
+  .select-file-download {
+    display: inline-block;
+    margin-left: .5ch;
+  }
+  span.select-file-download {
+    display: inline-block;
+    width: 1.4ch;
   }
 }

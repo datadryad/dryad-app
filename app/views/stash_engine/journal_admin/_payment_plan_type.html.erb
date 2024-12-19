@@ -1,4 +1,4 @@
-<p>Set new payment plan for <%= @journal.title %></p>
+<p><%= @journal.title %></p>
 <%
 plan_radios = [ ['', 'None'] ]
 @journal.payment_plans.each {|p| plan_radios.push([p, p.capitalize])}

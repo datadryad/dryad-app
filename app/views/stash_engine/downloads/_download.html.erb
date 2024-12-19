@@ -3,26 +3,52 @@
 <script type="text/javascript" src="https://16077a4ae659.us-west-2.captcha-sdk.awswaf.com/16077a4ae659/jsapi.js" defer></script>
 <% end %>
 <% worker_scope = request.fullpath.split('/').first(3).join('/') + '/' %>
-<% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>
-  <div class="o-download">
-    <%= form_with url: "#{worker_scope}downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{minimal_date(resource.publication_date.present? && resource.publication_date < Time.now.utc ? resource.publication_date : resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
-        <div id="file_downloads"></div>
-        <button type="button" class="o-download__files js-download" id="download_zip_button"><span id="download_icon"></span>Download full dataset</button>
-    <% end %>
-    <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
-  </div>
-  <% content_for :doc_end do %>
-  <% params = {resource_id: @resource.id} %>
-  <% params[:share] = share if share.present? %>
-  <script type="text/javascript" async>
-    const dlbutton = document.getElementById('download_zip_button');
-    if ("serviceWorker" in navigator) {
-      const zip_url = '<%= stash_url_helpers.zip_assembly_info_path(params)%>';    
-      const scope = '<%= worker_scope %>';
-      <%= render partial: 'stash_engine/downloads/download_zip', formats: :js %>
-    } else {
-      dlbutton.hidden = true;
-    }
-  </script>
+<div class="o-download">
+  <%= form_with url: "#{worker_scope}downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{minimal_date(resource.publication_date.present? && resource.publication_date < Time.now.utc ? resource.publication_date : resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
+      <div id="file_downloads"></div>
+      <% if resource.total_file_size > APP_CONFIG.maximums.zip_size %>
+        <p id="download-select-label">Select up to <%= filesize(APP_CONFIG.maximums.zip_size) %> of files for download</p>
+      <% end %>
+      <button type="button" class="o-download__files js-download" id="download_zip_button" <% if resource.total_file_size > APP_CONFIG.maximums.zip_size %>disabled<%end%>>
+        <span id="download_icon"></span>
+        <% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>Download full dataset<% else %>Download selected files<%end%>
+      </button>
   <% end %>
+  <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
+</div>
+<% content_for :doc_end do %>
+<% params = {resource_id: @resource.id} %>
+<% params[:share] = share if share.present? %>
+<script type="text/javascript" async>
+  <% if resource.total_file_size > APP_CONFIG.maximums.zip_size %>
+    const maxSize = <%= APP_CONFIG.maximums.zip_size %>
+    const selectForm = document.getElementById('download-select-form')
+    const selectDownloads = () => {
+      const els = Array.from(selectForm.elements)
+      if (els.some(i => i.checked)) {
+        document.getElementById('download_zip_button').disabled = false
+      } else {
+        document.getElementById('download_zip_button').disabled = true
+      }
+      const selectedSize = els.reduce((size, el) => {
+        if (el.checked) size += Number(el.dataset.size)
+        return size
+      }, 0)
+      els.forEach(el => {
+        el.disabled = !el.checked && Number(el.dataset.size) + selectedSize > maxSize
+      })
+    }
+    selectDownloads()
+    selectForm.addEventListener('change', selectDownloads)
+  <% end %>
+  const dlbutton = document.getElementById('download_zip_button');
+  if ("serviceWorker" in navigator) {
+    const zip_url = '<%= stash_url_helpers.zip_assembly_info_path(params)%>';    
+    const scope = '<%= worker_scope %>';
+    <%= render partial: 'stash_engine/downloads/download_zip', formats: :js %>
+  } else {
+    dlbutton.hidden = true;
+    document.getElementById('download_resource').classList.remove('large_download');
+  }
+</script>
 <% end %>
