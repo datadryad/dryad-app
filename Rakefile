@@ -30,3 +30,5 @@ begin
 rescue LoadError
   puts 'There was an error and rspec was not available.'
 end
+
+# require 'solr_wrapper/rake_task' unless Rails.env.production?
