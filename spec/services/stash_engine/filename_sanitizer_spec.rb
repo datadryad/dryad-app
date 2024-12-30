@@ -4,17 +4,17 @@ module StashEngine
       subject { FilenameSanitizer.new(@file_name).process }
 
       it 'replaces illegal characters with the replacement character' do
-        @file_name = "inval|id:file*name?.txt"
-        expect(subject).to eq("inval_id_file_name_.txt")
+        @file_name = 'inval|id:file*name?.txt'
+        expect(subject).to eq('inval_id_file_name_.txt')
       end
 
       it 'removes control characters' do
         @file_name = "Hello\u0000World"
-        expect(subject).to eq("Hello_World")
+        expect(subject).to eq('Hello_World')
       end
 
       it 'truncates to 220 bytes' do
-        @file_name = "a" * 300
+        @file_name = 'a' * 300
         expect(subject.bytesize).to eq(220)
       end
 
@@ -26,30 +26,30 @@ module StashEngine
       end
 
       it 'removes trailing dots and spaces' do
-        @file_name = "filename. "
-        expect(subject).to eq("filename_")
+        @file_name = 'filename. '
+        expect(subject).to eq('filename_')
       end
 
       it 'sanitizes input with default replacement' do
-        @file_name = "invalid|name"
-        expect(subject).to eq("invalid_name")
+        @file_name = 'invalid|name'
+        expect(subject).to eq('invalid_name')
       end
 
       it 'allows customization of the replacement character' do
-        file_name = "invalid:name"
+        file_name = 'invalid:name'
         output = FilenameSanitizer.new(file_name, replacement: '-').process
-        expect(output).to eq("invalid-name")
+        expect(output).to eq('invalid-name')
       end
 
       it 'handles strings that are entirely illegal characters' do
-        file_name = "|*?<>"
+        file_name = '|*?<>'
         output = FilenameSanitizer.new(file_name, replacement: '_').process
-        expect(output).to eq("_____")
+        expect(output).to eq('_____')
       end
 
       it 'handles strings that are entirely illegal characters' do
-        @file_name = "[name]"
-        expect(subject).to eq("_name_")
+        @file_name = '[name]'
+        expect(subject).to eq('_name_')
       end
     end
 
@@ -64,10 +64,10 @@ module StashEngine
       end
 
       it 'handles multibyte characters gracefully' do
-        @file_name = "你好世界"
+        @file_name = '你好世界'
         truncated = subject.send(:truncate_utf8, @file_name, 7)
         expect(truncated.bytesize).to be <= 7
-        expect(truncated).to eq("你好") # Partial characters should not appear
+        expect(truncated).to eq('你好') # Partial characters should not appear
       end
     end
   end

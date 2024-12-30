@@ -26,8 +26,8 @@
 
 module StashEngine
   class FilenameSanitizer
-    ILLEGAL_RE          = /[\/?<>\\:*|\"]/
-    CONTROL_RE          = /[\x00-\x1f]/.freeze
+    ILLEGAL_RE          = %r{[/?<>\\:*|\"]}
+    CONTROL_RE          = /[\x00-\x1f]/
     RESERVED_RE         = /^\.+$/
     WINDOWS_RESERVED_RE = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i
     WINDOWS_TRAILING_RE = /[. ]+$/
@@ -43,12 +43,12 @@ module StashEngine
 
     def process
       output = filename.gsub(ILLEGAL_RE, replacement)
-                 .gsub(CONTROL_RE, replacement)
-                 .gsub(RESERVED_RE, replacement)
-                 .gsub(WINDOWS_RESERVED_RE, replacement)
-                 .gsub(WINDOWS_TRAILING_RE, replacement)
-                 .gsub(S3_BADIES, replacement)
-                 .gsub(DRYAD_UNLIKED, replacement)
+        .gsub(CONTROL_RE, replacement)
+        .gsub(RESERVED_RE, replacement)
+        .gsub(WINDOWS_RESERVED_RE, replacement)
+        .gsub(WINDOWS_TRAILING_RE, replacement)
+        .gsub(S3_BADIES, replacement)
+        .gsub(DRYAD_UNLIKED, replacement)
 
       truncate_utf8(output, 220)
     end
