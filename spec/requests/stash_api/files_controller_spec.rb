@@ -86,6 +86,11 @@ module StashApi
                             headers: default_json_headers.merge('Content-Type' => @mime_type)
         expect(response_code).to eq(401)
       end
+
+      it 'calls filename sanitizer' do
+        expect(StashEngine::FilenameSanitizer).to receive_message_chain(:new, :process).with('favicon.ico').with(no_args)
+        put request_path, **request_args
+      end
     end
 
     describe '#show' do
