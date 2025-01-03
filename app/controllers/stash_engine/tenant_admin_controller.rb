@@ -18,7 +18,7 @@ module StashEngine
                                   "%#{q}%", "%#{q}%", "%#{q}%")
       end
 
-      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication partner_display enabled])
+      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication covers_dpc partner_display enabled])
       @tenants = @tenants.order(ord)
 
       @tenants = @tenants.where('id = ? or sponsor_id= ?', params[:sponsor], params[:sponsor]) if params[:sponsor].present?
@@ -29,7 +29,8 @@ module StashEngine
 
     def popup
       strings = { campus_contacts: 'contacts', partner_display: 'member display', ror_orgs: 'ROR organizations', enabled: 'active membership',
-                  logo: 'logo', short_name: 'member name', long_name: 'full member name', authentication: 'authentication strategy' }
+                  covers_dpc: 'payment', short_name: 'member name', long_name: 'full member name',
+                  logo: 'logo', authentication: 'authentication strategy' }
       @desc = strings[@field.to_sym]
       respond_to(&:js)
     end
@@ -76,7 +77,7 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[partner_display enabled short_name long_name]
+      valid = %i[covers_dpc partner_display enabled short_name long_name]
       update = edit_params.slice(*valid)
       update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:campus_contacts)
       if edit_params.key?(:authentication)
@@ -108,7 +109,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :field, :short_name, :long_name, :logo, :campus_contacts, :partner_display, :enabled, :ror_orgs,
+      params.permit(:id, :field, :short_name, :long_name, :logo, :campus_contacts, :covers_dpc, :partner_display, :enabled, :ror_orgs,
                     authentication: %i[strategy ranges entity_id entity_domain])
     end
 
