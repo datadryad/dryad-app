@@ -440,6 +440,7 @@ GEM
       net-protocol
     net-ssh (7.3.0)
     netrc (0.11.0)
+    newrelic_rpm (9.16.1)
     nio4r (2.7.3)
     noid (0.9.0)
     nokogiri (1.17.1-arm64-darwin)
@@ -822,6 +823,7 @@ DEPENDENCIES
   mysql2 (~> 0.5.3)
   net-ftp (~> 0.3.4)
   net-sftp
+  newrelic_rpm
   noid (~> 0.9.0)
   omniauth (~> 2.1.0)
   omniauth-google-oauth2 (~> 1.1.1)
