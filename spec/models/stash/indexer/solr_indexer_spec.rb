@@ -5,8 +5,8 @@ module Stash
     describe SolrIndexer do
 
       before(:each) do
-        @my_url = 'http://dryadsolr.datadryad.org:8983/solr/geoblacklight/'
-        @my_indexer = Stash::Indexer::SolrIndexer.new(solr_url: 'http://dryadsolr.datadryad.org:8983/solr/geoblacklight/')
+        @my_url = 'http://dryadsolr.datadryad.org:8983/solr/dryad/'
+        @my_indexer = Stash::Indexer::SolrIndexer.new(solr_url: 'http://dryadsolr.datadryad.org:8983/solr/dryad/')
 
         my_logger = instance_double('Logger')
         allow(my_logger).to receive(:error).and_return(nil)
