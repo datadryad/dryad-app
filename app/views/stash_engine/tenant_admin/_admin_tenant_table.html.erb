@@ -23,6 +23,9 @@
       <th class="c-admin-table">
         Notify
       </th>
+      <th class="c-lined-table__sort" <%= sort_display('covers_dpc') %>>
+        <%= sortable_column_head sort_field: 'covers_dpc', title: 'Pays DPC' %>
+      </th>
       <th class="c-lined-table__sort" <%= sort_display('partner_display') %>>
         <%= sortable_column_head sort_field: 'partner_display', title: 'Display' %>
       </th>
@@ -122,6 +125,24 @@
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'campus_contacts'), method: :get, local: false) do %>
               <button class="c-admin-edit-icon" aria-label="Edit member contacts" aria-haspopup="dialog" id="campus_contacts_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="covers_dpc_<%= t.id %>">
+            <span style="color: <%= t.covers_dpc ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+              <%= t.covers_dpc ? "True" : "False" %>
+            </span>
+          </div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'covers_dpc'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member payment" aria-haspopup="dialog" id="covers_dpc_button_<%= t.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>

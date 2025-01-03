@@ -8,6 +8,8 @@ when 'authentication'
   @tenant.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP')
 when 'partner_display'
   "<span style='color: #{@tenant.partner_display ? '#3c763d' : 'rgb(209, 44, 29)'}'>#{@tenant.partner_display ? 'Shown' : 'Hidden'}</span>".html_safe
+when 'covers_dpc'
+  "<span style='color: #{@tenant.covers_dpc ? '#3c763d' : 'rgb(209, 44, 29)'}'>#{@tenant.covers_dpc ? 'True' : 'False'}</span>".html_safe
 when 'enabled'
   "<span style='color: #{@tenant.enabled ? '#3c763d' : 'rgb(209, 44, 29)'}''>#{@tenant.enabled ? "Enabled" : "Disabled"}</span>".html_safe
 when 'campus_contacts'
