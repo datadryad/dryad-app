@@ -244,6 +244,7 @@ Rails.application.routes.draw do
 
     get 'close_page', to: 'pages#close_page'
     get 'requirements', to: 'pages#requirements'
+    get 'reuse', to: 'pages#reuse'
     get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
     get 'mission', to: 'pages#what_we_do'
