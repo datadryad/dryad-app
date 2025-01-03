@@ -86,8 +86,7 @@ test:
     zip_size: 11.0e+9
     api_zip_size: 200
     files: 100
-  frictionless:
-    size_limit: 1_000_000
+    frictionless: 1_000_000
   rate_limit:
     # number of requests allowed per minute
     # these rates are low to facilitate quick testing of the rate limiter,
@@ -220,10 +219,8 @@ defaults: &DEFAULTS
     zenodo_size: 50_000_000_000
     zip_size: 11_000_000_000
     api_zip_size: 200_000_000
-    files: 1000
-  frictionless:    
-    size_limit: 50_000_000
-    missing_values: ",NA,na,N/A,n/a,N.A.,n.a.,-,.,empty,blank"
+    files: 100
+    frictionless: 50_000_000
   rate_limit:
     file_downloads_per_hour: 100
     file_downloads_per_day: 500
