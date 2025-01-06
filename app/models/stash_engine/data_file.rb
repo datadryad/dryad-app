@@ -143,6 +143,11 @@ module StashEngine
       bucket.presigned_download_url(s3_key: s3_permanent_path, filename: upload_file_name)
     end
 
+    def s3_permanent_presigned_url_inline
+      bucket = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
+      bucket.presigned_download_url(s3_key: s3_permanent_path)
+    end
+
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
     def merritt_url
       domain, ark = resource.merritt_protodomain_and_local_id
@@ -223,6 +228,10 @@ module StashEngine
         return true if number[0, 4] == "\x89PNG".b || number[0, 4] == 'GIF8'.b || number[0, 2] == "\xFF\xD8".b
       end
       return true if upload_file_name.end_with?('svg') || ['image/svg+xml'].include?(upload_content_type)
+
+      # PDF < 1MB
+      return false if upload_file_size && upload_file_size > 1 * 1024 * 1024
+      return true if upload_file_name.end_with?('.pdf') || upload_content_type == 'application/pdf'
 
       false
     end

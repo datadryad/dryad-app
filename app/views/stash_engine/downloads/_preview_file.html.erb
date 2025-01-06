@@ -2,6 +2,9 @@
 <p role="heading" level="3" id="preview_file_name"><span>Preview: <%= @file.upload_file_name %></span><button class="o-button__plain-text7" aria-label="Close preview" onclick="close_preview()"><i class="fas fa-times" aria-hidden="true"></i></button></p>
 <% if @preview %>
   <% case @file_type %>
+  <% when 'pdf' %>
+    <div id="pdf_loading" style="text-align: center; margin-top: 1rem"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></div>
+    <canvas id="pdf_canvas"></canvas>
   <% when 'img' %>
     <img src="<%= @file.digest.present? ? @file.s3_permanent_presigned_url : @file.s3_staged_presigned_url %>"/>
   <% when 'csv' %>

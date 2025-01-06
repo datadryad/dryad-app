@@ -131,6 +131,8 @@ module StashEngine
       @file = DataFile.find(params[:file_id])
       # @preview = (@data_file.preview_file if @data_file&.resource&.may_download?(ui_user: current_user))
       @file_type = 'img'
+      @file_type = 'pdf' if @file.upload_file_name.end_with?('.pdf') ||
+        @file.upload_content_type == 'application/pdf'
       @file_type = 'csv' if @file.upload_file_name.end_with?('.csv', '.tsv') ||
         ['text/csv', 'text/tab-separated-values'].include?(@file.upload_content_type)
       @file_type = 'txt' if @file.upload_file_name.end_with?('.txt', '.md') ||
