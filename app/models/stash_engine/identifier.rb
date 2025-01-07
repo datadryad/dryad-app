@@ -172,7 +172,7 @@ module StashEngine
     def latest_downloadable_resource(user: nil)
       return latest_resource_with_public_download if user.nil?
 
-      lr = resources.submitted_only.by_version_desc.first
+      lr = resources_with_file_changes.submitted.last
       return lr if lr&.permission_to_edit?(user: user)
 
       latest_resource_with_public_download
