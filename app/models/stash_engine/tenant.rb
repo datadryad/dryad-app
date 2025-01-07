@@ -44,7 +44,7 @@ module StashEngine
     # return all enabled tenants sorted by name
     scope :enabled, -> { where(enabled: true).order(:short_name) }
     scope :partner_list, -> { enabled.where(partner_display: true) }
-    scope :connect_list, -> { partner_list.where(choose_sso: true) }
+    scope :connect_list, -> { partner_list.where(covers_dpc: true) }
     scope :tiered, -> { enabled.where(payment_plan: :tiered) }
     scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 
