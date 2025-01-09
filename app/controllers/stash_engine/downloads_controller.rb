@@ -129,20 +129,12 @@ module StashEngine
 
     def preview_file
       @file = DataFile.find(params[:file_id])
-      # @preview = (@data_file.preview_file if @data_file&.resource&.may_download?(ui_user: current_user))
-      @file_type = 'img'
-      @file_type = 'pdf' if @file.upload_file_name.end_with?('.pdf') ||
-        @file.upload_content_type == 'application/pdf'
-      @file_type = 'csv' if @file.upload_file_name.end_with?('.csv', '.tsv') ||
-        ['text/csv', 'text/tab-separated-values'].include?(@file.upload_content_type)
-      @file_type = 'txt' if @file.upload_file_name.end_with?('.txt', '.md') ||
-        @file.upload_content_type == 'text/plain'
 
-      if %w[csv txt].include?(@file_type)
+      if %w[csv txt].include?(@file.preview_type)
         @preview = @file.text_preview
         @sep = SniffColSeparator.find(@file.sniff_file) if @file_type == 'csv'
       else
-        @preview = true
+        @preview = @file.preview_type.present?
       end
     end
 

@@ -208,32 +208,46 @@ module StashEngine
     end
 
     # check if file may be previewed
-    def previewable?
-      return false if upload_file_name == 'README.md'
+    def preview_type
+      return nil if upload_file_name == 'README.md'
 
-      # Plain text and CSV
-      if upload_file_name.end_with?('.csv', '.tsv', '.txt', '.md') ||
-        ['text/plain', 'text/csv', 'text/tab-separated-values'].include?(upload_content_type)
-        return true if sniff_file(512)
+      return 'csv' if upload_file_name.end_with?('.csv', '.tsv') ||
+        ['text/csv', 'text/tab-separated-values'].include?(upload_content_type)
 
-        return false
-      end
+      return 'txt' if upload_file_name.end_with?('.txt', '.md') ||
+        upload_content_type == 'text/plain'
 
       # Images < 5MB
-      return false if upload_file_size && upload_file_size > 5 * 1024 * 1024
+      return nil if upload_file_size && upload_file_size > 5 * 1024 * 1024
 
-      if upload_file_name.end_with?('.png', '.gif', '.jpg', '.jpeg') ||
-        ['image/png', 'image/gif', 'image/jpeg'].include?(upload_content_type)
-        return false unless (number = sniff_file(4, encode: false))
-        return true if number[0, 4] == "\x89PNG".b || number[0, 4] == 'GIF8'.b || number[0, 2] == "\xFF\xD8".b
-      end
-      return true if upload_file_name.end_with?('svg') || ['image/svg+xml'].include?(upload_content_type)
+      return 'img' if upload_file_name.end_with?('.png', '.gif', '.jpg', '.jpeg', '.svg') ||
+      ['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'].include?(upload_content_type)
 
       # PDF < 1MB
-      return false if upload_file_size && upload_file_size > 1 * 1024 * 1024
-      return true if upload_file_name.end_with?('.pdf') || upload_content_type == 'application/pdf'
+      return nil if upload_file_size && upload_file_size > 1 * 1024 * 1024
 
-      false
+      return 'pdf' if upload_file_name.end_with?('.pdf') || upload_content_type == 'application/pdf'
+
+      nil
+    end
+
+    def previewable?
+      case preview_type
+      when 'txt', 'csv'
+        return true if sniff_file(512)
+
+        false
+      when 'img'
+        return true if upload_file_name.end_with?('svg') || ['image/svg+xml'].include?(upload_content_type)
+        return false unless (number = sniff_file(4, encode: false))
+        return true if number[0, 4] == "\x89PNG".b || number[0, 4] == 'GIF8'.b || number[0, 2] == "\xFF\xD8".b
+
+        false
+      when 'pdf'
+        true
+      else
+        false
+      end
     end
 
     # for testing CSV delimiters & file validity

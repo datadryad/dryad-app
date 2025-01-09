@@ -1,5 +1,5 @@
 document.getElementById('file_preview_box').innerHTML = `<%= render partial: 'preview_file' %>`
-<% if @file_type == 'pdf' %>
+<% if @file.preview_type == 'pdf' %>
 var { pdfjsLib } = globalThis;
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.mjs';
 var url = '<%= @file.digest.present? ? @file.s3_permanent_presigned_url_inline : @file.s3_staged_presigned_url %>'.replace(/&amp;/g, "&");
