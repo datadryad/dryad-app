@@ -4,23 +4,7 @@
   <%= render 'stash_engine/shared/standard_head' %>
   <%= render 'stash_engine/shared/stash_head' %>
   <%= content_for :head %>
-  <script type="text/javascript">
-    function load_data() {
-      $("[data-load]:not([data-loaded])").filter(":visible").each(function () {
-        var path = $(this).attr('data-load');
-        // $(this).load(path);
-        $.ajax({
-          url: path,
-          //data,
-          // success: success,
-          dataType: 'script'
-        }).always(function() {
-          // modernizeIt();
-        });
-        $(this).attr('data-loaded')
-      });
-    }
-  </script>
+  <script type="text/javascript" src="/javascript/dataload.js" defer></script>
 </head>
 <body class='<%= "#{controller_name}_#{action_name}" %>'>
   <%= render 'stash_engine/shared/top_area' %>
@@ -29,17 +13,9 @@
   <%= yield %>
   </main>
   <%= render partial: "stash_engine/shared/footer" %>
-
+  <script type="text/javascript" src="/javascript/interactions.js"></script>
   <%= render partial: "stash_engine/shared/dialog_confirm" %>
-
   <%= render partial: "stash_engine/shared/dialog_modal" %>
   <%= content_for :doc_end %>
-  <script type="text/javascript" defer="defer">
-    // see http://stackoverflow.com/questions/6214201/best-practices-for-loading-page-content-via-ajax-request-in-rails3
-    // for information about how data-load works, only I made it more standard UJS.
-    $(window).on("load", function() {
-      load_data()
-    });
-  </script>
 </body>
 </html>
