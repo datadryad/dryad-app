@@ -30,7 +30,7 @@ module StashEngine
     def popup
       strings = { campus_contacts: 'contacts', partner_display: 'member display', ror_orgs: 'ROR organizations', enabled: 'active membership',
                   covers_dpc: 'payment', short_name: 'member name', long_name: 'full member name',
-                  logo: 'logo', authentication: 'authentication strategy' }
+                  sponsor_id: 'sponsor', logo: 'logo', authentication: 'authentication strategy' }
       @desc = strings[@field.to_sym]
       respond_to(&:js)
     end
@@ -77,8 +77,9 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[covers_dpc partner_display enabled short_name long_name]
+      valid = %i[covers_dpc partner_display enabled short_name long_name sponsor_id]
       update = edit_params.slice(*valid)
+      update[:sponsor_id] = nil if edit_params.key?(:sponsor_id) && edit_params[:sponsor_id].blank?
       update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:campus_contacts)
       if edit_params.key?(:authentication)
         auth = {
@@ -109,7 +110,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :field, :short_name, :long_name, :logo, :campus_contacts, :covers_dpc, :partner_display, :enabled, :ror_orgs,
+      params.permit(:id, :field, :short_name, :long_name, :logo, :campus_contacts, :covers_dpc, :partner_display, :enabled, :ror_orgs, :sponsor_id,
                     authentication: %i[strategy ranges entity_id entity_domain])
     end
 

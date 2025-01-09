@@ -19,6 +19,8 @@ when 'ror_orgs'
     org = @tenant.ror_orgs.find{ |o| o.ror_id == r }
     "<a href='#{r}' target='_blank'>#{org ? org.name : r}</a>"
   }.join(', ').html_safe
+when 'sponsor_id'
+  @tenant.sponsor&.short_name
 when 'logo'
   @tenant.logo&.data&.present? ? "<img src='#{@tenant.logo.data}' alt='#{@tenant.short_name} logo'/>".html_safe : ''
 end %>";
