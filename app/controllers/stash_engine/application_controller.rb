@@ -13,6 +13,13 @@ module StashEngine
 
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+    if Rails.env.local?
+      before_action do
+        Rack::MiniProfiler.config.authorization_mode = :allow_all
+        Rack::MiniProfiler.authorize_request
+      end
+    end
+
     # returns the :return_to_path set in the session or else goes back to the path supplied
     def return_to_path_or(default_path)
       return session.delete(:return_to_path) if session[:return_to_path]

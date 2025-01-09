@@ -15,7 +15,7 @@
 <%= react_component('containers/UploadFiles', {
   resource_id: @resource.id,
   readme_size: @readme_size,
-  file_uploads: @resource.generic_files.validated_table.as_json(
+  file_uploads: @resource.generic_files.includes(:frictionless_report).validated_table.as_json(
     methods: :type, include: { frictionless_report: { only: [:report, :status] } }
   ),
   app_config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
