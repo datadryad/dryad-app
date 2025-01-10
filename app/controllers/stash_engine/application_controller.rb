@@ -15,7 +15,6 @@ module StashEngine
 
     if Rails.env.local?
       before_action do
-        Rack::MiniProfiler.config.authorization_mode = :allow_all
         Rack::MiniProfiler.authorize_request
       end
     end
