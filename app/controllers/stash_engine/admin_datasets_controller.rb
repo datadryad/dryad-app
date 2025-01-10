@@ -40,7 +40,9 @@ module StashEngine
       @identifier = Identifier.find(params[:id])
       resource_ids = @identifier.resources.collect(&:id)
       ord = helpers.sortable_table_order(whitelist: %w[created_at])
-      @curation_activities = CurationActivity.where(resource_id: resource_ids).includes(:resource, :user, resource: [:stash_version]).order(ord, id: :asc)
+      @curation_activities = CurationActivity.where(resource_id: resource_ids)
+        .includes(:resource, :user, resource: [:stash_version])
+        .order(ord, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     rescue ActiveRecord::RecordNotFound
       admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
