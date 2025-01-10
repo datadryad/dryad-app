@@ -269,6 +269,7 @@ Rails.application.routes.draw do
     get 'privacy', to: 'pages#privacy'
     get 'accessibility', to: 'pages#accessibility'
     get 'membership', to: 'pages#membership'
+    get 'sandbox', to: 'pages#sandbox' unless Rails.env.include?('production') 
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
     # All our identifiers seem to have either /dryad or /FK2 or /[A-Z]\d in them, replaces the first occurrence of %2F with /
