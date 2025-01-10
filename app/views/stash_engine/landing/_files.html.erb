@@ -69,7 +69,9 @@
     })
   }
   const load_preview = (n) => {
-    document.getElementById('file_preview_box').innerHTML = `<div class="file_preview"><p role="heading" level="3" id="preview_file_name"><span>Preview: ${n}</span></p><p style="text-align:center"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p></div>`;
+    const box = document.getElementById('file_preview_box');
+    box.innerHTML = `<div class="file_preview"><p role="heading" level="3" id="preview_file_name"><span>Preview: ${n}</span></p><p style="text-align:center"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p></div>`;
+    box.scrollIntoView();
   }
   const close_preview = () => {
     document.getElementById('file_preview_box').innerHTML = '';
