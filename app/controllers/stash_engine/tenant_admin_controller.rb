@@ -9,7 +9,7 @@ module StashEngine
       authorize %i[stash_engine tenant], :admin?
       setup_sponsors
 
-      @tenants = StashEngine::Tenant.all
+      @tenants = StashEngine::Tenant.includes(%i[logo tenant_ror_orgs ror_orgs])
 
       if params[:q]
         q = params[:q]
