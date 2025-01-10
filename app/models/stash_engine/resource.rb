@@ -189,7 +189,7 @@ module StashEngine
 
     # ------------------------------------------------------------
     # Scopes for repository status
-    default_scope { includes(:curation_activities) }
+    # default_scope { includes(:curation_activities) }
 
     scope :in_progress, -> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress error] })

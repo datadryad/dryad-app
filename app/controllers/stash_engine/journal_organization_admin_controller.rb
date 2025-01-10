@@ -8,7 +8,7 @@ module StashEngine
     def index
       setup_sponsors
 
-      @orgs = authorize StashEngine::JournalOrganization.all
+      @orgs = authorize StashEngine::JournalOrganization.includes(%i[children parent_org])
 
       if params[:q]
         q = params[:q]

@@ -178,8 +178,10 @@ group :development, :v3_development, :local_dev, :local, :test do
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
+  gem 'bullet'
   gem 'letter_opener'
   gem 'letter_opener_web', '~> 3.0'
+  gem 'rack-mini-profiler', require: false
   gem 'spring-commands-rspec'
 end
 
