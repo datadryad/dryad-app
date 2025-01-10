@@ -31,9 +31,11 @@
               <span>
               <%= link_to "<i class=\"fas fa-download\" aria-hidden=\"true\"></i>#{fu.upload_file_name.ellipsisize(200)}".html_safe, Rails.application.routes.url_helpers.download_stream_path(params),
                         title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
-              <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, format: :js) %>">
-                <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
-              </div>
+              <% unless fu.preview_type.nil? %>
+                <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, format: :js) %>">
+                  <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
+                </div>
+              <% end %>
               </span>
               <div>
                 <%= filesize(fu.upload_file_size) %>
@@ -66,7 +68,9 @@
     })
   }
   const load_preview = (n) => {
-    document.getElementById('file_preview_box').innerHTML = `<div class="file_preview"><p role="heading" level="3" id="preview_file_name"><span>Preview: ${n}</span></p><p style="text-align:center"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p></div>`;
+    const box = document.getElementById('file_preview_box');
+    box.innerHTML = `<div class="file_preview"><p role="heading" level="3" id="preview_file_name"><span>Preview: ${n}</span></p><p style="text-align:center"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p></div>`;
+    box.scrollIntoView();
   }
   const close_preview = () => {
     document.getElementById('file_preview_box').innerHTML = '';

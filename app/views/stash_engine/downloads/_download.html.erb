@@ -1,6 +1,7 @@
 <% # takes dataset_identifier as local %>
 <% content_for(:head) do %>
 <script type="text/javascript" src="https://16077a4ae659.us-west-2.captcha-sdk.awswaf.com/16077a4ae659/jsapi.js" defer></script>
+<script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" defer></script>
 <% end %>
 <% worker_scope = request.fullpath.split('/').first(3).join('/') + '/' %>
 <div class="o-download">

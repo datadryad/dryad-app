@@ -1,1 +1,27 @@
 document.getElementById('file_preview_box').innerHTML = `<%= render partial: 'preview_file' %>`
+<% if @file.preview_type == 'pdf' %>
+var { pdfjsLib } = globalThis;
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.mjs';
+var url = '<%= @file.digest.present? ? @file.s3_permanent_presigned_url_inline : @file.s3_staged_presigned_url %>'.replace(/&amp;/g, "&");
+pdfjsLib.getDocument(url).promise.then((pdf) => {
+  pdf.getPage(1).then((page) => {
+    var viewport = page.getViewport({scale: 1});
+
+    // Prepare canvas using PDF page dimensions
+    var canvas = document.getElementById('pdf_canvas');
+    var context = canvas.getContext('2d');
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    // Render PDF page into canvas context
+    var renderContext = {
+      canvasContext: context,
+      viewport: viewport
+    };
+    var renderTask = page.render(renderContext);
+    renderTask.promise.then(() => {
+      document.getElementById('pdf_loading').hidden = true;
+    });
+  })
+});
+<% end %>
