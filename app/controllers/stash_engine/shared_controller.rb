@@ -114,7 +114,7 @@ module StashEngine
     end
 
     def current_user
-      @current_user ||= StashEngine::User.find_by(id: session[:user_id]) if session[:user_id]
+      @current_user ||= StashEngine::User.preload(:roles).find_by(id: session[:user_id]) if session[:user_id]
     end
 
     def clear_user
