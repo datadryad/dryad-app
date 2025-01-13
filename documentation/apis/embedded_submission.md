@@ -58,6 +58,12 @@ summary of the deposit, including:
 - the DOI for the dataset (`identifier`)
 - a URL for making edits to the dataset (`editLink`)
 
+In case a dataset with the same API user, `title` and `manuscriptNumber` already exists,
+an error is returned.
+```json
+{"error": "A dataset with same information already exists."}
+```
+
 A sample call using the [sample dataset file](sample_dataset.json), with results abbreviated for readability:
 ```bash
 > curl --data "@sample_dataset.json" -i -X POST https://datadryad.org/api/v2/datasets -H "Authorization: Bearer <token>" -H "Content-Type: application/json"
@@ -100,7 +106,7 @@ A sample call using the [sample dataset file](sample_dataset.json), with results
   "lastModificationDate": "2020-10-02",
   "visibility": "restricted",
   "userId": "0000-0003-0597-4085",
-  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "license": "https://spdx.org/licenses/CC0-1.0.html",
   "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
   }
 ```
@@ -191,7 +197,7 @@ Sample call and (abbreviated) response:
   "visibility": "restricted",
   "sharingLink":"https://datadryad.org/stash/share/OI-tU-WmoT3I2KCOqX7Of624",
   "userId": 37182,
-  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "license": "https://spdx.org/licenses/CC0-1.0.html",
   "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
   }
 ```
@@ -216,8 +222,12 @@ that tells the server to set the /curationStatus value:
 
 ```json
 [
-	{ "op": "replace", "path": "/curationStatus", "value": "submitted" }
+  { "op": "replace", "path": "/curationStatus", "value": "submitted" }
 ]
+```
+OR directly
+```json
+{ "op": "replace", "path": "/curationStatus", "value": "submitted" }
 ```
 
 The value may be:
@@ -232,6 +242,8 @@ For the cURL example, please save a file called my_patch.json with the patch con
 curl --data "@my_patch.json" -i -X PATCH "https://<domain-name>/api/v2/datasets/<encoded-doi>" -H "Authorization: Bearer <token>" -H "Content-Type: application/json-patch+json" -H "Accept: application/json"
 ```
 
+`Accept` header is optional if you are using JSON format.
+
 Linking a dataset to a journal, or unlinking a dataset from a journal
 ---------------------------------------------------------------------
 
@@ -242,4 +254,7 @@ To link/unlink a dataset and a journal, use a similar approach to the status upd
 	{ "op": "replace", "path": "/publicationISSN", "value": "1234-5678" }
 ]
 ```
-
+OR directly
+```json
+{ "op": "replace", "path": "/publicationISSN", "value": "1234-5678" }
+```

@@ -77,8 +77,8 @@ module Stash
       def populate_pub_update!
         return nil unless @sm.present? && @resource.present?
 
-        populate_publication_issn
         populate_publication_name
+        populate_publication_issn
         @resource.reload
       end
 
@@ -362,35 +362,33 @@ module Stash
         @resource.publication_date = date_parts_to_date(publication_date)
       end
 
-      def populate_publication_issn
-        return unless @sm['ISSN'].present? && @sm['ISSN'].first.present?
-
-        # We only want to save the ISSN if we receive one that we already know about. Otherwise,
-        # it is likely an alternative ISSN for a journal where we have a different primary ISSN
-        # (most journals have separate ISSNs for print, online, linking)
-        # In that case, we will save the journal name, and look up the correct ISSN from the name.
-        return unless StashEngine::Journal.find_by_issn(@sm['ISSN'].first).present?
-
-        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
-
-        return if @resource.journal&.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first).id
-
-        datum.publication_issn = @sm['ISSN'].first
-        datum.save
-      end
-
       def populate_publication_name
         return unless publisher.present?
-        # We do not want to overwrite correct journal names with nonstandardized names for the same journal
-        # only update the journal name if the dataset is not already set with this journal
+        # We do not want to overwrite correct journal names with nonstandardized names
+        # only update the journal name if the dataset is not already set with this journal ISSN
         return if @sm['ISSN'].present? && @sm['ISSN'].first.present? && @resource.journal.present? &&
           @resource.journal.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first)&.id
 
         datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
         datum.publication_name = publisher
-        # If the publication name matches an existing journal, populate/update the ISSN
         journal = StashEngine::Journal.find_by_title(publisher)
-        datum.publication_issn = journal.single_issn if journal.present?
+        # If the publication name matches an existing journal, populate/update the ISSN
+        # Otherwise, remove existing ISSNs that do not match the imported journal name
+        datum.publication_issn = journal.present? ? journal.single_issn : nil
+        datum.save
+      end
+
+      def populate_publication_issn
+        return unless @sm['ISSN'].present? && @sm['ISSN'].first.present?
+
+        # Do not change the ISSN if one for this journal is already set
+        found = StashEngine::Journal.find_by_issn(@sm['ISSN'].first)
+        return if found && @resource.journal&.id == found&.id
+
+        # First look up the ISSN from the journal name (populate_publication_name).
+        # If we do not know the ISSN, save it for quarterly checking and addition to our db
+        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+        datum.publication_issn = @sm['ISSN'].first
         datum.save
       end
 

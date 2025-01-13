@@ -5,10 +5,13 @@ require 'cgi'
 
 # class ApplicationController < ActionController::Base
 class ApiApplicationController < StashEngine::ApplicationController
+  include StashApi::Versioning
 
   layout 'layouts/stash_engine/application'
 
   before_action :log_request
+  before_action :set_response_version_header
+  before_action :check_requested_version
   skip_before_action :verify_authenticity_token
 
   DEFAULT_PAGE_SIZE = 20
@@ -28,6 +31,8 @@ class ApiApplicationController < StashEngine::ApplicationController
   end
 
   def require_json_headers
+    request.format = :json unless params[:format]
+
     accept = request.headers['accept']
     content_type = request.headers['content-type']
     # check that content_type and accept headers are as expected

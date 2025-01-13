@@ -1,5 +1,3 @@
-require 'pry-remote'
-
 RSpec.feature 'Admin', type: :feature do
 
   include DatasetHelper
@@ -79,7 +77,7 @@ RSpec.feature 'Admin', type: :feature do
       visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page).to have_text('User settings')
       @resource.reload
-      expect(@resource.user_id).to eq(@admin.id)
+      expect(@resource.submitter.id).to eq(@admin.id)
     end
 
     it 'forces a non-logged-in user with a valid edit_code to login before take ownership of a dataset owned by the system user' do

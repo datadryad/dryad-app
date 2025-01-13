@@ -2,16 +2,16 @@
 <table class="c-lined-table">
   <thead>
     <tr>
-      <th class="c-lined-table__sort <%= sort_display('id') %>">
+      <th class="c-lined-table__sort" <%= sort_display('id') %>>
         <%= sortable_column_head sort_field: 'id', title: 'ID' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('short_name') %>">
+      <th class="c-lined-table__sort" <%= sort_display('short_name') %>>
         <%= sortable_column_head sort_field: 'short_name', title: 'Short name' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('long_name') %>">
+      <th class="c-lined-table__sort" <%= sort_display('long_name') %>>
         <%= sortable_column_head sort_field: 'long_name', title: 'Long name' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('authentication') %>">
+      <th class="c-lined-table__sort" <%= sort_display('authentication') %>>
         <%= sortable_column_head sort_field: 'authentication', title: 'Auth method' %>
       </th>
       <th class="c-admin-table">
@@ -23,10 +23,10 @@
       <th class="c-admin-table">
         Notify
       </th>
-      <th class="c-lined-table__sort <%= sort_display('partner_display') %>">
+      <th class="c-lined-table__sort" <%= sort_display('partner_display') %>>
         <%= sortable_column_head sort_field: 'partner_display', title: 'Display' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('enabled') %>">
+      <th class="c-lined-table__sort" <%= sort_display('enabled') %>>
         <%= sortable_column_head sort_field: 'enabled', title: 'Connect' %>
       </th>
     </tr>
@@ -36,13 +36,52 @@
   <% tenants.each do |t| %>
     <tr class="c-lined-table__row">
       <td><%= t.id %></td>
-      <td><%= t.short_name %></td>
-      <td><%= t.long_name %></td>
-      <td><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="short_name_<%= t.id %>"><%= t.short_name %></div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'short_name'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member name" aria-haspopup="dialog" id="short_name_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="long_name_<%= t.id %>"><%= t.long_name %></div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'long_name'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member long name" aria-haspopup="dialog" id="long_name_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="authentication_<%= t.id %>"><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'authentication'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member authentication" aria-haspopup="dialog" id="authentication_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="logo_<%= t.id %>">
-            <%= "<img src='#{t.logo}' style='min-width: 40px;' alt='#{t.short_name} logo'/>".html_safe unless t.logo.blank? %>
+            <%= "<img src='#{t.logo.data}' style='min-width: 40px;' alt='#{t.short_name} logo'/>".html_safe if t.logo&.data&.present? %>
           </div>
           <% if policy([:stash_engine, :tenant]).popup? %>
           <div class="c-lined-table__actions">

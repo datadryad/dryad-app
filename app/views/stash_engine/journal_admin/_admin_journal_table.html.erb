@@ -2,13 +2,13 @@
 <table class="c-lined-table">
   <thead>
     <tr>
-      <th class="c-lined-table__sort <%= sort_display('title') %>">
+      <th class="c-lined-table__sort" <%= sort_display('title') %>>
         <%= sortable_column_head sort_field: 'title', title: 'Title' %>
       </th>
       <th class="c-admin-table">
         ISSNs
       </th>
-      <th class="c-lined-table__sort <%= sort_display('payment_plan_type') %>">
+      <th class="c-lined-table__sort" <%= sort_display('payment_plan_type') %>>
         <%= sortable_column_head sort_field: 'payment_plan_type', title: 'Payment plan' %>
       </th>
       <th class="c-admin-table">
@@ -17,7 +17,7 @@
       <th class="c-admin-table">
         Review contacts
       </th>
-      <th class="c-lined-table__sort <%= sort_display('default_to_ppr') %>">
+      <th class="c-lined-table__sort" <%= sort_display('default_to_ppr') %>>
         <%= sortable_column_head sort_field: 'default_to_ppr', title: 'PPR Default' %>
       </th>
       <th class="c-admin-table">
@@ -29,7 +29,20 @@
 <tbody>  
   <% journals.each do |j| %>
     <tr class="c-lined-table__row">
-      <td><%= j.title %></td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="title_<%= j.id %>"><%= j.title %></div>
+          <% if policy([:stash_engine, :journal]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: journal_popup_path(id: j.id, field: 'title'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit Title" aria-haspopup="dialog" id="title_button_<%= j.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="issn_<%= j.id %>">

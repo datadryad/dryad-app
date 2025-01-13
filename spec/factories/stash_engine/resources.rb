@@ -42,23 +42,31 @@
 FactoryBot.define do
 
   factory :resource, class: StashEngine::Resource do
+    transient { user { nil } }
     identifier
-    user
 
     has_geolocation { true }
     title { Faker::Lorem.sentence }
-    download_uri { "http://merritt-fake.cdlib.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(number: 8)}" }
+    download_uri { "http://storage-fake.datadryad.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(number: 8)}" }
     update_uri do
-      "http://mrtsword-fake.cdlib.org:39001/mrtsword/edit/#{Faker::Alphanumeric.alpha(number: 8)}/" \
+      "http://storage-fake.org:39001/mrtsword/edit/#{Faker::Alphanumeric.alpha(number: 8)}/" \
         "doi%3A10.5061%2Fdryad.#{Faker::Alphanumeric.alphanumeric(number: 6)}"
     end
     publication_date { Time.new.utc }
 
-    before(:create) do |resource|
-      resource.tenant_id = resource.user.present? ? resource.user.tenant_id : 'dryad'
+    before(:create) do |resource, e|
+      user = e.user || StashEngine::User.find_by(id: resource.user_id) || create(:user)
+      resource.tenant_id = user.tenant_id
+      resource.current_editor_id = user.id unless resource.current_editor_id
     end
 
-    after(:create) do |resource|
+    after(:create) do |resource, e|
+      unless resource.creator
+        user = e.user || create(:user)
+        create(:role, user_id: resource.user_id || user.id, role_object: resource, role: 'creator')
+        create(:role, user_id: resource.user_id || user.id, role_object: resource, role: 'submitter')
+        resource.update_columns(user_id: nil)
+      end
       create(:author, resource: resource)
       create(:description, resource_id: resource.id)
       create(:right, resource: resource)
@@ -69,7 +77,7 @@ FactoryBot.define do
 
     trait :submitted do
       after(:create) do |resource|
-        create(:curation_activity, status: 'processing', user: resource.user, resource: resource)
+        create(:curation_activity, status: 'processing', user: resource.submitter, resource: resource)
         resource.current_state = 'submitted'
         resource.save
         resource.reload
@@ -85,10 +93,10 @@ FactoryBot.define do
     submitted
 
     after(:create) do |resource|
-      create(:curation_activity, :curation, user: resource.user, resource: resource)
+      create(:curation_activity, :curation, user: resource.submitter, resource: resource)
       create(:curation_activity,
              :embargoed, resource: resource,
-                         user: create(:user, role: 'admin', role_object: resource.user.tenant, tenant_id: resource.user.tenant_id)).id
+                         user: create(:user, role: 'admin', role_object: resource.submitter.tenant, tenant_id: resource.submitter.tenant_id)).id
     end
 
   end
@@ -100,10 +108,10 @@ FactoryBot.define do
     submitted
 
     after(:create) do |resource|
-      create(:curation_activity, :curation, user: resource.user, resource: resource)
+      create(:curation_activity, :curation, user: resource.submitter, resource: resource)
       create(:curation_activity,
              :published, resource: resource,
-                         user: create(:user, role: 'admin', role_object: resource.user.tenant, tenant_id: resource.user.tenant_id)).id
+                         user: create(:user, role: 'admin', role_object: resource.submitter.tenant, tenant_id: resource.submitter.tenant_id)).id
     end
 
   end

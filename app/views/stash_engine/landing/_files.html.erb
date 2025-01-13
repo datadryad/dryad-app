@@ -1,36 +1,52 @@
-<%# takes local variable of dataset_identifier and resource %>
 <%
-  resources = dataset_identifier.resources.files_published  # the public ones
-  if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
-    res_id = resources.last&.id || 0
-    # rails 5 has an OR we could use, but not yet in rails 4.2, so change to an array rather than an ActiveRecord Relation
-    # note: resources_with_file_changes is a method and not a scope, so must come first
-    # The rest are scopes on resources, greater than the last ID means submitted after the last version shown to public
-    resources = resources.to_a + dataset_identifier.resources_with_file_changes.submitted.where('stash_engine_resources.id > ?', res_id).to_a
+  if share.present?
+    resources = [share[:resource]]
+    dl_resource = share[:resource]
+  else
+    resources = dataset_identifier.resources.files_published  # the public ones
+    if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
+      res_id = resources.last&.id || 0
+      resources = resources.to_a + dataset_identifier.resources_with_file_changes.submitted.where('stash_engine_resources.id > ?', res_id).to_a
+    end
+    dl_resource = dataset_identifier.latest_downloadable_resource(user: current_user)
   end
 %>
 <div class="data_files_section">
   <h2>Data files</h2>
   <div>
-  <% if resources.count.positive? %>      
+  <% if resources.count.positive? %>
     <!-- list individual files -->
     <% resources.each do |res| %>
-      <details class="c-file-group" role="group"<%if res.id === resources.last.id && (res.current_file_uploads.count < 10 || res.total_file_size > APP_CONFIG.maximums.zip_size) %> open<%end%>>
+      <details <% if dl_resource == res %>id="download_resource"<% end %> class="c-file-group" <%if res.id == resources.last.id && (res.current_file_uploads.count < 10 || res.total_file_size > APP_CONFIG.maximums.zip_size) %> open<%end%>>
         <summary role="button" class="o-showhide__summary c-file-group__summary">
           <span><%= formatted_date(res.publication_date.present? && res.publication_date < Time.now.utc ? res.publication_date : res.updated_at) %> version files</span>
-          <span><%= filesize(res.total_file_size) %></span>
+          <span><%= filesize(res.total_file_size) %><% if dl_resource == res && res.total_file_size > APP_CONFIG.maximums.zip_size %><i id="download-select" class="fas fa-download" title="Select files for download"></i><% end %></span>
         </summary>
+        <% if dl_resource == res %><form id="download-select-form" <% if res.total_file_size > APP_CONFIG.maximums.zip_size %>aria-labelledby="download-select-label"<% end %>></form><% end %>
         <ul class="c-file-group__list">
           <% res.current_file_uploads.each do |fu| %>
+          <% params = {file_id: fu.id} %>
+          <% params[:share] = share[:code] if share.present? %>
             <li>
               <span>
-              <%= link_to "<i class=\"fas fa-download\" aria-hidden=\"true\"></i>#{fu.upload_file_name.ellipsisize(200)}".html_safe, Rails.application.routes.url_helpers.download_stream_path(fu.id),
+              <%= link_to "<i class=\"fas fa-download\" aria-hidden=\"true\"></i>#{fu.upload_file_name.ellipsisize(200)}".html_safe, Rails.application.routes.url_helpers.download_stream_path(params),
                         title: fu.upload_file_name, target: '_blank', class: 'js-individual-dl' %>
-              <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, format: :js) %>">
-                <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
-              </div>
+              <% unless fu.preview_type.nil? %>
+                <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, format: :js) %>">
+                  <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
+                </div>
+              <% end %>
               </span>
-              <%= filesize(fu.upload_file_size) %>
+              <div>
+                <%= filesize(fu.upload_file_size) %>
+                <% if dl_resource == res %>
+                <% if fu.upload_file_size < APP_CONFIG.maximums.zip_size %>
+                  <input class="select-file-download" data-size="<%= fu.upload_file_size %>" type="checkbox" name="<%= fu.upload_file_name%>" <%if res.total_file_size < APP_CONFIG.maximums.zip_size %>checked hidden <% end %>aria-label="Select <%= fu.upload_file_name%> for download" form="download-select-form">
+                <% else %>
+                  <span class="select-file-download" title="Too big for zip download" aria-label="Too big for zip download"></span>
+                <% end %>
+                <% end %>
+              </div>
             </li>
           <% end %>
         </ul>
@@ -38,21 +54,17 @@
     <% end %>
     <div id="file_preview_box"></div>
     <!-- full download second -->
-    <%= render partial: 'stash_engine/downloads/download', locals: { dataset_identifier: dataset_identifier } %>
+    <%= render partial: 'stash_engine/downloads/download', locals: { dataset_identifier: dataset_identifier, resource: dl_resource, share: share.present? ? share[:code] : nil } %>
   <% else %>
     <p>No data files are available for display.</p>
   <% end %>
   </div>
 </div>
 <script type="text/javascript">
-  const details = document.getElementsByClassName('c-file-group')
-  for (const expander of details) {
-    expander.addEventListener('toggle', (e) => {
-      load_data()
-    })
-  }
   const load_preview = (n) => {
-    document.getElementById('file_preview_box').innerHTML = `<div class="file_preview"><p role="heading" level="3" id="preview_file_name"><span>Preview: ${n}</span></p><p style="text-align:center"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p></div>`;
+    const box = document.getElementById('file_preview_box');
+    box.innerHTML = `<div class="file_preview"><p role="heading" level="3" id="preview_file_name"><span>Preview: ${n}</span></p><p style="text-align:center"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p></div>`;
+    box.scrollIntoView();
   }
   const close_preview = () => {
     document.getElementById('file_preview_box').innerHTML = '';

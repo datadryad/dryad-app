@@ -70,6 +70,20 @@
   align-items: center;
 }
 
+#admin_search {
+  select {
+    flex-shrink: 1;
+    flex-grow: 1;
+    min-width: 0;
+    max-width: 300px;
+    text-overflow: ellipsis;
+  }
+  input[type="submit"] {
+    padding-right: $spacing-md;
+    padding-left: $spacing-md;
+  }
+}
+
 .o-admin-form-pair {
   display: inline-flex;
   gap: $spacing-base/2;
@@ -83,21 +97,6 @@
   width: 660px;
   #search-terms {
     flex-grow: 1;
-  }
-}
-
-#timezone {
-  text-align: right;
-  font-size: .9em;
-  margin-bottom: 0;
-
-  &:before {
-    display: inline;
-    font-size: .9rem;
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    content: '\f0ac';
-    margin-right: .5ch;
   }
 }
 

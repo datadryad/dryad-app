@@ -19,23 +19,12 @@ module StashEngine
 
     def curator_edit?
       (curate? &&
-      (@resource.current_resource_state&.resource_state == 'submitted')) ||
-      (@resource.current_resource_state&.resource_state == 'in_progress' && @resource&.current_editor_id == @user.id)
+      (@record.current_resource_state&.resource_state == 'submitted')) ||
+      (@record.current_resource_state&.resource_state == 'in_progress' && @record&.user_id == @user.id)
     end
 
-    class Scope
-      def initialize(user, scope)
-        @user = user
-        @scope = scope
-      end
-
-      def resolve
-        @scope.where(user_id: @user.id)
-      end
-
-      private
-
-      attr_reader :user, :scope
+    def change_status?
+      @record.curatable? || @user.superuser?
     end
 
     class VersionScope

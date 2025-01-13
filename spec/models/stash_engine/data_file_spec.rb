@@ -44,7 +44,7 @@ module StashEngine
       @user = create(:user,
                      first_name: 'Lisa',
                      last_name: 'Muckenhaupt',
-                     email: 'lmuckenhaupt@ucop.edu',
+                     email: 'lmuckenhaupt@datadryad.org',
                      tenant_id: 'ucop')
 
       @identifier = create(:identifier)
@@ -65,6 +65,7 @@ module StashEngine
         original_version = @resource.stash_version
         new_resource = @resource.amoeba_dup
         expect(new_resource.stash_version).not_to eq(original_version) # just to be sure
+        new_resource.save
         new_file_record = new_resource.data_files.take
         expect(new_file_record.file_state).to eq('copied') # just to be sure
         expect(new_file_record.version_file_created_in).to eq(original_version)

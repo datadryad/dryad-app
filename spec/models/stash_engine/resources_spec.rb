@@ -14,7 +14,7 @@ module StashEngine
       @user = StashEngine::User.create(
         first_name: 'Lisa',
         last_name: 'Muckenhaupt',
-        email: 'lmuckenhaupt@ucop.edu',
+        email: 'lmuckenhaupt@datadryad.org',
         tenant_id: 'ucop'
       )
       allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
@@ -168,7 +168,7 @@ module StashEngine
         identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         editor = create(:user, first_name: 'L',
                                last_name: 'Mu',
-                               email: 'lm@ucop.edu',
+                               email: 'lm@datadryad.org',
                                tenant_id: 'ucop')
         resource = create(:resource, user_id: @user.id, identifier_id: identifier.id,
                                      current_editor_id: editor.id, tenant_id: 'ucop')
@@ -282,7 +282,7 @@ module StashEngine
 
     describe :publication_date do
       it 'defaults to nil' do
-        resource = Resource.create(user_id: user.id)
+        resource = Resource.create(current_editor_id: @user.id)
         expect(resource.publication_date).to be_nil
       end
 
@@ -296,7 +296,7 @@ module StashEngine
 
     describe :dataset_in_progress_editor_id do
       it 'defaults to current_editor for no identifier' do
-        resource = Resource.create(user_id: user.id, current_editor_id: 1)
+        resource = Resource.create(current_editor_id: 1)
         expect(resource.dataset_in_progress_editor_id).to eq(1)
       end
 
@@ -395,7 +395,7 @@ module StashEngine
       before(:each) do
         @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'published')
         @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
-        @merritt_state = create(:resource_state, user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
+        @merritt_state = create(:resource_state, user_id: @resource.submitter.id, resource_state: 'submitted', resource_id: @resource.id)
         @resource.update(current_resource_state_id: @merritt_state.id)
       end
 
@@ -437,7 +437,7 @@ module StashEngine
         @resource.identifier.update(pub_state: 'unpublished')
         @resource.update(file_view: false)
         @resource.reload
-        expect(@resource.may_download?(ui_user: @resource.user)).to be true
+        expect(@resource.may_download?(ui_user: @resource.submitter)).to be true
       end
 
       it 'returns true if being viewed by a curator' do
@@ -467,7 +467,7 @@ module StashEngine
       before(:each) do
         @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI', pub_state: 'embargoed')
         @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id, meta_view: true, file_view: true)
-        @merritt_state = create(:resource_state, user_id: @resource.user.id, resource_state: 'submitted', resource_id: @resource.id)
+        @merritt_state = create(:resource_state, user_id: @resource.submitter.id, resource_state: 'submitted', resource_id: @resource.id)
         @resource.update(current_resource_state_id: @merritt_state.id)
       end
 
@@ -1021,6 +1021,7 @@ module StashEngine
         describe 'amoeba duplication' do
           before(:each) do
             @res2 = @res1.amoeba_dup
+            @res2.save
           end
 
           it 'copies the non-deleted records' do
@@ -1335,7 +1336,7 @@ module StashEngine
         it 'counts published current states' do
           3.times do |index|
             Timecop.travel(Time.now.utc + 1.second)
-            resource = Resource.create(user_id: user.id)
+            resource = Resource.create(current_editor_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = 'submitted'
             resource.save
@@ -1361,7 +1362,7 @@ module StashEngine
 
         it 'doesn\'t count non-published datasets' do
           %w[in_progress processing error].each_with_index do |state, index|
-            resource = Resource.create(user_id: user.id)
+            resource = Resource.create(current_editor_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = state
             resource.save
@@ -1370,7 +1371,7 @@ module StashEngine
         end
         it 'doesn\'t count non-current states' do
           %w[in_progress processing error].each_with_index do |state, index|
-            resource = Resource.create(user_id: user.id)
+            resource = Resource.create(current_editor_id: user.id)
             resource.ensure_identifier("10.123/#{index}")
             resource.current_state = 'submitted'
             resource.current_state = state
@@ -1441,7 +1442,6 @@ module StashEngine
 
         it 'returns the correct dates when an item went straight from peer_review to curation' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
-          p res.id
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'peer_review')
           create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'curation')
@@ -1472,9 +1472,9 @@ module StashEngine
 
         before(:each) do
           # user has only user permission and is part of the UCOP tenant
-          @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@ucop.edu', tenant_id: 'ucop')
+          @user2 = create(:user, first_name: 'Gargola', last_name: 'Jones', email: 'luckin@datadryad.org', tenant_id: 'ucop')
           create(:role, role_object: @user2.tenant, user: @user2, role: 'admin')
-          @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@ucop.edu', tenant_id: 'ucb', role: 'curator')
+          @user3 = create(:user, first_name: 'Merga', last_name: 'Flav', email: 'flavin@datadryad.org', tenant_id: 'ucb', role: 'curator')
           @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
           @resources = []
           Timecop.travel(Time.now.utc - 12.seconds)
@@ -1595,7 +1595,7 @@ module StashEngine
           end
 
           it 'only shows curated-visible resources to a random user' do
-            @user4 = create(:user, first_name: 'Gorgon', last_name: 'Grup', email: 'st38p@ucop.edu', tenant_id: 'ucb')
+            @user4 = create(:user, first_name: 'Gorgon', last_name: 'Grup', email: 'st38p@datadryad.org', tenant_id: 'ucb')
             resources = StashEngine::ResourcePolicy::VersionScope.new(@user4, @identifier.resources).resolve
             expect(resources.count).to eq(2)
           end

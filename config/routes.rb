@@ -244,6 +244,7 @@ Rails.application.routes.draw do
 
     get 'close_page', to: 'pages#close_page'
     get 'requirements', to: 'pages#requirements'
+    get 'reuse', to: 'pages#reuse'
     get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'
     get 'mission', to: 'pages#what_we_do'
@@ -297,14 +298,20 @@ Rails.application.routes.draw do
     get 'tenant_admin', to: 'tenant_admin#index'
     get 'tenant_admin/:id/edit/:field', to: 'tenant_admin#popup', as: 'tenant_popup'
     post 'tenant_admin/:id', to: 'tenant_admin#edit', as: 'tenant_edit'
+    get 'tenant_admin/new', to: 'tenant_admin#new', as: 'tenant_new'
+    post 'tenant_admin', to: 'tenant_admin#create', as: 'tenant_create'
     # admin journal management
     get 'journal_admin', to: 'journal_admin#index'
     get 'journal_admin/:id/edit/:field', to: 'journal_admin#popup', as: 'journal_popup'
     post 'journal_admin/:id', to: 'journal_admin#edit', as: 'journal_edit'
+    get 'journal_admin/new', to: 'journal_admin#new', as: 'journal_new'
+    post 'journal_admin', to: 'journal_admin#create', as: 'journal_create'
     # admin publisher management
     get 'publisher_admin', to: 'journal_organization_admin#index', as: 'publisher_admin'
     get 'publisher_admin/:id/edit/:field', to: 'journal_organization_admin#popup', as: 'publisher_popup'
     post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
+    get 'publisher_admin/new', to: 'journal_organization_admin#new', as: 'publisher_new'
+    post 'publisher_admin', to: 'journal_organization_admin#create', as: 'publisher_create'
 
     # admin_dashboard
     match 'admin_dashboard', to: 'admin_dashboard#index', via: %i[get post]
@@ -324,9 +331,12 @@ Rails.application.routes.draw do
 
     # activity log
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
+    get 'ds_admin/:id/edit_delete_reference_date', to: 'admin_datasets#edit_delete_reference_date', as: 'edit_delete_reference_date'
+    post 'ds_admin/:id/update_delete_reference_date', to: 'admin_datasets#update_delete_reference_date', as: 'update_delete_reference_date'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     post 'ds_admin/:id', to: 'admin_datasets#edit', as: 'ds_admin_edit'
+    delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
 
     # curation notes
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
@@ -367,9 +377,8 @@ Rails.application.routes.draw do
     resource :pots, only: [:show]
   end
 
-  # the ones below coming from new routing for geoblacklight
+  # the ones below coming from new routing for blacklight
   #--------------------------------------------------------
-  mount Geoblacklight::Engine => 'geoblacklight'
   mount Blacklight::Engine => '/'
 
   get '/search', to: 'catalog#index'

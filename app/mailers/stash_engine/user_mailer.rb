@@ -23,6 +23,10 @@ module StashEngine
     def user_journal_withdrawn(resource, status)
       return unless status == 'withdrawn'
 
+      # Don't send if this was an abandoned dataset
+      removed_files_note = 'remove_abandoned_datasets CRON - removing data files from abandoned dataset'
+      return if resource.curation_activities&.map(&:note)&.include?(removed_files_note)
+
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
 
@@ -237,49 +241,5 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env}Your Dryad data submission has been withdrawn (#{resource&.identifier})")
     end
-
-    private
-
-    # rubocop:disable Style/NestedTernaryOperator
-    def user_email(user)
-      user.present? ? (user.respond_to?(:author_email) ? user.author_email : user.email) : nil
-    end
-
-    def user_name(user)
-      user.present? ? (user.respond_to?(:author_standard_name) ? user.author_standard_name : user.name) : nil
-    end
-    # rubocop:enable Style/NestedTernaryOperator
-
-    def assign_variables(resource)
-      @resource = resource
-      @user = resource.owner_author || resource.user
-      @user_name = user_name(@user)
-      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
-      @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]
-      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
-      @page_error_emails = APP_CONFIG['page_error_email'] || [@helpdesk_email]
-    end
-
-    def update_activities(resource:, message:, status:, journal: false)
-      recipient = journal ? 'journal' : 'author'
-      note = "#{message} notification sent to #{recipient}"
-      StashEngine::CurationActivity.create(resource: resource,
-                                           user_id: 0, # system user
-                                           note: note,
-                                           status: status)
-    end
-
-    def rails_env
-      return "[#{Rails.env}] " unless Rails.env.include?('production')
-
-      ''
-    end
-
-    def address_list(addresses)
-      addresses = [addresses] unless addresses.respond_to?(:join)
-      addresses.flatten.reject(&:blank?).join(',')
-    end
-
   end
-
 end

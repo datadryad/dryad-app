@@ -14,6 +14,7 @@ module StashEngine
 
     # this is the place omniauth calls back for shibboleth logins
     def callback
+      current_user.roles.tenant_roles.delete_all
       current_user.update(tenant_id: params[:tenant_id])
       do_redirect
     end
@@ -111,6 +112,7 @@ module StashEngine
 
     # no partner, so set as generic dryad tenant without membership benefits
     def no_partner
+      session[:target_page] = params[:target_page] if params[:target_page]
       set_default_tenant
       do_redirect
     end
@@ -122,6 +124,7 @@ module StashEngine
         tenant = StashEngine::Tenant.find(params[:tenant_id])
         case tenant&.authentication&.strategy
         when 'author_match'
+          current_user.roles.tenant_roles.delete_all
           current_user.update(tenant_id: tenant.id)
           do_redirect
         when 'ip_address'
@@ -274,6 +277,7 @@ module StashEngine
         net = IPAddr.new(range)
         next unless net.include?(IPAddr.new(request.remote_ip))
 
+        current_user.roles.tenant_roles.delete_all
         current_user.update(tenant_id: tenant.id)
         do_redirect
         return nil # adding nil here to jump out of loop and return early since rubocop sucks & requires a return value
@@ -298,6 +302,7 @@ module StashEngine
     def set_default_tenant
       return unless current_user.present?
 
+      current_user.roles.tenant_roles.delete_all
       current_user.update(tenant_id: APP_CONFIG.default_tenant)
     end
   end

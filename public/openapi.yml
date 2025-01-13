@@ -67,7 +67,8 @@ paths:
       summary: Test OAuth2 and bearer authentication
       tags:
         - root 
-      description: "Test your <a href='/stash/api#api-accounts'>API account authentication</a> by sending authenticated headers:  **'Accept: application/json'**, **'Content-Type: application/json'**, **'Authorization: Bearer {your-token}'**."
+      description: "Test your <a href='/stash/api#api-accounts'>API account authentication</a> by sending authenticated headers:  **'Accept: application/json'**, **'Content-Type: application/json'**, **'Authorization: Bearer {your-token}'**. \n\n **Accept** header is optional if you are using **'Content-Type: application/json'**."
+
       responses:
         '200':
           description: a welcome message if successful
@@ -158,6 +159,8 @@ paths:
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
 
   '/datasets/{doi}':
     get:
@@ -717,6 +720,12 @@ paths:
             with the given tenant. If both a *tenant* and *affiliation* are
             specified, the tenant will be ignored.
         - in: query
+          name: journalISSN
+          schema:
+            type: string
+          description:
+            The journal ISSN.
+        - in: query
           name: modifiedSince
           schema:
             type: string
@@ -724,8 +733,16 @@ paths:
             A timestamp for limiting results. Datasets will
             only be returned that have been modified since the given
             time. The time must be specified in ISO 8601 format, and the time
-            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`. Shortened versions
-            of the time string are acceptable, e.g., `2020-10`.
+            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+        - in: query
+          name: modifiedBefore
+          schema:
+            type: string
+          description:
+            A timestamp for limiting results. Datasets will
+            only be returned that have been modified before the given
+            time. The time must be specified in ISO 8601 format, and the time
+            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
       responses:
         '200':
           description: A list of datasets.
@@ -751,7 +768,7 @@ components:
   responses:
 
     Unacceptable:
-      description: '406 - unacceptable: please set your Content-Type and Accept headers for application/json'
+      description: "406 - unacceptable: please set your Content-Type or Accept headers for application/json. **Accept** header is optional if you are using **'Content-Type: application/json'**."
       $ref: '#/components/content/Error'
 
     NotFound:
@@ -761,7 +778,14 @@ components:
     Unauthorized:
       description: 'Unauthorized, must have current bearer token'
       $ref: '#/components/content/Error'
-  
+
+    UnprocessableEntity:
+      description: "422 - Unprocessable Content: the server understood the content type of the request,
+        and the syntax of the request content was correct, but it was unable to process the contained instructions.
+        \n\n
+        Example: _A dataset with same information already exists._"
+      $ref: '#/components/content/Error'
+
   content:
 
     Error:

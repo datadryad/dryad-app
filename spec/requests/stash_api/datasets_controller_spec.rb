@@ -222,6 +222,58 @@ module StashApi
         expect(@resource.curation_activities.size).to eq(3)
         expect(@resource.publication_date).to be_within(10.days).of(publish_date)
       end
+
+      context 'when submitted twice' do
+        it 'does not create duplicates' do
+          expect do
+            response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+            expect(response_code).to eq(201)
+
+            response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+            expect(response_code).to eq(422)
+          end.to change { StashEngine::Resource.count }.by(1)
+        end
+
+        it 'returns error' do
+          post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+          response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+          expect(response_code).to eq(422)
+          output = response_body_hash
+          expect(output).to eq({ 'error' => 'A dataset with same information already exists.' })
+        end
+      end
+
+      context 'with triggerSubmitInvitation set to true' do
+        before do
+          @meta.add_trigger_invitation(true)
+        end
+
+        it 'does not trigger email sending when owner has no email' do
+          @user.update(email: nil)
+          expect do
+            post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+          end.to raise_error(
+            ActionController::BadRequest,
+            'Dataset owner does not have an email address in order to send the Submission email.'
+          )
+        end
+
+        it 'triggers email sending when owner has email setup' do
+          expect(StashApi::ApiMailer).to receive_message_chain(:send_submit_request, :deliver_now)
+          post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        end
+      end
+
+      context 'with triggerSubmitInvitation set to false' do
+        before do
+          @meta.add_trigger_invitation(false)
+        end
+
+        it 'does not trigger email sending when owner has no email' do
+          expect(StashApi::ApiMailer).not_to receive(:send_submit_request)
+          post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        end
+      end
     end
 
     # test creation of a new dataset
@@ -258,7 +310,7 @@ module StashApi
         res = ident.latest_resource
 
         expect(ident).to be
-        expect(res.user_id).to eq(@system_user.id)
+        expect(res.submitter.id).to eq(@system_user.id)
       end
 
       it 'creates a new dataset from EM submission metadata' do
@@ -632,6 +684,13 @@ module StashApi
         expect(result['identifier']).to eq("doi:#{@ident.identifier}")
       end
 
+      it 'allows searches by modifiedBefore' do
+        time = 2.day.from_now.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
+        get "/api/v2/search?modifiedBefore=#{time}", headers: default_authenticated_headers
+        output = response_body_hash
+        expect(output['_embedded']['stash:datasets'].size).to eq(1)
+      end
+
       it 'passes a sanitised query to solr' do
         solr_mock = instance_double(RSolr::Client)
         allow(RSolr).to receive(:connect).and_return(solr_mock)
@@ -799,7 +858,8 @@ module StashApi
           access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
 
           # HACK: in update to make this regular user the owner/editor of this item
-          @res.update(current_editor_id: user2.id, user_id: user2.id)
+          @res.update(current_editor_id: user2.id)
+          @res.submitter = user2.id
 
           response_code = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
                                 params: @patch_body,

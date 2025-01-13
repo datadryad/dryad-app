@@ -1,9 +1,9 @@
-<p>Change logo for <%= @tenant.short_name %></label></p>
-<% if @tenant.logo.present? %>
+<p><%= @tenant.short_name %></p>
+<% if @tenant.logo&.data&.present? %>
 <div id="current-logo">
   <p>Current logo:</p>
   <p class="c-input__inline" style="column-gap: 4ch; margin-bottom: 2rem; justify-content: space-around;">
-    <img src="<%= @tenant.logo %>" style="max-height: 60px" alt="logo for <%= @tenant.short_name %>"/>
+    <img src="<%= @tenant.logo.data %>" style="max-height: 60px" alt="logo for <%= @tenant.short_name %>"/>
     <button class="o-button__plain-text7" id="remove-file"><i class="fa fa-times" aria-hidden="true"></i> Remove</button>
   </p>
 </div>
@@ -13,3 +13,24 @@
 <div id="file-preview">
 </div>
 <%= form.hidden_field :logo, value: @tenant.logo, id: 'logo_input' %>
+
+<script type="text/javascript">
+  document.getElementById('file-select').addEventListener('change', () => {
+  const file = document.getElementById('file-select').files[0];
+  const reader = new FileReader();
+  reader.addEventListener('load', () => {
+    document.getElementById('logo_input').value = reader.result;
+    document.getElementById('file-preview').innerHTML = `<img src="${reader.result}" style="max-height: 60px;" aria-hidden="true"/>`;
+  });
+  if (file) {
+      reader.readAsDataURL(file);
+    }
+  })
+  if (document.getElementById('remove-file')) {
+    document.getElementById('remove-file').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('logo_input').removeAttribute('value');
+      document.getElementById('current-logo').setAttribute('hidden', true);
+    })
+  }
+</script>

@@ -63,7 +63,7 @@ module StashEngine
         @user = create(:user,
                        first_name: 'Lisa',
                        last_name: 'Muckenhaupt',
-                       email: 'lmuckenhaupt@ucop.edu',
+                       email: 'lmuckenhaupt@datadryad.org',
                        tenant_id: 'ucop')
         @identifier = create(:identifier)
         @resource = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)

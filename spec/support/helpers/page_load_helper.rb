@@ -1,0 +1,16 @@
+module PageLoadHelper
+
+  def wait_for_ajax(seconds = Capybara.default_max_wait_time)
+    Timeout.timeout(seconds) do
+      loop until finished_all_ajax_requests?
+    end
+  end
+
+  def finished_all_ajax_requests?
+    page.evaluate_script('jQuery.active').zero?
+  end
+
+  def wait_for_page_load(text)
+    expect(page).to have_content text
+  end
+end

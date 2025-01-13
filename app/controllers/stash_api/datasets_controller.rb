@@ -36,8 +36,12 @@ module StashApi
       respond_to do |format|
         format.json do
           dp = DatasetParser.new(hash: params['dataset'], id: nil, user: @user)
+          render json: { error: 'A dataset with same information already exists.' }, status: :unprocessable_entity and return unless dp.resource_uniq?
+
           @stash_identifier = dp.parse
           ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user, post: true) # sets up display objects
+
+          dp.send_submit_invitation_email(ds.metadata)
           render json: ds.metadata, status: 201
         end
       end
@@ -170,7 +174,7 @@ module StashApi
       end
 
       sharing_link = @stash_identifier&.shares&.first&.sharing_link ||
-                     "/api/v2/datasets/#{CGI.escape(@stash_identifier.to_s)}"
+        "/api/v2/datasets/#{CGI.escape(@stash_identifier.to_s)}"
       {
         deposit_id: @stash_identifier.identifier,
         deposit_doi: @stash_identifier.identifier,
@@ -249,6 +253,7 @@ module StashApi
       em_params['authors'] = em_authors if em_authors.present?
       em_params
     end
+
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
@@ -347,6 +352,12 @@ module StashApi
         # ["timestamp:[2020-10-08T10:24:53Z TO NOW]"]
         fq_array << "updated_at_dt:[#{params['modifiedSince']} TO NOW]"
       end
+      if params['modifiedBefore']
+        # ["Before timestamp:[2020-10-08T10:24:53Z]"]
+        fq_array << "updated_at_dt:[* TO #{params['modifiedBefore']}]"
+      end
+
+      fq_array << "dryad_related_publication_issn_s:\"#{params['journalISSN']}\"" if params['journalISSN']
 
       fq_array
     end
@@ -547,9 +558,9 @@ module StashApi
       return if params['userId'].nil?
 
       unless @user.min_curator? ||
-             params['userId'].to_i == @user.id || # or it is your own user
-             # or you admin the target journal
-             @user.journals_as_admin.map(&:issn_array)&.flatten&.reject(&:blank?)&.include?(params['dataset']['publicationISSN'])
+        params['userId'].to_i == @user.id || # or it is your own user
+        # or you admin the target journal
+        @user.journals_as_admin.map(&:issn_array)&.flatten&.reject(&:blank?)&.include?(params['dataset']['publicationISSN'])
         render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
         false
       end
@@ -566,10 +577,19 @@ module StashApi
     end
 
     def duplicate_resource
-      nr = @resource.amoeba_dup
+      begin
+        nr = @resource.amoeba_dup
+        nr.current_editor_id = @user.id
+        nr.save!
+      rescue ActiveRecord::RecordNotUnique
+        @resource.identifier.reload
+        nr = @resource.identifier.latest_resource unless @resource.identifier.latest_resource_id == @resource.id
+        nr ||= @resource.amoeba_dup
+        nr.current_editor_id = @user.id
+        nr.save!
+      end
       nr.curation_activities&.update_all(user_id: @user.id)
-      nr.current_editor_id = @resource.user_id
-      nr.save!
+      nr.data_files.each(&:populate_container_files_from_last)
       @resource = nr
     end
 

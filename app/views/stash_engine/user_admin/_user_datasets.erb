@@ -1,44 +1,44 @@
-<%# locals: presenters (array of StashDatacite::ResourcesController::DatasetPresenter) %>
-<div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-label="User datasets">
+<div class="table-wrapper" role="region" tabindex="0" aria-label="User datasets">
 <table class="c-lined-table" style="margin-top: 0">
   <thead>
     <tr>
-      <th class="c-lined-table__sort <%= sort_display('title') %>">
+      <th class="c-lined-table__sort" <%= sort_display('title') %>>
         <%= sortable_column_head sort_field: 'title', title: 'Dataset title' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('embargo_status') %>">
-        <%= sortable_column_head sort_field: 'embargo_status', title: 'Status' %>
+      <th class="c-lined-table__sort" <%= sort_display('status') %>>
+        <%= sortable_column_head sort_field: 'status', title: 'Status' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('publication_date') %>">
+      <th class="c-lined-table__sort" <%= sort_display('publication_date') %>>
         <%= sortable_column_head sort_field: 'publication_date', title: 'Publication Date' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('size') %>">
-        <%= sortable_column_head sort_field: 'size', title: 'Size' %>
+      <th class="c-lined-table__sort" <%= sort_display('total_file_size') %>>
+        <%= sortable_column_head sort_field: 'total_file_size', title: 'Size' %>
       </th>
-      <th class="c-lined-table__sort <%= sort_display('updated_at') %>">
+      <th class="c-lined-table__sort" <%= sort_display('updated_at') %>>
         <%= sortable_column_head sort_field: 'updated_at', title: 'Last Modified' %>
       </th>      
-      <th class="c-lined-table__sort <%= sort_display('edited_by_name') %>">
-        <%= sortable_column_head sort_field: 'edited_by_name', title: 'Edited By' %>
+      <th class="c-lined-table__sort" <%= sort_display('current_editor_id') %>>
+        <%= sortable_column_head sort_field: 'current_editor_id', title: 'Edited By' %>
       </th>
     </tr>
   </thead>
   <tbody>
-  <% presenters.each do |p| %>
+  <% @resources.each do |res| %>
+    <% title = res.title.blank? ? '[No title supplied]' : res.title %>
     <tr class="c-lined-table__row">
       <td>
         <div class="c-lined-table__with-actions">
         <div class="c-lined-table__data">
-          <%= link_to p.title, stash_url_helpers.show_path(id: p.resource.identifier_str), target: '_blank' %>
-          <div class="c-lined-table__digits">DOI: <%= p.resource.identifier.identifier %></div>
+          <%= link_to title, stash_url_helpers.show_path(id: res.identifier_str), target: '_blank' %>
+          <div class="c-lined-table__digits">DOI: <%= res.identifier.identifier %></div>
         </div>
         <div class="c-lined-table__actions">
-          <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: p.resource.identifier_id) %>" class="c-admin-edit-icon">
+          <a title="Activity log" aria-label="Activity log" href="<%= stash_url_helpers.activity_log_path(id: res.identifier_id) %>" class="c-admin-edit-icon">
             <i class="fa fa-clock" aria-hidden="true"></i>
           </a>
-          <% if policy(p.resource).curator_edit? %>
+          <% if policy(res).curator_edit? %>
             <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post) do %>
-              <%= hidden_field_tag :resource_id, p.resource.id, id: "resource_id_#{p.resource.id}" %>
+              <%= hidden_field_tag :resource_id, res.id, id: "resource_id_#{res.id}" %>
               <button class="c-admin-edit-icon js-trap-curator-url" title="Edit dataset" aria-label="Edit dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
             <% end %>
           <% end %>
@@ -46,21 +46,21 @@
       </div>
       </td>
       <td>
-        <%= p.embargo_status_pretty %>
+        <%= res&.last_curation_activity&.readable_status %>
       </td>
       <td class="c-lined-table__digits">
-        <% if p.resource.submitted? %>
-          <%= default_date(p.publication_date) %>
+        <% if res.submitted? %>
+          <%= default_date(res.publication_date) %>
         <% end %>
       </td>
       <td class="c-lined-table__digits">
-        <%= filesize(p.size) %>
+        <%= filesize(res.total_file_size) %>
       </td>
       <td class="c-lined-table__digits">
-        <%= default_date(p.updated_at) %>
+        <%= default_date(res.updated_at) %>
       </td>
       <td>
-        <%= p.edited_by_name_w_role %>
+        <%= res.editor.name %>
       </td>
     </tr>
   <% end %>

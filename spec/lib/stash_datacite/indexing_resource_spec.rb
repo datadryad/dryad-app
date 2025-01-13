@@ -49,7 +49,8 @@ module Stash
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'manuscriptNumber', value: 'manuscript123')
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'pubmedID', value: 'pubmed123')
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'mismatchedDOI', value: 'doi987')
-        create(:resource_publication, resource_id: @resource.id, publication_name: 'Journal of Testing Fun', manuscript_number: 'manuscript123')
+        create(:resource_publication, resource_id: @resource.id, publication_name: 'Journal of Testing Fun', manuscript_number: 'manuscript123',
+                                      publication_issn: 'manuscript123issn')
         @resource_state = create(:resource_state, resource_id: @resource.id)
         @resource.update(current_resource_state_id: @resource_state.id)
         create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'doi', relation_type: 'iscitedby',
@@ -116,7 +117,7 @@ module Stash
 
       describe '#general_type' do
         it 'returns the correct value' do
-          expect(@ir.general_type.to_s.end_with?('Dataset')).to be_truthy
+          expect(@ir.general_type.to_s.end_with?('"Dataset"')).to be_truthy
         end
       end
 
@@ -300,10 +301,17 @@ module Stash
         it 'gets those dates' do
           expect(@ir.dct_temporal_dates).to eql(['2018-11-14'])
         end
+
+        context 'with bad date' do
+          it 'does not fail' do
+            allow(@resource).to receive(:datacite_dates).and_return [OpenStruct.new(date: 'bad date'), OpenStruct.new(date: '2024-10-21T00:00:00Z')]
+            expect(@ir.dct_temporal_dates).to eq(['2024-10-21'])
+          end
+        end
       end
 
       describe '#bounding_box_envelope' do
-        it 'gives a set of numbers like SOLR or Geoblacklight likes' do
+        it 'gives a set of numbers like SOLR or Blacklight likes' do
           the_box = StashDatacite::GeolocationBox.create(sw_latitude: -63.393966,
                                                          ne_latitude: -53.668786,
                                                          sw_longitude: -105.476213,
@@ -337,7 +345,7 @@ module Stash
             solr_geom: nil,
             solr_year_i: 2019,
             dct_issued_dt: @resource.publication_date.utc.iso8601,
-            dc_rights_s: 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
+            dc_rights_s: 'Creative Commons Zero v1.0 Universal',
             dc_publisher_s: @resource.publisher.publisher,
             dct_temporal_sm: ['2018-11-14'],
             dryad_author_affiliation_id_sm: ['https://ror.example.org/16xx22bs', 'https://ror.example.org/18dl67sn1'],
@@ -345,8 +353,13 @@ module Stash
                                                @affil2.long_name],
             dryad_related_publication_name_s: 'Journal of Testing Fun',
             dryad_related_publication_id_s: 'manuscript123 pubmed123 doi123',
+            dryad_related_publication_issn_s: 'manuscript123issn',
             dryad_dataset_file_ext_sm: df,
-            updated_at_dt: @resource.updated_at.iso8601
+            updated_at_dt: @resource.updated_at.iso8601,
+            author_orcids_sm: @resource.authors.map(&:author_orcid).reject(&:blank?).uniq,
+            funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
+            funder_ror_ids_sm: @resource.funders.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
+            sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq
           }
           expect(mega_hash).to eql(expected_mega_hash)
         end

@@ -19,11 +19,8 @@ module StashDatacite
   describe Description do
     attr_reader :resource
     before(:each) do
-      user = StashEngine::User.create(
-        email: 'lmuckenhaupt@example.edu',
-        tenant_id: 'dataone'
-      )
-      @resource = StashEngine::Resource.create(user_id: user.id)
+      user = create(:user, email: 'lmuckenhaupt@example.edu', tenant_id: 'dataone')
+      @resource = create(:resource, user: user)
     end
 
     describe 'description_type_mapping_obj' do

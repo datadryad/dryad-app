@@ -1,5 +1,3 @@
-require 'pry-remote'
-
 RSpec.feature 'CurationActivity', type: :feature do
   include Mocks::Stripe
   include Mocks::RSolr
@@ -104,6 +102,22 @@ RSpec.feature 'CurationActivity', type: :feature do
         fill_in('stash_engine_curation_activity[note]', with: 'This is a test of the note functionality')
         click_button('Submit')
         expect(page).to have_text('This is a test of the note functionality')
+      end
+
+      it 'change delete reference date', js: true do
+        visit stash_url_helpers.admin_dashboard_path
+
+        expect(page).to have_css('a[title="Activity log"]')
+        find('a[title="Activity log"]').click
+
+        expect(page).to have_text('Activity log for')
+        click_button 'Change delete reference date'
+        fill_in('[process_date][delete_calculation_date]', with: Date.new(2024, 1, 8))
+        fill_in('[curation_activity][note]', with: 'Some Note')
+        click_button('Submit')
+
+        expect(page).to have_text('Changed deletion reference date to Jan 08, 2024.')
+        expect(page).to have_text('Some Note')
       end
 
       it 'adds internal data', js: true do

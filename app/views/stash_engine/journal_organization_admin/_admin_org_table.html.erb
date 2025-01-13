@@ -2,7 +2,7 @@
 <table class="c-lined-table">
   <thead>
     <tr>
-      <th class="c-lined-table__sort <%= sort_display('name') %>">
+      <th class="c-lined-table__sort" <%= sort_display('name') %>>
         <%= sortable_column_head sort_field: 'name', title: 'Name' %>
       </th>
       <th class="c-admin-table">
@@ -23,7 +23,20 @@
 <tbody>  
   <% orgs.each do |o| %>
     <tr class="c-lined-table__row">
-      <td><%= o.name %></td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="name_<%= o.id %>"><%= o.name %></div>
+          <% if policy([:stash_engine, :journal_organization]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: publisher_popup_path(id: o.id, field: 'name'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit name" aria-haspopup="dialog" id="name_button_<%= o.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="contact_<%= o.id %>">

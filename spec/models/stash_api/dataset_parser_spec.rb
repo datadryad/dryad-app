@@ -13,7 +13,7 @@ module StashApi
       @user = create(:user,
                      first_name: 'Lisa',
                      last_name: 'Muckenhaupt',
-                     email: 'lmuckenhaupt@ucop.edu',
+                     email: 'lmuckenhaupt@datadryad.org',
                      tenant_id: 'exemplia',
                      orcid: '1234-5678-9876-5432')
 
@@ -36,7 +36,7 @@ module StashApi
           }
         ],
         'abstract' =>
-              'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.',
+          'Cyberneticists agree that concurrent models are an interesting new topic in the field of machine learning.',
         'userId' => @user2.id,
         'publicationISSN' => '0000-1111',
         'publicationName' => 'Some Great Journal',
@@ -57,7 +57,7 @@ module StashApi
           }
         ],
         'abstract' =>
-              'We are a for-profit university.'
+          'We are a for-profit university.'
       }.with_indifferent_access
 
       dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
@@ -239,22 +239,93 @@ module StashApi
       end
 
       it 'puts the paymentId on the identifier' do
-        expect(@stash_identifier.payment_id). to eq('invoice-123')
-        expect(@stash_identifier.payment_type). to eq('stripe')
+        expect(@stash_identifier.payment_id).to eq('invoice-123')
+        expect(@stash_identifier.payment_type).to eq('stripe')
+      end
+
+      context 'validates owner email' do
+        context 'with triggerSubmitInvitation set to true' do
+          it 'raises error if email is missing' do
+            @user.update(email: nil)
+            test_metadata = {
+              'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+              'authors' => [{
+                'firstName' => 'Wanda',
+                'lastName' => 'Jackson',
+                'email' => ''
+              }],
+              'abstract' => 'Cyberneticists agree that concurrent models are fun.',
+              'userId' => 'BOGUS-junk',
+              'triggerSubmitInvitation' => true
+            }.with_indifferent_access
+
+            dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
+
+            expect { dp.parse }.to raise_error(
+              ActionController::BadRequest,
+              'Dataset owner does not have an email address in order to send the Submission email.'
+            )
+          end
+
+          it 'returns error if owner email is missing' do
+            test_metadata = {
+              'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+              'authors' => [{
+                'firstName' => 'Wanda',
+                'lastName' => 'Jackson',
+                'email' => ''
+              }],
+              'abstract' => 'Cyberneticists agree that concurrent models are fun.',
+              'userId' => 'BOGUS-junk',
+              'triggerSubmitInvitation' => true
+            }.with_indifferent_access
+
+            dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
+
+            expect { dp.parse }.not_to raise_error(
+              ActionController::BadRequest,
+              'Dataset owner does not have an email address in order to send the Submission email.'
+            )
+          end
+        end
+
+        context 'with triggerSubmitInvitation set to false' do
+          it 'does not raise error if email is missing' do
+            @user.update(email: nil)
+            test_metadata = {
+              'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+              'authors' => [{
+                'firstName' => 'Wanda',
+                'lastName' => 'Jackson',
+                'email' => ''
+              }],
+              'abstract' => 'Cyberneticists agree that concurrent models are fun.',
+              'userId' => 'BOGUS-junk',
+              'triggerSubmitInvitation' => false
+            }.with_indifferent_access
+
+            dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
+
+            expect { dp.parse }.not_to raise_error(
+              ActionController::BadRequest,
+              'Dataset owner does not have an email address in order to send the Submission email.'
+            )
+          end
+        end
       end
     end
 
     describe 'dataset ownership' do
       it 'sets the owner' do
         resource = @stash_identifier.resources.first
-        expect(resource.user_id).to eq(@user2.id)
+        expect(resource.submitter).to eq(@user2)
         expect(resource.current_editor_id).to eq(@user2.id)
       end
 
       it 'sets the owner to an existing user from an ORCID' do
         test_user = StashEngine::User.create(first_name: 'Lena',
                                              last_name: 'Jarre',
-                                             email: 'lj123@ucop.edu',
+                                             email: 'lj123@datadryad.org',
                                              orcid: '1234-5678-0000-1111')
         test_metadata = {
           'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
@@ -271,7 +342,7 @@ module StashApi
         test_identifier = dp.parse
 
         resource = test_identifier.resources.first
-        expect(resource.user_id).to eq(test_user.id)
+        expect(resource.submitter).to eq(test_user)
       end
 
       it 'sets the owner to user specified in the metadata with an ORCID' do
@@ -291,7 +362,7 @@ module StashApi
         dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
         test_identifier = dp.parse
         resource = test_identifier.resources.first
-        expect(resource.user.first_name).to eq('Wanda')
+        expect(resource.submitter.first_name).to eq('Wanda')
       end
 
       it 'defaults ownership to the submitter when the userId is invalid' do
@@ -309,7 +380,7 @@ module StashApi
         dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
         test_identifier = dp.parse
         resource = test_identifier.resources.first
-        expect(resource.user).to eq(@user)
+        expect(resource.submitter).to eq(@user)
       end
 
       it 'errors when the userId is an ORCID, but does not match one set in the author list' do
@@ -362,7 +433,7 @@ module StashApi
         editing_resource = @stash_identifier.in_progress_resource
 
         expect(editing_resource.title).to eq(@update_metadata[:title])
-        expect(@user.id).to eq(editing_resource.user_id)
+        expect(@user.id).to eq(editing_resource.submitter.id)
 
         author = editing_resource.authors.first
         expect(author.author_first_name).to eq(@update_metadata[:authors].first['firstName'])

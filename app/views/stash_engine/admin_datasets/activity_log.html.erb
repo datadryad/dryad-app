@@ -4,9 +4,18 @@
 <div>
   <div style="float: left;"><br/><%= @identifier.to_s %></div>
   <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
-    <div style="float: right;">
+    <div style="float: right; display: inline-flex">
       <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
         <button class="o-button__submit" aria-haspopup="dialog" id="note_button_<%= @identifier&.id %>">Add note</button>
+      <% end %>
+
+      <% if policy([:stash_engine, :admin_datasets]).change_delete_schedule? %>
+        <%= form_with(url: edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
+          <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="reference_button_<%= @identifier&.id %>"
+                  style="width: auto; margin-left: 10px; white-space: nowrap">
+            Change delete reference date
+          </button>
+        <% end %>
       <% end %>
     </div>
   <% end %>
@@ -17,7 +26,7 @@
       <th>
         Resource ID
       </th>
-      <th class="c-lined-table__sort <%= sort_display('created_at') %>">
+      <th class="c-lined-table__sort" <%= sort_display('created_at') %>>
         <%= sortable_column_head sort_field: 'created_at', title: 'Timestamp' %>
       </th>
       <th>
@@ -113,7 +122,7 @@
 </div>
 
 <div id="internal_data" style="clear: both" hidden>
-  <div style="float: left"><h2>Internal data</h2></div>  
+  <div style="float: left"><h2>Internal data</h2></div>
   <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
     <div style="float: right">
       <br/>
@@ -146,6 +155,18 @@
         <p>Forcibly editing a dataset will assign it to you, and begin an editing session.
           Please only do this if you know the author is unable/unwilling to submit it.</p>
       </div>
+
+      <% if policy(@identifier).destroy? %>
+        <div style="float: left">
+          <%= form_with(url: stash_url_helpers.ds_admin_destroy_path(id: @identifier&.id),
+                        method: :delete, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
+            <button class="o-button__submit" data-confirm="Are you sure you want to permanently delete this dataset? This action cannot be undone.">Remove dataset</button>
+            <%= hidden_field_tag :id, @identifier.id, id: "identifier_id_#{@identifier.id}" %>
+          <% end %>
+          <p>Deleting a dataset will delete all its data and files.</p>
+        </div>
+        <div style="clear: both"></div>
+      <% end %>
 
       <% if policy([:stash_engine, :admin_datasets]).waiver_add? && @identifier.payment_type != 'waiver' %>
         <div style="float: left" id="apply_fee_waiver">

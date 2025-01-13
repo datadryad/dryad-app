@@ -13,6 +13,12 @@ module StashEngine
 
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+    if Rails.env.local?
+      before_action do
+        Rack::MiniProfiler.authorize_request
+      end
+    end
+
     # returns the :return_to_path set in the session or else goes back to the path supplied
     def return_to_path_or(default_path)
       return session.delete(:return_to_path) if session[:return_to_path]
@@ -33,7 +39,7 @@ module StashEngine
     end
 
     def display_authorization_failure
-      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user ID is #{resource.user_id || 'nil'} but " \
+      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user IDs are #{resource.users&.map(&:id)&.join(', ')} but " \
                         "current user is #{current_user.id || 'nil'}")
       flash[:alert] = 'You do not have permission to modify this dataset.'
       redirect_back(fallback_location: choose_dashboard_path)
