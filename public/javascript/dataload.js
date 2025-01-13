@@ -37,3 +37,10 @@ if (!!document.getElementById('blog-latest-posts')) {
     })
   })
 }     
+
+const details = document.getElementsByClassName('c-file-group')
+for (const expander of details) {
+  expander.addEventListener('toggle', (e) => {
+    load_data()
+  })
+}

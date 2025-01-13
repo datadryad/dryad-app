@@ -40,7 +40,7 @@
       })
     }
     selectDownloads()
-    selectForm.addEventListener('change', selectDownloads)
+    Array.from(selectForm.elements).forEach(inpt => inpt.addEventListener('change', selectDownloads))
   <% end %>
   const dlbutton = document.getElementById('download_zip_button');
   if ("serviceWorker" in navigator) {
