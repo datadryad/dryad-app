@@ -11,7 +11,7 @@ navigator.serviceWorker.ready.then(worker => {
 const insertFiles = async (files) => {
   const selectForm = document.getElementById('download-select-form').elements
   for (const f of files) {
-    if (selectForm[f.filename].checked) {
+    if (selectForm[f.filename]?.checked) {
       for (const k of Object.keys(f)) {
         const i = document.createElement('input');
         i.setAttribute('type', 'hidden');
