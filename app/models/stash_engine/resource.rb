@@ -870,6 +870,8 @@ module StashEngine
 
       changed = []
 
+      changed << 'tenant' if tenant_id != other_resource.tenant_id
+
       changed << 'journal' if resource_publication&.publication_name != other_resource&.resource_publication&.publication_name
       changed << 'manuscript' if resource_publication&.manuscript_number != other_resource&.resource_publication&.manuscript_number
       changed << 'title' if title != other_resource.title
