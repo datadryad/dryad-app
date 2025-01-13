@@ -23,10 +23,6 @@ module StashApi
     before_action :require_viewable_file, only: %i[show download]
     before_action -> { require_viewable_resource(resource_id: params[:version_id]) }, only: :index
 
-    def api_logger
-      Rails.application.config.api_logger
-    end
-
     # GET /files/<id>
     def show
       file = StashApi::File.new(file_id: params[:id], user: @user)

@@ -48,7 +48,7 @@ class ApiApplicationController < StashEngine::ApplicationController
     # check to see if the identifier is actually an id and not a DOI first
     @stash_identifier = StashEngine::Identifier.where(id: doi).first
 
-    return unless @stash_identifier.blank?
+    return if @stash_identifier.present?
 
     api_logger.error('require_stash_identifier')
     @stash_identifier = StashEngine::Identifier.find_with_id(doi)
