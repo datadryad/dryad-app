@@ -1,0 +1,14 @@
+<h1>Enter a new journal</h1>
+<%= form_with(url: journal_create_path, method: :post, local: true) do |form| -%>
+  <%= render partial: 'title', locals: {form: form} %>
+  <%= render partial: 'issn', locals: {form: form} %>
+  <%= render partial: 'payment_plan_type', locals: {form: form} %>
+  <%= render partial: 'notify_contacts', locals: {form: form} %>
+  <%= render partial: 'review_contacts', locals: {form: form} %>
+  <%= render partial: 'default_to_ppr', locals: {form: form} %>
+  <%= render partial: 'sponsor_id', locals: {form: form} %>
+  <div class="c-modal__buttons-right">
+    <%= submit_tag 'Submit', class: 'o-button__plain-text2' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+  </div>
+<% end %>

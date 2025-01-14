@@ -4,7 +4,7 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :load, only: %i[popup note_popup edit]
+    before_action :load, only: %i[popup note_popup edit edit_delete_reference_date update_delete_reference_date]
 
     def popup
       case @field
@@ -40,11 +40,34 @@ module StashEngine
       @identifier = Identifier.find(params[:id])
       resource_ids = @identifier.resources.collect(&:id)
       ord = helpers.sortable_table_order(whitelist: %w[created_at])
-      @curation_activities = CurationActivity.where(resource_id: resource_ids).order(ord, id: :asc)
+      @curation_activities = CurationActivity.where(resource_id: resource_ids)
+        .includes(:resource, :user, resource: [:stash_version])
+        .order(ord, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     rescue ActiveRecord::RecordNotFound
       admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
       redirect_to admin_path, notice: "Identifier ID #{params[:id]} no longer exists."
+    end
+
+    def edit_delete_reference_date
+      @desc = 'Edit dataset deletion date reference'
+      @process_date = @identifier.process_date
+      respond_to(&:js)
+    end
+
+    def update_delete_reference_date
+      delete_calculation_date = params.dig(:process_date, :delete_calculation_date)
+      return error_response('Date cannot be blank') if delete_calculation_date.blank?
+
+      @curation_activity = CurationActivity.create(
+        note: "Changed deletion reference date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe,
+        resource_id: @resource.id, user_id: current_user.id
+      )
+      @resource.reload
+
+      @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
+      @resource.process_date.update(delete_calculation_date: delete_calculation_date)
+      respond_to(&:js)
     end
 
     def create_salesforce_case
