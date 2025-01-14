@@ -1,9 +1,9 @@
-<p>Choose the sponsoring organization for <%= @org.name %></p>
+<p><%= @org.name %></p>
 <div class="c-input">
   <%
-    options = StashEngine::JournalOrganization.where("id != #{@org.id}").collect { |o| [ o.name, o.id ] } 
+    options = StashEngine::JournalOrganization.where.not(id: @org&.id).collect { |o| [ o.name, o.id ] } 
     options.unshift(['None', ''])
   %>
-  <%= label_tag 'parent_org_id', 'Publishers/societies', class: 'c-input__label' %>
+  <%= label_tag 'parent_org_id', 'Choose a sponsoring organization', class: 'c-input__label' %>
   <%= select_tag('parent_org_id', options_for_select(options, @org.parent_org_id), class: 'c-input__select') %>  
 </div>

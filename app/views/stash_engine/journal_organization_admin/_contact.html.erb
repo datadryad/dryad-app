@@ -1,4 +1,4 @@
-<p>Set new contacts for <%= @org.name %></p>
+<p><%= @org.name %></p>
 <div class="c-input">
 <%= form.label :contact, "Place each email address on a new line:"%>
 <%= form.text_area(:contact, value: @org.contact&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>

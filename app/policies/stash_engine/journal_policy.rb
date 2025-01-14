@@ -13,5 +13,13 @@ module StashEngine
       @user && @user.system_user?
     end
 
+    def create?
+      @user.superuser?
+    end
+
+    def new?
+      create?
+    end
+
   end
 end

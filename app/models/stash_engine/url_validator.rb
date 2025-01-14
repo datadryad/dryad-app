@@ -51,6 +51,9 @@ module StashEngine
         # the follow is for google drive which doesn't respond to head requests correctly
         fix_by_get_request(redirected_to || url) if google_drive_redirect?(status_code, redirected_to)
         return true unless @status_code > 399
+      rescue Addressable::URI::InvalidURIError
+        @status_code = 400 # bad request because the URL is malformed
+        return false
       rescue HTTPClient::TimeoutError
         @timed_out = true
         @status_code = 408
