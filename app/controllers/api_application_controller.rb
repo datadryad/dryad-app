@@ -47,11 +47,11 @@ class ApiApplicationController < StashEngine::ApplicationController
   def require_stash_identifier(doi:)
     # check to see if the identifier is actually an id and not a DOI first
     @stash_identifier = StashEngine::Identifier.where(id: doi).first
+    @stash_identifier ||= StashEngine::Identifier.find_with_id(doi)
 
     return if @stash_identifier.present?
 
     api_logger.error('require_stash_identifier')
-    @stash_identifier = StashEngine::Identifier.find_with_id(doi)
     render json: { error: 'not-found' }.to_json, status: 404
   end
 
