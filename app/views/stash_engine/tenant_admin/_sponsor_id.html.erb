@@ -1,5 +1,5 @@
 <p><%= @tenant.short_name %></p>
-<p>Is the member part of a consortium or otherwise sponsored?</p>
+<p>Are the member's fees sponsored by another institution?</p>
 <div class="c-input">
   <%
     options = StashEngine::Tenant.enabled.all.collect { |o| [ o.short_name, o.id ] } 
