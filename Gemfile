@@ -190,4 +190,4 @@ group :development, :v3_development, :local_dev do
   gem 'web-console'
 end
 
-gem "newrelic_rpm", "~> 9.16"
+gem 'newrelic_rpm', '~> 9.16'
