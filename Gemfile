@@ -182,7 +182,6 @@ group :development, :v3_development, :local_dev, :local, :test do
   gem 'bullet'
   gem 'letter_opener'
   gem 'letter_opener_web', '~> 3.0'
-  gem 'rack-mini-profiler', require: false
   gem 'spring-commands-rspec'
 end
 
