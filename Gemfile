@@ -189,3 +189,5 @@ group :development, :v3_development, :local_dev do
   gem 'colorize'
   gem 'web-console'
 end
+
+gem "newrelic_rpm", "~> 9.16"
