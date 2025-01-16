@@ -83,6 +83,7 @@ gem 'loofah', '~> 2.19.1'
 gem 'markdiff', '~> 0.8.1'
 gem 'net-ftp', '~> 0.3.4'
 gem 'net-sftp'
+gem 'newrelic_rpm'
 gem 'noid', '~> 0.9.0'
 gem 'omniauth', '~> 2.1.0'
 gem 'omniauth-google-oauth2', '~> 1.1.1'
@@ -189,5 +190,3 @@ group :development, :v3_development, :local_dev do
   gem 'colorize'
   gem 'web-console'
 end
-
-gem 'newrelic_rpm', '~> 9.16'
