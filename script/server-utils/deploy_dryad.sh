@@ -14,9 +14,9 @@ if [ $# -ne 1 ]; then errexit "Usage: $(basename $0) <git-ref>"; fi
 
 
 WORKING_TREE=/home/ec2-user/dryad-app
-CAP_STAGE="v3_stage"
+CAP_STAGE="stage"
 DEPLOY_TO="/home/ec2-user/deploy"
-RAILS_ENV="v3_stage"
+RAILS_ENV="stage"
 REPO_URL="https://github.com/datadryad/dryad-app.git"
 BUNDLE="/home/ec2-user/.rbenv/shims/bundle"
 BRANCH=$1

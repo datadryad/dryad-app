@@ -2,7 +2,7 @@
 
 class AddPeerReviewCustomTextForAcs < ActiveRecord::Migration[7.0]
   def up
-    return if Rails.env.v3_production?
+    return if Rails.env.production?
 
     StashEngine::JournalOrganization.where(name: 'American Chemical Society')
                                     .first

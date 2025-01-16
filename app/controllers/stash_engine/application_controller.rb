@@ -13,7 +13,7 @@ module StashEngine
 
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-    if Rails.env.local?
+    if Rails.env.development?
       before_action do
         Rack::MiniProfiler.authorize_request
       end

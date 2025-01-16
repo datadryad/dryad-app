@@ -1,14 +1,12 @@
 source 'https://rubygems.org'
-# do we need this still?
-# require File.join(File.dirname(__FILE__), 'lib', 'bundler_help.rb')
+ruby '3.3.7'
 
 # ############################################################
 # Rails
-
-gem 'irb', '~> 1.4.1'
+gem 'irb', '~> 1.14.3'
 gem 'mail', '~> 2.8'
-gem 'mysql2', '~> 0.5.3'
-gem 'rails', '~> 7.0.8.7'
+gem 'mysql2', '~> 0.5.6'
+gem 'rails', '~> 7.2.2.1'
 gem 'react-rails', '~> 2.6.2'
 gem 'shakapacker', '~> 6.0'
 gem 'sprockets', '~> 4.0'
@@ -50,18 +48,18 @@ gem 'amoeba', '~> 3.2.0'
 gem 'annotate', '~> 3.2'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
-gem 'blacklight', '= 7.37.0'
+gem 'blacklight', '~> 8.7.0'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.6'
-gem 'charlock_holmes', '~> 0.7.7'
-gem 'concurrent-ruby', '~> 1.1.10'
+# gem 'charlock_holmes', '~> 0.7.7'
+gem 'concurrent-ruby', '~> 1.3.4'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'
 gem 'datacite-mapping', git: 'https://github.com/CDLUC3/datacite-mapping.git'
 gem 'data_migrate'
 gem 'delayed_job_active_record', '~> 4.1.7'
-gem 'devise', '~> 4.8.0' # I don't believe we are using it directly
-gem 'devise-guests', '~> 0.6' # I don't believe we're using it directly
+# gem 'devise', '~> 4.8.0' # I don't believe we are using it directly
+# gem 'devise-guests', '~> 0.6' # I don't believe we're using it directly
 gem 'doorkeeper', '~> 5.5'
 gem 'down' # I'm not sure where this is used, but maybe in the frictionless data that Cassiano worked on to dl files
 gem 'exception_notification'
@@ -79,7 +77,7 @@ gem 'jquery-ui-rails', '~> 7.0', git: 'https://github.com/jquery-ui-rails/jquery
 gem 'jwt', '~> 2.3.0'
 gem 'kaminari', '~> 1.2.2'
 gem 'leaflet-rails', '~> 1.7.0'
-gem 'loofah', '~> 2.19.1'
+gem 'loofah', '~> 2.24.0'
 gem 'markdiff', '~> 0.8.1'
 gem 'net-ftp', '~> 0.3.4'
 gem 'net-sftp'
@@ -166,7 +164,7 @@ group :test do
   gem 'webmock'
 end
 
-group :development, :v3_development, :local_dev, :local, :test do
+group :development, :test, :dev do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
@@ -185,7 +183,7 @@ group :development, :v3_development, :local_dev, :local, :test do
   gem 'spring-commands-rspec'
 end
 
-group :development, :v3_development, :local_dev do
+group :development, :dev do
   gem 'colorize'
   gem 'web-console'
 end

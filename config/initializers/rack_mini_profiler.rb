@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if Rails.env.local?
+if Rails.env.development?
   require "rack-mini-profiler"
 
   Rack::MiniProfiler.config.authorization_mode = :allow_all

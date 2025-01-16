@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   def process_action(*args)
+    pp request.host
     super
 
     # Show Bad Request Error for bad Content-Type/Accept headers, Invalid URI

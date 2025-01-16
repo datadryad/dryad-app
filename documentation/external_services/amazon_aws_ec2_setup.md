@@ -56,8 +56,8 @@ bundle install
 - update the credentials and deploy script for the specified environment
 ```
 mkdir -p ~/deploy/shared/config/credentials/
-# if using a stage or prod environment, put the key in the appropriate place (REPLACE the "v3_stage" with the approppriate key name)
-cp v3_stage.key ~/deploy/shared/config/credentials/
+# if using a stage or prod environment, put the key in the appropriate place (REPLACE the "stage" with the approppriate key name)
+cp stage.key ~/deploy/shared/config/credentials/
 cp ~/dryad-app/script/server-utils/deploy_dryad.sh ~/bin/
 # EDIT the deploy_dryad.sh to use correct environment name
 ```
@@ -81,7 +81,7 @@ exit
 ```
 . ~/.nvm/nvm.sh
 nvm use 20.13.1 >/dev/null
-export RAILS_ENV=v3_stage 
+export RAILS_ENV=stage 
 ```
 
 Database setup

@@ -4,21 +4,9 @@ test:
 
 development:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad:8983/solr/geoblacklight" %>
-
-v3_development:
-  adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad.org:8983/solr/geoblacklight" %>
-
-aws_db:
-  adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad.org:8983/solr/geoblacklight" %>
-
-local:
-  adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/geoblacklight" %>
 
-local_dev:
+dev:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad.org:8983/solr/geoblacklight" %>
 
@@ -26,23 +14,6 @@ stage:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://v3-stage-solr.datadryad.org:8983/solr/geoblacklight" %>
 
-v3_stage:
-  adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-stage-solr.datadryad.org:8983/solr/geoblacklight" %>
-
-# migration solr not used, but we probably need the section here
-migration:
-  adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-solr.datadryad.org:8983/solr/geoblacklight" %>
-
-demo:
-  adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-stage-solr.datadryad.org:8983/solr/geoblacklight" %>
-
 production:
-  adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-solr.datadryad.org:8983/solr/geoblacklight" %>
-
-v3_production:
   adapter: solr
   url: <%= ENV['SOLR_URL'] || "http://v3-solr.datadryad.org:8983/solr/geoblacklight" %>

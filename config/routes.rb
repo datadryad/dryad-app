@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
 
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.local? || Rails.env.v3_development?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development? || Rails.env.dev?
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
