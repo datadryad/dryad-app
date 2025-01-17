@@ -14,10 +14,6 @@
 #
 #  index_stash_engine_resource_publications_on_resource_id  (resource_id) UNIQUE
 #
-# Foreign Keys
-#
-#  fk_rails_...  (resource_id => stash_engine_resources.id)
-#
 module StashEngine
   class ResourcePublication < ApplicationRecord
     self.table_name = 'stash_engine_resource_publications'
