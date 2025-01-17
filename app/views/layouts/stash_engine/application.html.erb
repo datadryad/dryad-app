@@ -7,6 +7,7 @@
   <script type="text/javascript" src="/javascript/dataload.js" defer></script>
 </head>
 <body class='<%= "#{controller_name}_#{action_name}" %>'>
+  <%= render partial: "stash_engine/shared/sandbox_message" %>
   <%= render 'stash_engine/shared/top_area' %>
   <%= render partial: "stash_engine/shared/flash_messages" %>
   <main id="maincontent">

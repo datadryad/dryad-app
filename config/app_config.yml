@@ -198,6 +198,7 @@ defaults: &DEFAULTS
     region: us-west-2
     bucket: dryad-s3-dev
     merritt_bucket: dryad-assetstore-merritt-dev
+    reports_bucket: dryad-reports
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   lambda_id:
