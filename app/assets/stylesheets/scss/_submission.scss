@@ -288,6 +288,14 @@
   margin-right: 0;
   margin-left: auto;  
   font-size: 2rem;
+  .fa-list-check {
+    margin-left: 4px;
+    margin-right: -7%;
+  }
+  .fa-angle-left, .fa-angle-right {
+    font-size: 1.4rem;
+    vertical-align: 15%;
+  }
 }
 
 .checklist-link {

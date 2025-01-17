@@ -52,7 +52,9 @@ export default function ChecklistNav({
             aria-expanded={open}
             onClick={() => setOpen(!open)}
           >
-            <i className="fas fa-list-check" aria-hidden="true" />
+            {open && <i className="fas fa-angle-left" aria-hidden="true" />}
+            <i className="fas fa-list-check" aria-hidden="true" style={{clipPath: 'rect(auto 70% auto auto)'}} />
+            {!open && <i className="fas fa-angle-right" aria-hidden="true" />}
           </button>
         )}
         <Checklist steps={steps} step={step} setStep={setStep} open={open} />

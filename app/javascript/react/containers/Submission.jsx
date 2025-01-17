@@ -27,7 +27,7 @@ function Submission({
   const previewRef = useRef(null);
   const [resource, setResource] = useState(JSON.parse(submission));
   const [step, setStep] = useState({name: 'Start'});
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
   const previous = resource.previous_curated_resource;
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -140,7 +140,6 @@ function Submission({
     /* eslint-disable-next-line no-undef */
     await awaitSelector('.saving_text[hidden]');
     setStep(steps[steps.findIndex((l) => l.name === step.name) + dir] || (dir === -1 && {name: 'Start'}));
-    if (open === 'start') setOpen(false);
   };
 
   useEffect(() => {
