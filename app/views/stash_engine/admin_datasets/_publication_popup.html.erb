@@ -4,17 +4,25 @@
       method: :put,
       local: false do |f| %>
   <div class="c-input">
-    <label class="c-input__label" for="curation_activity_note">Publication ISSN:</label>
+    <label class="c-input__label" for="curation_activity_note">
+      <% if publication.pub_type == 'primary_article' %>Publication ISSN:<% end %>
+      <% if publication.pub_type == 'preprint' %>Preprint server ISSN:<% end %>
+    </label>
     <%= f.text_field(:publication_issn, class: 'c-input__text', style: 'width: 100%') %>
   </div>
   <div class="c-input">
-    <label class="c-input__label" for="curation_activity_note">Publication name:</label>
+    <label class="c-input__label" for="curation_activity_note">
+      <% if publication.pub_type == 'primary_article' %>Publication name:<% end %>
+      <% if publication.pub_type == 'preprint' %>Preprint server name:<% end %>
+    </label>
     <%= f.text_field(:publication_name, class: 'c-input__text', style: 'width: 100%') %>
   </div>
-  <div class="c-input">
-    <label class="c-input__label" for="curation_activity_note">Manuscript number:</label>
-    <%= f.text_field(:manuscript_number, class: 'c-input__text', style: 'width: 100%') %>
-  </div>
+  <% if publication.pub_type == 'primary_article' %>
+    <div class="c-input">
+      <label class="c-input__label" for="curation_activity_note">Manuscript number:</label>
+      <%= f.text_field(:manuscript_number, class: 'c-input__text', style: 'width: 100%') %>
+    </div>
+  <% end %>
   <div class="c-modal__buttons-right">
     <%= submit_tag 'Submit', class: 'o-button__plain-text2', id: 'popup_submit' %>
     <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>

@@ -16,7 +16,11 @@ module StashEngine
         )
       when 'publication'
         authorize %i[stash_engine admin_datasets], :data_popup?
-        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id)
+        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
+      when 'preprint'
+        authorize %i[stash_engine admin_datasets], :data_popup?
+        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
+        @field = 'publication'
       when 'data'
         authorize %i[stash_engine admin_datasets], :data_popup?
         setup_internal_data_list
