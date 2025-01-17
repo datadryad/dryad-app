@@ -10,7 +10,7 @@
       <% end %>
 
       <% if policy([:stash_engine, :admin_datasets]).change_delete_schedule? %>
-        <%= form_with(url: admin_dash_edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
+        <%= form_with(url: edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
           <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="reference_button_<%= @identifier&.id %>"
                   style="width: auto; margin-left: 10px; white-space: nowrap">
             Change delete reference date
@@ -100,21 +100,42 @@
 
 <div id="publication">
   <h2>Publication information</h2>
-  <div style="display: flex; flex-wrap: wrap; gap: 2ch">
-    <div class="o-admin-form-pair">
-      <b>Publication ISSN:</b><span id="publication_issn" class="callout"><%= @identifier.publication_issn %></span>
+  <div style="display: flex; flex-basis: 48%; gap: 4ch">
+    <div style="display: flex; flex-direction: column; gap: 2ch">
+      <div class="o-admin-form-pair" style="justify-content: space-between; align-items: baseline;">
+        <h3 style="margin: 0">Preprint</h3>
+        <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
+          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'preprint'), method: :get, local: false) do %>
+            <button class="o-button__plain-text7" aria-label="Edit preprint server information" title="Edit" aria-haspopup="dialog" id="preprint_button_<%= @identifier&.id %>"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="o-admin-form-pair">
+        <b>Preprint server ISSN:</b><span id="preprint_publication_issn" class="callout"><%= @identifier.preprint_issn %></span>
+      </div>
+      <div class="o-admin-form-pair">
+        <b>Preprint server name:</b><span id="preprint_publication_name" class="callout"><%= @identifier.preprint_server %></span>
+      </div>
     </div>
-    <div class="o-admin-form-pair">
-      <b>Publication name:</b><span id="publication_name" class="callout"><%= @identifier.publication_name %></span>
+    <div style="display: flex; flex-direction: column; gap: 2ch">
+      <div class="o-admin-form-pair" style="justify-content: space-between;">
+        <h3 style="margin: 0">Primary article</h3>
+        <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
+          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'publication'), method: :get, local: false) do %>
+            <button class="o-button__plain-text7" aria-label="Edit publication information" title="Edit" aria-haspopup="dialog" id="publication_button_<%= @identifier&.id %>"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="o-admin-form-pair">
+        <b>Publication ISSN:</b><span id="primary_article_publication_issn" class="callout"><%= @identifier.publication_issn %></span>
+      </div>
+      <div class="o-admin-form-pair">
+        <b>Publication name:</b><span id="primary_article_publication_name" class="callout"><%= @identifier.publication_name %></span>
+      </div>
+      <div class="o-admin-form-pair">
+        <b>Manuscript number:</b><span id="manuscript_number" class="callout"><%= @identifier.manuscript_number %></span>
+      </div>
     </div>
-    <div class="o-admin-form-pair">
-      <b>Manuscript number:</b><span id="manuscript_number" class="callout"><%= @identifier.manuscript_number %></span>
-    </div>
-    <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
-      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'publication'), method: :get, local: false) do %>
-        <button class="o-button__plain-text7" aria-label="Edit publication information" title="Edit" aria-haspopup="dialog" id="publication_button_<%= @identifier&.id %>"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
-      <% end %>
-    <% end %>
   </div>
   <% if @identifier.internal_data %>
     <p><button class="o-button__plain-text7" onclick="document.getElementById('internal_data').toggleAttribute('hidden')"><i class="fa fa-eye" aria-hidden="true" style="margin-right: .5ch;"></i>View historical Internal data</button></p>

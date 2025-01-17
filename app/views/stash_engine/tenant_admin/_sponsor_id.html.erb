@@ -1,0 +1,10 @@
+<p><%= @tenant.short_name %></p>
+<p>Are the member's fees sponsored by another institution?</p>
+<div class="c-input">
+  <%
+    options = StashEngine::Tenant.enabled.all.collect { |o| [ o.short_name, o.id ] } 
+    options.unshift(['None', ''])
+  %>
+  <%= label_tag 'sponsor_id', 'Choose a sponsoring institution' %>
+  <%= select_tag('sponsor_id', options_for_select(options, @tenant.sponsor_id), class: 'c-input__select') %>  
+</div>

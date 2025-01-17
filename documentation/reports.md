@@ -100,7 +100,7 @@ Run the tiered institution payment reports with a command like:
 cp ~/journal-payments/shoppingcart/2024* /tmp
 # This command must be run on the production server, to access the production database
 
-RAILS_ENV=v3_production bundle exec rails identifiers:tiered_tenant_reports -- --sc_report tmp/shopping_cart_report_2023-Q1.csv --base_report /tmp/shopping_cart_report_2023.csv
+RAILS_ENV=v3_production bundle exec rails identifiers:tiered_tenant_reports -- --sc_report /tmp/shopping_cart_report_2023-Q1.csv --base_report /tmp/shopping_cart_report_2023.csv
 ```
 
 Copy the resultant files into their respective places in `~/journal-payments/`

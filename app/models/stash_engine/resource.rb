@@ -52,7 +52,9 @@ module StashEngine
     # ------------------------------------------------------------
     # Relations
     has_one :process_date, as: :processable, dependent: :destroy
-    has_one :resource_publication, dependent: :destroy
+    has_many :resource_publications, dependent: :destroy
+    has_one :resource_publication, -> { primary_article }, dependent: :destroy
+    has_one :resource_preprint, -> { preprint }, class_name: 'StashEngine::ResourcePublication', dependent: :destroy
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
@@ -100,6 +102,8 @@ module StashEngine
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
+    has_many :journal_issns, through: :resource_publications
+    has_many :journals, through: :journal_issns
     has_one :manuscript, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
     has_one :journal, through: :journal_issn
@@ -120,38 +124,26 @@ module StashEngine
     end
 
     amoeba do
-      include_association :authors
-      include_association :generic_files
-      customize(->(_, new_resource) do
-                  # you'd think 'include_association :current_resource_state' would do the right thing and deep-copy
-                  # the resource state, but instead it keeps the reference to the old one, so we need to clear it and
-                  # let init_version do its job
-                  new_resource.current_resource_state_id = nil
-                  # do not mark these resources for public view until they've been re-curated and embargoed/published again
-                  new_resource.publication_date = nil
-                  new_resource.meta_view = false
-                  new_resource.file_view = false
+      include_association %i[authors generic_files contributors datacite_dates descriptions geolocations temporal_coverages publication_years
+                             publisher related_identifiers resource_type rights sizes subjects resource_publication roles]
+      customize(->(_, new_resource) {
+        # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
+        new_resource.current_resource_state_id = nil
+        # do not mark these resources for public view until they've been re-curated and embargoed/published again
+        new_resource.publication_date = nil
+        new_resource.meta_view = false
+        new_resource.file_view = false
 
-                  new_resource.generic_files.each do |file|
-                    raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
+        new_resource.generic_files.each do |file|
+          raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
-                    file.file_state = 'copied' if file.file_state == 'created'
-                    file.save # if not saved first then some other queries that depend on id or resource_id will fail
-                    file.populate_container_files_from_last if file.type == 'StashEngine::DataFile'
-                  end
+          file.file_state = 'copied' if file.file_state == 'created'
+        end
 
-                  # I think there was something weird about Amoeba that required this approach
-                  deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-                  deleted_files.each(&:destroy)
-                end)
-
-      # can't just pass the array to include_association() or it clobbers the ones defined in stash_engine
-      # see https://github.com/amoeba-rb/amoeba/issues/76
-      %i[contributors datacite_dates descriptions geolocations temporal_coverages
-         publication_years publisher related_identifiers resource_type rights sizes
-         subjects resource_publication roles].each do |assoc|
-        include_association assoc
-      end
+        # I think there was something weird about Amoeba that required this approach
+        deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
+        deleted_files.each(&:destroy)
+      })
     end
 
     # ------------------------------------------------------------
@@ -201,7 +193,7 @@ module StashEngine
 
     # ------------------------------------------------------------
     # Scopes for repository status
-    default_scope { includes(:curation_activities) }
+    # default_scope { includes(:curation_activities) }
 
     scope :in_progress, -> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress error] })
@@ -656,7 +648,7 @@ module StashEngine
       user.min_app_admin? || user_id == user.id ||
         user.tenants.map(&:id).include?(tenant_id) ||
         funders_match?(user: user) ||
-        user.journals_as_admin.include?(journal)
+        user.journals_as_admin.intersect?(journals)
     end
 
     def funders_match?(user:)
@@ -885,6 +877,8 @@ module StashEngine
       return [] unless other_resource
 
       changed = []
+
+      changed << 'tenant' if tenant_id != other_resource.tenant_id
 
       changed << 'journal' if resource_publication&.publication_name != other_resource&.resource_publication&.publication_name
       changed << 'manuscript' if resource_publication&.manuscript_number != other_resource&.resource_publication&.manuscript_number
@@ -1138,6 +1132,7 @@ module StashEngine
           # create submitted status
           curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
           # immediately create published status
+          update(publication_date: previous_resource.publication_date)
           target_status = previous_resource.last_curation_activity.status
           curation_note = "Auto-published with minimal changes to #{changes.join(', ')}"
         end

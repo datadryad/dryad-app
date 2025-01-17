@@ -16,6 +16,7 @@ module Stash
       # By default, use the temporary storage bucket
       def initialize(s3_bucket_name: APP_CONFIG[:s3][:bucket])
         @s3_bucket = s3_resource.bucket(s3_bucket_name)
+        @s3_bucket_name = s3_bucket_name
       end
 
       def put(s3_key:, contents:)
@@ -81,6 +82,12 @@ module Stash
         return unless s3_key
 
         s3_bucket.object(s3_key)
+      end
+
+      def head_object(s3_key:)
+        return unless s3_key
+
+        s3_client.head_object(bucket: @s3_bucket_name, key: s3_key)
       end
 
       def objects(starts_with:)

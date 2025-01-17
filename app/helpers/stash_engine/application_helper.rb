@@ -18,7 +18,7 @@ module StashEngine
     end
 
     def tenant_select
-      StashEngine::Tenant.partner_list.map { |t| { id: t.id, name: t.short_name } }
+      StashEngine::Tenant.connect_list.map { |t| { id: t.id, name: t.short_name } }
     end
 
     # no decimal removes the after decimal bits

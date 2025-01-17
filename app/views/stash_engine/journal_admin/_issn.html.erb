@@ -1,4 +1,4 @@
-<p>Add or remove ISSNs for <%= @journal.title %></p>
+<p><%= @journal.title %></p>
 <div class="c-input">
 <%= form.label :issn, "Place each ISSN on a new line:"%>
 <%= form.text_area(:issn, value: @journal.issn_array.join("\n"), class: 'c-input__textarea', style: 'width:100%; min-height:200px') %>

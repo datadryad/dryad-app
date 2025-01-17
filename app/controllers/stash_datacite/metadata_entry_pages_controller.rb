@@ -18,13 +18,14 @@ module StashDatacite
                                 { authors: { include: [:affiliations] } }]
                     } }]
       )
-      @submission[:generic_files] = @resource.generic_files.validated_table.as_json(
+      @submission[:generic_files] = @resource.generic_files.includes(:frictionless_report).validated_table.as_json(
         methods: :type, include: { frictionless_report: { only: %i[report status] } }
       )
       if @resource.previous_curated_resource.present?
-        @submission['previous_curated_resource'][:generic_files] = @resource.previous_curated_resource.generic_files.validated_table.as_json(
-          methods: :type, include: { frictionless_report: { only: %i[report status] } }
-        )
+        @submission['previous_curated_resource'][:generic_files] = @resource.previous_curated_resource.generic_files
+          .includes(:frictionless_report).validated_table.as_json(
+            methods: :type, include: { frictionless_report: { only: %i[report status] } }
+          )
       end
       @submission = @submission.to_json
 

@@ -8,7 +8,7 @@ module StashEngine
     def index
       setup_sponsors
 
-      @journals = authorize StashEngine::Journal.all
+      @journals = authorize StashEngine::Journal.includes(%i[issns sponsor])
 
       if params[:q]
         q = params[:q]
@@ -28,22 +28,26 @@ module StashEngine
 
     def popup
       strings = { issn: 'ISSN(s)', payment_plan_type: 'payment plan type', notify_contacts: 'publication contacts',
-                  review_contacts: 'PPR contacts', default_to_ppr: 'PPR by default', sponsor_id: 'journal sponsor' }
+                  review_contacts: 'PPR contacts', default_to_ppr: 'PPR by default', sponsor_id: 'journal sponsor', title: 'title' }
       @desc = strings[@field.to_sym]
       respond_to(&:js)
     end
 
     def edit
-      valid = %i[default_to_ppr payment_plan_type sponsor_id]
-      update = edit_params.slice(*valid)
-      update[:sponsor_id] = nil if edit_params.key?(:sponsor_id) && edit_params[:sponsor_id].blank?
-      update[:payment_plan_type] = nil if edit_params.key?(:payment_plan_type) && edit_params[:payment_plan_type].blank?
+      @journal.update(update_hash)
       update_issns if edit_params.key?(:issn)
-      update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:notify_contacts)
-      update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:review_contacts)
-      @journal.update(update)
-
       respond_to(&:js)
+    end
+
+    def new
+      @journal = authorize StashEngine::Journal.new
+      respond_to(&:js)
+    end
+
+    def create
+      @journal = StashEngine::Journal.create(update_hash)
+      update_issns if edit_params.key?(:issn)
+      redirect_to action: 'index', q: @journal.single_issn
     end
 
     private
@@ -68,6 +72,16 @@ module StashEngine
       @field = params[:field]
     end
 
+    def update_hash
+      valid = %i[title default_to_ppr payment_plan_type sponsor_id]
+      update = edit_params.slice(*valid)
+      update[:sponsor_id] = nil if edit_params.key?(:sponsor_id) && edit_params[:sponsor_id].blank?
+      update[:payment_plan_type] = nil if edit_params.key?(:payment_plan_type) && edit_params[:payment_plan_type].blank?
+      update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:notify_contacts)
+      update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:review_contacts)
+      update
+    end
+
     def update_issns
       issns = edit_params[:issn].split("\n").map(&:strip)
       @journal.issns.where.not(id: issns).destroy_all
@@ -75,11 +89,11 @@ module StashEngine
       @journal.reload
     rescue ActiveRecord::RecordNotUnique
       @error_message = 'Journal ISSN is already in use'
-      render :update_error
+      render :update_error and return
     end
 
     def edit_params
-      params.permit(:id, :field, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id)
+      params.permit(:id, :field, :title, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id)
     end
 
   end
