@@ -8,7 +8,7 @@ module StashEngine
     def index
       setup_sponsors
 
-      @journals = authorize StashEngine::Journal.all
+      @journals = authorize StashEngine::Journal.includes(%i[issns sponsor])
 
       if params[:q]
         q = params[:q]

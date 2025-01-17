@@ -52,7 +52,9 @@ module StashEngine
     # ------------------------------------------------------------
     # Relations
     has_one :process_date, as: :processable, dependent: :destroy
-    has_one :resource_publication, dependent: :destroy
+    has_many :resource_publications, dependent: :destroy
+    has_one :resource_publication, -> { primary_article }, dependent: :destroy
+    has_one :resource_preprint, -> { preprint }, class_name: 'StashEngine::ResourcePublication', dependent: :destroy
     has_many :authors, class_name: 'StashEngine::Author', dependent: :destroy
     has_many :generic_files, class_name: 'StashEngine::GenericFile', dependent: :destroy
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
@@ -100,6 +102,8 @@ module StashEngine
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
+    has_many :journal_issns, through: :resource_publications
+    has_many :journals, through: :journal_issns
     has_one :manuscript, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
     has_one :journal, through: :journal_issn
@@ -189,7 +193,7 @@ module StashEngine
 
     # ------------------------------------------------------------
     # Scopes for repository status
-    default_scope { includes(:curation_activities) }
+    # default_scope { includes(:curation_activities) }
 
     scope :in_progress, -> do
       joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress error] })
@@ -644,7 +648,7 @@ module StashEngine
       user.min_app_admin? || user_id == user.id ||
         user.tenants.map(&:id).include?(tenant_id) ||
         funders_match?(user: user) ||
-        user.journals_as_admin.include?(journal)
+        user.journals_as_admin.intersect?(journals)
     end
 
     def funders_match?(user:)
@@ -873,6 +877,8 @@ module StashEngine
       return [] unless other_resource
 
       changed = []
+
+      changed << 'tenant' if tenant_id != other_resource.tenant_id
 
       changed << 'journal' if resource_publication&.publication_name != other_resource&.resource_publication&.publication_name
       changed << 'manuscript' if resource_publication&.manuscript_number != other_resource&.resource_publication&.manuscript_number

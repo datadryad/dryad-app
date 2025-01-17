@@ -16,7 +16,11 @@ module StashEngine
         )
       when 'publication'
         authorize %i[stash_engine admin_datasets], :data_popup?
-        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id)
+        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
+      when 'preprint'
+        authorize %i[stash_engine admin_datasets], :data_popup?
+        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
+        @field = 'publication'
       when 'data'
         authorize %i[stash_engine admin_datasets], :data_popup?
         setup_internal_data_list
@@ -40,7 +44,9 @@ module StashEngine
       @identifier = Identifier.find(params[:id])
       resource_ids = @identifier.resources.collect(&:id)
       ord = helpers.sortable_table_order(whitelist: %w[created_at])
-      @curation_activities = CurationActivity.where(resource_id: resource_ids).order(ord, id: :asc)
+      @curation_activities = CurationActivity.where(resource_id: resource_ids)
+        .includes(:resource, :user, resource: [:stash_version])
+        .order(ord, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     rescue ActiveRecord::RecordNotFound
       admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)

@@ -132,6 +132,20 @@ module StashEngine
         # not NoGgIn3.JpG for the current version and that is just gone
         expect(@resource2.data_files.where(upload_file_name: 'noggin3.jpg').count).to eq(1) # only destroy file and not former file
       end
+
+      it 'clears frictionless reports' do
+        allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(false)
+
+        create(:frictionless_report, generic_file: @files2[1])
+        expect { @files2[1].smart_destroy! }.to change(FrictionlessReport, :count).by(-1)
+      end
+
+      it 'clears PII scan reports' do
+        allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(false)
+
+        create(:sensitive_data_report, generic_file: @files2[1])
+        expect { @files2[1].smart_destroy! }.to change(SensitiveDataReport, :count).by(-1)
+      end
     end
 
     describe :s3_staged_path do
@@ -384,6 +398,14 @@ module StashEngine
         allow(StashEngine::ApiToken).to receive(:token).and_return('123456789ABCDEF')
         expect_any_instance_of(Aws::Lambda::Client).to receive(:invoke).and_return({ status_code: 202 }.to_ostruct)
         expect(@upload.trigger_frictionless[:triggered]).to eql(true)
+      end
+    end
+
+    describe :trigger_sensitive_data_scan do
+      it 'calls client.invoke for an AWS lambda function and returns a 202' do
+        allow(StashEngine::ApiToken).to receive(:token).and_return('123456789ABCDEF')
+        expect_any_instance_of(Aws::Lambda::Client).to receive(:invoke).and_return({ status_code: 202 }.to_ostruct)
+        expect(@upload.trigger_sensitive_data_scan[:triggered]).to eql(true)
       end
     end
 

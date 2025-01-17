@@ -9,7 +9,7 @@ module StashEngine
       authorize %i[stash_engine tenant], :admin?
       setup_sponsors
 
-      @tenants = StashEngine::Tenant.all
+      @tenants = StashEngine::Tenant.includes(%i[logo tenant_ror_orgs ror_orgs])
 
       if params[:q]
         q = params[:q]
@@ -18,7 +18,7 @@ module StashEngine
                                   "%#{q}%", "%#{q}%", "%#{q}%")
       end
 
-      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication partner_display enabled])
+      ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication covers_dpc partner_display enabled])
       @tenants = @tenants.order(ord)
 
       @tenants = @tenants.where('id = ? or sponsor_id= ?', params[:sponsor], params[:sponsor]) if params[:sponsor].present?
@@ -29,7 +29,8 @@ module StashEngine
 
     def popup
       strings = { campus_contacts: 'contacts', partner_display: 'member display', ror_orgs: 'ROR organizations', enabled: 'active membership',
-                  logo: 'logo', short_name: 'member name', long_name: 'full member name', authentication: 'authentication strategy' }
+                  covers_dpc: 'payment', short_name: 'member name', long_name: 'full member name',
+                  sponsor_id: 'sponsor', logo: 'logo', authentication: 'authentication strategy' }
       @desc = strings[@field.to_sym]
       respond_to(&:js)
     end
@@ -76,8 +77,9 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[partner_display enabled short_name long_name]
+      valid = %i[covers_dpc partner_display enabled short_name long_name sponsor_id]
       update = edit_params.slice(*valid)
+      update[:sponsor_id] = nil if edit_params.key?(:sponsor_id) && edit_params[:sponsor_id].blank?
       update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:campus_contacts)
       if edit_params.key?(:authentication)
         auth = {
@@ -108,7 +110,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :field, :short_name, :long_name, :logo, :campus_contacts, :partner_display, :enabled, :ror_orgs,
+      params.permit(:id, :field, :short_name, :long_name, :logo, :campus_contacts, :covers_dpc, :partner_display, :enabled, :ror_orgs, :sponsor_id,
                     authentication: %i[strategy ranges entity_id entity_domain])
     end
 

@@ -55,7 +55,7 @@ module Stash
       end
 
       def report_file_name(filters_text)
-        File.join(REPORTS_DIR, "affiliation_ror_matcher_report_#{Time.now.strftime('%Y%m%d_%H%M%S')}_#{filters_text}.csv")
+        @report_file_name ||= "affiliation_ror_matcher_report_#{Time.now.strftime('%Y%m%d_%H%M%S')}_#{filters_text}.csv"
       end
 
       def report_headers
