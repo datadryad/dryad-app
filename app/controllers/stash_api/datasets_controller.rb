@@ -582,6 +582,7 @@ module StashApi
         nr.current_editor_id = @user.id
         nr.save!
       rescue ActiveRecord::RecordNotUnique
+        @resource.identifier.reload
         nr = @resource.identifier.latest_resource unless @resource.identifier.latest_resource_id == @resource.id
         nr ||= @resource.amoeba_dup
         nr.current_editor_id = @user.id

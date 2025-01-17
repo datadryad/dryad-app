@@ -1,0 +1,13 @@
+<% unless Rails.env.include?('production') %>
+<div class="callout warn" id="sandbox_banner" role="alert">
+  <div class="flex modalClose">
+    <div>This is the Dryad Sandbox. To log in, you will need a <a href="/stash/sandbox">Dryad Sandbox account</a>. Real data should not be submitted through this site, which is for testing only</div>
+    <button aria-label="Close alert"></button>
+  </div>
+</div>
+<script type="text/javascript">
+  document.getElementById('sandbox_banner').querySelector('button').addEventListener('click', ()=> {
+    document.getElementById('sandbox_banner').hidden = true;
+  })
+</script>
+<% end %>

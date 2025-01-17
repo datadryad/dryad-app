@@ -6,6 +6,7 @@ module StashEngine
         @new_res.current_editor_id = current_user&.id
         @new_res.save!
       rescue ActiveRecord::RecordNotUnique
+        @resource.identifier.reload
         @new_res = @resource.identifier.latest_resource unless @resource.identifier.latest_resource_id == @resource.id
         @new_res ||= @resource.amoeba_dup
         @new_res.current_editor_id = current_user&.id

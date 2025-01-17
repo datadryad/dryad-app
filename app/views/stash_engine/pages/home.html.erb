@@ -43,10 +43,10 @@
   <div id="latest_tiles" <% unless @hostname == 'localhost' %>data-load="<%= main_app.latest_index_path(format: :js, q: '*:*') %>"<% end %>>
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
   </div>
-  <%= render partial: 'layouts/why_share' %>
+  <%= render partial: 'why_share' %>
 </div>
 <div class="o-home__group o-home__news_group">
-  <%= render partial: 'layouts/why_use' %>
+  <%= render partial: 'why_use' %>
   <h2 class="o-heading__level1-home">Latest news</h2>
   <div id="blog-latest-posts" data-count="5">
     <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>

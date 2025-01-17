@@ -27,6 +27,7 @@ module Stash
         start_report(items_to_be_mapped.count)
         map_items(items_to_be_mapped)
         end_report
+        copy_to_s3
       end
 
       private
@@ -73,14 +74,15 @@ module Stash
       def initialize_csv_report
         filters_text = @text.downcase.gsub(':', '').gsub(' ', '_')
         @report_name = report_file_name(filters_text)
+        @report_path = report_file_path(@report_name)
 
-        @csv = CSV.open(@report_name, 'wb') do |csv|
+        @csv = CSV.open(@report_path, 'wb') do |csv|
           csv << report_headers
         end
       end
 
       def update_csv_report(csv_rows)
-        @csv = CSV.open(@report_name, 'a+') do |csv|
+        @csv = CSV.open(@report_path, 'a+') do |csv|
           csv_rows.each do |row|
             csv << row
           end
@@ -128,6 +130,19 @@ module Stash
           @csv_rows << [item.id, item_name, message, rors.map { |ror| ror[:name] }.join("\n"), rors.map { |ror| ror[:id] }.join("\n")]
           puts " - #{message} for \"#{item_name}\""
         end
+      end
+
+      def copy_to_s3
+        s3_key = "#{Rails.env}/RorMatcher/#{@report_name}"
+        puts "Copying to S3: #{s3_key}"
+        Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:reports_bucket])
+          .put_file(s3_key: s3_key, filename: @report_path)
+      ensure
+        FileUtils.rm_f(@report_path)
+      end
+
+      def report_file_path(report_name)
+        @report_file_path ||= File.join(REPORTS_DIR, report_name)
       end
 
       def base_items_query

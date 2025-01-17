@@ -1,24 +1,21 @@
 namespace :checksums do
   desc 'Download and validate files against their digests'
   task validate_files: :environment do
+    Rails.logger.level = :info
     today = Time.now.utc
-    p "Validating file digests #{today}"
+    index = 0
+    puts ''
+    puts "Validating file digests #{today}"
     StashEngine::DataFile
       .where(file_state: 'created').where('validated_at is null or validated_at < ?', 60.days.ago)
       .where.not(digest: nil).find_each do |f|
-      p "   Validating file id #{f.id}"
-      sums = Stash::Checksums.get_checksums([f.digest_type], f.s3_permanent_presigned_url)
-      checksum = sums.get_checksum(f.digest_type)
-      size = sums.input_size
-      if size == f.upload_file_size && checksum == f.digest
-        f.validated_at = today
-        f.save
-      else
-        p '    File cannot be validated; possible corruption!'
-        StashEngine::UserMailer.file_validation_error(f).deliver_now
-      end
+      puts "   Validating file id #{f.id}"
+      index += 1
+      sleep(2) if index % 100 == 0
+
+      StashEngine::FileValidationService.new(file: f).validate_file
     rescue StandardError => e
-      p "    Exception! #{e.message}"
+      puts "   Exception! #{e.message}"
       next
 
     end
@@ -27,46 +24,53 @@ namespace :checksums do
   desc 'Generate new checksums for incorrect duplicates'
   task recreate_digests: :environment do
     today = Time.now.utc
-    p "Recreating file digests #{today}"
-    StashEngine::DataFile.where(file_state: 'created').where(digest: 'checksum_regen_required').find_each do |f|
-      p "   Regenerating checksum for file id #{f.id}"
-      digest_type = 'sha-256'
-      sums = Stash::Checksums.get_checksums([digest_type], f.s3_permanent_presigned_url)
-      checksum = sums.get_checksum(digest_type)
-      size = sums.input_size
-      if size == f.upload_file_size
-        f.digest_type = digest_type
-        f.digest = checksum
-        f.validated_at = today
-        f.save
-      else
-        p '    Error generating file checksum; possible corruption!'
-        StashEngine::UserMailer.file_validation_error(f).deliver_now
-      end
-    rescue StandardError => e
-      p "    Exception! #{e.message}"
-      next
+    index = 0
+    puts ''
+    puts "Recreating file digests #{today}"
+    StashEngine::DataFile.where(file_state: 'created').find_each do |f|
+      index += 1
+      sleep(2) if index % 100 == 0
 
+      puts "   Regenerating checksum for file id #{f.id}"
+      StashEngine::FileValidationService.new(file: f).recreate_digests
+    rescue StandardError => e
+      puts "   Exception! #{e.message}"
+      next
     end
   end
 
   desc 'Copy checksums to copied files'
   task copy_digests: :environment do
     today = Time.now.utc
-    p "Copying file digests #{today}"
+    index = 0
+    puts ''
+    puts "Copying file digests #{today}"
     StashEngine::DataFile.where(file_state: 'copied').find_each do |copied|
-      created = copied.original_deposit_file
-      next if created.digest == copied.digest
+      index += 1
+      sleep(2) if index % 100 == 0
 
-      p "   Copying digest from file id #{created.id} to file id #{copied.id}"
-      copied.digest = created.digest
-      copied.digest_type = created.digest_type
-      copied.validated_at = created.validated_at
-      copied.save
+      StashEngine::FileValidationService.new(file: copied).copy_digests
     rescue StandardError => e
-      p "    Exception! #{e.message}"
+      puts "   Exception! #{e.message}"
       next
+    end
+  end
 
+  desc 'Copy checksums to copied files'
+  task fetch_s3_digests: :environment do
+    today = Time.now.utc
+    index = 0
+    puts ''
+    puts "Fetching S3 digests #{today}"
+    StashEngine::DataFile.where(file_state: 'created', digest: nil).find_each do |file|
+      index += 1
+      sleep(2) if index % 100 == 0
+
+      success = StashEngine::FileValidationService.new(file: file).fetch_s3_digest
+      puts "   #{success ? 'Succeeded' : 'Failed'}"
+    rescue StandardError => e
+      puts "   Exception! #{e.message}"
+      next
     end
   end
 end

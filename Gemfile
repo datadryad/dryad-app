@@ -83,6 +83,7 @@ gem 'loofah', '~> 2.19.1'
 gem 'markdiff', '~> 0.8.1'
 gem 'net-ftp', '~> 0.3.4'
 gem 'net-sftp'
+gem 'newrelic_rpm'
 gem 'noid', '~> 0.9.0'
 gem 'omniauth', '~> 2.1.0'
 gem 'omniauth-google-oauth2', '~> 1.1.1'
@@ -178,6 +179,7 @@ group :development, :v3_development, :local_dev, :local, :test do
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
+  gem 'bullet'
   gem 'letter_opener'
   gem 'letter_opener_web', '~> 3.0'
   gem 'spring-commands-rspec'

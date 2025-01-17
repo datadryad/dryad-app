@@ -17,6 +17,8 @@
 module StashEngine
   class ResourcePublication < ApplicationRecord
     self.table_name = 'stash_engine_resource_publications'
+    enum pub_type: { primary_article: 0, preprint: 1 }
+    validates :pub_type, uniqueness: { scope: :resource_id }
     # connecting a resource with the publication for a manuscript and/or a primary_article related_identifier
     belongs_to :resource
     belongs_to :journal_issn, class_name: 'StashEngine::JournalIssn', foreign_key: :publication_issn, optional: true

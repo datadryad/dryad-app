@@ -88,3 +88,22 @@
 	clear: both;
 	border: 2px solid $red;
 }
+
+#sandbox_banner {
+	@extend %pull-background;
+	margin-top: -10px;
+	margin-bottom: 15px;
+	background-color: #fff2ce; //$lightest-orange
+	font-size: .98rem;
+	.modalClose {
+		margin-bottom: 0;
+		display: flex;
+		justify-content: space-between;
+		text-align: left;
+		button {
+			font-size: 22px;
+			line-height: 0;
+			height: 22px;
+		}
+	}
+}

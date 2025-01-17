@@ -7,7 +7,6 @@
   <li>American Society of Plant Taxonomists</li>
   <li>Association for Tropical Biology and Conservation</li>
   <li>British Ecological Society</li>
-  <li>Cambridge University Press</li>
   <li>Canadian Science Publishing</li>
   <li>Ecological Society of America</li>
   <li>eLife</li>
@@ -15,7 +14,6 @@
   <li>European Society for Evolutionary Biology</li>
   <li>Federation of American Societies for Experimental Biology</li>
   <li>Federation of European Biochemical Societies</li>
-  <li>Institute of Botany, Chinese Academy of Sciences</li>
   <li>International Society for Behavioral Ecology</li>
   <li>John Wiley &amp; Sons, Inc</li>
   <li>Nordic Society Oikos</li>

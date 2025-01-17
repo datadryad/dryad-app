@@ -74,10 +74,10 @@ Dryad’s fees are currently under review and will be available in Spring 2025. 
 including universities, research institutions and academic libraries. <a href="/stash/interested">Contact us about joining us as a member organization</a>.</p>
 
 ### Academic and research institutions
-<%= render "layouts/members_institutional" %>
+<%= render "members_institutional" %>
 
 ### Publishing organizations
-<%= render "layouts/members_publishers" %>
+<%= render "members_publishers" %>
 
 ## Jobs &amp; opportunities
 <div id="blog-latest-posts" data-feed="https://blog.datadryad.org/category/opportunities/feed" data-count="3">

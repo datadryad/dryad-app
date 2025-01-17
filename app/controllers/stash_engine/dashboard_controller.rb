@@ -40,7 +40,8 @@ module StashEngine
               ELSE 3
             END as sort_order")
             .order('sort_order asc, stash_engine_resources.updated_at desc').page(@page).per(@page_size)
-          @datasets = @datasets.preload(%i[last_curation_activity stash_version current_resource_state])
+          @datasets = @datasets.preload(%i[last_curation_activity stash_version current_resource_state identifier])
+            .includes(identifier: :resources)
         end
       end
     end

@@ -1,4 +1,5 @@
 <p><%= @tenant.short_name %></p>
+<p>Include the ROR IDs of all institutions which constitute the member and which should be visible in the admin dashboard. For a consortium, this should include the main ROR IDs of other members.</p>
 <div class="c-input">
 <%= form.label :ror_orgs, "Place each ROR ID (as a URL) on a new line:"%>
 <%= form.text_area(:ror_orgs, value: @tenant.ror_ids&.join("\n"), class: 'c-input__textarea', style: 'width:100%; min-height:200px') %>
