@@ -895,7 +895,6 @@ namespace :identifiers do
   # Write a PDF that Dryad can send to the sponsor, summarizing the datasets published
   # rubocop:disable Metrics/MethodLength
   def write_deferred_sponsor_summary(name:, file_prefix:, report_period:, table:)
-    name ||= 'aaaa'
     return if name.blank? || table.blank?
 
     filename = "#{file_prefix}deferred_submissions_#{StashEngine::GenericFile.sanitize_file_name(name)}_#{report_period}.pdf"

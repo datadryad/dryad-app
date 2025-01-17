@@ -9,7 +9,7 @@ require 'cgi'
 # came from another class, but it's the only method we need from that class.
 #
 # The Datacite::Mapping patches extra methods into an external gem David wrote to make classes for every enum and they
-# are used to special-sauce output for SOLR and geoblacklight's schema.
+# are used to special-sauce output for SOLR and blacklight's schema.
 
 # these patch datacite mapping modules for some extra stuff David added
 module Datacite
@@ -51,7 +51,7 @@ module Stash
         @resource = resource
       end
 
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
       def to_index_document
         georss = calc_bounding_box
@@ -82,10 +82,15 @@ module Stash
           author_orcids_sm: @resource.authors.map(&:author_orcid).reject(&:blank?).uniq,
           funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
           funder_ror_ids_sm: @resource.funders.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
-          sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq
+          sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
+          rw_sim: formatted_related_works
         }
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+      def formatted_related_works
+        @resource.related_identifiers.map { |rw| "id=#{rw.related_identifier},type=#{rw.work_type}" if rw.related_identifier.present? }.uniq.compact
+      end
 
       def default_title
         @resource&.title&.strip
@@ -186,8 +191,7 @@ module Stash
         Datacite::Mapping::GeoLocationBox.new(lat_min, long_min, lat_max, long_max) if lat_min && long_min && lat_max && long_max
       end
 
-      # converts to DublinCore Terms, temporal, see http://journal.code4lib.org/articles/9710 or
-      # https://github.com/geoblacklight/geoblacklight-schema and seems very similar to the annotation going
+      # converts to DublinCore Terms, temporal, see http://journal.code4lib.org/articles/9710,
       # into the original DataCite element.  https://terms.tdwg.org/wiki/dcterms:temporal
       #
       # method takes the values supplied and also adds every year for a range so people can search for

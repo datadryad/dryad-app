@@ -1,4 +1,4 @@
-# Information about Geoblacklight and SOLR
+# Information about Blacklight and SOLR
 
 ## Overview of config files
 
@@ -20,12 +20,12 @@
 - Defines query handling.
 
 `config/settings.yml`
-- UI settings for GeoBlacklight
+- UI settings for Blacklight
 
 
 ## How to add another facet to the data and search interface
 
-1. Set up the additional item(s) in the SOLR schema for Geoblacklight
+1. Set up the additional item(s) in the SOLR schema for Blacklight
    - edit `config/solr_config/solrconfig.xml` in our code and add a facet field
       like those already shown. Look at the dynamic naming at the end `s` is for string,
       `m` is multiple, `i` is integer.  The `schema.xml` in same directory gives more info.
@@ -33,12 +33,12 @@
    full-text search.  Follow the examples if you need to include in search or queryfilters. (see 3 below)
 3. Back in `solrconfig.xml` add to the `qf` and `pf` sections (queryFilter and phraseBoost).
    These use the copied fields you set up in number 2.
-4. You will need to copy (scp) these completed files into the geoblacklight core on
+4. You will need to copy (scp) these completed files into the dryad SOLR core on
    each server you want to use it on.  Start by testing on dev.  The core is someplace
-   like `/solr/server/solr/geoblacklight/conf`.  You'll need to restart SOLR
+   like `/solr/server/solr/dryad/conf`.  You'll need to restart SOLR
    afterwards (right now from `~/init.d` script).
 5. Double-check search is still working as expected without error after restarting.
-6. Add constants to the geoblacklight example and config for your new facet.
+6. Add constants to the blacklight example and config for your new facet.
    `dryad-config-example/settings.yml` and `config/settings.yml`. For example
     ```ruby
     :DATASET_FILE_EXT: 'dryad_dataset_file_ext_sm'

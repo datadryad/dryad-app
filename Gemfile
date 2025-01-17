@@ -101,7 +101,7 @@ gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure
 gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'serrano', '~> 1.0' # this is a gem from datacite(?) and not sure it's actively used
-gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
+# gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
 gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny
