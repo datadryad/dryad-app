@@ -40,7 +40,7 @@ export default function Calculations({
   return (
     <>
       <p>
-        Dryad charges a{large_files ? <> ${dpc} </> : ''}fee for the curation and preservation of published datasets.{' '}
+        Dryad charges a{large_files ? <> ${dpc}</> : ''} fee for the curation and preservation of published datasets.{' '}
         {large_files ? (
           <>
             For data packages in excess of {formatSizeUnits(large_file_size)}, submitters will be charged{' '}
