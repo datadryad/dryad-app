@@ -7,6 +7,12 @@
   p {
     font-size: 0.9em;
   }
+
+  .overage {
+    color: $red;
+    font-weight: bold;
+    cursor: help;
+  }
 }
 
 .c-uploadtable-wrapper {

@@ -20,7 +20,7 @@ import SubmissionHelp, {
 /* eslint-disable jsx-a11y/no-autofocus */
 
 function Submission({
-  submission, ownerId, admin, s3_dir_name, config_s3, config_frictionless, config_cedar, change_tenant,
+  submission, ownerId, admin, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
 }) {
   const location = useLocation();
   const subRef = useRef(null);
@@ -37,7 +37,7 @@ function Submission({
       name: 'Title/Import',
       pass: !!resource.title,
       fail: publicationCheck(resource, review),
-      component: <Publication resource={resource} setResource={setResource} />,
+      component: <Publication resource={resource} setResource={setResource} maxSize={config_maximums.merritt_size} />,
       help: <PublicationHelp />,
       preview: <PubPreview resource={resource} previous={previous} admin={admin} />,
     },
@@ -76,17 +76,18 @@ function Submission({
     {
       name: 'Files',
       pass: resource.generic_files.length > 0,
-      fail: filesCheck(resource.generic_files, review),
+      fail: filesCheck(resource.generic_files, review, admin, config_maximums),
       component: <UploadFiles
         resource={resource}
         setResource={setResource}
         previous={previous}
         s3_dir_name={s3_dir_name}
         config_s3={config_s3}
-        config_frictionless={config_frictionless}
+        config_maximums={config_maximums}
+        config_payments={config_payments}
       />,
       help: <FilesHelp />,
-      preview: <FilesPreview resource={resource} previous={previous} />,
+      preview: <FilesPreview resource={resource} previous={previous} admin={admin} maxSize={config_maximums.files} />,
     },
     {
       name: 'README',
@@ -106,16 +107,23 @@ function Submission({
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource, review),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
-      help: <WorksHelp setTitleStep={() => setStep(steps[steps.findIndex((l) => l.name === 'Title/Import')])} />,
+      help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title/Import'))} />,
       preview: <WorksPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Agreements',
       pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
-      component: <Agreements resource={resource} setResource={setResource} form={change_tenant} />,
+      component: <Agreements
+        config={config_payments}
+        resource={resource}
+        setResource={setResource}
+        form={change_tenant}
+        ownerId={ownerId}
+        setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
+      />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
-      preview: <Agreements resource={resource} previous={previous} preview />,
+      preview: <Agreements config={config_payments} resource={resource} previous={previous} preview />,
     },
   ];
 

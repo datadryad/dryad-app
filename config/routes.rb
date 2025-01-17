@@ -415,6 +415,8 @@ Rails.application.routes.draw do
     patch 'authors/update', to: 'authors#update'
     delete 'authors/:id/delete', to: 'authors#delete', as: 'authors_delete'
     patch 'authors/reorder', to: 'authors#reorder', as: 'authors_reorder'
+    get 'authors/:id/invoice', to: 'authors#check_invoice'
+    patch 'authors/invoice', to: 'authors#set_invoice'
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
