@@ -17,7 +17,7 @@ export const authorCheck = (authors, id) => {
   if (fnameErr >= 0) {
     return (
       <p className="error-text" id="author_fname_error" data-index={fnameErr}>
-        {upCase(ordinalNumber(fnameErr + 1))} author name is required
+        {upCase(ordinalNumber(fnameErr + 1))} author name is required. Fill in or delete the entry
       </p>
     );
   }

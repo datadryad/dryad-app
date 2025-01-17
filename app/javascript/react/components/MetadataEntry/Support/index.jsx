@@ -10,8 +10,9 @@ export const fundingCheck = (funders) => {
   if (orgError >= 0) {
     return (
       <p className="error-text" id="funder_error" data-index={orgError}>
-        {upCase(ordinalNumber(orgError + 1))} granting organization is required.
-        {orgError === 0 ? ' Check "No funding received" if there is no funding associated with the dataset.' : ''}
+        {orgError === 0
+          ? 'Granting organization is blank. Check "No funding received" if there is no funding associated with the dataset'
+          : `${upCase(ordinalNumber(orgError + 1))} granting organization is blank. Fill in or delete the entry`}
       </p>
     );
   }
