@@ -28,13 +28,16 @@ module StashDatacite
           @resource.reload
 
           if @error_list.empty?
-            @resource.curation_activities << StashEngine::CurationActivity.create(user_id: current_user.id,
-                                                                                  status: 'submitted',
-                                                                                  note: 'Release from PPR')
+            @resource.curation_activities << StashEngine::CurationActivity.create(
+              user_id: current_user.id, status: 'submitted', note: 'Release from PPR'
+            )
             redirect_to dashboard_path, notice: 'Dataset released from private for peer review and submitted for curation'
           else
             duplicate_resource
-            redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(@new_res.id),
+            @new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
+            redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(
+              resource_id: @new_res.id
+            ),
                         alert: 'Unable to submit dataset for curation. Please correct submission errors.'
           end
         rescue ActiveRecord::RecordInvalid
