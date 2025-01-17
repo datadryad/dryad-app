@@ -184,8 +184,8 @@ end
 
 group :development, :dev do
   gem 'colorize'
-  gem 'web-console'
   gem 'rack-mini-profiler'
+  gem 'web-console'
 end
 
 group :development do
