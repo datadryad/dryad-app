@@ -18,15 +18,7 @@ module StashDatacite
                                 { authors: { include: [:affiliations] } }]
                     } }]
       )
-      @submission[:generic_files] = @resource.generic_files.includes(:frictionless_report).validated_table.as_json(
-        methods: :type, include: { frictionless_report: { only: %i[report status] } }
-      )
-      if @resource.previous_curated_resource.present?
-        @submission['previous_curated_resource'][:generic_files] = @resource.previous_curated_resource.generic_files
-          .includes(:frictionless_report).validated_table.as_json(
-            methods: :type, include: { frictionless_report: { only: %i[report status] } }
-          )
-      end
+      find_files
       @submission = @submission.to_json
 
       @resource.update(updated_at: Time.current)
@@ -45,6 +37,18 @@ module StashDatacite
 
     def find_resource
       @resource = StashEngine::Resource.find(params[:resource_id].to_i) unless params[:resource_id].blank?
+    end
+
+    def find_files
+      @submission[:generic_files] = @resource.generic_files.includes(:frictionless_report).validated_table.as_json(
+        methods: :type, include: { frictionless_report: { only: %i[report status] } }
+      )
+      return unless @resource.previous_curated_resource.present?
+
+      @submission['previous_curated_resource'][:generic_files] = @resource.previous_curated_resource.generic_files
+        .includes(:frictionless_report).validated_table.as_json(
+          methods: :type, include: { frictionless_report: { only: %i[report status] } }
+        )
     end
   end
 end
