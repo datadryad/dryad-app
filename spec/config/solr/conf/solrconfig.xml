@@ -20,11 +20,12 @@
      this file, see http://wiki.apache.org/solr/SolrConfigXml.
 -->
 <config>
-  <luceneMatchVersion>4.7</luceneMatchVersion>
+  <luceneMatchVersion>9.11</luceneMatchVersion>
   <dataDir>${solr.data.dir:}</dataDir>
-  <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}"/>
-  <codecFactory class="solr.SchemaCodecFactory"/>
-  <schemaFactory class="ClassicIndexSchemaFactory"/>
+  <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}" />
+  <codecFactory class="solr.SchemaCodecFactory" />
+  <schemaFactory class="ClassicIndexSchemaFactory" />
+
   <indexConfig>
     <lockType>${solr.lock.type:native}</lockType>
   </indexConfig>
@@ -33,9 +34,10 @@
   <updateHandler class="solr.DirectUpdateHandler2">
     <updateLog>
       <str name="dir">${solr.ulog.dir:}</str>
+      <int name="numVersionBuckets">${solr.ulog.numVersionBuckets:65536}</int>
     </updateLog>
     <autoCommit>
-      <maxTime>15000</maxTime>
+      <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
       <openSearcher>false</openSearcher>
     </autoCommit>
   </updateHandler>
@@ -101,6 +103,7 @@
       <str name="fl">*,score</str>
       <str name="sort">score desc, dc_title_sort asc</str>
       <str name="q.alt">*:*</str>
+      <!-- briley 06/03/2019 - field to store the publication id that cites the dataset -->
       <str name="qf">
         text^1
         dc_description_ti^2
@@ -117,7 +120,16 @@
         layer_slug_ti^10
         dc_identifier_ti^10
         dryad_related_publication_id_ti^11
+        dryad_author_affiliation_id_tmi^12
+        dryad_dataset_file_ext_tmi^13
+        dcs_funder_tmi^14
+        dryad_related_publication_name_ti^15
+        author_orcids_tmi^15
+        funder_awd_ids_tmi^15
+        funder_ror_ids_tmi^15
+        sponsor_ror_ids_tmi^15
       </str>
+      <!-- briley 06/03/2019 - field to store the publication id that cites the dataset -->
       <str name="pf"><!-- phrase boost within result set -->
         text^1
         dc_description_ti^2
@@ -134,6 +146,10 @@
         layer_slug_ti^10
         dc_identifier_ti^10
         dryad_related_publication_id_ti^11
+        dryad_author_affiliation_id_tmi^12
+        dryad_dataset_file_ext_tmi^13
+        dcs_funder_tmi^14
+        dryad_related_publication_name_ti^15
       </str>
       <bool name="facet">true</bool>
       <int name="facet.mincount">1</int>
@@ -149,9 +165,22 @@
       <str name="facet.field">dc_subject_sm</str>
       <str name="facet.field">layer_geom_type_s</str>
       <str name="facet.field">solr_year_i</str>
+      <!-- briley 06/03/2019 - provide a facet for the publication that cites the dataset -->
       <str name="facet.field">dryad_related_publication_name_s</str>
       <str name="facet.field">dryad_related_publication_issn_s</str>
+      <!-- sfisher 08/22/2019 - provide a facet for author affiliation(s) -->
+      <str name="facet.field">dryad_author_affiliation_name_sm</str>
+      <str name="facet.field">dryad_dataset_file_ext_sm</str>
+      <str name="facet.field">dcs_funder_sm</str>
+
+      <str name="facet.field">author_orcids_sm</str>
+      <str name="facet.field">funder_awd_ids_sm</str>
+      <str name="facet.field">funder_ror_ids_sm</str>
+      <str name="facet.field">sponsor_ror_ids_sm</str>
     </lst>
+    <arr name="last-components">
+      <str>spellcheck</str>
+    </arr>
   </requestHandler>
 
   <requestHandler name="/update" class="solr.UpdateRequestHandler"/>
