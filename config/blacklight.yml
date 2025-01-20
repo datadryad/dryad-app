@@ -8,7 +8,7 @@ development:
 
 v3_development:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad.org:8983/solr/dryad" %>
+  url: <%= ENV['SOLR_URL'] || "http://18.236.111.137:8983/solr/dryad" %>
 
 aws_db:
   adapter: solr

@@ -36,10 +36,9 @@ Any combination of the following parameters may be used in a search:
   only be returned that have been modified since the given
   time. The time must be specified in ISO 8601 format, and the time
   zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
-- **modifiedBefore** -- a timestamp for limiting results. Datasets will
-  only be returned that have been modified before the given
-  time. The time must be specified in ISO 8601 format, and the time
-  zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+- **relatedWorkIdentifier** -- the identifier that is present in a related work. 
+  It allows `*` as a wildcard at the beginning and/or end of the value.
+- **relatedWorkRelationship** -- the type of relationship expressed by a related work.
 
 Searches do not require authenticated access, but they *may* be used
 with authenticated access to view the latest version of each dataset,
