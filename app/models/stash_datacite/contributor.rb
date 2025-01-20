@@ -53,7 +53,7 @@ module StashDatacite
     IdentifierTypesStrToFull = Datacite::Mapping::FunderIdentifierType.map { |i| [i.value.downcase.gsub(' ', '_'), i.value] }.to_h
     # rubocop:enable Style/MapToHash
 
-    enum contributor_type: ContributorTypesEnum
+    enum :contributor_type, ContributorTypesEnum
 
     before_save :strip_whitespace
 

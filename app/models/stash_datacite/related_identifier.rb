@@ -63,10 +63,10 @@ module StashDatacite
                              'is source of': 'issourceof' }.freeze
     # rubocop:enable Naming/ConstantName
 
-    enum work_type: { undefined: 0, article: 1, dataset: 2, preprint: 3, software: 4, supplemental_information: 5,
+    enum :work_type, { undefined: 0, article: 1, dataset: 2, preprint: 3, software: 4, supplemental_information: 5,
                       primary_article: 6, data_management_plan: 7 } # changing to make the enum index more explicit
 
-    enum added_by: { default: 0, zenodo: 1, simple_relation: 2, api_simple: 3 }
+    enum :added_by, { default: 0, zenodo: 1, simple_relation: 2, api_simple: 3 }
 
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
                           supplemental_information: 'Supplemental information',

@@ -27,7 +27,7 @@ module StashDatacite
 
     # GrantRegex = Regexp.new(/^Data were created with funding from (.+) under grant (.+)$/)
 
-    enum description_type: DescriptionTypesEnum
+    enum :description_type, DescriptionTypesEnum
 
     # usage_notes is our special sauce for 'other' which is the real value it would take in datacite.xml.  I suspect
     # we also want to prefix the value with "Usage notes:" in the XML so we can differentiate it.

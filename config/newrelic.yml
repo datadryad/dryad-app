@@ -50,13 +50,11 @@ common: &default_settings
 # RAILS_ENV or RACK_ENV (as appropriate) is used to determine the environment.
 # If your application has other named environments, configure them here.
 
-#development:
-#  <<: *default_settings
-#  app_name: 'DryadApp (Local)'
+development:
+  agent_enabled: false
 
-#dev:
-#  <<: *default_settings
-#  app_name: 'DryadApp (Local)'
+dev:
+  agent_enabled: false
 
 test:
   agent_enabled: false
