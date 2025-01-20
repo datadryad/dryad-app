@@ -221,3 +221,7 @@ yarn-debug.log*
 .yarn-integrity
 
 /config/credentials/development.key
+__pycache__/
+
+# Jupyter notebooks checkpoints
+documentation/apis/Jupyter-Notebooks/.ipynb_checkpoints/

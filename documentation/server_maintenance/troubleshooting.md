@@ -186,41 +186,39 @@ that user has logged in and has a record in the users table.
 
 Look up the dataset to see what you're dealing with and the resources involved.
 
-```sql
-SELECT res.* FROM stash_engine_resources res
-JOIN stash_engine_identifiers ids
-ON res.identifier_id = ids.id
-WHERE ids.identifier = '<bare-doi>'
+```ruby
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources
 ```
 
-Make a note of the user_id that owns the dataset and also note the last couple of resource.ids.
+Note the last couple of resource.ids.
 
-Lookup the desired user_id to transfer ownership to.  Curator should've given the ORCID.  Note their user.id.
-```sql
-SELECT * FROM `stash_engine_users` WHERE `orcid` = '<new-owner-orcid>';
+Lookup the current user and note the ORCID, name (you already have their user.id).
+```ruby
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last.submitter
 ```
 
-Lookup the current user_id and note the ORCID, name (you already have their user.id).
-```sql
-SELECT * FROM `stash_engine_users` WHERE `id` = '<old-owner-id>'
+Lookup the desired user to transfer ownership to.  Curator should've given the ORCID.  Note their user.id.
+```ruby
+StashEngine::User.find_by(orcid: '<new-owner-orcid>');
 ```
 
-Update both the user_id and current_editor_id for the last couple versions to match the new owner.
-```sql
-UPDATE stash_engine_resources SET user_id=<new-id>, current_editor_id=<new-id> WHERE id IN (<id1, id2>);
+Update both the submitter and current_editor_id for the last couple versions to match the new owner.
+```ruby
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last.submitter = '<noted_user_id>'
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last(2).update(current_editor_id: '<noted_user_id>')
 ```
 
 Often, a user or curator has completely destroyed the correct association between the
 author and their ORCID by retyping someone else's name for the author that
 had a verified ORCID.  Check to see.
 
-```sql
-SELECT * FROM `stash_engine_authors` WHERE `resource_id` IN (<id1, id2>);
+```ruby
+StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last.authors
 ```
 
-If necessary, change the two authors so they have the same
-ORCIDs associated with the names as in the user accounts 
-(which will have names and ORCIDS correct).
+If necessary, change the two authors `author_orcid` so they have the correct
+ORCIDs, which should be those associated with the names as in the user accounts.
+You should also check that the `author_email` for each author is correct.
 
 If you don't update the authors to be sure authors/orcids are correct then the
 "corresponding author" may not appear correctly and it also plays havok with data consistency
@@ -258,21 +256,41 @@ update stash_engine_curation_activities set status='embargoed' where id=;
 update stash_engine_resources set file_view=false where identifier_id=;
 update stash_engine_resources set publication_date='2020-07-25 01:01:01' where id=;
 update stash_engine_identifiers set pub_state='embargoed' where id=;
-select id,state,deposition_id,resource_id, copy_type from stash_engine_zenodo_copies where identifier_id=;
 ```
 
-Now run a command like the one one below if it has been published to Zenodo.  It will
-re-open the published record, set embargo and publish it again with the
-embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies
-table. The zenodo_copy_id is the id from that same table.
-```
-# the arguments are 1) resource_id, 2) deposition_id at zenodo, 3) date, 4) zenodo_copy_id
-RAILS_ENV=production bundle exec rake dev_ops:embargo_zenodo -- --resource_id 97683 --deposition_id 4407065 --date 2021-12-31 --zenodo_copy_id 12342
-```
+Removing a unpublished datasets and versions
+============================================
 
-**You must login to Zenodo and "publish" the new version of the dataset; otherwise the embargo
-will not take effect. This is probably something we can fix in the code, but it is waiting for us
-to revisit the Zenodo integration.**
+Removing an unsubmitted (and unpublished) dataset
+-------------------------------------------------
+
+Datasets that are unsubmitted and unpublished will be removed by automatic
+processes after the time is up. If you want to speed the process, you can find
+the resource_id and simply destroy it in Rails console.
+
+
+Removing an unpublished dataset
+-------------------------------
+
+Simply set the dataset to status `withdrawn`. The automatic cleanup processes will remove it after the time expires.
+
+
+Removing an unpublished (most recent) version of a published dataset
+--------------------------------------------------------------------
+
+If there is a request to remove the latest version of a dataset, and that
+version has not been published, you can find the resource_id and simply destroy
+it in Rails console.
+
+
+Other removal situations
+------------------------
+
+If you have a request to remove a version that is in the middle of the revision
+history for a dataset, DON'T. This will mess up the revision chain, and data
+files will not be correctly found. You can make this version invisible (`file_view=false` and/or `meta_view=false`).
+
+For published datasets, see the sections below.
 
 
 Setting "Private For Peer Review" (PPR) on dataset that was accidentally published
@@ -324,7 +342,6 @@ What to do at datacite?
 - You cannot change this back to a draft now because it was published
 - Under state, choose `Registered` instead of `Findable` and hopefully this is good enough since not a lot of other choices.
 - Click `Update DOI`
-- (if it's EZID, you may have to do this a different way, but most are datacite dois)
 
 # This dataset was accidentally published early (unpublish now and likely again published later)
 

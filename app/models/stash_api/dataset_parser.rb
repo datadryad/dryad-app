@@ -34,10 +34,9 @@ module StashApi
         resource_id: @resource.id,
         note: user_note
       )
-
+      @resource.submitter = owning_user_id
       @resource.update(
         title: remove_html(@hash['title']),
-        user_id: owning_user_id,
         current_editor_id: owning_user_id,
         skip_datacite_update: @hash['skipDataciteUpdate'] || false,
         skip_emails: @hash['skipEmails'] || false,
@@ -62,9 +61,26 @@ module StashApi
     end
 
     def send_submit_invitation_email(metadata)
-      return if @hash['triggerSubmitInvitation'] != true || @resource.user.email.blank?
+      return if @hash['triggerSubmitInvitation'] != true || @resource.submitter.email.blank?
 
       StashApi::ApiMailer.send_submit_request(@resource, metadata).deliver_now
+    end
+
+    def resource_uniq?
+      return true if @id
+
+      query = StashEngine::Resource.joins(:users).where(
+        stash_engine_resources: { title: @hash[:title] },
+        stash_engine_users: { orcid: @user.orcid }
+      )
+
+      if @hash[:manuscriptNumber].present?
+        query = query.joins(:resource_publication).where(
+          stash_engine_resource_publications: { manuscript_number: @hash[:manuscriptNumber] }
+        )
+      end
+
+      !query.exists?
     end
 
     private
@@ -155,17 +171,17 @@ module StashApi
 
     def create_dataset(doi_string: nil)
       # Resource needs to be created early, since minting an ID is based on the resource's tenant, add identifier afterward
-      # The user_id is initially set to the user that made the API call, though ownership may be changed
+      # The submitter is initially set to the user that made the API call, though may be changed
       # to a different user in the `parse` method based on metadata sent in the API call.
-      @resource = StashEngine::Resource.create(
-        user_id: @user.id, current_editor_id: @user.id, title: '', tenant_id: @user.tenant_id
-      )
-
+      @resource = StashEngine::Resource.new(current_editor_id: @user.id, tenant_id: @user.tenant_id)
       my_id = doi_string || Stash::Doi::DataciteGen.mint_id(resource: @resource)
       id_type, id_text = my_id.split(':', 2)
-      ident = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
-
-      ident.resources << @resource # add resource to identifier
+      db_id_obj = StashEngine::Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
+      @resource.identifier_id = db_id_obj.id
+      @resource.save
+      @resource.creator = @user.id
+      @resource.submitter = @user.id
+      @resource.reload
       add_default_values # for license, publisher, resource type
     end
 

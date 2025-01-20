@@ -8,7 +8,7 @@ source 'https://rubygems.org'
 gem 'irb', '~> 1.4.1'
 gem 'mail', '~> 2.8'
 gem 'mysql2', '~> 0.5.3'
-gem 'rails', '~> 7.0'
+gem 'rails', '~> 7.0.8.7'
 gem 'react-rails', '~> 2.6.2'
 gem 'shakapacker', '~> 6.0'
 gem 'sprockets', '~> 4.0'
@@ -22,7 +22,7 @@ gem 'capistrano-rails', '~> 1.6.2'
 gem 'capistrano-yarn'
 gem 'ed25519', '1.3.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
-gem 'rubocop', '~> 1.64', require: false
+gem 'rubocop', '~> 1.67.0', require: false
 # Use Puma as the app server
 gem 'puma', '6.4.3', group: :puma, require: false
 
@@ -50,7 +50,7 @@ gem 'amoeba', '~> 3.2.0'
 gem 'annotate', '~> 3.2'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
-gem 'blacklight'
+gem 'blacklight', '= 7.37.0'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.6'
 gem 'charlock_holmes', '~> 0.7.7'
@@ -68,11 +68,10 @@ gem 'exception_notification'
 gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-sass', '~> 6.1.0'
-gem 'geoblacklight', '~> 3.0'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'grover'
 gem 'http', '~> 5.0.4'
-gem 'httparty', '~> 0.21.0'
+gem 'httparty', '~> 0.22.0'
 gem 'httpclient', '~> 2.8.3'
 gem 'jbuilder' # is this used?
 gem 'jquery-turbolinks', '~> 2.1.0'
@@ -84,6 +83,7 @@ gem 'loofah', '~> 2.19.1'
 gem 'markdiff', '~> 0.8.1'
 gem 'net-ftp', '~> 0.3.4'
 gem 'net-sftp'
+gem 'newrelic_rpm'
 gem 'noid', '~> 0.9.0'
 gem 'omniauth', '~> 2.1.0'
 gem 'omniauth-google-oauth2', '~> 1.1.1'
@@ -98,16 +98,15 @@ gem 'recaptcha', '~> 5.14'
 gem 'redcarpet', '~> 3.6'
 gem 'responders', '~> 3.0.1' # do we use this?
 gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used
-gem 'restforce', '~> 5.2.4'
+gem 'restforce', '~> 7.5.0'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
-gem 'rsolr', '~> 2.5.0'
+gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'serrano', '~> 1.0' # this is a gem from datacite(?) and not sure it's actively used
 gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
 gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny
-gem 'twitter-typeahead-rails', '0.11.1' # this is in a generator to install blacklight
 gem 'yaml', '~> 0.3.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
 gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
@@ -116,6 +115,7 @@ gem 'zaru', '~> 0.3.0' # for sanitizing file names
 
 gem 'base64'
 gem 'bigdecimal'
+gem 'faraday', '~> 1.10.4'
 gem 'mutex_m'
 
 # ############################################################
@@ -171,16 +171,17 @@ group :development, :v3_development, :local_dev, :local, :test do
   gem 'binding_of_caller'
   # Ruby fast debugger - base + CLI (http://github.com/deivid-rodriguez/byebug)
   gem 'byebug'
+  gem 'drb'
   gem 'listen'
   gem 'parallel_tests'
   gem 'pry'
   gem 'pry-rails'
-  gem 'pry-remote', require: 'pry-remote'
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
-  gem 'letter_opener'
-  gem 'letter_opener_web', '~> 3.0'
   gem 'spring'
   # rspec command for spring (https://github.com/jonleighton/spring-commands-rspec)
+  gem 'bullet'
+  gem 'letter_opener'
+  gem 'letter_opener_web', '~> 3.0'
   gem 'spring-commands-rspec'
 end
 

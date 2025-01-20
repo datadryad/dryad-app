@@ -1,15 +1,33 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>We have received a notification from <%= @resource.identifier.publication_name %> that your manuscript was not approved for publication. Therefore, we have withdrawn your related Dryad data submission:</p>
-
 <p>
-Title: <%= @resource.title %><br/>
-DOI: <%= @resource.identifier_str %>
+  We received a notification from <%= @resource.identifier.publication_name %> that your manuscript was not approved
+  for publication. Therefore, we have withdrawn your related Dryad data submission:
 </p>
 
-<p>If you plan to submit to an alternate journal for consideration, or if you would like to proceed to publish your dataset as a standalone publication, we can reinstate your submission at any time.</p>
+<p>
+  Title: <%= @resource.title %><br/>
+  DOI: <%= @resource.identifier_uri %>
+</p>
 
-<p>Please contact the Dryad Helpdesk at <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_str %>"><%= @helpdesk_email %></a> if you have any questions.</p>
+<p>
+  If you plan to submit your manuscript to another journal, you can reinstate your submission by clicking
+  “revise submission” on your existing dataset. This action preserves the original DOI, metadata, and uploaded
+  data files—you will only need to update the journal information. To ensure your data remains unpublished and does
+  not enter our curation process for review and publication, we advise keeping it in "Private for Peer Review"
+  status until you are ready to proceed.
+</p>
 
-<p>Kind regards,<br/>
-The Dryad Team</p>
+<p>
+  It's worth noting that your dataset can be published independently without being directly associated with a
+  manuscript—allowing the opportunity for your data to be cited and reused by others in your field even before your
+  related manuscript is published.
+</p>
+
+<p>Please note that your withdrawn dataset will be permanently deleted after one year.</p>
+
+<p>
+  Contact us at
+  <a href="mailto:<%= @helpdesk_email %>?subject=Dataset with DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>
+  if you have any questions.
+</p>

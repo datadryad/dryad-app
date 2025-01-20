@@ -1,0 +1,22 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>Your data submission that was withdrawn from the Dryad platform will be permanently deleted in three months:</p>
+
+<p>
+  Title: <%= @resource.title %><br/>
+  DOI: <%= @resource.identifier_uri %>
+</p>
+
+<p>
+  You can reinstate your submission by following these steps:
+  <ol>
+    <li><a href="https://datadryad.org">Login to https://datadryad.org</a></li>
+    <li>Click on "My datasets"</li>
+    <li>Locate your submission under the header “Withdrawn” </li>
+    <li>Click "Revise submission" to access your submission</li>
+    <li>Incorporate edits, if any</li>
+    <li>Click "Submit"</li>
+  </ol>
+</p>
+
+<p>If you have questions about this action, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Auto-Withdraw <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>

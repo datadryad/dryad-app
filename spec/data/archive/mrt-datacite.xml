@@ -65,7 +65,7 @@
   </formats>
   <version>1</version>
   <rightsList>
-    <rights rightsURI='https://creativecommons.org/publicdomain/zero/1.0/'>CC0 1.0 Universal (CC0 1.0) Public Domain Dedication</rights>
+    <rights rightsURI='https://spdx.org/licenses/CC0-1.0.html'>Creative Commons Zero v1.0 Universal</rights>
   </rightsList>
   <descriptions>
     <description descriptionType='Abstract'>

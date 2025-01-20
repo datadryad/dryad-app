@@ -1,8 +1,6 @@
 require_relative '../../../lib/stash/aws/s3'
 require 'rails_helper'
-require 'pry-remote'
 require 'fileutils'
-# binding.remote_pry
 
 RSpec.feature 'UploadFiles', type: :feature, js: true do
 
@@ -16,7 +14,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::Aws
-  include AjaxHelper
 
   before(:each) do
     mock_repository!

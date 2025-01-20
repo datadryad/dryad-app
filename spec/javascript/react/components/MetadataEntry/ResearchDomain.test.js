@@ -33,7 +33,7 @@ describe('ResearchDomain', () => {
       updatePath={updatePath}
     />);
 
-    const resDomain = screen.getByLabelText('Research domain', {exact: false});
+    const resDomain = screen.getByLabelText('Research domain', {exact: true});
     expect(resDomain).toHaveValue(subject);
   });
 
@@ -51,11 +51,10 @@ describe('ResearchDomain', () => {
       updatePath={updatePath}
     />);
 
-    const resDomain = screen.getByLabelText('Research domain', {exact: false});
+    const resDomain = screen.getByLabelText('Research domain', {exact: true});
     expect(resDomain).toHaveValue(subject);
 
-    userEvent.clear(screen.getByLabelText('Research domain'));
-    userEvent.type(screen.getByLabelText('Research domain'), subjectList[20]);
+    await userEvent.selectOptions(screen.getByLabelText('Research domain'), subjectList[20]);
 
     await waitFor(() => expect(screen.getByLabelText('Research domain')).toHaveValue(subjectList[20]));
 

@@ -7,13 +7,13 @@
 #  campus_contacts :json
 #  covers_dpc      :boolean          default(TRUE)
 #  enabled         :boolean          default(TRUE)
-#  logo            :text(4294967295)
 #  long_name       :string(191)
 #  partner_display :boolean          default(TRUE)
 #  payment_plan    :integer
 #  short_name      :string(191)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  logo_id         :text(4294967295)
 #  sponsor_id      :string(191)
 #
 # Indexes
@@ -25,6 +25,11 @@ require 'ostruct'
 module StashEngine
   class Tenant < ApplicationRecord
     self.table_name = 'stash_engine_tenants'
+    validates :id, presence: true, uniqueness: true
+    validates :short_name, presence: true
+    validates :long_name, presence: true
+
+    belongs_to :logo, class_name: 'StashEngine::Logo', dependent: :destroy, optional: true
     belongs_to :sponsor, class_name: 'Tenant', inverse_of: :sponsored, optional: true
     has_many :sponsored, class_name: 'Tenant', primary_key: :id, foreign_key: :sponsor_id, inverse_of: :sponsor
     has_many :tenant_ror_orgs, class_name: 'StashEngine::TenantRorOrg', dependent: :destroy
@@ -39,20 +44,16 @@ module StashEngine
     # return all enabled tenants sorted by name
     scope :enabled, -> { where(enabled: true).order(:short_name) }
     scope :partner_list, -> { enabled.where(partner_display: true) }
+    scope :connect_list, -> { partner_list.where(covers_dpc: true) }
     scope :tiered, -> { enabled.where(payment_plan: :tiered) }
     scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 
-    def data_deposit_agreement?
-      dda = File.join(Rails.root, 'app', 'views', 'tenants', id, '_dda.html.erb')
-      File.exist?(dda)
-    end
-
     def authentication
-      JSON.parse(super, object_class: OpenStruct)
+      JSON.parse(super, object_class: OpenStruct) if super.present?
     end
 
     def campus_contacts
-      JSON.parse(super)
+      JSON.parse(super) if super.present?
     end
 
     def consortium

@@ -83,6 +83,7 @@ module StashEngine
 
       if article_type == 'primary_article'
         cr.populate_pub_update!
+        identifier.record_payment if latest_resource.submitted? && identifier.publication_date.blank?
         release_updated_resource(latest_resource) if latest_resource.current_curation_status == 'peer_review'
       end
 

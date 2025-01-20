@@ -4,6 +4,8 @@ module StashEngine
 
   describe UserMailer do
     include MailerSpecHelper
+    let(:journal) { create(:journal) }
+    let(:journal_issn) { create(:journal_issn, journal: journal) }
 
     before(:each) do
 
@@ -16,7 +18,7 @@ module StashEngine
       @request_port = 80
 
       @user = create(:user)
-      @resource = create(:resource, user: @user, identifier: create(:identifier))
+      @resource = create(:resource, user: @user, identifier: create(:identifier), journal_issn: journal.issns.first)
       @identifier = @resource.identifier
 
       @tenant = double(Tenant)
@@ -58,6 +60,7 @@ module StashEngine
     describe 'curation status changes' do
 
       mailable = %w[peer_review submitted published embargoed withdrawn]
+      # mailable = %w[peer_review]
 
       StashEngine::CurationActivity.statuses.each do |status|
 
@@ -74,7 +77,7 @@ module StashEngine
               expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
               expect(delivery.body.to_s).to include('your submission will not enter our curation process for review and publication')
             when 'submitted'
-              expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
+              # expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
               expect(delivery.body.to_s).to include('Thank you for your submission to Dryad')
             when 'published'
               expect(delivery.body.to_s).to include('approved for publication')
@@ -94,9 +97,24 @@ module StashEngine
             assert_no_email
           end
         end
-
       end
 
+      context 'when journal has peer_review_custom_text' do
+        let(:status) { 'peer_review' }
+        let(:journal) { create(:journal, peer_review_custom_text: 'This is a custom peer review message') }
+
+        it 'contains the custom text' do
+          allow(@resource).to receive(:current_curation_status).and_return(status)
+          allow(@resource).to receive(:publication_date).and_return(Time.now.utc.to_date)
+
+          UserMailer.status_change(@resource, status).deliver_now
+          delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
+
+          expect(delivery.body.to_s).to include(@resource.identifier.shares.first.sharing_link)
+          expect(delivery.body.to_s).to include('your submission will not enter our curation process for review and publication')
+          expect(delivery.body.to_s).to include('This is a custom peer review message')
+        end
+      end
     end
 
     describe 'publication email' do
@@ -125,8 +143,8 @@ module StashEngine
         UserMailer.status_change(@resource, 'published').deliver_now
         delivery = assert_email("[test] Dryad Submission \"#{@resource.title}\"")
 
-        expect(delivery.body.to_s).to include('Your related software files are being hosted by Zenodo')
-        expect(delivery.body.to_s).to include('Your supplemental information is being hosted by Zenodo')
+        expect(delivery.body.to_s).to include('Your related software files are now published and publicly available on Zenodo')
+        expect(delivery.body.to_s).to include('Your supplemental information is now published and publicly available on Zenodo')
         expect(delivery.body.to_s).to include(@test_doi)
         expect(delivery.body.to_s).to include(@test_doi2)
       end

@@ -23,11 +23,17 @@
       <th class="c-admin-table">
         Notify
       </th>
+      <th class="c-admin-table">
+        Sponsor
+      </th>
+      <th class="c-lined-table__sort" <%= sort_display('enabled') %>>
+        <%= sortable_column_head sort_field: 'enabled', title: 'Active' %>
+      </th>      
       <th class="c-lined-table__sort" <%= sort_display('partner_display') %>>
         <%= sortable_column_head sort_field: 'partner_display', title: 'Display' %>
       </th>
-      <th class="c-lined-table__sort" <%= sort_display('enabled') %>>
-        <%= sortable_column_head sort_field: 'enabled', title: 'Connect' %>
+      <th class="c-lined-table__sort" <%= sort_display('covers_dpc') %>>
+        <%= sortable_column_head sort_field: 'covers_dpc', title: 'Pays' %>
       </th>
     </tr>
   </thead>
@@ -36,13 +42,52 @@
   <% tenants.each do |t| %>
     <tr class="c-lined-table__row">
       <td><%= t.id %></td>
-      <td><%= t.short_name %></td>
-      <td><%= t.long_name %></td>
-      <td><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="short_name_<%= t.id %>"><%= t.short_name %></div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'short_name'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member name" aria-haspopup="dialog" id="short_name_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="long_name_<%= t.id %>"><%= t.long_name %></div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'long_name'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member long name" aria-haspopup="dialog" id="long_name_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="authentication_<%= t.id %>"><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'authentication'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member authentication" aria-haspopup="dialog" id="authentication_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
       <td>
         <div class="c-lined-table__with-actions">
           <div class="c-lined-table__data" id="logo_<%= t.id %>">
-            <%= "<img src='#{t.logo}' style='min-width: 40px;' alt='#{t.short_name} logo'/>".html_safe unless t.logo.blank? %>
+            <%= "<img src='#{t.logo.data}' style='min-width: 40px;' alt='#{t.short_name} logo'/>".html_safe if t.logo&.data&.present? %>
           </div>
           <% if policy([:stash_engine, :tenant]).popup? %>
           <div class="c-lined-table__actions">
@@ -92,15 +137,11 @@
       </td>
       <td>
         <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="partner_display_<%= t.id %>">
-            <span style="color: <%= t.partner_display ? '#3c763d' : 'rgb(209, 44, 29)'%>">
-              <%= t.partner_display ? "Shown" : "Hidden" %>
-            </span>
-          </div>
+          <div class="c-lined-table__data" id="sponsor_id_<%= t.id %>"><%= t.sponsor&.short_name %></div>
           <% if policy([:stash_engine, :tenant]).popup? %>
           <div class="c-lined-table__actions">
-            <%= form_with(url: tenant_popup_path(id: t.id, field: 'partner_display'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit member display" aria-haspopup="dialog" id="partner_display_button_<%= t.id %>">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'sponsor_id'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member sponsor" aria-haspopup="dialog" id="sponsor_id_button_<%= t.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>
@@ -119,6 +160,42 @@
           <div class="c-lined-table__actions">
             <%= form_with(url: tenant_popup_path(id: t.id, field: 'enabled'), method: :get, local: false) do %>
               <button class="c-admin-edit-icon" aria-label="Edit whether member is enabled" aria-haspopup="dialog" id="enabled_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="partner_display_<%= t.id %>">
+            <span style="color: <%= t.partner_display ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+              <%= t.partner_display ? "Shown" : "Hidden" %>
+            </span>
+          </div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'partner_display'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member display" aria-haspopup="dialog" id="partner_display_button_<%= t.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
+      </td>
+      <td>
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="covers_dpc_<%= t.id %>">
+            <span style="color: <%= t.covers_dpc ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+              <%= t.covers_dpc ? "True" : "False" %>
+            </span>
+          </div>
+          <% if policy([:stash_engine, :tenant]).popup? %>
+          <div class="c-lined-table__actions">
+            <%= form_with(url: tenant_popup_path(id: t.id, field: 'covers_dpc'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" aria-label="Edit member payment" aria-haspopup="dialog" id="covers_dpc_button_<%= t.id %>">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
             <% end %>

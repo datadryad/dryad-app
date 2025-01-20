@@ -22,7 +22,7 @@
 module StashEngine
   class Role < ApplicationRecord
     self.table_name = 'stash_engine_roles'
-    belongs_to :user, class_name: 'User'
+    belongs_to :user, class_name: 'StashEngine::User'
     belongs_to :role_object, polymorphic: true, optional: true
 
     # only join after relevant scopes for query efficiency
@@ -30,6 +30,10 @@ module StashEngine
     belongs_to :journal, class_name: 'StashEngine::Journal', foreign_key: 'role_object_id', optional: true
     belongs_to :journal_organization, class_name: 'StashEngine::JournalOrganization', foreign_key: 'role_object_id', optional: true
     belongs_to :funder, class_name: 'StashEngine::Funder', foreign_key: 'role_object_id', optional: true
+    belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'role_object_id', optional: true
+
+    scope :submission_roles, -> { where(role_object_type: 'StashEngine::Resource') }
+    scope :admin_roles, -> { where("role_object_type is null or role_object_type != 'StashEngine::Resource'") }
 
     scope :system_roles, -> { where(role_object_type: nil) }
     scope :tenant_roles, -> { where(role_object_type: 'StashEngine::Tenant') }

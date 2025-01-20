@@ -2,6 +2,7 @@ module StashEngine
   # rubocop:disable Metrics/ClassLength
   class AdminDashboardController < ApplicationController
     helper SortableTableHelper
+    helper AdminHelper
     helper AdminDashboardHelper
     before_action :require_admin
     protect_from_forgery except: :results
@@ -15,7 +16,7 @@ module StashEngine
     def results
       @datasets = StashEngine::Resource.latest_per_dataset.select(
         :id, :title, :total_file_size, :user_id, :tenant_id, :identifier_id, :last_curation_activity_id, :publication_date,
-        :current_editor_id, :current_resource_state_id
+        :user_id, :current_resource_state_id
       ).distinct
 
       add_fields
@@ -43,7 +44,7 @@ module StashEngine
           collect_properties
         end
         format.csv do
-          helpers.csv_headers
+          helpers.csv_headers('DryadAdminReport')
           self.response_body = helpers.csv_enumerator
         end
       end
@@ -97,7 +98,7 @@ module StashEngine
     # rubocop:disable Style/MultilineIfModifier
     def setup_limits
       session[:admin_search_role] = params[:user_role] if params[:user_role].present?
-      @user_role = current_user.roles.find_by(id: session[:admin_search_role]) || current_user.roles.first
+      @user_role = current_user.roles.admin_roles.find_by(id: session[:admin_search_role]) || current_user.roles.admin_roles.first
       @role_object = @user_role.role_object
       @tenant_limit = @role_object.is_a?(StashEngine::Tenant) ? policy_scope(StashEngine::Tenant) : StashEngine::Tenant.enabled
       if @role_object.is_a?(StashEngine::JournalOrganization)
@@ -167,12 +168,8 @@ module StashEngine
     end
 
     def curator_field
-      @datasets = @datasets.joins("left outer join (
-          select stash_engine_users.* from stash_engine_users
-          inner join stash_engine_roles on stash_engine_users.id = stash_engine_roles.user_id
-            and role in ('curator', 'superuser')
-        ) curator on curator.id = stash_engine_resources.current_editor_id")
-        .select("CONCAT_WS(' ', curator.first_name, curator.last_name) as curator_name")
+      @datasets = @datasets.left_outer_joins(:curator)
+        .select("CONCAT_WS(' ', stash_engine_users.first_name, stash_engine_users.last_name) as curator_name")
     end
 
     def author_field
@@ -209,7 +206,7 @@ module StashEngine
         :affiliation, :value
       ).present?
       @datasets = @datasets.where(
-        'curator.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
+        'stash_engine_users.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
       ) if @filters[:curator].present? && current_user.min_app_admin?
       unless @search_string.blank?
         search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
@@ -272,7 +269,7 @@ module StashEngine
       journal_ids = @filters.dig(:journal, :value)&.to_i
       journal_ids = (@journal_limit.map(&:id).include?(journal_ids) ? journal_ids : @journal_limit.map(&:id)) if @journal_limit.present?
 
-      @datasets = @datasets.joins(:journal).where('stash_engine_journals.id': journal_ids) if journal_ids.present?
+      @datasets = @datasets.joins(:journals).where('stash_engine_journals.id': journal_ids) if journal_ids.present?
     end
 
     def sponsor_filter
@@ -281,7 +278,7 @@ module StashEngine
       sponsor_ids = @filters[:sponsor]&.to_i
       sponsor_ids = (@sponsor_limit.map(&:id).include?(sponsor_ids) ? sponsor_ids : @sponsor_limit.map(&:id)) if @sponsor_limit.present?
 
-      @datasets = @datasets.joins(:journal).where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
+      @datasets = @datasets.joins(:journals).where('stash_engine_journals.sponsor_id': sponsor_ids) if sponsor_ids.present?
     end
 
     def funder_filter
@@ -312,7 +309,7 @@ module StashEngine
       @datasets = @datasets.preload(:authors) if @fields.include?('authors')
       @datasets = @datasets.preload(:tenant).preload(authors: :affiliations) if @fields.include?('affiliations')
       @datasets = @datasets.preload(tenant: :ror_orgs).preload(authors: { affiliations: :ror_org }) if @fields.include?('countries')
-      @datasets = @datasets.preload(:user) if @fields.include?('submitter')
+      @datasets = @datasets.preload(roles: :user) if @fields.include?('submitter')
       @datasets = @datasets.preload(identifier: :counter_stat) if @fields.include?('metrics')
       if @fields.include?('journal') || @fields.include?('sponsor') || @fields.include?('identifiers')
         @datasets = @datasets.preload(:resource_publication)
@@ -330,14 +327,14 @@ module StashEngine
     end
 
     def curation_activity_change
-      return publishing_error if @resource.id != @identifier.last_submitted_resource.id &&
+      return publishing_error if @resource.id != @identifier.last_submitted_resource&.id &&
         %w[embargoed published].include?(params.dig(:curation_activity, :status))
 
-      return state_error unless CurationActivity.allowed_states(@last_state).include?(@status)
+      return state_error unless CurationActivity.allowed_states(@last_state, current_user).include?(@status)
 
       decipher_curation_activity
       @note = params.dig(:curation_activity, :note)
-      @resource.current_editor_id = current_user.id
+      @resource.user_id = current_user.id
       @resource.publication_date = @pub_date
       @resource.hold_for_peer_review = true if @status == 'peer_review'
       @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
@@ -363,11 +360,6 @@ module StashEngine
       return if @pub_date.present?
 
       @pub_date = Time.now.utc.to_date.to_s
-      return unless @identifier.allow_blackout?
-
-      @note = 'Adding 1-year blackout period due to journal settings.'
-      @status = 'embargoed'
-      @pub_date = (Time.now.utc.to_date + 1.year).to_s
     end
 
     def publishing_error
@@ -403,18 +395,25 @@ module StashEngine
     def current_editor_change
       editor_id = params.dig(:current_editor, :id)
       if editor_id&.to_i == 0
-        @resource.update(current_editor_id: nil)
+        @resource.update(user_id: nil)
         @status = 'submitted' if @resource.current_curation_status == 'curation'
         @curator_name = ''
       else
-        @resource.update(current_editor_id: editor_id)
+        @resource.update(user_id: editor_id)
         @curator_name = StashEngine::User.find(editor_id)&.name
       end
-      @note = "Changing current editor to #{@curator_name.presence || 'unassigned'}. " + params.dig(:curation_activity, :note)
+      @note = "Changing curator to #{@curator_name.presence || 'unassigned'}. " + params.dig(:curation_activity, :note)
       @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
       @resource.reload
     end
 
+  end
+
+  def error_response(message)
+    @error_message = <<-HTML.chomp.html_safe
+      #{message}
+    HTML
+    render :curation_activity_error
   end
   # rubocop:enable Metrics/ClassLength
 end

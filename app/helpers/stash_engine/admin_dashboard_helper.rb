@@ -1,3 +1,5 @@
+require 'csv'
+
 module StashEngine
   # rubocop:disable Metrics/AbcSize, Metrics/ModuleLength, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   module AdminDashboardHelper
@@ -58,7 +60,9 @@ module StashEngine
                 end].flatten.concat(affs).uniq.reject(&:blank?).first(6).join('; ')
       end
       if @fields.include?('submitter')
-        row << "#{dataset.user.first_name} #{dataset.user.last_name}#{dataset.user.orcid ? " ORCID: #{dataset.user.orcid}" : ''}"
+        row << "#{dataset.submitter&.first_name} #{dataset.submitter&.last_name}#{
+          dataset.submitter.orcid.present? ? " ORCID: #{dataset.submitter.orcid}" : ''
+        }"
       end
       row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
       row << filesize(dataset.total_file_size) if @fields.include?('size')
@@ -97,17 +101,8 @@ module StashEngine
       row << dataset.identifier.process_date.submitted if @fields.include?('queue_date')
       row.to_csv(row_sep: "\r\n")
     end
+
     # rubocop:enable Metrics/AbcSize, Metrics/ModuleLength, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-
-    def csv_headers
-      headers.delete('Content-Length')
-      headers['X-Accel-Buffering'] = 'no'
-      headers['Cache-Control'] = 'no-cache'
-      headers['Content-Type'] = 'text/csv; charset=utf-8'
-      headers['Last-Modified'] = Time.now.ctime.to_s
-      headers['Content-Disposition'] = "attachment; filename=\"DryadAdminReport_#{Time.new.strftime('%F')}.csv\""
-    end
-
     def csv_enumerator
       Enumerator.new do |rows|
         rows << csv_report_head

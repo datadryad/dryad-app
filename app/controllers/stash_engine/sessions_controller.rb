@@ -101,7 +101,7 @@ module StashEngine
 
     def choose_sso
       set_default_tenant
-      tenants = StashEngine::Tenant.partner_list.map { |t| { id: t.id, name: t.short_name } }
+      tenants = StashEngine::Tenant.connect_list.map { |t| { id: t.id, name: t.short_name } }
       # If no tenants are defined redirect to the no_parter path
       if tenants.empty?
         redirect_to :no_partner, method: :post

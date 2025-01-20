@@ -11,7 +11,7 @@ decisions they made while upgrading.
 
 It appears to me that we may run into significant challenges and may take significant time to
 update our Javascript (especially with Rails Engines that we use of our own and possibly others
-like Geoblacklight).
+like Blacklight).
 
 ## Steps to manual install (solution for now)
 

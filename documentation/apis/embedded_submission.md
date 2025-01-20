@@ -58,6 +58,12 @@ summary of the deposit, including:
 - the DOI for the dataset (`identifier`)
 - a URL for making edits to the dataset (`editLink`)
 
+In case a dataset with the same API user, `title` and `manuscriptNumber` already exists,
+an error is returned.
+```json
+{"error": "A dataset with same information already exists."}
+```
+
 A sample call using the [sample dataset file](sample_dataset.json), with results abbreviated for readability:
 ```bash
 > curl --data "@sample_dataset.json" -i -X POST https://datadryad.org/api/v2/datasets -H "Authorization: Bearer <token>" -H "Content-Type: application/json"
@@ -100,7 +106,7 @@ A sample call using the [sample dataset file](sample_dataset.json), with results
   "lastModificationDate": "2020-10-02",
   "visibility": "restricted",
   "userId": "0000-0003-0597-4085",
-  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "license": "https://spdx.org/licenses/CC0-1.0.html",
   "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
   }
 ```
@@ -191,7 +197,7 @@ Sample call and (abbreviated) response:
   "visibility": "restricted",
   "sharingLink":"https://datadryad.org/stash/share/OI-tU-WmoT3I2KCOqX7Of624",
   "userId": 37182,
-  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "license": "https://spdx.org/licenses/CC0-1.0.html",
   "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
   }
 ```

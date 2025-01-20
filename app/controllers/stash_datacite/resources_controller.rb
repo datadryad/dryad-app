@@ -39,7 +39,7 @@ module StashDatacite
           @resource.reload
           if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown'
             @target_page = stash_url_helpers.review_resource_path(@resource.id)
-            @aff_tenant = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id).partner_list.first
+            @aff_tenant = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id).connect_list.first
           end
         end
       end
@@ -47,7 +47,7 @@ module StashDatacite
 
     def submission
       @resource.current_state = 'processing'
-      @resource.identifier.record_payment
+      @resource.identifier.record_payment unless @resource.identifier.publication_date.present?
       @resource.check_add_readme_file
       @resource.check_add_cedar_json
 

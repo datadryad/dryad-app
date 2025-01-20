@@ -18,16 +18,6 @@
     <span><%= check_box_tag 'agree_to_tos', 'yes', (@resource.version_number > 1), class: 't-review__agree-to-license js-agrees' %></span>
     <label for="agree_to_tos" class="required">By checking this box, I agree to <%= link_to "Dryad's Terms of Service", stash_url_helpers.terms_view_path, target: '_blank' %></label>
   </p>
-
-  <% if current_tenant.data_deposit_agreement? %>
-    <p>
-      <span><%= check_box_tag 'agree_to_dda', 'yes', false, class: 't-review__agree-to-license js-agrees' %></span>
-      <label for="agree_to_dda">
-        By checking this box, I agree to the
-        <%= link_to 'Data Deposit Agreement', stash_url_helpers.dda_path, target: '_blank' %>
-      </label>
-    </p>
-  <% end %>
 </div>
 
 <% if @review.software_files.count.positive? || @review.supp_files.count.positive? %>

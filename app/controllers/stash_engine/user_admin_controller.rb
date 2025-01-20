@@ -6,7 +6,7 @@ module StashEngine
     before_action :require_user_login
     before_action :load, only: %i[popup edit set_role user_profile]
     before_action :setup_roles, only: %i[set_role user_profile]
-    before_action :setup_paging, only: :index
+    before_action :setup_paging, only: %i[index user_profile]
 
     def index
       setup_facets
@@ -98,12 +98,13 @@ module StashEngine
     # profile for a user showing stats and datasets
     def user_profile
       @user = User.find(params[:id])
-      @progress_count = Resource.in_progress.where(user_id: @user.id).count
+      @progress_count = @user.resources.in_progress.distinct.count
       # some of these columns are calculated values for display that aren't stored (publication date)
-      @resources = Resource.where(user_id: @user.id).latest_per_dataset
-      @presenters = @resources.map { |res| StashDatacite::ResourcesController::DatasetPresenter.new(res) }
-      setup_ds_status_facets
-      sort_and_paginate_datasets
+      @resources = @user.resources.latest_per_dataset.distinct.joins(:last_curation_activity)
+        .select('stash_engine_resources.*, stash_engine_curation_activities.status')
+      ord = helpers.sortable_table_order(whitelist: %w[title status publication_date total_file_size updated_at current_editor_id])
+      add_profile_filters
+      @resources = @resources.order(ord).page(@page).per(@page_size)
     end
 
     private
@@ -123,7 +124,7 @@ module StashEngine
     end
 
     def setup_roles
-      @system_role = @user.roles.where(role_object_type: nil)&.first
+      @system_role = @user.roles.system_roles&.first
       @tenant_role = @user.roles.tenant_roles&.first
       @journal_role = @user.roles.journal_roles&.first
       @publisher_role = @user.roles.journal_org_roles&.first
@@ -147,24 +148,13 @@ module StashEngine
       setup_roles
     end
 
-    def setup_ds_status_facets
-      @status_facets = @presenters.map(&:embargo_status).uniq.sort
-      return unless params[:status]
-
-      @presenters.keep_if { |i| i.embargo_status == params[:status] }
-    end
-
-    def sort_and_paginate_datasets
-      @page_presenters = Kaminari.paginate_array(@presenters).page(@page).per(@page_size)
-    end
-
     def setup_facets
       @tenant_facets = StashEngine::Tenant.enabled.sort_by(&:short_name)
     end
 
     def setup_tenants
       @tenants = [OpenStruct.new(id: '', name: '')]
-      @tenants << StashEngine::Tenant.enabled.map do |t|
+      @tenants << StashEngine::Tenant.all.sort_by(&:short_name).map do |t|
         OpenStruct.new(id: t.id, name: t.short_name)
       end
       @tenants.flatten!
@@ -175,12 +165,23 @@ module StashEngine
       @users = @users.where(tenant_id: params[:tenant_id]) if params[:tenant_id].present?
     end
 
+    def add_profile_filters
+      @status_facets = @resources.map(&:status).uniq.sort
+      return unless profile_params[:status]
+
+      @resources = @resources.where('stash_engine_curation_activities.status': profile_params[:status])
+    end
+
     def edit_params
       params.permit(:id, :field, :email, :tenant_id)
     end
 
     def role_params
       params.permit(:role, :tenant_role, :publisher, :publisher_role, :funder, :funder_role, :journal_role, journal: %i[value label])
+    end
+
+    def profile_params
+      params.permit(:status)
     end
   end
 end

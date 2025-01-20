@@ -1,8 +1,6 @@
 require_relative '../../../lib/stash/aws/s3'
 require 'rails_helper'
-require 'pry-remote'
 require 'fileutils'
-# binding.remote_pry
 
 RSpec.feature 'UploadFiles', type: :feature, js: true do
 
