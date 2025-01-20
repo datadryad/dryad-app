@@ -28,7 +28,7 @@ module StashDatacite
       .except(:valid).merge(valid_date: 'valid')
     DateTypesStrToFull = DateTypes.to_h { |i| [i.downcase, i] }
 
-    enum date_type: DateTypesEnum
+    enum :date_type, DateTypesEnum
 
     # with enum the types are automatically scopes such as available
     # scope :available, -> { where(date_type: 'available')}

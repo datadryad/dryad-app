@@ -270,7 +270,7 @@ defaults: &DEFAULTS
     - ["ea716306-5263-4f7a-9155-b7958f566933", "NCBI-MIAIRR", "MiAIRR V1.1.0"]
     - ["dc3fa214-88f4-49dd-b56b-f4552b2d3474", "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
 
-development: &DEVELOPMENT
+dev: &DEV
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
@@ -299,22 +299,12 @@ development: &DEVELOPMENT
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
 
-v3_development:
-  <<: *DEVELOPMENT
-
-aws_db:
-  <<: *DEVELOPMENT
-  send_journal_published_notices: false
-
-local:
-  <<: *DEVELOPMENT
+development:
+  <<: *DEV
   submission_error_email: [dryad.submission.error.emails@mailinator.com]
   send_journal_published_notices: false
 
-local_dev:
-  <<: *DEVELOPMENT
-
-stage: &STAGE
+stage:
   <<: *DEFAULTS
   submission_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
   zenodo_error_email: [dryad.submission.error.emails@mailinator.com, devs@datadryad.org]
@@ -336,26 +326,7 @@ stage: &STAGE
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
 
-v3_stage:
-  <<: *STAGE
-
-migration:
-  <<: *DEFAULTS
-  submission_error_email: [devs@datadryad.org]
-  zenodo_error_email: [devs@datadryad.org]
-  shib_sp_host: sandbox.datadryad.org
-  page_error_email: ["ryan@datadryad.org"]
-  feedback_email_from: no-reply-dryad-migration@datadryad.org
-
-demo:
-  <<: *DEFAULTS
-  shib_sp_host: dryaddemo.datadryad.org
-  page_error_email: [devs@datadryad.org]
-  submission_error_email: [devs@datadryad.org]
-  zenodo_error_email: [devs@datadryad.org]
-  feedback_email_from: no-reply-dryaddemo@datadryad.org
-
-production: &PRODUCTION
+production:
   <<: *DEFAULTS
   shib_sp_host: datadryad.org
   page_error_email: [devs@datadryad.org]
@@ -433,8 +404,5 @@ production: &PRODUCTION
     sandbox: false
   cedar_templates:
     - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
-
-v3_production:
-  <<: *PRODUCTION
 
 <% end %>

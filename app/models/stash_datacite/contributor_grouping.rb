@@ -16,7 +16,7 @@ module StashDatacite
   class ContributorGrouping < ApplicationRecord
     self.table_name = 'dcs_contributor_groupings'
 
-    enum contributor_type: {
+    enum :contributor_type, {
       contactperson: 0,
       datacollector: 1,
       datacurator: 2,
@@ -40,7 +40,7 @@ module StashDatacite
       workpackageleader: 20
     }
 
-    enum identifier_type: {
+    enum :identifier_type, {
       isni: 0,
       grid: 1,
       crossref_funder_id: 2,

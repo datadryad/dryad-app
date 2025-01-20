@@ -21,7 +21,8 @@
 module StashEngine
   class ResourcePublication < ApplicationRecord
     self.table_name = 'stash_engine_resource_publications'
-    enum pub_type: { primary_article: 0, preprint: 1 }
+    enum :pub_type, { primary_article: 0, preprint: 1 }
+
     validates :pub_type, uniqueness: { scope: :resource_id }
     # connecting a resource with the publication for a manuscript and/or a primary_article related_identifier
     belongs_to :resource

@@ -56,8 +56,8 @@ bundle install
 - update the credentials and deploy script for the specified environment
 ```
 mkdir -p ~/deploy/shared/config/credentials/
-# if using a stage or prod environment, put the key in the appropriate place (REPLACE the "v3_stage" with the approppriate key name)
-cp v3_stage.key ~/deploy/shared/config/credentials/
+# if using a stage or prod environment, put the key in the appropriate place (REPLACE the "stage" with the approppriate key name)
+cp stage.key ~/deploy/shared/config/credentials/
 cp ~/dryad-app/script/server-utils/deploy_dryad.sh ~/bin/
 # EDIT the deploy_dryad.sh to use correct environment name
 ```
@@ -81,7 +81,7 @@ exit
 ```
 . ~/.nvm/nvm.sh
 nvm use 20.13.1 >/dev/null
-export RAILS_ENV=v3_stage 
+export RAILS_ENV=stage 
 ```
 
 Database setup
@@ -126,19 +126,18 @@ For general SOLR information, see [solr.md](../solr.md)
 
 SOLR should be installed on a separate machine from the Rails server!
 
-All of these tools are outdated. To make SOLR work with Dryad's old
-GeoBlacklight, we need to use SOLR 7 or before. SOLR 7 requires very old Java,
-such as 1.8.
+All of these tools are using up to date versions.
 
 To install solr:
 ```
-sudo yum install java-1.8.0-amazon-corretto
-wget "https://archive.apache.org/dist/lucene/solr/7.7.3/solr-7.7.3.tgz"
-tar zxf solr-7.7.3.tgz
-cd ~/solr-7.7.3
+sudo yum install -y procps gzip tar lsof java wget git
+cd ~
+wget "https://dlcdn.apache.org/solr/solr/9.7.0/solr-9.7.0.tgz"
+tar zxf solr-9.7.0.tgz
+cd ~/solr-9.7.0
 export SOLR_JETTY_HOST="0.0.0.0"
 bin/solr start
-bin/solr create  -c geoblacklight
+bin/solr create -c dryad
 ```
 
 Before proceeding, ensure the machine's security group allows connections from the world and
@@ -146,11 +145,11 @@ verify that the SOLR is visable via the web at http://xxxx:8983
 
 Configure SOLR for Dryad:
 ```
-cd ~/solr-7.7.3
+cd ~/solr-9.7.0
 export SOLR_JETTY_HOST="0.0.0.0"
 bin/solr stop
-cp ~/dryad-app/config/solr_config/* ~/solr-7.7.3/server/solr/geoblacklight/conf/
-chmod 775 ~/solr-7.7.3/server/solr/geoblacklight/conf/schema.xml
+cp ~/dryad-app/config/solr_config/* ~/solr-9.7.0/server/solr/dryad/conf/
+chmod 775 ~/solr-9.7.0/server/solr/dryad/conf/schema.xml
 bin/solr start
 ```
 

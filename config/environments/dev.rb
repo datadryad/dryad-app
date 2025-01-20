@@ -1,6 +1,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Have to include this because the dev env name is elaborate and unexpected
+  config.web_console.development_only = false
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -23,10 +26,14 @@ Rails.application.configure do
   # NGINX, varnish or squid.
   # config.action_dispatch.rack_cache = true
 
-  config.public_file_server.enabled = true					
+  # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
+  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files). x
+  config.require_master_key = true
+
+  config.public_file_server.enabled = true
 
   # Compress JavaScripts and CSS, default is sassc without being specified for css
-  config.assets.js_compressor = :uglifier
+  config.assets.js_compressor = Uglifier.new(harmony: true)
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
@@ -40,9 +47,6 @@ Rails.application.configure do
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
-
-  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -65,8 +69,8 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  # config.active_storage.service = :local     
-  
+  # config.active_storage.service = :local
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = [I18n.default_locale]
@@ -76,28 +80,34 @@ Rails.application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+  logger = ActiveSupport::Logger.new(Rails.root.join("log", "v3_development.log"), 5, 100.megabytes)
+  config.logger    = ActiveSupport::TaggedLogging.new(logger)
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  #this is obnovious because the initializers haven't run yet, so have to duplicate code to read config
-  ac = YAML.load_file(File.join(Rails.root, 'config', 'app_config.yml'))[Rails.env]
+  #this is obnoxious because the initializers haven't run yet, so have to duplicate code to read config
+  # this will interpret any ERB in the yaml file first before bringing in
+  ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml'))).result, aliases: true, permitted_classes: [Date])[Rails.env]
+
   unless ac['page_error_email'].blank?
     Rails.application.config.middleware.use ExceptionNotification::Rack,
-      :email => {
-          # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
-          :email_prefix => "[Dash Exception]",
-          :sender_address => %{"Dash Notifier" <no-reply-dryad@datadryad.org>},
-          :exception_recipients => ac['page_error_email']
-      },
-      :error_grouping => true,
-      :error_grouping_period => 3.hours
+                                            :email => {
+                                                # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+                                                :email_prefix => "[Drystg Exception]",
+                                                :sender_address => %{"Dryad Notifier" <no-reply-dryad@v3-dev.datadryad.org>},
+                                                :exception_recipients => ac['page_error_email']
+                                            },
+                                            :error_grouping => true,
+                                            :error_grouping_period => 3.hours,
+                                            :ignore_exceptions => ['ActionController::InvalidAuthenticityToken',
+                                              'ActionController::InvalidCrossOriginRequest'] + ExceptionNotifier.ignored_exceptions,
+                                            :ignore_crawlers => %w{Googlebot bingbot}
   end
 
-  config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.raise_delivery_errors = true
-  Rails.application.default_url_options = { host: 'dryad-demo.datadryad.org' }
-  config.action_mailer.default_url_options = { host: 'dryad-demo.datadryad.org' }
 
+  Rails.application.default_url_options = { host: 'v3-dev.datadryad.org' }
 end

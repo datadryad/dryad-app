@@ -35,7 +35,7 @@ module StashDatacite
     # not generate a `model` method that would conflict with the method in ActiveRecord. If you want to
     # use the automatically-generated methods for working with enums, you must include the prefix,
     # such as `my_resource_type.rtg_dataset?` or `my_resource_type.rtg_software!`
-    enum resource_type_general: ResourceTypeGeneralEnum, _prefix: :rtg
+    enum :resource_type_general, ResourceTypeGeneralEnum, prefix: :rtg
 
     def resource_type_general_friendly
       return nil if resource_type_general.blank?

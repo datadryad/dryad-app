@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
 
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.local? || Rails.env.v3_development?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development? || Rails.env.dev?
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -128,14 +128,6 @@ Rails.application.routes.draw do
 
     get '/queue_length', to: 'submission_queue#length'
   end
-
-  ############################# Discovery support ######################################
-
-  get '/latest', to: 'latest#index', as: 'latest_index'
-  # blacklight_for :catalog
-
-  # Endpoint for LinkOut
-  get :discover, to: 'catalog#discover'
 
   ########################## StashEngine support ######################################
 
@@ -393,6 +385,13 @@ Rails.application.routes.draw do
 
   # this is kind of hacky, but it directs our search results to open links to the landing pages
   resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'
+
+  ############################# Discovery support ######################################
+
+  get '/latest', to: 'latest#index', as: 'latest_index'
+
+  # Endpoint for LinkOut
+  get :discover, to: 'catalog#discover'
 
   ########################## StashDatacite support ######################################
 
