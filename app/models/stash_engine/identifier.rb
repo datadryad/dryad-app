@@ -354,6 +354,14 @@ module StashEngine
       latest_resource&.manuscript
     end
 
+    def preprint_issn
+      latest_resource&.resource_preprint&.publication_issn
+    end
+
+    def preprint_server
+      latest_resource&.resource_preprint&.publication_name
+    end
+
     def automatic_ppr?
       return false unless latest_manuscript.present?
       return false if has_accepted_manuscript?
