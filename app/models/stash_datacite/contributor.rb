@@ -18,11 +18,11 @@
 #
 # Indexes
 #
-#  index_dcs_contributors_on_contributor_type     (contributor_type)
-#  index_dcs_contributors_on_funder_order         (funder_order)
-#  index_dcs_contributors_on_identifier_type      (identifier_type)
-#  index_dcs_contributors_on_name_identifier_id   (name_identifier_id)
-#  index_dcs_contributors_on_resource_id          (resource_id)
+#  index_dcs_contributors_on_contributor_type    (contributor_type)
+#  index_dcs_contributors_on_funder_order        (funder_order)
+#  index_dcs_contributors_on_identifier_type     (identifier_type)
+#  index_dcs_contributors_on_name_identifier_id  (name_identifier_id)
+#  index_dcs_contributors_on_resource_id         (resource_id)
 #
 module StashDatacite
   class Contributor < ApplicationRecord
@@ -53,7 +53,7 @@ module StashDatacite
     IdentifierTypesStrToFull = Datacite::Mapping::FunderIdentifierType.map { |i| [i.value.downcase.gsub(' ', '_'), i.value] }.to_h
     # rubocop:enable Style/MapToHash
 
-    enum contributor_type: ContributorTypesEnum
+    enum :contributor_type, ContributorTypesEnum
 
     before_save :strip_whitespace
 

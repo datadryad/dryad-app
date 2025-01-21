@@ -10,7 +10,7 @@ You'll need the following parts installed and configured on a (local) UI develop
 You'll also need the following components installed either on the same server or on separate servers for all the application features to work:
 
 - MySQL (with the database specified in the database.yml created and using utf8mb4 character set by default)
-- SOLR (with a geoblacklight schema and core installed)
+- SOLR (with a blacklight schema and core installed)
 - An S3 storage repository will be needed to submit files
 - A DOI-minting service to mint DOIs.
 
@@ -99,7 +99,7 @@ Solr requires a Java runtime.  Try *java -version* and if it says that "java can
 
 Verify Solr is set up correctly from the Admin UI:
 
-1. Choose the geoblacklight core from the core selector list.<br>![core selctor](images/solr2.png)
+1. Choose the dryad core from the core selector list.<br>![core selctor](images/solr2.png)
 
 2. You can then click the *query* sidebar tab and scroll down to the bottom of the form to submit a blank query.  While the document will not return any results yet because there are no documents in SOLR, you should see it execute and you can verify that Solr queries are running.<br>![query test](images/solr3.png)
 

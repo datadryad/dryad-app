@@ -13,6 +13,7 @@
 #  notify_contacts         :text(65535)
 #  payment_contact         :string(191)
 #  payment_plan_type       :string
+#  peer_review_custom_text :text(65535)
 #  review_contacts         :text(65535)
 #  title                   :string(191)
 #  website                 :string(191)

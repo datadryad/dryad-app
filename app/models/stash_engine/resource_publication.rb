@@ -4,6 +4,7 @@
 #
 #  id                :bigint           not null, primary key
 #  manuscript_number :string(191)
+#  pub_type          :integer          default("primary_article")
 #  publication_issn  :string(191)
 #  publication_name  :string(191)
 #  created_at        :datetime         not null
@@ -12,16 +13,13 @@
 #
 # Indexes
 #
-#  index_stash_engine_resource_publications_on_resource_id  (resource_id) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_...  (resource_id => stash_engine_resources.id)
+#  index_resource_pub_type  (resource_id,pub_type) UNIQUE
 #
 module StashEngine
   class ResourcePublication < ApplicationRecord
     self.table_name = 'stash_engine_resource_publications'
-    enum pub_type: { primary_article: 0, preprint: 1 }
+    enum :pub_type, { primary_article: 0, preprint: 1 }
+
     validates :pub_type, uniqueness: { scope: :resource_id }
     # connecting a resource with the publication for a manuscript and/or a primary_article related_identifier
     belongs_to :resource

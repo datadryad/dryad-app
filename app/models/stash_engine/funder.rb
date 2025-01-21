@@ -22,9 +22,7 @@ module StashEngine
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
 
-    enum payment_plan: {
-      tiered: 0
-    }
+    enum :payment_plan, { tiered: 0 }
 
     scope :exemptions, -> { where(enabled: true, covers_dpc: true) }
   end

@@ -4,7 +4,7 @@
 #
 #  id                         :integer          not null, primary key
 #  citation_count             :integer
-#  citation_updated           :datetime         default(Mon, 01 Jan 2018 00:00:00.000000000 UTC +00:00)
+#  citation_updated           :datetime         default(2018-01-01 00:00:00.000000000 UTC +00:00)
 #  unique_investigation_count :integer
 #  unique_request_count       :integer
 #  created_at                 :datetime         not null

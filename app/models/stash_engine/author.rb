@@ -8,6 +8,8 @@
 #  author_last_name   :string(191)
 #  author_orcid       :string(191)
 #  author_order       :integer
+#  author_org_name    :string(255)
+#  corresp            :boolean          default(FALSE)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  resource_id        :integer
