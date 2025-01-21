@@ -1,0 +1,2 @@
+document.getElementById("<%= @journal.id %>_row").innerHTML = "<%= escape_javascript(render partial: 'admin_journal_row', locals: {j: @journal}) %>";
+document.getElementById('genericModalDialog').close();

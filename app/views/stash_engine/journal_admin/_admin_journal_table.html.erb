@@ -26,126 +26,13 @@
     </tr>
   </thead>
 
-<tbody>  
-  <% journals.each do |j| %>
-    <tr class="c-lined-table__row">
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="title_<%= j.id %>"><%= j.title %></div>
-          <% if policy([:stash_engine, :journal]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: journal_popup_path(id: j.id, field: 'title'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit Title" aria-haspopup="dialog" id="title_button_<%= j.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="issn_<%= j.id %>">
-            <%= j.issn_array.join(", ") %>
-          </div>
-          <% if policy([:stash_engine, :journal]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: journal_popup_path(id: j.id, field: 'issn'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit ISSNs" aria-haspopup="dialog" id="issn_button_<%= j.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="payment_plan_type_<%= j.id %>">
-            <%= j.payment_plan_type&.capitalize %>
-          </div>
-          <% if policy([:stash_engine, :journal]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: journal_popup_path(id: j.id, field: 'payment_plan_type'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit payment plan" aria-haspopup="dialog" id="payment_plan_type_button_<%= j.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="notify_contacts_<%= j.id %>">
-            <%= j.notify_contacts&.join(', ') %>
-          </div>
-          <% if policy([:stash_engine, :journal]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: journal_popup_path(id: j.id, field: 'notify_contacts'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit publication contacts" aria-haspopup="dialog" id="notify_contacts_button_<%= j.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="review_contacts_<%= j.id %>">
-            <%= j.review_contacts&.join(', ') %>
-          </div>
-          <% if policy([:stash_engine, :journal]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: journal_popup_path(id: j.id, field: 'review_contacts'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit PPR contacts" aria-haspopup="dialog" id="review_contacts_button_<%= j.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="default_to_ppr_<%= j.id %>">
-            <span style="color: <%= j.default_to_ppr ? '#3c763d' : 'rgb(209, 44, 29)'%>">
-              <%= j.default_to_ppr ? "True" : "False" %>
-            </span>
-          </div>
-          <% if policy([:stash_engine, :journal]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: journal_popup_path(id: j.id, field: 'default_to_ppr'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit PPR default" aria-haspopup="dialog" id="default_to_ppr_button_<%= j.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="sponsor_id_<%= j.id %>">
-            <% if j.sponsor.present? %>
-              <a href="<%= publisher_admin_path(q: j.sponsor.name) %>"><%= j.sponsor.name %></a>
-            <% end %>
-          </div>
-          <% if policy([:stash_engine, :journal]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: journal_popup_path(id: j.id, field: 'sponsor_id'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit sponsor" aria-haspopup="dialog" id="sponsor_id_button_<%= j.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-    </tr>
-  <% end %>
-</tbody>
+  <tbody>  
+    <% journals.each do |j| %>
+      <tr class="c-lined-table__row" id="<%=j.id%>_row">
+        <%= render partial: 'admin_journal_row', locals: {j: j} %>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 </div>
 

@@ -304,8 +304,8 @@ Rails.application.routes.draw do
     post 'tenant_admin', to: 'tenant_admin#create', as: 'tenant_create'
     # admin journal management
     get 'journal_admin', to: 'journal_admin#index'
-    get 'journal_admin/:id/edit/:field', to: 'journal_admin#popup', as: 'journal_popup'
-    post 'journal_admin/:id', to: 'journal_admin#edit', as: 'journal_edit'
+    get 'journal_admin/:id/edit', to: 'journal_admin#edit', as: 'journal_edit'
+    post 'journal_admin/:id', to: 'journal_admin#update', as: 'journal_update'
     get 'journal_admin/new', to: 'journal_admin#new', as: 'journal_new'
     post 'journal_admin', to: 'journal_admin#create', as: 'journal_create'
     # admin publisher management

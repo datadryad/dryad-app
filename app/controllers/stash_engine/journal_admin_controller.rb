@@ -3,7 +3,6 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     before_action :setup_paging, only: :index
-    before_action :load, only: %i[popup edit]
 
     def index
       setup_sponsors
@@ -26,14 +25,13 @@ module StashEngine
       @journals = @journals.page(@page).per(@page_size)
     end
 
-    def popup
-      strings = { issn: 'ISSN(s)', payment_plan_type: 'payment plan type', notify_contacts: 'publication contacts',
-                  review_contacts: 'PPR contacts', default_to_ppr: 'PPR by default', sponsor_id: 'journal sponsor', title: 'title' }
-      @desc = strings[@field.to_sym]
+    def edit
+      @journal = authorize StashEngine::Journal.find(params[:id])
       respond_to(&:js)
     end
 
-    def edit
+    def update
+      @journal = authorize StashEngine::Journal.find(params[:id])
       @journal.update(update_hash)
       update_issns if edit_params.key?(:issn)
       respond_to(&:js)
@@ -67,11 +65,6 @@ module StashEngine
       @sponsors.flatten!
     end
 
-    def load
-      @journal = authorize StashEngine::Journal.find(params[:id]), :popup?
-      @field = params[:field]
-    end
-
     def update_hash
       valid = %i[title default_to_ppr payment_plan_type sponsor_id]
       update = edit_params.slice(*valid)
@@ -93,7 +86,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :field, :title, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id)
+      params.permit(:id, :title, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id)
     end
 
   end

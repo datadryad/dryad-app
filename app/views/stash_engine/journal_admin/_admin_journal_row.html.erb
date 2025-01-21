@@ -1,0 +1,28 @@
+<td>
+  <div class="c-lined-table__with-actions">
+    <div class="c-lined-table__data" id="title_<%= j.id %>"><%= j.title %></div>
+    <% if policy([:stash_engine, :journal]).edit? %>
+    <div class="c-lined-table__actions">
+      <%= form_with(url: journal_edit_path(id: j.id), method: :get, local: false) do %>
+        <button class="c-admin-edit-icon" aria-label="Edit journal" aria-haspopup="dialog" id="title_button_<%= j.id %>">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      <% end %>
+    </div>
+    <% end %>
+  </div>
+</td>
+<td><%= j.issn_array.join(", ") %></td>
+<td><%= j.payment_plan_type&.capitalize %></td>
+<td><%= j.notify_contacts&.join(', ') %></td>
+<td><%= j.review_contacts&.join(', ') %></td>
+<td>
+  <span style="color: <%= j.default_to_ppr ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+    <%= j.default_to_ppr ? "True" : "False" %>
+  </span>
+</td>
+<td>
+  <% if j.sponsor.present? %>
+    <a href="<%= publisher_admin_path(q: j.sponsor.name) %>"><%= j.sponsor.name %></a>
+  <% end %>
+</td>
