@@ -38,6 +38,7 @@ module Dash2
 
     config.time_zone = "UTC"
     config.active_record.default_timezone = :utc
+    config.active_support.to_time_preserves_timezone = :zone
 
     config.active_job.queue_adapter = :delayed_job
 

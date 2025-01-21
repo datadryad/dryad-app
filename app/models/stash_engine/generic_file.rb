@@ -78,8 +78,8 @@ module StashEngine
         .or(present_files.where(upload_content_type: 'text/xml'))
         .or(present_files.where('upload_file_name LIKE ?', '%.xml'))
     }
-    enum :file_state, %w[created copied deleted].to_h { |i| [i.to_sym, i] }
-    enum :digest_type, %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] }
+    enum(:file_state, %w[created copied deleted].to_h { |i| [i.to_sym, i] })
+    enum(:digest_type, %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] })
 
     # display the correct error message based on the url status code
     def error_message

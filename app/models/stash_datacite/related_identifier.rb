@@ -64,7 +64,7 @@ module StashDatacite
     # rubocop:enable Naming/ConstantName
 
     enum :work_type, { undefined: 0, article: 1, dataset: 2, preprint: 3, software: 4, supplemental_information: 5,
-                      primary_article: 6, data_management_plan: 7 } # changing to make the enum index more explicit
+                       primary_article: 6, data_management_plan: 7 } # changing to make the enum index more explicit
 
     enum :added_by, { default: 0, zenodo: 1, simple_relation: 2, api_simple: 3 }
 

@@ -21,7 +21,7 @@ module StashEngine
     belongs_to :user
     belongs_to :resource
 
-    enum :resource_state, %w[in_progress processing submitted error].to_h { |i| [i.to_sym, i] }
+    enum(:resource_state, %w[in_progress processing submitted error].to_h { |i| [i.to_sym, i] })
 
     validates :resource_state, presence: true
   end
