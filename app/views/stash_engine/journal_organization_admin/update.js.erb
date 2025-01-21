@@ -1,0 +1,2 @@
+document.getElementById("<%= @org.id %>_row").innerHTML = "<%= escape_javascript(render partial: 'admin_org_row', locals: {o: @org}) %>";
+document.getElementById('genericModalDialog').close();

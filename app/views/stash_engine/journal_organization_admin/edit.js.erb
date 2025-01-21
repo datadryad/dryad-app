@@ -1,10 +1,7 @@
-document.getElementById("<%= @field %>_<%= @org.id %>").innerHTML = "<%=
-case @field
-when 'parent_org_id'
-  @org.parent_org&.name
-when 'contact'
-  @org.contact&.join(', ')
-when 'name'
-  @org.name
-end %>";
-document.getElementById('genericModalDialog').close();
+// open a modal dialog
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'edit') %>";
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});

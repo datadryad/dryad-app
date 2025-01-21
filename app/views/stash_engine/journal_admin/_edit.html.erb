@@ -1,4 +1,4 @@
-<h1>Update <%= @desc %></h1>
+<h1>Update journal</h1>
 <%= form_with(url: journal_update_path(@journal.id), method: :post, local: false) do |form| -%>
   <%= render partial: "form", locals: {form: form} %>
   <div class="c-modal__buttons-right">

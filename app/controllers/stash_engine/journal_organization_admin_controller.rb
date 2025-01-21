@@ -3,7 +3,6 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     before_action :setup_paging, only: :index
-    before_action :load, only: %i[popup edit]
 
     def index
       setup_sponsors
@@ -25,13 +24,13 @@ module StashEngine
       @orgs = @orgs.page(@page).per(@page_size)
     end
 
-    def popup
-      strings = { name: 'name', contact: 'contacts', parent_org_id: 'parent organization' }
-      @desc = strings[@field.to_sym]
+    def edit
+      @org = authorize StashEngine::JournalOrganization.find(params[:id])
       respond_to(&:js)
     end
 
-    def edit
+    def update
+      @org = authorize StashEngine::JournalOrganization.find(params[:id])
       @org.update(update_hash)
       respond_to(&:js)
     end
@@ -71,13 +70,8 @@ module StashEngine
       update
     end
 
-    def load
-      @org = authorize StashEngine::JournalOrganization.find(params[:id]), :popup?
-      @field = params[:field]
-    end
-
     def edit_params
-      params.permit(:id, :field, :name, :contact, :parent_org_id)
+      params.permit(:id, :name, :contact, :parent_org_id)
     end
 
   end

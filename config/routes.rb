@@ -310,8 +310,8 @@ Rails.application.routes.draw do
     post 'journal_admin', to: 'journal_admin#create', as: 'journal_create'
     # admin publisher management
     get 'publisher_admin', to: 'journal_organization_admin#index', as: 'publisher_admin'
-    get 'publisher_admin/:id/edit/:field', to: 'journal_organization_admin#popup', as: 'publisher_popup'
-    post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
+    get 'publisher_admin/:id/edit', to: 'journal_organization_admin#edit', as: 'publisher_edit'
+    post 'publisher_admin/:id', to: 'journal_organization_admin#update', as: 'publisher_update'
     get 'publisher_admin/new', to: 'journal_organization_admin#new', as: 'publisher_new'
     post 'publisher_admin', to: 'journal_organization_admin#create', as: 'publisher_create'
 

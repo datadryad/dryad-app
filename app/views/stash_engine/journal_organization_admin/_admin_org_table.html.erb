@@ -20,60 +20,13 @@
     </tr>
   </thead>
 
-<tbody>  
-  <% orgs.each do |o| %>
-    <tr class="c-lined-table__row">
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="name_<%= o.id %>"><%= o.name %></div>
-          <% if policy([:stash_engine, :journal_organization]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: publisher_popup_path(id: o.id, field: 'name'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit name" aria-haspopup="dialog" id="name_button_<%= o.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="contact_<%= o.id %>">
-            <%= o.contact&.join(', ') %>
-          </div>
-          <% if policy([:stash_engine, :journal_organization]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: publisher_popup_path(id: o.id, field: 'contact'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit contacts" aria-haspopup="dialog" id="contact_button_<%= o.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-      <td><%= o.children.map(&:name).join(', ') %></td>
-      <td><%= o.journals_sponsored_deep.map(&:title).join(', ') %></td>
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="parent_org_id_<%= o.id %>">
-            <%= o.parent_org&.name %>
-          </div>
-          <% if policy([:stash_engine, :journal_organization]).popup? %>
-          <div class="c-lined-table__actions">
-            <%= form_with(url: publisher_popup_path(id: o.id, field: 'parent_org_id'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit parent org" aria-haspopup="dialog" id="parent_org_id_button_<%= o.id %>">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-            <% end %>
-          </div>
-          <% end %>
-        </div>
-      </td>
-    </tr>
-  <% end %>
-</tbody>
+  <tbody>  
+    <% orgs.each do |o| %>
+      <tr class="c-lined-table__row" id="<%=o.id%>_row">
+        <%= render partial: 'admin_org_row', locals: {o: o} %>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 </div>
 
