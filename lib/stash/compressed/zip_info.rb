@@ -1,6 +1,6 @@
 require 'http'
 require 'stringio'
-# require 'charlock_holmes/string'
+require 'charlock_holmes/string'
 require 'zip'
 require 'down/http'
 require 'open3'

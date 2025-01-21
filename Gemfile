@@ -50,7 +50,7 @@ gem 'aws-sdk-s3', '~> 1.113'
 gem 'blacklight', '~> 8.7.0'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.6'
-# gem 'charlock_holmes', '~> 0.7.7'
+gem 'charlock_holmes', '~> 0.7.9'
 gem 'concurrent-ruby', '~> 1.3.4'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'

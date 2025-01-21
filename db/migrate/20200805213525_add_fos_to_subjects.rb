@@ -56,7 +56,7 @@ class AddFosToSubjects < ActiveRecord::Migration[5.0]
     # it can have unexpected consequences to use ActiveRecord models directly in a migration, so using SQL,
     # btw, no values have an apostrophe or other weird characters in them and a controlled list
     results = ActiveRecord::Base.connection
-                                .query("SELECT * FROM dcs_subjects WHERE subject_scheme = 'fos'", as: :hash)
+                                .query("SELECT * FROM dcs_subjects WHERE subject_scheme = 'fos'")
     existing_subjects = results.map { |i| i['subject'] } # can't use a symbol here for more compact notation
 
     need_insertion = SUBJECT_LIST - existing_subjects
