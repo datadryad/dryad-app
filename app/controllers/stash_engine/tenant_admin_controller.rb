@@ -24,7 +24,7 @@ module StashEngine
       @tenants = @tenants.where('id = ? or sponsor_id= ?', params[:sponsor], params[:sponsor]) if params[:sponsor].present?
 
       # paginate for display
-      @tenants = @tenants.page(@page).per(@page_size)
+      @tenants = @tenants.includes([:sponsor]).page(@page).per(@page_size)
     end
 
     def popup
