@@ -104,7 +104,7 @@ module StashEngine
         .select('stash_engine_resources.*, stash_engine_curation_activities.status')
       ord = helpers.sortable_table_order(whitelist: %w[title status publication_date total_file_size updated_at current_editor_id])
       add_profile_filters
-      @resources = @resources.order(ord).page(@page).per(@page_size)
+      @resources = @resources.includes(%i[identifier current_resource_state last_curation_activity editor]).order(ord).page(@page).per(@page_size)
     end
 
     private

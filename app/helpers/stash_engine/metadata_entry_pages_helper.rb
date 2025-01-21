@@ -2,6 +2,7 @@ module StashEngine
   module MetadataEntryPagesHelper
     def duplicate_resource
       begin
+        pp @resource
         @new_res = @resource.amoeba_dup
         @new_res.current_editor_id = current_user&.id
         @new_res.save!

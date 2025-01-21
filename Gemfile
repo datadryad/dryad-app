@@ -6,7 +6,7 @@ ruby '3.3.7'
 gem 'irb', '~> 1.14.3'
 gem 'mail', '~> 2.8'
 gem 'mysql2', '~> 0.5.6'
-gem 'rails', '~> 7.2.2.1'
+gem 'rails', '~> 8.0.1'
 gem 'react-rails', '~> 2.6.2'
 gem 'shakapacker', '~> 6.0'
 gem 'sprockets', '~> 4.0'
@@ -22,7 +22,7 @@ gem 'ed25519', '1.3.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.67.0', require: false
 # Use Puma as the app server
-gem 'puma', '6.4.3', group: :puma, require: false
+gem 'puma', '6.5.0', group: :puma, require: false
 
 # ############################################################
 # UI
@@ -44,8 +44,7 @@ gem 'uglifier', '~> 4.2.0'
 # Misc
 
 gem 'amatch', '~> 0.4.0'
-gem 'amoeba', '~> 3.2.0'
-gem 'annotate', '~> 3.2'
+gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
 gem 'blacklight', '~> 8.7.0'
@@ -189,5 +188,6 @@ group :development, :dev do
 end
 
 group :development do
+  gem 'annotaterb', '~> 4.13.0'
   gem 'bullet'
 end
