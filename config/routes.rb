@@ -298,8 +298,8 @@ Rails.application.routes.draw do
     post 'user_admin/:id', to: 'user_admin#edit', as: 'user_admin_edit'
     # admin tenant management
     get 'tenant_admin', to: 'tenant_admin#index'
-    get 'tenant_admin/:id/edit/:field', to: 'tenant_admin#popup', as: 'tenant_popup'
-    post 'tenant_admin/:id', to: 'tenant_admin#edit', as: 'tenant_edit'
+    get 'tenant_admin/:id/edit', to: 'tenant_admin#edit', as: 'tenant_edit'
+    post 'tenant_admin/:id', to: 'tenant_admin#update', as: 'tenant_update'
     get 'tenant_admin/new', to: 'tenant_admin#new', as: 'tenant_new'
     post 'tenant_admin', to: 'tenant_admin#create', as: 'tenant_create'
     # admin journal management
