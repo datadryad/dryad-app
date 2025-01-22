@@ -4,7 +4,7 @@
     <% if policy([:stash_engine, :journal_organization]).edit? %>
     <div class="c-lined-table__actions">
       <%= form_with(url: publisher_edit_path(id: o.id), method: :get, local: false) do %>
-        <button class="c-admin-edit-icon" aria-label="Edit publisher" aria-haspopup="dialog" id="name_button_<%= o.id %>">
+        <button class="c-admin-edit-icon" aria-label="Edit publisher" aria-haspopup="dialog" id="edit_button_<%= o.id %>">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       <% end %>

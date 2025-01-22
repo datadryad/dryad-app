@@ -38,7 +38,7 @@
           <% if policy([:stash_engine, :user]).edit? %>
             <div class="c-lined-table__actions">
               <%= form_with(url: user_edit_path(id: u.id), method: :get, local: false) do %>
-                <button class="c-admin-edit-icon" aria-label="Edit user" aria-haspopup="dialog" aria-expanded="false" id="button_<%= u.id %>">
+                <button class="c-admin-edit-icon" aria-label="Edit user" aria-haspopup="dialog" id="edit_button_<%= u.id %>">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </button>
               <% end %>

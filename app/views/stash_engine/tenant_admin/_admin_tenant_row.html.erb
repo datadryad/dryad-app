@@ -4,7 +4,7 @@
     <div class="c-lined-table__actions">
     <% if policy([:stash_engine, :tenant]).edit? %>
       <%= form_with(url: tenant_edit_path(id: t.id), method: :get, local: false) do %>
-          <button class="c-admin-edit-icon" aria-label="Edit member" aria-haspopup="dialog" id="short_name_button_<%= t.id %>">
+          <button class="c-admin-edit-icon" aria-label="Edit member" aria-haspopup="dialog" id="edit_button_<%= t.id %>">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
         <% end %>
