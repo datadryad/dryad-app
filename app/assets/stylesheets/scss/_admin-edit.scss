@@ -23,3 +23,51 @@
 .o-div__placeholder {
   width: 270px;
 }
+
+#role_form_flex {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 2ch;
+  row-gap: 1ch;
+  align-items: flex-start;
+
+  button {
+    order: 2;
+    flex-basis: 100%;
+    flex-shrink: 0;
+  }
+  fieldset {
+    order: 1;
+    margin: 1rem 0;
+    flex-basis: 48%;
+    flex-shrink: 0;
+    flex-grow: 1;
+
+    p, div {
+      margin: 0 auto 1rem;
+    }
+
+    div > div {
+      display: inline-block;
+    }
+
+    & > ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+
+      li {
+        padding-left: 2ch;
+        text-indent: -2ch;
+        margin-bottom: .3rem;
+
+        span {
+          font-size: .9em;
+          margin-left: .5ch;
+          padding-left: .75ch;
+          border-left: 1px solid black;
+        }
+      }
+    }
+  }
+}

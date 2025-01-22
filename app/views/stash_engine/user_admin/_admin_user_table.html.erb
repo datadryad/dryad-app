@@ -30,53 +30,29 @@
       <% if policy([:stash_engine, :user]).merge? %>
         <td><%= check_box("user_ids", "selections", {multiple: true, class: 'merge-checkbox'}, u.id, nil) %></td>
       <% end %>
-      <td><%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u), title: "#{u.first_name} #{u.last_name}'s activity and datasets" %></td>
       <td>
         <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="user_email_<%= u.id %>">
-  	        <%= u.email %>
+          <div class="c-lined-table__data">
+            <%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u), title: "#{u.first_name} #{u.last_name}'s activity and datasets" %>
           </div>
-          <% if policy([:stash_engine, :user]).popup? %>
-          <div class="c-lined-table__actions">
-        	  <%= form_with(url: user_popup_path(id: u.id, field: 'email'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit user email" aria-haspopup="dialog" aria-expanded="false" id="email_button_<%= u.id %>">
-        	      <i class="fa fa-pencil" aria-hidden="true"></i>
-        	    </button>
-        	  <% end %>
-          </div>
+          <% if policy([:stash_engine, :user]).edit? %>
+            <div class="c-lined-table__actions">
+              <%= form_with(url: user_edit_path(id: u.id), method: :get, local: false) do %>
+                <button class="c-admin-edit-icon" aria-label="Edit user" aria-haspopup="dialog" aria-expanded="false" id="button_<%= u.id %>">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                </button>
+              <% end %>
+            </div>
           <% end %>
         </div>
       </td>
+      <td id="user_email_<%= u.id %>"><%= u.email %></td>
       <td class="c-lined-table__digits"><nobr><%= u.orcid %></nobr></td>
-      <td>
-        <div class="c-lined-table__with-actions">
-          <div class="c-lined-table__data" id="user_tenant_id_<%= u.id %>">
-            <%= StashEngine::Tenant.find(u.tenant_id)&.short_name if StashEngine::Tenant.exists?(u.tenant_id) %>
-          </div>
-          <% if policy([:stash_engine, :user]).popup? %>
-          <div class="c-lined-table__actions">
-        	  <%= form_with(url: user_popup_path(id: u.id, field: 'tenant_id'), method: :get, local: false) do %>
-              <button class="c-admin-edit-icon" aria-label="Edit user tenant" aria-haspopup="dialog" aria-expanded="false" id="tenant_id_button_<%= u.id %>">
-        	      <i class="fa fa-pencil" aria-hidden="true"></i>
-        	    </button>
-        	  <% end %>
-          </div>
-          <% end %>
-        </div>
+      <td id="user_tenant_id_<%= u.id %>">
+        <%= StashEngine::Tenant.find(u.tenant_id)&.short_name if StashEngine::Tenant.exists?(u.tenant_id) %>
       </td>
-      <td>
-        <div class="c-lined-table__with-actions">
-        <div class="c-lined-table__data" id="user_role_<%= u.id %>">
-          <%= u.roles&.admin_roles.present? ? u.roles.admin_roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>
-        </div>
-        <% if policy([:stash_engine, :user]).set_role? %>
-        <div class="c-lined-table__actions">
-    	    <a class="c-admin-edit-icon" aria-label="Edit user role" title="Edit user role" href="<%=stash_url_helpers.user_admin_profile_path(u) %>#edit_roles">
-    	      <i class="fa fa-pen-to-square" aria-hidden="true"></i>
-    	    </a>
-        </div>
-        <% end %>
-      </div>
+      <td id="user_role_<%= u.id %>">
+        <%= u.roles&.admin_roles.present? ? u.roles.admin_roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>
       </td>
       <td class="c-lined-table__digits"><%= formatted_datetime(u.last_login) %></td>
     </tr>

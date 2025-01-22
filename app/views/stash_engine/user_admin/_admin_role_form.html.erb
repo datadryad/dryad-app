@@ -7,8 +7,8 @@ system_roles = [
   ['', 'User <span>Default user role. Can submit, view, and edit their submissions.</span>']
 ]
 tenant_roles = [
-  ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated tenant.</span>'],
-  ['admin', 'Admin <span>Can view all tenant submissions and curation pages, and create datasets.</span>'],
+  ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated member institution.</span>'],
+  ['admin', 'Admin <span>Can view all member institution submissions and curation pages, and create datasets.</span>'],
   ['', 'Remove tenant role']
 ]
 publisher_roles = [
@@ -26,121 +26,51 @@ funder_roles = [
   ['', 'Remove funder role']
 ]
 %>
-<% content_for(:head) do %>
-  <style type="text/css">
-    #role_form_flex {
-      display: flex;
-      flex-wrap: wrap;
-      column-gap: 2ch;
-      row-gap: 1ch;
-      align-items: flex-start;
-    }
-    #role_form_flex button {
-      order: 2;
-      flex-basis: 100%;
-      flex-shrink: 0;
-    }
-    #role_form_flex fieldset {
-      order: 1;
-      margin: 1rem 0;
-      flex-basis: 48%;
-      flex-shrink: 0;
-      flex-grow: 1;
-    }
-    #role_form_flex fieldset p,
-    #role_form_flex fieldset div {
-      margin: 0 auto 1rem;
-    }
-    #role_form_flex fieldset div > div {
-      display: inline-block;
-    }
-    #role_form_flex fieldset > ul {
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
-    }
-    #role_form_flex fieldset > ul li {
-      padding-left: 2ch;
-      text-indent: -2ch;
-      margin-bottom: .3rem;
-    }
-    #role_form_flex fieldset > ul li span {
-      font-size: .9em;
-      margin-left: .5ch;
-      padding-left: .75ch;
-      border-left: 1px solid black;
-    }
-  </style>
-<% end %>
-<%= form_with(url: user_admin_set_role_path(user.id), method: :post, local: false, html: {id: 'role_form'}) do -%>
-  <div id="role_form_flex">
-    <fieldset class="c-fieldset">
-      <legend class="c-fieldset__legend">Dryad system roles:</legend>
-      <ul>
-        <% system_roles.each do |role| %>
-          <li><%= radio_button_tag('role', role.first, @system_role ? @system_role.role == role.first : '' == role.first) %> <label for="<%= "role_#{role.first}" %>"><%= role[1].html_safe %></label>
-        <% end %>
-      </ul>
-    </fieldset>
-    <% if user.tenant_id.present? %>
-      <% unless user.tenant_id == APP_CONFIG.default_tenant %>
-        <% unless @tenant_role %>
-          <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a tenant role (for <%= user.tenant.short_name %>)</button>
-        <% end %>
-        <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'tenant', select_label: 'For user member institution:', roles: tenant_roles } %>
+<div id="role_form_flex">
+  <fieldset class="c-fieldset">
+    <legend class="c-fieldset__legend">Dryad system roles:</legend>
+    <ul>
+      <% system_roles.each do |role| %>
+        <li><%= radio_button_tag('role', role.first, @system_role ? @system_role.role == role.first : '' == role.first) %> <label for="<%= "role_#{role.first}" %>"><%= role[1].html_safe %></label>
       <% end %>
+    </ul>
+  </fieldset>
+  <% if @user.tenant_id.present? %>
+    <% unless @user.tenant_id == APP_CONFIG.default_tenant %>
+      <% unless @tenant_role %>
+        <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a member role (for <%= @user.tenant.short_name %>)</button>
+      <% end %>
+      <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'member', select_label: 'For user member institution:', roles: tenant_roles } %>
     <% end %>
-    <% unless @publisher_role %>
-      <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a publisher role</button>
-    <% end %>
-    <%= render partial: 'admin_role_fieldset', locals: { user_role: @publisher_role, label: 'publisher', select_label: 'For organization or society:', roles: publisher_roles, options: StashEngine::JournalOrganization.order(:name).collect { |j| [ j.name, j.id ] } } %>
-    <% unless @journal_role %>
-      <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a journal role</button>
-    <% end %>
-    <fieldset class="c-fieldset" id="journal_fieldset" <%= "hidden" unless @journal_role %> >
-      <legend class="c-fieldset__legend">Journal roles:</legend>
-      <div>
-        <%= render partial: 'stash_engine/shared/search_select', locals: {
-          id: 'journal',
-          label: 'For journal',
-          field_name: 'journal',
-          options_path: '/stash_datacite/publications/autocomplete?term=',
-          options_label: 'title',
-          options_value: 'id',
-          selected: {value: @journal_role&.role_object_id, label: @user&.journals&.map(&:title)}
-        } %>
-      </div>
-      <ul>
-        <% journal_roles.each do |role| %>
-          <li><%= radio_button_tag("journal_role", role.first, @journal_role&.role == role.first) %> <label for="<%= "journal_role_#{role.first}" %>"><%= role[1].html_safe %></label>
-        <% end %>
-      </ul>
-    </fieldset>
-    <% unless @funder_role %>
-      <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a funder role</button>
-    <% end %>
-    <%= render partial: 'admin_role_fieldset', locals: { user_role: @funder_role, label: 'funder', select_label: 'For funder:', roles: funder_roles, options: StashEngine::Funder.exemptions.collect { |f| [ f.name, f.id ] } } %>
-  </div>
-  <div class="c-modal__buttons-right">
-    <%= submit_tag 'Submit role changes', class: 'o-button__plain-text2' %>
-    <%= button_tag 'Cancel', type: 'button', id: 'cancel_form', class: 'o-button__plain-text7' %>
-  </div>
-<% end %>
-<script type="text/javascript">
-  var formButtons = Array.from(document.getElementsByClassName('button-expand'));
-  formButtons.forEach(button => {
-    button.addEventListener('click', e => {
-      e.preventDefault();
-      e.currentTarget.setAttribute('hidden', true);
-      e.currentTarget.nextElementSibling.removeAttribute('hidden');
-    })
-  })
-  document.getElementById('cancel_form').addEventListener('click', e => {
-    e.preventDefault();
-    document.getElementById('role_form').reset()
-    formButtons.forEach(button => {
-      button.nextElementSibling.setAttribute('hidden', true);
-      button.removeAttribute('hidden');
-    })
-  })
-</script>
+  <% end %>
+  <% unless @publisher_role %>
+    <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a publisher role</button>
+  <% end %>
+  <%= render partial: 'admin_role_fieldset', locals: { user_role: @publisher_role, label: 'publisher', select_label: 'For organization or society:', roles: publisher_roles, options: StashEngine::JournalOrganization.order(:name).collect { |j| [ j.name, j.id ] } } %>
+  <% unless @journal_role %>
+    <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a journal role</button>
+  <% end %>
+  <fieldset class="c-fieldset" id="journal_fieldset" <%= "hidden" unless @journal_role %> >
+    <legend class="c-fieldset__legend">Journal roles:</legend>
+    <div>
+      <%= render partial: 'stash_engine/shared/search_select', locals: {
+        id: 'journal',
+        label: 'For journal',
+        field_name: 'journal',
+        options_path: '/stash_datacite/publications/autocomplete?term=',
+        options_label: 'title',
+        options_value: 'id',
+        selected: {value: @journal_role&.role_object_id, label: @user&.journals&.map(&:title)}
+      } %>
+    </div>
+    <ul>
+      <% journal_roles.each do |role| %>
+        <li><%= radio_button_tag("journal_role", role.first, @journal_role&.role == role.first) %> <label for="<%= "journal_role_#{role.first}" %>"><%= role[1].html_safe %></label>
+      <% end %>
+    </ul>
+  </fieldset>
+  <% unless @funder_role %>
+    <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a funder role</button>
+  <% end %>
+  <%= render partial: 'admin_role_fieldset', locals: { user_role: @funder_role, label: 'funder', select_label: 'For funder:', roles: funder_roles, options: StashEngine::Funder.exemptions.collect { |f| [ f.name, f.id ] } } %>
+</div>

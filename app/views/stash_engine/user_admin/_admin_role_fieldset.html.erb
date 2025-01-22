@@ -2,7 +2,7 @@
 <fieldset class="c-fieldset" id="<%= label %>_fieldset" <%= "hidden" unless user_role %> >
   <legend class="c-fieldset__legend"><%=label.capitalize%> roles:</legend>
   <p>
-    <% if label == 'tenant' %>
+    <% if label == 'member' %>
       <%= select_label %> <b><%= @user.tenant.short_name %></b>
     <% else %>
       <%= label_tag(label, select_label, class: 'c-input__label') %>

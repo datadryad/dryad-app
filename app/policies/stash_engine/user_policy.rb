@@ -12,20 +12,16 @@ module StashEngine
       @user.superuser?
     end
 
-    def popup?
-      edit?
-    end
-
     def edit?
       @user.system_admin?
     end
 
-    def user_profile?
-      @user.system_user?
+    def update?
+      edit?
     end
 
-    def set_role?
-      @user.system_admin?
+    def user_profile?
+      @user.system_user?
     end
   end
 end

@@ -1,12 +1,20 @@
-document.getElementById("user_<%= @field %>_<%= @user.id %>").innerHTML = "<%=
-case @field
-when 'email'
-  @user.email
-when 'tenant_id'
-  @user.tenant.short_name
-end %>";
-<% if @field == 'tenant_id' %>
-$('#edit_roles_form').html("<%= escape_javascript(render partial: 'admin_role_form', locals: { user: @user }) %>");
-document.getElementById('user_role_<%= @user.id %>').innerHTML = "<%= @user.roles&.admin_roles.present? ? @user.roles.admin_roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>";
-<% end %>
-document.getElementById('genericModalDialog').close();
+// open a modal dialog
+document.getElementById('genericModalDialog').classList.add('extra-wide');
+document.getElementById('genericModalContent').innerHTML = '';
+document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'edit') %>"));
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('genericModalDialog').addEventListener('close', () => {
+  document.getElementById('genericModalDialog').classList.remove('extra-wide');
+});
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});
+var formButtons = Array.from(document.getElementsByClassName('button-expand'));
+formButtons.forEach(button => {
+  button.addEventListener('click', e => {
+    e.preventDefault();
+    e.currentTarget.setAttribute('hidden', true);
+    e.currentTarget.nextElementSibling.removeAttribute('hidden');
+  })
+})
