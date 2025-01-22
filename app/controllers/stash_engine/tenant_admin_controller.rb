@@ -71,7 +71,10 @@ module StashEngine
       tenants = StashEngine::Tenant.includes([:tenant_ror_orgs]).joins(:tenant_ror_orgs).where(tenant_ror_orgs: { ror_id: rors })
         .distinct.order(:short_name)
       tenants.each do |t|
-        @consortia << OpenStruct.new(id: t.id, name: t.short_name) if t.tenant_ror_orgs.count > 1
+        if t.tenant_ror_orgs.length > 1 &&
+          StashEngine::Tenant.joins(:tenant_ror_orgs).where(tenant_ror_orgs: { ror_id: t.ror_ids }).distinct.length > 2
+          @consortia << OpenStruct.new(id: t.id, name: t.short_name)
+        end
       end
       @consortia.flatten!
     end

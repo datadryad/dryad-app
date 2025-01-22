@@ -2,7 +2,6 @@
 <%= form.label :title, "Title"%>
 <%= form.text_field(:title, required: true, value: @journal.title, class: 'c-input__text', style: 'width:100%') %>
 </div>
-<p><%= @journal.title %></p>
 <div class="c-input">
 <%= form.label :issn, "Place each Journal ISSN on a new line:"%>
 <%= form.text_area(:issn, value: @journal.issn_array.join("\n"), class: 'c-input__textarea', style: 'width:100%; min-height:200px') %>
@@ -17,8 +16,7 @@ plan_radios = [ ['', 'None'] ]
       <%= radio_button_tag('payment_plan_type', plan.first, @journal.payment_plan_type == plan.first || '' == plan.first) %> <label for="<%= "payment_plan_type_#{plan.first}" %>"><%= plan[1] %></label></br>
   <% end %>
 </fieldset>
-<p><%= @journal.title %></p>
-<p><%= form.check_box :default_to_ppr, {checked: @journal.default_to_ppr}, 1, 0 %> <%= form.label :default_to_ppr, "Submissions enter PPR by default" %></p>
+<p><%= form.check_box :default_to_ppr, {checked: @journal.default_to_ppr}, 1, 0 %> <%= form.label :default_to_ppr, "When checked, submissions enter PPR by default" %></p>
 <h2>Publication contacts</h2>
 <p>These addresses will emailed when related submissions are published</p>
 <div class="c-input">

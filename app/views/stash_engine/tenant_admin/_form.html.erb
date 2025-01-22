@@ -21,20 +21,19 @@
   <%= form.text_area(:ror_orgs, value: @tenant.ror_ids&.join("\n"), class: 'c-input__textarea', style: 'width:100%; min-height:200px') %>
 </div>
 <h2>Notify</h2>
-<p><%= @tenant.short_name %></p>
 <p>These addresses will be BCCed on status change emails for related submissions</p>
 <div class="c-input">
   <%= form.label :campus_contacts, "Place each email address on a new line:"%>
   <%= form.text_area(:campus_contacts, value: @tenant.campus_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
 </div>
 <h2>Active</h2>
-<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%> is active, and selectable from the admin dashboard. Active members can also be set to display on the member list and for selection by users (with 'Display' and 'Pays').</p>
+<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%> is enabled and selectable from the admin dashboard.</p>
 <p><%= form.check_box :enabled, {checked: @tenant.enabled}, 1, 0 %> <%= form.label :enabled, "Member is active", class: 'c-input__label' %></p>
 <h2>Display</h2>
-<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%>, if active, is displayed on the member list.</p>
+<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%>, if <b>active</b>, is displayed on the public member list.</p>
 <p><%= form.check_box :partner_display, {checked: @tenant.partner_display}, 1, 0 %> <%= form.label :partner_display, "Member is displayed", class: 'c-input__label' %></p>
-<h2>Pays</h2>
-<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%> covers the cost of Dryad for its users. Members must be <b>enabled</b>, <b>shown</b>, and <b>cover the DPC</b> for users to be invited to connect to them.</p>
+<h2>DPC</h2>
+<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%> covers the cost of Dryad for its users. Members must be <b>active</b>, <b>displayed</b>, and <b>cover the DPC</b> for users to be invited to connect to them.</p>
 <p><%= form.check_box :covers_dpc, {checked: @tenant.covers_dpc}, 1, 0 %> <%= form.label :covers_dpc, "Member covers the DPC", class: 'c-input__label' %></p>
 <h2>Sponsor</h2>
 <p>Are the member's fees sponsored by another institution?</p>
