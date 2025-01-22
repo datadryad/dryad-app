@@ -97,16 +97,18 @@ module StashEngine
     end
 
     def update_associations
-      if edit_params.key?(:logo)
+      if edit_params.key?(:logo) && edit_params[:logo] != @tenant.logo&.data
         @tenant.logo = StashEngine::Logo.new unless @tenant.logo.present?
         @tenant.logo.data = edit_params[:logo]
         @tenant.logo.save
       end
 
       if edit_params.key?(:ror_orgs)
-        @tenant.tenant_ror_orgs.destroy_all
         orgs = edit_params[:ror_orgs].split("\n")
-        orgs.each { |o| StashEngine::TenantRorOrg.create(ror_id: o.strip, tenant_id: @tenant.id) }
+        if @tenant.ror_ids.difference(orgs).any?
+          @tenant.tenant_ror_orgs.destroy_all
+          orgs.each { |o| StashEngine::TenantRorOrg.create(ror_id: o.strip, tenant_id: @tenant.id) }
+        end
       end
 
       @tenant.reload

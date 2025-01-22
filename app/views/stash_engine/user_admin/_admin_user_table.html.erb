@@ -2,7 +2,7 @@
 <table class="c-lined-table">
   <thead>
     <tr>
-      <% if policy([:stash_engine, :user]).merge? %><th class="c-admin-table__user-selection" /><% end %>
+      <% if policy([:stash_engine, :user]).merge? %><th class="c-admin-table__user-selection"><i class="fas fa-user-check" title="Select user to merge" id="merge-label"><span class="screen-reader-only">Select user to merge</span></i></th><% end %>
       <th class="c-lined-table__sort c-admin-table__user-name" <%= sort_display('last_name') %>>
         <%= sortable_column_head sort_field: 'last_name', title: 'Name' %>
       </th>
@@ -28,7 +28,7 @@
   <% users.each do |u| %>
     <tr class="c-lined-table__row">
       <% if policy([:stash_engine, :user]).merge? %>
-        <td><%= check_box("user_ids", "selections", {multiple: true, class: 'merge-checkbox'}, u.id, nil) %></td>
+        <td><%= check_box("user_ids", "selections", {multiple: true, class: 'merge-checkbox', 'aria-labelledby': 'merge-label'}, u.id, nil) %></td>
       <% end %>
       <td>
         <div class="c-lined-table__with-actions">

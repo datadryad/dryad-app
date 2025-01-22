@@ -28,7 +28,7 @@
 
   <tbody>  
     <% journals.each do |j| %>
-      <tr class="c-lined-table__row" id="<%=j.id%>_row">
+      <tr class="c-lined-table__row" id="row_<%=j.id%>">
         <%= render partial: 'admin_journal_row', locals: {j: j} %>
       </tr>
     <% end %>

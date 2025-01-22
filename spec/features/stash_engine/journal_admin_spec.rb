@@ -24,14 +24,14 @@ RSpec.feature 'JournalAdmin', type: :feature do
     it 'allows changing ISSNs as a system admin', js: true do
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)
-      within(:css, "form[action=\"#{journal_popup_path(id: @journal.id, field: 'issn')}\"]") do
+      within(:css, "form[action=\"#{journal_edit_path(id: @journal.id)}\"]") do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
         find('#issn').set('1111-2222')
         find('input[name=commit]').click
       end
-      expect(page.find("#issn_#{@journal.id}")).to have_text('1111-2222')
+      expect(page.find("#row_#{@journal.id}")).to have_text('1111-2222')
       changed = StashEngine::Journal.find(@journal.id)
       expect(changed.issn_array).to include('1111-2222')
     end
@@ -39,14 +39,14 @@ RSpec.feature 'JournalAdmin', type: :feature do
     it 'allows changing notify contacts as a system admin', js: true do
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)
-      within(:css, "form[action=\"#{journal_popup_path(id: @journal.id, field: 'notify_contacts')}\"]") do
+      within(:css, "form[action=\"#{journal_edit_path(id: @journal.id)}\"]") do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
         find('#notify_contacts').set('test@email.com')
         find('input[name=commit]').click
       end
-      expect(page.find("#notify_contacts_#{@journal.id}")).to have_text('test@email.com')
+      expect(page.find("#row_#{@journal.id}")).to have_text('test@email.com')
       changed = StashEngine::Journal.find(@journal.id)
       expect(changed.notify_contacts).to include('test@email.com')
     end
@@ -54,14 +54,14 @@ RSpec.feature 'JournalAdmin', type: :feature do
     it 'allows changing review contacts as a system admin', js: true do
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)
-      within(:css, "form[action=\"#{journal_popup_path(id: @journal.id, field: 'review_contacts')}\"]") do
+      within(:css, "form[action=\"#{journal_edit_path(id: @journal.id)}\"]") do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
         find('#review_contacts').set('test@email.com')
         find('input[name=commit]').click
       end
-      expect(page.find("#review_contacts_#{@journal.id}")).to have_text('test@email.com')
+      expect(page.find("#row_#{@journal.id}")).to have_text('test@email.com')
       changed = StashEngine::Journal.find(@journal.id)
       expect(changed.review_contacts).to include('test@email.com')
     end
@@ -69,14 +69,14 @@ RSpec.feature 'JournalAdmin', type: :feature do
     it 'allows changing ppr default as a system admin', js: true do
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)
-      within(:css, "form[action=\"#{journal_popup_path(id: @journal.id, field: 'default_to_ppr')}\"]") do
+      within(:css, "form[action=\"#{journal_edit_path(id: @journal.id)}\"]") do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
         find('#default_to_ppr').click
         find('input[name=commit]').click
       end
-      expect(page.find("#default_to_ppr_#{@journal.id}")).to have_text('True')
+      expect(page.find("#row_#{@journal.id}")).to have_text('True')
       changed = StashEngine::Journal.find(@journal.id)
       expect(changed.default_to_ppr).to be true
     end
@@ -85,14 +85,14 @@ RSpec.feature 'JournalAdmin', type: :feature do
       org = create(:journal_organization)
       visit stash_url_helpers.journal_admin_path
       expect(page).to have_content(@journal.title)
-      within(:css, "form[action=\"#{journal_popup_path(id: @journal.id, field: 'sponsor_id')}\"]") do
+      within(:css, "form[action=\"#{journal_edit_path(id: @journal.id)}\"]") do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
         find("option[value='#{org.id}']").select_option
         find('input[name=commit]').click
       end
-      expect(page.find("#sponsor_id_#{@journal.id}")).to have_text(org.name)
+      expect(page.find("#row_#{@journal.id}")).to have_text(org.name)
       changed = StashEngine::Journal.find(@journal.id)
       expect(changed.sponsor_id).to be org.id
     end

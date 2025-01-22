@@ -22,7 +22,7 @@
 
   <tbody>  
     <% orgs.each do |o| %>
-      <tr class="c-lined-table__row" id="<%=o.id%>_row">
+      <tr class="c-lined-table__row" id="row_<%=o.id%>">
         <%= render partial: 'admin_org_row', locals: {o: o} %>
       </tr>
     <% end %>
