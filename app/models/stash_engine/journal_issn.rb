@@ -21,6 +21,6 @@ module StashEngine
     belongs_to :journal, class_name: 'StashEngine::Journal'
     ISSN = /\A[0-9]{4}-[0-9]{3}[0-9X]\z/
 
-    validates :id, format: ISSN
+    validates :id, format: { with: ISSN, message: 'ISSN %{value} format is invalid' }, uniqueness: { message: 'ISSN %{value} is already in use' }
   end
 end

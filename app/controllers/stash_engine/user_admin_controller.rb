@@ -50,6 +50,11 @@ module StashEngine
       setup_roles
       update = edit_params.slice(*valid)
       @user.update(update)
+      errs = @user.errors.full_messages
+      if errs.any?
+        @error_message = errs[0]
+        render :update_error and return
+      end
       set_roles
       respond_to(&:js)
     end

@@ -78,10 +78,17 @@ module StashEngine
     def update_issns
       issns = edit_params[:issn].split("\n").map(&:strip)
       @journal.issns.where.not(id: issns).destroy_all
-      issns.reject { |id| @journal.issns.map(&:id).include?(id) }.each { |issn| StashEngine::JournalIssn.create(id: issn, journal_id: @journal.id) }
+      issns.reject { |id| @journal.issns.map(&:id).include?(id) }.each do |issn|
+        errs = StashEngine::JournalIssn.create(id: issn, journal_id: @journal.id).errors.full_messages
+        if errs.any?
+          @error_message = errs[0]
+          render :update_error and break
+        end
+        StashEngine::JournalIssn.create(id: issn, journal_id: @journal.id)
+      end
       @journal.reload
     rescue ActiveRecord::RecordNotUnique
-      @error_message = 'Journal ISSN is already in use'
+      @error_message = 'ISSN is already in use'
       render :update_error and return
     end
 
