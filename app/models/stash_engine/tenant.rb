@@ -59,7 +59,7 @@ module StashEngine
     end
 
     def email_array
-      campus_contacts.each do |email|
+      campus_contacts&.each do |email|
         errors.add(:campus_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
       end
     end

@@ -32,7 +32,7 @@ module StashEngine
     end
 
     def email_array
-      contact.each do |email|
+      contact&.each do |email|
         errors.add(:contact, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
       end
     end

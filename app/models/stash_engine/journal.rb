@@ -85,10 +85,10 @@ module StashEngine
     end
 
     def email_array
-      notify_contacts.each do |email|
+      notify_contacts&.each do |email|
         errors.add(:notify_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
       end
-      review_contacts.each do |email|
+      review_contacts&.each do |email|
         errors.add(:review_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
       end
     end
