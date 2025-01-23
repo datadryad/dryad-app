@@ -13,6 +13,7 @@ module Mocks
       stub_request(:post, %r{solr/dryad}).to_return(status: 200, body: [], headers: {})
       stub_request(:get, %r{solr/dryad.*fq=dryad_author_affiliation}).to_return(status: 200, body: trivial_results, headers: {})
       stub_request(:get, %r{solr/dryad.*fq=updated_at_dt}).to_return(status: 200, body: trivial_results, headers: {})
+      stub_request(:get, %r{solr/dryad.*fq=rw_sim}).to_return(status: 200, body: trivial_results, headers: {})
 
       # The StashDiscovery::LatestController.index attempts to contact Solr and the Rails.cache for
       # the list of 'Recent Datasets' on the home page. We have to set one of the controller's instance

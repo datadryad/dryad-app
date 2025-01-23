@@ -691,6 +691,12 @@ module StashApi
         expect(output['_embedded']['stash:datasets'].size).to eq(1)
       end
 
+      it 'allows searches by relatedWorkIdentifier' do
+        get '/api/v2/search?relatedWorkIdentifier=*123*', headers: default_authenticated_headers
+        output = response_body_hash
+        expect(output['_embedded']['stash:datasets'].size).to eq(1)
+      end
+
       it 'passes a sanitised query to solr' do
         solr_mock = instance_double(RSolr::Client)
         allow(RSolr).to receive(:connect).and_return(solr_mock)

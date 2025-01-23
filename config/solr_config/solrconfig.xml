@@ -127,6 +127,8 @@
         funder_awd_ids_tmi^15
         funder_ror_ids_tmi^15
         sponsor_ror_ids_tmi^15
+        rw_identifier_tmi^15
+        rw_type_tmi^15
       </str>
       <!-- briley 06/03/2019 - field to store the publication id that cites the dataset -->
       <str name="pf"><!-- phrase boost within result set -->
@@ -149,6 +151,8 @@
         dryad_dataset_file_ext_tmi^13
         dcs_funder_tmi^14
         dryad_related_publication_name_ti^15
+        rw_identifier_tmi^15
+        rw_type_tmi^15
       </str>
       <bool name="facet">true</bool>
       <int name="facet.mincount">1</int>
