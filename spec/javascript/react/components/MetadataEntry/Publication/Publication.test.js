@@ -40,7 +40,7 @@ describe('Publication', () => {
     render(<Publication {...info} />);
 
     await waitFor(() => journals);
-    expect(screen.getByRole('group', {name: 'Is your data used in a published article?'})).toBeInTheDocument();
+    expect(screen.getByRole('group', {name: 'Is your data used in a published article, with a DOI?'})).toBeInTheDocument();
   });
 
   it('changes radio button and sends json request', async () => {
@@ -49,7 +49,7 @@ describe('Publication', () => {
 
     render(<Publication {...info} />);
 
-    const radios = screen.getByRole('group', {name: 'Is your data used in a published article?'});
+    const radios = screen.getByRole('group', {name: 'Is your data used in a published article, with a DOI?'});
     expect(radios).toBeInTheDocument();
     expect(within(radios).getByLabelText('Yes')).not.toHaveAttribute('checked');
     expect(within(radios).getByLabelText('No')).not.toHaveAttribute('checked');
@@ -68,7 +68,7 @@ describe('Publication', () => {
 
     render(<Publication {...info} />);
 
-    const radios = screen.getByRole('group', {name: 'Is your data used in a published article?'});
+    const radios = screen.getByRole('group', {name: 'Is your data used in a published article, with a DOI?'});
     expect(radios).toBeInTheDocument();
     expect(within(radios).getByLabelText('Yes')).not.toHaveAttribute('checked');
     expect(within(radios).getByLabelText('No')).not.toHaveAttribute('checked');
@@ -76,7 +76,7 @@ describe('Publication', () => {
     userEvent.click(within(radios).getByLabelText('No'));
     await waitFor(() => first);
 
-    const nextRadios = screen.getByRole('group', {name: 'Is your data used in a submitted manuscript?'});
+    const nextRadios = screen.getByRole('group', {name: 'Is your data used in a submitted manuscript, with a manuscript number?'});
     expect(nextRadios).toBeInTheDocument();
     expect(within(nextRadios).getByLabelText('Yes')).not.toHaveAttribute('checked');
     expect(within(nextRadios).getByLabelText('No')).not.toHaveAttribute('checked');
@@ -93,7 +93,7 @@ describe('Publication', () => {
 
     render(<Publication {...info} />);
 
-    const radios = screen.getByRole('group', {name: 'Is your data used in a published article?'});
+    const radios = screen.getByRole('group', {name: 'Is your data used in a published article, with a DOI?'});
     expect(radios).toBeInTheDocument();
     expect(within(radios).getByLabelText('Yes')).not.toHaveAttribute('checked');
     expect(within(radios).getByLabelText('No')).not.toHaveAttribute('checked');
