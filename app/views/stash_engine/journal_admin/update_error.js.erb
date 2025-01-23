@@ -1,8 +1,0 @@
-if (document.getElementById('update_error')) document.getElementById('update_error').remove()
-var err = document.createElement('div')
-err.classList.add('callout', 'err')
-err.setAttribute('id', 'update_error')
-err.innerHTML = "<p><%= escape_javascript(@error_message) %></p>"
-var content = document.getElementById('genericModalContent')
-content.insertBefore(err, content.querySelector('form'))
-content.querySelector('h1').scrollIntoView()

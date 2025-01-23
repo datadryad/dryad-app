@@ -40,7 +40,7 @@ module StashEngine
       errs = @tenant.errors.full_messages
       if errs.any?
         @error_message = errs[0]
-        render :update_error and return
+        render 'stash_engine/user_admin/update_error' and return
       end
       update_associations
       respond_to(&:js)
@@ -58,7 +58,7 @@ module StashEngine
       errs = @tenant.errors.full_messages
       if errs.any?
         @error_message = errs[0]
-        render :update_error and return
+        render 'stash_engine/user_admin/update_error' and return
       end
       update_associations
       redirect_to action: 'index', q: edit_params[:id]
