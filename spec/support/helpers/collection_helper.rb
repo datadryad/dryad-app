@@ -45,11 +45,11 @@ module CollectionHelper
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-    within_fieldset('Is your collection associated with a published article?') do
+    within_fieldset('Is your collection associated with a published article, with a DOI?') do
       find(:label, 'No').click
     end
-    expect(page).to have_content('Is your collection associated with a submitted manuscript?')
-    within_fieldset('Is your collection associated with a submitted manuscript?') do
+    expect(page).to have_content('Is your collection associated with a submitted manuscript, with a manuscript number?')
+    within_fieldset('Is your collection associated with a submitted manuscript, with a manuscript number?') do
       find(:label, 'No').click
     end
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 5)
