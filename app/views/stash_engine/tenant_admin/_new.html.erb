@@ -1,5 +1,5 @@
 <h1>Enter a new institutional member</h1>
-<%= form_with(url: tenant_create_path, method: :post, local: true) do |form| -%>
+<%= form_with(url: tenant_create_path, method: :post, local: false) do |form| -%>
   <div class="c-input">
     <%= form.label :id, "Member ID (usually main portion of web domain)"%>
     <%= form.text_field(:id, required: true, value: '', class: 'c-input__text', style: 'width:100%') %>

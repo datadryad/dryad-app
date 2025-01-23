@@ -37,6 +37,11 @@ module StashEngine
     def update
       @tenant = authorize StashEngine::Tenant.find(params[:id])
       @tenant.update(update_hash)
+      errs = @tenant.errors.full_messages
+      if errs.any?
+        @error_message = errs[0]
+        render :update_error and return
+      end
       update_associations
       respond_to(&:js)
     end
@@ -50,6 +55,11 @@ module StashEngine
       h = update_hash
       h[:id] = edit_params[:id]
       @tenant = StashEngine::Tenant.create(h)
+      errs = @tenant.errors.full_messages
+      if errs.any?
+        @error_message = errs[0]
+        render :update_error and return
+      end
       update_associations
       redirect_to action: 'index', q: edit_params[:id]
     end

@@ -28,6 +28,8 @@ module StashEngine
     validates :id, presence: true, uniqueness: true
     validates :short_name, presence: true
     validates :long_name, presence: true
+    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
+    validate :email_array
 
     belongs_to :logo, class_name: 'StashEngine::Logo', dependent: :destroy, optional: true
     belongs_to :sponsor, class_name: 'Tenant', inverse_of: :sponsored, optional: true
@@ -54,6 +56,12 @@ module StashEngine
 
     def campus_contacts
       JSON.parse(super) if super.present?
+    end
+
+    def email_array
+      campus_contacts.each do |email|
+        errors.add(:campus_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
+      end
     end
 
     def consortium

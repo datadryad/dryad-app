@@ -14,6 +14,8 @@ module StashEngine
   class JournalOrganization < ApplicationRecord
     self.table_name = 'stash_engine_journal_organizations'
     validates :name, presence: true
+    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
+    validate :email_array
 
     has_many :children, class_name: 'JournalOrganization', primary_key: :id, foreign_key: :parent_org_id, inverse_of: :parent_org
     belongs_to :parent_org, class_name: 'JournalOrganization', optional: true, inverse_of: :children
@@ -27,6 +29,12 @@ module StashEngine
 
     def contact
       JSON.parse(super) unless super.nil?
+    end
+
+    def email_array
+      contact.each do |email|
+        errors.add(:contact, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
+      end
     end
 
     # journals sponsored directly by this org

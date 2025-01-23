@@ -32,6 +32,11 @@ module StashEngine
     def update
       @org = authorize StashEngine::JournalOrganization.find(params[:id])
       @org.update(update_hash)
+      errs = @org.errors.full_messages
+      if errs.any?
+        @error_message = errs[0]
+        render :update_error and return
+      end
       respond_to(&:js)
     end
 
@@ -42,6 +47,11 @@ module StashEngine
 
     def create
       @org = StashEngine::JournalOrganization.create(update_hash)
+      errs = @org.errors.full_messages
+      if errs.any?
+        @error_message = errs[0]
+        render :update_error and return
+      end
       redirect_to action: 'index', q: @org.name
     end
 
