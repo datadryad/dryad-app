@@ -121,6 +121,7 @@ module StashEngine
       # set funder role
       save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
       # reload roles
+      @user.reload
     end
 
     def save_role(role, existing, object = nil)
