@@ -24,11 +24,11 @@ local_dev:
 
 stage:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-stage-solr.datadryad.org:8983/solr/dryad" %>
+  url: <%= ENV['SOLR_URL'] || "http://34.215.143.38:8983/solr/dryad" %>
 
 v3_stage:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-stage-solr.datadryad.org:8983/solr/dryad" %>
+  url: <%= ENV['SOLR_URL'] || "http://34.215.143.38:8983/solr/dryad" %>
 
 # migration solr not used, but we probably need the section here
 migration:
