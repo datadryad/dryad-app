@@ -29,7 +29,6 @@
 module StashEngine
   class Journal < ApplicationRecord
     self.table_name = 'stash_engine_journals'
-    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
     validates :title, presence: true
     validate :email_array
 

@@ -14,7 +14,6 @@ module StashEngine
   class JournalOrganization < ApplicationRecord
     self.table_name = 'stash_engine_journal_organizations'
     validates :name, presence: true
-    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
     validate :email_array
 
     has_many :children, class_name: 'JournalOrganization', primary_key: :id, foreign_key: :parent_org_id, inverse_of: :parent_org

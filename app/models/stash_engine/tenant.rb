@@ -28,7 +28,6 @@ module StashEngine
     validates :id, presence: true, uniqueness: true
     validates :short_name, presence: true
     validates :long_name, presence: true
-    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
     validate :email_array
 
     belongs_to :logo, class_name: 'StashEngine::Logo', dependent: :destroy, optional: true
