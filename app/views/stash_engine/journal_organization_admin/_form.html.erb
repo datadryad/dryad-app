@@ -1,0 +1,18 @@
+<div class="c-input">
+<%= form.label :name, "Name of publisher or society"%>
+<%= form.text_field(:name, required: true, value: @org.name, class: 'c-input__text', style: 'width:100%') %>
+</div>
+<h2>Contacts</h2>
+<div class="c-input">
+<%= form.label :contact, "Place each email address on a new line:"%>
+<%= form.text_area(:contact, value: @org.contact&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
+</div>
+<h2>Parent org</h2>
+<div class="c-input">
+  <%
+    options = StashEngine::JournalOrganization.where.not(id: @org&.id).collect { |o| [ o.name, o.id ] } 
+    options.unshift(['None', ''])
+  %>
+  <%= label_tag 'parent_org_id', 'Choose a sponsoring organization'%>
+  <%= select_tag('parent_org_id', options_for_select(options, @org.parent_org_id), class: 'c-input__select') %>  
+</div>

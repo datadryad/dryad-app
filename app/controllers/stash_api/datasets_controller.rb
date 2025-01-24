@@ -283,7 +283,8 @@ module StashApi
       # we want to make sure that we're only working those specified.
       if params.key?('publicationISSN')
         # add these conditions to narrow to publicationISSN
-        ds_query = ds_query.joins(latest_resource: :resource_publication).where(resource_publication: { publication_issn: params['publicationISSN'] })
+        ds_query = ds_query.joins(latest_resource: :resource_publications)
+          .where(resource_publications: { publication_issn: params['publicationISSN'] })
       elsif params.key?('manuscriptNumber')
         # add these conditions to narrow to manuscriptNumber
         ds_query = ds_query.joins(latest_resource: :resource_publication)
@@ -490,23 +491,32 @@ module StashApi
     # some parameters would be locked down for only admins or superusers to set
     def lock_down_admin_only_params
       # all this bogus return false stuff is to prevent double render errors in some circumstances
-      return if check_superuser_restricted_params == false
+      return if check_restricted_params == false
       return if check_may_set_user_id == false
 
       nil if check_may_set_payment_id == false
     end
 
-    def check_superuser_restricted_params
-      %w[skipDataciteUpdate skipEmails preserveCurationStatus loosenValidation].each do |attr|
+    def check_restricted_params
+      # rubocop:disable Style/Next
+      %w[skipDataciteUpdate loosenValidation skipEmails preserveCurationStatus].each do |attr|
         item_value = params[attr]
         unless item_value.nil? || item_value.instance_of?(TrueClass) || item_value.instance_of?(FalseClass)
           render json: { error: "Bad Request: #{attr} must be true or false" }.to_json, status: 400
           return false
         end
-        if item_value.instance_of?(TrueClass) && !@user.superuser?
+        # superuser restrictions
+        if %w[skipDataciteUpdate loosenValidation].include?(attr) && item_value.instance_of?(TrueClass) && !@user.superuser?
           render json: { error: "Unauthorized: only superusers may set #{attr} to true" }.to_json, status: 401
           return false
         end
+        # admin restrictions
+        if %w[skipEmails preserveCurationStatus].include?(attr) && item_value.instance_of?(TrueClass) &&
+          !(@user.min_curator? || @user.journals_as_admin.intersect?(@resource.journals))
+          render json: { error: "Unauthorized: only curators, superusers, and journal administrators may set #{attr} to true" }.to_json, status: 401
+          return false
+        end
+        # rubocop:enable Style/Next
       end
     end
 

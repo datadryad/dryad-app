@@ -1,6 +1,0 @@
-<p><%= @journal.title %></p>
-<p>These addresses will emailed when related submissions are published</p>
-<div class="c-input">
-<%= form.label :notify_contacts, "Place each email address on a new line:"%>
-<%= form.text_area(:notify_contacts, value: @journal.notify_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
-</div>

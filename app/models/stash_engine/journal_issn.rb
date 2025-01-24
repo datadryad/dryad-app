@@ -18,9 +18,10 @@
 module StashEngine
   class JournalIssn < ApplicationRecord
     self.table_name = 'stash_engine_journal_issns'
-    belongs_to :journal, class_name: 'StashEngine::Journal'
+    belongs_to :journal, class_name: 'StashEngine::Journal', inverse_of: :issns
     ISSN = /\A[0-9]{4}-[0-9]{3}[0-9X]\z/
+    alias_attribute :issn, :id
 
-    validates :id, format: ISSN
+    validates :issn, format: { with: ISSN, message: 'ISSN %{value} format is invalid' }, uniqueness: { message: 'ISSN %{value} is already in use' }
   end
 end

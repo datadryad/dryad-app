@@ -106,6 +106,15 @@ behavior:
   requests to DataCite when registering the dataset. This is useful
   when the dataset already has a DOI, which is present in the
   `identifier` field.
+- `loosenValidation` - Defaults to false. Allows a dataset to be
+  processed even if author information is incomplete (e.g., missing
+  affiliations), or if the abstract is missing. It does still perform
+  some basic validation of the dataset. This should only be used when
+  datasets are being replicated from another system and it is not
+  feasible to provide complete metadata.
+
+Administrative users (including curators and journal administrators) have access to
+the following options:
 - `skipEmails` - Defaults to false. If true, prevents emails from
   being sent to users on submission. Prevents emails regardless of
   whether the submission is successful or an error. Also suppresses
@@ -113,15 +122,11 @@ behavior:
   stop the internal emails that are sent to Dryad admins if there is a
   submission error.
 - `preserveCurationStatus` - Defaults to false. If true, prevents
-  Dryad from automatically setting the curation status to
-  "submitted". This is useful when the dataset already has a curation
-  status that will be set in a later API call.
-- `loosenValidation` - Defaults to false. Allows a dataset to be
-  processed even if author information is incomplete (e.g., missing
-  affiliations), or if the abstract is missing. It does still perform
-  some basic validation of the dataset. This should only be used when
-  datasets are being replicated from another system and it is not
-  feasible to provide complete metadata.
+  Dryad from automatically setting the curation status when the datset is
+  processed. This is useful when the current version of the dataset has been 
+  explicitly given a curation status in a prior API call, or one will be set
+  in a later API call. Note: If a curation status is not explicitly set,
+  the resultant status is not defined.
 - `holdForPeerReview` - Defaults to false. Allows a dataset to be set in
   hold for peer review status when it is created
 

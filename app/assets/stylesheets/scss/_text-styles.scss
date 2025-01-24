@@ -75,6 +75,9 @@ figure {
   &.alt {
     background-color: $lightest-green;
   }
+  &.err {
+    background-color: $lightest-red;
+  }
 }
 
 pre {

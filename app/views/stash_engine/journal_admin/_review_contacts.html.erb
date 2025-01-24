@@ -1,6 +1,0 @@
-<p><%= @journal.title %></p>
-<p>These addresses will emailed when related submissions enter PPR</p>
-<div class="c-input">
-<%= form.label :review_contacts, "Place each email address on a new line:"%>
-<%= form.text_area(:review_contacts, value: @journal.review_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
-</div>

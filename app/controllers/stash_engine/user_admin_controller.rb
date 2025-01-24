@@ -4,8 +4,6 @@ module StashEngine
   class UserAdminController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :load, only: %i[popup edit set_role user_profile]
-    before_action :setup_roles, only: %i[set_role user_profile]
     before_action :setup_paging, only: %i[index user_profile]
 
     def index
@@ -39,20 +37,25 @@ module StashEngine
       @users = @users.page(@page).per(@page_size)
     end
 
-    def popup
-      authorize %i[stash_engine user]
-      strings = { email: 'email', tenant_id: 'member institution' }
-      @desc = strings[@field.to_sym]
+    def edit
+      @user = authorize User.find(params[:id])
+      setup_roles
       respond_to(&:js)
     end
 
-    def edit
-      authorize %i[stash_engine user]
+    def update
+      @user = authorize User.find(params[:id])
       valid = %i[email tenant_id]
-      check_tenant_role
+      @user.roles.tenant_roles.delete_all if edit_params[:tenant_id] != @user.tenant_id
+      setup_roles
       update = edit_params.slice(*valid)
       @user.update(update)
-
+      errs = @user.errors.full_messages
+      if errs.any?
+        @error_message = errs[0]
+        render :update_error and return
+      end
+      set_roles
       respond_to(&:js)
     end
 
@@ -78,33 +81,17 @@ module StashEngine
       respond_to(&:js)
     end
 
-    # sets the user roles
-    def set_role
-      # set system role
-      save_role(role_params[:role], @system_role)
-      # set tenant role
-      save_role(role_params[:tenant_role], @tenant_role, @user.tenant)
-      # set publisher role
-      save_role(role_params[:publisher_role], @publisher_role, StashEngine::JournalOrganization.find_by(id: role_params[:publisher]))
-      # set journal role
-      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params.dig(:journal, :value)))
-      # set funder role
-      save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
-      # reload roles
-      setup_roles
-      respond_to(&:js)
-    end
-
     # profile for a user showing stats and datasets
     def user_profile
-      @user = User.find(params[:id])
+      @user = authorize User.find(params[:id])
       @progress_count = @user.resources.in_progress.distinct.count
       # some of these columns are calculated values for display that aren't stored (publication date)
       @resources = @user.resources.latest_per_dataset.distinct.joins(:last_curation_activity)
         .select('stash_engine_resources.*, stash_engine_curation_activities.status')
       ord = helpers.sortable_table_order(whitelist: %w[title status publication_date total_file_size updated_at current_editor_id])
       add_profile_filters
-      @resources = @resources.includes(%i[identifier current_resource_state last_curation_activity editor]).order(ord).page(@page).per(@page_size)
+      @resources = @resources.includes(%i[identifier current_resource_state last_curation_activity editor])
+      @resources = @resources.order(ord).page(@page).per(@page_size)
     end
 
     private
@@ -118,17 +105,28 @@ module StashEngine
                    end
     end
 
-    def load
-      @user = User.find(params[:id])
-      @field = params[:field]
-    end
-
     def setup_roles
       @system_role = @user.roles.system_roles&.first
       @tenant_role = @user.roles.tenant_roles&.first
       @journal_role = @user.roles.journal_roles&.first
       @publisher_role = @user.roles.journal_org_roles&.first
       @funder_role = @user.roles.funder_roles&.first
+    end
+
+    # sets the user roles
+    def set_roles
+      # set system role
+      save_role(role_params[:role], @system_role)
+      # set tenant role
+      save_role(role_params[:tenant_role], @tenant_role, @user.tenant)
+      # set publisher role
+      save_role(role_params[:publisher_role], @publisher_role, StashEngine::JournalOrganization.find_by(id: role_params[:publisher]))
+      # set journal role
+      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params.dig(:journal, :value)))
+      # set funder role
+      save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
+      # reload roles
+      @user.reload
     end
 
     def save_role(role, existing, object = nil)
@@ -139,13 +137,6 @@ module StashEngine
       else
         StashEngine::Role.create(user: @user, role: role, role_object: object)
       end
-    end
-
-    def check_tenant_role
-      return unless edit_params[:tenant_id] != @user.tenant_id
-
-      @user.roles.tenant_roles.delete_all
-      setup_roles
     end
 
     def setup_facets
@@ -161,8 +152,8 @@ module StashEngine
     end
 
     def add_filters
-      @users = @users.joins(:roles).where(roles: { role: params[:role] }).distinct if params[:role].present?
-      @users = @users.where(tenant_id: params[:tenant_id]) if params[:tenant_id].present?
+      @users = @users.joins(:roles).where(roles: { role: params[:role_filter] }).distinct if params[:role_filter].present?
+      @users = @users.where(tenant_id: params[:tenant_filter]) if params[:tenant_filter].present?
     end
 
     def add_profile_filters
