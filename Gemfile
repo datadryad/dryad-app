@@ -37,7 +37,8 @@ gem 'jquery-rails', '~> 4.6'
 gem 'sassc-rails', '~> 2.1.2' # the default for newer rails, no need for yui and already used by bootstrap or something else
 # gem 'therubyracer', platforms: :ruby # this is very outdated and people say to use mini_racer instead if possible
 gem 'turbolinks'
-gem 'uglifier', '~> 4.2.0'
+# gem 'uglifier', '~> 4.2.1'
+gem 'terser'
 # gem 'yui-compressor' # I think no longer used
 
 # ############################################################
@@ -47,7 +48,7 @@ gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
-gem 'blacklight', '~> 8.7.0'
+gem 'blacklight', '~> 8.8.0'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.6'
 gem 'charlock_holmes', '~> 0.7.9'

@@ -59,9 +59,9 @@ dev:
 test:
   agent_enabled: false
 
-v3_stage:
+stage:
   <<: *default_settings
   app_name: 'DryadApp (Stage)'
 
-v3_production:
+production:
   <<: *default_settings

@@ -17,7 +17,6 @@
     <%= stylesheet_link_tag "blacklight/application", media: "all" %>
     <meta name="turbolinks-cache-control" content="no-cache">
     <%= javascript_include_tag "stash_engine/geobl_application" %>
-    <%= javascript_include_tag "blacklight/blacklight", type: 'module' %>
     <script type="module">
       import githubAutoCompleteElement from 'https://cdn.skypack.dev/@github/auto-complete-element';
     </script>
@@ -48,6 +47,7 @@
     </main>
     <%= render partial: "stash_engine/shared/footer" %>
     <%= render partial: 'shared/modal' %>
+    <script type="text/javascript" src="/javascript/interactions.js"></script>
   </body>
 <% end %>
 
