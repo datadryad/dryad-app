@@ -143,9 +143,9 @@ GEM
       zeitwerk
     bootsnap (1.18.4)
       msgpack (~> 1.2)
-    bootstrap (4.6.2.1)
+    bootstrap (5.3.3)
       autoprefixer-rails (>= 9.1.0)
-      popper_js (>= 1.16.1, < 2)
+      popper_js (>= 2.11.8, < 3)
     builder (3.3.0)
     bullet (8.0.0)
       activesupport (>= 3.0.0)
@@ -484,7 +484,7 @@ GEM
     parser (3.3.5.0)
       ast (~> 2.4.1)
       racc
-    popper_js (1.16.1)
+    popper_js (2.11.8)
     posix-spawn (0.3.15)
     pry (0.14.2)
       coderay (~> 1.1)
@@ -769,7 +769,7 @@ DEPENDENCIES
   binding_of_caller
   blacklight (~> 8.8.0)
   bootsnap
-  bootstrap (~> 4.6)
+  bootstrap (~> 5.3)
   bullet
   byebug
   capistrano (~> 3.17)
