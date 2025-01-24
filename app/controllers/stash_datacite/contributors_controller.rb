@@ -29,6 +29,7 @@ module StashDatacite
     # PATCH/PUT /contributors/1
     def update
       respond_to do |format|
+        contributor_params[:contributor_name] = contributor_params[:contributor_name].squish
         if @contributor.update(contributor_params)
           format.json { render json: @contributor }
           format.js { render template: 'stash_datacite/shared/update.js.erb' }
@@ -100,7 +101,7 @@ module StashDatacite
 
     def find_or_initialize
       # If it's the same as the previous one, but the award number changed from blank to non-blank, just add the award number
-      contrib_name = contributor_params[:contributor_name]
+      contrib_name = contributor_params[:contributor_name].squish
       unless contrib_name.blank?
         contributor = Contributor.where('resource_id = ? AND (contributor_name = ? OR contributor_name = ?)',
                                         contributor_params[:resource_id],
