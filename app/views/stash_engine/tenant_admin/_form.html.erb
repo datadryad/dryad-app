@@ -1,0 +1,47 @@
+<div class="c-input">
+  <%= form.label :long_name, "Full name"%>
+  <%= form.text_field(:long_name, required: true, value: @tenant.long_name, class: 'c-input__text', style: 'width:100%') %>
+</div>
+<div class="c-input">
+  <%= form.label :short_name, "Short name"%>
+  <%= form.text_field(:short_name, required: true, value: @tenant.short_name, class: 'c-input__text', style: 'width:100%') %>
+</div>
+<h2>Auth method</h2>
+<div class="callout" style="padding: .75rem">
+  <%= render partial: 'authentication', locals: {form: form} %>
+</div>
+<h2>Logo</h2>
+<div class="callout alt" style="margin-top: 1em; padding: 0 .75rem 1px">
+<%= render partial: 'logo', locals: {form: form} %>
+</div>
+<h2>ROR IDs</h2>
+<p>Include the ROR IDs of all institutions which constitute the member and which should be visible in the admin dashboard. For a consortium, this should include the main ROR IDs of other members.</p>
+<div class="c-input">
+  <%= form.label :ror_orgs, "Place each ROR ID (as a URL) on a new line:"%>
+  <%= form.text_area(:ror_orgs, value: @tenant.ror_ids&.join("\n"), class: 'c-input__textarea', style: 'width:100%; min-height:200px') %>
+</div>
+<h2>Notify</h2>
+<p>These addresses will be BCCed on status change emails for related submissions</p>
+<div class="c-input">
+  <%= form.label :campus_contacts, "Place each email address on a new line:"%>
+  <%= form.text_area(:campus_contacts, value: @tenant.campus_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
+</div>
+<h2>Active</h2>
+<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%> is enabled and selectable from the admin dashboard.</p>
+<p><%= form.check_box :enabled, {checked: @tenant.enabled}, 1, 0 %> <%= form.label :enabled, "Member is active", class: 'c-input__label' %></p>
+<h2>Display</h2>
+<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%>, if <b>active</b>, is displayed on the public member list.</p>
+<p><%= form.check_box :partner_display, {checked: @tenant.partner_display}, 1, 0 %> <%= form.label :partner_display, "Member is displayed", class: 'c-input__label' %></p>
+<h2>DPC</h2>
+<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%> covers the cost of Dryad for its users. Members must be <b>active</b>, <b>displayed</b>, and <b>cover the DPC</b> for users to be invited to connect to them.</p>
+<p><%= form.check_box :covers_dpc, {checked: @tenant.covers_dpc}, 1, 0 %> <%= form.label :covers_dpc, "Member covers the DPC", class: 'c-input__label' %></p>
+<h2>Sponsor</h2>
+<p>Are the member's fees sponsored by another institution?</p>
+<div class="c-input">
+  <%
+    options = StashEngine::Tenant.enabled.all.collect { |o| [ o.short_name, o.id ] } 
+    options.unshift(['None', ''])
+  %>
+  <%= label_tag 'sponsor_id', 'Choose a sponsoring institution' %>
+  <%= select_tag('sponsor_id', options_for_select(options, @tenant.sponsor_id), class: 'c-input__select') %>  
+</div>

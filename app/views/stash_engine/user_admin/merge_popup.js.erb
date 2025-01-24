@@ -1,7 +1,7 @@
 // open a modal dialog
 document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'stash_engine/user_admin/merge_form', locals: { user1: @user1, user2: @user2 }) %>";
 // expand the width of the default dialog to accommodate the merge table
-document.getElementById('genericModalContent').classList.add('extra-wide');
+document.getElementById('genericModalDialog').classList.add('extra-wide');
 document.getElementById('genericModalDialog').showModal();
 document.getElementById('genericModalDialog').addEventListener('close', () => {
   // reset the dialog to its default width

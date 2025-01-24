@@ -8,8 +8,12 @@ module StashEngine
       @user.system_user?
     end
 
-    def popup?
+    def edit?
       @user.system_admin?
+    end
+
+    def update?
+      edit?
     end
 
     def create?
