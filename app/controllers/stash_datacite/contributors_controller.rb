@@ -29,7 +29,8 @@ module StashDatacite
     # PATCH/PUT /contributors/1
     def update
       respond_to do |format|
-        contributor_params[:contributor_name] = contributor_params[:contributor_name].squish
+        contributor_params[:contributor_name] = contributor_params[:contributor_name].squish if contributor_params[:contributor_name].present?
+        contributor_params[:award_description] = contributor_params[:award_description].squish if contributor_params[:award_description].present?
         if @contributor.update(contributor_params)
           format.json { render json: @contributor }
           format.js { render template: 'stash_datacite/shared/update.js.erb' }
@@ -111,7 +112,7 @@ module StashDatacite
       if contributor.present?
         if contributor.award_number.blank? || contributor.award_description.blank?
           contributor.award_number = contributor_params[:award_number]
-          contributor.award_description = contributor_params[:award_description]
+          contributor.award_description = contributor_params[:award_description].squish
         else
           contributor.funder_order = contributor_params[:funder_order]
         end
