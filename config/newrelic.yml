@@ -9,6 +9,10 @@
 #
 # For full documentation of agent configuration options, please refer to
 # https://docs.newrelic.com/docs/agents/ruby-agent/installation-configuration/ruby-agent-configuration
+<% if Rails.env == 'test' %>
+test:
+  agent_enabled: false
+<% else %>
 
 common: &default_settings
   # Required license key associated with your New Relic account.
@@ -65,3 +69,5 @@ stage:
 
 production:
   <<: *default_settings
+
+<% end %>

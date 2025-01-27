@@ -14,9 +14,9 @@ gem 'sprockets', '~> 4.0'
 # ############################################################
 # Deployment
 
-gem 'bcrypt_pbkdf', '1.1.0'
+# gem 'bcrypt_pbkdf', '1.1.0'
 gem 'capistrano', '~> 3.17'
-gem 'capistrano-rails', '~> 1.6.2'
+gem 'capistrano-rails', '~> 1.7.0'
 gem 'capistrano-yarn'
 gem 'ed25519', '1.3.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
@@ -95,7 +95,7 @@ gem 'recaptcha', '~> 5.14'
 gem 'redcarpet', '~> 3.6'
 gem 'responders', '~> 3.0.1' # do we use this?
 gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used
-gem 'restforce', '~> 7.5.0'
+gem 'restforce', '~> 8.0.0'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
 gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
@@ -104,15 +104,14 @@ gem 'serrano', '~> 1.0' # this is a gem from datacite(?) and not sure it's activ
 gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 # gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny
-gem 'yaml', '~> 0.3.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
-gem 'zaru', '~> 0.3.0' # for sanitizing file names
+gem 'yaml', '~> 0.4.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
+gem 'zaru', '~> 1.0.0' # for sanitizing file names
 
 # Peer dependencies
 # with future versions of activesupport and bootsnap, these may not be needed here
 
 gem 'base64'
 gem 'bigdecimal'
-gem 'faraday', '~> 1.10.4' # used for SOLR
 gem 'mutex_m'
 
 # ############################################################
@@ -151,9 +150,7 @@ group :test do
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
   gem 'selenium-webdriver', '~> 4.11'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
-  gem 'shoulda'
-  # Simple one-liner tests for common Rails functionality (https://github.com/thoughtbot/shoulda-matchers)
-  gem 'shoulda-matchers', '~> 5.0'
+  gem 'shoulda', '~> 4.0.0'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
@@ -168,7 +165,7 @@ group :development, :test, :dev do
   gem 'byebug'
   gem 'drb'
   gem 'listen'
-  gem 'parallel_tests'
+  # gem 'parallel_tests'
   gem 'pry'
   gem 'pry-rails'
   # Rails application preloader (https://github.com/rails/spring), says not to install in production
