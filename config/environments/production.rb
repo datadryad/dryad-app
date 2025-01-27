@@ -90,7 +90,7 @@ Rails.application.configure do
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
   else
-    logger = ActiveSupport::Logger.new(Rails.root.join("log", "v3_production.log"), 5, 100.megabytes)
+    logger = ActiveSupport::Logger.new(Rails.root.join("log", "production.log"), 5, 100.megabytes)
   end
 
   config.logger    = ActiveSupport::TaggedLogging.new(logger)

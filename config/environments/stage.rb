@@ -78,7 +78,7 @@ Rails.application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  logger = ActiveSupport::Logger.new(Rails.root.join("log", "v3_stage.log"), 5, 10.megabytes)
+  logger = ActiveSupport::Logger.new(Rails.root.join("log", "stage.log"), 5, 10.megabytes)
   config.logger    = ActiveSupport::TaggedLogging.new(logger)
 
   # Do not dump schema after migrations.

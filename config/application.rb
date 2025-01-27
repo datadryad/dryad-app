@@ -22,7 +22,7 @@ Bundler.require(*Rails.groups)
 module Dash2
   class Application < Rails::Application
     # Initialize configuration defaults for the Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.0
 
     config.eager_load_paths << Rails.root.join("lib")
     config.autoload_paths << Rails.root.join("lib")
