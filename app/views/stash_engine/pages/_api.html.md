@@ -109,6 +109,7 @@ Detailed, interactive documentation of all available Dryad request methods:
       });
     })
   })
+  awaitSelector('.opblock.is-open').then((el) => el.scrollIntoView())
 </script>
 
 <p style="text-align:right; font-size: smaller">Created with <a href="https://swagger.io/tools/swagger-ui/" target="blank">Swagger UI<span class="screen-reader-only"> (opens in new window)</span></a></p>
