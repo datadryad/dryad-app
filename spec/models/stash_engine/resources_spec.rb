@@ -341,7 +341,7 @@ module StashEngine
 
     describe 'solr fun' do
       before(:each) do
-        blacklight_hash = { solr_url: 'http://test.com/blah/geoblacklight' }
+        blacklight_hash = { solr_url: 'http://test.com/blah/dryad' }
         @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id)
 

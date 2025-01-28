@@ -19,7 +19,7 @@ Config files
 - stopwords_en.txt - stopwords specific to English
 - synonyms.txt - words that should be indexed/queried together
 - blacklight.yml - basic Blacklight config
-- settings.yml - GeoBlacklight config
+- settings.yml - Blacklight config
 
 
 Adding data to SOLR
@@ -41,7 +41,7 @@ SOLR security group, and access its specific port, e.g.,
 http://34.222.121.163:8983/
 
 To get details about terms in the index:
-1. select "geoblacklight" core in the left menu
+1. select "dryad" core in the left menu
 2. select Schema
 3. select a field
 4. Load Term Info

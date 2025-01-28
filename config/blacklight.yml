@@ -1,48 +1,48 @@
 test:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:8983/solr/dryad" %>
 
 development:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad:8983/solr/dryad" %>
 
 v3_development:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://18.236.111.137:8983/solr/dryad" %>
 
 aws_db:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad.org:8983/solr/dryad" %>
 
 local:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/dryad" %>
 
 local_dev:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://v3-dev-solr.datadryad.org:8983/solr/dryad" %>
 
 stage:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-stage-solr.datadryad.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://34.215.143.38:8983/solr/dryad" %>
 
 v3_stage:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-stage-solr.datadryad.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://34.215.143.38:8983/solr/dryad" %>
 
 # migration solr not used, but we probably need the section here
 migration:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-solr.datadryad.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://v3-solr.datadryad.org:8983/solr/dryad" %>
 
 demo:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-stage-solr.datadryad.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://v3-stage-solr.datadryad.org:8983/solr/dryad" %>
 
 production:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-solr.datadryad.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://35.91.212.8:8983/solr/dryad" %>
 
 v3_production:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-solr.datadryad.org:8983/solr/geoblacklight" %>
+  url: <%= ENV['SOLR_URL'] || "http://35.91.212.8:8983/solr/dryad" %>
