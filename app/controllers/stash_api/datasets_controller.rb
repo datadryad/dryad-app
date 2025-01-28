@@ -19,10 +19,10 @@ module StashApi
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
 
-    def initialize
-      super
-      @solr = RSolr.connect(url: Blacklight.connection_config[:url])
-    end
+    # def initialize
+    #   super
+    #   @solr = RSolr.connect(url: Blacklight.connection_config[:url])
+    # end
 
     # get /datasets/<id>
     def show
@@ -283,7 +283,8 @@ module StashApi
       # we want to make sure that we're only working those specified.
       if params.key?('publicationISSN')
         # add these conditions to narrow to publicationISSN
-        ds_query = ds_query.joins(latest_resource: :resource_publication).where(resource_publication: { publication_issn: params['publicationISSN'] })
+        ds_query = ds_query.joins(latest_resource: :resource_publications)
+          .where(resource_publications: { publication_issn: params['publicationISSN'] })
       elsif params.key?('manuscriptNumber')
         # add these conditions to narrow to manuscriptNumber
         ds_query = ds_query.joins(latest_resource: :resource_publication)
@@ -302,64 +303,20 @@ module StashApi
     # get /search
     def search
       # datasets in SOLR are always public, so there is no need to limit the query based on the API user
-      page = params['page'] || 1
-      query = params['q']
+      service = StashApi::SolrSearchService.new(query: params['q'], filters: params)
+      solr_response = service.search(page: page, per_page: per_page)
 
-      # do some light sanitization
-      # passing `system(_any_string_)` or `exec(_any_string_)` will return a 403 from solr
-      # escaping these as `system\(_any_string_\)` will perform the query as expected
-      query = query&.gsub(/.*\(.*?\).*/) { |match| match.gsub('(', '\(').gsub(')', '\)') }
-
-      begin
-        solr_call = @solr.paginate(page, per_page, 'select',
-                                   params: { q: query.to_s, fq: solr_filter_query, fl: 'dc_identifier_s' })
-        solr_response = solr_call['response']
-
-        # once we have the solr_response, use the DOIs to build the 'real' response
-        mapped_results = solr_response['docs'].map { |i| Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata }
-        datasets = paging_hash_results(all_count: solr_response['numFound'],
-                                       results: mapped_results)
-        render json: datasets
-      rescue RSolr::Error::Http
-        render status: 400, plain: 'Unable to parse query request.'
-      end
-    end
-
-    # Builds an array of the various filter settings requested
-    def solr_filter_query
-      fq_array = []
-
-      # if user requests both 'affiliation' and 'tenant', prefer the affiliation,
-      # because it is more specific
-      if params['affiliation']
-        # ["dryad_author_affiliation_id_sm:\"https://ror.org/01sf06y89\" "
-        fq_array << "dryad_author_affiliation_id_sm:\"#{params['affiliation']}\" "
-      elsif params['tenant']
-        # multiple affiliations, separated by OR
-        if StashEngine::Tenant.exists?(params['tenant'])
-          tenant = StashEngine::Tenant.find(params['tenant'])
-          ror_array = tenant.ror_ids.map do |r|
-            # map the id into the format
-            "dryad_author_affiliation_id_sm:\"#{r}\" "
-          end
-          fq_array << ror_array.join(' OR ')
-        else
-          fq_array << 'dryad_author_affiliation_id_sm:"missing_tenant" '
-        end
+      if (error = service.error)
+        render status: error.status, plain: error.message and return
       end
 
-      if params['modifiedSince']
-        # ["timestamp:[2020-10-08T10:24:53Z TO NOW]"]
-        fq_array << "updated_at_dt:[#{params['modifiedSince']} TO NOW]"
+      # once we have the solr_response, use the DOIs to build the 'real' response
+      mapped_results = solr_response['docs'].map do |i|
+        Dataset.new(identifier: (i['dc_identifier_s']).to_s, user: @user).metadata
       end
-      if params['modifiedBefore']
-        # ["Before timestamp:[2020-10-08T10:24:53Z]"]
-        fq_array << "updated_at_dt:[* TO #{params['modifiedBefore']}]"
-      end
+      datasets = paging_hash_results(all_count: solr_response['numFound'], results: mapped_results)
 
-      fq_array << "dryad_related_publication_issn_s:\"#{params['journalISSN']}\"" if params['journalISSN']
-
-      fq_array
+      render json: datasets
     end
 
     # we are using PATCH only to allow updates for a few status settings:
@@ -534,23 +491,32 @@ module StashApi
     # some parameters would be locked down for only admins or superusers to set
     def lock_down_admin_only_params
       # all this bogus return false stuff is to prevent double render errors in some circumstances
-      return if check_superuser_restricted_params == false
+      return if check_restricted_params == false
       return if check_may_set_user_id == false
 
       nil if check_may_set_payment_id == false
     end
 
-    def check_superuser_restricted_params
-      %w[skipDataciteUpdate skipEmails preserveCurationStatus loosenValidation].each do |attr|
+    def check_restricted_params
+      # rubocop:disable Style/Next
+      %w[skipDataciteUpdate loosenValidation skipEmails preserveCurationStatus].each do |attr|
         item_value = params[attr]
         unless item_value.nil? || item_value.instance_of?(TrueClass) || item_value.instance_of?(FalseClass)
           render json: { error: "Bad Request: #{attr} must be true or false" }.to_json, status: 400
           return false
         end
-        if item_value.instance_of?(TrueClass) && !@user.superuser?
+        # superuser restrictions
+        if %w[skipDataciteUpdate loosenValidation].include?(attr) && item_value.instance_of?(TrueClass) && !@user.superuser?
           render json: { error: "Unauthorized: only superusers may set #{attr} to true" }.to_json, status: 401
           return false
         end
+        # admin restrictions
+        if %w[skipEmails preserveCurationStatus].include?(attr) && item_value.instance_of?(TrueClass) &&
+          !(@user.min_curator? || @user.journals_as_admin.intersect?(@resource.journals))
+          render json: { error: "Unauthorized: only curators, superusers, and journal administrators may set #{attr} to true" }.to_json, status: 401
+          return false
+        end
+        # rubocop:enable Style/Next
       end
     end
 

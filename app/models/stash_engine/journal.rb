@@ -30,13 +30,17 @@ module StashEngine
   class Journal < ApplicationRecord
     self.table_name = 'stash_engine_journals'
     validates :title, presence: true
+    validate :email_array
 
-    has_many :issns, -> { order(created_at: :asc) }, class_name: 'StashEngine::JournalIssn', dependent: :destroy
+    has_many :issns, -> { order(created_at: :asc) }, class_name: 'StashEngine::JournalIssn', inverse_of: :journal, dependent: :destroy
     has_many :alternate_titles, class_name: 'StashEngine::JournalTitle', dependent: :destroy
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
     has_many :manuscripts, -> { order(created_at: :desc) }, class_name: 'StashEngine::Manuscript'
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
+
+    validates_associated :issns
+    accepts_nested_attributes_for :issns
 
     def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
 
@@ -77,6 +81,15 @@ module StashEngine
 
     def review_contacts
       JSON.parse(super) unless super.nil?
+    end
+
+    def email_array
+      notify_contacts&.each do |email|
+        errors.add(:notify_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
+      end
+      review_contacts&.each do |email|
+        errors.add(:review_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
+      end
     end
 
     def self.find_by_title(title)

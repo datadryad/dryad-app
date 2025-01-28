@@ -1,2 +1,0 @@
-<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%> is active, and selectable from the admin dashboard. Active members can also be set to display on the member list and for selection by users (with 'Display' and 'Pays').</p>
-<p><%= form.check_box :enabled, {checked: @tenant.enabled}, 1, 0 %> <%= form.label :enabled, "Member is active", class: 'c-input__label' %></p>

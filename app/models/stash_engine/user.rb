@@ -54,9 +54,7 @@ module StashEngine
 
     scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
 
-    EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
-
-    validates :email, format: EMAIL_REGEX, allow_blank: true
+    validates :email, format: { with: EMAIL_REGEX, message: '%{value} is not a valid email address' }, allow_blank: true
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
