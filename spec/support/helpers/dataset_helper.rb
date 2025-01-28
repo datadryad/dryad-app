@@ -13,7 +13,7 @@ module DatasetHelper
     click_button 'Next'
     page.find('#checklist-button').click unless page.has_button?('Title/Import')
     click_button 'Title/Import'
-    expect(page).to have_content('Is your data used in a published article?')
+    expect(page).to have_content('Is your data used in a published article, with a DOI?')
   end
 
   def navigate_to_readme
@@ -55,11 +55,11 @@ module DatasetHelper
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-    within_fieldset('Is your data used in a published article?') do
+    within_fieldset('Is your data used in a published article, with a DOI?') do
       find(:label, 'No').click
     end
-    expect(page).to have_content('Is your data used in a submitted manuscript?')
-    within_fieldset('Is your data used in a submitted manuscript?') do
+    expect(page).to have_content('Is your data used in a submitted manuscript, with a manuscript number?')
+    within_fieldset('Is your data used in a submitted manuscript, with a manuscript number?') do
       find(:label, 'No').click
     end
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 5)
@@ -97,11 +97,11 @@ module DatasetHelper
 
   def fill_manuscript_info(name:, issn:, msid:)
     navigate_to_metadata
-    within_fieldset('Is your data used in a published article?') do
+    within_fieldset('Is your data used in a published article, with a DOI?') do
       find(:label, 'No').click
     end
-    expect(page).to have_content('Is your data used in a submitted manuscript?')
-    within_fieldset('Is your data used in a submitted manuscript?') do
+    expect(page).to have_content('Is your data used in a submitted manuscript, with a manuscript number?')
+    within_fieldset('Is your data used in a submitted manuscript, with a manuscript number?') do
       find(:label, 'Yes').click
     end
     page.execute_script("$('#publication').val('#{name}')")

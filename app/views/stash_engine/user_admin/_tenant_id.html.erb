@@ -1,7 +1,0 @@
-<p>Set new member institution for user: <%= "#{@user.first_name} #{@user.last_name}".strip %></p>
-<p>Choosing 'Dryad' will remove the current member institution.</p>
-<div class="c-input">
-  <% tenant_options = StashEngine::Tenant.enabled.collect { |t| [ t.short_name, t.id ] } %>
-  <%= label_tag :tenant_id, 'Dryad members', class: 'c-input__label' %>
-  <%= select_tag(:tenant_id, options_for_select(tenant_options, @user.tenant_id), class: 'c-input__select') %>  
-</div>

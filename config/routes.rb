@@ -129,14 +129,6 @@ Rails.application.routes.draw do
     get '/queue_length', to: 'submission_queue#length'
   end
 
-  ############################# Discovery support ######################################
-
-  get '/latest', to: 'latest#index', as: 'latest_index'
-  # blacklight_for :catalog
-
-  # Endpoint for LinkOut
-  get :discover, to: 'catalog#discover'
-
   ########################## StashEngine support ######################################
 
   scope module: 'stash_engine', path: '/stash' do
@@ -292,28 +284,27 @@ Rails.application.routes.draw do
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     # page for viewing a single user
     get 'user_admin/user_profile/:id', to: 'user_admin#user_profile', as: 'user_admin_profile'
-    post 'user_admin/set_role/:id', to: 'user_admin#set_role', as: 'user_admin_set_role'
     # admin editing user
     get 'user_admin/merge', to: 'user_admin#merge_popup', as: 'user_merge_popup'
     post 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
-    get 'user_admin/:id/edit/:field', to: 'user_admin#popup', as: 'user_popup'
-    post 'user_admin/:id', to: 'user_admin#edit', as: 'user_admin_edit'
+    get 'user_admin/:id/edit', to: 'user_admin#edit', as: 'user_edit'
+    post 'user_admin/:id', to: 'user_admin#update', as: 'user_update'
     # admin tenant management
     get 'tenant_admin', to: 'tenant_admin#index'
-    get 'tenant_admin/:id/edit/:field', to: 'tenant_admin#popup', as: 'tenant_popup'
-    post 'tenant_admin/:id', to: 'tenant_admin#edit', as: 'tenant_edit'
+    get 'tenant_admin/:id/edit', to: 'tenant_admin#edit', as: 'tenant_edit'
+    post 'tenant_admin/:id', to: 'tenant_admin#update', as: 'tenant_update'
     get 'tenant_admin/new', to: 'tenant_admin#new', as: 'tenant_new'
     post 'tenant_admin', to: 'tenant_admin#create', as: 'tenant_create'
     # admin journal management
     get 'journal_admin', to: 'journal_admin#index'
-    get 'journal_admin/:id/edit/:field', to: 'journal_admin#popup', as: 'journal_popup'
-    post 'journal_admin/:id', to: 'journal_admin#edit', as: 'journal_edit'
+    get 'journal_admin/:id/edit', to: 'journal_admin#edit', as: 'journal_edit'
+    post 'journal_admin/:id', to: 'journal_admin#update', as: 'journal_update'
     get 'journal_admin/new', to: 'journal_admin#new', as: 'journal_new'
     post 'journal_admin', to: 'journal_admin#create', as: 'journal_create'
     # admin publisher management
     get 'publisher_admin', to: 'journal_organization_admin#index', as: 'publisher_admin'
-    get 'publisher_admin/:id/edit/:field', to: 'journal_organization_admin#popup', as: 'publisher_popup'
-    post 'publisher_admin/:id', to: 'journal_organization_admin#edit', as: 'publisher_edit'
+    get 'publisher_admin/:id/edit', to: 'journal_organization_admin#edit', as: 'publisher_edit'
+    post 'publisher_admin/:id', to: 'journal_organization_admin#update', as: 'publisher_update'
     get 'publisher_admin/new', to: 'journal_organization_admin#new', as: 'publisher_new'
     post 'publisher_admin', to: 'journal_organization_admin#create', as: 'publisher_create'
 
@@ -396,6 +387,13 @@ Rails.application.routes.draw do
 
   # this is kind of hacky, but it directs our search results to open links to the landing pages
   resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'
+
+  ############################# Discovery support ######################################
+
+  get '/latest', to: 'latest#index', as: 'latest_index'
+
+  # Endpoint for LinkOut
+  get :discover, to: 'catalog#discover'
 
   ########################## StashDatacite support ######################################
 

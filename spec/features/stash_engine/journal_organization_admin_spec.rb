@@ -34,14 +34,14 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
     it 'allows changing contacts as a system admin', js: true do
       visit stash_url_helpers.publisher_admin_path
       expect(page).to have_content(@org.name)
-      within(:css, "form[action=\"#{publisher_popup_path(id: @org.id, field: 'contact')}\"]") do
+      within(:css, "form[action=\"#{publisher_edit_path(id: @org.id)}\"]") do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
         find('#contact').set('test@email.com')
         find('input[name=commit]').click
       end
-      expect(page.find("#contact_#{@org.id}")).to have_text('test@email.com')
+      expect(page.find("#row_#{@org.id}")).to have_text('test@email.com')
       changed = StashEngine::JournalOrganization.find(@org.id)
       expect(changed.contact).to include('test@email.com')
     end
@@ -50,14 +50,14 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
       org = create(:journal_organization)
       visit stash_url_helpers.publisher_admin_path
       expect(page).to have_content(@org.name)
-      within(:css, "form[action=\"#{publisher_popup_path(id: @org.id, field: 'parent_org_id')}\"]") do
+      within(:css, "form[action=\"#{publisher_edit_path(id: @org.id)}\"]") do
         find('.c-admin-edit-icon').click
       end
       within(:css, '#genericModalDialog') do
         find("option[value='#{org.id}']").select_option
         find('input[name=commit]').click
       end
-      expect(page.find("#parent_org_id_#{@org.id}")).to have_text(org.name)
+      expect(page.find("#row_#{@org.id}")).to have_text(org.name)
       changed = StashEngine::JournalOrganization.find(@org.id)
       expect(changed.parent_org_id).to be org.id
     end

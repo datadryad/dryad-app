@@ -1,0 +1,2 @@
+document.getElementById("<%= @tenant.id %>_row").innerHTML = "<%= escape_javascript(render partial: 'admin_tenant_row', locals: {t: @tenant}) %>";
+document.getElementById('genericModalDialog').close();

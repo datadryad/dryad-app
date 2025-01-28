@@ -1,2 +1,0 @@
-<p>This setting controls whether <%= @tenant.short_name.presence || 'the member'%> covers the cost of Dryad for its users. Members must be <b>enabled</b>, <b>shown</b>, and <b>cover the DPC</b> for users to be invited to connect to them.</p>
-<p><%= form.check_box :covers_dpc, {checked: @tenant.covers_dpc}, 1, 0 %> <%= form.label :covers_dpc, "Member covers the DPC", class: 'c-input__label' %></p>

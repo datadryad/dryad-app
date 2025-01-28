@@ -1,0 +1,42 @@
+<td>
+  <div class="c-lined-table__with-actions">
+    <div class="c-lined-table__data"><%= t.id %></div>
+    <div class="c-lined-table__actions">
+    <% if policy([:stash_engine, :tenant]).edit? %>
+      <%= form_with(url: tenant_edit_path(id: t.id), method: :get, local: false) do %>
+          <button class="c-admin-edit-icon" aria-label="Edit member" aria-haspopup="dialog" id="edit_button_<%= t.id %>">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</td>
+<td><%= t.short_name %></td>
+<td><%= t.long_name %></td>
+<td><%= t.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP') %></td>
+<td>
+  <%= "<img src='#{t.logo.data}' style='min-width: 40px;' alt='#{t.short_name} logo'/>".html_safe if t.logo&.data&.present? %>
+</td>
+<td>
+  <%= t.ror_ids.map {|r|
+    org = t.ror_orgs.find{ |o| o.ror_id == r }
+    "<a href='#{r}' target='_blank'>#{org ? org.name : r}</a>"}.join(', ').html_safe
+  %>
+</td>
+<td><%= t.campus_contacts.join(', ') %></td>
+<td>
+  <span style="color: <%= t.enabled ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+    <%= t.enabled ? "Enabled" : "Disabled" %>
+  </span>
+</td>
+<td>
+  <span style="color: <%= t.partner_display ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+    <%= t.partner_display ? "Shown" : "Hidden" %>
+  </span>
+</td>
+<td>
+  <span style="color: <%= t.covers_dpc ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+    <%= t.covers_dpc ? "True" : "False" %>
+  </span>
+</td>

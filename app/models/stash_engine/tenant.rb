@@ -28,11 +28,12 @@ module StashEngine
     validates :id, presence: true, uniqueness: true
     validates :short_name, presence: true
     validates :long_name, presence: true
+    validate :email_array
 
     belongs_to :logo, class_name: 'StashEngine::Logo', dependent: :destroy, optional: true
     belongs_to :sponsor, class_name: 'Tenant', inverse_of: :sponsored, optional: true
     has_many :sponsored, class_name: 'Tenant', primary_key: :id, foreign_key: :sponsor_id, inverse_of: :sponsor
-    has_many :tenant_ror_orgs, class_name: 'StashEngine::TenantRorOrg', dependent: :destroy
+    has_many :tenant_ror_orgs, -> { order(:created_at) }, class_name: 'StashEngine::TenantRorOrg', dependent: :destroy
     has_many :ror_orgs, class_name: 'StashEngine::RorOrg', through: :tenant_ror_orgs
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
@@ -54,6 +55,12 @@ module StashEngine
 
     def campus_contacts
       JSON.parse(super) if super.present?
+    end
+
+    def email_array
+      campus_contacts&.each do |email|
+        errors.add(:campus_contacts, "#{email} is not a valid email address") unless email.match?(EMAIL_REGEX)
+      end
     end
 
     def consortium

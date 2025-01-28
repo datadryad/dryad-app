@@ -1,27 +1,8 @@
-document.getElementById("<%= @field %>_<%= @tenant.id %>").innerHTML = "<%=
-case @field
-when 'short_name'
-  @tenant.short_name
-when 'long_name'
-  @tenant.long_name
-when 'authentication'
-  @tenant.authentication&.strategy&.sub('_', ' ')&.capitalize&.sub('Ip', 'IP')
-when 'partner_display'
-  "<span style='color: #{@tenant.partner_display ? '#3c763d' : 'rgb(209, 44, 29)'}'>#{@tenant.partner_display ? 'Shown' : 'Hidden'}</span>".html_safe
-when 'covers_dpc'
-  "<span style='color: #{@tenant.covers_dpc ? '#3c763d' : 'rgb(209, 44, 29)'}'>#{@tenant.covers_dpc ? 'True' : 'False'}</span>".html_safe
-when 'enabled'
-  "<span style='color: #{@tenant.enabled ? '#3c763d' : 'rgb(209, 44, 29)'}''>#{@tenant.enabled ? "Enabled" : "Disabled"}</span>".html_safe
-when 'campus_contacts'
-  @tenant.campus_contacts.join(', ')
-when 'ror_orgs'
-  @tenant.ror_ids.map {|r|
-    org = @tenant.ror_orgs.find{ |o| o.ror_id == r }
-    "<a href='#{r}' target='_blank'>#{org ? org.name : r}</a>"
-  }.join(', ').html_safe
-when 'sponsor_id'
-  @tenant.sponsor&.short_name
-when 'logo'
-  @tenant.logo&.data&.present? ? "<img src='#{@tenant.logo.data}' alt='#{@tenant.short_name} logo'/>".html_safe : ''
-end %>";
-document.getElementById('genericModalDialog').close();
+// open a modal dialog
+document.getElementById('genericModalContent').innerHTML = '';
+document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'edit') %>"));
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});

@@ -60,7 +60,7 @@
         <%= default_date(res.updated_at) %>
       </td>
       <td>
-        <%= res.editor.name %>
+        <%= res.editor&.name %>
       </td>
     </tr>
   <% end %>

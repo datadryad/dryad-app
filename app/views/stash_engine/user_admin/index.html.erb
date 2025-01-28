@@ -11,12 +11,12 @@
     <%= search_field_tag(:q, params[:q], class: 'c-input__text', id: 'search-terms' ) %>
   </div>
   <div class="o-admin-form-pair">
-    <label for="role">Role:</label>
-    <%= select_tag :role, options_for_select([['', ''],['Superuser', 'superuser'],['Curator', 'curator'],['Admin', 'admin']], params[:role]), class: 'c-input__select' %>
+    <label for="role_filter">Role:</label>
+    <%= select_tag :role_filter, options_for_select([['', ''],['Superuser', 'superuser'],['Curator', 'curator'],['Admin', 'admin']], params[:role_filter]), class: 'c-input__select' %>
   </div>
   <div class="o-admin-form-pair">
-    <label for="tenant_id">Institution:</label>
-    <%= select_tag :tenant_id, options_from_collection_for_select(@tenants, "id", "name", params[:tenant_id]), class: 'c-input__select' %>
+    <label for="tenant_filter">Institution:</label>
+    <%= select_tag :tenant_filter, options_from_collection_for_select(@tenants, "id", "name", params[:tenant_filter]), class: 'c-input__select' %>
   </div>
   <%= submit_tag('Search', name: nil, class: 'o-button__plain-text2' ) %>
 </div>

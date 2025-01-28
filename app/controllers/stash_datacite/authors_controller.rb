@@ -115,7 +115,7 @@ module StashDatacite
       args = aff_params
       affs = args['affiliations']&.reject { |a| a['long_name'].blank? }
       affs.each do |aff|
-        process_affiliation(aff['long_name'], aff['ror_id'])
+        process_affiliation(aff['long_name'].squish, aff['ror_id'])
       end
     end
 

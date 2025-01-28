@@ -39,7 +39,8 @@ gem 'jquery-rails', '~> 4.6'
 gem 'sassc-rails', '~> 2.1.2' # the default for newer rails, no need for yui and already used by bootstrap or something else
 # gem 'therubyracer', platforms: :ruby # this is very outdated and people say to use mini_racer instead if possible
 gem 'turbolinks'
-gem 'uglifier', '~> 4.2.0'
+# gem 'uglifier', '~> 4.2.1'
+gem 'terser'
 # gem 'yui-compressor' # I think no longer used
 
 # ############################################################
@@ -50,7 +51,7 @@ gem 'amoeba', '~> 3.2.0'
 gem 'annotate', '~> 3.2'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
-gem 'blacklight', '= 7.37.0'
+gem 'blacklight', '>= 8.7.0'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 4.6'
 gem 'charlock_holmes', '~> 0.7.7'
@@ -103,7 +104,7 @@ gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure
 gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'serrano', '~> 1.0' # this is a gem from datacite(?) and not sure it's actively used
-gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
+# gem 'solr_wrapper', '~> 3.1.3' # was once used in tests, not sure still used
 gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 gem 'tins', '~> 1.31.0' # ?? some library that doesn't say what it does aside from stuff that is tiny

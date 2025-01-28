@@ -1,18 +1,7 @@
-document.getElementById("<%= @field %>_<%= @journal.id %>").innerHTML = "<%=
-case @field
-when 'title'
-  @journal.title
-when 'sponsor_id'
-  @journal.sponsor&.name
-when 'default_to_ppr'
-  "<span style='color: #{@journal.default_to_ppr ? '#3c763d' : 'rgb(209, 44, 29)'}'>#{@journal.default_to_ppr ? 'True' : 'False'}</span>".html_safe
-when 'review_contacts'
-  @journal.review_contacts&.join(', ')
-when 'notify_contacts'
-  @journal.notify_contacts&.join(', ')
-when 'payment_plan_type'
-  @journal.payment_plan_type&.capitalize
-when 'issn'
-  @journal.issn_array.join(", ")
-end %>";
-document.getElementById('genericModalDialog').close();
+// open a modal dialog
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'edit') %>";
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});

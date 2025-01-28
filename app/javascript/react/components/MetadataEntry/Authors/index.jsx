@@ -17,7 +17,7 @@ export const authorCheck = (authors, id) => {
   if (fnameErr >= 0) {
     return (
       <p className="error-text" id="author_fname_error" data-index={fnameErr}>
-        {upCase(ordinalNumber(fnameErr + 1))} author name is required
+        {upCase(ordinalNumber(fnameErr + 1))} author name is required. Fill in or delete the entry
       </p>
     );
   }
@@ -44,7 +44,7 @@ export const authorCheck = (authors, id) => {
     const last = authors.findLastIndex((a) => a.author_email === email);
     return (
       <p className="error-text" id="author_email_error" data-index={last}>
-        The {ordinalNumber(last + 1)} author&apos;s email address the same as the {ordinalNumber(dupeEmail + 1)} author. Is this a duplicate?
+        The {ordinalNumber(last + 1)} author&apos;s email address is the same as the {ordinalNumber(dupeEmail + 1)} author. Is this a duplicate?
       </p>
     );
   }

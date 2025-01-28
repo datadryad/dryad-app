@@ -1,6 +1,0 @@
-<p><%= @tenant.short_name %></p>
-<p>These addresses will be BCCed on status change emails for related submissions</p>
-<div class="c-input">
-<%= form.label :campus_contacts, "Place each email address on a new line:"%>
-<%= form.text_area(:campus_contacts, value: @tenant.campus_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
-</div>

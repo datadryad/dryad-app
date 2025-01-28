@@ -1,9 +1,8 @@
-<p><%= @tenant.short_name %></p>
 <%
 radios = [ ['author_match', 'Author affiliation match'], ['shibboleth', 'Shibboleth (InCommon)'], ['ip_address', 'IP address match'] ]
 %>
 <fieldset class="c-fieldset" id="strategy" style="margin-bottom: 1rem;">
-  <legend class="c-fieldset__legend">Authentication strategies:</legend>
+  <legend>Authentication strategy:</legend>
   <% radios.each do |s| %>
       <label><%= radio_button_tag('authentication[strategy]', s.first, @tenant.authentication&.strategy == s.first, required: true) %> <%= s.last %></label></br>
   <% end %>
