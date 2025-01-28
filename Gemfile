@@ -3,7 +3,7 @@ ruby '3.3.7'
 
 # ############################################################
 # Rails
-gem 'irb', '~> 1.14.3'
+gem 'irb', '~> 1.15.1'
 gem 'mail', '~> 2.8'
 gem 'mysql2', '~> 0.5.6'
 gem 'rails', '~> 8.0.1'
@@ -53,7 +53,7 @@ gem 'bootstrap', '~> 5.3'
 gem 'charlock_holmes', '~> 0.7.9'
 gem 'concurrent-ruby', '~> 1.3.4'
 gem 'daemons', '~> 1.4.1'
-gem 'database_cleaner', '~> 2.0.1'
+gem 'database_cleaner', '~> 2.1.0'
 gem 'datacite-mapping', git: 'https://github.com/CDLUC3/datacite-mapping.git'
 gem 'data_migrate'
 gem 'delayed_job_active_record', '~> 4.1.7'
@@ -64,7 +64,7 @@ gem 'down' # I'm not sure where this is used, but maybe in the frictionless data
 gem 'exception_notification'
 gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
-gem 'font-awesome-sass', '~> 6.1.0'
+gem 'font-awesome-sass', '~> 6.7.2'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'grover'
 gem 'http', '~> 5.0.4'
@@ -91,9 +91,9 @@ gem 'posix-spawn', '~> 0.3.15'
 gem 'pundit', '~> 2.3'
 gem 'rack-attack'
 gem 'rb-readline', require: false
-gem 'recaptcha', '~> 5.14'
+gem 'recaptcha', '~> 5.19.0'
 gem 'redcarpet', '~> 3.6'
-gem 'responders', '~> 3.0.1' # do we use this?
+# gem 'responders', '~> 3.0.1' # do we use this?
 gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used
 gem 'restforce', '~> 8.0.0'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
@@ -148,7 +148,7 @@ group :test do
   gem 'rspec-html'
 
   # The next generation developer focused tool for automated testing of webapps (https://github.com/SeleniumHQ/selenium)
-  gem 'selenium-webdriver', '~> 4.11'
+  gem 'selenium-webdriver', '~> 4.28'
   # Making tests easy on the fingers and eyes (https://github.com/thoughtbot/shoulda)
   gem 'shoulda', '~> 4.0.0'
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
