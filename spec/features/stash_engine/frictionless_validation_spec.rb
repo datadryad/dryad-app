@@ -60,7 +60,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @file = create(:generic_file,
                      resource_id: StashEngine::Resource.last.id,
                      upload_content_type: @tabular_mime_type,
-                     upload_file_size: APP_CONFIG[:frictionless][:size_limit],
+                     upload_file_size: APP_CONFIG[:maximums][:frictionless],
                      status_code: 200,
                      file_state: 'created')
     end
@@ -76,7 +76,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows Uploaded Too Large For Validation for tabular files greater than the size limit' do
-      @file.update(upload_file_size: APP_CONFIG[:frictionless][:size_limit] + 1, upload_file_name: 'tabular.csv', original_filename: 'tabular.csv')
+      @file.update(upload_file_size: APP_CONFIG[:maximums][:frictionless] + 1, upload_file_name: 'tabular.csv', original_filename: 'tabular.csv')
       refresh
       navigate_to_upload
 

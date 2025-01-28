@@ -427,9 +427,9 @@ module StashEngine
     end
 
     def large_files?
-      return false if latest_resource.nil?
+      return false if latest_resource.nil? || latest_resource.total_file_size.nil?
 
-      latest_resource.size > APP_CONFIG.payments['large_file_size']
+      latest_resource.total_file_size > APP_CONFIG.payments['large_file_size']
     end
 
     # overrides reading the pub state so it can set it for caching if it's not set yet

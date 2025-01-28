@@ -115,6 +115,9 @@ export default function Authors({
 
 Authors.propTypes = {
   resource: PropTypes.object.isRequired,
-  admin: PropTypes.bool.isRequired,
+  admin: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+  ]).isRequired,
   ownerId: PropTypes.number.isRequired,
 };

@@ -160,8 +160,6 @@ module StashEngine
         payment_type: @resource.identifier.payment_type,
         paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
         aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.partner_list&.first,
-        large_file_size: APP_CONFIG.payments.large_file_size,
-        large_files: @resource.identifier.large_files?,
         allow_review: @resource.identifier.allow_review?,
         automatic_ppr: @resource.identifier.automatic_ppr?,
         man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
@@ -257,6 +255,5 @@ module StashEngine
     def update_internal_search
       @resource&.identifier&.update_search_words!
     end
-
   end
 end

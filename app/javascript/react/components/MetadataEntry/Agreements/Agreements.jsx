@@ -1,9 +1,11 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import Calculations from './Calculations';
+import InvoiceForm from './InvoiceForm';
 
 export default function Agreements({
-  resource, setResource, form, previous, preview = false,
+  resource, setResource, form, previous, ownerId, setAuthorStep, config, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -87,6 +89,14 @@ export default function Agreements({
     getPaymentInfo();
   }, []);
 
+  if (!dpc.dpc) {
+    return (
+      <>
+        <h2>Agreements</h2>
+        <p><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
+      </>
+    );
+  }
   return (
     <>
       <h2>Agreements</h2>
@@ -170,21 +180,7 @@ export default function Agreements({
               {previous && resource.tenant !== previous.tenant && <p className="del ins">Member institution changed</p>}
             </>
           )}
-          {dpc.user_must_pay && (
-            <>
-              <p>
-                Dryad charges a fee for data publication that covers curation and preservation of published
-                datasets. Upon publication of your dataset, you will receive an invoice for ${dpc.dpc} USD.
-              </p>
-              {!!dpc.large_files && (
-                <p>
-                  For data packages in excess of {dpc.large_file_size}, submitters will be charged $50 USD for
-                  each additional 10GB, or part thereof. Submissions between 50 and 60GB = $50 USD, between 60
-                  and 70GB = $100 USD, and so on.
-                </p>
-              )}
-            </>
-          )}
+          {dpc.user_must_pay && <Calculations resource={resource} previous={previous} dpc={dpc.dpc} config={config} />}
         </>
       )}
       {preview ? (
@@ -201,18 +197,19 @@ export default function Agreements({
         </div>
       ) : (
         <>
-          <p className="radio_choice">
-            <label>
-              <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
-              I agree to Dryad&apos;s {subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}
-              <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
-            </label>
-          </p>
+          {subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && dpc.user_must_pay && (
+            <InvoiceForm resource={resource} setResource={setResource} ownerId={ownerId} />
+          )}
           {(subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay)) && (
             <>
+              {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
+                <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad member.</p>
+              )}
               {dpc.user_must_pay && (
                 <>
-                  <div className="callout warn"><p>Are you affiliated with a Dryad member institution that could sponsor this fee?</p></div>
+                  <div className="callout warn" style={{marginTop: '2em'}}>
+                    <p>Are you affiliated with a Dryad member institution that could sponsor this fee?</p>
+                  </div>
                   {!!dpc.aff_tenant && (
                     <p>Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad member.</p>
                   )}
@@ -220,13 +217,31 @@ export default function Agreements({
               )}
               <div style={{maxWidth: '700px'}} ref={formRef} />
               {dpc.user_must_pay && resource.tenant.authentication?.strategy === 'author_match' && (
-                <p><em>For sponsorship, {resource.tenant.short_name} must appear as your author list affiliation for this submission.</em>.</p>
-              )}
-              {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
-                <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad member.</p>
+                <p>
+                  <em>For sponsorship, {resource.tenant.short_name} must appear as your author list affiliation for this submission.</em>.{' '}
+                  <span
+                    role="button"
+                    tabIndex="0"
+                    className="o-link__primary"
+                    onClick={setAuthorStep}
+                    onKeyDown={(e) => {
+                      if (['Enter', 'Space'].includes(e.key)) {
+                        setAuthorStep();
+                      }
+                    }}
+                  ><i className="fa fa-pencil" aria-hidden="true" /> Edit the author list
+                  </span>
+                </p>
               )}
             </>
           )}
+          <p className="radio_choice" style={{marginTop: '2em'}}>
+            <label>
+              <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
+              <span className="input-label">I agree</span> to Dryad&apos;s {subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}
+              <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
+            </label>
+          </p>
         </>
       )}
     </>
