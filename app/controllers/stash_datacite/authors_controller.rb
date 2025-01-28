@@ -96,7 +96,7 @@ module StashDatacite
 
       # find a matching pre-existing affiliation
       affil = nil
-      name = args['affiliation']['long_name']
+      name = args['affiliation']['long_name'].squish
       ror_val = args['affiliation']['ror_id']
       if ror_val.present?
         # - find by ror_id if avaialable

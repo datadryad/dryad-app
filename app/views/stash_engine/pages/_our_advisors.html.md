@@ -1,4 +1,8 @@
-#### Fundraising Advisory Board
+<small>Updated January 28, 2005</small>
+
+Dryad committees, advisory groups and task forces are appointed by the Board to support the healthy, transparent operation of the organization and the powerful realization of Dryad strategy. Community participation is warmly invited through semi-annual, open calls for application ([For example](https://blog.datadryad.org/2023/12/18/join-us-invitation-to-participate-in-dryad-committees/)). Follow us to get the latest.
+
+#### Fundraising Advisory Group
 * **Barbara Ebert**, German Federation for Biological Data e.V. (GFBio)
 * **Brooks Hanson**, Retired, American Geophysical Union (AGU)
 * **Jason Williams**, Cold Spring Harbor Laboratory DNA Learning Center
@@ -23,8 +27,8 @@
 * **Ryan Scherle**, Dryad
 * **Jen Gibson**, Dryad
         
-#### Nominations and Elections Committee 
-* **Kristi Holmes**, Galter Health Sciences Library & Learning Center at Northwestern University
+#### Nominations and Elections Advisory Group 
+* **Ian Mulvany**, BMJ
 * **Devika Madali**, Indian Statistical Institute
 * **Nicolás Palopoli**, Universidad Nacional de Quilmes - CONICET & MetaDocencia
 * **Daniel Potter**, UC Davis
@@ -47,14 +51,12 @@
 * **Zhiwu Xie**, University of California Riverside
 * **Sarah Lippincott**, Dryad
 
-#### Member Model Advisory Group
+#### Member Model Task Force
 * **Karl Benedict**, Retired, University of New Mexico Libraries
 * **Vicky Johnson**, John Wiley and Sons
 * **Johan Nilsson**, Nordic Society Oikos
 * **Rob O'Donnell**, Rockefeller University Press
 * **Matt Wascavage**, Alliance of Crop, Soil, and Environmental Science Societies (ACSESS)
-* **Jeanine Finn**, Claremont Colleges Library
 * **Shawn Ross**, Australian Research Data Commons (ARDC)
-* **Cynthia Hudson Vitale**, Association of Research Libraries
 * **Jen Gibson**, Dryad
-* **Sarah Lippincott**, Dryad
+* **Maria Guerreiro**, Dryad

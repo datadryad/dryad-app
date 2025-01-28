@@ -16,4 +16,4 @@ stage:
 
 production:
   adapter: solr
-  url: <%= ENV['SOLR_URL'] || "http://v3-solr.datadryad.org:8983/solr/dryad" %>
+  url: <%= ENV['SOLR_URL'] || "http://35.91.212.8:8983/solr/dryad" %>
