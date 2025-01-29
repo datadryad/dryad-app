@@ -20,7 +20,10 @@ module StashEngine
     enum :flag, { priority: 0 }
 
     belongs_to :flaggable, polymorphic: true, optional: true
-    
+    belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'flaggable_id', optional: true
+    belongs_to :tenant, class_name: 'StashEngine::Tenant', foreign_key: 'flaggable_id', optional: true
+    belongs_to :journal, class_name: 'StashEngine::Journal', foreign_key: 'flaggable_id', optional: true
+    belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'flaggable_id', optional: true
 
   end
 end
