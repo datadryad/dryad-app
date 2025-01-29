@@ -328,7 +328,7 @@ Rails.application.routes.draw do
     post 'ds_admin/:id/update_delete_reference_date', to: 'admin_datasets#update_delete_reference_date', as: 'update_delete_reference_date'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
-    post 'ds_admin/:id', to: 'admin_datasets#edit', as: 'ds_admin_edit'
+    post 'ds_admin/:id/waive', to: 'admin_datasets#waiver_add', as: 'ds_admin_waiver'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
 
     # curation notes

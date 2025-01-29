@@ -1,0 +1,31 @@
+<h1><%= @desc %></h1>
+<%= form_with(url: ds_admin_waiver_path(@identifier.id), method: :post, local: false) do |form| -%>
+  <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
+  <p class="c-alert--notification">This dataset has been approved for publication</p>
+  <p>The submitter has already received an invoice. Please ensure invoice <b><%= @identifier.payment_id %></b> is voided.</p>
+  <% else %>
+    <div class="c-input">
+      <div id="select_div" class="c-input">
+        <label class="c-input__label" for="waiver_basis">Please provide a reason for applying a waiver</label>
+        <select name="waiver_basis" id="waiver_basis" class="c-input__select">
+          <option value="">- Select a reason -</option>
+          <option value="country_not_detected">Waiver country, but not detected automatically</option>
+          <option value="unaware_of_dpc">Author unaware of DPC</option>
+          <option value="no_funds">Author/Institution no funds</option>
+          <option value="sponsoring_entity_updated">Sponsoring entity updated</option>
+          <option value="political_economic_situation">Political/Economic situation</option>
+          <option value="fee_increase">Fee increase</option>
+          <option value="other">Other</option>
+        </select>
+      </div>  
+      <div id="other_div" class="c-input" hidden>
+        <label class="c-input__label" for="other">Other reason</label>
+        <input class="c-input__text" size="80" type="text" name="other" />
+      </div>
+    </div>
+  <% end %>
+  <div class="c-modal__buttons-right">
+    <%= submit_tag 'Submit', class: 'o-button__plain-text2', id: 'popup_submit' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+  </div>
+<% end %>
