@@ -7,7 +7,7 @@ module StashEngine
     def index
       setup_sponsors
 
-      @journals = authorize StashEngine::Journal.includes(%i[issns sponsor])
+      @journals = authorize StashEngine::Journal.includes(%i[issns sponsor flag])
 
       if params[:q]
         q = params[:q]
@@ -76,13 +76,19 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[title default_to_ppr payment_plan_type sponsor_id]
+      valid = %i[title default_to_ppr]
       update = edit_params.slice(*valid).to_h
-      update[:sponsor_id] = nil if edit_params.key?(:sponsor_id) && edit_params[:sponsor_id].blank?
-      update[:payment_plan_type] = nil if edit_params.key?(:payment_plan_type) && edit_params[:payment_plan_type].blank?
-      update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:notify_contacts)
-      update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:review_contacts)
+      update[:sponsor_id] = edit_params[:sponsor_id].presence || nil
+      update[:payment_plan_type] = edit_params[:payment_plan_type].presence || nil
+      update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json
+      update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json
       update[:issns_attributes] = update_issns
+      if edit_params.key?(:flag)
+        update[:flag_attributes] = { note: edit_params[:note] }
+        update[:flag_attributes][:id] = @journal.flag.id if @journal.flag.present?
+      elsif @journal.flag.present?
+        @journal.flag.delete
+      end
       update
     end
 
@@ -95,7 +101,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :title, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id)
+      params.permit(:id, :title, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id, :flag, :note)
     end
 
   end
