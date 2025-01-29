@@ -2,6 +2,10 @@
 
 input {
 	accent-color: $medium-green;
+
+	&[disabled], &:disabled {
+		background-color: $lightest-gray;
+	}
 }
 
 %c-input {

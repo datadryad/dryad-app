@@ -33,7 +33,7 @@ module StashEngine
       end
 
       ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id last_login])
-      @users = @users.order(ord)
+      @users = @users.includes([:flag]).order(ord)
       @users = @users.page(@page).per(@page_size)
     end
 
@@ -48,8 +48,13 @@ module StashEngine
       valid = %i[email tenant_id]
       @user.roles.tenant_roles.delete_all if edit_params[:tenant_id] != @user.tenant_id
       setup_roles
-      update = edit_params.slice(*valid)
+      update = edit_params.slice(*valid).to_h
+      if edit_params[:flag].present?
+        update[:flag_attributes] = { note: edit_params[:note] }
+        update[:flag_attributes][:id] = @user.flag.id if @user.flag.present?
+      end
       @user.update(update)
+      @user.flag.delete unless edit_params.key?(:flag)
       errs = @user.errors.full_messages
       if errs.any?
         @error_message = errs[0]
@@ -164,7 +169,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :field, :email, :tenant_id)
+      params.permit(:id, :field, :email, :tenant_id, :flag, :note)
     end
 
     def role_params
