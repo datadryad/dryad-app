@@ -26,7 +26,7 @@ module StashEngine
       end
 
       # paginate for display
-      @tenants = @tenants.includes(%i[logo ror_orgs]).page(@page).per(@page_size)
+      @tenants = @tenants.includes(%i[logo ror_orgs flag]).page(@page).per(@page_size)
     end
 
     def edit
@@ -89,22 +89,28 @@ module StashEngine
       @consortia.flatten!
     end
 
+    # rubocop:disable Metrics/AbcSize
     def update_hash
-      valid = %i[covers_dpc partner_display enabled short_name long_name sponsor_id]
+      valid = %i[covers_dpc partner_display enabled short_name long_name]
       update = edit_params.slice(*valid)
-      update[:sponsor_id] = nil if edit_params.key?(:sponsor_id) && edit_params[:sponsor_id].blank?
-      update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json if edit_params.key?(:campus_contacts)
-      if edit_params.key?(:authentication)
-        auth = {
-          strategy: edit_params[:authentication][:strategy],
-          ranges: edit_params[:authentication][:ranges].present? ? edit_params[:authentication][:ranges].split("\n").map(&:strip) : nil,
-          entity_id: edit_params[:authentication][:entity_id].presence || nil,
-          entity_domain: edit_params[:authentication][:entity_domain].presence || nil
-        }
-        update[:authentication] = auth.compact.to_json
+      update[:sponsor_id] = edit_params[:sponsor_id].presence || nil
+      update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json
+      if edit_params.key?(:flag)
+        update[:flag_attributes] = { note: edit_params[:note] }
+        update[:flag_attributes][:id] = @tenant.flag.id if @tenant.flag.present?
+      elsif @tenant.flag.present?
+        @tenant.flag.delete
       end
+      auth = {
+        strategy: edit_params[:authentication][:strategy],
+        ranges: edit_params[:authentication][:ranges].present? ? edit_params[:authentication][:ranges].split("\n").map(&:strip) : nil,
+        entity_id: edit_params[:authentication][:entity_id].presence || nil,
+        entity_domain: edit_params[:authentication][:entity_domain].presence || nil
+      }
+      update[:authentication] = auth.compact.to_json
       update
     end
+    # rubocop:enable Metrics/AbcSize
 
     def update_associations
       if edit_params.key?(:logo) && edit_params[:logo] != @tenant.logo&.data
@@ -125,7 +131,8 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :covers_dpc, :partner_display, :enabled, :ror_orgs, :sponsor_id,
+      params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled,
+                    :covers_dpc, :partner_display, :ror_orgs, :sponsor_id, :flag, :note,
                     authentication: %i[strategy ranges entity_id entity_domain])
     end
 
