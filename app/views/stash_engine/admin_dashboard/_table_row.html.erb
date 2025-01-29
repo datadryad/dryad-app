@@ -2,9 +2,19 @@
   <td><div class="c-lined-table__with-actions">
     <div class="c-lined-table__data">
       <%= link_to "#{dataset.title}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, stash_url_helpers.show_path(id: dataset.identifier_str), target: '_blank' %>
-      <% if @fields.include?('doi') %>
-        <div class="c-lined-table__digits">DOI: <%= dataset.identifier.identifier %></div>
-      <% end %>
+      <div class="c-lined-table__digits" style="display: flex; align-items: baseline; gap: 1ch">
+        <% if @fields.include?('doi') %>
+          <span>DOI: <%= dataset.identifier.identifier %></span>
+        <% end %>
+        <% if policy(dataset).flag? %>
+          <div>
+            <% flag_type = {'StashEngine::Journal': 'journal', 'StashEngine::User': 'user', 'StashEngine::Tenant': 'institution', 'StashEngine::Resource': ''} %>
+            <% [dataset.flag].concat(dataset.flags).reject(&:blank?).map do |flag| %>
+              <i class="fas fa-flag <%= flag_type[flag.flaggable_type.to_sym][0,4] %>" title="Flagged <%= flag_type[flag.flaggable_type.to_sym]%><%= flag.note.present? ? ": #{flag.note}" : '' %>"></i>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
       <% if @fields.include?('keywords') && dataset.subjects.present? %>
         <div class="c-lined-table__digits"><%= dataset.subjects.map(&:subject).join(', ') %></div>
       <% end %>
