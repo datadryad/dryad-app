@@ -46,7 +46,7 @@ input {
 
 	&::after {
       content: ' *';
-      color: $orange;
+      color: $dark-orange;
 	}
 
 }
@@ -127,7 +127,7 @@ input {
 
 	&::before {
       content: '* ';
-	  color: $orange;
+	  color: $dark-orange;
 	}
 
 }
