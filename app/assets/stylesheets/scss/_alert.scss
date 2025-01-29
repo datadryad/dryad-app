@@ -110,6 +110,9 @@
 
 .fa-flag {
 	font-size: .9em;
+	&.dashboard-flag:last-of-type {
+		margin-right: .5ch;
+	}
 	&.user {
 		color: $dark-blue
 	}
@@ -118,5 +121,8 @@
 	}
 	&.jour {
 		color: $orange;
+	}
+	&.priority {
+		color: $red;
 	}
 }

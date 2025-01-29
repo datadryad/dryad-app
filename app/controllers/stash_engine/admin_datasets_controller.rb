@@ -4,10 +4,12 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :load, only: %i[popup note_popup edit edit_delete_reference_date update_delete_reference_date]
+    before_action :load, only: %i[popup note_popup waiver_add flag edit_delete_reference_date update_delete_reference_date]
 
     def popup
       case @field
+      when 'flag'
+        authorize @resource, :flag?
       when 'note'
         authorize %i[stash_engine admin_datasets], :note_popup?
         @curation_activity = CurationActivity.new(
@@ -52,6 +54,18 @@ module StashEngine
         basis = params[:waiver_basis]
       end
       @identifier.update(payment_type: 'waiver', payment_id: '', waiver_basis: basis)
+      respond_to(&:js)
+    end
+
+    def flag
+      authorize @resource
+      if params[:flag].blank?
+        @resource.flag.delete if @resource&.flag&.present?
+      else
+        attributes = { flag: params[:flag].to_sym }
+        attributes[:id] = @resource.flag.id if @resource&.flag&.present?
+        @resource.update(flag_attributes: attributes)
+      end
       respond_to(&:js)
     end
 

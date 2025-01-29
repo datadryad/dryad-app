@@ -329,6 +329,7 @@ Rails.application.routes.draw do
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     post 'ds_admin/:id/waive', to: 'admin_datasets#waiver_add', as: 'ds_admin_waiver'
+    post 'ds_admin/:id/flag', to: 'admin_datasets#flag', as: 'ds_admin_flag'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
 
     # curation notes

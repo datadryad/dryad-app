@@ -3,8 +3,18 @@
 <h1 class="o-heading__level1">Activity log for <%= r&.title %></h1>
 
 <div style="display: flex; align-items: center; justify-content: space-between; column-gap: 2ch; row-gap: .5ch; flex-wrap: wrap;">
-  <div style="display: flex; flex-wrap: wrap;">
+  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 1ch;">
     <%= @identifier.identifier %>
+    <% if policy(r).flag? %>
+      <span id="resource_flag">
+        <% if r&.flag&.present? %>        
+          <i class="fas fa-flag <%= r.flag.flag %>" aria-label="Flagged" title="<%= r.flag.flag.upcase_first %>"></i>
+        <% end %>
+      </span>
+      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'flag'), method: :get, local: false) do %>
+        <button class="o-button__plain-text2" aria-haspopup="dialog">Flag</button>
+      <% end %>
+    <% end %>
   </div>
   <div style="display: flex; flex-wrap: wrap; column-gap: 1ch; row-gap: .5ch;">
     <% if policy([:stash_engine, :admin_datasets]).note_popup? %>

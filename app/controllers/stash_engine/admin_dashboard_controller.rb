@@ -201,6 +201,7 @@ module StashEngine
       sponsor_filter
       funder_filter
 
+      @datasets = @datasets.joins(:flag).where(flag: { flag: @filters[:flag].to_sym }) if StashEngine::Flag.flags.key?(@filters[:flag])
       @datasets = @datasets.where('stash_engine_curation_activities.status': @filters[:status]) if @filters[:status].present?
       @datasets = @datasets.joins(authors: :affiliations).where('dcs_affiliations.ror_id': @filters.dig(:affiliation, :value)) if @filters.dig(
         :affiliation, :value
