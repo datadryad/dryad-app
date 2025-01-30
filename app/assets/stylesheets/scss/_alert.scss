@@ -91,11 +91,9 @@
 
 #sandbox_banner {
 	@extend %pull-background;
-	box-sizing: border-box;
-	width: 100%;
-	max-width: 1220px;
 	margin-top: -10px;
 	margin-bottom: 15px;
+	max-width: 1220px;	
 	background-color: #fff2ce; //$lightest-orange
 	font-size: .98rem;
 	.modalClose {
