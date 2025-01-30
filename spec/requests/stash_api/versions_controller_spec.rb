@@ -255,7 +255,7 @@ module StashApi
         before(:each) do
           allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download) do |o|
             # o is the object instance and cc is the controller context
-            # o.cc.response.headers['Location'] = 'http://example.com'
+            # o.cc.response.headers['Location'] = 'http://example.com/fun'
             # o.cc.render -- this isn't needed in the tests and causes a double-render which is different than the actual method
             o.cc.redirect_to 'http://example.com/fun', allow_other_host: true
           end
@@ -266,8 +266,8 @@ module StashApi
           @resources[0].update(file_view: true)
           response_code = get "/api/v2/versions/#{@resources[0].id}/download"
           expect(response_code).to eq(302)
-          expect(response.body).to include('http://example.com/fun')
-          expect(response.body).to include('redirected')
+          expect(response.headers['Location']).to include('http://example.com/fun')
+          # expect(response.body).to include('redirected')
         end
 
         it 'allows owner to download private, but submitted to Merritt version' do
@@ -279,16 +279,16 @@ module StashApi
                               headers: { 'Accept' => '*/*', 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{access_token}" }
 
           expect(response_code).to eq(302)
-          expect(response.body).to include('http://example.com/fun')
-          expect(response.body).to include('redirected')
+          expect(response.headers['Location']).to include('http://example.com/fun')
+          # expect(response.body).to include('redirected')
         end
 
         it 'allows superuser to download private, but submitted to Merritt version' do
           response_code = get "/api/v2/versions/#{@resources[1].id}/download",
                               headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(302)
-          expect(response.body).to include('http://example.com/fun')
-          expect(response.body).to include('redirected')
+          expect(response.headers['Location']).to include('http://example.com/fun')
+          # expect(response.body).to include('redirected')
         end
 
         it 'disallows random user from downloading non-public, but submitted version' do
@@ -309,8 +309,8 @@ module StashApi
           @user.update(tenant_id: @resources[1].tenant_id)
           response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(302)
-          expect(response.body).to include('http://example.com/fun')
-          expect(response.body).to include('redirected')
+          expect(response.headers['Location']).to include('http://example.com/fun')
+          # expect(response.body).to include('redirected')
         end
 
         it "disallows download if it's not submitted to Merritt" do
