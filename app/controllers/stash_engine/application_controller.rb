@@ -45,6 +45,5 @@ module StashEngine
       uri.port = port if port
       uri.to_s
     end
-
   end
 end

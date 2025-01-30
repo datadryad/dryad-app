@@ -9,6 +9,10 @@
 #
 # For full documentation of agent configuration options, please refer to
 # https://docs.newrelic.com/docs/agents/ruby-agent/installation-configuration/ruby-agent-configuration
+<% if Rails.env == 'test' %>
+test:
+  agent_enabled: false
+<% else %>
 
 common: &default_settings
   # Required license key associated with your New Relic account.
@@ -50,18 +54,20 @@ common: &default_settings
 # RAILS_ENV or RACK_ENV (as appropriate) is used to determine the environment.
 # If your application has other named environments, configure them here.
 
-local:
+development:
   agent_enabled: false
 
-v3_development:
+dev:
   agent_enabled: false
 
 test:
   agent_enabled: false
 
-v3_stage:
+stage:
   <<: *default_settings
   app_name: 'DryadApp (Stage)'
 
-v3_production:
+production:
   <<: *default_settings
+
+<% end %>

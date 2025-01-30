@@ -29,6 +29,7 @@
 #
 #  index_stash_engine_generic_files_on_file_state        (file_state)
 #  index_stash_engine_generic_files_on_resource_id       (resource_id)
+#  index_stash_engine_generic_files_on_status_code       (status_code)
 #  index_stash_engine_generic_files_on_upload_file_name  (upload_file_name)
 #  index_stash_engine_generic_files_on_url               (url)
 #
@@ -77,8 +78,8 @@ module StashEngine
         .or(present_files.where(upload_content_type: 'text/xml'))
         .or(present_files.where('upload_file_name LIKE ?', '%.xml'))
     }
-    enum file_state: %w[created copied deleted].to_h { |i| [i.to_sym, i] }
-    enum digest_type: %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] }
+    enum(:file_state, %w[created copied deleted].to_h { |i| [i.to_sym, i] })
+    enum(:digest_type, %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] })
 
     # display the correct error message based on the url status code
     def error_message

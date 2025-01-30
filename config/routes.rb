@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
 
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.local? || Rails.env.v3_development?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development? || Rails.env.dev?
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -372,13 +372,8 @@ Rails.application.routes.draw do
 
   # the ones below coming from new routing for blacklight
   #--------------------------------------------------------
-  mount Blacklight::Engine => '/'
-
-  get '/search', to: 'catalog#index'
-
   concern :searchable, Blacklight::Routes::Searchable.new
-
-  resource :catalog, only: [:index], as: 'catalog', path: '/search', controller: 'catalog' do
+  resource :catalog, as: 'catalog', path: '/search', controller: 'catalog' do
     concerns :searchable
   end
 
