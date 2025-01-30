@@ -103,6 +103,7 @@ gem 'zaru', '~> 1.0.0' # for sanitizing file names
 # gem 'base64'
 # gem 'bigdecimal'
 # gem 'mutex_m'
+gem 'faraday', '~> 1.10.4'
 
 # ############################################################
 # Development and testing
