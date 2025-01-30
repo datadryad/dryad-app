@@ -12,7 +12,7 @@
   margin: 0; padding: 0;
   display: table;
   border-collapse: collapse;
-  width: calc(100% + 20px);
+  width: calc(100% + 18px);
   margin-left: -10px;
   margin-bottom: $spacing-sm;
 
@@ -46,7 +46,7 @@
   }
 
   @include bp(screen1) {
-    width: calc(100% + 40px);
+    width: calc(100% + 38px);
     margin-left: -20px;
   	li > div:first-child {
 	    padding-left: 20px;
@@ -57,7 +57,7 @@
 	}
 
 	@include bp(screen2) {
-    width: calc(100% + 60px);
+    width: calc(100% + 58px);
     margin-left: -30px;
 	  li > div:first-child {
 	    padding-left: 30px;
