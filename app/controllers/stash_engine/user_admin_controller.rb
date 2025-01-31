@@ -54,7 +54,7 @@ module StashEngine
         update[:flag_attributes][:id] = @user.flag.id if @user.flag.present?
       end
       @user.update(update)
-      @user.flag.delete unless edit_params.key?(:flag)
+      @user.flag.delete if @user.flag.present? && !edit_params.key?(:flag)
       errs = @user.errors.full_messages
       if errs.any?
         @error_message = errs[0]
