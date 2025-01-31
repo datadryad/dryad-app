@@ -20,8 +20,8 @@ module CollectionHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     click_button 'Next'
-    page.find('#checklist-button').click unless page.has_button?('Title/Import')
-    click_button 'Title/Import'
+    page.find('#checklist-button').click unless page.has_button?('Title')
+    click_button 'Title'
     expect(page).to have_content('Is your collection associated with a published article?')
   end
 
