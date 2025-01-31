@@ -80,7 +80,6 @@ function RelatedWorks({resource, setResource}) {
 
   return (
     <>
-      <h2>Related works</h2>
       {resource.related_identifiers.find((w) => w.work_type === 'primary_article') && (
         <div className="callout alt">
           <p>

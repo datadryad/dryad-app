@@ -124,7 +124,7 @@ function PublicationForm({
         <Form style={{margin: '1em auto'}}>
           <ImportCheck importType={importType} journal={journal} setDisable={setDisable} />
           <Field name="isImport" type="hidden" />
-          <p style={{marginTop: '2em'}}>Enter your publication information and import the title and other metadata:</p>
+          <p>Enter your publication information and import the title and other metadata:</p>
           <div className="input-line">
             <div className="input-stack" style={{flex: 0}}>
               <Journal

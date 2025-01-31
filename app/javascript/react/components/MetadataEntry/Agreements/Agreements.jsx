@@ -91,15 +91,11 @@ export default function Agreements({
 
   if (!dpc.dpc) {
     return (
-      <>
-        <h2>Agreements</h2>
-        <p><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
-      </>
+      <p><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
     );
   }
   return (
     <>
-      <h2>Agreements</h2>
       {preview && (
         <>
           <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
@@ -133,7 +129,7 @@ export default function Agreements({
           )}
           {!curated && dpc.allow_review ? (
             <fieldset onChange={togglePPR}>
-              <h3><legend>Publication{subType === 'collection' ? '' : ' of your files'}</legend></h3>
+              <h3 style={{marginTop: '.5rem'}}><legend>Publication{subType === 'collection' ? '' : ' of your files'}</legend></h3>
               <p className="radio_choice">
                 <label style={!ppr ? {fontWeight: 'bold'} : {}}>
                   <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
@@ -141,7 +137,7 @@ export default function Agreements({
                   as soon as possible
                 </label>
               </p>
-              <p className="radio_choice">
+              <p className="radio_choice" style={{marginBottom: 0}}>
                 <label style={ppr ? {fontWeight: 'bold'} : {}}>
                   <input type="radio" name="peer_review" value="1" defaultChecked={ppr} />
                   Keep my {subType === 'collection' ? 'collection' : 'files'} private while my manuscript is in peer review

@@ -88,7 +88,7 @@ export default function Description({
 
   return (
     <>
-      <div className="input-line spaced" style={{marginTop: '2rem'}}>
+      <div className="input-line spaced">
         <label
           className={`input-label xl${(mceLabel.required ? ' required' : ' optional')}`}
           id={`${dcsDescription.description_type}_label`}

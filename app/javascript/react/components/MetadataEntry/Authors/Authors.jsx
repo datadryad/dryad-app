@@ -73,14 +73,13 @@ export default function Authors({
 
   return (
     <>
-      <div className="drag-instruct">
-        <h2 id="authors-head">Authors</h2>
-        <p>Drag <i className="fa-solid fa-bars-staggered" role="img" aria-label="handle button" /> to reorder</p>
-      </div>
+      <p className="drag-instruct" style={{marginTop: '0'}}>
+        <span>Drag <i className="fa-solid fa-bars-staggered" role="img" aria-label="handle button" /> to reorder</span>
+      </p>
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
           <DragonListItem key={author.id} item={author} typeName="author">
-            <AuthorForm author={author} update={updateItem} admin={admin} ownerId={ownerId} />
+            <AuthorForm author={author} update={updateItem} admin={!!admin} ownerId={ownerId} />
             {ownerId !== author.id && (
               <button
                 type="button"

@@ -50,12 +50,14 @@ export default function DescriptionGroup({
 
   return (
     <>
-      <h2>Description</h2>
       <Description dcsDescription={abstract} setResource={setRes} mceLabel={abstractLabel} admin={admin} />
       {resource.resource_type.resource_type !== 'collection' && (
         <>
           {openMethods ? (
-            <Description dcsDescription={methods} setResource={setRes} mceLabel={methodsLabel} admin={admin} />
+            <>
+              <br />
+              <Description dcsDescription={methods} setResource={setRes} mceLabel={methodsLabel} admin={admin} />
+            </>
           ) : (
             <p><button type="button" className="o-button__plain-text2" onClick={() => setOpenMethods(true)}>+ Add methods section</button></p>
           )}

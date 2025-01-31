@@ -23,7 +23,7 @@ export default function SuppPreview({resource, previous, admin}) {
       )}
       {funders.length > 0 && funders[0].contributor_name !== 'N/A' && (
         <>
-          <h3>Funding</h3>
+          <h3 className="o-heading__level2">Funding</h3>
           <ul className="o-list">
             {funders.sort((a, b) => a.funder_order - b.funder_order).map((funder, i) => {
               const prev = pFunders?.[i];

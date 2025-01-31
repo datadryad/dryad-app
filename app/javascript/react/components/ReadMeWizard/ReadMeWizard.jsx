@@ -104,7 +104,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
   if (initialValue || replaceValue) {
     return (
       <>
-        <h2 id="md_editor_label">README</h2>
+        <span id="md_editor_label" className="screen-reader-only">Create README for dataset</span>
         <div className="readme-columns-final">
           <div>
             <p style={{marginTop: 0}}>
@@ -179,7 +179,6 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
     if (wizardStep === 0) {
       return (
         <>
-          <h2>README</h2>
           <p>
             Your Dryad submission must be accompanied by a{' '}
             <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
@@ -212,17 +211,14 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
       );
     }
     return (
-      <>
-        <h2>Build a README</h2>
-        <ReadMeSteps
-          key={wizardStep}
-          content={wizardContent}
-          step={wizardStep}
-          setStep={setWizardStep}
-          fileList={fileList}
-          save={checkDescription}
-        />
-      </>
+      <ReadMeSteps
+        key={wizardStep}
+        content={wizardContent}
+        step={wizardStep}
+        setStep={setWizardStep}
+        fileList={fileList}
+        save={checkDescription}
+      />
     );
   }
   return (
