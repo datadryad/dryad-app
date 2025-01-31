@@ -298,7 +298,7 @@ Set up shibboleth service provider
 See instructions in [the shibboleth directory](../shibboleth/README.md).
 
 
-Set up other system services and crons
+Set up other system services
 ======================================
 
 Set up systemd services that need to remain running
@@ -317,6 +317,11 @@ sudo systemctl enable delayed_job
 sudo systemctl status delayed_job
 sudo systemctl status status_updater
 ```
+
+Set up crons
+======================================
+Set up cron jobs using systemd services. Documentation in [here](../../cron/README.md)
+
 
 Troubleshooting
 ================
