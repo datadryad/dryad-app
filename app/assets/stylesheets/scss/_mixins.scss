@@ -65,19 +65,19 @@ Selector pattern using above mixin:
 // Pull component/object container over responsive body margins to viewport edge. Reset content to mirror responsive body margins by adding padding. Typically used for bleeding background to page edge, like with table heading component
 
 %pull-background {
-  box-sizing: border-box;
   margin-left: -10px;
   margin-right: -10px;
   padding-left: 10px;
   padding-right: 10px;
-  width: calc(100% + 20px);
+  width: 1220px;
+  max-width: 100%;
+  box-sizing: content-box;
 
   @include bp(screen1) {
     margin-left: -20px;
     margin-right: -20px;
     padding-left: 20px;
     padding-right: 20px;
-    width: calc(100% + 40px);
   }
 
   @include bp(screen2) {
@@ -85,7 +85,6 @@ Selector pattern using above mixin:
     margin-right: -30px;
     padding-left: 30px;
     padding-right: 30px;
-    width: calc(100% + 60px);
   }
 }
 
