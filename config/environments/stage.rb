@@ -78,6 +78,9 @@ Rails.application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
+  logger = ActiveSupport::Logger.new(Rails.root.join("log", "stage.log"), 5, 10.megabytes)
+  config.logger    = ActiveSupport::TaggedLogging.new(logger)
+
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
@@ -100,10 +103,21 @@ Rails.application.configure do
                                             :ignore_crawlers => %w{Googlebot bingbot}
   end
 
-  config.action_mailer.delivery_method = :sendmail
+  # Email through Amazon SES
+  # Although it would be nice to read these settings from the APP_CONFIG,
+  # that hash doesn't exist at the time this file is loaded, so we need to
+  # put the configuration directly in here.
+  ActionMailer::Base.smtp_settings = {
+    :address => 'email-smtp.us-west-2.amazonaws.com',
+    :port => '587',
+    :authentication => :plain,
+    :user_name => 'AKIA2KERHV5ERJHPR552',
+    :password => Rails.application.credentials[Rails.env.to_sym][:aws_ses_password]
+  }
+
+
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_url_options = { host: 'sandbox.datadryad.org' }
 
   Rails.application.default_url_options = { host: 'sandbox.datadryad.org' }
 

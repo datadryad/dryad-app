@@ -1,4 +1,4 @@
-require 'blacklight/catalog'
+# require 'blacklight/catalog'
 
 # rubocop:disable Security/YAMLLoad
 settigs = YAML.load(File.open(File.join('config', 'settings.yml')), symbolize_names: true, aliases: true)

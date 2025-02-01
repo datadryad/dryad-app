@@ -1,7 +1,7 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # Have to include this because the v3_development env name is elaborate and unexpected
+  # Have to include this because the dev env name is elaborate and unexpected
   config.web_console.development_only = false
 
   # Code is not reloaded between requests.
@@ -80,7 +80,7 @@ Rails.application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
-  logger = ActiveSupport::Logger.new(Rails.root.join("log", "v3_development.log"), 5, 10.megabytes)
+  logger = ActiveSupport::Logger.new(Rails.root.join("log", "dev.log"), 5, 100.megabytes)
   config.logger    = ActiveSupport::TaggedLogging.new(logger)
 
   # Do not dump schema after migrations.

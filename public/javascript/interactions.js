@@ -99,7 +99,7 @@ expandButtons.forEach(button => {
 
 if (window.location.hash) {
   const hashed = document.getElementById(window.location.hash.substring(1))
-  if (hashed.getAttribute('aria-expanded') === 'false') {
+  if (hashed && hashed.getAttribute('aria-expanded') === 'false') {
     hashed.setAttribute('aria-expanded', 'true');
     const section = document.getElementById(hashed.getAttribute('aria-controls'))
     section.removeAttribute('hidden');

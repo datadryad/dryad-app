@@ -4,13 +4,11 @@
 #
 # Table name: dcs_publishers
 #
-#  id                   :integer          not null, primary key
-#  identifier_type      :string
-#  publisher            :text(65535)
-#  publisher_identifier :string(191)
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  resource_id          :integer
+#  id          :integer          not null, primary key
+#  publisher   :text(65535)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  resource_id :integer
 #
 # Indexes
 #

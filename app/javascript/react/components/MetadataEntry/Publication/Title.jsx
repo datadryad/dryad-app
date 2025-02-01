@@ -44,7 +44,7 @@ function Title({resource, setResource}) {
       }}
     >
       {(formik) => (
-        <Form style={{margin: '2em auto 1em'}} className="input-stack">
+        <Form style={{margin: '1em auto'}} className="input-stack">
           <label className="required input-label" htmlFor={`title__${resource.id}`}>
             {upCase(resource.resource_type.resource_type)} title
           </label>

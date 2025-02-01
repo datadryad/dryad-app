@@ -11,9 +11,19 @@
   gap: 2ch;
   align-items: flex-start;
   justify-content: space-between;
-  flex-direction: row-reverse; 
+  flex-direction: row-reverse;
+  position: relative;
+
+  & > i {
+    color: $lighter-gray;
+    font-size: 2rem;
+    margin-left: -1ch;
+    margin-right: -.5ch;
+    margin-top: -.25ch;
+  }
 
   #submission-help-text {
+    flex: 1;
     font-size: 1rem;
     *:first-child {
       margin-top: 0;
@@ -25,6 +35,12 @@
 
   @media (max-width: 811px){
     flex-direction: column-reverse;
+    & > i {
+      font-size: 1.5rem;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: -1ch;
+    }
     *:first-child {
       margin-left: auto;
     }

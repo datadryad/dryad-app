@@ -65,9 +65,8 @@ export default function Publication({resource, setResource, maxSize}) {
 
   return (
     <>
-      <h2>Title/Import</h2>
       <fieldset onChange={setOption}>
-        <legend style={{margin: '1em 0 0'}}>
+        <legend>
           Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} a published article, with a DOI?
         </legend>
         <p className="radio_choice">
@@ -76,7 +75,7 @@ export default function Publication({resource, setResource, maxSize}) {
         </p>
       </fieldset>
       <fieldset id="manuscript" onChange={setOption} hidden={!checks.published || checks.published === 'yes'}>
-        <legend style={{margin: '1.5em 0 0'}}>
+        <legend>
           Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} a submitted manuscript, with a manuscript number?
         </legend>
         <p className="radio_choice">

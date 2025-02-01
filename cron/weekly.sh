@@ -18,7 +18,7 @@ bundle exec rails identifiers:voided_invoices_report >> /home/ec2-user/deploy/sh
 bundle exec rails counter:populate_citations >> /home/ec2-user/deploy/shared/log/citation_populator.log 2>&1 &!
 
 # the MDC/counter processor only runs in the production && stage environments
-if [ "$RAILS_ENV" == "production" ] || [ "$RAILS_ENV" == "stage" ] ||  [ "$RAILS_ENV" == "v3_production" ] || [ "$RAILS_ENV" == "v3_stage" ]
+if [ "$RAILS_ENV" == "production" ] || [ "$RAILS_ENV" == "stage" ]
 then
     # the counter.sh script used to do more log procesing, but now only does a couple of things
     cd /home/ec2-user/deploy/current/cron

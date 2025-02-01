@@ -26,7 +26,7 @@ function Submission({
   const subRef = useRef(null);
   const previewRef = useRef(null);
   const [resource, setResource] = useState(JSON.parse(submission));
-  const [step, setStep] = useState({name: 'Start'});
+  const [step, setStep] = useState({name: 'Create a submission'});
   const [open, setOpen] = useState(true);
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
   const previous = resource.previous_curated_resource;
@@ -34,7 +34,7 @@ function Submission({
 
   const steps = [
     {
-      name: 'Title/Import',
+      name: 'Title',
       pass: !!resource.title,
       fail: publicationCheck(resource, review),
       component: <Publication resource={resource} setResource={setResource} maxSize={config_maximums.merritt_size} />,
@@ -147,7 +147,7 @@ function Submission({
   const move = async (dir) => {
     /* eslint-disable-next-line no-undef */
     await awaitSelector('.saving_text[hidden]');
-    setStep(steps[steps.findIndex((l) => l.name === step.name) + dir] || (dir === -1 && {name: 'Start'}));
+    setStep(steps[steps.findIndex((l) => l.name === step.name) + dir] || (dir === -1 && {name: 'Create a submission'}));
   };
 
   useEffect(() => {
@@ -162,11 +162,11 @@ function Submission({
 
   useEffect(() => {
     const main = document.getElementById('maincontent');
-    if (review && step.name === 'Start') {
+    if (review && step.name === 'Create a submission') {
       main.classList.add('submission-review');
     } else if (review) {
       main.classList.remove('submission-review');
-    } else if (step.name !== 'Start') {
+    } else if (step.name !== 'Create a submission') {
       const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
       const url = window.location.search.slice(1);
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
@@ -207,11 +207,11 @@ function Submission({
   if (review) {
     return (
       <>
-        <h1>{upCase(resource.resource_type.resource_type)} submission preview{step.name !== 'Start' ? ' editor' : ''}</h1>
-        <nav aria-label="Submission editing" className={step.name !== 'Start' ? 'screen-reader-only' : null}>
+        <h1>{upCase(resource.resource_type.resource_type)} submission preview{step.name !== 'Create a submission' ? ' editor' : ''}</h1>
+        <nav aria-label="Submission editing" className={step.name !== 'Create a submission' ? 'screen-reader-only' : null}>
           <Checklist steps={steps} step={{}} setStep={setStep} open />
         </nav>
-        {step.name === 'Start' && (
+        {step.name === 'Create a submission' && (
           <>
             <div id="submission-preview" ref={previewRef} className={admin ? 'track-changes' : null}>
               {steps.map((s) => (
@@ -224,8 +224,8 @@ function Submission({
             <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} authenticityToken={authenticity_token} admin={admin} />
           </>
         )}
-        <dialog id="submission-step" open={step.name !== 'Start' || null}>
-          {step.name !== 'Start' && (
+        <dialog id="submission-step" open={step.name !== 'Create a submission' || null}>
+          {step.name !== 'Create a submission' && (
             <div className="submission-edit">
               <nav id="submission-nav" className="open" aria-label="Back">
                 <div style={{textAlign: 'right', fontSize: '1.3rem'}}>
@@ -235,7 +235,7 @@ function Submission({
                     autoFocus
                     aria-controls="submission-step"
                     aria-expanded="true"
-                    onClick={() => setStep({name: 'Start'})}
+                    onClick={() => setStep({name: 'Create a submission'})}
                   >
                     <span className="checklist-icon">
                       <i className="fas fa-chevron-left" aria-hidden="true" />
@@ -246,26 +246,28 @@ function Submission({
               <div id="submission-wizard" className="open">
                 <div ref={subRef}>
                   <div>
-                    {step.component}
-                    {steps.find((s) => s.name === step.name).fail}
-                  </div>
-                  <div id="submission-help">
-                    <div>
-                      <button
-                        type="button"
-                        className="o-button__plain-text2"
-                        onClick={() => setStep({name: 'Start'})}
-                      >
-                        Preview changes
-                      </button>
+                    <div id="submission-header">
+                      <h2 className="o-heading__level2">{step.name}</h2>
                       <div role="status">
                         <div className="saving_text" hidden>Saving&hellip;</div>
                         <div className="saved_text" hidden>All progress saved</div>
                       </div>
                     </div>
+                    {step.component}
+                    {steps.find((s) => s.name === step.name).fail}
+                  </div>
+                  <div id="submission-help">
+                    <button
+                      type="button"
+                      className="o-button__plain-text2"
+                      onClick={() => setStep({name: 'Create a submission'})}
+                    >
+                      Preview changes
+                    </button>
                     <div id="submission-help-text">
                       {step.help}
                     </div>
+                    <i className="fas fa-circle-question" aria-hidden="true" />
                   </div>
                 </div>
               </div>
@@ -277,70 +279,74 @@ function Submission({
   }
 
   return (
-    <div className="submission-edit">
-      <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
-      <div id="submission-wizard" className={(step.name === 'Start' && 'start') || (open && 'open') || ''}>
-        <div id="submission-step" role="region" aria-label={step.name} aria-live="polite">
-          <div ref={subRef}>
-            <div id="submission-header">
-              <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
-              <div role="status">
-                <div className="saving_text" hidden>Saving&hellip;</div>
-                <div className="saved_text" hidden>All progress saved</div>
+    <>
+      <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
+      <div className="submission-edit">
+        <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
+        <div id="submission-wizard" className={open ? 'open' : null}>
+          <div id="submission-step" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
+            <div ref={subRef}>
+              <div id="submission-header">
+                <h2 className="o-heading__level2">{step.name}</h2>
+                <div role="status">
+                  <div className="saving_text" hidden>Saving&hellip;</div>
+                  <div className="saved_text" hidden>All progress saved</div>
+                </div>
               </div>
+              {step.name === 'Create a submission' && (<SubmissionHelp type={resource.resource_type.resource_type} />)}
+              {step.component}
+              {!['Create a submission', 'README'].includes(step.name) && (
+                steps.find((s) => s.name === step.name).pass && steps.find((s) => s.name === step.name).fail
+              )}
             </div>
-            {step.name === 'Start' && (<SubmissionHelp type={resource.resource_type.resource_type} />)}
-            {step.component}
-            {!['Start', 'README'].includes(step.name) && (
-              steps.find((s) => s.name === step.name).pass && steps.find((s) => s.name === step.name).fail
-            )}
-          </div>
-          <div id="submission-help">
-            <div className="o-dataset-nav">
-              {step.name === 'Agreements' ? (
-                <button
-                  type="button"
-                  className="o-button__plain-text2"
-                  disabled={!resource.accepted_agreement}
-                  onClick={() => {
-                    if (open === 'start') setOpen(false);
-                    setStep({name: 'Start'});
-                    setReview(true);
-                  }}
-                >
+            <div id="submission-help">
+              <div className="o-dataset-nav">
+                {step.name === 'Agreements' ? (
+                  <button
+                    type="button"
+                    className="o-button__plain-text2"
+                    disabled={!resource.accepted_agreement}
+                    onClick={() => {
+                      if (open === 'start') setOpen(false);
+                      setStep({name: 'Create a submission'});
+                      setReview(true);
+                    }}
+                  >
                   Preview submission
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="o-button__plain-text2"
-                  aria-controls="submission-step"
-                  onClick={() => move(1)}
-                >
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="o-button__plain-text2"
+                    aria-controls="submission-step"
+                    onClick={() => move(1)}
+                  >
                   Next <i className="fa fa-caret-right" aria-hidden="true" />
-                </button>
-              )}
-              {step.name !== 'Start' && (
-                <button
-                  type="button"
-                  className="o-button__plain-text"
-                  aria-controls="submission-step"
-                  onClick={() => move(-1)}
-                >
-                  <i className="fa fa-caret-left" aria-hidden="true" /> Previous
-                </button>
-              )}
-            </div>
-            <div id="submission-help-text">
-              {step.name === 'Start' && (
-                <p>Questions? Check this spot for helpful information about each step!</p>
-              )}
-              {step.help}
+                  </button>
+                )}
+                {step.name !== 'Create a submission' && (
+                  <button
+                    type="button"
+                    className="o-button__plain-text"
+                    aria-controls="submission-step"
+                    onClick={() => move(-1)}
+                  >
+                    <i className="fa fa-caret-left" aria-hidden="true" /> Previous
+                  </button>
+                )}
+              </div>
+              <div id="submission-help-text" aria-label="Section help">
+                {step.name === 'Create a submission' && (
+                  <p>Questions? Check this spot for helpful information about each step!</p>
+                )}
+                {step.help}
+              </div>
+              <i className="fas fa-circle-question" aria-hidden="true" />
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -21,7 +21,7 @@ module StashEngine
     self.table_name = 'stash_engine_manuscripts'
     belongs_to :journal
     belongs_to :identifier, optional: true
-    serialize :metadata
+    serialize :metadata, coder: YAML
 
     def accepted?
       accepted_statuses = %w[accepted published]

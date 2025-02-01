@@ -28,19 +28,20 @@ input {
 
 .input-example, [id$='-ex'] {
 	font-size: .98rem;
-	color: $medium-gray;
+	color: $dark-gray;
 	margin-top: .35ch;
 	i:not(.fas, .far) {
 		 &:before {
 		 	font-family: 'Font Awesome 6 Free';
 			font-style: normal;
-			font-size: .75rem;
+			font-size: .85rem;
 			display: inline-block;
 			line-height: 0;
 			vertical-align: 1px;
 			content: '\f059' / 'Hint:';
-			color: $dark-gray;
+			font-weight: 900;
 			margin-right: .5ch;
+			color: $light-gray;
 		}
 	}
 }

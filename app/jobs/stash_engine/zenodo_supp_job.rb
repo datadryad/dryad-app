@@ -1,7 +1,7 @@
 require 'stash/zenodo_software'
 
 module StashEngine
-  class ZenodoSuppJob < ::ActiveJob::Base
+  class ZenodoSuppJob < ApplicationJob
     queue_as :zenodo_supp
 
     attr_accessor :job_entry

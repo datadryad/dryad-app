@@ -22,7 +22,7 @@ Bundler.require(*Rails.groups)
 module Dash2
   class Application < Rails::Application
     # Initialize configuration defaults for the Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 8.0
 
     config.eager_load_paths << Rails.root.join("lib")
     config.autoload_paths << Rails.root.join("lib")
@@ -38,6 +38,7 @@ module Dash2
 
     config.time_zone = "UTC"
     config.active_record.default_timezone = :utc
+    config.active_support.to_time_preserves_timezone = :zone
 
     config.active_job.queue_adapter = :delayed_job
 

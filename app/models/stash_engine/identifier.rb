@@ -61,7 +61,7 @@ module StashEngine
 
     # This makes the setting of the "preliminary information" and how something was imported explicit.  Default is other.
     # There is only one import per dataset and it overwrites info after getting valid information.
-    enum import_info: {
+    enum :import_info, {
       other: 0,
       manuscript: 1,
       published: 2

@@ -520,7 +520,6 @@ export default function UploadFiles({
 
   return (
     <div ref={uploadRef}>
-      <h2>Files</h2>
       <UploadData changed={addFilesHandler} clickedModal={showModalHandler} />
       <p style={{fontSize: '.98rem'}}>
         By uploading files to Dryad, you agree they will be licensed as{' '}

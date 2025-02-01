@@ -5,7 +5,7 @@ export function Checklist({
 }) {
   return (
     <>
-      <ul id="submission-checklist" hidden={!open && step.name !== 'Start'}>
+      <ul id="submission-checklist" hidden={!open}>
         {steps.map((s) => (
           <li
             key={s.name}
@@ -38,25 +38,23 @@ export default function ChecklistNav({
   steps, step, setStep, open, setOpen,
 }) {
   return (
-    <nav id="submission-nav" aria-label="Submission checklist" className={(step.name === 'Start' && 'start') || (open && 'open') || ''}>
+    <nav id="submission-nav" aria-label="Submission checklist" className={open ? 'open' : null}>
       <div>
-        {step.name === 'Start' ? (
-          <p>Submission checklist</p>
-        ) : (
+        <div>
+          <span hidden={!open}>Checklist</span>
           <button
             type="button"
             id="checklist-button"
-            aria-label="View checklist"
+            aria-label={open ? 'Hide checklist' : 'View checklist'}
             aria-haspopup="menu"
             aria-controls="submission-checklist"
             aria-expanded={open}
             onClick={() => setOpen(!open)}
           >
-            {open && <i className="fas fa-angle-left" aria-hidden="true" />}
-            <i className="fas fa-list-check" aria-hidden="true" style={{clipPath: 'rect(auto 70% auto auto)'}} />
-            {!open && <i className="fas fa-angle-right" aria-hidden="true" />}
+            <i className="fas fa-list-check" aria-hidden="true" />
+            <i className={`fas fa-angle-${open ? 'left' : 'right'}`} aria-hidden="true" />
           </button>
-        )}
+        </div>
         <Checklist steps={steps} step={step} setStep={setStep} open={open} />
       </div>
     </nav>
