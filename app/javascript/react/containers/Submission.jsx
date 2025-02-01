@@ -27,7 +27,7 @@ function Submission({
   const previewRef = useRef(null);
   const [resource, setResource] = useState(JSON.parse(submission));
   const [step, setStep] = useState({name: 'Create a submission'});
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(window.innerWidth > 600);
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
   const previous = resource.previous_curated_resource;
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');

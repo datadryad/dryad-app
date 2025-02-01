@@ -6,6 +6,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  #sandbox_banner {
+    box-sizing: border-box;
+  }
   #maincontent {
     min-height: auto;
     align-self: stretch;
@@ -306,6 +309,17 @@
     font-size: 1.4rem;
     vertical-align: 15%;
   }
+  @media (max-width: 600px) {
+    position: absolute;
+    right: 10px;
+    top: -2.6rem;
+    .fa-angle-left:before {
+      content: "\f106";
+    }
+    .fa-angle-right:before {
+      content: "\f107";
+    }
+  }
 }
 
 .checklist-link {
@@ -357,6 +371,7 @@ dialog#submission-step[open] {
   flex: 1;
   @media (max-width: 600px) {
     flex-direction: column;
+    position: relative;
   }
 }
 
@@ -369,7 +384,7 @@ dialog#submission-step[open] {
   & > div {
     margin-left: auto;
     max-width: 90px;
-    padding-right: 1.4rem;
+    padding-right: .8rem;
 
     & > div {
       display: flex;
@@ -429,11 +444,20 @@ dialog#submission-step[open] {
   }
 
   @media (max-width: 600px) {
+    padding-bottom: 0;
     &, &.open {
       flex: 1 1 auto;
       & > div {
         padding-top: 0;
         max-width: 100%;
+        
+        & > div {
+          margin-bottom: 0;
+        }
+
+        ul {
+          padding: 1rem 0;
+        }
       }
     }
   }
