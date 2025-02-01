@@ -20,10 +20,6 @@ set :log_level, :debug
 # this copies these files over from shared, but only the files that exist on that machine
 set :optional_shared_files, %w{
   config/master.key
-  config/credentials/production.key
-  config/credentials/stage.key
-  config/credentials/v3_production.key
-  config/credentials/v3_stage.key
 }
 
 # Default value for linked_dirs is []
