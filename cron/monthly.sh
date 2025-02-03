@@ -2,10 +2,8 @@
 
 : ${1:?"Need to pass in environment (e.g. development, stage, production)"}
 
-export RAILS_ENV="$1"
-
 cd /home/ec2-user/deploy/current/
-
+export RAILS_ENV="$1"
 export REPORT_DIR="/home/ec2-user/deploy/shared/cron/counter-json"
 
 # force counter submissions for last month (and will submit other missing months)

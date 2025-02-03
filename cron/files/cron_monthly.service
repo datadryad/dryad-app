@@ -4,7 +4,7 @@ Wants=cron_monthly.timer
  
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -c "/home/ec2-user/deploy/current/cron/monthly.sh v3_production >> /home/ec2-user/deploy/shared/log/cron.log 2>&1"
+ExecStart=/bin/bash -c "/home/ec2-user/deploy/current/cron/monthly.sh production >> /home/ec2-user/deploy/shared/log/cron.log 2>&1"
 
 [Install]
 WantedBy=multi-user.target
