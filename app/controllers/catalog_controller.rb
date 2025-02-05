@@ -98,10 +98,8 @@ class CatalogController < ApplicationController
     config.add_show_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', itemprop: 'related_publication_name'
     config.add_show_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME, label: 'Institution', itemprop: 'author_affiliation_name'
 
-    config.add_sort_field 'score desc, dc_title_sort asc', label: 'relevance'
-    config.add_sort_field "#{Settings.FIELDS.YEAR} desc, dc_title_sort asc", label: 'year'
-    config.add_sort_field "#{Settings.FIELDS.PUBLISHER} asc, dc_title_sort asc", label: 'institution'
-    config.add_sort_field 'dc_title_sort asc', label: 'title'
+    config.add_sort_field "score desc, #{Settings.FIELDS.DATE} asc", label: 'relevance'
+    config.add_sort_field "#{Settings.FIELDS.DATE} desc, score desc asc", label: 'date'
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
