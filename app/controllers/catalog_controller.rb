@@ -69,12 +69,13 @@ class CatalogController < ApplicationController
     # config.show.sidebar_component = Blacklight::HeaderComponent
 
     config.add_facet_field Settings.FIELDS.SUBJECT, label: 'Subject keyword', limit: 8
-    config.add_facet_field Settings.FIELDS.SPATIAL_COVERAGE, label: 'Geographical Location', limit: 8
-    config.add_facet_field Settings.FIELDS.PART_OF, label: 'Collection', limit: 8
     config.add_facet_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', limit: 8
-    config.add_facet_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME, label: 'Institution', limit: 8
-    config.add_facet_field Settings.FIELDS.DATASET_FILE_EXT, label: 'File Extension', limit: 8
+    config.add_facet_field Settings.FIELDS.AUTHOR_AFFILIATION, label: 'Institution', limit: 8
     config.add_facet_field Settings.FIELDS.FUNDER, label: 'Funder', limit: 8
+    config.add_facet_field Settings.FIELDS.AWARD, label: 'Grant ID', limit: 8
+    config.add_facet_field Settings.FIELDS.AUTHOR, label: 'Author', limit: 8
+    config.add_facet_field Settings.FIELDS.DATASET_FILE_EXT, label: 'File Extension', limit: 8
+    config.add_facet_field Settings.FIELDS.PART_OF, label: 'Collection', limit: 8
 
     # config.add_facet_field Settings.FIELDS.RIGHTS, label: 'Access', limit: 8, partial: "icon_facet"
     # config.add_facet_field Settings.FIELDS.GEOM_TYPE, label: 'Data type', limit: 8, partial: "icon_facet"
@@ -96,7 +97,7 @@ class CatalogController < ApplicationController
     config.add_show_field Settings.FIELDS.TEMPORAL, label: 'Year', itemprop: 'temporal'
     config.add_show_field Settings.FIELDS.PROVENANCE, label: 'Held by', link_to_search: true
     config.add_show_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', itemprop: 'related_publication_name'
-    config.add_show_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME, label: 'Institution', itemprop: 'author_affiliation_name'
+    config.add_show_field Settings.FIELDS.AUTHOR_AFFILIATION, label: 'Institution', itemprop: 'author_affiliation'
 
     config.add_sort_field "score desc, #{Settings.FIELDS.DATE} asc", label: 'relevance'
     config.add_sort_field "#{Settings.FIELDS.DATE} desc, score desc asc", label: 'date'
