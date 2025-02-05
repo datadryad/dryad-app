@@ -93,7 +93,7 @@ module StashEngine
     def update_hash
       valid = %i[covers_dpc partner_display enabled short_name long_name]
       update = edit_params.slice(*valid)
-      update[:sponsor_id] = edit_params[:sponsor_id].presence || nil
+      update[:sponsor_id] = edit_params[:sponsor_id].presence
       update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json
       if edit_params.key?(:flag)
         update[:flag_attributes] = { note: edit_params[:note] }
@@ -104,8 +104,8 @@ module StashEngine
       auth = {
         strategy: edit_params[:authentication][:strategy],
         ranges: edit_params[:authentication][:ranges].present? ? edit_params[:authentication][:ranges].split("\n").map(&:strip) : nil,
-        entity_id: edit_params[:authentication][:entity_id].presence || nil,
-        entity_domain: edit_params[:authentication][:entity_domain].presence || nil
+        entity_id: edit_params[:authentication][:entity_id].presence,
+        entity_domain: edit_params[:authentication][:entity_domain].presence
       }
       update[:authentication] = auth.compact.to_json
       update

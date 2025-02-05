@@ -78,8 +78,8 @@ module StashEngine
     def update_hash
       valid = %i[title default_to_ppr]
       update = edit_params.slice(*valid).to_h
-      update[:sponsor_id] = edit_params[:sponsor_id].presence || nil
-      update[:payment_plan_type] = edit_params[:payment_plan_type].presence || nil
+      update[:sponsor_id] = edit_params[:sponsor_id].presence
+      update[:payment_plan_type] = edit_params[:payment_plan_type].presence
       update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json
       update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json
       update[:issns_attributes] = update_issns
