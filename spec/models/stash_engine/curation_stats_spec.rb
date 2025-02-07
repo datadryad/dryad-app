@@ -226,8 +226,10 @@ module StashEngine
 
         # YES -- user submitted, a curator was assigned, then the curator was unassigned
         @res[4].curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
-        @res[4].curation_activities << CurationActivity.create(status: 'submitted', note: 'Changing curator to Any Name.', user: @curator, created_at: @day)
-        @res[4].curation_activities << CurationActivity.create(status: 'submitted', note: 'Changing curator to unassigned.', user: @curator, created_at: @day)
+        @res[4].curation_activities << CurationActivity.create(status: 'submitted', note: 'Changing curator to Any Name.', user: @curator,
+                                                               created_at: @day)
+        @res[4].curation_activities << CurationActivity.create(status: 'submitted', note: 'Changing curator to unassigned.', user: @curator,
+                                                               created_at: @day)
         stats.recalculate
         expect(stats.datasets_unclaimed).to eq(5)
       end
@@ -393,8 +395,6 @@ module StashEngine
         expect(stats.ppr_to_curation).to eq(1)
       end
     end
-
-
 
     # Test the fields of format `datasets_to_XXXXX`
     # Focus on the `aar` field, with occasional test of the others, since they use
