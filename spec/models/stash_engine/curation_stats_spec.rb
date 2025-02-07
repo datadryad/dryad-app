@@ -376,10 +376,10 @@ module StashEngine
       it 'knows when there are none' do
         # NO -- move to submitted after a curation status
         @res[0].curation_activities << CurationActivity.create(status: 'peer_review', user: @curator, created_at: @day)
-        res_new = create(:resource, identifier_id: @res[0].id, user: @user, tenant_id: 'dryad')
+        res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
         res_new.curation_activities << CurationActivity.create(status: 'curation', user: @curator, created_at: @day)
         Timecop.travel(Time.now.utc + 1.minute)
-        res_new2 = create(:resource, identifier_id: @res[0].id, user: @user, tenant_id: 'dryad')
+        res_new2 = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
         res_new2.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
         stats = CurationStats.create(date: @day)
         expect(stats.ppr_to_curation).to eq(0)
@@ -389,7 +389,8 @@ module StashEngine
       it 'counts correctly when there are some' do
         # YES -- move to submitted after a PPR status
         @res[0].curation_activities << CurationActivity.create(status: 'peer_review', user: @curator, created_at: @day)
-        res_new = create(:resource, identifier_id: @res[0].id, user: @user, tenant_id: 'dryad')
+        res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
+        res_new.resource_states.first.update(resource_state: 'submitted')
         res_new.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
         stats = CurationStats.create(date: @day)
         expect(stats.ppr_to_curation).to eq(1)
