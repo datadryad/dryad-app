@@ -2,7 +2,7 @@
 
 Most of the Dryad Cron jobs are executed via the shell scripts in this directory.
 
-The files deploy with the code (in `apps/ui/current`), but the logs and shared items are in
+The files deploy with the code (in `/home/ec2-user/deploy/current`), but the logs and shared items are in
 `/home/ec2-user/deploy/shared/cron`.
 
 ## Frequencies:
@@ -22,18 +22,22 @@ Add your task as a new line to one of these shell scripts and then redeploy the 
 
 ## Cron tasks:
 
-example crontab
+Cron jobs are configured to run using systemd timers. The `*.service` and `*.timer` files need to be placed in `/etc/systemd/system/`.
+Example files are [here](files)
+
+Every systemd service needs to be enabled and started using `systemctl enable <service>` and `systemctl start <service>`.
 
 ```shell
-# Run jobs every 5 minutes
-*/5 * * * * /home/ec2-user/deploy/current/cron/every_5.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
+# Start jobs that run hourly
+systemctl start cron_hourly
 
-# Run the jobs at noon each day
-00 12 * * * /home/ec2-user/deploy/current/cron/daily.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
-
-# Run the jobs every Sunday at 21:00
-00 21 * * 0 /home/ec2-user/deploy/current/cron/weekly.sh stage >> /home/ec2-user/deploy/shared/cron/logs/cron.log 2>&1
+# Enable jobs that run hourly
+systemctl enable cron_hourly
 ```
+
+Make sure to edit the `*.service` files to specify the proper Rails environment.
+
+After changing any of the files in `/etc/systemd/system/`, you need to reload the systemd daemon using `systemctl daemon-reload`.
 
 ##counter-processor move to new server (require for counter weekly cron to work after move)
 - Set up ssh so you can scp files

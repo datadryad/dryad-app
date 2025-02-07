@@ -1159,15 +1159,15 @@ module StashEngine
 
     def auto_assign_curator(target_status:)
       target_curator = curator&.min_curator? ? curator : identifier.most_recent_curator
-      if target_curator.nil? || !target_curator.min_curator?
+      if target_curator.nil?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to a random current curator , but not a superuser
         cur_list = StashEngine::User.curators.to_a
         target_curator = cur_list[rand(cur_list.length)]
       end
-      return unless target_curator
+      return unless target_curator.present?
 
-      update(user_id: target_curator.id) unless curator == target_curator
+      update(user_id: target_curator.id) unless curator&.id == target_curator.id
 
       curation_activities << StashEngine::CurationActivity.create(
         user_id: target_curator.id, status: target_status,
