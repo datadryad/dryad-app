@@ -1,6 +1,6 @@
 defaults: &DEFAULTS
   shared_resource_model: StashEngine::Resource
-  stash_mount: /stash
+  stash_mount: /
   max_review_days: 180
   ezid:
     host: ezid.cdlib.org

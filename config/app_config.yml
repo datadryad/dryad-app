@@ -1,7 +1,7 @@
 <% if Rails.env == 'test' %>
 test:
   shared_resource_model: StashEngine::Resource
-  stash_mount: /stash
+  stash_mount: /
   ezid:
     host: ezid.cdlib.org
     port: 443
@@ -125,7 +125,7 @@ test:
 
 defaults: &DEFAULTS
   shared_resource_model: StashEngine::Resource
-  stash_mount: /stash
+  stash_mount: /
   ezid:
     host: ezid.cdlib.org
     port: 443

@@ -126,7 +126,7 @@ module Stash
               database: db,
               link_base: 'dryad.seq.',
               icon_url: "#{@root_url}images/DryadLogo-Button.png",
-              callback_base: "#{@root_url}stash/dataset/",
+              callback_base: "#{@root_url}dataset/",
               callback_rule: hash[:doi],
               subject_type: 'supplemental materials',
               ids: JSON.parse(hash[:sequence])

@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rails routes".
 
-  root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
+  # root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
+
+  root to: 'stash_engine/pages#home'
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development? || Rails.env.dev?
 
@@ -78,7 +80,7 @@ Rails.application.routes.draw do
   # Individual pages that we're redirecting from the old wiki, then a catchall
   # for any other page from the old wiki. The individual pages must be listed
   # first, or they will not take effect.
-  get '/Governance', to: redirect('stash/our_governance')
+  get '/Governance', to: redirect('/about#our-board')
   get '*path',
       constraints: {host: 'wiki.datadryad.org'},
       to: redirect('https://github.com/datadryad/dryad-app/tree/main/documentation/v1_wiki_content.md')
@@ -131,7 +133,7 @@ Rails.application.routes.draw do
 
   ########################## StashEngine support ######################################
 
-  scope module: 'stash_engine', path: '/stash' do
+  scope module: 'stash_engine' do
 
     get 'landing/show'
 
@@ -218,6 +220,9 @@ Rails.application.routes.draw do
     # root 'sessions#index'
     root 'pages#home', as: 'pages_root'
 
+    # this is temporary until we get ORCID configured
+    match '/stash/auth/orcid/callback', to: 'sessions#orcid_callback', via: %i[get post]
+
     match 'auth/orcid/callback', to: 'sessions#orcid_callback', via: %i[get post]
     match 'auth/google_oauth2/callback', to: 'sessions#google_callback', via: %i[get post]
     match 'auth/developer/callback', to: 'sessions#developer_callback', via: %i[get post]
@@ -251,7 +256,6 @@ Rails.application.routes.draw do
     get 'process', to: 'pages#process'
     get 'why_use', to: 'pages#why_use'
     get 'dda', to: 'pages#dda' # data deposit agreement
-    get 'search', to: 'searches#index'
     get 'terms', to: 'pages#terms'
     get 'editor', to: 'pages#editor'
     get 'web_crawling', to: 'pages#web_crawling'
@@ -266,7 +270,7 @@ Rails.application.routes.draw do
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
     # All our identifiers seem to have either /dryad or /FK2 or /[A-Z]\d in them, replaces the first occurrence of %2F with /
-    get 'dataset/*id', to: redirect{ |params| "/stash/dataset/#{params[:id].sub('%2F', '/') }"}, status: 302,
+    get 'dataset/*id', to: redirect{ |params| "/dataset/#{params[:id].sub('%2F', '/') }"}, status: 302,
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
     get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
@@ -377,8 +381,10 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
+  # get 'search', to: 'catalog#search', as: 'search'
+
   # this is kind of hacky, but it directs our search results to open links to the landing pages
-  resources :solr_documents, only: [:show], path: '/stash/dataset', controller: 'catalog'
+  resources :solr_documents, only: [:show], path: '/dataset', controller: 'catalog'
 
   ############################# Discovery support ######################################
 
@@ -500,31 +506,35 @@ Rails.application.routes.draw do
   ########################## Dryad v1 support ######################################
 
   # Routing to redirect old Dryad URLs to their correct locations in this system
-  get '/pages/faq', to: redirect('stash/requirements')
+  get '/pages/faq', to: redirect('/requirements')
   get '/pages/jdap', to: redirect('docs/JointDataArchivingPolicy.pdf')
-  get '/pages/membershipOverview', to: redirect('stash/join_us#our-membership')
-  get '/stash/our_membership', to: redirect('stash/join_us#our-membership')
-  get '/stash/our_community', to: redirect('stash/join_us#our-membership')
-  get '/stash/our_governance', to: redirect('stash/about#our-board')
-  get '/stash/our_staff', to: redirect('stash/about#our-staff')
-  get '/stash/our_advisors', to: redirect('stash/about#our-advisors')
-  get '/stash/our_platform', to: redirect('stash/mission#our-platform')
-  get '/stash/our_mission', to: redirect('stash/mission')
-  get '/stash/faq', to: redirect('stash/requirements')
-  get '/pages/organization', to: redirect('stash/mission')
-  get '/pages/policies', to: redirect('stash/terms')
-  get '/pages/publicationBlackout', to: redirect('stash/pb_tombstone')
-  get '/publicationBlackout', to: redirect('stash/pb_tombstone')
+  get '/pages/membershipOverview', to: redirect('/join_us#our-membership')
+  get '/stash/our_membership', to: redirect('/join_us#our-membership')
+  get '/stash/our_community', to: redirect('/join_us#our-membership')
+  get '/stash/our_governance', to: redirect('/about#our-board')
+  get '/stash/our_staff', to: redirect('/about#our-staff')
+  get '/stash/our_advisors', to: redirect('/about#our-advisors')
+  get '/stash/our_platform', to: redirect('/mission#our-platform')
+  get '/stash/our_mission', to: redirect('/mission')
+  get '/stash/faq', to: redirect('/requirements')
+  get '/pages/organization', to: redirect('/mission')
+  get '/pages/policies', to: redirect('/terms')
+  get '/pages/publicationBlackout', to: redirect('/pb_tombstone')
+  get '/publicationBlackout', to: redirect('/pb_tombstone')
   get '/pages/searching', to: redirect('search')
   get '/themes/Dryad/images/:image', to: redirect('/images/%{image}')
   get '/themes/Dryad/images/dryadLogo.png', to: redirect('/images/logo_dryad.png')
   get '/themes/Mirage/*path', to: redirect('/')
   get '/repo/*path', to: redirect('/')
   get '/repo', to: redirect('/')
-  get '/submit', to: redirect { |params, request| "/stash/resources/new?#{request.params.to_query}" }
-  get '/interested', to: redirect('/stash/contact#get-involved')
-  get '/stash/interested', to: redirect('/stash/contact#get-involved')
-  get '/stash/ds_admin', to: redirect('/stash/admin_dashboard')
+  get '/submit', to: redirect { |params, request| "/resources/new?#{request.params.to_query}" }
+  get '/interested', to: redirect('/contact#get-involved')
+  get '/stash/interested', to: redirect('/contact#get-involved')
+  get '/stash/ds_admin', to: redirect('/admin_dashboard')
+
+  get '/stash', to: redirect('/')
+  get '/stash/*other', to: redirect('/%{other}')
+
 
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
@@ -532,14 +542,14 @@ Rails.application.routes.draw do
   # Version of Dataset: https://datadryad.org/resource/doi:10.5061/dryad.kq201.2
   get '/resource/:doi_prefix/:doi_suffix',
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
-      to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
+      to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
   # File within a Dataset:            https://datadryad.org/resource/doi:10.5061/dryad.kq201/3
   # Version of File within a Dataset: https://datadryad.org/resource/doi:10.5061/dryad.kq201/3.1
   # File within a Version:            https://datadryad.org/resource/doi:10.5061/dryad.kq201.2/3
   # Version of File within a Version: https://datadryad.org/resource/doi:10.5061/dryad.kq201.2/3.1
   get '/resource/:doi_prefix/:doi_suffix*file',
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
-      to: redirect{ |p, req| "stash/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
+      to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
 
   get :health_check, to: 'health#check'
 end

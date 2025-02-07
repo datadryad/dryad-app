@@ -23,7 +23,7 @@ module Stash
         @identifier_str = 'doi:10.5072/1234-5678'
         @url_helpers = double(Module)
 
-        path_to_landing = "/stash/#{identifier_str}"
+        path_to_landing = "/#{identifier_str}"
         @landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: path_to_landing).to_s
         allow(url_helpers).to receive(:show_path).with(identifier_str).and_return(path_to_landing)
 
