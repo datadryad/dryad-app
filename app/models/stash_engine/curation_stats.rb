@@ -69,7 +69,7 @@ module StashEngine
       return nil if identifier.created_at > date + 1.day
 
       curr_status = 'in_progress'
-      identifier&.resources&.map(&:curation_activities)&.flatten&.each do |ca|
+      identifier.curation_activities.each do |ca|
         return curr_status if ca.created_at > date + 1.day
 
         curr_status = ca.status
@@ -85,12 +85,12 @@ module StashEngine
       # for each dataset that received the target status on the given day
       CurationActivity.where(
         created_at: date..(date + 1.day), status: %w[action_required embargoed published]
-      ).joins(:resource).find_each do |ca|
+      ).includes(resource: :identifier).find_each do |ca|
         next unless ca.resource
 
         # if the previous ca was `curation`, add the identifier to datasets_found
         prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
-        datasets_found.add(ca.resource.identifier) if prev_ca&.curation?
+        datasets_found.add(ca.resource.identifier.id) if prev_ca&.curation?
       end
       update(datasets_curated: datasets_found.size)
     end
@@ -99,24 +99,28 @@ module StashEngine
     # including any held over from before (either have status 'curation' or 'submitted')
     def populate_datasets_to_be_curated
       datasets_found = 0
-      unclaimed = 0
+      unclaimed      = 0
 
       # for each dataset that was in the target status on the given day
       launch_day = Date.new(2019, 9, 17)
-
-      StashEngine::Identifier.where(created_at: launch_day..(date + 1.day)).find_each do |i|
+      StashEngine::Identifier.where(created_at: launch_day..(date + 1.day))
+                             .includes(resources: :curation_activities)
+                             .find_each do |ident|
         # check the actual status on that date...if it was 'curation' or 'submitted', count it
-        s = status_on_date(i)
-        next unless %w[submitted curation].include?(s)
+        status = status_on_date(ident)
+        next unless %w[submitted curation].include?(status)
 
         datasets_found += 1
+        next if status == 'curation'
+        # count as unclaimed if
+        #  there there is no activity for setting the curator
+        #  OR
+        #  the last activity for setting the curator is to unsigned
+        last_activity = ident.curation_activities.where(created_at: launch_day..(date + 1.day))
+                             .where("note like 'Changing curator to%' OR note like 'System auto-assigned curator%'")
+                             .order(id: :asc).last
 
-        next unless s == 'submitted'
-
-        # count as unclaimed unless a curator posted a curation activity on the same day
-        unclaimed += 1 unless StashEngine::CurationActivity.find_by(
-          resource_id: i.resources.pluck(:id), created_at: date..(date + 1.day), user_id: StashEngine::User.all_curators.pluck(:id)
-        ).present?
+        unclaimed     += 1 if last_activity.nil? || last_activity.note.start_with?('Changing curator to unassigned')
       end
       update(datasets_to_be_curated: datasets_found)
       update(datasets_unclaimed: unclaimed)
@@ -130,13 +134,14 @@ module StashEngine
     def populate_new_datasets_to_submitted
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted]).joins(resource: :identifier).find_each do |ca|
+      CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted])
+                      .includes(resource: :identifier).find_each do |ca|
         found_dataset = ca.resource&.identifier
         next unless found_dataset
         # skip if the dataset was not first submitted on this date
-        next unless found_dataset.first_submitted_resource&.submitted_date&.to_date == date
+        next unless found_dataset.first_submitted_resource&.process_date&.submitted&.to_date == date
 
-        datasets_found.add(found_dataset) if found_dataset
+        datasets_found.add(found_dataset.id) if found_dataset
       end
       update(new_datasets_to_submitted: datasets_found.size)
     end
@@ -145,14 +150,15 @@ module StashEngine
     def populate_new_datasets_to_peer_review
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.where(created_at: date..(date + 1.day), status: %w[peer_review]).joins(resource: :identifier).find_each do |ca|
+      CurationActivity.where(created_at: date..(date + 1.day), status: %w[peer_review])
+                      .includes(resource: :identifier).find_each do |ca|
         found_dataset = ca.resource&.identifier
         next unless found_dataset
 
         # skip if the dataset was not first submitted on this date
-        next unless found_dataset.first_submitted_resource&.submitted_date&.to_date == date
+        next unless found_dataset.first_submitted_resource&.process_date&.peer_review&.to_date == date
 
-        datasets_found.add(found_dataset) if found_dataset
+        datasets_found.add(found_dataset.id) if found_dataset
       end
       update(new_datasets_to_peer_review: datasets_found.size)
     end
@@ -165,16 +171,17 @@ module StashEngine
 
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.where(created_at: date..(date + 1.day), status: to_status).joins(:resource).find_each do |ca|
+      CurationActivity.where(created_at: date..(date + 1.day), status: to_status).
+        includes(:resource).find_each do |ca|
         next unless ca.resource
+        next if datasets_found.include?(ca.resource.identifier_id)
 
         # if the previous ca was from_status, add the identifier to datasets_found
-        prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
+        prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..(ca.id - 1)).last
 
         # add to datasets_found if it's transition we want to count
-        if (from_status.blank? && (prev_ca&.status != ca&.status)) ||
-           prev_ca&.status == from_status
-          datasets_found.add(ca.resource.identifier)
+        if (from_status.blank? && (prev_ca&.status != ca&.status)) || prev_ca&.status == from_status
+          datasets_found.add(ca.resource.identifier_id)
         end
       end
       datasets_found.size
@@ -187,12 +194,13 @@ module StashEngine
     def populate_ppr_to_curation
       p2c_count = 0
       # for each dataset that received curation status on the given day
-      CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted').joins(resource: :identifier).find_each do |ca|
+      CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
+                      .includes(resource: [identifier: :curation_activities]).find_each do |ca|
         # find the most recent PPR or curation status
         # if it's PPR, count it as a ppr_to_curation transition
-        # if it's curation, or we get to the end of the list, don't count it
-        ca.resource&.identifier&.resources&.map(&:curation_activities)&.flatten&.reverse&.each do |sibling_ca|
-          next if sibling_ca.id >= ca.id
+        ca.resource.identifier.curation_activities
+          .where('resource_id < ?', ca.resource_id)
+          .order(id: :asc).reverse.each do |sibling_ca|
 
           if sibling_ca.peer_review?
             p2c_count += 1
@@ -231,17 +239,20 @@ module StashEngine
     def populate_author_revised
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted curation]).joins(resource: :identifier).find_each do |ca|
+      CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
+                      .includes(resource: [identifier: :curation_activities])
+                      .find_each do |ca|
         # action_required is either a previous status in this version, or the last status of the previous version
         ident = ca.resource&.identifier
         next unless ident
+        next if datasets_found.include?(ident.id)
 
         this_ver_aar = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1, status: 'action_required').present?
 
         prev_resource = ident.resources.where(id: 0..ca.resource_id - 1).last
-        prev_ver_aar = prev_resource&.current_curation_status == 'action_required'
+        prev_ver_aar  = prev_resource&.current_curation_status == 'action_required'
 
-        datasets_found.add(ca.resource.identifier) if this_ver_aar || prev_ver_aar
+        datasets_found.add(ca.resource.identifier_id) if this_ver_aar || prev_ver_aar
       end
 
       update(author_revised: datasets_found.size)
@@ -251,15 +262,17 @@ module StashEngine
     def populate_author_versioned
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted').joins(resource: :identifier).find_each do |ca|
+      CurationActivity.where(created_at: date - 100.day..(date + 1.day), status: 'submitted')
+                      .includes(resource: [:identifier, :process_date]).find_each do |ca|
         # check if this was the actual date of submission for this resource
         next unless ca.resource.submitted_date&.to_date == date
 
         # if this dataset has been published or embargoed, count it
         ident = ca.resource&.identifier
         next unless ident
+        next if datasets_found.include?(ident.id)
 
-        datasets_found.add(ident) if %w[published embargoed].include?(ident.pub_state)
+        datasets_found.add(ident.id) if %w[published embargoed].include?(ident.pub_state)
       end
 
       update(author_versioned: datasets_found.size)
