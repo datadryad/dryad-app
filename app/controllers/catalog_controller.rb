@@ -101,8 +101,8 @@ class CatalogController < ApplicationController
     config.add_show_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME, label: 'Institution', itemprop: 'author_affiliation_name'
     config.add_show_field Settings.FIELDS.AUTHOR_AFFILIATION, label: 'Institution', itemprop: 'author_affiliation'
 
-    config.add_sort_field "score desc, #{Settings.FIELDS.DATE} asc", label: 'relevance'
-    config.add_sort_field "#{Settings.FIELDS.DATE} desc, score desc asc", label: 'date'
+    config.add_sort_field "score desc, #{Settings.FIELDS.DATE} desc", label: 'relevance'
+    config.add_sort_field "#{Settings.FIELDS.DATE} desc, score desc", label: 'date'
 
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
