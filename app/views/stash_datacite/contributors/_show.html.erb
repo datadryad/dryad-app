@@ -17,7 +17,7 @@
       <% else %>
   	  <li>
   	    <%if contributor.name_identifier_id.present? && contributor.identifier_type == 'ror'%>
-          <a href="/search?f%5Bfunder_awd_ids_sm%5D%5B%5D=<%= URI.encode_www_form_component(contributor.name_identifier_id) %>"><%= contributor.contributor_name_friendly%></a>
+          <a href="/search?q=<%= URI.encode_www_form_component(contributor.name_identifier_id) %>"><%= contributor.contributor_name_friendly%></a>
         <% else %><%= contributor.contributor_name_friendly%><% end %>
           <% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
   	  </li>

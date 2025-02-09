@@ -45,6 +45,7 @@ FIELDS:
   :AUTHOR_AFFILIATION: 'dryad_author_affiliation_id_sm'
   :DATASET_FILE_EXT: 'dryad_dataset_file_ext_sm'
   :FUNDER: 'dcs_funder_sm'
+  :FUNDER_ID: 'funder_ror_ids_sm'
   :AWARD: 'funder_awd_ids_sm'
   :AUTHOR: 'author_orcids_sm'
 
