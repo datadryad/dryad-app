@@ -70,6 +70,7 @@ class CatalogController < ApplicationController
 
     config.add_facet_field Settings.FIELDS.SUBJECT, label: 'Subject keyword', limit: 8
     config.add_facet_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', limit: 8
+    config.add_facet_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME, label: 'Institution', limit: 8
     config.add_facet_field Settings.FIELDS.AUTHOR_AFFILIATION, label: 'Institution', limit: 8
     config.add_facet_field Settings.FIELDS.FUNDER, label: 'Funder', limit: 8
     config.add_facet_field Settings.FIELDS.AWARD, label: 'Grant ID', limit: 8
@@ -97,6 +98,7 @@ class CatalogController < ApplicationController
     config.add_show_field Settings.FIELDS.TEMPORAL, label: 'Year', itemprop: 'temporal'
     config.add_show_field Settings.FIELDS.PROVENANCE, label: 'Held by', link_to_search: true
     config.add_show_field Settings.FIELDS.RELATED_PUBLICATION_NAME, label: 'Journal', itemprop: 'related_publication_name'
+    config.add_show_field Settings.FIELDS.AUTHOR_AFFILIATION_NAME, label: 'Institution', itemprop: 'author_affiliation_name'
     config.add_show_field Settings.FIELDS.AUTHOR_AFFILIATION, label: 'Institution', itemprop: 'author_affiliation'
 
     config.add_sort_field "score desc, #{Settings.FIELDS.DATE} asc", label: 'relevance'
