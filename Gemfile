@@ -25,10 +25,6 @@ gem 'puma', '6.5.0', group: :puma, require: false
 
 # ############################################################
 # UI
-
-# TODO: why do we have uglifier AND yui-compressor?
-# asset pipeline problems with Joels pre-minified CSS/JS caused errors with uglifier and had to revert to yui-compressor
-
 gem 'coffee-rails', '~> 5.0'
 gem 'jquery-rails', '~> 4.6'
 gem 'sassc-rails', '~> 2.1.2' # the default for newer rails, no need for yui and already used by bootstrap or something else
@@ -36,7 +32,6 @@ gem 'terser' # for JS and CSS minify
 
 # ############################################################
 # Misc
-
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
@@ -53,7 +48,7 @@ gem 'data_migrate'
 gem 'delayed_job_active_record', '~> 4.1.7'
 gem 'doorkeeper', '~> 5.5'
 gem 'down' # I'm not sure where this is used, but maybe in the frictionless data that Cassiano worked on to dl files
-gem 'exception_notification'
+gem 'exception_notification', git: 'https://github.com/smartinez87/exception_notification.git'
 gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
 gem 'font-awesome-sass', '~> 6.1.0'
@@ -107,7 +102,6 @@ gem 'faraday', '~> 1.10.4'
 
 # ############################################################
 # Development and testing
-
 group :test do
   # I'm not sure we're really using every one of these libraries like fuubar?, guard?, mocha?, rspec-html?, shoulda?
   # Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb (https://github.com/teamcapybara/capybara)

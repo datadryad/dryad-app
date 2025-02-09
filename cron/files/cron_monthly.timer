@@ -1,0 +1,10 @@
+[Unit]
+Description=Cron timer - monthly
+Requires=cron_monthly.service
+
+[Timer]
+OnCalendar=*-*-20 19:00:00
+Unit=cron_monthly.service
+
+[Install]
+WantedBy=timers.target
