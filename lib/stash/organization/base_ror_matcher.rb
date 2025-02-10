@@ -137,8 +137,8 @@ module Stash
         puts "Copying to S3: #{s3_key}"
         Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:reports_bucket])
           .put_file(s3_key: s3_key, filename: @report_path)
-      # ensure
-      #   FileUtils.rm_f(@report_path)
+        # ensure
+        #   FileUtils.rm_f(@report_path)
       end
 
       def report_file_path(report_name)
