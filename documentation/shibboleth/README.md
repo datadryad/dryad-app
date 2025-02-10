@@ -73,7 +73,7 @@ Shibboleth flow of control
 - shibd sends to https://wayf.incommonfederation.org/DS/WAYF
    - IdP makes a SAML assertion and sends it back to shibd
    - Apache sees it's approved and forwards to puma
-- Once login is complete, control goes back to https://datadryad.org/stash/auth/shibboleth/callback,
+- Once login is complete, control goes back to https://datadryad.org/auth/shibboleth/callback,
   which is handled by Rails
   - In Rails `SessionsController.callback` handles the call,
     - verifyies the validity of the package sent from the IdP

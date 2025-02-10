@@ -1,15 +1,15 @@
 # Submission walkthrough
 
-Before you begin a submission, please ensure your submission meets [our requirements](/stash/requirements) and follows [good data practices](/stash/best_practices). After your submission is complete, your dataset will be [curated and published](/stash/process). 
+Before you begin a submission, please ensure your submission meets [our requirements](/requirements) and follows [good data practices](/best_practices). After your submission is complete, your dataset will be [curated and published](/process). 
 
-Ready to get started? [Log in](/stash/sessions/choose_login) and go to "My datasets" to begin your data submission now!
+Ready to get started? [Log in](/sessions/choose_login) and go to "My datasets" to begin your data submission now!
 
 
 ## Preparing your data
 
-Data publishing includes describing and organizing your data in a way that makes it accessible and reusable. We recommend the use of [good data practices](/stash/best_practices), including descriptive names for file names and table headings, and a logical file organization.
+Data publishing includes describing and organizing your data in a way that makes it accessible and reusable. We recommend the use of [good data practices](/best_practices), including descriptive names for file names and table headings, and a logical file organization.
 
-Assemble all data files together. Where possible, data should be shared in [an open file format](/stash/requirements#preferred-file-formats) so that proprietary software is not required to view or use the files.
+Assemble all data files together. Where possible, data should be shared in [an open file format](/requirements#preferred-file-formats) so that proprietary software is not required to view or use the files.
 
 * All files should be able to be opened without any passcode restrictions.
 * All information needs to be in English.
@@ -23,7 +23,7 @@ Data may be submitted and published at any time. However, if your data are assoc
 
 * If you received an invitation from a journal to submit data to Dryad, then that journal has integrated its submission process with Dryad. Please follow the instructions from the journal.
 * Dryad usually does not grant short- or long-term embargoes of data, but we will consider requests in specific instances (i.e., graduate students publishing thesis data that they intend to use for other parts of their thesis/dissertation; media blackouts around a study). If you wish to embargo data beyond the publication date of the associated article, we require confirmation from the publishing journal. Please submit an embargo request to <a class="emailr" href="mailto:dev@null?subject=Embargo+request&body=My+Dryad+dataset+DOI:%0D%0AEmbargo+reason:">gro.dayrdatad@pleh</a> at the time of submission.
-* Regardless of journal, you may choose to make your data temporarily [private for peer review](/stash/process#private-for-peer-review).
+* Regardless of journal, you may choose to make your data temporarily [private for peer review](/process#private-for-peer-review).
 
 
 ## Login
@@ -37,14 +37,14 @@ For institutional members, we require a second form of authentication at login. 
 
 ### Describe your dataset
 
-You will first be asked to enter [required metadata](/stash/requirements) (information about your data). 
+You will first be asked to enter [required metadata](/requirements) (information about your data). 
 
 Our duplicate submission detector will scan the first four words of the dataset title and, if those words match an existing dataset linked to the same submitting author, a pop-up will appear on the final page of the submission form to warn of a potential identical submission. If there is no risk of duplication, you can bypass the warning and proceed.
 
 
 ### Prepare a README
 
-You will be asked to create a documentation file describing your data files’ content and organization, which will serve as the main source of information for users of your dataset. [Your README](/stash/best_practices#describe-your-dataset-in-a-readme-file) can be created onscreen using our provided template, or if you have already created a README in markdown format, you may upload your file into the README editor. 
+You will be asked to create a documentation file describing your data files’ content and organization, which will serve as the main source of information for users of your dataset. [Your README](/best_practices#describe-your-dataset-in-a-readme-file) can be created onscreen using our provided template, or if you have already created a README in markdown format, you may upload your file into the README editor. 
 
 If you wish to provide additional documentation or README files in other formats, those can be uploaded along with your dataset files on the next screen. 
 
@@ -76,7 +76,7 @@ If any potential inconsistencies are identified, instructions will appear on the
 
 You can choose to proceed to the final page of the submission form without editing any files. During curation, if there are questions about how your data are presented, a curator will contact you with options to improve the organization, readability, and/or reusability of your dataset.
 
-If you have questions, please see our [guide to the tabular data check alerts](/stash/data_check_guide). If you require assistance, [contact support](/stash/contact).
+If you have questions, please see our [guide to the tabular data check alerts](/data_check_guide). If you require assistance, [contact support](/contact).
 
 
 ## Review and submit

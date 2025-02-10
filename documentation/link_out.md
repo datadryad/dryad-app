@@ -150,7 +150,7 @@ Sample `sequencelinkout000001.xml` file:
       </ObjectList>
     </ObjectSelector>
     <ObjectUrl>
-      <Base>https://v3-dev.datadryad.org/stash/dataset/</Base>
+      <Base>https://v3-dev.datadryad.org/dataset/</Base>
       <Rule>doi:12.1234/dryad.12345a</Rule>
       <SubjectType>supplemental materials</SubjectType>
     </ObjectUrl>
@@ -174,7 +174,7 @@ Sample `sequencelinkout000001.xml` file:
       </ObjectList>
     </ObjectSelector>
     <ObjectUrl>
-      <Base>https://v3-dev.datadryad.org/stash/dataset/</Base>
+      <Base>https://v3-dev.datadryad.org/dataset/</Base>
       <Rule>doi:12.1234/dryad.12345a</Rule>
       <SubjectType>supplemental materials</SubjectType>
     </ObjectUrl>
@@ -191,7 +191,7 @@ Sample `sequencelinkout000001.xml` file:
       </ObjectList>
     </ObjectSelector>
     <ObjectUrl>
-      <Base>https://v3-dev.datadryad.org/stash/dataset/</Base>
+      <Base>https://v3-dev.datadryad.org/dataset/</Base>
       <Rule>doi:12.1234/dryad.12345b</Rule>
       <SubjectType>supplemental materials</SubjectType>
     </ObjectUrl>

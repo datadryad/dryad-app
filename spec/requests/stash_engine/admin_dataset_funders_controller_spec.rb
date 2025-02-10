@@ -146,8 +146,8 @@ module StashEngine
 
         it 'limits to an initial submission date' do
           response_code = get '/ds_admin_funders', params: { date_type: 'initial',
-                                                                   start_date: '2011-11-01',
-                                                                   end_date: '2011-12-01' }
+                                                             start_date: '2011-11-01',
+                                                             end_date: '2011-12-01' }
           expect(response_code).to eq(200)
           expect(body).to include('Nov 11, 2011')
           expect(body).to include(CGI.escapeHTML(@resources[0].title))
@@ -159,8 +159,8 @@ module StashEngine
           res.identifier.update(pub_state: 'published')
           res.update(meta_view: true, file_view: true, publication_date: Time.new(2016, 8, 22, 12))
           response_code = get '/ds_admin_funders', params: { date_type: 'published',
-                                                                   start_date: '2016-08-01',
-                                                                   end_date: '2016-09-01' }
+                                                             start_date: '2016-08-01',
+                                                             end_date: '2016-09-01' }
           expect(response_code).to eq(200)
           expect(body).to include('Aug 22, 2016')
           expect(body).to include(CGI.escapeHTML(@resources[0].title))
