@@ -214,7 +214,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    date (3.3.4)
+    date (3.4.1)
     debug_inspector (1.2.0)
     declarative (0.0.20)
     delayed_job (4.1.13)
@@ -425,7 +425,7 @@ GEM
     net-ftp (0.3.8)
       net-protocol
       time
-    net-imap (0.5.0)
+    net-imap (0.5.6)
       date
       net-protocol
     net-pop (0.1.2)
