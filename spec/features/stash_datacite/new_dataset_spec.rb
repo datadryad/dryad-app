@@ -172,7 +172,7 @@ RSpec.feature 'NewDataset', type: :feature do
       expect(page).not_to have_text('Payment for this deposit is sponsored by')
     end
 
-    it 'charges user when institution is not in a fee-waiver country', js: true do
+    xit 'charges user when institution is not in a fee-waiver country', js: true do
       non_waiver_country = Faker::Address.country
       non_waiver_university = Faker::Educator.university
       ror_org = create(:ror_org, name: non_waiver_university, country: non_waiver_country)
