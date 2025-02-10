@@ -12,7 +12,7 @@ module StashEngine
       end
 
       it 'loads react root component' do
-        get "/stash/resources/#{@resource.id}/upload"
+        get "/resources/#{@resource.id}/upload"
 
         assert_react_component 'containers/UploadFiles' do |props|
           assert_equal @resource.id, props[:resource_id]
@@ -29,7 +29,7 @@ module StashEngine
           report: '[{errors: errors}]', generic_file: file, status: 'issues'
         )
 
-        get "/stash/resources/#{@resource.id}/upload"
+        get "/resources/#{@resource.id}/upload"
 
         assert_react_component 'containers/UploadFiles' do |props|
           assert_equal file.frictionless_report.status,

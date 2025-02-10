@@ -32,7 +32,7 @@ module StashEngine
       it 'returns the sharing link' do
         @share = Share.create(identifier_id: @identifier.id)
         expect(@share.sharing_link).to start_with('http')
-        expect(@share.sharing_link).to include('/stash/share/')
+        expect(@share.sharing_link).to include('/share/')
         expect(@share.sharing_link).to include('http')
       end
 

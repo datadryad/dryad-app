@@ -24,7 +24,7 @@ module StashEngine
       it 'is not found' do
         stub_404_status
         stub_404_assemble
-        response_code = get "/stash/downloads/download_resource/#{@resource.id}"
+        response_code = get "/downloads/download_resource/#{@resource.id}"
         expect(response_code).to eq(404)
         expect(response.body).to include('Download for this dataset is unavailable')
       end
@@ -32,7 +32,7 @@ module StashEngine
       it 'returns 404 for item where not available because of permissions' do
         # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
         allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
-        response_code = get "/stash/downloads/download_resource/#{@resource.id}"
+        response_code = get "/downloads/download_resource/#{@resource.id}"
         expect(response_code).to eq(404)
         expect(response.body).to include('Download for this dataset is unavailable')
       end
@@ -41,7 +41,7 @@ module StashEngine
         # couldn't get 'unstub' to work here for deprecation warnings and other problems, so just redefining it
         allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
         share_id = @resource.identifier.shares.first.secret_id
-        response_code = get "/stash/downloads/download_resource/0?share=#{share_id}"
+        response_code = get "/downloads/download_resource/0?share=#{share_id}"
         expect(response_code).to eq(302)
       end
 
@@ -50,7 +50,7 @@ module StashEngine
         allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
         share_id = @resource.identifier.shares.first.secret_id
         # stub_404_status
-        response_code = get "/stash/downloads/download_resource/0?share=#{share_id}lol"
+        response_code = get "/downloads/download_resource/0?share=#{share_id}lol"
         expect(response_code).to eq(404)
         expect(response.body).to include('Download for this dataset is unavailable')
       end
@@ -60,7 +60,7 @@ module StashEngine
       it 'gives 200 in response to valid share item' do
         allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
         share_id = @resource.identifier.shares.first.secret_id
-        response_code = get "/stash/share/#{share_id}"
+        response_code = get "/share/#{share_id}"
         expect(response_code).to eq(200)
       end
 
@@ -68,9 +68,9 @@ module StashEngine
         allow_any_instance_of(DownloadsController).to receive(:session).and_return({ user_id: nil }.to_ostruct)
         share_id = @resource.identifier.shares.first.secret_id
         @resource.identifier.update(pub_state: 'withdrawn')
-        response_code = get "/stash/share/#{share_id}"
+        response_code = get "/share/#{share_id}"
         expect(response_code).to eq(302) # since this redirects to a generic 404 page
-        expect(response.headers['Location']).to eq("http://#{request.host}/stash/404")
+        expect(response.headers['Location']).to eq("http://#{request.host}/404")
       end
     end
   end
