@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  constraints(:host => /datadryad.com/) do
+    match "/(*path)" => redirect {|params, req| "https://datadryad.org/#{params[:path]}"},  via: [:get, :post]
+  end
   match '(*any)', to: redirect(subdomain: ''), via: :all, constraints: {subdomain: 'www'}
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
@@ -6,60 +9,11 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rails routes".
 
-  # root :requirements => { :protocol => 'http' }, :to => redirect(path: APP_CONFIG.stash_mount )
+  # root :requirements => { :protocol => 'http' }, :to => redirect(path: '/' )
 
   root to: 'stash_engine/pages#home'
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development? || Rails.env.dev?
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 
   # this is a rack way of showing a 404 for some crazy old/speculative link that Google has stuck in its craw
   get '/search/facet/dc_creator_sm', to: proc { [410, {}, ['']] }
@@ -274,7 +228,7 @@ Rails.application.routes.draw do
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
     get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
-    get '404', to: 'pages#app_404', as: 'app_404'
+    get 'stash/404', to: 'pages#app_404', as: 'app_404'
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
