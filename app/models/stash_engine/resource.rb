@@ -732,7 +732,7 @@ module StashEngine
       StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
 
       affiliation = submitter.affiliation
-      affiliation = StashDatacite::Affiliation.from_long_name(long_name: submitter.tenant.long_name) if affiliation.blank? &&
+      affiliation = StashDatacite::Affiliation.from_ror_id(ror_id: submitter.tenant.ror_ids&.first) if affiliation.blank? &&
         submitter.tenant.present? && !%w[dryad localhost].include?(submitter.tenant.id)
       StashEngine::Author.create(resource_id: id, author_orcid: orcid, affiliation: affiliation,
                                  author_first_name: f_name, author_last_name: l_name, author_email: email)
