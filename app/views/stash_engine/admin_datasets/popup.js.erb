@@ -1,25 +1,22 @@
 // open a modal dialog
 <% case @field
+when 'flag'
+  partial = 'flag'
 when 'data'
-  partial = 'stash_engine/admin_datasets/internal_data_popup'
-  locals = { identifier: @identifier, title: params[:internal_datum_id] ? 'Edit datum' : 'Add datum' }
+  partial = 'internal_data_popup'
 when 'publication'
-  partial = 'stash_engine/admin_datasets/publication_popup'
-  locals = { publication: @publication, title: 'Edit publication information' }
+  partial = 'publication_popup'
 when 'note'
-  partial = 'stash_engine/admin_datasets/curation_note_popup'
-  locals = { identifier: @identifier, title: 'Add note' }
+  partial = 'curation_note_popup'
 else
-  partial = 'popup_form'
-  locals = {}
+  partial = 'waiver_add'
 end %>
-document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: partial, locals: locals) %>";
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: partial) %>";
 document.getElementById('genericModalDialog').showModal();
 document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('genericModalDialog').close();
 });
-
 <% if @field == 'waiver' %>
   <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
     document.getElementById('popup_submit').setAttribute('hidden', 'hidden');

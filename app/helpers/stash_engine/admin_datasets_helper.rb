@@ -30,6 +30,11 @@ module StashEngine
       end
     end
 
+    def flag_select
+      flags = StashEngine::Flag.flags.map { |k, _v| [k.upcase_first, k] }
+      flags + [['Flagged user', 'user'], ['Flagged institution', 'tenant'], ['Flagged journal', 'journal']]
+    end
+
     def format_external_references(instring)
       return '' unless instring.present?
 

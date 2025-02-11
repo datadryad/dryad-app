@@ -106,6 +106,8 @@ module StashEngine
     has_one :manuscript, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
     has_one :journal, through: :journal_issn
+    has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
+    has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
 
     after_create :create_process_date, unless: :process_date
     after_update_commit :update_salesforce_metadata, if: [:saved_change_to_current_editor_id?, proc { |res| res.editor&.min_curator? }]
@@ -115,7 +117,7 @@ module StashEngine
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
       .to_h { |i| [i.name, i.class_name] }.with_indifferent_access.freeze
 
-    accepts_nested_attributes_for :curation_activities
+    accepts_nested_attributes_for :curation_activities, :flag
 
     # ensures there is always an associated download_token record
     def download_token

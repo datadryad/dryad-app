@@ -1,15 +1,18 @@
 <td>
   <div class="c-lined-table__with-actions">
     <div class="c-lined-table__data"><%= t.id %></div>
-    <div class="c-lined-table__actions">
-    <% if policy([:stash_engine, :tenant]).edit? %>
-      <%= form_with(url: tenant_edit_path(id: t.id), method: :get, local: false) do %>
+    <% if policy(t).edit? %>
+      <div class="c-lined-table__with-actions">
+          <% if t.flag.present? %>
+            <span><i class="fas fa-flag inst" aria-label="Flagged" title="<%= t.flag.note %>"></i></span>
+          <% end %>
+        <%= form_with(url: tenant_edit_path(id: t.id), method: :get, local: false) do %>
           <button class="c-admin-edit-icon" aria-label="Edit member" aria-haspopup="dialog" id="edit_button_<%= t.id %>">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
         <% end %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
   </div>
 </td>
 <td><%= t.short_name %></td>

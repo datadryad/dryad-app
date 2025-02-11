@@ -11,11 +11,6 @@ end
   <b id="edit_filters" role="heading" aria-level="3">Search filters</b>
 </div>
 <fieldset id="edit_filters-form" aria-labelledby="edit_filters">
-  <% if @tenant_limit.length > 1 %>
-    <div class="o-admin-form-pair half-width">
-      <%= selecter('member', [['', '']] + @tenant_limit.map { |t| [t.short_name, t.id] }).html_safe %>
-    </div>
-  <% end %>
   <div class="o-admin-form-pair <%= @role_object.blank? || @user_role.role == 'curator' ? 'quarter-width' : 'half-width' %>">
     <%= render partial: 'stash_engine/shared/multi_select', locals: {
       id: 'status',
@@ -28,6 +23,25 @@ end
   <% if @role_object.blank? || @user_role.role == 'curator' %>
     <div class="o-admin-form-pair quarter-width">
       <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
+    </div>
+    <div class="o-admin-form-pair quarter-width">
+      <%= selecter('flag', [['', '']] + flag_select).html_safe %>
+    </div>
+  <% end %>
+  <div class="o-admin-form-pair <%= @role_object.blank? || @user_role.role == 'curator' ? 'quarter-width' : 'half-width' %>">
+    <%= render partial: 'stash_engine/shared/search_select', locals: {
+      id: 'affiliation',
+      label: 'Affiliation',
+      field_name: 'filters[affiliation]',
+      options_path: '/stash_datacite/affiliations/autocomplete?query=',
+      options_label: 'name',
+      options_value: 'id',
+      selected: @filters.dig(:affiliation)
+    } %>
+  </div>
+  <% if @tenant_limit.length > 1 %>
+    <div class="o-admin-form-pair half-width">
+      <%= selecter('member', [['', '']] + @tenant_limit.map { |t| [t.short_name, t.id] }).html_safe %>
     </div>
   <% end %>
   <% if @journal_limit.present? %>
@@ -68,17 +82,6 @@ end
       options_label: 'name',
       options_value: 'id',
       selected: @filters.dig(:funder)
-    } %>
-  </div>
-  <div class="o-admin-form-pair half-width">
-    <%= render partial: 'stash_engine/shared/search_select', locals: {
-      id: 'affiliation',
-      label: 'Affiliation',
-      field_name: 'filters[affiliation]',
-      options_path: '/stash_datacite/affiliations/autocomplete?query=',
-      options_label: 'name',
-      options_value: 'id',
-      selected: @filters.dig(:affiliation)
     } %>
   </div>
   <div class="date-flex">
