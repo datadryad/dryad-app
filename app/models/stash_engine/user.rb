@@ -37,6 +37,10 @@ module StashEngine
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
     has_many :admin_searches, class_name: 'StashEngine::AdminSearch', dependent: :destroy
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
+    has_one :api_application,
+            class_name: 'Doorkeeper::Application',
+            foreign_key: :owner_id,
+            dependent: :destroy # or :destroy if you need callbacks
     has_many :access_grants,
              class_name: 'Doorkeeper::AccessGrant',
              foreign_key: :resource_owner_id,
