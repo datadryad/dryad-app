@@ -36,17 +36,21 @@ module StashEngine
     belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
     has_many :admin_searches, class_name: 'StashEngine::AdminSearch', dependent: :destroy
+    has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
+    has_one :api_application,
+            class_name: 'Doorkeeper::Application',
+            foreign_key: :owner_id,
+            dependent: :destroy # or :destroy if you need callbacks
     has_many :access_grants,
              class_name: 'Doorkeeper::AccessGrant',
              foreign_key: :resource_owner_id,
              dependent: :delete_all # or :destroy if you need callbacks
-
     has_many :access_tokens,
              class_name: 'Doorkeeper::AccessToken',
              foreign_key: :resource_owner_id,
              dependent: :delete_all # or :destroy if you need callbacks
 
-    accepts_nested_attributes_for :roles
+    accepts_nested_attributes_for :roles, :flag
 
     scope :curators, -> { joins(:roles).where('stash_engine_roles' => { role: 'curator', role_object_id: nil }) }
 

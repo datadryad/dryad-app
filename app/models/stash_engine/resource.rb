@@ -106,6 +106,8 @@ module StashEngine
     has_one :manuscript, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
     has_one :journal, through: :journal_issn
+    has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
+    has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
 
     after_create :create_process_date, unless: :process_date
     after_update_commit :update_salesforce_metadata, if: [:saved_change_to_current_editor_id?, proc { |res| res.editor&.min_curator? }]
@@ -115,7 +117,7 @@ module StashEngine
     ASSOC_TO_FILE_CLASS = reflect_on_all_associations(:has_many).select { |i| i.name.to_s.include?('file') }
       .to_h { |i| [i.name, i.class_name] }.with_indifferent_access.freeze
 
-    accepts_nested_attributes_for :curation_activities
+    accepts_nested_attributes_for :curation_activities, :flag
 
     # ensures there is always an associated download_token record
     def download_token
@@ -666,8 +668,17 @@ module StashEngine
       # collaborators
       return true if users.include?(user)
 
-      # curator or admin for the memebr institution
+      # curator or admin for the member institution
       admin_for_this_item?(user: user)
+    end
+
+    def user_edit_permission?(user:)
+      return false unless user
+      # the creator and submitter may change editor roles
+      return true if creator == user || submitter == user
+
+      # admins and curators may change editor roles
+      user.min_app_admin?
     end
 
     # Checks if someone may download files for this resource
@@ -734,7 +745,7 @@ module StashEngine
       StashDatacite::AuthorPatch.patch! unless StashEngine::Author.method_defined?(:affiliation)
 
       affiliation = submitter.affiliation
-      affiliation = StashDatacite::Affiliation.from_long_name(long_name: submitter.tenant.long_name) if affiliation.blank? &&
+      affiliation = StashDatacite::Affiliation.from_ror_id(ror_id: submitter.tenant.ror_ids&.first) if affiliation.blank? &&
         submitter.tenant.present? && !%w[dryad localhost].include?(submitter.tenant.id)
       StashEngine::Author.create(resource_id: id, author_orcid: orcid, affiliation: affiliation,
                                  author_first_name: f_name, author_last_name: l_name, author_email: email)

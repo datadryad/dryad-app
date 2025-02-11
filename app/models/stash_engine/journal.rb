@@ -37,10 +37,11 @@ module StashEngine
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
     has_many :manuscripts, -> { order(created_at: :desc) }, class_name: 'StashEngine::Manuscript'
+    has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
 
     validates_associated :issns
-    accepts_nested_attributes_for :issns
+    accepts_nested_attributes_for :issns, :flag
 
     def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
 

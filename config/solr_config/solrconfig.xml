@@ -100,7 +100,7 @@
       <int name="ps">0</int>
       <float name="tie">0.01</float>
       <str name="fl">*,score</str>
-      <str name="sort">score desc, dc_title_sort asc</str>
+      <str name="sort">score desc, dct_issued_dt desc</str>
       <str name="q.alt">*:*</str>
       <!-- briley 06/03/2019 - field to store the publication id that cites the dataset -->
       <str name="qf">

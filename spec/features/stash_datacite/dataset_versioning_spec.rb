@@ -83,7 +83,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           find('a[aria-label="Activity log"]').click
         end
 
-        expect(page).to have_text(@resource.identifier)
+        expect(page).to have_text(@resource.identifier.identifier)
 
         # it has the user comment when they clicked to submit and end in-progress edit
         expect(page).to have_text(@resource.edit_histories.last.user_comment)

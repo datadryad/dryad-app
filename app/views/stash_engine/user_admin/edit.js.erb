@@ -24,3 +24,9 @@ document.getElementById('tenant_id').addEventListener('change', () => {
   div.innerHTML=`<p>Save your institution change to refresh the available roles</p>`
   document.getElementById('role_form_flex').replaceWith(div)
 })
+var chk = document.getElementById('flag')
+chk.addEventListener('change', () => {
+  var note = document.getElementById('note')
+  note.disabled = !chk.checked
+  if (!chk.checked) note.value = ''
+})

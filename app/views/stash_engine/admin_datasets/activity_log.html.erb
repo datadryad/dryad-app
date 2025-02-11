@@ -1,25 +1,37 @@
 <% @page_title = "Activity log for #{@identifier.to_s}" %>
-<h1 class="o-heading__level1">Activity log for <%= @identifier&.latest_resource&.title %></h1>
+<% r = @identifier&.latest_resource %>
+<h1 class="o-heading__level1">Activity log for <%= r&.title %></h1>
 
-<div>
-  <div style="float: left;"><br/><%= @identifier.to_s %></div>
-  <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
-    <div style="float: right; display: inline-flex">
-      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
-        <button class="o-button__submit" aria-haspopup="dialog" id="note_button_<%= @identifier&.id %>">Add note</button>
-      <% end %>
-
-      <% if policy([:stash_engine, :admin_datasets]).change_delete_schedule? %>
-        <%= form_with(url: edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
-          <button class="o-button__submit" aria-haspopup="dialog" aria-expanded="false" id="reference_button_<%= @identifier&.id %>"
-                  style="width: auto; margin-left: 10px; white-space: nowrap">
-            Change delete reference date
-          </button>
+<div style="display: flex; align-items: center; justify-content: space-between; column-gap: 2ch; row-gap: .5ch; flex-wrap: wrap;">
+  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 1ch;">
+    <%= @identifier.identifier %>
+    <% if policy(r).flag? %>
+      <span id="resource_flag">
+        <% if r&.flag&.present? %>        
+          <i class="fas fa-flag <%= r.flag.flag %>" aria-label="Flagged" title="<%= r.flag.flag.upcase_first %>"></i>
         <% end %>
+      </span>
+      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'flag'), method: :get, local: false) do %>
+        <button class="o-button__plain-text2" aria-haspopup="dialog">Flag</button>
       <% end %>
-    </div>
-  <% end %>
-  <div class="table-wrapper c-lined-table-wrapper" style="clear: both;" role="region" tabindex="0" aria-label="Curation table">
+    <% end %>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; column-gap: 1ch; row-gap: .5ch;">
+    <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
+      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
+        <button class="o-button__plain-text2" aria-haspopup="dialog">Add note</button>
+      <% end %>
+    <% end %>
+    <% if policy([:stash_engine, :admin_datasets]).change_delete_schedule? %>
+      <%= form_with(url: edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
+        <button class="o-button__plain-text2" aria-haspopup="dialog">
+          Change delete reference date
+        </button>
+      <% end %>
+    <% end %>
+  </div> 
+</div>
+<div class="table-wrapper c-lined-table-wrapper" style="clear: both;" role="region" tabindex="0" aria-label="Curation table">
   <table class="c-lined-table" id="curation_table">
     <thead>
     <tr>
@@ -49,8 +61,8 @@
     <% end %>
   </tbody>
   </table>
-  </div>
 </div>
+
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
   <div id="salesforce_links" style="clear: both">
@@ -60,7 +72,7 @@
       <%= button_to "Create SF case",
                     stash_url_helpers.create_salesforce_case_path(id: @identifier&.id, only_path: false),
                     method: :get,
-                    class: 'o-button__submit',
+                    class: 'o-button__plain-text2',
                     form: { target: '_blank' }
       %>
     </div>
@@ -106,7 +118,7 @@
         <h3 style="margin: 0">Preprint</h3>
         <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
           <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'preprint'), method: :get, local: false) do %>
-            <button class="o-button__plain-text7" aria-label="Edit preprint server information" title="Edit" aria-haspopup="dialog" id="preprint_button_<%= @identifier&.id %>"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
+            <button class="o-button__plain-text7" aria-label="Edit preprint server information" title="Edit" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
           <% end %>
         <% end %>
       </div>
@@ -122,7 +134,7 @@
         <h3 style="margin: 0">Primary article</h3>
         <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
           <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'publication'), method: :get, local: false) do %>
-            <button class="o-button__plain-text7" aria-label="Edit publication information" title="Edit" aria-haspopup="dialog" id="publication_button_<%= @identifier&.id %>"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
+            <button class="o-button__plain-text7" aria-label="Edit publication information" title="Edit" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
           <% end %>
         <% end %>
       </div>
@@ -148,7 +160,7 @@
     <div style="float: right">
       <br/>
       <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'data'), method: :get, local: false) do %>
-        <button class="o-button__submit" aria-haspopup="dialog" id="data_button_<%= @identifier&.id %>">Add data</button>
+        <button class="o-button__submit" aria-haspopup="dialog">Add data</button>
       <% end %>
     </div>
   <% end %>
@@ -159,78 +171,71 @@
 </div>
 
 <% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
-  <div style="float: left"><h2 id="payment-info">Payment information</h2></div>
-  <div id="payment_info" class="table-wrapper c-lined-table-wrapper" style="clear: both" role="region" tabindex="0" aria-labelledby="payment-info">
+  <h2 id="payment-info">Payment information</h2>
+  <div id="payment_info" class="table-wrapper c-lined-table-wrapper" style="margin-top: 0;" role="region" tabindex="0" aria-labelledby="payment-info">
     <%= render partial: 'payment_info_table' %>
   </div>
+  <% if policy([:stash_engine, :admin_datasets]).waiver_add? && @identifier.payment_type != 'waiver' %>
+    <div style="text-align: right;" id="apply_fee_waiver">
+      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
+        <button class="o-button__plain-text7" aria-haspopup="dialog">Apply fee waiver</button>
+      <% end %>
+    </div>
+  <% end %>
+
   <div id="dangerous_actions">
-    <div style="float: left"><h2>Dangerous actions</h2>
+    <h2>Dangerous actions</h2>
+    <div>
+      <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path,
+                    method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
+        <p>
+          <button class="o-button__plain-text7"><i class="fas fa-pencil" aria-hidden="true"></i> Forcibly edit dataset</button>
+          &nbsp;Note: Forcibly editing a dataset will assign it to you, and begin an editing session. Please only do this if you know the author is unable/unwilling to submit it.
+        </p>
+        <%= hidden_field_tag :resource_id, r&.id, id: "resource_id_#{r&.id}" %>
+      <% end %>        
+    </div>
 
-      <div style="float: left">
-        <% res = @identifier&.latest_resource %>
-        <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path,
-                      method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
-          <button class="o-button__submit">Forcibly edit dataset</button>
-          <%= hidden_field_tag :resource_id, res&.id, id: "resource_id_#{res&.id}" %>
-        <% end %>
-        <p>Forcibly editing a dataset will assign it to you, and begin an editing session.
-          Please only do this if you know the author is unable/unwilling to submit it.</p>
-      </div>
-
-      <% if policy(@identifier).destroy? %>
-        <div style="float: left">
-          <%= form_with(url: stash_url_helpers.ds_admin_destroy_path(id: @identifier&.id),
-                        method: :delete, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
-            <button class="o-button__submit" data-confirm="Are you sure you want to permanently delete this dataset? This action cannot be undone.">Remove dataset</button>
-            <%= hidden_field_tag :id, @identifier.id, id: "identifier_id_#{@identifier.id}" %>
-          <% end %>
-          <p>Deleting a dataset will delete all its data and files.</p>
-        </div>
-        <div style="clear: both"></div>
+    <% if policy(@identifier).destroy? %>
+      <%= form_with(url: stash_url_helpers.ds_admin_destroy_path(id: @identifier&.id), method: :delete, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
+        <p>
+          <button class="o-button__plain-text7" data-confirm="Are you sure you want to permanently delete this dataset? This action cannot be undone."><i class="fas fa-trash" aria-hidden="true"></i> Remove dataset</button>
+          &nbsp;Note: Deleting a dataset will delete all its data and files.
+        </p>
+        <%= hidden_field_tag :id, @identifier.id, id: "identifier_id_#{@identifier.id}" %>
       <% end %>
+    <% end %>
 
-      <% if policy([:stash_engine, :admin_datasets]).waiver_add? && @identifier.payment_type != 'waiver' %>
-        <div style="float: left" id="apply_fee_waiver">
-          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
-            <button class="o-button__submit" aria-haspopup="dialog" id="waiver_button_<%= @identifier&.id %>">Apply fee waiver</button>
-          <% end %>
-        </div>
-      <% end %>
+    <div id="revert_edit_div">
+      <h3>New version based on previous</h3>
+      <% if @identifier&.latest_resource&.current_resource_state&.submitted? && @identifier.resources.count > 1 %>
+        <%
+          resource_list = @identifier.resources.includes(:stash_version).by_version
+          sel_list = resource_list.map do |res|
+            ["Version #{res.stash_version.version}, (updated #{res.updated_at.strftime('%Y-%m-%d')})", res.id]
+          end
+          sel_idx = resource_list[-2]&.id || resource_list.last.id
+        %>
+        <%= form_with(url: metadata_entry_pages_new_version_from_previous_path,
+                      method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do |f| -%>
 
-      <div style="clear: both" id="revert_edit_div">
-        <br/>
-        <hr/>
-        <h3>New version based on previous</h3>
-        <% if @identifier&.latest_resource&.current_resource_state&.submitted? && @identifier.resources.count > 1 %>
-          <%
-            resource_list = @identifier.resources.includes(:stash_version).by_version
-            sel_list = resource_list.map do |res|
-              ["Version #{res.stash_version.version}, (updated #{res.updated_at.strftime('%Y-%m-%d')})", res.id]
-            end
-            sel_idx = resource_list[-2]&.id || resource_list.last.id
-          %>
-          <%= form_with(url: metadata_entry_pages_new_version_from_previous_path,
-                        method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do |f| -%>
-
-            <%= f.label :select_res, 'Select version' %>
-            <%= f.select(:resource_id, options_for_select(sel_list, sel_idx), {}, id: 'select_res') %>
-            <button class="o-button__submit">&lt;- New edit based on</button>
-
-            <p>
-              Note: Creating and editing a new version based on an old one does not duplicate the old files, but <em>just
-              the user-entered metadata</em>. The files may need to be manually deleted or uploaded if the files in the
-              last version of the dataset are not correct.
-            </p>
-          <% end %>
-        <% else %>
+          <%= f.label :select_res, 'Select basis version:' %>
+          <%= f.select(:resource_id, options_for_select(sel_list, sel_idx), {}, id: 'select_res', class: 'c-input__select') %>&nbsp;&nbsp;
+          <button class="o-button__submit">Create new version</button>
           <p>
-            You may only create and edit a new version based on an old version if there are currently no in-progress
-            versions being edited or there is more than one version submitted.
+            Note: Creating and editing a new version based on an old one does not duplicate the old files, but <em>just
+            the user-entered metadata</em>. The files may need to be manually deleted or uploaded if the files in the
+            last version of the dataset are not correct.
           </p>
         <% end %>
-      </div>
-
+      <% else %>
+        <p>
+          You may only create and edit a new version based on an old version if there are currently no in-progress
+          versions being edited or there is more than one version submitted.
+        </p>
+      <% end %>
     </div>
+
   </div>
   <script type="text/javascript">
     (function () {

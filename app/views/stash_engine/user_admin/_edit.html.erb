@@ -18,7 +18,16 @@
       <p style="margin: .5rem 0; font-size: .98rem;">Choosing 'Dryad' will remove any set member institution.</p>
     </div>
   </div>
-  <h2 style="margin-top: 0">Edit roles</h2>
+  <div class="o-admin-form-inline">
+    <p>
+      <%= form.check_box :flag, { checked: @user.flag.present? }, 1, nil %> <%= form.label :flag, "Flag user", class: 'c-input__label' %>
+    </p>
+    <p class="o-admin-form-pair" style="flex: 1">
+      <%= form.label :note, 'Flag note:' %>
+      <%= form.text_field :note, value: @user.flag&.note, class: 'c-input__text', style: 'flex: 1', disabled: @user.flag.nil? %>
+    </p>
+  </div>
+  <h2>Edit roles</h2>
     <%= render partial: 'admin_role_form' %>
   </div>
   <div class="c-modal__buttons-right">
