@@ -664,8 +664,17 @@ module StashEngine
       # collaborators
       return true if users.include?(user)
 
-      # curator or admin for the memebr institution
+      # curator or admin for the member institution
       admin_for_this_item?(user: user)
+    end
+
+    def user_edit_permission?(user:)
+      return false unless user
+      # the creator and submitter may change editor roles
+      return true if creator == user || submitter == user
+
+      # admins and curators may change editor roles
+      user.min_app_admin?
     end
 
     # Checks if someone may download files for this resource
