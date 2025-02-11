@@ -267,7 +267,7 @@ module StashEngine
     def populate_author_versioned
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.where(created_at: date - 100.day..(date + 1.day), status: 'submitted')
+      CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
         .includes(resource: %i[identifier process_date]).find_each do |ca|
 
         # check if this was the actual date of submission for this resource
