@@ -27,7 +27,7 @@
 <tbody>  
   <% users.each do |u| %>
     <tr class="c-lined-table__row">
-      <% if policy([:stash_engine, :user]).merge? %>
+      <% if policy(u).merge? %>
         <td><%= check_box("user_ids", "selections", {multiple: true, class: 'merge-checkbox', 'aria-labelledby': 'merge-label'}, u.id, nil) %></td>
       <% end %>
       <td>
@@ -35,8 +35,13 @@
           <div class="c-lined-table__data">
             <%= link_to "#{u.first_name} #{u.last_name}".strip, stash_url_helpers.user_admin_profile_path(u), title: "#{u.first_name} #{u.last_name}'s activity and datasets" %>
           </div>
-          <% if policy([:stash_engine, :user]).edit? %>
-            <div class="c-lined-table__actions">
+          <% if policy(u).edit? %>
+            <div class="c-lined-table__with-actions">
+              <span id="user_flag_<%=u.id%>">
+                <% if u.flag.present? %>
+                  <i class="fas fa-flag user" aria-label="Flagged" title="<%= u.flag.note %>"></i>
+                <% end %>
+              </span>
               <%= form_with(url: user_edit_path(id: u.id), method: :get, local: false) do %>
                 <button class="c-admin-edit-icon" aria-label="Edit user" aria-haspopup="dialog" id="edit_button_<%= u.id %>">
                   <i class="fa fa-pencil" aria-hidden="true"></i>

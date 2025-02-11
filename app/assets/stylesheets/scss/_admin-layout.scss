@@ -103,31 +103,22 @@
 .o-admin-form-pair.half-width {
   flex-basis: 50%;
   max-width: calc(50% - 2ch);
+}
+.o-admin-form-pair.quarter-width {
+  flex-basis: 25%;
+  max-width: calc(25% - 2ch);
+}
+.o-admin-form-pair.half-width,
+.o-admin-form-pair.quarter-width {
   flex-wrap: nowrap;
+  min-width: 0;
   @media (max-width: 1050px) {
+    flex-basis: 50%;
     max-width: calc(50% - 1ch);
   }
   @media (max-width: 760px) {
     flex-basis: 100%;
     max-width: 100%;
-    flex-wrap: wrap;
-  }
-  @media (max-width: 450px) {   
-    flex-basis: auto;
-  }
-}
-
-.o-admin-form-pair.quarter-width {
-  flex-basis: 25%;
-  max-width: calc(25% - 2ch);
-  flex-wrap: nowrap;
-  @media (max-width: 1050px) {
-    flex-basis: 50%;
-    max-width: calc(50% - 1ch);
-  }
-  @media (max-width: 450px) {   
-    flex-basis: auto;
-    max-width: 100%; 
     flex-wrap: wrap;
   }
 }

@@ -37,7 +37,9 @@ module StashEngine
     has_many :ror_orgs, class_name: 'StashEngine::RorOrg', through: :tenant_ror_orgs
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
+    has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
 
+    accepts_nested_attributes_for :flag
     enum :payment_plan, { tiered: 0 }
 
     # return all enabled tenants sorted by name

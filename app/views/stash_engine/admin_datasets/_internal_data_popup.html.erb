@@ -1,5 +1,5 @@
 <% # local: identifier %>
-<h1><%= title %></h1>
+<h1><%= params[:internal_datum_id] ? 'Edit datum' : 'Add datum' %></h1>
 <% my_path = params[:sub_method] == 'put' ? stash_engine_internal_datum_path(@internal_datum) :internal_data_create_path(@identifier) %>
 <%= form_with(model: @internal_datum, url: my_path, method: params[:sub_method], local: false ) do |f| -%>
   <div class="c-input">

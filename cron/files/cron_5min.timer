@@ -1,0 +1,10 @@
+[Unit]
+Description=Cron timer - every 5 minutes
+Requires=cron_5min.service
+
+[Timer]
+OnCalendar=*-*-* *:0/5:00
+Unit=cron_5min.service
+
+[Install]
+WantedBy=timers.target

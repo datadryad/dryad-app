@@ -2,9 +2,8 @@
 
 : ${1:?"Need to pass in environment (e.g. development, stage, production)"}
 
-export RAILS_ENV="$1"
-
 cd /home/ec2-user/deploy/current/
+export RAILS_ENV="$1"
 
 # clear out cache older than 3 weeks old, remove empty directories in cache
 find /home/ec2-user/deploy/shared/tmp/cache -mtime +21 -type f -exec rm {} \;

@@ -1,0 +1,2 @@
+document.getElementById("resource_flag").innerHTML = <% if @resource&.flag&.present? %> `<i class="fas fa-flag <%= @resource.flag.flag %>" aria-label="Flagged" title="<%= @resource.flag.flag.upcase_first %>"></i>`<% else %>''<% end %> 
+document.getElementById('genericModalDialog').close();

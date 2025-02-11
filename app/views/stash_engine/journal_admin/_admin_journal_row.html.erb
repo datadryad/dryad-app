@@ -1,8 +1,11 @@
 <td>
   <div class="c-lined-table__with-actions">
     <div class="c-lined-table__data" id="title_<%= j.id %>"><%= j.title %></div>
-    <% if policy([:stash_engine, :journal]).edit? %>
-    <div class="c-lined-table__actions">
+    <% if policy(j).edit? %>
+    <div class="c-lined-table__with-actions">
+      <% if j.flag.present? %>
+        <span><i class="fas fa-flag jour" aria-label="Flagged" title="<%= j.flag.note %>"></i></span>
+      <% end %>
       <%= form_with(url: journal_edit_path(id: j.id), method: :get, local: false) do %>
         <button class="c-admin-edit-icon" aria-label="Edit journal" aria-haspopup="dialog" id="edit_button_<%= j.id %>">
           <i class="fa fa-pencil" aria-hidden="true"></i>

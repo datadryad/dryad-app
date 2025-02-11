@@ -2,6 +2,10 @@
 
 input {
 	accent-color: $medium-green;
+
+	&[disabled], &:disabled {
+		background-color: $lightest-gray;
+	}
 }
 
 .input-stack {
@@ -97,7 +101,7 @@ label.optional:after {
 
 	&::after {
       content: ' *';
-      color: $orange;
+      color: $dark-orange;
 	}
 
 }
@@ -179,7 +183,7 @@ label.optional:after {
 
 	&::before {
       content: '* ';
-	  color: $orange;
+	  color: $dark-orange;
 	}
 
 }

@@ -1,0 +1,10 @@
+[Unit]
+Description=Cron service - weekly
+Wants=cron_weekly.timer
+ 
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "/home/ec2-user/deploy/current/cron/weekly.sh production >> /home/ec2-user/deploy/shared/log/cron.log 2>&1"
+
+[Install]
+WantedBy=multi-user.target

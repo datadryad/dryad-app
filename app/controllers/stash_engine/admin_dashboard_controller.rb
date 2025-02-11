@@ -201,13 +201,11 @@ module StashEngine
       sponsor_filter
       funder_filter
 
+      @datasets = @datasets.joins(:flag).where(flag: { flag: @filters[:flag].to_sym }) if StashEngine::Flag.flags.key?(@filters[:flag])
       @datasets = @datasets.where('stash_engine_curation_activities.status': @filters[:status]) if @filters[:status].present?
       @datasets = @datasets.joins(authors: :affiliations).where('dcs_affiliations.ror_id': @filters.dig(:affiliation, :value)) if @filters.dig(
         :affiliation, :value
       ).present?
-      @datasets = @datasets.where(
-        'stash_engine_users.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
-      ) if @filters[:curator].present? && current_user.min_app_admin?
       unless @search_string.blank?
         search_string = %r{^10.[\S]+/[\S]+$}.match(@search_string) ? "\"#{@search_string}\"" : @search_string
         @datasets = @datasets.where("MATCH(stash_engine_identifiers.search_words) AGAINST(#{ActiveRecord::Base.connection.quote(search_string)}) > 0")
@@ -218,7 +216,15 @@ module StashEngine
           "%#{@filters[:identifiers]}%", "%#{@filters[:identifiers]}%"
         ) unless @filters[:identifiers].blank?
 
+      user_filters
       date_filters
+    end
+
+    def user_filters
+      @datasets = @datasets.where(
+        'stash_engine_users.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
+      ) if @filters[:curator].present? && current_user.min_app_admin?
+      @datasets = @datasets.joins(users: :flag) if @filters[:flag] == 'user'
     end
 
     def date_filters
@@ -246,14 +252,20 @@ module StashEngine
     # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
 
     def tenant_filter
-      return unless @role_object.is_a?(StashEngine::Tenant) || @filters[:member].present?
+      return unless @role_object.is_a?(StashEngine::Tenant) || @filters[:member].present? || @filters[:flag] == 'tenant'
 
       tenant_limit = @tenant_limit
       tenant_orgs = @role_object.ror_ids if @role_object.is_a?(StashEngine::Tenant)
 
       if @filters[:member].present? && tenant_limit.find_by(id: @filters[:member])
         tenant_limit = tenant_limit.where(id: @filters[:member])
-        tenant_orgs = StashEngine::Tenant.find(@filters[:member]).ror_ids
+        tenant_orgs = tenant_limit.map(&:ror_ids).flatten
+      end
+
+      if @filters[:flag] == 'tenant'
+        flagged = StashEngine::Tenant.joins(:flag).select(:id)
+        tenant_limit = tenant_limit.where(id: flagged)
+        tenant_orgs = []
       end
 
       @datasets = @datasets.left_outer_joins(authors: :affiliations).left_outer_joins(:funders).where(
@@ -264,10 +276,15 @@ module StashEngine
     end
 
     def journal_filter
-      return unless @journal_limit.present? || @filters.dig(:journal, :value).present?
+      return unless @journal_limit.present? || @filters.dig(:journal, :value).present? || @filters[:flag] == 'journal'
 
-      journal_ids = @filters.dig(:journal, :value)&.to_i
+      journal_ids = @filters.dig(:journal, :value)&.to_i if @filters.dig(:journal, :value).present?
       journal_ids = (@journal_limit.map(&:id).include?(journal_ids) ? journal_ids : @journal_limit.map(&:id)) if @journal_limit.present?
+
+      if @filters[:flag] == 'journal'
+        flagged = StashEngine::Journal.joins(:flag).select(:id)
+        journal_ids = journal_ids.blank? ? flagged : journal_ids.select { |id| flagged.include?(id) }
+      end
 
       @datasets = @datasets.joins(:journals).where('stash_engine_journals.id': journal_ids) if journal_ids.present?
     end

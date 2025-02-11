@@ -4,10 +4,12 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :load, only: %i[popup note_popup edit edit_delete_reference_date update_delete_reference_date]
+    before_action :load, only: %i[popup note_popup waiver_add flag edit_delete_reference_date update_delete_reference_date]
 
     def popup
       case @field
+      when 'flag'
+        authorize @resource, :flag?
       when 'note'
         authorize %i[stash_engine admin_datasets], :note_popup?
         @curation_activity = CurationActivity.new(
@@ -32,9 +34,38 @@ module StashEngine
       respond_to(&:js)
     end
 
-    def edit
-      authorize %i[stash_engine admin_datasets], :waiver_add?
-      waiver_add
+    def waiver_add
+      if @identifier.payment_type == 'stripe'
+        # if it's already invoiced, show a warning
+        @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
+        render :curation_activity_error and return
+      elsif params[:waiver_basis] == 'none'
+        @error_message = 'No waiver message selected, so waiver was not applied.'
+        render :curation_activity_error and return
+      elsif params[:waiver_basis] == 'other'
+        basis = 'unspecified'
+        if params[:other].present?
+          basis = params[:other]
+        else
+          @error_message = 'No waiver message selected, so waiver was not applied.'
+          render :curation_activity_error and return
+        end
+      else
+        basis = params[:waiver_basis]
+      end
+      @identifier.update(payment_type: 'waiver', payment_id: '', waiver_basis: basis)
+      respond_to(&:js)
+    end
+
+    def flag
+      authorize @resource
+      if params[:flag].blank?
+        @resource.flag.delete if @resource&.flag&.present?
+      else
+        attributes = { flag: params[:flag].to_sym }
+        attributes[:id] = @resource.flag.id if @resource&.flag&.present?
+        @resource.update(flag_attributes: attributes)
+      end
       respond_to(&:js)
     end
 
@@ -123,28 +154,6 @@ module StashEngine
       StashEngine::InternalDatum.where(identifier_id: @internal_datum.identifier_id).where(data_type: only_one_options).each do |existing_item|
         @options.delete(existing_item.data_type)
       end
-    end
-
-    def waiver_add
-      if @identifier.payment_type == 'stripe'
-        # if it's already invoiced, show a warning
-        @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
-        render :curation_activity_error and return
-      elsif params[:waiver_basis] == 'none'
-        @error_message = 'No waiver message selected, so waiver was not applied.'
-        render :curation_activity_error and return
-      elsif params[:waiver_basis] == 'other'
-        basis = 'unspecified'
-        if params[:other].present?
-          basis = params[:other]
-        else
-          @error_message = 'No waiver message selected, so waiver was not applied.'
-          render :curation_activity_error and return
-        end
-      else
-        basis = params[:waiver_basis]
-      end
-      @identifier.update(payment_type: 'waiver', payment_id: '', waiver_basis: basis)
     end
 
   end

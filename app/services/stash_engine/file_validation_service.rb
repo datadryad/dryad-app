@@ -20,7 +20,7 @@ module StashEngine
       checksum = sums.get_checksum(file.digest_type)
       size     = sums.input_size
       if size == file.upload_file_size && checksum == file.digest
-        file.validated_at = today
+        file.validated_at = Time.now.utc
         file.save
       else
         p ' File cannot be validated; possible corruption! '
@@ -36,7 +36,7 @@ module StashEngine
       if size == file.upload_file_size
         file.digest_type  = digest_type
         file.digest       = checksum
-        file.validated_at = today
+        file.validated_at = Time.now.utc
         file.save
       else
         p ' Error generating file checksum; possible corruption! '

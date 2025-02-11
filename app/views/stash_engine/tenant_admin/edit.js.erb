@@ -6,3 +6,9 @@ document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('genericModalDialog').close();
 });
+var chk = document.getElementById('flag')
+chk.addEventListener('change', () => {
+  var note = document.getElementById('note')
+  note.disabled = !chk.checked
+  if (!chk.checked) note.value = ''
+})

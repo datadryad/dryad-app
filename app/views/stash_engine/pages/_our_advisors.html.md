@@ -6,7 +6,6 @@ Dryad committees, advisory groups and task forces are appointed by the Board to 
 * **Barbara Ebert**, German Federation for Biological Data e.V. (GFBio)
 * **Brooks Hanson**, Retired, American Geophysical Union (AGU)
 * **Jason Williams**, Cold Spring Harbor Laboratory DNA Learning Center
-* **Mone Zaidi**, Icahn Sinai School of Medicine at Mount Sinai
 * **Maria Guerreiro**, Dryad
 * **Jen Gibson**, Dryad
         

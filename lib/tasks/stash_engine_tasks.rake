@@ -219,8 +219,7 @@ namespace :identifiers do
     end
 
     # Remove resources that have been "in progress" for more than a year without updates
-    StashEngine::Resource.in_progress.find_each do |res|
-      next unless res.updated_at < 1.year.ago
+    StashEngine::Resource.in_progress.where('stash_engine_resources.updated_at < ?', 1.year.ago).find_each do |res|
       next unless res.current_curation_status == 'in_progress'
 
       ident = res.identifier
@@ -229,7 +228,9 @@ namespace :identifiers do
       log "   DESTROY temporary s3 contents #{s3_dir}"
       Stash::Aws::S3.new.delete_dir(s3_key: s3_dir) unless dry_run
       log "   DESTROY resource #{res.id}"
-      res.destroy unless dry_run
+      next if dry_run
+
+      StashEngine::DeleteDatasetsService.new(res).call
     end
 
     # Remove directories in AWS temporary storage that have no corresponding resource, or whose resource is already submitted

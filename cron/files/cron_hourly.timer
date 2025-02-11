@@ -1,0 +1,10 @@
+[Unit]
+Description=Cron timer - hourly
+Requires=cron_hourly.service
+
+[Timer]
+OnCalendar=*-*-* *:00:00
+Unit=cron_hourly.service
+
+[Install]
+WantedBy=timers.target

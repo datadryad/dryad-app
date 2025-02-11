@@ -23,6 +23,10 @@ module StashEngine
       (@record.current_resource_state&.resource_state == 'in_progress' && @record&.user_id == @user.id)
     end
 
+    def flag?
+      @user.system_user?
+    end
+
     def change_status?
       @record.curatable? || @user.superuser?
     end
