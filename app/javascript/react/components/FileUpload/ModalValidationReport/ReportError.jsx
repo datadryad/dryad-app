@@ -21,7 +21,7 @@ function ReportError(props) {
         </h2>
         <a
           target="_blank"
-          href={`/stash/data_check_guide#${reportError.name.toLowerCase().replace(' ', '-')}`}
+          href={`/data_check_guide#${reportError.name.toLowerCase().replace(' ', '-')}`}
           title={`Help with ${reportError.name} alerts`}
           rel="noreferrer"
         >

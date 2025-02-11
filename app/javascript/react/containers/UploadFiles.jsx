@@ -190,7 +190,7 @@ export default function UploadFiles({
       if (checkPollingDone(toCheck)) return;
 
       axios.get(
-        `/stash/generic_file/check_frictionless/${resource_id}`,
+        `/generic_file/check_frictionless/${resource_id}`,
         {params: {file_ids: toCheck.map((file) => file.id)}},
       ).then((response) => {
         const transformed = transformData(response.data);
@@ -213,7 +213,7 @@ export default function UploadFiles({
       updateAlreadyChosenById(files);
       // post to the method to trigger frictionless validation in AWS Lambda
       axios.post(
-        `/stash/generic_file/trigger_frictionless/${resource_id}`,
+        `/generic_file/trigger_frictionless/${resource_id}`,
         {file_ids: files.map((file) => file.id)},
       ).then(() => {
         if (!interval.current) {
@@ -328,7 +328,7 @@ export default function UploadFiles({
           },
           complete: () => {
             axios.post(
-              `/stash/${file.uploadType}_file/upload_complete/${resource_id}`,
+              `/${file.uploadType}_file/upload_complete/${resource_id}`,
               {
                 resource_id,
                 name: file.sanitized_name,
@@ -356,7 +356,7 @@ export default function UploadFiles({
         // Before start uploading, change file status cell to a progress bar
         changeStatusToProgressBar(file.id);
 
-        const signerUrl = `/stash/${file.uploadType}_file/presign_upload/${resource_id}`;
+        const signerUrl = `/${file.uploadType}_file/presign_upload/${resource_id}`;
         evaporate.add(addConfig, {signerUrl})
           .then(
             (awsObjectKey) => console.log('File successfully uploaded to: ', awsObjectKey),
@@ -380,7 +380,7 @@ export default function UploadFiles({
       awsRegion: region,
       // Assign any first signerUrl, but it changes for each upload file type
       // when call evaporate object add method bellow
-      signerUrl: `/stash/generic_file/presign_upload/${resource_id}`,
+      signerUrl: `/generic_file/presign_upload/${resource_id}`,
       awsSignatureVersion: '4',
       computeContentMd5: true,
       cryptoMd5Method: (data) => AWS.util.crypto.md5(data, 'base64'),
@@ -411,7 +411,7 @@ export default function UploadFiles({
     setWarning(null);
     const file = chosenFiles.find((f) => f.id === id);
     if (file.status !== 'Pending') {
-      axios.patch(`/stash/${file.uploadType}_files/${id}/destroy_manifest`)
+      axios.patch(`/${file.uploadType}_files/${id}/destroy_manifest`)
         .then(() => {
           setChosenFiles((cf) => cf.filter((f) => f.id !== id));
         })
@@ -465,7 +465,7 @@ export default function UploadFiles({
     if (urlsObject.url.length) {
       setLoading(true);
       const typeFilePartialRoute = `${manFileType}_file`;
-      axios.post(`/stash/${typeFilePartialRoute}/validate_urls/${resource_id}`, urlsObject)
+      axios.post(`/${typeFilePartialRoute}/validate_urls/${resource_id}`, urlsObject)
         .then((response) => {
           updateManifestFiles(response.data);
           setLoading(false);

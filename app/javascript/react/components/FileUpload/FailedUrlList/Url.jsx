@@ -22,7 +22,7 @@ const getErrorMessage = (url) => {
   case 409:
     return "You've already added this URL in this version.";
   case 481:
-    return '<a href="/stash/web_crawling" target="_blank">Crawling of HTML files</a> isn\'t supported.';
+    return '<a href="/web_crawling" target="_blank">Crawling of HTML files</a> isn\'t supported.';
   // case 500: case 501: case 502: case 503: case 504: case 505: case 506: case 507: case 508: case 509: case 510: case 511:
   default:
     return 'Encountered a remote server error while retrieving the request.';

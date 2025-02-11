@@ -44,19 +44,19 @@ export default function ReadMeSteps({
         {
           key: 'nzs7h44xg',
           example:
-        <><a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.nzs7h44xg#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> describing data of several file types, including genomic data
+        <><a href="https://datadryad.org/dataset/doi:10.5061/dryad.nzs7h44xg#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> describing data of several file types, including genomic data
         </>,
         },
         {
           key: 'rr4xgxdg6',
           example:
-        <><a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.rr4xgxdg6#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> with a content section describing MATLAB files
+        <><a href="https://datadryad.org/dataset/doi:10.5061/dryad.rr4xgxdg6#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> with a content section describing MATLAB files
         </>,
         },
         {
           key: '18931zd25',
           example:
-        <><a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.18931zd25#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> with good detail for genomic VCF files
+        <><a href="https://datadryad.org/dataset/doi:10.5061/dryad.18931zd25#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> with good detail for genomic VCF files
         </>,
         },
       ],
@@ -68,13 +68,13 @@ export default function ReadMeSteps({
         {
           key: 'jdfn2z3j3',
           example:
-        <><a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.jdfn2z3j3#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> containing excellent information on how to set up, access, and run neural network deep learning code
+        <><a href="https://datadryad.org/dataset/doi:10.5061/dryad.jdfn2z3j3#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> containing excellent information on how to set up, access, and run neural network deep learning code
         </>,
         },
         {
           key: 'h70rxwdq5',
           example:
-        <><a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.h70rxwdq5#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> with a detailed Recommended Software section
+        <><a href="https://datadryad.org/dataset/doi:10.5061/dryad.h70rxwdq5#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />View example README<span className="screen-reader-only"> (opens in new window)</span></a> with a detailed Recommended Software section
         </>,
         },
       ],

@@ -46,7 +46,7 @@ const badList = (props) => {
           Our automated tabular data checker identified potential inconsistencies in the format and structure of {issueFiles.length} of your files.
         </span>
         <p>
-          <a href="/stash/data_check_guide" target="_blank">
+          <a href="/data_check_guide" target="_blank">
             A detailed report is available<span className="screen-reader-only"> (opens in new window)</span>
           </a>
           {' '}for each file. To address the identified alerts:

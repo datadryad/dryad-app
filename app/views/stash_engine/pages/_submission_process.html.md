@@ -83,7 +83,7 @@ If you have questions, please see our [guide to the tabular data check alerts](/
 
 On the final page of the submission form, you’ll have the opportunity to review that your metadata is correct.
 
-Check the required acknowledgments to agree to payment of the data publication charge. If you are affiliated with a member institution or your related publication is associated with a sponsoring journal title, the option to select the acknowledgment will not be available, and a statement below will appear to confirm who is sponsoring the data publication charge. If your submission should be sponsored, but you do not see a statement indicating as much, please [contact support](/stash/contact). 
+Check the required acknowledgments to agree to payment of the data publication charge. If you are affiliated with a member institution or your related publication is associated with a sponsoring journal title, the option to select the acknowledgment will not be available, and a statement below will appear to confirm who is sponsoring the data publication charge. If your submission should be sponsored, but you do not see a statement indicating as much, please [contact support](/contact). 
 
 
 ### Private for peer review
@@ -94,4 +94,4 @@ When your manuscript has been accepted, you can take your dataset out of private
 
 Note that if your manuscript is submitted to, and accepted by, an integrated title that sends us status updates on your manuscript, the private for peer review period will automatically end.
 
-If you have questions or require assistance, [contact support](/stash/contact).
+If you have questions or require assistance, [contact support](/contact).

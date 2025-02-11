@@ -24,7 +24,7 @@ function PrelimInfo(
     setImportType(choice);
 
     axios.patch(
-      `/stash/resources/${resourceId}/import_type`,
+      `/resources/${resourceId}/import_type`,
       {authenticity_token: csrf, import_info: choice},
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
