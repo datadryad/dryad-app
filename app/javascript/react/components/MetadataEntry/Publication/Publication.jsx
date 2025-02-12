@@ -34,7 +34,10 @@ export default function Publication({resource, setResource, maxSize}) {
     const v = e.target.value;
     setChecks((s) => ({...s, [n]: v}));
     if (v === 'yes') optionChange(n);
-    if (v === 'no') optionChange(n === 'published' && checks.manuscript === 'yes' ? 'manuscript' : 'other');
+    if (v === 'no') {
+      if (n === 'published' && checks.manuscript === 'yes') optionChange('manuscript');
+      if (n === 'manuscript' && checks.published === 'no') optionChange('other');
+    }
   };
 
   useEffect(() => {
@@ -60,7 +63,7 @@ export default function Publication({resource, setResource, maxSize}) {
     const it = resource.identifier.import_info;
     if (it === 'published') setChecks({published: 'yes', manuscript: false, showTitle: resource.title ? 'yes' : 'no'});
     if (it === 'manuscript') setChecks({published: 'no', manuscript: 'yes', showTitle: resource.title ? 'yes' : 'no'});
-    if (it === 'other' && resource.title) setChecks({published: 'no', manuscript: 'no', showTitle: 'yes'});
+    if (it === 'other') setChecks({published: 'no', manuscript: 'no', showTitle: 'yes'});
   }, []);
 
   return (
@@ -88,7 +91,9 @@ export default function Publication({resource, setResource, maxSize}) {
           <p>Payment for this submission is sponsored by <b>{sponsored}</b></p>
         </div>
       )}
-      {importType !== 'other' && <PublicationForm resource={res} setResource={setRes} setSponsored={setSponsored} importType={importType} />}
+      {importType && importType !== 'other' && (
+        <PublicationForm resource={res} setResource={setRes} setSponsored={setSponsored} importType={importType} />
+      )}
       {((checks.published === 'no' && checks.manuscript === 'no') || checks.showTitle === 'yes') && (
         <Title key={res.title} resource={res} setResource={setRes} />
       )}

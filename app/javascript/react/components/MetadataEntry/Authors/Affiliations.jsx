@@ -44,7 +44,7 @@ export default function Affiliations({
             formRef={formRef}
             acText={aff.long_name || ''}
             setAcText={(v) => updateName(i, v)}
-            acID={aff.ror_id}
+            acID={aff.ror_id || ''}
             setAcID={(v) => updateID(i, v)}
             controlOptions={{
               htmlId: `instit_affil_${id}-${i}`,
