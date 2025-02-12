@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export {default} from './ReadMeWizard';
 
-export const readmeCheck = (resource, review) => {
+export const readmeCheck = (resource) => {
   const readme = resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
   if (readme) {
     try {
@@ -16,10 +16,8 @@ export const readmeCheck = (resource, review) => {
     } catch (e) {
       return false;
     }
-  } else if (review) {
-    return <p className="error-text" id="readme_error">A README is required</p>;
   }
-  return false;
+  return <p className="error-text" id="readme_error">A README is required</p>;
 };
 
 export function ReadMePreview({resource, previous, admin}) {

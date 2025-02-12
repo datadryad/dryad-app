@@ -6,7 +6,7 @@
 #  edit_code           :string(191)
 #  identifier          :text(65535)
 #  identifier_type     :text(65535)
-#  import_info         :integer          default("other")
+#  import_info         :integer
 #  payment_type        :string(191)
 #  pub_state           :string
 #  publication_date    :datetime

@@ -4,7 +4,7 @@ import {formatSizeUnits} from '../../../lib/utils';
 export {default} from './UploadFiles';
 export {default as FilesPreview} from './FilesPreview';
 
-export const filesCheck = (files, review, admin, maximums) => {
+export const filesCheck = (files, admin, maximums) => {
   const {files: maxFiles, zenodo_size: maxZenodo, merritt_size: maxSize} = maximums;
   if (files.length > 0) {
     const present = files.filter((f) => f.file_state !== 'deleted');
@@ -66,8 +66,7 @@ export const filesCheck = (files, review, admin, maximums) => {
         </p>
       );
     }
-  } else if (review) {
-    return <p className="error-text" id="data_error">Files are required</p>;
+    return false;
   }
-  return false;
+  return <p className="error-text" id="data_error">Files are required</p>;
 };

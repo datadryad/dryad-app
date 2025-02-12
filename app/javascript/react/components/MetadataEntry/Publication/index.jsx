@@ -41,62 +41,64 @@ const copyTitle = (e) => {
   });
 };
 
-export const publicationCheck = (resource, review) => {
-  if (resource.title) {
-    if (nondescript(resource.title)) {
-      return (
-        <p className="error-text" id="title_error">
-          Your dataset title is not specific to your dataset. Use a descriptive title so your data can be discovered.
-        </p>
-      );
-    }
-    if (capitals(resource.title)) {
-      return (
-        <>
-          <p className="error-text" id="title_error">
-            {capitals(resource.title)} Please correct your dataset title to sentence case, which could look like:
-          </p>
-          <div className="callout warn">
-            <p><span>{titleCase(resource.title, {sentenceCase: true})}</span>
-              <span
-                className="copy-icon"
-                role="button"
-                tabIndex="0"
-                aria-label="Copy title"
-                title="Copy title"
-                onClick={copyTitle}
-                onKeyDown={(e) => {
-                  if (e.key === ' ' || e.key === 'Enter') {
-                    copyTitle(e);
-                  }
-                }}
-              ><i className="fa fa-paste" role="status" />
-              </span>
-            </p>
-          </div>
-        </>
-      );
-    }
-  } else if (review) {
-    return <p className="error-text" id="title_error">Title is required</p>;
-  }
+export const publicationPass = (resource) => !!resource.identifier.import_info || !!resource.title;
+
+export const publicationFail = (resource) => {
   const {import_info} = resource.identifier;
-  if (import_info !== 'other') {
-    const {publication_name, manuscript_number} = resource.resource_publication;
-    if (!publication_name) {
-      return (
-        <p className="error-text" id="journal_error">The journal of the related publication is required</p>
-      );
-    }
-    if (import_info === 'manuscript' && !manuscript_number) {
-      return (
-        <p className="error-text" id="msid_error">The manuscript number is required</p>
-      );
-    }
-    if (import_info === 'published' && !validPrimary(resource)) {
-      return (
-        <p className="error-text" id="doi_error">A valid DOI for the article is required</p>
-      );
+  if (!!resource.title || !!import_info) {
+    if (resource.title) {
+      if (nondescript(resource.title)) {
+        return (
+          <p className="error-text" id="title_error">
+            Your dataset title is not specific to your dataset. Use a descriptive title so your data can be discovered.
+          </p>
+        );
+      }
+      if (capitals(resource.title)) {
+        return (
+          <>
+            <p className="error-text" id="title_error">
+              {capitals(resource.title)} Please correct your dataset title to sentence case, which could look like:
+            </p>
+            <div className="callout warn">
+              <p><span>{titleCase(resource.title, {sentenceCase: true})}</span>
+                <span
+                  className="copy-icon"
+                  role="button"
+                  tabIndex="0"
+                  aria-label="Copy title"
+                  title="Copy title"
+                  onClick={copyTitle}
+                  onKeyDown={(e) => {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                      copyTitle(e);
+                    }
+                  }}
+                ><i className="fa fa-paste" role="status" />
+                </span>
+              </p>
+            </div>
+          </>
+        );
+      }
+    } else {
+      const {publication_name, manuscript_number} = resource.resource_publication;
+      if (import_info !== 'other' && !publication_name) {
+        return (
+          <p className="error-text" id="journal_error">The journal of the related publication is required</p>
+        );
+      }
+      if (import_info === 'manuscript' && !manuscript_number) {
+        return (
+          <p className="error-text" id="msid_error">The manuscript number is required</p>
+        );
+      }
+      if (import_info === 'published' && !validPrimary(resource)) {
+        return (
+          <p className="error-text" id="doi_error">A valid DOI for the article is required</p>
+        );
+      }
+      return <p className="error-text" id="title_error">Title is required</p>;
     }
   }
   return false;

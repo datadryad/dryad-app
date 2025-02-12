@@ -5,11 +5,11 @@ import {urlCheck} from './RelatedWorksErrors';
 export {default} from './RelatedWorks';
 export {default as WorksPreview} from './WorksPreview';
 
-export const worksCheck = (resource, review) => {
+export const worksCheck = (resource, touched) => {
   if (resource.resource_type.resource_type === 'collection') {
     const collection = resource.related_identifiers.filter((ri) => ri.relation_type === 'haspart');
     if (resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article')
-      || resource.accepted_agreement || review) {
+      || resource.accepted_agreement || touched) {
       if (collection.length === 0) {
         return (
           <p className="error-text" id="works_error">The related works in the collection are required</p>
