@@ -1,7 +1,7 @@
 # require 'blacklight/catalog'
 
 # rubocop:disable Security/YAMLLoad
-settigs = YAML.load(File.open(File.join('config', 'settings.yml')), symbolize_names: true, aliases: true)
+settigs  = YAML.load(File.open(File.join('config', 'settings.yml')), symbolize_names: true, aliases: true)
 Settings = JSON.parse(settigs.to_json, object_class: OpenStruct)
 # rubocop:enable Security/YAMLLoad
 
@@ -20,7 +20,7 @@ class CatalogController < ApplicationController
   layout :determine_layout if respond_to? :layout
 
   configure_blacklight do |config|
-    config.bootstrap_version = 5
+    config.bootstrap_version            = 5
     config.track_search_session.storage = false
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
@@ -34,7 +34,7 @@ class CatalogController < ApplicationController
     # config.per_page = [10,20,50,100]
 
     # solr field configuration for search results/index views
-    config.index.title_field = Settings.FIELDS.TITLE
+    config.index.title_field        = Settings.FIELDS.TITLE
     config.index.display_type_field = 'format'
 
     # The presenter is the view-model class for the page
@@ -110,7 +110,7 @@ class CatalogController < ApplicationController
 
     # Configuration for autocomplete suggester
     config.autocomplete_enabled = true
-    config.autocomplete_path = 'suggest'
+    config.autocomplete_path    = 'suggest'
   end
 
   ##
@@ -123,31 +123,40 @@ class CatalogController < ApplicationController
   def has_search_parameters?
     !params[:q].nil? || super
   end
+
   # rubocop:enable Naming/PredicateName
 
   # Endpoint called from LinkOut buttons on Pubmed site but could be used to locate a Dataset
   # based on the InternalDatum types defined below
   # GET stash/discover?query=[:internal_datum_value]
   def discover
+    query = params[:query].to_s.gsub('"', '')
+    query = query.gsub('doi:', '') if query.start_with?('doi:')
+
     internal_datum_types = %w[pubmedID manuscriptNumber]
-    where_clause = 'stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value = ?'
-    internal_data = StashEngine::Identifier
+    where_clause         = 'stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value = ?'
+    internal_data        = StashEngine::Identifier
       .publicly_viewable.distinct.joins(:internal_data)
-      .where(where_clause, internal_datum_types, params[:query])
+      .where(where_clause, internal_datum_types, query)
 
     related_dois = StashApi::SolrSearchService.new(
       query: nil,
       filters: {
-        'relatedWorkIdentifier' => "*#{params[:query]}",
+        'relatedWorkIdentifier' => "*#{query}",
         'relatedWorkRelationship' => 'primary_article'
       }
-    ).search&['docs']
-    related_dois = related_dois.map { |a| a['dc_identifier_s'].gsub('doi:', '') } if related_dois.any?
-    related_ids = StashEngine::Identifier.where(identifier: related_dois)
+    ).search
 
+    related_ids = if related_dois.is_a?(Hash)
+                    related_dois = related_dois['docs']
+                    related_dois = related_dois.map { |a| a['dc_identifier_s'].gsub('doi:', '') } if related_dois.any?
+                    StashEngine::Identifier.where(identifier: related_dois)
+                  else
+                    []
+                  end
     identifiers = internal_data + related_ids
 
-    redirect_discover_to_landing(identifiers, params[:query].gsub('"', ''))
+    redirect_discover_to_landing(identifiers, query)
   end
 
   private
