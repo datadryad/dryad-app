@@ -5,7 +5,7 @@ import {BrowserRouter, useLocation} from 'react-router-dom';
 import {upCase} from '../../lib/utils';
 import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
-import Publication, {PubPreview, publicationCheck} from '../components/MetadataEntry/Publication';
+import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Publication';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
 import Support, {SuppPreview, fundingCheck} from '../components/MetadataEntry/Support';
 import Subjects, {SubjPreview, keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
@@ -35,22 +35,25 @@ function Submission({
   const steps = [
     {
       name: 'Title',
-      pass: !!resource.title,
-      fail: publicationCheck(resource, review),
+      index: 0,
+      pass: publicationPass(resource),
+      fail: (review || publicationPass(resource)) && publicationFail(resource),
       component: <Publication resource={resource} setResource={setResource} maxSize={config_maximums.merritt_size} />,
       help: <PublicationHelp />,
       preview: <PubPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Authors',
-      pass: !!resource.title && resource.authors.length > 0,
-      fail: (review || !!resource.title) && authorCheck(resource.authors, ownerId),
+      index: 1,
+      pass: step.index > 0 && resource.authors.length > 0,
+      fail: (review || step.index > 0) && authorCheck(resource.authors, ownerId),
       component: <Authors resource={resource} setResource={setResource} admin={admin} ownerId={ownerId} />,
       help: <AuthHelp />,
       preview: <AuthPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Support',
+      index: 2,
       pass: resource.contributors.find((c) => c.contributor_type === 'funder'),
       fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support resource={resource} setResource={setResource} />,
@@ -59,24 +62,27 @@ function Submission({
     },
     {
       name: 'Subjects',
+      index: 3,
       pass: keywordPass(resource.subjects),
-      fail: keywordFail(resource.subjects, review),
+      fail: (review || step.index > 2) && keywordFail(resource.subjects),
       component: <Subjects resource={resource} setResource={setResource} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Description',
+      index: 4,
       pass: resource.descriptions.some((d) => !!d.description),
-      fail: abstractCheck(resource, review),
+      fail: (review || step.index > 3) && abstractCheck(resource),
       component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Files',
+      index: 5,
       pass: resource.generic_files.length > 0,
-      fail: filesCheck(resource.generic_files, review, admin, config_maximums),
+      fail: (review || step.index > 4) && filesCheck(resource.generic_files, admin, config_maximums),
       component: <UploadFiles
         resource={resource}
         setResource={setResource}
@@ -91,8 +97,9 @@ function Submission({
     },
     {
       name: 'README',
+      index: 6,
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
-      fail: readmeCheck(resource, review),
+      fail: (review || step.index > 5) && readmeCheck(resource),
       component: <ReadMeWizard
         dcsDescription={resource.descriptions.find((d) => d.description_type === 'technicalinfo')}
         resource={resource}
@@ -104,14 +111,16 @@ function Submission({
     },
     {
       name: 'Related works',
+      index: 7,
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
-      fail: worksCheck(resource, review),
+      fail: worksCheck(resource, (review || step.index > 6)),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title/Import'))} />,
       preview: <WorksPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Agreements',
+      index: 8,
       pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
       component: <Agreements
@@ -138,9 +147,7 @@ function Submission({
       const inv = ind
         ? document.querySelectorAll(`*[aria-errormessage="${et.id}"]`)[ind]
         : document.querySelector(`*[aria-errormessage="${et.id}"]`);
-      if (inv) {
-        inv.setAttribute('aria-invalid', true);
-      }
+      if (inv) inv.setAttribute('aria-invalid', true);
     }
   };
 
@@ -154,7 +161,7 @@ function Submission({
     if (!review) {
       const url = location.search.slice(1);
       if (url) {
-        const n = steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
+        const n = steps.find((c) => url === c.name.toLowerCase());
         if (n.name !== step.name) setStep(n);
       }
     }
@@ -167,7 +174,7 @@ function Submission({
     } else if (review) {
       main.classList.remove('submission-review');
     } else if (step.name !== 'Create a submission') {
-      const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
+      const slug = step.name.toLowerCase();
       const url = window.location.search.slice(1);
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
     }
@@ -181,7 +188,7 @@ function Submission({
         if (old) old.removeAttribute('aria-invalid');
         markInvalid();
       });
-      observer.observe(subRef.current, {subtree: true, childList: true});
+      observer.observe(subRef.current, {subtree: true, childList: true, attributeFilter: ['id']});
     }
   }, [subRef.current]);
 
@@ -296,7 +303,7 @@ function Submission({
               {step.name === 'Create a submission' && (<SubmissionHelp type={resource.resource_type.resource_type} />)}
               {step.component}
               {!['Create a submission', 'README'].includes(step.name) && (
-                steps.find((s) => s.name === step.name).pass && steps.find((s) => s.name === step.name).fail
+                steps.find((s) => s.name === step.name).fail
               )}
             </div>
             <div id="submission-help">
