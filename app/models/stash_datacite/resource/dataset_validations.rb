@@ -102,7 +102,7 @@ module StashDatacite
       def article_id
         err = []
 
-        if @resource.identifier.import_info != 'other' && @resource.identifier.publication_name.blank?
+        if @resource.identifier.import_info && @resource.identifier.import_info != 'other' && @resource.identifier.publication_name.blank?
           err << ErrorItem.new(message: 'Fill in the {journal of the related publication}',
                                page: metadata_page(@resource),
                                ids: ['publication'])
