@@ -13,7 +13,6 @@ import ModalValidationReport from './ModalValidationReport/ModalValidationReport
 import UploadData from './UploadSelect/UploadData';
 import UploadSelect from './UploadSelect/UploadSelect';
 import ValidateFiles from './ValidateFiles';
-import WarningMessage from './WarningMessage';
 import TrackChanges from './TrackChanges';
 
 /**
@@ -568,7 +567,9 @@ export default function UploadFiles({
               <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
             </div>
           )}
-          {warning && <WarningMessage message={warning} />}
+          <div className="callout warn" role="alert">
+            {warning && (<p>{warning}</p>)}
+          </div>
           {hasPendingFiles() && (
             <ValidateFiles
               id="confirm_to_validate_files"
