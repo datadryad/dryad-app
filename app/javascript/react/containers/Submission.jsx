@@ -45,7 +45,7 @@ function Submission({
     {
       name: 'Authors',
       index: 1,
-      pass: step.index > 0 && resource.authors.length > 0,
+      pass: resource.authors.length > 0 && !authorCheck(resource.authors, ownerId),
       fail: (review || step.index > 0) && authorCheck(resource.authors, ownerId),
       component: <Authors resource={resource} setResource={setResource} admin={admin} ownerId={ownerId} />,
       help: <AuthHelp />,
