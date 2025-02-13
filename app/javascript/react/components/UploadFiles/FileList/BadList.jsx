@@ -45,18 +45,20 @@ export default function BadList(props) {
     issueMsg = (
       <div className="callout err" role="alert" style={{paddingBottom: '.75rem', marginBottom: '1em'}}>
         <p style={{marginBottom: '.5rem'}}>
-          Tabular data checker found inconsistencies in the format and structure of {issueFiles.length} of your files
+          Inconsistencies found in the format and structure of {issueFiles.length} of your tabular data files
         </p>
         <div style={{backgroundColor: 'white', padding: '.75rem', fontSize: '.98rem'}}>
           <p style={{marginTop: 0}}>
+            These inconsistencies can affect the usability of your data.
             <a href="/stash/data_check_guide" target="_blank">
-              A detailed report<span className="screen-reader-only"> (opens in new window)</span>
+              Check our guide for more information<span className="screen-reader-only"> (opens in new window)</span>
             </a>
-            {' '}is available for each file. To address the identified alerts:
+            .
           </p>
+          <p>A detailed report is available for each file. To address the identified alerts:</p>
           <ol style={{marginBottom: 0}}>
             <li>
-              Click the alert button in the <em>Tabular data check</em> column to see what has been highlighted for your review.
+              Click the link in the <em>Tabular data check</em> column to see what has been highlighted for your review.
             </li>
             <li>Review the local copy of your file and make any desired changes.</li>
             <li>
