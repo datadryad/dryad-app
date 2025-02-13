@@ -1,8 +1,8 @@
 # require 'blacklight/catalog'
 
 # rubocop:disable Security/YAMLLoad
-settigs  = YAML.load(File.open(File.join('config', 'settings.yml')), symbolize_names: true, aliases: true)
-Settings = JSON.parse(settigs.to_json, object_class: OpenStruct)
+settings = YAML.load(File.open(File.join('config', 'settings.yml')), symbolize_names: true, aliases: true)
+Settings = JSON.parse(settings.to_json, object_class: OpenStruct)
 # rubocop:enable Security/YAMLLoad
 
 class CatalogController < ApplicationController
@@ -20,7 +20,7 @@ class CatalogController < ApplicationController
   layout :determine_layout if respond_to? :layout
 
   configure_blacklight do |config|
-    config.bootstrap_version            = 5
+    config.bootstrap_version = 5
     config.track_search_session.storage = false
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
@@ -34,7 +34,7 @@ class CatalogController < ApplicationController
     # config.per_page = [10,20,50,100]
 
     # solr field configuration for search results/index views
-    config.index.title_field        = Settings.FIELDS.TITLE
+    config.index.title_field = Settings.FIELDS.TITLE
     config.index.display_type_field = 'format'
 
     # The presenter is the view-model class for the page
@@ -110,7 +110,7 @@ class CatalogController < ApplicationController
 
     # Configuration for autocomplete suggester
     config.autocomplete_enabled = true
-    config.autocomplete_path    = 'suggest'
+    config.autocomplete_path = 'suggest'
   end
 
   ##
@@ -134,8 +134,8 @@ class CatalogController < ApplicationController
     query = query.gsub('doi:', '') if query.start_with?('doi:')
 
     internal_datum_types = %w[pubmedID manuscriptNumber]
-    where_clause         = 'stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value = ?'
-    internal_data        = StashEngine::Identifier
+    where_clause = 'stash_engine_internal_data.data_type IN (?) AND stash_engine_internal_data.value = ?'
+    internal_data = StashEngine::Identifier
       .publicly_viewable.distinct.joins(:internal_data)
       .where(where_clause, internal_datum_types, query)
 
