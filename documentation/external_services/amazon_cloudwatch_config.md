@@ -65,7 +65,7 @@ sudo vim etc/amazon-cloudwatch-agent.d/logs_config.json
       "files": {
         "collect_list": [
           {
-            "file_path": "/home/ec2-user/deploy/current/log/dev.log",
+            "file_path": "/home/ec2-user/deploy/current/log/production.log",
             "log_group_class": "STANDARD",
             "log_group_name": "production-web",
             "log_stream_name": "{ip_address}_{instance_id}",
@@ -105,10 +105,13 @@ sudo vim etc/amazon-cloudwatch-agent.d/logs_config.json
 }
 ```
 
-To create symlinks for all `others` log files, `cd` into application `logs/crons/` 
-folder and run the following command
+To create symlinks for all `others` log files, `cd` into application `logs` 
+and create the `crons/`folder and run the following command
 ```
-ln -s ../!(dev.log|api_requests.log|crons) ./
+cd ~/deploy/current/log/
+mkdir crons
+cd crons
+ln -s ../!(production.log*|api_requests.log|crons) ./
 ```
   
 Start and enable the service
