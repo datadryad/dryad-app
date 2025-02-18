@@ -61,7 +61,7 @@ module StashEngine
         render 'stash_engine/user_admin/update_error' and return
       end
       update_associations
-      redirect_to action: 'index', q: edit_params[:id]
+      render js: "window.location.search = '?q=#{edit_params[:id]}'"
     end
 
     private
@@ -97,8 +97,8 @@ module StashEngine
       update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json
       if edit_params.key?(:flag)
         update[:flag_attributes] = { note: edit_params[:note] }
-        update[:flag_attributes][:id] = @tenant.flag.id if @tenant.flag.present?
-      elsif @tenant.flag.present?
+        update[:flag_attributes][:id] = @tenant.flag.id if @tenant&.flag.present?
+      elsif @tenant&.flag.present?
         @tenant.flag.delete
       end
       auth = {

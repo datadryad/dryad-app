@@ -55,7 +55,7 @@ module StashEngine
         @error_message = errs[0]
         render 'stash_engine/user_admin/update_error' and return
       end
-      redirect_to action: 'index', q: @journal.single_issn
+      render js: "window.location.search = '?q=#{@journal.single_issn}'"
     end
 
     private
@@ -85,8 +85,8 @@ module StashEngine
       update[:issns_attributes] = update_issns
       if edit_params.key?(:flag)
         update[:flag_attributes] = { note: edit_params[:note] }
-        update[:flag_attributes][:id] = @journal.flag.id if @journal.flag.present?
-      elsif @journal.flag.present?
+        update[:flag_attributes][:id] = @journal.flag.id if @journal&.flag.present?
+      elsif @journal&.flag.present?
         @journal.flag.delete
       end
       update
