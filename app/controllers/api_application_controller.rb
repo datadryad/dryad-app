@@ -15,11 +15,11 @@ class ApiApplicationController < StashEngine::ApplicationController
   skip_before_action :verify_authenticity_token
 
   def page
-    @page ||= (params[:page].to_i.positive? ? params[:page].to_i : 1)
+    @page ||= (params[:page].respond_to?(:to_i) && params[:page].to_i.positive? ? params[:page].to_i : 1)
   end
 
   def per_page
-    [params['per_page']&.to_i || DEFAULT_PAGE_SIZE, 100].min
+    [params[:per_page]&.to_i || DEFAULT_PAGE_SIZE, 100].min
   end
 
   def paging_hash(result_count:)
@@ -38,7 +38,7 @@ class ApiApplicationController < StashEngine::ApplicationController
     return if ct_ok && accept_ok
 
     api_logger.error('require_json_headers')
-    render json: { error: UNACCEPTABLE_MSG }.to_json, status: 406
+    render json: { error: 'not-acceptable' }.to_json, status: 406
   end
 
   def require_stash_identifier(doi:)

@@ -112,7 +112,7 @@ module StashDatacite
       if contributor.present?
         if contributor.award_number.blank? || contributor.award_description.blank?
           contributor.award_number = contributor_params[:award_number]
-          contributor.award_description = contributor_params[:award_description].squish
+          contributor.award_description = contributor_params[:award_description].squish if contributor_params[:award_description].present?
         else
           contributor.funder_order = contributor_params[:funder_order]
         end
