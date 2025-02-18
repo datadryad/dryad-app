@@ -50,10 +50,12 @@ export default function RorAutocomplete({
         return [];
         // raise an error here if we want to catch it and display something to user or do something else
       }
-      return data.data.map((i) => {
+      const list = data.data.map((i) => {
         i.display = (<>{i.name}<br /><small>{i.acronyms.length > 0 && `(${i.acronyms.join(', ')}) `}{i.country}</small></>);
         return i;
       });
+      list.unshift({name: '', id: ''});
+      return list;
     });
 
   // Given a js object from list (supplyLookupList above) it returns the string name

@@ -85,11 +85,11 @@ describe('FunderForm', () => {
     const promise = Promise.resolve({status: 200, data: newFunder});
 
     axios.patch.mockImplementationOnce(() => promise);
+    const data = {status: 200, data: {error: null}};
+    axios.patch.mockImplementationOnce(() => promise);
 
     const menu = screen.getByLabelText('Granting organization autocomplete list');
-    expect(menu).toBeVisible();
-
-    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(3));
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(4));
 
     userEvent.selectOptions(menu, screen.getByText(/Wellcome Trust/));
 

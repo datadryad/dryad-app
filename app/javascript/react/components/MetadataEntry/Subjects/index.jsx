@@ -12,14 +12,14 @@ export const keywordPass = (subjects) => {
 export const keywordFail = (subjects) => {
   const keywords = subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme));
   const subject = subjects.find((s) => ['fos', 'bad_fos'].includes(s.subject_scheme));
-  if (keywords.length < 3) {
-    return (
-      <p className="error-text" id="subj_error">At least 3 subject keywords are required</p>
-    );
-  }
   if (!subject) {
     return (
       <p className="error-text" id="domain_error">A research domain is required</p>
+    );
+  }
+  if (keywords.length < 3) {
+    return (
+      <p className="error-text" id="subj_error">At least 3 subject keywords are required</p>
     );
   }
   return false;

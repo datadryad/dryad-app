@@ -126,7 +126,7 @@ function PublicationForm({
           <Field name="isImport" type="hidden" />
           <p>Enter your publication information and import the title and other metadata:</p>
           <div className="input-line">
-            <div className="input-stack" style={{flex: 0}}>
+            <div className="input-stack">
               <Journal
                 formRef={formRef}
                 title={journal}

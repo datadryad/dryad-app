@@ -66,7 +66,7 @@ describe('FacilityForm', () => {
     const menu = screen.getByLabelText('Research facility autocomplete list');
     expect(menu).toBeVisible();
 
-    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(2));
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(3));
 
     userEvent.selectOptions(menu, screen.getByText(/Dryad Digital Repository/));
 
