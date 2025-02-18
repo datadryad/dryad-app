@@ -1,6 +1,4 @@
-import React, {
-  useCallback, useState, useRef, useEffect,
-} from 'react';
+import React, {useCallback, useState, useRef} from 'react';
 import {useCombobox} from 'downshift';
 import {debounce} from 'lodash';
 import PropTypes from 'prop-types';

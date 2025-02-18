@@ -85,7 +85,6 @@ describe('FunderForm', () => {
     const promise = Promise.resolve({status: 200, data: newFunder});
 
     axios.patch.mockImplementationOnce(() => promise);
-    const data = {status: 200, data: {error: null}};
     axios.patch.mockImplementationOnce(() => promise);
 
     const menu = screen.getByLabelText('Granting organization autocomplete list');
