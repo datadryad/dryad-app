@@ -1,7 +1,6 @@
-import React, {useRef, useCallback} from 'react';
+import React, {useRef} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import axios from 'axios';
-import {debounce} from 'lodash';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
@@ -83,8 +82,6 @@ export default function Description({
         });
     }
   };
-
-  const checkSubmit = useCallback(debounce(submit, 900), []);
 
   return (
     <>
