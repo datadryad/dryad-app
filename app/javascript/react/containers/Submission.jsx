@@ -115,7 +115,7 @@ function Submission({
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource, (review || step.index > 6)),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
-      help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title/Import'))} />,
+      help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title'))} />,
       preview: <WorksPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
@@ -161,7 +161,7 @@ function Submission({
     if (!review) {
       const url = location.search.slice(1);
       if (url) {
-        const n = steps.find((c) => url === c.name.toLowerCase());
+        const n = steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
         if (n.name !== step.name) setStep(n);
       }
     }
@@ -174,7 +174,7 @@ function Submission({
     } else if (review) {
       main.classList.remove('submission-review');
     } else if (step.name !== 'Create a submission') {
-      const slug = step.name.toLowerCase();
+      const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
       const url = window.location.search.slice(1);
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
     }
@@ -188,7 +188,7 @@ function Submission({
         if (old) old.removeAttribute('aria-invalid');
         markInvalid();
       });
-      observer.observe(subRef.current, {subtree: true, childList: true, attributeFilter: ['id']});
+      observer.observe(subRef.current, {subtree: true, childList: true, attributeFilter: ['id', 'data-index']});
     }
   }, [subRef.current]);
 

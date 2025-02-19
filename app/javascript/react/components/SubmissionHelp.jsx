@@ -137,7 +137,7 @@ export function WorksHelp({setTitleStep}) {
             setTitleStep();
           }
         }}
-      >Title/Import screen
+      >Title screen
       </span>.
     </p>
   );
