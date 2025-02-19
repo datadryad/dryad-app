@@ -33,7 +33,7 @@ describe('BadList', () => {
     render(<BadList chosenFiles={testIssue} />);
 
     expect(screen.getByText(
-      'Tabular data checker found inconsistencies in the format and structure of 1 of your files',
+      'Inconsistencies found in the format and structure of 1 of your tabular data files',
     )).toBeInTheDocument();
   });
 
@@ -47,7 +47,7 @@ describe('BadList', () => {
     render(<BadList chosenFiles={testFiles} />);
 
     expect(screen.queryByText(
-      'Tabular data checker found inconsistencies in the format and structure of 1 of your files',
+      'Inconsistencies found in the format and structure of 1 of your tabular data files',
     )).not.toBeInTheDocument();
   });
 
@@ -64,7 +64,7 @@ describe('BadList', () => {
     render(<BadList chosenFiles={testFiles} />);
 
     expect(screen.queryByText(
-      'Tabular data checker found inconsistencies in the format and structure of 1 of your files',
+      'Inconsistencies found in the format and structure of 1 of your tabular data files',
     )).not.toBeInTheDocument();
   });
 });

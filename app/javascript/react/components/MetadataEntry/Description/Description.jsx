@@ -1,7 +1,6 @@
-import React, {useRef, useCallback} from 'react';
+import React, {useRef} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import axios from 'axios';
-import {debounce} from 'lodash';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
@@ -84,8 +83,6 @@ export default function Description({
     }
   };
 
-  const checkSubmit = useCallback(debounce(submit, 900), []);
-
   return (
     <>
       <div className="input-line spaced">
@@ -103,7 +100,7 @@ export default function Description({
         onInit={(evt, editor) => { editorRef.current = editor; }}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         licenseKey="gpl"
-        initialValue={dcsDescription.description}
+        initialValue={dcsDescription?.description}
         init={{
           height: 300,
           width: '100%',
@@ -126,7 +123,6 @@ export default function Description({
           paste_preprocess,
         }}
         onBlur={submit}
-        onEditorChange={checkSubmit}
       />
     </>
   );

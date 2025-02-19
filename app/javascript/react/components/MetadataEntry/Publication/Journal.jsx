@@ -47,21 +47,13 @@ export default function Journal({
       if (data.status !== 200) {
         return [];
       }
-      // remove duplicates of the same name
-      const deduped = {};
-      data.data.forEach((item) => {
-        // only add to the deduped key/value if the key doesn't exist
-        if (!deduped[item.title]) {
-          deduped[item.title] = item;
-        }
-      });
-
-      const list = Object.values(deduped).map((item) => {
+      const list = Object.values(data.data).map((item) => {
         // add one point if starts with the same string, sends to top
         const similarity = stringSimilarity.compareTwoStrings(item.title, qt) + (item.title.startsWith(qt) ? 1 : 0);
         return {...item, similarity};
       });
       list.sort((x, y) => ((x.similarity < y.similarity) ? 1 : -1));
+      list.unshift({title: '', issn: '', id: ''});
       return list;
     });
 

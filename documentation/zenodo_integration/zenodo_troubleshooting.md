@@ -1,5 +1,30 @@
+
+I want to fix an individual failed Zenodo submission
+=====================================================
+
+1. Find all ZenodoCopies for this dataset: `select id,state,resource_id,copy_type from stash_engine_zenodo_copies where identifier_id=XXXXX order by resource_id;`
+2. Save the above table in a text file (or ticket) so you can reference the needed IDs as you repair each resource.
+3. Delete the errored rows: `delete from stash_engine_zenodo_copies where state='error' and identifier_id=XXXXXX;`
+4. Starting with the first resource that had errored, resend each resource in
+   order, and wait until each is completed before sending the next:
+   `r.send_software_to_zenodo`
+5. If the previous step failed for any resource, reference the email error or
+   the error linked from the Zenodo submission queue page to determine what failed.
+6. For entries with `copy_type=software_publish`, after the initial send, send again with `r.send_software_to_zenodo(publish: true)`
+
+
+If a transfer fails due to Zenodo's inability to delete files, you can try:
+1. Remove the appropriate "delete" entries from Dryad's `stash_engine_generic_files`
+2. Run the `r.send_software_to_zenodo`
+3. If it works, determine whether the Zenodo files are correct. You may need to
+   manually delete the files that should have been deleted.
+
+
 I want to go fix a number of failed Zenodo submissions.  How?
 =============================================================
+
+Note: This process may not work if a particular Zenodo item is "stuck" in a way
+that breaks the replication process. To fix a stuck item, use the above process.
 
 1. Go to the *Datasets > Zenodo Submissions* option in the UI as a superuser.
 2. ssh into the server and restart the delayed job daemon `sudo systemctl start delayed_job` just to

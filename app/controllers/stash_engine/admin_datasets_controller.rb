@@ -96,7 +96,7 @@ module StashEngine
 
       @curation_activity = CurationActivity.create(
         note: "Changed deletion reference date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe,
-        resource_id: @resource.id, user_id: current_user.id
+        resource_id: @resource.id, user_id: current_user.id, status: @resource.last_curation_activity&.status
       )
       @resource.reload
 

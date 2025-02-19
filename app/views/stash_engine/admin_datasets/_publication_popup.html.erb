@@ -1,23 +1,23 @@
 <h1>Edit publication information</h1>
-<%= form_with model: publication,
-      url: resource_publication_path(publication.id),
+<%= form_with model: @publication,
+      url: resource_publication_path(@publication.id),
       method: :put,
       local: false do |f| %>
   <div class="c-input">
     <label class="c-input__label" for="curation_activity_note">
-      <% if publication.pub_type == 'primary_article' %>Publication ISSN:<% end %>
-      <% if publication.pub_type == 'preprint' %>Preprint server ISSN:<% end %>
+      <% if @publication.pub_type == 'primary_article' %>Publication ISSN:<% end %>
+      <% if @publication.pub_type == 'preprint' %>Preprint server ISSN:<% end %>
     </label>
     <%= f.text_field(:publication_issn, class: 'c-input__text', style: 'width: 100%') %>
   </div>
   <div class="c-input">
     <label class="c-input__label" for="curation_activity_note">
-      <% if publication.pub_type == 'primary_article' %>Publication name:<% end %>
-      <% if publication.pub_type == 'preprint' %>Preprint server name:<% end %>
+      <% if @publication.pub_type == 'primary_article' %>Publication name:<% end %>
+      <% if @publication.pub_type == 'preprint' %>Preprint server name:<% end %>
     </label>
     <%= f.text_field(:publication_name, class: 'c-input__text', style: 'width: 100%') %>
   </div>
-  <% if publication.pub_type == 'primary_article' %>
+  <% if @publication.pub_type == 'primary_article' %>
     <div class="c-input">
       <label class="c-input__label" for="curation_activity_note">Manuscript number:</label>
       <%= f.text_field(:manuscript_number, class: 'c-input__text', style: 'width: 100%') %>

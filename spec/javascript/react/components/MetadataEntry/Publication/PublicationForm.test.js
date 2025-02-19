@@ -180,7 +180,7 @@ describe('PublicationForm', () => {
     const menu = screen.getByLabelText('Journal name autocomplete list');
     expect(menu).toBeVisible();
 
-    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(8));
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(9));
 
     userEvent.selectOptions(menu, 'PLOS ONE');
 
@@ -210,7 +210,7 @@ describe('PublicationForm', () => {
     const data = {status: 200, data: {error: null}};
     axios.patch.mockResolvedValueOnce(data);
 
-    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(8));
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(9));
 
     userEvent.tab();
 
@@ -240,7 +240,7 @@ describe('PublicationForm', () => {
     const data = {status: 200, data: {error: null}};
     axios.patch.mockResolvedValueOnce(data);
 
-    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(8));
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(9));
 
     userEvent.click(document.body);
 

@@ -102,7 +102,7 @@ module CollectionHelper
     StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
     click_button 'Next'
     expect(page).to have_content('Research domain')
-    fill_in 'Research domain', with: fos
+    select(fos, from: 'Research domain')
     page.send_keys(:tab)
   end
 

@@ -15,10 +15,11 @@ function ReportError(props) {
   return (
     <div className="result">
       {/* Heading */}
-      <div className="d-flex align-items-center error-info">
+      <div style={{display: 'flex', alignItems: 'baseline', gap: '.5ch'}}>
         <h2>
           {reportError.name}
         </h2>
+        <span className="count" style={{marginRight: '2ch'}}>x {reportError.count}</span>
         <a
           target="_blank"
           href={`/stash/data_check_guide#${reportError.name.toLowerCase().replace(' ', '-')}`}
@@ -26,9 +27,9 @@ function ReportError(props) {
           rel="noreferrer"
         >
           <i className="fa fa-question-circle" aria-hidden="true" />
-          <span className="screen-reader-only">Help with {reportError.name} alerts (opens in new window)</span>
+          <em style={{fontSize: '.98em'}}>What does this mean?</em>
+          <span className="screen-reader-only"> (opens in new window)</span>
         </a>
-        <span className="count">x {reportError.count}</span>
       </div>
 
       {/* Error details */}

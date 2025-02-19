@@ -7,7 +7,7 @@ import ResearchDomain from '../../../../../../app/javascript/react/components/Me
 jest.mock('axios');
 
 describe('ResearchDomain', () => {
-  let resource; let subject; let subjectList; let form;
+  let resource; let subject; let subjectList;
   const setResource = () => {};
 
   beforeEach(() => {
@@ -23,18 +23,14 @@ describe('ResearchDomain', () => {
         subject,
       ],
     };
-    form = {
-      data: `<label for="searchselect-fos_subjects__input">Research domain</label>
-    <input type="text" id="searchselect-fos_subjects__input"/>`,
-    };
   });
 
   // {resourceId, subject, subjectList, updatePath}
   it('renders basic Research domain form', async () => {
-    axios.get.mockResolvedValue(form);
+    axios.get.mockResolvedValue({data: subjectList.map((s) => s.subject)});
     render(<ResearchDomain resource={resource} setResource={setResource} />);
 
-    await waitFor(() => form);
-    expect(screen.getByLabelText('Research domain', {exact: false})).toBeVisible();
+    await waitFor(() => subjectList.map((s) => s.subject));
+    expect(screen.getByLabelText('Research domain')).toBeVisible();
   });
 });
