@@ -103,7 +103,7 @@ export default function Description({
         onInit={(evt, editor) => { editorRef.current = editor; }}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         licenseKey="gpl"
-        initialValue={dcsDescription.description}
+        initialValue={dcsDescription?.description}
         init={{
           height: 300,
           width: '100%',
@@ -126,7 +126,6 @@ export default function Description({
           paste_preprocess,
         }}
         onBlur={submit}
-        onEditorChange={checkSubmit}
       />
     </>
   );

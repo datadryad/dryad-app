@@ -69,7 +69,7 @@
     "@milkdown/react": "^7.3.0",
     "@milkdown/transformer": "^7.3.0",
     "@milkdown/utils": "^7.3.0",
-    "@tinymce/tinymce-react": "^5.0.1",
+    "@tinymce/tinymce-react": "^5.1.1",
     "aws-sdk": "^2.1060.0",
     "axios": "^1.7.4",
     "babel-loader": "8",
