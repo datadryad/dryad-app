@@ -49,7 +49,7 @@ export default function BadList(props) {
         </p>
         <div style={{backgroundColor: 'white', padding: '.75rem', fontSize: '.98rem'}}>
           <p style={{marginTop: 0}}>
-            These inconsistencies can affect the usability of your data.
+            These inconsistencies can affect the usability of your data.{' '}
             <a href="/stash/data_check_guide" target="_blank">
               Check our guide for more information<span className="screen-reader-only"> (opens in new window)</span>
             </a>
