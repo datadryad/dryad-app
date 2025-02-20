@@ -520,7 +520,11 @@ dialog#submission-step[open] {
   }
 
   *[aria-invalid] {
-    border: thin solid $orange;
+    border: thin solid $red !important;
+  }
+
+  label:has(input[type="checkbox"][aria-invalid]) {
+    color: $red;
   }
 }
 

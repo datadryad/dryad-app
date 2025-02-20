@@ -23,7 +23,7 @@ describe('Title', () => {
   it('renders a basic title', () => {
     render(<Title resource={resource} setResource={setResource} />);
 
-    const input = screen.getByLabelText('Dataset title', {exact: false});
+    const input = screen.getByLabelText('Submission title', {exact: false});
     expect(input).toHaveValue(resource.title);
   });
 
@@ -39,13 +39,13 @@ describe('Title', () => {
 
     render(<Title resource={resource} setResource={setResource} />);
 
-    const title = screen.getByLabelText('Dataset title', {exact: false});
+    const title = screen.getByLabelText('Submission title', {exact: false});
     expect(title).toHaveValue(resource.title);
 
-    userEvent.clear(screen.getByLabelText('Dataset title'));
-    userEvent.type(screen.getByLabelText('Dataset title'), newTitle);
+    userEvent.clear(screen.getByLabelText('Submission title'));
+    userEvent.type(screen.getByLabelText('Submission title'), newTitle);
 
-    await waitFor(() => expect(screen.getByLabelText('Dataset title')).toHaveValue(newTitle));
+    await waitFor(() => expect(screen.getByLabelText('Submission title')).toHaveValue(newTitle));
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 

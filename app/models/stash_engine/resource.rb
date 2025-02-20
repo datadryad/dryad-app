@@ -748,7 +748,7 @@ module StashEngine
       affiliation = StashDatacite::Affiliation.from_ror_id(ror_id: submitter.tenant.ror_ids&.first) if affiliation.blank? &&
         submitter.tenant.present? && !%w[dryad localhost].include?(submitter.tenant.id)
       StashEngine::Author.create(resource_id: id, author_orcid: orcid, affiliation: affiliation,
-                                 author_first_name: f_name, author_last_name: l_name, author_email: email)
+                                 author_first_name: f_name, author_last_name: l_name, author_email: email, corresp: true)
       # disabling because we no longer wnat this with UC Press
       # author.affiliation_by_name(submitter.tenant.short_name) if submitter.try(:tenant)
     end

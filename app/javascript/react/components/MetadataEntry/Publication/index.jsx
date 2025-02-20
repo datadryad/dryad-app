@@ -8,12 +8,12 @@ const nondescript = (t) => {
   /* eslint-disable max-len */
   const remainder = t.replace(/[^a-z0-9\s]/gi, '').replace(/\b(raw|data|dataset|dryad|fig|figure|figures|table|tables|file|supp|suppl|supplement|supplemental|extended|supplementary|supporting|et al|the|of|for|in|from|to|s\d|f\d|t\d)\b/gi, '').trim();
   /* eslint-enable max-len */
-  return remainder.split(/\s/).length <= 4;
+  return remainder.split(/\s/).length < 5;
 };
 
 const capitals = (t) => {
   if (t === t.toUpperCase()) return 'All-caps titles are not allowed.';
-  if (t.match(/\b[A-Z].*?\b/g)?.length > t.split(/\s/).length * 0.6) return 'Sentence casing of titles is preferred.';
+  if (t.match(/\b[A-Z].*?\b/g)?.length > t.split(/\s/).length * 0.6) return 'Sentence case is preferred for titles.';
   return false;
 };
 

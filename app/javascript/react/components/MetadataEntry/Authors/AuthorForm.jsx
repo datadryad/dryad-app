@@ -114,6 +114,7 @@ export default function AuthorForm({
                         type="checkbox"
                         defaultChecked={author.corresp}
                         disabled={!author.author_email}
+                        aria-errormessage="author_corresp_error"
                         onChange={(e) => update({...author, corresp: e.target.checked})}
                       />
                       Corresponding

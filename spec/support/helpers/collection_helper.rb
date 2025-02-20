@@ -52,7 +52,7 @@ module CollectionHelper
     within_fieldset('Is your collection associated with a submitted manuscript, with a manuscript number?') do
       find(:label, 'No').click
     end
-    fill_in 'title', with: Faker::Lorem.sentence(word_count: 5)
+    fill_in 'title', with: Faker::Lorem.sentence(word_count: 6)
     click_button 'Next'
     fill_in_author
     click_button 'Next'

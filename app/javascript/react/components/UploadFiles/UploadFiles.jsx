@@ -548,7 +548,22 @@ export default function UploadFiles({
       <div id="zenodo-widget" hidden={!zenodo}>
         <p style={{fontSize: '.98rem'}}>
           Files that require other licensing can be published at Zenodo.
-          The license for software (e.g. &apos;MIT&apos;, &apos;GNU&apos;) can be specified:
+          The license for software (e.g. &apos;MIT&apos;, &apos;GNU&apos;) can be specified.
+          <span
+            className="o-link__primary"
+            role="button"
+            aria-expanded={zenodo}
+            aria-controls="zenodo-widget"
+            style={{marginLeft: '1ch'}}
+            tabIndex="0"
+            onClick={() => setZenodo(false)}
+            onKeyDown={(e) => {
+              if (['Enter', 'Space'].includes(e.key)) {
+                setZenodo(false);
+              }
+            }}
+          ><i className="fas fa-caret-up" aria-hidden="true" style={{marginRight: '.5ch'}} />Close
+          </span>
         </p>
         <UploadSelect resource={resource} setResource={setResource} changed={addFilesHandler} clickedModal={showModalHandler} />
       </div>

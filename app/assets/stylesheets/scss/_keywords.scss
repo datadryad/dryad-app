@@ -15,6 +15,9 @@
 	padding: 6px;
 	background-color: $lightest-blue;
 	cursor: text;
+	.searchselect {
+		max-width: 250px;
+	}
 }
 
 .c-keywords__container,

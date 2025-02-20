@@ -27,8 +27,8 @@ export default function SubmissionHelp({type}) {
 export function PublicationHelp() {
   return (
     <>
-      <p>If your submission is associated with an article or manuscript, including that information can aid in connecting your data with that work, and some <a href="/stash/journals" target="_blank">integrated journals<span className="screen-reader-only"> (opens in new window)</span></a> cover the Dryad <a href="/stash/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
-      <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some integrated journals.</p>
+      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/stash/journals" target="_blank">member journals<span className="screen-reader-only"> (opens in new window)</span></a> will also cover the <a href="/stash/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
+      <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some journals.</p>
     </>
   );
 }
@@ -37,7 +37,7 @@ export function AuthHelp() {
   return (
     <>
       <p>At least one affiliation is required for all authors. An email address is required for the submitter, who will be the point of contact for Dryad, and for any corresponding authors.</p>
-      <p>Check <b>Corresponding</b> to mark someone as a corresponding author on the published dataset.</p>
+      <p>Check <b>Corresponding</b> to display an author&apos;s email address on the public dataset. At least one corresponding author is required.</p>
     </>
   );
 }
@@ -59,7 +59,15 @@ export function SubjHelp() {
 
 export function DescHelp({type}) {
   return (
-    <p>An abstract is required.{type !== 'collection' && ' You may also add a methods section to describe how your data was collected and processed.'}</p>
+    <>
+      <p>An abstract is required.{type !== 'collection' && ' Briefly summarize the dataset’s structure and concepts including information regarding data values, contents of the dataset, reuse potential and any legal or ethical considerations.'}</p>
+      {type !== 'collection' && (
+        <>
+          <p>If this dataset is associated with an article, abstract language can be similar, but it should focus on the information relevant to the data itself, rather than to the study. See <a href="https://doi.org/10.5061/dryad.5bk4c" target="_blank" rel="noreferrer">an example of a well-composed abstract<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
+          <p>You may also add a methods section to describe how your data was collected and processed.</p>
+        </>
+      )}
+    </>
   );
 }
 
@@ -87,7 +95,7 @@ export function FilesHelp() {
 export function ReadMeHelp() {
   return (
     <>
-      <p>See these example READMES from previous Dryad submissions</p>
+      <p>See these example READMEs from previous Dryad submissions</p>
       <p>For files and variables:</p>
       <ul className="readme-examples" style={{paddingLeft: '2ch'}}>
         <li>

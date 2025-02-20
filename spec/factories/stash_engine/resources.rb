@@ -46,7 +46,7 @@ FactoryBot.define do
     identifier
 
     has_geolocation { true }
-    title { Faker::Lorem.sentence }
+    title { Faker::Lorem.sentence(word_count: 6) }
     download_uri { "http://storage-fake.datadryad.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(number: 8)}" }
     update_uri do
       "http://storage-fake.org:39001/mrtsword/edit/#{Faker::Alphanumeric.alpha(number: 8)}/" \
