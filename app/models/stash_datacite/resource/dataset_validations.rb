@@ -151,6 +151,8 @@ module StashDatacite
         temp_err = []
         @resource.authors.each_with_index do |author, idx|
 
+          next unless author.author_org_name.blank?
+
           if author.author_first_name.blank?
             temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {first name}",
                                       page: metadata_page(@resource),

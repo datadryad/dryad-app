@@ -64,7 +64,8 @@ module StashEngine
     enum :import_info, {
       other: 0,
       manuscript: 1,
-      published: 2
+      published: 2,
+      preprint: 3
     }
 
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks

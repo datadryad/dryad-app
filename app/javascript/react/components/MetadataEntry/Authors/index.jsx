@@ -48,5 +48,10 @@ export const authorCheck = (authors, id) => {
       </p>
     );
   }
+  if (!authors.some((a) => a.corresp)) {
+    return (
+      <p className="error-text" id="author_corresp_error">At least 1 corresponding author is required</p>
+    );
+  }
   return false;
 };

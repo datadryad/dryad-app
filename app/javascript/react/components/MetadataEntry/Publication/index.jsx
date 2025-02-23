@@ -8,17 +8,17 @@ const nondescript = (t) => {
   /* eslint-disable max-len */
   const remainder = t.replace(/[^a-z0-9\s]/gi, '').replace(/\b(raw|data|dataset|dryad|fig|figure|figures|table|tables|file|supp|suppl|supplement|supplemental|extended|supplementary|supporting|et al|the|of|for|in|from|to|s\d|f\d|t\d)\b/gi, '').trim();
   /* eslint-enable max-len */
-  return remainder.split(/\s/).length < 3;
+  return remainder.split(/\s/).length < 5;
 };
 
 const capitals = (t) => {
   if (t === t.toUpperCase()) return 'All-caps titles are not allowed.';
-  if (t.match(/\b[A-Z].*?\b/g)?.length > t.split(/\s/).length * 0.6) return 'Sentence casing of titles is preferred.';
+  if (t.match(/\b[A-Z].*?\b/g)?.length > t.split(/\s/).length * 0.6) return 'Sentence case is preferred for titles.';
   return false;
 };
 
-const validPrimary = (r) => {
-  const p = r.related_identifiers.find((ri) => ri.work_type === 'primary_article');
+const validPrimary = (r, t = 'primary_article') => {
+  const p = r.related_identifiers.find((ri) => ri.work_type === t);
   if (!p) return false;
   return /^https:\/\/doi\.org\/10\.\d{4,9}\/[-._;()/:a-zA-Z0-9]+$/.test(p.related_identifier);
 };
@@ -83,7 +83,8 @@ export const publicationFail = (resource) => {
       }
     } else {
       const {publication_name, manuscript_number} = resource.resource_publication;
-      if (import_info !== 'other' && !publication_name) {
+      const {publication_name: preprint_server} = resource.resource_preprint || {};
+      if (['manuscript', 'published'].includes(import_info) && !publication_name) {
         return (
           <p className="error-text" id="journal_error">The journal of the related publication is required</p>
         );
@@ -96,6 +97,16 @@ export const publicationFail = (resource) => {
       if (import_info === 'published' && !validPrimary(resource)) {
         return (
           <p className="error-text" id="doi_error">A valid DOI for the article is required</p>
+        );
+      }
+      if (import_info === 'preprint' && !preprint_server) {
+        return (
+          <p className="error-text" id="journal_error">The server of the related publication is required</p>
+        );
+      }
+      if (import_info === 'preprint' && !validPrimary(resource, 'preprint')) {
+        return (
+          <p className="error-text" id="doi_error">A valid DOI for the preprint is required</p>
         );
       }
       return <p className="error-text" id="title_error">Title is required</p>;

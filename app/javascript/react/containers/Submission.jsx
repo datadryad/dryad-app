@@ -52,13 +52,13 @@ function Submission({
       preview: <AuthPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
-      name: 'Support',
+      name: 'Description',
       index: 2,
-      pass: resource.contributors.find((c) => c.contributor_type === 'funder'),
-      fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      component: <Support resource={resource} setResource={setResource} />,
-      help: <SuppHelp type={resource.resource_type.resource_type} />,
-      preview: <SuppPreview resource={resource} previous={previous} />,
+      pass: resource.descriptions.some((d) => !!d.description),
+      fail: (review || step.index > 3) && abstractCheck(resource),
+      component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
+      help: <DescHelp type={resource.resource_type.resource_type} />,
+      preview: <DescPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Subjects',
@@ -70,13 +70,13 @@ function Submission({
       preview: <SubjPreview resource={resource} previous={previous} />,
     },
     {
-      name: 'Description',
+      name: 'Support',
       index: 4,
-      pass: resource.descriptions.some((d) => !!d.description),
-      fail: (review || step.index > 3) && abstractCheck(resource),
-      component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
-      help: <DescHelp type={resource.resource_type.resource_type} />,
-      preview: <DescPreview resource={resource} previous={previous} />,
+      pass: resource.contributors.find((c) => c.contributor_type === 'funder'),
+      fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
+      component: <Support resource={resource} setResource={setResource} />,
+      help: <SuppHelp type={resource.resource_type.resource_type} />,
+      preview: <SuppPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Files',
@@ -115,7 +115,7 @@ function Submission({
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource, (review || step.index > 6)),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
-      help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title/Import'))} />,
+      help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title'))} />,
       preview: <WorksPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
@@ -161,7 +161,7 @@ function Submission({
     if (!review) {
       const url = location.search.slice(1);
       if (url) {
-        const n = steps.find((c) => url === c.name.toLowerCase());
+        const n = steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
         if (n.name !== step.name) setStep(n);
       }
     }
@@ -174,7 +174,7 @@ function Submission({
     } else if (review) {
       main.classList.remove('submission-review');
     } else if (step.name !== 'Create a submission') {
-      const slug = step.name.toLowerCase();
+      const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
       const url = window.location.search.slice(1);
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
     }
@@ -188,7 +188,7 @@ function Submission({
         if (old) old.removeAttribute('aria-invalid');
         markInvalid();
       });
-      observer.observe(subRef.current, {subtree: true, childList: true, attributeFilter: ['id']});
+      observer.observe(subRef.current, {subtree: true, childList: true, attributeFilter: ['id', 'data-index']});
     }
   }, [subRef.current]);
 
@@ -204,7 +204,6 @@ function Submission({
           const stop = (steps.findLastIndex((c) => c.pass) + 1) > (steps.length - 1);
           setStep(stop ? steps.findLast((c) => c.pass) : steps[steps.findLastIndex((c) => c.pass) + 1]);
         }
-        setOpen('start');
       }
     } else if (resource.identifier.publication_date) {
       document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
@@ -314,7 +313,6 @@ function Submission({
                     className="o-button__plain-text2"
                     disabled={!resource.accepted_agreement}
                     onClick={() => {
-                      if (open === 'start') setOpen(false);
                       setStep({name: 'Create a submission'});
                       setReview(true);
                     }}

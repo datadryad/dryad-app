@@ -14,6 +14,8 @@ function ImportCheck({importType, journal, setDisable}) {
       setDisable(true);
     } else if (importType === 'published' && (!journal || !values.primary_article_doi)) {
       setDisable(true);
+    } else if (importType === 'preprint' && (!journal || !values.primary_article_doi)) {
+      setDisable(true);
     } else {
       setDisable(false);
     }
@@ -24,9 +26,9 @@ function PublicationForm({
   resource, setResource, setSponsored, importType,
 }) {
   const formRef = useRef();
-  const {resource_publication} = resource;
-  const {publication_name, publication_issn, manuscript_number} = resource_publication;
-  const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article');
+  const {resource_publication, resource_preprint = {}} = resource;
+  const {publication_name, publication_issn, manuscript_number} = importType === 'preprint' ? resource_preprint : resource_publication;
+  const primary_article = resource.related_identifiers.find((r) => r.work_type === (importType === 'preprint' ? 'preprint' : 'primary_article'));
   const [importError, setImportError] = useState('');
   const [journal, setJournal] = useState(publication_name);
   const [issn, setIssn] = useState(publication_issn);
@@ -86,14 +88,22 @@ function PublicationForm({
             contributors,
             descriptions,
             journal: j,
-            resource_publication: res_pub,
+            ...(importType === 'preprint' ? {
+              resource_preprint: res_pub,
+            } : {
+              resource_publication: res_pub,
+            }),
             related_identifiers,
           }));
-        } else if (error || apiJournal || !journal) {
+        } else {
           setResource((r) => ({
             ...r,
             journal: j,
-            resource_publication: res_pub,
+            ...(importType === 'preprint' ? {
+              resource_preprint: res_pub,
+            } : {
+              resource_publication: res_pub,
+            }),
             related_identifiers,
           }));
         }
@@ -124,7 +134,9 @@ function PublicationForm({
         <Form style={{margin: '1em auto'}}>
           <ImportCheck importType={importType} journal={journal} setDisable={setDisable} />
           <Field name="isImport" type="hidden" />
-          <p>Enter your publication information and import the title and other metadata:</p>
+          <div className="callout alt">
+            <p><i className="fas fa-file-import" /> Enter your publication information to import the title and other metadata</p>
+          </div>
           <div className="input-line">
             <div className="input-stack">
               <Journal
@@ -136,7 +148,7 @@ function PublicationForm({
                 setAPIJournal={setAPIJournal}
                 controlOptions={
                   {
-                    labelText: 'Journal name',
+                    labelText: importType === 'preprint' ? 'Preprint server' : 'Journal name',
                     htmlId: 'publication',
                     isRequired: true,
                     errorId: 'journal_error',
@@ -144,7 +156,7 @@ function PublicationForm({
                   }
                 }
               />
-              <div id="journal-ex"><i />Nature, Science</div>
+              <div id="journal-ex"><i />{importType === 'preprint' ? 'bioRxiv, SSRN' : 'Nature, Science'}</div>
             </div>
             {importType !== 'manuscript' && (
               <div className="input-stack">
@@ -167,7 +179,7 @@ function PublicationForm({
                 <div id="doi-ex"><i />10.5702/qlm.1266rr</div>
               </div>
             )}
-            {importType !== 'published' && (
+            {importType === 'manuscript' && (
               <div className="input-stack">
                 <label className="input-label" htmlFor="msid">
                   Manuscript number
@@ -190,25 +202,75 @@ function PublicationForm({
             )}
             <div className="input-stack">
               <span style={{height: '23px'}} />
-              <button
-                type="button"
-                name="commit"
-                className="o-button__plain-text5"
-                hidden={hide}
-                disabled={disable}
-                onClick={() => {
-                  formRef.current.values.isImport = true;
-                  formik.handleSubmit();
-                }}
-              >
-                Import metadata
-              </button>
+              {resource.title ? (
+                <button
+                  type="button"
+                  name="commit"
+                  className="o-button__plain-text5"
+                  hidden={hide}
+                  disabled={disable}
+                  aria-controls="overwrite-dialog"
+                  onClick={() => document.getElementById('overwrite-dialog').showModal()}
+                >
+                  <i className="fas fa-file-import" />{' '}
+                  Overwrite metadata
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  name="commit"
+                  className="o-button__plain-text5"
+                  hidden={hide}
+                  disabled={disable}
+                  onClick={() => {
+                    formRef.current.values.isImport = true;
+                    formik.handleSubmit();
+                  }}
+                >
+                  <i className="fas fa-file-import" />{' '}
+                  Import metadata
+                </button>
+              )}
             </div>
           </div>
-          <div id="population-warnings" className="o-metadata__autopopulate-message">
+          <p id="population-warnings" className="o-metadata__autopopulate-message">
             {importError}
-          </div>
+          </p>
           {loading && <p><i className="fa fa fa-spinner fa-spin" aria-hidden="true" /><span className="screen-reader-only">Loading...</span></p>}
+          <dialog
+            id="overwrite-dialog"
+            className="modalDialog"
+            role="alertdialog"
+            aria-labelledby="import-alert-title"
+            aria-describedby="import-alert-desc"
+            aria-modal="true"
+          >
+            <div className="modalClose">
+              <button aria-label="Close" type="button" onClick={() => document.getElementById('overwrite-dialog').close()} />
+            </div>
+            <div>
+              <h1 id="import-alert-title">Overwrite inserted metadata?</h1>
+              <p id="import-alert-desc">
+                Your {importType === 'published' ? 'published article' : importType} information has been saved.
+                Are you certain you also want to attempt to overwrite your submission title and any other metadata?
+              </p>
+              <div className="c-modal__buttons-right">
+                <button
+                  type="button"
+                  className="o-button__plain-text2"
+                  onClick={() => {
+                    document.getElementById('overwrite-dialog').close();
+                    formRef.current.values.isImport = true;
+                    formik.handleSubmit();
+                  }}
+                >Import new metadata
+                </button>
+                <button type="button" className="o-button__plain-text7" onClick={() => document.getElementById('overwrite-dialog').close()}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </dialog>
         </Form>
       )}
     </Formik>

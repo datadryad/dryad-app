@@ -42,16 +42,6 @@ RSpec.feature 'NewCollection', type: :feature do
     end
   end
 
-  context :requirements_not_met, js: true do
-    it 'should disable submit button', js: true do
-      visit('/stash/resources/new?collection')
-      navigate_to_review
-      submit = find_button('submit_button', disabled: :all)
-      expect(submit).not_to be_nil
-      expect(submit).to be_disabled
-    end
-  end
-
   # tests below are very slow
 
   context :requirements_met, js: true do

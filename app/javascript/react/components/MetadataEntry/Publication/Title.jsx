@@ -3,7 +3,7 @@ import React, {useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg, upCase} from '../../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 /* Formik makes it difficult to get a hold of some of the context to do some things manually unless you make the forms very
    verbose like the initial, "building Formik" ones at https://formik.org/docs/tutorial .  If you use the compact and less
@@ -46,7 +46,7 @@ function Title({resource, setResource}) {
       {(formik) => (
         <Form style={{margin: '1em auto'}} className="input-stack">
           <label className="required input-label" htmlFor={`title__${resource.id}`}>
-            {upCase(resource.resource_type.resource_type)} title
+            Submission title
           </label>
           <Field
             name="title"

@@ -33,7 +33,7 @@ export default function InvoiceForm({resource, setResource, ownerId}) {
     }
   }, []);
 
-  if (email === null) return <p><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading" /></p>;
+  if (email === null) return null;
   return (
     <Formik
       initialValues={
@@ -71,18 +71,19 @@ export default function InvoiceForm({resource, setResource, ownerId}) {
         <Form>
           <p>The invoice will be sent to:</p>
           <p className="input-line" style={{alignItems: 'baseline'}}>
-            <span className="input-line" style={{alignItems: 'baseline', gap: '.5ch'}}>
+            <span className="input-line" style={{flex: 1, alignItems: 'baseline', gap: '.5ch'}}>
               <label className="input-label" htmlFor="invoice-name">Name</label>
               <Field
                 id="invoice-name"
                 name="name"
                 type="text"
                 className="c-input__text"
+                style={{flex: 1}}
               />
             </span>
-            <span className="input-line" style={{alignItems: 'baseline', gap: '.5ch'}}>
+            <span className="input-line" style={{flex: 1, alignItems: 'baseline', gap: '.5ch'}}>
               <label className="input-label" htmlFor="invoice-email">Email</label>
-              <span className="input-stack">
+              <span className="input-stack" style={{flex: 1}}>
                 <Field
                   id="invoice-email"
                   name="email"

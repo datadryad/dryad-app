@@ -26,11 +26,11 @@ export default function Calculations({
           <>
             <p>
               For data packages in excess of {formatSizeUnits(large_file_size)}, submitters will be charged{' '}
-              an additional ${chunk_cost} for each additional {formatSizeUnits(chunk_size)}, or part thereof.
+              an additional {chunk_cost} USD for each additional {formatSizeUnits(chunk_size)}, or part thereof.
             </p>
             <p>
               For the addition of {formatSizeUnits(over)} to your published dataset,
-              a new invoice will be sent for <b>${chunks * (chunk_cost)}</b>.
+              a new invoice will be sent for <b>{chunks * (chunk_cost)} USD</b>.
             </p>
           </>
         )}
@@ -44,16 +44,16 @@ export default function Calculations({
         {large_files ? (
           <>
             For data packages in excess of {formatSizeUnits(large_file_size)}, submitters will be charged{' '}
-            an additional ${chunk_cost} for each additional {formatSizeUnits(chunk_size)}, or part thereof.
+            an additional {chunk_cost} USD for each additional {formatSizeUnits(chunk_size)}, or part thereof.
           </>
         ) : (
-          <>Upon publication of your dataset, an invoice will be sent for ${dpc}.</>
+          <>Upon publication of your dataset, an invoice will be sent for {dpc} USD.</>
         )}
       </p>
       {large_files && (
         <p>
           Upon publication of your {formatSizeUnits(resource.total_file_size)} dataset,
-          an invoice will be sent for <b>${dpc + (chunks * (chunk_cost))}</b>.
+          an invoice will be sent for <b>{dpc + (chunks * (chunk_cost))} USD</b>.
         </p>
       )}
     </>

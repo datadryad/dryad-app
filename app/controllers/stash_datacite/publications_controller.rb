@@ -17,7 +17,7 @@ module StashDatacite
           if params[:do_import] == 'true' || params[:do_import] == true
             @error = 'Please fill in the form completely' if params[:msid]&.strip.blank? && params[:primary_article_doi]&.strip.blank?
             update_manuscript_metadata if params[:import_type] == 'manuscript'
-            update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] == 'published'
+            update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] != 'manuscript'
             if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
               manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier)
             end
@@ -40,7 +40,6 @@ module StashDatacite
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     # GET /publications/autocomplete?term={query_term}
     def autocomplete
@@ -83,13 +82,16 @@ module StashDatacite
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
       @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
-      @resource.related_identifiers.where(work_type: 'primary_article').destroy_all if params[:primary_article_doi].blank?
+      if params[:primary_article_doi].blank?
+        @resource.related_identifiers.where(work_type: params[:import_type] == 'preprint' ? 'preprint' : 'primary_article').destroy_all
+      end
       if @pub_issn.blank? && @pub_name.present?
         exact_matches = StashEngine::Journal.find_by_title(@pub_name)
         @pub_issn = exact_matches.single_issn if exact_matches.present?
       end
       begin
-        publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
+        publication = StashEngine::ResourcePublication
+          .find_or_create_by(resource_id: @resource.id, pub_type: params[:import_type] == 'preprint' ? :preprint : :primary_article)
         publication.publication_name = @pub_name
         publication.publication_issn = @pub_issn
         publication.manuscript_number = @msid
@@ -107,11 +109,13 @@ module StashDatacite
 
       save_doi
     end
+    # rubocop:enable Metrics/AbcSize
 
     def save_doi
       form_doi = params[:primary_article_doi]
       return if form_doi.blank?
 
+      work_type = params[:import_type] == 'preprint' ? 'preprint' : 'primary_article'
       bare_form_doi = Stash::Import::Crossref.bare_doi(doi_string: form_doi)
       related_dois = @resource.related_identifiers
 
@@ -121,19 +125,18 @@ module StashDatacite
 
         standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
         # user is expanding on a DOI that we already have; update it in the DB (and change the work_type if needed)
-        rd.update(related_identifier: standard_doi, related_identifier_type: 'doi', work_type: 'primary_article',
-                  hidden: false)
-        rd.update(verified: rd.live_url_valid?) # do this separately since we need the doi in standard format in object to check
+        rd.update(related_identifier: standard_doi, related_identifier_type: 'doi', work_type: work_type)
+        rd.update(verified: rd.live_url_valid?, hidden: false) # do this separately since we need the doi in standard format in object to check
         return nil
       end
 
       # none of the existing related_dois overlap with the form_doi; add the form_doi as a completely new relation
       standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
-      existing_primary = @resource.related_identifiers.where(work_type: 'primary_article').first
+      existing_primary = @resource.related_identifiers.where(work_type: work_type).first
       hsh = { related_identifier: standard_doi,
               related_identifier_type: 'doi',
               relation_type: 'iscitedby',
-              work_type: 'primary_article',
+              work_type: work_type,
               hidden: false }
 
       ri = if existing_primary.present?

@@ -84,7 +84,7 @@ export default function DragonDropList({
     });
 
     // duplicate list with updated order values reflecting new order
-    const newItems = localItems.map((item) => ({...item, [orderProp]: newOrderObj[item.id]}));
+    const newItems = [...localItems.map((item) => ({...item, [orderProp]: newOrderObj[item.id]}))].sort((a, b) => a[orderProp] - b[orderProp]);
     // replace
     setItems(newItems);
   }
