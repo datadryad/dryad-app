@@ -19,7 +19,7 @@ module StashDatacite
       end
 
       def resource_publications
-        @resource_publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
+        @resource_publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :primary_article)
         @primary_article = @resource.related_identifiers.where(work_type: 'primary_article').first || StashDatacite::RelatedIdentifier.new(
           resource_id: @resource.id, related_identifier_type: 'doi', work_type: 'primary_article'
         )

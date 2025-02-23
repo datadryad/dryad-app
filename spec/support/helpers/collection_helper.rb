@@ -22,7 +22,7 @@ module CollectionHelper
     click_button 'Next'
     page.find('#checklist-button').click unless page.has_button?('Title')
     click_button 'Title'
-    expect(page).to have_content('Is your collection associated with a published article?')
+    expect(page).to have_content('Is your collection associated with a research article?')
   end
 
   def navigate_to_review
@@ -39,26 +39,23 @@ module CollectionHelper
   def fill_required_fields
     fill_required_metadata
     add_required_abstract
+    click_button 'Support'
+    check('No funding received')
     refresh
   end
 
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-    within_fieldset('Is your collection associated with a published article, with a DOI?') do
-      find(:label, 'No').click
-    end
-    expect(page).to have_content('Is your collection associated with a submitted manuscript, with a manuscript number?')
-    within_fieldset('Is your collection associated with a submitted manuscript, with a manuscript number?') do
+    within_fieldset('Is your collection associated with a research article?') do
       find(:label, 'No').click
     end
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 6)
     click_button 'Next'
     fill_in_author
-    click_button 'Next'
-    check('No funding received')
     fill_in_research_domain
     fill_in_keywords
+    click_button 'Next'
     fill_in_collection
   end
 
@@ -100,7 +97,7 @@ module CollectionHelper
   def fill_in_research_domain
     fos = 'Biological sciences'
     StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
-    click_button 'Next'
+    click_button 'Subjects'
     expect(page).to have_content('Research domain')
     select(fos, from: 'Research domain')
     page.send_keys(:tab)

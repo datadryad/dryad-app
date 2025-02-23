@@ -21,11 +21,8 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
 
     it 'gives disable submit manuscript not filled' do
       navigate_to_metadata
-      within_fieldset('Is your data used in a published article, with a DOI?') do
+      within_fieldset('Is your data used in a research article?') do
         find(:label, 'No').click
-      end
-      within_fieldset('Is your data used in a submitted manuscript, with a manuscript number?') do
-        find(:label, 'Yes').click
       end
       expect(page).not_to have_button('Import metadata')
     end
@@ -87,7 +84,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       fill_crossref_info(name: journal, doi: doi)
       expect(page).to have_button('Import metadata')
       click_button('Import metadata')
-      expect(page.find('div#population-warnings')).to have_content(
+      expect(page.find('#population-warnings')).to have_content(
         "We couldn't find metadata to import for this DOI. Please fill in your title manually", wait: 15
       )
     end

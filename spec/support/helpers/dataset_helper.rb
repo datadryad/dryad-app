@@ -13,7 +13,7 @@ module DatasetHelper
     click_button 'Next'
     page.find('#checklist-button').click unless page.has_button?('Title')
     click_button 'Title'
-    expect(page).to have_content('Is your data used in a published article, with a DOI?')
+    expect(page).to have_content('Is your data used in a research article?')
   end
 
   def navigate_to_readme
@@ -46,6 +46,8 @@ module DatasetHelper
 
   def fill_required_fields
     fill_required_metadata
+    click_button 'Support'
+    fill_in_funder
     add_required_abstract
     add_required_data_files
     add_required_readme
@@ -55,18 +57,12 @@ module DatasetHelper
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-    within_fieldset('Is your data used in a published article, with a DOI?') do
-      find(:label, 'No').click
-    end
-    expect(page).to have_content('Is your data used in a submitted manuscript, with a manuscript number?')
-    within_fieldset('Is your data used in a submitted manuscript, with a manuscript number?') do
+    within_fieldset('Is your data used in a research article?') do
       find(:label, 'No').click
     end
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 6)
     click_button 'Next'
     fill_in_author
-    click_button 'Next'
-    fill_in_funder
     fill_in_research_domain
     fill_in_keywords
   end
@@ -97,12 +93,12 @@ module DatasetHelper
 
   def fill_manuscript_info(name:, issn:, msid:)
     navigate_to_metadata
-    within_fieldset('Is your data used in a published article, with a DOI?') do
-      find(:label, 'No').click
-    end
-    expect(page).to have_content('Is your data used in a submitted manuscript, with a manuscript number?')
-    within_fieldset('Is your data used in a submitted manuscript, with a manuscript number?') do
+    within_fieldset('Is your data used in a research article?') do
       find(:label, 'Yes').click
+    end
+    expect(page).to have_content('From what source would you like to import information?')
+    within_fieldset('From what source would you like to import information?') do
+      find(:label, 'Submitted manuscript').click
     end
     page.execute_script("$('#publication').val('#{name}')")
     page.execute_script("$('#publication_issn').val('#{issn}')") # must do to fill hidden field
@@ -113,6 +109,10 @@ module DatasetHelper
   def fill_crossref_info(name:, doi:)
     navigate_to_metadata
     find(:label, 'Yes').click
+    expect(page).to have_content('From what source would you like to import information?')
+    within_fieldset('From what source would you like to import information?') do
+      find(:label, 'Published article').click
+    end
     fill_in 'publication', with: name
     fill_in 'primary_article_doi', with: doi
     page.send_keys(:tab)
@@ -145,7 +145,7 @@ module DatasetHelper
   def fill_in_research_domain
     fos = 'Biological sciences'
     StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
-    click_button 'Next'
+    click_button 'Subjects'
     expect(page).to have_content('Research domain')
     select(fos, from: 'Research domain')
     page.send_keys(:tab)
