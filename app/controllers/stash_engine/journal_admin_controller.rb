@@ -76,7 +76,7 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[title default_to_ppr]
+      valid = %i[title default_to_ppr allow_review_workflow]
       update = edit_params.slice(*valid).to_h
       update[:sponsor_id] = edit_params[:sponsor_id].presence
       update[:payment_plan_type] = edit_params[:payment_plan_type].presence
@@ -101,8 +101,8 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :title, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id, :flag, :note)
+      params.permit(:id, :title, :issn, :payment_plan_type, :notify_contacts, :review_contacts,
+        :default_to_ppr, :allow_review_workflow, :sponsor_id, :flag, :note)
     end
-
   end
 end
