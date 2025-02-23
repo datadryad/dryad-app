@@ -40,7 +40,7 @@ module StashEngine
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
 
     validates_associated :issns
-    accepts_nested_attributes_for :issns, :flag
+    accepts_nested_attributes_for :issns, :alternate_titles, :flag
 
     def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
 

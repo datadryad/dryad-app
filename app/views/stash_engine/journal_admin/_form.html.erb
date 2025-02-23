@@ -15,6 +15,10 @@
 <%= form.label :issn, "Place each Journal ISSN on a new line:"%>
 <%= form.text_area(:issn, value: @journal.issn_array.join("\n"), class: 'c-input__textarea', style: 'width:100%;') %>
 </div>
+<div class="c-input">
+<%= form.label :alt_title, "Place each alternate title on a new line:"%>
+<%= form.text_area(:alt_title, value: @journal.alternate_titles.map(&:title).join("\n"), class: 'c-input__textarea', style: 'width:100%;') %>
+</div>
 <%
 plan_radios = [ ['', 'None'] ]
 @journal.payment_plans.each {|p| plan_radios.push([p, p.capitalize])}
