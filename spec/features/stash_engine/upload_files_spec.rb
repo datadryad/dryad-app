@@ -66,7 +66,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page).to have_content(@file1.upload_file_name)
       expect(page).to have_content(@file2.url)
       expect(page).to have_content(@file3.upload_file_name)
-      expect(page).to have_content('Uploaded', count: 3)
+      expect(page.has_css?('i[aria-label="complete"]', count: 3)).to be true
 
       # 'shows only files with status different of "deleted"'
 
@@ -411,7 +411,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       click_on('validate_files')
-      expect(page).to have_content('Uploaded')
+      expect(page.has_css?('i[aria-label="complete"]')).to be true
     end
 
     it 'only changes table status column to a progress bar if file status is Pending' do

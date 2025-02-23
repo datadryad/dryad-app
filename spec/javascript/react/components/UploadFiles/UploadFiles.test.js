@@ -209,7 +209,6 @@ describe('UploadFiles', () => {
     await waitFor(() => {
       expect(screen.getByText('data.csv')).toBeInTheDocument();
       expect(screen.queryByText('Pending')).not.toBeInTheDocument();
-      expect(screen.getByText('Uploaded')).toBeInTheDocument();
       expect(screen.getAllByText('180 KB')[0]).toBeInTheDocument();
     });
   });
@@ -239,9 +238,8 @@ describe('UploadFiles', () => {
     await waitFor(() => postB);
 
     await waitFor(() => {
-      expect(screen.getByText('Uploaded')).toBeInTheDocument();
+      expect(screen.getByText('Validating...')).toBeInTheDocument();
     });
-    expect(screen.getByText('Validating...')).toBeInTheDocument();
 
     await waitFor(() => get);
 
@@ -431,7 +429,7 @@ describe('UploadFiles', () => {
     await waitFor(() => data);
 
     expect(screen.getByText('data.csv')).toBeInTheDocument();
-    expect(screen.getByText('Uploaded')).toBeInTheDocument();
+    expect(screen.getAllByText('180 KB')[0]).toBeInTheDocument();
   });
 
   it('enters URLs and shows failures', async () => {

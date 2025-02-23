@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import moment from 'moment';
 import ellipsize from '../../../../lib/string_patch';
 import classes from './File.module.css';
 
@@ -23,7 +24,7 @@ const statusCss = (status) => {
   case TabularCheckStatus.error:
     return classes.Passed;
   default:
-    return null;
+    return '';
   }
 };
 
@@ -83,7 +84,13 @@ export default function File({file, clickRemove, clickValidationReport}) {
   return (
     <tr>
       <th scope="row">{file.sanitized_name}</th>
-      <td id={`status_${file.id}`} className={`c-uploadtable__status ${statusCss(file.status)}`}>{file.status}</td>
+      <td id={`status_${file.id}`} className={`c-uploadtable__status ${statusCss(file.status)}`}>
+        {file.status === 'Uploaded' ? (
+          <div className="c-uploadtable-time">
+            {moment(file.updated_at).format('YYYY/MM/DD H:mm')} <i className="fas fa-check" role="img" aria-label="complete" />
+          </div>
+        ) : file.status}
+      </td>
       <td className={statusCss(file.tabularCheckStatus)}>
         {tabularInfo}
       </td>
