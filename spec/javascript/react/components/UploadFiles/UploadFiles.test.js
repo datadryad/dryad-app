@@ -320,7 +320,7 @@ describe('UploadFiles', () => {
     const [input] = screen.getAllByLabelText('Choose files');
     userEvent.upload(input, files);
 
-    expect(screen.getByText('A file of the same name is already in the table, and was not added.')).toBeInTheDocument();
+    expect(screen.getByText('A file of the same name is already in the table. The new file was not added.')).toBeInTheDocument();
   });
 
   it('allows duplicate files for zenodo', async () => {
@@ -337,7 +337,7 @@ describe('UploadFiles', () => {
 
     userEvent.upload(input, files);
     expect(screen.getAllByText('data.csv').length).toEqual(2);
-    expect(screen.queryByText('A file of the same name is already in the table, and was not added.')).not.toBeInTheDocument();
+    expect(screen.queryByText('A file of the same name is already in the table. The new file was not added.')).not.toBeInTheDocument();
   });
 
   it('does not allow more than the max allowed files', async () => {

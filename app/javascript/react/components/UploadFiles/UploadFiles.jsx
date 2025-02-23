@@ -82,7 +82,7 @@ export default function UploadFiles({
   const [urls, setUrls] = useState(null);
   const [manFileType, setManFileType] = useState(null);
   const [valFile, setValFile] = useState(null);
-  const [warning, setWarning] = useState(null);
+  const [warning, setWarning] = useState([]);
   const [pollingCount, setPollingCount] = useState(0);
   const [zenodo, setZenodo] = useState(false);
 
@@ -94,9 +94,11 @@ export default function UploadFiles({
   const maxFiles = config_maximums.files;
   const Messages = {
     fileReadme: 'Please prepare your README on the README page.',
-    fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
-    filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
+    fileAlreadySelected: 'A file of the same name is already in the table. The new file was not added.',
+    filesAlreadySelected: 'Files of the same name are already in the table. New files were not added.',
     tooManyFiles: `You may not upload more than ${maxFiles} individual files of this type.`,
+    // eslint-disable-next-line max-len
+    rarTypeFiles: 'RAR files were not added. RAR is a proprietary compression format that cannot be opened universally. Please use an open-access format, such as TAR.GZ, 7Z, or ZIP.',
   };
 
   const isValidTabular = (file) => (ValidTabular.extensions.includes(file.sanitized_name.split('.').pop())
@@ -238,9 +240,9 @@ export default function UploadFiles({
 
   const setWarningRepeatedFile = (countRepeated) => {
     if (countRepeated < 0) return;
-    if (countRepeated === 0) setWarning(null);
-    if (countRepeated === 1) setWarning(Messages.fileAlreadySelected);
-    if (countRepeated > 1) setWarning(Messages.filesAlreadySelected);
+    if (countRepeated === 0) return;
+    if (countRepeated === 1) setWarning([Messages.fileAlreadySelected]);
+    if (countRepeated > 1) setWarning([Messages.filesAlreadySelected]);
   };
 
   const discardAlreadyChosenById = (files) => {
@@ -259,23 +261,29 @@ export default function UploadFiles({
       && sanitize(filename).toLowerCase() !== 'readme.md');
   };
 
-  const discardFilesAlreadyChosen = (files, uploadType) => {
+  const discardUnwantedFiles = (files) => {
+    if (files.some((f) => f.type === 'application/vnd.rar' || f.name.endsWith('.rar'))) {
+      setWarning((w) => [...w, Messages.rarTypeFiles]);
+    }
+    return files.filter((f) => !(f.type === 'application/vnd.rar' || f.name.endsWith('.rar')));
+  };
+
+  const discardFiles = (files, uploadType) => {
+    setWarning([]);
+    let newFiles = files;
     const filenames = files.map((file) => file.name);
     const newFilenames = discardAlreadyChosenByName(filenames, uploadType);
-    if (filenames.length === newFilenames.length) return files;
-
-    const newFiles = files.filter((file) => newFilenames.includes(file.name));
-
-    const countRepeated = files.length - newFiles.length;
-    if (filenames.includes('README.md')) {
-      setWarning(Messages.fileReadme);
-    } else {
+    if (filenames.length !== newFilenames.length) {
+      newFiles = files.filter((file) => newFilenames.includes(file.name));
+      const countRepeated = files.length - newFiles.length;
       setWarningRepeatedFile(countRepeated);
+      if (filenames.includes('README.md')) setWarning((w) => [...w, Messages.fileReadme]);
     }
+    newFiles = discardUnwantedFiles(newFiles);
     return newFiles;
   };
 
-  const discardUrlsAlreadyChosen = (uris, uploadType) => {
+  const discardUrls = (uris, uploadType) => {
     const handleUrls = uris.split('\n').filter((url) => url);
 
     const filenames = handleUrls.map((url) => url.split('/').pop());
@@ -297,12 +305,11 @@ export default function UploadFiles({
   const addFilesHandler = (event, uploadType) => {
     const timestamp = Date.now();
     displayAriaMsg('Your files are being checked');
-    setWarning(null);
-    setSubmitDisabled(true);
-    const files = discardFilesAlreadyChosen([...event.target.files], uploadType);
+    setWarning([]);
+    const files = discardFiles([...event.target.files], uploadType);
     const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
     if (fileCount > maxFiles) {
-      setWarning(Messages.tooManyFiles);
+      setWarning([...warning, Messages.tooManyFiles]);
     } else {
       displayAriaMsg('Your files were added and are pending upload.');
       // TODO: make a function?; future: unify adding file attributes
@@ -420,7 +427,7 @@ export default function UploadFiles({
   };
 
   const removeFileHandler = (id) => {
-    setWarning(null);
+    setWarning([]);
     const file = chosenFiles.find((f) => f.id === id);
     if (file.status !== 'Pending') {
       axios.patch(`/stash/${file.uploadType}_files/${id}/destroy_manifest`)
@@ -466,13 +473,13 @@ export default function UploadFiles({
   };
 
   const submitUrlsHandler = (event) => {
-    setWarning(null);
+    setWarning([]);
     event.preventDefault();
     hideModal(event);
 
     if (!urls) return;
 
-    const urlsObject = {url: discardUrlsAlreadyChosen(urls, manFileType)};
+    const urlsObject = {url: discardUrls(urls, manFileType)};
 
     if (urlsObject.url.length) {
       setLoading(true);
@@ -582,18 +589,21 @@ export default function UploadFiles({
               <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
             </div>
           )}
-          <div className="callout warn" role="alert">
-            {warning && (<p>{warning}</p>)}
+          <div role="alert">
+            {warning.map((w) => <div className="callout warn" key={w}><p>{w}</p></div>)}
           </div>
           {hasPendingFiles() && (
-            <ValidateFiles
-              id="confirm_to_validate_files"
-              buttonLabel="Upload pending files"
-              checkConfirmed
-              disabled={submitDisabled}
-              changed={(e) => setSubmitDisabled(!e.target.checked)}
-              clicked={uploadFilesHandler}
-            />
+            <>
+              <br />
+              <ValidateFiles
+                id="confirm_to_validate_files"
+                buttonLabel="Upload pending files"
+                checkConfirmed
+                disabled={submitDisabled}
+                changed={(e) => setSubmitDisabled(!e.target.checked)}
+                clicked={uploadFilesHandler}
+              />
+            </>
           )}
         </>
       ) : (
@@ -622,7 +632,10 @@ export default function UploadFiles({
       />
       <div id="aria-info" className="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text" />
       <div className="callout warn" role="status">
-        <p id="leave-warning" hidden>Wait for file uploads to complete before leaving this page</p>
+        <p id="leave-warning" hidden>
+          <i className="fas fa-hourglass-start" aria-hidden="true" />
+          Wait for file uploads to complete before leaving this page
+        </p>
       </div>
     </div>
   );

@@ -16,7 +16,6 @@
 }
 
 .c-uploadtable-wrapper {
-  margin-bottom: $spacing-lg;
   width: 100%;
 }
 
@@ -71,4 +70,11 @@
   progress {
     width: 100%;
   }
+}
+
+#leave-warning {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 1ch;
 }
