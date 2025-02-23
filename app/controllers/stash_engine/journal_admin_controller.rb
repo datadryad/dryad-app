@@ -17,7 +17,7 @@ module StashEngine
             'LOWER(stash_engine_journals.title) LIKE LOWER(?)
             OR LOWER(stash_engine_journal_titles.title) LIKE LOWER(?)
             OR stash_engine_journal_issns.id LIKE ?',
-            "%#{q.strip}%", "%#{q.strip}%"
+            "%#{q.strip}%", "%#{q.strip}%", "%#{q.strip}%"
           )
       end
 
