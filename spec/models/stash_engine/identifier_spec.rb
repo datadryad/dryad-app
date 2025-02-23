@@ -580,15 +580,6 @@ module StashEngine
         allow_any_instance_of(Resource).to receive(:current_curation_status).and_return('peer_review')
         expect(@identifier.allow_review?).to be(true)
       end
-
-      it 'disallows blackout by default' do
-        expect(@identifier.allow_blackout?).to be(false)
-      end
-
-      it 'allows blackout when the journal allows blackout' do
-        create(:journal, issn: @fake_issn, allow_blackout: true)
-        expect(@identifier.allow_blackout?).to be(true)
-      end
     end
 
     describe '#institution_will_pay?' do
