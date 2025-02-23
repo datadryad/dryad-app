@@ -62,7 +62,7 @@ export default function File({file, clickRemove, clickValidationReport}) {
         >
           <i
             className="fa-solid fa-triangle-exclamation"
-            style={{color: 'rgb(209, 44, 29)', marginRight: '.5ch'}}
+            style={{color: '#fff2ce', marginRight: '.5ch'}}
             role="img"
             aria-label="Has alerts"
           />
