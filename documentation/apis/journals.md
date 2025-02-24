@@ -26,15 +26,7 @@ Options for processing in `StashEngine::Journal`:
   a journal allowed authors to submit data during the manuscript
   review process. Controls whether the "private for peer review"
   checkbox is displayed in the submission system. All journals now
-  have this set to `true`. 
-- *allow_embargo* -- Was previously used to determine whether
-  submitters saw a choice for embargoing their data after the article
-  was published. Now has no effect, since we only allow user-requested
-  embargoes in extraordinary circumstances.
-- *allow_blackout* -- Was previously used to determine whether to
-  "hide" a dataset until the associated article was published. Now
-  controls whether an automatic 1-year blackout/embargo is added to
-  the dataset.
+  have this set to `true`.
 - *default_to_ppr* -- Whether the Peer Review checkbox should be checked by
   default when a new dataset is associated with this journal.
 
