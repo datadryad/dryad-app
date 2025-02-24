@@ -106,7 +106,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
       <>
         <span id="md_editor_label" className="screen-reader-only">Create README for dataset</span>
         <div className="readme-columns-final">
-          <div>
+          <div id="md_editor_desc">
             <p style={{marginTop: 0}}>
               To help others interpret and reuse your dataset, a README file must be included, containing
               abbreviations and codes, file descriptions, and information about any necessary software.{' '}
