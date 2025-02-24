@@ -57,9 +57,7 @@ namespace :dryad_migration do
                stripe_customer_id: pr['stripeCustomerID'],
                notify_contacts: pr['notifyContacts'],
                review_contacts: pr['reviewContacts'],
-               allow_review_workflow: pr['allowReviewWorkflow'],
-               allow_embargo: pr['allowEmbargo'],
-               allow_blackout: pr['allowBlackout'])
+               allow_review_workflow: pr['allowReviewWorkflow'])
       j.save!
     end
   end

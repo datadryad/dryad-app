@@ -3,9 +3,7 @@
 # Table name: stash_engine_journals
 #
 #  id                      :integer          not null, primary key
-#  allow_blackout          :boolean
-#  allow_embargo           :boolean
-#  allow_review_workflow   :boolean
+#  allow_review_workflow   :boolean          default(TRUE)
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
 #  journal_code            :string(191)
@@ -13,6 +11,8 @@
 #  notify_contacts         :text(65535)
 #  payment_contact         :string(191)
 #  payment_plan_type       :string
+#  peer_review_custom_text :text(65535)
+#  preprint_server         :boolean          default(FALSE)
 #  review_contacts         :text(65535)
 #  title                   :string(191)
 #  website                 :string(191)
@@ -20,7 +20,6 @@
 #  updated_at              :datetime
 #  sponsor_id              :integer
 #  stripe_customer_id      :string(191)
-#  peer_review_custom_text :text(65535)
 #
 # Indexes
 #
@@ -41,7 +40,7 @@ module StashEngine
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
 
     validates_associated :issns
-    accepts_nested_attributes_for :issns, :flag
+    accepts_nested_attributes_for :issns, :alternate_titles, :flag
 
     def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
 

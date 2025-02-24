@@ -324,12 +324,6 @@ module StashEngine
       journal.allow_review_workflow?
     end
 
-    def allow_blackout?
-      return false if journal.blank?
-
-      journal.allow_blackout?
-    end
-
     def publication_issn
       latest_resource&.resource_publication&.publication_issn
     end
