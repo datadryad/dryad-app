@@ -221,7 +221,7 @@ defaults: &DEFAULTS
     zenodo_size: 50_000_000_000
     zip_size: 11_000_000_000
     api_zip_size: 200_000_000
-    files: 1000
+    files: 100
   frictionless:    
     size_limit: 50_000_000
     missing_values: ",NA,na,N/A,n/a,N.A.,n.a.,-,.,empty,blank"
