@@ -128,7 +128,7 @@ class CatalogController < ApplicationController
 
   # Endpoint called from LinkOut buttons on Pubmed site but could be used to locate a Dataset
   # based on the InternalDatum types defined below
-  # GET stash/discover?query=[:internal_datum_value]
+  # GET discover?query=[:internal_datum_value]
   def discover
     query = params[:query].to_s.gsub('"', '')
     query = query.gsub('doi:', '') if query.start_with?('doi:')

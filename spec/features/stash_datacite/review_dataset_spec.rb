@@ -135,7 +135,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       create(:data_file, file_state: 'copied', resource: @res, upload_file_name: 'README.md')
       create(:data_file, file_state: 'copied', resource: @res)
       # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
-      visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
+      visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fsubmission_process"
       all('[id^=instit_affil_]').last.set('test institution')
       page.send_keys(:tab)
       page.has_css?('.use-text-entered')
@@ -145,7 +145,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       agree_to_everything
       submit = find_button('submit_dataset', disabled: :all)
       submit.click
-      expect(page.current_path).to eq('/stash/submission_process')
+      expect(page.current_path).to eq('/submission_process')
     end
   end
 

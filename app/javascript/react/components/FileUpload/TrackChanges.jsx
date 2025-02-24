@@ -7,7 +7,7 @@ export default function TrackChanges({id, file_note}) {
 
   const postNote = (e) => {
     axios.post(
-      `/stash/file_note/${id}`,
+      `/file_note/${id}`,
       {
         id,
         note: e.currentTarget.value,

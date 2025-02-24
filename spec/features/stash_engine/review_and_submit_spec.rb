@@ -47,7 +47,7 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
     xit 'shows right links to edit files' do
       click_link('Review and submit')
       # wait_for_ajax(15)
-      expect(page).to have_link('Edit Files', href: '/stash/resources/1/upload', count: 1)
+      expect(page).to have_link('Edit Files', href: '/resources/1/upload', count: 1)
     end
   end
 

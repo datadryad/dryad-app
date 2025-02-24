@@ -86,7 +86,7 @@ module Stash
           Oversize submission charges for #{resource.identifier}. Overage amount is #{filesize(overage_bytes)} @
           #{ActionController::Base.helpers.number_to_currency(APP_CONFIG.payments.additional_storage_chunk_cost / 100)}
           per #{filesize(APP_CONFIG.payments.additional_storage_chunk_size)} or part thereof
-          over #{filesize(APP_CONFIG.payments.large_file_size)} (see https://datadryad.org/stash/publishing_charges for details)
+          over #{filesize(APP_CONFIG.payments.large_file_size)} (see https://datadryad.org/publishing_charges for details)
         MESSAGE
         msg.strip.gsub(/\s+/, ' ')
       end

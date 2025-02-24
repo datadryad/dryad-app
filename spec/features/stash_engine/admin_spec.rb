@@ -34,7 +34,7 @@ RSpec.feature 'Admin', type: :feature do
       @identifier.edit_code = Faker::Number.number(digits: 4)
       @identifier.save
       @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
-      visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
+      visit "edit/#{@identifier.identifier}/#{@identifier.edit_code}"
       expect(page).to have_text('Describe your dataset')
       expect(page).to have_text('User settings')
     end
@@ -43,7 +43,7 @@ RSpec.feature 'Admin', type: :feature do
       @identifier.edit_code = Faker::Number.number(digits: 4)
       @identifier.save
       @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
-      visit "/stash/edit/#{@identifier.identifier}/bad-code"
+      visit "/edit/#{@identifier.identifier}/bad-code"
       expect(page).to have_text('do not have permission to modify')
     end
 
@@ -51,7 +51,7 @@ RSpec.feature 'Admin', type: :feature do
       @resource.update(tenant_id: 'dryad')
       @resource.reload
       visit stash_url_helpers.dashboard_path
-      visit "/stash/edit/#{@identifier.identifier}"
+      visit "/edit/#{@identifier.identifier}"
       expect(page).to have_text('does not exist')
     end
 
@@ -62,7 +62,7 @@ RSpec.feature 'Admin', type: :feature do
       new_ident.save
       new_user = create(:user, tenant_id: nil)
       expect { create(:resource, :submitted, user: new_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
-      visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
+      visit "/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page).to have_text('User settings')
     end
 
@@ -74,7 +74,7 @@ RSpec.feature 'Admin', type: :feature do
       system_user = StashEngine::User.where(id: 0).first || create(:user, id: 0)
       expect { @resource = create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       Timecop.return
-      visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
+      visit "/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page).to have_text('User settings')
       @resource.reload
       expect(@resource.submitter.id).to eq(@admin.id)
@@ -87,8 +87,8 @@ RSpec.feature 'Admin', type: :feature do
       new_ident.save
       system_user = create(:user, id: 0)
       expect { create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
-      visit "/stash/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
-      expect(page.current_path).to eq('/stash/sessions/choose_login')
+      visit "/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
+      expect(page.current_path).to eq('/sessions/choose_login')
     end
   end
 end

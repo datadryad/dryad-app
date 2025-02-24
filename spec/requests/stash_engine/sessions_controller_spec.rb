@@ -6,9 +6,9 @@ module StashEngine
         @user = create(:user, tenant_id: 'dryad_ip')
         allow_any_instance_of(SessionsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
 
-        response_code = post '/stash/sessions/sso', params: { 'tenant_id' => 'dryad_ip' }
+        response_code = post '/sessions/sso', params: { 'tenant_id' => 'dryad_ip' }
         expect(response_code).to eql(302) # redirect
-        expect(response.headers['Location']).to include('/stash/choose_dashboard')
+        expect(response.headers['Location']).to include('/choose_dashboard')
       end
 
       it 'blocks user from non-allowed IP address' do
@@ -16,9 +16,9 @@ module StashEngine
         @user = create(:user, tenant_id: 'dryad_ip')
         allow_any_instance_of(SessionsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
 
-        response_code = post '/stash/sessions/sso', params: { 'tenant_id' => 'dryad_ip' }
+        response_code = post '/sessions/sso', params: { 'tenant_id' => 'dryad_ip' }
         expect(response_code).to eql(302) # redirect
-        expect(response.headers['Location']).to include('/stash/ip_error')
+        expect(response.headers['Location']).to include('/ip_error')
       end
 
       it 'sets default tenant_id on chose sso page' do
@@ -27,7 +27,7 @@ module StashEngine
         allow_any_instance_of(SessionsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
         allow_any_instance_of(SessionsController).to receive(:current_tenant).and_return(nil)
 
-        response_code = get '/stash/sessions/choose_sso'
+        response_code = get '/sessions/choose_sso'
         expect(response_code).to eql(200) # no redirect
         expect(@user.reload.tenant_id).to eql(APP_CONFIG.default_tenant)
       end

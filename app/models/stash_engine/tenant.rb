@@ -97,7 +97,7 @@ module StashEngine
     end
 
     def callback_path_begin
-      "https://#{Rails.application.default_url_options[:host]}#{APP_CONFIG.stash_mount}/auth/"
+      "https://#{Rails.application.default_url_options[:host]}/auth/"
     end
 
     def full_url(path)
