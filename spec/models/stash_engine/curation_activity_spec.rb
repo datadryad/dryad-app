@@ -212,5 +212,7 @@ module StashEngine
         end
       end
     end
+
+    it_should_behave_like 'soft delete record', :curation_activity
   end
 end

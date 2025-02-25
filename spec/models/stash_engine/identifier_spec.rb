@@ -1090,5 +1090,6 @@ module StashEngine
       end
     end
 
+    it_should_behave_like 'soft delete record', :identifier
   end
 end
