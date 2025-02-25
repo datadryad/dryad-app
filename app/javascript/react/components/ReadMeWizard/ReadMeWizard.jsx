@@ -40,7 +40,9 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
   const checkDescription = useCallback(debounce(saveDescription, 900), []);
 
   const assembleValue = () => {
-    let v = `# ${wizardContent.title}\n\n[${wizardContent.doi}](${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
+    let v = `# ${
+      wizardContent.title || 'Dryad dataset'
+    }\n\nDataset DOI: [${wizardContent.doi}](${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
     if (wizardContent.step1) v += wizardContent.step1;
     if (wizardContent.step2) v += `### ${secTitles[1]}\n\n${wizardContent.step2}`;
     [3, 4].forEach((s) => {
