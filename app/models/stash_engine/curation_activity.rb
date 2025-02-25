@@ -122,6 +122,7 @@ module StashEngine
     # ------------------------------------------
     # Translates the enum value to a human readable status
     def self.readable_status(status)
+      status = status.first if status.is_a?(Array)
       return '' unless status.present?
 
       case status

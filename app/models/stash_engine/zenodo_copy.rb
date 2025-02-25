@@ -38,7 +38,7 @@ module StashEngine
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
     belongs_to :resource, class_name: 'StashEngine::Resource'
 
-    enum :state, %w[enqueued replicating finished error].index_by(&:to_sym), default: 'enqueued', validate: true
+    enum :state, %w[enqueued replicating finished error deferred].index_by(&:to_sym), default: 'enqueued', validate: true
     enum :copy_type, %w[data software software_publish supp supp_publish].index_by(&:to_sym), default: 'data', validate: true
 
     scope :software, -> { where(copy_type: %w[software software_publish]) }
