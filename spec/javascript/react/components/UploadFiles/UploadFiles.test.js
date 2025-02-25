@@ -41,7 +41,7 @@ jest.mock('../../../../../app/javascript/react/components/UploadFiles/pollingDel
 }));
 
 describe('UploadFiles', () => {
-  let info; let files; let datafile; let loaded;
+  let info; let files; let datafile; let setfile; let loaded;
   const setResource = () => {};
   const form = {
     data: `<label for="searchselect-license__input">Software license</label>
@@ -79,6 +79,16 @@ describe('UploadFiles', () => {
       original_filename: 'data.csv',
       compressed_try: 0,
     };
+    setfile = {
+      id: datafile.id + 1,
+      upload_file_name: 'set.csv',
+      upload_content_type: 'text/csv',
+      upload_file_size: 130000,
+      resource_id: resourceId,
+      file_state: 'created',
+      original_filename: 'set.csv',
+      compressed_try: 0,
+    };
     loaded = JSON.parse(JSON.stringify(datafile));
     loaded.type = 'StashEngine::DataFile';
     loaded.frictionless_report = {
@@ -111,73 +121,6 @@ describe('UploadFiles', () => {
     expect(screen.queryByLabelText('Describe your file changes')).not.toBeInTheDocument();
   });
 
-  it('loads pending data files', () => {
-    axios.get.mockResolvedValueOnce(form);
-    axios.post.mockResolvedValueOnce(software_data);
-    render(<UploadFiles {...info} />);
-
-    const [input] = screen.getAllByLabelText('Choose files');
-    expect(input).toHaveAttribute('id', 'data');
-
-    userEvent.upload(input, files);
-
-    expect(input.files).toHaveLength(2);
-    expect(input.files[0]).toStrictEqual(files[0]);
-    expect(input.files[1]).toStrictEqual(files[1]);
-    expect(screen.getByText('data.csv')).toBeInTheDocument();
-  });
-
-  it('loads pending software files', async () => {
-    axios.get.mockResolvedValueOnce(form);
-    axios.post.mockResolvedValueOnce(software_data);
-    render(<UploadFiles {...info} />);
-
-    const button = screen.getByText('+ Add files for simultaneous publication at Zenodo');
-    await waitFor(() => userEvent.click(button));
-    const input = screen.getAllByLabelText('Choose files')[1];
-    expect(input).toHaveAttribute('id', 'software');
-
-    userEvent.upload(input, files);
-
-    expect(input.files).toHaveLength(2);
-    expect(input.files[0]).toStrictEqual(files[0]);
-    expect(input.files[1]).toStrictEqual(files[1]);
-    expect(screen.getByText('data.csv')).toBeInTheDocument();
-  });
-
-  it('loads pending supp files', async () => {
-    axios.get.mockResolvedValueOnce(form);
-    axios.post.mockResolvedValueOnce(software_data);
-    render(<UploadFiles {...info} />);
-
-    const button = screen.getByText('+ Add files for simultaneous publication at Zenodo');
-    await waitFor(() => userEvent.click(button));
-    const input = screen.getAllByLabelText('Choose files')[2];
-    expect(input).toHaveAttribute('id', 'supp');
-
-    userEvent.upload(input, files);
-
-    expect(input.files).toHaveLength(2);
-    expect(input.files[0]).toStrictEqual(files[0]);
-    expect(input.files[1]).toStrictEqual(files[1]);
-    expect(screen.getByText('data.csv')).toBeInTheDocument();
-  });
-
-  it('removes a pending file', async () => {
-    axios.get.mockResolvedValueOnce(form);
-    axios.post.mockResolvedValueOnce(software_data);
-    render(<UploadFiles {...info} />);
-
-    const [input] = screen.getAllByLabelText('Choose files');
-    await waitFor(() => userEvent.upload(input, [files[1]]));
-
-    const button = screen.getByText('Remove');
-    userEvent.click(button);
-
-    expect(screen.queryByText('Remove')).not.toBeInTheDocument();
-    expect(screen.getByText('No files have been selected.')).toBeInTheDocument();
-  });
-
   it('uploads a data file and shows the size', async () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
@@ -193,17 +136,6 @@ describe('UploadFiles', () => {
 
     expect(input.files).toHaveLength(1);
     expect(screen.getByText('data.csv')).toBeInTheDocument();
-    expect(screen.getByText('Pending')).toBeInTheDocument();
-
-    const checkbox = screen.getByRole('checkbox');
-    expect(checkbox).toHaveAttribute('id', 'confirm_to_validate_files');
-
-    userEvent.click(checkbox);
-    await waitFor(() => {
-      expect(checkbox.checked).toEqual(true);
-    });
-
-    await waitFor(() => userEvent.click(screen.getByText('Upload pending files')));
     await waitFor(() => newfile);
 
     await waitFor(() => {
@@ -230,10 +162,6 @@ describe('UploadFiles', () => {
 
     const [input] = screen.getAllByLabelText('Choose files');
     userEvent.upload(input, files[0]);
-    const checkbox = screen.getByRole('checkbox');
-    userEvent.click(checkbox);
-    userEvent.click(screen.getByText('Upload pending files'));
-
     await waitFor(() => postA);
     await waitFor(() => postB);
 
@@ -310,22 +238,28 @@ describe('UploadFiles', () => {
     });
   });
 
-  it('does not allow duplicate files', () => {
+  it('does not allow duplicate files', async () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
+    const postA = {status: 200, data: {new_file: setfile}};
+    axios.post.mockResolvedValueOnce(postA);
 
     info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
 
     const [input] = screen.getAllByLabelText('Choose files');
     userEvent.upload(input, files);
-
+    await waitFor(() => postA);
     expect(screen.getByText('A file of the same name is already in the table. The new file was not added.')).toBeInTheDocument();
   });
 
   it('allows duplicate files for zenodo', async () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
+    const postA = {status: 200, data: {new_file: setfile}};
+    const postB = {status: 200, data: {new_file: datafile}};
+    axios.post.mockResolvedValueOnce(postA);
+    axios.post.mockResolvedValueOnce(postB);
 
     info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
@@ -336,6 +270,8 @@ describe('UploadFiles', () => {
     expect(input).toHaveAttribute('id', 'software');
 
     userEvent.upload(input, files);
+    await waitFor(() => postA);
+    await waitFor(() => postB);
     expect(screen.getAllByText('data.csv').length).toEqual(2);
     expect(screen.queryByText('A file of the same name is already in the table. The new file was not added.')).not.toBeInTheDocument();
   });

@@ -92,68 +92,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
   end
 
-  describe 'Select files to upload' do
-    before(:each) do
-      navigate_to_upload
-      find('span', text: '+ Add files for simultaneous publication at Zenodo').click
-      attach_files
-    end
-
-    it 'shows files selected with "Pending" status' do
-      within(page.find('tr', text: 'file_10.ods')) do
-        expect(page).to have_content('Data')
-      end
-      within(page.find('tr', text: 'file_100.ods')) do
-        expect(page).to have_content('Software')
-      end
-      within(page.find('tr', text: 'file_1000.ods')) do
-        expect(page).to have_content('Supp')
-      end
-      expect(page).to have_content('Pending', count: 3)
-    end
-
-    it 'does not allow to select new FILE already in the table and of the same upload type' do
-      attach_file(
-        'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
-      )
-      expect(page).to have_content('file_10.ods', count: 1)
-      expect(page).to have_content('A file of the same name is already in the table. The new file was not added.')
-    end
-
-    it 'does not allow to select new FILES already in the table and of the same upload type' do
-      attach_file(
-        'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 }
-      )
-      attach_file(
-        'data',
-        %W[#{Rails.root}/spec/fixtures/stash_engine/funbar.txt
-           #{Rails.root}/spec/fixtures/stash_engine/file_10.ods],
-        make_visible: { opacity: 1 }
-      )
-      expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
-      expect(page).to have_content(/^\bfile_10.ods\b/, count: 1)
-      expect(page).to have_content('Files of the same name are already in the table. New files were not added.')
-    end
-
-    it 'allows to select new files already in the table and are not of the same upload type' do
-      attach_file(
-        'software',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
-      )
-      expect(page).to have_content('file_10.ods', count: 2)
-    end
-
-    xit 'sanitizes file name' do
-      attach_file(
-        'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/crazy*chars?are(crazy)", make_visible: { opacity: 1 }
-      )
-      expect(page).to have_content('crazy_chars_are(crazy)')
-    end
-  end
-
   describe 'URL manifest files validation' do
     before(:each) do
       @file_name1 = 'funbar.txt'
@@ -312,16 +250,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       navigate_to_upload
       find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       attach_files
-
-      check('confirm_to_upload')
-      click_on('validate_files')
+      expect(page).to have_content('file_10.ods')
     end
 
-    it 'vanishes Pending file status when start to upload' do
-      expect(page).not_to have_content('Pending')
+    it 'disallows navigation away with pending uploads' do
       # 'shows progress bar when start to upload'
       expect(page.has_css?('progress', count: 3)).to be true
-      # 'disallows navigation away with pending uploads'
       expect(page).to have_text('Wait for file uploads to complete before leaving this page')
     end
 
@@ -332,67 +266,49 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       first(:button, 'Remove').click
 
       attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt", make_visible: { opacity: 1 })
-      check('confirm_to_upload')
-      click_on('validate_files')
-
       expect(page.has_css?('progress[value]')).to be true
       expect(find('progress')['value']).to eq('0')
     end
 
-    xit 'removes file from database when click Remove button' do
-      # At the time this placeholder test was first written the remove function
-      # was working for manifest files and files that are displayed
-      # after loading the files already uploaded. The remove function
-      # was not working for chosen files from user file system that have
-      # just uploaded. TODO: Implement this test!
-    end
-
-    xit 'does not remove line from Files table if failed calling ajax to remove the file' do
-      # TODO: mock axios?
-    end
-
-    xit 'removes line from Files table if successfuly calling ajax to remove the file' do
-      # TODO: mock axios?
-    end
-
-    # TODO: skiping until intermitently capybara tests been solved
-    xit 'removes warning messages after clicking in Remove link' do
+    it 'does not allow to select new FILE already in the table and of the same upload type' do
       attach_file(
         'data',
         "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
       )
-      # the message for already added file is displayed
-
-      first(:button, 'Remove').click
-      expect(page).not_to have_content('A file of the same name is already in the table. The new file was not added.')
+      expect(page).to have_content('file_10.ods', count: 1)
+      expect(page).to have_content('A file of the same name is already in the table. The new file was not added.')
     end
 
-    xit 'shows spinner when calling ajax to remove the file' do
-      # TODO: mock axios?
+    it 'does not allow to select new FILES already in the table and of the same upload type' do
+      attach_file(
+        'data',
+        "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 }
+      )
+      attach_file(
+        'data',
+        %W[#{Rails.root}/spec/fixtures/stash_engine/funbar.txt
+           #{Rails.root}/spec/fixtures/stash_engine/file_10.ods],
+        make_visible: { opacity: 1 }
+      )
+      expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
+      expect(page).to have_content(/^\bfile_10.ods\b/, count: 1)
+      expect(page).to have_content('Files of the same name are already in the table. New files were not added.')
     end
 
-    xit 'creates S3 entry after upload is complete' do
-      # TODO: S3.exists? mock returns true now.
-      #  See if it's possible to return something from the Evaporate using S3 mocks
-      # TODO: remove raw url for s3 dir name
-      result = Stash::Aws::S3.new.exists?(s3_key: '37fb70ac-1/data/file_10.ods')
-      expect(result).to be true
+    it 'allows to select new files already in the table and are not of the same upload type' do
+      attach_file(
+        'software',
+        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
+      )
+      expect(page).to have_content('file_10.ods', count: 2)
     end
 
-    xit 'achieves 50% of the progress bar after starting to upload' do
-      expect(page.find('progress')[:value]).to eql('50')
-    end
-
-    xit 'shows "New" label after upload is complete' do
-      # TODO: get url from configs and s3 dir name
-      stub_request(
-        :post, 'https://s3-us-west-2.amazonaws.com/a-test-bucket/37fb70ac-1/data/file_example_ODS_10.ods?uploads'
-      ).with(headers: { 'Accept' => '*/*' }).to_return(status: 200)
-      expect(page).to have_content('New')
-    end
-
-    xit 'sanitizes file name before save it in database' do
-      # TODO: (cacods) to implement when mocking Evaporate javascript library.
+    xit 'sanitizes file name' do
+      attach_file(
+        'data',
+        "#{Rails.root}/spec/fixtures/stash_engine/crazy*chars?are(crazy)", make_visible: { opacity: 1 }
+      )
+      expect(page).to have_content('crazy_chars_are(crazy)')
     end
   end
 
@@ -405,24 +321,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
       )
       expect(page).to have_content('file_10.ods')
-      expect(page).to have_content('Pending', count: 1)
 
       build_valid_stub_request('http://example.org/funbar.txt')
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/funbar.txt')
       click_on('validate_files')
       expect(page.has_css?('i[aria-label="complete"]')).to be true
-    end
-
-    it 'only changes table status column to a progress bar if file status is Pending' do
-      # TODO: test for table row with other status than 'Pending'
-      pending_file_table_row = page.find('td', text: 'Pending')
-      check('confirm_to_upload')
-      click_on('validate_files')
-
-      within(pending_file_table_row) do
-        expect(page.has_css?('progress')).to be true
-      end
     end
 
     it 'does not allow to select new FILE from file system with the same name of manifest FILE' do
@@ -499,29 +403,4 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page).not_to have_content('A file of the same name is already in the table. The new file was not added.')
     end
   end
-
-  describe 'Destroy file uploaded and manifest file' do
-    before(:each) do
-      @file1 = create_data_file(@resource_id)
-      @file2 = create_software_file(@resource_id)
-      @file2.url = 'http://example.com/example.csv'
-      @file2.save
-      @file3 = create_supplemental_file(@resource_id)
-      refresh
-      navigate_to_upload # refresh the page to show the table with the file
-    end
-
-    xit 'calls destroy_manifest when removing New file' do
-      # TODO: to solve error:
-      #     Failure/Error: raise ActionController::UnknownFormat, message
-      #      ActionController::UnknownFormat:
-      #        StashEngine::DataFilesController#destroy_manifest is missing a template for this request format and variant.
-      #        request.formats: ["text/html"]
-      #        request.variant: []
-      first('td > a').click
-      expect_any_instance_of(StashEngine::GenericFilesController).to
-      receive(:destroy_manifest).and_return('OK')
-    end
-  end
-
 end
