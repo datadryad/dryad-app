@@ -9,7 +9,7 @@ export default function License({license, resourceId, setResource}) {
     showSavingMsg();
     const {value} = document.getElementById('searchselect-license__value');
     axios.post(
-      '/stash/software_license',
+      '/software_license',
       {resource_id: resourceId, license: value},
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     ).then((data) => {
@@ -20,7 +20,7 @@ export default function License({license, resourceId, setResource}) {
 
   useEffect(() => {
     async function getList() {
-      axios.get(`/stash/software_license_select?select=${license?.id || ''}`).then((data) => {
+      axios.get(`/software_license_select?select=${license?.id || ''}`).then((data) => {
         const active_form = document.createRange().createContextualFragment(data.data);
         divRef.current.append(active_form);
         document.getElementById('searchselect-license__input').addEventListener('blur', submit);

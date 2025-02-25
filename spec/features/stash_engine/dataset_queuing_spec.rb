@@ -54,7 +54,7 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     end
 
     xit 'should show queuing', js: true do
-      visit '/stash/submission_queue'
+      visit '/submission_queue'
       wait_for_ajax(15)
       expect(page).to have_content(/[01] are currently processing from this server/)
       expect(page).to have_content(/[23] queued on this server/)

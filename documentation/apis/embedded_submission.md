@@ -6,7 +6,7 @@ Dryad's API allows manuscript processing systems to embed Dryad
 submissions directly into their process. Sample API calls are shown
 below, but for full details on the API options see the
 [submissions](submission.md) document and the
-[API documentation](https://datadryad.org/stash/api).
+[API documentation](https://datadryad.org/api).
 
 Though the API allows for some flexiblity in the workflow, Dryad's
 preferred workflow is described below.
@@ -107,7 +107,7 @@ A sample call using the [sample dataset file](sample_dataset.json), with results
   "visibility": "restricted",
   "userId": "0000-0003-0597-4085",
   "license": "https://spdx.org/licenses/CC0-1.0.html",
-  "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
+  "editLink": "/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
   }
 ```
 
@@ -195,10 +195,10 @@ Sample call and (abbreviated) response:
   "curationStatus": "Submitted",
   "lastModificationDate": "2020-10-02",
   "visibility": "restricted",
-  "sharingLink":"https://datadryad.org/stash/share/OI-tU-WmoT3I2KCOqX7Of624",
+  "sharingLink":"https://datadryad.org/share/OI-tU-WmoT3I2KCOqX7Of624",
   "userId": 37182,
   "license": "https://spdx.org/licenses/CC0-1.0.html",
-  "editLink": "/stash/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
+  "editLink": "/edit/doi%3A10.7959%2Fdryad.83bk3jc0"
   }
 ```
 

@@ -7,7 +7,7 @@ To use the Dryad Sandbox, you must create one or more equivalent ORCID Sandbox i
 
 ## Logging into the Dryad Sandbox
 
-1. Visit the [Dryad Sandbox login page](/stash/sessions/choose_login)
+1. Visit the [Dryad Sandbox login page](/sessions/choose_login)
 2. Click <span class="t-login__buttonlink" disabled style="background-color: white;"><i class="fab fa-orcid" aria-hidden="true" style="font-size: 1.8rem"></i> Login or create your ORCID iD</span>
 3. You will be redirected to a login screen where the URL begins with sandbox.orcid.org and the screen has a yellow warning bar at the top:  
 <div class="callout warn" style="background-color:#f5c120; font-size: .98rem;">

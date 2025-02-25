@@ -28,7 +28,7 @@ module StashEngine
         end
 
         it 'limits to tenant institution' do
-          response_code = get '/stash/ds_admin_funders'
+          response_code = get '/ds_admin_funders'
           expect(response_code).to eq(200)
           expect(body).to include(CGI.escapeHTML(@resources.first.title))
           expect(body).to include(CGI.escapeHTML(@resources.third.title))
@@ -54,7 +54,7 @@ module StashEngine
           @resources.each { |res| res.resource_states.first.update(resource_state: 'submitted', updated_at: Time.new(2006, 6, 6, 12)) }
         end
         it 'outputs basic information about title, author, doi, funder and award' do
-          response_code = get '/stash/ds_admin_funders'
+          response_code = get '/ds_admin_funders'
           expect(response_code).to eq(200)
 
           @resources.each do |res|
@@ -67,7 +67,7 @@ module StashEngine
         end
 
         it 'shows the submission date' do
-          response_code = get '/stash/ds_admin_funders'
+          response_code = get '/ds_admin_funders'
           expect(response_code).to eq(200)
           expect(body).to include('Jun 06, 2006')
         end
@@ -76,7 +76,7 @@ module StashEngine
           res = @resources.first
           res.identifier.update(pub_state: 'embargoed')
           res.update(meta_view: true, publication_date: Time.new(2291, 10, 11, 12))
-          response_code = get '/stash/ds_admin_funders'
+          response_code = get '/ds_admin_funders'
           expect(response_code).to eq(200)
           expect(body).to include('Oct 11, 2291')
         end
@@ -85,7 +85,7 @@ module StashEngine
           res = @resources.first
           res.identifier.update(pub_state: 'published')
           res.update(meta_view: true, file_view: true, publication_date: Time.new(2021, 3, 17, 12))
-          response_code = get '/stash/ds_admin_funders'
+          response_code = get '/ds_admin_funders'
           expect(response_code).to eq(200)
           expect(body).to include('Mar 17, 2021')
         end
@@ -100,7 +100,7 @@ module StashEngine
         end
 
         it 'limits by partner institution' do
-          response_code = get '/stash/ds_admin_funders', params: { tenant: 'dryad' }
+          response_code = get '/ds_admin_funders', params: { tenant: 'dryad' }
           expect(response_code).to eq(200)
           expect(body).to include(CGI.escapeHTML(@resources.second.title))
           expect(body).not_to include(CGI.escapeHTML(@resources.first.title))
@@ -114,7 +114,7 @@ module StashEngine
         end
 
         it 'limits to a single, simple funder (not NIH)' do
-          response_code = get '/stash/ds_admin_funders', params: { funder_name: @resources.first.contributors.first.contributor_name }
+          response_code = get '/ds_admin_funders', params: { funder_name: @resources.first.contributors.first.contributor_name }
           expect(response_code).to eq(200)
           expect(body).to include(CGI.escapeHTML(@resources.first.title))
           expect(body).not_to include(CGI.escapeHTML(@resources.second.title))
@@ -130,7 +130,7 @@ module StashEngine
           )
 
           cg = StashDatacite::ContributorGrouping.first
-          response_code = get '/stash/ds_admin_funders', params: { funder_name: cg.contributor_name, funder_id: cg.name_identifier_id }
+          response_code = get '/ds_admin_funders', params: { funder_name: cg.contributor_name, funder_id: cg.name_identifier_id }
           expect(response_code).to eq(200)
 
           expect(body).to include(CGI.escapeHTML(@resources[0].title))
@@ -145,9 +145,9 @@ module StashEngine
         end
 
         it 'limits to an initial submission date' do
-          response_code = get '/stash/ds_admin_funders', params: { date_type: 'initial',
-                                                                   start_date: '2011-11-01',
-                                                                   end_date: '2011-12-01' }
+          response_code = get '/ds_admin_funders', params: { date_type: 'initial',
+                                                             start_date: '2011-11-01',
+                                                             end_date: '2011-12-01' }
           expect(response_code).to eq(200)
           expect(body).to include('Nov 11, 2011')
           expect(body).to include(CGI.escapeHTML(@resources[0].title))
@@ -158,9 +158,9 @@ module StashEngine
           res = @resources.first
           res.identifier.update(pub_state: 'published')
           res.update(meta_view: true, file_view: true, publication_date: Time.new(2016, 8, 22, 12))
-          response_code = get '/stash/ds_admin_funders', params: { date_type: 'published',
-                                                                   start_date: '2016-08-01',
-                                                                   end_date: '2016-09-01' }
+          response_code = get '/ds_admin_funders', params: { date_type: 'published',
+                                                             start_date: '2016-08-01',
+                                                             end_date: '2016-09-01' }
           expect(response_code).to eq(200)
           expect(body).to include('Aug 22, 2016')
           expect(body).to include(CGI.escapeHTML(@resources[0].title))

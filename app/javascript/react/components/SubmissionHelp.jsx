@@ -27,7 +27,7 @@ export default function SubmissionHelp({type}) {
 export function PublicationHelp() {
   return (
     <>
-      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/stash/journals" target="_blank">member journals<span className="screen-reader-only"> (opens in new window)</span></a> will also cover the <a href="/stash/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
+      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">member journals<span className="screen-reader-only"> (opens in new window)</span></a> will also cover the <a href="/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
       <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some journals.</p>
     </>
   );
@@ -46,7 +46,7 @@ export function SuppHelp({type}) {
   return (
     <>
       <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can aid in connections between your data and other systems and works.</p>
-      <p>Your funder may cover the Dryad <a href="/stash/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
+      <p>Your funder may cover the Dryad <a href="/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
     </>
   );
 }
@@ -99,17 +99,17 @@ export function ReadMeHelp() {
       <p>For files and variables:</p>
       <ul className="readme-examples" style={{paddingLeft: '2ch'}}>
         <li>
-          <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.nzs7h44xg#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.nzs7h44xg#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
         Genomic data<span className="screen-reader-only"> (opens in new window)</span>
           </a> including descriptions of data of several file types
         </li>
         <li>
-          <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.rr4xgxdg6#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.rr4xgxdg6#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
         MATLAB files<span className="screen-reader-only"> (opens in new window)</span>
           </a> described in detail
         </li>
         <li>
-          <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.18931zd25#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.18931zd25#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
         Genomic VCF and companion scripts<span className="screen-reader-only"> (opens in new window)</span>
           </a> described in detail
         </li>
@@ -117,12 +117,12 @@ export function ReadMeHelp() {
       <p>For code/software</p>
       <ul className="readme-examples" style={{paddingLeft: '2ch'}}>
         <li>
-          <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.h70rxwdq5#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.h70rxwdq5#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
           Chromatographic and mass spectrometric analysis data<span className="screen-reader-only"> (opens in new window)</span>
           </a> with a detailed Recommended Software section
         </li>
         <li>
-          <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.jdfn2z3j3#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.jdfn2z3j3#readme" target="_blank" rel="noreferrer"><i className="fa fa-right-to-bracket" aria-hidden="true" />
         Neural network deep learning code<span className="screen-reader-only"> (opens in new window)</span>
           </a> with excellent information on setup, access, and running the code
         </li>

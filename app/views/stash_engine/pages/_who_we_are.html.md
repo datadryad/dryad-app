@@ -12,13 +12,13 @@
     <li>Our obligation as a trusted partner to research is to ensure that the interests of the research community remain our focus, that data are available to evidence new research, that data published with us persist, and that our organization and service are sustainable and available to support research so long as we are valued. Dryad is a signatory to the <a href="https://openscholarlyinfrastructure.org/">Principles of Open Scholarly Infrastructure</a> (POSI).
   </ul>
 </p>
-<p>In all of our convenings we are committed to abiding by our <a href="/stash/code_of_conduct">Code of conduct</a>.</p>
+<p>In all of our convenings we are committed to abiding by our <a href="/code_of_conduct">Code of conduct</a>.</p>
 
 ## Get to know Dryad
 <h3 id="our-members" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="our-members-sec">Our members</h3>
 <div class="about-page" id="our-members-sec" hidden>
 <p>Dryad’s members are part of a non-profit, shared community working together to promote
-data publishing, curation, and preservation. The community benefits from Dryad’s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/stash/join_us">Learn about joining us as a member organization</a>.</p>
+data publishing, curation, and preservation. The community benefits from Dryad’s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/join_us">Learn about joining us as a member organization</a>.</p>
 <h4>Academic and research institutions</h4>
   <%= render "members_institutional" %>
 <h4>Publishing organizations</h4>
@@ -40,7 +40,7 @@ data publishing, curation, and preservation. The community benefits from Dryad�
 
 ## Collaborations
 
-Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [member list](/stash/our_membership) and [how to join us](/stash/join_us).
+Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [member list](/our_membership) and [how to join us](/join_us).
 
 Dryad advocates for community-adopted standards for metadata and persistent identifiers in concert with DataCite, ORCID, ROR, and Funder Registry. 
 
@@ -60,7 +60,7 @@ We are also pleased to partner with the following organizations and initiatives,
 * **Dataset curation and publication**: [Kriyadocs](https://www.kriyadocs.com/)
 * **Accounting, finance, and human resources support**: [CxORE](https://www.cxore.com/)
 
-This list is a work-in-progress. If you’d like to suggest an addition, please [contact us](/stash/contact). 
+This list is a work-in-progress. If you’d like to suggest an addition, please [contact us](/contact). 
 
 Dryad is grateful to the following consortia and institutions for their support of Dryad through <a href="https://scoss.org/">SCOSS</a>. Their contributions enable us to grow our outreach and promotion efforts to bring new members into our community; increase community engagement with current members and users; and stay at the forefront of best practice for data-sharing and building best practice for data reuse. 
 

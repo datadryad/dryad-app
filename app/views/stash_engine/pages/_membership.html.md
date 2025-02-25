@@ -4,7 +4,7 @@
 
 These Dryad Terms of Membership (these “Terms”) set forth the terms and conditions of Membership in Dryad, a nonprofit corporation under the laws of North Carolina, USA.
 
-Capitalized terms used herein shall have the meanings ascribed to such terms on the [Definitions](/stash/definitions) page.
+Capitalized terms used herein shall have the meanings ascribed to such terms on the [Definitions](/definitions) page.
 
 
 ## Background
@@ -22,7 +22,7 @@ Capitalized terms used herein shall have the meanings ascribed to such terms on 
 
     When you join Dryad as a Member you join a community of organizations committed to leading in best practices for open data publishing. 
 
-    Additional information on Membership can be found on our [Join us](/stash/join_us#benefits-of-membership) page. 
+    Additional information on Membership can be found on our [Join us](/join_us#benefits-of-membership) page. 
 
 2. Membership in Dryad is open to organizations that produce or fund Research Data, as well as organizations that invest in the development of open infrastructure and open research services. Members must meet the Terms of Membership established from time to time by Dryad. Together with the Dryad Governing Documents, these Terms govern Membership in Dryad.
 3. By completing a Membership Agreement, the organization agrees to be bound by these Terms and, upon receipt of the first Annual Fee, the organization becomes a Member.
@@ -40,7 +40,7 @@ Capitalized terms used herein shall have the meanings ascribed to such terms on 
     6. Members may not Submit Datasets on behalf of its affiliated researchers without the express permission and full knowledge of the author of the Dataset or a researcher collaborating with the author(s), including explicit agreement to the Dryad [Terms of submission and use](https://docs.google.com/document/d/1wOPlUMz5O_higmJ5ZGJrpb47YgkbOSKMbT-T-urrGOY/edit?usp=sharing).
 3. **Fees**. The Member shall pay Fees described in this Section 3. These Terms refer to Annual Fees and Data Publication Fees collectively as “Fees”.
     1. *Annual Fee*. The Member is responsible to pay an annual membership fee (the “Annual Fee”). The Annual Fee for a Member’s first year of membership is invoiced as a prorated amount for the Member’s initial calendar year of Membership, to be paid in full for Membership. Thereafter, the Annual Fee is invoiced as at the beginning of each calendar year . Payment terms are 30 days from the date of the invoice.
-    2. *Data Publication Fees*. Dryad may charge Members a Data Publication Fee (collectively, “Data Publication Fees”) to Publish Datasets with Dryad, as more fully described on the [Website](/stash/join_us#benefits-of-membership) from time to time. Data Publication Fees are invoiced on a quarterly basis. Payment terms are 30 days from the date of the invoice.
+    2. *Data Publication Fees*. Dryad may charge Members a Data Publication Fee (collectively, “Data Publication Fees”) to Publish Datasets with Dryad, as more fully described on the [Website](/join_us#benefits-of-membership) from time to time. Data Publication Fees are invoiced on a quarterly basis. Payment terms are 30 days from the date of the invoice.
 4. **Intellectual Property Rights**. 
     1. *Dryad Intellectual Property*. The Member acknowledges that, as between itself and Dryad, Dryad has all right, title, and interest in and to the Dryad Infrastructure and Services, including all copyrights, database compilation rights, trademarks, trade names, and other intellectual property rights, currently in existence or later developed. The Member shall not delete or modify any of Dryad’s logos or notice of intellectual property rights on documents, online text or interfaces made available by Dryad. Dryad owns the service marks Dryad, Dryad Data, and the Dryad logos appearing on the Dryad Website.
     2. *Permitted Uses of Dryad Intellectual Property*. Members are welcome to use screenshots, the Dryad name and other Dryad trademarks (such as the Dryad logo) for informational purposes only. Content other than Datasets on the Dryad Website and blog is available for reuse with attribution under a Creative Commons CC-BY 4.0 license.
@@ -135,4 +135,4 @@ Capitalized terms used herein shall have the meanings ascribed to such terms on 
 
     The Member warrants that neither it nor any of its affiliates, officers, directors, employees, or members is (i) a person whose name appears on the list of Specially Designated Nationals and Blocked Persons published by the Office of Foreign Assets Control, U.S. Department of Treasury (“OFAC”), (ii) a department, agency or instrumentality of, or is otherwise controlled by or acting on behalf of, any such person; (iii) a department, agency, or instrumentality of the government of a country subject to comprehensive U.S. economic sanctions administered by OFAC; or (iv) is subject to sanctions by the United Nations or the European Union.
 
-1. **Incorporation by Reference**. The provisions of Dryad’s [Publication policies, obligations & warranties](/stash/publication_policy) and the related definitions (unless otherwise specified herein) are incorporated by reference herein and shall be deemed to have the same force and effect as if set forth in full herein.
+1. **Incorporation by Reference**. The provisions of Dryad’s [Publication policies, obligations & warranties](/publication_policy) and the related definitions (unless otherwise specified herein) are incorporated by reference herein and shall be deemed to have the same force and effect as if set forth in full herein.

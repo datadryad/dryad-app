@@ -28,7 +28,7 @@ module StashEngine
         id: 'license',
         label: 'Software license:',
         field_name: 'license',
-        options_path: '/stash/software_licenses?term=',
+        options_path: '/software_licenses?term=',
         options_label: 'name',
         options_value: 'id',
         selected: { label: selected&.name, value: selected&.id }
