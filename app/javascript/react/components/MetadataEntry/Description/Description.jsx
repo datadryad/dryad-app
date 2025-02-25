@@ -1,6 +1,7 @@
-import React, {useRef} from 'react';
+import React, {useRef, useCallback} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import axios from 'axios';
+import {debounce} from 'lodash';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
@@ -59,6 +60,12 @@ export default function Description({
   const editorRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
+  const update = () => {
+    const {description_type} = dcsDescription;
+    dcsDescription.description = editorRef.current.getContent();
+    setResource((r) => ({...r, descriptions: [dcsDescription, ...r.descriptions.filter((d) => d.description_type !== description_type)]}));
+  };
+
   const submit = () => {
     if (editorRef.current) {
       const subJson = {
@@ -75,13 +82,13 @@ export default function Description({
         subJson,
         {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
       )
-        .then((data) => {
-          const {description_type} = data.data;
-          setResource((r) => ({...r, descriptions: [data.data, ...r.descriptions.filter((d) => d.description_type !== description_type)]}));
+        .then(() => {
           showSavedMsg();
         });
     }
   };
+
+  const checkSubmit = useCallback(debounce(submit, 1000), []);
 
   return (
     <>
@@ -122,7 +129,8 @@ export default function Description({
           paste_block_drop: true,
           paste_preprocess,
         }}
-        onBlur={submit}
+        onEditorChange={checkSubmit}
+        onBlur={update}
       />
     </>
   );

@@ -60,7 +60,7 @@ module StashEngine
     end
 
     it "doesn't show a submitted but not embargoed/published version of the landing page" do
-      get "/stash/dataset/#{@identifier}"
+      get "/dataset/#{@identifier}"
       expect(response).to have_http_status(:not_found)
     end
 
@@ -77,7 +77,7 @@ module StashEngine
       res2.update(title: 'Treecats and friends')
       @identifier.reload
 
-      get "/stash/dataset/#{@identifier}"
+      get "/dataset/#{@identifier}"
       expect(response.body).to include(res.title)
       expect(response.body).not_to include(res2.title)
       expect(response.body).to include('This dataset is embargoed')
@@ -98,7 +98,7 @@ module StashEngine
       create(:data_file, resource_id: res2.id, file_state: 'created')
       @identifier.reload
 
-      get "/stash/dataset/#{@identifier}"
+      get "/dataset/#{@identifier}"
       expect(response.body).to include(res.title)
       expect(response.body).not_to include(res2.title)
       expect(response.body).not_to include('This dataset is embargoed')

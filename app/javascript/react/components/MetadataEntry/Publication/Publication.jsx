@@ -20,7 +20,7 @@ export default function Publication({resource, setResource, maxSize}) {
     setImportType(choice);
     setRes((r) => ({...r, identifier: {...r.identifier, import_info: choice}}));
     axios.patch(
-      `/stash/resources/${resource.id}/import_type`,
+      `/resources/${resource.id}/import_type`,
       {authenticity_token, import_info: choice},
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
@@ -64,7 +64,7 @@ export default function Publication({resource, setResource, maxSize}) {
     }
     setSponsored(!!res.journal?.payment_plan_type && (manuscript_number || primary_article) ? res.journal.title : false);
     if (res.title && !resource.identifier.process_date?.processing) {
-      axios.get(`/stash/resources/${resource.id}/dupe_check`).then((data) => {
+      axios.get(`/resources/${resource.id}/dupe_check`).then((data) => {
         setDupeWarning(data.data?.[0]?.title || false);
       });
     } else {
@@ -144,7 +144,7 @@ export default function Publication({resource, setResource, maxSize}) {
             <b style={{display: 'block', marginTop: '.5ch'}}>{dupeWarning}</b>
           </p>
           <div>
-            <form action={`/stash/resources/${resource.id}`} method="post" style={{display: 'inline'}}>
+            <form action={`/resources/${resource.id}`} method="post" style={{display: 'inline'}}>
               <input type="hidden" name="_method" value="delete" />
               <input type="hidden" name="authenticity_token" value={authenticity_token} />
               <button type="submit" className="o-link__primary" style={{border: 0, padding: 0, background: 'transparent'}}>

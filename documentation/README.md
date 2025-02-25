@@ -31,9 +31,9 @@ Our demo instance of Dryad is available at [https://sandbox.datadryad.org](https
 * We have an [installation guide](dryad_install.md) for installing the user-interface part of Dryad along with some of the basic depedencies.
 
 * A basic generalized introduction to Dryad's architecture is
-  available at https://datadryad.org/stash/our_platform .
+  available at https://datadryad.org/our_platform .
 
-* [API documentation and specification](https://datadryad.org/stash/api) and [API READMEs](apis)
+* [API documentation and specification](https://datadryad.org/api) and [API READMEs](apis)
 
 * A (somewhat dated) database [Entity-Relationship diagram](other_files/dash_er_2018-06.pdf).
 

@@ -11,3 +11,9 @@ chk.addEventListener('change', () => {
   note.disabled = !chk.checked
   if (!chk.checked) note.value = ''
 })
+var ppr = document.getElementById('allow_review_workflow')
+ppr.addEventListener('change', () => {
+  var def = document.getElementById('default_to_ppr')
+  def.disabled = ppr.checked
+  if (ppr.checked) def.checked = false
+})

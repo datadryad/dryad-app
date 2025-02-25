@@ -58,7 +58,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       create(:data_file, file_state: 'copied', resource: @res)
       create(:description, description_type: 'technicalinfo', resource: @res)
       # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
-      visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
+      visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
       navigate_to_metadata
       click_button 'Authors'
       all('[id^=instit_affil_]').last.set('test institution')
@@ -69,7 +69,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       fill_in_keywords
       navigate_to_review
       submit_form
-      expect(page.current_path).to eq('/stash/submission_process')
+      expect(page.current_path).to eq('/submission_process')
     end
   end
 

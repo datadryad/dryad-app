@@ -6,7 +6,7 @@ These Dryad Terms of Submission and Use (these “Terms”) set forth the terms 
 
 If there is any conflict between an organization’s Membership Agreement and these Terms, the Membership Agreement will prevail.
 
-Capitalized terms used herein shall have the meanings ascribed to such terms on the [Definitions](/stash/definitions) page.
+Capitalized terms used herein shall have the meanings ascribed to such terms on the [Definitions](/definitions) page.
 
 
 ## Background
@@ -25,14 +25,14 @@ All of the above functions and offerings, including associated systems, hardware
 
 When you Publish your Research Data within Dryad, you join a community of researchers and organizations committed to leading in best practices for open data curation and publishing. 
 
-If you would like your institution to join Dryad, please direct your administrators to our [Join us page](stash/join_us) and encourage them to contact our Head of Partnership Development with any questions at <span style="white-space: nowrap;"><a href="mailto:dev@null" class="emailr">gro.dayrdatad@olleh</a></span>.
+If you would like your institution to join Dryad, please direct your administrators to our [Join us page](/join_us) and encourage them to contact our Head of Partnership Development with any questions at <span style="white-space: nowrap;"><a href="mailto:dev@null" class="emailr">gro.dayrdatad@olleh</a></span>.
 
 
 ## Terms
 
 1. **Permission**.
     1. By Submitting a Dataset to the Dryad Website, the Submitter grants Dryad irrevocable permission to make the Dataset available to the public under a CC0 instrument.
-    2. Unless otherwise indicated during the Submission process to the Dryad Website (see [Publication policies, obligations & warranties](/stash/publication_policy), Section 2), the Submitter agrees that the Dataset may be Published upon Acceptance by Dryad Curation personnel.
+    2. Unless otherwise indicated during the Submission process to the Dryad Website (see [Publication policies, obligations & warranties](/publication_policy), Section 2), the Submitter agrees that the Dataset may be Published upon Acceptance by Dryad Curation personnel.
     3. The Submitter further grants Dryad permission to:
         1. promote and advertise the availability of the Dataset;
         2. re-format or otherwise transform the Dataset in any way to ensure its accessibility and preservability;
@@ -50,7 +50,7 @@ If you would like your institution to join Dryad, please direct your administrat
     The Submitter warrants that neither s/he nor any co-author(s) or co-creator(s) is a person whose name appears on the list of Specially Designated Nationals and Blocked Persons published by the Office of Foreign Assets Control, U.S. Department of Treasury (“OFAC”);
 
 3. **Fees**. 
-    1. _Charges at Acceptance_. Dryad does not charge any fees for Submissions that are not Accepted for Publication by Dryad Curation personnel. Dryad only Accepts Submissions that meet the content criteria described in [Publication policies, obligations & warranties](/stash/publication_policy), Section 1.
+    1. _Charges at Acceptance_. Dryad does not charge any fees for Submissions that are not Accepted for Publication by Dryad Curation personnel. Dryad only Accepts Submissions that meet the content criteria described in [Publication policies, obligations & warranties](/publication_policy), Section 1.
     2. _Hierarchy of Payments_. In determining the party responsible for Data Publishing Charges, Dryad will apply the following criteria, in sequence:
         1. if a Submission is related to a Dryad Member, the Data Publishing Charge is covered by the Member in accordance with the terms of its Membership Agreement;
         2. if the Submitter is granted a Waiver, no Data Publishing Charge will be incurred;
@@ -84,4 +84,4 @@ If you would like your institution to join Dryad, please direct your administrat
 14. **Mutual Indemnification**. Each party agrees to indemnify and hold harmless the other party, its affiliates, officers, directors, agents and employees from and against any and all claims, damages, liabilities, costs or expenses (including reasonable attorneys' fees) arising out of or in connection with any breach of this agreement or any negligent or wrongful act or omission of the indemnifying party or its agents or employees. 
 15. **Taxes**. The Submitter and User is responsible for all sales and use taxes imposed, if any, with respect to the services rendered or products provided to the Submitter hereunder, other than taxes based upon or credited against Dryad’s income.
 16. **Compliance**. Each of the Submitter, User and Dryad shall perform under this Agreement in compliance with all laws, rules, and regulations of any jurisdiction which is or may be applicable to its business and activities, including anti-corruption, copyright, privacy, and data protection laws, rules, and regulations.
-17. **Incorporation by Reference**. The provisions of Dryad’s [Publication policies, obligations & warranties](/stash/publication_policy) and the related definitions (unless otherwise specified herein) are incorporated by reference herein and shall be deemed to have the same force and effect as if set forth in full herein.
+17. **Incorporation by Reference**. The provisions of Dryad’s [Publication policies, obligations & warranties](/publication_policy) and the related definitions (unless otherwise specified herein) are incorporated by reference herein and shall be deemed to have the same force and effect as if set forth in full herein.

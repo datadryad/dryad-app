@@ -27,7 +27,7 @@ export function ReadMePreview({resource, previous, admin}) {
   const diff = admin && previous && readme !== prev;
 
   const getREADME = () => {
-    axios.get(`/stash/resources/${resource.id}/display_readme${diff ? '?admin' : ''}`).then((data) => {
+    axios.get(`/resources/${resource.id}/display_readme${diff ? '?admin' : ''}`).then((data) => {
       const active_readme = document.createRange().createContextualFragment(data.data);
       readmeRef.current.append(active_readme);
     });

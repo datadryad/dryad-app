@@ -6,11 +6,11 @@ Dryad advances our vision – for the open availability and routine reuse of res
 
 * Data curation at Dryad – Ensures metadata quality; verifies data are accessible, usable, and licensed for sharing, and supports authors.
 * Data publishing at Dryad – Increases discoverability of data, connects data with other research outputs, promotes data citation, and makes data count.
-* The Dryad platform – Offers a smooth and easy publishing experience for authors, integrates readily with publisher workflows, [runs on open-source software](https://github.com/datadryad/dryad-app), and may be [accessed via open API](/stash/api).
+* The Dryad platform – Offers a smooth and easy publishing experience for authors, integrates readily with publisher workflows, [runs on open-source software](https://github.com/datadryad/dryad-app), and may be [accessed via open API](/api).
 
 Dryad serves all research domains and welcomes submissions of data in every field – where there is not an existing specialist repository and where the data may be shared openly. Dryad publishes data exclusively under a [Creative Commons Public Domain License](https://creativecommons.org/share-your-work/public-domain/cc0/) (CC0) and does not support the publication of sensitive data to which access should be restricted.
 
-Our process is dedicated exclusively to research data. We work in concert with [aligned organizations](/stash/about#collaborations) to facilitate the release and interconnection of related software, supplementary information, research articles, preprints, data management plans, and more.
+Our process is dedicated exclusively to research data. We work in concert with [aligned organizations](/about#collaborations) to facilitate the release and interconnection of related software, supplementary information, research articles, preprints, data management plans, and more.
 
 See [how Dryad compares with other platforms](https://doi.org/10.5281/zenodo.7946938).
 
@@ -25,7 +25,7 @@ See [how Dryad compares with other platforms](https://doi.org/10.5281/zenodo.794
 
 We make it easy and affordable for researchers to curate, publish, and preserve research data by providing robust infrastructure, services, and expertise to meet your needs for public release of data, as well as for fulfilling funder mandates.
 
-We are a nonprofit organization and exist to promote an environment where research data are openly available, managed, preserved, integrated with publications, and routinely reused to create knowledge. [We operate on a cost-recovery, *not* profit-maximizing, basis](/stash/requirements/#cost).
+We are a nonprofit organization and exist to promote an environment where research data are openly available, managed, preserved, integrated with publications, and routinely reused to create knowledge. [We operate on a cost-recovery, *not* profit-maximizing, basis](/requirements/#cost).
 
 When you publish your data with Dryad, you join a community of researchers committed to leading in best practices for open data publishing. 
 
@@ -41,14 +41,14 @@ Data publishing is the presentation of openly available and citable research dat
 
 Data curation and publishing ensure equitable access to data and create opportunities to foster new collaborations and connections across the research community, helping Dryad to achieve our vision for the acceleration of discovery and translation of research into benefits for society.
 
-For a demonstration of our process, please [contact us](/stash/interested).
+For a demonstration of our process, please [contact us](/contact#get-involved).
 
 Learn more:
 
-* [Good data practices](/stash/best_practices)
-* [Data publishing ethics](/stash/ethics)
-* [Submission walkthrough](/stash/submission_process)
-* [Publication process](/stash/process)
+* [Good data practices](/best_practices)
+* [Data publishing ethics](/ethics)
+* [Submission walkthrough](/submission_process)
+* [Publication process](/process)
 
 
 ## Dataset discovery
@@ -59,7 +59,7 @@ Dryad has implemented the [Make Data Count](https://makedatacount.org) project r
 
 Ways you can ensure your data publication has the broadest reach:
 
-* **Comprehensive documentation** is the key for discoverability as well as ensuring future researchers understand the data. Without thorough documentation (README files) and metadata (descriptions of the context of the data file, the context in which the data were collected, the measurements that were made, and the quality of the data), the data cannot be found through internet searches or data indexing services, understood by fellow researchers, or effectively used. [We require a few key pieces of metadata and a README file](/stash/requirements). The metadata entry form is based on fields from the [DataCite schema](http://schema.datacite.org/meta/kernel-3/index.html) and is broadly applicable to data from any field.
+* **Comprehensive documentation** is the key for discoverability as well as ensuring future researchers understand the data. Without thorough documentation (README files) and metadata (descriptions of the context of the data file, the context in which the data were collected, the measurements that were made, and the quality of the data), the data cannot be found through internet searches or data indexing services, understood by fellow researchers, or effectively used. [We require a few key pieces of metadata and a README file](/requirements). The metadata entry form is based on fields from the [DataCite schema](http://schema.datacite.org/meta/kernel-3/index.html) and is broadly applicable to data from any field.
 * **Cite and publicize your data publication** with your given DOI assigned upon submission. The recommended citation format appears on your dataset landing page.
 
 

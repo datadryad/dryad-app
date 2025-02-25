@@ -165,15 +165,4 @@ function joelsReady(){
   $('.js-pubdate__year1').text(year1);
   $('.js-pubdate__year1').attr('datetime', year1datetime);
 
-  var noClick = document.getElementsByClassName('prevent-click');
-  for (var i=0; i < noClick.length; i++) {
-    noClick[i].addEventListener('click', (e) => {
-      console.log(e.target)
-      console.log(e.currentTarget)
-      var icon = e.currentTarget.lastElementChild;
-      icon.className = 'fa fa-spinner fa-spin';
-      document.body.classList.add('prevent-clicks');
-    });
-  }
-
 }// close joelsReady()

@@ -21,7 +21,7 @@
 </p>
 
 <p>
-  See our <a href="/stash/terms">Terms of Service</a> for licensing and other service considerations.
+  See our <a href="/terms">Terms of Service</a> for licensing and other service considerations.
 </p>
 
 <p>
@@ -31,7 +31,7 @@
 </p>
 
 <p>
-  See the Dryad <a href="/stash/terms#publication">Terms of Service, Publication Policies section</a> for further 
+  See the Dryad <a href="/terms#publication">Terms of Service, Publication Policies section</a> for further 
   information about our time-limited embargoes and delayed publication.
 </p>
 
@@ -44,7 +44,7 @@
 <p>
   In any data publishing ethics concern that arises, Dryad
   reserves the right to remove published datasets if it deems that a breach in its
-  <a href="/stash/terms">terms of service</a> or in ethical or legal publishing practice has taken place,
+  <a href="/terms">terms of service</a> or in ethical or legal publishing practice has taken place,
   or if it deems it necessary to restrict or remove access while the concerns are the subject of follow up.
   In the context of any data publishing concerns, Dryad may contact
   other parties that host content associated with the dataset (e.g. a journal article) and may contact

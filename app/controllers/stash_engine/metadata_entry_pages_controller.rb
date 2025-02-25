@@ -32,7 +32,7 @@ module StashEngine
     end
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    # GET /stash/edit/{doi}/{edit_code}
+    # GET /edit/{doi}/{edit_code}
     def edit_by_doi
       if resource.processing?
         redirect_to stash_url_helpers.root_path, alert: 'The target dataset is being processed. Please try again later.' and return

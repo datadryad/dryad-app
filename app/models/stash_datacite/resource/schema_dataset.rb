@@ -81,7 +81,11 @@ module StashDatacite
         return [] unless @resource.descriptions
 
         @resource.descriptions.map do |d|
-          str = ActionView::Base.full_sanitizer.sanitize(d.description || '')
+          str = if d.description_type == 'technicalinfo'
+                  d.description
+                else
+                  ActionView::Base.full_sanitizer.sanitize(d.description || '')
+                end
           ((str&.length || 0) > 1000 ? "#{str[0..1000]}..." : str)
         end.compact
       end

@@ -180,7 +180,7 @@ module StashApi
         deposit_doi: @stash_identifier.identifier,
         deposit_url: sharing_link,
         deposit_edit_url: "#{request.protocol}#{request.host_with_port}" \
-                          "/stash/edit/#{CGI.escape(@stash_identifier.to_s)}/#{@stash_identifier&.edit_code}",
+                          "/edit/#{CGI.escape(@stash_identifier.to_s)}/#{@stash_identifier&.edit_code}",
         status: 'Success'
       }
     end

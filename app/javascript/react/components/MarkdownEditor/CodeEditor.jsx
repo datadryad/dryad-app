@@ -107,6 +107,7 @@ export default function CodeEditor({
         }),
         EditorView.contentAttributes.of({
           'aria-labelledby': 'md_editor_label',
+          'aria-describedby': 'md_editor_desc',
           'aria-errormessage': 'readme_error',
         }),
         EditorView.updateListener.of((v) => {

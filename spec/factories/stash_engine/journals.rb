@@ -3,9 +3,7 @@
 # Table name: stash_engine_journals
 #
 #  id                      :integer          not null, primary key
-#  allow_blackout          :boolean
-#  allow_embargo           :boolean
-#  allow_review_workflow   :boolean
+#  allow_review_workflow   :boolean          default(TRUE)
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
 #  journal_code            :string(191)
@@ -14,6 +12,7 @@
 #  payment_contact         :string(191)
 #  payment_plan_type       :string
 #  peer_review_custom_text :text(65535)
+#  preprint_server         :boolean          default(FALSE)
 #  review_contacts         :text(65535)
 #  title                   :string(191)
 #  website                 :string(191)

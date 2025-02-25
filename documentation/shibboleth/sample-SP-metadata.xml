@@ -38,7 +38,7 @@ Q293ougmQdksKwE+3vL/lx0Afwgem42azWa87U1vneVtzCCOR34w1gypR7aZhzR5P+Cleasp1HVv&#xD
       <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://sandbox.datadryad.org/Shibboleth.sso/Login" index="1"/>
       <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">
         <mdui:DisplayName xml:lang="en">Dryad sandbox</mdui:DisplayName>
-        <mdui:PrivacyStatementURL xml:lang="en">https://datadryad.org/stash/privacy</mdui:PrivacyStatementURL>
+        <mdui:PrivacyStatementURL xml:lang="en">https://datadryad.org/privacy</mdui:PrivacyStatementURL>
         <mdui:Logo height="210" width="1100" xml:lang="en">https://datadryad.org/assets/stash_engine/logo_dryad-b63b80e8fdc94e79fe893976701a292b54840f9f288be4367fa67b6e208ddd0f.png</mdui:Logo>
       </mdui:UIInfo>
     </Extensions>
@@ -90,7 +90,7 @@ MwEvksvOdKH6oMEIQYM+M9KHFV8=
   <Organization>
     <OrganizationName xml:lang="en">Dryad</OrganizationName>
     <OrganizationDisplayName xml:lang="en">Dryad</OrganizationDisplayName>
-    <OrganizationURL xml:lang="en">https://datadryad.org/stash</OrganizationURL>
+    <OrganizationURL xml:lang="en">https://datadryad.org/</OrganizationURL>
   </Organization>
   <ContactPerson contactType="administrative">
     <GivenName>Ryan Scherle</GivenName>

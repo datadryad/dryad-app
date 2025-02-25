@@ -33,7 +33,7 @@ See the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/
 
 ## Submission
 
-The Submission API is used by institutions that partner closely with Dryad, and use systems to create dataset submissions directly. Please contact us if you are [interested in partnering with Dryad](/stash/interested), and setting up an API account for submission.
+The Submission API is used by institutions that partner closely with Dryad, and use systems to create dataset submissions directly. Please contact us if you are [interested in partnering with Dryad](/contact#get-involved), and setting up an API account for submission.
 
 The <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md" target="blank">API submission examples document<span class="screen-reader-only"> (opens in new window)</span></a> gives concrete examples of submission through the Dryad API.
 

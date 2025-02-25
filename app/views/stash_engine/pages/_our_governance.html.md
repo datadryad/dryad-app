@@ -1,6 +1,6 @@
 <p>Dryad is a not-for-profit membership organization, recognized as a 501(c)3 by the U.S. Internal Revenue Service. Dryad members nominate and elect the Board of Directors, twelve individuals from the stakeholder community who provide strategic planning, fiscal oversight, and oversee the position of the Executive Director. Members also approve any amendments to <a href="/docs/DryadBylaws.pdf">the organization’s bylaws<span class="pdfIcon" role="img" aria-label=" (PDF)"></span></a>, have the opportunity to steer policies and features, and are kept abreast of emerging issues in data publishing. Dryad Board terms rotate in October every year.</p>
 
-<p>Our <a href="/stash/code_of_conduct">Code of conduct</a> applies for all Dryad community spaces.</p>
+<p>Our <a href="/code_of_conduct">Code of conduct</a> applies for all Dryad community spaces.</p>
 
 #### Current board members
 

@@ -2,7 +2,7 @@
 
 *Updated: August 29, 2023*
 
-Capitalized terms used herein shall have the meanings ascribed to such terms on the [Definitions](/stash/definitions) page.
+Capitalized terms used herein shall have the meanings ascribed to such terms on the [Definitions](/definitions) page.
 
 ## Background
 
@@ -75,8 +75,8 @@ All of the above functions and offerings, including associated systems, hardware
     This policy is informed by the [Open Archival Information System (OAIS) reference model (ISO 14721:2012](https://www.iso.org/standard/57284.html), which defines “long term” to be a period of time long enough for there to be concern about the impacts of changing technologies, including support for new media and data formats, and of a changing user community.
 
 1. **Preferred Formats and Support Levels**.
-    1. *Preferred Formats*. While Dryad accepts all data types and formats within reason, some formats are preferred. Curation personnel may contact Submitters to request a file in an alternate format, and/or Dryad may save additional Versions of files that have been transformed to preferred formats. Non-proprietary, openly documented formats are preferred if the format does not compromise reuse potential. Dryad recognizes that some formats may be preferred for reusability even if not ideal for preservation. Preferred formats are listed on our [Good data practices](/stash/best_practices) page and updated from time to time.
-    2. *Full Support*. Dryad will make commercially reasonable efforts to ensure the properties and behaviors into the future of Datasets Submitted in a preferred format or other common format, as listed on our [Good data practices](/stash/best_practices) page and updated from time to time.
+    1. *Preferred Formats*. While Dryad accepts all data types and formats within reason, some formats are preferred. Curation personnel may contact Submitters to request a file in an alternate format, and/or Dryad may save additional Versions of files that have been transformed to preferred formats. Non-proprietary, openly documented formats are preferred if the format does not compromise reuse potential. Dryad recognizes that some formats may be preferred for reusability even if not ideal for preservation. Preferred formats are listed on our [Good data practices](/best_practices) page and updated from time to time.
+    2. *Full Support*. Dryad will make commercially reasonable efforts to ensure the properties and behaviors into the future of Datasets Submitted in a preferred format or other common format, as listed on our [Good data practices](/best_practices) page and updated from time to time.
     3. *Limited support*. For uncommon formats for which we are less confident there will be robust conversion tools, Dryad will make some effort to ensure the future readability and functionality of the Submission, but there may be some loss. Examples would include PDF files that are not compliant with the requirements of [PDF/A](https://helpx.adobe.com/acrobat/using/pdf-x-pdf-a-pdf.html).
     4. *As-Is Bitstream Access*. For binary files from proprietary instrumentation and software and other exotic formats, Dryad preserves the bitstream as-is and makes no commitment to format transformations or future usability.
 1. **Procedures for Preservation**. Dryad aims to preserve originally submitted Datasets indefinitely. Steps to ensure long-term availability include:

@@ -2,17 +2,17 @@
 
 ## Get help
 
-Please contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@pleh</a> for assistance with your dataset submission, or with questions about our [submission process](/stash/submission_process) or [publication process](/stash/process).
+Please contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@pleh</a> for assistance with your dataset submission, or with questions about our [submission process](/submission_process) or [publication process](/process).
 
 ## Get involved
 
-Is your organization interested in [joining or working with Dryad](https://datadryad.org/stash/join_us)? Contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@spihsrentrap</a> and our partnership team will get back to you. Individual researchers do not need a Dryad membership, and should follow our [submission instructions](https://datadryad.org/stash/submission_process) to get started.
+Is your organization interested in [joining or working with Dryad](https://datadryad.org/join_us)? Contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@spihsrentrap</a> and our partnership team will get back to you. Individual researchers do not need a Dryad membership, and should follow our [submission instructions](https://datadryad.org/submission_process) to get started.
 
 ## Preview changes
 
 A few times a year, we ask volunteer user testers to provide feedback on sneak peeks at changes and new features. Do you want to help direct the future of Dryad?
 
-<a href="/stash/feedback?m=4&l=contact" class="o-link__buttonlink">Sign up for previews and feedback opportunities</a>
+<a href="/feedback?m=4&l=contact" class="o-link__buttonlink">Sign up for previews and feedback opportunities</a>
 
 ## Request changes
 

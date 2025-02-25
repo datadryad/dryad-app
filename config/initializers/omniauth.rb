@@ -1,10 +1,10 @@
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :shibboleth,
-           callback_path: '/stash/auth/shibboleth/callback',
+           callback_path: '/auth/shibboleth/callback',
            request_type: :header,
            host: APP_CONFIG.shib_sp_host,
            uid_field: 'eppn',
-           path_prefix: '/stash/auth',
+           path_prefix: '/auth',
            info_fields: {
              email: 'mail',
              identity_provider: 'shib_identity_provider'
@@ -14,7 +14,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            member: APP_CONFIG.orcid.member,
            sandbox: APP_CONFIG.orcid.sandbox,
            callback_path: '/stash/auth/orcid/callback',
-           path_prefix: '/stash/auth',
+           path_prefix: '/auth',
            authorize_params: {
              scope: '/read-limited'
            },
@@ -27,7 +27,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :google_oauth2, APP_CONFIG.google&.gmail_client_id, APP_CONFIG.google&.gmail_client_secret,
            {
              scope: 'email, profile, gmail.modify',
-             callback_path: '/stash/auth/google_oauth2/callback'
+             callback_path: '/auth/google_oauth2/callback'
            }
   
   # patch to help prevent CSRF for CVE-2015-9284

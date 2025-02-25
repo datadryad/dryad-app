@@ -12,8 +12,13 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.left_outer_joins(:issns).distinct
-          .where('LOWER(title) LIKE LOWER(?) OR stash_engine_journal_issns.id LIKE ?', "%#{q.strip}%", "%#{q.strip}%")
+        @journals = @journals.left_outer_joins(:issns, :alternate_titles).distinct
+          .where(
+            'LOWER(stash_engine_journals.title) LIKE LOWER(?)
+            OR LOWER(stash_engine_journal_titles.title) LIKE LOWER(?)
+            OR stash_engine_journal_issns.id LIKE ?',
+            "%#{q.strip}%", "%#{q.strip}%", "%#{q.strip}%"
+          )
       end
 
       ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan_type default_to_ppr])
@@ -76,13 +81,14 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[title default_to_ppr]
+      valid = %i[title preprint_server default_to_ppr allow_review_workflow]
       update = edit_params.slice(*valid).to_h
       update[:sponsor_id] = edit_params[:sponsor_id].presence
       update[:payment_plan_type] = edit_params[:payment_plan_type].presence
       update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json
       update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json
       update[:issns_attributes] = update_issns
+      update[:alternate_titles_attributes] = update_alts
       if edit_params.key?(:flag)
         update[:flag_attributes] = { note: edit_params[:note] }
         update[:flag_attributes][:id] = @journal.flag.id if @journal&.flag.present?
@@ -100,9 +106,17 @@ module StashEngine
       issns.reject { |id| @journal.issns.map(&:id).include?(id) }.map { |id| { issn: id } }
     end
 
-    def edit_params
-      params.permit(:id, :title, :issn, :payment_plan_type, :notify_contacts, :review_contacts, :default_to_ppr, :sponsor_id, :flag, :note)
+    def update_alts
+      alts = edit_params[:alt_title].split("\n").map(&:strip)
+      return alts.map { |str| { title: str } } unless @journal&.alternate_titles&.any?
+
+      @journal.alternate_titles.where.not(title: alts).destroy_all
+      alts.reject { |str| @journal.alternate_titles.map(&:title).include?(str) }.map { |str| { title: str } }
     end
 
+    def edit_params
+      params.permit(:id, :title, :issn, :alt_title, :payment_plan_type, :notify_contacts, :review_contacts, :preprint_server,
+                    :default_to_ppr, :allow_review_workflow, :sponsor_id, :flag, :note)
+    end
   end
 end

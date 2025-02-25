@@ -43,14 +43,14 @@ module StashDatacite
 
     # GET /publications/autocomplete?term={query_term}
     def autocomplete
-      partial_term = params['term']
+      partial_term = params[:term]
       if partial_term.blank?
         render json: nil
       else
         # clean the partial_term of unwanted characters so it doesn't cause errors
         partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
-
-        found = StashEngine::Journal.where('title like ?', "%#{partial_term}%").includes([:issns]).limit(40).to_a
+        found = params.key?(:preprint) ? StashEngine::Journal.servers : StashEngine::Journal
+        found = found.where('title like ?', "%#{partial_term}%").includes([:issns]).limit(40).to_a
         matches = found.map { |m| { id: m.id, title: m.title, issn: m.single_issn } }
         alt_matches = StashEngine::JournalTitle.where('show_in_autocomplete=true and title like ?', "%#{partial_term}%").limit(10)
         alt_matches.each do |am|

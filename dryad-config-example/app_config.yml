@@ -1,11 +1,10 @@
 defaults: &DEFAULTS
   shared_resource_model: StashEngine::Resource
-  stash_mount: /stash
   max_review_days: 180
   ezid:
     host: ezid.cdlib.org
     port: 443
-  contact_us_uri: https://datadryad.org/stash/contact
+  contact_us_uri: https://datadryad.org/contact
   repository:
     domain: https://merritt-test.example.org
     endpoint: "https://merritt-test.example.org:39001/mrtsword/collection/cdl_dryaddev"

@@ -192,7 +192,7 @@ sudo systemctl enable puma
 # check that it is running
 sudo systemctl status puma
 # check that the homepage renders
-curl http://localhost:3000/stash
+curl http://localhost:3000/
 ```
 
 Set up Apache, which will redirect to Puma and Shibboleth
@@ -235,7 +235,7 @@ Set up a load balancer to send traffic to the machine
   - HTTP (for testing basic access; will change to HTTPS in next section)
   - IPv4
   - HTTP1
-  - Health check = /stash
+  - Health check = /
 - After creating the target group, enable "stickiness" so shibboleth connections will attach to the same server and pass their cookies correctly
   - On the group's detail page, go to Attributes, Edit
   - Turn on stickiness

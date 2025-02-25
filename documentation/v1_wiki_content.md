@@ -10,10 +10,10 @@ documentation that lives in various other places.
 
 *Technical documentation* is primarily alongside the Dryad code in
 GitHub, at https://github.com/datadryad/dryad-app/tree/main/documentation, supplemented with
-[API documentation](https://datadryad.org/stash/api)
+[API documentation](https://datadryad.org/api)
 
 *Documents related to Dryad's governance* can be found in:
-- [Governance page](https://datadryad.org/stash/our_governance) on the main Dryad website
+- [Governance page](https://datadryad.org/our_governance) on the main Dryad website
 - [Dryad's Governance Documents](https://github.com/datadryad/governance/tree/main/) on GitHub
 
 *Documents about data submission and curation* can be found on the

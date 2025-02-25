@@ -97,6 +97,16 @@ expandButtons.forEach(button => {
   });
 });
 
+var noClick = document.getElementsByClassName('prevent-click');
+for (var i=0; i < noClick.length; i++) {
+  noClick[i].addEventListener('click', (e) => {
+    e.currentTarget.disabled = true;
+    var icon = e.currentTarget.lastElementChild;
+    icon.className = 'fa fa-spinner fa-spin';
+    document.body.classList.add('prevent-clicks');
+  });
+}
+
 if (window.location.hash) {
   const hashed = document.getElementById(window.location.hash.substring(1))
   if (hashed && hashed.getAttribute('aria-expanded') === 'false') {

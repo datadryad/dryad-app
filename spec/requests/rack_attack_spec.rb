@@ -28,7 +28,7 @@ RSpec.describe 'Rack::Attack', type: :request do
 
     it 'limits basic page access' do
       # succeeds initially, blocks after too many attempts, then allows afteer time passes
-      target_url = '/stash'
+      target_url = '/'
       freeze_time do
         APP_CONFIG[:rate_limit][:all_requests].times do
           get target_url, headers: headers
@@ -84,7 +84,7 @@ RSpec.describe 'Rack::Attack', type: :request do
     end
 
     it 'throttles download of zip files' do
-      target_url = '/stash/downloads/download_resource/BOGUS'
+      target_url = '/downloads/download_resource/BOGUS'
       freeze_time do
         APP_CONFIG[:rate_limit][:zip_downloads_per_hour].times do
           get target_url, headers: headers
@@ -101,17 +101,37 @@ RSpec.describe 'Rack::Attack', type: :request do
       end
     end
 
+    it 'throttles download of zip files for old /"stash/..." paths too' do
+      target_url = '/stash/downloads/download_resource/BOGUS'
+      freeze_time do
+        APP_CONFIG[:rate_limit][:zip_downloads_per_hour].times do
+          get target_url, headers: headers
+          follow_redirect!
+          expect(response).to have_http_status(:not_found)
+        end
+
+        get target_url, headers: headers
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      travel_to(2.hours.from_now) do
+        get target_url, headers: headers
+        follow_redirect!
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
     it 'forbids users from visiting a malicious path, then blocks user from whole site' do
       freeze_time do
         get '/etc/passwd', headers: headers
         expect(response).to have_http_status(:forbidden)
       end
       # Banned from the rest of the site
-      get '/stash', headers: headers
+      get '/', headers: headers
       expect(response).to have_http_status(:forbidden)
       # Resets after days
       travel_to(2.months.from_now) do
-        get '/stash', headers: headers
+        get '/', headers: headers
         expect(response).to have_http_status(:success)
       end
     end
@@ -119,18 +139,18 @@ RSpec.describe 'Rack::Attack', type: :request do
     it 'tells users about 2 bad requests, then blocks user from whole site' do
       freeze_time do
         2.times do
-          get '/stash', headers: badheaders
+          get '/', headers: badheaders
           puts response.status
           puts response.body
           expect(response).to have_http_status(:bad_request)
         end
       end
       # Banned from the rest of the site
-      get '/stash', headers: headers
+      get '/', headers: headers
       expect(response).to have_http_status(:forbidden)
       # Resets after days
       travel_to(2.days.from_now) do
-        get '/stash', headers: headers
+        get '/', headers: headers
         expect(response).to have_http_status(:success)
       end
     end

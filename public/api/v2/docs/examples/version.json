@@ -91,7 +91,7 @@
       "identifier": "http://example.org/cats"
     }
   ],
-  "sharingLink": "https://datadryad.org/stash/dataset/doi:10.5072/FK2708471V",
+  "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK2708471V",
   "versionNumber": 1,
   "versionStatus": "submitted",
   "visibility": "public"

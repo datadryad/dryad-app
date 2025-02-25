@@ -40,7 +40,9 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
   const checkDescription = useCallback(debounce(saveDescription, 900), []);
 
   const assembleValue = () => {
-    let v = `# ${wizardContent.title}\n\n[${wizardContent.doi}](${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
+    let v = `# ${
+      wizardContent.title || 'Dryad dataset'
+    }\n\nDataset DOI: [${wizardContent.doi}](${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
     if (wizardContent.step1) v += wizardContent.step1;
     if (wizardContent.step2) v += `### ${secTitles[1]}\n\n${wizardContent.step2}`;
     [3, 4].forEach((s) => {
@@ -79,7 +81,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
 
   useEffect(() => {
     async function getFiles() {
-      axios.get(`/stash/resources/${resource.id}/prepare_readme`).then((data) => {
+      axios.get(`/resources/${resource.id}/prepare_readme`).then((data) => {
         const {file_list, readme_file} = data.data;
         setFileList(file_list);
         if (readme_file) {
@@ -106,11 +108,11 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
       <>
         <span id="md_editor_label" className="screen-reader-only">Create README for dataset</span>
         <div className="readme-columns-final">
-          <div>
+          <div id="md_editor_desc">
             <p style={{marginTop: 0}}>
               To help others interpret and reuse your dataset, a README file must be included, containing
               abbreviations and codes, file descriptions, and information about any necessary software.{' '}
-              <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
+              <a href="/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
                 <i className="far fa-file-lines" aria-hidden="true" style={{marginRight: '.5ch'}} />Learn about README files
                 <span className="screen-reader-only"> (opens in new window)</span>
               </a>
@@ -181,7 +183,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
         <>
           <p>
             Your Dryad submission must be accompanied by a{' '}
-            <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
+            <a href="/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
               README file<span className="screen-reader-only"> (opens in new window)</span>
             </a>, to help others use and understand your
             dataset. It should contain the details needed to interpret and reuse your data, including abbreviations

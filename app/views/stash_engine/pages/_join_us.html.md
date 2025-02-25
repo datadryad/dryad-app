@@ -1,6 +1,6 @@
 # Join us
 
-<p>Dryad makes it easy and affordable to curate, publish, and preserve research data by providing robust infrastructure, services, and expertise to meet your organization's needs. Whether you’d like to see data shared to support research integrity, open research or compliance with funder policies, we can help. Our multi-stakeholder community of academic and research institutions, research funders, scholarly societies and publishers is committed to leading in best practices for open data sharing and reuse. To join Dryad today, please <a href="/stash/interested"/>contact us</a>.</p>
+<p>Dryad makes it easy and affordable to curate, publish, and preserve research data by providing robust infrastructure, services, and expertise to meet your organization's needs. Whether you’d like to see data shared to support research integrity, open research or compliance with funder policies, we can help. Our multi-stakeholder community of academic and research institutions, research funders, scholarly societies and publishers is committed to leading in best practices for open data sharing and reuse. To join Dryad today, please <a href="/contact#get-involved"/>contact us</a>.</p>
 
 <ul>
   <li><strong>Institutions and funders</strong> join the community to support researchers who already rely on Dryad for sharing their data, and to leverage an out-of-the-box solution to curate, publish, share and preserve the research data resulting from their support.</li>
@@ -71,7 +71,7 @@ Dryad’s fees are currently under review and will be available in Spring 2025. 
 ## Members
 
 <p>Our community is open to a full spectrum of stakeholder organizations
-including universities, research institutions and academic libraries. <a href="/stash/interested">Contact us about joining us as a member organization</a>.</p>
+including universities, research institutions and academic libraries. <a href="/contact#get-involved">Contact us about joining us as a member organization</a>.</p>
 
 ### Academic and research institutions
 <%= render "members_institutional" %>

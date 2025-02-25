@@ -1,6 +1,6 @@
 # How to reuse Dryad data
 
-Dryad hosts a vast collection of [curated](/stash/mission#our-curation-and-publication-process) datasets across a wide range of scientific disciplines. We enable researchers to share, access, and reuse high-quality data. This guide helps researchers make the most of data on Dryad.
+Dryad hosts a vast collection of [curated](/mission#our-curation-and-publication-process) datasets across a wide range of scientific disciplines. We enable researchers to share, access, and reuse high-quality data. This guide helps researchers make the most of data on Dryad.
 
 
 ## Understanding usage rights
@@ -36,7 +36,7 @@ Dryad provides a user-friendly search interface to help you locate datasets rele
 
 ## Accessing data via our API
 
-Dryad offers an **API** (Application Programming Interface) for programmatic access to datasets, which is useful for large-scale data gathering, integration with software tools, or analyses that require multiple datasets. Visit the[ API documentation](/stash/api) page for detailed information on the available endpoints and usage examples. 
+Dryad offers an **API** (Application Programming Interface) for programmatic access to datasets, which is useful for large-scale data gathering, integration with software tools, or analyses that require multiple datasets. Visit the[ API documentation](/api) page for detailed information on the available endpoints and usage examples. 
 
 
 ### Common API use cases

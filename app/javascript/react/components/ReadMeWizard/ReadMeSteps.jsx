@@ -74,7 +74,7 @@ export default function ReadMeSteps({
         ))}
       </div>
       <h3 id="md_editor_label">{secTitles[step - 1]}</h3>
-      <div style={{margin: '-.5em 0'}}>
+      <div style={{margin: '-.5em 0'}} id="md_editor_desc">
         {sections[step].desc}
       </div>
       <MarkdownEditor

@@ -20,7 +20,7 @@ export default function SubmissionForm({
       {!steps.some((s) => s.fail) && !hasChanges && (
         <>
           <p>No changes have been made to the submission. Make changes to submit, or delete this version to revert to the one already submitted</p>
-          <form action={`/stash/resources/${resource.id}`} method="post">
+          <form action={`/resources/${resource.id}`} method="post">
             <input type="hidden" name="_method" value="delete" />
             <input type="hidden" name="authenticity_token" value={authenticityToken} />
             <button type="submit" className="o-button__plain-text0">Delete &amp; revert</button>

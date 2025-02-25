@@ -69,7 +69,7 @@ export default function WorksPreview({resource, previous, admin}) {
     const preOther = pRis?.filter((r) => r.relation_type !== 'haspart');
 
     const getCollection = () => {
-      axios.get(`/stash/resources/${resource.id}/display_collection`).then((data) => {
+      axios.get(`/resources/${resource.id}/display_collection`).then((data) => {
         colRef.current.innerHTML = data.data;
         colRef.current.querySelectorAll('a').forEach((l) => l.setAttribute('target', '_blank'));
         if (previous) {

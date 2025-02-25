@@ -9,7 +9,7 @@ Interactions with storage
 ===========================
 
 Submissions to the storage system can be started and stopped from the
-[GUI Submission Queue page](https://datadryad.org/stash/submission_queue). However,
+[GUI Submission Queue page](https://datadryad.org/submission_queue). However,
 actions on this page will only affect the single server that you are
 attached to, and not all servers in a load-balanced system. (Note
 the long_jobs.dryad script will also do this,

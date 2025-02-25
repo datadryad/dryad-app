@@ -67,7 +67,7 @@ end
 
 # it looks like
 # "timestamp","metric_name","repo_id", "user_id", "session_id", "url", "pid"
-# "2023-11-01 15:32:20.721","view","da-80l49bsf",25990524582826763,3082643891120137357,"https://datadryad.org/stash/dataset/doi:10.6078/D1MS3X","10.6078/D1MS3X"
+# "2023-11-01 15:32:20.721","view","da-80l49bsf",25990524582826763,3082643891120137357,"https://datadryad.org/dataset/doi:10.6078/D1MS3X","10.6078/D1MS3X"
 def match_datacite_entries(file:)
   count = 0
   matched_count = 0

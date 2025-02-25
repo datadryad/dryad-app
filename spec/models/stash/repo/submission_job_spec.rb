@@ -61,7 +61,7 @@ module Stash
           @rails_logger = Rails.logger
           Rails.logger = @logger
 
-          @landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: '/stash/doi:10.123/456').to_s
+          @landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: '/doi:10.123/456').to_s
 
           @user = create(:user, tenant_id: 'dryad')
           @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
@@ -69,7 +69,7 @@ module Stash
           allow(StashEngine::Resource).to receive(:find).with(@resource.id).and_return(@resource)
 
           @url_helpers = double(Module) # yes, apparently URL helpers are an anonymous module
-          allow(@url_helpers).to(receive(:show_path)) { |identifier_str| "/stash/#{identifier_str}" }
+          allow(@url_helpers).to(receive(:show_path)) { |identifier_str| "/#{identifier_str}" }
 
           @job = SubmissionJob.new(resource_id: @resource.id)
           allow(@job).to receive(:id_helper).and_return(OpenStruct.new(ensure_identifier: 'xxx'))

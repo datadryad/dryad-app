@@ -28,7 +28,7 @@ Additionally, if applicable, please do not include any data visualizations that 
 
 ## Make sure your data are accessible
 
-* To maximize accessibility, reusability and preservability, share data in non-proprietary [open formats](https://en.wikipedia.org/wiki/Open_format) when possible (see [preferred formats](/stash/requirements#preferred-file-formats)). This ensures your data will be accessible by most people.
+* To maximize accessibility, reusability and preservability, share data in non-proprietary [open formats](https://en.wikipedia.org/wiki/Open_format) when possible (see [preferred formats](/requirements#preferred-file-formats)). This ensures your data will be accessible by most people.
 * Review files for errors. Common errors include missing data, misnamed files, mislabeled variables, incorrectly formatted values, and corrupted file archives. It may be helpful to run data validation tools before sharing. For example, if you are working with tabular datasets, a tool like [Frictionless validation](https://framework.frictionlessdata.io/) can identify missing data and data type formatting problems.
 * File compression may be necessary to reduce large file sizes or directories of files. Files can be bundled together in compressed file archives (`.zip, .7z, .tar.gz`). If you have a large directory of files, and there is a logical way to split it into subdirectories and compress those, we encourage you to do so. We recommend not exceeding 10GB each.
 
@@ -110,7 +110,7 @@ If you wish to create a README using your preferred markdown editor, we provide 
 * Author names, or any other potentially identifying information, if the data is being submitted to a journal with a double-blind review process in place
 
 
-Ready to get started? [Log in](/stash/sessions/choose_login) and go to the "My datasets" to begin your data submission now!
+Ready to get started? [Log in](/sessions/choose_login) and go to the "My datasets" to begin your data submission now!
 
 
 ## Further reading

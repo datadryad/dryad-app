@@ -39,10 +39,13 @@ export default function Journal({
     getList();
   }, []);
 
-  const supplyLookupList = (qt) => axios.get('/stash_datacite/publications/autocomplete', {
-    params: {term: qt},
-    headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
-  })
+  const supplyLookupList = (qt) => axios.get(
+    `/stash_datacite/publications/autocomplete${controlOptions?.labelText === 'Preprint server' ? '?preprint' : ''}`,
+    {
+      params: {term: qt},
+      headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
+    },
+  )
     .then((data) => {
       if (data.status !== 200) {
         return [];
