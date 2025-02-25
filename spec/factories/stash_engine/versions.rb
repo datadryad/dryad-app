@@ -3,6 +3,7 @@
 # Table name: stash_engine_versions
 #
 #  id              :integer          not null, primary key
+#  deleted_at      :datetime
 #  merritt_version :integer
 #  version         :integer
 #  zip_filename    :text(65535)
@@ -12,6 +13,7 @@
 #
 # Indexes
 #
+#  index_stash_engine_versions_on_deleted_at   (deleted_at)
 #  index_stash_engine_versions_on_resource_id  (resource_id)
 #
 FactoryBot.define do
@@ -21,5 +23,6 @@ FactoryBot.define do
     version { 1 }
     merritt_version { 1 }
     zip_filename { nil }
+    deleted_at { nil }
   end
 end
