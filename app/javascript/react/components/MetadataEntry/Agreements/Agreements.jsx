@@ -183,7 +183,7 @@ export default function Agreements({
         <div>
           {resource.accepted_agreement ? (
             <p>
-              <i className="fas fa-check-square" aria-hidden="true" />{' '}
+              <i className="fas fa-circle-check" aria-hidden="true" />{' '}
               The submitter has agreed to Dryad&apos;s{' '}
               <a href="/stash/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
             </p>
