@@ -7,9 +7,10 @@ import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
 import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Publication';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
-import Support, {SuppPreview, fundingCheck} from '../components/MetadataEntry/Support';
-import Subjects, {SubjPreview, keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
+import Validation, {ValPreview, validationCheck} from '../components/MetadataEntry/Validation';
 import Description, {DescPreview, abstractCheck} from '../components/MetadataEntry/Description';
+import Subjects, {SubjPreview, keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
+import Support, {SuppPreview, fundingCheck} from '../components/MetadataEntry/Support';
 import RelatedWorks, {WorksPreview, worksCheck} from '../components/MetadataEntry/RelatedWorks';
 import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
@@ -79,10 +80,19 @@ function Submission({
       preview: <SuppPreview resource={resource} previous={previous} />,
     },
     {
-      name: 'Files',
+      name: 'Validation',
       index: 5,
+      pass: !validationCheck(resource),
+      fail: (review || step.index > 4) && validationCheck(resource),
+      component: <Validation resource={resource} setResource={setResource} />,
+      help: null,
+      preview: <ValPreview resource={resource} previous={previous} />,
+    },
+    {
+      name: 'Files',
+      index: 6,
       pass: resource.generic_files.length > 0,
-      fail: (review || step.index > 4) && filesCheck(resource.generic_files, admin, config_maximums),
+      fail: (review || step.index > 5) && filesCheck(resource.generic_files, admin, config_maximums),
       component: <UploadFiles
         resource={resource}
         setResource={setResource}
@@ -97,9 +107,9 @@ function Submission({
     },
     {
       name: 'README',
-      index: 6,
+      index: 7,
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
-      fail: (review || step.index > 5) && readmeCheck(resource),
+      fail: (review || step.index > 6) && readmeCheck(resource),
       component: <ReadMeWizard
         dcsDescription={resource.descriptions.find((d) => d.description_type === 'technicalinfo')}
         resource={resource}
@@ -111,16 +121,16 @@ function Submission({
     },
     {
       name: 'Related works',
-      index: 7,
+      index: 8,
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
-      fail: worksCheck(resource, (review || step.index > 6)),
+      fail: worksCheck(resource, (review || step.index > 7)),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title'))} />,
       preview: <WorksPreview resource={resource} previous={previous} admin={admin} />,
     },
     {
       name: 'Agreements',
-      index: 8,
+      index: 9,
       pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
       component: <Agreements
@@ -137,7 +147,7 @@ function Submission({
   ];
 
   if (resource.resource_type.resource_type === 'collection') {
-    steps.splice(5, 2);
+    steps.splice(5, 3);
   }
 
   const markInvalid = () => {

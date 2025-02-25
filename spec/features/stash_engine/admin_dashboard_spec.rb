@@ -316,6 +316,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
           it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
             create(:description, resource: @resource, description_type: 'technicalinfo')
+            create(:description, resource: @resource, description_type: 'usage_notes', description: nil)
             create(:data_file, resource: @resource)
             click_button 'Edit dataset'
             click_button 'Authors'
