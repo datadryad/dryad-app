@@ -81,7 +81,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
 
   useEffect(() => {
     async function getFiles() {
-      axios.get(`/stash/resources/${resource.id}/prepare_readme`).then((data) => {
+      axios.get(`/resources/${resource.id}/prepare_readme`).then((data) => {
         const {file_list, readme_file} = data.data;
         setFileList(file_list);
         if (readme_file) {
@@ -112,7 +112,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
             <p style={{marginTop: 0}}>
               To help others interpret and reuse your dataset, a README file must be included, containing
               abbreviations and codes, file descriptions, and information about any necessary software.{' '}
-              <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
+              <a href="/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
                 <i className="far fa-file-lines" aria-hidden="true" style={{marginRight: '.5ch'}} />Learn about README files
                 <span className="screen-reader-only"> (opens in new window)</span>
               </a>
@@ -183,7 +183,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
         <>
           <p>
             Your Dryad submission must be accompanied by a{' '}
-            <a href="/stash/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
+            <a href="/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
               README file<span className="screen-reader-only"> (opens in new window)</span>
             </a>, to help others use and understand your
             dataset. It should contain the details needed to interpret and reuse your data, including abbreviations

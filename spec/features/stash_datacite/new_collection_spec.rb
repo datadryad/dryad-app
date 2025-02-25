@@ -24,7 +24,7 @@ RSpec.feature 'NewCollection', type: :feature do
 
     it 'displays an error message if unable to mint a new DOI/ARK' do
       allow(Stash::Doi::DataciteGen).to receive(:new).and_raise(Stash::Doi::DataciteError)
-      visit('/stash/resources/new?collection')
+      visit('/resources/new?collection')
       expect(page).to have_text('My datasets')
       expect(page).to have_text('Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.')
       expect(StashEngine::Identifier.all.length).to eql(@identifier_count)
@@ -32,7 +32,7 @@ RSpec.feature 'NewCollection', type: :feature do
     end
 
     it 'successfully mints a new DOI/ARK', js: true do
-      visit('/stash/resources/new?collection')
+      visit('/resources/new?collection')
       expect(StashEngine::Identifier.all.length).to eql(@identifier_count + 1)
       expect(StashEngine::Resource.all.length).to eql(@resource_count + 1)
 
@@ -47,7 +47,7 @@ RSpec.feature 'NewCollection', type: :feature do
   context :requirements_met, js: true do
     before(:each, js: true) do
       create_datasets
-      visit('/stash/resources/new?collection')
+      visit('/resources/new?collection')
       fill_required_fields
       navigate_to_review
       fill_in 'user_comment', with: Faker::Lorem.sentence
@@ -78,7 +78,7 @@ RSpec.feature 'NewCollection', type: :feature do
       @res = create(:resource, identifier: @identifier)
       create(:resource_type_collection, resource: @res)
       # Edit link for the above collection, including a returnURL that should redirect to a documentation page
-      visit "/stash/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
+      visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
       click_button 'Authors'
       all('[id^=instit_affil_]').last.set('test institution')
       page.send_keys(:tab)
@@ -91,7 +91,7 @@ RSpec.feature 'NewCollection', type: :feature do
       navigate_to_review
       fill_in 'user_comment', with: Faker::Lorem.sentence
       submit_form
-      expect(page.current_path).to eq('/stash/submission_process')
+      expect(page.current_path).to eq('/submission_process')
     end
   end
 end

@@ -6,12 +6,12 @@ export default function TrackChanges({resource}) {
   const [value, setValue] = useState('');
 
   const postNote = (e) => {
-    axios.post(`/stash/file_note/${note.id}`, {note: e.currentTarget.value});
+    axios.post(`/file_note/${note.id}`, {note: e.currentTarget.value});
   };
 
   useEffect(() => {
     async function getNote() {
-      axios.get(`/stash/file_note/${resource.id}`).then((data) => {
+      axios.get(`/file_note/${resource.id}`).then((data) => {
         setNote(data.data);
         setValue(data.data.note);
       });

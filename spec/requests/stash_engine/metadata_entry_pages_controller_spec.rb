@@ -39,7 +39,7 @@ module StashEngine
 
       it 'creates new version from older version except for files' do
         Timecop.travel(Time.now.utc + 1.minute)
-        response_code = post '/stash/metadata_entry_pages/new_version_from_previous', params: { resource_id: @resource1.id }
+        response_code = post '/metadata_entry_pages/new_version_from_previous', params: { resource_id: @resource1.id }
         expect(response_code).to eq(302)
         expect(@identifier.resources.count).to eq(3)
 

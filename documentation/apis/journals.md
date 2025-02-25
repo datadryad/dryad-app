@@ -302,7 +302,7 @@ token is valid and/or reset the token by running:
 
 If something is wrong with the authorization, you can delete the `google_token.json`
 file and generate it again. To generate it, login to Dryad as a superuser and navigate to
-`/stash/gmail_auth`. Follow the instructions there.
+`/gmail_auth`. Follow the instructions there.
 
 If you get an error about "Credentials do not contain a refresh_token.", You
 will need to de-authorize Dryad for this account (because it only sends the

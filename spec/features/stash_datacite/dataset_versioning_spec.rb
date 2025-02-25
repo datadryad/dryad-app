@@ -152,7 +152,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         Timecop.travel(Time.now.utc + 1.minute)
         sign_in(@author)
         click_link 'My datasets'
-        within(:css, "form[action=\"/stash/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
+        within(:css, "form[action=\"/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
           find('button[name="update"]').click
         end
         update_dataset
@@ -208,7 +208,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         create(:curation_activity, :published, user: @curator, resource: @resource)
         sign_in(@author)
         click_link 'My datasets'
-        within(:css, "form[action=\"/stash/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
+        within(:css, "form[action=\"/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
           find('button[name="update"]').click
         end
         minor_update
