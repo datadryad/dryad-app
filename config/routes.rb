@@ -488,7 +488,7 @@ Rails.application.routes.draw do
   get '/stash/ds_admin', to: redirect('/admin_dashboard')
 
   get '/stash', to: redirect('/')
-  get '/stash/*other', to: redirect('/%{other}')
+  get '/stash/*path', to: redirect('/%{path}'), constraints: { path: /.*/ }
 
 
   # Routing to redirect old Dryad landing pages to the correct location
