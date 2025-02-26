@@ -1,5 +1,12 @@
-<div id="submission-wizard">
-<%= render partial: 'stash_engine/shared/dataset_steps_nav' %>
-<%= render partial: 'stash_datacite/metadata_entry_pages/metadata_entry_form' %>
-</div>
-<%= render partial: 'stash_engine/shared/dataset_steps_bottom_nav', locals: {page: 1} %>
+<%= render partial: 'stash_engine/shared/dataset_non_user_editor', locals: {resource: @resource} %>
+<%= react_component('containers/Submission', {
+  submission: @submission,
+  ownerId: @resource.owner_author&.id,
+  admin: current_user.superuser? && 'superuser' || current_user.min_app_admin?,
+  s3_dir_name: @resource.s3_dir_name(type: 'base'),
+  config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
+  config_maximums: APP_CONFIG[:maximums].to_h,
+  config_payments: APP_CONFIG[:payments].to_h,
+  config_cedar: {editorUrl: APP_CONFIG[:cedar_editor_url], templates: APP_CONFIG[:cedar_templates]},
+  change_tenant: render(partial: 'stash_engine/shared/change_tenant')
+}) %>

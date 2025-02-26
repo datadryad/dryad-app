@@ -8,6 +8,61 @@ input {
 	}
 }
 
+.input-stack {
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+.input-line {
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	column-gap: 2ch;
+	row-gap: 1ch;
+
+	&.spaced {
+		justify-content: space-between;
+  	align-items: baseline;
+  }
+}
+
+.input-label {
+	color: $dark-navy;
+}
+
+.input-example, [id$='-ex'] {
+	font-size: .98rem;
+	color: $dark-gray;
+	margin-top: .35ch;
+	i:not(.fas, .far) {
+		 &:before {
+		 	font-family: 'Font Awesome 6 Free';
+			font-style: normal;
+			font-size: .85rem;
+			display: inline-block;
+			line-height: 0;
+			vertical-align: 1px;
+			content: '\f059' / 'Hint:';
+			font-weight: 900;
+			margin-right: .5ch;
+			color: $light-gray;
+		}
+	}
+}
+
+label.optional:after,
+label span.details {
+	display: inline-block;
+	font-size: .98rem;
+	font-weight: normal;
+	margin-left: .25ch;
+	color: $dark-gray;
+}
+
+label.optional:after {
+	content: '(optional)';
+}
+
 %c-input {
 	display: flex;
 	flex: 1 1 auto;
@@ -87,7 +142,8 @@ input {
 	height: $input-height;
 	padding: 0 35px 0 5px;
 	border-radius: 0;
-	background: url('/images/scss/icon_up-down-arrows.svg') right 9px center / 12px no-repeat, linear-gradient($light-blue, $light-blue) right / 30px 30px no-repeat;
+	background: url('/images/scss/icon_up-down-arrows.svg') right 10px center / 12px no-repeat, linear-gradient($light-blue, $light-blue) right / $input-height $input-height no-repeat;
+	background-color: white;
 	appearance: none; // removes default down arrow for Chrome and FF 35 and higher
 	// background: linear-gradient(90deg, blue 50%, green 50%);
 

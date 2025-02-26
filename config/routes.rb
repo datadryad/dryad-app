@@ -93,13 +93,11 @@ Rails.application.routes.draw do
 
     resources :resources do
       member do
-        get 'review'
-        get 'upload'
         get 'prepare_readme'
-        get 'upload_manifest'
-        get 'up_code'
-        get 'up_code_manifest'
-        get 'submission'
+        get 'display_readme'
+        get 'dpc_status'
+        get 'dupe_check'
+        get 'display_collection'
         get 'show_files'
         patch 'import_type'
       end
@@ -144,6 +142,10 @@ Rails.application.routes.draw do
         to: 'generic_files#check_frictionless',
         as: 'generic_file_check_frictionless'
 
+    get 'software_license_select', to: 'software_files#licenses'
+    get 'software_licenses', to: 'software_files#licenses_autocomplete'
+    post 'software_license', to: 'software_files#license'
+
     get 'choose_dashboard', to: 'dashboard#choose', as: 'choose_dashboard'
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
@@ -165,10 +167,10 @@ Rails.application.routes.draw do
     get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
 
     get 'edit/:doi/:edit_code', to: 'metadata_entry_pages#edit_by_doi', as: 'edit', constraints: { doi: /\S+/ }
-    match 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', via: %i[get post put]
+    match 'submission/:resource_id', to: 'metadata_entry_pages#find_or_create', via: %i[get post put], as: 'metadata_entry_pages_find_or_create'
     match 'metadata_entry_pages/new_version', to: 'metadata_entry_pages#new_version', via: %i[post get]
     post 'metadata_entry_pages/new_version_from_previous', to: 'metadata_entry_pages#new_version_from_previous'
-    match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:delete]
+    match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:post]
     match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
 
     # root 'sessions#index'
@@ -293,6 +295,7 @@ Rails.application.routes.draw do
     # curation notes
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
     post 'file_note/:id', to: 'curation_activity#file_note', as: 'file_note'
+    get 'file_note/:resource_id', to: 'curation_activity#make_file_note'
 
     # admin report for dataset funders
     get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'
@@ -366,9 +369,12 @@ Rails.application.routes.draw do
     patch 'authors/update', to: 'authors#update'
     delete 'authors/:id/delete', to: 'authors#delete', as: 'authors_delete'
     patch 'authors/reorder', to: 'authors#reorder', as: 'authors_reorder'
+    get 'authors/:id/invoice', to: 'authors#check_invoice'
+    patch 'authors/invoice', to: 'authors#set_invoice'
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
+    get 'contributors/groupings', to: 'contributors#groupings'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
     patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'
@@ -376,6 +382,7 @@ Rails.application.routes.draw do
 
     get 'publications/new', to: 'publications#new'
     get 'publications/autocomplete', to: 'publications#autocomplete'
+    get 'publications/api_list', to: 'publications#api_list'
     get 'publications/issn/:id', to: 'publications#issn'
     post 'publications/create', to: 'publications#create'
     patch 'publications/update', to: 'publications#update'
@@ -393,6 +400,7 @@ Rails.application.routes.draw do
     get 'subjects/landing', to: 'subjects#landing', as: 'subjects_landing'
 
     # fos subjects are a special subject that is treated differently for the OECD Field of Science
+    get 'fos_subjects', to: 'fos_subjects#index'
     patch 'fos_subjects/update', to: 'fos_subjects#update'
 
     get 'related_identifiers/new', to: 'related_identifiers#new'
@@ -401,6 +409,7 @@ Rails.application.routes.draw do
     delete 'related_identifiers/:id/delete', to: 'related_identifiers#delete', as: 'related_identifiers_delete'
     get 'related_identifiers/report', to: 'related_identifiers#report', as: 'related_identifiers_report'
     get 'related_identifiers/show', to: 'related_identifiers#show', as: 'related_identifiers_show'
+    get 'related_identifiers/types', to: 'related_identifiers#types'
 
     get 'geolocation_places/new', to: 'geolocation_places#new'
     post 'geolocation_places/create', to: 'geolocation_places#create'
@@ -437,7 +446,6 @@ Rails.application.routes.draw do
 
     # get composite views or items that begin at the resource level
     get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', as: :datacite_metadata_entry_pages
-    get 'metadata_entry_pages/cedar_check', to: 'metadata_entry_pages#cedar_check', as: :metadata_entry_cedar_check
     get 'resources/review', to: 'resources#review'
     match 'resources/submission' => 'resources#submission', as: :resources_submission, via: :post
     get 'resources/show', to: 'resources#show'

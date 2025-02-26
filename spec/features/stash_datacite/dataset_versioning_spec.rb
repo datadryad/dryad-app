@@ -10,11 +10,13 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::DataFile
+  include Mocks::Aws
 
   before(:each) do
     mock_repository!
     mock_salesforce!
     mock_solr!
+    mock_aws!
     mock_datacite_gen!
     mock_stripe!
     ignore_zenodo!
@@ -25,141 +27,23 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     @document_list = []
   end
 
-  describe :initial_version do
-
-    before(:each, js: true) do |test|
-      Timecop.travel(Time.now.utc - 5.minutes)
-      ActionMailer::Base.deliveries = []
-      # Sign in and create a new dataset
-      sign_in(@author)
-      visit root_path
-      click_link 'My datasets'
-      start_new_dataset
-      fill_required_fields
-      navigate_to_review
-      agree_to_everything
-      submit_form unless test.metadata[:no_submit]
-      Timecop.return
-    end
-
-    describe :pre_submit do
-      it 'should display the proper info on the My datasets page', js: true, no_submit: true do
-        click_link 'My datasets'
-
-        expect(page).to have_text(@resource.title)
-        expect(page).to have_text('In progress')
-      end
-    end
-
-    describe :pre_merrit_submit do
-      it 'should display the proper info on the My datasets page', js: true do
-        click_link 'My datasets'
-
-        expect(page).to have_text(@resource.title)
-        expect(page).to have_text('Processing')
-      end
-
-      it 'did not send out an email to the author', js: true do
-        expect(ActionMailer::Base.deliveries.count).to eq(0)
-      end
-    end
-
-    describe :merritt_submission_error do
-      it 'displays the proper information on the My datasets page', js: true do
-        mock_merritt_send!(@resource)
-        mock_unsuccessfull_merritt_submission!(@resource)
-        click_link 'My datasets'
-        within(:css, '#user_processing li:first-child') do
-          expect(page).to have_text(@resource.title)
-          expect(page).to have_text('Processing')
-          expect(page).not_to have_selector('button[name="update"]')
-        end
-      end
-    end
-
-    describe :merritt_submission_success do
-      before(:each) do
-        ActionMailer::Base.deliveries = []
-        mock_merritt_send!(@resource)
-        mock_successfull_merritt_submission!(@resource)
-      end
-
-      it 'has a resource_state (Merritt status) of "submitted"', js: true do
-        expect(@resource.submitted?).to eql(true)
-      end
-
-      it 'has a curation status of "submitted"', js: true do
-        expect(@resource.current_curation_status).to eql('submitted')
-      end
-
-      it 'displays the proper information on the My datasets page', js: true do
-        click_link 'My datasets'
-        within(:css, '#user_processing li:first-child') do
-          expect(page).to have_text(@resource.title)
-          expect(page).to have_text('Submitted')
-          expect(page).to have_selector('button[name="update"]')
-        end
-      end
-
-      describe :when_viewed_by_curator do
-        before(:each, js: true) do
-          sign_in(@curator)
-          find('.c-header_nav-button', text: 'Datasets').click
-          visit stash_url_helpers.admin_dashboard_path
-        end
-
-        it 'displays the proper information on the Admin page', js: true do
-          within(:css, 'tbody tr') do
-            # Make sure the appropriate buttons are available
-            # Curators want to edit everything unless it's in progress, so enjoy
-            expect(page).to have_css('button[title="Edit dataset"]')
-            expect(page).to have_css('button[aria-label="Update status"]')
-
-            # Make sure the right text is shown
-            expect(page).to have_link(@resource.title)
-            within(:css, "#curation_activity_#{@resource.id}") do
-              expect(page).to have_text('Submitted')
-            end
-            expect(page).to have_text(@resource.authors.collect(&:author_last_name).join('; '))
-            expect(page).not_to have_text(@curator.name_last_first)
-            expect(page).to have_text(@resource.identifier.identifier)
-          end
-        end
-
-        it 'displays the proper information on the Activity Log page', js: true do
-          within(:css, 'tbody tr') do
-            find('a[aria-label="Activity log"]').click
-          end
-
-          expect(page).to have_text(@resource.identifier.identifier)
-          expect(page).to have_text('Submitted')
-          expect(page).to have_text(@author.name)
-        end
-      end
-    end
-  end
-
   describe :new_version do
     before(:each) do
+      # needed to set the user to system user.  Not migrated as part of tests for some reason
+      StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System') unless StashEngine::User.where(id: 0).first
       ActionMailer::Base.deliveries = []
       Timecop.travel(Time.now.utc - 5.minutes)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, identifier: @identifier, user_id: @author.id,
-                                                tenant_id: @author.tenant_id, current_editor_id: @curator.id)
+      @resource = create(:resource, :submitted, identifier: @identifier, user: @author,
+                                                tenant_id: @author.tenant_id, accepted_agreement: true)
+      create(:description, resource: @resource, description_type: 'technicalinfo')
+      create(:data_file, resource: @resource)
       Timecop.return
     end
 
     context :by_curator do
-      before(:each, js: true) do
-        # needed to set the user to system user.  Not migrated as part of tests for some reason
-        StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System') unless StashEngine::User.where(id: 0).first
-
-        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
-        expect do
-          create(:data_file, file_state: 'copied', resource: @resource, upload_file_name: 'README.md')
-          create(:data_file, file_state: 'copied', resource: @resource)
-        end.to change(StashEngine::DataFile, :count).by(2)
-
+      it "is submitted, has 'curation' status, and correct admin page info", js: true do
+        create(:curation_activity, user: @curator, resource_id: @resource.id, status: 'curation')
         @resource.reload
 
         sign_in(@curator)
@@ -172,22 +56,14 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset(curator: true)
         @resource.reload
 
-        visit stash_url_helpers.admin_dashboard_path
-      end
-
-      it 'has a resource_state (Merritt status) of "submitted"', js: true do
         expect(@resource.submitted?).to eql(true)
-      end
-
-      it 'has a curation status of "curation"', js: true do
         expect(@resource.current_curation_status).to eql('curation')
-      end
 
-      it 'added a curation note to the record', js: true do
+        # added a curation note to the record
         expect(@resource.curation_activities.where(status: 'in_progress').last.note).to include(@resource.edit_histories.last.user_comment)
-      end
 
-      it 'displays the proper information on the Admin page', js: true do
+        visit stash_url_helpers.admin_dashboard_path
+
         within(:css, 'tbody tr') do
           # Make sure the appropriate buttons are available
           expect(page).to have_css('button[title="Edit dataset"]')
@@ -202,9 +78,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           expect(page).to have_text(@curator.name.to_s)
           expect(page).to have_text(@resource.identifier.identifier)
         end
-      end
 
-      it 'displays the proper information on the Activity Log page', js: true do
         within(:css, 'tbody tr') do
           find('a[aria-label="Activity log"]').click
         end
@@ -232,24 +106,12 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
       end
 
-      it 'has a resource_state (Merritt status) of "submitted"', js: true do
+      it "is 'submitted' without a curator", js: true do
         expect(@resource.submitted?).to eql(true)
-      end
-
-      it 'has a curation status of "submitted"', js: true do
         expect(@resource.current_curation_status).to eql('submitted')
-      end
+        expect(@resource.current_editor_id).to eq(@author.id)
 
-      it 'does not have an automatically-assigned curator', js: true do
-        expect(@resource.user_id).to eq(nil)
-      end
-
-      # TODO: This is no longer tested the same way... may need to install capybara-email
-      xit 'sends out a "submitted" email to the author', js: true do
-        expect(ActionMailer::Base.deliveries.count).to eq(1)
-      end
-
-      it 'displays the proper information on the Admin page', js: true do
+        # 'displays the proper information on the Admin pages', js: true do
         sign_in(@curator)
         find('.c-header_nav-button', text: 'Datasets').click
 
@@ -266,12 +128,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           expect(page).not_to have_text(@curator.name_last_first)
           expect(page).to have_text(@resource.identifier.identifier)
         end
-      end
-
-      it 'displays the proper information on the Activity Log page', js: true do
-        sign_in(@curator)
-        find('.c-header_nav-button', text: 'Datasets').click
-        visit stash_url_helpers.admin_dashboard_path
 
         within(:css, 'tbody tr') do
           find('a[aria-label="Activity log"]').click
@@ -285,13 +141,33 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
     end
 
-    context :by_author_after_curation do
+    context :after_ppr_and_curation do
+      it 'does not go to ppr when prior version was curated', js: true do
+        @resource.update(hold_for_peer_review: true)
+        @resource.update(current_editor_id: @curator.id)
+        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
+        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'action_required')
+        @resource.reload
+        Timecop.travel(Time.now.utc + 1.minute)
+        sign_in(@author)
+        click_link 'My datasets'
+        within(:css, "form[action=\"/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
+          find('button[name="update"]').click
+        end
+        update_dataset
+        @resource.reload
+        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.user_id).to eql(@curator.id)
+        Timecop.return
+      end
+    end
 
+    context :after_curation do
       before(:each) do
         # needed to set the user to system user.  Not migrated as part of tests for some reason
         StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System') unless StashEngine::User.where(id: 0).first
-
-        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
+        @resource.update(current_editor_id: @curator.id)
+        create(:curation_activity, user: @curator, resource_id: @resource.id, status: 'curation')
         @resource.reload
       end
 
@@ -327,38 +203,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.user_id).to eql(@curator.id)
       end
 
-      it 'does not go to ppr when prior version was curated', js: true do
-        @resource = create(
-          :resource, :submitted, identifier: @identifier, user_id: @author.id, tenant_id: @author.tenant_id,
-                                 current_editor_id: @curator.id, hold_for_peer_review: true
-        )
-        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
-        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'action_required')
-        @resource.reload
-        Timecop.travel(Time.now.utc + 1.minute)
-        sign_in(@author)
-        click_link 'My datasets'
-        within(:css, "form[action=\"/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
-          find('button[name="update"]').click
-        end
-        update_dataset
-        @resource.reload
-        expect(@resource.current_curation_status).to eql('submitted')
-        expect(@resource.user_id).to eql(@curator.id)
-        Timecop.return
-      end
-
       it 'is automatically published with simple changes', js: true do
+        create(:curation_activity, :published, user: @curator, resource: @resource)
         sign_in(@author)
-        click_link 'My datasets'
-        create_dataset
-        @resource.current_state = 'submitted'
-        @resource.publication_date { Time.now.utc.to_date.to_s }
-        @resource.save
-        @resource.reload
-        create(:curation_activity, :curation, user: @resource.submitter, resource: @resource)
-        user = create(:user, role: 'admin', role_object: @resource.submitter.tenant, tenant_id: @resource.submitter.tenant_id)
-        create(:curation_activity, :published, resource: @resource, user: user)
         click_link 'My datasets'
         within(:css, "form[action=\"/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
           find('button[name="update"]').click
@@ -369,7 +216,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       context :curator_workflow do
-
         before(:each) do
           ActionMailer::Base.deliveries = []
           mock_datacite!
@@ -400,6 +246,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           @curator.roles.curator.destroy_all
           create(:role, user: @curator, role: 'curator', role_object: @resource.tenant)
           create(:user, role: 'curator') # backup curator
+          @resource.update(current_editor_id: @curator.id)
           create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
           @resource.reload
 
@@ -416,56 +263,46 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
 
       end
-
     end
-
   end
 
-  def create_dataset
-    start_new_dataset
-    fill_required_fields
-    navigate_to_review
-    check 'agree_to_license'
-    check 'agree_to_tos'
-    check 'agree_to_payment'
-    click_button 'submit_dataset'
-    @resource = StashEngine::Resource.last
+  def set_and_submit
+    @resource = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
+    submit_form
     mock_successfull_merritt_submission!(@resource)
   end
 
   def minor_update
-    navigate_to_metadata
+    click_button 'Subjects'
     fill_in_keywords
+    click_button 'Preview changes'
+    click_button 'Support'
     fill_in_funder
-    # Submit the changes
-    navigate_to_review
-    agree_to_everything
-    click_button 'Submit'
-    @resource = StashEngine::Resource.last
-    mock_successfull_merritt_submission!(@resource)
+    click_button 'Preview changes'
+    set_and_submit
   end
 
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
-    navigate_to_metadata
-    fill_in_keywords
+    click_button 'Authors'
     all('[id^=instit_affil_]').last.set('test institution')
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.set(true) }
-    description_divider = find('h2', text: 'Data description')
-    description_divider.click
+    page.send_keys(:tab)
+    click_button 'Preview changes'
+    click_button 'Subjects'
+    fill_in_keywords
+    click_button 'Preview changes'
+    click_button 'Related works'
     doi = 'https://doi.org/10.5061/dryad.888gm50'
     mock_good_doi_resolution(doi: doi)
-    fill_in 'Identifier or external url', with: doi
-    add_required_data_files
+    fill_in 'DOI or other URL', with: doi
+    page.send_keys(:tab)
+    click_button 'Preview changes'
     # Submit the changes
-    navigate_to_review
-    agree_to_everything
-    fill_in('user_comment', with: Faker::Lorem.sentence) if curator
-    click_button 'Submit'
-    @resource = StashEngine::Resource.last
-    mock_successfull_merritt_submission!(@resource)
+    fill_in('Describe edits made', with: Faker::Lorem.sentence) if curator
+    set_and_submit
   end
 
 end

@@ -6,7 +6,7 @@
 #  edit_code           :string(191)
 #  identifier          :text(65535)
 #  identifier_type     :text(65535)
-#  import_info         :integer          default("other")
+#  import_info         :integer
 #  payment_type        :string(191)
 #  pub_state           :string
 #  publication_date    :datetime
@@ -65,7 +65,8 @@ module StashEngine
     enum :import_info, {
       other: 0,
       manuscript: 1,
-      published: 2
+      published: 2,
+      preprint: 3
     }
 
     # See https://medium.com/rubyinside/active-records-queries-tricks-2546181a98dd for some good tricks
@@ -319,10 +320,8 @@ module StashEngine
       return false if pub_state == 'published'
       # do not allow to go into peer review if associated manuscript already accepted or published
       return false if has_accepted_manuscript? || publication_article_doi
-      return true if journal.blank?
-      return true if last_submitted_resource&.current_curation_status == 'peer_review'
 
-      journal.allow_review_workflow?
+      true
     end
 
     def publication_issn
@@ -424,9 +423,9 @@ module StashEngine
     end
 
     def large_files?
-      return false if latest_resource.nil?
+      return false if latest_resource.nil? || latest_resource.total_file_size.nil?
 
-      latest_resource.size > APP_CONFIG.payments['large_file_size']
+      latest_resource.total_file_size > APP_CONFIG.payments['large_file_size']
     end
 
     # overrides reading the pub state so it can set it for caching if it's not set yet

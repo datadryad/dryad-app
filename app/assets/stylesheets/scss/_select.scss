@@ -73,6 +73,8 @@ select {
 
 	& > input {
 		width: 100%;
+		background: url('/images/scss/icon_search-select.svg') right 5px center / 24px no-repeat, linear-gradient($light-blue, $light-blue) right / $input-height $input-height no-repeat;
+		background-color: white;
 	}
 
 	&:focus-within input {
@@ -82,7 +84,7 @@ select {
 	ul {
 		margin: 0;
 		padding: 2px 0;
-		list-style-type: none;
+		list-style: "";
 		position: absolute;		
 		top: 32px;
 		right: -2px;
@@ -111,7 +113,8 @@ select {
 					content: '\f00c';
 				}
 				&:hover,
-				&:focus {
+				&:focus,
+				&.focussed {
 					color: white;
 					background-color: $dark-blue;
 				}		 
@@ -119,3 +122,15 @@ select {
 		}
 	}
 }
+
+.c-ac__error_message {
+  padding: 5px;
+  background-color: $red;
+  color: white;
+}
+
+.c-ac__checkbox {
+  display: block;
+  margin-top: 12px;
+}
+

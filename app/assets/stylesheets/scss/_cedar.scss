@@ -1,0 +1,149 @@
+
+/* ******************* CEDAR *************** */
+
+.cedar-container {
+  background-color: rgba(233, 236, 239, 1);
+  padding: 1.5rem;
+  margin: 1.5rem auto;
+
+  label {
+    display: block;
+  }
+
+  select {
+    margin-right: 10px;
+  }
+
+  o-button__add {
+    padding: 5px 8px;
+    border: thin solid #9fc7d8;
+    background-color: #9fc7d8;
+    color: rgb(0, 0, 0);
+  }
+}
+
+.cedar-heading__level3 {
+  margin: 0 0 20px;
+  color: rgb(0, 85, 129);
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+#cedarDialog {
+  width: 45rem;
+}
+
+#cedarDialog .modalClose {
+  position: sticky;
+  z-index: 3;
+  top: 0;
+
+  button {
+    background-color: #fff;
+    padding: 8px 10px;
+    border-radius: 50%;
+    border: thin solid #ccc;
+    box-shadow: 0 3px 1px -2px #0003, 0 2px 2px #00000024, 0 1px 5px #0000001f;
+  }
+}
+
+.c-modal-content__cedar {
+  padding: 0;
+  margin: 0;
+
+  .template-card {
+    padding: 0;
+    margin: 0;
+    max-width: 100% !important;
+    background-color: transparent !important;
+    font-size: 1rem;
+  }
+
+  .template-card, .mat-badge-content, .mat-form-field,  {
+    font-family: "KievitWeb", sans-serif;
+    
+  }
+
+  .mat-card {
+    padding: 0;
+    margin: 0;
+    box-shadow: none !important;
+    background-color: transparent !important;
+  }
+
+  .mat-card-avatar {
+    display: none;
+  }
+
+  .mat-card-header {
+    flex-direction: column;
+    row-gap: $spacing-base;
+
+    h1, h2 {
+      margin: 0;
+    }
+
+    h2 {
+      font-size: 1em;
+      color: #000;
+    }
+  }
+
+  .mat-card-content {
+    font-size: 1rem;
+
+    h2 {
+      margin: $spacing-sm -1.1rem $spacing-md;
+      padding: 8px 1.1rem;
+      background-color: $dark-blue;
+      color: white;
+      font-size: 1.2em;
+      font-weight: normal;
+    }
+
+    & > button {
+      margin-bottom: $spacing-base;
+      &:first-of-type {
+        margin-right: 1ch;
+      }
+    }
+  }
+
+  .mat-button {
+    font-size: 1rem;
+    border: thin solid #ccc;
+  }
+
+  .mat-expansion-panel {
+    margin-bottom: $spacing-base !important;
+  }
+
+  .mat-expansion-panel-header {
+    font-size: 1rem;
+  }
+
+  .mat-icon {
+    font-size: 22px !important;
+    height: 22px !important;
+    width: 22px !important;
+  }
+
+  .child-component-card {
+    margin-bottom: $spacing-sm;
+  }
+
+  .mat-form-field-appearance-outline {
+    .mat-form-field-subscript-wrapper {
+      padding: 0;
+      font-size: 90%;
+    }
+  }
+
+}
+
+.cdk-overlay-container .mat-tooltip{
+  font-size: .9rem;
+}
+
+/* ********************************************** */
+

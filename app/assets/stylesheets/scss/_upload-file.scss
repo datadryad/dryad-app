@@ -1,9 +1,5 @@
 // ##### Upload File Component ##### //
 
-.c-upload {
-	margin: 0 0 20px;
-}
-
 %c-upload__item {
 	@extend %pull-borders;
 	display: flex;
@@ -146,23 +142,12 @@ img.c-upload__spinner {
 	object-fit: contain;
 }
 
-.c-upload__warning-text {
-	margin: 10px 0 0;
-	color: #ffc107;
-	font-weight: bold;
-}
-
 .c-upload__changes-form {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
-	div {
-		width: 400px;
-		max-width: 100%;
-	}
 	textarea {
 		width: 100%;
-		min-height: 150px;
+		max-width: 100%;
 		margin-top: $spacing-base;
 	}
 }

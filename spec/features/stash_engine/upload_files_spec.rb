@@ -35,56 +35,40 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     visit root_path
     click_link 'My datasets'
     start_new_dataset
-    navigate_to_readme
-    # fill_required_fields # don't need this if we're not checking metadata and just files
+    @resource_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
+    @resource = StashEngine::Resource.find(@resource_id)
   end
 
   describe 'Upload files index' do
     before(:each) do
-      navigate_to_upload
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
       @file1 = create_data_file(@resource_id)
       @file2 = create_software_file(@resource_id)
       @file2.update(url: 'http://example.com/example.csv')
       @file3 = create_supplemental_file(@resource_id)
-      click_link('Upload files') # to refresh the page
+      @file4 = create_data_file(@resource_id)
+      @file4.update(original_filename: 'file_deleted.txt', file_state: 'deleted')
+      refresh
+      navigate_to_upload
     end
 
     it 'shows correct introductory text' do
-      expect(page).to have_content('Upload your files')
-      expect(page.text).to have_content(
-        'You may upload data via two mechanisms: directly from your computer, or from a URL on an external server'
-      )
-      expect(page.text).to have_content(
-        'You will have the opportunity to choose a separate license for your software on the review page.'
-      )
+      expect(page).to have_content('Upload files to Dryad')
+      expect(page.text).to have_content('Files may be uploaded from your computer')
+      expect(page.text).to have_content('Files that require other licensing can be published at Zenodo')
       expect(page).to have_link('Zenodo', href: 'https://zenodo.org')
       expect(find_link('Zenodo')[:target]).to eq('_blank')
-    end
 
-    it 'shows correct Upload Type boxes example texts' do
-      expect(page).to have_content('e.g., .csv, .xsl, fasta, .zip')
+      # 'shows correct Upload Type boxes example texts'
       expect(page).to have_content('e.g., code packages, scripts')
       expect(page).to have_content('e.g., figures, supporting tables')
-    end
 
-    it 'shows files already uploaded' do
+      # 'shows files already uploaded'
       expect(page).to have_content(@file1.upload_file_name)
       expect(page).to have_content(@file2.url)
       expect(page).to have_content(@file3.upload_file_name)
       expect(page).to have_content('Uploaded', count: 3)
-    end
 
-    it 'shows the right navigation buttons at the bottom' do
-      expect(page). to have_content('Back to Describe dataset')
-      expect(page). to have_content('Proceed to README')
-    end
-
-    it 'shows only files with status different of "deleted"' do
-      @file4 = create_data_file(@resource_id)
-      @file4.update(original_filename: 'file_deleted.txt', file_state: 'deleted')
-      click_link('Upload files') # click on it to refresh the page and show the table with the file
+      # 'shows only files with status different of "deleted"'
 
       expect(page).to_not have_content(@file4.original_filename)
     end
@@ -101,7 +85,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
         upload_file_name: 'new_example2.com',
         url: 'http://example.com/new%20example*2.com'
       )
-      click_link('Upload files') # to refresh the page
+      refresh
+      navigate_to_upload
       expect(page).to have_content('_u0000_ssh_authorized_keys.csv')
       expect(page).to have_content('new_example2')
     end
@@ -110,9 +95,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   describe 'Select files to upload' do
     before(:each) do
       navigate_to_upload
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
-      click_link('Upload files') # click on it to refresh the page and show the table with the file
+      find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       attach_files
     end
 
@@ -132,7 +115,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'does not allow to select new FILE already in the table and of the same upload type' do
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 }
+        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
       )
       expect(page).to have_content('file_10.ods', count: 1)
       expect(page).to have_content('A file of the same name is already in the table, and was not added.')
@@ -141,13 +124,13 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'does not allow to select new FILES already in the table and of the same upload type' do
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { left: 0 }
+        "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 }
       )
       attach_file(
         'data',
         %W[#{Rails.root}/spec/fixtures/stash_engine/funbar.txt
            #{Rails.root}/spec/fixtures/stash_engine/file_10.ods],
-        make_visible: { left: 0 }
+        make_visible: { opacity: 1 }
       )
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
       expect(page).to have_content(/^\bfile_10.ods\b/, count: 1)
@@ -157,7 +140,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'allows to select new files already in the table and are not of the same upload type' do
       attach_file(
         'software',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 }
+        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
       )
       expect(page).to have_content('file_10.ods', count: 2)
     end
@@ -165,7 +148,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     xit 'sanitizes file name' do
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/crazy*chars?are(crazy)", make_visible: { left: 0 }
+        "#{Rails.root}/spec/fixtures/stash_engine/crazy*chars?are(crazy)", make_visible: { opacity: 1 }
       )
       expect(page).to have_content('crazy_chars_are(crazy)')
     end
@@ -180,8 +163,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       build_valid_stub_request(@valid_url_manifest)
       build_invalid_stub_request(@invalid_url_manifest)
       navigate_to_upload
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
     end
 
     it 'validates data file URL that works' do
@@ -203,6 +184,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'validates software file URL that works' do
+      find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       click_button('software_manifest')
       validate_url_manifest(@valid_url_manifest)
 
@@ -215,12 +197,14 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows problem with bad software URL' do
+      find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       click_button('software_manifest')
       validate_url_manifest(@invalid_url_manifest)
       expect(page).to have_content('The URL was not found')
     end
 
     it 'validates supplemental file URL that works' do
+      find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       click_button('supp_manifest')
       validate_url_manifest(@valid_url_manifest)
 
@@ -233,6 +217,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows problem with bad supplemental file URL' do
+      find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       click_button('supp_manifest')
       validate_url_manifest(@invalid_url_manifest)
       expect(page).to have_content('The URL was not found')
@@ -242,6 +227,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @manifest = create_software_file(@resource_id)
       @manifest.update(url: @valid_url_manifest, upload_file_name: @file_name1)
 
+      find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       click_button('data_manifest')
       validate_url_manifest(@valid_url_manifest)
 
@@ -322,9 +308,9 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
   describe 'S3 file uploading' do
     before(:each) do
+      navigate_to_metadata
       navigate_to_upload
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
+      find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       attach_files
 
       check('confirm_to_upload')
@@ -333,10 +319,10 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'vanishes Pending file status when start to upload' do
       expect(page).not_to have_content('Pending')
-    end
-
-    it 'shows progress bar when start to upload' do
+      # 'shows progress bar when start to upload'
       expect(page.has_css?('progress', count: 3)).to be true
+      # 'disallows navigation away with pending uploads'
+      expect(page).to have_text('Wait for file uploads to complete before leaving this page')
     end
 
     it 'shows empty progress bar if file has 0 size' do
@@ -345,18 +331,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       first(:button, 'Remove').click
       first(:button, 'Remove').click
 
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt", make_visible: { left: 0 })
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt", make_visible: { opacity: 1 })
       check('confirm_to_upload')
       click_on('validate_files')
 
       expect(page.has_css?('progress[value]')).to be true
       expect(find('progress')['value']).to eq('0')
-    end
-
-    it 'disallows navigation away with pending uploads' do
-      click_on('Proceed to README')
-      sleep 0.5
-      expect(page).to have_text('please click "Upload pending files"')
     end
 
     xit 'removes file from database when click Remove button' do
@@ -379,7 +359,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     xit 'removes warning messages after clicking in Remove link' do
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 }
+        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
       )
       # the message for already added file is displayed
 
@@ -418,13 +398,11 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
   describe 'S3 file uploading mixed with already selected manifest files' do
     before(:each) do
+      navigate_to_metadata
       navigate_to_upload
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
-
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { left: 0 }
+        "#{Rails.root}/spec/fixtures/stash_engine/file_10.ods", make_visible: { opacity: 1 }
       )
       expect(page).to have_content('file_10.ods')
       expect(page).to have_content('Pending', count: 1)
@@ -448,7 +426,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'does not allow to select new FILE from file system with the same name of manifest FILE' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { left: 0 })
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 })
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
       expect(page).to have_content('A file of the same name is already in the table, and was not added.')
     end
@@ -464,7 +442,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       attach_file(
         'data',
         %W[#{Rails.root}/spec/fixtures/stash_engine/funbar.txt
-           #{Rails.root}/spec/fixtures/stash_engine/file_10.ods], make_visible: { left: 0 }
+           #{Rails.root}/spec/fixtures/stash_engine/file_10.ods], make_visible: { opacity: 1 }
       )
 
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
@@ -485,7 +463,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     it 'does not allow to add manifest FILEs with the same name of FILES selected from file system' do
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { left: 0 }
+        "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { opacity: 1 }
       )
 
       build_valid_stub_request('http://example.org/file_10.ods')
@@ -500,18 +478,18 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'removes warning message when adding new file from file system' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { left: 0 })
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 })
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
 
       attach_file(
         'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { left: 0 }
+        "#{Rails.root}/spec/fixtures/stash_engine/file_100.ods", make_visible: { opacity: 1 }
       )
       expect(page).not_to have_content('A file of the same name is already in the table, and was not added.')
     end
 
     it 'removes warning message when adding new manifest file' do
-      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { left: 0 })
+      attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/funbar.txt", make_visible: { opacity: 1 })
       expect(page).to have_content(/^\bfunbar.txt\b/, count: 1)
 
       build_valid_stub_request('http://example.org/funbar_2.txt')
@@ -524,15 +502,13 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
   describe 'Destroy file uploaded and manifest file' do
     before(:each) do
-      navigate_to_upload
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
       @file1 = create_data_file(@resource_id)
       @file2 = create_software_file(@resource_id)
       @file2.url = 'http://example.com/example.csv'
       @file2.save
       @file3 = create_supplemental_file(@resource_id)
-      click_link 'Upload files' # refresh the page to show the table with the file
+      refresh
+      navigate_to_upload # refresh the page to show the table with the file
     end
 
     xit 'calls destroy_manifest when removing New file' do

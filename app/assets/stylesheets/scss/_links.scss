@@ -24,6 +24,7 @@ a {
 
 .o-link__primary {
   @extend %o-link__primary;
+  cursor: pointer;
 }
 
 %o-link__secondary {

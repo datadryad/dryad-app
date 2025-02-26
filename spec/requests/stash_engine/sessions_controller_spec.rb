@@ -6,7 +6,7 @@ module StashEngine
         @user = create(:user, tenant_id: 'dryad_ip')
         allow_any_instance_of(SessionsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
 
-        response_code = post '/sessions/sso', params: { 'tenant_id' => 'dryad_ip' }
+        response_code = post '/sessions/sso', params: { tenant_id: { value: 'dryad_ip' } }
         expect(response_code).to eql(302) # redirect
         expect(response.headers['Location']).to include('/choose_dashboard')
       end
@@ -16,7 +16,7 @@ module StashEngine
         @user = create(:user, tenant_id: 'dryad_ip')
         allow_any_instance_of(SessionsController).to receive(:session).and_return({ user_id: @user.id }.to_ostruct)
 
-        response_code = post '/sessions/sso', params: { 'tenant_id' => 'dryad_ip' }
+        response_code = post '/sessions/sso', params: { tenant_id: { value: 'dryad_ip' } }
         expect(response_code).to eql(302) # redirect
         expect(response.headers['Location']).to include('/ip_error')
       end

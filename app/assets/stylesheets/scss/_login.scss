@@ -39,27 +39,20 @@
       flex-direction: row;
       width: 100%;
       flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1ch;
 
       & > div {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1ch;
+        flex-direction: column;
+        gap: 0;
+        flex-grow: 1;
       }
     }
 
-    .c-auto_complete {
-      width: 20rem;
-      .c-input__text.c-ac__input_with_button, .c-ac__input-button {
-        height: 45px;
-      }
-      .c-ac__menu {
-        top: 45px;
-        text-align: left;
-        margin: 0;
-        padding: 0;
-      }
+    .searchselect ul {
+      max-height: 25vh;
     }
   }
 }

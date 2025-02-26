@@ -5,25 +5,37 @@ require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
 
-# rubocop:disable Metrics/ClassLength
+# rubocop:disable Metrics/ClassLength, Metrics/AbcSize
 module StashDatacite
   class PublicationsController < ApplicationController
     def update
-      @se_id = StashEngine::Identifier.find(params[:identifier_id])
       @resource = StashEngine::Resource.find(params[:resource_id])
+      @se_id = @resource.identifier
       save_publications
       respond_to do |format|
         format.json do
           if params[:do_import] == 'true' || params[:do_import] == true
             @error = 'Please fill in the form completely' if params[:msid]&.strip.blank? && params[:primary_article_doi]&.strip.blank?
             update_manuscript_metadata if params[:import_type] == 'manuscript'
-            update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] == 'published'
+            update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] != 'manuscript'
             if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
               manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier)
             end
-            render json: { error: @error, reloadPage: @error.blank? }
+            import_data = {
+              title: @resource.title,
+              authors: @resource.authors.as_json(include: [:affiliations]),
+              descriptions: @resource.descriptions,
+              subjects: @resource.subjects,
+              contributors: @resource.contributors
+            }
+            render json: {
+              error: @error,
+              journal: @resource.journal,
+              related_identifiers: @resource.related_identifiers,
+              import_data: @error ? false : import_data
+            }
           else
-            render json: { error: @error, reloadPage: false }
+            render json: { error: @error, journal: @resource.journal, related_identifiers: @resource.related_identifiers, import_data: false }
           end
         end
       end
@@ -31,21 +43,29 @@ module StashDatacite
 
     # GET /publications/autocomplete?term={query_term}
     def autocomplete
-      partial_term = params['term']
+      partial_term = params[:term]
       if partial_term.blank?
         render json: nil
       else
         # clean the partial_term of unwanted characters so it doesn't cause errors
         partial_term.gsub!(%r{[/\-\\()~!@%&"\[\]\^:]}, ' ')
-
-        found = StashEngine::Journal.where('title like ?', "%#{partial_term}%").limit(40).to_a
+        found = params.key?(:preprint) ? StashEngine::Journal.servers : StashEngine::Journal
+        found = found.where('title like ?', "%#{partial_term}%").includes([:issns]).limit(40).to_a
         matches = found.map { |m| { id: m.id, title: m.title, issn: m.single_issn } }
         alt_matches = StashEngine::JournalTitle.where('show_in_autocomplete=true and title like ?', "%#{partial_term}%").limit(10)
         alt_matches.each do |am|
           matches << { id: am.journal.id, title: am.title, issn: am.journal.single_issn }
         end
-        render json: bubble_up_exact_matches(result_list: matches, term: partial_term)
+        render json: bubble_up_exact_matches(result_list: matches.uniq { |j| j[:id] }, term: partial_term)
       end
+    end
+
+    # GET /publications/api_list
+    def api_list
+      @api_journals = StashEngine::User.joins('inner join oauth_applications on owner_id = stash_engine_users.id')
+        .joins(:roles).where(roles: { role_object_type: ['StashEngine::Journal', 'StashEngine::JournalOrganization'] })
+        .distinct.map(&:journals_as_admin).flatten.uniq.map(&:issn_array).flatten.uniq
+      render json: { api_journals: @api_journals }
     end
 
     # GET /publications/issn/{id}
@@ -61,19 +81,20 @@ module StashDatacite
     def save_publications
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
-      if params.key?('msid')
-        @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
+      @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
+      if params[:primary_article_doi].blank?
+        @resource.related_identifiers.where(work_type: params[:import_type] == 'preprint' ? 'preprint' : 'primary_article').destroy_all
       end
-      if @pub_issn.blank?
-        exact_matches = StashEngine::Journal.find_by(title: @pub_name)
+      if @pub_issn.blank? && @pub_name.present?
+        exact_matches = StashEngine::Journal.find_by_title(@pub_name)
         @pub_issn = exact_matches.single_issn if exact_matches.present?
       end
-      fix_removable_asterisk
       begin
-        publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
+        publication = StashEngine::ResourcePublication
+          .find_or_create_by(resource_id: @resource.id, pub_type: params[:import_type] == 'preprint' ? :preprint : :primary_article)
         publication.publication_name = @pub_name
         publication.publication_issn = @pub_issn
-        publication.manuscript_number = @msid if params.key?('msid')
+        publication.manuscript_number = @msid
         publication.save
       rescue ActiveRecord::RecordNotUnique
         publication = StashEngine::ResourcePublication.find_by(resource_id: @resource.id)
@@ -88,11 +109,13 @@ module StashDatacite
 
       save_doi
     end
+    # rubocop:enable Metrics/AbcSize
 
     def save_doi
       form_doi = params[:primary_article_doi]
       return if form_doi.blank?
 
+      work_type = params[:import_type] == 'preprint' ? 'preprint' : 'primary_article'
       bare_form_doi = Stash::Import::Crossref.bare_doi(doi_string: form_doi)
       related_dois = @resource.related_identifiers
 
@@ -102,19 +125,18 @@ module StashDatacite
 
         standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
         # user is expanding on a DOI that we already have; update it in the DB (and change the work_type if needed)
-        rd.update(related_identifier: standard_doi, related_identifier_type: 'doi', work_type: 'primary_article',
-                  hidden: false)
-        rd.update(verified: rd.live_url_valid?) # do this separately since we need the doi in standard format in object to check
+        rd.update(related_identifier: standard_doi, related_identifier_type: 'doi', work_type: work_type)
+        rd.update(verified: rd.live_url_valid?, hidden: false) # do this separately since we need the doi in standard format in object to check
         return nil
       end
 
       # none of the existing related_dois overlap with the form_doi; add the form_doi as a completely new relation
       standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
-      existing_primary = @resource.related_identifiers.where(work_type: 'primary_article').first
+      existing_primary = @resource.related_identifiers.where(work_type: work_type).first
       hsh = { related_identifier: standard_doi,
               related_identifier_type: 'doi',
               relation_type: 'iscitedby',
-              work_type: 'primary_article',
+              work_type: work_type,
               hidden: false }
 
       ri = if existing_primary.present?
@@ -147,30 +169,33 @@ module StashDatacite
     end
 
     def update_manuscript_metadata
-      if !params[:publication].blank? && params[:publication_issn].blank?
-        @error = 'Please select your journal from the autocomplete drop-down list'
+      if @pub_name.blank? && @pub_issn.blank?
+        @error = 'Please select your journal from the autocomplete list.'
         return
       end
-      return if params[:publication].blank? # keeps the default fill-in message
-      return if @pub_issn.blank?
-      return if @msid.blank?
-
+      if @msid.blank?
+        @error = 'Please enter your manuscript number.'
+        return
+      end
+      if @pub_issn.blank?
+        @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
+        return
+      end
       journal = StashEngine::Journal.find_by_issn(@pub_issn)
       if journal.blank?
-        @error = 'Journal not recognized by Dryad'
+        @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
         return
       end
       manu = StashEngine::Manuscript.where(journal: journal, manuscript_number: @msid).first
       if manu.blank?
-        @error = 'We could not find metadata to import for this manuscript.'
+        @error = 'We could not find metadata to import for this manuscript. Please fill in your title manually.'
         return
       end
-
       dryad_import = Stash::Import::DryadManuscript.new(resource: @resource, manuscript: manu)
       dryad_import.populate
     rescue HTTParty::Error, SocketError => e
       logger.error("Dryad manuscript API returned a HTTParty/Socket error for ISSN: #{@pub_issn}, MSID: #{@msid}\r\n #{e}")
-      @error = 'We could not find metadata to import for this manuscript.'
+      @error = 'We could not find metadata to import for this manuscript. Please fill in your title manually.'
     end
 
     def update_doi_metadata
@@ -180,13 +205,13 @@ module StashDatacite
       end
       cr = Stash::Import::Crossref.query_by_doi(resource: @resource, doi: params[:primary_article_doi])
       unless cr.present?
-        @error = "We couldn't obtain information from CrossRef about this DOI: #{params[:primary_article_doi]}"
+        @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
         return
       end
 
       @resource = @resource.previous_curated_resource.present? ? cr.populate_pub_update! : cr.populate_resource!
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
-      @error = "We couldn't retrieve information from CrossRef about this DOI"
+      @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
     end
 
     def manage_pubmed_datum(identifier:, doi:)
@@ -227,18 +252,6 @@ module StashDatacite
     end
 
     private
-
-    # Check whether the journal name ends with an asterisk that can be removed, because the journal name
-    # exactly matches a name we have in the database
-    def fix_removable_asterisk
-      return unless @pub_name&.end_with?('*')
-
-      journal = StashEngine::Journal.find_by_title(@pub_name)
-      return unless journal.present?
-
-      @pub_issn = journal.single_issn
-      @pub_name = journal.title
-    end
 
     # Re-order a journal list to prioritize exact matches at the beginning of the string, then
     # exact matches within the string, otherwise leaving the order unchanged

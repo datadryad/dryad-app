@@ -41,65 +41,12 @@ RSpec.feature 'NewDataset', type: :feature do
   context :form_submission, js: true do
 
     before(:each) do
-      StashDatacite::Subject.create(subject: 'Agricultural biotechnology', subject_scheme: 'fos')
       start_new_dataset
-    end
-
-    it 'fills in submission form', js: true do
-
-      # subjects
-      select 'Agricultural biotechnology', from: 'Research domain'
-
-      # ##############################
-      # Title
-      fill_in 'title', with: Faker::Lorem.sentence
-
-      # ##############################
-      # Author
-      fill_in_author
-
-      # TODO: additional author(s)
-
-      # ##############################
-      # Abstract
-      fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
-
-      # ##############################
-      # Optional fields
-      description_divider = find('h2', text: 'Data description')
-      description_divider.click
-
-      # ##############################
-      # Funding
-      find_field('Granting organization').set(Faker::Company.name)
-      find_field('Award number').set(Faker::Number.number(digits: 5))
-
-      # ##############################
-      # Keywords
-      fill_in 'keyword_ac', with: Array.new(3) { Faker::Lorem.word }.join(' ')
-
-      # ##############################
-      # Autocomplete checkboxes
-      page.send_keys(:tab)
-      page.has_css?('.use-text-entered')
-      all(:css, '.use-text-entered').each { |i| i.set(true) }
-
-      # ##############################
-      # Methods
-      fill_in_tinymce(field: 'methods', content: Faker::Lorem.paragraph)
-
-      # ##############################
-      # Usage
-      # fill_in_tinymce(field: 'other', content: Faker::Lorem.paragraph)
-
-      # ##############################
-      # Related works
-      select 'Dataset', from: 'Work type'
-      fill_in 'Identifier or external url', with: Faker::Pid.doi
+      navigate_to_metadata
     end
 
     it 'reorders authors with keyboard', js: true do
-      fill_in 'title', with: Faker::Lorem.sentence
+      click_button 'Authors'
       first_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
       second_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
 
@@ -115,13 +62,11 @@ RSpec.feature 'NewDataset', type: :feature do
       all(:css, 'input[name=author_last_name]')[1].set(second_author[:last])
       all(:css, 'input[name=author_email]')[1].set(second_author[:email])
 
-      fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
-      el = all(:css, 'button.fa-workaround').first
+      el = all(:css, 'button.handle').first
       el.send_keys(:enter)
       el.send_keys(:arrow_down)
       el.send_keys(:enter)
 
-      sleep 1
       expect(all(:css, 'input[name=author_first_name]').first.value).to eq(second_author[:first])
 
       navigate_to_review
@@ -130,67 +75,28 @@ RSpec.feature 'NewDataset', type: :feature do
     end
 
     it 'charges user by default', js: true do
-      navigate_to_review
-      expect(page).to have_text('you will receive an invoice')
-    end
-
-    xit 'waives the fee when institution is in a fee-waiver country', js: true do
-      waiver_country = Faker::Address.country
-      waiver_university = Faker::Educator.university
-      ror_org = create(:ror_org, name: waiver_university, country: waiver_country)
-      allow_any_instance_of(StashDatacite::Affiliation).to receive(:fee_waiver_countries).and_return([waiver_country])
-
-      # ##############################
-      # Author w/ affiliation in specific university
-      fill_in_author
-      fill_in_research_domain
-      navigate_to_review
-
-      # Need to set the affiliation directly in the backend, because it's a pain to interact with the autocomplete component
-      author = StashEngine::Author.first
-      author.affiliation.update(long_name: waiver_university, ror_id: ror_org.ror_id)
-      navigate_to_review
-
-      expect(page).to have_text('Payment is not required')
+      click_button 'Agreements'
+      expect(page).to have_text('an invoice will be sent')
     end
 
     it 'waives the fee when funder has agreed to pay', js: true do
       funder = create(:funder, name: 'Happy Clown School')
       stub_funder_name_lookup(name: 'Happy Clown School')
       fill_required_metadata
+      click_button 'Support'
       fill_in_funder(name: 'Happy Clown School', value: funder.id)
 
-      navigate_to_review
-      expect(page).to have_text('Payment for this deposit is sponsored by Happy Clown School')
+      click_button 'Agreements'
+      expect(page).to have_text('Payment for this submission is sponsored by Happy Clown School')
     end
 
     it "doesn't waive the fee when funder isn't paying", js: true do
       fill_required_metadata
+      click_button 'Support'
       fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
 
-      navigate_to_review
-      expect(page).not_to have_text('Payment for this deposit is sponsored by')
+      click_button 'Agreements'
+      expect(page).not_to have_text('Payment for this submission is sponsored by')
     end
-
-    xit 'charges user when institution is not in a fee-waiver country', js: true do
-      non_waiver_country = Faker::Address.country
-      non_waiver_university = Faker::Educator.university
-      ror_org = create(:ror_org, name: non_waiver_university, country: non_waiver_country)
-      allow_any_instance_of(StashDatacite::Affiliation).to receive(:fee_waiver_countries).and_return(['Waiverlandia'])
-
-      # ##############################
-      # Author w/ affiliation in specific university
-      fill_in_author
-      navigate_to_review
-
-      # Need to set the affiliation directly in the backend, because it's a pain to interact with the autocomplete component
-      author = StashEngine::Author.first
-      author.affiliation.update(long_name: non_waiver_university, ror_id: ror_org.ror_id)
-      navigate_to_review
-
-      expect(page).to have_text('you will receive an invoice')
-    end
-
   end
-
 end

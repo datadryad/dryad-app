@@ -19,40 +19,57 @@ module CollectionHelper
   def navigate_to_metadata
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Describe collection'
-    expect(page).to have_content('Collection: Basic information')
+    click_button 'Next'
+    page.find('#checklist-button').click unless page.has_button?('Title')
+    click_button 'Title'
+    expect(page).to have_content('Is your collection associated with a research article?')
   end
 
   def navigate_to_review
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_link 'Review and submit', wait: 15
-    expect(page).to have_content('Review description')
+    page.find('#checklist-button').click unless page.has_button?('Agreements')
+    click_button 'Agreements'
+    expect(page).to have_content('Publication')
+    agree_to_everything
+    click_button 'Preview submission'
+    expect(page).to have_content('Collection submission preview')
   end
 
   def fill_required_fields
     fill_required_metadata
+    add_required_abstract
+    click_button 'Support'
+    check('No funding received')
+    refresh
   end
 
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-    choose('choose_other')
-    fill_in 'title', with: Faker::Lorem.sentence(word_count: 5)
+    within_fieldset('Is your collection associated with a research article?') do
+      find(:label, 'No').click
+    end
+    fill_in 'title', with: Faker::Lorem.sentence(word_count: 6)
+    click_button 'Next'
     fill_in_author
     fill_in_research_domain
-    fill_in_funder
-    page.send_keys(:tab)
-    page.has_css?('.use-text-entered')
-    all(:css, '.use-text-entered').each { |i| i.set(true) }
     fill_in_keywords
-    # fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
-    create(:description, resource: StashEngine::Resource.last)
+    click_button 'Next'
     fill_in_collection
   end
 
+  def add_required_abstract
+    # fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
+    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
+    ab = res.descriptions.find_by(description_type: 'abstract')
+    ab.update(description: Faker::Lorem.paragraph)
+  end
+
   def submit_form
-    click_button 'Submit', wait: 5
+    click_button 'Preview submission' if page.has_button?('Preview submission')
+    expect(page).to have_content('Collection submission preview')
+    click_button 'submit_button'
   end
 
   def fill_in_keywords
@@ -65,39 +82,44 @@ module CollectionHelper
     fill_in 'author_last_name', with: Faker::Name.unique.last_name
     fill_in 'author_email', with: Faker::Internet.email
     fill_in 'Institutional affiliation', with: Faker::Educator.university
+    page.send_keys(:tab)
+    page.has_css?('.use-text-entered')
+    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
   end
 
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
-    res = StashEngine::Resource.last
-    res.update(contributors: [create(:contributor, contributor_name: name, award_number: value, resource: res)])
+    fill_in 'Granting organization', with: name
+    fill_in 'award_number', with: value
+    page.has_css?('.use-text-entered')
+    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
   end
 
   def fill_in_research_domain
-    # Should work with:
-    #    fill_in 'fos_subjects', with: 'Biological sciences'
-    # Or at least:
-    #    fos_field = page.find('input.fos-subjects', match: :first)
-    #    fos_field.send_keys 'Bio', :down, :down, :tab
-    # But Capybara is not cooperating with the datalist, so we will fake it....
     fos = 'Biological sciences'
-    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist in the database to be recognized
-    res = StashEngine::Resource.last
-    res.subjects << create(:subject, subject: fos, subject_scheme: 'fos')
+    StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist
+    click_button 'Subjects'
+    expect(page).to have_content('Research domain')
+    select(fos, from: 'Research domain')
+    page.send_keys(:tab)
   end
 
   def fill_in_collection
-    res = StashEngine::Resource.last
+    page.find('#checklist-button').click unless page.has_button?('Related works')
+    click_button 'Related works'
+    expect(page).to have_content('Please list all the datasets in the collection')
+    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
     sets = StashEngine::Resource.where.not(id: res.id).limit(3)
-    sets.each do |set|
-      create(:related_identifier, relation_type: 'haspart', work_type: 'dataset', resource_id: res.id,
-                                  related_identifier: set.identifier_uri, related_identifier_type: 'doi')
-
+    sets.each_with_index do |set, i|
+      within(".work-form:nth-of-type(#{i + 1})") do
+        fill_in 'DOI or other URL', with: set.identifier_uri
+        page.send_keys(:tab)
+      end
+      click_button '+ Add work' unless i == sets.length - 1
     end
   end
 
   def agree_to_everything
-    # navigate_to_review  # do we really have to re-navigate each time?
-    all(:css, '.js-agrees').each { |i| i.click unless i.checked? } # this does the same if they're present, but doesn't always wait
+    find('#agreement').click
   end
 
   def build_valid_stub_request(url, mime_type = 'text/plain')

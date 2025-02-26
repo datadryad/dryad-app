@@ -46,7 +46,7 @@ FactoryBot.define do
     identifier
 
     has_geolocation { true }
-    title { Faker::Lorem.sentence }
+    title { Faker::Lorem.sentence(word_count: 6) }
     download_uri { "http://storage-fake.datadryad.org/d/ark%3A%2F99999%2Ffk#{Faker::Alphanumeric.alphanumeric(number: 8)}" }
     update_uri do
       "http://storage-fake.org:39001/mrtsword/edit/#{Faker::Alphanumeric.alpha(number: 8)}/" \
@@ -65,9 +65,10 @@ FactoryBot.define do
         user = e.user || create(:user)
         create(:role, user_id: resource.user_id || user.id, role_object: resource, role: 'creator')
         create(:role, user_id: resource.user_id || user.id, role_object: resource, role: 'submitter')
+        create(:author, resource: resource, author_first_name: user.first_name, author_last_name: user.last_name,
+                        author_orcid: user.orcid, author_email: user.email)
         resource.update_columns(user_id: nil)
       end
-      create(:author, resource: resource)
       create(:description, resource_id: resource.id)
       create(:right, resource: resource)
       create(:contributor, resource: resource)
