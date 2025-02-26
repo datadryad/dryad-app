@@ -302,7 +302,6 @@ export default function UploadFiles({
   };
 
   const uploadFileToS3 = (evaporate, fileList) => {
-    console.log(fileList);
     fileList.map((file) => {
       if (file.status === 'Pending') {
         // TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
@@ -336,6 +335,7 @@ export default function UploadFiles({
                   c.id = new_file.id;
                   c.sanitized_name = new_file.upload_file_name;
                   c.status = 'Uploaded';
+                  c.dl_url = new_file.dl_url;
                 }
                 return c;
               }));
@@ -410,7 +410,10 @@ export default function UploadFiles({
     }
 
     if (!files.valid_urls.length) return;
-    let successfulUrls = files.valid_urls;
+    let successfulUrls = files.valid_urls.map((f) => {
+      f.dl_url = f.url;
+      return f;
+    });
     if (chosenFiles.length) {
       successfulUrls = discardAlreadyChosenById(successfulUrls);
     }

@@ -257,6 +257,7 @@ describe('UploadFiles', () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
     const postA = {status: 200, data: {new_file: setfile}};
+    datafile.id += 2;
     const postB = {status: 200, data: {new_file: datafile}};
     axios.post.mockResolvedValueOnce(postA);
     axios.post.mockResolvedValueOnce(postB);

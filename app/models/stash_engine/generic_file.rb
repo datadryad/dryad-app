@@ -234,11 +234,17 @@ module StashEngine
       in_str[first_brace..last_brace]
     end
 
+    def dl_url
+      dl_url = s3_staged_presigned_url if file_state.nil? || file_state == 'created'
+      dl_url ||= s3_permanent_presigned_url
+      dl_url ||= url
+      dl_url
+    end
+
     def download_file
       http = HTTP.use(
         normalize_uri: { normalizer: Stash::Download::NORMALIZER }
       ).timeout(connect: 10, read: 10).follow(max_hops: 10)
-      dl_url = url || s3_staged_presigned_url
       begin
         http.get(dl_url)
       rescue HTTP::Error => e

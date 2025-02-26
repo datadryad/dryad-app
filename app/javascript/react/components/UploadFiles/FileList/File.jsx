@@ -28,6 +28,19 @@ const statusCss = (status) => {
   }
 };
 
+function S3Check({file}) {
+  if (file.dl_url) {
+    return (
+      <div className="c-uploadtable-time">
+        {moment(file.upload_updated_at || file.updated_at).format('YYYY/MM/DD H:mm')} <i className="fas fa-check" role="img" aria-label="complete" />
+      </div>
+    );
+  }
+  return (
+    <div className="error-text c-uploadtable-time">Upload error! Remove and retry</div>
+  );
+}
+
 export default function File({file, clickRemove, clickValidationReport}) {
   const [removing, setRemoving] = useState(false);
 
@@ -86,9 +99,7 @@ export default function File({file, clickRemove, clickValidationReport}) {
       <th scope="row">{file.sanitized_name}</th>
       <td id={`status_${file.id}`} className={`c-uploadtable__status ${statusCss(file.status)}`}>
         {file.status === 'Uploaded' ? (
-          <div className="c-uploadtable-time">
-            {moment(file.updated_at).format('YYYY/MM/DD H:mm')} <i className="fas fa-check" role="img" aria-label="complete" />
-          </div>
+          <S3Check file={file} />
         ) : file.status}
       </td>
       <td className={statusCss(file.tabularCheckStatus)}>
@@ -98,6 +109,11 @@ export default function File({file, clickRemove, clickValidationReport}) {
         {file.url && (
           <a href={file.url} title={file.url}>
             {ellipsize(file.url)}
+          </a>
+        )}
+        {!file.url && file.dl_url && (
+          <a href={file.dl_url} download title="Download from Dryad" target="_blank" rel="noreferrer">
+            {file.sanitized_name}
           </a>
         )}
       </td>
