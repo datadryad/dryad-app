@@ -56,7 +56,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page.text).to have_content('Files may be uploaded from your computer')
       expect(page.text).to have_content('Files that require other licensing can be published at Zenodo')
       expect(page).to have_link('Zenodo', href: 'https://zenodo.org')
-      expect(find_link('Zenodo')[:target]).to eq('_blank')
+      expect(find_link('Zenodo', href: 'https://zenodo.org')[:target]).to eq('_blank')
 
       # 'shows correct Upload Type boxes example texts'
       expect(page).to have_content('e.g., code packages, scripts')
