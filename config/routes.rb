@@ -488,8 +488,10 @@ Rails.application.routes.draw do
   get '/stash/ds_admin', to: redirect('/admin_dashboard')
 
   get '/stash', to: redirect('/')
-  get '/stash/*other', to: redirect('/%{other}')
-
+  get '/stash/*path', to: redirect { |params, req|
+    query = req.query_string.present? ? "?#{req.query_string}" : ""
+    "/#{params[:path]}#{query}"
+  }, constraints: { path: /.*/ }
 
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
