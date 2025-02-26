@@ -126,7 +126,7 @@ module StashEngine
 
     amoeba do
       include_association %i[authors generic_files contributors datacite_dates descriptions geolocations temporal_coverages publication_years
-                             publisher related_identifiers resource_type rights sizes subjects resource_publication roles]
+                             publisher related_identifiers resource_type rights flag sizes subjects resource_publication roles]
       customize(->(_, new_resource) {
         # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
         new_resource.current_resource_state_id = nil
