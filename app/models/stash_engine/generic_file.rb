@@ -236,7 +236,7 @@ module StashEngine
 
     def dl_url
       dl_url = s3_staged_presigned_url if file_state.nil? || file_state == 'created'
-      dl_url ||= s3_permanent_presigned_url
+      dl_url ||= public_download_url
       dl_url ||= url
       dl_url
     end

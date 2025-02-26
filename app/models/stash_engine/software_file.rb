@@ -57,6 +57,13 @@ module StashEngine
       rat.magic_url(deposition_id: dep_id, filename: upload_file_name)
     end
 
+    def public_download_url
+      url = public_zenodo_download_url if resource.zenodo_published?
+      url ||= zenodo_presigned_url
+      url ||= nil
+      url
+    end
+
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
     def s3_staged_presigned_url

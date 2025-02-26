@@ -29,7 +29,7 @@ const statusCss = (status) => {
 };
 
 function S3Check({file}) {
-  if (file.dl_url) {
+  if (file.file_state === 'copied' || file.dl_url) {
     return (
       <div className="c-uploadtable-time">
         {moment(file.upload_updated_at || file.updated_at).format('YYYY/MM/DD H:mm')} <i className="fas fa-check" role="img" aria-label="complete" />
@@ -112,7 +112,7 @@ export default function File({file, clickRemove, clickValidationReport}) {
           </a>
         )}
         {!file.url && file.dl_url && (
-          <a href={file.dl_url} download title="Download from Dryad" target="_blank" rel="noreferrer">
+          <a href={file.dl_url} download title={`Download from ${file.uploadType === 'data' ? 'Dryad' : 'Zenodo'}`} target="_blank" rel="noreferrer">
             {file.sanitized_name}
           </a>
         )}

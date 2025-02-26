@@ -155,6 +155,10 @@ module StashEngine
       bucket.presigned_download_url(s3_key: s3_permanent_path)
     end
 
+    def public_download_url
+      s3_permanent_presigned_url
+    end
+
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes
     def merritt_url
       domain, ark = resource.merritt_protodomain_and_local_id
