@@ -207,13 +207,8 @@ function Submission({
       const url = window.location.search.slice(1);
       if (url) {
         setStep(steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
-      } else if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
-        if (steps.find((c) => c.fail)) {
-          setStep(steps.find((c) => c.fail));
-        } else {
-          const stop = (steps.findLastIndex((c) => c.pass) + 1) > (steps.length - 1);
-          setStep(stop ? steps.findLast((c) => c.pass) : steps[steps.findLastIndex((c) => c.pass) + 1]);
-        }
+      } else if (steps.find((c) => c.fail || c.pass)) {
+        setStep(steps.find((c) => !c.pass));
       }
     } else if (resource.identifier.publication_date) {
       document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
