@@ -118,19 +118,19 @@ module StashEngine
       return resource.stash_version if file_state == 'created' || file_state.blank?
 
       sql = <<-SQL
-             SELECT versions.*
-               FROM stash_engine_generic_files uploads
-                    JOIN stash_engine_resources resource
-                      ON uploads.resource_id = resource.id
-                      AND resource.deleted_at IS NULL
-                    JOIN stash_engine_versions versions
-                      ON resource.id = versions.resource_id
-                      AND versions.deleted_at IS NULL
+              SELECT versions.*
+              FROM stash_engine_generic_files uploads
+              JOIN stash_engine_resources resource
+                ON uploads.resource_id = resource.id
+                AND resource.deleted_at IS NULL
+              JOIN stash_engine_versions versions
+                ON resource.id = versions.resource_id
+                AND versions.deleted_at IS NULL
               WHERE uploads.type = '#{self.class}'
                 AND resource.identifier_id = ?
                 AND uploads.upload_file_name = ?
                 AND uploads.file_state = 'created'
-           ORDER BY versions.version DESC
+              ORDER BY versions.version DESC
               LIMIT 1;
       SQL
 

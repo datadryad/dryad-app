@@ -10,7 +10,7 @@ module Tasks
 
       def self.count_remaining
         sql = <<~SQL
-          SELECT count(DISTINCT ids.id) as remaining 
+          SELECT count(DISTINCT ids.id) as remaining
           FROM stash_engine_identifiers ids
           LEFT JOIN stash_engine_zenodo_copies cops
             ON ids.id = cops.identifier_id
@@ -29,7 +29,7 @@ module Tasks
 
       def self.size_migrated
         sql = <<~SQL
-          SELECT SUM(ids.`storage_size`) as st_size 
+          SELECT SUM(ids.`storage_size`) as st_size
           FROM stash_engine_zenodo_copies cop
           JOIN stash_engine_identifiers ids
             ON cop.identifier_id = ids.`id`
@@ -44,10 +44,10 @@ module Tasks
 
       def self.size_remaining
         sql = <<~SQL
-          SELECT sum(ids1.`storage_size`) as store 
+          SELECT sum(ids1.`storage_size`) as store
           FROM stash_engine_identifiers ids1
           JOIN (
-            SELECT DISTINCT ids.id 
+            SELECT DISTINCT ids.id
             FROM stash_engine_identifiers ids
             LEFT JOIN stash_engine_zenodo_copies cops ON ids.id = cops.identifier_id
             WHERE ids.pub_state = 'published'

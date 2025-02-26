@@ -24,13 +24,13 @@ namespace :funders do
     util = Tasks::Funders::Utils.new
 
     sql = <<-SQL
-      SELECT REPLACE(c.contributor_name, '*', '') as contrib, COUNT(*) as count 
+      SELECT REPLACE(c.contributor_name, '*', '') as contrib, COUNT(*) as count
       FROM dcs_contributors c
       JOIN stash_engine_resources res
         ON c.`resource_id` = res.id
         AND res.deleted_at IS NULL
-      WHERE res.meta_view = 1 
-        AND c.contributor_type = "funder" 
+      WHERE res.meta_view = 1
+        AND c.contributor_type = "funder"
         AND (c.name_identifier_id IS NULL OR c.name_identifier_id = '')
       GROUP BY contrib
       ORDER BY COUNT(*) DESC

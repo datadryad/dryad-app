@@ -22,7 +22,7 @@ module StashEngine
       add_fields
       add_filters
 
-      pp @sql = @datasets.to_sql
+      @sql = @datasets.to_sql
 
       if params[:sort].present? || @search_string.present?
         order_string = 'relevance desc'
@@ -52,7 +52,8 @@ module StashEngine
 
     def count
       if session[:admin_search_count].blank?
-        session[:admin_search_count] = StashEngine::Resource.unscoped.select('count(*) as total').from("(#{params[:sql]}) subquery").map(&:total).first
+        session[:admin_search_count] =
+          StashEngine::Resource.unscoped.select('count(*) as total').from("(#{params[:sql]}) subquery").map(&:total).first
       end
       @count = session[:admin_search_count]
       respond_to(&:js)

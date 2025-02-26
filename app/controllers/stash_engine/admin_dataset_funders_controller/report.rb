@@ -10,7 +10,7 @@ module StashEngine
       # I looked into trying to reuse an activerecord model or using Arel instead, but both seemed more difficult
 
       BASE_QUERY = <<~SQL.freeze
-        SELECT ids.id, last_res.title, ids.identifier, ids.deleted_at, contrib.contributor_name, contrib.name_identifier_id,
+        SELECT ids.id, last_res.title, ids.identifier, contrib.contributor_name, contrib.name_identifier_id,
                contrib.award_number, ids.pub_state, init_sub_date, last_viewable.max_resource_id as last_viewable_resource_id,
                viewable_resource.publication_date,
                (SELECT GROUP_CONCAT(author_last_name ORDER BY author_last_name SEPARATOR '; ')
