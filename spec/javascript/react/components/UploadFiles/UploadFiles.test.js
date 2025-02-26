@@ -78,6 +78,7 @@ describe('UploadFiles', () => {
       file_state: 'created',
       original_filename: 'data.csv',
       compressed_try: 0,
+      type: 'StashEngine::DataFile',
     };
     setfile = {
       id: datafile.id + 1,
@@ -88,6 +89,7 @@ describe('UploadFiles', () => {
       file_state: 'created',
       original_filename: 'set.csv',
       compressed_try: 0,
+      type: 'StashEngine::DataFile',
     };
     loaded = JSON.parse(JSON.stringify(datafile));
     loaded.type = 'StashEngine::DataFile';
@@ -256,6 +258,8 @@ describe('UploadFiles', () => {
   it('allows duplicate files for zenodo', async () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
+    setfile.type = 'StashEngine::SoftwareFile';
+    datafile.type = 'StashEngine::SoftwareFile';
     const postA = {status: 200, data: {new_file: setfile}};
     datafile.id += 2;
     const postB = {status: 200, data: {new_file: datafile}};
