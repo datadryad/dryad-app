@@ -331,7 +331,8 @@ export default function UploadFiles({
             ).then((response) => {
               const {new_file} = response.data;
               setChosenFiles((cf) => cf.map((c) => {
-                if (c.name === new_file.original_filename) {
+                if (c.name === new_file.original_filename
+                  && UploadTypetoRailsActiveRecord[c.uploadType] === new_file.type) {
                   c.id = new_file.id;
                   c.sanitized_name = new_file.upload_file_name;
                   c.status = 'Uploaded';
