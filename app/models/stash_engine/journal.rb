@@ -42,6 +42,8 @@ module StashEngine
     validates_associated :issns
     accepts_nested_attributes_for :issns, :alternate_titles, :flag
 
+    scope :servers, -> { where(preprint_server: true) }
+
     def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
 
     def will_pay?

@@ -63,6 +63,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(find('#search_head')).to have_text('First saved search')
         click_button('Fields and filters')
+        expect(page).to have_text('Display fields')
         expect(find('#submitter')).to be_checked
         expect(find('thead')).to have_text('Submitter')
       end
@@ -72,6 +73,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(find('#search_head')).to have_text('First saved search')
         click_button('Fields and filters')
+        expect(page).to have_text('Display fields')
         expect(find('#submitter')).to be_checked
         expect(find('thead')).to have_text('Submitter')
       end
@@ -80,6 +82,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(find('#search_head')).to have_text('First saved search')
         click_button('Fields and filters')
+        expect(page).to have_text('Display fields')
         check 'metrics'
         click_button('Apply')
         click_button('Save search changes')
@@ -87,6 +90,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(find('#search_head')).to have_text('First saved search')
         click_button('Fields and filters')
+        expect(page).to have_text('Display fields')
         expect(find('#metrics')).to be_checked
         expect(find('thead')).to have_text('Metrics')
       end
@@ -96,6 +100,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(find('#search_head')).to have_text('First saved search')
         click_button('Fields and filters')
+        expect(page).to have_text('Display fields')
         check 'metrics'
         click_button('Apply')
         click_button('Save as new search')
@@ -107,6 +112,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(find('#search_head')).to have_text('New default search')
         click_button('Fields and filters')
+        expect(page).to have_text('Display fields')
         expect(find('#metrics')).to be_checked
         expect(find('thead')).to have_text('Metrics')
       end

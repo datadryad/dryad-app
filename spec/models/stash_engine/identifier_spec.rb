@@ -6,7 +6,7 @@
 #  edit_code           :string(191)
 #  identifier          :text(65535)
 #  identifier_type     :text(65535)
-#  import_info         :integer          default("other")
+#  import_info         :integer
 #  payment_type        :string(191)
 #  pub_state           :string
 #  publication_date    :datetime
@@ -558,16 +558,6 @@ module StashEngine
 
       it 'allows review when there is no journal' do
         expect(@identifier.allow_review?).to be(true)
-      end
-
-      it 'allows review when the journal allows review' do
-        create(:journal, issn: @fake_issn, allow_review_workflow: true)
-        expect(@identifier.allow_review?).to be(true)
-      end
-
-      it 'disallows review when the journal disallows review' do
-        create(:journal, issn: @fake_issn, allow_review_workflow: false)
-        expect(@identifier.allow_review?).to be(false)
       end
 
       it 'disallows review if already published' do

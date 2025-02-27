@@ -59,15 +59,18 @@ module StashEngine
     def affiliation=(affil)
       return unless affil.is_a?(StashDatacite::Affiliation)
 
-      affiliations.destroy_all
       affiliations << affil
     end
 
     def author_full_name
+      return author_org_name unless author_org_name.blank?
+
       [author_last_name, author_first_name].reject(&:blank?).join(', ')
     end
 
     def author_standard_name
+      return author_org_name unless author_org_name.blank?
+
       "#{author_first_name} #{author_last_name}".strip
     end
 

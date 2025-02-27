@@ -16,7 +16,7 @@ module StashDatacite
         @error = 'Unable to enable peer review status at this time.'
       end
 
-      respond_to(&:js)
+      render json: { hold_for_peer_review: peer_review_params[:hold_for_peer_review], error: @error }
     end
 
     def release
@@ -28,13 +28,16 @@ module StashDatacite
           @resource.reload
 
           if @error_list.empty?
-            @resource.curation_activities << StashEngine::CurationActivity.create(user_id: current_user.id,
-                                                                                  status: 'submitted',
-                                                                                  note: 'Release from PPR')
+            @resource.curation_activities << StashEngine::CurationActivity.create(
+              user_id: current_user.id, status: 'submitted', note: 'Release from PPR'
+            )
             redirect_to dashboard_path, notice: 'Dataset released from private for peer review and submitted for curation'
           else
             duplicate_resource
-            redirect_to stash_url_helpers.review_resource_path(@new_res.id),
+            @new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
+            redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(
+              resource_id: @new_res.id
+            ),
                         alert: 'Unable to submit dataset for curation. Please correct submission errors.'
           end
         rescue ActiveRecord::RecordInvalid
@@ -50,7 +53,7 @@ module StashDatacite
     private
 
     def peer_review_params
-      params.require(:stash_engine_resource).permit(:id, :hold_for_peer_review)
+      params.permit(:id, :hold_for_peer_review)
     end
 
   end

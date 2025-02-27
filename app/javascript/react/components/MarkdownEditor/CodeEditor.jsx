@@ -105,6 +105,11 @@ export default function CodeEditor({
           base: markdownLanguage,
           extensions: [markdownTags],
         }),
+        EditorView.contentAttributes.of({
+          'aria-labelledby': 'md_editor_label',
+          'aria-describedby': 'md_editor_desc',
+          'aria-errormessage': 'readme_error',
+        }),
         EditorView.updateListener.of((v) => {
           if (v.docChanged) {
             onChange(v.state.doc.toString());

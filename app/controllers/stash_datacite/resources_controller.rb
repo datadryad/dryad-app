@@ -38,7 +38,7 @@ module StashDatacite
           @resource.save!
           @resource.reload
           if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown'
-            @target_page = stash_url_helpers.review_resource_path(@resource.id)
+            @target_page = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
             @aff_tenant = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id).connect_list.first
           end
         end
@@ -46,6 +46,7 @@ module StashDatacite
     end
 
     def submission
+      @resource.cleanup_blank_models!
       @resource.current_state = 'processing'
       @resource.identifier.record_payment unless @resource.identifier.publication_date.present?
       @resource.check_add_readme_file
@@ -95,11 +96,6 @@ module StashDatacite
         resource.update(display_readme: true)
       end
 
-      # write the software license to the database
-      license_id = (params[:software_license].blank? ? 'MIT' : params[:software_license])
-      id_for_license = StashEngine::SoftwareLicense.where(identifier: license_id).first&.id
-      resource.identifier.update(software_license_id: id_for_license)
-
       # TODO: put this somewhere more reliable
       StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
 
@@ -148,7 +144,7 @@ module StashDatacite
       @resource.identifier.update_search_words!
 
       error_items = Resource::DatasetValidations.new(resource: @resource).errors
-      redirect_to stash_url_helpers.review_resource_path(@resource) and return if error_items.count.positive?
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id) and return if error_items.count.positive?
 
       redirect_to stash_url_helpers.dashboard_path, alert: 'Dataset is already being submitted' if processing?(@resource)
     end

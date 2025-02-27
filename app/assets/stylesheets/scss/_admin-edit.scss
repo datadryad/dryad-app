@@ -1,13 +1,11 @@
 .c-admin-editing-banner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  margin: 10px 0 20px;
-  padding: 15px;
-  border: $dark-gray;
-  border-width: 1px;
-  border-style: solid;
-  background-color: $dark-orange;
+  justify-content: center;
+  padding: .5rem 1rem;
+  gap: 1rem;
+  background-color: $green;
   color: white;
 }
 

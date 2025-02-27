@@ -38,6 +38,12 @@ module StashEngine
   class DataFile < GenericFile
     has_many :container_files, class_name: 'StashEngine::ContainerFile', dependent: :delete_all
 
+    after_commit :recalculate_total
+
+    def recalculate_total
+      StashEngine::Resource.find_by(id: resource.id)&.update(total_file_size: resource.data_files.present_files.sum(:upload_file_size))
+    end
+
     def s3_staged_path
       return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
 
@@ -147,6 +153,10 @@ module StashEngine
     def s3_permanent_presigned_url_inline
       bucket = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
       bucket.presigned_download_url(s3_key: s3_permanent_path)
+    end
+
+    def public_download_url
+      s3_permanent_presigned_url
     end
 
     # http://<merritt-url>/d/<ark>/<version>/<encoded-fn> is an example of the URLs Merritt takes

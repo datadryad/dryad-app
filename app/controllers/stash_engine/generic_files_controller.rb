@@ -65,7 +65,6 @@ module StashEngine
           # It can maintain previous deletions for the file (both same and different case), but delete non-deletions
           @resource.send(@resource_assoc).where('lower(upload_file_name) = ?', params[:name]&.downcase)
             .where.not(file_state: 'deleted').destroy_all
-
           db_file =
             @file_model.create(
               upload_file_name: params[:name],
@@ -76,12 +75,10 @@ module StashEngine
               file_state: 'created',
               original_filename: params[:original]
             )
-
-          @resource.update(total_file_size: StashEngine::DataFile
-                                              .where(resource_id: @resource.id)
-                                              .where(file_state: %w[created copied])
-                                              .sum(:upload_file_size))
-          render json: { new_file: db_file }
+          json_file = db_file.as_json
+          json_file[:type] = db_file.type
+          json_file[:dl_url] = db_file.s3_staged_presigned_url
+          render json: { new_file: json_file }
         end
       end
     end

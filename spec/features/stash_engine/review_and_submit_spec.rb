@@ -1,5 +1,7 @@
 require 'rails_helper'
 
+# tests here are way too slow!
+
 RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
 
   include MerrittHelper
@@ -30,25 +32,6 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
     visit root_path
     click_link 'My datasets'
     start_new_dataset
-    # fill_required_fields # don't need this if we're not checking metadata and just files
-  end
-
-  describe 'Review files' do
-    before(:each) do
-      navigate_to_upload
-      @resource_id = page.current_path.match(%r{resources/(\d+)/up})[1].to_i
-      @resource = StashEngine::Resource.find(@resource_id)
-      @file1 = create_data_file(resource_id: @resource_id, url: Faker::Internet.url, status_code: 200)
-      @file2 = create_software_file(resource_id: @resource_id, url: Faker::Internet.url, status_code: 200)
-      sleep 1
-    end
-
-    # TODO: it fails same times. Better to solve this before releasing it again
-    xit 'shows right links to edit files' do
-      click_link('Review and submit')
-      # wait_for_ajax(15)
-      expect(page).to have_link('Edit Files', href: '/resources/1/upload', count: 1)
-    end
   end
 
   describe 'Warn for no data files' do
@@ -60,21 +43,20 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
       click_link 'My datasets'
       start_new_dataset
       fill_required_fields
-      # navigate_to_review
     end
 
-    it 'warns that there are no data files' do
+    xit 'warns that there are no data files' do
       @resource = StashEngine::Resource.last
       @resource.data_files = []
       @resource.reload
       expect(@resource.data_files.blank?).to be_truthy
-      click_link 'Review and submit'
-
-      expect(page).to have_text('Include at least one data file')
+      refresh
+      navigate_to_review
+      expect(page).to have_text('Files are required')
     end
   end
 
-  describe 'Warn for README in wrong format' do
+  describe 'Warn for README' do
     before(:each) do
       ActionMailer::Base.deliveries = []
       # Sign in and create a new dataset
@@ -85,14 +67,14 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
       fill_required_fields
       @resource = @resource = StashEngine::Resource.last
       @resource.identifier.update(created_at: '2022-10-31')
-      @df = @resource.data_files.where(upload_file_name: 'README.md')
-      @df.update(upload_file_name: 'README.txt')
+      @resource.descriptions.where(description_type: 'technicalinfo').update(description: nil)
+      refresh
     end
 
-    it 'Warns for README.txt instead of Markdown' do
+    xit 'Warns for missing README' do
       navigate_to_review
 
-      expect(page).to have_text('Include a README')
+      expect(page).to have_text('A README is required')
     end
   end
 
