@@ -66,12 +66,12 @@ export const filesCheck = (files, admin, maximums) => {
         </p>
       );
     }
-    const uploadErrors = present.filter((f) => !f.dl_url && f.status === 'Uploaded');
+    const uploadErrors = data.filter((f) => !f.dl_url && f.status === 'Uploaded');
     if (uploadErrors.length > 0) {
       return (
         <p className="error-text" id="data_error">
           There was an error with the following upload{uploadErrors.length > 1 && 's'}. Please remove them and try again:<br />
-          {urlErrors.map((f) => f.upload_file_name).join(', ')}
+          {uploadErrors.map((f) => f.upload_file_name).join(', ')}
         </p>
       );
     }
