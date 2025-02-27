@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import moment from 'moment';
 import ellipsize from '../../../../lib/string_patch';
 import classes from './File.module.css';
 
@@ -23,9 +24,22 @@ const statusCss = (status) => {
   case TabularCheckStatus.error:
     return classes.Passed;
   default:
-    return null;
+    return '';
   }
 };
+
+function S3Check({file}) {
+  if (file.file_state === 'copied' || file.dl_url) {
+    return (
+      <div className="c-uploadtable-time">
+        {moment(file.upload_updated_at || file.updated_at).format('YYYY/MM/DD H:mm')} <i className="fas fa-check" role="img" aria-label="complete" />
+      </div>
+    );
+  }
+  return (
+    <div className="error-text c-uploadtable-time">Upload error! Remove and retry</div>
+  );
+}
 
 export default function File({file, clickRemove, clickValidationReport}) {
   const [removing, setRemoving] = useState(false);
@@ -61,7 +75,7 @@ export default function File({file, clickRemove, clickValidationReport}) {
         >
           <i
             className="fa-solid fa-triangle-exclamation"
-            style={{color: 'rgb(209, 44, 29)', marginRight: '.5ch'}}
+            style={{color: '#fff2ce', marginRight: '.5ch'}}
             role="img"
             aria-label="Has alerts"
           />
@@ -83,7 +97,11 @@ export default function File({file, clickRemove, clickValidationReport}) {
   return (
     <tr>
       <th scope="row">{file.sanitized_name}</th>
-      <td id={`status_${file.id}`} className={`c-uploadtable__status ${statusCss(file.status)}`}>{file.status}</td>
+      <td id={`status_${file.id}`} className={`c-uploadtable__status ${statusCss(file.status)}`}>
+        {file.status === 'Uploaded' ? (
+          <S3Check file={file} />
+        ) : file.status}
+      </td>
       <td className={statusCss(file.tabularCheckStatus)}>
         {tabularInfo}
       </td>
@@ -91,6 +109,11 @@ export default function File({file, clickRemove, clickValidationReport}) {
         {file.url && (
           <a href={file.url} title={file.url}>
             {ellipsize(file.url)}
+          </a>
+        )}
+        {!file.url && file.dl_url && (
+          <a href={file.dl_url} download title={`Download from ${file.uploadType === 'data' ? 'Dryad' : 'Zenodo'}`} target="_blank" rel="noreferrer">
+            {file.sanitized_name}
           </a>
         )}
       </td>

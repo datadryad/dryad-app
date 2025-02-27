@@ -12,7 +12,6 @@ import ModalUrl from './ModalUrl';
 import ModalValidationReport from './ModalValidationReport/ModalValidationReport';
 import UploadData from './UploadSelect/UploadData';
 import UploadSelect from './UploadSelect/UploadSelect';
-import ValidateFiles from './ValidateFiles';
 import TrackChanges from './TrackChanges';
 
 /**
@@ -77,12 +76,11 @@ export default function UploadFiles({
   const [chosenFiles, setChosenFiles] = useState([]);
   const [validating, setValidating] = useState([]);
   const [failedUrls, setFailedUrls] = useState([]);
-  const [submitDisabled, setSubmitDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [urls, setUrls] = useState(null);
   const [manFileType, setManFileType] = useState(null);
   const [valFile, setValFile] = useState(null);
-  const [warning, setWarning] = useState(null);
+  const [warning, setWarning] = useState([]);
   const [pollingCount, setPollingCount] = useState(0);
   const [zenodo, setZenodo] = useState(false);
 
@@ -94,21 +92,21 @@ export default function UploadFiles({
   const maxFiles = config_maximums.files;
   const Messages = {
     fileReadme: 'Please prepare your README on the README page.',
-    fileAlreadySelected: 'A file of the same name is already in the table, and was not added.',
-    filesAlreadySelected: 'Some files of the same name are already in the table, and were not added.',
+    fileAlreadySelected: 'A file of the same name is already in the table. The new file was not added.',
+    filesAlreadySelected: 'Files of the same name are already in the table. New files were not added.',
     tooManyFiles: `You may not upload more than ${maxFiles} individual files of this type.`,
+    // eslint-disable-next-line max-len
+    rarTypeFiles: 'RAR files were not added. RAR is a proprietary compression format that cannot be opened universally. Please use an open-access format, such as TAR.GZ, 7Z, or ZIP.',
   };
 
   const isValidTabular = (file) => (ValidTabular.extensions.includes(file.sanitized_name.split('.').pop())
             || ValidTabular.mime_types.includes(file.upload_content_type))
             && (file.upload_file_size <= config_maximums.frictionless);
 
-  const labelNonTabular = (files) => {
-    files.map((file) => {
-      file.tabularCheckStatus = isValidTabular(file) ? null : TabularCheckStatus.na;
-      return file;
-    });
-  };
+  const labelNonTabular = (files) => files.map((file) => {
+    file.tabularCheckStatus = isValidTabular(file) ? null : TabularCheckStatus.na;
+    return file;
+  });
 
   // set status based on contents of frictionless report
   const setTabularCheckStatus = (file) => {
@@ -140,6 +138,9 @@ export default function UploadFiles({
 
   useEffect(() => {
     if (chosenFiles.some((f) => f.uploadType !== 'data')) setZenodo(true);
+    chosenFiles.forEach((f) => {
+      if (f.status === 'Uploaded' && f.tabularCheckStatus === null) setValidating((v) => [...v, f]);
+    });
     const generic_files = chosenFiles.map((f) => ({
       ...f,
       upload_file_name: f.sanitized_name,
@@ -238,9 +239,9 @@ export default function UploadFiles({
 
   const setWarningRepeatedFile = (countRepeated) => {
     if (countRepeated < 0) return;
-    if (countRepeated === 0) setWarning(null);
-    if (countRepeated === 1) setWarning(Messages.fileAlreadySelected);
-    if (countRepeated > 1) setWarning(Messages.filesAlreadySelected);
+    if (countRepeated === 0) return;
+    if (countRepeated === 1) setWarning([Messages.fileAlreadySelected]);
+    if (countRepeated > 1) setWarning([Messages.filesAlreadySelected]);
   };
 
   const discardAlreadyChosenById = (files) => {
@@ -259,23 +260,29 @@ export default function UploadFiles({
       && sanitize(filename).toLowerCase() !== 'readme.md');
   };
 
-  const discardFilesAlreadyChosen = (files, uploadType) => {
+  const discardUnwantedFiles = (files) => {
+    if (files.some((f) => f.type === 'application/vnd.rar' || f.name.endsWith('.rar'))) {
+      setWarning((w) => [...w, Messages.rarTypeFiles]);
+    }
+    return files.filter((f) => !(f.type === 'application/vnd.rar' || f.name.endsWith('.rar')));
+  };
+
+  const discardFiles = (files, uploadType) => {
+    setWarning([]);
+    let newFiles = files;
     const filenames = files.map((file) => file.name);
     const newFilenames = discardAlreadyChosenByName(filenames, uploadType);
-    if (filenames.length === newFilenames.length) return files;
-
-    const newFiles = files.filter((file) => newFilenames.includes(file.name));
-
-    const countRepeated = files.length - newFiles.length;
-    if (filenames.includes('README.md')) {
-      setWarning(Messages.fileReadme);
-    } else {
+    if (filenames.length !== newFilenames.length) {
+      newFiles = files.filter((file) => newFilenames.includes(file.name));
+      const countRepeated = files.length - newFiles.length;
       setWarningRepeatedFile(countRepeated);
+      if (filenames.includes('README.md')) setWarning((w) => [...w, Messages.fileReadme]);
     }
+    newFiles = discardUnwantedFiles(newFiles);
     return newFiles;
   };
 
-  const discardUrlsAlreadyChosen = (uris, uploadType) => {
+  const discardUrls = (uris, uploadType) => {
     const handleUrls = uris.split('\n').filter((url) => url);
 
     const filenames = handleUrls.map((url) => url.split('/').pop());
@@ -290,39 +297,12 @@ export default function UploadFiles({
   };
 
   const updateFileList = (files) => {
-    labelNonTabular(files);
-    setChosenFiles((c) => [...c, ...files]);
+    const labeled = labelNonTabular(files);
+    setChosenFiles((c) => [...c, ...labeled]);
   };
 
-  const addFilesHandler = (event, uploadType) => {
-    const timestamp = Date.now();
-    displayAriaMsg('Your files are being checked');
-    setWarning(null);
-    setSubmitDisabled(true);
-    const files = discardFilesAlreadyChosen([...event.target.files], uploadType);
-    const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
-    if (fileCount > maxFiles) {
-      setWarning(Messages.tooManyFiles);
-    } else {
-      displayAriaMsg('Your files were added and are pending upload.');
-      // TODO: make a function?; future: unify adding file attributes
-      const newFiles = files.map((file, index) => {
-        file.id = `pending${timestamp + index / 1000}`;
-        file.sanitized_name = sanitize(file.name);
-        file.status = 'Pending';
-        file.url = null;
-        file.uploadType = uploadType;
-        file.manifest = false;
-        file.upload_file_size = file.size;
-        file.sizeKb = formatSizeUnits(file.size);
-        return file;
-      });
-      updateFileList(newFiles);
-    }
-  };
-
-  const uploadFileToS3 = (evaporate) => {
-    chosenFiles.map((file, index) => {
+  const uploadFileToS3 = (evaporate, fileList) => {
+    fileList.map((file) => {
       if (file.status === 'Pending') {
         // TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
         const evaporateUrl = `${s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.sanitized_name}`;
@@ -351,17 +331,16 @@ export default function UploadFiles({
             ).then((response) => {
               const {new_file} = response.data;
               setChosenFiles((cf) => cf.map((c) => {
-                if (c.name === new_file.original_filename) {
+                if (c.name === new_file.original_filename
+                  && UploadTypetoRailsActiveRecord[c.uploadType] === new_file.type) {
                   c.id = new_file.id;
                   c.sanitized_name = new_file.upload_file_name;
                   c.status = 'Uploaded';
+                  c.dl_url = new_file.dl_url;
                 }
                 return c;
               }));
               displayAriaMsg(`${file.original_filename} finished uploading`);
-              if (isValidTabular(chosenFiles[index])) {
-                setValidating((v) => [...v, chosenFiles[index]]);
-              }
             }).catch((error) => console.log(error));
           },
         };
@@ -379,28 +358,51 @@ export default function UploadFiles({
     });
   };
 
-  const uploadFilesHandler = () => {
-    const {key, bucket, region} = config_s3.table;
-    // AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
-    let partSize = 5 * 1024 * 1024;
-    const maxSize = chosenFiles.reduce((p, c) => (p > c.size ? p : c.size), 0);
-    if (maxSize > 10000000000) partSize = 10 * 1024 * 1024;
-    if (maxSize > 100000000000) partSize = 30 * 1024 * 1024;
-    const config = {
-      aws_key: key,
-      bucket,
-      awsRegion: region,
-      // Assign any first signerUrl, but it changes for each upload file type
-      // when call evaporate object add method bellow
-      signerUrl: `/generic_file/presign_upload/${resource.id}`,
-      awsSignatureVersion: '4',
-      computeContentMd5: true,
-      cryptoMd5Method: (data) => AWS.util.crypto.md5(data, 'base64'),
-      cryptoHexEncodedHash256: (data) => AWS.util.crypto.sha256(data, 'hex'),
-      partSize,
-      maxConcurrentParts: 50,
-    };
-    Evaporate.create(config).then(uploadFileToS3);
+  const addFilesHandler = (event, uploadType) => {
+    const timestamp = Date.now();
+    displayAriaMsg('Your files are being checked');
+    setWarning([]);
+    const files = discardFiles([...event.target.files], uploadType);
+    const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
+    if (fileCount > maxFiles) {
+      setWarning([...warning, Messages.tooManyFiles]);
+    } else {
+      displayAriaMsg('Your files were added and are being uploaded.');
+      // TODO: make a function?; future: unify adding file attributes
+      const newFiles = files.map((file, index) => {
+        file.id = `pending${timestamp + index / 1000}`;
+        file.sanitized_name = sanitize(file.name);
+        file.status = 'Pending';
+        file.url = null;
+        file.uploadType = uploadType;
+        file.manifest = false;
+        file.upload_file_size = file.size;
+        file.sizeKb = formatSizeUnits(file.size);
+        return file;
+      });
+      updateFileList(newFiles);
+      const {key, bucket, region} = config_s3.table;
+      // AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
+      let partSize = 5 * 1024 * 1024;
+      const maxSize = newFiles.reduce((p, c) => (p > c.size ? p : c.size), 0);
+      if (maxSize > 10000000000) partSize = 10 * 1024 * 1024;
+      if (maxSize > 100000000000) partSize = 30 * 1024 * 1024;
+      const config = {
+        aws_key: key,
+        bucket,
+        awsRegion: region,
+        // Assign any first signerUrl, but it changes for each upload file type
+        // when call evaporate object add method bellow
+        signerUrl: `/generic_file/presign_upload/${resource.id}`,
+        awsSignatureVersion: '4',
+        computeContentMd5: true,
+        cryptoMd5Method: (data) => AWS.util.crypto.md5(data, 'base64'),
+        cryptoHexEncodedHash256: (data) => AWS.util.crypto.sha256(data, 'hex'),
+        partSize,
+        maxConcurrentParts: 50,
+      };
+      Evaporate.create(config).then((ev) => uploadFileToS3(ev, newFiles));
+    }
   };
 
   const updateManifestFiles = (files) => {
@@ -409,7 +411,10 @@ export default function UploadFiles({
     }
 
     if (!files.valid_urls.length) return;
-    let successfulUrls = files.valid_urls;
+    let successfulUrls = files.valid_urls.map((f) => {
+      f.dl_url = f.url;
+      return f;
+    });
     if (chosenFiles.length) {
       successfulUrls = discardAlreadyChosenById(successfulUrls);
     }
@@ -420,7 +425,7 @@ export default function UploadFiles({
   };
 
   const removeFileHandler = (id) => {
-    setWarning(null);
+    setWarning([]);
     const file = chosenFiles.find((f) => f.id === id);
     if (file.status !== 'Pending') {
       axios.patch(`/${file.uploadType}_files/${id}/destroy_manifest`)
@@ -466,13 +471,13 @@ export default function UploadFiles({
   };
 
   const submitUrlsHandler = (event) => {
-    setWarning(null);
+    setWarning([]);
     event.preventDefault();
     hideModal(event);
 
     if (!urls) return;
 
-    const urlsObject = {url: discardUrlsAlreadyChosen(urls, manFileType)};
+    const urlsObject = {url: discardUrls(urls, manFileType)};
 
     if (urlsObject.url.length) {
       setLoading(true);
@@ -489,9 +494,6 @@ export default function UploadFiles({
   const removeFailedUrlHandler = (index) => {
     setFailedUrls((failed) => failed.filter((url, urlIndex) => urlIndex !== index));
   };
-
-  // checks the file list if any files are pending and if so returns true (or false)
-  const hasPendingFiles = () => chosenFiles.filter((file) => file.status === 'Pending').length > 0;
 
   useEffect(() => {
     if (uploadRef.current) {
@@ -570,6 +572,9 @@ export default function UploadFiles({
       {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={removeFailedUrlHandler} />}
       {chosenFiles.length > 0 ? (
         <>
+          <div role="alert">
+            {warning.map((w) => <div className="callout warn" key={w}><p>{w}</p></div>)}
+          </div>
           <FileList
             config={config_payments}
             chosenFiles={chosenFiles}
@@ -578,30 +583,17 @@ export default function UploadFiles({
             totalSize={chosenFiles.reduce((s, f) => s + f.upload_file_size, 0)}
           />
           {loading && (
-            <div className="c-upload__loading-spinner">
-              <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-            </div>
-          )}
-          <div className="callout warn" role="alert">
-            {warning && (<p>{warning}</p>)}
-          </div>
-          {hasPendingFiles() && (
-            <ValidateFiles
-              id="confirm_to_validate_files"
-              buttonLabel="Upload pending files"
-              checkConfirmed
-              disabled={submitDisabled}
-              changed={(e) => setSubmitDisabled(!e.target.checked)}
-              clicked={uploadFilesHandler}
-            />
+            <p className="c-upload__loading-spinner">
+              <i className="fa fa-spin fa-spinner" role="img" aria-label="Loading" style={{color: '#888'}} />
+            </p>
           )}
         </>
       ) : (
         <div>
           {loading ? (
-            <div className="c-upload__loading-spinner">
-              <img className="c-upload__spinner" src="../../../images/spinner.gif" alt="Loading spinner" />
-            </div>
+            <p className="c-upload__loading-spinner">
+              <i className="fa fa-spin fa-spinner" role="img" aria-label="Loading" style={{color: '#888'}} />
+            </p>
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
@@ -622,7 +614,10 @@ export default function UploadFiles({
       />
       <div id="aria-info" className="screen-reader-only" aria-live="polite" aria-atomic="true" aria-relevant="additions text" />
       <div className="callout warn" role="status">
-        <p id="leave-warning" hidden>Wait for file uploads to complete before leaving this page</p>
+        <p id="leave-warning" hidden>
+          <i className="fas fa-hourglass-start" aria-hidden="true" />
+          Wait for file uploads to complete before leaving this page
+        </p>
       </div>
     </div>
   );

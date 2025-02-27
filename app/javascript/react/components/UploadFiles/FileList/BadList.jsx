@@ -32,7 +32,7 @@ export default function BadList(props) {
 
   if (errorFiles.length > 0) {
     errorMsg = (
-      <div className="callout err" role="alert">
+      <div className="callout warn" role="alert">
         <p>
           Our tabular data checker couldn&apos;t read tabular data from {makeAndString(errorFiles)}.
           If you expect them to have consistent tabular data, check that they are readable and formatted correctly.
@@ -43,7 +43,7 @@ export default function BadList(props) {
 
   if (issueFiles.length > 0) {
     issueMsg = (
-      <div className="callout err" role="alert" style={{paddingBottom: '.75rem', marginBottom: '1em'}}>
+      <div className="callout warn" role="alert" style={{paddingBottom: '.75rem', marginBottom: '1em'}}>
         <p style={{marginBottom: '.5rem'}}>
           Inconsistencies found in the format and structure of {issueFiles.length} of your tabular data files
         </p>

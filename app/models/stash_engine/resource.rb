@@ -388,16 +388,25 @@ module StashEngine
       result.flatten
     end
 
+    def complete_readme
+      technical_info = descriptions.type_technical_info&.first&.description
+      return nil if !technical_info || technical_info.empty?
+
+      disclaimer = descriptions.where(description_type: 'usage_notes')&.first&.description
+      technical_info = "#{technical_info}\n\n## Human subjects data\n\n#{disclaimer}" if disclaimer.present?
+      technical_info
+    end
+
     def check_add_readme_file
       filename = 'README.md'
-      technical_info = descriptions.type_technical_info.first&.description
-      return if !technical_info || technical_info.empty?
+      readme = complete_readme
+      return if !readme || readme.empty?
 
       # check if new content
-      old_info = previous_resource&.descriptions&.type_technical_info&.first&.description
-      return if technical_info == old_info
+      old_readme = previous_resource&.complete_readme
+      return if readme == old_readme
 
-      add_data_as_file(filename, technical_info)
+      add_data_as_file(filename, readme)
     end
 
     def check_add_cedar_json

@@ -1,5 +1,4 @@
 import React from 'react';
-import ValidateFiles from './ValidateFiles';
 
 const modal_url = React.forwardRef(({changedUrls, submitted, clickedClose}, ref) => (
   <dialog
@@ -28,11 +27,11 @@ const modal_url = React.forwardRef(({changedUrls, submitted, clickedClose}, ref)
         placeholder="List file location URLs here"
       />
       <div className="c-uploadmodal__text-content">Place each URL on a new line.</div>
-      <ValidateFiles
-        id="confirm_to_validate"
-        buttonLabel="Validate files"
-        checkConfirmed={false}
-        disabled={false}
+      <input
+        type="submit"
+        id="validate_files"
+        className="c-uploadmodal__button-validate o-button__submit"
+        value="Validate files"
       />
     </form>
   </dialog>
