@@ -58,6 +58,12 @@ module StashDatacite
       end
     end
 
+    # GET /related_identifiers/types
+    def types
+      worktypes = StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a
+      render json: worktypes
+    end
+
     # TODO: EMBARGO: do we care about published vs. embargoed in this report?
     # this is a report of related identifiers in tsv
     def report

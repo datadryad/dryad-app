@@ -10,10 +10,23 @@ module StashDatacite
       @description = Description.new
     end
 
+    # POST /descriptions
+    def create
+      respond_to do |format|
+        @desc = Description.create(resource_id: params[:resource_id], description_type: params[:type], description: params[:val])
+        @desc.reload
+        format.js
+        format.json { render json: @desc.as_json }
+      end
+    end
+
     # PATCH/PUT /descriptions/1
     def update
       items = description_params
-      items[:description] = Loofah.fragment(items[:description]).scrub!(:strip).to_s unless @description&.description_type == 'technicalinfo'
+      unless @description&.description_type == 'technicalinfo' || items[:description].nil?
+        items[:description] =
+          Loofah.fragment(items[:description]).scrub!(:strip).to_s
+      end
       respond_to do |format|
         if @description.update(items)
           format.json { render json: @description.slice(:id, :resource_id, :description, :description_type) }

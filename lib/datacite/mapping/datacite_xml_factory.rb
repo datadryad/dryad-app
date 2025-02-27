@@ -30,7 +30,10 @@ module Datacite
           identifier: Identifier.from_doi(doi_value),
           creators: se_resource.authors.map do |c|
             Creator.new(
-              name: c.author_full_name,
+              name: CreatorName.new(
+                value: c.author_full_name,
+                type: c.author_org_name.present? ? NameType::ORGANIZATIONAL : NameType::PERSONAL
+              ),
               identifier: dcs_identifier_from(c.author_orcid),
               affiliations: c.affiliations.map do |a|
                 if a.ror_id && !datacite_3
@@ -96,6 +99,9 @@ module Datacite
       def add_descriptions(dcs_resource)
         se_resource.descriptions.where.not(description: nil).each do |d|
           next if d.description.blank?
+          next if d.description_type == 'usage_notes'
+
+          d.description = se_resource.complete_readme if d.description_type == 'technicalinfo'
 
           dcs_resource.descriptions << Description.new(
             value: ActionController::Base.helpers.strip_tags(d.description),

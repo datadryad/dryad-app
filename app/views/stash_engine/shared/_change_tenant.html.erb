@@ -11,19 +11,30 @@
   <% end %>
 </div>
 <div id="edit-tenant-form" hidden>
-  <p id="label_tenant_lookup">Select your Dryad member institution:</p>
   <div class="t-login__choose">
     <div class="c-institution__container" style="width: 100%">
-      <%= form_with(url: sso_path, method: :post, html: {style: 'justify-content: space-between;'}) do %>
+      <%= form_with(url: sso_path, method: :post) do %>
         <% if @target_page %><input type="hidden" name="target_page" value="<%= @target_page %>"><% end %>
-        <%= react_component('components/TenantForm', {tenants: tenant_select}) %>
+        <div style="display: flex; gap: 0; flex-direction: column; flex-grow: 1">
+          <%= render partial: 'stash_engine/shared/search_select', locals: {
+            id: 'tenant',
+            label: 'Select your Dryad member institution',
+            field_name: 'tenant_id',
+            options: tenant_select.to_json.html_safe,
+            options_label: 'name',
+            options_value: 'id',
+            selected: {},
+            required: true,
+          } %>
+        </div>
+        <button type="submit" class="t-login__buttonlink" style="padding: 5px 15px">Login to verify</button>
         <span style="flex-grow: 1"></span>
         <button class="o-button__plain-text7" id="keep_tenant" aria-expanded="true" aria-controls="edit_tenant-form"><i class="fas fa-times" aria-hidden="true"></i> Cancel</button>
       <% end %>
     </div>
   </div>
   <% if current_tenant.id != 'dryad' %>
-    <br/><br/>
+    <br/>
     <p>Is your institution not a member of Dryad?</p>
     <%= form_with(url: no_partner_path, method: :post) do |f| %>
       <% if @target_page %><input type="hidden" name="target_page" value="<%= @target_page %>"><% end %>

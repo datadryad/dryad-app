@@ -1,0 +1,54 @@
+.readme-columns, .readme-columns-final, .readme-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2ch;
+}
+.readme-columns {
+  margin: 2rem auto;
+  & > div {
+    padding: 1.5rem 2rem;
+    background-color: $lightest-blue;
+    &:nth-child(odd) {
+      background-color: $lightest-green;
+    }
+    @include bp(screen2) {
+      flex-basis: calc(50% - 2ch);
+      flex-shrink: 1;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      p {
+        margin-top: 0;
+        flex: 1;
+      }
+    }
+  }
+}
+.readme-columns-final > div {
+  &:last-child {
+    background-color: $lightest-blue;
+    padding: 1rem;
+  }
+  @include bp(screen2) {
+    flex-basis: calc(50% - 2ch);
+    flex-shrink: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    p {
+      margin-top: 0;
+      flex: 1;
+    }
+  }
+}
+.readme-buttons {
+  justify-content: center;
+}
+
+.readme-examples {
+  list-style: "";
+  padding-left: 0;
+  i {
+    margin-right: .5ch;
+  }
+}

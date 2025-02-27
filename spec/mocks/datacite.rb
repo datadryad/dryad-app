@@ -48,7 +48,7 @@ module Mocks
     end
 
     def mock_good_doi_resolution(doi:)
-      stub_request(:get, doi)
+      stub_request(:head, doi)
         .with(
           headers: {
             'Host' => 'doi.org'
@@ -58,7 +58,7 @@ module Mocks
     end
 
     def mock_bad_doi_resolution(doi:)
-      stub_request(:get, doi)
+      stub_request(:head, doi)
         .with(
           headers: {
             'Host' => 'doi.org'
@@ -68,7 +68,7 @@ module Mocks
     end
 
     def mock_bad_doi_resolution_server_error(doi:)
-      stub_request(:get, doi)
+      stub_request(:head, doi)
         .with(
           headers: {
             'Host' => 'doi.org'

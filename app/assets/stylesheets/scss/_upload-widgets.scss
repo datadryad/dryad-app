@@ -5,62 +5,79 @@
   gap: $spacing-sm;
   grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   margin-bottom: $spacing-md;
+
+  & > div {
+    text-align: center;
+  }
+
+  .c-uploadwidget + * {
+    font-size: .98rem;
+  }
+
+  .license-select {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5ch;
+    margin: 1em auto;
+    #searchselect-license {
+      text-align: left;
+    }
+  }
 }
 
-.c-uploadwidget--data,
-.c-uploadwidget--software,
-.c-uploadwidget--supplemental {
-  display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+.c-choose__input-file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.c-choose__input-file-label,
+*[class^='c-uploadwidget'] button {
+  line-height: 1;
+  padding: $spacing-base;
+  border: none;
+  background-color: $lighter-blue;
+  width: 250px;
+  box-sizing: border-box;
+  &:hover {
+    opacity: 0.85;
+  }
+  z-index: 2;
+}
+
+.c-uploadwidget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: $spacing-sm;
   padding: $spacing-sm;
-  border: thin solid $light-gray;
+  border: thin dashed $light-gray;
+  position: relative;
 
-  header {
-    grid-column: 1 / -1;
+  &.dragover {
+    background-color: $lightest-gray;
+  }
 
-    img {
-      display: block;
-      height: 17px;
-      margin-bottom: $spacing-sm;
+  h3, h4, p {
+    margin: 0;
+  }
+
+  h4 img {
+    height: 17px;
+    margin-right: 1ch;
+  }
+
+  input {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+
+    &:focus ~ label {
+      outline: 2px solid $medium-blue;
     }
-
-    h2 {
-      @extend %o-heading__level2;
-      margin: 0;
-      text-align: center;
-    }
-  }
-
-  b {
-    grid-column: 1 / -1;
-    font-weight: normal;
-  }
-
-  .c-choose {
-    grid-column: 2;
-  }
-
-  button {
-    grid-column: 2;
-    padding: $spacing-base;
-    border: none;
-  }
-}
-
-.c-uploadwidget--data {
-  --c-uploadwidget-color: #{$lighter-blue};
-
-  button {
-    background-color: var(--c-uploadwidget-color);
-  }
-}
-
-.c-uploadwidget--software,
-.c-uploadwidget--supplemental {
-  --c-uploadwidget-color: #{$lighter-gray};
-
-  button {
-    background-color: var(--c-uploadwidget-color);
   }
 }

@@ -210,7 +210,11 @@ module StashEngine
       return unless ready_for_payment?
 
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
-      inv.charge_user_via_invoice
+      if resource.identifier.payment_type == 'stripe' && previously_published?
+        inv.check_new_overages(resource.previous_curated_resource.total_file_size)
+      else
+        inv.charge_user_via_invoice
+      end
     end
 
     def submit_to_datacite
@@ -390,10 +394,11 @@ module StashEngine
 
     def ready_for_payment?
       return false unless resource
+      return false unless first_time_in_status?
 
       resource.identifier.reload
       APP_CONFIG&.payments&.service == 'stripe' &&
-        (resource.identifier.payment_type.nil? || %w[unknown waiver].include?(resource.identifier.payment_type)) &&
+        (resource.identifier.payment_type.nil? || %w[unknown waiver stripe].include?(resource.identifier.payment_type)) &&
         %w[published embargoed].include?(status)
     end
 

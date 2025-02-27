@@ -47,21 +47,16 @@ module StashEngine
       create
     end
 
-    # GET /resources/1/edit
-    def edit; end
-
     # POST /resources
     # POST /resources.json
     def create
       resource = authorize Resource.new(current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Stash::Doi::DataciteGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
-      db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase, import_info: 'manuscript')
-      resource.identifier_id = db_id_obj.id
-      resource.save
+      db_id_obj = Identifier.create(identifier: id_text, identifier_type: id_type.upcase)
+      resource.update(identifier_id: db_id_obj.id)
       resource.creator = current_user.id
       resource.submitter = current_user.id
-      resource.reload
       resource.fill_blank_author!
       import_manuscript_using_params(resource) if params['journalID']
       session[:resource_type] = current_user.min_app_admin? && params.key?(:collection) ? 'collection' : 'dataset'
@@ -111,17 +106,8 @@ module StashEngine
       end
     end
 
-    # Review responds as a get request to review the resource before saving
-    def review
-      resource.update(tenant_id: resource.submitter.tenant_id) unless resource.tenant_id == resource.submitter.tenant_id
-    end
-
-    # Submission of the resource to the repository
-    def submission; end
-
-    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize
     def prepare_readme
-      @metadata_entry = StashDatacite::Resource::MetadataEntry.new(@resource, @resource.resource_type.resource_type, current_tenant)
       @file_list = @resource.data_files.reject { |f| f.upload_file_name == 'README.md' }.map do |f|
         h = { name: f.upload_file_name }
         if f.upload_file_name.end_with?('.csv', '.tsv', '.xlsx', '.xls', '.rdata', '.rda', '.mat', '.txt')
@@ -132,7 +118,7 @@ module StashEngine
         end
         h
       end
-      if @metadata_entry&.technical_info.try(:description) && !@metadata_entry&.technical_info.try(:description).empty?
+      if @resource.descriptions.type_technical_info.try(:description) && !@resource.descriptions.type_technical_info.try(:description).empty?
         @file_content = nil
       else
         readme_file = @resource&.data_files&.present_files&.where(upload_file_name: 'README.md')&.first
@@ -149,59 +135,65 @@ module StashEngine
           @file_content = nil
         end
       end
+      render json: { readme_file: @file_content, file_list: @file_list }
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize
 
-    # Upload files view for resource
-    def upload
-      @file_model = StashEngine::DataFile
-      @resource_assoc = :data_files
-      @readme_size = (resource.descriptions.type_technical_info.first&.description.present? &&
-              resource.descriptions.type_technical_info.first&.description&.bytesize) ||
-              resource.data_files.present_files.where(upload_file_name: 'README.md').first&.upload_file_size
-
-      @file = DataFile.new(resource_id: resource.id) # this seems needed for the upload control
-      @file_note = resource.curation_activities.where(user_id: current_user.id).where("note like 'User described file changes:%'").first
-      @uploads = resource.latest_file_states
+    def display_readme
+      review = StashDatacite::Resource::Review.new(@resource)
+      render partial: 'stash_datacite/descriptions/readme',
+             locals: { review: review, highlight_fields: params.key?(:admin) ? ['technical_info'] : [] }
     end
 
-    # upload by manifest view for resource
-    def upload_manifest
-      @file_model = StashEngine::DataFile
-      @resource_assoc = :data_files
+    def dpc_status
+      dpc_checks = {
+        dpc: Stash::Payments::Invoicer.data_processing_charge(identifier: @resource.identifier) / 100,
+        journal_will_pay: @resource.identifier.journal&.will_pay?,
+        institution_will_pay: @resource.identifier.institution_will_pay?,
+        funder_will_pay: @resource.identifier.funder_will_pay?,
+        user_must_pay: @resource.identifier.user_must_pay?,
+        payment_type: @resource.identifier.payment_type,
+        paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
+        aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.partner_list&.first,
+        allow_review: @resource.identifier.allow_review?,
+        automatic_ppr: @resource.identifier.automatic_ppr?,
+        man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
+      }
+      render json: dpc_checks
     end
 
-    # Upload files view for resource
-    def up_code
-      @file_model = StashEngine::SoftwareFile
-      @resource_assoc = :software_files
+    def display_collection
+      review = StashDatacite::Resource::Review.new(@resource)
+      render partial: 'stash_datacite/related_identifiers/collection', locals: { review: review, highlight_fields: [] }
+    end
 
-      @file = SoftwareFile.new(resource_id: resource.id) # this seems needed for the upload control
-      @uploads = resource.latest_file_states(model: 'StashEngine::SoftwareFile')
-      if resource.upload_type(association: 'software_files') == :manifest
-        render 'upload_manifest'
-      else
-        render 'upload'
+    def dupe_check
+      dupes = []
+      if @resource.title && @resource.title.length > 3
+        other_submissions = params.key?(:admin) ? StashEngine::Resources.all : current_user.resources
+        other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
+        primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
+        manuscript = @resource.resource_publication.manuscript_number
+        dupes = other_submissions.where(title: @resource.title)&.select(:id, :title).to_a
+        if primary_article.present?
+          dupes.concat(other_submissions.joins(:related_identifiers)
+              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })&.select(:id, :title).to_a)
+        end
+        if manuscript.present?
+          dupes.concat(
+            other_submissions.joins(:resource_publication).find_by(resource_publication: { manuscript_number: manuscript })&.select(:id, :title).to_a
+          )
+        end
       end
-    end
-
-    # upload by manifest view for resource
-    def up_code_manifest
-      @file_model = StashEngine::SoftwareFile
-      @resource_assoc = :software_files
-      render 'upload_manifest'
+      render json: dupes.uniq
     end
 
     # patch request
     # Saves the setting of the import type (manuscript, published, other).  While this is set on the identifier, put it
     # here because we already have the resource controller, including permission checking and no identifier controller.
     def import_type
-      respond_to do |format|
-        format.json do
-          @resource.identifier.update(import_info: params[:import_info])
-          render json: { import_info: params[:import_info] }, status: :ok
-        end
-      end
+      @resource.identifier.update(import_info: params[:import_info])
+      render json: { import_info: params[:import_info] }, status: :ok
     end
 
     private
@@ -258,6 +250,5 @@ module StashEngine
     def update_internal_search
       @resource&.identifier&.update_search_words!
     end
-
   end
 end

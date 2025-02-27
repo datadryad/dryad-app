@@ -78,6 +78,9 @@ figure {
   &.err {
     background-color: $lightest-red;
   }
+  &.warn {
+    background-color: $lightest-orange;
+  }
 }
 
 pre {

@@ -3,7 +3,7 @@
 // ***** General ***** //
 
 $global-search-width: 190px;
-$input-height: 30px;
+$input-height: 34px;
 
 // ***** Colors ***** //
 
@@ -15,12 +15,14 @@ $light-blue: rgb(55, 150, 196);
 $lighter-blue: lighten($light-blue, 25%);
 $lightest-blue: lighten($light-blue, 44%);
 $dark-gray: rgb(78, 80, 80);
+$medium-gray: #767676;
 $light-gray: rgb(157, 159, 162);
 $lighter-gray: rgb(211, 211, 211);
 $lightest-gray: rgb(235, 235, 235);
 $dark-orange: #cf4817;
 $orange: #eb8148;
 $light-orange: rgb(237, 129, 90);
+$lightest-orange: #fff2ce;
 $red: rgb(209, 44, 29);
 $lightest-red: rgb(249, 213, 210);
 $dark-green: #3c763d;

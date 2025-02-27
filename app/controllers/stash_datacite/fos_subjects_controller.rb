@@ -17,6 +17,11 @@ module StashDatacite
       end
     end
 
+    # GET /fos_subjects
+    def index
+      render json: StashDatacite::Subject.fos.pluck(:subject).uniq.sort
+    end
+
     def resource
       @resource ||= StashEngine::Resource.find(params[:id])
     end

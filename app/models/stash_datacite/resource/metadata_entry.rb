@@ -18,6 +18,19 @@ module StashDatacite
           .find_or_create_by(resource_id: @resource.id)
       end
 
+      def resource_publications
+        @resource_publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :primary_article)
+        @primary_article = @resource.related_identifiers.where(work_type: 'primary_article').first || StashDatacite::RelatedIdentifier.new(
+          resource_id: @resource.id, related_identifier_type: 'doi', work_type: 'primary_article'
+        )
+      end
+
+      def descriptions
+        @abstract = Description.type_abstract.find_or_create_by(resource_id: @resource.id)
+        @methods = Description.type_methods.find_or_create_by(resource_id: @resource.id)
+        @technical_info = Description.type_technical_info.find_or_create_by(resource_id: @resource.id)
+      end
+
       def title
         @title = @resource.title
       end
@@ -28,22 +41,6 @@ module StashDatacite
 
       def authors
         @authors = StashEngine::Author.where(resource_id: @resource.id)
-      end
-
-      def abstract
-        @abstract = Description.type_abstract.find_or_create_by(resource_id: @resource.id)
-      end
-
-      def methods
-        @methods = Description.type_methods.find_or_create_by(resource_id: @resource.id)
-      end
-
-      def technical_info
-        @technical_info = Description.type_technical_info.find_or_create_by(resource_id: @resource.id)
-      end
-
-      def other
-        @other = Description.type_other.find_or_create_by(resource_id: @resource.id)
       end
 
       def new_subject
@@ -62,22 +59,12 @@ module StashDatacite
         @contributors = Contributor.where(resource_id: @resource.id).where(contributor_type: :funder)
       end
 
-      def contributor_groupings
-        @contributor_groupings = ContributorGrouping.all
-      end
-
       def new_related_identifier
         @related_identifier = RelatedIdentifier.new(resource_id: @resource.id)
       end
 
       def related_identifiers
         @related_identifiers = RelatedIdentifier.where(resource_id: @resource.id)
-      end
-
-      def api_journals
-        @api_journals = StashEngine::User.joins('inner join oauth_applications on owner_id = stash_engine_users.id')
-          .joins(:roles).where(roles: { role_object_type: ['StashEngine::Journal', 'StashEngine::JournalOrganization'] })
-          .distinct.map(&:journals_as_admin).flatten.uniq.map(&:issn_array).flatten.uniq
       end
 
       def new_geolocation_point

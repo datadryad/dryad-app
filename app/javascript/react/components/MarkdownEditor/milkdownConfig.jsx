@@ -8,6 +8,9 @@ const dryadConfig = (ctx) => {
     ...prev,
     attributes: {
       class: 'milkdown dryad-milkdown-theme',
+      'aria-errormessage': 'readme_error',
+      'aria-labelledby': 'md_editor_label',
+      'aria-describedby': 'md_editor_desc',
     },
   }));
 };

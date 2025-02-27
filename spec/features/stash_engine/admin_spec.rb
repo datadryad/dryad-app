@@ -34,8 +34,8 @@ RSpec.feature 'Admin', type: :feature do
       @identifier.edit_code = Faker::Number.number(digits: 4)
       @identifier.save
       @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
-      visit "edit/#{@identifier.identifier}/#{@identifier.edit_code}"
-      expect(page).to have_text('Describe your dataset')
+      visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
+      expect(page).to have_text('Dataset submission preview')
       expect(page).to have_text('User settings')
     end
 

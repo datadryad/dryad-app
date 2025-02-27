@@ -2,7 +2,6 @@
 <% unless resource&.users&.include?(current_user) %>
   <% revertible = resource.identifier.resources.count > 1 %>
   <div class="c-admin-editing-banner">
-    <div class="o-div__placeholder"></div>
     <div class="o-div__editing_msg">
       You are editing <%= resource.submitter.name %>'s dataset.
       <% unless revertible %>

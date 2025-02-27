@@ -80,24 +80,6 @@ module StashDatacite
         end
       end
 
-      describe '#abstract' do
-        it 'extracts the abstract' do
-          expect(metadata_entry.abstract).to eq(resource.descriptions.where(description_type: :abstract).first)
-        end
-      end
-
-      describe '#methods' do
-        it 'extracts the methods' do
-          expect(metadata_entry.methods).to eq(resource.descriptions.where(description_type: :methods).first)
-        end
-      end
-
-      describe '#other' do
-        it 'extracts the "other" description' do
-          expect(metadata_entry.other).to eq(resource.descriptions.where(description_type: :other).first)
-        end
-      end
-
       describe '#subjects' do
         it 'extracts the subjects' do
           expect(metadata_entry.subjects).to eq(resource.subjects)

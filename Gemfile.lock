@@ -761,6 +761,7 @@ GEM
 PLATFORMS
   arm64-darwin-24
   x86_64-darwin-17
+  x86_64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
