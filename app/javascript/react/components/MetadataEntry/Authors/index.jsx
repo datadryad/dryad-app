@@ -15,7 +15,7 @@ export const authorCheck = (resource) => {
     );
   }
   if (!submitter.author_email) {
-    const ind = authors.findIndex((a) => a.id === submitter.id);
+    const ind = authors.filter((a) => a.author_org_name === null).findIndex((a) => a.id === submitter.id);
     return (
       <p className="error-text" id="author_email_error" data-index={ind}>Submitting author email is required</p>
     );
@@ -30,8 +30,9 @@ export const authorCheck = (resource) => {
   }
   const affErr = authors.findIndex((a) => !a.author_org_name && !a.affiliations?.[0]?.long_name);
   if (affErr >= 0) {
+    const ind = authors.filter((a) => a.author_org_name === null).findIndex((a) => !a.affiliations?.[0]?.long_name);
     return (
-      <p className="error-text" id="author_aff_error" data-index={affErr}>{upCase(ordinalNumber(affErr + 1))} author affiliation is required</p>
+      <p className="error-text" id="author_aff_error" data-index={ind}>{upCase(ordinalNumber(affErr + 1))} author affiliation is required</p>
     );
   }
   const dupeName = authors.findIndex((a, i) => authors.find((au, x) => (i === x ? false : checkName(a) === checkName(au))));
@@ -49,8 +50,9 @@ export const authorCheck = (resource) => {
   if (dupeEmail >= 0) {
     const email = authors[dupeEmail].author_email;
     const last = authors.findLastIndex((a) => a.author_email === email);
+    const ind = authors.filter((a) => a.author_org_name === null).findLastIndex((a) => a.author_email === email);
     return (
-      <p className="error-text" id="author_email_error" data-index={last}>
+      <p className="error-text" id="author_email_error" data-index={ind}>
         The {ordinalNumber(last + 1)} author&apos;s email address is the same as the {ordinalNumber(dupeEmail + 1)} author. Is this a duplicate?
       </p>
     );
