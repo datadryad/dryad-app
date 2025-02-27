@@ -77,7 +77,7 @@ module StashDatacite
       end
 
       def readme_content
-        if technical_info.try(:description).blank?
+        if @resource.complete_readme.blank?
           readme_file = @resource.current_file_uploads.where(upload_file_name: 'README.md')&.first
           # Render only README file content in UTF 8 encoding
           content = readme_file&.file_content || ''
@@ -87,7 +87,7 @@ module StashDatacite
             JSON.parse(technical_info.try(:description))
             @readme_content ||= nil
           rescue StandardError
-            @readme_content ||= technical_info.try(:description)
+            @readme_content ||= @resource.complete_readme
           end
         end
       end

@@ -99,6 +99,9 @@ module Datacite
       def add_descriptions(dcs_resource)
         se_resource.descriptions.where.not(description: nil).each do |d|
           next if d.description.blank?
+          next if d.description_type == 'usage_notes'
+
+          d.description = se_resource.complete_readme if d.description_type == 'technicalinfo'
 
           dcs_resource.descriptions << Description.new(
             value: ActionController::Base.helpers.strip_tags(d.description),

@@ -1,4 +1,4 @@
-const MAX_LENGTH = 60;
+const MAX_LENGTH = 40;
 
 const ellipsisize = (url) => {
     if (url.length <= MAX_LENGTH) return url;

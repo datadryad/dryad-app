@@ -65,6 +65,8 @@ module DatasetHelper
     fill_in_author
     fill_in_research_domain
     fill_in_keywords
+    click_button 'Validation'
+    fill_in_validation
   end
 
   def add_required_abstract
@@ -133,6 +135,12 @@ module DatasetHelper
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
+  end
+
+  def fill_in_validation
+    within_fieldset('Does your data contain information on human subjects?') do
+      find(:label, 'No').click
+    end
   end
 
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))

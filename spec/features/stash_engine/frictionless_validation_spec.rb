@@ -71,17 +71,17 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       navigate_to_upload
 
       within('table') do
-        expect(page).not_to have_content('Uploaded Too large for validation')
+        expect(page).not_to have_content('Too large for validation')
       end
     end
 
-    it 'shows Uploaded Too Large For Validation for tabular files greater than the size limit' do
+    it 'shows Too Large For Validation for tabular files greater than the size limit' do
       @file.update(upload_file_size: APP_CONFIG[:maximums][:frictionless] + 1, upload_file_name: 'tabular.csv', original_filename: 'tabular.csv')
       refresh
       navigate_to_upload
 
       within('table') do
-        expect(page).to have_content('Uploaded Too large for validation')
+        expect(page).to have_content('Too large for validation')
       end
     end
 

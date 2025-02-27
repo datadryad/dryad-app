@@ -21,9 +21,8 @@ export default function Affiliations({
     setAffs((afs) => afs.concat([{long_name: '', ror_id: ''}]));
     e.target.blur();
   };
-  const removeAff = (i) => {
-    affs.splice(i, 1);
-    setAffs(affs);
+  const removeAff = (index) => {
+    setAffs((afs) => afs.filter((a, i) => i !== index));
   };
 
   return (

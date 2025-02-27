@@ -60,9 +60,18 @@ export const filesCheck = (files, admin, maximums) => {
     if (urlErrors.length > 0) {
       return (
         <p className="error-text" id="data_error">
-          Individual files cannot be retrieved from the URLs for the following URL upload files.
-          Please check that the URLs are valid, publically accessible, and point to individual file downloads:<br />
+          Files cannot be retrieved from the URLs for the following URL uploads.
+          Please remove them and try again, ensuring the URLs are valid, publically accessible, and point to individual files:<br />
           {urlErrors.map((f) => f.upload_file_name).join(', ')}
+        </p>
+      );
+    }
+    const uploadErrors = data.filter((f) => !f.dl_url && f.status === 'Uploaded');
+    if (uploadErrors.length > 0) {
+      return (
+        <p className="error-text" id="data_error">
+          There was an error with the following upload{uploadErrors.length > 1 && 's'}. Please remove them and try again:<br />
+          {uploadErrors.map((f) => f.upload_file_name).join(', ')}
         </p>
       );
     }
