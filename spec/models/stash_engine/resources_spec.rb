@@ -1659,5 +1659,12 @@ module StashEngine
       end
     end
 
+    describe 'destroy' do
+      before do
+        allow_any_instance_of(Stash::Aws::S3).to receive(:delete_dir)
+      end
+
+      it_should_behave_like 'soft delete record', :resource
+    end
   end
 end

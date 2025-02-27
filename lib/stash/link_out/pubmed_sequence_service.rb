@@ -34,7 +34,7 @@ module Stash
         return nil unless pmid.present?
 
         hash = {}
-        StashEngine::ExternalReference.sources.each do |db|
+        StashEngine::ExternalReference.sources.each_key do |db|
           query = "dbfrom=pubmed&db=#{db}&id=#{pmid}&api_key=#{@ftp.api_key}"
           genbank_ids = extract_genbank_ids(get_xml_from_api(@genbank_api, query))
           hash[db] = genbank_ids unless genbank_ids.empty?
@@ -73,7 +73,7 @@ module Stash
       def generate_links_file!
         doc = start_sequence_file
 
-        StashEngine::ExternalReference.sources.each do |db|
+        StashEngine::ExternalReference.sources.each_key do |db|
           identifiers = StashEngine::Identifier.cited_by_external_site(db).map do |identifier|
             {
               doi: identifier.to_s,

@@ -68,7 +68,7 @@ module StashEngine
       end
 
       it 'returns a default readable version of the remaining statuses' do
-        CurationActivity.statuses.each do |s|
+        CurationActivity.statuses.each_key do |s|
           unless %w[peer_review action_required unchanged].include?(s)
             @ca.send("#{s}!")
             expect(@ca.readable_status).to eql(s.humanize)
@@ -162,7 +162,7 @@ module StashEngine
           allow_any_instance_of(StashEngine::UserMailer).to receive(:journal_published_notice).and_return(true)
         end
 
-        StashEngine::CurationActivity.statuses.each do |status|
+        StashEngine::CurationActivity.statuses.each_key do |status|
           if %w[published embargoed peer_review submitted withdrawn].include?(status)
             it "sends email when '#{status}'" do
               expect_any_instance_of(StashEngine::UserMailer).to receive(:status_change)

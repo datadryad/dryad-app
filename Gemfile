@@ -171,4 +171,5 @@ group :development do
   gem 'bullet'
 end
 
+gem 'acts_as_paranoid', '~> 0.10.3'
 gem "paper_trail", "~> 16.0"
