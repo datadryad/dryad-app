@@ -62,7 +62,7 @@ module StashEngine
     has_many :supp_files, class_name: 'StashEngine::SuppFile', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
-    has_many :users, -> { select('stash_engine_users.*', 'stash_engine_roles.role') }, through: :roles, class_name: 'StashEngine::User'
+    has_many :users, through: :roles, class_name: 'StashEngine::User'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
