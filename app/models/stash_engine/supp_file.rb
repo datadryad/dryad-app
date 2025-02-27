@@ -59,7 +59,7 @@ module StashEngine
 
     def public_download_url
       url = public_zenodo_download_url if resource.zenodo_published?
-      url ||= zenodo_presigned_url if resource.zenodo_copies.software&.last&.deposition_id
+      url ||= zenodo_presigned_url if resource.zenodo_copies.supp&.last&.deposition_id
       url ||= nil
       url
     end
