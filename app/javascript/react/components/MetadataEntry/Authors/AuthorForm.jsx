@@ -5,7 +5,7 @@ import Affiliations from './Affiliations';
 import OrcidInfo from './OrcidInfo';
 
 export default function AuthorForm({
-  author, update, ownerId, admin,
+  author, update, curator,
 }) {
   const formRef = useRef(0);
   const [affiliations, setAffiliations] = useState(author?.affiliations);
@@ -136,7 +136,7 @@ export default function AuthorForm({
               </div>
               <Affiliations formRef={formRef} id={author.id} affiliations={affiliations} setAffiliations={setAffiliations} />
               <div className="input-line" style={{flexBasis: '100%', maxWidth: '100%', marginTop: '.5em'}}>
-                <OrcidInfo author={author} curator={admin} ownerId={ownerId} />
+                <OrcidInfo author={author} curator={curator} />
               </div>
             </>
           )}
@@ -149,6 +149,5 @@ export default function AuthorForm({
 AuthorForm.propTypes = {
   author: PropTypes.object.isRequired,
   update: PropTypes.func.isRequired,
-  admin: PropTypes.bool.isRequired,
-  ownerId: PropTypes.number.isRequired,
+  curator: PropTypes.bool.isRequired,
 };

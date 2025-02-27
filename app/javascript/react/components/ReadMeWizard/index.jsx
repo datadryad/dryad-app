@@ -20,11 +20,11 @@ export const readmeCheck = (resource) => {
   return <p className="error-text" id="readme_error">A README is required</p>;
 };
 
-export function ReadMePreview({resource, previous, admin}) {
+export function ReadMePreview({resource, previous, curator}) {
   const readmeRef = useRef(null);
   const readme = resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
   const prev = previous?.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
-  const diff = admin && previous && readme !== prev;
+  const diff = curator && previous && readme !== prev;
 
   const getREADME = () => {
     axios.get(`/resources/${resource.id}/display_readme${diff ? '?admin' : ''}`).then((data) => {

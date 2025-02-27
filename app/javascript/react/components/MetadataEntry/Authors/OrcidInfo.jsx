@@ -5,9 +5,7 @@ export const orcidURL = (orcid) => (window.location.hostname === 'datadryad.org'
   ? `https://orcid.org/${orcid}`
   : `https://sandbox.orcid.org/${orcid}`);
 
-export default function OrcidInfo({
-  author, curator, ownerId,
-}) {
+export default function OrcidInfo({author, curator}) {
   const orcidInfo = author.author_orcid ? orcidURL(author.author_orcid) : null;
   return (
     <>
@@ -15,11 +13,6 @@ export default function OrcidInfo({
         <span>
           <i className="fab fa-orcid" aria-hidden="true" />&nbsp;
           <a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{author.author_orcid}</a>
-        </span>
-      )}
-      {ownerId === author.id && (
-        <span>
-          <i className="fas fa-address-card" aria-hidden="true" />&nbsp;Submitter
         </span>
       )}
       {(curator && !orcidInfo && author.orcid_invite_path) ? (
@@ -37,5 +30,4 @@ OrcidInfo.propTypes = {
     PropTypes.string,
     PropTypes.bool,
   ]).isRequired,
-  ownerId: PropTypes.number.isRequired,
 };

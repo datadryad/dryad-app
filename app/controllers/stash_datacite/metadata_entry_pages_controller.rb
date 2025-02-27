@@ -10,8 +10,8 @@ module StashDatacite
 
       @submission = @resource.as_json(
         include: [:tenant, :resource_type, :resource_publication, :resource_preprint, :journal,
-                  :related_identifiers, :edit_histories, :contributors, :subjects, :descriptions,
-                  { authors: { include: [:affiliations] },
+                  :related_identifiers, :edit_histories, :contributors, :subjects, :descriptions, :users,
+                  { authors: { methods: [:orcid_invite_path], include: [:affiliations] },
                     identifier: { include: %i[process_date software_license] },
                     previous_curated_resource: {
                       include: [:tenant, :subjects, :descriptions, :resource_publication, :journal, :related_identifiers, :contributors,

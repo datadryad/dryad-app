@@ -19,7 +19,7 @@ const citename = (author) => {
   return [author?.author_last_name, author?.author_first_name].filter(Boolean).join(', ');
 };
 
-export default function AuthPreview({resource, previous, admin}) {
+export default function AuthPreview({resource, previous, curator}) {
   const {authors} = resource;
   const prev_auth = previous?.authors || [];
   const affs = getAffs(authors);
@@ -71,8 +71,8 @@ export default function AuthPreview({resource, previous, admin}) {
                       <i className="fa fa-envelope" aria-hidden="true" />
                     </a>
                   )}
-                  {admin && !author.corresp && (
-                    <sup title="Shown for admin">
+                  {curator && !author.corresp && (
+                    <sup title="Shown for curators">
                       {previous && author.author_email !== prev?.author_email ? <ins>{author.author_email}</ins> : author.author_email}
                     </sup>
                   )}
@@ -111,7 +111,7 @@ export default function AuthPreview({resource, previous, admin}) {
             {affs.map((aff, i) => (
               <li key={aff[0]} id={`aff${aff[0]}`}>
                 {previous && aff[1] !== prev_affs[i]?.[1] ? <ins>{aff[1]}</ins> : aff[1]}
-                {admin && !aff[2] && (
+                {curator && !aff[2] && (
                   <i
                     className="fas fa-triangle-exclamation unmatched-icon"
                     role="note"

@@ -6,13 +6,14 @@ export {default as AuthPreview} from './AuthPreview';
 
 const checkName = (a) => [a.author_first_name, a.author_last_name, a.author_org_name].filter(Boolean).join(' ').toLowerCase();
 
-export const authorCheck = (authors, id) => {
-  if (!authors.find((a) => a.id === id)?.author_email) {
+export const authorCheck = (resource) => {
+  const {authors} = resource;
+  /* if (!authors.find((a) => a.id === id)?.author_email) {
     const ind = authors.findIndex((a) => a.id === id);
     return (
       <p className="error-text" id="author_email_error" data-index={ind}>Submitting author email is required</p>
     );
-  }
+  } */
   const fnameErr = authors.findIndex((a) => !a.author_first_name && !a.author_org_name);
   if (fnameErr >= 0) {
     return (
