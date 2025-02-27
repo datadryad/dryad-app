@@ -5,7 +5,7 @@ import Calculations from './Calculations';
 import InvoiceForm from './InvoiceForm';
 
 export default function Agreements({
-  resource, setResource, form, previous, ownerId, setAuthorStep, config, preview = false,
+  resource, setResource, form, previous, setAuthorStep, config, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -194,7 +194,7 @@ export default function Agreements({
       ) : (
         <>
           {subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && dpc.user_must_pay && (
-            <InvoiceForm resource={resource} setResource={setResource} ownerId={ownerId} />
+            <InvoiceForm resource={resource} setResource={setResource} />
           )}
           {(subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay)) && (
             <>
