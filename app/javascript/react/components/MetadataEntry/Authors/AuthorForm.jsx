@@ -1,14 +1,17 @@
 import React, {useState, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
-import PropTypes from 'prop-types';
 import Affiliations from './Affiliations';
 import OrcidInfo from './OrcidInfo';
+import Editor from './Editor';
 
 export default function AuthorForm({
-  author, update, curator,
+  author, users, update, user,
 }) {
   const formRef = useRef(0);
   const [affiliations, setAffiliations] = useState(author?.affiliations);
+  const editor = author.author_orcid && users.filter((u) => u.role !== 'creator').find((u) => u.orcid === author.author_orcid);
+  const creator = users.find((u) => u.role === 'creator');
+  const isCreator = user.id === creator.id;
 
   const submitForm = (values) => {
     const submit = {
@@ -98,17 +101,27 @@ export default function AuthorForm({
                 />
                 <div id={`${author.id}lname-ex`}><i />Family name</div>
               </div>
-              <div className="input-stack">
-                <div
-                  className="input-line"
-                  style={{
-                    gap: '1ch', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'nowrap',
-                  }}
-                >
+              <Affiliations formRef={formRef} id={author.id} affiliations={affiliations} setAffiliations={setAffiliations} />
+              <div className="author-form email-opts">
+                <div className="input-stack">
                   <label className={`input-label ${(author.author_orcid ? 'required' : '')}`} htmlFor={`author_email__${author.id}`}>
-                    Email
+                    Email address
                   </label>
-                  <span className="radio_choice" style={{fontSize: '.98rem'}}>
+                  <Field
+                    id={`author_email__${author.id}`}
+                    name="author_email"
+                    type="text"
+                    className="c-input__text"
+                    aria-errormessage="author_email_error"
+                    aria-describedby={`${author.id}email-ex`}
+                    validate={validateEmail}
+                    onBlur={handleSubmit}
+                  />
+                  {errors.author_email && touched.author_email && <span className="c-ac__error_message">{errors.author_email}</span>}
+                  <div id={`${author.id}email-ex`}><i />name@institution.org</div>
+                </div>
+                <div className="input-stack author-one-line" style={{gap: '.5ch'}}>
+                  <div className="radio_choice">
                     <label title={author.author_email ? null : 'Author email must be entered'}>
                       <input
                         type="checkbox"
@@ -117,26 +130,12 @@ export default function AuthorForm({
                         aria-errormessage="author_corresp_error"
                         onChange={(e) => update({...author, corresp: e.target.checked})}
                       />
-                      Corresponding
+                      Publish email
                     </label>
-                  </span>
+                  </div>
+                  <OrcidInfo author={author} curator={user.curator} />
                 </div>
-                <Field
-                  id={`author_email__${author.id}`}
-                  name="author_email"
-                  type="text"
-                  className="c-input__text"
-                  aria-errormessage="author_email_error"
-                  aria-describedby={`${author.id}email-ex`}
-                  validate={validateEmail}
-                  onBlur={handleSubmit}
-                />
-                {errors.author_email && touched.author_email && <span className="c-ac__error_message">{errors.author_email}</span>}
-                <div id={`${author.id}email-ex`}><i />name@institution.org</div>
-              </div>
-              <Affiliations formRef={formRef} id={author.id} affiliations={affiliations} setAffiliations={setAffiliations} />
-              <div className="input-line" style={{flexBasis: '100%', maxWidth: '100%', marginTop: '.5em'}}>
-                <OrcidInfo author={author} curator={curator} />
+                <Editor author={author} editor={editor} permission={isCreator || user.curator} />
               </div>
             </>
           )}
@@ -145,9 +144,3 @@ export default function AuthorForm({
     </Formik>
   );
 }
-
-AuthorForm.propTypes = {
-  author: PropTypes.object.isRequired,
-  update: PropTypes.func.isRequired,
-  curator: PropTypes.bool.isRequired,
-};

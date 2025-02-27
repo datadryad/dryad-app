@@ -7,13 +7,19 @@ export {default as AuthPreview} from './AuthPreview';
 const checkName = (a) => [a.author_first_name, a.author_last_name, a.author_org_name].filter(Boolean).join(' ').toLowerCase();
 
 export const authorCheck = (resource) => {
-  const {authors} = resource;
-  /* if (!authors.find((a) => a.id === id)?.author_email) {
-    const ind = authors.findIndex((a) => a.id === id);
+  const {authors, users} = resource;
+  const submitter = authors.find((a) => a.author_orcid === users.find((u) => u.role === 'submitter')?.orcid);
+  if (!submitter) {
+    return (
+      <p className="error-text" id="submitter_error">A submitting author is required</p>
+    );
+  }
+  if (!submitter.author_email) {
+    const ind = authors.findIndex((a) => a.id === submitter.id);
     return (
       <p className="error-text" id="author_email_error" data-index={ind}>Submitting author email is required</p>
     );
-  } */
+  }
   const fnameErr = authors.findIndex((a) => !a.author_first_name && !a.author_org_name);
   if (fnameErr >= 0) {
     return (
@@ -51,7 +57,7 @@ export const authorCheck = (resource) => {
   }
   if (!authors.some((a) => a.corresp)) {
     return (
-      <p className="error-text" id="author_corresp_error">At least 1 corresponding author is required</p>
+      <p className="error-text" id="author_corresp_error">At least 1 published email is required</p>
     );
   }
   return false;
