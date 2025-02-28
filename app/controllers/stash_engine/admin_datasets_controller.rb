@@ -67,6 +67,7 @@ module StashEngine
         attributes[:id] = @resource.flag.id if @resource&.flag&.present?
         @resource.update(flag_attributes: attributes)
       end
+      @resource.reload
       respond_to(&:js)
     end
 
