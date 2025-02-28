@@ -217,7 +217,8 @@ module StashApi
     def ensure_license
       return unless @resource.rights.blank?
 
-      license = StashEngine::License.by_id(@resource.identifier.license_id)
+      @resource.identifier.update(license_id: 'cc0')
+      license = StashEngine::License.by_id('cc0')
       @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
     end
 

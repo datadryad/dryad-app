@@ -120,7 +120,7 @@ export default function Validation({resource, setResource}) {
               onChange={licenseChange}
               aria-errormessage="license_error"
             />
-            By checking this box, I confirm that my files are compatible with the CC0 license waiver.
+            By checking this box, I confirm that my files are compatible with the CC0 license waiver
           </label>
         </p>
       </fieldset>
