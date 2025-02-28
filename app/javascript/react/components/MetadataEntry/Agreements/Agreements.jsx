@@ -129,7 +129,9 @@ export default function Agreements({
           )}
           {!curated && dpc.allow_review ? (
             <fieldset onChange={togglePPR}>
-              <legend role="heading" aria-level="3" style={{display: 'block', margin: '0'}} className="o-heading__level3">{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</legend>
+              <legend role="heading" aria-level="3" style={{display: 'block', margin: '0'}} className="o-heading__level3">
+                {subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?
+              </legend>
               <p className="radio_choice">
                 <label style={!ppr ? {fontWeight: 'bold'} : {}}>
                   <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
