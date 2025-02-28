@@ -100,6 +100,7 @@ Rails.application.routes.draw do
         get 'display_collection'
         get 'show_files'
         patch 'import_type'
+        patch 'license_agree'
       end
     end
 

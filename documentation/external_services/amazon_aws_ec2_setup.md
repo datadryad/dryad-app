@@ -291,6 +291,40 @@ To get Apache using the new certificates:
 2. Restart Apache
 3. In AWS, rebuild the Target Group (as in the section above), using HTTPS setting instead of HTTP.
 
+Verify the certificates and check expiration dates (on all servers)
+```
+curl --insecure -vvI https://localhost 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'
+```
+
+
+To renew the LetsEncrypt certificates
+--------------------------------------
+
+1. Set load balancerr to only point to the first server, which is the one with certbot installed
+2. Ensure the config includes both port 80 and port 443
+```
+sudo emacs apache/conf.d/datadryad.org.conf
+sudo systemctl restart httpd
+```
+3. Create and apply new certificate
+```
+sudo certbot certonly --apache
+```
+4. Copy the keys to the correct locations
+```
+sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/fullchain.pem /etc/pki/tls/certs/letsencrypt.crt
+sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/privkey.pem /etc/pki/tls/private/letsencrypt.key
+```
+5. Restart apache to use new certs
+```
+sudo systemctl restart https
+```
+6. Copy certs to other servers and restart their Apaches too
+7. Verify certificates (on all servers)
+```
+curl --insecure -vvI https://localhost 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'
+```
+
 
 Set up shibboleth service provider
 ==================================

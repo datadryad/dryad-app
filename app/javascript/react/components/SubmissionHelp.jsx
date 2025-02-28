@@ -42,21 +42,6 @@ export function AuthHelp() {
   );
 }
 
-export function SuppHelp({type}) {
-  return (
-    <>
-      <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can aid in connections between your data and other systems and works.</p>
-      <p>Your funder may cover the Dryad <a href="/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
-    </>
-  );
-}
-
-export function SubjHelp() {
-  return (
-    <p>Dryad requires one research domain (from the <a href="https://en.wikipedia.org/wiki/Fields_of_Science_and_Technology" target="_blank" rel="noreferrer">OECD Fields of Science and Technology<span className="screen-reader-only"> (opens in new window)</span></a>) and at least 3 subject keywords per submission.</p>
-  );
-}
-
 export function DescHelp({type}) {
   return (
     <>
@@ -71,22 +56,68 @@ export function DescHelp({type}) {
   );
 }
 
+export function SubjHelp() {
+  return (
+    <p>Dryad requires one research domain (from the <a href="https://en.wikipedia.org/wiki/Fields_of_Science_and_Technology" target="_blank" rel="noreferrer">OECD Fields of Science and Technology<span className="screen-reader-only"> (opens in new window)</span></a>) and at least 3 subject keywords per submission.</p>
+  );
+}
+
+export function SuppHelp({type}) {
+  return (
+    <>
+      <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can aid in connections between your data and other systems and works.</p>
+      <p>Your funder may cover the Dryad <a href="/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
+    </>
+  );
+}
+
+export function ValHelp() {
+  return (
+    <>
+      <p>
+        Dryad data is licensed as{' '}
+        <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">
+          Public domain
+          <span role="img" aria-label="CC0 (opens in new window)" style={{marginLeft: '.25ch'}}>
+            <i className="fab fa-creative-commons" aria-hidden="true" />
+            <i className="fab fa-creative-commons-zero" aria-hidden="true" />
+          </span>
+        </a>
+        . Data that comes from a source that is copyrighted cannot be published on Dryad.
+        Note that data published on open-access sites or by journals does not guarantee that it is licensed under CC0.
+        For example, sources may allow for data reuse but could require citation for data manipulation (i.e.,{' '}
+        <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noreferrer">
+          Attribution
+          <span role="img" aria-label="CC-BY (opens in new window)" style={{marginLeft: '.25ch'}}>
+            <i className="fab fa-creative-commons" aria-hidden="true" />
+            <i className="fab fa-creative-commons-by" aria-hidden="true" />
+          </span>
+        </a>).
+      </p>
+      <p>
+        Any human subjects data must be properly anonymized and prepared under applicable legal and ethical guidelines.
+        Dryad cannot publish any direct identifiers or more than three indirect identifiers. Please see our{' '}
+        <a href="/docs/HumanSubjectsData.pdf" target="_blank">
+          human subjects guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" />
+          <span className="screen-reader-only"> (opens in new window)</span>
+        </a> for a sample list of potential direct and indirect identifiers.
+      </p>
+      <p>
+        Data involving endangered species must also be appropriate for the public domain. See our{' '}
+        <a href="/docs/EndangeredSpeciesData.pdf" target="_blank">
+          species conservation guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" />
+          <span className="screen-reader-only"> (opens in new window)</span>
+        </a> for information about masking endangered species data.
+      </p>
+    </>
+  );
+}
+
 export function FilesHelp() {
   return (
     <>
       <p>Files may be uploaded from your computer, or by entering a publically accessible, individual URL for each file (for files hosted on e.g. Box, Dropbox, AWS, or your lab server).</p>
       <p>Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
-      <p>
-        Any human subjects data or species data must be properly anonymized and prepared under applicable legal and ethical guidelines. Please see our{' '}
-        <a href="/docs/HumanSubjectsData.pdf" target="_blank">
-          human subjects guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" />
-          <span className="screen-reader-only"> (opens in new window)</span>
-        </a> and{' '}
-        <a href="/docs/EndangeredSpeciesData.pdf" target="_blank">
-          species conservation guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" />
-          <span className="screen-reader-only"> (opens in new window)</span>
-        </a>.
-      </p>
       <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<span className="screen-reader-only"> (opens in new window)</span></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
     </>
   );

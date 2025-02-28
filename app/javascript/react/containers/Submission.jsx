@@ -16,7 +16,7 @@ import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
 import Agreements from '../components/MetadataEntry/Agreements';
 import SubmissionHelp, {
-  PublicationHelp, AuthHelp, SuppHelp, SubjHelp, DescHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
+  PublicationHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, ValHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
 /* eslint-disable jsx-a11y/no-autofocus */
 
@@ -85,7 +85,7 @@ function Submission({
       pass: !validationCheck(resource),
       fail: (review || step.index > 4) && validationCheck(resource),
       component: <Validation resource={resource} setResource={setResource} />,
-      help: null,
+      help: <ValHelp />,
       preview: <ValPreview resource={resource} previous={previous} />,
     },
     {

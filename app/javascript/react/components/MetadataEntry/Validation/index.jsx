@@ -3,7 +3,13 @@ import React from 'react';
 export {default} from './Validation';
 
 export const validationCheck = (resource) => {
+  const {license_id} = resource.identifier;
   const disclaimer = resource.descriptions.find((d) => d.description_type === 'usage_notes');
+  if (!license_id) {
+    return (
+      <p className="error-text" id="license_error">Completion of the validation questionnaire is required</p>
+    );
+  }
   if (!disclaimer) {
     return (
       <p className="error-text" id="hsi_error">Completion of the validation questionnaire is required</p>
@@ -18,16 +24,30 @@ export const validationCheck = (resource) => {
 };
 
 export function ValPreview({resource}) {
+  const {license_id} = resource.identifier;
   const disclaimer = resource.descriptions.find((d) => d.description_type === 'usage_notes');
-
-  if (disclaimer) {
-    return (
-      <p>
-        <i className="fa-solid fa-circle-check" aria-hidden="true" />{' '}
-        The data {disclaimer.description ? 'contains' : 'does not contain'} information on human subjects.
-        {disclaimer.description?.split(/\s/)?.length > 9 && ' The human subjects data statement appears in the README.'}
-      </p>
-    );
-  }
-  return null;
+  return (
+    <>
+      {license_id === 'cc0' && (
+        <p>
+          <i className="fa-solid fa-circle-check" aria-hidden="true" />{' '}
+          Data submitted will be publised under the{' '}
+          <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">
+          Public domain
+            <span role="img" aria-label="CC0 (opens in new window)" style={{marginLeft: '.25ch'}}>
+              <i className="fab fa-creative-commons" aria-hidden="true" />
+              <i className="fab fa-creative-commons-zero" aria-hidden="true" />
+            </span>
+          </a>{' '}license waiver.
+        </p>
+      )}
+      {disclaimer && (
+        <p>
+          <i className="fa-solid fa-circle-check" aria-hidden="true" />{' '}
+          The data {disclaimer.description !== null ? 'contains' : 'does not contain'} information on human subjects.
+          {disclaimer.description?.split(/\s/)?.length > 9 && ' The human subjects data statement appears in the README.'}
+        </p>
+      )}
+    </>
+  );
 }

@@ -38,7 +38,7 @@ module DatasetHelper
     # e.g. `it 'should test this amazing thing', js: true do`
     page.find('#checklist-button').click unless page.has_button?('Agreements')
     click_button 'Agreements'
-    expect(page).to have_content('Publication of your files')
+    expect(page).to have_content('Are your files ready to publish')
     agree_to_everything
     click_button 'Preview submission'
     expect(page).to have_content('Dataset submission preview')
@@ -138,6 +138,7 @@ module DatasetHelper
   end
 
   def fill_in_validation
+    check 'By checking this box, I confirm that my files are compatible with the CC0 license waiver'
     within_fieldset('Does your data contain information on human subjects?') do
       find(:label, 'No').click
     end
