@@ -1,7 +1,7 @@
 module StashEngine
   class AdminDatasetsPolicy < ApplicationPolicy
 
-    def activity_log?
+    def index?
       @user.min_admin?
     end
 

@@ -4,6 +4,7 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
+    protect_from_forgery except: :activity_log
     before_action :load, only: %i[popup note_popup waiver_add flag edit_delete_reference_date update_delete_reference_date]
 
     def popup
@@ -70,18 +71,23 @@ module StashEngine
     end
 
     # show curation activities for this item
-    def activity_log
+    def index
       authorize %i[stash_engine admin_datasets]
+      @identifier = Identifier.find(params[:id])
+      @internal_data = InternalDatum.where(identifier_id: @identifier.id)
+    rescue ActiveRecord::RecordNotFound
+      admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
+      redirect_to admin_path, notice: "Identifier ID #{params[:id]} no longer exists."
+    end
+
+    def activity_log
       @identifier = Identifier.find(params[:id])
       resource_ids = @identifier.resources.collect(&:id)
       ord = helpers.sortable_table_order(whitelist: %w[created_at])
       @curation_activities = CurationActivity.where(resource_id: resource_ids)
         .includes(:resource, :user, resource: [:stash_version])
         .order(ord, id: :asc)
-      @internal_data = InternalDatum.where(identifier_id: @identifier.id)
-    rescue ActiveRecord::RecordNotFound
-      admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
-      redirect_to admin_path, notice: "Identifier ID #{params[:id]} no longer exists."
+      respond_to(&:js)
     end
 
     def edit_delete_reference_date

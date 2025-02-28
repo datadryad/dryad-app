@@ -1,10 +1,14 @@
 <% @page_title = "Activity log for #{@identifier.to_s}" %>
 <% r = @identifier&.latest_resource %>
-<h1 class="o-heading__level1">Activity log for <%= r&.title %></h1>
+
+<%= render partial: 'privileged_banner' %>
+<div class="admin-dashboard-header">
+  <h1 class="o-heading__level1"><%= r&.title %></h1>
+  <%= @identifier.identifier %>
+</div>
 
 <div style="display: flex; align-items: center; justify-content: space-between; column-gap: 2ch; row-gap: .5ch; flex-wrap: wrap;">
   <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 1ch;">
-    <%= @identifier.identifier %>
     <% if policy(r).flag? %>
       <span id="resource_flag">
         <% if r&.flag&.present? %>        
@@ -31,39 +35,7 @@
     <% end %>
   </div> 
 </div>
-<div class="table-wrapper c-lined-table-wrapper" style="clear: both;" role="region" tabindex="0" aria-label="Curation table">
-  <table class="c-lined-table" id="curation_table">
-    <thead>
-    <tr>
-      <th>
-        Resource ID
-      </th>
-      <th class="c-lined-table__sort" <%= sort_display('created_at') %>>
-        <%= sortable_column_head sort_field: 'created_at', title: 'Timestamp' %>
-      </th>
-      <th>
-        Version
-      </th>
-      <th>
-        Status
-      </th>
-      <th>
-        Action taken by
-      </th>
-      <th>
-        Notes
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @curation_activities.each do |ca| %>
-      <%= render partial: 'activity_log_row', locals: { curation_activity: ca } %>
-    <% end %>
-  </tbody>
-  </table>
-</div>
-
-
+<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction] || 'desc', page_size: params[:page_size], page: params[:page]) %>"></div>
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
   <div id="salesforce_links" style="clear: both">
     <div style="float: left"><h2 id="salesforce-cases">Salesforce cases</h2></div>
@@ -235,8 +207,8 @@
         </p>
       <% end %>
     </div>
-
   </div>
+
   <script type="text/javascript">
     (function () {
       window.onpageshow = function(event) {
