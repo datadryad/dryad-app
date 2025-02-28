@@ -5,12 +5,15 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     protect_from_forgery except: :activity_log
-    before_action :load, only: %i[popup note_popup waiver_add flag edit_delete_reference_date update_delete_reference_date]
+    before_action :load, only: %i[popup note_popup waiver_add flag update_delete_reference_date]
 
     def popup
       case @field
       when 'flag'
         authorize @resource, :flag?
+      when 'notification_date'
+        authorize %i[stash_engine admin_datasets], :notification_date?
+        @desc = 'Notification date'
       when 'note'
         authorize %i[stash_engine admin_datasets], :note_popup?
         @curation_activity = CurationActivity.new(
@@ -31,7 +34,6 @@ module StashEngine
         authorize %i[stash_engine admin_datasets], :waiver_add?
         @desc = 'Add fee waiver'
       end
-
       respond_to(&:js)
     end
 
@@ -91,24 +93,21 @@ module StashEngine
       respond_to(&:js)
     end
 
-    def edit_delete_reference_date
-      @desc = 'Edit dataset deletion date reference'
-      @process_date = @identifier.process_date
-      respond_to(&:js)
-    end
-
     def update_delete_reference_date
-      delete_calculation_date = params.dig(:process_date, :delete_calculation_date)
-      return error_response('Date cannot be blank') if delete_calculation_date.blank?
+      notification_date = params[:notification_date].to_datetime
+      return error_response('Date cannot be blank') if notification_date.blank?
+
+      delete_calculation_date = notification_date - 1.month
+      delete_calculation_date = notification_date - 6.months if @resource.current_curation_status == 'peer_review'
 
       @curation_activity = CurationActivity.create(
-        note: "Changed deletion reference date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe,
+        note: "Changed notification start date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe,
         resource_id: @resource.id, user_id: current_user.id, status: @resource.last_curation_activity&.status
       )
-      @resource.reload
 
-      @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
       @resource.process_date.update(delete_calculation_date: delete_calculation_date)
+      @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
+      @resource.reload
       respond_to(&:js)
     end
 

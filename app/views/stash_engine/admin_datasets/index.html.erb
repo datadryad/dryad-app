@@ -25,7 +25,15 @@
         </span>
       <% end %>
       <span><b>Publication state:</b> <%= @identifier.pub_state.upcase_first %></span>
-      <span><b>Curation state:</b> <%= r.current_curation_status.upcase_first %></span>
+      <span><b>Curation state:</b> <%= r.current_curation_status.humanize %></span>
+      <span class="input-line">
+        <span><b>Notification date:</b> <span id="notification_date"><%= formatted_date(r.process_date.notification_date) %></span></span>
+        <% if r.process_date.notification_date && policy([:stash_engine, :admin_datasets]).notification_date? %>
+        <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'notification_date'), method: :get, local: false) do %>
+          <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit notification date"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+        <% end %>
+      <% end %>
+      </span>
     </div>
     <div class="input-stack">
       <span><b>Submitter:</b> <%= r.submitter.name %></span>
@@ -65,14 +73,6 @@
     </div>
   </div>
 </div>
-
-<% if policy([:stash_engine, :admin_datasets]).change_delete_schedule? %>
-  <%= form_with(url: edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
-    <button class="o-button__plain-text2" aria-haspopup="dialog">
-      Change delete reference date
-    </button>
-  <% end %>
-<% end %>
 
 <!--div id="publication">
   <h2>Publication information</h2>

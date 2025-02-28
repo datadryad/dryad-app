@@ -1,0 +1,21 @@
+<h1><%= @desc %></h1>
+<%= form_with(url: update_delete_reference_date_path(@identifier.id), method: :post, local: false) do |form| -%>  
+  <p>The monthly reminder email will be sent on <b><%= formatted_date(@resource.process_date.notification_date) %></b></p>
+  <p>The <%= @resource.current_curation_status == 'in_progress' ? 'latest version' : 'dataset' %> will be <%= @resource.current_curation_status == 'in_progress' ? 'deleted' : 'withdrawn' %> on <b><%= formatted_date(@resource.process_date.delete_date) %></b></p>
+  <p>
+  <p style="max-width: 500px;">You may delay email notifications by selecting a new date on which to start the monthly emails over again. This will also push back the scheduled deletion date.</p>
+  <div class="c-input">
+    <%= form.label :notification_date, 'Notification restart date', class: 'c-input__label' %>
+    <%= form.date_field :notification_date, class: 'c-input__text', min: @resource.process_date.notification_date %>
+  </div>
+  <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
+    <div class="c-input">
+      <%= ca.label :note, 'Notes', class: 'c-input__label' %>
+      <%= ca.text_area :note, class: 'c-input__textarea', id: 'activity_note', style: 'width: 100%;' %>
+    </div>
+  <% end %>
+  <div class="c-modal__buttons-right">
+    <%= submit_tag 'Submit', class: 'o-button__plain-text2', id: 'popup_submit' %>
+    <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+  </div>
+<% end %>
