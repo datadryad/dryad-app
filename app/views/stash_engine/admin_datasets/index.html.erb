@@ -114,25 +114,6 @@
     </div>
   </div>
 </div-->
-
-<% if @identifier.internal_data.present? %>
-<p><button class="o-button__plain-text7" onclick="document.getElementById('internal_data').toggleAttribute('hidden')"><i class="fa fa-eye" aria-hidden="true" style="margin-right: .5ch;"></i>View historical Internal data</button></p>
-<% end %>
-<div id="internal_data" style="clear: both" hidden>
-  <div style="float: left"><h2>Internal data</h2></div>
-  <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
-    <div style="float: right">
-      <br/>
-      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'data'), method: :get, local: false) do %>
-        <button class="o-button__submit" aria-haspopup="dialog">Add data</button>
-      <% end %>
-    </div>
-  <% end %>
-  <div id="internal_data_table" class="table-wrapper c-lined-table-wrapper" style="clear: both" role="region" tabindex="0" aria-labelledby="internal-data">
-    <%= render partial: 'stash_engine/internal_data/table' %>
-  </div>
-</div>
-
 <div class="activity-log-header">
   <h2>Activity log</h2>
   <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
@@ -177,6 +158,23 @@
     </div>
   <% end %>
 <% end %>
+
+<% if @identifier.internal_data.present? %>
+<p><button class="o-button__plain-text7" onclick="document.getElementById('internal_data').toggleAttribute('hidden')"><i class="fa fa-eye" aria-hidden="true" style="margin-right: .5ch;"></i>View historical Internal data</button></p>
+<% end %>
+<div id="internal_data" hidden>
+  <div class="activity-log-header">
+    <h2 style="margin-top: 0;">Internal data</h2>
+    <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
+      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'data'), method: :get, local: false) do %>
+        <button class="o-button__plain-text2" aria-haspopup="dialog">Add data</button>
+      <% end %>
+    <% end %>
+  </div>
+  <div id="internal_data_table" class="table-wrapper c-lined-table-wrapper" style="margin-top: 0" role="region" tabindex="0" aria-labelledby="internal-data">
+    <%= render partial: 'stash_engine/internal_data/table' %>
+  </div>
+</div>
 
 <% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
 <%= render partial: 'dangerous_actions' %>
