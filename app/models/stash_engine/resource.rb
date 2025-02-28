@@ -52,6 +52,7 @@ module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
+    has_paper_trail versions: { class_name: 'CustomVersion' }
 
     # ------------------------------------------------------------
     # Relations

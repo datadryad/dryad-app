@@ -9,7 +9,7 @@ class CreateVersions < ActiveRecord::Migration[8.0]
   TEXT_BYTES = 1_073_741_823
 
   def change
-    create_table :versions, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci" do |t|
+    create_table :paper_trail_versions, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci" do |t|
       # Consider using bigint type for performance if you are going to store only numeric ids.
       # t.bigint   :whodunnit
       t.string   :whodunnit
@@ -34,8 +34,8 @@ class CreateVersions < ActiveRecord::Migration[8.0]
       t.string   :item_id,   null: false
       t.string   :item_type, null: false, limit: 191
       t.string   :event,     null: false
-      t.text     :object, limit: TEXT_BYTES
+      t.json     :object
     end
-    add_index :versions, %i[item_type item_id]
+    add_index :paper_trail_versions, %i[item_type item_id]
   end
 end
