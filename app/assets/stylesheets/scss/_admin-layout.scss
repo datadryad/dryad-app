@@ -305,3 +305,30 @@
   column-gap: 2ch;
   row-gap: 1ch;
 }
+
+#activity-at-a-glance {
+  display: grid;
+  grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr;
+  gap: 1ch;
+  & > * {
+    flex-grow: 1;
+  }
+  b[role="heading"] {
+    font-size: 1.15rem;
+  }
+  .input-stack {
+    row-gap: 1ch;
+  }
+  .input-line {
+    column-gap: .5ch;
+  }
+}
+
+.activity-log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 1ch;
+  row-gap: .5ch;
+  flex-wrap: wrap;
+}

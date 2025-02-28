@@ -6,83 +6,75 @@
   <h1 class="o-heading__level1"><%= r&.title %></h1>
   <%= @identifier.identifier %>
 </div>
-
-<div style="display: flex; align-items: center; justify-content: space-between; column-gap: 2ch; row-gap: .5ch; flex-wrap: wrap;">
-  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 1ch;">
-    <% if policy(r).flag? %>
-      <span id="resource_flag">
-        <% if r&.flag&.present? %>        
-          <i class="fas fa-flag <%= r.flag.flag %>" aria-label="Flagged" title="<%= r.flag.flag.upcase_first %>"></i>
-        <% end %>
-      </span>
-      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'flag'), method: :get, local: false) do %>
-        <button class="o-button__plain-text2" aria-haspopup="dialog">Flag</button>
-      <% end %>
-    <% end %>
-  </div>
-  <div style="display: flex; flex-wrap: wrap; column-gap: 1ch; row-gap: .5ch;">
-    <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
-      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
-        <button class="o-button__plain-text2" aria-haspopup="dialog">Add note</button>
-      <% end %>
-    <% end %>
-    <% if policy([:stash_engine, :admin_datasets]).change_delete_schedule? %>
-      <%= form_with(url: edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
-        <button class="o-button__plain-text2" aria-haspopup="dialog">
-          Change delete reference date
-        </button>
-      <% end %>
-    <% end %>
-  </div> 
-</div>
-<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction] || 'desc', page_size: params[:page_size], page: params[:page]) %>"></div>
-<% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
-  <div id="salesforce_links" style="clear: both">
-    <div style="float: left"><h2 id="salesforce-cases">Salesforce cases</h2></div>
-    <div style="float: right">
-      <br/>
-      <%= button_to "Create SF case",
-                    stash_url_helpers.create_salesforce_case_path(id: @identifier&.id, only_path: false),
-                    method: :get,
-                    class: 'o-button__plain-text2',
-                    form: { target: '_blank' }
-      %>
-    </div>
-
-    <% sf_links = salesforce_links(@identifier.identifier) %>
-    <% if sf_links %>
-      <div class="table-wrapper c-lined-table-wrapper" id="sf_link_list" style="clear: both" role="region" tabindex="0" aria-labelledby="salesforce-cases">
-        <table class="c-lined-table" id="curation_table">
-          <thead>
-          <tr>
-            <th>Case</th>
-            <th>Status</th>
-            <th>Reason</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% sf_links.each do |sf_link| %>
-            <tr class="c-lined-table__row">
-              <td>
-                <%= link_to sf_link.title, sf_link.path, target: '_blank' %>
-              </td>
-              <td>
-                <%= sf_link.status %>
-              </td>
-              <td>
-                <%= sf_link.reason %>
-              </td>
-            </tr>
+<div class="callout alt">
+  <div id="activity-at-a-glance">
+    <div class="input-stack">
+      <% if policy(r).flag? %>
+        <span class="input-line">
+          <span id="resource_flag">
+            <% if r&.flag&.present? %>        
+              <i class="fas fa-flag <%= r.flag.flag %>" aria-label="Flagged"></i>
+              <%= r.flag.flag.upcase_first %>
+            <% else %>
+              Not flagged
+            <% end %>
+          </span>
+          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'flag'), method: :get, local: false) do %>
+            <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit Flag"><i class="fas fa-pencil" aria-hidden="true"></i></button>
           <% end %>
-        </tbody>
-        </table>
+        </span>
+      <% end %>
+      <span><b>Publication state:</b> <%= @identifier.pub_state.upcase_first %></span>
+      <span><b>Curation state:</b> <%= r.current_curation_status.upcase_first %></span>
+    </div>
+    <div class="input-stack">
+      <span><b>Submitter:</b> <%= r.submitter.name %></span>
+      <span><b>Current Editor:</b> <%= r.editor&.name || "<em>None</em>".html_safe %></span>
+      <% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
+        <span class="input-line" style="column-gap: .5ch">
+          <b>Payment:</b>
+          <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
+            User
+          <% else %>
+            <%= @identifier.payment_type %>
+          <% end %>
+          <%= format_external_references(@identifier.payment_id) %>
+          <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
+            <%= @identifier.waiver_basis %>
+            <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
+              <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Apply fee waiver"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+            <% end %>
+          <% end %>
+        </span>
+      <% end %>
+    </div>
+    <%# if @identifier.publication_date.present? %>
+      <div class="input-stack">
+        <b role="heading" aria-level="2">Publication dates</b>
+        <span><b>First:</b> <%= formatted_date(@identifier.date_first_published) %></span>
+        <span><b>Latest:</b> <%= formatted_date(@identifier.date_last_published) %></span>
       </div>
-    <% end %>
+    <%# end %>
+    <div class="input-stack" style="flex-shrink: 1">
+      <b role="heading" aria-level="2">Related works</b>
+      <span><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type)&.first.publication_name}" : ''}"}&.join('; ') %></span>
+    </div>
+    <div class="input-stack" style="flex-shrink: 1">
+      <b role="heading" aria-level="2">Funders</b>
+      <span><%= r.contributors.funder&.map(&:contributor_name)&.join('; ') %></span>
+    </div>
   </div>
-  <br style="clear: both;"/>
+</div>
+
+<% if policy([:stash_engine, :admin_datasets]).change_delete_schedule? %>
+  <%= form_with(url: edit_delete_reference_date_path(id: @identifier&.id, field: 'curation_activity'), method: :get, local: false) do %>
+    <button class="o-button__plain-text2" aria-haspopup="dialog">
+      Change delete reference date
+    </button>
+  <% end %>
 <% end %>
 
-<div id="publication">
+<!--div id="publication">
   <h2>Publication information</h2>
   <div style="display: flex; flex-basis: 48%; gap: 4ch">
     <div style="display: flex; flex-direction: column; gap: 2ch">
@@ -121,11 +113,11 @@
       </div>
     </div>
   </div>
-  <% if @identifier.internal_data %>
-    <p><button class="o-button__plain-text7" onclick="document.getElementById('internal_data').toggleAttribute('hidden')"><i class="fa fa-eye" aria-hidden="true" style="margin-right: .5ch;"></i>View historical Internal data</button></p>
-  <% end %>
-</div>
+</div-->
 
+<% if @identifier.internal_data.present? %>
+<p><button class="o-button__plain-text7" onclick="document.getElementById('internal_data').toggleAttribute('hidden')"><i class="fa fa-eye" aria-hidden="true" style="margin-right: .5ch;"></i>View historical Internal data</button></p>
+<% end %>
 <div id="internal_data" style="clear: both" hidden>
   <div style="float: left"><h2>Internal data</h2></div>
   <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
@@ -136,87 +128,68 @@
       <% end %>
     </div>
   <% end %>
-
   <div id="internal_data_table" class="table-wrapper c-lined-table-wrapper" style="clear: both" role="region" tabindex="0" aria-labelledby="internal-data">
     <%= render partial: 'stash_engine/internal_data/table' %>
   </div>
 </div>
 
-<% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
-  <h2 id="payment-info">Payment information</h2>
-  <div id="payment_info" class="table-wrapper c-lined-table-wrapper" style="margin-top: 0;" role="region" tabindex="0" aria-labelledby="payment-info">
-    <%= render partial: 'payment_info_table' %>
+<div class="activity-log-header">
+  <h2>Activity log</h2>
+  <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
+    <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
+      <button class="o-button__plain-text2" aria-haspopup="dialog">Add note</button>
+    <% end %>
+  <% end %>
+</div>
+<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>"></div>
+
+<% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
+  <div class="activity-log-header">
+    <h2 id="salesforce-cases">Salesforce cases</h2>
+    <%= button_to "Create SF case",
+                  stash_url_helpers.create_salesforce_case_path(id: @identifier&.id, only_path: false),
+                  method: :get,
+                  class: 'o-button__plain-text2',
+                  form: { target: '_blank' }
+    %>
   </div>
-  <% if policy([:stash_engine, :admin_datasets]).waiver_add? && @identifier.payment_type != 'waiver' %>
-    <div style="text-align: right;" id="apply_fee_waiver">
-      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
-        <button class="o-button__plain-text7" aria-haspopup="dialog">Apply fee waiver</button>
-      <% end %>
+  <% sf_links = salesforce_links(@identifier.identifier) %>
+  <% if sf_links %>
+    <div class="table-wrapper c-lined-table-wrapper" id="sf_link_list" role="region" tabindex="0" style="margin-top: 0" aria-labelledby="salesforce-cases">
+      <table class="c-lined-table" id="curation_table">
+        <thead>
+        <tr>
+          <th>Case</th>
+          <th>Status</th>
+          <th>Reason</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% sf_links.each do |sf_link| %>
+          <tr class="c-lined-table__row">
+            <td><%= link_to sf_link.title, sf_link.path, target: '_blank' %></td>
+            <td><%= sf_link.status %></td>
+            <td><%= sf_link.reason %></td>
+          </tr>
+        <% end %>
+      </tbody>
+      </table>
     </div>
   <% end %>
-
-  <div id="dangerous_actions">
-    <h2>Dangerous actions</h2>
-    <div>
-      <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path,
-                    method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
-        <p>
-          <button class="o-button__plain-text7"><i class="fas fa-pencil" aria-hidden="true"></i> Forcibly edit dataset</button>
-          &nbsp;Note: Forcibly editing a dataset will assign it to you, and begin an editing session. Please only do this if you know the author is unable/unwilling to submit it.
-        </p>
-        <%= hidden_field_tag :resource_id, r&.id, id: "resource_id_#{r&.id}" %>
-      <% end %>        
-    </div>
-
-    <% if policy(@identifier).destroy? %>
-      <%= form_with(url: stash_url_helpers.ds_admin_destroy_path(id: @identifier&.id), method: :delete, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
-        <p>
-          <button class="o-button__plain-text7" data-confirm="Are you sure you want to permanently delete this dataset? This action cannot be undone."><i class="fas fa-trash" aria-hidden="true"></i> Remove dataset</button>
-          &nbsp;Note: Deleting a dataset will delete all its data and files.
-        </p>
-        <%= hidden_field_tag :id, @identifier.id, id: "identifier_id_#{@identifier.id}" %>
-      <% end %>
-    <% end %>
-
-    <div id="revert_edit_div">
-      <h3>New version based on previous</h3>
-      <% if @identifier&.latest_resource&.current_resource_state&.submitted? && @identifier.resources.count > 1 %>
-        <%
-          resource_list = @identifier.resources.includes(:stash_version).by_version
-          sel_list = resource_list.map do |res|
-            ["Version #{res.stash_version.version}, (updated #{res.updated_at.strftime('%Y-%m-%d')})", res.id]
-          end
-          sel_idx = resource_list[-2]&.id || resource_list.last.id
-        %>
-        <%= form_with(url: metadata_entry_pages_new_version_from_previous_path,
-                      method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do |f| -%>
-
-          <%= f.label :select_res, 'Select basis version:' %>
-          <%= f.select(:resource_id, options_for_select(sel_list, sel_idx), {}, id: 'select_res', class: 'c-input__select') %>&nbsp;&nbsp;
-          <button class="o-button__submit">Create new version</button>
-          <p>
-            Note: Creating and editing a new version based on an old one does not duplicate the old files, but <em>just
-            the user-entered metadata</em>. The files may need to be manually deleted or uploaded if the files in the
-            last version of the dataset are not correct.
-          </p>
-        <% end %>
-      <% else %>
-        <p>
-          You may only create and edit a new version based on an old version if there are currently no in-progress
-          versions being edited or there is more than one version submitted.
-        </p>
-      <% end %>
-    </div>
-  </div>
-
-  <script type="text/javascript">
-    (function () {
-      window.onpageshow = function(event) {
-          if (event.persisted) {
-              window.location.reload();
-            }
-        };
-    })();
-  </script>
 <% end %>
+
+<% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
+<%= render partial: 'dangerous_actions' %>
+<% end %>
+
+<script type="text/javascript">
+  (function () {
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+          }
+      };
+  })();
+</script>
+
 
