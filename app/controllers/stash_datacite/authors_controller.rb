@@ -26,6 +26,7 @@ module StashDatacite
     def update
       respond_to do |format|
         @author.update(author_params)
+        check_for_orcid if @author.author_orcid.blank?
         process_affiliations
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
         format.json { render json: @author.as_json(include: :affiliations) }
@@ -36,7 +37,6 @@ module StashDatacite
     def delete
       unless params[:id] == 'new'
         @resource = StashEngine::Resource.find(@author.resource_id)
-        @if_orcid = check_for_orcid(@author)
         @author.destroy
       end
       respond_to do |format|
@@ -103,13 +103,20 @@ module StashDatacite
                                      affiliations: %i[id ror_id long_name])
     end
 
-    def check_for_orcid(author)
-      author&.author_orcid ? true : false
+    def check_for_orcid
+      return unless @author.present?
+      return unless @author.author_email.present?
+      return unless @author.author_orcid.blank?
+
+      found = StashEngine::User.where('LOWER(email) = LOWER(?)', @author.author_email)&.first
+      return unless found && found.orcid.present?
+
+      @author.update(author_orcid: found.orcid)
     end
 
     # find correct affiliation based on long_name and ror_id and set it, create one if needed.
     def process_affiliations
-      return nil unless @author.present?
+      return unless @author.present?
 
       @author.affiliations.destroy_all
       args = aff_params
@@ -120,7 +127,7 @@ module StashDatacite
     end
 
     def process_affiliation(name, ror_val)
-      return nil unless @author.present?
+      return unless @author.present?
 
       # find a matching pre-existing affiliation
       affil = nil

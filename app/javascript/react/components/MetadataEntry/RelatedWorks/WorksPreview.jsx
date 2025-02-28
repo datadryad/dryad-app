@@ -7,7 +7,7 @@ const nameit = (name, arr) => {
   return `${upper.replace('_', ' ')}${plural}`;
 };
 
-function WorksList({identifiers, previous, admin}) {
+function WorksList({identifiers, previous, curator}) {
   const works = Object.groupBy(identifiers, ({work_type}) => work_type);
   const icons = {
     article: 'far fa-newspaper',
@@ -38,7 +38,7 @@ function WorksList({identifiers, previous, admin}) {
                       <i className={icons[type]} aria-hidden="true" style={{marginRight: '.5ch'}} />{w.related_identifier}
                       <span className="screen-reader-only"> (opens in new window)</span>
                     </a>
-                    {admin && !w.verified && (
+                    {curator && !w.verified && (
                       <i className="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link" />
                     )}
                   </li>
@@ -57,7 +57,7 @@ function WorksList({identifiers, previous, admin}) {
   return null;
 }
 
-export default function WorksPreview({resource, previous, admin}) {
+export default function WorksPreview({resource, previous, curator}) {
   const ris = resource.related_identifiers.filter((ri) => ri.work_type !== 'primary_article' && !!ri.related_identifier);
   const pRis = previous?.related_identifiers.filter((ri) => ri.work_type !== 'primary_article' && !!ri.related_identifier);
   const colRef = useRef(null);
@@ -100,9 +100,9 @@ export default function WorksPreview({resource, previous, admin}) {
       <>
         <h3 className="o-heading__level2">Collected datasets</h3>
         <div ref={colRef} />
-        <WorksList identifiers={other} previous={preOther} admin={admin} />
+        <WorksList identifiers={other} previous={preOther} curator={curator} />
       </>
     );
   }
-  return <WorksList identifiers={ris} previous={pRis} admin={admin} />;
+  return <WorksList identifiers={ris} previous={pRis} curator={curator} />;
 }

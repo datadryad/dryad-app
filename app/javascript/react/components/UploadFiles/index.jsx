@@ -4,7 +4,7 @@ import {formatSizeUnits} from '../../../lib/utils';
 export {default} from './UploadFiles';
 export {default as FilesPreview} from './FilesPreview';
 
-export const filesCheck = (files, admin, maximums) => {
+export const filesCheck = (files, superuser, maximums) => {
   const {files: maxFiles, zenodo_size: maxZenodo, merritt_size: maxSize} = maximums;
   if (files.length > 0) {
     const present = files.filter((f) => f.file_state !== 'deleted');
@@ -21,7 +21,7 @@ export const filesCheck = (files, admin, maximums) => {
         <p className="error-text" id="data_error">A maximum of {maxFiles} data files can be uploaded per submission. Remove files to proceed</p>
       );
     }
-    if (admin !== 'superuser' && data.reduce((sum, f) => sum + f.upload_file_size, 0) > maxSize) {
+    if (!superuser && data.reduce((sum, f) => sum + f.upload_file_size, 0) > maxSize) {
       return (
         <p className="error-text" id="data_error">
         Total data file uploads are limited to {formatSizeUnits(maxSize)} per submission. Remove data files to proceed

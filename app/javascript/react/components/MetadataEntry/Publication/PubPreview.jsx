@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function PubPreview({resource, previous, admin}) {
+export default function PubPreview({resource, previous, curator}) {
   const {publication_name, manuscript_number} = resource.resource_publication;
   const primary = resource.related_identifiers.find((ri) => ri.work_type === 'primary_article');
   const primary_article = primary?.related_identifier;
@@ -40,7 +40,7 @@ export default function PubPreview({resource, previous, admin}) {
                 <i className="fas fa-newspaper" aria-hidden="true" style={{marginRight: '.5ch'}} />{primary_article}
                 <span className="screen-reader-only"> (opens in new window)</span>
               </a>
-              {admin && !primary.verified && (
+              {curator && !primary.verified && (
                 <i className="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link" />
               )}
               {previous && primary_article !== prev_art && prev_art && <del>{prev_art}</del>}

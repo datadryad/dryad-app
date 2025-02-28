@@ -55,7 +55,7 @@ const paste_preprocess = (_editor, args) => {
 const curatorTools = '| code strikethrough forecolor backcolor';
 
 export default function Description({
-  setResource, dcsDescription, mceLabel, admin,
+  setResource, dcsDescription, mceLabel, curator,
 }) {
   const editorRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -115,7 +115,7 @@ export default function Description({
           plugins: 'advlist anchor autolink charmap code directionality help lists link table',
           toolbar: 'help | undo redo | blocks paste | bold italic superscript subscript removeformat '
                   + '| table link charmap | bullist numlist outdent indent | ltr rtl '
-                  + `${(admin ? curatorTools : '')}`,
+                  + `${(curator ? curatorTools : '')}`,
           table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | '
                   + 'tableinsertcolbefore tableinsertcolafter tabledeletecol',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
@@ -140,8 +140,5 @@ Description.propTypes = {
   setResource: PropTypes.func.isRequired,
   dcsDescription: PropTypes.object.isRequired,
   mceLabel: PropTypes.object.isRequired,
-  admin: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.bool,
-  ]).isRequired,
+  curator: PropTypes.bool.isRequired,
 };

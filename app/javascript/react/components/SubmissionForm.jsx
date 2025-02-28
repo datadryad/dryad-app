@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 
 export default function SubmissionForm({
-  steps, resource, previewRef, authenticityToken, admin,
+  steps, resource, previewRef, authenticityToken, curator,
 }) {
   const [hasChanges, setChanges] = useState(!resource.previous_curated_resource);
   const [showR, setShowR] = useState(resource.display_readme);
@@ -28,7 +28,7 @@ export default function SubmissionForm({
         </>
       )}
       {hasChanges && !steps.some((s) => s.fail) && (
-        admin ? (
+        curator ? (
           <div style={{
             flex: 1, marginRight: 'auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', rowGap: '1ch', columnGap: '2ch',
           }}
@@ -67,9 +67,9 @@ export default function SubmissionForm({
           type="submit"
           className="o-button__plain-text1"
           name="submit_button"
-          disabled={!hasChanges || steps.some((s) => s.fail) || (admin && !userComment)}
+          disabled={!hasChanges || steps.some((s) => s.fail) || (curator && !userComment)}
         >
-          {admin ? 'Submit changes' : `Submit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
+          {curator ? 'Submit changes' : `Submit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
         </button>
       </form>
     </div>

@@ -24,7 +24,7 @@ const makeAuthor = (resource_id, myOrder) => {
 };
 
 describe('Authors', () => {
-  let resource; let admin; let ownerId; let dryadAuthors;
+  let resource; let user; let dryadAuthors;
   const setResource = (item) => { resource = item; };
   beforeEach(() => {
     const rid = faker.datatype.number();
@@ -32,13 +32,27 @@ describe('Authors', () => {
     resource = {
       id: rid,
       authors: dryadAuthors,
+      users: [{
+        id: 1,
+        first_name: dryadAuthors[0].author_first_name,
+        last_name: dryadAuthors[0].author_last_name,
+        role: 'creator',
+        orcid: dryadAuthors[0].author_orcid,
+        email: dryadAuthors[0].author_email,
+      }, {
+        id: 1,
+        first_name: dryadAuthors[0].author_first_name,
+        last_name: dryadAuthors[0].author_last_name,
+        role: 'submitter',
+        orcid: dryadAuthors[0].author_orcid,
+        email: dryadAuthors[0].author_email,
+      }],
     };
-    admin = false;
-    ownerId = faker.datatype.number();
+    user = {id: 1, curator: false, superuser: false};
   });
 
   it('renders multiple authors in authors section', () => {
-    render(<Authors resource={resource} setResource={setResource} ownerId={ownerId} admin={admin} />);
+    render(<Authors resource={resource} setResource={setResource} user={user} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
     expect(labeledElements.length).toBe(3);
@@ -58,7 +72,7 @@ describe('Authors', () => {
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} setResource={setResource} ownerId={ownerId} admin={admin} />);
+    render(<Authors resource={resource} setResource={setResource} user={user} />);
 
     let removes = screen.getAllByLabelText('Remove author');
     expect(removes.length).toBe(3);
@@ -89,7 +103,7 @@ describe('Authors', () => {
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} setResource={setResource} ownerId={ownerId} admin={admin} />);
+    render(<Authors resource={resource} setResource={setResource} user={user} />);
 
     const removes = screen.getAllByLabelText('Remove author');
     expect(removes.length).toBe(3);
@@ -105,7 +119,7 @@ describe('Authors', () => {
     const promise = Promise.resolve({status: 200, data: []});
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} setResource={setResource} ownerId={ownerId} admin={admin} />);
+    render(<Authors resource={resource} setResource={setResource} user={user} />);
 
     await waitFor(() => {
       expect(screen.getAllByRole('listitem').length).toBe(3);

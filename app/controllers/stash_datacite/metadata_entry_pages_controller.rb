@@ -11,13 +11,14 @@ module StashDatacite
       @submission = @resource.as_json(
         include: [:tenant, :resource_type, :resource_publication, :resource_preprint, :journal,
                   :related_identifiers, :edit_histories, :contributors, :subjects, :descriptions,
-                  { authors: { include: [:affiliations] },
+                  { authors: { methods: [:orcid_invite_path], include: [:affiliations] },
                     identifier: { include: %i[process_date software_license] },
                     previous_curated_resource: {
                       include: [:tenant, :subjects, :descriptions, :resource_publication, :journal, :related_identifiers, :contributors,
                                 { authors: { include: [:affiliations] } }]
                     } }]
       )
+      @submission[:users] = @resource.users.select('stash_engine_users.*', 'stash_engine_roles.role')
       find_files
       @submission = @submission.to_json
 

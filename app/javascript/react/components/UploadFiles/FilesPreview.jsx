@@ -34,7 +34,7 @@ const fileList = (list, previous) => {
 };
 
 export default function FilesPreview({
-  resource, previous, admin, maxSize,
+  resource, previous, curator, maxSize,
 }) {
   const present = resource.generic_files.filter((f) => f.file_state !== 'deleted');
   const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.upload_file_name !== 'README.md');
@@ -51,7 +51,7 @@ export default function FilesPreview({
       <>
         {data.length > 0 && (
           <>
-            {admin && resource.total_file_size > maxSize && (
+            {curator && resource.total_file_size > maxSize && (
               <div className="callout warn">
                 <p>
                   This dataset&apos;s total file size is {formatSizeUnits(resource.total_file_size)} (max {formatSizeUnits(maxSize)}).

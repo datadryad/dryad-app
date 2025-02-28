@@ -21,7 +21,7 @@ import SubmissionHelp, {
 /* eslint-disable jsx-a11y/no-autofocus */
 
 function Submission({
-  submission, ownerId, admin, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
+  submission, user, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
 }) {
   const location = useLocation();
   const subRef = useRef(null);
@@ -41,23 +41,23 @@ function Submission({
       fail: (review || publicationPass(resource)) && publicationFail(resource),
       component: <Publication resource={resource} setResource={setResource} maxSize={config_maximums.merritt_size} />,
       help: <PublicationHelp />,
-      preview: <PubPreview resource={resource} previous={previous} admin={admin} />,
+      preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Authors',
       index: 1,
-      pass: resource.authors.length > 0 && !authorCheck(resource.authors, ownerId),
-      fail: (review || step.index > 0) && authorCheck(resource.authors, ownerId),
-      component: <Authors resource={resource} setResource={setResource} admin={admin} ownerId={ownerId} />,
+      pass: resource.authors.length > 0 && !authorCheck(resource),
+      fail: (review || step.index > 0) && authorCheck(resource),
+      component: <Authors resource={resource} setResource={setResource} user={user} />,
       help: <AuthHelp />,
-      preview: <AuthPreview resource={resource} previous={previous} admin={admin} />,
+      preview: <AuthPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Description',
       index: 2,
       pass: resource.descriptions.some((d) => !!d.description),
       fail: (review || step.index > 3) && abstractCheck(resource),
-      component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
+      component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} />,
     },
@@ -92,7 +92,7 @@ function Submission({
       name: 'Files',
       index: 6,
       pass: resource.generic_files.length > 0,
-      fail: (review || step.index > 5) && filesCheck(resource.generic_files, admin, config_maximums),
+      fail: (review || step.index > 5) && filesCheck(resource.generic_files, user.superuser, config_maximums),
       component: <UploadFiles
         resource={resource}
         setResource={setResource}
@@ -103,7 +103,7 @@ function Submission({
         config_payments={config_payments}
       />,
       help: <FilesHelp />,
-      preview: <FilesPreview resource={resource} previous={previous} admin={admin} maxSize={config_maximums.files} />,
+      preview: <FilesPreview resource={resource} previous={previous} curator={user.curator} maxSize={config_maximums.files} />,
     },
     {
       name: 'README',
@@ -117,7 +117,7 @@ function Submission({
         // errors={readmeCheck(resource)}
       />,
       help: <ReadMeHelp />,
-      preview: <ReadMePreview resource={resource} previous={previous} admin={admin} />,
+      preview: <ReadMePreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Related works',
@@ -126,7 +126,7 @@ function Submission({
       fail: worksCheck(resource, (review || step.index > 7)),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title'))} />,
-      preview: <WorksPreview resource={resource} previous={previous} admin={admin} />,
+      preview: <WorksPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Agreements',
@@ -138,7 +138,6 @@ function Submission({
         resource={resource}
         setResource={setResource}
         form={change_tenant}
-        ownerId={ownerId}
         setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
@@ -207,13 +206,8 @@ function Submission({
       const url = window.location.search.slice(1);
       if (url) {
         setStep(steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
-      } else if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
-        if (steps.find((c) => c.fail)) {
-          setStep(steps.find((c) => c.fail));
-        } else {
-          const stop = (steps.findLastIndex((c) => c.pass) + 1) > (steps.length - 1);
-          setStep(stop ? steps.findLast((c) => c.pass) : steps[steps.findLastIndex((c) => c.pass) + 1]);
-        }
+      } else if (steps.find((c) => c.fail || c.pass)) {
+        setStep(steps.find((c) => !c.pass));
       }
     } else if (resource.identifier.publication_date) {
       document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
@@ -229,7 +223,7 @@ function Submission({
         </nav>
         {step.name === 'Create a submission' && (
           <>
-            <div id="submission-preview" ref={previewRef} className={admin ? 'track-changes' : null}>
+            <div id="submission-preview" ref={previewRef} className={user.curator ? 'track-changes' : null}>
               {steps.map((s) => (
                 <section key={s.name} aria-label={s.name}>
                   {s.preview}
@@ -237,7 +231,7 @@ function Submission({
                 </section>
               ))}
             </div>
-            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} authenticityToken={authenticity_token} admin={admin} />
+            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} authenticityToken={authenticity_token} curator={user.curator} />
           </>
         )}
         <dialog id="submission-step" open={step.name !== 'Create a submission' || null}>

@@ -25,13 +25,13 @@ describe('OrcidInfo', () => {
 
   it('renders orcid info if present', () => {
     const auth = makeAuthor();
-    render(<OrcidInfo author={auth} curator={false} ownerId={auth.id} />);
+    render(<OrcidInfo author={auth} curator={false} />);
     expect(screen.getByRole('link')).toHaveTextContent(auth.author_orcid);
   });
 
   it('renders orcid link if curator and no orcid', () => {
     const auth = {...makeAuthor(), author_orcid: null};
-    render(<OrcidInfo author={auth} curator ownerId={27} />);
-    expect(screen.getByText(auth.orcid_invite_path, {exact: false})).toBeInTheDocument();
+    render(<OrcidInfo author={auth} curator />);
+    expect(screen.getByTitle(auth.orcid_invite_path, {exact: false})).toBeInTheDocument();
   });
 });
