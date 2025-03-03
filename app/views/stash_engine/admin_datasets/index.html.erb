@@ -30,14 +30,21 @@
       <span class="input-line">
         <span><b>Notification date:</b> <span id="notification_date"><%= formatted_date(r.process_date.notification_date) %></span></span>
         <% if r.process_date.notification_date && policy([:stash_engine, :admin_datasets]).notification_date? %>
-        <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'notification_date'), method: :get, local: false) do %>
-          <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit notification date"><i class="fas fa-pencil" aria-hidden="true"></i></button>
-        <% end %>
+          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'notification_date'), method: :get, local: false) do %>
+            <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit notification date"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+          <% end %>
       <% end %>
       </span>
     </div>
     <div class="input-stack">
-      <span><b>Submitter:</b> <%= r.submitter.name %></span>
+      <span class="input-line">
+        <span><b>Submitter:</b> <span id="submitter_name"><%= r.submitter.name %></span></span>
+        <% if policy([:stash_engine, :admin_datasets]).edit_submitter? %>
+          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'submitter'), method: :get, local: false) do %>
+            <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit submitter"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+          <% end %>
+        <% end %>
+      </span>
       <span><b>Current Editor:</b> <%= r.editor&.name || "<em>None</em>".html_safe %></span>
       <% if policy([:stash_engine, :admin_datasets]).curation_actions? %>
         <span class="input-line" style="column-gap: .5ch">
@@ -157,6 +164,8 @@
       </tbody>
       </table>
     </div>
+  <% else %>
+    <div style="background-color: #f2f2f2; padding: .5ch"><em>None</em></div>
   <% end %>
 <% end %>
 

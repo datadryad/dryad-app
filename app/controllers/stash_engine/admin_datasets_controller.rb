@@ -5,12 +5,14 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     protect_from_forgery except: :activity_log
-    before_action :load, only: %i[popup note_popup waiver_add flag notification_date]
+    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date]
 
+    # rubocop:disable Metrics/MethodLength
     def popup
       case @field
       when 'flag'
         authorize @resource, :flag?
+        @desc = 'Flag dataset'
       when 'notification_date'
         authorize %i[stash_engine admin_datasets], :notification_date?
         @desc = 'Notification date'
@@ -20,6 +22,9 @@ module StashEngine
           resource_id: @resource.id,
           status: @resource.last_curation_activity&.status
         )
+      when 'submitter'
+        authorize %i[stash_engine admin_datasets], :edit_submitter?
+        @desc = 'Change dataset submitter'
       when 'publication'
         authorize %i[stash_engine admin_datasets], :data_popup?
         @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
@@ -36,6 +41,7 @@ module StashEngine
       end
       respond_to(&:js)
     end
+    # rubocop:enable Metrics/MethodLength
 
     def waiver_add
       if @identifier.payment_type == 'stripe'
@@ -109,6 +115,19 @@ module StashEngine
       @resource.process_date.update(delete_calculation_date: delete_calculation_date)
       @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
       @resource.reload
+      respond_to(&:js)
+    end
+
+    def edit_submitter
+      authorize %i[stash_engine admin_datasets]
+      user = StashEngine::User.where(orcid: params[:orcid])&.first
+      if user.present?
+        @resource.submitter = user.id
+        @resource.reload
+      else
+        @error_message = 'No Dryad user found with this ORCID'
+        render 'stash_engine/user_admin/update_error' and return
+      end
       respond_to(&:js)
     end
 
