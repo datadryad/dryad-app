@@ -5,6 +5,7 @@
 #  id                        :integer          not null, primary key
 #  accepted_agreement        :boolean
 #  cedar_json                :text(65535)
+#  deleted_at                :datetime
 #  display_readme            :boolean          default(TRUE)
 #  download_uri              :text(65535)
 #  file_view                 :boolean          default(FALSE)
@@ -34,6 +35,7 @@
 # Indexes
 #
 #  index_stash_engine_resources_on_current_editor_id             (current_editor_id)
+#  index_stash_engine_resources_on_deleted_at                    (deleted_at)
 #  index_stash_engine_resources_on_identifier_id                 (identifier_id)
 #  index_stash_engine_resources_on_identifier_id_and_created_at  (identifier_id,created_at) UNIQUE
 #  index_stash_engine_resources_on_tenant_id                     (tenant_id)
@@ -53,6 +55,7 @@ FactoryBot.define do
         "doi%3A10.5061%2Fdryad.#{Faker::Alphanumeric.alphanumeric(number: 6)}"
     end
     publication_date { Time.new.utc }
+    deleted_at { nil }
 
     before(:create) do |resource, e|
       user = e.user || StashEngine::User.find_by(id: resource.user_id) || create(:user)
