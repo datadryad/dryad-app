@@ -40,10 +40,9 @@ module StashEngine
     end
 
     def delete_date
-      date = notification_start_date
-      return nil if date.blank?
+      return nil if delete_calculation_date.blank?
 
-      date + 1.year
+      delete_calculation_date + 1.year
     end
 
     def notification_date

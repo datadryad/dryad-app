@@ -5,7 +5,7 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     protect_from_forgery except: :activity_log
-    before_action :load, only: %i[popup note_popup waiver_add flag update_delete_reference_date]
+    before_action :load, only: %i[popup note_popup waiver_add flag notification_date]
 
     def popup
       case @field
@@ -93,7 +93,8 @@ module StashEngine
       respond_to(&:js)
     end
 
-    def update_delete_reference_date
+    def notification_date
+      authorize %i[stash_engine admin_datasets]
       notification_date = params[:notification_date].to_datetime
       return error_response('Date cannot be blank') if notification_date.blank?
 
@@ -137,13 +138,7 @@ module StashEngine
 
     def load
       @identifier = Identifier.find(params[:id])
-      @resource = if @identifier.last_submitted_resource&.id.present?
-                    Resource.includes(:identifier,
-                                      :curation_activities).find(@identifier.last_submitted_resource.id)
-                  else
-                    @identifier.latest_resource
-                  end
-      # usually notes go on latest submitted, but there is none, so put it here
+      @resource = @identifier.latest_resource
       @field = params[:field]
     end
 
