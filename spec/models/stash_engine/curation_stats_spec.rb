@@ -92,6 +92,28 @@ module StashEngine
       end
     end
 
+    describe 'with deleted records' do
+      it 'does not fail if the resource was deleted' do
+        @res[0].curation_activities << CurationActivity.create(status: 'peer_review', user: @curator, created_at: @day)
+        res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
+        res_new.resource_states.first.update(resource_state: 'submitted')
+        res_new.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        res_new.delete
+        stats = CurationStats.create(date: @day)
+        expect(stats.ppr_to_curation).to eq(0)
+      end
+
+      it 'does not fail if the resource was deleted' do
+        @res[0].curation_activities << CurationActivity.create(status: 'peer_review', user: @curator, created_at: @day)
+        res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
+        res_new.resource_states.first.update(resource_state: 'submitted')
+        res_new.curation_activities << CurationActivity.create(status: 'submitted', user: @curator, created_at: @day)
+        res_new.identifier.delete
+        stats = CurationStats.create(date: @day)
+        expect(stats.ppr_to_curation).to eq(0)
+      end
+    end
+
     describe :datasets_curated do
       it 'knows when there are none' do
         # @res[0] stays in_progress
