@@ -170,22 +170,28 @@ module StashEngine
     def dupe_check
       dupes = []
       if @resource.title && @resource.title.length > 3
-        other_submissions = params.key?(:admin) ? StashEngine::Resources.all : current_user.resources
+        other_submissions = params.key?(:admin) ? StashEngine::Resource.all : current_user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
         manuscript = @resource.resource_publication.manuscript_number
-        dupes = other_submissions.where(title: @resource.title)&.select(:id, :title).to_a
+        dupes = other_submissions.where(title: @resource.title)&.select(:id, :title, :identifier_id).to_a
         if primary_article.present?
           dupes.concat(other_submissions.joins(:related_identifiers)
-              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })&.select(:id, :title).to_a)
+              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
+              &.select(:id, :title, :identifier_id).to_a)
         end
         if manuscript.present?
           dupes.concat(
-            other_submissions.joins(:resource_publication).find_by(resource_publication: { manuscript_number: manuscript })&.select(:id, :title).to_a
+            other_submissions.joins(:resource_publication).find_by(resource_publication: { manuscript_number: manuscript })
+            &.select(:id, :title, :identifier_id).to_a
           )
         end
       end
-      render json: dupes.uniq
+      @dupes = dupes.uniq
+      respond_to do |format|
+        format.js { render template: 'stash_engine/admin_datasets/dupe_check', formats: [:js] }
+        format.json { render json: @dupes }
+      end
     end
 
     # patch request
