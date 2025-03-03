@@ -3,7 +3,9 @@
     document.getElementById('dataset_curator_<%= @identifier.id %>').innerHTML = "<%= escape_javascript(render partial: 'table_curator', locals: { dataset: @resource, curator_name: @curator_name }) %>"
   }
 <% end %>
-document.getElementById('dataset_description_<%= @identifier.id %>').innerHTML = "<%= escape_javascript(render partial: 'table_description', locals: { dataset: @resource }) %>"
+if (document.getElementById('dataset_description_<%= @identifier.id %>')) {
+  document.getElementById('dataset_description_<%= @identifier.id %>').innerHTML = "<%= escape_javascript(render partial: 'table_description', locals: { dataset: @resource }) %>"
+}
 if (document.getElementById('dataset_status_<%= @identifier.id %>')) {
   document.getElementById("dataset_status_<%= @identifier.id %>").innerHTML = "<%= escape_javascript(render partial: 'table_status', locals: { dataset: @resource }) %>"
 }
@@ -11,6 +13,12 @@ if (document.getElementById('dataset_updated_<%= @identifier.id %>')) {
   document.getElementById('dataset_updated_<%= @identifier.id %>').innerHTML = "<%= formatted_datetime(@resource.last_curation_activity.updated_at) %>"
 }
 if (document.getElementById('dataset_published_<%= @identifier.id %>')) {
-  document.getElementById('dataset_published_<%= @identifier.id %>').innerHTML = "<%= formatted_datetime(@resource.publication_date) %>"
+  document.getElementById('dataset_published_<%= @identifier.id %>').innerHTML = "<%= formatted_date(@identifier.date_last_published) %>"
+}
+if (document.getElementById('dataset_first_published_<%= @identifier.id %>')) {
+  document.getElementById('dataset_first_published_<%= @identifier.id %>').innerHTML = "<%= formatted_date(@identifier.date_first_published) %>"
+}
+if (document.getElementById('dataset_pub_state_<%= @identifier.id %>')){
+  document.getElementById('dataset_pub_state_<%= @identifier.id %>').innerHTML = "<%= @identifier.calculated_pub_state.upcase_first %>"
 }
 document.getElementById('genericModalDialog').close();

@@ -322,6 +322,10 @@
   .input-line {
     column-gap: .5ch;
   }
+  .c-admin-edit-icon {
+    color: $dark-blue;
+    @extend %o-button__link-style;
+  }
 }
 
 .activity-log-header {
