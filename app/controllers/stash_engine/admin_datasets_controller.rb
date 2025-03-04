@@ -5,7 +5,7 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     protect_from_forgery except: :activity_log
-    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date]
+    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates]
 
     # rubocop:disable Metrics/MethodLength
     def popup
@@ -25,6 +25,9 @@ module StashEngine
       when 'submitter'
         authorize %i[stash_engine admin_datasets], :edit_submitter?
         @desc = 'Change dataset submitter'
+      when 'pub_dates'
+        authorize @resource, :curate?
+        @desc = 'Edit publication dates'
       when 'publication'
         authorize %i[stash_engine admin_datasets], :data_popup?
         @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
@@ -128,6 +131,15 @@ module StashEngine
         @error_message = 'No Dryad user found with this ORCID'
         render 'stash_engine/user_admin/update_error' and return
       end
+      respond_to(&:js)
+    end
+
+    def pub_dates
+      params[:resources].each do |r|
+        res = StashEngine::Resource.find(r[0])
+        res.update(r[1].to_unsafe_h)
+      end
+      @identifier.reload
       respond_to(&:js)
     end
 

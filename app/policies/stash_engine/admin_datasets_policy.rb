@@ -13,10 +13,6 @@ module StashEngine
       @user.min_app_admin?
     end
 
-    def curation_actions?
-      @user.min_curator?
-    end
-
     def edit_submitter?
       @user.superuser?
     end
