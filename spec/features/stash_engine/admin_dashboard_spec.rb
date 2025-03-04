@@ -246,7 +246,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
         it 'allows assigning a curator to a dataset' do
           click_button 'Update curator'
-          select(@curator.name_last_first, from: 'current_editor')
+          select(@curator.name_last_first, from: 'curator')
           click_button('Submit')
           expect(find('#search_results')).to have_text(@curator.name, count: 1)
         end
@@ -256,11 +256,11 @@ RSpec.feature 'AdminDashboard', type: :feature do
           visit stash_url_helpers.admin_dashboard_path
           expect(page).to have_text('Admin dashboard')
           click_button 'Update curator'
-          select(@curator.name_last_first, from: 'current_editor')
+          select(@curator.name_last_first, from: 'curator')
           click_button('Submit')
           expect(find('#search_results')).to have_text(@curator.name, count: 1)
           click_button 'Update curator'
-          select('unassign', from: 'current_editor')
+          select('unassign', from: 'curator')
           click_button('Submit')
           expect(find('#search_results')).not_to have_text(@curator.name)
           @resource.reload
@@ -291,7 +291,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
             expect(find('#search_results')).to have_text('Curation')
             expect(find('#search_results')).to have_text(@curator.name, count: 1)
             click_button 'Update curator'
-            select('unassign', from: 'current_editor')
+            select('unassign', from: 'curator')
             click_button('Submit')
             expect(find('#search_results')).not_to have_text(@curator.name)
             expect(find('#search_results')).to have_text('Submitted')

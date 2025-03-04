@@ -47,13 +47,15 @@ RSpec.feature 'AdminPaths', type: :feature do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit @path
-      expect(page).to have_text("Activity log for #{@dataset.title}")
+      expect(page).to have_text('This is the dataset activity page.')
+      expect(page).to have_text(@dataset.title.to_s)
     end
 
     it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit @path
-      expect(page).to have_text("Activity log for #{@dataset.title}")
+      expect(page).to have_text('This is the dataset activity page.')
+      expect(page).to have_text(@dataset.title.to_s)
     end
   end
 
