@@ -1,5 +1,5 @@
 <% r = @identifier&.latest_resource %>
-<div class="callout<% if @identifier&.pub_state == 'published' %> alt<%end%>" id="privilege_banner">
+<div class="callout" id="privilege_banner">
   <p>This is the <%= r&.resource_type&.resource_type %> activity page.
     <% if @identifier&.last_submitted_resource&.present? %>
       <span><a href="<%= stash_url_helpers.show_path(id: @identifier.identifier_str) %>"><i class="fas fa-eye" aria-hidden="true"></i>Landing page</a></span>
