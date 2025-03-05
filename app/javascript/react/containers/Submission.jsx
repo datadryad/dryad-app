@@ -55,8 +55,8 @@ function Submission({
     {
       name: 'Description',
       index: 2,
-      pass: resource.descriptions.some((d) => !!d.description),
-      fail: (review || step.index > 3) && abstractCheck(resource),
+      pass: !abstractCheck(resource),
+      fail: (review || step.index > 1) && abstractCheck(resource),
       component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} />,

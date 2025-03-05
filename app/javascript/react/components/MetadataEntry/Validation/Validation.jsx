@@ -144,14 +144,16 @@ export default function Validation({resource, setResource}) {
             If your data does not meet Dryad’s human subjects data standards for publication,{' '}
             your submission will be returned for revisions until it complies, or we can direct you to a more suitable repository.
           </p>
-          <h4 id="hsi-label">Human subjects de-identification</h4>
+          <h4 id="hsi-label">Human subjects de-identification statement</h4>
           <div id="hsi-desc">
-            <p>A written statement is required:</p>
-            <ol>
-              <li>Confirm that you received explicit consent from your participants to publish the de-identified data in the public domain.</li>
-              <li>Explain how you de-identified the data.</li>
-            </ol>
-            <p>This statement will appear with your submission README and will be rederenced by users of your data.</p>
+            <p>
+              A written statement is required.
+              This statement will appear with your submission README and will be referenced by users of your data.
+            </p>
+            <p>
+              In your statement, confirm that you received explicit consent from your participants to publish the de-identified data{' '}
+              in the public domain, and explain how you de-identified the data.
+            </p>
           </div>
           <textarea
             ref={hsiRef}
