@@ -6,8 +6,9 @@ import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/ut
 import AuthorForm from './AuthorForm';
 
 export default function Authors({
-  resource, setResource, admin, ownerId,
+  resource, setResource, user,
 }) {
+  const {users} = resource;
   const [authors, setAuthors] = useState(resource.authors);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -79,23 +80,21 @@ export default function Authors({
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
           <DragonListItem key={author.id} item={author} typeName="author">
-            <AuthorForm author={author} update={updateItem} admin={!!admin} ownerId={ownerId} />
-            {ownerId !== author.id && (
-              <button
-                type="button"
-                className="remove-record"
-                onClick={() => {
-                  showModalYNDialog('Are you sure you want to remove this author?', () => {
-                    removeItem(author.id, author.resource_id);
-                    // deleteItem(auth.id);
-                  });
-                }}
-                aria-label="Remove author"
-                title="Remove"
-              >
-                <i className="fas fa-trash-can" aria-hidden="true" />
-              </button>
-            )}
+            <AuthorForm author={author} users={users} update={updateItem} user={user} />
+            <button
+              type="button"
+              className="remove-record"
+              onClick={() => {
+                showModalYNDialog('Are you sure you want to remove this author?', () => {
+                  removeItem(author.id, author.resource_id);
+                  // deleteItem(auth.id);
+                });
+              }}
+              aria-label="Remove author"
+              title="Remove"
+            >
+              <i className="fas fa-trash-can" aria-hidden="true" />
+            </button>
           </DragonListItem>
         ))}
       </DragonDropList>
@@ -114,9 +113,6 @@ export default function Authors({
 
 Authors.propTypes = {
   resource: PropTypes.object.isRequired,
-  admin: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.bool,
-  ]).isRequired,
-  ownerId: PropTypes.number.isRequired,
+  setResource: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
