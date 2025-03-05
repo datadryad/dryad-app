@@ -65,7 +65,6 @@ module StashEngine
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
     has_many :software_files, class_name: 'StashEngine::SoftwareFile', dependent: :destroy
     has_many :supp_files, class_name: 'StashEngine::SuppFile', dependent: :destroy
-    has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles, class_name: 'StashEngine::User'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
