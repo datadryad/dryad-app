@@ -10,11 +10,13 @@ module Tasks
 
       def self.count_remaining
         sql = <<~SQL
-          SELECT count(DISTINCT ids.id) as remaining FROM stash_engine_identifiers ids
+          SELECT count(DISTINCT ids.id) as remaining
+          FROM stash_engine_identifiers ids
           LEFT JOIN stash_engine_zenodo_copies cops
-          ON ids.id = cops.identifier_id
+            ON ids.id = cops.identifier_id
           WHERE ids.pub_state = 'published'
-          AND (cops.id IS NULL OR cops.state != 'finished');
+            AND ids.deleted_at IS NULL
+            AND (cops.id IS NULL OR cops.state != 'finished');
         SQL
 
         res = ActiveRecord::Base.connection.exec_query(sql)
@@ -27,9 +29,11 @@ module Tasks
 
       def self.size_migrated
         sql = <<~SQL
-          SELECT SUM(ids.`storage_size`) as st_size FROM stash_engine_zenodo_copies cop
+          SELECT SUM(ids.`storage_size`) as st_size
+          FROM stash_engine_zenodo_copies cop
           JOIN stash_engine_identifiers ids
-          ON cop.identifier_id = ids.`id`
+            ON cop.identifier_id = ids.`id`
+            AND ids.deleted_at IS NULL
           WHERE cop.note like '%Sent by migration%'
           AND state = 'finished';
         SQL
@@ -40,14 +44,17 @@ module Tasks
 
       def self.size_remaining
         sql = <<~SQL
-          SELECT sum(ids1.`storage_size`) as store FROM stash_engine_identifiers ids1
-          JOIN
-            (SELECT DISTINCT ids.id FROM stash_engine_identifiers ids
-            LEFT JOIN stash_engine_zenodo_copies cops
-            ON ids.id = cops.identifier_id
+          SELECT sum(ids1.`storage_size`) as store
+          FROM stash_engine_identifiers ids1
+          JOIN (
+            SELECT DISTINCT ids.id
+            FROM stash_engine_identifiers ids
+            LEFT JOIN stash_engine_zenodo_copies cops ON ids.id = cops.identifier_id
             WHERE ids.pub_state = 'published'
-            AND (cops.id IS NULL OR cops.state != 'finished')) as ids2
-            ON ids2.id = ids1.id;
+              AND (cops.id IS NULL OR cops.state != 'finished')
+              AND ids.deleted_at IS NULL
+            ) as ids2 ON ids2.id = ids1.id;
+          WHERE ids1.deleted_at IS NULL;
         SQL
 
         res = ActiveRecord::Base.connection.exec_query(sql)

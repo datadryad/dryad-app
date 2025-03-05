@@ -5,6 +5,7 @@
 #  id                        :integer          not null, primary key
 #  accepted_agreement        :boolean
 #  cedar_json                :text(65535)
+#  deleted_at                :datetime
 #  display_readme            :boolean          default(TRUE)
 #  download_uri              :text(65535)
 #  file_view                 :boolean          default(FALSE)
@@ -34,6 +35,7 @@
 # Indexes
 #
 #  index_stash_engine_resources_on_current_editor_id             (current_editor_id)
+#  index_stash_engine_resources_on_deleted_at                    (deleted_at)
 #  index_stash_engine_resources_on_identifier_id                 (identifier_id)
 #  index_stash_engine_resources_on_identifier_id_and_created_at  (identifier_id,created_at) UNIQUE
 #  index_stash_engine_resources_on_tenant_id                     (tenant_id)
@@ -49,6 +51,9 @@ require 'cgi'
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_resources'
+    acts_as_paranoid
+    has_paper_trail
+
     # ------------------------------------------------------------
     # Relations
     has_one :process_date, as: :processable, dependent: :destroy
@@ -60,7 +65,6 @@ module StashEngine
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
     has_many :software_files, class_name: 'StashEngine::SoftwareFile', dependent: :destroy
     has_many :supp_files, class_name: 'StashEngine::SuppFile', dependent: :destroy
-    has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles, class_name: 'StashEngine::User'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
@@ -97,7 +101,7 @@ module StashEngine
     has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy
     has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy
     has_many :sizes, class_name: 'StashDatacite::Size', dependent: :destroy
-    has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject', through: 'StashDatacite::ResourceSubject', dependent: :destroy
+    has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
@@ -921,8 +925,8 @@ module StashEngine
       that_technical_info = other_resource.descriptions.type_technical_info&.first&.description
       changed << 'technical_info' if this_technical_info != that_technical_info
 
-      this_other_desc = descriptions.type_other.map(&:description).reject(&:blank)
-      that_other_desc = other_resource.descriptions.type_other.map(&:description).reject(&:blank)
+      this_other_desc = descriptions.type_other.map(&:description).reject(&:blank?)
+      that_other_desc = other_resource.descriptions.type_other.map(&:description).reject(&:blank?)
       changed << 'usage_notes' if this_other_desc != that_other_desc
 
       changed.concat(changed_subjects(other_resource.subjects))
