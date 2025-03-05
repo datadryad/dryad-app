@@ -1,4 +1,4 @@
-<h1><%= @desc %></h1>
+<h1>Change dataset submitter</h1>
 <%= form_with(url: ds_admin_edit_submitter_path(@identifier.id), method: :post, local: false) do |form| -%>
   <div class="c-input">
     <%= form.label :orcid, "Enter the ORCID of the submitter user", class: 'c-input__label' %>

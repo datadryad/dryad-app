@@ -1,11 +1,11 @@
-<h1><%= @desc %></h1>
+<h1>Edit publication dates</h1>
 <p style="max-width: 480px">Edit the publication dates for the public versions. To set the latest publication date to the future, please change the status to embargoed.</p>
 <%= form_with(url: ds_admin_pub_dates_path(@identifier.id), method: :post, local: false) do |form| -%>
   <% @identifier.resources.with_public_metadata.each do |resource| %>
     <%= form.fields_for "resources[]", resource do |f| %>
         <div class="c-input">
-          <%= f.label :publication_date, "Version Publication date (Resource ID)", class: 'c-input__label' %>
-          <%= f.date_field :publication_date, class: 'c-input__text'%>
+          <%= f.label :publication_date, "Version #{resource.stash_version.version} Publication date (Resource ID #{resource.id})", class: 'c-input__label' %>
+          <%= f.date_field :publication_date, class: 'c-input__text', max: Date.today %>
         </div>
     <% end %>
   <% end %>

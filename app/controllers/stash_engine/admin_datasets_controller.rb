@@ -7,15 +7,12 @@ module StashEngine
     protect_from_forgery except: :activity_log
     before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates]
 
-    # rubocop:disable Metrics/MethodLength
     def popup
       case @field
       when 'flag'
         authorize @resource, :flag?
-        @desc = 'Flag dataset'
       when 'notification_date'
         authorize %i[stash_engine admin_datasets], :notification_date?
-        @desc = 'Notification date'
       when 'note'
         authorize %i[stash_engine admin_datasets], :note_popup?
         @curation_activity = CurationActivity.new(
@@ -24,10 +21,8 @@ module StashEngine
         )
       when 'submitter'
         authorize %i[stash_engine admin_datasets], :edit_submitter?
-        @desc = 'Change dataset submitter'
       when 'pub_dates'
         authorize @resource, :curate?
-        @desc = 'Edit publication dates'
       when 'publications'
         authorize @resource, :curate?
         @related_work = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id)
@@ -38,11 +33,9 @@ module StashEngine
         setup_internal_data_list
       when 'waiver'
         authorize %i[stash_engine admin_datasets], :waiver_add?
-        @desc = 'Add fee waiver'
       end
       respond_to(&:js)
     end
-    # rubocop:enable Metrics/MethodLength
 
     def waiver_add
       if @identifier.payment_type == 'stripe'
