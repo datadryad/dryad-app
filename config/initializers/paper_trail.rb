@@ -14,7 +14,7 @@ def extract_resource_id(record)
 
   return record.id if record.is_a?(StashEngine::Resource)
   return record.resource_id if record.respond_to?(:resource_id)
-  return record.resource.id if record.respond_to?(:resource)
+  return record.resource&.id if record.respond_to?(:resource)
 
   nil
 end
