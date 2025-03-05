@@ -103,7 +103,7 @@
           <% end %>
         <% end %>
       </span>
-      <span id="related_works_list"><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ') %>. <%= r.resource_publication.manuscript_number.presence || ''%></span>
+      <span id="related_works_list"><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ') %> <%= r.resource_publication.manuscript_number.presence || ''%></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
       <span class="input-line">
