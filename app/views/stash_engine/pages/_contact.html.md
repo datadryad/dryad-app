@@ -32,7 +32,7 @@ After your request is received, we will provide you with brief feedback about th
 
 <p><strong>Email:</strong> <a class="emailr" href="mailto:dev@null">gro.dayrdatad@olleh</a></p>
 <p><strong>Phone:</strong> <a href="tel:+18332925326">+1 833-292-5326</a></p>
-<p><a href="https://twitter.com/datadryad">Twitter</a> | <a href="https://www.linkedin.com/company/datadryad/">LinkedIn</a> | <a href="https://www.facebook.com/profile.php?id=100075926210112">Facebook</a></p>
+<p><a href="https://www.linkedin.com/company/datadryad/">LinkedIn</a> | <a href="https://www.facebook.com/profile.php?id=100075926210112">Facebook</a></p>
 
 ## Head office
 
