@@ -16,7 +16,7 @@
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  latest_resource_id  :integer
-#  license_id          :string(191)      default("cc0")
+#  license_id          :string(191)
 #  payment_id          :text(65535)
 #  software_license_id :integer
 #
