@@ -13,8 +13,8 @@ export default function SuppPreview({resource, previous, admin}) {
       {facility && facility.contributor_name && (
         <div className="o-metadata__group2-item">
           Research facility:{' '}
-          {previous && facility.contributor_name !== pFacility.contributor_name ? (
-            <><ins>facility.contributor_name</ins>{pFacility.contributor_name && <del>{pFacility.contributor_name}</del>}</>
+          {previous && facility.contributor_name !== pFacility?.contributor_name ? (
+            <><ins>facility.contributor_name</ins>{pFacility?.contributor_name && <del>{pFacility?.contributor_name}</del>}</>
           ) : facility.contributor_name}
         </div>
       )}

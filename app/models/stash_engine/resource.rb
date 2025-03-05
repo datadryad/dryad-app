@@ -52,7 +52,7 @@ module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
-    has_paper_trail versions: { class_name: 'CustomVersion' }
+    has_paper_trail
 
     # ------------------------------------------------------------
     # Relations
@@ -102,7 +102,7 @@ module StashEngine
     has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy
     has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy
     has_many :sizes, class_name: 'StashDatacite::Size', dependent: :destroy
-    has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject', through: 'StashDatacite::ResourceSubject', dependent: :destroy
+    has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
@@ -926,8 +926,8 @@ module StashEngine
       that_technical_info = other_resource.descriptions.type_technical_info&.first&.description
       changed << 'technical_info' if this_technical_info != that_technical_info
 
-      this_other_desc = descriptions.type_other.map(&:description).reject(&:blank)
-      that_other_desc = other_resource.descriptions.type_other.map(&:description).reject(&:blank)
+      this_other_desc = descriptions.type_other.map(&:description).reject(&:blank?)
+      that_other_desc = other_resource.descriptions.type_other.map(&:description).reject(&:blank?)
       changed << 'usage_notes' if this_other_desc != that_other_desc
 
       changed.concat(changed_subjects(other_resource.subjects))

@@ -8,5 +8,8 @@ class AddObjectChangesToVersions < ActiveRecord::Migration[8.0]
 
   def change
     add_column :paper_trail_versions, :object_changes, :json
+    add_column :paper_trail_versions, :resource_id, :integer
+
+    add_index :paper_trail_versions, :resource_id
   end
 end
