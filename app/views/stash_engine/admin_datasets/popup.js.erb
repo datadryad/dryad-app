@@ -1,28 +1,25 @@
 // open a modal dialog
-<% case @field
-when 'flag'
-  partial = 'flag'
-when 'data'
-  partial = 'internal_data_popup'
-when 'publications'
-  partial = 'publications_popup'
-when 'note'
-  partial = 'curation_note_popup'
-when 'notification_date'
-  partial = 'notification_date_popup'
-when 'pub_dates'
-  partial = 'pub_date_popup'
-when 'submitter'
-  partial = 'edit_submitter'
-else
-  partial = 'waiver_add'
-end %>
-document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: partial) %>";
+<% 
+partial = { flag: 'flag', data: 'internal_data_popup', publications: 'publications_popup',
+  note: 'curation_note_popup', notification_date: 'notification_date_popup',
+  pub_dates: 'pub_date_popup', submitter: 'edit_submitter', funders: 'funders_popup',
+  waiver: 'waiver_add' }
+%>
+document.getElementById('genericModalContent').innerHTML = '';
+document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: partial[@field.to_sym]) %>"));
 document.getElementById('genericModalDialog').showModal();
 document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('genericModalDialog').close();
 });
+<% if @field == 'funders' %>
+  document.getElementById('genericModalDialog').style.height = '100%';
+  document.getElementById('genericModalContent').style.height = '100%';
+  document.getElementById('genericModalDialog').addEventListener('close', () => {
+    document.getElementById('genericModalContent').removeAttribute('style');
+    document.getElementById('genericModalDialog').removeAttribute('style');
+  })
+<% end %> 
 <% if @field == 'waiver' %>
   <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
     document.getElementById('popup_submit').setAttribute('hidden', 'hidden');

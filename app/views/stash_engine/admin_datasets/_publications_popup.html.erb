@@ -1,6 +1,6 @@
 <h1>Edit related works</h1>
 <% @resource.related_identifiers.each do |related_identifier| %>
-  <%= form_with(url: related_identifiers_update_path(format: :js), method: :post, local: false) do |form| -%>
+  <%= form_with(url: related_identifiers_update_path(format: :js), method: :patch, local: false) do |form| -%>
     <div class="input-line" style="width:680px; max-width: 100%; margin-bottom: 1rem;">
       <%= form.fields_for :stash_datacite_related_identifier, related_identifier do |f| %>
         <%= f.hidden_field :id %>

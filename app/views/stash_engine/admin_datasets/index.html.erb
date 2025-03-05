@@ -106,8 +106,15 @@
       <span id="related_works_list"><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ') %>. <%= r.resource_publication.manuscript_number.presence || ''%></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
-      <b role="heading" aria-level="2">Funders</b>
-      <span><%= r.contributors.funder&.map(&:contributor_name)&.join('; ') %></span>
+      <span class="input-line">
+        <b role="heading" aria-level="2">Funders</b>
+        <% if policy(r).curate? %>
+          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'funders'), method: :get, local: false) do %>
+            <button class="o-button__plain-text7" aria-label="Edit funders" title="Edit funders" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          <% end %>
+        <% end %>
+      </span>
+      <span id="funders_list"><%= r.contributors.funder&.map(&:contributor_name)&.join('; ') %></span>
     </div>
   </div>
 </div>

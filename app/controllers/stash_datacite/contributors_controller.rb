@@ -19,9 +19,9 @@ module StashDatacite
       respond_to do |format|
         if @contributor.save
           format.json { render json: @contributor }
-          format.js
-        else
-          format.html { render :new }
+          format.js do
+            render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
+          end
         end
       end
     end
@@ -33,9 +33,9 @@ module StashDatacite
         contributor_params[:award_description] = contributor_params[:award_description].squish if contributor_params[:award_description].present?
         if @contributor.update(contributor_params)
           format.json { render json: @contributor }
-          format.js { render template: 'stash_datacite/shared/update.js.erb' }
-        else
-          format.html { render :edit }
+          format.js do
+            render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
+          end
         end
       end
     end
@@ -47,8 +47,10 @@ module StashDatacite
         @contributor.destroy
       end
       respond_to do |format|
-        format.js
         format.json { render json: @contributor }
+        format.js do
+          render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
+        end
       end
     end
 

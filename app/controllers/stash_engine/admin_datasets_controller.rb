@@ -21,18 +21,16 @@ module StashEngine
         )
       when 'submitter'
         authorize %i[stash_engine admin_datasets], :edit_submitter?
-      when 'pub_dates'
-        authorize @resource, :curate?
       when 'publications'
         authorize @resource, :curate?
-        @related_work = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id)
-        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
-        @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
+        setup_publications
       when 'data'
         authorize %i[stash_engine admin_datasets], :data_popup?
         setup_internal_data_list
       when 'waiver'
         authorize %i[stash_engine admin_datasets], :waiver_add?
+      else
+        authorize @resource, :curate?
       end
       respond_to(&:js)
     end
@@ -162,6 +160,12 @@ module StashEngine
       @identifier = Identifier.find(params[:id])
       @resource = @identifier.latest_resource
       @field = params[:field]
+    end
+
+    def setup_publications
+      @related_work = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id)
+      @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
+      @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
     end
 
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
