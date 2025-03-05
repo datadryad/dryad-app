@@ -1,7 +1,11 @@
 <tr>
   <td><div class="c-lined-table__with-actions">
     <div class="c-lined-table__data">
-      <%= link_to "#{dataset.title}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, stash_url_helpers.show_path(id: dataset.identifier_str), target: '_blank' %>
+      <% if dataset.identifier&.last_submitted_resource&.present? %>
+        <%= link_to "#{dataset.title}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, stash_url_helpers.show_path(id: dataset.identifier_str), target: '_blank' %>
+      <% else %>
+        <%= dataset.title %>
+      <% end %>
       <div class="c-lined-table__digits">
         <% if policy(dataset).flag? %>
           <span>

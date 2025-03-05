@@ -1,7 +1,7 @@
 module StashEngine
   class AdminDatasetsPolicy < ApplicationPolicy
 
-    def activity_log?
+    def index?
       @user.min_admin?
     end
 
@@ -13,8 +13,8 @@ module StashEngine
       @user.min_app_admin?
     end
 
-    def curation_actions?
-      @user.min_curator?
+    def edit_submitter?
+      @user.superuser?
     end
 
     def create_salesforce_case?
@@ -25,7 +25,7 @@ module StashEngine
       @user.superuser?
     end
 
-    def change_delete_schedule?
+    def notification_date?
       @user.superuser?
     end
   end

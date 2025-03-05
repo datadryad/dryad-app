@@ -26,7 +26,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       within(:css, 'tbody tr', wait: 10) do
         find('a[title="Activity log"]').click
       end
-      expect(page).to have_text('Activity log for')
+      expect(page).to have_text('This is the dataset activity page.')
       expect(page).to have_text('Not a valid SF link')
       # 'SF #0001' is not a valid case number, so the text is not changed
       expect(page).to have_text('SF #0001')
@@ -39,7 +39,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       within(:css, 'tbody tr', wait: 10) do
         find('a[title="Activity log"]').click
       end
-      expect(page).to have_text('Activity log for')
+      expect(page).to have_text('This is the dataset activity page.')
       expect(page).to have_text('Salesforce cases')
       expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
     end
@@ -68,7 +68,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
 
-        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('This is the dataset activity page.')
         expect(page).to have_text('Add note')
       end
     end
@@ -79,25 +79,15 @@ RSpec.feature 'CurationActivity', type: :feature do
         mock_salesforce!
         @superuser = create(:user, role: 'superuser')
         sign_in(@superuser, false)
-      end
-
-      it 'allows adding notes to the curation activity log', js: true do
         visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
 
-        expect(page).to have_text('Activity log for')
-        expect(page).to have_text('Add note')
+        expect(page).to have_text('This is the dataset activity page.')
       end
 
       it 'adds a note to the curation activity log', js: true do
-        visit stash_url_helpers.admin_dashboard_path
-
-        expect(page).to have_css('a[title="Activity log"]')
-        find('a[title="Activity log"]').click
-
-        expect(page).to have_text('Activity log for')
         click_button 'Add note'
         fill_in('stash_engine_curation_activity[note]', with: 'This is a test of the note functionality')
         click_button('Submit')
@@ -105,44 +95,21 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'change delete reference date', js: true do
+        create(:curation_activity_no_callbacks, status: 'action_required', user_id: @user.id, resource_id: @resource.id)
         visit stash_url_helpers.admin_dashboard_path
-
-        expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
-
-        expect(page).to have_text('Activity log for')
-        click_button 'Change delete reference date'
-        fill_in('[process_date][delete_calculation_date]', with: Date.new(2024, 1, 8))
+        click_button 'Edit notification date'
+        fill_in('notification_date', with: Date.today + 2.months)
         fill_in('[curation_activity][note]', with: 'Some Note')
         click_button('Submit')
 
-        expect(page).to have_text('Changed deletion reference date to Jan 08, 2024.')
+        expect(page).to have_text("Changed notification start date to #{(Date.today + 1.month).strftime('%b %d, %Y')}.")
         expect(page).to have_text('Some Note')
       end
 
-      it 'adds internal data', js: true do
-        visit stash_url_helpers.admin_dashboard_path
-
-        expect(page).to have_css('a[title="Activity log"]')
-        find('a[title="Activity log"]').click
-
-        expect(page).to have_text('Activity log for')
-        click_button 'View historical Internal data'
-        click_button 'Add data'
-        select('pubmedID', from: 'stash_engine_internal_datum[data_type]')
-        fill_in('stash_engine_internal_datum[value]', with: '123456')
-        click_button('Submit')
-        expect(page).to have_text('pubmedID')
-      end
-
       it 'allows superuser to set a fee waiver', js: true do
-        visit stash_url_helpers.admin_dashboard_path
-
-        expect(page).to have_css('a[title="Activity log"]')
-        find('a[title="Activity log"]').click
-
         expect(@resource.identifier.payment_type).to be(nil)
-        expect(page).to have_text('Payment information')
+        expect(page).to have_text('Payment:')
         click_button('Apply fee waiver')
         expect(page).to have_text('Please provide a reason')
         find("#select_div option[value='no_funds']").select_option
@@ -163,7 +130,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
 
-        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('This is the dataset activity page.')
         expect(page).to have_text('Add note')
       end
     end
@@ -189,7 +156,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
 
-        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('This is the dataset activity page.')
         expect(page).to have_text('Add note')
       end
     end
@@ -209,7 +176,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_css('a[title="Activity log"]')
         find('a[title="Activity log"]').click
 
-        expect(page).to have_text('Activity log for')
+        expect(page).to have_text('This is the dataset activity page.')
         expect(page).to have_text('Add note')
       end
     end

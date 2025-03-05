@@ -1,4 +1,4 @@
-<h1><%= @desc %></h1>
+<h1>Add fee waiver</h1>
 <%= form_with(url: ds_admin_waiver_path(@identifier.id), method: :post, local: false) do |form| -%>
   <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
   <p class="c-alert--notification">This dataset has been approved for publication</p>
