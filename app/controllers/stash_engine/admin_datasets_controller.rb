@@ -28,13 +28,11 @@ module StashEngine
       when 'pub_dates'
         authorize @resource, :curate?
         @desc = 'Edit publication dates'
-      when 'publication'
-        authorize %i[stash_engine admin_datasets], :data_popup?
+      when 'publications'
+        authorize @resource, :curate?
+        @related_work = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id)
         @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
-      when 'preprint'
-        authorize %i[stash_engine admin_datasets], :data_popup?
-        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
-        @field = 'publication'
+        @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
       when 'data'
         authorize %i[stash_engine admin_datasets], :data_popup?
         setup_internal_data_list

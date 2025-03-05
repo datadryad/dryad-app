@@ -32,7 +32,7 @@ RSpec.feature 'AdminPaths', type: :feature do
       mock_salesforce!
       @user = create(:user)
       @dataset = create(:resource, user: @user)
-      @path = stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'activity_log',
+      @path = stash_url_helpers.url_for(controller: '/stash_engine/admin_datasets', action: 'index',
                                         id: @dataset.identifier_id, only_path: true)
     end
 

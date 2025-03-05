@@ -95,8 +95,15 @@
       <span><b>Latest:</b> <span id="dataset_published_<%= @identifier.id %>"><%= formatted_date(@identifier.date_last_published) %></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
-      <b role="heading" aria-level="2">Related works</b>
-      <span><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type)&.first.publication_name}" : ''}"}&.join('; ') %></span>
+      <span class="input-line">
+        <b role="heading" aria-level="2">Related works</b>
+        <% if policy(r).curate? %>
+          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'publications'), method: :get, local: false) do %>
+            <button class="o-button__plain-text7" aria-label="Edit related works" title="Edit related works" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          <% end %>
+        <% end %>
+      </span>
+      <span id="related_works_list"><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ') %>. <%= r.resource_publication.manuscript_number.presence || ''%></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
       <b role="heading" aria-level="2">Funders</b>
@@ -105,46 +112,6 @@
   </div>
 </div>
 
-<!--div id="publication">
-  <h2>Publication information</h2>
-  <div style="display: flex; flex-basis: 48%; gap: 4ch">
-    <div style="display: flex; flex-direction: column; gap: 2ch">
-      <div class="o-admin-form-pair" style="justify-content: space-between; align-items: baseline;">
-        <h3 style="margin: 0">Preprint</h3>
-        <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
-          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'preprint'), method: :get, local: false) do %>
-            <button class="o-button__plain-text7" aria-label="Edit preprint server information" title="Edit" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
-          <% end %>
-        <% end %>
-      </div>
-      <div class="o-admin-form-pair">
-        <b>Preprint server ISSN:</b><span id="preprint_publication_issn" class="callout"><%= @identifier.preprint_issn %></span>
-      </div>
-      <div class="o-admin-form-pair">
-        <b>Preprint server name:</b><span id="preprint_publication_name" class="callout"><%= @identifier.preprint_server %></span>
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: column; gap: 2ch">
-      <div class="o-admin-form-pair" style="justify-content: space-between;">
-        <h3 style="margin: 0">Primary article</h3>
-        <% if policy([:stash_engine, :admin_datasets]).data_popup? %>
-          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'publication'), method: :get, local: false) do %>
-            <button class="o-button__plain-text7" aria-label="Edit publication information" title="Edit" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .5ch;"></i></button>
-          <% end %>
-        <% end %>
-      </div>
-      <div class="o-admin-form-pair">
-        <b>Publication ISSN:</b><span id="primary_article_publication_issn" class="callout"><%= @identifier.publication_issn %></span>
-      </div>
-      <div class="o-admin-form-pair">
-        <b>Publication name:</b><span id="primary_article_publication_name" class="callout"><%= @identifier.publication_name %></span>
-      </div>
-      <div class="o-admin-form-pair">
-        <b>Manuscript number:</b><span id="manuscript_number" class="callout"><%= @identifier.manuscript_number %></span>
-      </div>
-    </div>
-  </div>
-</div-->
 <div class="activity-log-header">
   <h2>Activity log</h2>
   <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
