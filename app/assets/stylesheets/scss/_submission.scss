@@ -597,7 +597,7 @@ dialog#submission-step[open] {
 }
 
 .author-form > div {
-  flex-basis: calc(33% - 1ch);
+  flex-basis: calc(50% - 1ch);
   flex-shrink: 1;
   flex-grow: 0;
   max-width: 100%;
@@ -632,14 +632,22 @@ dialog#submission-step[open] {
       }
     }
   }
-  @media (max-width: $screen-lg-min) {
-    flex-basis: calc(50% - 1ch);
-  }
   @media (max-width: 520px) {
     flex-basis: 100%;
   }
 }
 
+.author-form.email-opts {
+  flex-basis: 100%;
+  & > div {
+    flex-basis: calc(33% - 1ch);
+    &.author-one-line {
+      align-self: center;
+      min-width: 0;
+      flex-basis: auto;
+    }
+  }
+}
 .open .author-form > div {
   @media (max-width: 740px) {
     flex-basis: 100%;

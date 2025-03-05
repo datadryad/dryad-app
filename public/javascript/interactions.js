@@ -56,17 +56,41 @@ if (timezone) {
 
 var navButtons = Array.from(document.getElementsByClassName('c-header_nav-button'));
 navButtons.forEach(button => {
+  button.parentElement.addEventListener('mouseenter', (e) => {
+    if (window.innerWidth > 899) {
+      const closed = button.getAttribute('aria-expanded') === 'false';
+      navButtons.forEach(nb => {
+        nb.setAttribute('aria-expanded', 'false');
+        nb.parentElement.classList.remove('is-open');
+        nb.nextElementSibling.setAttribute('hidden', true);
+      });
+      if (closed) {
+        button.parentElement.classList.add('is-open');
+        button.setAttribute('aria-expanded', 'true');
+        button.nextElementSibling.removeAttribute('hidden');
+      }
+    }
+  })
+  button.parentElement.addEventListener('mouseleave', (e) => {
+    if (window.innerWidth > 899) {
+      navButtons.forEach(nb => {
+        nb.setAttribute('aria-expanded', 'false');
+        nb.parentElement.classList.remove('is-open');
+        nb.nextElementSibling.setAttribute('hidden', true);
+      });
+    }
+  })
   button.addEventListener('click', (e) => {
-    const closed = e.currentTarget.getAttribute('aria-expanded') === 'false';
+    const closed = button.getAttribute('aria-expanded') === 'false';
     navButtons.forEach(nb => {
       nb.setAttribute('aria-expanded', 'false');
       nb.parentElement.classList.remove('is-open');
       nb.nextElementSibling.setAttribute('hidden', true);
     });
     if (closed) {
-      e.currentTarget.parentElement.classList.add('is-open');
-      e.currentTarget.setAttribute('aria-expanded', 'true');
-      e.currentTarget.nextElementSibling.removeAttribute('hidden');
+      button.parentElement.classList.add('is-open');
+      button.setAttribute('aria-expanded', 'true');
+      button.nextElementSibling.removeAttribute('hidden');
     }
   })
 });
