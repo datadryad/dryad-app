@@ -57,7 +57,7 @@
         "><%= dataset&.last_curation_activity&.readable_status %></span>
         <div class="c-user-datasets-actions">
           <% if dataset&.last_curation_activity.status == 'in_progress' %>
-            <% if dataset.current_editor_id == current_user&.id %>
+            <% if dataset.current_editor_id.nil? || dataset.current_editor_id == current_user&.id %>
               <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
                 Resume <i class="fa fa-pencil" aria-hidden="true"></i>
               <% end %>

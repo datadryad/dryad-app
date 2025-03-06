@@ -106,6 +106,11 @@ module StashEngine
       end
     end
 
+    def logout
+      @resource.update(current_editor_id: nil)
+      redirect_to dashboard_path
+    end
+
     # rubocop:disable Metrics/AbcSize
     def prepare_readme
       @file_list = @resource.data_files.reject { |f| f.upload_file_name == 'README.md' }.map do |f|

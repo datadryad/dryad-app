@@ -22,7 +22,7 @@ module StashDatacite
       find_files
       @submission = @submission.to_json
 
-      @resource.update(updated_at: Time.current)
+      @resource.update(updated_at: Time.current, current_editor_id: current_user.id)
       @target_page = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
 
       # If the most recent Curation Activity was from the "Dryad System", add an entry for the
