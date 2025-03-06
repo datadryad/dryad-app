@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Field, Form, Formik} from 'formik';
 import Affiliations from './Affiliations';
 import OrcidInfo from './OrcidInfo';
@@ -32,6 +32,10 @@ export default function AuthorForm({
     }
     return null;
   };
+
+  useEffect(() => {
+    if (formRef.current && affiliations.length < author.affiliations.length) formRef.current.handleSubmit();
+  }, [affiliations]);
 
   return (
     <Formik

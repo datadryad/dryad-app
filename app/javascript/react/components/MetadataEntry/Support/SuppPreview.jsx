@@ -31,13 +31,13 @@ export default function SuppPreview({resource, previous, admin}) {
                 <li key={funder.id}>
                   <span>
                     {previous && cName(funder.contributor_name) !== cName(prev?.contributor_name) ? (
-                      <ins>cName(funder.contributor_name)</ins>
+                      <ins>{cName(funder.contributor_name)}</ins>
                     ) : cName(funder.contributor_name) }
                     {admin && !funder.name_identifier_id && (
                       <i className="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched funder" title="Unmatched funder" />
                     )}
                     {previous && cName(funder.contributor_name) !== cName(prev?.contributor_name) && cName(prev?.contributor_name) && (
-                      <del>cName(prev?.contributor_name)</del>
+                      <del>{cName(prev?.contributor_name)}</del>
                     )}
                   </span>
                   {funder.award_number && (
