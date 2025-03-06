@@ -309,9 +309,19 @@
 #activity-at-a-glance {
   display: grid;
   grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr;
-  gap: 1ch;
-  & > * {
-    flex-grow: 1;
+  column-gap: 1ch;
+  row-gap: 3ch;
+  @media screen and (min-width: 631px) and (max-width: 1100px) {
+    grid-template-columns: repeat(6, 1fr);
+    & > * {
+      grid-column: span 2;
+    }
+    & > *:nth-child(-n + 2) {
+      grid-column: span 3;
+    }
+  }
+  @media screen and (max-width: 630px) {
+    grid-template-columns: 1fr;
   }
   b[role="heading"] {
     font-size: 1.15rem;
