@@ -14,7 +14,10 @@ module StashEngine
         note = "#{(user_id == 0 && 'System cleanup') || 'User'} deleted unsubmitted version #{resource.version_number}"
         StashEngine::CurationActivity.create(resource_id: last.id, status: last.current_curation_status, user_id: user_id, note: note)
       end
-      resource.destroy
+      success = resource.destroy
+      last.identifier.update(latest_resource_id: last.id) if success && last.identifier
+
+      success
     end
   end
 end

@@ -202,6 +202,11 @@ module StashEngine
       render json: { import_info: params[:import_info] }, status: :ok
     end
 
+    def license_agree
+      @resource.identifier.update(license_id: params[:license_id])
+      render json: { license_id: params[:license] }, status: :ok
+    end
+
     private
 
     # We have parameters requesting to match to a Manuscript object; prefill journal info and import metadata if possible

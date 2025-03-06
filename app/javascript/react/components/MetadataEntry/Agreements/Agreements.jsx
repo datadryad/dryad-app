@@ -98,7 +98,7 @@ export default function Agreements({
     <>
       {preview && (
         <>
-          <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
+          <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
           <div className="callout alt">
             {ppr ? (
               <p>
@@ -119,7 +119,7 @@ export default function Agreements({
         <>
           {!curated && dpc.automatic_ppr && (
             <>
-              <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
+              <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
               <p>
                 This submission is associated with a manuscript from an{' '}
                 <a href="/journals" target="_blank">integrated journal<span className="screen-reader-only"> (opens in new window)</span></a>.
@@ -129,7 +129,9 @@ export default function Agreements({
           )}
           {!curated && dpc.allow_review ? (
             <fieldset onChange={togglePPR}>
-              <h3 style={{marginTop: '.5rem'}}><legend>Publication{subType === 'collection' ? '' : ' of your files'}</legend></h3>
+              <legend role="heading" aria-level="3" style={{display: 'block', margin: '0'}} className="o-heading__level3">
+                {subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?
+              </legend>
               <p className="radio_choice">
                 <label style={!ppr ? {fontWeight: 'bold'} : {}}>
                   <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
@@ -146,7 +148,7 @@ export default function Agreements({
             </fieldset>
           ) : (
             <>
-              <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
+              <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
               <p>
                 The private for peer review option is not available for this submission{reason}.
                 The submission will proceed to our curation process for evaluation and publication.
@@ -157,7 +159,7 @@ export default function Agreements({
       )}
       {subType === 'collection' ? <h3>Terms</h3> : (
         <>
-          <h3>Payment and terms</h3>
+          <h3 style={preview ? {} : {marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>
           {dpc.journal_will_pay && (
             <div className="callout">
               <p>Payment for this submission is sponsored by <b>{resource.resource_publication.publication_name}</b></p>
