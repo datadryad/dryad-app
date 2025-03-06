@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class ResourcesController < ApplicationController
     include StashEngine::LandingHelper
@@ -265,3 +266,5 @@ module StashEngine
     end
   end
 end
+
+# rubocop:enable Metrics/ClassLength
