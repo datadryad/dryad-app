@@ -17,7 +17,7 @@
 module StashEngine
   class Flag < ApplicationRecord
     self.table_name = 'stash_engine_flags'
-    enum :flag, { priority: 0 }
+    enum :flag, { priority: 0, pending_action: 1, sensitive_data: 2, careful_attention: 3, technical_glitch: 4 }
 
     belongs_to :flaggable, polymorphic: true, optional: true
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'flaggable_id', optional: true
