@@ -218,10 +218,7 @@ module StashEngine
 
       # Save the journal and manuscript information in the dataset
       pub = StashEngine::ResourcePublication.find_or_create_by(resource_id: resource.id)
-      pub.publication_issn = j.single_issn
-      pub.publication_name = j.title
-      pub.manuscript_number = params['manu']
-      pub.save
+      pub.update({ publication_issn: j.single_issn, publication_name: j.title, manuscript_number: params['manu'] })
 
       # If possible, import existing metadata from the Manuscript objects into the dataset
       manu = StashEngine::Manuscript.where(journal: j, manuscript_number: params['manu']).first
