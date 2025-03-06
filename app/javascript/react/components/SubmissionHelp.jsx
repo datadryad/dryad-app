@@ -55,7 +55,10 @@ export function SuppHelp({type}) {
 
 export function SubjHelp() {
   return (
-    <p>Dryad requires one research domain (from the <a href="https://en.wikipedia.org/wiki/Fields_of_Science_and_Technology" target="_blank" rel="noreferrer">OECD Fields of Science and Technology<span className="screen-reader-only"> (opens in new window)</span></a>) and at least 3 subject keywords per submission.</p>
+    <>
+      <p>Dryad requires one research domain (from the <a href="https://en.wikipedia.org/wiki/Fields_of_Science_and_Technology" target="_blank" rel="noreferrer">OECD Fields of Science and Technology<span className="screen-reader-only"> (opens in new window)</span></a>) and at least 3 subject keywords per submission.</p>
+      <p>You may enter any text as a subject keyword if your desired term does not appear.</p>
+    </>
   );
 }
 
