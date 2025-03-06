@@ -6,7 +6,7 @@
   <p style="max-width: 500px;">You may delay email notifications by selecting a new date on which to start the monthly emails over again. This will also push back the scheduled deletion date.</p>
   <div class="c-input">
     <%= form.label :notification_date, 'Notification restart date', class: 'c-input__label' %>
-    <%= form.date_field :notification_date, class: 'c-input__text', min: @resource.process_date.notification_date %>
+    <%= form.date_field :notification_date, class: 'c-input__text', min: @resource.process_date.notification_date, required: true %>
   </div>
   <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
     <div class="c-input">

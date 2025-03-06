@@ -14,7 +14,8 @@
             options_path: '/stash_datacite/affiliations/autocomplete?query=',
             options_label: 'name',
             options_value: 'id',
-            selected: {value: funder.name_identifier_id, label: funder.contributor_name}
+            selected: {value: funder.name_identifier_id, label: funder.contributor_name},
+            required: true
           } %>
         </div>
         <div class="input-stack" style="flex: 1; min-width: 115px;">
@@ -49,6 +50,7 @@
           options_label: 'name',
           options_value: 'id',
           selected: {},
+          required: true
         } %>
         </div>
       <div class="input-stack" style="flex: 1; min-width: 115px;">
