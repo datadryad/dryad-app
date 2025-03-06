@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
 
 export default function SubmissionForm({
-  steps, resource, previewRef, authenticityToken, curator,
+  steps, resource, previewRef, curator,
 }) {
   const [hasChanges, setChanges] = useState(!resource.previous_curated_resource);
   const [showR, setShowR] = useState(resource.display_readme);
   const [userComment, setUserComment] = useState(resource?.edit_histories?.[0]?.user_comment);
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   useEffect(() => {
     if (previewRef.current && resource.previous_curated_resource) {
@@ -22,7 +23,7 @@ export default function SubmissionForm({
           <p>No changes have been made to the submission. Make changes to submit, or delete this version to revert to the one already submitted</p>
           <form action={`/resources/${resource.id}`} method="post">
             <input type="hidden" name="_method" value="delete" />
-            <input type="hidden" name="authenticity_token" value={authenticityToken} />
+            <input type="hidden" name="authenticity_token" value={authenticity_token} />
             <button type="submit" className="o-button__plain-text0">Delete &amp; revert</button>
           </form>
         </>
@@ -57,7 +58,7 @@ export default function SubmissionForm({
       <form action="/stash_datacite/resources/submission" method="post">
         {hasChanges && !steps.some((s) => s.fail) && (
           <>
-            <input type="hidden" name="authenticity_token" value={authenticityToken} />
+            <input type="hidden" name="authenticity_token" value={authenticity_token} />
             <input type="hidden" name="resource_id" value={resource.id} />
             <input type="hidden" name="user_comment" value={userComment} />
             {!showR && <input type="hidden" name="hide_readme" value="true" />}

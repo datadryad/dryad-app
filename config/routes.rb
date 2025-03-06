@@ -101,6 +101,7 @@ Rails.application.routes.draw do
         get 'show_files'
         patch 'import_type'
         patch 'license_agree'
+        post 'logout'
       end
     end
 

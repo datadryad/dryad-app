@@ -23,20 +23,49 @@
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      & > h1 {
-        margin: 0 auto;
-        width: 100%;
-        padding: .5rem 1rem;
+      & > #submission-heading {
+        padding: .5rem 0;
         background-color: $lightest-green;
-        color: black;
-        box-sizing: border-box;
-        text-align: center;
-        font-size: 1.3rem;
         box-shadow: 0 3px 2px -2px $lightest-green;
+        width: 100%;
+        div {
+          margin: 0 auto;
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 2ch;
+          h1 {
+            flex: 3;
+            margin: 0;
+            margin-left: 110px;
+            color: black;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.3rem;
+          }
+          button i {
+            margin-right: .25ch;
+          }
+          @media (max-width: 600px) {
+            flex-direction: row-reverse;
+            h1 {
+              margin-left: 0;
+              margin-right: 110px;
+            }
+          }
+        }
       }
     }
     div, section {
       box-sizing: border-box;
+    }
+
+    &.submission-review > div:not(.c-admin-editing-banner) > #submission-heading h1 {
+      @media (max-width: 600px) {
+        margin-right: 0;
+      }
     }
 
     &.submission-review > div:not(.c-admin-editing-banner) {
@@ -76,7 +105,7 @@
         grid-template-columns: calc(50vw - 300px) 1fr;
       }
 
-      & > h1 {
+      & > #submission-heading {
         grid-row: 1;
         grid-column: span 2;
         margin: 0 auto -1.5rem;
@@ -278,7 +307,7 @@
       }
     }
   }
-  .c-header, #page-footer {
+  .c-header, #page-footer, #submission-heading div {
     @extend %pull-background;
     box-sizing: border-box;
     width: 100%;
