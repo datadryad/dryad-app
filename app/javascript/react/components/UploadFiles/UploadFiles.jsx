@@ -525,8 +525,11 @@ export default function UploadFiles({
       <p style={{fontSize: '.98rem'}}>
         By uploading files to Dryad, you agree they will be licensed as{' '}
         <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">
-          <i className="fab fa-creative-commons-zero" aria-hidden="true" style={{marginRight: '.5ch'}} />
-          Public domain<span className="screen-reader-only"> (opens in new window)</span>
+          Public domain
+          <span role="img" aria-label="CC0 (opens in new window)" style={{marginLeft: '.25ch'}}>
+            <i className="fab fa-creative-commons" aria-hidden="true" />
+            <i className="fab fa-creative-commons-zero" aria-hidden="true" />
+          </span>
         </a>
       </p>
       <p style={{fontSize: '.98rem'}} hidden={zenodo}>

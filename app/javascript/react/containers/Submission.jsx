@@ -16,7 +16,7 @@ import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
 import Agreements from '../components/MetadataEntry/Agreements';
 import SubmissionHelp, {
-  PublicationHelp, AuthHelp, SuppHelp, SubjHelp, DescHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
+  PublicationHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, ValHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
 /* eslint-disable jsx-a11y/no-autofocus */
 
@@ -55,8 +55,8 @@ function Submission({
     {
       name: 'Description',
       index: 2,
-      pass: resource.descriptions.some((d) => !!d.description),
-      fail: (review || step.index > 3) && abstractCheck(resource),
+      pass: !abstractCheck(resource),
+      fail: (review || step.index > 1) && abstractCheck(resource),
       component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} />,
@@ -85,7 +85,7 @@ function Submission({
       pass: !validationCheck(resource),
       fail: (review || step.index > 4) && validationCheck(resource),
       component: <Validation resource={resource} setResource={setResource} />,
-      help: null,
+      help: <ValHelp />,
       preview: <ValPreview resource={resource} previous={previous} />,
     },
     {
