@@ -326,6 +326,11 @@
     color: $dark-blue;
     @extend %o-button__link-style;
   }
+  .child-details {
+    flex: 1;
+    padding: .75ch;
+    background-color: white;
+  }
 }
 
 .activity-log-header {
