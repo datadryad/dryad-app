@@ -17,9 +17,7 @@ module StashEngine
         StashEngine::CurationActivity.create(resource_id: prev.id, status: prev.current_curation_status, user_id: user_id, note: note)
       end
       success = resource.destroy
-      if success && identifier && identifier.latest_resource_id == resource.id
-        identifier.update(latest_resource_id: prev.id)
-      end
+      identifier.update(latest_resource_id: prev.id) if success && identifier && identifier.latest_resource_id == resource.id
 
       success
     end
