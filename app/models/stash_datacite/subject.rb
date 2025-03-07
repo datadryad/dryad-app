@@ -20,8 +20,8 @@ module StashDatacite
     self.table_name = 'dcs_subjects'
     has_paper_trail
 
-    has_and_belongs_to_many :resources, class_name: StashEngine::Resource.to_s,
-                                        through: 'StashDatacite::ResourceSubject'
+    has_many :resources_subjects, class_name: 'StashDatacite::ResourcesSubjects'
+    has_many :resources, through: :resources_subjects
 
     # non_fos isn't a field of science
     # fos is a field of science, but only standard ones

@@ -101,7 +101,10 @@ module StashEngine
     has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy
     has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy
     has_many :sizes, class_name: 'StashDatacite::Size', dependent: :destroy
-    has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject'
+
+    has_many :resources_subjects, class_name: 'StashDatacite::ResourcesSubjects'
+    has_many :subjects, class_name: 'StashDatacite::Subject', through: :resources_subjects
+
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
