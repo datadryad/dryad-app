@@ -1,10 +1,10 @@
-name: RSpec Feature Tests [f-z]
+name: RSpec Feature Tests 2
 
 on: pull_request
 
 jobs:
   rspec-features:
-    name: RSpec Feature Tests [f-z]
+    name: RSpec Feature Tests 2
     runs-on: ubuntu-22.04
 
     env:
