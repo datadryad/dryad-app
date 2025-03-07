@@ -46,12 +46,8 @@ module StashDatacite
     end
 
     def submission
-      @resource.cleanup_blank_models!
-      @resource.current_state = 'processing'
-      @resource.identifier.record_payment unless @resource.identifier.publication_date.present?
-      @resource.check_add_readme_file
-      @resource.check_add_cedar_json
-
+      resource_cleanup
+      ensure_license
       update_submission_resource_info(@resource)
 
       StashEngine.repository.submit(resource_id: @resource_id)
@@ -133,6 +129,21 @@ module StashDatacite
 
       resource.current_resource_state.update(resource_state: 'processing') # should lock them out of multiple rapid submissions of same resource
       false
+    end
+
+    def resource_cleanup
+      @resource.cleanup_blank_models!
+      @resource.current_state = 'processing'
+      @resource.identifier.record_payment unless @resource.identifier.publication_date.present?
+      @resource.check_add_readme_file
+      @resource.check_add_cedar_json
+    end
+
+    def ensure_license
+      return unless @resource.rights.empty?
+
+      license = StashEngine::License.by_id(@resource.identifier.license_id)
+      @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
     end
 
     def revalidate_submission

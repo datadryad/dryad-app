@@ -1,0 +1,2 @@
+document.getElementById('related_works_list').innerHTML = "<%= @resource.related_identifiers&.map { |w| w.work_type.humanize + "#{@resource.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{@resource.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ') %> <%= @resource.resource_publication&.manuscript_number&.presence || ''%>"
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'stash_engine/admin_datasets/publications_popup') %>";

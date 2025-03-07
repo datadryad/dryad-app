@@ -1,0 +1,82 @@
+<h1>Edit funders</h1>
+<% @resource.contributors.funder.each do |funder| %>
+  <%= form_with(url: contributors_update_path(format: :js), method: :patch, local: false) do |form| -%>
+    <div class="input-line" style="width:800px; max-width: 100%; margin-bottom: 1rem;">
+      <%= form.fields_for :contributor, funder do |f| %>
+        <%= f.hidden_field :id %>
+        <%= f.hidden_field :resource_id %>
+        <%= f.hidden_field :name_identifier_id %>
+        <div class="input-stack" style="flex: 2;">
+          <%= render partial: 'stash_engine/shared/search_select', locals: {
+            id: "funder#{funder.id}",
+            label: 'Funder:',
+            field_name: '',
+            options_path: '/stash_datacite/affiliations/autocomplete?query=',
+            options_label: 'name',
+            options_value: 'id',
+            selected: {value: funder.name_identifier_id, label: funder.contributor_name},
+            required: true
+          } %>
+        </div>
+        <div class="input-stack" style="flex: 1; min-width: 115px;">
+          <%= f.label :award_number, 'Award ID', for: "award_number#{funder.id}" %>
+          <%= f.text_field :award_number, class: 'c-input__text', id: "award_number#{funder.id}" %>
+        </div>
+        <div class="input-stack" style="flex: 1; min-width: 115px;">
+          <%= f.label :award_description, 'Program/division', for: "desc#{funder.id}" %>
+          <%= f.text_field :award_description, class: 'c-input__text', for: "desc#{funder.id}" %>
+        </div>
+        <%= submit_tag 'Save', class: 'o-button__plain-text2', style: 'align-self: flex-end' %>
+      <% end %>
+      <button class="o-button__plain-text7" style="align-self: flex-end;" aria-label="Delete related work" type="submit" form="contributor_delete_form<%=funder.id%>"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+    </div>
+  <% end %>
+  <%= form_with(url: contributors_delete_path(format: :js, id: funder.id), method: :delete, local: false, html: {style: "align-self: flex-end", id: "contributor_delete_form#{funder.id}"}) do |form| -%>
+  <% end %>
+<% end %>
+<h2>+Add funder</h2>
+<%= form_with(url: contributors_create_path(format: :js), method: :post, local: false) do |form| %>
+  <%= form.fields_for :contributor do |f| %>
+    <%= f.hidden_field :resource_id, value: @resource.id %>
+    <%= f.hidden_field :name_identifier_id %>
+    <%= f.hidden_field :contributor_name %>
+    <div class="input-line" style="width:800px; max-width: 100%">
+      <div class="input-stack" style="flex: 2">
+        <%= render partial: 'stash_engine/shared/search_select', locals: {
+          id: 'newfunder',
+          label: 'Funder:',
+          field_name: '',
+          options_path: '/stash_datacite/affiliations/autocomplete?query=',
+          options_label: 'name',
+          options_value: 'id',
+          selected: {},
+          required: true
+        } %>
+        </div>
+      <div class="input-stack" style="flex: 1; min-width: 115px;">
+        <%= f.label :award_number, 'Award ID' %>
+        <%= f.text_field :award_number, class: 'c-input__text' %>
+      </div>
+      <div class="input-stack" style="flex: 1; min-width: 115px;">
+        <%= f.label :award_description, 'Program/division' %>
+        <%= f.text_field :award_description, class: 'c-input__text' %>
+      </div>
+      <%= submit_tag 'Save', class: 'o-button__plain-text2', style: 'align-self: flex-end' %>
+    </div>
+  <% end %>
+  <br/>
+<% end %>
+<div class="c-modal__buttons-right" style="">
+  <button type="button" id="cancel_dialog" class="o-button__plain-text7" onclick="cancelClick()">Close dialog</button>
+</div>
+<script type="text/javascript">
+  var selects = document.getElementsByClassName('c-input__select')
+  Array.from(selects).forEach(select => select.addEventListener('blur', () => {
+    const id = select.form.elements['[value]'];
+    const name = select.form.elements['[label]'];
+    const realid = select.form.elements['[contributor][name_identifier_id]'];
+    const realname = select.form.elements['[contributor][contributor_name]'];
+    realid.value = id.value;
+    realname.value = name.value;
+  }))
+</script>

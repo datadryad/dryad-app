@@ -1,0 +1,54 @@
+<% r = @identifier&.latest_resource %>
+<div id="dangerous_actions">
+  <h2>Dangerous actions</h2>
+  <div>
+    <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path,
+                  method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
+      <p>
+        <button class="o-button__plain-text7"><i class="fas fa-pencil" aria-hidden="true"></i> Forcibly edit dataset</button>
+        &nbsp;Note: Forcibly editing a dataset will assign it to you, and begin an editing session. Please only do this if you know the author is unable/unwilling to submit it.
+      </p>
+      <%= hidden_field_tag :resource_id, r&.id, id: "resource_id_#{r&.id}" %>
+    <% end %>        
+  </div>
+
+  <% if policy(@identifier).destroy? %>
+    <%= form_with(url: stash_url_helpers.ds_admin_destroy_path(id: @identifier&.id), method: :delete, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do -%>
+      <p>
+        <button class="o-button__plain-text7" data-confirm="Are you sure you want to permanently delete this dataset? This action cannot be undone."><i class="fas fa-trash" aria-hidden="true"></i> Remove dataset</button>
+        &nbsp;Note: Deleting a dataset will delete all its data and files.
+      </p>
+      <%= hidden_field_tag :id, @identifier.id, id: "identifier_id_#{@identifier.id}" %>
+    <% end %>
+  <% end %>
+
+  <div id="revert_edit_div">
+    <h3>New version based on previous</h3>
+    <% if @identifier&.latest_resource&.current_resource_state&.submitted? && @identifier.resources.count > 1 %>
+      <%
+        resource_list = @identifier.resources.includes(:stash_version).by_version
+        sel_list = resource_list.map do |res|
+          ["Version #{res.stash_version.version}, (updated #{res.updated_at.strftime('%Y-%m-%d')})", res.id]
+        end
+        sel_idx = resource_list[-2]&.id || resource_list.last.id
+      %>
+      <%= form_with(url: metadata_entry_pages_new_version_from_previous_path,
+                    method: :post, :html => { onsubmit: "document.body.classList.add('prevent-clicks')" }) do |f| -%>
+
+        <%= f.label :select_res, 'Select basis version:' %>
+        <%= f.select(:resource_id, options_for_select(sel_list, sel_idx), {}, id: 'select_res', class: 'c-input__select') %>&nbsp;&nbsp;
+        <button class="o-button__submit">Create new version</button>
+        <p>
+          Note: Creating and editing a new version based on an old one does not duplicate the old files, but <em>just
+          the user-entered metadata</em>. The files may need to be manually deleted or uploaded if the files in the
+          last version of the dataset are not correct.
+        </p>
+      <% end %>
+    <% else %>
+      <p>
+        You may only create and edit a new version based on an old version if there are currently no in-progress
+        versions being edited or there is more than one version submitted.
+      </p>
+    <% end %>
+  </div>
+</div>

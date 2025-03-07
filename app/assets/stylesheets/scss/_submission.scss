@@ -43,11 +43,11 @@
       display: grid;
       row-gap: 1.5rem;
       grid-template-columns: 1fr 2fr;
-      grid-template-rows: repeat(11, minmax(auto, auto));
+      grid-template-rows: repeat(12, minmax(auto, auto));
       @media (max-width: 811px) {
         row-gap: .75rem;
         grid-template-columns: 100%;
-        grid-template-rows: repeat(20, minmax(auto, auto));
+        grid-template-rows: repeat(22, minmax(auto, auto));
         grid-template-areas:
           "head"
           "label1"
@@ -68,6 +68,8 @@
           "area8"
           "label9"
           "area9"
+          "label10"
+          "area10"
           "submit"
       }
       @media (min-width: 1220px){
@@ -91,12 +93,12 @@
 
       #submission-checklist, #submission-preview {
         display: grid;
-        grid-row: 2/span 10;
+        grid-row: 2/span 11;
         grid-template-rows: subgrid;
         max-width: 100%;
         box-sizing: border-box;
         @media (max-width: 811px) {
-          grid-row: 2/span 19;
+          grid-row: 2/span 20;
           grid-template-columns: subgrid;
           grid-column: 1;
         }
@@ -150,6 +152,9 @@
             }
             &:nth-child(9) {
               grid-area: label9;
+            }
+            &:nth-child(10) {
+              grid-area: label10;
             }
           }
         }
@@ -234,6 +239,9 @@
             }
             &:nth-child(9) {
               grid-area: area9;
+            }
+            &:nth-child(10) {
+              grid-area: area10;
             }
           }
         }
