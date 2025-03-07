@@ -28,7 +28,8 @@ module StashEngine
     has_paper_trail
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
-    has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation', join_table: 'dcs_affiliations_authors'
+    has_many :affiliations_author, class_name: 'StashDatacite::AffiliationAuthor'
+    has_many :affiliations, class_name: 'StashDatacite::Affiliation', through: :affiliations_author
 
     # I believe the default to ordering by author oder is fin and it falls back to the ID order (order of creation) as secondary
     default_scope { order(author_order: :asc, id: :asc) }

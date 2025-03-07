@@ -35,7 +35,11 @@ class CreateVersions < ActiveRecord::Migration[8.0]
       t.string   :item_type, null: false, limit: 191
       t.string   :event,     null: false
       t.json     :object
+      t.json     :object_changes
+      t.integer  :resource_id
     end
+
     add_index :paper_trail_versions, %i[item_type item_id]
+    add_index :paper_trail_versions, :resource_id
   end
 end
