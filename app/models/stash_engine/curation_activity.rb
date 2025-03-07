@@ -3,6 +3,7 @@
 # Table name: stash_engine_curation_activities
 #
 #  id          :integer          not null, primary key
+#  deleted_at  :datetime
 #  keywords    :string(191)
 #  note        :text(65535)
 #  status      :string(191)      default("in_progress")
@@ -13,6 +14,7 @@
 #
 # Indexes
 #
+#  index_stash_engine_curation_activities_on_deleted_at          (deleted_at)
 #  index_stash_engine_curation_activities_on_resource_id_and_id  (resource_id,id)
 #
 require 'stash/doi/datacite_gen'
@@ -21,7 +23,7 @@ module StashEngine
 
   class CurationActivity < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_curation_activities'
-    include StashEngine::Support::StringEnum
+    acts_as_paranoid
 
     # Associations
     # ------------------------------------------
@@ -52,7 +54,7 @@ module StashEngine
       embargoed
       published
     ]
-    string_enum('status', enum_vals, 'in_progress', false)
+    enum :status, enum_vals.index_by(&:to_sym), default: 'in_progress', validate: true
 
     # I'm making this more explicit because the view helper that did this was confusing and complex.
     # We also need to enforce states outside of the select list in the view.
@@ -74,7 +76,6 @@ module StashEngine
     # Validations
     # ------------------------------------------
     validates :resource, presence: true
-    validates :status, presence: true, inclusion: { in: enum_vals }
 
     # Scopes
     # ------------------------------------------
@@ -121,6 +122,7 @@ module StashEngine
     # ------------------------------------------
     # Translates the enum value to a human readable status
     def self.readable_status(status)
+      status = status.first if status.is_a?(Array)
       return '' unless status.present?
 
       case status

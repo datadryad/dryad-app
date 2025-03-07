@@ -13,23 +13,28 @@ module Tasks
             (SELECT ids.id
             FROM dcs_affiliations affil
             JOIN dcs_affiliations_authors affil_auth
-            ON affil.id = affil_auth.`affiliation_id`
+              ON affil.id = affil_auth.`affiliation_id`
             JOIN stash_engine_authors auth
-            ON affil_auth.`author_id` = auth.id
+              ON affil_auth.`author_id` = auth.id
             JOIN stash_engine_resources res
-            ON auth.`resource_id` = res.id
+              ON auth.`resource_id` = res.id
+              AND res.deleted_at IS NULL
             JOIN `stash_engine_identifiers` ids
-            ON res.`identifier_id` = ids.id
+              ON res.`identifier_id` = ids.id
+              AND ids.deleted_at IS NULL
             WHERE affil.long_name LIKE "#{sanitized_ver}")
             UNION
             (SELECT ids.id
             FROM dcs_contributors contrib
             JOIN stash_engine_resources res
-            ON contrib.`resource_id` = res.id
+              ON contrib.`resource_id` = res.id
+              AND res.deleted_at IS NULL
             JOIN `stash_engine_identifiers` ids
-            ON res.`identifier_id` = ids.id
+              ON res.`identifier_id` = ids.id
+              AND ids.deleted_at IS NULL
             WHERE contrib.`contributor_name` LIKE "#{sanitized_ver}")) ids2
           ON ids1.id = ids2.id
+          WHERE ids1.deleted_at IS NULL
         SQL
 
         idents = StashEngine::Identifier.find_by_sql(query)

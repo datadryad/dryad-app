@@ -27,25 +27,32 @@ module StashEngine
         expect(external_reference.source).to eql('nuccore')
       end
 
+      it 'source does not allow nil' do
+        external_reference = StashEngine::ExternalReference.new(identifier: @identifier, source: nil)
+        expect(external_reference.valid?).to be_falsey
+        expect(external_reference.errors.messages[:source]).to eq([' is not a valid source'])
+      end
+
       it 'requires an identifier' do
         external_reference = StashEngine::ExternalReference.new(identifier: nil, source: 'nuccore', value: 'TEST')
-        expect(external_reference.valid?).to eql(false)
+        expect(external_reference.valid?).to be_falsey
       end
 
       it 'requires a value' do
         external_reference = StashEngine::ExternalReference.new(identifier: @identifier, source: 'nuccore', value: nil)
-        expect(external_reference.valid?).to eql(false)
+        expect(external_reference.valid?).to be_falsey
       end
 
       it 'requires that the source value belong to the enum list' do
         external_reference = StashEngine::ExternalReference.new(identifier: @identifier, source: 'testing', value: 'TEST')
-        expect(external_reference.valid?).to eql(false)
+        expect(external_reference.valid?).to be_falsey
+        expect(external_reference.errors.messages[:source]).to eq(['testing is not a valid source'])
       end
 
       it 'requires that the source be unique for the identifier' do
         StashEngine::ExternalReference.create(identifier: @identifier, source: 'bioproject', value: 'TEST')
         external_reference = StashEngine::ExternalReference.new(identifier: @identifier, source: 'bioproject', value: 'DUPLICATE')
-        expect(external_reference.valid?).to eql(false)
+        expect(external_reference.valid?).to be_falsey
       end
     end
 
@@ -54,7 +61,7 @@ module StashEngine
         external_reference = StashEngine::ExternalReference.create(identifier: @identifier)
         @identifier.reload
         @identifier.destroy
-        expect(StashEngine::ExternalReference.where(id: external_reference.id).any?).to eql(false)
+        expect(StashEngine::ExternalReference.where(id: external_reference.id).any?).to be_falsey
       end
     end
 
