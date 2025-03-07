@@ -258,8 +258,8 @@ module Stash
       def populate_affiliation(author, hash)
         affil_name = (hash['affiliation']&.first ? hash['affiliation'].first['name'] : nil)
         affiliation = StashDatacite::Affiliation.from_long_name(long_name: affil_name, check_ror: true) if affil_name.present?
-        affiliation.authors << author if affiliation.present? && !affiliation.authors.include?(author)
         affiliation.save if affiliation.present?
+        affiliation.authors << author if affiliation.present? && !affiliation.authors.include?(author)
       end
 
       def populate_author(hash)

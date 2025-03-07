@@ -32,7 +32,7 @@ module StashDatacite
     validates :long_name, presence: true
 
     before_save :strip_whitespace
-    
+
     # prefer short_name if it is set over long name and make string
     def smart_name
       return '' if short_name.blank? && long_name.blank?
