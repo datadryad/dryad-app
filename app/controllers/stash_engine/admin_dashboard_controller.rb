@@ -79,7 +79,7 @@ module StashEngine
 
     def update
       curation_activity_change if @field == 'curation_activity'
-      current_editor_change if @field == 'current_editor'
+      curator_change if @field == 'curator'
       respond_to(&:js)
     end
 
@@ -409,15 +409,15 @@ module StashEngine
       render :curation_activity_error
     end
 
-    def current_editor_change
-      editor_id = params.dig(:current_editor, :id)
-      if editor_id&.to_i == 0
+    def curator_change
+      curator_id = params.dig(:curator, :id)
+      if curator_id&.to_i == 0
         @resource.update(user_id: nil)
         @status = 'submitted' if @resource.current_curation_status == 'curation'
         @curator_name = ''
       else
-        @resource.update(user_id: editor_id)
-        @curator_name = StashEngine::User.find(editor_id)&.name
+        @resource.update(user_id: curator_id)
+        @curator_name = StashEngine::User.find(curator_id)&.name
       end
       @note = "Changing curator to #{@curator_name.presence || 'unassigned'}. " + params.dig(:curation_activity, :note)
       @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)

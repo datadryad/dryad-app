@@ -86,7 +86,7 @@ module StashEngine
       CurationActivity.where(
         created_at: date..(date + 1.day), status: %w[action_required embargoed published]
       ).includes(resource: :identifier).find_each do |ca|
-        next unless ca.resource
+        next unless ca&.resource&.identifier
 
         # if the previous ca was `curation`, add the identifier to datasets_found
         prev_ca = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1).last
@@ -139,8 +139,9 @@ module StashEngine
       CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted])
         .includes(resource: :identifier).find_each do |ca|
 
-        found_dataset = ca.resource&.identifier
-        next unless found_dataset
+        next unless ca&.resource&.identifier
+
+        found_dataset = ca.resource.identifier
         # skip if the dataset was not first submitted on this date
         next unless found_dataset.first_submitted_resource&.process_date&.submitted&.to_date == date
 
@@ -156,9 +157,9 @@ module StashEngine
       CurationActivity.where(created_at: date..(date + 1.day), status: %w[peer_review])
         .includes(resource: :identifier).find_each do |ca|
 
-        found_dataset = ca.resource&.identifier
-        next unless found_dataset
+        next unless ca&.resource&.identifier
 
+        found_dataset = ca.resource.identifier
         # skip if the dataset was not first submitted on this date
         next unless found_dataset.first_submitted_resource&.process_date&.peer_review&.to_date == date
 
@@ -199,6 +200,8 @@ module StashEngine
       # for each dataset that received curation status on the given day
       CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
         .includes(resource: [identifier: :curation_activities]).find_each do |ca|
+
+        next unless ca&.resource&.identifier
 
         # find the most recent PPR or curation status
         # if it's PPR, count it as a ppr_to_curation transition
@@ -247,9 +250,10 @@ module StashEngine
         .includes(resource: [identifier: :curation_activities])
         .find_each do |ca|
 
+        next unless ca&.resource&.identifier
+
         # action_required is either a previous status in this version, or the last status of the previous version
-        ident = ca.resource&.identifier
-        next unless ident
+        ident = ca.resource.identifier
         next if datasets_found.include?(ident.id)
 
         this_ver_aar = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1, status: 'action_required').present?
@@ -270,12 +274,12 @@ module StashEngine
       CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
         .includes(resource: %i[identifier process_date]).find_each do |ca|
 
+        next unless ca&.resource&.identifier
         # check if this was the actual date of submission for this resource
         next unless ca.resource.submitted_date&.to_date == date
 
         # if this dataset has been published or embargoed, count it
-        ident = ca.resource&.identifier
-        next unless ident
+        ident = ca.resource.identifier
         next if datasets_found.include?(ident.id)
 
         datasets_found.add(ident.id) if %w[published embargoed].include?(ident.pub_state)

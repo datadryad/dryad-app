@@ -1,0 +1,3 @@
+document.getElementById('dataset_published_<%= @identifier.id %>').innerHTML = "<%= formatted_date(@identifier.date_last_published) %>"
+document.getElementById('dataset_first_published_<%= @identifier.id %>').innerHTML = "<%= formatted_date(@identifier.date_first_published) %>"
+document.getElementById('genericModalDialog').close();

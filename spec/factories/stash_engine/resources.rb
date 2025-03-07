@@ -72,6 +72,7 @@ FactoryBot.define do
       create(:description, resource_id: resource.id)
       create(:right, resource: resource)
       create(:contributor, resource: resource)
+      create(:resource_type, resource: resource)
       resource.subjects << create(:subject, subject: Faker::Lorem.unique.word, subject_scheme: 'fos')
       3.times { resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
     end
