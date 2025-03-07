@@ -68,6 +68,11 @@ module StashDatacite
 
     enum :added_by, { default: 0, zenodo: 1, simple_relation: 2, api_simple: 3 }
 
+    validates :related_identifier, uniqueness: { scope: :resource_id, message: 'The DOI or URL is already added to the dataset' }
+    validates :work_type, uniqueness: { scope: :resource_id, conditions: -> {
+      where(work_type: :primary_article)
+    }, message: 'Only one Primary article is allowed' }
+
     WORK_TYPE_CHOICES = { article: 'Article', dataset: 'Dataset', preprint: 'Preprint', software: 'Software',
                           supplemental_information: 'Supplemental information',
                           data_management_plan: 'Data management plan' }.with_indifferent_access
