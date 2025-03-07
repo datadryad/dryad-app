@@ -64,7 +64,7 @@ export default function Publication({resource, setResource, maxSize}) {
     }
     setSponsored(!!res.journal?.payment_plan_type && (manuscript_number || primary_article) ? res.journal.title : false);
     if (res.title && !resource.identifier.process_date?.processing) {
-      axios.get(`/resources/${resource.id}/dupe_check`).then((data) => {
+      axios.get(`/resources/${resource.id}/dupe_check.json`).then((data) => {
         setDupeWarning(data.data?.[0]?.title || false);
       });
     } else {
