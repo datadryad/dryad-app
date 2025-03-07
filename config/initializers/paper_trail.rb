@@ -10,8 +10,6 @@ PaperTrail.config.version_limit = nil
 PaperTrail.config.serializer = PaperTrail::Serializers::JSON
 
 def extract_resource_id(record)
-  pp record
-
   return record.id if record.is_a?(StashEngine::Resource)
   return record.resource_id if record.respond_to?(:resource_id)
   return record.resource&.id if record.respond_to?(:resource)
