@@ -24,15 +24,15 @@ module StashDatacite
     has_paper_trail
 
     has_and_belongs_to_many :contributors, class_name: 'StashDatacite::Contributor'
-    has_many :affiliations_author, class_name: 'StashDatacite::AffiliationAuthor'
-    has_many :authors, class_name: 'StashDatacite::Affiliation', through: :affiliations_author
+    has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor'
+    has_many :authors, class_name: 'StashEngine::Author', through: :affiliation_authors
 
     belongs_to :ror_org, class_name: 'StashEngine::RorOrg', primary_key: 'ror_id', foreign_key: 'ror_id', optional: true
 
     validates :long_name, presence: true
 
     before_save :strip_whitespace
-
+    
     # prefer short_name if it is set over long name and make string
     def smart_name
       return '' if short_name.blank? && long_name.blank?

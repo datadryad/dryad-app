@@ -28,8 +28,8 @@ module StashEngine
     has_paper_trail
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
-    has_many :affiliations_author, class_name: 'StashDatacite::AffiliationAuthor'
-    has_many :affiliations, class_name: 'StashDatacite::Affiliation', through: :affiliations_author
+    has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor'
+    has_many :affiliations, class_name: 'StashDatacite::Affiliation', through: :affiliation_authors
 
     # I believe the default to ordering by author oder is fin and it falls back to the ID order (order of creation) as secondary
     default_scope { order(author_order: :asc, id: :asc) }
@@ -43,7 +43,7 @@ module StashEngine
     scope :names_filled, -> { where("TRIM(IFNULL(author_first_name,'')) <> '' AND TRIM(IFNULL(author_last_name,'')) <> ''") }
 
     amoeba do
-      enable
+      clone :affiliation_authors
     end
 
     def ==(other)

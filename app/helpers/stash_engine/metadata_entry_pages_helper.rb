@@ -4,6 +4,10 @@ module StashEngine
       begin
         @new_res = @resource.amoeba_dup
         @new_res.current_editor_id = current_user&.id
+        @new_res.save
+        # binding.pry
+        pp @new_res.authors.first.errors.messages
+        pp @new_res.errors.messages
         @new_res.save!
       rescue ActiveRecord::RecordNotUnique
         @resource.identifier.reload
