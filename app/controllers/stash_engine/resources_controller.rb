@@ -83,7 +83,7 @@ module StashEngine
     # DELETE /resources/1
     # DELETE /resources/1.json
     def destroy
-      StashEngine::DeleteDatasetsService.new(resource, current_user).call
+      StashEngine::DeleteDatasetsService.new(resource, current_user: current_user).call
 
       respond_to do |format|
         format.html do
