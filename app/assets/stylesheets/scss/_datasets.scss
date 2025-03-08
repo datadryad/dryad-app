@@ -7,36 +7,65 @@
   display: block;
 }
 
+.c-datasets-heading {
+  display: flex;
+  flex-flow: column nowrap;
+  margin-bottom: $spacing-sm;
+
+  @include bp(screen1) {
+    flex-flow: row nowrap;
+    justify-content: space-between;
+  }
+
+  .c-datasets-heading__button {
+    @extend %o-button__plain-text;
+    align-self: center;
+    height: 45px;
+    padding: 0 45px 0 30px;
+    border: none;
+    background-color: $dark-blue;
+    color: white;
+    font-size: 1.2em;
+    i {
+      margin-right: 1ch;
+      font-size: .75em;
+      -webkit-text-stroke: 1px white;
+      vertical-align: 2px;
+    }
+    &[disabled] i {
+      -webkit-text-stroke: 0;
+    }
+  }
+}
+
+.c-user-datasets-heading {
+  font-weight: bold;
+  color: black;
+  margin-bottom: 0;
+  font-size: 1.35em;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
 .c-user-datasets-list {
   list-style: "";
   margin: 0; padding: 0;
-  display: table;
-  border-collapse: collapse;
-  width: calc(100% + 18px);
-  margin-left: -10px;
-  margin-bottom: $spacing-sm;
+  border-bottom: thin solid $lighter-green;
 
 	li {
-    padding: 0;
-	  border: thin solid #888;
-	  display: table-row;
-
-	  &:nth-child(even) {
-	    background-color: #f6f6f6;
-	  }
+    padding: 1ch 0;
+    margin: 0;
+	  border-top: thin solid $lighter-green;
+	  display: flex;
+    row-gap: 1ch;
+    column-gap: 2ch;
 	 
 	 	& > div {
-    	display: table-cell;
-
-	  	&:first-child {
-		    padding-left: 10px;
-		    padding-right: 2rem;
-		  }
-
+      flex: 3;
 		  &:last-child {
-		    width: 200px;
+        flex: 1;
 		    font-size: .9em;
-		    padding-right: 10px; 
 		  }
 		}
 
@@ -44,28 +73,6 @@
     	margin: $spacing-base auto;
   	}
   }
-
-  @include bp(screen1) {
-    width: calc(100% + 38px);
-    margin-left: -20px;
-  	li > div:first-child {
-	    padding-left: 20px;
-	  }
-	  li > div:last-child {
-	    padding-right: 20px;
-	  }
-	}
-
-	@include bp(screen2) {
-    width: calc(100% + 58px);
-    margin-left: -30px;
-	  li > div:first-child {
-	    padding-left: 30px;
-	  }
-	  li > div:last-child {
-	    padding-right: 30px;
-	  }
-	}
 }
 
 .c-user-dataset-details {
@@ -116,5 +123,9 @@
 	  display: flex;
 	  justify-content: space-between;
     flex-wrap: wrap;
+
+    button i {
+      margin-right: .5ch;
+    }
 	}
 }

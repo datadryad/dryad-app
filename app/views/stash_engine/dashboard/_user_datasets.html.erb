@@ -14,21 +14,10 @@
     <% if i > 0 %>
       </ul>
     <% end %>
-    <div class="c-table-heading">
-    <%case dataset.sort_order%>
-      <%when 0%>
-        <h2 class="c-table-heading__text">Needs attention</h2>
-      <%when 1%>
-        <h2 class="c-table-heading__text">Kept private</h2>
-      <%when 2%>
-        <h2 class="c-table-heading__text">Processing</h2>
-      <%when 3%>
-        <h2 class="c-table-heading__text">Complete</h2>
-      <%when 4%>
-        <h2 class="c-table-heading__text">Withdrawn</h2>
-    <%end%>
-    </div>
-    <ul class="c-user-datasets-list" id="<%case dataset.sort_order%><%when 0%>user_in-progress<%when 1%>user_private<%when 2%>user_processing<%when 3%>user_complete<%when 4%>user_withdrawn<%end%>">
+    <h2 class="c-user-datasets-heading">
+      <%case dataset.sort_order%><%when 0%>Needs attention<%when 1%>In progress with another user<%when 2%>Kept private<%when 3%>Curation<%when 4%>Complete<%when 5%>Withdrawn<%end%>
+    </h2>
+    <ul class="c-user-datasets-list" id="<%case dataset.sort_order%><%when 0%>user_in-progress<%when 1%>user_other-editor<%when 2%>user_private<%when 3%>user_processing<%when 4%>user_complete<%when 5%>user_withdrawn<%end%>">
   <% end %>
   <li>
     <div>
@@ -39,43 +28,46 @@
           <%= title %>
         <% end %>
       </p>
-      <p class="c-user-dataset-details"><span>DOI: <%= dataset.identifier.identifier %></span><span>Version <%= dataset&.stash_version.version%></span><span><%= time_ago_in_words(dataset.updated_at, include_seconds: true) %> since last update</span><% if dataset.identifier.pub_state == 'published' %><span>Published: <%= formatted_date(dataset.identifier.date_last_published) %></span><% if dataset.sort_order != 3 %><span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span><% end %><% end %></p>
+      <p class="c-user-dataset-details">
+        <span>DOI: <%= dataset.identifier.identifier %></span>
+        <span>Version <%= dataset&.stash_version.version%></span>
+        <span><%= time_ago_in_words(dataset.updated_at, include_seconds: true) %> since last update</span>
+        <% if dataset.identifier.pub_state == 'published' %>
+          <span>Published: <%= formatted_date(dataset.identifier.date_last_published) %></span><% if dataset.sort_order != 3 %>
+            <span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span>
+          <% end %>
+        <% end %>
+      </p>
     </div>
       <div>
       <div class="c-user-datasets-status">
-        <span class="dataset-status
-          <%case dataset.sort_order%>
-          <%when 0%>
-            error-status
-          <%when 1%>
-            warning-status
-          <%when 2%>
-            info-status
-          <%when 3%>
-            success-status
-          <%end%>
-        "><%= dataset&.last_curation_activity&.readable_status %></span>
+        <span class="dataset-status <%case dataset.sort_order%><%when 0%>error-status<%when 3%>info-status<%when 4%>success-status<%else%>warning-status<%end%>"><%= dataset&.last_curation_activity&.readable_status %></span>
         <div class="c-user-datasets-actions">
           <% if dataset&.last_curation_activity.status == 'in_progress' %>
             <% if dataset.current_editor_id.nil? || dataset.current_editor_id == current_user&.id %>
               <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
-                Resume <i class="fa fa-pencil" aria-hidden="true"></i>
+                <i class="fas fa-pencil" aria-hidden="true"></i><%= dataset.current_editor_id.nil? ? "Edit" : "Resume" %>
+              <% end %>
+              <% if dataset.current_editor_id == current_user&.id %>
+                <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
+                  <i class="fas fa-floppy-disk" aria-hidden="true"></i>Save & exit
+                <% end %>
               <% end %>
               <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
-                <%= dataset&.stash_version.version > 1 ? 'Revert' : 'Delete' %> <i class="fa fa-trash-can" aria-hidden="true"></i>
+                <i class="fas fa-trash-can" aria-hidden="true"></i><%= dataset&.stash_version.version > 1 ? 'Revert' : 'Delete' %>
               <% end %>
             <% elsif dataset.current_editor_id.present? %>
-              Dataset being edited by <%= dataset.editor.name %>
+              <%= dataset.editor.name %> is editing
             <% end %>
           <% end %>
-          <% if dataset.sort_order == 1 %>
+          <% if dataset.sort_order == 2 %>
             <%= button_to stash_url_helpers.peer_review_release_path, method: :patch, params: {stash_engine_resource: { id: dataset.id }}, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
-              Release for curation <i class="fa fa-paper-plane" aria-hidden="true"></i>
+              <i class="fa fa-paper-plane" aria-hidden="true"></i>Release for curation
             <% end %>
           <% end %>
-          <% if ['submitted', 'action_required'].include?(dataset&.last_curation_activity.status) || dataset.sort_order == 1 || dataset.sort_order >= 3 %>
+          <% if ['submitted', 'action_required'].include?(dataset&.last_curation_activity.status) || dataset.sort_order == 2 || dataset.sort_order >= 4 %>
             <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: dataset.id), method: :post, class: 'o-button__inline-form') do %>
-              <button class="o-button__plain-text7 prevent-click" name="update" title="Edit dataset" aria-label="Edit dataset">Revise submission <i class="fa fa-pencil" aria-hidden="true"></i></button>
+              <button class="o-button__plain-text7 prevent-click" name="update" title="Edit dataset" aria-label="Edit dataset"><i class="fas fa-pencil" aria-hidden="true"></i>Revise submission</button>
             <% end %>
           <% end %> 
         </div>
