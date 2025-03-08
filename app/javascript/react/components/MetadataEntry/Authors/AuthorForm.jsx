@@ -5,11 +5,11 @@ import OrcidInfo from './OrcidInfo';
 import Editor from './Editor';
 
 export default function AuthorForm({
-  author, users, update, user,
+  author, users, update, invite, user,
 }) {
   const formRef = useRef(0);
   const [affiliations, setAffiliations] = useState(author?.affiliations);
-  const editor = author.author_orcid && users.filter((u) => u.role !== 'creator').find((u) => u.orcid === author.author_orcid);
+  const editor = author.author_orcid && users.find((u) => u.orcid === author.author_orcid);
   const creator = users.find((u) => u.role === 'creator');
   const isCreator = user.id === creator.id;
 
@@ -139,7 +139,7 @@ export default function AuthorForm({
                   </div>
                   <OrcidInfo author={author} curator={user.curator} />
                 </div>
-                <Editor author={author} editor={editor} permission={isCreator || user.curator} />
+                <Editor author={author} editor={editor} permission={isCreator || user.curator} invite={invite} />
               </div>
             </>
           )}

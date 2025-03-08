@@ -33,11 +33,14 @@ module StashEngine
             .joins(:last_curation_activity)
             .select("stash_engine_resources.*,
             CASE
-              WHEN status in ('in_progress', 'action_required') THEN 0
-              WHEN status='peer_review' THEN 1
-              WHEN status in ('submitted', 'curation', 'processing') THEN 2
-              WHEN status='withdrawn' THEN 4
-              ELSE 3
+              WHEN status='action_required' THEN 0
+              WHEN (status='in_progress' and (current_editor_id = #{current_user.id} or  current_editor_id is null)) THEN 0
+              WHEN (status='in_progress' and current_editor_id in (#{StashEngine::User.min_curators.map(&:id).join(',')})) THEN 3
+              WHEN status='in_progress' THEN 1
+              WHEN status='peer_review' THEN 2
+              WHEN status in ('submitted', 'curation', 'processing') THEN 3
+              WHEN status='withdrawn' THEN 5
+              ELSE 4
             END as sort_order")
             .order('sort_order asc, stash_engine_resources.updated_at desc').page(@page).per(@page_size)
           @datasets = @datasets.preload(%i[last_curation_activity stash_version current_resource_state identifier])

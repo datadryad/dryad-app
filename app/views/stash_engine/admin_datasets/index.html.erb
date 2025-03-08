@@ -63,7 +63,17 @@
           <% end %>
         <% end %>
       </span>
-      <span><b>Current Editor:</b> <%= r.editor&.name || "<em>None</em>".html_safe %></span>
+      <span class="input-line">
+        <b>Current Editor:</b>
+        <span id="editor_name" class="input-line">
+          <%= r.editor&.name || "<em>None</em>".html_safe %>
+          <% if r.editor.present? && policy(r).curate? %>
+            <%= form_with(url: logout_resource_path(id: r&.id), method: :post, local: false) do %>
+              <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Logout current editor" title="Logout current editor"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+            <% end %>
+          <% end %>
+        </span>
+      </span>
       <% if policy(r).curate? %>
         <span class="input-line" style="column-gap: .5ch">
           <b>Payment:</b>

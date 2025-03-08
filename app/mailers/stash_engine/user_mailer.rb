@@ -78,6 +78,31 @@ module StashEngine
            subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
     end
 
+    def invite_author(edit_code)
+      return unless edit_code.author.author_email.present? && edit_code&.edit_code&.present?
+
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @user_name = user_name(edit_code.author)
+      @resource = edit_code.author.resource
+      @role = edit_code.role
+      if Rails.application.default_url_options[:port].present?
+        host = "http://#{Rails.application.default_url_options[:host]}:#{Rails.application.default_url_options[:port]}"
+      end
+      host ||= "https://#{Rails.application.default_url_options[:host]}"
+      @url = "#{host}#{Rails.application.routes.url_helpers.accept_invite_path(edit_code: edit_code.edit_code)}"
+      mail(to: user_email(edit_code.author), subject: "#{rails_env}Invitation to edit submission \"#{@resource.title}\"")
+    end
+
+    def invite_user(user, role)
+      return unless user.email&.present? && role.role&.present?
+
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @user_name = user_name(user)
+      @resource = role.role_object
+      @role = role.role
+      mail(to: user_email(user), subject: "#{rails_env}Invitation to edit submission \"#{@resource.title}\"")
+    end
+
     # Called from the StashEngine::Repository
     def error_report(resource, error)
       logger.warn("Unable to report update error #{error}; nil resource") unless resource.present?
