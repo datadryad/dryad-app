@@ -117,7 +117,7 @@ export default function DragonDropList({
       });
       dragon.on('dropped', () => {
         savedWrapper.current();
-        dragonRef.current.closest('section').style.minHeight = 0
+        dragonRef.current.closest('section').style.minHeight = 0;
       });
       dragon.on('cancel', () => {
         // Dragon Drop has an old bug that still isn't fixed https://github.com/schne324/dragon-drop/issues/34

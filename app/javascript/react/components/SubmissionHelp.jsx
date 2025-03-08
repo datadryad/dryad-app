@@ -37,7 +37,7 @@ export function AuthHelp() {
   return (
     <>
       <p>The author name and at least one affiliation are required for all authors.</p>
-      <p>Authors may be invited to edit this submission. One author must be marked as the submitter, who will be the point of contact for Dryad, and must submit this for curation and publication when complete.</p>
+      <p>Authors may be invited to edit this submission. One author must be the submitter, who will be the point of contact for Dryad, and must send this submission for curation and publication when complete.</p>
       <p>An email address is required for the submitter and for any other authors invited to edit the submission.</p>
       <p>Check <b>Publish email</b> to display an author&apos;s email address on the public dataset. At least one published email is required.</p>
     </>

@@ -10,6 +10,7 @@ export default function Authors({
 }) {
   const {users} = resource;
   const [authors, setAuthors] = useState(resource.authors);
+  const [invited, setInvited] = useState(false);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const lastOrder = () => (authors.length ? Math.max(...authors.map((auth) => auth.author_order)) + 1 : 0);
@@ -68,6 +69,27 @@ export default function Authors({
     setAuthors((a) => a.filter((item) => item.id !== id));
   };
 
+  const inviteAuthor = (author, role) => {
+    showSavingMsg();
+    return axios.patch(
+      '/stash_datacite/authors/invite',
+      {authenticity_token, author, role},
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    ).then((data) => {
+      setAuthors((as) => as.map((a) => (a.id === author.id ? data.data.author : a)));
+      setResource((r) => ({...r, users: data.data.users}));
+      showSavedMsg();
+      setInvited(true);
+    });
+  };
+
+  useEffect(() => {
+    if (invited) {
+      document.getElementById('author_invited').scrollIntoView();
+      setTimeout(() => setInvited(false), 3500);
+    }
+  }, [invited]);
+
   useEffect(() => {
     setResource((r) => ({...r, authors}));
   }, [authors]);
@@ -77,10 +99,19 @@ export default function Authors({
       <p className="drag-instruct" style={{marginTop: '0'}}>
         <span>Drag <i className="fa-solid fa-bars-staggered" role="img" aria-label="handle button" /> to reorder</span>
       </p>
+      {invited && (
+        <div id="author_invited" className="callout alt">
+          <p>
+            Collaboration invitation sent! Only one collaborator may edit the submission at a time.
+            To save your work and end your editing session, click &nbsp;
+            <b><i className="fas fa-floppy-disk" /> Save &amp; exit</b>
+          </p>
+        </div>
+      )}
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
           <DragonListItem key={author.id} item={author} typeName="author">
-            <AuthorForm author={author} users={users} update={updateItem} user={user} />
+            <AuthorForm author={author} users={users} update={updateItem} invite={inviteAuthor} user={user} />
             <button
               type="button"
               className="remove-record"

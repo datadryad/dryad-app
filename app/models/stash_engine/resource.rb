@@ -731,7 +731,7 @@ module StashEngine
 
     # may not be able to match one up
     def owner_author
-      return nil unless submitter&.orcid.present? # apparently there are cases where user doesn't have an orcid
+      return nil unless submitter&.orcid&.present? # apparently there are cases where user doesn't have an orcid
 
       authors.where(author_orcid: submitter.orcid).first
     end

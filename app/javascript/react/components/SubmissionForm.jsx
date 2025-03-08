@@ -1,12 +1,16 @@
 import React, {useState, useEffect} from 'react';
 
 export default function SubmissionForm({
-  steps, resource, previewRef, curator,
+  steps, resource, previewRef, user,
 }) {
   const [hasChanges, setChanges] = useState(!resource.previous_curated_resource);
   const [showR, setShowR] = useState(resource.display_readme);
   const [userComment, setUserComment] = useState(resource?.edit_histories?.[0]?.user_comment);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+  const {curator} = user;
+  const {users} = resource;
+  const submitter = users.find((u) => u.role === 'submitter');
+  const isSubmitter = user.id === submitter.id;
 
   useEffect(() => {
     if (previewRef.current && resource.previous_curated_resource) {
@@ -52,7 +56,7 @@ export default function SubmissionForm({
             />
           </div>
         ) : (
-          <p>Ready to complete your submission?</p>
+          <p>{isSubmitter ? 'Ready to complete your submission?' : 'Only the submitter may complete the submission.'}</p>
         )
       )}
       <form action="/stash_datacite/resources/submission" method="post">
@@ -68,7 +72,7 @@ export default function SubmissionForm({
           type="submit"
           className="o-button__plain-text1"
           name="submit_button"
-          disabled={!hasChanges || steps.some((s) => s.fail) || (curator && !userComment)}
+          disabled={!hasChanges || steps.some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator)}
         >
           {curator ? 'Submit changes' : `Submit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
         </button>

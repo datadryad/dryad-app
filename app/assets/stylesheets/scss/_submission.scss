@@ -626,7 +626,8 @@ dialog#submission-step[open] {
   color: $dark-blue;
   background-color: white;
   border: thin solid $medium-blue;
-  padding: 2px 5px;
+  line-height: 0;
+  font-size: .98rem;
   &:hover, &:active, &:focus {
     background-color: $dark-blue;
     color: white;
@@ -643,6 +644,11 @@ dialog#submission-step[open] {
     max-width: 100%;
     text-overflow: ellipsis;
   }
+  &.author-one-line {
+    align-self: center;
+    min-width: 0;
+    flex-basis: auto;
+  }
   &.affiliation-input {
     flex: 1;
     min-width: 200px;
@@ -653,21 +659,16 @@ dialog#submission-step[open] {
       flex-wrap: nowrap;
       button {
         @extend %author-form-button;
-        line-height: 0;
-        font-size: .9rem;
       }
     }
-
-    & + span {
-      display: block;
-      align-self: start;
-      button {
-        @extend %author-form-button;
-        margin-top: 28px;
-        font-size: .98rem;
-        padding-bottom: 0;
-      }
-    }
+  }
+  .add-aff-button {
+    @extend %author-form-button;
+    line-height: 1;
+    padding: 8px 6px 6px;
+  }
+  @media (min-width: 600px) and (max-width: 610px) {
+    flex-basis: 100%;
   }
   @media (max-width: 520px) {
     flex-basis: 100%;
@@ -676,17 +677,15 @@ dialog#submission-step[open] {
 
 .author-form.email-opts {
   flex-basis: 100%;
-  & > div {
-    flex-basis: calc(33% - 1ch);
-    &.author-one-line {
-      align-self: center;
-      min-width: 0;
-      flex-basis: auto;
-    }
-  }
 }
+
+.remove-collab-button {
+  @extend %author-form-button;
+  margin-left: 1ch;
+}
+
 .open .author-form > div {
-  @media (max-width: 740px) {
+  @media (min-width: 600px) and (max-width: 740px) {
     flex-basis: 100%;
   }
 }
