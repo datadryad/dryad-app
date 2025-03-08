@@ -109,7 +109,10 @@ module StashEngine
 
     def logout
       @resource.update(current_editor_id: nil)
-      redirect_to dashboard_path
+      respond_to do |format|
+        format.html { redirect_to dashboard_path }
+        format.js { render js: "document.getElementById('editor_name').innerHTML='<em>None</em>';" }
+      end
     end
 
     # rubocop:disable Metrics/AbcSize
