@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class ResourcesController < ApplicationController
     include StashEngine::LandingHelper
@@ -103,6 +104,14 @@ module StashEngine
           end
         end
         format.json { head :no_content }
+      end
+    end
+
+    def logout
+      @resource.update(current_editor_id: nil)
+      respond_to do |format|
+        format.html { redirect_to dashboard_path }
+        format.js { render js: "document.getElementById('editor_name').innerHTML='<em>None</em>';" }
       end
     end
 
@@ -260,3 +269,5 @@ module StashEngine
     end
   end
 end
+
+# rubocop:enable Metrics/ClassLength

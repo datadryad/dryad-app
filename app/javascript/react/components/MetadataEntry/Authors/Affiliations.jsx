@@ -55,7 +55,7 @@ export default function Affiliations({
           <div id={`${id}-${`aff${i}`}-ex`}><i />Employer or sponsor</div>
         </div>
       ))}
-      <span><button type="button" onClick={newAff}>+ Add affiliation</button></span>
+      <div className="author-one-line"><button type="button" className="add-aff-button" onClick={newAff}>+ Add affiliation</button></div>
     </>
   );
 }

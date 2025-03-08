@@ -101,6 +101,7 @@ Rails.application.routes.draw do
         get 'show_files'
         patch 'import_type'
         patch 'license_agree'
+        post 'logout'
       end
     end
 
@@ -173,6 +174,8 @@ Rails.application.routes.draw do
     post 'metadata_entry_pages/new_version_from_previous', to: 'metadata_entry_pages#new_version_from_previous'
     match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:post]
     match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
+
+    get 'accept/:edit_code', to: 'edit_codes#accept_invite', as: 'accept_invite'
 
     # root 'sessions#index'
     root 'pages#home', as: 'pages_root'
@@ -376,6 +379,7 @@ Rails.application.routes.draw do
     patch 'authors/reorder', to: 'authors#reorder', as: 'authors_reorder'
     get 'authors/:id/invoice', to: 'authors#check_invoice'
     patch 'authors/invoice', to: 'authors#set_invoice'
+    patch 'authors/invite', to: 'authors#invite'
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
