@@ -86,7 +86,6 @@ export default function Authors({
   useEffect(() => {
     if (invited) {
       document.getElementById('author_invited').scrollIntoView();
-      setTimeout(() => setInvited(false), 3500);
     }
   }, [invited]);
 
