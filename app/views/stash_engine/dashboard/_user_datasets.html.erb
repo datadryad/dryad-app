@@ -49,12 +49,14 @@
                 <i class="fas fa-pencil" aria-hidden="true"></i><%= dataset.current_editor_id.nil? ? "Edit" : "Resume" %>
               <% end %>
               <% if dataset.current_editor_id == current_user&.id %>
-                <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
+                <%= button_to stash_url_helpers.logout_resource_path(dataset), name: 'exit', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
                   <i class="fas fa-floppy-disk" aria-hidden="true"></i>Save & exit
                 <% end %>
               <% end %>
-              <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
-                <i class="fas fa-trash-can" aria-hidden="true"></i><%= dataset&.stash_version.version > 1 ? 'Revert' : 'Delete' %>
+              <% if policy(dataset).delete? %>
+                <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
+                  <i class="fas fa-trash-can" aria-hidden="true"></i><%= dataset&.stash_version.version > 1 ? 'Revert' : 'Delete' %>
+                <% end %>
               <% end %>
             <% elsif dataset.current_editor_id.present? %>
               <%= dataset.editor.name %> is editing
@@ -65,10 +67,12 @@
               <i class="fa fa-paper-plane" aria-hidden="true"></i>Release for curation
             <% end %>
           <% end %>
+          <% if policy(dataset).delete? %>
           <% if ['submitted', 'action_required'].include?(dataset&.last_curation_activity.status) || dataset.sort_order == 2 || dataset.sort_order >= 4 %>
             <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: dataset.id), method: :post, class: 'o-button__inline-form') do %>
-              <button class="o-button__plain-text7 prevent-click" name="update" title="Edit dataset" aria-label="Edit dataset"><i class="fas fa-pencil" aria-hidden="true"></i>Revise submission</button>
+              <button class="o-button__plain-text7 prevent-click" name="update"><i class="fas fa-pencil" aria-hidden="true"></i>Revise submission</button>
             <% end %>
+          <% end %> 
           <% end %> 
         </div>
       </div>
