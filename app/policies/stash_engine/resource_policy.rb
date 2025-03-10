@@ -13,6 +13,10 @@ module StashEngine
       create?
     end
 
+    def delete?
+      @record.creator == @user || @record.submitter == @user
+    end
+
     def curate?
       @user.min_curator?
     end

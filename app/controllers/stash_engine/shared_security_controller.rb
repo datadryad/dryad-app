@@ -88,7 +88,15 @@ module StashEngine
     # this requires a method called resource in the controller that returns the current resource (usually @resource)
     def require_modify_permission
       return if valid_edit_code?
-      return if current_user && resource.permission_to_edit?(user: current_user)
+      return if current_user.present? && resource.editor.present? && current_user == resource.editor
+      return if current_user.present? && resource.editor.nil? && resource.permission_to_edit?(user: current_user)
+
+      display_authorization_failure
+    end
+
+    def require_duplicate_permission
+      return if valid_edit_code?
+      return if current_user.present? && resource.permission_to_edit?(user: current_user)
 
       display_authorization_failure
     end

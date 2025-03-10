@@ -26,6 +26,7 @@ module StashEngine
   class Author < ApplicationRecord
     self.table_name = 'stash_engine_authors'
     belongs_to :resource, class_name: 'StashEngine::Resource'
+    has_one :edit_code, class_name: 'StashEngine::EditCode', dependent: :destroy
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation', join_table: 'dcs_affiliations_authors'
 
     # I believe the default to ordering by author oder is fin and it falls back to the ID order (order of creation) as secondary
@@ -78,6 +79,14 @@ module StashEngine
       return if author_email.blank?
 
       "<a href=\"mailto:#{CGI.escapeHTML(author_email.strip)}\">#{CGI.escapeHTML(author_standard_name.strip)}</a>"
+    end
+
+    def user
+      return nil if author_orcid.blank? && author_email.blank?
+
+      user = StashEngine::User.where(orcid: author_orcid)&.first if author_orcid.present?
+      user ||= StashEngine::User.where(email: author_email)&.first if author_email.present?
+      user
     end
 
     # NOTE: this ONLY works b/c we assume that only the resource-owning

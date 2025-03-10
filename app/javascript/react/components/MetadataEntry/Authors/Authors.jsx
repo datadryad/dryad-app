@@ -8,7 +8,7 @@ import AuthorForm from './AuthorForm';
 export default function Authors({
   resource, setResource, user,
 }) {
-  const {users} = resource;
+  const [users, setUsers] = useState(resource.users);
   const [authors, setAuthors] = useState(resource.authors);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -68,8 +68,25 @@ export default function Authors({
     setAuthors((a) => a.filter((item) => item.id !== id));
   };
 
+  const inviteAuthor = (author, role) => {
+    showSavingMsg();
+    return axios.patch(
+      '/stash_datacite/authors/invite',
+      {authenticity_token, author, role},
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    ).then((data) => {
+      showSavedMsg();
+      // eslint-disable-next-line max-len
+      document.getElementById(`invite-${author.id}-alert`).innerHTML = '<p>Collaboration invitation sent! Only one collaborator may edit the submission at a time. To save your work and end your editing session, click &nbsp; <b><i class="fas fa-floppy-disk"></i> Save &amp; exit</b></p>';
+      document.getElementById(`invite-dialog${author.id}`).addEventListener('close', () => {
+        setAuthors((as) => as.map((a) => (a.id === author.id ? data.data.author : a)));
+        setUsers(() => data.data.users);
+      });
+    });
+  };
+
   useEffect(() => {
-    setResource((r) => ({...r, authors}));
+    setResource((r) => ({...r, authors, users}));
   }, [authors]);
 
   return (
@@ -80,7 +97,7 @@ export default function Authors({
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
           <DragonListItem key={author.id} item={author} typeName="author">
-            <AuthorForm author={author} users={users} update={updateItem} user={user} />
+            <AuthorForm author={author} users={users} update={updateItem} invite={inviteAuthor} user={user} />
             <button
               type="button"
               className="remove-record"

@@ -5,11 +5,14 @@ import Calculations from './Calculations';
 import InvoiceForm from './InvoiceForm';
 
 export default function Agreements({
-  resource, setResource, form, previous, setAuthorStep, config, preview = false,
+  resource, setResource, user, form, previous, setAuthorStep, config, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
   const curated = !!resource.identifier.process_date.curation_end;
+  const {users} = resource;
+  const submitter = users.find((u) => u.role === 'submitter');
+  const isSubmitter = user.id === submitter.id;
   const formRef = useRef(null);
   const [dpc, setDPC] = useState({});
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
@@ -181,7 +184,7 @@ export default function Agreements({
           {dpc.user_must_pay && <Calculations resource={resource} previous={previous} dpc={dpc.dpc} config={config} />}
         </>
       )}
-      {preview ? (
+      {preview && (
         <div>
           {resource.accepted_agreement ? (
             <p>
@@ -193,7 +196,18 @@ export default function Agreements({
             <p style={{fontStyle: 'italic'}}><i className="fas fa-square" aria-hidden="true" />{' '} Terms not yet accepted</p>
           )}
         </div>
-      ) : (
+      )}
+      {!preview && !isSubmitter && (
+        <div className="callout warn">
+          <p>
+            Only the submitter can agree to the terms and conditions.
+            When you are done editing, please click &nbsp;
+            <b><i className="fas fa-floppy-disk" /> Save &amp; exit</b> &nbsp;
+            and ask the submitter to complete the submission.
+          </p>
+        </div>
+      )}
+      {!preview && isSubmitter && (
         <>
           {subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && dpc.user_must_pay && (
             <InvoiceForm resource={resource} setResource={setResource} />
