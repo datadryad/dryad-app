@@ -7,7 +7,7 @@ import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
 import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Publication';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
-import Validation, {ValPreview, validationCheck} from '../components/MetadataEntry/Validation';
+import Compliance, {CompPreview, complianceCheck} from '../components/MetadataEntry/Compliance';
 import Description, {DescPreview, abstractCheck} from '../components/MetadataEntry/Description';
 import Subjects, {SubjPreview, keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
 import Support, {SuppPreview, fundingCheck} from '../components/MetadataEntry/Support';
@@ -16,7 +16,7 @@ import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
 import Agreements from '../components/MetadataEntry/Agreements';
 import SubmissionHelp, {
-  PublicationHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, ValHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
+  PublicationHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, CompHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
 /* eslint-disable jsx-a11y/no-autofocus */
 
@@ -80,13 +80,13 @@ function Submission({
       preview: <SuppPreview resource={resource} previous={previous} />,
     },
     {
-      name: 'Validation',
+      name: 'Compliance',
       index: 5,
-      pass: !validationCheck(resource),
-      fail: (review || step.index > 4) && validationCheck(resource),
-      component: <Validation resource={resource} setResource={setResource} />,
-      help: <ValHelp />,
-      preview: <ValPreview resource={resource} previous={previous} />,
+      pass: !complianceCheck(resource),
+      fail: (review || step.index > 4) && complianceCheck(resource),
+      component: <Compliance resource={resource} setResource={setResource} />,
+      help: <CompHelp />,
+      preview: <CompPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Files',

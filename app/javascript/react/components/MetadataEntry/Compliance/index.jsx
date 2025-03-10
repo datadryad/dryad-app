@@ -1,18 +1,18 @@
 import React from 'react';
 
-export {default} from './Validation';
+export {default} from './Compliance';
 
-export const validationCheck = (resource) => {
+export const complianceCheck = (resource) => {
   const {license_id} = resource.identifier;
   const disclaimer = resource.descriptions.find((d) => d.description_type === 'usage_notes');
   if (!license_id) {
     return (
-      <p className="error-text" id="license_error">Completion of the validation questionnaire is required</p>
+      <p className="error-text" id="license_error">Completion of the compliance questionnaire is required</p>
     );
   }
   if (!disclaimer) {
     return (
-      <p className="error-text" id="hsi_error">Completion of the validation questionnaire is required</p>
+      <p className="error-text" id="hsi_error">Completion of the compliance questionnaire is required</p>
     );
   }
   if (disclaimer.description !== null) {
@@ -23,7 +23,7 @@ export const validationCheck = (resource) => {
   return false;
 };
 
-export function ValPreview({resource}) {
+export function CompPreview({resource}) {
   const {license_id} = resource.identifier;
   const disclaimer = resource.descriptions.find((d) => d.description_type === 'usage_notes');
   return (

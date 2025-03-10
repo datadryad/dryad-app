@@ -65,7 +65,7 @@ module DatasetHelper
     fill_in_author
     fill_in_research_domain
     fill_in_keywords
-    click_button 'Validation'
+    click_button 'Compliance'
     fill_in_validation
   end
 
