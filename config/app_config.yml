@@ -221,9 +221,9 @@ defaults: &DEFAULTS
     files: 100
     frictionless: 50_000_000
   rate_limit:
-    file_downloads_per_hour: 100
-    file_downloads_per_day: 500
-    file_downloads_per_month: 3000
+    file_downloads_per_hour: 50
+    file_downloads_per_day: 200
+    file_downloads_per_month: 1000
     zip_downloads_per_hour: 20
     zip_downloads_per_day: 100
     zip_downloads_per_month: 500
