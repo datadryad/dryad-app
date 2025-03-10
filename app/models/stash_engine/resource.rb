@@ -66,7 +66,7 @@ module StashEngine
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
-    has_one :curator, class_name: 'StashEngine::User', primary_key: 'user_id', foreign_key: 'id'
+    has_one :curator, class_name: 'StashEngine::User', primary_key: 'user_id', foreign_key: 'id', touch: false, dependent: nil
     has_one :current_resource_state,
             class_name: 'StashEngine::ResourceState',
             primary_key: 'current_resource_state_id',
@@ -75,7 +75,7 @@ module StashEngine
             class_name: 'StashEngine::CurationActivity',
             primary_key: 'last_curation_activity_id',
             foreign_key: 'id'
-    has_one :editor, class_name: 'StashEngine::User', primary_key: 'current_editor_id', foreign_key: 'id'
+    has_one :editor, class_name: 'StashEngine::User', primary_key: 'current_editor_id', foreign_key: 'id', touch: false, dependent: nil
     has_many :submission_logs, class_name: 'StashEngine::SubmissionLog', dependent: :destroy
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
@@ -110,7 +110,7 @@ module StashEngine
     has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
 
     after_create :create_process_date, unless: :process_date
-    after_update_commit :update_salesforce_metadata, if: [:saved_change_to_current_editor_id?, proc { |res| res.editor&.min_curator? }]
+    after_update_commit :update_salesforce_metadata, if: [:saved_change_to_user_id?, proc { |res| res.curator&.min_curator? }]
     after_save_commit :save_first_pub_date, if: proc { |res| res.publication_date.present? }
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }

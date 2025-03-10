@@ -41,34 +41,40 @@ export default function Editor({
             <div className="modalClose">
               <button aria-label="Close" type="button" onClick={() => document.getElementById(`invite-dialog${author.id}`).close()} />
             </div>
-            <div>
+            <div style={{maxWidth: '600px'}}>
               <h1 id={`invite-${author.id}-title`}>
                 Invite {author.author_first_name ? [author.author_first_name, author.author_last_name].join(' ') : author.author_email}
               </h1>
-              <p id={`invite-${author.id}-desc`}>
-                You may invite this author as a collaborator on the submission.
-              </p>
-              <p style={{maxWidth: '600px'}}>
-                One collaborator must also be the submitter.
-                The submitter will be responsible for approving the submission for curation and publication when it is complete,{' '}
-                and will be the point of contact with Dryad for any revisions during curation.
-              </p>
-              <p>
-                {author.author_email} should be invited to{' '}
-                <select name="role" className="c-input__select" required>
-                  <option value aria-label="Select a role" />
-                  <option value="collaborator">Collaborate</option>
-                  <option value="submitter">Collaborate and submit</option>
-                </select>
-              </p>
-              <p>Choosing &quot;Collaborate and submit&quot; will replace the current submitter.</p>
+              <div id={`invite-${author.id}-alert`} role="alert" className="callout alt" />
+              <div>
+                <p id={`invite-${author.id}-desc`}>
+                  You may invite this author as a collaborator on the submission.
+                </p>
+                <p>
+                  One collaborator must also be the submitter.
+                  The submitter will be responsible for approving the submission for curation and publication when it is complete,{' '}
+                  and will be the point of contact with Dryad for any revisions during curation.
+                </p>
+                <p>
+                  {author.author_email} should be invited to{' '}
+                  <select name="role" className="c-input__select" required>
+                    <option value aria-label="Select a role" />
+                    <option value="collaborator">Collaborate</option>
+                    <option value="submitter">Collaborate and submit</option>
+                  </select>
+                </p>
+                <p>Choosing &quot;Collaborate and submit&quot; will replace the current submitter.</p>
+              </div>
               <div className="c-modal__buttons-right">
                 <button
                   type="button"
                   className="o-button__plain-text2"
-                  onClick={() => {
+                  onClick={(e) => {
                     invite(author, document.querySelector(`#invite-dialog${author.id} select`).value);
-                    document.getElementById(`invite-dialog${author.id}`).close();
+                    e.target.disabled = true;
+                    e.target.hidden = true;
+                    e.target.parentElement.previousElementSibling.hidden = true;
+                    e.target.nextElementSibling.innerHTML = 'Close';
                   }}
                 >Invite
                 </button>
