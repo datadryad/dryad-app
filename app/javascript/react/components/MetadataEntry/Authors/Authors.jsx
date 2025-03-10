@@ -8,9 +8,8 @@ import AuthorForm from './AuthorForm';
 export default function Authors({
   resource, setResource, user,
 }) {
-  const {users} = resource;
+  const [users, setUsers] = useState(resource.users);
   const [authors, setAuthors] = useState(resource.authors);
-  const [invited, setInvited] = useState(false);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const lastOrder = () => (authors.length ? Math.max(...authors.map((auth) => auth.author_order)) + 1 : 0);
@@ -76,21 +75,18 @@ export default function Authors({
       {authenticity_token, author, role},
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     ).then((data) => {
-      setAuthors((as) => as.map((a) => (a.id === author.id ? data.data.author : a)));
-      setResource((r) => ({...r, users: data.data.users}));
       showSavedMsg();
-      setInvited(true);
+      // eslint-disable-next-line max-len
+      document.getElementById(`invite-${author.id}-alert`).innerHTML = '<p>Collaboration invitation sent! Only one collaborator may edit the submission at a time. To save your work and end your editing session, click &nbsp; <b><i class="fas fa-floppy-disk"></i> Save &amp; exit</b></p>';
+      document.getElementById(`invite-dialog${author.id}`).addEventListener('close', () => {
+        setAuthors((as) => as.map((a) => (a.id === author.id ? data.data.author : a)));
+        setUsers(() => data.data.users);
+      });
     });
   };
 
   useEffect(() => {
-    if (invited) {
-      document.getElementById('author_invited').scrollIntoView();
-    }
-  }, [invited]);
-
-  useEffect(() => {
-    setResource((r) => ({...r, authors}));
+    setResource((r) => ({...r, authors, users}));
   }, [authors]);
 
   return (
@@ -98,15 +94,6 @@ export default function Authors({
       <p className="drag-instruct" style={{marginTop: '0'}}>
         <span>Drag <i className="fa-solid fa-bars-staggered" role="img" aria-label="handle button" /> to reorder</span>
       </p>
-      {invited && (
-        <div id="author_invited" className="callout alt">
-          <p>
-            Collaboration invitation sent! Only one collaborator may edit the submission at a time.
-            To save your work and end your editing session, click &nbsp;
-            <b><i className="fas fa-floppy-disk" /> Save &amp; exit</b>
-          </p>
-        </div>
-      )}
       <DragonDropList model="author" typeName="author" items={authors} path="/stash_datacite/authors/reorder" setItems={setAuthors}>
         {orderedItems({items: authors, typeName: 'author'}).map((author) => (
           <DragonListItem key={author.id} item={author} typeName="author">
