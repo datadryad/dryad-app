@@ -62,7 +62,7 @@ module StashEngine
       mailable = %w[peer_review submitted published embargoed withdrawn]
       # mailable = %w[peer_review]
 
-      StashEngine::CurationActivity.statuses.each do |status|
+      StashEngine::CurationActivity.statuses.each_key do |status|
 
         if mailable.include?(status)
           it "should send an email when '#{status}'" do

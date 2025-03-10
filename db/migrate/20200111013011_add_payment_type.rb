@@ -3,7 +3,7 @@ class AddPaymentType < ActiveRecord::Migration[4.2]
     rename_column :stash_engine_identifiers, :invoice_id, :payment_id
     add_column :stash_engine_identifiers, :payment_type, :string, after: :search_words
     StashEngine::Identifier.reset_column_information
-    StashEngine::Identifier.all.each do |i|
+    StashEngine::Identifier.unscoped.all.each do |i|
       if i.payment_id
         if i.payment_id.start_with?('in_')
           i.update_column(:payment_type, 'stripe')
@@ -20,7 +20,7 @@ class AddPaymentType < ActiveRecord::Migration[4.2]
   end
 
   def down
-    StashEngine::Identifier.all.each do |i|
+    StashEngine::Identifier.unscoped.all.each do |i|
       next unless i.payment_id
 
       if i.payment_type != 'stripe'
