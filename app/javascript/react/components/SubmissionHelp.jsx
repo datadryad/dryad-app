@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
 import React from 'react';
 
-export default function SubmissionHelp({type}) {
+export default function SubmissionHelp() {
+  // need to create a version for collections
   return (
     <>
       <p>An average submission follows this process:</p>
