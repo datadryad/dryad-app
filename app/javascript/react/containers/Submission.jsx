@@ -5,6 +5,7 @@ import {BrowserRouter, useLocation} from 'react-router-dom';
 import {upCase} from '../../lib/utils';
 import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
+import ExitButton from '../components/ExitButton';
 import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Publication';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
 import Compliance, {CompPreview, complianceCheck} from '../components/MetadataEntry/Compliance';
@@ -31,7 +32,6 @@ function Submission({
   const [open, setOpen] = useState(window.innerWidth > 600);
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
   const previous = resource.previous_curated_resource;
-  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const steps = [
     {
@@ -137,11 +137,12 @@ function Submission({
         config={config_payments}
         resource={resource}
         setResource={setResource}
+        user={user}
         form={change_tenant}
         setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
-      preview: <Agreements config={config_payments} resource={resource} previous={previous} preview />,
+      preview: <Agreements config={config_payments} resource={resource} user={user} previous={previous} preview />,
     },
   ];
 
@@ -217,7 +218,12 @@ function Submission({
   if (review) {
     return (
       <>
-        <h1>{upCase(resource.resource_type.resource_type)} submission preview{step.name !== 'Create a submission' ? ' editor' : ''}</h1>
+        <div id="submission-heading">
+          <div>
+            <h1>{upCase(resource.resource_type.resource_type)} submission preview{step.name !== 'Create a submission' ? ' editor' : ''}</h1>
+            <ExitButton resource={resource} />
+          </div>
+        </div>
         <nav aria-label="Submission editing" className={step.name !== 'Create a submission' ? 'screen-reader-only' : null}>
           <Checklist steps={steps} step={{}} setStep={setStep} open />
         </nav>
@@ -231,7 +237,7 @@ function Submission({
                 </section>
               ))}
             </div>
-            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} authenticityToken={authenticity_token} curator={user.curator} />
+            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} user={user} />
           </>
         )}
         <dialog id="submission-step" open={step.name !== 'Create a submission' || null}>
@@ -290,7 +296,12 @@ function Submission({
 
   return (
     <>
-      <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
+      <div id="submission-heading">
+        <div>
+          <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
+          <ExitButton resource={resource} />
+        </div>
+      </div>
       <div className="submission-edit">
         <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
         <div id="submission-wizard" className={open ? 'open' : null}>

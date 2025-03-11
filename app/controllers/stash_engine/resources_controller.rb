@@ -1,9 +1,10 @@
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class ResourcesController < ApplicationController
     include StashEngine::LandingHelper
 
     before_action :require_login
-    before_action :require_modify_permission, except: %i[index new]
+    before_action :require_modify_permission, except: %i[index new logout]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
     # before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
     before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
@@ -103,6 +104,15 @@ module StashEngine
           end
         end
         format.json { head :no_content }
+      end
+    end
+
+    def logout
+      @resource = resource
+      @resource.update_columns(current_editor_id: nil)
+      respond_to do |format|
+        format.html { redirect_to dashboard_path }
+        format.js { render js: "document.getElementById('editor_name').innerHTML='<em>None</em>';" }
       end
     end
 
@@ -260,3 +270,5 @@ module StashEngine
     end
   end
 end
+
+# rubocop:enable Metrics/ClassLength

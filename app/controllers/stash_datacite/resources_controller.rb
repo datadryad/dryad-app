@@ -39,7 +39,7 @@ module StashDatacite
           @resource.reload
           if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown'
             @target_page = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
-            @aff_tenant = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id).connect_list.first
+            @aff_tenant = StashEngine::Tenant.where(ror_id: @resource.owner_author.affiliations.map(&:ror_id)).connect_list.first
           end
         end
       end

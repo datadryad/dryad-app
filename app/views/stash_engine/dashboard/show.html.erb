@@ -6,10 +6,11 @@
 <% end %>
 <div class="c-datasets-heading">
   <h1 class="c-datasets-heading__heading o-heading__level1">My datasets</h1>
-  <%= button_to 'Start new dataset', stash_url_helpers.new_resource_path,
-            class: 'c-datasets-heading__button', form_class: 'o-button__inline-form', method: :get %>
+  <%= button_to stash_url_helpers.new_resource_path, class: 'c-datasets-heading__button prevent-click', form_class: 'o-button__inline-form', method: :get do %>
+    <i class="fas fa-plus" aria-hidden="true"></i>Start new submission
+  <% end %>
 </div>
 <div id="user_datasets" data-load="<%= stash_url_helpers.dashboard_user_datasets_path(format: :js) %>">
-  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+  <p style="text-align: center;"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p>
 </div>
 <p style="text-align:right; font-size: .9em;"><a href="/feedback?m=4&l=dashboard" class="o-link__buttonlink"><i class="fa fa-commenting-o" aria-hidden="true" style="margin-right: .5ch"></i>Help direct the future of Dryad</a></p>
