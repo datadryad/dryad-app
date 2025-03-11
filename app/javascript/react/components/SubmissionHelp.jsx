@@ -1,24 +1,33 @@
 /* eslint-disable max-len */
 import React from 'react';
-import {upCase} from '../../lib/utils';
 
-export default function SubmissionHelp({type}) {
+export default function SubmissionHelp() {
+  // need to create a version for collections
   return (
     <>
       <p>An average submission follows this process:</p>
-      <div id="infographic">
-        <span id="user" className="user">{upCase(type)} authors</span>
-        <span id="journal" className="journal">Journal publisher</span>
-        <span id="curator" className="curator">Dryad curators</span>
-        <ol>
-          <li className="user" aria-describedby="user">Complete the submission checklist</li>
-          <li className="user" aria-describedby="user">Review and submit the {type}</li>
-          <li className="journal" aria-describedby="journal">Completes review of associated manuscript <span style={{fontSize: '.98rem'}}>(optional step)</span></li>
-          <li className="curator" aria-describedby="curator">Check the {type === 'dataset' ? 'data for validity, quality, and accessibility' : 'collection metadata'}</li>
-          <li className="user" aria-describedby="user">Complete any edits required from curation</li>
-          <li className="curator" aria-describedby="curator">Approve and publish the {type}</li>
-        </ol>
-      </div>
+      <ol id="infographic">
+        <li>
+          <h3><i className="fas fa-arrow-up-from-bracket" aria-hidden="true" />Initial submission</h3>
+          <p>Upload your data, complete metadata fields, and prepare a README file. Complete the checklist and carefully review the submission before you click &quot;Submit&quot;.</p>
+        </li>
+        <li>
+          <h3><i className="fas fa-eye-slash" aria-hidden="true" />Private for peer review option</h3>
+          <p>If your dataset is associated with a manuscript under review, you can choose to keep the dataset private and use a temporary sharing link for peer review. The dataset can proceed to curation once the manuscript has been accepted.</p>
+        </li>
+        <li>
+          <h3><i className="fas fa-layer-group" aria-hidden="true" />Curation</h3>
+          <p>Our experienced data curators will thoroughly evaluate each dataset to ensure the completeness of metadata, documentation, and files, following <a href="https://www.go-fair.org/fair-principles/" target="_blank" rel="noreferrer">FAIR principles<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
+        </li>
+        <li>
+          <h3><i className="fas fa-arrow-rotate-left" aria-hidden="true" />Revisions</h3>
+          <p>Revise your dataset based on curator feedback.<br />Don&apos;t hesitate to contact us with questions!</p>
+        </li>
+        <li>
+          <h3><i className="fas fa-database" aria-hidden="true" />Publication</h3>
+          <p>After final review, our curators will approve and publish your dataset. Your DOI will become active, and your dataset will be searchable, citable, and reusable.</p>
+        </li>
+      </ol>
       <p>Click the Next button to get started!</p>
     </>
   );
