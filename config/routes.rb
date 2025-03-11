@@ -231,7 +231,7 @@ Rails.application.routes.draw do
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
     get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
-    get 'stash/404', to: 'pages#app_404', as: 'app_404'
+    get '/404', to: 'pages#app_404', as: 'app_404'
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
