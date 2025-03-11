@@ -76,7 +76,7 @@ export function SuppHelp({type}) {
   );
 }
 
-export function ValHelp() {
+export function CompHelp() {
   return (
     <>
       <p>
