@@ -151,11 +151,8 @@ Rails.application.routes.draw do
     get 'choose_dashboard', to: 'dashboard#choose', as: 'choose_dashboard'
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
-    get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
-    get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
-    get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
-    get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
-    get 'react_basics', to: 'dashboard#react_basics', as: 'react_basics'
+    get 'dashboard/primary_article/:resource_id', to: 'dashboard#primary_article', as: 'primary_article'
+    post 'dashboard/primary_article', to: 'dashboard#save_primary_article', as: 'save_primary_article'
 
     # download related
     match 'downloads/zip_assembly_info/:resource_id', to: 'downloads#zip_assembly_info', as: 'zip_assembly_info', via: %i[get post]
