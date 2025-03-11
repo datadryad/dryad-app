@@ -151,6 +151,8 @@ Rails.application.routes.draw do
     get 'choose_dashboard', to: 'dashboard#choose', as: 'choose_dashboard'
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
+    get 'dashboard/primary_article/:resource_id', to: 'dashboard#primary_article', as: 'primary_article'
+    post 'dashboard/primary_article', to: 'dashboard#save_primary_article', as: 'save_primary_article'
 
     # download related
     match 'downloads/zip_assembly_info/:resource_id', to: 'downloads#zip_assembly_info', as: 'zip_assembly_info', via: %i[get post]

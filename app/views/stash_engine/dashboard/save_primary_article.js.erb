@@ -1,0 +1,4 @@
+<% if @related_work.related_identifier.present? %>
+  document.getElementById('<%= @related_work.resource_id %>_pub_form').hidden = true;
+<% end %>
+document.getElementById('genericModalDialog').close();
