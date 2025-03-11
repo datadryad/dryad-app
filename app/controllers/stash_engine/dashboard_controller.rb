@@ -16,14 +16,6 @@ module StashEngine
       @doi = CGI.escape(params[:doi] || '')
     end
 
-    def metadata_basics; end
-
-    def preparing_to_submit; end
-
-    def upload_basics; end
-
-    def react_basics; end
-
     def user_datasets
       @page = params[:page] || '1'
       @page_size = params[:page_size] || '10'
