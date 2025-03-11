@@ -70,7 +70,7 @@ module StashEngine
         @resource.identifier.update(pub_state: 'withdrawn')
         response_code = get "/share/#{share_id}"
         expect(response_code).to eq(302) # since this redirects to a generic 404 page
-        expect(response.headers['Location']).to eq("http://#{request.host}/stash/404")
+        expect(response.headers['Location']).to eq("http://#{request.host}/404")
       end
     end
   end
