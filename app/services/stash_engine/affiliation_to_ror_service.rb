@@ -12,12 +12,17 @@ module StashEngine
     end
 
     def info_list
+      published_affiliation_ids_subquery = StashEngine::CurationActivity.where(status: ['published', 'embargoed']).joins(resource: {authors: :affiliations}).select('dcs_affiliations.id').distinct.to_sql
+      affiliations_query = "select
+                      long_name,
+                      COUNT(1) AS affiliations_count,
+                      (select count(1) from dcs_affiliations_authors where dcs_affiliations_authors.affiliation_id = dcs_affiliations.id) AS authors_count
+                    from dcs_affiliations
+                    where ror_id is NULL AND id IN (#{published_affiliation_ids_subquery})
+                    group by long_name"
       CSV.open(File.join(Rails.root, 'reports', "affiliations_report_#{Time.now.strftime('%Y-%m-%d')}.csv"), 'w') do |csv|
         csv << ['Affiliation name', 'Affiliation count', 'Authors count']
-        # StashDatacite::Affiliation.where(ror_id: nil).joins(:authors).group(:long_name).select("long_name, COUNT(dcs_affiliations.id) AS affiliations_count, COUNT(DISTINCT stash_engine_authors.id) AS authors_count").each do |affiliation|
-        #   csv << [affiliation.long_name, affiliation.affiliations_count, affiliation.authors_count]
-        # end
-        ActiveRecord::Base.connection.execute("select long_name, COUNT(1) AS affiliations_count, (select count(1) from dcs_affiliations_authors where dcs_affiliations_authors.affiliation_id = dcs_affiliations.id) AS authors_count from dcs_affiliations where ror_id is NULL group by long_name").each do |affiliation|
+        ActiveRecord::Base.connection.execute(affiliations_query).each do |affiliation|
           csv << affiliation
         end
       end

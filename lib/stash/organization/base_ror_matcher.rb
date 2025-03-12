@@ -114,7 +114,7 @@ module Stash
           return
         end
 
-        rors = StashEngine::RorOrg.find_by_name_for_auto_matching(item_name)
+        rors = StashEngine::RorOrg.find_by_name_for_auto_matching(item_name.dup.gsub(/^\*+|\*+$/, '').strip)
         case rors.count
         when 0
           @no_ror_found_count += 1
