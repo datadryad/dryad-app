@@ -1,5 +1,6 @@
 import React, {Fragment, useRef, useEffect} from 'react';
 import axios from 'axios';
+import {ExitIcon} from '../../ExitButton';
 
 const nameit = (name, arr) => {
   const plural = !['software', 'supplemental_information'].includes(name) && arr.length > 1 ? 's' : '';
@@ -35,8 +36,7 @@ function WorksList({identifiers, previous, curator}) {
                       rel="noreferrer"
                       className={previous && (!prev || prev.work_type !== w.work_type) ? 'ins' : ''}
                     >
-                      <i className={icons[type]} aria-hidden="true" style={{marginRight: '.5ch'}} />{w.related_identifier}
-                      <span className="screen-reader-only"> (opens in new window)</span>
+                      <i className={icons[type]} aria-hidden="true" style={{marginRight: '.5ch'}} />{w.related_identifier}<ExitIcon/>
                     </a>
                     {curator && !w.verified && (
                       <i className="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link" />

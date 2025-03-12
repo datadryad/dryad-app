@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {debounce} from 'lodash';
 import ReadMeImport from './ReadMeImport';
 import ReadMeSteps, {secTitles} from './ReadMeSteps';
+import {ExitIcon} from '../ExitButton';
 import MarkdownEditor from '../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
@@ -113,8 +114,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
               To help others interpret and reuse your dataset, a README file must be included, containing
               abbreviations and codes, file descriptions, and information about any necessary software.{' '}
               <a href="/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
-                <i className="far fa-file-lines" aria-hidden="true" style={{marginRight: '.5ch'}} />Learn about README files
-                <span className="screen-reader-only"> (opens in new window)</span>
+                <i className="far fa-file-lines" aria-hidden="true" style={{marginRight: '.5ch'}} />Learn about README files<ExitIcon/>
               </a>
             </p>
             <p>
@@ -122,7 +122,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
             </p>
           </div>
           <div>
-            <p>You can replace the content below with a local README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a>, or by deleting the content and generating a new README using our tool.</p>
+            <p>You can replace the content below with a local README file in <a href="https://www.markdownguide.org/" target="_blank" rel="noreferrer">markdown format<ExitIcon/></a>, or by deleting the content and generating a new README using our tool.</p>
             <div className="readme-buttons">
               <ReadMeImport title="Import README" setValue={setReplaceValue} />
               <button
@@ -184,7 +184,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
           <p>
             Your Dryad submission must be accompanied by a{' '}
             <a href="/best_practices#describe-your-dataset-in-a-readme-file" target="_blank">
-              README file<span className="screen-reader-only"> (opens in new window)</span>
+              README file<ExitIcon/>
             </a>, to help others use and understand your
             dataset. It should contain the details needed to interpret and reuse your data, including abbreviations
             and codes, file descriptions, and information about any necessary software.
@@ -205,7 +205,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
             </div>
             <div>
               <h2 className="o-heading__level2">Already have a README file?</h2>
-              <p>If you already have a README file in <a href="https://commonmark.org/help/" target="_blank" rel="noreferrer">markdown format<span className="screen-reader-only"> (opens in new window)</span></a> for your dataset, you can import it here. </p>
+              <p>If you already have a README file in <a href="https://commonmark.org/help/" target="_blank" rel="noreferrer">markdown format<ExitIcon/></a> for your dataset, you can import it here. </p>
               <ReadMeImport setValue={setReplaceValue} />
             </div>
           </div>
