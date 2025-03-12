@@ -92,17 +92,20 @@ Rails.application.configure do
 
   unless ac['page_error_email'].blank?
     Rails.application.config.middleware.use ExceptionNotification::Rack,
-                                            :email => {
-                                                # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
-                                                :email_prefix => "[Drystg Exception]",
-                                                :sender_address => %{"Dryad Notifier" <no-reply-dryad@v3-dev.datadryad.org>},
-                                                :exception_recipients => ac['page_error_email']
-                                            },
-                                            :error_grouping => true,
-                                            :error_grouping_period => 3.hours,
-                                            :ignore_exceptions => ['ActionController::InvalidAuthenticityToken',
-                                              'ActionController::InvalidCrossOriginRequest'] + ExceptionNotifier.ignored_exceptions,
-                                            :ignore_crawlers => %w{Googlebot bingbot}
+      :email => {
+          # :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+          :email_prefix => "[Drystg Exception]",
+          :sender_address => %{"Dryad Notifier" <no-reply-dryad@v3-dev.datadryad.org>},
+          :exception_recipients => ac['page_error_email']
+      },
+      :error_grouping => true,
+      :error_grouping_period => 3.hours,
+      :ignore_exceptions => [
+          'ActionController::InvalidAuthenticityToken',
+          'ActionController::InvalidCrossOriginRequest',
+          'URI::InvalidURIError'
+        ] + ExceptionNotifier.ignored_exceptions,
+      :ignore_crawlers => %w{Googlebot bingbot}
   end
 
   config.action_mailer.perform_deliveries = true

@@ -5,7 +5,7 @@ import axios from 'axios';
 import {debounce} from 'lodash';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-export default function Validation({resource, setResource}) {
+export default function Compliance({resource, setResource}) {
   const hsiRef = useRef(null);
   const [hsi, setHSI] = useState(null);
   const [desc, setDesc] = useState('');

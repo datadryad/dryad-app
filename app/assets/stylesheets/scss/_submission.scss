@@ -677,6 +677,19 @@ dialog#submission-step[open] {
 
 .author-form.email-opts {
   flex-basis: 100%;
+  & > div:first-child {
+    flex-basis: auto;
+    flex: 1;
+    max-width: calc(50% - 1ch);
+    @media (min-width: 600px) and (max-width: 610px) {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+    @media (max-width: 520px) {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+  }
 }
 
 .remove-collab-button {
@@ -684,9 +697,10 @@ dialog#submission-step[open] {
   margin-left: 1ch;
 }
 
-.open .author-form > div {
+.open .author-form > div, .author-form.email-opts > div:first-child {
   @media (min-width: 600px) and (max-width: 740px) {
     flex-basis: 100%;
+    max-width: 100%;
   }
 }
 

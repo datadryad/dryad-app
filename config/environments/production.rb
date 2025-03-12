@@ -133,7 +133,11 @@ Rails.application.configure do
       },
       :error_grouping => true,
       :error_grouping_period => 3.hours,
-      :ignore_exceptions => ['ActionController::InvalidAuthenticityToken', 'ActionController::InvalidCrossOriginRequest'] + ExceptionNotifier.ignored_exceptions,
+      :ignore_exceptions => [
+          'ActionController::InvalidAuthenticityToken',
+          'ActionController::InvalidCrossOriginRequest',
+          'URI::InvalidURIError'
+        ] + ExceptionNotifier.ignored_exceptions,
       :ignore_crawlers => %w{Googlebot bingbot}
   end
 

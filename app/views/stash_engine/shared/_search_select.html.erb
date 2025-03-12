@@ -1,4 +1,4 @@
-<% # locals: field_name, label, id, selected, options, options_path, options_label, options_value %>
+<% # locals: field_name, label, id, selected, options, options_path, options_label, options_value, required, save_text %>
 <label for="searchselect-<%= id %>__input"><%= label %></label>
 <div class="searchselect" id="searchselect-<%= id %>" tabindex="-1">
   <input type="hidden" name="<%= field_name %>[value]" id="searchselect-<%= id %>__value" value="<%= selected&.dig(:value) %>">
@@ -65,7 +65,11 @@
       v.value = value
       l.value = label
     }
-
+    <% if local_assigns.key?(:save_text) %>
+      textbox.addEventListener('blur', () => {
+        if (!l.value) l.value = textbox.value
+      })
+    <% end %>
     new ComboboxAutocomplete(combobox, textbox, list, fill, select)
   }
   searchSelect<%= id %>();
