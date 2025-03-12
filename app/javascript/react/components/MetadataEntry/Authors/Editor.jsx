@@ -52,7 +52,7 @@ export default function Editor({
                 </p>
                 <p>
                   One collaborator must also be the submitter.
-                  The submitter will be responsible for approving the submission for curation and publication when it is complete,{' '}
+                  The submitter is responsible for approving the submission for curation and publication,{' '}
                   and will be the point of contact with Dryad for any revisions during curation.
                 </p>
                 <p>

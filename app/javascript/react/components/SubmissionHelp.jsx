@@ -45,8 +45,8 @@ export function PublicationHelp() {
 export function AuthHelp() {
   return (
     <>
-      <p>The author name and at least one affiliation are required for all authors.</p>
-      <p>Authors may be invited to edit this submission. One author must be the submitter, who will be the point of contact for Dryad, and must send this submission for curation and publication when complete.</p>
+      <p>All authors must include theri name and at least one affiliation.</p>
+      <p>Authors may be invited to edit this submission. One author must be the submitter. The submitter will be the point of contact for Dryad, and must approve this submission for curation and publication.</p>
       <p>An email address is required for the submitter and for any other authors invited to edit the submission.</p>
       <p>Check <b>Publish email</b> to display an author&apos;s email address on the public dataset. At least one published email is required.</p>
     </>
@@ -79,7 +79,7 @@ export function SubjHelp() {
 export function SuppHelp({type}) {
   return (
     <>
-      <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can aid in connections between your data and other systems and works.</p>
+      <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can help connect your data with other systems and works.</p>
       <p>Your funder may cover the Dryad <a href="/requirements#cost" target="_blank">data publishing charge<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
     </>
   );
@@ -99,7 +99,7 @@ export function CompHelp() {
         </a>
         . Data that comes from a source that is copyrighted cannot be published on Dryad.
         Note that data published on open-access sites or by journals does not guarantee that it is licensed under CC0.
-        For example, sources may allow for data reuse but could require citation for data manipulation (i.e.,{' '}
+        For example, sources may allow for data reuse but could require a citation (i.e.,{' '}
         <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noreferrer">
           Attribution
           <span role="img" aria-label="CC-BY (opens in new window)" style={{marginLeft: '.25ch'}}>
@@ -114,7 +114,7 @@ export function CompHelp() {
         <a href="/docs/HumanSubjectsData.pdf" target="_blank">
           human subjects guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" />
           <span className="screen-reader-only"> (opens in new window)</span>
-        </a> for a sample list of potential direct and indirect identifiers.
+        </a> for a list of potential direct and indirect identifiers.
       </p>
       <p>
         Data involving endangered species must also be appropriate for the public domain. See our{' '}
@@ -130,7 +130,7 @@ export function CompHelp() {
 export function FilesHelp() {
   return (
     <>
-      <p>Files may be uploaded from your computer, or by entering a publically accessible, individual URL for each file (for files hosted on e.g. Box, Dropbox, AWS, or your lab server).</p>
+      <p>Files may be uploaded from your computer, or by entering a publicly accessible, individual URL for each file (for files hosted on e.g. Dropbox, OneDrive, AWS, or your lab server).</p>
       <p>Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
       <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<span className="screen-reader-only"> (opens in new window)</span></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<span className="screen-reader-only"> (opens in new window)</span></a>.</p>
     </>
@@ -140,7 +140,7 @@ export function FilesHelp() {
 export function ReadMeHelp() {
   return (
     <>
-      <p>See these example READMEs from previous Dryad submissions</p>
+      <p>See these example READMEs from published Dryad submissions</p>
       <p>For files and variables:</p>
       <ul className="readme-examples" style={{paddingLeft: '2ch'}}>
         <li>
@@ -199,9 +199,9 @@ export function WorksHelp({setTitleStep}) {
 export function AgreeHelp({type}) {
   return (
     <>
-      <p>After curation, <b>Dryad submissions are made publicly available unless otherwise specified</b>. If your submission needs to be kept private during the review of an associated manuscript, indicate that on this page.</p>
-      {type !== 'collection' && <p>Many <a href="/join_us#members">Dryad members</a> sponsor the cost of submission to Dryad. If you belong to a Dryad member institution, make sure that is reflected here.</p>}
-      <p>You may continue to edit your submission from the submission preview.</p>
+      <p>After curation, <b>Dryad submissions are made publicly available unless otherwise specified</b>. If your submission needs to be kept private during the review of an associated manuscript, choose that option on this page.</p>
+      {type !== 'collection' && <p>Many <a href="/join_us#members">Dryad members</a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad member institution, make sure that is reflected here.</p>}
+      <p>You may continue to make changes to your submission from the submission preview.</p>
     </>
   );
 }
