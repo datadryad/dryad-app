@@ -103,7 +103,7 @@ function Submission({
         config_payments={config_payments}
       />,
       help: <FilesHelp />,
-      preview: <FilesPreview resource={resource} previous={previous} curator={user.curator} maxSize={config_maximums.files} />,
+      preview: <FilesPreview resource={resource} previous={previous} curator={user.curator} maxSize={config_maximums.merritt_size} />,
     },
     {
       name: 'README',
