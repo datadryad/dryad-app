@@ -28,7 +28,7 @@ function ReportError(props) {
           rel="noreferrer"
         >
           <i className="fa fa-question-circle" aria-hidden="true" />
-          <em style={{fontSize: '.98em'}}>What does this mean?</em><ExitIcon/>
+          <em style={{fontSize: '.98em'}}>What does this mean?</em><ExitIcon />
         </a>
       </div>
 

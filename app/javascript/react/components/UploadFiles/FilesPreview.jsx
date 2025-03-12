@@ -66,13 +66,13 @@ export default function FilesPreview({
         )}
         {software.length > 0 && (
           <>
-            <h3 className="o-heading__level2">Software files hosted by <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon/></a></h3>
+            <h3 className="o-heading__level2">Software files hosted by <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon /></a></h3>
             {fileList(software, prev_soft)}
           </>
         )}
         {supp.length > 0 && (
           <>
-            <h3 className="o-heading__level2">Supplemental files hosted by <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon/></a></h3>
+            <h3 className="o-heading__level2">Supplemental files hosted by <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon /></a></h3>
             {fileList(supp, prev_supp)}
           </>
         )}

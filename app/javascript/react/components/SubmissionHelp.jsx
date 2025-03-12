@@ -18,7 +18,7 @@ export default function SubmissionHelp() {
         </li>
         <li>
           <h3><i className="fas fa-layer-group" aria-hidden="true" />Curation</h3>
-          <p>Our experienced data curators will thoroughly evaluate each dataset to ensure the completeness of metadata, documentation, and files, following <a href="https://www.go-fair.org/fair-principles/" target="_blank" rel="noreferrer">FAIR principles<ExitIcon/></a>.</p>
+          <p>Our experienced data curators will thoroughly evaluate each dataset to ensure the completeness of metadata, documentation, and files, following <a href="https://www.go-fair.org/fair-principles/" target="_blank" rel="noreferrer">FAIR principles<ExitIcon /></a>.</p>
         </li>
         <li>
           <h3><i className="fas fa-arrow-rotate-left" aria-hidden="true" />Revisions</h3>
@@ -37,7 +37,7 @@ export default function SubmissionHelp() {
 export function PublicationHelp() {
   return (
     <>
-      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">member journals<ExitIcon/></a> will also cover the <a href="/requirements#cost" target="_blank">data publishing charge<ExitIcon/></a>.</p>
+      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">member journals<ExitIcon /></a> will also cover the <a href="/requirements#cost" target="_blank">data publishing charge<ExitIcon /></a>.</p>
       <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some journals.</p>
     </>
   );
@@ -60,7 +60,7 @@ export function DescHelp({type}) {
       <p>An abstract is required.{type !== 'collection' && ' Briefly summarize the dataset’s structure and concepts including information regarding data values, contents of the dataset, reuse potential and any legal or ethical considerations.'}</p>
       {type !== 'collection' && (
         <>
-          <p>If this dataset is associated with an article, abstract language can be similar, but it should focus on the information relevant to the data itself, rather than to the study. See <a href="https://doi.org/10.5061/dryad.5bk4c" target="_blank" rel="noreferrer">an example of a well-composed abstract<ExitIcon/></a>.</p>
+          <p>If this dataset is associated with an article, abstract language can be similar, but it should focus on the information relevant to the data itself, rather than to the study. See <a href="https://doi.org/10.5061/dryad.5bk4c" target="_blank" rel="noreferrer">an example of a well-composed abstract<ExitIcon /></a>.</p>
           <p>You may also add a methods section to describe how your data was collected and processed.</p>
         </>
       )}
@@ -71,7 +71,7 @@ export function DescHelp({type}) {
 export function SubjHelp() {
   return (
     <>
-      <p>Dryad requires one research domain (from the <a href="https://en.wikipedia.org/wiki/Fields_of_Science_and_Technology" target="_blank" rel="noreferrer">OECD Fields of Science and Technology<ExitIcon/></a>) and at least 3 subject keywords per submission.</p>
+      <p>Dryad requires one research domain (from the <a href="https://en.wikipedia.org/wiki/Fields_of_Science_and_Technology" target="_blank" rel="noreferrer">OECD Fields of Science and Technology<ExitIcon /></a>) and at least 3 subject keywords per submission.</p>
       <p>You may enter any text as a subject keyword if your desired term does not appear.</p>
     </>
   );
@@ -81,7 +81,7 @@ export function SuppHelp({type}) {
   return (
     <>
       <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can help connect your data with other systems and works.</p>
-      <p>Your funder may cover the Dryad <a href="/requirements#cost" target="_blank">data publishing charge<ExitIcon/></a>.</p>
+      <p>Your funder may cover the Dryad <a href="/requirements#cost" target="_blank">data publishing charge<ExitIcon /></a>.</p>
     </>
   );
 }
@@ -131,7 +131,7 @@ export function FilesHelp() {
     <>
       <p>Files may be uploaded from your computer, or by entering a publicly accessible, individual URL for each file (for files hosted on e.g. Dropbox, OneDrive, AWS, or your lab server).</p>
       <p>Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
-      <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<ExitIcon/></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon/></a>.</p>
+      <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<ExitIcon /></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon /></a>.</p>
     </>
   );
 }
@@ -143,26 +143,26 @@ export function ReadMeHelp() {
       <p>For files and variables:</p>
       <ul className="readme-examples" style={{paddingLeft: '2ch'}}>
         <li>
-          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.nzs7h44xg#readme" target="_blank" rel="noreferrer"><ExitIcon/>Genomic data
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.nzs7h44xg#readme" target="_blank" rel="noreferrer"><ExitIcon />Genomic data
           </a> including descriptions of data of several file types
         </li>
         <li>
-          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.rr4xgxdg6#readme" target="_blank" rel="noreferrer"><ExitIcon/>MATLAB files
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.rr4xgxdg6#readme" target="_blank" rel="noreferrer"><ExitIcon />MATLAB files
           </a> described in detail
         </li>
         <li>
-          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.18931zd25#readme" target="_blank" rel="noreferrer"><ExitIcon/>Genomic VCF and companion scripts
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.18931zd25#readme" target="_blank" rel="noreferrer"><ExitIcon />Genomic VCF and companion scripts
           </a> described in detail
         </li>
       </ul>
       <p>For code/software</p>
       <ul className="readme-examples" style={{paddingLeft: '2ch'}}>
         <li>
-          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.h70rxwdq5#readme" target="_blank" rel="noreferrer"><ExitIcon/>Chromatographic and mass spectrometric analysis data
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.h70rxwdq5#readme" target="_blank" rel="noreferrer"><ExitIcon />Chromatographic and mass spectrometric analysis data
           </a> with a detailed Recommended Software section
         </li>
         <li>
-          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.jdfn2z3j3#readme" target="_blank" rel="noreferrer"><ExitIcon/>Neural network deep learning code
+          <a href="https://datadryad.org/dataset/doi:10.5061/dryad.jdfn2z3j3#readme" target="_blank" rel="noreferrer"><ExitIcon />Neural network deep learning code
           </a> with excellent information on setup, access, and running the code
         </li>
       </ul>
@@ -194,7 +194,7 @@ export function AgreeHelp({type}) {
   return (
     <>
       <p>After curation, <b>Dryad submissions are made publicly available unless otherwise specified</b>. If your submission needs to be kept private during the review of an associated manuscript, choose that option on this page.</p>
-      {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad members<ExitIcon/></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad member institution, make sure that is reflected here.</p>}
+      {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad members<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad member institution, make sure that is reflected here.</p>}
       <p>You may continue to make changes to your submission from the submission preview.</p>
     </>
   );

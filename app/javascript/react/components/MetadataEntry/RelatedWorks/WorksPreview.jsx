@@ -36,7 +36,7 @@ function WorksList({identifiers, previous, curator}) {
                       rel="noreferrer"
                       className={previous && (!prev || prev.work_type !== w.work_type) ? 'ins' : ''}
                     >
-                      <i className={icons[type]} aria-hidden="true" style={{marginRight: '.5ch'}} />{w.related_identifier}<ExitIcon/>
+                      <i className={icons[type]} aria-hidden="true" style={{marginRight: '.5ch'}} />{w.related_identifier}<ExitIcon />
                     </a>
                     {curator && !w.verified && (
                       <i className="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link" />

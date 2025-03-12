@@ -38,7 +38,7 @@ export default function PubPreview({resource, previous, curator}) {
             <span>
               <b>Primary article:</b>{' '}
               <a href={primary_article} target="_blank" rel="noreferrer" className={previous && primary_article !== prev_art ? 'ins' : null}>
-                <i className="fas fa-newspaper" aria-hidden="true" style={{marginRight: '.5ch'}} />{primary_article}<ExitIcon/>
+                <i className="fas fa-newspaper" aria-hidden="true" style={{marginRight: '.5ch'}} />{primary_article}<ExitIcon />
               </a>
               {curator && !primary.verified && (
                 <i className="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link" />
