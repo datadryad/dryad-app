@@ -921,8 +921,8 @@ module StashEngine
       that_technical_info = other_resource.descriptions.type_technical_info&.first&.description
       changed << 'technical_info' if this_technical_info != that_technical_info
 
-      this_other_desc = descriptions.type_other.map(&:description).reject(&:blank)
-      that_other_desc = other_resource.descriptions.type_other.map(&:description).reject(&:blank)
+      this_other_desc = descriptions.type_other&.first&.description
+      that_other_desc = other_resource.descriptions.type_other&.first&.description
       changed << 'usage_notes' if this_other_desc != that_other_desc
 
       changed.concat(changed_subjects(other_resource.subjects))

@@ -48,7 +48,7 @@ function WorksList({identifiers, previous, curator}) {
           </Fragment>
         ))}
         {previous?.map((p) => {
-          if (works.some((w) => w.related_identifier === p.related_identifier)) return null;
+          if (works?.some((w) => w.related_identifier === p.related_identifier)) return null;
           return <del style={{display: 'block'}}>p.related_identifier</del>;
         })}
       </>

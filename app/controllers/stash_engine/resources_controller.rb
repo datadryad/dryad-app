@@ -192,7 +192,7 @@ module StashEngine
         end
         if manuscript.present?
           dupes.concat(
-            other_submissions.joins(:resource_publication).find_by(resource_publication: { manuscript_number: manuscript })
+            other_submissions.joins(:resource_publication).where(resource_publication: { manuscript_number: manuscript })
             &.select(:id, :title, :identifier_id).to_a
           )
         end
