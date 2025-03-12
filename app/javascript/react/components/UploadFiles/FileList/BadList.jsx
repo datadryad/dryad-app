@@ -1,4 +1,5 @@
 import React from 'react';
+import {ExitIcon} from '../../ExitButton';
 
 // checks files to see if they have validation and also status
 const filterForStatus = (status, files) => {
@@ -51,7 +52,7 @@ export default function BadList(props) {
           <p style={{marginTop: 0}}>
             These inconsistencies can affect the usability of your data.{' '}
             <a href="/data_check_guide" target="_blank">
-              Check our guide for more information<span className="screen-reader-only"> (opens in new window)</span>
+              Check our guide for more information<ExitIcon />
             </a>
             .
           </p>

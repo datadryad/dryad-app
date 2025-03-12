@@ -35,7 +35,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
     res = @identifier.resources.first
     res.update(meta_view: true, file_view: true, publication_date: Time.new)
     visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
-    expect(page).to have_text('Share on LinkedIn')
+    expect(page).to have_text('Share:')
     expect(page).to have_text(/\d* downloads/)
   end
 
