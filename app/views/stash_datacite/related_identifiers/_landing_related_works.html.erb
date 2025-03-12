@@ -1,13 +1,13 @@
 <% # Article IDs %>
 
 <% icons = {
-	primary_article: "<i class=\"fas fa-newspaper\" aria-hidden=\"true\"></i>",
-	article: "<i class=\"far fa-newspaper\" aria-hidden=\"true\"></i>",
-	dataset: "<i class=\"fas fa-table\" aria-hidden=\"true\"></i>",
-	software: "<i class=\"fas fa-code-branch\" aria-hidden=\"true\"></i>",
-	preprint: "<i class=\"fas fa-receipt\" aria-hidden=\"true\"></i>",
-	supplemental_information: "<i class=\"far fa-file-lines\" aria-hidden=\"true\"></i>",
-	data_management_plan: "<i class=\"fas fa-list-check\" aria-hidden=\"true\"></i>",
+	primary_article: "<i class=\"fas fa-newspaper\" role=\"img\" aria-label=\"(opens in new window) \"></i>",
+	article: "<i class=\"far fa-newspaper\" role=\"img\" aria-label=\"(opens in new window) \"></i>",
+	dataset: "<i class=\"fas fa-table\" role=\"img\" aria-label=\"(opens in new window) \"></i>",
+	software: "<i class=\"fas fa-code-branch\" role=\"img\" aria-label=\"(opens in new window) \"></i>",
+	preprint: "<i class=\"fas fa-receipt\" role=\"img\" aria-label=\"(opens in new window) \"></i>",
+	supplemental_information: "<i class=\"far fa-file-lines\" role=\"img\" aria-label=\"(opens in new window) \"></i>",
+	data_management_plan: "<i class=\"fas fa-list-check\" role=\"img\" aria-label=\"(opens in new window) \"></i>",
 	undefined: ''
 } %>
 
@@ -40,7 +40,7 @@
 							 my_id: r.related_identifier) %> <%= unverified %>
 				<% else %>
 					<% if r.added_by != 'zenodo' || !unpublished %>
-						<%= link_to "#{icons[r.work_type.to_sym]}#{r.related_identifier}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, r.related_identifier, class: 'o-link__primary', title: "Go to #{orel.work_type_friendly.downcase}", target: "_blank" %><%= unverified %>
+						<%= link_to "#{icons[r.work_type.to_sym]}#{r.related_identifier}".html_safe, r.related_identifier, class: 'o-link__primary', title: "Go to #{orel.work_type_friendly.downcase}", target: "_blank" %><%= unverified %>
 					<% else %> <!-- not put in the zenodo queue to publish until the dataset is actually published -->
 						<span><%= r.related_identifier %></span><%= unverified %>
 					<% end %>

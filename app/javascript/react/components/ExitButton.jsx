@@ -9,3 +9,7 @@ export default function ExitButton({resource}) {
     </form>
   );
 }
+
+export function ExitIcon() {
+  return <i className="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window) " role="img" />;
+}

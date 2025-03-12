@@ -16,7 +16,7 @@
           <%= display_id(type: r.related_identifier_type,
                          my_id: r.related_identifier) %><%= unverified %>
         <% else %>
-          <%= link_to "#{icon}#{r.related_identifier}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, r.related_identifier, title: "Go to #{item_label.downcase}", target: "_blank" %><%= unverified %>
+          <%= link_to "#{icon}#{r.related_identifier}".html_safe, r.related_identifier, title: "Go to #{item_label.downcase}", target: "_blank" %><%= unverified %>
         <% end %>
       </li>
     <% end %>

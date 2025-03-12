@@ -1,6 +1,7 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import {ExitIcon} from '../../ExitButton';
 import Calculations from './Calculations';
 import InvoiceForm from './InvoiceForm';
 
@@ -125,7 +126,7 @@ export default function Agreements({
               <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
               <p>
                 This submission is associated with a manuscript from an{' '}
-                <a href="/journals" target="_blank">integrated journal<span className="screen-reader-only"> (opens in new window)</span></a>.
+                <a href="/journals" target="_blank">integrated journal<ExitIcon /></a>.
                 It will remain private for peer review until formal acceptance of the associated manuscript.
               </p>
             </>
@@ -190,7 +191,7 @@ export default function Agreements({
             <p>
               <i className="fas fa-circle-check" aria-hidden="true" />{' '}
               The submitter has agreed to Dryad&apos;s{' '}
-              <a href="/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
+              <a href="/terms" target="_blank">terms of submission<ExitIcon /></a>
             </p>
           ) : (
             <p style={{fontStyle: 'italic'}}><i className="fas fa-square" aria-hidden="true" />{' '} Terms not yet accepted</p>
@@ -251,7 +252,7 @@ export default function Agreements({
             <label>
               <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
               <span className="input-label">I agree</span> to Dryad&apos;s {subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}
-              <a href="/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
+              <a href="/terms" target="_blank">terms of submission<ExitIcon /></a>
             </label>
           </p>
         </>
