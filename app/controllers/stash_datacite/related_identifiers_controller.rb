@@ -23,9 +23,14 @@ module StashDatacite
           end
         else
           errs = @related_identifier.errors.full_messages
-          if errs.any?
-            @error_message = errs[0]
-            render 'stash_engine/user_admin/update_error' and return
+          @error_message = errs&.first
+          format.js do
+            if @error_message
+              render 'stash_engine/user_admin/update_error' and return
+            end
+          end
+          format.json do
+            render json: @error_message, status: :unprocessable_entity
           end
         end
       end
@@ -44,9 +49,14 @@ module StashDatacite
           end
         else
           errs = @related_identifier.errors.full_messages
-          if errs.any?
-            @error_message = errs[0]
-            render 'stash_engine/user_admin/update_error' and return
+          @error_message = errs&.first
+          format.js do
+            if @error_message
+              render 'stash_engine/user_admin/update_error' and return
+            end
+          end
+          format.json do
+            render json: @error_message, status: :unprocessable_entity
           end
         end
       end

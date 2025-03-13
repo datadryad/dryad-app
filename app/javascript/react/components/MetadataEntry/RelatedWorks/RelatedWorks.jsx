@@ -28,10 +28,10 @@ function RelatedWorks({resource, setResource}) {
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
       .then((data) => {
-        if (data.status !== 200) {
-          console.log("Couldn't add new related work");
-        }
-        setWorks((w) => [...w, data.data]);
+          setWorks((w) => [...w, data.data]);
+      })
+      .catch((err) => {
+        console.log("Couldn't add new related work");
       });
   };
 
@@ -102,9 +102,9 @@ function RelatedWorks({resource, setResource}) {
             resulted from or are related to this submission?`}
       </p>
       <div className="related-works">
-        {works.map((work) => (
+        {works.map((work, index) => (
           <RelatedWorkForm
-            key={work.id}
+            key={`${work.id}_${index}`}
             relatedIdentifier={work}
             workTypes={workTypes}
             removeFunction={removeItem}
