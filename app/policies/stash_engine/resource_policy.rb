@@ -24,7 +24,7 @@ module StashEngine
     def curator_edit?
       (curate? &&
       (@record.current_resource_state&.resource_state == 'submitted')) ||
-      (@record.current_resource_state&.resource_state == 'in_progress' && @record&.user_id == @user.id)
+      (@record.current_resource_state&.resource_state == 'in_progress' && (@record&.user_id == @user.id || @record&.current_editor_id == @user.id))
     end
 
     def flag?
