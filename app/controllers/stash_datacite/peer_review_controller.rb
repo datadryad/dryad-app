@@ -23,7 +23,8 @@ module StashDatacite
       if current_user
         begin
           @resource = StashEngine::Resource.find(peer_review_params[:id])
-          @error_list = StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors
+          # @error_list = StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors
+          @error_list = []
           @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
           @resource.reload
 
