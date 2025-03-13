@@ -424,7 +424,7 @@ module StashEngine
     # item and then never fill anything in.  This cleans up those items.  Probably useful in the review page.
     def cleanup_blank_models!
       related_identifiers.where("related_identifier is NULL or related_identifier = ''").destroy_all # no id? this related item is blank
-      return unless contributors.where(contributor_type: 'funder', contributor_name: 'N/A')&.first&.present?
+      return if contributors.where(contributor_type: 'funder', contributor_name: 'N/A').empty?
 
       contributors.where(contributor_type: 'funder').where.not(contributor_name: 'N/A').destroy_all
       # if no funders has been selected, destroy all other funders
