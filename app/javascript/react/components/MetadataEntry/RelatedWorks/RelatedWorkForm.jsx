@@ -134,8 +134,8 @@ function RelatedWorkForm(
       <div role="status">
         <RelatedWorksErrors relatedIdentifier={relatedIdentifier} />
         { saveError && (
-              <div className="callout err">
-              <p>{saveError}</p>
+          <div className="callout err">
+            <p>{saveError}</p>
           </div>
         )}
       </div>
