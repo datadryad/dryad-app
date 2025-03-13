@@ -127,6 +127,7 @@ module Stash
         items.concat(create_invoice_overages(overage_bytes))
         # For users with a waiver, add line waiving invoice amount
         if stripe_user_waiver?
+          over_chunks = overage_chunks(overage_bytes)
           overcharge = over_chunks.positive? ? APP_CONFIG.payments.additional_storage_chunk_cost * over_chunks : 0
           items.push(Stripe::InvoiceItem.create(
                        customer: customer_id,

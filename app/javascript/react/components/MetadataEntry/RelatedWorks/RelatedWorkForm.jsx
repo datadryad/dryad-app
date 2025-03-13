@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
@@ -12,6 +12,7 @@ function RelatedWorkForm(
   },
 ) {
   const formRef = useRef();
+  const [saveError, setSaveError] = useState(null);
 
   const submitForm = (values) => {
     showSavingMsg();
@@ -34,6 +35,7 @@ function RelatedWorkForm(
     }
 
     // submit by json
+    setSaveError(null);
     return axios.patch(
       '/stash_datacite/related_identifiers/update',
       {authenticity_token, stash_datacite_related_identifier: sdri},
@@ -47,10 +49,13 @@ function RelatedWorkForm(
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from funders save');
       }
-
       // forces data update in the collection containing me
       updateWork(data.data);
       showSavedMsg();
+    }).catch((error) => {
+      console.log('Response failure not a 200 response from funders save');
+      showSavedMsg();
+      setSaveError(error.response.data);
     });
   };
 
@@ -71,7 +76,7 @@ function RelatedWorkForm(
       >
         {(formik) => (
           <Form
-            className={`work-form${(!urlCheck(relatedIdentifier.related_identifier) && ' err')
+            className={`work-form${((!urlCheck(relatedIdentifier.related_identifier) || saveError) && ' err')
               || (!verifiedCheck(relatedIdentifier) && ' warn') || ''}`}
           >
             <Field name="id" type="hidden" />
@@ -128,6 +133,11 @@ function RelatedWorkForm(
       </Formik>
       <div role="status">
         <RelatedWorksErrors relatedIdentifier={relatedIdentifier} />
+        { saveError && (
+          <div className="callout err">
+            <p>{saveError}</p>
+          </div>
+        )}
       </div>
     </>
   );

@@ -31,7 +31,7 @@ export function CompPreview({resource}) {
       {license_id === 'cc0' && (
         <p>
           <i className="fa-solid fa-circle-check" aria-hidden="true" />{' '}
-          Data submitted will be publised under the{' '}
+          Data submitted will be published under the{' '}
           <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">
           Public domain
             <span role="img" aria-label="CC0 (opens in new window)" style={{marginLeft: '.25ch'}}>
