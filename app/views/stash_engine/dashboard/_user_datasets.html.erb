@@ -30,7 +30,6 @@
       </p>
       <p class="c-user-dataset-details">
         <span>DOI: <%= dataset.identifier.identifier %></span>
-        <span>Version <%= dataset&.stash_version.version%></span>
         <span><%= time_ago_in_words(dataset.updated_at, include_seconds: true) %> since last update</span>
         <% if dataset.identifier.pub_state == 'published' %>
           <span>Published: <%= formatted_date(dataset.identifier.date_last_published) %></span><% if dataset.sort_order != 3 %>
@@ -63,7 +62,7 @@
             <% end %>
           <% end %>
           <% if dataset.sort_order == 2 %>
-            <%= button_to stash_url_helpers.peer_review_release_path, method: :patch, params: {stash_engine_resource: { id: dataset.id }}, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
+            <%= button_to stash_url_helpers.peer_review_release_path(id: dataset.id), method: :patch, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
               <i class="fa fa-paper-plane" aria-hidden="true"></i>Release for curation
             <% end %>
           <% end %>
