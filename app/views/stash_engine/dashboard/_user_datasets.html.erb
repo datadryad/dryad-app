@@ -30,7 +30,6 @@
       </p>
       <p class="c-user-dataset-details">
         <span>DOI: <%= dataset.identifier.identifier %></span>
-        <span>Version <%= dataset&.stash_version.version%></span>
         <span><%= time_ago_in_words(dataset.updated_at, include_seconds: true) %> since last update</span>
         <% if dataset.identifier.pub_state == 'published' %>
           <span>Published: <%= formatted_date(dataset.identifier.date_last_published) %></span><% if dataset.sort_order != 3 %>
