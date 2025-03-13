@@ -28,10 +28,10 @@ function RelatedWorks({resource, setResource}) {
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
       .then((data) => {
-        if (data.status !== 200) {
-          console.log("Couldn't add new related work");
-        }
         setWorks((w) => [...w, data.data]);
+      })
+      .catch(() => {
+        console.log("Couldn't add new related work");
       });
   };
 
