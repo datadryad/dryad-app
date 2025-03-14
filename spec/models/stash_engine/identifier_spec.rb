@@ -201,7 +201,7 @@ module StashEngine
         end
       end
 
-      describe '#resources_with_file_changes' do
+      describe '#resources.with_file_changes' do
         before(:each) do
           DataFile.create(resource_id: @res1.id, upload_file_name: 'cat', file_state: 'created')
           DataFile.create(resource_id: @res2.id, upload_file_name: 'cat', file_state: 'copied')
@@ -209,7 +209,7 @@ module StashEngine
         end
 
         it 'returns the version that changed' do
-          resources = @identifier.resources_with_file_changes
+          resources = @identifier.resources.with_file_changes.distinct
           expect(resources.first.id).to eq(@res1.id)
           expect(resources.count).to eq(2)
         end

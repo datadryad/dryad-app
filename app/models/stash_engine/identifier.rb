@@ -143,13 +143,6 @@ module StashEngine
                identifier, identifier_type).sum(:downloads)
     end
 
-    def resources_with_file_changes
-      Resource.distinct.where(identifier_id: id)
-        .joins(:data_files)
-        .where(stash_engine_generic_files: { file_state: %w[created deleted] })
-        .where(stash_engine_generic_files: { type: 'StashEngine::DataFile' })
-    end
-
     # these are items that are embargoed or published and can show metadata
     def latest_resource_with_public_metadata
       return nil if pub_state == 'withdrawn'
@@ -174,8 +167,8 @@ module StashEngine
     def latest_downloadable_resource(user: nil)
       return latest_resource_with_public_download if user.nil?
 
-      lr = resources_with_file_changes.submitted.last
-      return lr if lr&.permission_to_edit?(user: user)
+      lr = resources.with_file_changes.submitted.last
+      return lr if lr&.permission_to_edit?(user: user) && lr.version_number > (latest_resource_with_public_download&.version_number || 0)
 
       latest_resource_with_public_download
     end
@@ -510,7 +503,7 @@ module StashEngine
     # make the display look desireable.  We can also put the old versions back and re-process the info to get corect views for these datasets.
     def borked_file_history?
       # I have been setting resources curators don't like to the negative identifier_id on the resource foreign key to orphan them
-      return true if Resource.where(identifier_id: -id).count.positive? || resources_with_file_changes.count.zero?
+      return true if Resource.where(identifier_id: -id).count.positive? || resources.with_file_changes.count.zero?
 
       false
     end

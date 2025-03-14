@@ -77,7 +77,7 @@ function Submission({
       fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support resource={resource} setResource={setResource} />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
-      preview: <SuppPreview resource={resource} previous={previous} />,
+      preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Compliance',

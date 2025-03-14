@@ -221,6 +221,11 @@ module StashEngine
       where(meta_view: true)
     end
 
+    scope :with_file_changes, -> do
+      joins(:data_files)
+        .where(stash_engine_generic_files: { file_state: %w[created deleted], type: 'StashEngine::DataFile' })
+    end
+
     scope :files_published, -> do
       # this also depends on the publication updater to update statuses to published daily
       where(file_view: true)
