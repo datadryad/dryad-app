@@ -9,34 +9,15 @@ require 'stash/aws/s3'
 include StashEngine::ApplicationHelper
 # rubocop:enable Style/MixinUsage
 
-# rubocop:disable Metrics/ClassLength
-
 module StashDatacite
   module Resource
-
-    # an error with a little information about page and id in addition to message, mostly a struct
-    # Some items such as name may have more than one field so IDs array, but we probably just focus on first
-    class ErrorItem
-      attr_accessor :message, :page, :ids
-      def initialize(message:, page:, ids:)
-        @message = message
-        @page = page
-        @ids = ids
-      end
-
-      def display_message
-        url = Addressable::URI.parse(@page)
-        url.query_values = (url.query_values || {}).merge({ display_validation: true })
-        url_str = "#{url}##{@ids&.first}"
-        @message.gsub('{', "<a href=\"#{url_str}\">").gsub('}', '</a>')
-      end
-    end
 
     class DatasetValidations
       # this page displays specific validation information
       # contains a message for each, a link for the page to look at and an id for the field with a problem when possible
-      def initialize(resource:)
+      def initialize(resource:, user: nil)
         @resource = resource
+        @user = user
       end
 
       def url_help
@@ -55,243 +36,136 @@ module StashDatacite
       # files that haven't validated, errors uploading, too many files, too big of size
 
       def errors
-        err = []
-        err << article_id
-        err << title
-        err << authors
-        err << research_domain
-        err << funder
-        err << abstract
-        err << subjects
+        import.presence || title.presence || authors.presence || abstract.presence ||
+        subjects.presence || funder.presence || type_errors.presence || false
+      end
 
+      def type_errors
         if @resource&.resource_type&.resource_type == 'collection'
-          err << collected_datasets
+          collected_datasets.presence || false
         else
-
-          err << s3_error_uploads
-          err << url_error_validating
-          err << over_file_count
-          err << over_files_size
-          err << readme_required
-          err << data_required
-
+          data_required.presence || s3_error_uploads.presence || url_error_validating.presence ||
+          over_max.presence || readme_required.presence || false
         end
-
-        err.flatten
       end
 
-      # this is a shorter list used by curators
-      def loose_errors
-        err = []
-        err << title
-        err << authors
-        err << s3_error_uploads
-        err << url_error_validating
+      def import
+        return 'Journal name missing' if %w[manuscript published].include?(@resource.identifier.import_info) &&
+          @resource.identifier.publication_name.blank?
+        return 'Preprint server missing' if @resource.identifier.import_info == 'preprint' && @resource.identifier.preprint_server.blank?
+        return 'Manuscript number missing' if @resource.identifier.import_info == 'manuscript' && @resource.identifier.manuscript_number.blank?
 
-        err.flatten
-      end
-
-      def collected_datasets
-        err = []
-        if @resource.related_identifiers.where(relation_type: 'haspart').count.zero?
-          err << ErrorItem.new(message: 'List all {datasets in the collection}', page: metadata_page(@resource), ids: ['related_works_section'])
+        if @resource.identifier.import_info == 'preprint'
+          preprint = @resource.related_identifiers.where(work_type: 'preprint').first
+          return 'DOI missing' if preprint.nil? || preprint.related_identifier.blank? || !preprint.valid_doi_format?
+        elsif @resource.identifier.import_info == 'published'
+          primary_article = @resource.related_identifiers.where(work_type: 'primary_article').first
+          return 'DOI missing' if primary_article.nil? || primary_article.related_identifier.blank? || !primary_article.valid_doi_format?
         end
-        err
-      end
-
-      def article_id
-        err = []
-
-        if @resource.identifier.import_info && @resource.identifier.import_info != 'other' && @resource.identifier.publication_name.blank?
-          err << ErrorItem.new(message: 'Fill in the {journal of the related publication}',
-                               page: metadata_page(@resource),
-                               ids: ['publication'])
-        end
-
-        journal = " from #{@resource.identifier.publication_name}" if @resource.identifier.publication_name.present?
-
-        primary_article = @resource.related_identifiers.where(work_type: 'primary_article').first
-        if @resource.identifier.import_info == 'published' && (
-                      primary_article.nil? || primary_article.related_identifier.blank? || !primary_article.valid_doi_format?
-                    )
-          err << ErrorItem.new(message: "Fill in {a correctly formatted DOI} for the article#{journal}",
-                               page: metadata_page(@resource),
-                               ids: %w[primary_article_doi])
-        elsif @resource.identifier.import_info == 'manuscript' && @resource.identifier.manuscript_number.blank?
-          err << ErrorItem.new(message: "Fill in the {manuscript number} for the article#{journal}",
-                               page: metadata_page(@resource),
-                               ids: ['msId'])
-        end
-        err
+        false
       end
 
       def title
-        if @resource.title.blank?
-          return ErrorItem.new(message: "Fill in a {#{@resource&.resource_type&.resource_type} title}",
-                               page: metadata_page(@resource),
-                               ids: ["title__#{@resource.id}"])
-        elsif nondescript_title?
-          return ErrorItem.new(
-            message: 'Use a {descriptive title} so your dataset can be discovered. Your title is not specific to your dataset.',
-            page: metadata_page(@resource),
-            ids: ["title__#{@resource.id}"]
-          )
-        elsif @resource.title == @resource.title.upcase
-          return ErrorItem.new(
-            message: "Correct the casing of your {#{@resource&.resource_type&.resource_type} title}. Titles should be in sentence casing.",
-            page: metadata_page(@resource),
-            ids: ["title__#{@resource.id}"]
-          )
-        end
+        return 'Blank title' if @resource.title.blank?
+        return 'Nondescriptive title' if nondescript_title?
+        return 'All caps title' if @resource.title == @resource.title.upcase
+        return 'Title case title' if @resource.title.scan(/\b[A-Z].*?\b/).size > @resource.title.split.size * 0.6
 
-        []
+        false
       end
 
       def authors
-        temp_err = []
-        @resource.authors.each_with_index do |author, idx|
-
-          next unless author.author_org_name.blank?
-
-          if author.author_first_name.blank?
-            temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {first name}",
-                                      page: metadata_page(@resource),
-                                      ids: ["author_first_name__#{author.id}"])
-          end
-
-          affil = author.affiliation || StashDatacite::Affiliation.new # there is always an affiliation this way
-          # below gets rid of the annoying asterisk that go into end of this string, too bad names aren't atomic
-          next unless (affil.long_name || '').gsub(/\*$/, '').blank?
-
-          temp_err << ErrorItem.new(message: "Fill #{(idx + 1).ordinalize} author's {institutional affiliation}",
-                                    page: metadata_page(@resource),
-                                    ids: ["instit_affil__#{author.id}"])
+        return 'Submitter missing' if @resource.owner_author.nil?
+        return 'Submitter email missing' if @resource.owner_author.author_email.blank?
+        return 'Names missing' if @resource.authors.any? { |a| a.author_first_name.blank? && a.author_org_name.blank? }
+        return 'Affiliations missing' if @resource.authors.any? { |a| a.affiliation.nil? || a.affiliation.long_name.blank? }
+        return 'Duplicate author names' if @resource.authors.map(&:author_full_name).uniq.any? do |n|
+          @resource.authors.map(&:author_full_name).count(n) > 1
         end
+        return 'Duplicate author emails' if @resource.authors.map(&:author_email).uniq.any? { |n| @resource.authors.map(&:author_email).count(n) > 1 }
+        return 'Published email missing' if @resource.authors.none?(&:corresp)
 
-        unless @resource&.owner_author&.author_email.present?
-          temp_err << ErrorItem.new(message: "Fill in {submitting author's email}",
-                                    page: metadata_page(@resource),
-                                    ids: ["author_email__#{@resource&.owner_author&.id}"])
-        end
-
-        temp_err
+        false
       end
 
-      def research_domain
-        domain_require_date = '2021-12-20'
-        if @resource.subjects.fos.blank? && @resource.identifier.created_at > domain_require_date
-          return ErrorItem.new(message: 'Fill in a {research domain}',
-                               page: metadata_page(@resource),
-                               ids: ["fos_subjects__#{@resource.id}"])
-        end
-        []
+      def abstract
+        return 'Abstract missing' unless @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).count.positive?
+
+        false
       end
 
       def subjects
         subjects_require_date = '2023-06-07'
-        if @resource.subjects.non_fos.count < 3 && @resource.identifier.created_at > subjects_require_date
-          return ErrorItem.new(message: 'Fill in at least three {keywords}',
-                               page: metadata_page(@resource),
-                               ids: ['keyword_ac'])
+        domain_require_date = '2021-12-20'
+        if @resource.subjects.fos.blank? &&
+          (@resource.identifier.publication_date.blank? || @resource.identifier.publication_date > domain_require_date)
+          return 'Research domain missing'
         end
-        []
+        if @resource.subjects.non_fos.count < 3 &&
+          (@resource.identifier.publication_date.blank? || @resource.identifier.publication_date > subjects_require_date)
+          return 'Subjects missing'
+        end
+
+        false
       end
 
       def funder
-        funder_require_date = '2022-04-14'
-        if (@resource.contributors.where(contributor_type: 'funder').blank? ||
-          @resource.contributors.where(contributor_type: 'funder').first.contributor_name.blank?) &&
-           @resource.identifier.created_at > funder_require_date &&
-           @resource.identifier.pub_state == 'unpublished'
-          return ErrorItem.new(message: 'Fill in a {funder}. Check "No funding received" if there is no funder associated with the dataset.',
-                               page: metadata_page(@resource),
-                               ids: ['funder_fieldset'])
-        end
-        []
+        return 'Funding missing' if @resource.contributors.where(contributor_type: 'funder').blank? ||
+          @resource.contributors.where(contributor_type: 'funder').first.contributor_name.blank?
+
+        false
       end
 
-      def abstract
-        unless @resource.descriptions.where(description_type: 'abstract').where.not(description: [nil, '']).count.positive?
-          return ErrorItem.new(message: 'Fill in the {abstract}',
-                               page: metadata_page(@resource),
-                               ids: ['abstract_label'])
-        end
-        []
+      def collected_datasets
+        return 'No datasets in the collection' if @resource.related_identifiers.where(relation_type: 'haspart').count.zero?
+
+        false
+      end
+
+      def data_required
+        return 'No data files' unless contains_data?
+
+        false
       end
 
       def s3_error_uploads
-        return [] if @resource.submitted?
+        return false if @resource.submitted?
 
         files = @resource.generic_files.newly_created.file_submission
-        errored_uploads = []
-        files.each do |f|
-          errored_uploads.push(f.upload_file_name) unless Stash::Aws::S3.new.exists?(s3_key: f.s3_staged_path)
-        end
+        return 'Upload file errors' if files.any? { |f| !Stash::Aws::S3.new.exists?(s3_key: f.s3_staged_path) }
 
-        return [] if errored_uploads.empty?
-
-        msg = '{Check that the following file(s) have uploaded}:<br/><br/>' \
-              "#{errored_uploads.map { |i| CGI.escapeHTML(i) }.join('<br/>')}<br/><br/>" \
-              'If this state persists for more than a few minutes, please remove and upload the file(s) again.'
-
-        ErrorItem.new(message: msg,
-                      page: metadata_page(@resource),
-                      ids: ['filelist_id'])
+        false
       end
 
       def url_error_validating
         # error if has url and not a 200 status code
-        files = @resource.generic_files.newly_created.errors.map(&:upload_file_name)
+        files = @resource.generic_files.newly_created.errors
+        return 'URL file errors' if files.size.positive?
 
-        return [] if files.empty?
-
-        msg = '{Check that the URLs associated with the following files are available and publicly viewable}:<br/><br/>' \
-              "#{files.map { |i| CGI.escapeHTML(i) }.join('<br/>')}<br/><br/>" \
-              'URLs for deposit need to be publicly accessible and self-contained objects.  For example, ' \
-              'adding an HTML file will only retrieve the HTML and not all referenced images or other assets.'
-
-        ErrorItem.new(message: msg,
-                      page: metadata_page(@resource),
-                      ids: ['filelist_id'])
+        false
       end
 
-      def over_file_count
-        return [] unless @resource.generic_files.present_files.count > APP_CONFIG.maximums.files
+      def over_max
+        return 'Too many files' if @resource.generic_files.present_files.count > 1000
 
-        ErrorItem.new(message: "{Please limit the number of files to #{APP_CONFIG.maximums.files}} " \
-                               'or package your files in a container such as a zip archive',
-                      page: metadata_page(@resource),
-                      ids: ['filelist_id'])
-      end
-
-      def over_files_size
-        errors = []
-
-        if @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size
-          errors << ErrorItem.new(message: "Data uploads are limited to #{filesize(APP_CONFIG.maximums.merritt_size, 0)}. " \
-                                           '{Remove some data files to proceed}.',
-                                  page: metadata_page(@resource),
-                                  ids: ['filelist_id'])
+        files_date = '2025-03-12'
+        if (@resource.identifier.publication_date.blank? || @resource.identifier.publication_date > files_date) &&
+          (@resource.data_files.present_files.count > APP_CONFIG.maximums.files ||
+            @resource.software_files.present_files.count > APP_CONFIG.maximums.files ||
+            @resource.supp_files.present_files.count > APP_CONFIG.maximums.files)
+          return 'Too many files'
         end
 
-        if @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
-          errors << ErrorItem.new(message: "Software uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}. " \
-                                           '{Remove some software files to proceed}.',
-                                  page: metadata_page(@resource),
-                                  ids: ['filelist_id'])
-        end
+        return 'Over file size limit' if (@resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size &&
+          !@user&.superuser?) ||
+          @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size ||
+          @resource.supp_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
 
-        if @resource.supp_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
-          errors << ErrorItem.new(message: "Supplemental uploads are limited to #{filesize(APP_CONFIG.maximums.zenodo_size, 0)}. " \
-                                           '{Remove some supplemental files to proceed}.',
-                                  page: metadata_page(@resource),
-                                  ids: ['filelist_id'])
-        end
-
-        errors
+        false
       end
 
       def readme_required
+        readme_editor_date = '2023-08-29'
         readme_md_require_date = '2022-09-28'
         readme_require_date = '2021-12-20'
 
@@ -305,35 +179,15 @@ module StashDatacite
           false
         end
 
-        no_md = @resource.identifier.created_at > readme_md_require_date && readme_md_files.count.zero?
-
-        no_readme = @resource.identifier.created_at > readme_require_date && readme_files.count.zero?
-
-        if no_techinfo && (no_md || no_readme)
-          return ErrorItem.new(message: '{Include a README} to describe your dataset.',
-                               page: metadata_page(@resource),
-                               ids: ['readme_editor'])
+        if @resource.identifier.publication_date.blank? || @resource.identifier.publication_date > readme_editor_date
+          return 'README missing' if no_techinfo
+        elsif @resource.identifier.publication_date > readme_md_require_date
+          return 'README file missing' if readme_md_files.count.zero?
+        elsif @resource.identifier.publication_date > readme_require_date
+          return 'README file missing' if readme_files.count.zero?
         end
-        # rubocop:disable Layout/LineLength
-        unless no_techinfo
-          unedited = %r{\A#\s.+\n\n\[https://doi\.org/.+\]\(https://doi\.org/.+\)\n\n##\sDescription of the data and file structure\n\n\Z}.match? techinfo.first.description
-          if unedited
-            return ErrorItem.new(message: 'Include required content {in your README} to describe your dataset.',
-                                 page: metadata_page(@resource),
-                                 ids: ['readme_editor'])
-          end
-        end
-        # rubocop:enable Layout/LineLength
-        []
-      end
 
-      def data_required
-        return [] if contains_data?
-
-        ErrorItem.new(message: 'Include at least one data file in your submission. ' \
-                               '{Add some data files to proceed}.',
-                      page: metadata_page(@resource),
-                      ids: ['filelist_id'])
+        false
       end
 
       private
@@ -341,10 +195,10 @@ module StashDatacite
       def nondescript_title?
         dict = ['raw', 'data', 'dataset', 'dryad', 'fig', 'figure', 'figures', 'table', 'tables', 'file', 'supp', 'suppl',
                 'supplement', 'supplemental', 'extended', 'supplementary', 'supporting', 'et al',
-                'the', 'of', 'for', 'in', 'from']
+                'the', 'of', 'for', 'in', 'from', 'to']
         regex = dict.join('|')
         remainder = @resource.title.gsub(/[^a-z0-9\s]/i, '').gsub(/(#{regex}|s\d|f\d|t\d)\b/i, '').strip
-        remainder.split.size < 3
+        remainder.split.size < 4
       end
 
       # Checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
@@ -364,5 +218,3 @@ module StashDatacite
     end
   end
 end
-
-# rubocop:enable Metrics/ClassLength
