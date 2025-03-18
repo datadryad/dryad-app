@@ -85,10 +85,12 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
       axios.get(`/resources/${resource.id}/prepare_readme`).then((data) => {
         const {file_list, readme_file} = data.data;
         setFileList(file_list);
-        if (readme_file) {
-          setInitialValue(readme_file);
-        } else if (!dcsDescription.description) {
-          setWizardContent({title: resource.title, doi: resource.identifier.identifier, step: 0});
+        if (!dcsDescription.description) {
+          if (readme_file) {
+            setInitialValue(readme_file);
+          } else {
+            setWizardContent({title: resource.title, doi: resource.identifier.identifier, step: 0});
+          }
         }
       });
     }
