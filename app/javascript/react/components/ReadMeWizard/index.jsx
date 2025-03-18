@@ -4,7 +4,10 @@ import axios from 'axios';
 export {default} from './ReadMeWizard';
 
 export const readmeCheck = (resource) => {
-  const readme = resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
+  const {descriptions, identifier: {publication_date}, generic_files: files} = resource;
+  const readme = descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
+  const markdownFile = files.filter((f) => f.file_state !== 'deleted' && f.type === 'StashEngine::DataFile' && f.upload_file_name === 'README.md');
+  const readmeFile = files.filter((f) => f.file_state !== 'deleted' && f.type === 'StashEngine::DataFile' && f.upload_file_name.startsWith('README'));
   if (readme) {
     try {
       const obj = JSON.parse(readme);
@@ -17,7 +20,14 @@ export const readmeCheck = (resource) => {
       return false;
     }
   }
-  return <p className="error-text" id="readme_error">A README is required</p>;
+  if (!publication_date || publication_date > new Date('2023-08-29')) {
+    return <p className="error-text" id="readme_error">A README is required</p>;
+  } if (publication_date > new Date('2022-09-28')) {
+    if (!markdownFile) return <p className="error-text" id="readme_error">A README is required</p>;
+  } else if (publication_date > new Date('2021-12-20')) {
+    if (!readmeFile) return <p className="error-text" id="readme_error">A README is required</p>;
+  }
+  return false;
 };
 
 export function ReadMePreview({resource, previous, curator}) {
