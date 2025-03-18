@@ -23,7 +23,7 @@ module SubmissionMixin
   end
 
   def check_dataset_completions
-    error = StashDatacite::Resource::DatasetValidations.new(resource: @resource, user: current_user).errors
+    error = StashDatacite::Resource::DatasetValidations.new(resource: @resource, user: @user).errors
     if @resource.identifier&.processing?
       error = 'Your previous version is still being processed, please wait until it completes before submitting again'
     end
