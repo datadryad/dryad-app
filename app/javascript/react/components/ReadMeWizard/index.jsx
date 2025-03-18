@@ -24,10 +24,10 @@ export function ReadMePreview({resource, previous, curator}) {
   const readmeRef = useRef(null);
   const readme = resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
   const prev = previous?.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
-  const diff = curator && previous && readme !== prev;
+  const diff = previous && readme !== prev;
 
   const getREADME = () => {
-    axios.get(`/resources/${resource.id}/display_readme${diff ? '?admin' : ''}`).then((data) => {
+    axios.get(`/resources/${resource.id}/display_readme${curator && diff ? '?admin' : ''}`).then((data) => {
       const active_readme = document.createRange().createContextualFragment(data.data);
       readmeRef.current.append(active_readme);
     });
