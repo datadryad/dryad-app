@@ -59,7 +59,7 @@ module Stash
 
         over = ds_size - [prev_size, lfs].max
         invoice = create_invoice(customer_id)
-        create_invoice_overages(over)
+        create_invoice_overages(over, customer_id, invoice.id)
         invoice.send_invoice
         resource.curation_activities << StashEngine::CurationActivity(note: "New overage invoice sent with ID: #{invoice.id}",
                                                                       status: resource.current_curation_status, user_id: 0)
@@ -124,7 +124,7 @@ module Stash
           currency: 'usd',
           description: "Data processing charge for #{resource.identifier} (#{filesize(ds_size)})"
         )]
-        items.concat(create_invoice_overages(overage_bytes))
+        items.concat(create_invoice_overages(overage_bytes, customer_id, invoice_id))
         # For users with a waiver, add line waiving invoice amount
         if stripe_user_waiver?
           over_chunks = overage_chunks(overage_bytes)
@@ -140,7 +140,7 @@ module Stash
         items
       end
 
-      def create_invoice_overages(over_bytes)
+      def create_invoice_overages(over_bytes, customer_id, invoice_id)
         over_chunks = overage_chunks(over_bytes)
         items = []
         if over_chunks.positive?
