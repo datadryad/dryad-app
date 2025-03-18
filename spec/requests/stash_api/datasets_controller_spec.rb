@@ -824,7 +824,7 @@ module StashApi
         @res  = my_id.in_progress_resource
         @res.update(title: 'Sufficiently complex title for test dataset')
         @res.update(data_files: [create(:data_file, file_state: 'copied'),
-                                 create(:data_file, file_state: 'copied', upload_file_name: 'README.md')])
+                                 create(:data_file, file_state: 'copied')])
         @patch_body = [{ op: 'replace', path: '/versionStatus', value: 'submitted' }].to_json
       end
 
@@ -869,6 +869,7 @@ module StashApi
           access_token             = get_access_token(doorkeeper_application: @doorkeeper_application2)
 
           # HACK: in update to make this regular user the owner/editor of this item
+          create(:description, resource: @res, description_type: 'technicalinfo')
           @res.update(current_editor_id: user2.id)
           @res.submitter = user2.id
 
@@ -950,8 +951,9 @@ module StashApi
           @access_token           = get_access_token(doorkeeper_application: @doorkeeper_application)
           @identifier             = create(:identifier)
           @res                    = create(:resource, identifier: @identifier, user: @super_user)
+          create(:description, resource: @res, description_type: 'technicalinfo')
           @res.update(data_files: [create(:data_file, file_state: 'copied'),
-                                   create(:data_file, file_state: 'copied', upload_file_name: 'README.md')])
+                                   create(:data_file, file_state: 'copied')])
           @res.authors.first.update(author_orcid: @super_user.orcid)
           @res.subjects << [create(:subject), create(:subject), create(:subject)]
           @ca = create(:curation_activity, resource: @res, status: 'peer_review')

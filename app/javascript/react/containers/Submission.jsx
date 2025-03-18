@@ -65,7 +65,7 @@ function Submission({
       name: 'Subjects',
       index: 3,
       pass: keywordPass(resource.subjects),
-      fail: (review || step.index > 2) && keywordFail(resource.subjects),
+      fail: (review || step.index > 2) && keywordFail(resource),
       component: <Subjects resource={resource} setResource={setResource} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} previous={previous} />,
@@ -92,7 +92,7 @@ function Submission({
       name: 'Files',
       index: 6,
       pass: resource.generic_files.length > 0,
-      fail: (review || step.index > 5) && filesCheck(resource.generic_files, user.superuser, config_maximums),
+      fail: (review || step.index > 5) && filesCheck(resource, user.superuser, config_maximums),
       component: <UploadFiles
         resource={resource}
         setResource={setResource}

@@ -23,25 +23,13 @@ module SubmissionMixin
   end
 
   def check_dataset_completions
-    errors = errors_for_completions
-    if @resource.size > APP_CONFIG.maximums.merritt_size
-      errors.push('The files for this dataset are larger than the allowed version or total object size')
-    end
+    error = StashDatacite::Resource::DatasetValidations.new(resource: @resource, user: @user).errors
     if @resource.identifier&.processing?
-      errors.push('Your previous version is still being processed, please wait until it completes before submitting again')
+      error = 'Your previous version is still being processed, please wait until it completes before submitting again'
     end
-    return unless errors.length.positive?
+    return unless error
 
-    return_error(messages: errors, status: 403) { yield }
-  end
-
-  def errors_for_completions
-    validations = StashDatacite::Resource::DatasetValidations.new(resource: @resource)
-    if @resource.loosen_validation && @user.min_curator?
-      validations.loose_errors.map { |err| err.message.gsub('{', '').gsub('}', '') }
-    else
-      validations.errors.map { |err| err.message.gsub('{', '').gsub('}', '') }
-    end
+    return_error(messages: error, status: 403) { yield }
   end
 
   def pre_submission_updates

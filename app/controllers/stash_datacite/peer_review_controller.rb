@@ -23,23 +23,22 @@ module StashDatacite
       if current_user
         begin
           @resource = StashEngine::Resource.find(peer_review_params[:id])
-          # @error_list = StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors
-          @error_list = []
+          @errors = StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors
           @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
           @resource.reload
 
-          if @error_list.empty?
-            @resource.curation_activities << StashEngine::CurationActivity.create(
-              user_id: current_user.id, status: 'submitted', note: 'Release from PPR'
-            )
-            redirect_to dashboard_path, notice: 'Dataset released from private for peer review and submitted for curation'
-          else
+          if @errors
             duplicate_resource
             @new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
             redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(
               resource_id: @new_res.id
             ),
                         alert: 'Unable to submit dataset for curation. Please correct submission errors.'
+          else
+            @resource.curation_activities << StashEngine::CurationActivity.create(
+              user_id: current_user.id, status: 'submitted', note: 'Release from PPR'
+            )
+            redirect_to dashboard_path, notice: 'Dataset released from private for peer review and submitted for curation'
           end
         rescue ActiveRecord::RecordInvalid
           @error = 'Unable to edit peer review status at this time.'

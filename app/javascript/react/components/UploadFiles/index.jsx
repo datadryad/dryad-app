@@ -4,7 +4,8 @@ import {formatSizeUnits} from '../../../lib/utils';
 export {default} from './UploadFiles';
 export {default as FilesPreview} from './FilesPreview';
 
-export const filesCheck = (files, superuser, maximums) => {
+export const filesCheck = (resource, superuser, maximums) => {
+  const {generic_files: files, identifier: {publication_date}} = resource;
   const {files: maxFiles, zenodo_size: maxZenodo, merritt_size: maxSize} = maximums;
   if (files.length > 0) {
     const present = files.filter((f) => f.file_state !== 'deleted');
@@ -16,9 +17,31 @@ export const filesCheck = (files, superuser, maximums) => {
         <p className="error-text" id="data_error">Data files submitted to Dryad are required</p>
       );
     }
-    if (data.length > maxFiles) {
+    if (!publication_date || publication_date > new Date('2025-03-12')) {
+      if (data.length > maxFiles) {
+        return (
+          <p className="error-text" id="data_error">A maximum of {maxFiles} data files can be uploaded per submission. Remove files to proceed</p>
+        );
+      }
+      if (software.length > maxFiles) {
+        return (
+          <p className="error-text" id="software_error">
+            A maximum of {maxFiles} software files can be uploaded per submission. Remove software files to proceed
+          </p>
+        );
+      }
+      if (supp.length > maxFiles) {
+        return (
+          <p className="error-text" id="supp_error">
+            A maximum of {maxFiles} supplemental files can be uploaded per submission. Remove files to proceed
+          </p>
+        );
+      }
+    } else if (files.length > 1000) {
       return (
-        <p className="error-text" id="data_error">A maximum of {maxFiles} data files can be uploaded per submission. Remove files to proceed</p>
+        <p className="error-text" id="data_error">
+            A maximum of 1000 files can be uploaded per submission. Remove files to proceed
+        </p>
       );
     }
     if (!superuser && data.reduce((sum, f) => sum + f.upload_file_size, 0) > maxSize) {
@@ -35,24 +58,10 @@ export const filesCheck = (files, superuser, maximums) => {
         </p>
       );
     }
-    if (software.length > maxFiles) {
-      return (
-        <p className="error-text" id="data_error">
-          A maximum of {maxFiles} software files can be uploaded per submission. Remove software files to proceed
-        </p>
-      );
-    }
     if (supp.reduce((sum, f) => sum + f.upload_file_size, 0) > maxZenodo) {
       return (
         <p className="error-text" id="supp_error">
         Total supplemental file uploads are limited to {formatSizeUnits(maxZenodo)} per submission. Remove supplemental files to proceed
-        </p>
-      );
-    }
-    if (supp.length > maxFiles) {
-      return (
-        <p className="error-text" id="data_error">
-          A maximum of {maxFiles} supplemental files can be uploaded per submission. Remove files to proceed
         </p>
       );
     }
@@ -66,7 +75,7 @@ export const filesCheck = (files, superuser, maximums) => {
         </p>
       );
     }
-    const uploadErrors = data.filter((f) => !f.dl_url && f.status === 'Uploaded');
+    const uploadErrors = data.filter((f) => !f.dl_url && (f.status === 'Uploaded' || f.file_state === 'created'));
     if (uploadErrors.length > 0) {
       return (
         <p className="error-text" id="data_error">
