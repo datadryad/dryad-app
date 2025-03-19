@@ -4,7 +4,7 @@ def check(id, indent = false)
   label = h[id.to_sym]
   label ||= id.length < 4 ? id.upcase : id.capitalize
 
-  '<span class="field-pair">' + (indent ? '<i class="fa-solid fa-arrow-turn-up fa-rotate-90" style="font-size:.85em; margin-left: .2em" aria-hidden="true"></i>' : '') +
+  '<span class="field-pair">' + (indent ? '<i class="fa-solid fa-arrow-turn-up fa-rotate-90" style="font-size:.85em; margin-left: .2em" role="img" aria-label="Can include "></i>' : '') +
   check_box_tag('fields[]', id, @fields.include?(id), {id: id, 'aria-describedby': "#{id}-desc"}) +
   label_tag('fields[]', label, {for: id})+
   '</span>'
