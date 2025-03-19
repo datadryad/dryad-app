@@ -60,6 +60,7 @@ module StashDatacite
 
     def invite
       return unless @author.resource
+      return unless %w[submitter collaborator].include?(params[:role])
 
       respond_to do |format|
         if @author.user.present?
