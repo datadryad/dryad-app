@@ -110,7 +110,7 @@ function expandButtonMenu(e) {
     section.setAttribute('hidden', true);
   }
 }
-var expandButtons = Array.from(document.getElementsByClassName('expand-button'));
+var expandButtons = Array.from(document.querySelectorAll('.expand-button button'));
 expandButtons.forEach(button => {
   button.addEventListener('click', expandButtonMenu)
   button.addEventListener('keydown', (e) => {
