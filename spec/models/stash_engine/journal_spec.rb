@@ -138,6 +138,11 @@ module StashEngine
         expect(@journal.will_pay?).to be(true)
       end
 
+      it 'returns true when there is a 2025 plan' do
+        allow(@journal).to receive('payment_plan_type').and_return('2025')
+        expect(@journal.will_pay?).to be(true)
+      end
+
       it 'returns false when there is a no plan' do
         allow(@journal).to receive('payment_plan_type').and_return(nil)
         expect(@journal.will_pay?).to be(false)

@@ -68,7 +68,7 @@ export default function Authors({
     setAuthors((a) => a.filter((item) => item.id !== id));
   };
 
-  const inviteAuthor = (author, role) => {
+  const inviteAuthor = (event, author, role) => {
     showSavingMsg();
     return axios.patch(
       '/stash_datacite/authors/invite',
@@ -76,12 +76,19 @@ export default function Authors({
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     ).then((data) => {
       showSavedMsg();
-      // eslint-disable-next-line max-len
-      document.getElementById(`invite-${author.id}-alert`).innerHTML = '<p>Collaboration invitation sent! Only one collaborator may edit the submission at a time. To save your work and end your editing session, click &nbsp; <b><i class="fas fa-floppy-disk"></i> Save &amp; exit</b> &nbsp; at the top of the screen</p>';
-      document.getElementById(`invite-dialog${author.id}`).addEventListener('close', () => {
-        setAuthors((as) => as.map((a) => (a.id === author.id ? data.data.author : a)));
-        setUsers(() => data.data.users);
-      });
+      if (data.data) {
+        event.target.disabled = true;
+        event.target.hidden = true;
+        event.target.parentElement.previousElementSibling.hidden = true;
+        event.target.nextElementSibling.innerHTML = 'Close';
+        // eslint-disable-next-line max-len
+        document.getElementById(`invite-${author.id}-alert`).innerHTML = '<p>Collaboration invitation sent! Only one collaborator may edit the submission at a time. To save your work and end your editing session, click &nbsp; <b><i class="fas fa-floppy-disk"></i> Save &amp; exit</b> &nbsp; at the top of the screen</p>';
+        document.getElementById(`invite-${author.id}-alert`).className = 'callout alt';
+        document.getElementById(`invite-dialog${author.id}`).addEventListener('close', () => {
+          setAuthors((as) => as.map((a) => (a.id === author.id ? data.data.author : a)));
+          setUsers(() => data.data.users);
+        });
+      }
     });
   };
 

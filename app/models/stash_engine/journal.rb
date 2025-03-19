@@ -44,7 +44,7 @@ module StashEngine
 
     scope :servers, -> { where(preprint_server: true) }
 
-    def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
+    def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED 2025]
 
     def will_pay?
       payment_plans.include?(payment_plan_type)
