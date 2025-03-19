@@ -818,7 +818,7 @@ module StashEngine
 
     # Title without "Data from:"
     def clean_title
-      title.delete_prefix('Data from:').strip
+      title&.delete_prefix('Data from:')&.strip
     end
 
     # -----------------------------------------------------------

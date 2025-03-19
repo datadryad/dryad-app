@@ -150,7 +150,7 @@ module StashDatacite
       @author.affiliations.destroy_all
       args = aff_params
       affs = args['affiliations']&.reject { |a| a['long_name'].blank? }
-      affs.each do |aff|
+      affs&.each do |aff|
         process_affiliation(aff['long_name'].squish, aff['ror_id'])
       end
     end
@@ -189,7 +189,7 @@ module StashDatacite
       # you can only order things belonging to one resource
       render json: { error: 'bad request' }, status: :bad_request unless @authors.map(&:resource_id)&.uniq&.length == 1
 
-      @resource = StashEngine::Resource.find(@authors.first.resource_id) # set resource to check permission to modify
+      @resource = StashEngine::Resource.find(@authors.first&.resource_id) # set resource to check permission to modify
     end
 
   end
