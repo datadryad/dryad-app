@@ -82,7 +82,9 @@ module StashDatacite
         return 'Duplicate author names' if @resource.authors.map(&:author_full_name).uniq.any? do |n|
           @resource.authors.map(&:author_full_name).count(n) > 1
         end
-        return 'Duplicate author emails' if @resource.authors.map(&:author_email).uniq.any? { |n| @resource.authors.map(&:author_email).count(n) > 1 }
+        return 'Duplicate author emails' if @resource.authors.map(&:author_email).uniq.compact_blank.any? do |n|
+          @resource.authors.map(&:author_email).count(n) > 1
+        end
         return 'Published email missing' if @resource.authors.none?(&:corresp)
 
         false
