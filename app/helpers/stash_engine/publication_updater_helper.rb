@@ -14,9 +14,7 @@ module StashEngine
       <<~HTML
         <td class="c-proposed-change-table__column-mergeable">
           #{new_val.present? ? new_val : 'Not available'}
-          <div class="c-proposed-change-table__column-mergeable-icon">
-            <em class="fa fa-arrow-up"></em>
-          </div>
+          <i class="fa fa-arrow-up c-proposed-change-table__column-mergeable-icon" role="img" aria-label="Replace above with below"></i>
         </td>
       HTML
     end
