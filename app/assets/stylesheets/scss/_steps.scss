@@ -21,7 +21,6 @@
       width: 100%;
       top: .9rem;
       left: 50%;
-      z-index: 2;
     }
 
     &:last-child::after {
@@ -32,7 +31,7 @@
       font-size: .85rem;
       line-height: 0;
       position: relative;
-      z-index: 3;
+      z-index: 1;
       width: 1.8rem;
       height: 1.8rem;
       border-radius: 50%;

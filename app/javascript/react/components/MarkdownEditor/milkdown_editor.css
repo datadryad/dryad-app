@@ -139,7 +139,8 @@
 
 .markdown_editor .md_editor-buttons button:hover,
 .markdown_editor .md_editor-buttons .headingButton:hover {
-  background-color: #98cae2;
+  background-color: #0071a8;
+  color: #fff;
 }
 
 .markdown_editor .md_editor-buttons button.active,
@@ -148,15 +149,19 @@
   text-shadow: 0 0 .06rem #98cae2;
 }
 
-.markdown_editor .md_editor-buttons button.active:hover,
-.markdown_editor .md_editor-buttons .headingButton.active:hover {
-  background-color: #fff;
-}
-
 .markdown_editor .md_editor-buttons .headingButton:focus,
 .markdown_editor .md_editor-buttons button:focus {
-  background-color: #98cae2;
+  background-color: #0071a8;
+  color: #fff;
   outline-width: thin;
+}
+
+.markdown_editor .md_editor-buttons button.active:hover,
+.markdown_editor .md_editor-buttons .headingButton.active:hover,
+.markdown_editor .md_editor-buttons .headingButton.active:focus,
+.markdown_editor .md_editor-buttons button.active:focus {
+  color: #0071a8;
+  background-color: #fff;
 }
 
 .markdown_editor .md_editor-buttons button[disabled] {
@@ -205,12 +210,14 @@
   border-top: thin solid #d0d0d0;
 }
 
-.markdown_editor .md_editor-buttons .headingMenu li.highlighted {
-  background-color: #e4f1f7;
+.markdown_editor .md_editor-buttons .headingMenu li.selected {
+  background-color: #00527A;
+  color: white;
 }
 
-.markdown_editor .md_editor-buttons .headingMenu li.selected {
-  background-color: rgb(233, 236, 239);
+.markdown_editor .md_editor-buttons .headingMenu li.highlighted {
+  background-color: #0071a8;
+  color: white;
 }
 
 .markdown_editor .md_editor-buttons .tableMenu {

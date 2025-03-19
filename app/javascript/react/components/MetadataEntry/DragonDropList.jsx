@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import DragonDrop from 'drag-on-drop';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showSavedMsg, showSavingMsg, upCase} from '../../../lib/utils';
 
 export const orderedItems = ({items, typeName}) => items.slice(0).sort((a, b) => {
   const orderProp = `${typeName}_order`;
@@ -164,7 +164,7 @@ export default function DragonDropList({
         Activate the reorder button and use the arrow keys to reorder the list or use your mouse to{' '}
         drag/reorder. Press escape to cancel the reordering. Ensure screen reader is in focus mode.
       </p>
-      <ul className="dragon-drop-list" aria-labelledby={`${typeName}s-head`} ref={dragonRef}>
+      <ul className="dragon-drop-list" aria-label={`${upCase(typeName)}`} ref={dragonRef}>
         {children}
       </ul>
     </section>
