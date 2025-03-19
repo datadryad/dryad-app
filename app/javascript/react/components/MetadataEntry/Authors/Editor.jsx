@@ -86,7 +86,7 @@ export default function Editor({
                 </div>
               </form>
             </dialog>,
-            document.getElementById('maincontent'),
+            document.body,
           )}
         </>
       )}
