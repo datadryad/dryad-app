@@ -2,23 +2,24 @@
 #
 # Table name: stash_engine_identifiers
 #
-#  id                  :integer          not null, primary key
-#  edit_code           :string(191)
-#  identifier          :text(65535)
-#  identifier_type     :text(65535)
-#  import_info         :integer
-#  payment_type        :string(191)
-#  pub_state           :string
-#  publication_date    :datetime
-#  search_words        :text(65535)
-#  storage_size        :bigint
-#  waiver_basis        :string(191)
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  latest_resource_id  :integer
-#  license_id          :string(191)
-#  payment_id          :text(65535)
-#  software_license_id :integer
+#  id                      :integer          not null, primary key
+#  edit_code               :string(191)
+#  identifier              :text(65535)
+#  identifier_type         :text(65535)
+#  import_info             :integer
+#  last_invoiced_file_size :bigint
+#  payment_type            :string(191)
+#  pub_state               :string
+#  publication_date        :datetime
+#  search_words            :text(65535)
+#  storage_size            :bigint
+#  waiver_basis            :string(191)
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  latest_resource_id      :integer
+#  license_id              :string(191)
+#  payment_id              :text(65535)
+#  software_license_id     :integer
 #
 # Indexes
 #
@@ -622,6 +623,10 @@ module StashEngine
       return nil unless res.present?
 
       res.publication_date || res.updated_at
+    end
+
+    def previous_invoiced_file_size
+      last_invoiced_file_size.presence || latest_resource.previous_published_resource.total_file_size
     end
 
     # ------------------------------------------------------------

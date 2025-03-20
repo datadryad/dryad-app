@@ -14,7 +14,8 @@ module Stash
 
         rep = StashDatacite::Affiliation.find_by(ror_id: ror_id)
         rep ||= StashDatacite::Affiliation.from_ror_id(ror_id: ror_id)
-        to_fix = StashDatacite::Affiliation.where(ror_id: nil, long_name: item.long_name)
+        aff_service = AffiliationsService.new(item)
+        to_fix = aff_service.affiliations_with_same_name.where(ror_id: nil)
 
         update_affiliation_name(rep, ror)
 
@@ -24,13 +25,7 @@ module Stash
         @updates_count += to_fix.count
         return unless perform_updates
 
-        to_fix.each do |aff|
-          # updating authors affiliation with new affiliation
-          aff.authors.each do |author|
-            author.affiliation = rep
-          end
-          aff.destroy
-        end
+        aff_service.make_unique
       end
 
       def update_affiliation_name(rep, ror)

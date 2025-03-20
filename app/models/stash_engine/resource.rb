@@ -628,6 +628,13 @@ module StashEngine
         .order(id: :desc).first
     end
 
+    def previous_published_resource
+      StashEngine::Resource.joins(:last_curation_activity)
+        .where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
+        .where(identifier_id: identifier_id).where('stash_engine_resources.id < ?', id)
+        .order(id: :desc).first
+    end
+
     def previous_resource_published?
       %w[published embargoed].include?(previous_resource&.last_curation_activity&.status)
     end

@@ -2,7 +2,7 @@ import React from 'react';
 import {formatSizeUnits} from '../../../../lib/utils';
 
 export default function Calculations({
-  resource, previous, dpc, config,
+  resource, dpc, config,
 }) {
   const {large_file_size, additional_storage_chunk_size: chunk_size, additional_storage_chunk_cost} = config;
   const chunk_cost = additional_storage_chunk_cost / 100;
@@ -12,9 +12,9 @@ export default function Calculations({
   if (published) {
     over = 0;
     if (large_files
-        && resource.total_file_size > previous.total_file_size
-        && Math.floor(resource.total_file_size / 10) !== Math.floor(previous.total_file_size / 10)) {
-      over = resource.total_file_size - Math.max(previous.total_file_size, large_file_size);
+        && resource.total_file_size > resource.identifier.previous_invoiced_file_size
+        && Math.floor(resource.total_file_size / chunk_size) !== Math.floor(resource.identifier.previous_invoiced_file_size / chunk_size)) {
+      over = resource.total_file_size - Math.max(resource.identifier.previous_invoiced_file_size, large_file_size);
     }
   }
   const chunks = Math.ceil(over / chunk_size);

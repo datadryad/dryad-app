@@ -112,6 +112,7 @@ module StashDatacite
       end
 
       def funder
+        return false if @resource.identifier.publication_date.present?
         return 'Funding missing' if @resource.contributors.where(contributor_type: 'funder').blank? ||
           @resource.contributors.where(contributor_type: 'funder').first.contributor_name.blank?
 

@@ -43,9 +43,9 @@ const copyTitle = (e) => {
 
 export const publicationPass = (resource) => !!resource.identifier.import_info || !!resource.title;
 
-export const publicationFail = (resource) => {
+export const publicationFail = (resource, review) => {
   const {import_info} = resource.identifier;
-  if (!!resource.title || !!import_info) {
+  if (!!import_info || review) {
     if (resource.title) {
       if (nondescript(resource.title)) {
         return (
@@ -82,34 +82,34 @@ export const publicationFail = (resource) => {
         );
       }
     } else {
-      const {publication_name, manuscript_number} = resource.resource_publication;
-      const {publication_name: preprint_server} = resource.resource_preprint || {};
-      if (['manuscript', 'published'].includes(import_info) && !publication_name) {
-        return (
-          <p className="error-text" id="journal_error">The journal of the related publication is required</p>
-        );
-      }
-      if (import_info === 'manuscript' && !manuscript_number) {
-        return (
-          <p className="error-text" id="msid_error">The manuscript number is required</p>
-        );
-      }
-      if (import_info === 'published' && !validPrimary(resource)) {
-        return (
-          <p className="error-text" id="doi_error">A valid DOI for the article is required</p>
-        );
-      }
-      if (import_info === 'preprint' && !preprint_server) {
-        return (
-          <p className="error-text" id="journal_error">The server of the related publication is required</p>
-        );
-      }
-      if (import_info === 'preprint' && !validPrimary(resource, 'preprint')) {
-        return (
-          <p className="error-text" id="doi_error">A valid DOI for the preprint is required</p>
-        );
-      }
       return <p className="error-text" id="title_error">Title is required</p>;
+    }
+    const {publication_name, manuscript_number} = resource.resource_publication;
+    const {publication_name: preprint_server} = resource.resource_preprint || {};
+    if (['manuscript', 'published'].includes(import_info) && !publication_name) {
+      return (
+        <p className="error-text" id="journal_error">The journal of the related publication is required</p>
+      );
+    }
+    if (import_info === 'manuscript' && !manuscript_number) {
+      return (
+        <p className="error-text" id="msid_error">The manuscript number is required</p>
+      );
+    }
+    if (import_info === 'published' && !validPrimary(resource)) {
+      return (
+        <p className="error-text" id="doi_error">A valid DOI for the article is required</p>
+      );
+    }
+    if (import_info === 'preprint' && !preprint_server) {
+      return (
+        <p className="error-text" id="journal_error">The server of the related publication is required</p>
+      );
+    }
+    if (import_info === 'preprint' && !validPrimary(resource, 'preprint')) {
+      return (
+        <p className="error-text" id="doi_error">A valid DOI for the preprint is required</p>
+      );
     }
   }
   return false;
