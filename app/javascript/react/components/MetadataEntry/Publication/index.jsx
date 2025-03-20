@@ -45,7 +45,7 @@ export const publicationPass = (resource) => !!resource.identifier.import_info |
 
 export const publicationFail = (resource) => {
   const {import_info} = resource.identifier;
-  if (!!resource.title || !!import_info) {
+  if (resource.title) {
     if (resource.title) {
       if (nondescript(resource.title)) {
         return (
@@ -82,6 +82,9 @@ export const publicationFail = (resource) => {
         );
       }
     } else {
+      return <p className="error-text" id="title_error">Title is required</p>;
+    }
+    if (import_info) {
       const {publication_name, manuscript_number} = resource.resource_publication;
       const {publication_name: preprint_server} = resource.resource_preprint || {};
       if (['manuscript', 'published'].includes(import_info) && !publication_name) {
@@ -109,7 +112,6 @@ export const publicationFail = (resource) => {
           <p className="error-text" id="doi_error">A valid DOI for the preprint is required</p>
         );
       }
-      return <p className="error-text" id="title_error">Title is required</p>;
     }
   }
   return false;
