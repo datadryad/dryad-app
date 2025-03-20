@@ -14,7 +14,6 @@ describe AffiliationsService do
   let!(:author_3) { create(:author, affiliations: [aff_without_ror_1, aff_with_different_name_1, aff_without_ror_2]) }
   let!(:author_4) { create(:author, affiliations: [aff_without_ror_1, aff_with_different_name_1, aff_with_different_name_and_ror_1]) }
 
-
   subject { described_class.new(main_affiliation) }
 
   describe '#initialize' do
@@ -28,7 +27,7 @@ describe AffiliationsService do
       expect do
         subject.make_uniq
         expect(StashDatacite::Affiliation.where(long_name: main_affiliation.long_name).count).to eq(1)
-      end.to change{StashDatacite::Affiliation.count}.by(-2)
+      end.to change { StashDatacite::Affiliation.count }.by(-2)
     end
   end
 
