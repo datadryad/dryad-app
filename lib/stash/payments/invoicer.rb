@@ -55,7 +55,8 @@ module Stash
         return unless customer_id.present?
 
         lfs = APP_CONFIG.payments.large_file_size
-        return unless ds_size > lfs && ds_size > prev_size && (ds_size / 10).floor != (prev_size / 10).floor
+        overage_step = 10_000_000_000 # 10GB
+        return unless ds_size > lfs && (ds_size / overage_step).floor > (prev_size / overage_step).floor
 
         over = ds_size - [prev_size, lfs].max
         invoice = create_invoice(customer_id)
