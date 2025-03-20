@@ -34,6 +34,7 @@ module Stash
       def initialize(resource:, curator:)
         @resource = resource
         @curator = curator
+        @has_overage_line_item = false
       end
 
       # For an end-user, generate an invoice with a single charge
@@ -47,7 +48,10 @@ module Stash
         resource.identifier.payment_id = invoice.id
         resource.identifier.payment_type = stripe_user_waiver? ? 'waiver' : 'stripe'
         resource.identifier.save
-        invoice.send_invoice
+        res = invoice.send_invoice
+
+        resource.identifier.update(last_invoiced_file_size: ds_size) if @has_overage_line_item
+        res
       end
 
       def check_new_overages(prev_size)
@@ -55,12 +59,14 @@ module Stash
         return unless customer_id.present?
 
         lfs = APP_CONFIG.payments.large_file_size
-        return unless ds_size > lfs && ds_size > prev_size && (ds_size / 10).floor != (prev_size / 10).floor
+        overage_step = APP_CONFIG.payments.additional_storage_chunk_size
+        return unless ds_size > lfs && (ds_size / overage_step).floor > (prev_size / overage_step).floor
 
         over = ds_size - [prev_size, lfs].max
         invoice = create_invoice(customer_id)
         create_invoice_overages(over, customer_id, invoice.id)
         invoice.send_invoice
+        resource.identifier.update(last_invoiced_file_size: ds_size) if @has_overage_line_item
         resource.curation_activities << StashEngine::CurationActivity.create(
           note: "New overage invoice sent with ID: #{invoice.id}", status: resource.current_curation_status, user_id: 0
         )
@@ -153,6 +159,7 @@ module Stash
                        quantity: over_chunks,
                        description: overage_message(over_bytes)
                      ))
+          @has_overage_line_item = true
         end
         items
       end

@@ -17,6 +17,7 @@ module StashEngine
       Timecop.travel(Time.now.utc - 1.minute)
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/123')
       @resource = create(:resource, identifier_id: @identifier.id)
+      @curator = create(:user, role: 'curator')
       # reload so that it picks up any associated models that are initialized
       # (e.g. CurationActivity and ResourceState)
       @resource.reload
@@ -78,28 +79,24 @@ module StashEngine
     end
 
     context :callbacks do
-
       context :update_solr do
-
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'calls update_solr when published' do
+        it 'calls update_solr when published' do
           @resource.update(publication_date: Time.now.utc.to_date.to_s)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'published', user: @curator)
           expect(ca).to receive(:update_solr)
           ca.save
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'calls update_solr when embargoed' do
+        it 'calls update_solr when embargoed' do
           @resource.update(publication_date: (Time.now.utc.to_date + 1.day).to_s)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed', user: @curator)
           expect(ca).to receive(:update_solr)
           ca.save
         end
 
         it 'does not call update_solr if not published' do
           @resource.update(publication_date: Time.now.utc.to_date.to_s)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required')
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'action_required', user: @curator)
           expect(ca).not_to receive(:update_solr)
           ca.save
         end
@@ -112,25 +109,23 @@ module StashEngine
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:email_status_change_notices).and_return(true)
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'calls submit_to_stripe when published' do
+        it 'calls submit_to_stripe when published' do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'published', user: @curator)
           expect(ca).to receive(:submit_to_stripe)
           ca.save
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'calls submit_to_stripe when embargoed' do
+        it 'calls submit_to_stripe when embargoed' do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed', user: @curator)
           expect(ca).to receive(:submit_to_stripe)
           ca.save
         end
 
         it 'does not call submit_to_stripe if not ready_for_payment' do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(false)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'submitted')
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'submitted', user: @curator)
           expect(ca).not_to receive(:submit_to_stripe)
           ca.save
         end
@@ -138,21 +133,78 @@ module StashEngine
         it 'does not call submit_to_stripe if skip_datacite' do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
           allow_any_instance_of(StashEngine::Resource).to receive(:skip_datacite_update).and_return(true)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'published')
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'published', user: @curator)
           expect(ca).not_to receive(:submit_to_stripe)
           ca.save
         end
 
-        # TODO: Fix this intermittently-failing test. Ticket #806.
-        xit 'does not call submit_to_stripe when user is not responsible for payment' do
+        it 'does not call submit_to_stripe when user is not responsible for payment' do
           allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(true)
           allow_any_instance_of(StashEngine::Identifier).to receive(:user_must_pay?).and_return(false)
-          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed')
+          ca = CurationActivity.new(resource_id: @resource.id, status: 'embargoed', user: @curator)
           expect(ca).to receive(:process_payment)
           expect(ca).not_to receive(:submit_to_stripe)
           ca.save
         end
 
+        describe 'calls proper Stash::Payments::Invoicer method' do
+          let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123') }
+          let(:res_1) { create(:resource, identifier: identifier, total_file_size: 103_807_000_000, skip_datacite_update: false) }
+          let(:curator) { create(:user, role: 'curator') }
+          subject { Stash::Payments::Invoicer.new(resource: res_1, curator: curator) }
+
+          before do
+            mock_salesforce!
+            allow_any_instance_of(StashEngine::CurationActivity).to receive(:submit_to_datacite).and_return(true)
+            allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_solr).and_return(true)
+            allow_any_instance_of(StashEngine::CurationActivity).to receive(:remove_peer_review).and_return(true)
+          end
+
+          context 'on first publish' do
+            it 'cals #charge_user_via_invoice' do
+              expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
+              expect(subject).to receive(:charge_user_via_invoice).and_return(true)
+
+              create(:curation_activity, resource: res_1, status: 'published', note: 'first publish', user: curator)
+            end
+          end
+
+          context 'on second publish' do
+            context 'if identifier has no last_invoiced_file_size value' do
+              it 'cals #check_new_overages with previous published resource total_file_size' do
+                expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
+                expect(subject).to receive(:charge_user_via_invoice).and_return(true)
+                create(:curation_activity, resource: res_1, status: 'published', note: 'first publish', user: curator)
+
+                Timecop.travel(1.minute) do
+                  res_2 = create(:resource, identifier: identifier, total_file_size: 104_807_000_000)
+                  expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_2, curator: curator).and_return(subject)
+                  expect(subject).to receive(:check_new_overages).with(res_1.total_file_size).and_return(true)
+
+                  create(:curation_activity, resource: res_2, status: 'published', note: 'second publish', user: curator)
+                end
+              end
+            end
+
+            context 'if identifier has last_invoiced_file_size value' do
+              let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123', last_invoiced_file_size: 100_000) }
+
+              it 'cals #check_new_overages with identifier last_invoiced_file_size' do
+                expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
+                expect(subject).to receive(:charge_user_via_invoice).and_return(true)
+                create(:curation_activity, resource: res_1, status: 'published', note: 'first publish', user: curator)
+
+                Timecop.travel(1.minute) do
+                  res_2 = create(:resource, identifier: identifier, total_file_size: 104_807_000_000)
+                  expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_2, curator: curator).and_return(subject)
+                  expect(subject).to receive(:check_new_overages).with(100_000).and_return(true)
+
+                  create(:curation_activity, resource: res_2, status: 'published', note: 'second publish', user: curator)
+                end
+              end
+            end
+          end
+        end
       end
 
       context :email_status_change_notices do

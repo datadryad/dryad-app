@@ -182,7 +182,7 @@ export default function Agreements({
               {previous && resource.tenant !== previous.tenant && <p className="del ins">Member institution changed</p>}
             </>
           )}
-          {dpc.user_must_pay && <Calculations resource={resource} previous={previous} dpc={dpc.dpc} config={config} />}
+          {dpc.user_must_pay && <Calculations resource={resource} dpc={dpc.dpc} config={config} />}
         </>
       )}
       {preview && (
