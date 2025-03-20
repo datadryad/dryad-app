@@ -16,9 +16,9 @@ export default function AuthorForm({
   const submitForm = (values) => {
     const submit = {
       id: values.id,
-      author_first_name: values.author_first_name,
+      author_first_name: author.author_org_name !== null ? null : values.author_first_name,
       author_last_name: values.author_last_name,
-      author_org_name: values.author_org_name || null,
+      author_org_name: author.author_org_name !== null ? values.author_org_name : null,
       author_email: values.author_email,
       resource_id: author.resource_id,
       affiliations,
