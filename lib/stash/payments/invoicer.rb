@@ -59,7 +59,7 @@ module Stash
         return unless customer_id.present?
 
         lfs = APP_CONFIG.payments.large_file_size
-        overage_step = 10_000_000_000 # 10GB
+        overage_step = APP_CONFIG.payments.additional_storage_chunk_size
         return unless ds_size > lfs && (ds_size / overage_step).floor > (prev_size / overage_step).floor
 
         over = ds_size - [prev_size, lfs].max
