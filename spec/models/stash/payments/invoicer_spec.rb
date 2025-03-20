@@ -1,5 +1,4 @@
 require 'ostruct'
-# require_relative '../../../../lib/stash/payments/invoicer'
 require 'action_controller'
 
 module Stash
@@ -103,45 +102,6 @@ module Stash
         end
       end
 
-      describe 'calling proper invoicer method' do
-        let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123') }
-        let(:res_1) { create(:resource, identifier: identifier, total_file_size: 103_807_000_000, skip_datacite_update: false) }
-        let(:curator) { create(:user, role: 'curator') }
-        subject { described_class.new(resource: res_1, curator: curator) }
-
-        before do
-          mock_salesforce!
-          allow_any_instance_of(StashEngine::CurationActivity).to receive(:submit_to_datacite).and_return(true)
-          allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_solr).and_return(true)
-          allow_any_instance_of(StashEngine::CurationActivity).to receive(:remove_peer_review).and_return(true)
-        end
-
-        context 'on first publish' do
-          it 'cals #charge_user_via_invoice' do
-            expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
-            expect(subject).to receive(:charge_user_via_invoice).and_return(true)
-
-            create(:curation_activity, resource: res_1, status: 'published', note: 'first publish', user: curator)
-          end
-        end
-
-        context 'on second publish' do
-          it 'cals #check_new_overages' do
-            expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
-            expect(subject).to receive(:charge_user_via_invoice).and_return(true)
-            create(:curation_activity, resource: res_1, status: 'published', note: 'first publish', user: curator)
-
-            Timecop.travel(1.minute) do
-              res_2 = create(:resource, identifier: identifier, total_file_size: 104_807_000_000)
-              expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_2, curator: curator).and_return(subject)
-              expect(subject).to receive(:check_new_overages).with(103_807_000_000).and_return(true)
-
-              create(:curation_activity, resource: res_2, status: 'published', note: 'second publish', user: curator)
-            end
-          end
-        end
-      end
-
       describe 'invoice charges' do
         let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123') }
         let(:res_1) { create(:resource, identifier: identifier, total_file_size: 103_807_000_000, created_at: 1.minute.ago) }
@@ -180,7 +140,9 @@ module Stash
                 }
               ).and_return([OpenStruct.new(id: 1)])
 
-              subject.charge_user_via_invoice
+              expect { subject.charge_user_via_invoice }.not_to(change do
+                identifier.reload.last_invoiced_file_size
+              end)
             end
           end
 
@@ -220,17 +182,22 @@ module Stash
                 }
               ).and_return([OpenStruct.new(id: 2)])
 
-              subject.charge_user_via_invoice
+              expect { subject.charge_user_via_invoice }.to change {
+                identifier.reload.last_invoiced_file_size
+              }.from(nil).to(res_1.total_file_size)
             end
           end
         end
 
         context 'on second publish' do
+          let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123', last_invoiced_file_size: 103_807_000_000) }
           subject { described_class.new(resource: res_2, curator: curator) }
 
           context 'if file size did not change' do
             it 'does not bill for overage' do
-              subject.check_new_overages(103_807_000_000)
+              expect { subject.check_new_overages(103_807_000_000) }.not_to(change do
+                identifier.reload.last_invoiced_file_size
+              end)
             end
           end
 
@@ -238,7 +205,9 @@ module Stash
             let(:new_res_file_size) { 83_807_000_000 }
 
             it 'does not bill for overage' do
-              subject.check_new_overages(103_807_000_000)
+              expect { subject.check_new_overages(103_807_000_000) }.not_to(change do
+                identifier.reload.last_invoiced_file_size
+              end)
             end
           end
 
@@ -247,6 +216,9 @@ module Stash
 
             it 'does not bill for overage' do
               subject.check_new_overages(103_807_000_000)
+              expect { subject.check_new_overages(103_807_000_000) }.not_to(change do
+                identifier.reload.last_invoiced_file_size
+              end)
             end
           end
 
@@ -279,7 +251,9 @@ module Stash
                 }
               ).and_return([OpenStruct.new(id: 2)])
 
-              subject.check_new_overages(103_807_000_000)
+              expect { subject.check_new_overages(103_807_000_000) }.to change {
+                identifier.reload.last_invoiced_file_size
+              }.from(103_807_000_000).to(129_807_000_000)
             end
           end
         end
