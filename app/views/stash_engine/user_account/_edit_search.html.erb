@@ -2,7 +2,7 @@
   <div>
     <%= hidden_field_tag :default, false %>
     <%= check_box_tag(:default, true, saved_search.default)%>
-    <%= label_tag(:default, 'Default') %>
+    <%= label_tag(:default, 'Default', style: "font-size: .98rem") %>
   </div>
   <div>
     <%= text_field_tag(:title, saved_search.title, class: 'c-input__text', maxlength: '50', required: true, 'aria-label': 'Name') %>

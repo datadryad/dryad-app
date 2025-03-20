@@ -66,7 +66,7 @@
 
 ## Fees
 
-Dryad’s fees are currently under review and will be available in Spring 2025. In the meantime, contact us at <a class="emailr" href="mailto:dev@null?subject=Membership">gro.dayrdatad@spihsrentrap</a> for more information.
+Dryad’s fees are currently under review and will be available in Spring 2025. In the meantime, contact us at <a class="emailr" href="mailto:dev@null?subject=Membership" aria-label="Email about membership">gro.dayrdatad@spihsrentrap</a> for more information.
 
 ## Members
 

@@ -7,7 +7,7 @@
       <% if ps == page_size.to_i %>
         <span class="page-current"><%= ps %></span>
       <% else %>
-        <%= link_to(ps, stash_url_helpers.admin_dashboard_results_path(page_size: ps, page: 1, sort: sort, direction: direction, search: search), remote: true) %>
+        <%= link_to(ps, stash_url_helpers.admin_dashboard_results_path(page_size: ps, page: 1, sort: sort, direction: direction, search: search), remote: true, 'aria-label': "#{ps} results per page") %>
       <% end %>
     <% end %>
   </div>

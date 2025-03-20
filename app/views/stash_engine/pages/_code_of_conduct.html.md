@@ -69,18 +69,18 @@ Reports of harassment/discrimination will be promptly and thoroughly investigate
 
 Anyone asked to stop unacceptable behavior is expected to comply immediately. Violation of these guidelines can result in you being asked to leave an event or online space, either temporarily or for the duration of the event, or being banned from participation in spaces, or future events and activities in perpetuity.
 
-If you believe someone is violating the Code of Conduct, we ask that you report it by emailing the Code of Conduct Working Group at <a class="emailr" href="mailto:dev@null">gro.dayrdatad@tcudnoc</a>.
+If you believe someone is violating the Code of Conduct, we ask that you report it by emailing the Code of Conduct Working Group at <a class="emailr" href="mailto:dev@null" aria-label="Email Code of conduct working group">gro.dayrdatad@tcudnoc</a>.
 
 ## Dryad Code of Conduct Working Group
 
 <em>The composition of this group rotates &amp; will be updated here. Last updated 2024-01-02</em>
 
 <ul>
-  <li>Daniel Potter &#8211; <a class="emailr" href="mailto:dev@null">ude.sivadcu@rettopd</a></li>
-  <li>Jason Williams &#8211; <a class="emailr" href="mailto:dev@null">ude.lhsc@smailliw</a></li>
-  <li>Jennifer Gibson &#8211; <a class="emailr" href="mailto:dev@null">gro.dayrdatad@nosbigj</a></li>
-  <li>Jenny Muilenburg &#8211;<a class="emailr" href="mailto:dev@null">ude.wu@liumj</a></li>
-  <li>Malvika Sharan &#8211; <a class="emailr" href="mailto:dev@null">moc.liamg@narahsakivlam</a></li>
+  <li>Daniel Potter &#8211; <a class="emailr" href="mailto:dev@null" aria-label="Email Daniel Potter">ude.sivadcu@rettopd</a></li>
+  <li>Jason Williams &#8211; <a class="emailr" href="mailto:dev@null" aria-label="Email Jason Williams">ude.lhsc@smailliw</a></li>
+  <li>Jennifer Gibson &#8211; <a class="emailr" href="mailto:dev@null" aria-label="Email Jennifer Gibson">gro.dayrdatad@nosbigj</a></li>
+  <li>Jenny Muilenburg &#8211;<a class="emailr" href="mailto:dev@null" aria-label="Email Jenny Muilenburg">ude.wu@liumj</a></li>
+  <li>Malvika Sharan &#8211; <a class="emailr" href="mailto:dev@null" aria-label="Email Malvika Sharan">moc.liamg@narahsakivlam</a></li>
 </ul>
 
 <strong>All reports will be kept confidential.</strong> In some cases we may determine that a public statement will need to be made. If that&#8217;s the case, the identities of all victims and reporters will remain confidential unless those individuals instruct us otherwise.
