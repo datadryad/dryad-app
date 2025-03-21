@@ -1,4 +1,4 @@
-import wordsToNumbers from 'words-to-numbers';
+import wordsToNumbers from '@insomnia-dev/words-to-numbers';
 import {brill} from 'brill'
 
 const TOKENS = /(\S+)|(.)/g;
