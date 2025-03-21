@@ -1,4 +1,6 @@
 require 'markdiff'
+require 'kramdown'
+require 'kramdown-parser-gfm'
 
 module ApplicationHelper
   # reverses name and puts last, first middle, etc
@@ -17,19 +19,6 @@ module ApplicationHelper
   end
 
   def markdown_render(content)
-    @md_options = {
-      no_intra_emphasis: true,
-      tables: true,
-      fenced_code_blocks: true,
-      autolink: false,
-      disable_indented_code_blocks: true,
-      strikethrough: true,
-      space_after_headers: true,
-      underline: false,
-      highlight: false,
-      link_attributes: { rel: 'nofollow', target: '_blank' }
-    }.freeze
-
     return '' if content.blank?
 
     # all html elements minus those in next comment
@@ -44,18 +33,6 @@ module ApplicationHelper
 
     content = CGI.escapeElement(content, esc_elements)
 
-    markdown = Redcarpet::Markdown.new(KnockDownHeadings.new(hard_wrap: true), @md_options)
-    markdown.render(content).html_safe
+    Kramdown::Document.new(content, { input: 'GFM', header_offset: 1 }).to_html
   end
-
-  class KnockDownHeadings < Redcarpet::Render::HTML
-    def header(text, header_level)
-      "<h#{header_level + 1}>#{text}</h#{header_level + 1}>"
-    end
-
-    def table(header, body)
-      "<div class='table-wrapper' role='region' tabindex='0' aria-label='Table'><table>#{header}#{body}</table></div>"
-    end
-  end
-
 end
