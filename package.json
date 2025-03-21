@@ -114,6 +114,7 @@
     "webpack-cli": "5",
     "webpack-merge": "5",
     "webpack-sources": "^3.2.3",
+    "words-to-numbers": "^1.5.1",
     "yup": "^0.32.11"
   },
   "babel": {

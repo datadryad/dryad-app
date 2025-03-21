@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {titleCase} from '../../../../lib/title-case';
+import {sentenceCase} from '../../../../lib/title-case';
 import {showSavedMsg, showSavingMsg, formatSizeUnits} from '../../../../lib/utils';
 import PublicationForm from './PublicationForm';
 import Title from './Title';
@@ -21,6 +21,15 @@ const copyTitle = (e) => {
       copyButton.innerHTML = '';
     }, 2000);
   });
+};
+
+const capitals = (t) => {
+  if (t === t.toUpperCase()) return true;
+  const [l] = t.match(/\p{Letter}/u);
+  if (t.match(/\b[\p{Lu}].*?\b/ug)?.length > t.split(/\s/).length * 0.6 || l !== l.toUpperCase()) {
+    return t !== sentenceCase(t);
+  }
+  return false;
 };
 
 export default function Publication({resource, setResource, maxSize}) {
@@ -79,7 +88,6 @@ export default function Publication({resource, setResource, maxSize}) {
     const preprint = res.related_identifiers.find((r) => r.work_type === 'preprint')?.related_identifier;
     if ((!!publication_name && (!!manuscript_number || !!primary_article))
       || (!!preprint_server && !!preprint)) {
-      console.log('hey');
       setShowTitle(true);
     }
     setSponsored(!!res.journal?.payment_plan_type && (manuscript_number || primary_article) ? res.journal.title : false);
@@ -91,10 +99,7 @@ export default function Publication({resource, setResource, maxSize}) {
       } else {
         setDupeWarning(false);
       }
-      if (
-        res.title === res.title.toUpperCase()
-        || (res.title.match(/\b[A-Z].*?\b/g)?.length > res.title.split(/\s/).length * 0.6 && res.title !== titleCase(res.title, {sentenceCase: true}))
-      ) {
+      if (capitals(res.title)) {
         setCaseWarning(true);
       } else {
         setCaseWarning(false);
@@ -170,7 +175,7 @@ export default function Publication({resource, setResource, maxSize}) {
       {caseWarning && (
         <div className="callout warn">
           <p style={{fontSize: '.98rem'}}>Please correct your dataset title to sentence case, which could look like:</p>
-          <p><span>{titleCase(res.title, {sentenceCase: true})}</span>
+          <p><span>{sentenceCase(res.title)}</span>
             <span
               className="copy-icon"
               role="button"
