@@ -164,23 +164,23 @@ export default function Agreements({
       {subType === 'collection' ? <h3>Terms</h3> : (
         <>
           <h3 style={preview ? {} : {marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>
-          {dpc.journal_will_pay && (
-            <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{resource.resource_publication.publication_name}</b></p>
-            </div>
-          )}
-          {!dpc.journal_will_pay && dpc.funder_will_pay && (
-            <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
-            </div>
-          )}
-          {!dpc.journal_will_pay && !dpc.funder_will_pay && dpc.institution_will_pay && (
+          {dpc.institution_will_pay && (
             <>
               <div className="callout">
                 <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
               </div>
               {previous && resource.tenant !== previous.tenant && <p className="del ins">Member institution changed</p>}
             </>
+          )}
+          {!dpc.institution_will_pay && dpc.journal_will_pay && (
+            <div className="callout">
+              <p>Payment for this submission is sponsored by <b>{resource.resource_publication.publication_name}</b></p>
+            </div>
+          )}
+          {!dpc.institution_will_pay && !dpc.journal_will_pay && dpc.funder_will_pay && (
+            <div className="callout">
+              <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
+            </div>
           )}
           {dpc.user_must_pay && <Calculations resource={resource} dpc={dpc.dpc} config={config} />}
         </>
