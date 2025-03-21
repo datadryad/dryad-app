@@ -10,8 +10,6 @@ const load_data = function() {
       dataType: 'script',
       async: true,
       cache: false,
-    }).always(function() {
-      // modernizeIt();
     });
     $(this).attr('data-loaded')
   });
