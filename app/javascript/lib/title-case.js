@@ -1,9 +1,7 @@
-import {Tagger} from 'fast-tag-pos';
+import {brill} from 'brill'
 
 //modified from https://github.com/blakeembrey/change-case/tree/main/packages/title-case
 
-const tagger = new Tagger();
-tagger.extendLexicon({'Dryad': ['NNP']})
 const TOKENS = /(\S+)|(.)/g;
 const IS_SPECIAL_CASE = /[\.#][\p{L}\p{N}]/u; // #tag, example.com, etc.
 const IS_MANUAL_CASE = /\p{Ll}(?=[\p{Lu}])/u; // iPhone, iOS, etc.
@@ -55,9 +53,16 @@ export const SMALL_WORDS = new Set([
   "with",
   "without",
   "yet",
+  // common Dryad lowercases
+  "raw",
+  "data",
+  "dataset",
+  "supplement",
+  "supplementary",
+  "supporting"
   ]);
 export function titleCase(input, options = {}) {
-  const { locale = undefined, sentenceCase = false, sentenceTerminators = SENTENCE_TERMINATORS, titleTerminators = TITLE_TERMINATORS, smallWords = SMALL_WORDS, wordSeparators = WORD_SEPARATORS, } = typeof options === "string" || Array.isArray(options)
+  const { locale = 'en-US', sentenceCase = false, sentenceTerminators = SENTENCE_TERMINATORS, titleTerminators = TITLE_TERMINATORS, smallWords = SMALL_WORDS, wordSeparators = WORD_SEPARATORS, } = typeof options === "string" || Array.isArray(options)
   ? { locale: options }
   : options;
   const terminators = sentenceCase ? sentenceTerminators : titleTerminators;
@@ -101,16 +106,13 @@ export function titleCase(input, options = {}) {
           continue
         }
         else if (IS_MANUAL_CASE.test(word)) {
+          value = word;
           continue;
         }
         // Handle simple words.
         else if (matches.length === 1) {
           // Avoid capitalizing small words, except at the end of a sentence.
           if (smallWords.has(word)) {
-            // unless sentenceCase
-            if (sentenceCase) {
-              value = lowerAt(value, locale)
-            }
             const isFinalToken = index + token.length === input.length;
             if (!isFinalToken && !isSentenceEnd) {
               continue;
@@ -126,18 +128,19 @@ export function titleCase(input, options = {}) {
           // Ignore small words in the middle of hyphenated words.
           if (smallWords.has(word) && wordSeparators.has(nextChar)) {
             // unless sentenceCase
-            if (sentenceCase) {
-              value = lowerAt(value, locale)
-            }
             continue
           }
         }
         if (sentenceCase) {
-          const [[_, tag]] = tagger.tag([word])
-          if (tag && tag.startsWith('NNP')) {
-            value = upperAt(value, wordIndex, locale);
-          } else {
+          const tag = brill[lowerAt(word)] ? brill[lowerAt(word)] : brill[word]
+          if (smallWords.has(lowerAt(word))) {
             value = lowerAt(value, locale)
+          } else if (tag && tag.includes('NNP')) {
+            value = upperAt(value, wordIndex, locale);
+          } else if (tag) {
+            value = lowerAt(value, locale)
+          } else {
+            value = word === lowerAt(word) ? lowerAt(word, locale) : upperAt(value, wordIndex, locale);
           }
         } else {
           value = upperAt(value, wordIndex, locale);
