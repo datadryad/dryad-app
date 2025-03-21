@@ -55,6 +55,7 @@
     "@emotion/css": "^11.7.1",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@insomnia-dev/words-to-numbers": "^2.2.0",
     "@lezer/common": "^1.0.0",
     "@lezer/highlight": "^1.2.0",
     "@lezer/markdown": "^1.1.0",
