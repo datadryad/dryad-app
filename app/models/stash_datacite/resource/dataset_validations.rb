@@ -69,7 +69,6 @@ module StashDatacite
         return 'Blank title' if @resource.title.blank?
         return 'Nondescriptive title' if nondescript_title?
         return 'All caps title' if @resource.title == @resource.title.upcase
-        return 'Title case title' if @resource.title.scan(/\b[A-Z].*?\b/).size > @resource.title.split.size * 0.6
 
         false
       end
