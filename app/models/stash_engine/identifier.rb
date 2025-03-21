@@ -626,7 +626,7 @@ module StashEngine
     end
 
     def previous_invoiced_file_size
-      last_invoiced_file_size.presence || latest_resource.previous_published_resource.total_file_size
+      last_invoiced_file_size.presence || latest_resource.previous_published_resource&.total_file_size
     end
 
     # ------------------------------------------------------------
