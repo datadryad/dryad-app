@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {sentenceCase} from '../../../../lib/title-case';
+import {sentenceCase} from '../../../../lib/sentence-case';
 import {showSavedMsg, showSavingMsg, formatSizeUnits} from '../../../../lib/utils';
 import PublicationForm from './PublicationForm';
 import Title from './Title';
