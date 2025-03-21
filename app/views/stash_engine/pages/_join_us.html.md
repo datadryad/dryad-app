@@ -1,86 +1,92 @@
-# Join us
+# Partner with us
 
-<p>Dryad makes it easy and affordable to curate, publish, and preserve research data by providing robust infrastructure, services, and expertise to meet your organization's needs. Whether you’d like to see data shared to support research integrity, open research or compliance with funder policies, we can help. Our multi-stakeholder community of academic and research institutions, research funders, scholarly societies and publishers is committed to leading in best practices for open data sharing and reuse. To join Dryad today, please <a href="/contact#get-involved"/>contact us</a>.</p>
+_Quality data publishing. Unmatched user support._
 
-<ul>
-  <li><strong>Institutions and funders</strong> join the community to support researchers who already rely on Dryad for sharing their data, and to leverage an out-of-the-box solution to curate, publish, share and preserve the research data resulting from their support.</li>
-  <li><strong>Societies, research organizations and publishers</strong> join Dryad to enhance service to authors with data publishing support, to promote research integrity and enable peer review, and to continue to define best practice for data sharing and reuse.</li>
-</ul>
+Dryad makes curating, publishing, and preserving research data simple and affordable. As a non-profit open data publishing platform, we provide robust open-source infrastructure, knowledgeable guidance and dedicated support to researchers, and an easy-to-use interface that facilitates data preparation and sharing. Dryad publishes thousands of datasets each year, comprising millions of individual data files across all fields of research — all optimized for sharing and reuse. 
 
-## Benefits of membership
-<p>Dryad members champion best practice in open data sharing and commit to the health and growth of shared, open infrastructure for data curation, publishing, preservation and reuse.</p>
+Institutions, publishing organizations, academic societies, and others partner with us to sponsor data curation, publication, and preservation for researchers at a reduced rate. Partnership also streamlines workflows through system integration and limits administrative tasks for individual authors. Partner fees are calculated and billed annually based on usage and the size of the organization.
 
-<div class="table-wrapper" role="region" tabindex="0" aria-labelledby="benefits-of-membership">
-<table>
-  <thead>
-    <th/>
-    <th>Institutions</th>
-    <th>Publishers</th>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Governance</td>
-      <td colspan="2">Co-create with Dryad at our community events. Exercise your vote to elect Dryad’s Board of Directors and help set our direction</td>
-    </tr>
-    <tr>
-      <td>Integrations</td>
-      <td>We can help members integrate Dryad metadata and data – via API – with their local repository, ILS, or storage system</td>
-      <td>Dryad connects seamlessly to submission and publication workflows via API or email-based integration</td>
-    </tr>
-    <tr>
-      <td>Administrative access</td>
-      <td colspan="2">Members have hands-on access to a dashboard displaying activity for each dataset, from submission through curation and publication, and including responsibility for payment. Institutions may view data for all affiliated researchers while publishers view all data coming through in association with their journals.</td>
-    </tr>
-    <tr>
-      <td>Training and support</td>
-      <td colspan="2">Work with our Community Engagement and Publishing Service teams to get staff up to speed and collaborate on outreach programs</td>
-    </tr>
-    <tr>
-      <td>Branded instance</td>
-      <td>Available to users logging in via SSO</td>
-      <td>Not applicable</td>
-    </tr>
-    <tr>
-      <td>Data publishing deposits</td>
-      <td>Included with membership for researchers affiliated with your institution</td>
-      <td>Affordably priced to support growth</td>
-    </tr>
-  </tbody>
-</table>
+<div class="callout">
+  <p style="text-align: center"><a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us to learn more</a>, or to become a Dryad partner.</p>
 </div>
 
-<figure>
-<blockquote>
-  <p>Joining the Dryad community has helped us build stronger connections with researchers on campus, engage more fully in discussions related to the management and sharing of research data, and become part of the broader open science community. Being able to address the question “How can I share my data?” with a top of the line and curation-focused platform not only helps us to address an immediate need but allows us to position the library as a source of expertise on related issues more generally. Our partnership with Dryad allows Lane Medical Library to offer exceptional data storage and curation so we can focus our resources on education, guidance, and community building.</p>
-</blockquote>
-<figcaption><cite>— Director, Research & Instruction, Lane Medical Library, Stanford University</cite></figcaption>
-</figure>
+## Benefits of membership
+
+Dryad’s partner community includes research institutions, funders, publishers, and academic societies — all committed to maximizing the impact of research and accelerating the pace of discovery. Organizations partner with us to sponsor the cost of Dryad services for their researchers at a reduced rate. Researchers enjoy access to Dryad data curation, publication and preservation services, with hands-on support from our experienced team.
+
+Dryad is more than a repository; we’re a mission-driven non-profit organization operating a service for data publishing in the community interest. We help researchers to meet data-sharing best practices as well as funder and journal requirements with individualized support from submission through to publication. Our data curators review each dataset shared with us to ensure that it is reusable and thoroughly described with appropriate metadata according to [FAIR data standards](https://www.go-fair.org/fair-principles/). With Dryad, you can be sure policy requirements are fulfilled, and data will remain discoverable, accessible, and reusable in perpetuity.
+
+Dryad partners enjoy:
+
+* Time-saving support, training, and outreach — to researchers, colleagues and stakeholders
+Convenient annual billing
+* Administrative dashboard — for dataset monitoring and reporting both before and after publication 
+* Lower per-dataset fees
+
+### What our partners are saying
 
 <figure>
 <blockquote>
-  <p>Dryad is recognised and supported by communities of authors, reviewers and editors as providing a simple solution for data sharing and compliance with funder policies. Partnering with Dryad over many years has been vital in realizing our data sharing policy: with hundreds of datasets being openly available in support of research integrity and openness.</p>
+  <p>Joining the Dryad community has helped us build stronger connections with researchers, engage more fully in the management and sharing of research data, and become part of the broader open science community.</p>
 </blockquote>
-<figcaption><cite>– Publisher, the Royal Society </cite></figcaption>
+<figcaption><cite>— Director of Research & Instruction, Lane Medical Library, Stanford University</cite></figcaption>
+</figure>
+<figure>
+<blockquote>
+  <p>Dryad is recognised and supported by communities of authors, reviewers, and editors as providing a simple solution for data sharing and compliance with funder policies. Partnering with Dryad over many years has been vital in realizing our data sharing policy.</p>
+</blockquote>
+<figcaption><cite>– Publisher, the Royal Society</cite></figcaption>
+</figure>
+<figure>
+<blockquote>
+  <p>I always appreciate the feedback that the Dryad team has provided to me. I hope it helps make my data as accessible as possible.</p>
+</blockquote>
+<figcaption><cite>– Dryad author</cite></figcaption>
 </figure>
 
 
 ## Fees
 
-Dryad’s fees are currently under review and will be available in Spring 2025. In the meantime, contact us at <a class="emailr" href="mailto:dev@null?subject=Membership">gro.dayrdatad@spihsrentrap</a> for more information.
+As a community-driven non-profit organization, Dryad is committed to enabling the open availability and routine reuse of all research data. We strive to make high-quality data publishing affordable as well as easy. 
 
-## Members
+All our fees are set on a cost-recovery basis and designed to keep Dryad’s systems running strong, while putting our services within reach for as many researchers as possible. Dryad fees are developed by an advisory group representing publishing organizations of all kinds, scholarly societies, the libraries and research offices for academic institutions, and academic library consortia. 
 
-<p>Our community is open to a full spectrum of stakeholder organizations
-including universities, research institutions and academic libraries. <a href="/contact#get-involved">Contact us about joining us as a member organization</a>.</p>
+Fees fall into two categories:
 
-### Academic and research institutions
-<%= render "members_institutional" %>
+* All Dryad authors incur a **Data Publication Charge (DPC)** based on the variable costs of curating, publishing, and preserving one dataset — that is, one package of metadata and data files related to a single course of investigation. Pricing is designed to scale with use, with discounts based on volume for Dryad partners. DPCs may be paid directly by individual authors, or sponsored by an organization through partnership with Dryad.
 
-### Publishing organizations
-<%= render "members_publishers" %>
+* In addition to sponsoring DPCs for affiliated authors, partner organizations pay an **Annual Service Fee** that funds Dryad’s fixed costs for operations, administration, and infrastructure. The service fee is calculated on a sliding scale based on the organizations’ overall revenue or expenditure.
 
-## Jobs &amp; opportunities
-<div id="blog-latest-posts" data-feed="https://blog.datadryad.org/category/opportunities/feed" data-count="3">
-  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+### Partner fees
+
+Institutions, publishers, academic societies, and others partner with Dryad to make our services available to their affiliated researchers at a reduced rate. Dryad partners trust us to provide individualized support to authors, and to curate, publish, and preserve data in the most economical way. Partner fees are calculated and billed annually based on usage and the size of the organization.
+
+<div class="callout">
+  <div style="display: grid; grid-columns: 1fr 4em 1fr; column-gap: 2ch; align-items: center;">
+    <h4 style="text-align: center; margin-top: 0; grid-column: 1 / span 3;">Partner fees calculation formula</h4>
+    <div>
+      <h5>Data Publication Charge</h5>
+      <p>Covers the cost of data curation, publication and preservation</p>
+      <p>Based on the estimated number of datasets under 10GB published each year</p>
+    </div>
+    <div><i class="fas fa-plus" aria-label="+" role="img"></i></div>
+    <div>
+      <h5>Annual Service Fee</h5>
+      <p>Covers the fixed costs of service, infrastructure and operations</p>
+      <p>Based on the partner organization’s annual research revenue or expenditure</p>
+    </div>
+    <div style="grid-column: 1 /span 3; text-align: center;">
+      <p><i class="fas fa-plus" aria-label="+" role="img"></i>Any à la carte fees for large datasets</p>
+      <p><i class="fas fa-equals" aria-label="=" role="img"></i> total annual partner fee</p>
+    </div>
+  </div>
 </div>
-<p style="text-align:right"><a href="https://blog.datadryad.org/jobs">View all jobs &amp opportunities→</a></p>
+
+Contact us to learn more about becoming a Dryad partner. Consult the links below to estimate fees with our fee calculator and explore our detailed fee schedule.
+
+Not an institution, publishing organization, or society, and looking for a data solution? We can help. <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us</a>.
+
+
+## Our partners
+
+Our partner community spans a wide spectrum of stakeholder organizations including academic and research institutions of all sizes as well as publishing organizations and scholarly societies. See [our complete partner list](/about#our-members).
