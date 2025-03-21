@@ -8,7 +8,7 @@
   </div>
 
   <div id="show_metrics"
-       data-load="<%= stash_url_helpers.show_metrics_path(identifier_id: @id.id) %>">
+       data-load="<%= stash_url_helpers.show_metrics_url(identifier_id: @id.id) %>">
     <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
   </div>
   
@@ -20,7 +20,7 @@
 
   <% unless @resource&.resource_type&.resource_type == 'collection' %>
     <div id="show_license"
-         data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
+         data-load="<%= metadata_url_helpers.license_details_url(resource_id: @resource.id, format: :js) %>">
       <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
     </div>
   <% end %>
@@ -30,7 +30,7 @@
   <div id="keyword_section">
     <h2>Subject keywords</h2>
     <div id="show_subjects"
-         data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>">
+         data-load="<%= metadata_url_helpers.subjects_landing_url(resource_id: @resource.id, format: :js) %>">
       <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
     </div>
   </div>

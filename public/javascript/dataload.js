@@ -5,10 +5,11 @@ const load_data = function() {
     var path = $(this).attr('data-load');
     // $(this).load(path);
     $.ajax({
+      method: 'GET',
       url: path,
-      //data,
-      // success: success,
-      dataType: 'script'
+      dataType: 'script',
+      async: true,
+      cache: false,
     }).always(function() {
       // modernizeIt();
     });
