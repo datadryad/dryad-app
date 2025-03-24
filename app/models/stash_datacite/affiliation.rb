@@ -24,7 +24,7 @@ module StashDatacite
     has_paper_trail
 
     has_and_belongs_to_many :contributors, class_name: 'StashDatacite::Contributor'
-    has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor'
+    has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor', dependent: :destroy
     has_many :authors, class_name: 'StashEngine::Author', through: :affiliation_authors
 
     belongs_to :ror_org, class_name: 'StashEngine::RorOrg', primary_key: 'ror_id', foreign_key: 'ror_id', optional: true

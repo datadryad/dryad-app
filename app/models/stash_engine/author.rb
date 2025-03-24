@@ -28,7 +28,7 @@ module StashEngine
     has_paper_trail
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
-    has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor'
+    has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor', dependent: :destroy
     has_many :affiliations, class_name: 'StashDatacite::Affiliation', through: :affiliation_authors
     has_one :edit_code, class_name: 'StashEngine::EditCode', dependent: :destroy
 
