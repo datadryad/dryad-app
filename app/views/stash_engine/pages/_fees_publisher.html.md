@@ -15,7 +15,7 @@ Our publisher and society partners also benefit from:
 </div>
 
 
-The annual partner fee is calculated as a total of the anticipated data publication charge (DPC) for the coming year, plus the Annual Service Fee. DPCs are adjusted to reflect actual usage at year-end.
+The annual partner fee is calculated as a total of the anticipated Data Publication Charge (DPC) for the coming year, plus the Annual Service Fee. DPCs are adjusted to reflect actual usage at year-end.
 
 Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule. 
 
@@ -183,7 +183,7 @@ Datasets larger than 10GB are billed individually as follows. Publisher and soci
 
 Partners pay a flat Annual Service Fee to help cover Dryad’s fixed costs for service, infrastructure and operations. Our fixed expenses include: partner support, training, and outreach; operation, maintenance and development of the Dryad platform; financial and legal administration; and leadership, oversight, and strategy development. As a global virtual organization, Dryad does not operate a physical office. Consult our [annual reports](https://github.com/datadryad/governance/tree/main/annual-reports) for details on Dryad expenses.
 
-Annual service fees for Dryad publisher and society partners are tiered according to total publishing revenue or expenses. This approach is modeled after CrossRef, and uses the same tiers (as of November 2024).
+Annual Service Fees for Dryad publisher and society partners are tiered according to total publishing revenue or expenses. This approach is modeled after CrossRef, and uses the same tiers (as of November 2024).
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
@@ -356,7 +356,7 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 
 ### Total fees
 
-The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from 1,000 to 98,250 USD depending on the volume of data publications and organization reported publishing expenditure or revenue.
+The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $1,000 to $98,250 depending on the volume of data publications and organization reported publishing expenditure or revenue.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
