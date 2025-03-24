@@ -62,27 +62,27 @@ Fees fall into two categories:
 Institutions, publishers, academic societies, and others partner with Dryad to make our services available to their affiliated researchers at a reduced rate. Dryad partners trust us to provide individualized support to authors, and to curate, publish, and preserve data in the most economical way. Partner fees are calculated and billed annually based on usage and the size of the organization.
 
 <div class="callout">
-  <div style="display: grid; grid-columns: 1fr 4em 1fr; column-gap: 2ch; align-items: center;">
-    <h4 style="text-align: center; margin-top: 0; grid-column: 1 / span 3;">Partner fees calculation formula</h4>
-    <div>
-      <h5>Data Publication Charge</h5>
-      <p>Covers the cost of data curation, publication and preservation</p>
-      <p>Based on the estimated number of datasets under 10GB published each year</p>
+  <div style="display: grid; grid-columns: 1fr 4em 1fr; column-gap: 2ch; align-items: top;">
+    <h4 style="text-align: center; margin-top: .5ch; grid-column: 1 / span 3; font-weight: bold; color: #3c763d; font-size: 1.5em;">Partner fees calculation formula</h4>
+    <div style="text-align: right;">
+      <h5 style="font-weight: bold; color: #3c763d; font-size: 1.15em;">Data Publication Charge</h5>
+      <p style="font-style: italic; font-size: .98rem; margin: 0">Covers the cost of data curation, publication, and preservation</p>
+      <p style="margin-top: .5ch;">Based on the estimated number of datasets under 10GB published each year</p>
     </div>
-    <div><i class="fas fa-plus" aria-label="+" role="img"></i></div>
+    <div><p style="color: #3c763d; font-size: 1.15em; margin-top: 1rem;"><i class="fas fa-plus" aria-label="+" role="img"></i></p></div>
     <div>
-      <h5>Annual Service Fee</h5>
-      <p>Covers the fixed costs of service, infrastructure and operations</p>
-      <p>Based on the partner organization’s annual research revenue or expenditure</p>
+      <h5 style="font-weight: bold; color: #3c763d; font-size: 1.15em;">Annual Service Fee</h5>
+      <p style="font-style: italic; font-size: .98rem; margin: 0;">Covers the fixed costs of service, infrastructure, and operations</p>
+      <p style="margin-top: .5ch;">Based on the partner organization’s annual research revenue or expenditure</p>
     </div>
-    <div style="grid-column: 1 /span 3; text-align: center;">
-      <p><i class="fas fa-plus" aria-label="+" role="img"></i>Any à la carte fees for large datasets</p>
-      <p><i class="fas fa-equals" aria-label="=" role="img"></i> total annual partner fee</p>
+    <div style="grid-column: 1 /span 3; text-align: center; color: #3c763d; font-weight: bold;">
+      <p style="font-size: 1.15em; margin: 0 auto;"><i class="fas fa-plus" aria-label="+" role="img"></i> Any fees for large datasets</p>
+      <p style="margin: .75ch auto .5ch; font-size: 1.5em;"><i class="fas fa-equals" aria-label="=" role="img"></i> Total annual partner fee</p>
     </div>
   </div>
 </div>
 
-Contact us to learn more about becoming a Dryad partner. Consult the links below to estimate fees with our fee calculator and explore our detailed fee schedule.
+<a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us to learn more</a> about becoming a Dryad partner. Consult the links below to estimate fees with our fee calculator and explore our detailed fee schedule.
 
 Not an institution, publishing organization, or society, and looking for a data solution? We can help. <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us</a>.
 
