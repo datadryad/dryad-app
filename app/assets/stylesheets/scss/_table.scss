@@ -32,6 +32,10 @@ tbody tr:nth-child(odd) {
   background-color: #f6f6f6;
 }
 
+tfoot tr {
+  background-color: $lightest-blue;
+}
+
 td, th {
   text-align: left;
   padding: $spacing-base;
@@ -41,6 +45,21 @@ td, th {
 
   &:last-child {
     border-color: #888;
+  }
+}
+
+table.columned {
+  tr {
+    border: none;
+  }
+  tbody, thead, tfoot {
+    border: thin solid #888;
+  }
+  td, th {
+    border-right: thin solid #888;
+  }
+  tr:not(:last-child) {
+    border-bottom: thin solid #ddd;
   }
 }
 
