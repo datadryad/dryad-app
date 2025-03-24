@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useSelect} from 'downshift';
+import {range} from 'lodash';
 import {editorViewCtx} from '@milkdown/core';
 import {callCommand} from '@milkdown/utils';
 // eslint-disable-next-line import/no-unresolved
@@ -110,10 +111,14 @@ function LinkMenu({editor, editorId, active}) {
   };
 
   const openMenu = (e) => {
-    getSettings();
-    e.currentTarget.setAttribute('aria-expanded', true);
-    document.getElementById(`${editorId}linkMenu`).removeAttribute('hidden');
-    document.addEventListener('click', clickListener);
+    if (e.currentTarget.getAttribute('aria-expanded') === 'true') {
+      closeMenu();
+    } else {
+      getSettings();
+      e.currentTarget.setAttribute('aria-expanded', true);
+      document.getElementById(`${editorId}linkMenu`).removeAttribute('hidden');
+      document.addEventListener('click', clickListener);
+    }
   };
 
   const checkNewText = () => {
@@ -244,16 +249,16 @@ function List({type, editor, active}) {
 function Table({
   active, editor, mdEditor, activeEditor, editorId,
 }) {
-  const startNum = [1, 2, 3, 4, 5, 6];
+  const startNum = range(1, 6);
   const [rows, setRows] = useState(startNum);
   const [cols, setCols] = useState(startNum);
-  const [colNum, setColNum] = useState(0);
-  const [rowNum, setRowNum] = useState(0);
+  const [tableNums, setNums] = useState([0, 0]);
 
   const closeMenu = () => {
     const menu = document.getElementById(`${editorId}tableMenu`);
     menu.previousElementSibling.setAttribute('aria-expanded', false);
     menu.hidden = true;
+    setNums([0,0])
     setCols(startNum);
     setRows(startNum);
   };
@@ -267,41 +272,53 @@ function Table({
   };
 
   const openMenu = (e) => {
-    e.currentTarget.setAttribute('aria-expanded', true);
-    document.getElementById(`${editorId}tableMenu`).removeAttribute('hidden');
-    document.addEventListener('click', clickListener);
+    if (e.currentTarget.getAttribute('aria-expanded') === 'true') {
+      closeMenu();
+    } else {
+      e.currentTarget.setAttribute('aria-expanded', true);
+      document.getElementById(`${editorId}tableMenu`).removeAttribute('hidden');
+      document.addEventListener('click', clickListener);
+    }
   };
 
   const select = (e) => {
     const col = Number(e.currentTarget.dataset.col);
     const row = Number(e.currentTarget.parentElement.dataset.row);
-    document.querySelectorAll('.tableEntry span').forEach((s) => {
-      if (s.dataset.col <= col && s.parentElement.dataset.row <= row) s.classList.add('hovering');
-    });
-    if (col === cols.length) setCols((c) => Array.from(new Set([...c, col + 1])));
-    if (row === rows.length) setRows((r) => Array.from(new Set([...r, row + 1])));
-    setColNum(col);
-    setRowNum(row);
+    setNums([col, row]);
   };
 
   const deselect = () => {
-    document.querySelectorAll('.tableEntry span').forEach((s) => s.classList.remove('hovering'));
-    setColNum(0);
-    setRowNum(0);
+    setNums([0, 0]);
   };
 
-  const submit = () => {
-    closeMenu();
-    document.removeEventListener('click', clickListener);
+  const submit = (e) => {
+    if (e) e.preventDefault();
+    const [col, row] = tableNums;
     if (activeEditor === 'visual') {
       const view = editor()?.ctx.get(editorViewCtx);
-      editor()?.action(callCommand(commands.table.key, {row: rowNum, col: colNum}));
+      editor()?.action(callCommand(commands.table.key, {row, col}));
       view.focus();
     } else if (activeEditor === 'markdown') {
-      mdCommands.table(mdEditor, rowNum, colNum);
+      mdCommands.table(mdEditor, row, col);
       mdEditor.focus();
     }
+    closeMenu();
+    document.removeEventListener('click', clickListener);
   };
+
+  useEffect(() => {
+    const [col, row] = tableNums;
+    document.querySelectorAll('.tableEntry span').forEach((s) => s.classList.remove('hovering'));
+    if (col > 0 || row > 0) {
+      document.querySelectorAll('.tableEntry span').forEach((s) => {
+        if (s.dataset.col <= col && s.parentElement.dataset.row <= row) s.classList.add('hovering');
+      });
+      if (col === cols.length) setCols((c) => Array.from(new Set([...c, col + 1])));
+      if (row === rows.length) setRows((r) => Array.from(new Set([...r, row + 1])));
+      if (col > cols.length) setCols(() => range(1, col + 1));
+      if (row > rows.length) setRows(() => range(1, row + 1));
+    }
+  }, tableNums);
 
   return (
     <div className="tableSelect" role="menuitem">
@@ -321,11 +338,6 @@ function Table({
         hidden
         style={{width: `${2.1 + (1.3 * cols.length)}rem`, height: `${3 + (1.3 * rows.length)}rem`}}
       >
-        <div className="screen-reader-only">
-          <input type="text" aria-label="Number of rows" value={rowNum} onChange={(e) => setRowNum(e.target.value)} />
-          <input type="text" aria-label="Number of columns" value={colNum} onChange={(e) => setColNum(e.target.value)} />
-          <button type="button" onClick={submit} aria-label={`Insert ${rowNum} x ${colNum} table`} />
-        </div>
         <div className="tableEntry">
           {rows.map((r) => (
             <div key={`row${r}`} data-row={r}>
@@ -335,7 +347,21 @@ function Table({
             </div>
           ))}
         </div>
-        <p style={{fontSize: '.8rem', textAlign: 'center', margin: '.5rem auto 0'}}>{(rowNum && colNum) ? `${rowNum} x ${colNum}` : ''}</p>
+        <form onSubmit={submit}>
+          <p className="tableMenuButtons">
+            <input type="text" aria-label="Number of rows" value={tableNums[1]} onChange={(e) => setNums(([c]) => [c, Number(e.target.value)])} />
+            x
+            <input
+              type="text"
+              aria-label="Number of columns"
+              value={tableNums[0]}
+              onChange={(e) => setNums(([, r]) => [Number(e.target.value), r])}
+            />
+            <button type="submit" className="o-button__plain-textlink" aria-label={`Insert a ${tableNums[1]} x ${tableNums[0]} table`}>
+              <i className="fas fa-square-plus" />
+            </button>
+          </p>
+        </form>
       </div>
     </div>
   );
