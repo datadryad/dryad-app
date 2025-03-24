@@ -89,8 +89,9 @@ Institutions, publishers, academic societies, and others partner with Dryad to m
   <a href="/publishers" class="o-link__buttonlink" style="flex: 1;"><i class="fas fa-book-open" aria-hidden="true" style="font-size: 2em;"></i><br/>Publisher or society partnership fees</a>
 </div>
 
-Not an institution, publishing organization, or society, and looking for a data solution? We can help. <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us</a>.
-
+<div class="callout">
+  <p>Not an institution, publishing organization, or society, and looking for a data solution? We can help. <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us</a>.</p>
+</div>
 
 ## Our partners
 
