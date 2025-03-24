@@ -7,7 +7,7 @@
 <%# end %>
 <div id="landing_readme">
   <% if highlight_fields.include?('technical_info') %>
-    <% old_content = @resource.complete_readme %>
+    <% old_content = @resource.previous_curated_resource.complete_readme %>
     <p><span class="ins" style="font-size: 1.3em; padding: 8px 0; margin-right: 50px">README changed</span><%if old_content %><button type="button" class="o-button__plain-text1 diff-toggle" style="margin-right: 10px" disabled>View changes</button><button type="button" class="o-button__plain-text1 diff-toggle">View final</button><% end %></p>
     <% if old_content %>
       <% hide_final = true %>

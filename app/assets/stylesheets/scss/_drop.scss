@@ -1,19 +1,19 @@
 // ##### Drop Region Object ##### //
 
 .o-drop {
-	display: inline-block;
-	padding: 1.5em;
-	border: 3px dashed $dark-gray;
-	border-radius: 0.5em;
-	color: $dark-blue;
-	font-size: 1.6em;
-	text-align: center;
+  display: inline-block;
+  padding: 1.5em;
+  border: 3px dashed $dark-gray;
+  border-radius: 0.5em;
+  color: $dark-blue;
+  font-size: 1.6em;
+  text-align: center;
 
-	@include bp(screen2) {
-		padding: 2em;
-		border-radius: 0.75em;
-		font-size: 1.9em;
-	}
+  @include bp(screen2) {
+    padding: 2em;
+    border-radius: 0.75em;
+    font-size: 1.9em;
+  }
 
 }
 
@@ -23,10 +23,10 @@
 }
 
 .dd-list-item {
-	list-style: "";
-	margin: 1rem auto;
+  list-style: "";
+  margin: 1rem auto;
   padding: 1rem;
-	background-color: $lightest-blue;
+  background-color: $lightest-blue;
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -36,45 +36,48 @@
   }
 
   .handle {
-	  @extend %o-button__link-style;
-	  cursor: ns-resize;
-	  float: left;
-	  margin-top: 28px;
-	  &:before {
-		  font-family: 'Font Awesome 6 Free';
-		  font-weight: 900;
-		  content: '\f550';
-		  content: '\f550' / '';
-		  display: inline-block;
-		}
-	}
+    @extend %o-button__link-style;
+    cursor: ns-resize;
+    float: left;
+    margin-top: 28px;
+    &:before {
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      content: '\f550';
+      content: '\f550' / '';
+      display: inline-block;
+    }
+  }
 
-	label {
-	  vertical-align: middle;
-	}
+  label {
+    vertical-align: middle;
+  }
 
-	button[aria-pressed="true"] {
-	  box-shadow: inset 0 0 7px #000 !important;
-	}
+  button[aria-pressed="true"] {
+    color: $medium-blue;
+    background-color: white;
+  }
 
-	li[aria-pressed="true"] {
-	  background: #7654C4;
-	  color: #fff;
-	}
+  li[aria-pressed="true"] {
+    background: #7654C4;
+    color: #fff;
+  }
 
-	pre {
-	  overflow-y: auto;
-	  text-align: left;
-	}
+  pre {
+    overflow-y: auto;
+    text-align: left;
+  }
 }
 
 .gu-mirror {
-	box-sizing: border-box;
+  box-sizing: border-box;
   position: fixed !important;
   z-index: 9999 !important;  
   margin: 0 !important;
   cursor: -webkit-grabbing;
   box-shadow: 2px 2px 4px #ccc;
+  max-height: 7rem;
+  overflow: hidden;
 }
 
 .gu-hide {
@@ -92,6 +95,13 @@
   opacity: 0.2;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
   filter: alpha(opacity=20);
+  max-height: 5rem;
+  overflow: hidden;
+}
+
+.dragon-drop-list:has(.gu-transit) .dd-list-item {
+  max-height: 5rem;
+  overflow: hidden;
 }
 
 .live-log {

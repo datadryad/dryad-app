@@ -199,9 +199,10 @@
   <% end %>
 
   document.querySelectorAll('.t-landing__text-wall a').forEach((link) => {
-    const span = document.createElement('span')
-    span.classList.add('screen-reader-only')
-    span.textContent = ' (opens in new window)'
+    const span = document.createElement('i')
+    span.classList.add('fas', 'fa-arrow-up-right-from-square', 'exit-icon')
+    span.setAttribute('aria-label', ' (opens in new window)')
+    span.setAttribute('role', 'img')
     link.appendChild(span)
     link.setAttribute('target', '_blank')
   });

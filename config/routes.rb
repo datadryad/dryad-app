@@ -101,6 +101,7 @@ Rails.application.routes.draw do
         get 'show_files'
         patch 'import_type'
         patch 'license_agree'
+        post 'logout'
       end
     end
 
@@ -150,11 +151,8 @@ Rails.application.routes.draw do
     get 'choose_dashboard', to: 'dashboard#choose', as: 'choose_dashboard'
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
-    get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
-    get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
-    get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
-    get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
-    get 'react_basics', to: 'dashboard#react_basics', as: 'react_basics'
+    get 'dashboard/primary_article/:resource_id', to: 'dashboard#primary_article', as: 'primary_article'
+    post 'dashboard/primary_article', to: 'dashboard#save_primary_article', as: 'save_primary_article'
 
     # download related
     match 'downloads/zip_assembly_info/:resource_id', to: 'downloads#zip_assembly_info', as: 'zip_assembly_info', via: %i[get post]
@@ -173,6 +171,8 @@ Rails.application.routes.draw do
     post 'metadata_entry_pages/new_version_from_previous', to: 'metadata_entry_pages#new_version_from_previous'
     match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:post]
     match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
+
+    get 'accept/:edit_code', to: 'edit_codes#accept_invite', as: 'accept_invite'
 
     # root 'sessions#index'
     root 'pages#home', as: 'pages_root'
@@ -231,7 +231,7 @@ Rails.application.routes.draw do
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
     get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
-    get 'stash/404', to: 'pages#app_404', as: 'app_404'
+    get '/404', to: 'pages#app_404', as: 'app_404'
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
@@ -376,6 +376,7 @@ Rails.application.routes.draw do
     patch 'authors/reorder', to: 'authors#reorder', as: 'authors_reorder'
     get 'authors/:id/invoice', to: 'authors#check_invoice'
     patch 'authors/invoice', to: 'authors#set_invoice'
+    patch 'authors/invite', to: 'authors#invite'
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'

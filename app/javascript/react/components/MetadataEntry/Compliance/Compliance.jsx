@@ -3,9 +3,10 @@ import React, {
 } from 'react';
 import axios from 'axios';
 import {debounce} from 'lodash';
+import {ExitIcon} from '../../ExitButton';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-export default function Validation({resource, setResource}) {
+export default function Compliance({resource, setResource}) {
   const hsiRef = useRef(null);
   const [hsi, setHSI] = useState(null);
   const [desc, setDesc] = useState('');
@@ -98,8 +99,8 @@ export default function Validation({resource, setResource}) {
       <h3>Can your data be shared in the public domain?</h3>
       <p>All data deposited at Dryad must comply with a CC0 license waiver.{' '}
         <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">
-          Learn more about why we use CC0<span className="screen-reader-only"> (opens in new window)</span>.
-        </a>
+          Learn more about why we use CC0<ExitIcon />
+        </a>.
       </p>
       <p>
         CC0 means others can freely share, modify, adapt, and use the data in any way, without conditions such as providing attribution.
@@ -107,7 +108,7 @@ export default function Validation({resource, setResource}) {
         Authors are legally responsible for ensuring their dataset does not violate copyright claims over material generated or published by others.
       </p>
       <fieldset>
-        <legend>Do you understand and agree to the <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode.en" target="_blank" rel="noreferrer">license terms<span className="screen-reader-only"> (opens in new window)</span></a>?</legend>
+        <legend>Do you understand and agree to the <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode.en" target="_blank" rel="noreferrer">license terms<ExitIcon /></a>?</legend>
         <p className="radio_choice">
           <label>
             <input

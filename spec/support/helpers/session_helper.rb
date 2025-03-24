@@ -31,6 +31,7 @@ module SessionsHelper
     visit root_path
     click_link 'Login'
     click_link 'Login or create your ORCID iD'
+    sleep 0.1
     nil unless with_shib || user.tenant_id.blank?
   end
 

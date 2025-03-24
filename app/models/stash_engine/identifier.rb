@@ -2,24 +2,25 @@
 #
 # Table name: stash_engine_identifiers
 #
-#  id                  :integer          not null, primary key
-#  deleted_at          :datetime
-#  edit_code           :string(191)
-#  identifier          :text(65535)
-#  identifier_type     :text(65535)
-#  import_info         :integer
-#  payment_type        :string(191)
-#  pub_state           :string
-#  publication_date    :datetime
-#  search_words        :text(65535)
-#  storage_size        :bigint
-#  waiver_basis        :string(191)
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  latest_resource_id  :integer
-#  license_id          :string(191)
-#  payment_id          :text(65535)
-#  software_license_id :integer
+#  id                      :integer          not null, primary key
+#  deleted_at              :datetime
+#  edit_code               :string(191)
+#  identifier              :text(65535)
+#  identifier_type         :text(65535)
+#  import_info             :integer
+#  last_invoiced_file_size :bigint
+#  payment_type            :string(191)
+#  pub_state               :string
+#  publication_date        :datetime
+#  search_words            :text(65535)
+#  storage_size            :bigint
+#  waiver_basis            :string(191)
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  latest_resource_id      :integer
+#  license_id              :string(191)
+#  payment_id              :text(65535)
+#  software_license_id     :integer
 #
 # Indexes
 #
@@ -148,13 +149,6 @@ module StashEngine
                identifier, identifier_type).sum(:downloads)
     end
 
-    def resources_with_file_changes
-      Resource.distinct.where(identifier_id: id)
-        .joins(:data_files)
-        .where(stash_engine_generic_files: { file_state: %w[created deleted] })
-        .where(stash_engine_generic_files: { type: 'StashEngine::DataFile' })
-    end
-
     # these are items that are embargoed or published and can show metadata
     def latest_resource_with_public_metadata
       return nil if pub_state == 'withdrawn'
@@ -179,8 +173,8 @@ module StashEngine
     def latest_downloadable_resource(user: nil)
       return latest_resource_with_public_download if user.nil?
 
-      lr = resources_with_file_changes.submitted.last
-      return lr if lr&.permission_to_edit?(user: user)
+      lr = resources.with_file_changes.submitted.last
+      return lr if lr&.permission_to_edit?(user: user) && lr.version_number > (latest_resource_with_public_download&.version_number || 0)
 
       latest_resource_with_public_download
     end
@@ -515,7 +509,7 @@ module StashEngine
     # make the display look desireable.  We can also put the old versions back and re-process the info to get corect views for these datasets.
     def borked_file_history?
       # I have been setting resources curators don't like to the negative identifier_id on the resource foreign key to orphan them
-      return true if Resource.where(identifier_id: -id).count.positive? || resources_with_file_changes.count.zero?
+      return true if Resource.where(identifier_id: -id).count.positive? || resources.with_file_changes.count.zero?
 
       false
     end
@@ -634,6 +628,10 @@ module StashEngine
       return nil unless res.present?
 
       res.publication_date || res.updated_at
+    end
+
+    def previous_invoiced_file_size
+      last_invoiced_file_size.presence || latest_resource.previous_published_resource&.total_file_size
     end
 
     # ------------------------------------------------------------

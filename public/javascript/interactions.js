@@ -121,15 +121,16 @@ expandButtons.forEach(button => {
   });
 });
 
-var noClick = document.getElementsByClassName('prevent-click');
-for (var i=0; i < noClick.length; i++) {
-  noClick[i].addEventListener('click', (e) => {
-    e.currentTarget.disabled = true;
-    var icon = e.currentTarget.lastElementChild;
-    icon.className = 'fa fa-spinner fa-spin';
+var noClicks = Array.from(document.getElementsByClassName('prevent-click'));
+noClicks.forEach(button => {
+  button.addEventListener('click', (e) => {
+    var icon = button.querySelector('i');
+    icon.className = 'fas fa-spinner fa-spin';
     document.body.classList.add('prevent-clicks');
+    if (button.form) button.form.submit();
+    button.disabled = true;
   });
-}
+});
 
 if (window.location.hash) {
   const hashed = document.getElementById(window.location.hash.substring(1))

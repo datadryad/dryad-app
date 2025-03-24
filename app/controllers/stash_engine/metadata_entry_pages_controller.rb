@@ -3,14 +3,12 @@ module StashEngine
     include StashEngine::MetadataEntryPagesHelper
     before_action :require_login, except: %i[edit_by_doi]
     before_action :resource_exist, except: %i[metadata_callback]
-    before_action :require_modify_permission, except: %i[metadata_callback edit_by_doi]
-    before_action :require_in_progress_editor, only: %i[find_or_create]
+    before_action :require_modify_permission, only: %i[find_or_create reject_agreement accept_agreement]
+    before_action :require_duplicate_permission, only: %i[new_version new_version_from_previous]
     before_action :require_can_duplicate, only: %i[new_version new_version_from_previous]
     before_action :ajax_require_modifiable, only: %i[reject_agreement accept_agreement]
     before_action :bust_cache, only: %i[find_or_create]
     before_action :require_not_obsolete, only: %i[find_or_create]
-
-    # apply Pundit?
 
     def resource
       @resource ||= Resource.find(params[:resource_id])

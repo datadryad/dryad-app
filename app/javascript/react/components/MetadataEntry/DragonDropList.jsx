@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import DragonDrop from 'drag-on-drop';
-import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {showSavedMsg, showSavingMsg, upCase} from '../../../lib/utils';
 
 export const orderedItems = ({items, typeName}) => items.slice(0).sort((a, b) => {
   const orderProp = `${typeName}_order`;
@@ -99,6 +99,7 @@ export default function DragonDropList({
       // the "announcement section below is to announce changes to screen readers
       const dragon = new DragonDrop(dragonRef.current, {
         handle: '.handle',
+        item: ':scope > li',
         announcement: {
           grabbed: (el) => `${el.querySelector('input').value} grabbed`,
           dropped: (el) => `${el.querySelector('input').value} dropped`,
@@ -111,8 +112,13 @@ export default function DragonDropList({
         },
       });
       savedWrapper.current = wrappingFunction;
+      dragon.on('grabbed', () => {
+        const sec = dragonRef.current.closest('section');
+        sec.style.minHeight = `${sec.offsetHeight}px`;
+      });
       dragon.on('dropped', () => {
         savedWrapper.current();
+        dragonRef.current.closest('section').style.minHeight = 0;
       });
       dragon.on('cancel', () => {
         // Dragon Drop has an old bug that still isn't fixed https://github.com/schne324/dragon-drop/issues/34
@@ -159,7 +165,7 @@ export default function DragonDropList({
         Activate the reorder button and use the arrow keys to reorder the list or use your mouse to{' '}
         drag/reorder. Press escape to cancel the reordering. Ensure screen reader is in focus mode.
       </p>
-      <ul className="dragon-drop-list" aria-labelledby={`${typeName}s-head`} ref={dragonRef}>
+      <ul className="dragon-drop-list" aria-label={`${upCase(typeName)}s`} ref={dragonRef}>
         {children}
       </ul>
     </section>

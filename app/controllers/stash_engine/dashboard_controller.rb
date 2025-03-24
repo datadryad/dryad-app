@@ -2,7 +2,7 @@ module StashEngine
   class DashboardController < ApplicationController
     before_action :require_login, only: %i[show user_datasets]
     before_action :ensure_tenant, only: %i[show user_datasets]
-    protect_from_forgery except: :user_datasets
+    protect_from_forgery except: %i[user_datasets primary_article]
 
     MAX_VALIDATION_TRIES = 5
 
@@ -16,14 +16,6 @@ module StashEngine
       @doi = CGI.escape(params[:doi] || '')
     end
 
-    def metadata_basics; end
-
-    def preparing_to_submit; end
-
-    def upload_basics; end
-
-    def react_basics; end
-
     def user_datasets
       @page = params[:page] || '1'
       @page_size = params[:page_size] || '10'
@@ -33,17 +25,39 @@ module StashEngine
             .joins(:last_curation_activity)
             .select("stash_engine_resources.*,
             CASE
-              WHEN status in ('in_progress', 'action_required') THEN 0
-              WHEN status='peer_review' THEN 1
-              WHEN status in ('submitted', 'curation', 'processing') THEN 2
-              WHEN status='withdrawn' THEN 4
-              ELSE 3
+              WHEN status='action_required' THEN 0
+              WHEN (status='in_progress' and (current_editor_id = #{current_user.id} or  current_editor_id is null)) THEN 0
+              WHEN (status='in_progress' and current_editor_id in (#{StashEngine::User.min_curators.map(&:id).join(',')})) THEN 3
+              WHEN status='in_progress' THEN 1
+              WHEN status='peer_review' THEN 2
+              WHEN status in ('submitted', 'curation', 'processing') THEN 3
+              WHEN status='withdrawn' THEN 5
+              ELSE 4
             END as sort_order")
             .order('sort_order asc, stash_engine_resources.updated_at desc').page(@page).per(@page_size)
           @datasets = @datasets.preload(%i[last_curation_activity stash_version current_resource_state identifier])
             .includes(identifier: :resources)
         end
       end
+    end
+
+    def primary_article
+      @related_work = StashDatacite::RelatedIdentifier.new(resource_id: params[:resource_id], work_type: :primary_article)
+      @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: params[:resource_id], pub_type: :primary_article)
+      respond_to(&:js)
+    end
+
+    def save_primary_article
+      @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: params.dig(:primary_article, :resource_id),
+                                                                        pub_type: :primary_article)
+      @publication.update(publication_name: params.dig(:publication, :label), publication_issn: params.dig(:publication, :value))
+      std_fmt = StashDatacite::RelatedIdentifier.standardize_format(params.dig(:primary_article, :related_identifier))
+      @related_work = StashDatacite::RelatedIdentifier.create(
+        resource_id: params.dig(:primary_article, :resource_id), work_type: :primary_article,
+        relation_type: 'iscitedby', related_identifier: std_fmt,
+        related_identifier_type: StashDatacite::RelatedIdentifier.identifier_type_from_str(std_fmt)
+      )
+      respond_to(&:js)
     end
 
     # methods below are private

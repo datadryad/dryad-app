@@ -46,7 +46,7 @@ export const authorCheck = (resource) => {
     );
   }
   const dupeEmail = authors.findIndex((a, i) => authors.find((au, x) => (i === x ? false
-    : a.author_email.toLowerCase() === au.author_email.toLowerCase())));
+    : a.author_email && au.author_email && a.author_email.toLowerCase() === au.author_email.toLowerCase())));
   if (dupeEmail >= 0) {
     const email = authors[dupeEmail].author_email;
     const last = authors.findLastIndex((a) => a.author_email === email);

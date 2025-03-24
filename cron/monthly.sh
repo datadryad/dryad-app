@@ -25,5 +25,6 @@ bundle exec rails affiliation_import:update_ror_orgs >> /home/ec2-user/deploy/sh
 bundle exec rails affiliation_import:update_affiliations_names >> /home/ec2-user/deploy/shared/log/affiliations_name_updates.log 2>&1
 
 # Cleanup affiliation/contributor records
+bundle exec rails cleanup:duplicate_affiliations >> /home/ec2-user/deploy/shared/log/duplicate_affiliations.log 2>&1
 bundle exec rails cleanup:affiliations_wo_ror >> /home/ec2-user/deploy/shared/log/affiliations_wo_ror_cleanup.log 2>&1
 bundle exec rails cleanup:contributors_wo_ror >> /home/ec2-user/deploy/shared/log/contributors_wo_ror_cleanup.log 2>&1

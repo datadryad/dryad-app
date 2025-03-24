@@ -11,7 +11,7 @@ module StashDatacite
       @submission = @resource.as_json(
         include: [:tenant, :resource_type, :resource_publication, :resource_preprint, :journal,
                   :related_identifiers, :edit_histories, :contributors, :subjects, :descriptions,
-                  { authors: { methods: [:orcid_invite_path], include: [:affiliations] },
+                  { authors: { methods: [:orcid_invite_path], include: %i[affiliations edit_code] },
                     identifier: { include: %i[process_date software_license] },
                     previous_curated_resource: {
                       include: [:tenant, :subjects, :descriptions, :resource_publication, :journal, :related_identifiers, :contributors,
@@ -22,7 +22,7 @@ module StashDatacite
       find_files
       @submission = @submission.to_json
 
-      @resource.update(updated_at: Time.current)
+      @resource.update(updated_at: Time.current, current_editor_id: current_user.id)
       @target_page = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
 
       # If the most recent Curation Activity was from the "Dryad System", add an entry for the

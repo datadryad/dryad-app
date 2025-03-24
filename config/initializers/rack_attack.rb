@@ -31,6 +31,8 @@ Rack::Attack.blocklist('malicious_clients') do |req|
       (req.ip.start_with?('172.31') && start_w_wo_stash?(req.path,'/downloads')) ||
       (req.ip.start_with?('64.233') && start_w_wo_stash?(req.path,'/downloads')) ||
       (req.ip.start_with?('47.76') && start_w_wo_stash?(req.path,'/downloads')) ||
+      (req.ip.start_with?('8.210') && start_w_wo_stash?(req.path,'/downloads')) ||
+      (req.ip.start_with?('207.241') && start_w_wo_stash?(req.path,'/downloads')) ||
       (req.ip.start_with?('43.1') && req.path.start_with?('/search')) ||
       /\S+\.php/.match?(req.path)
   end

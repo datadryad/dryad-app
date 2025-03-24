@@ -87,12 +87,6 @@ module StashEngine
     # ------------------------------------------
     before_validation :set_resource
 
-    # Once we are certain that we will be publishing this dataset, remove any "N/A" placeholders
-    # Note tht this uses "after_validation" to ensure it runs before all of the "after_create"
-    after_validation :remove_placeholder_funders, if: proc { |ca|
-      (ca.published? || ca.embargoed?) && curation_status_changed?
-    }
-
     after_create :process_dates, if: %i[curation_status_changed?]
 
     # the publication flags need to be set before creating datacite metadata (after create below)
@@ -211,7 +205,7 @@ module StashEngine
 
       inv = Stash::Payments::Invoicer.new(resource: resource, curator: user)
       if resource.identifier.payment_type == 'stripe' && previously_published?
-        inv.check_new_overages(resource.previous_curated_resource.total_file_size)
+        inv.check_new_overages(resource.identifier.previous_invoiced_file_size)
       else
         inv.charge_user_via_invoice
       end
@@ -273,12 +267,6 @@ module StashEngine
       # Copy only software and supplemental files to zenodo | resource.send_to_zenodo
       resource.send_software_to_zenodo(publish: true)
       resource.send_supp_to_zenodo(publish: true)
-    end
-
-    def remove_placeholder_funders
-      return unless resource.present?
-
-      resource.update(contributors: resource.contributors.reject { |funder| funder.contributor_name&.upcase == 'N/A' })
     end
 
     def remove_peer_review

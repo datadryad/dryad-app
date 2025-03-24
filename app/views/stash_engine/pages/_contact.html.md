@@ -42,6 +42,5 @@ Davis, CA 95618<br>
 United States</p>
 <p>Jennifer Gibson, Executive Director: <a class="emailr" href="mailto:dev@null">gro.dayrdatad@nosbigj</a></p>
 <p>Jessica Herzog, Head of Publishing Services: <a class="emailr" href="mailto:dev@null">gro.dayrdatad@gozrehj</a></p>
-<p>Sarah Lippincott, Head of Community Engagement: <a class="emailr" href="mailto:dev@null">gro.dayrdatad@haras</a></p>
 <br>
 <p style="font-size: .9em;">Dryad is a 501(c)(3) nonprofit corporation under the North Carolina Nonprofit Corporation Act, registered with the U.S. IRS, EIN number 46-1685419.</p>

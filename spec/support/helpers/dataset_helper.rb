@@ -3,7 +3,7 @@ module DatasetHelper
   def start_new_dataset
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_button 'Start new dataset'
+    click_button 'Start new submission'
     expect(page).to have_content('Dataset submission')
   end
 
@@ -65,7 +65,7 @@ module DatasetHelper
     fill_in_author
     fill_in_research_domain
     fill_in_keywords
-    click_button 'Validation'
+    click_button 'Compliance'
     fill_in_validation
   end
 

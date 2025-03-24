@@ -1,7 +1,7 @@
 module StashDatacite
   class AuthorsController < ApplicationController
     before_action :check_reorder_valid, only: %i[reorder]
-    before_action :set_author, only: %i[update delete check_invoice set_invoice]
+    before_action :set_author, only: %i[update delete invite check_invoice set_invoice]
     before_action :ajax_require_modifiable, only: %i[update create delete reorder]
 
     respond_to :json
@@ -54,6 +54,35 @@ module StashDatacite
           grouped_authors = js.index_by { |author| author[:id] }
           resp = StashEngine::Author.update(grouped_authors.keys, grouped_authors.values)
           render json: resp, status: :ok
+        end
+      end
+    end
+
+    def invite
+      return unless @author.resource
+      return unless %w[submitter collaborator].include?(params[:role])
+
+      respond_to do |format|
+        if @author.user.present?
+          if params[:role] == 'submitter'
+            @author.resource.submitter = @author.user.id
+            role = @author.resource.roles.where(role: 'submitter')&.first
+          else
+            role = @author.resource.roles.find_or_create_by(user_id: @author.user.id)
+            role.update(role: params[:role])
+          end
+          @author.resource.reload
+          StashEngine::UserMailer.invite_user(@author.user, role).deliver_now
+        else
+          @author.create_edit_code(role: params[:role])
+          @author.edit_code.send_invitation
+        end
+        @author.reload
+        format.json do
+          render json: {
+            author: @author.as_json(include: %i[affiliations edit_code]),
+            users: @resource.users.select('stash_engine_users.*', 'stash_engine_roles.role')
+          }
         end
       end
     end
@@ -121,7 +150,7 @@ module StashDatacite
       @author.affiliations.destroy_all
       args = aff_params
       affs = args['affiliations']&.reject { |a| a['long_name'].blank? }
-      affs.each do |aff|
+      affs&.each do |aff|
         process_affiliation(aff['long_name'].squish, aff['ror_id'])
       end
     end
@@ -160,7 +189,7 @@ module StashDatacite
       # you can only order things belonging to one resource
       render json: { error: 'bad request' }, status: :bad_request unless @authors.map(&:resource_id)&.uniq&.length == 1
 
-      @resource = StashEngine::Resource.find(@authors.first.resource_id) # set resource to check permission to modify
+      @resource = StashEngine::Resource.find(@authors.first&.resource_id) # set resource to check permission to modify
     end
 
   end
