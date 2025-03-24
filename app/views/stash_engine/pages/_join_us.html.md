@@ -53,7 +53,7 @@ All our fees are set on a cost-recovery basis and designed to keep Dryad’s sys
 
 Fees fall into two categories:
 
-* All Dryad authors incur a **Data Publication Charge (DPC)** based on the variable costs of curating, publishing, and preserving one dataset — that is, one package of metadata and data files related to a single course of investigation. Pricing is designed to scale with use, with discounts based on volume for Dryad partners. DPCs may be paid directly by individual authors, or sponsored by an organization through partnership with Dryad.
+* All Dryad authors incur a **Data Publication Charge (DPC)** based on the variable costs of curating, publishing, and preserving one dataset — that is, one package of metadata and data files related to a single course of investigation. Pricing is designed to scale with use, with discounts based on volume for Dryad partners. [DPCs may be paid directly by individual authors](/requirements#unsponsored-author-fees), or sponsored by an organization through partnership with Dryad.
 
 * In addition to sponsoring DPCs for affiliated authors, partner organizations pay an **Annual Service Fee** that funds Dryad’s fixed costs for operations, administration, and infrastructure. The service fee is calculated on a sliding scale based on the organizations’ overall revenue or expenditure.
 
