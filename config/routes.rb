@@ -205,6 +205,7 @@ Rails.application.routes.draw do
     get 'mission', to: 'pages#what_we_do'
     get 'contact_thanks', to: 'pages#contact_thanks'
     get 'join_us', to: 'pages#join_us'
+    get 'support_us', to: 'pages#support_us'
     get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
