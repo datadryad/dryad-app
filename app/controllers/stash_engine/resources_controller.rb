@@ -147,7 +147,6 @@ module StashEngine
       end
       render json: { readme_file: @file_content, file_list: @file_list }
     end
-    # rubocop:enable Metrics/AbcSize
 
     def display_readme
       review = StashDatacite::Resource::Review.new(@resource)
@@ -185,12 +184,12 @@ module StashEngine
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
         manuscript = @resource.resource_publication.manuscript_number
         dupes = other_submissions.where(title: @resource.title)&.select(:id, :title, :identifier_id).to_a
-        if primary_article.present?
+        if primary_article.present? && !['NA', 'N/A', 'TBD'].include?(primary_article)
           dupes.concat(other_submissions.joins(:related_identifiers)
               .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
               &.select(:id, :title, :identifier_id).to_a)
         end
-        if manuscript.present?
+        if manuscript.present? && !['NA', 'N/A', 'TBD'].include?(manuscript)
           dupes.concat(
             other_submissions.joins(:resource_publication).where(resource_publication: { manuscript_number: manuscript })
             &.select(:id, :title, :identifier_id).to_a
@@ -203,6 +202,7 @@ module StashEngine
         format.json { render json: @dupes }
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # patch request
     # Saves the setting of the import type (manuscript, published, other).  While this is set on the identifier, put it
