@@ -36,6 +36,10 @@ tfoot tr {
   background-color: $lightest-blue;
 }
 
+th {
+  font-weight: bold;
+}
+
 td, th {
   text-align: left;
   padding: $spacing-base;
