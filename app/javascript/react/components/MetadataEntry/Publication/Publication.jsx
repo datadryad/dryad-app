@@ -1,8 +1,36 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {sentenceCase} from '../../../../lib/sentence-case';
 import {showSavedMsg, showSavingMsg, formatSizeUnits} from '../../../../lib/utils';
 import PublicationForm from './PublicationForm';
 import Title from './Title';
+
+const copyTitle = (e) => {
+  const copyButton = e.currentTarget.firstElementChild;
+  const title = e.currentTarget.previousSibling.textContent;
+  navigator.clipboard.writeText(title).then(() => {
+    // Successful copy
+    copyButton.parentElement.setAttribute('title', 'Title copied');
+    copyButton.classList.remove('fa-paste');
+    copyButton.classList.add('fa-check');
+    copyButton.innerHTML = '<span class="screen-reader-only">Title copied</span>';
+    setTimeout(() => {
+      copyButton.parentElement.setAttribute('title', 'Copy title');
+      copyButton.classList.add('fa-paste');
+      copyButton.classList.remove('fa-check');
+      copyButton.innerHTML = '';
+    }, 2000);
+  });
+};
+
+const capitals = (t) => {
+  if (t === t.toUpperCase()) return true;
+  const [l] = t.match(/\p{Letter}/u);
+  if (t.match(/\b[\p{Lu}].*?\b/ug)?.length > t.split(/\s/).length * 0.6 || l !== l.toUpperCase()) {
+    return t !== sentenceCase(t);
+  }
+  return false;
+};
 
 export default function Publication({resource, setResource, maxSize}) {
   const subType = resource.resource_type.resource_type;
@@ -11,6 +39,7 @@ export default function Publication({resource, setResource, maxSize}) {
   const [showTitle, setShowTitle] = useState(false);
   const [importType, setImportType] = useState(resource.identifier.import_info);
   const [sponsored, setSponsored] = useState(false);
+  const [caseWarning, setCaseWarning] = useState(false);
   const [dupeWarning, setDupeWarning] = useState(false);
 
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -59,16 +88,22 @@ export default function Publication({resource, setResource, maxSize}) {
     const preprint = res.related_identifiers.find((r) => r.work_type === 'preprint')?.related_identifier;
     if ((!!publication_name && (!!manuscript_number || !!primary_article))
       || (!!preprint_server && !!preprint)) {
-      console.log('hey');
       setShowTitle(true);
     }
     setSponsored(!!res.journal?.payment_plan_type && (manuscript_number || primary_article) ? res.journal.title : false);
-    if (res.title && !resource.identifier.process_date?.processing) {
-      axios.get(`/resources/${resource.id}/dupe_check.json`).then((data) => {
-        setDupeWarning(data.data?.[0]?.title || false);
-      });
-    } else {
-      setDupeWarning(false);
+    if (res.title) {
+      if (!resource.identifier.process_date?.processing) {
+        axios.get(`/resources/${resource.id}/dupe_check.json`).then((data) => {
+          setDupeWarning(data.data?.[0]?.title || false);
+        });
+      } else {
+        setDupeWarning(false);
+      }
+      if (capitals(res.title)) {
+        setCaseWarning(true);
+      } else {
+        setCaseWarning(false);
+      }
     }
   }, [res]);
 
@@ -135,6 +170,28 @@ export default function Publication({resource, setResource, maxSize}) {
 
       {showTitle && (
         <Title key={res.title} resource={res} setResource={setRes} />
+      )}
+
+      {caseWarning && (
+        <div className="callout warn">
+          <p style={{fontSize: '.98rem'}}>Please correct your dataset title to sentence case, which could look like:</p>
+          <p><span>{sentenceCase(res.title)}</span>
+            <span
+              className="copy-icon"
+              role="button"
+              tabIndex="0"
+              aria-label="Copy title"
+              title="Copy title"
+              onClick={copyTitle}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                  copyTitle(e);
+                }
+              }}
+            ><i className="fa fa-paste" role="status" />
+            </span>
+          </p>
+        </div>
       )}
 
       {dupeWarning && (

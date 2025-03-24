@@ -1418,6 +1418,13 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.3.tgz#4a2868d75d6d6963e423bcf90b7fd1be343409d3"
   integrity sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==
 
+"@insomnia-dev/words-to-numbers@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@insomnia-dev/words-to-numbers/-/words-to-numbers-2.2.0.tgz#6b0cea21431c11fd05d12304543400579854543a"
+  integrity sha512-HSqiVEQy969HfDE8eOC0xVxpfCjDdu4cEUgVUrDVN5JE1rBICdiraQdWFntz3cI3VseDJjojQfVQGio9OH5XAA==
+  dependencies:
+    "@skyra/jaro-winkler" "^1.1.1"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -1944,6 +1951,11 @@
   integrity sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==
   dependencies:
     "@sinonjs/commons" "^3.0.0"
+
+"@skyra/jaro-winkler@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@skyra/jaro-winkler/-/jaro-winkler-1.1.1.tgz#446c46f3d74e2a8051d46d1341b98ed375439fc7"
+  integrity sha512-jT2OWwpajtXTb6opnaIwmBTMpQtKUwl2Ro1zApxIIrpZJon71kZIv6GZSc08LzKO2lpTqUjvD+i7Z2hGuG42KQ==
 
 "@testing-library/dom@^9.0.0", "@testing-library/dom@^9.3.3":
   version "9.3.4"
@@ -3118,6 +3130,11 @@ braces@^3.0.3, braces@~3.0.2:
   integrity sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==
   dependencies:
     fill-range "^7.1.1"
+
+brill@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/brill/-/brill-3.1.0.tgz#e960ae19cee457ec5cd6ef34b15d6773274bfcb9"
+  integrity sha512-A2PkfAOvBQAkQRxTbOpHlvO2/GD3C9C2UXh5smA13icDBAPGZJHXu28kR4yUMTKAf9fmtgaYZKgk5ES07qrAtw==
 
 browserslist@^4.0.0, browserslist@^4.21.10, browserslist@^4.22.2, browserslist@^4.23.0:
   version "4.23.0"
@@ -4834,11 +4851,6 @@ fast-levenshtein@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
-
-fast-tag-pos@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/fast-tag-pos/-/fast-tag-pos-2.0.0.tgz#de0f6923e92ca4e6d1bb32fd5e23388d5f86e68f"
-  integrity sha512-BdT2WMan25s8x5obDInSy1twqAKzeqHQ7T6fbowICcIUANoCRlhWUPn1e7r4Me2Jz3tNFT71MIZf2hIn0tUrag==
 
 fastest-levenshtein@^1.0.12, fastest-levenshtein@^1.0.16:
   version "1.0.16"

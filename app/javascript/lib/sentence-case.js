@@ -1,15 +1,12 @@
-import {Tagger} from 'fast-tag-pos';
+import wordsToNumbers from '@insomnia-dev/words-to-numbers';
+import {brill} from 'brill'
 
-//modified from https://github.com/blakeembrey/change-case/tree/main/packages/title-case
-
-const tagger = new Tagger();
-tagger.extendLexicon({'Dryad': ['NNP']})
 const TOKENS = /(\S+)|(.)/g;
 const IS_SPECIAL_CASE = /[\.#][\p{L}\p{N}]/u; // #tag, example.com, etc.
 const IS_MANUAL_CASE = /\p{Ll}(?=[\p{Lu}])/u; // iPhone, iOS, etc.
 const ALPHANUMERIC_PATTERN = /[\p{L}\p{N}]+/gu;
 const IS_ACRONYM = /^([^\p{L}])*(?:\p{L}\.){2,}([^\p{L}])*$/u;
-export const WORD_SEPARATORS = new Set(["—", "–", "-", "―", "/"]);
+export const WORD_SEPARATORS = new Set(["—", "–", "-", "―", "/", "'"]);
 export const SENTENCE_TERMINATORS = new Set([".", "!", "?"]);
 export const TITLE_TERMINATORS = new Set([
   ...SENTENCE_TERMINATORS,
@@ -24,6 +21,7 @@ export const SMALL_WORDS = new Set([
   "and",
   "as",
   "at",
+  "are",
   "because",
   "but",
   "by",
@@ -55,9 +53,16 @@ export const SMALL_WORDS = new Set([
   "with",
   "without",
   "yet",
+  // common Dryad lowercases
+  "raw",
+  "data",
+  "dataset",
+  "supplement",
+  "supplementary",
+  "supporting"
   ]);
-export function titleCase(input, options = {}) {
-  const { locale = undefined, sentenceCase = false, sentenceTerminators = SENTENCE_TERMINATORS, titleTerminators = TITLE_TERMINATORS, smallWords = SMALL_WORDS, wordSeparators = WORD_SEPARATORS, } = typeof options === "string" || Array.isArray(options)
+export function sentenceCase(input, options = {}) {
+  const { locale = 'en-US', sentenceCase = false, sentenceTerminators = SENTENCE_TERMINATORS, titleTerminators = TITLE_TERMINATORS, smallWords = SMALL_WORDS, wordSeparators = WORD_SEPARATORS, } = typeof options === "string" || Array.isArray(options)
   ? { locale: options }
   : options;
   const terminators = sentenceCase ? sentenceTerminators : titleTerminators;
@@ -76,10 +81,7 @@ export function titleCase(input, options = {}) {
       // but we should uppercase first for i.e., e.g., etc.
       if (acronym) {
         const [_, prefix = "", suffix = ""] = acronym;
-        result +=
-        sentenceCase && !isNewSentence
-        ? token
-        : upperAt(token, prefix.length, locale);
+        result += !isNewSentence ? token : upperAt(token, prefix.length, locale);
         isNewSentence = terminators.has(suffix.charAt(0));
         continue;
       }
@@ -94,53 +96,28 @@ export function titleCase(input, options = {}) {
         const { 0: word, index: wordIndex = 0 } = matches[i];
         const nextChar = token.charAt(wordIndex + word.length);
         isSentenceEnd = terminators.has(nextChar);
+        const tag = brill[lower(word, locale)] || brill[upperAt(lower(word), 0, locale)];
+        if (IS_MANUAL_CASE.test(word)) {
+          value = value;
+          continue;
+        } else if (smallWords.has(lower(word)) || !isNaN(wordsToNumbers(word))) {
+          value = lower(value, locale)
+        } else if (tag && tag.includes('NNP')) {
+          value = upperAt(lower(value), wordIndex, locale);
+        } else if (tag) {
+          value = lower(value, locale)
+        } else {
+          if (word === lower(word, locale) || word === upper(word, locale)) {
+            value = value
+          } else {
+            value = upperAt(lower(value), wordIndex, locale);
+          }
+        }
         // Always the capitalize first word and reset "new sentence".
         if (isNewSentence) {
-          value = upperAt(lowerAt(value, locale), wordIndex, locale);
-          isNewSentence = false;
-          continue
-        }
-        else if (IS_MANUAL_CASE.test(word)) {
-          continue;
-        }
-        // Handle simple words.
-        else if (matches.length === 1) {
-          // Avoid capitalizing small words, except at the end of a sentence.
-          if (smallWords.has(word)) {
-            // unless sentenceCase
-            if (sentenceCase) {
-              value = lowerAt(value, locale)
-            }
-            const isFinalToken = index + token.length === input.length;
-            if (!isFinalToken && !isSentenceEnd) {
-              continue;
-            }
-          }
-        }
-        // Multi-word tokens need to be parsed differently.
-        else if (i > 0) {
-          // Avoid capitalizing words without a valid word separator, e.g. "apple's" or "test(ing)".
-          if (!wordSeparators.has(token.charAt(wordIndex - 1))) {
-            continue;
-          }
-          // Ignore small words in the middle of hyphenated words.
-          if (smallWords.has(word) && wordSeparators.has(nextChar)) {
-            // unless sentenceCase
-            if (sentenceCase) {
-              value = lowerAt(value, locale)
-            }
-            continue
-          }
-        }
-        if (sentenceCase) {
-          const [[_, tag]] = tagger.tag([word])
-          if (tag && tag.startsWith('NNP')) {
-            value = upperAt(value, wordIndex, locale);
-          } else {
-            value = lowerAt(value, locale)
-          }
-        } else {
           value = upperAt(value, wordIndex, locale);
+          isNewSentence = false;
+          continue;
         }
       }
       result += value;
@@ -150,11 +127,19 @@ export function titleCase(input, options = {}) {
   }
   return result;
 }
+function upper(input, locale) {
+  return input.toLocaleUpperCase(locale)
+}
+function lower(input, locale) {
+  return input.toLocaleLowerCase(locale)
+}
 function upperAt(input, index, locale) {
   return (input.slice(0, index) +
     input.charAt(index).toLocaleUpperCase(locale) +
     input.slice(index + 1));
 }
 function lowerAt(input, locale) {
-  return input.toLocaleLowerCase(locale)
+  return (input.slice(0, index) +
+    input.charAt(index).toLocaleLowerCase(locale) +
+    input.slice(index + 1));
 }

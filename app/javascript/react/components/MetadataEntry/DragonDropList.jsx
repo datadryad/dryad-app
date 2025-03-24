@@ -99,6 +99,7 @@ export default function DragonDropList({
       // the "announcement section below is to announce changes to screen readers
       const dragon = new DragonDrop(dragonRef.current, {
         handle: '.handle',
+        item: ':scope > li',
         announcement: {
           grabbed: (el) => `${el.querySelector('input').value} grabbed`,
           dropped: (el) => `${el.querySelector('input').value} dropped`,
@@ -164,7 +165,7 @@ export default function DragonDropList({
         Activate the reorder button and use the arrow keys to reorder the list or use your mouse to{' '}
         drag/reorder. Press escape to cancel the reordering. Ensure screen reader is in focus mode.
       </p>
-      <ul className="dragon-drop-list" aria-label={`${upCase(typeName)}`} ref={dragonRef}>
+      <ul className="dragon-drop-list" aria-label={`${upCase(typeName)}s`} ref={dragonRef}>
         {children}
       </ul>
     </section>

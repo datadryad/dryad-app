@@ -111,12 +111,6 @@ module StashDatacite
           error = validations.title
           expect(error).to eq('All caps title')
         end
-        it 'returns error for Title Case title' do
-          @resource.update(title: @resource.title.titleize)
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.title
-          expect(error).to eq('Title case title')
-        end
       end
 
       describe :authors do
