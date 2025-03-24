@@ -56,6 +56,7 @@ const checkResponse = async (response) => {
       onLoad: () => { if (!dialog.open) dialog.showModal(); },
       onSuccess: async (token) =>  {
         dialog.close();
+        dlbutton.focus();
         const response = await AwsWafIntegration.fetch(zip_url);
         checkResponse(response);
       },
@@ -88,6 +89,9 @@ messageChannel.port1.addEventListener("message", ({data}) => {
     dlbutton.classList.remove('o-download__wait');
     dlbutton.lastElementChild.innerHTML = 'Download full dataset';
     dlbutton.removeAttribute('disabled');
-    if (dialog.open) dialog.close();
+    if (dialog.open) {
+      dialog.close();
+      dlbutton.focus();
+    }
   }
 });
