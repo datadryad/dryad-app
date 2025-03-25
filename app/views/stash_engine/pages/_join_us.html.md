@@ -10,7 +10,7 @@ Institutions, publishing organizations, academic societies, and others partner w
   <p style="text-align: center"><a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us to learn more</a>, or to become a Dryad partner.</p>
 </div>
 
-## Benefits of membership
+## Benefits of partnership
 
 Dryad’s partner community includes research institutions, funders, publishers, and academic societies — all committed to maximizing the impact of research and accelerating the pace of discovery. Organizations partner with us to sponsor the cost of Dryad services for their researchers at a reduced rate. Researchers enjoy access to Dryad data curation, publication and preservation services, with hands-on support from our experienced team.
 
@@ -19,7 +19,7 @@ Dryad is more than a repository; we’re a mission-driven non-profit organizatio
 Dryad partners enjoy:
 
 * Time-saving support, training, and outreach — to researchers, colleagues and stakeholders
-Convenient annual billing
+* Convenient annual billing
 * Administrative dashboard — for dataset monitoring and reporting both before and after publication 
 * Lower per-dataset fees
 
@@ -73,7 +73,7 @@ Institutions, publishers, academic societies, and others partner with Dryad to m
     <div>
       <h5 style="font-weight: bold; color: #3c763d; font-size: 1.15em;">Annual Service Fee</h5>
       <p style="font-style: italic; font-size: .98rem; margin: 0;">Covers the fixed costs of service, infrastructure, and operations</p>
-      <p style="margin-top: .5ch;">Based on the partner organization’s annual research revenue or expenditure</p>
+      <p style="margin-top: .5ch;">Based on the partner organization’s annual revenue or expenditure</p>
     </div>
     <div style="grid-column: 1 /span 3; text-align: center; color: #3c763d; font-weight: bold;">
       <p style="font-size: 1.15em; margin: 0 auto;"><i class="fas fa-plus" aria-label="+" role="img"></i> Any fees for large datasets</p>

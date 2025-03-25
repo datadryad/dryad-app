@@ -365,7 +365,7 @@ The DPC and Annual Service Fee are combined to calculate the total annual fee, w
       All fees are listed in USD
     </caption>
     <thead>
-      <tr class="callout"><th colspan="6" style="text-align: center;">Sample institutional fee calculation<p style="font-weight: normal; margin: 0 auto">Effective March 25, 2025</p></th></tr>
+      <tr class="callout"><th colspan="6" style="text-align: center;">Sample publisher fee calculation<p style="font-weight: normal; margin: 0 auto">Effective March 25, 2025</p></th></tr>
       <tr>
         <th>Service tier</th>
         <th>Annual Service Fee</th>
