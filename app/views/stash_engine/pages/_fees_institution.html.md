@@ -401,7 +401,7 @@ The DPC and Annual Service Fee are combined to calculate the total annual fee, w
       <tr>
         <td>6</td>
         <td>$50,000</td>
-        <td>15</td>
+        <td>16</td>
         <td>551</td>
         <td>$58,250</td>
         <td>$108,250</td>
