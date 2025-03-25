@@ -99,16 +99,19 @@ end
 # since it is expensive to asemble the zip files.
 Rack::Attack.throttle('zip_downloads_per_hour', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_hour], period: 1.hour) do |req|
   "zip_download_per_hour_#{req.ip}" if start_w_wo_stash?(req.path, '/downloads/download_resource') ||
+                              start_w_wo_stash?(req.path, '/downloads/zip_assembly_info') ||
                               req.path.match(/api.*(version|dataset).*download/)
 end
 
 Rack::Attack.throttle('zip_downloads_per_day', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_day], period: 1.day) do |req|
   "zip_download_per_day_#{req.ip}" if start_w_wo_stash?(req.path, '/downloads/download_resource') ||
+                              start_w_wo_stash?(req.path, '/downloads/zip_assembly_info') ||
                               req.path.match(/api.*(version|dataset).*download/)
 end
 
 Rack::Attack.throttle('zip_downloads_per_month', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_month], period: 30.days) do |req|
   "zip_download_per_month_#{req.ip}" if start_w_wo_stash?(req.path, '/downloads/download_resource') ||
+                              start_w_wo_stash?(req.path, '/downloads/zip_assembly_info') ||
                               req.path.match(/api.*(version|dataset).*download/)
 end
 
