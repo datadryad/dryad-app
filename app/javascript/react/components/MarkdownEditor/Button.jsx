@@ -258,7 +258,7 @@ function Table({
     const menu = document.getElementById(`${editorId}tableMenu`);
     menu.previousElementSibling.setAttribute('aria-expanded', false);
     menu.hidden = true;
-    setNums([0,0])
+    setNums([0, 0]);
     setCols(startNum);
     setRows(startNum);
   };
