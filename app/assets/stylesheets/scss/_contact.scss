@@ -1,4 +1,9 @@
+.nobr {
+  white-space: nowrap;
+}
+
 .emailr {
   unicode-bidi: bidi-override;
   direction: rtl;
+  white-space: nowrap;
 }

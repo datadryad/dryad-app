@@ -1,14 +1,14 @@
 <%= form_with(model: StashEngine::SavedSearch, url: update_saved_search_path(saved_search.id), method: :patch, local: false, class: 'saved_search_form') do %>
-  <div>
+  <div class="input-stack">
     <%= label_tag(:default, 'Default', style: "font-size: .98rem") %>
     <%= hidden_field_tag :default, false %>
     <%= check_box_tag(:default, true, saved_search.default)%>    
   </div>
-  <div>
+  <div class="input-stack">
     <%= label_tag(:title, 'Name', style: "font-size: .98rem") %>
     <%= text_field_tag(:title, saved_search.title, class: 'c-input__text', maxlength: '50', required: true) %>
   </div>
-  <div>
+  <div class="input-stack">
     <%= label_tag(:description, 'Description', style: "font-size: .98rem") %>
     <%= text_area_tag(:description, saved_search.description, class: 'c-input__textarea', style: 'width: 100%; min-height: 2rem;') %>
   </div>

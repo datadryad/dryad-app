@@ -152,6 +152,7 @@
     @media (max-width: 1070px) { columns: 5 }
     @media (max-width: 920px) { columns: 3 }
     @media (max-width: 480px) { columns: 2 }
+    @media (max-width: 315px) { columns: 1 }
 
     div {
       margin-bottom: 4px;
@@ -275,6 +276,8 @@
 }
 
 .admin-dashboard-buttons {
+  box-sizing: border-box;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;

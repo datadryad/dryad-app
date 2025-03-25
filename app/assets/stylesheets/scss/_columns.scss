@@ -95,7 +95,7 @@
     }
   }
 
-  a {
+  a {    
     &:link, &:visited {
       text-decoration: none;
     }
@@ -176,6 +176,11 @@
       max-width: 20ch;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+  }
+  @media (max-width: $screen-lg-min - 1) {
+    a {
+      max-width: 10ch;
     }
   }
 }

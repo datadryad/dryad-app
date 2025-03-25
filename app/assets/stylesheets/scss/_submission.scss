@@ -569,9 +569,13 @@ dialog#submission-step[open] {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  flex-wrap: wrap;
+  gap: 1ch;
   & + * {
     margin-top: 0;
+    margin-bottom: 0;
   }
+  margin-bottom: 1rem;
 }
 
 .drag-instruct {
