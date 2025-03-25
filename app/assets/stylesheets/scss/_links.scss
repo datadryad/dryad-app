@@ -55,10 +55,15 @@ a {
   display: inline-block;
   border: none;
   text-decoration: none;
-  padding: 8px 12px;
+  padding: 6px 10px;
   background-color: $dark-blue;
+  border: thin solid $dark-blue;
   color: white;
   text-align: center;
+}
+
+.o-link__buttonlink:focus {
+  border: thin solid white;
 }
 
 .o-link__buttonlink:hover, .o-link__buttonlink:active {

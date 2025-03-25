@@ -44,15 +44,15 @@ module StashEngine
         sort_link_url(sort_field),
         class: params[:sort] == sort_field ? "current #{params[:direction]}" : nil,
         'aria-label': "Sort on #{title}",
+        'data-sort': sort_field,
+        'aria-pressed': params[:pressed] == sort_field ? true : nil,
         remote: remote
       )
     end
 
     # Passthrough for query parameters that are allowed on pages with sortable tables
     def sortable_table_params
-      params.permit(:q, :sort, :direction, :page, :page_size, :show_all,
-                    :tenant, :editor_id, :curation_status, :publication_name, :sponsor_org,
-                    :all_advanced)
+      params.permit(:q, :sort, :pressed, :direction, :page, :page_size, :show_all)
     end
 
     # Generate a string for ordering ActiveRecord selections. If no sort order
@@ -75,6 +75,7 @@ module StashEngine
     def sort_link_url(sort_field)
       query_params = sortable_table_params
       query_params[:sort] = sort_field
+      query_params[:pressed] = sort_field
       query_params[:direction] = if params[:sort] == sort_field
                                    switch_direction(params[:direction])
                                  else
@@ -82,7 +83,8 @@ module StashEngine
                                  end
 
       local_params = sortable_table_params.to_unsafe_h.with_indifferent_access.merge!(request.query_parameters)
-      base_url = "#{request.path}?#{local_params.merge!(sort: query_params[:sort], direction: query_params[:direction]).to_query}"
+      base_url = "#{request.path}?#{local_params.merge!(sort: query_params[:sort], pressed: query_params[:pressed],
+                                                        direction: query_params[:direction]).to_query}"
       sort_url = URI(base_url)
       sort_url.to_s
     end

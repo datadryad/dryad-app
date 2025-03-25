@@ -102,6 +102,11 @@ function LinkMenu({editor, editorId, active}) {
     setUrl('');
   };
 
+  const leaveMenu = (e) => {
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    closeMenu();
+  };
+
   const clickListener = (e) => {
     const element = document.getElementById(`${editorId}linkMenu`).parentElement;
     if (!element.contains(e.target)) {
@@ -159,7 +164,7 @@ function LinkMenu({editor, editorId, active}) {
   };
 
   return (
-    <div className="linkSelect" role="menuitem">
+    <div className="linkSelect" role="menuitem" onBlur={leaveMenu}>
       <button
         type="button"
         className={active ? 'active' : undefined}
@@ -263,6 +268,11 @@ function Table({
     setRows(startNum);
   };
 
+  const leaveMenu = (e) => {
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    closeMenu();
+  };
+
   const clickListener = (e) => {
     const element = document.getElementById(`${editorId}tableMenu`).parentElement;
     if (!element.contains(e.target)) {
@@ -321,7 +331,7 @@ function Table({
   }, tableNums);
 
   return (
-    <div className="tableSelect" role="menuitem">
+    <div className="tableSelect" role="menuitem" onBlur={leaveMenu}>
       <button
         type="button"
         className={active ? 'active' : undefined}

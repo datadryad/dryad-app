@@ -69,7 +69,7 @@ export default function ReadMeSteps({
               }
             }}
           >
-            <span className="bar"/><span className="step-counter">{i}</span><span className="step-name">{secTitles[i - 1]}</span>
+            <span className="bar" /><span className="step-counter">{i}</span><span className="step-name">{secTitles[i - 1]}</span>
           </div>
         ))}
       </div>

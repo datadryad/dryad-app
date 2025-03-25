@@ -187,8 +187,7 @@ function Submission({
     } else if (review) {
       main.classList.remove('submission-review');
     } else {
-      console.log('stepped');
-      document.getElementById('submission-step')?.focus();
+      document.querySelector('#submission-header h2')?.focus();
     }
     if (step.name !== 'Create a submission') {
       const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
@@ -311,10 +310,10 @@ function Submission({
       <div className="submission-edit">
         <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
         <div id="submission-wizard" className={open ? 'open' : null}>
-          <div id="submission-step" tabIndex="-1" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
+          <div id="submission-step" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
             <div ref={subRef}>
               <div id="submission-header">
-                <h2 className="o-heading__level2">{step.name}</h2>
+                <h2 className="o-heading__level2" tabIndex="-1">{step.name}</h2>
                 <div role="status">
                   <div className="saving_text" hidden>Saving&hellip;</div>
                   <div className="saved_text" hidden>All progress saved</div>

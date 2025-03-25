@@ -84,6 +84,16 @@ navButtons.forEach(button => {
       });
     }
   })
+  button.parentElement.addEventListener('focusout', (e) => {
+    if (button.parentElement.contains(e.relatedTarget)) return
+    if (window.innerWidth > 899) {
+      navButtons.forEach(nb => {
+        nb.setAttribute('aria-expanded', 'false');
+        nb.parentElement.classList.remove('is-open');
+        nb.nextElementSibling.setAttribute('hidden', true);
+      });
+    }
+  })
   button.addEventListener('click', (e) => {
     const closed = button.getAttribute('aria-expanded') === 'false';
     navButtons.forEach(nb => {
