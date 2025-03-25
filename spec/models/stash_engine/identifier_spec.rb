@@ -487,16 +487,6 @@ module StashEngine
         expect(@identifier.payment_type).to eq('institution')
       end
 
-      xit 'records an a country-based fee waiver' do
-        affil = double(StashDatacite::Affiliation)
-        allow(affil).to receive(:fee_waivered?).and_return(true)
-        allow(affil).to receive(:country_name).and_return('Bogusland')
-        allow(@identifier).to receive(:submitter_affiliation).and_return(affil)
-        @identifier.record_payment
-        expect(@identifier.payment_type).to eq('waiver')
-        expect(@identifier.waiver_basis).to eq('Bogusland')
-      end
-
       it 'records a funder-based payment' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
