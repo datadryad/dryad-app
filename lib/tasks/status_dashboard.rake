@@ -73,7 +73,7 @@ namespace :status_dashboard do
       name: 'DataCite citations population',
       description: 'Checks logs for new or updated citations checker from event data. Checks the script ran successfully',
       documentation: 'It checks the log for the rake task "counter:populate_citations" from the weekly cron.' \
-                     'The cron logs to /home/ec2-user/deploy/shared/cron/logs/citation_populator.log.' \
+                     'The cron logs to /home/ec2-user/deploy/shared/log/citation_populator.log.' \
                      'Looks for "Completed populating citations" and date that is not too old.',
       internally_managed: true,
       status: 1

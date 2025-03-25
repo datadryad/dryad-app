@@ -281,23 +281,19 @@ module StashEngine
 
     def record_payment
       # once we have assigned payment to an entity, keep that entity
-      # unless it was a journal that was removed or a new journal covers the dpc
+      # unless it was a journal that was removed
       clear_payment_for_changed_journal
       return if payment_type.present? && payment_type != 'unknown'
 
       if collection?
         self.payment_type = 'no_data'
         self.payment_id = nil
-      elsif journal&.will_pay?
-        self.payment_type = "journal-#{journal.payment_plan_type}"
-        self.payment_id = publication_issn
       elsif institution_will_pay?
         self.payment_id = latest_resource&.tenant&.id
         self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_plan == 'tiered'}"
-      elsif submitter_affiliation&.fee_waivered?
-        self.payment_type = 'waiver'
-        self.waiver_basis = submitter_affiliation.country_name
-        self.payment_id = nil
+      elsif journal&.will_pay?
+        self.payment_type = "journal-#{journal.payment_plan_type}"
+        self.payment_id = publication_issn
       elsif funder_will_pay?
         contrib = funder_payment_info
         self.payment_type = 'funder'
@@ -642,6 +638,7 @@ module StashEngine
       self.payment_type = nil
       self.payment_id = nil
       save
+      reload
     end
 
     def abstracts
