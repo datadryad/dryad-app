@@ -1,6 +1,6 @@
 # Institutional partner fees
 
-Academic institutions, independent research, and other organizations partner with Dryad to make our services available to their researchers at a reduced rate. They trust us to provide individualized support to authors, and to curate, publish, and preserve data in the most economical way.
+Academic institutions, independent research organizations, and others partner with Dryad to make our services available to their researchers at a reduced rate. They trust us to provide individualized support to authors, and to curate, publish, and preserve data in the most economical way.
 
 Our institution and research partners also benefit from:
 
@@ -14,7 +14,7 @@ Our institution and research partners also benefit from:
   <p style="text-align: center;">Learn more about <a href="/join_us">Dryad services and partner benefits</a></p>
 </div>
 
-The annual partner fee is calculated as a total of the anticipated data publication charge (DPC) for the coming year, plus the Annual Service Fee. DPCs are adjusted to reflect actual usage at year-end.
+The annual partner fee is calculated as a total of the anticipated Data Publication Charge (DPC) for the coming year, plus the Annual Service Fee. DPCs are adjusted to reflect actual usage at year-end.
 
 Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule.
 
@@ -310,7 +310,7 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 
 #### Lower- and middle-income countries
 
-Annual service fees for institutions based in lower- and middle-income countries are as follows.
+Annual Service Fees for institutions based in lower- and middle-income countries are as follows.
 
 
 <div style="text-align: center;">
@@ -360,54 +360,48 @@ Annual service fees for institutions based in lower- and middle-income countries
 
 ### Total fees
 
-The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from 5,000 to 108,250 USD depending on the institution’s data publications and annual research expenditure.
+The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $5,000 to $108,250 depending on the institution’s data publications and annual research expenditure.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
-  <table style="width: 100%;" class="columned">
+  <table style="width: 100%;">
     <caption>
       All fees are listed in USD
     </caption>
     <thead>
-      <tr class="callout"><th colspan="4" style="text-align: center;">Sample institutional fee calculation<p style="font-weight: normal; margin: 0 auto">Effective March 25, 2025</p></th></tr>
+      <tr class="callout"><th colspan="6" style="text-align: center;">Sample institutional fee calculation<p style="font-weight: normal; margin: 0 auto">Effective March 25, 2025</p></th></tr>
+      <tr>
+        <th>Service tier</th>
+        <th>Annual Service Fee</th>
+        <th>DPC tier</th>
+        <th>Datasets published</th>
+        <th>DPC fee</th>
+        <th>Total annual fees</th>
+      </tr>
     </thead>
     <tbody>
       <tr>
-        <th>DPC tier</th>
         <td>1</td>
-        <td>10</td>
-        <td>15</td>
-      </tr>
-      <tr>
-        <th>Datasets published</th>
+        <td>$5,000</td>
         <td>1</td>
-        <td>251</td>
-        <td>551</td>
-      </tr>
-      <tr>
-        <th>DPC fee</th>
+        <td>1</td>
         <td>$0</td>
-        <td>$30,250</td>
-        <td>$58,250</td>
+        <td>$5,000</td>
       </tr>
       <tr>
-        <th>Service tier</th>
-        <td>1</td>
         <td>4</td>
-        <td>6</td>
-      </tr>
-      <tr>
-        <th>Annual Service Fee</th>
-        <td>$5,000</td>
         <td>$30,000</td>
-        <td>$50,000</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <th>Total annual fees</th>
-        <td>$5,000</td>
+        <td>10</td>
+        <td>251</td>
+        <td>$30,250</td>
         <td>$60,250</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>$50,000</td>
+        <td>15</td>
+        <td>551</td>
+        <td>$58,250</td>
         <td>$108,250</td>
       </tr>
     </tfoot>
