@@ -63,7 +63,7 @@ td, th {
     content: '\f176\f175';
     content: '\f176\f175' / '';
     margin-left: .5ch;
-    color: $light-gray;
+    color: $medium-gray;
     letter-spacing: .2ch;
   }
 
@@ -133,7 +133,7 @@ td, th {
   }
 
   &:hover, &:focus, &:active {
-    color: $light-green;
+    color: $medium-green;
   }
 }
 
