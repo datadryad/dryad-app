@@ -129,6 +129,7 @@
   min-width: 110px;
   margin-right: 1.5px;
   margin-left: 1.5px;
+  cursor: pointer;
 }
 
 .markdown_editor .md_editor-buttons button {
