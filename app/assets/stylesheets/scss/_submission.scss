@@ -575,11 +575,13 @@ dialog#submission-step[open] {
   align-items: baseline;
   flex-wrap: wrap;
   gap: 1ch;
-  & + * {
-    margin-top: 0;
+  margin-bottom: 1rem;
+  * {
     margin-bottom: 0;
   }
-  margin-bottom: 1rem;
+  & + * {
+    margin-top: 0;
+  }
 }
 
 .drag-instruct {
@@ -616,20 +618,6 @@ dialog#submission-step[open] {
   color: $dark-gray;
 }
 
-.author-form, .funder-form, .work-form {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  column-gap: 1.5ch;
-  row-gap: 1ch;
-  flex: 1;
-
-  .remove-record, & + .remove-record {
-    @extend %o-button__link-style;
-    margin-top: 28px;
-  }
-}
-
 %author-form-button {
   color: $dark-blue;
   background-color: white;
@@ -639,6 +627,25 @@ dialog#submission-step[open] {
   &:hover, &:active, &:focus {
     background-color: $dark-blue;
     color: white;
+  }
+  &:focus {
+    border: thin solid white;
+  }
+}
+
+.author-form, .funder-form, .work-form {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 1.5ch;
+  row-gap: 1ch;
+  flex: 1;
+
+  .remove-record, & + .remove-record {
+    @extend %author-form-button;
+    margin-top: 28px;
+    font-size: 1.1rem;
+    padding: 4px;
   }
 }
 
