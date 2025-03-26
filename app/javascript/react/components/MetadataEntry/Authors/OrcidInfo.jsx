@@ -31,7 +31,14 @@ export default function OrcidInfo({author, curator}) {
       {orcidInfo && (
         <div className="author-one-line" style={{marginRight: 'auto'}}>
           <i className="fab fa-orcid" aria-hidden="true" />&nbsp;
-          <a href={orcidInfo} target="_blank" className="c-orcid__id" rel="noreferrer">{author.author_orcid}</a>
+          <a
+            href={orcidInfo}
+            aria-label={`ORCID profile for ${[author.author_first_name, author.author_last_name].filter(Boolean).join(' ')}`}
+            target="_blank"
+            className="c-orcid__id"
+            rel="noreferrer"
+          >{author.author_orcid}
+          </a>
         </div>
       )}
       {(curator && !orcidInfo && author.orcid_invite_path) && (

@@ -23,17 +23,27 @@
 
 .o-button__plain-text0 {
   @extend %o-button__plain-text;
-  padding: 8px 12px;
-  background-color: $green;
+  padding: 6px 10px;
+  border: thin solid $dark-green;
+  background-color: $dark-green;
   color: white;
+
+  &:focus {
+    border-color: white
+  }
 }
 
 .o-button__plain-text1,
 input[type=file]::file-selector-button {
   @extend %o-button__plain-text;
-  padding: 8px 12px;
+  padding: 6px 10px;
+  border: thin solid $dark-blue;
   background-color: $dark-blue;
   color: white;
+
+  &:focus {
+    border-color: white
+  }
 }
 
 .o-button__plain-text2 {

@@ -1,3 +1,7 @@
+html.preview_submission {
+  scroll-padding-bottom: 115px;
+}
+
 .metadata_entry_pages_find_or_create {
   max-width: none;
   padding-left: 0;
@@ -569,6 +573,12 @@ dialog#submission-step[open] {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  flex-wrap: wrap;
+  gap: 1ch;
+  margin-bottom: 1rem;
+  * {
+    margin-bottom: 0;
+  }
   & + * {
     margin-top: 0;
   }
@@ -608,20 +618,6 @@ dialog#submission-step[open] {
   color: $dark-gray;
 }
 
-.author-form, .funder-form, .work-form {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  column-gap: 1.5ch;
-  row-gap: 1ch;
-  flex: 1;
-
-  .remove-record, & + .remove-record {
-    @extend %o-button__link-style;
-    margin-top: 28px;
-  }
-}
-
 %author-form-button {
   color: $dark-blue;
   background-color: white;
@@ -631,6 +627,25 @@ dialog#submission-step[open] {
   &:hover, &:active, &:focus {
     background-color: $dark-blue;
     color: white;
+  }
+  &:focus {
+    border: thin solid white;
+  }
+}
+
+.author-form, .funder-form, .work-form {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 1.5ch;
+  row-gap: 1ch;
+  flex: 1;
+
+  .remove-record, & + .remove-record {
+    @extend %author-form-button;
+    margin-top: 28px;
+    font-size: 1.1rem;
+    padding: 4px;
   }
 }
 

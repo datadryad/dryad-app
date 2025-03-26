@@ -68,6 +68,11 @@
 
 .c-alert__close {
 	margin: 0 0 0 12px;
+
+	&:hover, &:focus, &:active {
+		outline: none;
+		border-bottom: 3px solid white;
+	}
 }
 
 .c-alert--migration {

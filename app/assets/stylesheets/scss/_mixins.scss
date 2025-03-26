@@ -130,9 +130,4 @@ Selector pattern using above mixin:
 
 %fcontrol-focus:focus {
   outline: 2px solid $medium-blue;
-  
-  &::placeholder {
-    opacity: 0.5;
-  }
-
 }

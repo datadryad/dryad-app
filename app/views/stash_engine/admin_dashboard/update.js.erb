@@ -22,3 +22,8 @@ if (document.getElementById('dataset_pub_state_<%= @identifier.id %>')){
   document.getElementById('dataset_pub_state_<%= @identifier.id %>').innerHTML = "<%= @identifier.calculated_pub_state.upcase_first %>"
 }
 document.getElementById('genericModalDialog').close();
+<% if @field == 'curation_activity' %>
+  document.getElementById('curation_activity_button_<%=@identifier.id%>').focus()
+<% elsif @field == 'curator' %>
+  document.getElementById('curator_button_<%=@identifier.id%>').focus()
+<% end %>

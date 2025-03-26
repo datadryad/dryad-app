@@ -129,6 +129,7 @@
   min-width: 110px;
   margin-right: 1.5px;
   margin-left: 1.5px;
+  cursor: pointer;
 }
 
 .markdown_editor .md_editor-buttons button {
@@ -139,7 +140,8 @@
 
 .markdown_editor .md_editor-buttons button:hover,
 .markdown_editor .md_editor-buttons .headingButton:hover {
-  background-color: #98cae2;
+  background-color: #0071a8;
+  color: #fff;
 }
 
 .markdown_editor .md_editor-buttons button.active,
@@ -148,15 +150,19 @@
   text-shadow: 0 0 .06rem #98cae2;
 }
 
-.markdown_editor .md_editor-buttons button.active:hover,
-.markdown_editor .md_editor-buttons .headingButton.active:hover {
-  background-color: #fff;
-}
-
 .markdown_editor .md_editor-buttons .headingButton:focus,
 .markdown_editor .md_editor-buttons button:focus {
-  background-color: #98cae2;
+  background-color: #0071a8;
+  color: #fff;
   outline-width: thin;
+}
+
+.markdown_editor .md_editor-buttons button.active:hover,
+.markdown_editor .md_editor-buttons .headingButton.active:hover,
+.markdown_editor .md_editor-buttons .headingButton.active:focus,
+.markdown_editor .md_editor-buttons button.active:focus {
+  color: #0071a8;
+  background-color: #fff;
 }
 
 .markdown_editor .md_editor-buttons button[disabled] {
@@ -205,12 +211,14 @@
   border-top: thin solid #d0d0d0;
 }
 
-.markdown_editor .md_editor-buttons .headingMenu li.highlighted {
-  background-color: #e4f1f7;
+.markdown_editor .md_editor-buttons .headingMenu li.selected {
+  background-color: #00527A;
+  color: white;
 }
 
-.markdown_editor .md_editor-buttons .headingMenu li.selected {
-  background-color: rgb(233, 236, 239);
+.markdown_editor .md_editor-buttons .headingMenu li.highlighted {
+  background-color: #0071a8;
+  color: white;
 }
 
 .markdown_editor .md_editor-buttons .tableMenu {
@@ -263,8 +271,39 @@
 }
 
 .markdown_editor .md_editor-buttons .tableEntry span.hovering {
-  background-color: #e4f1f7;
-  border-color: #98cae2;
+  background-color: #98cae2;
+  border-color: #0071a8;
+}
+
+.markdown_editor .md_editor-buttons .tableMenuButtons {
+  display: block;
+  font-size: .98rem;
+  text-align: center;
+  padding: 0;
+  margin: .25ch auto;
+  line-height: 1;
+}
+
+.markdown_editor .md_editor-buttons .tableMenuButtons input {
+  padding: 0;
+  margin: 0;
+  border: none;
+  max-width: 3ch;
+  text-align: center;
+}
+
+.markdown_editor .md_editor-buttons .tableMenuButtons button {
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  min-height: 0;
+  height: 1ch;
+}
+
+.markdown_editor .md_editor-buttons .tableMenuButtons button:hover,
+.markdown_editor .md_editor-buttons .tableMenuButtons button:focus  {
+  color: #00527A;
+  background-color: #fff;
 }
 
 .markdown_editor .md_editor-buttons .linkMenu {

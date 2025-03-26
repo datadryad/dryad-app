@@ -43,7 +43,6 @@ export default function ReadMeImport({title, setValue}) {
         <label
           style={{display: 'inline-block'}}
           htmlFor="readme_upload"
-          aria-label="Upload README file"
           className="o-button__plain-text1"
         >
           <i className="fa fa-upload" aria-hidden="true" />{' '}{title || 'Import README'}

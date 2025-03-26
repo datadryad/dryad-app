@@ -108,7 +108,7 @@ function FunderForm({
                 }
               }
             />
-            <div id={`${contributor.id}funder-ex`}><i />National Institutes of Health</div>
+            <div id={`${contributor.id}funder-ex`}><i aria-hidden="true" />National Institutes of Health</div>
             {showSelect && (
               <>
                 <label htmlFor="subfunder_select" className="c-input__label" style={{marginTop: '1em'}}>{showSelect.group_label}</label>
@@ -130,7 +130,7 @@ function FunderForm({
               aria-describedby={`${contributor.id}award-ex`}
               onBlur={formik.handleSubmit}
             />
-            <div id={`${contributor.id}award-ex`}><i />CA 123456-01A1</div>
+            <div id={`${contributor.id}award-ex`}><i aria-hidden="true" />CA 123456-01A1</div>
           </div>
           <div className="input-stack">
             <label className="input-label optional" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
@@ -143,7 +143,7 @@ function FunderForm({
               aria-describedby={`${contributor.id}desc-ex`}
               onBlur={formik.handleSubmit}
             />
-            <div id={`${contributor.id}desc-ex`}><i />Section of the funder</div>
+            <div id={`${contributor.id}desc-ex`}><i aria-hidden="true" />Section of the funder</div>
           </div>
         </Form>
       )}
