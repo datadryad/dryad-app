@@ -1,12 +1,12 @@
 <h1>Edit funders</h1>
 <% @resource.contributors.funder.each do |funder| %>
   <%= form_with(url: contributors_update_path(format: :js), method: :patch, local: false) do |form| -%>
-    <div class="input-line" style="width:800px; max-width: 100%; margin-bottom: 1rem;">
+    <div class="input-line" style="max-width: 100%; flex-wrap: wrap; margin-bottom: 2rem;">
       <%= form.fields_for :contributor, funder do |f| %>
         <%= f.hidden_field :id %>
         <%= f.hidden_field :resource_id %>
         <%= f.hidden_field :name_identifier_id %>
-        <div class="input-stack" style="flex: 2;">
+        <div class="input-stack" style="flex: 3;">
           <%= render partial: 'stash_engine/shared/search_select', locals: {
             id: "funder#{funder.id}",
             label: 'Funder:',
@@ -40,8 +40,8 @@
     <%= f.hidden_field :resource_id, value: @resource.id %>
     <%= f.hidden_field :name_identifier_id %>
     <%= f.hidden_field :contributor_name %>
-    <div class="input-line" style="width:800px; max-width: 100%">
-      <div class="input-stack" style="flex: 2">
+    <div class="input-line" style="max-width: 100%; flex-wrap: wrap">
+      <div class="input-stack" style="flex: 3">
         <%= render partial: 'stash_engine/shared/search_select', locals: {
           id: 'newfunder',
           label: 'Funder:',

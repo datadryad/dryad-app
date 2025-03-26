@@ -15,9 +15,11 @@ document.getElementById('cancel_dialog').addEventListener('click', (e) => {
 <% if @field == 'funders' %>
   document.getElementById('genericModalDialog').style.height = '100%';
   document.getElementById('genericModalContent').style.height = '100%';
+  document.getElementById('genericModalDialog').classList.add('extra-wide');
   document.getElementById('genericModalDialog').addEventListener('close', () => {
     document.getElementById('genericModalContent').removeAttribute('style');
     document.getElementById('genericModalDialog').removeAttribute('style');
+    document.getElementById('genericModalDialog').classList.remove('extra-wide');
   })
 <% end %> 
 <% if @field == 'waiver' %>
