@@ -17,29 +17,29 @@ The minimal fields for a dataset are:
 - `title` - The title of the dataset. This title may reference an
   associated article, or it may describe only the data.
 - `authors` - A list of authors for the dataset. At minimum, each
-  author must contain `firstName`, `lastName`, `email`, and `affiliation`.
+  author must contain `firstName`, `lastName`, `email`, and `affiliation`, and `orcid`. 
 - `abstract` - A short description of the dataset, similar to the
   abstract of an article. HTML markup is acceptable in this field.
 - `keywords` - A list of subject keywords associated with the dataset. There must be at least three keywords present.
 - `fieldOfScience` - A scientific discipline drawn from the [OECD Fields of Science and Technology](/db/migrate/20200805213525_add_fos_to_subjects.rb).
+- `funders` - A list of funders for the dataset. At minimum, each funder must contain an `organization` name.
 
 An example of minimal metadata is used in the
 [submission API documentation](submission.md).
 
-Note that a dataset may be initially created with some of the minimal
-metadata omitted (e.g., to obtain a stub dataset object before adding
-files). However, all of the minimal metadata must be present in order
-to submit the dataset for curation.
+Note that a dataset may be initially created with some of the minimal metadata omitted (e.g., to obtain a stub dataset object before adding files). However, all of the minimal metadata must be present in order to submit the dataset for curation.
+
+*Important!* If the submitter does not have permission to assign ownership to other authors, the submitter must be listed as one of the authors in the metadata (the submitter's ORCID must match the `orcid` field for one of the authors).
 
 Authors
 ==========
 
 In addition to the minimal metadata, each author may include:
-- `orcid` - The ORCID identifier associated with the author. 
 - `affiliationROR` or `affiliationISNI` - A formal identifier for the
   author's affilation. If one of these is present, it will take
   precedence over an `affiliation` field, and in this case, the
   `affiliation` field is not required. 
+
 
 Descriptive fields
 ==================
@@ -49,8 +49,6 @@ Other fields with descriptive metadata include:
   giving a `relationship` and identifier information. The allowed
   values for `relationship` are: `undefined`, `article`, `dataset`, `preprint`,
   `software`, `supplemental_information`
-- `funders` - Funding organizations and award numbers may be
-  specified. 
 - `methods` - Description of methods for collecting and processing the
   data. HTML markup is acceptable in this field.
 - `usageNotes` - Instructions for using the data. HTML markup is acceptable in this field. 
