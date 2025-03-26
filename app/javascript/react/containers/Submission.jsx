@@ -215,8 +215,11 @@ function Submission({
       } else if (steps.find((c) => c.fail || c.pass)) {
         setStep(steps.find((c) => !c.pass));
       }
-    } else if (resource.identifier.publication_date) {
-      document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
+    } else {
+      document.documentElement.classList.add('preview_submission');
+      if (resource.identifier.publication_date) {
+        document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
+      }
     }
   }, []);
 
