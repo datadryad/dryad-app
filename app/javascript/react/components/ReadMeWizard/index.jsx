@@ -13,7 +13,11 @@ export const readmeCheck = (resource) => {
       const obj = JSON.parse(readme);
       if (typeof obj === 'object') {
         return (
-          <p className="error-text" id="readme_error">A completed README is required</p>
+          <p className="error-text" id="readme_error">
+            A completed README is required.
+            Complete each section of the README generator, and click the &quot;Next&quot; buttons,{' '}
+            until you are able to &quot;Complete &amp; generate&quot; your README
+          </p>
         );
       }
     } catch (e) {

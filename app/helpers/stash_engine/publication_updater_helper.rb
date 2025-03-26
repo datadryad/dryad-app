@@ -12,11 +12,9 @@ module StashEngine
       return "<td>#{new_val.present? ? new_val : 'Not available'}</td>" unless mergeable?(old_val, new_val)
 
       <<~HTML
-        <td class="c-proposed-change-table__column-mergeable">
+        <td class="c-proposed-change-table__column-mergeable" aria-label="Merged into the above">
           #{new_val.present? ? new_val : 'Not available'}
-          <div class="c-proposed-change-table__column-mergeable-icon">
-            <em class="fa fa-arrow-up"></em>
-          </div>
+          <i class="fa fa-arrow-up c-proposed-change-table__column-mergeable-icon" role="img" aria-label="Replace above content with below"></i>
         </td>
       HTML
     end

@@ -1,5 +1,5 @@
 <h1>Update user information</h1>
-<p style="display: flex; align-items: baseline; justify-content: space-between; column-gap: 2ch">
+<p style="display: flex; align-items: baseline; justify-content: space-between; column-gap: 2ch; flex-wrap: wrap;">
   <span><%= "#{@user.first_name} #{@user.last_name}".strip %></span>
   <% if @user.orcid.present? %>
     <a href="<%= @user.orcid_link %>" target="_blank"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a>

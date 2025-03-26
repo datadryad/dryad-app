@@ -18,22 +18,26 @@ function copyEmail(e) {
 
 var emails = document.getElementsByClassName('emailr');
 for (var i=0; i < emails.length; i++) {
-  emails[i].addEventListener('click', (e) => {
+  const element = emails[i];
+  element.addEventListener('click', (e) => {
     var mailto = e.currentTarget.href
     var email = e.currentTarget.textContent.split('').reverse().join('');
     e.currentTarget.href = mailto.replace('dev@null', email);
   });
   const newEl = document.createElement("span");
-  newEl.setAttribute('class', 'copy-icon');
-  newEl.setAttribute('role', 'button');
-  newEl.setAttribute('tabindex', 0);
-  newEl.setAttribute('aria-label', 'Copy email address');
-  newEl.setAttribute('title', 'Copy email');
-  newEl.innerHTML = '<i class="fa fa-paste" role="status"></i>';
-  const element = emails[i];
-  element.parentNode.insertBefore(newEl, element.nextSibling);
-  newEl.addEventListener('click', copyEmail)
-  newEl.addEventListener('keydown', (e) => {
+  newEl.setAttribute('class', 'nobr');
+  const cb = document.createElement("span");
+  cb.setAttribute('class', 'copy-icon');
+  cb.setAttribute('role', 'button');
+  cb.setAttribute('tabindex', 0);
+  cb.setAttribute('aria-label', `Copy address to ${element.getAttribute('aria-label').replace(/^\p{Lu}/u, char => char.toLocaleLowerCase('en-US'))}`);
+  cb.setAttribute('title', 'Copy email');
+  cb.innerHTML = '<i class="fa fa-paste" role="status"></i>';
+  element.parentNode.insertBefore(newEl, element);
+  newEl.appendChild(element)
+  newEl.appendChild(cb)
+  cb.addEventListener('click', copyEmail)
+  cb.addEventListener('keydown', (e) => {
     if (event.key === ' ' || event.key === 'Enter') {
       copyEmail(e)
     }
@@ -80,6 +84,16 @@ navButtons.forEach(button => {
       });
     }
   })
+  button.parentElement.addEventListener('focusout', (e) => {
+    if (button.parentElement.contains(e.relatedTarget)) return
+    if (window.innerWidth > 899) {
+      navButtons.forEach(nb => {
+        nb.setAttribute('aria-expanded', 'false');
+        nb.parentElement.classList.remove('is-open');
+        nb.nextElementSibling.setAttribute('hidden', true);
+      });
+    }
+  })
   button.addEventListener('click', (e) => {
     const closed = button.getAttribute('aria-expanded') === 'false';
     navButtons.forEach(nb => {
@@ -110,7 +124,7 @@ function expandButtonMenu(e) {
     section.setAttribute('hidden', true);
   }
 }
-var expandButtons = Array.from(document.getElementsByClassName('expand-button'));
+var expandButtons = Array.from(document.querySelectorAll('.expand-button button'));
 expandButtons.forEach(button => {
   button.addEventListener('click', expandButtonMenu)
   button.addEventListener('keydown', (e) => {

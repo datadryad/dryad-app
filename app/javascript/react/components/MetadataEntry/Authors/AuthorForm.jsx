@@ -72,7 +72,7 @@ export default function AuthorForm({
                 aria-describedby={`${author.id}org-ex`}
                 onBlur={handleSubmit}
               />
-              <div id={`${author.id}org-ex`}><i />Committee, agency, working group, etc.</div>
+              <div id={`${author.id}org-ex`}><i aria-hidden="true" />Committee, agency, working group, etc.</div>
             </div>
           ) : (
             <>
@@ -89,7 +89,7 @@ export default function AuthorForm({
                   aria-describedby={`${author.id}name-ex`}
                   onBlur={handleSubmit}
                 />
-                <div id={`${author.id}name-ex`}><i />Given name</div>
+                <div id={`${author.id}name-ex`}><i aria-hidden="true" />Given name</div>
               </div>
               <div className="input-stack">
                 <label className="input-label" htmlFor={`author_last_name__${author.id}`}>
@@ -103,7 +103,7 @@ export default function AuthorForm({
                   aria-describedby={`${author.id}lname-ex`}
                   onBlur={handleSubmit}
                 />
-                <div id={`${author.id}lname-ex`}><i />Family name</div>
+                <div id={`${author.id}lname-ex`}><i aria-hidden="true" />Family name</div>
               </div>
               <Affiliations formRef={formRef} id={author.id} affiliations={affiliations} setAffiliations={setAffiliations} />
               <div className="author-form email-opts">
@@ -122,7 +122,7 @@ export default function AuthorForm({
                     onBlur={handleSubmit}
                   />
                   {errors.author_email && touched.author_email && <span className="c-ac__error_message">{errors.author_email}</span>}
-                  <div id={`${author.id}email-ex`}><i />name@institution.org</div>
+                  <div id={`${author.id}email-ex`}><i aria-hidden="true" />name@institution.org</div>
                 </div>
                 <div className="input-stack author-one-line" style={{gap: '.5ch'}}>
                   <div className="radio_choice">

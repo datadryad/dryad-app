@@ -111,7 +111,7 @@ function RelatedWorkForm(
                 className="c-input__text"
                 onBlur={formik.handleSubmit}
               />
-              <div id={`${relatedIdentifier.id}url-ex`}><i />https://doi.org/10.1594/PANGAEA.726855</div>
+              <div id={`${relatedIdentifier.id}url-ex`}><i aria-hidden="true" />https://doi.org/10.1594/PANGAEA.726855</div>
             </div>
             <span style={{display: 'block', alignSelf: 'start'}}>
               <button

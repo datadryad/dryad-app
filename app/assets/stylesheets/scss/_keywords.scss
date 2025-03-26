@@ -39,12 +39,13 @@
 
 .c-keywords__keyword-remove {
 	border: none;
-	background-color: $medium-green;
+	background-color: white;
 	border: thin solid $light-green;
-	color: white;
+	color: $green;
 	font-size: .98rem;
 	line-height: 0;
 	&:hover, &:active, &:focus {
 		background-color: $dark-blue;
+		color: white;
 	}
 }

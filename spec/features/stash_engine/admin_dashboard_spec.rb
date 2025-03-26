@@ -305,7 +305,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
               click_button 'Update status'
             end
             find("#activity_status_select option[value='action_required']").select_option
-            fill_in(id: 'activity_note', with: 'My cat says hi')
+            fill_in(id: '_curation_activity_note', with: 'My cat says hi')
             click_button('Submit')
             expect(find('tbody tr')).to have_text('Action required')
             within(:css, 'tbody tr') do

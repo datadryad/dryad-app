@@ -23,7 +23,7 @@
           <% if ps == current_ps %>
             <span class="page-current"><%= ps %></span>
           <% else %>
-            <%= link_to(ps, stash_url_helpers.ds_admin_funders_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1))) %>
+            <%= link_to(ps, stash_url_helpers.ds_admin_funders_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1)), 'aria-label': "#{ps} results per page") %>
           <% end %>
         <% end %>
       </div>

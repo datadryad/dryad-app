@@ -78,6 +78,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
       wizardContent.step = wizardStep;
       saveDescription(JSON.stringify(wizardContent));
     }
+    document.querySelector('.markdown_editor')?.focus();
   }, [wizardStep]);
 
   useEffect(() => {

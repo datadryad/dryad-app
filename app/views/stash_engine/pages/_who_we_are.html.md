@@ -15,7 +15,7 @@
 <p>In all of our convenings we are committed to abiding by our <a href="/code_of_conduct">Code of conduct</a>.</p>
 
 ## Get to know Dryad
-<h3 id="our-members" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="our-members-sec">Our members</h3>
+<h3 id="our-members" class="expand-button"><button aria-expanded="false" aria-controls="our-members-sec">Our members</button></h3>
 <div class="about-page" id="our-members-sec" hidden>
 <p>Dryad’s members are part of a non-profit, shared community working together to promote
 data publishing, curation, and preservation. The community benefits from Dryad’s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/join_us">Learn about joining us as a member organization</a>.</p>
@@ -24,15 +24,15 @@ data publishing, curation, and preservation. The community benefits from Dryad�
 <h4>Publishing organizations</h4>
   <%= render "members_publishers" %>
 </div>
-<h3 id="our-board" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="our-board-sec">Our board</h3>
+<h3 id="our-board" class="expand-button"><button aria-expanded="false" aria-controls="our-board-sec">Our board</button></h3>
 <div class="about-page" id="our-board-sec" hidden>
   <%= render "our_governance" %>
 </div>
-<h3 id="our-staff" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="our-staff-sec">Our staff</h3>
+<h3 id="our-staff" class="expand-button"><button aria-expanded="false" aria-controls="our-staff-sec">Our staff</button></h3>
 <div class="about-page" id="our-staff-sec" hidden>
   <%= render "our_staff" %>
 </div>
-<h3 id="our-advisors" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="our-advisors-sec">Our advisors</h3>
+<h3 id="our-advisors" class="expand-button"><button aria-expanded="false" aria-controls="our-advisors-sec">Our advisors</button></h3>
 <div class="about-page" id="our-advisors-sec" hidden>
   <%= render "our_advisors" %>
 </div>

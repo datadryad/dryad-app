@@ -113,7 +113,7 @@ export default function Description({
           width: '100%',
           menubar: false,
           plugins: 'advlist anchor autolink charmap code directionality help lists link table',
-          toolbar: 'help | undo redo | blocks paste | bold italic superscript subscript removeformat '
+          toolbar: 'help | undo redo | blocks | bold italic superscript subscript removeformat '
                   + '| table link charmap | bullist numlist outdent indent | ltr rtl '
                   + `${(curator ? curatorTools : '')}`,
           table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | '

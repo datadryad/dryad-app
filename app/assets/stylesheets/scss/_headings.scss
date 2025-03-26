@@ -96,9 +96,13 @@ h6 {
 }
 
 
-.expand-button {
+.expand-button button {
+  text-align: left;
+  width: 100%;
   color: $dark-blue;
-  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  padding: 0;
   border-bottom: thin solid $green;
 
   &::after {

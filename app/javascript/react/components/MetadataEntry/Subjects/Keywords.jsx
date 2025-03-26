@@ -93,7 +93,7 @@ function Keywords({resource, setResource}) {
           }
         />
       </div>
-      <div id="keywords-ex"><i />Scientific names, method types, or keywords from your related article</div>
+      <div id="keywords-ex"><i aria-hidden="true" />Scientific names, method types, or keywords from your related article</div>
     </div>
   );
 }

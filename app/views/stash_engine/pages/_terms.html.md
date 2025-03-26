@@ -25,7 +25,7 @@ All of the above functions and offerings, including associated systems, hardware
 
 When you Publish your Research Data within Dryad, you join a community of researchers and organizations committed to leading in best practices for open data curation and publishing. 
 
-If you would like your institution to join Dryad, please direct your administrators to our [Join us page](/join_us) and encourage them to contact our Head of Partnership Development with any questions at <span style="white-space: nowrap;"><a href="mailto:dev@null" class="emailr">gro.dayrdatad@olleh</a></span>.
+If you would like your institution to join Dryad, please direct your administrators to our [Join us page](/join_us) and encourage them to contact our Head of Partnership Development with any questions at <span style="white-space: nowrap;"><a href="mailto:dev@null" class="emailr" aria-label="Email Head of Partnership Development">gro.dayrdatad@olleh</a></span>.
 
 
 ## Terms

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import {
   Editor, rootCtx, schemaCtx, serializerCtx, editorViewCtx, remarkCtx, remarkStringifyOptionsCtx, rootDOMCtx,
 } from '@milkdown/core';
@@ -199,8 +198,12 @@ function MilkdownEditor({
             ))}
           </div>
           <div className="md_editor-toggle">
-            <button type="button" onClick={() => setEditType('markdown')} disabled={editType === 'markdown'}>Markdown</button>
-            <button type="button" onClick={() => setEditType('visual')} disabled={editType === 'visual'}>Rich text</button>
+            <button type="button" onClick={() => setEditType('markdown')} aria-pressed={editType === 'markdown'} disabled={editType === 'markdown'}>
+              Markdown
+            </button>
+            <button type="button" onClick={() => setEditType('visual')} aria-pressed={editType === 'visual'} disabled={editType === 'visual'}>
+              Rich text
+            </button>
           </div>
         </div>
       )}
@@ -245,19 +248,5 @@ function MarkdownEditor(props) {
     </div>
   );
 }
-
-MarkdownEditor.propTypes = {
-  id: PropTypes.string.isRequired,
-  initialValue: PropTypes.string,
-  replaceValue: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  buttons: PropTypes.arrayOf(PropTypes.oneOf(defaultButtons)),
-};
-
-MarkdownEditor.defaultProps = {
-  buttons: defaultButtons,
-  initialValue: '',
-  replaceValue: '',
-};
 
 export default MarkdownEditor;

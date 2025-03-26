@@ -4,7 +4,7 @@ def check(id, indent = false)
   label = h[id.to_sym]
   label ||= id.length < 4 ? id.upcase : id.capitalize
 
-  '<span class="field-pair">' + (indent ? '<i class="fa-solid fa-arrow-turn-up fa-rotate-90" style="font-size:.85em; margin-left: .2em" aria-hidden="true"></i>' : '') +
+  '<span class="field-pair">' + (indent ? '<i class="fa-solid fa-arrow-turn-up fa-rotate-90" style="font-size:.85em; margin-left: .2em" role="img" aria-label="Can include "></i>' : '') +
   check_box_tag('fields[]', id, @fields.include?(id), {id: id, 'aria-describedby': "#{id}-desc"}) +
   label_tag('fields[]', label, {for: id})+
   '</span>'
@@ -12,7 +12,7 @@ end
 %>
 <div class="admin-dashboard-buttons">
   <b role="heading" aria-level="3" id="edit_fields">Display fields</b>
-  <button type="button" class="o-button__plain-text7" id="edit_fields-help" aria-hidden="true"><i class="fa fa-info-circle"></i> Display field help</button>
+  <button type="button" class="o-button__plain-text7" id="edit_fields-help"><i aria-hidden="true" class="fa fa-info-circle"></i> Display field help</button>
 </div>
 <fieldset id="edit_fields-form" aria-labelledby="edit_fields">
   <div>Description</div>

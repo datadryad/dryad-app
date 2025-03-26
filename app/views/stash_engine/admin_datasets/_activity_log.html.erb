@@ -29,3 +29,7 @@
   </tbody>
   </table>
 </div>
+
+<div id="announce" aria-live="polite" class="screen-reader-only">
+  <% if params[:sort] %>Results sorted by timestamp, <%= params[:direction] %>ending.<% end %>
+</div>

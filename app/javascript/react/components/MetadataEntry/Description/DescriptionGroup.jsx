@@ -18,17 +18,17 @@ export default function DescriptionGroup({
   const abstractLabel = {
     label: 'Abstract',
     required: true,
-    describe: <><i />An introductory description of your dataset</>,
+    describe: <><i aria-hidden="true" />An introductory description of your dataset</>,
   };
   const methodsLabel = {
     label: 'Methods',
     required: false,
-    describe: <><i />A description of the collection and processing of the data</>,
+    describe: <><i aria-hidden="true" />A description of the collection and processing of the data</>,
   };
   const usageLabel = {
     label: 'Usage notes',
     required: false,
-    describe: <><i />Programs and software required to open the data files</>,
+    describe: <><i aria-hidden="true" />Programs and software required to open the data files</>,
   };
 
   useEffect(() => {

@@ -58,7 +58,7 @@ function Title({resource, setResource}) {
             aria-describedby="title-ex"
             aria-errormessage="title_error"
           />
-          <div id="title-ex"><i />The title should be a succinct summary of the data and its purpose or use</div>
+          <div id="title-ex"><i aria-hidden="true" />The title should be a succinct summary of the data and its purpose or use</div>
         </Form>
       )}
     </Formik>

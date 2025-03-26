@@ -17,11 +17,11 @@
       <div class="c-input__inline">
         <div class="c-input">
           <%= form.label :full_name, "Full name:" %>
-          <%= form.text_field :full_name, class: 'c-input__text', required: true, value: current_user ? "#{current_user&.first_name} #{current_user&.last_name}" : '' %>
+          <%= form.text_field :full_name, class: 'c-input__text', autocomplete: 'name', required: true, value: current_user ? "#{current_user&.first_name} #{current_user&.last_name}" : '' %>
         </div>
         <div class="c-input">
           <%= form.label :email, "Email address:" %>
-          <%= form.text_field :email, required: true, class: 'c-input__text', value: current_user&.email %>
+          <%= form.email_field :email, required: true, class: 'c-input__text', autocomplete: 'email', value: current_user&.email %>
         </div>
       </div>
       <div class="c-input__inline">
@@ -30,7 +30,7 @@
         </div>
         <div class="c-input">
           <%= form.label :title, "Title/position:", class: 'c-input__label' %>
-          <%= form.text_field :title, class: 'c-input__text' %>
+          <%= form.text_field :title, class: 'c-input__text', autocomplete: 'organization-title' %>
         </div>
       </div>      
       <fieldset class="c-fieldset">
@@ -45,13 +45,12 @@
           </span><span>
           <%= form.check_box :interest_reuse %>
           <%= form.label :interest_reuse, "Data reuse" %>
-          </span><span>          
-          <%= form.check_box :interest_other %>
-          <%= form.label :interest_other, "Other:" %>
-          <%= form.text_field :interest_other %>
           </span><span>
           <%= form.check_box :interest_any %>
           <%= form.label :interest_any, "All things Dryad" %>          
+          </span><span>          
+          <%= form.label :interest_other, "Other:" %>
+          <%= form.text_field :interest_other %>
           </span>
         </div>
       </fieldset>

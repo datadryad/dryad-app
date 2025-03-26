@@ -48,7 +48,6 @@
       align-items: center;
       justify-content: center;
       gap: 1ch;
-      overflow: auto;
       overflow-wrap: anywhere;
 
       button {
@@ -60,6 +59,7 @@
   #sharing_link {
     font-size: .8em;
     background-color: white;
+    overflow-wrap: anywhere;
   }
 }
 

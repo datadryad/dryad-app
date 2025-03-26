@@ -9,6 +9,10 @@
   </table>
 </div>
 
+<div id="announce" aria-live="polite" class="screen-reader-only">
+  <% if @sort %>Results sorted by <%= @sort.humanize.downcase %>, <%= params[:direction] %>ending.<% end %>
+</div>
+
 <div class="search-results-footer" id="admin-pagination">
   <%= form_with(url: admin_dashboard_count_path(format: :js, page: @page, page_size: @page_size, sort: @sort, direction: params[:direction], search: params[:search]), method: :post, local: false, id: 'count_form') do %>
     <input type="hidden" name="sql" value="<%= @sql %>"/>

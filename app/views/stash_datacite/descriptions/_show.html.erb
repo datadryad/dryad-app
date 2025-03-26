@@ -11,7 +11,7 @@
 
 <% unless methods.try(:description).blank? %>
   <% if params[:controller].include?('landing') %>
-    <h2 tabindex="0" id="methods" class="expand-button" role="button" aria-expanded="false" aria-controls="methods-sec">Methods</h2>
+    <h2 id="methods" class="expand-button"><button aria-expanded="false" aria-controls="methods-sec">Methods</button></h2>
   <% else %>
     <h3 class="o-heading__level2">Methods</h3>
   <% end %>
@@ -22,7 +22,7 @@
 
 <% unless other.try(:description).blank? %>
   <% if params[:controller].include?('landing') %>
-    <h2 id="usage" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="usage-sec">Usage notes</h2>
+    <h2 id="usage" class="expand-button"><button aria-expanded="false" aria-controls="usage-sec">Usage notes</button></h2>
   <% else %>
     <h3 class="o-heading__level2">Usage notes</h3>
   <% end %>

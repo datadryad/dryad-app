@@ -37,7 +37,7 @@
   <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
     <div class="c-input">
       <%= ca.label :note, 'Notes', class: 'c-input__label' %>
-      <%= ca.text_area :note, class: 'c-input__textarea', id: 'activity_note', style: 'width: 100%;' %>
+      <%= ca.text_area :note, class: 'c-input__textarea', style: 'width: 100%;' %>
     </div>
   <% end %>
   <div class="c-modal__buttons-right">

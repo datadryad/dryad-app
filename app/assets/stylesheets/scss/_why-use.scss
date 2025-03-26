@@ -16,6 +16,9 @@
   &:not(:last-child) {
     border-bottom: 10px solid white;
   } 
+  @media (max-width: 315px) {
+    flex-direction: column;
+  }
 }
 
 .c-why-use__icon {
@@ -28,6 +31,9 @@
   line-height: 1.5;
   @include bp(screen2) {
     font-size: 1.1rem;
+  }
+  @media (max-width: 315px) {
+    padding: 0 1em 0;
   }
 }
 

@@ -51,6 +51,10 @@ input:focus, button:focus, *[tabindex]:focus, a:focus-visible {
 	outline: 2px solid $medium-blue;
 }
 
+*[tabindex="-1"]:focus {
+  outline: 0;
+}
+
 a:focus-visible {
 	outline-offset: 4px;
 }
