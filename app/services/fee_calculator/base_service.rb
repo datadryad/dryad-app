@@ -2,6 +2,7 @@ module FeeCalculator
   class BaseService
     attr_reader :options, :for_dataset
 
+    # rubocop:disable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
     ESTIMATED_DATASETS = [
       { tier:  1, range:   0..  5, price:      0 },
       { tier:  2, range:   6.. 15, price:  1_650 },
@@ -29,6 +30,7 @@ module FeeCalculator
       { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
       { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
     ].freeze
+    # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
     def initialize(options, for_dataset: false)
       @sum = 0
