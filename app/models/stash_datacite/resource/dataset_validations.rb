@@ -183,7 +183,7 @@ module StashDatacite
         if @resource.identifier.publication_date.blank? || @resource.identifier.publication_date > readme_md_require_date
           return 'README file missing' if readme_md_files.count.zero? && no_techinfo
         elsif @resource.identifier.publication_date > readme_require_date
-          return 'README file missing' if readme_files.count.zero?
+          return 'README file missing' if readme_files.count.zero? && no_techinfo
         end
 
         false
