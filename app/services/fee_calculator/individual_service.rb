@@ -1,7 +1,7 @@
 module FeeCalculator
   class IndividualService < BaseService
     # rubocop:disable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
-    ESTIMATED_FILES_SIZE = [
+    INDIVIDUAL_ESTIMATED_FILES_SIZE = [
       { tier: 1, range:                 0..    5_000_000_000, price:    150 },
       { tier: 2, range:     5_000_000_001..   10_000_000_000, price:    180 },
       { tier: 3, range:    10_000_000_001..   50_000_000_000, price:    520 },
@@ -24,7 +24,7 @@ module FeeCalculator
     private
 
     def storage_fee_tiers
-      ESTIMATED_FILES_SIZE
+      INDIVIDUAL_ESTIMATED_FILES_SIZE
     end
 
     def add_invoice_fee
