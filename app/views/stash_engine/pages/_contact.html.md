@@ -6,7 +6,7 @@ Please contact <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad 
 
 ## Get involved
 
-Is your organization interested in [joining or working with Dryad](https://datadryad.org/join_us)? Contact <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad partnership team">gro.dayrdatad@spihsrentrap</a> and our partnership team will get back to you. Individual researchers do not need a Dryad membership, and should follow our [submission instructions](https://datadryad.org/submission_process) to get started.
+Is your organization interested in [joining or working with Dryad](https://datadryad.org/join_us)? Contact <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad partnership team">gro.dayrdatad@spihsrentrap</a> and our partnership team will get back to you. Individual researchers do not need a Dryad partnership, and should follow our [submission instructions](https://datadryad.org/submission_process) to get started.
 
 ## Preview changes
 
