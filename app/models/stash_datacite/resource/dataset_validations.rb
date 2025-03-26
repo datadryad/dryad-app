@@ -167,7 +167,6 @@ module StashDatacite
       end
 
       def readme_required
-        readme_editor_date = '2023-08-29'
         readme_md_require_date = '2022-09-28'
         readme_require_date = '2021-12-20'
 
@@ -181,12 +180,10 @@ module StashDatacite
           false
         end
 
-        if @resource.identifier.publication_date.blank? || @resource.identifier.publication_date > readme_editor_date
-          return 'README missing' if no_techinfo
-        elsif @resource.identifier.publication_date > readme_md_require_date
-          return 'README file missing' if readme_md_files.count.zero?
+        if @resource.identifier.publication_date.blank? || @resource.identifier.publication_date > readme_md_require_date
+          return 'README file missing' if readme_md_files.count.zero? && no_techinfo
         elsif @resource.identifier.publication_date > readme_require_date
-          return 'README file missing' if readme_files.count.zero?
+          return 'README file missing' if readme_files.count.zero? && no_techinfo
         end
 
         false

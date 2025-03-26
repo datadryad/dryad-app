@@ -725,6 +725,9 @@ dialog#submission-step[open] {
       text-overflow: ellipsis;
     }
   }
+  & > div:first-of-type {
+    flex-basis: 100%;
+  }
 }
 
 .funder-buttons {

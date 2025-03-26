@@ -30,6 +30,7 @@ module Stash
           ).to_return(status: 200, body: '<!DOCTYPE html><html><head></head><body>Awesome webpage instead.</body></html>', headers: {})
         @meta = Stash::DataciteMetadata.new(doi: '10.1111/mec.13594')
         expect(@meta.raw_metadata).to be_falsey
+        expect(@meta.html_citation).to be_falsey
       end
     end
 

@@ -2,15 +2,15 @@
       url: resource_publication_path(publication.id),
       method: :put,
       local: false do |f| %>
-  <div class="input-line" style="margin-bottom: 1rem;">
-    <div class="input-stack" style="flex: 1; min-width: 145px;">
+  <div class="input-line" style="margin-bottom: 2rem;">
+    <div class="input-stack" <%if publication.pub_type == 'primary_article' %>style="width: 140px"<%end%>>
       <label class="c-input__label" for="<%= publication.pub_type %>_issn">
         <% if publication.pub_type == 'primary_article' %>Publication ISSN:<% end %>
         <% if publication.pub_type == 'preprint' %>Preprint server ISSN:<% end %>
       </label>
       <%= f.text_field(:publication_issn, class: 'c-input__text', style: "min-width: 0", id: "#{publication.pub_type}_issn") %>
     </div>
-    <div class="input-stack" style="flex: 1">
+    <div class="input-stack" style="flex: 2">
       <label class="c-input__label" for="<%= publication.pub_type %>_name">
         <% if publication.pub_type == 'primary_article' %>Publication name:<% end %>
         <% if publication.pub_type == 'preprint' %>Preprint server name:<% end %>
@@ -18,7 +18,7 @@
       <%= f.text_field(:publication_name, class: 'c-input__text', id: "#{publication.pub_type}_name") %>
     </div>
     <% if publication.pub_type == 'primary_article' %>
-      <div class="input-stack">
+      <div class="input-stack" style="width: 170px;">
         <label class="c-input__label" for="<%= publication.pub_type %>_man">Manuscript number:</label>
         <%= f.text_field(:manuscript_number, class: 'c-input__text', id: "#{publication.pub_type}_man") %>
       </div>

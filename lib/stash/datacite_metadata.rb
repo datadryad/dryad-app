@@ -83,7 +83,7 @@ module Stash
     end
 
     def html_citation
-      return nil if raw_metadata.nil?
+      return raw_metadata if raw_metadata.in?([nil, false])
 
       # html_safe when concatenated with other stuff makes non-html-safe escaped
       citation_array = []

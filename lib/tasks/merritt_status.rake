@@ -51,7 +51,7 @@ namespace :merritt_status do
           end
         end
         Rails.logger.info('Ending round of processing')
-        sleep 30
+        sleep 10
       end
     end
 

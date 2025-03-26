@@ -1,7 +1,7 @@
 <h1>Edit related works</h1>
 <% @resource.related_identifiers.each do |related_identifier| %>
   <%= form_with(url: related_identifiers_update_path(format: :js), method: :patch, local: false) do |form| -%>
-    <div class="input-line" style="width:680px; max-width: 100%; margin-bottom: 1rem;">
+    <div class="input-line" style="width: 720px; max-width: 100%; margin-bottom: 1rem;">
       <%= form.fields_for :stash_datacite_related_identifier, related_identifier do |f| %>
         <%= f.hidden_field :id %>
         <%= f.hidden_field :resource_id %>
@@ -25,7 +25,7 @@
 <%= form_with(url: related_identifiers_create_path(format: :js), method: :post, local: false) do |form| %>
   <%= form.fields_for @related_work do |f| %>
     <%= f.hidden_field :resource_id, value: @resource.id %>
-    <div class="input-line" style="width:680px; max-width: 100%">
+    <div class="input-line" style="width:720px; max-width: 100%">
       <div class="input-stack" style="flex: 1">
         <%= f.label :work_type, 'Work type', class: 'c-input__label' %>
         <%= f.select(:work_type, options_for_select(StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a + [["Primary article", 'primary_article']]), {}, { disabled: ( params[:sub_method] == 'put' ), class: 'c-input__select', required: true} ) %>

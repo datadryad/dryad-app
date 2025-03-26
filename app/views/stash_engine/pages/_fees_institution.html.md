@@ -16,7 +16,9 @@ Our institution and research partners also benefit from:
 
 The annual partner fee is calculated as a total of the anticipated Data Publication Charge (DPC) for the coming year, plus the Annual Service Fee. DPCs are adjusted to reflect actual usage at year-end.
 
-Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule.
+Read on for a detailed fee schedule.
+
+[Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule.]: #
 
 <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us</a> with questions, to discuss partnership, or to confirm the estimated partner fee for your organization.
 
@@ -399,7 +401,7 @@ The DPC and Annual Service Fee are combined to calculate the total annual fee, w
       <tr>
         <td>6</td>
         <td>$50,000</td>
-        <td>15</td>
+        <td>16</td>
         <td>551</td>
         <td>$58,250</td>
         <td>$108,250</td>
