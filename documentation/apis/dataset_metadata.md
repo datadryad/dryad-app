@@ -20,6 +20,8 @@ The minimal fields for a dataset are:
   author must contain `firstName`, `lastName`, `email`, and `affiliation`.
 - `abstract` - A short description of the dataset, similar to the
   abstract of an article. HTML markup is acceptable in this field.
+- `keywords` - A list of subject keywords associated with the dataset. There must be at least three keywords present.
+- `fieldOfScience` - A scientific discipline drawn from the [OECD Fields of Science and Technology](/db/migrate/20200805213525_add_fos_to_subjects.rb).
 
 An example of minimal metadata is used in the
 [submission API documentation](submission.md).

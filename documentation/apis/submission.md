@@ -27,6 +27,13 @@ is shown below, but typical metadata should be more complete:
         "affiliation": "University of the Example"
       }
    	 ],
+     "keywords": [
+	"Dryad",
+	"Computer",
+	"Examples",
+	"Interesting"
+    ],
+    "fieldOfScience": "Animal and dairy science",
     "abstract": "Cyberneticists agree that concurrent models are an interesting new topic, and security experts concur."
   }
 ```
