@@ -79,9 +79,11 @@ module Stash
           SELECT res.* FROM stash_engine_resources res
           JOIN stash_engine_curation_activities cur1
             ON res.last_curation_activity_id  = cur1.id
+            AND cur1.deleted_at IS NULL
           WHERE cur1.status = 'published'
             AND res.identifier_id = ?
             AND res.id < ?
+            AND res.deleted_at IS NULL
           ORDER BY res.id DESC;
         SQL
         StashEngine::Resource.find_by_sql([query, @resource.identifier_id, @resource.id]).first
