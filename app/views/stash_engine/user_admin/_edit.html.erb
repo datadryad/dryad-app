@@ -13,9 +13,9 @@
     </div>
     <div class="c-input" style="max-width: 100%;">
       <% tenant_options = StashEngine::Tenant.enabled.collect { |t| [ t.short_name, t.id ] } %>
-      <%= label_tag :tenant_id, 'Dryad member institution' %>
+      <%= label_tag :tenant_id, 'Dryad partner institution' %>
       <%= select_tag(:tenant_id, options_for_select(tenant_options, @user.tenant_id), class: 'c-input__select', style: 'flex-shrink: 1; flex-grow: 1; min-width: 0; max-width: 100%;') %>  
-      <p style="margin: .5rem 0; font-size: .98rem;">Choosing 'Dryad' will remove any set member institution.</p>
+      <p style="margin: .5rem 0; font-size: .98rem;">Choosing 'Dryad' will remove any set partner institution.</p>
     </div>
   </div>
   <div class="o-admin-form-inline">

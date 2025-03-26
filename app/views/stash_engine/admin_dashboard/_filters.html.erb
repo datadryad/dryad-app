@@ -1,6 +1,6 @@
 <%
 def selecter(id, options)
-  h = { member: 'Dryad member', sponsor: 'Journal sponsor' }
+  h = { member: 'Dryad partner', sponsor: 'Journal sponsor' }
   label = h[id.to_sym] || id.capitalize
 
   "<label for='filter-#{id}'>#{label}:</label>" +

@@ -37,7 +37,7 @@ export default function SubmissionHelp() {
 export function PublicationHelp() {
   return (
     <>
-      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">member journals<ExitIcon /></a> will also cover the <a href="/requirements#cost" target="_blank">data publishing charge<ExitIcon /></a>.</p>
+      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/requirements#cost" target="_blank">data publishing charge<ExitIcon /></a>.</p>
       <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some journals.</p>
     </>
   );
@@ -194,7 +194,7 @@ export function AgreeHelp({type}) {
   return (
     <>
       <p>After curation, <b>Dryad submissions are made publicly available unless otherwise specified</b>. If your submission needs to be kept private during the review of an associated manuscript, choose that option on this page.</p>
-      {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad members<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad member institution, make sure that is reflected here.</p>}
+      {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad partners<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad partner institution, make sure that is reflected here.</p>}
       <p>You may continue to make changes to your submission from the submission preview.</p>
     </>
   );
