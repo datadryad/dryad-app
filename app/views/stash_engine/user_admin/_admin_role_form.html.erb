@@ -7,8 +7,8 @@ system_roles = [
   ['', 'User <span>Default user role. Can submit, view, and edit their submissions.</span>']
 ]
 tenant_roles = [
-  ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated member institution.</span>'],
-  ['admin', 'Admin <span>Can view all member institution submissions and curation pages, and create datasets.</span>'],
+  ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated institution.</span>'],
+  ['admin', 'Admin <span>Can view all institution submissions and curation pages, and create datasets.</span>'],
   ['', 'Remove tenant role']
 ]
 publisher_roles = [
@@ -40,7 +40,7 @@ funder_roles = [
       <% unless @tenant_role %>
         <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a tenant role (for <%= @user.tenant.short_name %>)</button>
       <% end %>
-      <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'tenant', select_label: 'For user member institution:', roles: tenant_roles } %>
+      <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'tenant', select_label: 'For user partner institution:', roles: tenant_roles } %>
     <% end %>
   <% end %>
   <% unless @publisher_role %>

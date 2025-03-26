@@ -7,7 +7,7 @@
             <span><i class="fas fa-flag inst" aria-label="Flagged" title="<%= t.flag.note %>"></i></span>
           <% end %>
         <%= form_with(url: tenant_edit_path(id: t.id), method: :get, local: false) do %>
-          <button class="c-admin-edit-icon" aria-label="Edit member" aria-haspopup="dialog" id="edit_button_<%= t.id %>">
+          <button class="c-admin-edit-icon" aria-label="Edit institution" aria-haspopup="dialog" id="edit_button_<%= t.id %>">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
         <% end %>

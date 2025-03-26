@@ -25,7 +25,7 @@
   <% readme_parsed = Nokogiri::HTML5::DocumentFragment.parse(readme_html) %>
   <% h2 = readme_parsed.css('h2')&.first&.content %>
   <% if params[:controller].include?('landing') %>
-    <h2 tabindex="0" id="readme" class="expand-button" role="button" aria-expanded="false" aria-controls="readme-sec"><%= h2.presence || 'README' %></h2>    
+    <h2 tabindex="0" id="readme" class="expand-button"><button aria-expanded="false" aria-controls="readme-sec"><%= h2.presence || 'README' %></button></h2>    
   <% else %>
     <h2 <% if highlight_fields.include?('technical_info') %>hidden<% end %>><%= h2.presence || 'README' %></h2>
   <% end %>

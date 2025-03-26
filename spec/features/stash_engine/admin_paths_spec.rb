@@ -236,7 +236,7 @@ RSpec.feature 'AdminPaths', type: :feature do
     it 'is accessible by dryad admins' do
       sign_in(create(:user, role: 'admin'))
       visit stash_url_helpers.tenant_admin_path
-      expect(page).to have_text('Manage member institutions')
+      expect(page).to have_text('Manage partner institutions')
     end
   end
 
