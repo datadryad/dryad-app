@@ -527,6 +527,6 @@ Rails.application.routes.draw do
 
   get :health_check, to: 'health#check'
 
-  get :fee_calculator, to: 'fee_calculator#calculate_fee'
-  get :dataset_fee_calculator, to: 'fee_calculator#calculate_dataset_fee'
+  get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
+  get :dataset_fee_calculator, to: 'fee_calculator#calculate_dataset_fee', format: :json
 end
