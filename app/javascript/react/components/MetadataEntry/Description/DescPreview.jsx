@@ -1,5 +1,6 @@
 import React, {useRef, useEffect} from 'react';
-import {formatSizeUnits} from '../../../../lib/utils';
+import {formatSizeUnits, upCase} from '../../../../lib/utils';
+import HTMLDiffer from '../../HTMLDiffer';
 
 function WrapTables({html}) {
   const wall = useRef(null);
@@ -22,39 +23,47 @@ function WrapTables({html}) {
   );
 }
 
-export default function DescPreview({resource, previous}) {
-  const abstract = resource.descriptions.find((d) => d.description_type === 'abstract')?.description;
-  const methods = resource.descriptions.find((d) => d.description_type === 'methods')?.description;
-  const usage = resource.descriptions.find((d) => d.description_type === 'other')?.description;
-  const cedar = resource.cedar_json ? new Blob([resource.cedar_json]) : '';
+function DescSection({
+  title, previous, current, prev, curator,
+}) {
+  const diff = previous && current !== prev;
 
-  const prevA = previous?.descriptions.find((d) => d.description_type === 'abstract')?.description;
-  const prevM = previous?.descriptions.find((d) => d.description_type === 'methods')?.description;
-  const prevU = previous?.descriptions.find((d) => d.description_type === 'other')?.description;
+  if (current) {
+    return (
+      <>
+        <h3 className="o-heading__level2">{title}</h3>
+        {diff && (
+          <>
+            <ins />
+            {curator && <HTMLDiffer current={current} previous={prev} />}
+          </>
+        )}
+        {(!diff || !curator) && <WrapTables html={current} />}
+      </>
+    );
+  }
+  if (prev) {
+    return <del>{title} removed</del>;
+  }
+  return null;
+}
+
+export default function DescPreview({resource, previous, curator}) {
+  const descs = ['abstract', 'methods', 'other'];
+  const cedar = resource.cedar_json ? new Blob([resource.cedar_json]) : '';
 
   return (
     <>
-      {previous && abstract !== prevA && <p className="del ins">Abstract changed</p>}
-      {!!abstract && (
-        <>
-          <h3 className="o-heading__level2">Abstract</h3>
-          <WrapTables html={abstract} />
-        </>
-      )}
-      {previous && methods !== prevM && <p className="del ins">Methods changed</p>}
-      {!!methods && (
-        <>
-          <h3 className="o-heading__level2">Methods</h3>
-          <WrapTables html={methods} />
-        </>
-      )}
-      {previous && usage !== prevU && <p className="del ins">Usage notes changed</p>}
-      {!!usage && (
-        <>
-          <h3 className="o-heading__level2">Usage notes</h3>
-          <WrapTables html={usage} />
-        </>
-      )}
+      {descs.map((t) => (
+        <DescSection
+          key={t}
+          title={t === 'other' ? 'Usage notes' : upCase(t)}
+          current={resource.descriptions.find((d) => d.description_type === t)?.description}
+          prev={previous?.descriptions.find((d) => d.description_type === t)?.description}
+          previous={!!previous}
+          curator={curator}
+        />
+      ))}
       {!!resource.cedar_json && (
         <div className="callout">
           <p>DisciplineSpecificMetadata.json <span className="file_size">{formatSizeUnits(cedar.size)}</span> file generated.</p>
