@@ -51,17 +51,6 @@ module StashDatacite
       ror_org.country
     end
 
-    def fee_waivered?
-      false
-      # return false if country_name.nil?
-      # return false unless country_name.present?
-      # fee_waiver_countries&.include?(country_name)
-    end
-
-    def fee_waiver_countries
-      APP_CONFIG.fee_waiver_countries || []
-    end
-
     # Get an affiliation by long_name.
     # Our first preference is to reuse an existing affiliation from our DB.
     # Otherwise, if check_ror is true, search for a name match in ROR.

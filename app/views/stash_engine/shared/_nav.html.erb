@@ -30,14 +30,19 @@
 
   <ul class="c-header__nav-group" id="site-menu">
 
-    <li class="c-header__nav-item"><%= link_to 'Who we are', stash_url_helpers.about_path %></li>
-
     <li class="c-header__nav-item">
-      <%= link_to 'What we do', "#{stash_url_helpers.mission_path}" %>
+      <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="about-menu">About</button>
+      <ul class="c-header__nav-submenu" id="about-menu" hidden>
+        <li><%= link_to 'Who we are', stash_url_helpers.about_path %></li>
+        <li><%= link_to 'What we do', "#{stash_url_helpers.mission_path}" %></li>
+      </ul>
     </li>
 
     <li class="c-header__nav-item">
-      <%= link_to 'Join us', "#{stash_url_helpers.join_us_path}" %>
+      <%= link_to 'Partner with us', "#{stash_url_helpers.join_us_path}" %>
+    </li>
+    <li class="c-header__nav-item">
+      <%= link_to 'Support us', "#{stash_url_helpers.support_us_path}" %>
     </li>
 
     <li class="c-header__nav-item">

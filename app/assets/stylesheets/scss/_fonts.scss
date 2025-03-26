@@ -3,4 +3,17 @@
 @font-face {
   font-family: 'KievitWeb';
   src: url('/fonts/KievitWeb.woff') format('woff');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'KievitWeb';
+  src: url('/fonts/KievitWeb-Medium.woff') format('woff');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'KievitWeb';
+  src: url('/fonts/KievitWeb-Bold.woff') format('woff');
+  font-weight: 900;
 }

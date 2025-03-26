@@ -3,10 +3,11 @@
 module StashDatacite
   module Resource
     class MetadataEntry
-      def initialize(resource, type, _tenant)
+      def initialize(resource, type, tenant_id)
         @resource = resource
         @type = type
         create_publisher
+        @resource.update(tenant_id: tenant_id)
         @resource.fill_blank_author!
         ensure_author_orcid
       end

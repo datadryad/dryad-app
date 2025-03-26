@@ -205,6 +205,7 @@ Rails.application.routes.draw do
     get 'mission', to: 'pages#what_we_do'
     get 'contact_thanks', to: 'pages#contact_thanks'
     get 'join_us', to: 'pages#join_us'
+    get 'support_us', to: 'pages#support_us'
     get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
@@ -223,6 +224,8 @@ Rails.application.routes.draw do
     get 'privacy', to: 'pages#privacy'
     get 'accessibility', to: 'pages#accessibility'
     get 'membership', to: 'pages#membership'
+    get 'publishers', to: 'pages#fees_publisher'
+    get 'institutions', to: 'pages#fees_institution'
     get 'sandbox', to: 'pages#sandbox' unless Rails.env.include?('production') 
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker

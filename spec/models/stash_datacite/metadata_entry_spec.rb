@@ -25,15 +25,7 @@ module StashDatacite
           upload_date: stash_wrapper.version_date
         ).build
 
-        @tenant = double(StashEngine::Tenant)
-        allow(tenant).to receive(:identifier_service).and_return(shoulder: 'doi:10.15146/R3',
-                                                                 account: 'stash',
-                                                                 password: 'stash',
-                                                                 id_scheme: 'doi')
-        allow(tenant).to receive(:short_name).and_return('DataONE')
-        allow(tenant).to receive(:default_license).and_return('cc0')
-
-        @metadata_entry = MetadataEntry.new(resource, 'dataset', tenant)
+        @metadata_entry = MetadataEntry.new(resource, 'dataset', @user.tenant_id)
       end
 
       describe '#initialize' do
