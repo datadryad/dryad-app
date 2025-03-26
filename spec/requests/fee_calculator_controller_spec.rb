@@ -119,7 +119,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
   describe '#publisher fee' do
     let(:type) { 'publisher' }
     let(:service_instance) { double(:FeeCalculatorService) }
-    let(:options) { {} }
+    let(:options) { { 'cover_storage_fee' => nil } }
 
     describe '#fee_calculator_url' do
       let(:url) { fee_calculator_url }
@@ -149,6 +149,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       context 'with all configuration attrs' do
         let(:options) do
           {
+            'cover_storage_fee' => nil,
             'dpc_tier' => '1',
             'service_tier' => '3',
             'storage_usage' => {
@@ -203,6 +204,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       context 'with all configuration attrs' do
         let(:options) do
           {
+            'cover_storage_fee' => true,
             'dpc_tier' => '1',
             'service_tier' => '3',
             'storage_usage' => {
