@@ -14,24 +14,26 @@
     <div id="user_profile">
       <%= render partial: 'user_profile' %>
     </div>
-    <div style="margin-bottom: 3rem;">
-      <p class="c-input__label">Dryad partner affiliation</p>
-      <%= render partial: 'stash_engine/shared/change_tenant' %>
-    </div>
-    <div id="admin_searches">
-      <% if current_user.min_admin? %>
-        <h2 id="saved">Saved searches</h2>
-        <% if current_user.admin_searches.empty? %>
-          <p>Save searches from the new <%= link_to 'Admin dashboard', admin_dashboard_path %></p>
-        <% else %>
-          <p>Click the search name to view results and to edit search fields and filters.</p>
-          <ol class="saved_searches_list" id="admin_searches_list">
-            <% current_user.admin_searches.each_with_index do |s,i| %>
-              <%= render partial: 'saved_search', locals: { saved_search: s, index: i } %>
-            <% end %>
-          </ol>
+    <div style="min-height: calc(25vh + 4rem);">
+      <div style="margin-bottom: 3rem;">
+        <p class="c-input__label">Dryad partner affiliation</p>
+        <%= render partial: 'stash_engine/shared/change_tenant' %>
+      </div>
+      <div id="admin_searches">
+        <% if current_user.min_admin? %>
+          <h2 id="saved">Saved searches</h2>
+          <% if current_user.admin_searches.empty? %>
+            <p>Save searches from the new <%= link_to 'Admin dashboard', admin_dashboard_path %></p>
+          <% else %>
+            <p>Click the search name to view results and to edit search fields and filters.</p>
+            <ol class="saved_searches_list" id="admin_searches_list">
+              <% current_user.admin_searches.each_with_index do |s,i| %>
+                <%= render partial: 'saved_search', locals: { saved_search: s, index: i } %>
+              <% end %>
+            </ol>
+          <% end %>
         <% end %>
-      <% end %>
+      </div>
     </div>
   </div>
 </div>
