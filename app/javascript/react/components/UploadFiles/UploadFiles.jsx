@@ -336,7 +336,7 @@ export default function UploadFiles({
                   c.id = new_file.id;
                   c.sanitized_name = new_file.upload_file_name;
                   c.status = 'Uploaded';
-                  c.dl_url = new_file.dl_url;
+                  c.uploaded = new_file.uploaded;
                 }
                 return c;
               }));
@@ -412,7 +412,7 @@ export default function UploadFiles({
 
     if (!files.valid_urls.length) return;
     let successfulUrls = files.valid_urls.map((f) => {
-      f.dl_url = f.url;
+      f.uploaded = true;
       return f;
     });
     if (chosenFiles.length) {

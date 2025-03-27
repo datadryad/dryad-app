@@ -45,6 +45,35 @@ module Stash
                              "Original HTTP library error: #{e}\n" \
                              "#{e.full_message}"
       end
+
+      # file is file from ActiveRecord object
+      def in_submission_download(file:)
+        tenant = file&.resource&.tenant
+        if file.blank? || tenant.blank?
+          cc.render status: 404, plain: 'Not found'
+          return
+        end
+
+        url = file.uploaded_success_url
+
+        if url.nil?
+          cc.render status: 404, plain: 'Not found'
+          error_text = "The file is not available for download. Most likely this is due to a mismatch in Merritt\n" \
+                       "and Dryad versioning. The database information probably indicates a deposit in an earlier version\n" \
+                       "than when the actual Merritt deposit took place. Or this could be caused by some other issues.\n" \
+                       "\n" \
+                       "File id: #{file.id}\n" \
+                       "Filename: #{file.upload_file_name}\n"
+          StashEngine::UserMailer.general_error(file&.resource, error_text).deliver_now
+        else
+          cc.redirect_to url, allow_other_host: true
+        end
+      rescue HTTP::Error => e
+        raise S3CustomError, "HTTP Error while creating presigned URL from S3\n" \
+                             "#{file.merritt_presign_info_url}\n" \
+                             "Original HTTP library error: #{e}\n" \
+                             "#{e.full_message}"
+      end
     end
   end
 end

@@ -41,7 +41,7 @@ module GenericFilesHelper
     new_file = StashEngine::GenericFile.first
     with_dl = new_file.as_json
     with_dl[:type] = new_file.type
-    with_dl[:dl_url] = new_file.s3_staged_presigned_url
+    with_dl[:uploaded] = new_file.s3_staged_presigned_url.present?
     expect(body['new_file'].to_json).to eql(with_dl.to_json)
   end
 

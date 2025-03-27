@@ -75,7 +75,7 @@ export const filesCheck = (resource, superuser, maximums) => {
         </p>
       );
     }
-    const uploadErrors = data.filter((f) => !f.dl_url && (f.status === 'Uploaded' || f.file_state === 'created'));
+    const uploadErrors = data.filter((f) => !f.uploaded && (f.status === 'Uploaded' || f.file_state === 'created'));
     if (uploadErrors.length > 0) {
       return (
         <p className="error-text" id="data_error">
