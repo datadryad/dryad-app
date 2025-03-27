@@ -338,6 +338,58 @@ RSpec.describe 'FeeCalculatorController', type: :request do
     end
   end
 
+  describe 'examples in documentation table' do
+    context 'sample institutional fee calculation' do
+      let(:type) { 'institution' }
+
+      it 'returns proper value on example 1' do
+        get fee_calculator_path, params: { type: type, service_tier: '1', dpc_tier: '1' }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq({ 'service_fee' => 5_000, 'dpc_fee' => 0, 'total'=> 5_000 })
+      end
+
+      it 'returns proper value on example 2' do
+        get fee_calculator_url, params: { type: type, service_tier: '4', dpc_tier: '10' }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq({ 'service_fee' => 30_000, 'dpc_fee' => 30_250, 'total'=> 60_250 })
+      end
+
+      it 'returns proper value on example 3' do
+        get fee_calculator_url, params: { type: type, service_tier: '6', dpc_tier: '16' }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq({ 'service_fee' => 50_000, 'dpc_fee' => 58_250, 'total'=> 108_250 })
+      end
+    end
+
+    context 'sample institutional fee calculation' do
+      let(:type) { 'publisher' }
+
+      it 'returns proper value on example 1' do
+        get fee_calculator_path, params: { type: type, service_tier: '1', dpc_tier: '1' }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq({ 'service_fee' => 1_000, 'dpc_fee' => 0, 'total'=> 1_000 })
+      end
+
+      it 'returns proper value on example 2' do
+        get fee_calculator_url, params: { type: type, service_tier: '6', dpc_tier: '10' }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq({ 'service_fee' => 12_500, 'dpc_fee' => 30_250, 'total'=> 42_750 })
+      end
+
+      it 'returns proper value on example 3' do
+        get fee_calculator_url, params: { type: type, service_tier: '10', dpc_tier: '16' }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq({ 'service_fee' => 40_000, 'dpc_fee' => 58_250, 'total'=> 98_250 })
+      end
+    end
+  end
+
   def json_response
     JSON.parse(response.body)['fees']
   end

@@ -22,7 +22,7 @@ class FeeCalculatorController < ApplicationController
   end
 
   def options
-    send("#{params[:type]}_permit_params").to_hash
+    send("#{params[:type]}_permit_params").to_hash.with_indifferent_access
   end
 
   def institution_permit_params
