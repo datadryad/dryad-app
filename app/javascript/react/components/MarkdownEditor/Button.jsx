@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useId} from 'react';
 import {useSelect} from 'downshift';
 import {range} from 'lodash';
 import {editorViewCtx} from '@milkdown/core';
@@ -47,6 +47,8 @@ function LinkMenu({editor, editorId, active}) {
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [showRemove, setRemove] = useState(false);
+  const textId = useId();
+  const urlId = useId();
 
   const getLink = (doc, pos, schema) => {
     const $pos = doc.resolve(pos);
@@ -176,8 +178,8 @@ function LinkMenu({editor, editorId, active}) {
       >{icons.link}
       </button>
       <div className="linkMenu" id={`${editorId}linkMenu`} hidden>
-        <label>Link text <input type="text" value={text} onChange={(e) => setText(e.target.value)} /></label>
-        <label>URL <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} /></label>
+        <label htmlFor={textId}>Link text <input id={textId} type="text" value={text} onChange={(e) => setText(e.target.value)} /></label>
+        <label htmlFor={urlId}>URL <input id={urlId} type="text" value={url} onChange={(e) => setUrl(e.target.value)} /></label>
         <div className="buttons">
           <button type="button" onClick={submit}>Save</button>
           {showRemove && <button type="button" onClick={removeLink}>Remove</button>}
