@@ -27,7 +27,9 @@ module FeeCalculator
         context 'with storage_size over 2TB limit' do
           let(:options) { { storage_size: 10_000_000_000_000 } }
 
-          it { is_expected.to eq({ storage_fee: 0, total: 0 }) }
+          it 'raises an error' do
+            expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+          end
         end
       end
 
@@ -54,7 +56,9 @@ module FeeCalculator
         context 'with storage_size over 2TB limit' do
           let(:options) { { generate_invoice: true, storage_size: 10_000_000_000_000 } }
 
-          it { is_expected.to eq({ storage_fee: 0, invoice_fee: 199, total: 199 }) }
+          it 'raises an error' do
+            expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+          end
         end
       end
     end

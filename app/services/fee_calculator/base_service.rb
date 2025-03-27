@@ -117,7 +117,9 @@ module FeeCalculator
 
     def price_by_range(tier_definition, value)
       tier = tier_definition.find { |t| t[:range].include?(value.to_i) }
-      tier ? tier[:price] : 0
+      raise ActionController::BadRequest, 'The value is out of defined range' if tier.nil?
+
+      tier[:price]
     end
   end
 end
