@@ -10,6 +10,7 @@
 
   &[disabled] {
     background-color: lighten($light-gray, 20%);
+    border-color: lighten($light-gray, 20%);
     color: $dark-gray;
     opacity: 1;
   }
@@ -50,6 +51,12 @@ input[type=file]::file-selector-button {
   @extend %o-button__plain-text;
   padding: 8px 12px;
   background-color: $lighter-blue;
+}
+
+.diff-toggle {
+  @extend %o-button__plain-text;
+  padding: 8px 12px;
+  background-color: #edba5a;
 }
 
 .o-button__plain-text3 {
