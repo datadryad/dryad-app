@@ -25,3 +25,9 @@ document.getElementById('clear_filters').removeEventListener('click', clearFilte
 document.getElementById('clear_filters').addEventListener('click', clearFilters)
 document.getElementById('count_form_button').click();
 <% if params[:pressed].present? %>document.querySelector('*[data-sort=<%=params[:pressed]%>]').focus()<% end %>
+
+var noClicks = Array.from(document.getElementsByClassName('prevent-click'));
+noClicks.forEach(button => {
+  button.removeEventListener('click', preventClicks);
+  button.addEventListener('click', preventClicks);
+});
