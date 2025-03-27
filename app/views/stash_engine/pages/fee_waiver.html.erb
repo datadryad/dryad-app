@@ -1,0 +1,44 @@
+<% @page_title = 'Fee waiver application' %>
+<% content_for(:doc_end) do %>
+<script type="text/javascript">
+  const labelPlusValue = (input) => {
+    return `${input.labels[0].textContent}: ${input.value}\n\n`
+  }
+  const legendPlusValue = (input) => {
+    const legend = input[0].closest('fieldset').firstElementChild
+    return `${legend.textContent}: ${input.value}\n\n`
+  }
+  const legendPlusChecks = (input) => {
+    const legend = input[0].closest('fieldset').firstElementChild
+    const value = []
+    input.forEach(i => {
+      if (i.checked) value.push(i.value)
+    })
+    return `${legend.textContent}: ${value.join('; ')}\n\n`
+  }
+  const form = document.getElementById('fee_waiver_email')
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let body = labelPlusValue(form.elements['doi'])
+    body += 'Submitting author information:\n\n'
+    form.elements['author-set'].querySelectorAll('input').forEach(input => {
+      body += labelPlusValue(input)
+    })
+    body += legendPlusValue(form.elements['reason'])
+    if (form.elements['other-reason'].value) body += `${form.elements['other-reason'].value}\n\n` 
+    body += legendPlusChecks(form.elements['funding'])
+    console.log(form.elements['funding'])
+    if (form.elements['other-funding'].value) body += `${form.elements['other-funding'].value}\n\n`
+    body += legendPlusValue(form.elements['grant-funding'])
+    if (form.elements['other-grant-funding'].value) body += `${form.elements['other-grant-funding'].value}\n\n`
+    body += legendPlusValue(form.elements['apc-discount'])
+    if (form.elements['other-apc-discount'].value) body += `${form.elements['other-apc-discount'].value}\n\n`
+    body += labelPlusValue(form.elements['journal'])
+    body += labelPlusValue(form.elements['comments'])
+    window.open(`mailto:<%= APP_CONFIG.contact_us_uri %>?subject=Application to waive data publication charge&body=${encodeURIComponent(body)}`)
+  });
+</script>
+<% end %>
+<div id="page-columns">
+  <div id="page-content"><%= render "fee_waiver" %></div>
+</div>
