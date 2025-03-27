@@ -42,7 +42,7 @@ module StashDatacite
 
     def find_files
       @submission[:generic_files] = @resource.generic_files.includes(:frictionless_report).validated_table.as_json(
-        methods: %i[type dl_url], include: { frictionless_report: { only: %i[report status] } }
+        methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
       )
       return unless @resource.previous_curated_resource.present?
 

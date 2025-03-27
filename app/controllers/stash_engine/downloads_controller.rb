@@ -96,6 +96,16 @@ module StashEngine
       end
     end
 
+    # uses presigned
+    def presubmit_file_stream
+      file = GenericFile.where(id: params[:file_id]).present_files.first
+      if file&.resource&.may_view?(ui_user: current_user)
+        @file_presigned.in_submission_download(file: file)
+      else
+        render status: 403, plain: 'You may not download this file.'
+      end
+    end
+
     # Downloads a zenodo file, by Resource Access Tokens presigned, maybe will need to do both RATs and public download.
     # Also may need to enable passing secret token for sharing access and right now we only supply Zenodo downloads for
     # private access, not to the general public which should go to Zenodo to examine the full info and downloads.
@@ -105,7 +115,7 @@ module StashEngine
       share = (params[:share].blank? ? nil : StashEngine::Share.where(secret_id: params[:share]).first)
 
       # can see if they had permission or the Share matches the identifier
-      if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id) &&
+      if res && (res&.may_view?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id) &&
           [StashEngine::SuppFile, StashEngine::SoftwareFile].include?(zen_upload.class)
         if res.zenodo_published?
           redirect_to zen_upload.public_zenodo_download_url
