@@ -31,14 +31,19 @@ function DescSection({
   if (current) {
     return (
       <>
-        <h3 className="o-heading__level2">{title}</h3>
-        {diff && (
+        {diff && <ins />}
+        {diff && curator && (
           <>
-            <ins />
-            {curator && <HTMLDiffer current={current} previous={prev} />}
+            <h3 className="o-heading__level2" style={{display: 'inline', marginRight: '1ch'}}>{title}</h3>
+            <HTMLDiffer current={current} previous={prev} />
           </>
         )}
-        {(!diff || !curator) && <WrapTables html={current} />}
+        {(!diff || !curator) && (
+          <>
+            <h3 className="o-heading__level2">{title}</h3>
+            <WrapTables html={current} />
+          </>
+        )}
       </>
     );
   }
