@@ -77,7 +77,7 @@ module StashEngine
             )
           json_file = db_file.as_json
           json_file[:type] = db_file.type
-          json_file[:dl_url] = db_file.s3_staged_presigned_url
+          json_file[:uploaded] = db_file.s3_staged_presigned_url.present?
           render json: { new_file: json_file }
         end
       end
@@ -124,7 +124,7 @@ module StashEngine
       files = files.select { |f| f&.frictionless_report&.report.present? && f&.frictionless_report&.status != 'checking' }
 
       render json: files.as_json(
-        methods: %i[type dl_url], include: { frictionless_report: { only: %i[report status] } }
+        methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
       )
     end
 
