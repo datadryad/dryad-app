@@ -527,4 +527,7 @@ Rails.application.routes.draw do
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
 
   get :health_check, to: 'health#check'
+
+  get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
+  get :dataset_fee_calculator, to: 'fee_calculator#calculate_dataset_fee', format: :json
 end
