@@ -124,7 +124,7 @@ module StashEngine
       files = files.select { |f| f&.frictionless_report&.report.present? && f&.frictionless_report&.status != 'checking' }
 
       render json: files.as_json(
-        methods: %i[type dl_url], include: { frictionless_report: { only: %i[report status] } }
+        methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
       )
     end
 
