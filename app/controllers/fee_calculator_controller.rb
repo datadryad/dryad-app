@@ -5,19 +5,21 @@ class FeeCalculatorController < ApplicationController
     calculate
   end
 
-  def calculate_dataset_fee
-    calculate(dataset_fee: true)
+  def calculate_resource_fee
+    resource = StashEngine::Resource.find(params[:id])
+
+    calculate(resource: resource)
   end
 
   private
 
-  def calculate(dataset_fee: false)
+  def calculate(resource: nil)
     type = params[:type]
     raise NotImplementedError, 'Invalid calculator selected.' if %w[institution publisher individual].exclude?(type)
 
     render json: {
       options: options,
-      fees: FeeCalculatorService.new(type).calculate(options, for_dataset: dataset_fee)
+      fees: FeeCalculatorService.new(type).calculate(options, resource: resource)
     }
   end
 
@@ -41,7 +43,7 @@ class FeeCalculatorController < ApplicationController
   end
 
   def individual_permit_params
-    attrs = params.permit(:storage_size, :generate_invoice)
+    attrs = params.permit(%i[storage_size generate_invoice type id])
     attrs[:generate_invoice] = ActiveModel::Type::Boolean.new.cast(attrs[:generate_invoice])
     attrs
   end

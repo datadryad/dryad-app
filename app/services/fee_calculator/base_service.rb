@@ -1,6 +1,6 @@
 module FeeCalculator
   class BaseService
-    attr_reader :options, :for_dataset
+    attr_reader :options, :resource
 
     # rubocop:disable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
     ESTIMATED_DATASETS = [
@@ -32,15 +32,15 @@ module FeeCalculator
     ].freeze
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
-    def initialize(options, for_dataset: false)
+    def initialize(options, resource: nil)
       @sum = 0
       @options = options
       @sum_options = {}
-      @for_dataset = for_dataset
+      @resource = resource
     end
 
     def call
-      if for_dataset
+      if resource.present?
         add_zero_fee(:service_fee)
         add_zero_fee(:dpc)
         add_storage_fee
@@ -90,8 +90,7 @@ module FeeCalculator
 
     def add_fee_by_tier(tier_definition, value_key)
       value = price_by_tier(tier_definition, options[value_key])
-      @sum += value
-      @sum_options[output_key(value_key)] = value
+      add_fee_to_total(value_key, value)
     end
 
     def output_key(key)
@@ -111,8 +110,7 @@ module FeeCalculator
 
     def add_fee_by_range(tier_definition, value_key)
       value = price_by_range(tier_definition, options[value_key])
-      @sum += value
-      @sum_options[output_key(value_key)] = value
+      add_fee_to_total(value_key, value)
     end
 
     def price_by_range(tier_definition, value)
@@ -120,6 +118,11 @@ module FeeCalculator
       raise ActionController::BadRequest, 'The value is out of defined range' if tier.nil?
 
       tier[:price]
+    end
+
+    def add_fee_to_total(value_key, fee)
+      @sum += fee
+      @sum_options[output_key(value_key)] = fee
     end
   end
 end

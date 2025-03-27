@@ -800,6 +800,13 @@ module StashEngine
       prev.count.positive?
     end
 
+    def previously_published?
+      # ignoring the current resource, is there an embargoed or published status previous this point for this identifier?
+      identifier.curation_activities
+                .where('stash_engine_curation_activities.resource_id < ? and status in (?)', id, %w[published embargoed])
+                .exists?
+    end
+
     # -----------------------------------------------------------
     # editor
 

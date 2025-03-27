@@ -4,8 +4,8 @@ class FeeCalculatorService
     @calculation_type = type
   end
 
-  def calculate(options, for_dataset: false)
-    calculator_class.constantize.new(options, for_dataset: for_dataset).call
+  def calculate(options, resource: nil)
+    calculator_class.constantize.new(options, resource: resource).call
   end
 
   private

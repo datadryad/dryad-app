@@ -16,8 +16,13 @@ module FeeCalculator
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
     def call
-      add_storage_fee
-      add_invoice_fee
+      if resource.present? && resource.previously_published?
+        add_storage_fee_difference
+        add_invoice_fee
+      else
+        add_storage_fee
+        add_invoice_fee
+      end
       @sum_options.merge(total: @sum)
     end
 
@@ -32,6 +37,14 @@ module FeeCalculator
 
       @sum += INVOICE_FEE
       @sum_options[:invoice_fee] = INVOICE_FEE
+    end
+
+    def add_storage_fee_difference
+      paid_storage = resource.identifier.previous_invoiced_file_size
+      paid_tier_price = price_by_range(storage_fee_tiers, paid_storage)
+      new_tier_price =  price_by_range(storage_fee_tiers, resource.total_file_size)
+
+      add_fee_to_total(:storage_size, new_tier_price-paid_tier_price)
     end
   end
 end
