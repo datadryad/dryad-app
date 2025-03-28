@@ -7,3 +7,27 @@
   direction: rtl;
   white-space: nowrap;
 }
+
+.range-grid {
+  display: grid;
+  grid-template-columns: 13ch 1fr 5ch;
+  align-items: center;
+  column-gap: 1ch;
+  row-gap: 2ch;
+  max-width: 90%;
+
+  output:after {
+    content: '%';
+  }
+}
+
+#total_estimate {
+  flex: 1;
+  font-size: 1.25rem;
+  padding: .5ch;
+  background-color: white;
+  text-align: center;
+  &:before {
+    content: '$';
+  }
+}

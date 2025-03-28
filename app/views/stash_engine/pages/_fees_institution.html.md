@@ -16,9 +16,9 @@ Our institution and research partners also benefit from:
 
 The annual partner fee is calculated as a total of the anticipated Data Publication Charge (DPC) for the coming year, plus the Annual Service Fee. DPCs are adjusted to reflect actual usage at year-end.
 
-Read on for a detailed fee schedule.
+Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule.
 
-[Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule.]: #
+<%= render partial: 'fee_calculator/institution' %>
 
 <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us</a> with questions, to discuss partnership, or to confirm the estimated partner fee for your organization.
 
@@ -135,9 +135,7 @@ The DPC is based on the variable costs of curating, publishing, and preserving o
 </div>
 </div>
 
-
-Datasets larger than 10GB are billed individually as follows.
-
+Datasets larger than 10GB are billed individually as follows. Institutional partners may opt to cover large data fees or assign them to the author.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
@@ -309,11 +307,9 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 </div>
 </div>
 
-
 #### Lower- and middle-income countries
 
 Annual Service Fees for institutions based in lower- and middle-income countries are as follows.
-
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
