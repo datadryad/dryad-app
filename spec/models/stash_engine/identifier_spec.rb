@@ -3,6 +3,7 @@
 # Table name: stash_engine_identifiers
 #
 #  id                      :integer          not null, primary key
+#  deleted_at              :datetime
 #  edit_code               :string(191)
 #  identifier              :text(65535)
 #  identifier_type         :text(65535)
@@ -24,6 +25,7 @@
 # Indexes
 #
 #  admin_search_index                                     (search_words)
+#  index_stash_engine_identifiers_on_deleted_at           (deleted_at)
 #  index_stash_engine_identifiers_on_identifier           (identifier)
 #  index_stash_engine_identifiers_on_latest_resource_id   (latest_resource_id)
 #  index_stash_engine_identifiers_on_license_id           (license_id)
@@ -644,22 +646,23 @@ module StashEngine
       end
     end
 
-    describe '#large_files?' do
-      it 'returns false when large files are not present' do
-        expect(@identifier.large_files?).to eq(false)
-      end
-
-      it 'returns true when large files are present' do
-        DataFile.create(
-          resource: @res3,
-          file_state: 'created',
-          upload_file_name: 'created.bin',
-          upload_file_size: 1.0e+14
-        )
-        expect(@identifier.large_files?).to eq(true)
-      end
-
-    end
+    # TODO: Cleanup - method for this is commented
+    # describe '#large_files?' do
+    #   it 'returns false when large files are not present' do
+    #     expect(@identifier.large_files?).to eq(false)
+    #   end
+    #
+    #   it 'returns true when large files are present' do
+    #     DataFile.create(
+    #       resource: @res3,
+    #       file_state: 'created',
+    #       upload_file_name: 'created.bin',
+    #       upload_file_size: 1.0e+14
+    #     )
+    #     expect(@identifier.large_files?).to eq(true)
+    #   end
+    #
+    # end
 
     describe '#calculated_pub_state' do
 

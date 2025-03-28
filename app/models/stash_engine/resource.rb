@@ -5,6 +5,7 @@
 #  id                        :integer          not null, primary key
 #  accepted_agreement        :boolean
 #  cedar_json                :text(65535)
+#  deleted_at                :datetime
 #  display_readme            :boolean          default(TRUE)
 #  download_uri              :text(65535)
 #  file_view                 :boolean          default(FALSE)
@@ -34,6 +35,7 @@
 # Indexes
 #
 #  index_stash_engine_resources_on_current_editor_id             (current_editor_id)
+#  index_stash_engine_resources_on_deleted_at                    (deleted_at)
 #  index_stash_engine_resources_on_identifier_id                 (identifier_id)
 #  index_stash_engine_resources_on_identifier_id_and_created_at  (identifier_id,created_at) UNIQUE
 #  index_stash_engine_resources_on_tenant_id                     (tenant_id)
@@ -798,6 +800,13 @@ module StashEngine
     def previously_public?
       prev = self.class.where(identifier_id: identifier_id).where('created_at < ?', created_at).where(meta_view: true)
       prev.count.positive?
+    end
+
+    def previously_published?
+      # ignoring the current resource, is there an embargoed or published status previous this point for this identifier?
+      identifier.curation_activities
+        .where('stash_engine_curation_activities.resource_id < ? and status in (?)', id, %w[published embargoed])
+        .exists?
     end
 
     # -----------------------------------------------------------

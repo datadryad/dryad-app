@@ -2,19 +2,21 @@
 #
 # Table name: stash_engine_tenants
 #
-#  id              :string(191)      not null, primary key
-#  authentication  :json
-#  campus_contacts :json
-#  covers_dpc      :boolean          default(TRUE)
-#  enabled         :boolean          default(TRUE)
-#  long_name       :string(191)
-#  partner_display :boolean          default(TRUE)
-#  payment_plan    :integer
-#  short_name      :string(191)
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  logo_id         :text(4294967295)
-#  sponsor_id      :string(191)
+#  id                 :string(191)      not null, primary key
+#  authentication     :json
+#  campus_contacts    :json
+#  covers_dpc         :boolean          default(TRUE)
+#  covers_ldf         :boolean          default(FALSE)
+#  enabled            :boolean          default(TRUE)
+#  long_name          :string(191)
+#  low_income_country :boolean          default(FALSE)
+#  partner_display    :boolean          default(TRUE)
+#  payment_plan       :integer
+#  short_name         :string(191)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  logo_id            :text(4294967295)
+#  sponsor_id         :string(191)
 #
 # Indexes
 #
@@ -40,7 +42,7 @@ module StashEngine
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
 
     accepts_nested_attributes_for :flag
-    enum :payment_plan, { tiered: 0 }
+    enum :payment_plan, { tiered: 0, '2025': 1 }
 
     # return all enabled tenants sorted by name
     scope :enabled, -> { where(enabled: true).order(:short_name) }
