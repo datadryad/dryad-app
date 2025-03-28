@@ -156,7 +156,7 @@ function PublicationForm({
                   }
                 }
               />
-              <div id="journal-ex"><i />{importType === 'preprint' ? 'bioRxiv, SSRN' : 'Nature, Science'}</div>
+              <div id="journal-ex"><i aria-hidden="true" />{importType === 'preprint' ? 'bioRxiv, SSRN' : 'Nature, Science'}</div>
             </div>
             {importType !== 'manuscript' && (
               <div className="input-stack">
@@ -176,7 +176,7 @@ function PublicationForm({
                   aria-errormessage="doi_error"
                   required
                 />
-                <div id="doi-ex"><i />10.5702/qlm.1266rr</div>
+                <div id="doi-ex"><i aria-hidden="true" />10.5702/qlm.1266rr</div>
               </div>
             )}
             {importType === 'manuscript' && (
@@ -197,7 +197,7 @@ function PublicationForm({
                   aria-errormessage="msid_error"
                   required
                 />
-                <div id="man-ex"><i />APPS-D-17-00113</div>
+                <div id="man-ex"><i aria-hidden="true" />APPS-D-17-00113</div>
               </div>
             )}
             <div className="input-stack">

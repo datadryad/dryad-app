@@ -384,3 +384,25 @@ cd /tmp
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 sudo yum localinstall google-chrome-stable_current_x86_64.rpm
 ```
+
+Extending a disk on EC2
+========================
+
+In the console, select the disk, modify, and give it the new size.
+
+```
+# See the size of the disk and partitions
+sudo lsblk
+
+# Grow a partition to use the new space
+sudo growpart /dev/nvme0n1 1
+
+# Verify that it grew
+sudo lsblk
+
+# See where the partition is mounted
+df -hT
+
+# Extend the filesystem to use the full partition
+sudo xfs_growfs -d <filesystem location>
+```

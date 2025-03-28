@@ -1,1 +1,7 @@
 document.getElementById('user_datasets').innerHTML = "<%= escape_javascript(render(partial: 'user_datasets')) %>";
+
+var noClicks = Array.from(document.getElementsByClassName('prevent-click'));
+noClicks.forEach(button => {
+  button.removeEventListener('click', preventClicks);
+  button.addEventListener('click', preventClicks);
+});

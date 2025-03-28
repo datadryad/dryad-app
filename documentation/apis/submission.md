@@ -27,7 +27,24 @@ is shown below, but typical metadata should be more complete:
         "affiliation": "University of the Example"
       }
    	 ],
-    "abstract": "Cyberneticists agree that concurrent models are an interesting new topic, and security experts concur."
+     "keywords": [
+	"Dryad",
+	"Computer",
+	"Examples",
+	"Interesting"
+    ],
+    "fieldOfScience": "Animal and dairy science",
+    "abstract": "Cyberneticists agree that concurrent models are an interesting new topic, and security experts concur.",
+     "funders": [ 
+	{
+		"organization": "Savannah River Operations Office",
+		"identifierType": "ror",
+		"identifier": "https://ror.org/05hhm9a98",
+		"awardNumber": "12345" },
+	{
+	    "organization": "The Cat Chronicles",
+	    "awardNumber": "cat383"
+	}]
   }
 ```
 

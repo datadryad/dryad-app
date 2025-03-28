@@ -364,7 +364,7 @@ module StashDatacite
           @resource.descriptions.type_technical_info.first.destroy
           validations = DatasetValidations.new(resource: @resource)
           error = validations.readme_required
-          expect(error).to eq('README missing')
+          expect(error).to eq('README file missing')
         end
       end
     end

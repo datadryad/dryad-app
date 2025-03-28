@@ -45,6 +45,11 @@
   justify-content: center;
 }
 
+#readme_upload:focus + label {
+  border: thin solid white;
+  outline: 2px solid $medium-blue;
+}
+
 .readme-examples {
   list-style: "";
   padding-left: 0;

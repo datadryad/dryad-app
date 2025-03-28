@@ -7,7 +7,7 @@
       <button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-pencil" aria-hidden="true"></i> Edit affiliation</button>
     </p>
   <% else %>
-  <p><button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a Dryad member institution</button></p>
+  <p><button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a Dryad partner institution</button></p>
   <% end %>
 </div>
 <div id="edit-tenant-form" hidden>
@@ -18,7 +18,7 @@
         <div style="display: flex; gap: 0; flex-direction: column; flex-grow: 1">
           <%= render partial: 'stash_engine/shared/search_select', locals: {
             id: 'tenant',
-            label: 'Select your Dryad member institution',
+            label: 'Select your Dryad partner institution',
             field_name: 'tenant_id',
             options: tenant_select.to_json.html_safe,
             options_label: 'name',
@@ -35,11 +35,11 @@
   </div>
   <% if current_tenant.id != 'dryad' %>
     <br/>
-    <p>Is your institution not a member of Dryad?</p>
+    <p>Is your institution not a partner of Dryad?</p>
     <%= form_with(url: no_partner_path, method: :post) do |f| %>
       <% if @target_page %><input type="hidden" name="target_page" value="<%= @target_page %>"><% end %>
       <%= f.button type: 'submit', class: 'o-button__plain-text7' do %>
-         <i class="fa fa-minus-circle" aria-hidden="true"></i> Remove member affiliation (<%= current_tenant.short_name %>)
+         <i class="fa fa-minus-circle" aria-hidden="true"></i> Remove partner affiliation (<%= current_tenant.short_name %>)
       <% end %>
     <% end %>
   <% end %>

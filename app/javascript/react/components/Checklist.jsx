@@ -17,6 +17,7 @@ export function Checklist({
               className="checklist-link"
               onClick={() => setStep(s)}
               aria-controls="submission-step"
+              data-slug={s.name.split(/[^a-z]/i)[0].toLowerCase()}
             >
               <span className="checklist-icon">
                 <i className="fas fa-square" aria-hidden="true" />

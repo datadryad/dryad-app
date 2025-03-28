@@ -115,7 +115,7 @@
           <% end %>
         <% end %>
       </span>
-      <span id="related_works_list" class="child-details"><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ') %> <%= r.resource_publication&.manuscript_number&.presence || ''%></span>
+      <span id="related_works_list" class="child-details"><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ').truncate(100) %> <%= r.resource_publication&.manuscript_number&.presence || ''%></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
       <span class="input-line">
@@ -126,7 +126,7 @@
           <% end %>
         <% end %>
       </span>
-      <span id="funders_list" class="child-details"><%= r.contributors.funder&.map(&:contributor_name)&.join('; ') %></span>
+      <span id="funders_list" class="child-details"><%= r.contributors.funder&.map(&:contributor_name)&.join('; ').truncate(100) %></span>
     </div>
   </div>
 </div>
@@ -139,7 +139,9 @@
     <% end %>
   <% end %>
 </div>
-<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>"></div>
+<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>">
+  <p style="text-align: center;"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p>
+</div>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
   <div class="activity-log-header">
@@ -210,4 +212,9 @@
       document.getElementById('c-input_publication_date').setAttribute('hidden', 'hidden');
     }
   }
+  var noClicks = Array.from(document.getElementsByClassName('prevent-click'));
+  noClicks.forEach(button => {
+    button.removeEventListener('click', preventClicks);
+    button.addEventListener('click', preventClicks);
+  });
 </script>
