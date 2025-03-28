@@ -2,7 +2,7 @@ module FeeCalculator
   class InstitutionService < BaseService
     # rubocop:disable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
     NORMAL_SERVICE_FEE = [
-      { tier: 1, range:             0..     99_000_000, price:  5_000 },
+      { tier: 1, range:             0..    100_000_000, price:  5_000 },
       { tier: 2, range:   100_000_001..    250_000_000, price: 10_000 },
       { tier: 3, range:   250_000_001..    500_000_000, price: 20_000 },
       { tier: 4, range:   500_000_001..    750_000_000, price: 30_000 },

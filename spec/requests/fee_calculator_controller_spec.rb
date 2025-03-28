@@ -10,7 +10,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
 
       before do
         allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options, for_dataset: false).and_return({ some_fee: 12 })
+        allow(service_instance).to receive(:calculate).with(options).and_return({ some_fee: 12 })
       end
 
       context 'without any configuration' do
@@ -26,7 +26,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: false)
+          expect(service_instance).to have_received(:calculate).with(options)
         end
       end
 
@@ -55,17 +55,20 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: false)
+          expect(service_instance).to have_received(:calculate).with(options)
         end
       end
     end
 
-    describe '#dataset_fee_calculator_url' do
-      let(:url) { dataset_fee_calculator_url }
+    describe '#resource_fee_calculator_url(resource)' do
+      let(:url) { resource_fee_calculator_url(resource) }
+      let(:options) { {} }
+      let(:identifier) { create(:identifier) }
+      let(:resource) { create(:resource, identifier: identifier) }
 
       before do
         allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options, for_dataset: true).and_return({ some_fee: 12 })
+        allow(service_instance).to receive(:calculate).with(options, resource: resource).and_return({ some_fee: 12 })
       end
 
       context 'without any configuration' do
@@ -81,22 +84,12 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: true)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
         end
       end
 
       context 'with all configuration attrs' do
-        let(:options) do
-          {
-            'low_middle_income_country' => true,
-            'dpc_tier' => '1',
-            'service_tier' => '3',
-            'storage_usage' => {
-              '1' => '10',
-              '4' => '43'
-            }
-          }
-        end
+        let(:options) { { 'generate_invoice' => false } }
 
         before { get url, params: { type: type }.merge(options) }
 
@@ -110,7 +103,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: true)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
         end
       end
     end
@@ -126,7 +119,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
 
       before do
         allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options, for_dataset: false).and_return({ some_fee: 12 })
+        allow(service_instance).to receive(:calculate).with(options).and_return({ some_fee: 12 })
       end
 
       context 'without any configuration' do
@@ -142,7 +135,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: false)
+          expect(service_instance).to have_received(:calculate).with(options)
         end
       end
 
@@ -171,17 +164,20 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: false)
+          expect(service_instance).to have_received(:calculate).with(options)
         end
       end
     end
 
-    describe '#dataset_fee_calculator_url' do
-      let(:url) { dataset_fee_calculator_url }
+    describe '#resource_fee_calculator_url(resource)' do
+      let(:url) { resource_fee_calculator_url(resource) }
+      let(:options) { {} }
+      let(:identifier) { create(:identifier) }
+      let(:resource) { create(:resource, identifier: identifier) }
 
       before do
         allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options, for_dataset: true).and_return({ some_fee: 12 })
+        allow(service_instance).to receive(:calculate).with(options, resource: resource).and_return({ some_fee: 12 })
       end
 
       context 'without any configuration' do
@@ -197,22 +193,12 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: true)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
         end
       end
 
       context 'with all configuration attrs' do
-        let(:options) do
-          {
-            'cover_storage_fee' => true,
-            'dpc_tier' => '1',
-            'service_tier' => '3',
-            'storage_usage' => {
-              '1' => '10',
-              '4' => '43'
-            }
-          }
-        end
+        let(:options) { { 'generate_invoice' => true } }
 
         before { get url, params: { type: type }.merge(options) }
 
@@ -226,7 +212,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: true)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
         end
       end
     end
@@ -242,7 +228,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
 
       before do
         allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options, for_dataset: false).and_return({ some_fee: 12 })
+        allow(service_instance).to receive(:calculate).with(options).and_return({ some_fee: 12 })
       end
 
       context 'without any configuration' do
@@ -258,7 +244,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: false)
+          expect(service_instance).to have_received(:calculate).with(options)
         end
       end
 
@@ -282,17 +268,20 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: false)
+          expect(service_instance).to have_received(:calculate).with(options)
         end
       end
     end
 
-    describe '#dataset_fee_calculator_url' do
-      let(:url) { dataset_fee_calculator_url }
+    describe '#resource_fee_calculator_url(resource)' do
+      let(:url) { resource_fee_calculator_url(resource) }
+      let(:options) { {} }
+      let(:identifier) { create(:identifier) }
+      let(:resource) { create(:resource, identifier: identifier) }
 
       before do
         allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options, for_dataset: true).and_return({ some_fee: 12 })
+        allow(service_instance).to receive(:calculate).with(options, resource: resource).and_return({ some_fee: 12 })
       end
 
       context 'without any configuration' do
@@ -308,17 +297,12 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: true)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
         end
       end
 
       context 'with all configuration attrs' do
-        let(:options) do
-          {
-            'generate_invoice' => true,
-            'storage_size' => '10000'
-          }
-        end
+        let(:options) { { 'generate_invoice' => true } }
 
         before { get url, params: { type: type }.merge(options) }
 
@@ -332,7 +316,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, for_dataset: true)
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
         end
       end
     end

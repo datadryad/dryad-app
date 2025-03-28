@@ -529,5 +529,5 @@ Rails.application.routes.draw do
   get :health_check, to: 'health#check'
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
-  get "resource_fee_calculator/:id", to: 'fee_calculator#calculate_resource_fee', format: :json
+  get "resource_fee_calculator/:id", to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
 end

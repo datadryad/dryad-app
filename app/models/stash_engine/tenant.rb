@@ -6,7 +6,7 @@
 #  authentication  :json
 #  campus_contacts :json
 #  covers_dpc      :boolean          default(TRUE)
-#  covers_ldf      :string(191)
+#  covers_ldf      :boolean          default(FALSE)
 #  enabled         :boolean          default(TRUE)
 #  long_name       :string(191)
 #  partner_display :boolean          default(TRUE)
@@ -41,7 +41,7 @@ module StashEngine
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
 
     accepts_nested_attributes_for :flag
-    enum :payment_plan, { tiered: 0 }
+    enum :payment_plan, { tiered: 0, '2025': 1 }
 
     # return all enabled tenants sorted by name
     scope :enabled, -> { where(enabled: true).order(:short_name) }

@@ -23,13 +23,16 @@ module FeeCalculator
     ].freeze
 
     ESTIMATED_FILES_SIZE = [
-      { tier: 1, range:    10_000_000_000..   50_000_000_000, price:   259 },
+      { tier: 0, range:                 0..   10_000_000_000, price:     0 },
+      { tier: 1, range:    10_000_000_001..   50_000_000_000, price:   259 },
       { tier: 2, range:    50_000_000_001..  100_000_000_000, price:   464 },
       { tier: 3, range:   100_000_000_001..  250_000_000_000, price: 1_123 },
       { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
       { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
       { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
     ].freeze
+
+    INVOICE_FEE = 199.freeze
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
     def initialize(options, resource: nil)
@@ -37,13 +40,22 @@ module FeeCalculator
       @options = options
       @sum_options = {}
       @resource = resource
+      @payment_plan_is_2025 = resource ? resource.identifier.payer_2025? : false
+      @covers_ldf = resource ? resource.identifier.payer&.covers_ldf : false
     end
 
     def call
+      raise ActionController::BadRequest, 'Payer is not on 2025 payment plan' if resource && !@payment_plan_is_2025
+
       if resource.present?
-        add_zero_fee(:service_fee)
-        add_zero_fee(:dpc)
-        add_storage_fee
+        add_zero_fee(:service_tier)
+        add_zero_fee(:dpc_tier)
+        if @covers_ldf
+          add_zero_fee(:storage_size)
+        else
+          add_storage_fee_difference
+          add_invoice_fee
+        end
       else
         add_service_fee
         add_dpc_fee
@@ -55,7 +67,15 @@ module FeeCalculator
     private
 
     def add_zero_fee(value_key)
-      @sum_options[value_key] = 0
+      add_fee_to_total(value_key, 0)
+    end
+
+    def add_invoice_fee
+      return unless options[:generate_invoice]
+      return if @sum.zero?
+
+      @sum += INVOICE_FEE
+      @sum_options[:invoice_fee] = INVOICE_FEE
     end
 
     def add_dpc_fee
@@ -78,6 +98,14 @@ module FeeCalculator
         @sum += items_fee
       end
       @sum_options[:storage_by_tier] = res
+    end
+
+    def add_storage_fee_difference
+      paid_storage = resource.identifier.previous_invoiced_file_size
+      paid_tier_price = price_by_range(storage_fee_tiers, paid_storage)
+      new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
+
+      add_fee_to_total(:storage_size, new_tier_price - paid_tier_price)
     end
 
     def add_storage_usage_fee(key)

@@ -1,26 +1,28 @@
 class FeeCalculatorController < ApplicationController
   respond_to :json
+  before_action :validate_payer_type
 
   def calculate_fee
-    calculate
+    render json: {
+      options: options,
+      fees: FeeCalculatorService.new(params[:type]).calculate(options)
+    }
   end
 
   def calculate_resource_fee
     resource = StashEngine::Resource.find(params[:id])
 
-    calculate(resource: resource)
+    render json: {
+      options: resource_options,
+      fees: FeeCalculatorService.new(params[:type]).calculate(resource_options, resource: resource)
+    }
   end
 
   private
 
-  def calculate(resource: nil)
+  def validate_payer_type
     type = params[:type]
     raise NotImplementedError, 'Invalid calculator selected.' if %w[institution publisher individual].exclude?(type)
-
-    render json: {
-      options: options,
-      fees: FeeCalculatorService.new(type).calculate(options, resource: resource)
-    }
   end
 
   def options
@@ -43,8 +45,14 @@ class FeeCalculatorController < ApplicationController
   end
 
   def individual_permit_params
-    attrs = params.permit(%i[storage_size generate_invoice type id])
+    attrs = params.permit(%i[storage_size generate_invoice])
     attrs[:generate_invoice] = ActiveModel::Type::Boolean.new.cast(attrs[:generate_invoice])
     attrs
+  end
+
+  def resource_options
+    attrs = params.permit(%i[generate_invoice])
+    attrs[:generate_invoice] = ActiveModel::Type::Boolean.new.cast(attrs[:generate_invoice]) if attrs.key?(:generate_invoice)
+    attrs.to_hash.with_indifferent_access
   end
 end

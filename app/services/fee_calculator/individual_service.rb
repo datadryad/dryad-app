@@ -11,8 +11,6 @@ module FeeCalculator
       { tier: 7, range:   500_000_000_001..1_000_000_000_000, price:  6_077 },
       { tier: 8, range: 1_000_000_000_001..2_000_000_000_000, price: 12_162 }
     ].freeze
-
-    INVOICE_FEE = 199
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
     def call
@@ -30,21 +28,6 @@ module FeeCalculator
 
     def storage_fee_tiers
       INDIVIDUAL_ESTIMATED_FILES_SIZE
-    end
-
-    def add_invoice_fee
-      return unless options[:generate_invoice]
-
-      @sum += INVOICE_FEE
-      @sum_options[:invoice_fee] = INVOICE_FEE
-    end
-
-    def add_storage_fee_difference
-      paid_storage = resource.identifier.previous_invoiced_file_size
-      paid_tier_price = price_by_range(storage_fee_tiers, paid_storage)
-      new_tier_price =  price_by_range(storage_fee_tiers, resource.total_file_size)
-
-      add_fee_to_total(:storage_size, new_tier_price-paid_tier_price)
     end
   end
 end

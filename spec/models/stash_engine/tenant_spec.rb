@@ -6,7 +6,7 @@
 #  authentication  :json
 #  campus_contacts :json
 #  covers_dpc      :boolean          default(TRUE)
-#  covers_ldf      :string(191)
+#  covers_ldf      :boolean          default(FALSE)
 #  enabled         :boolean          default(TRUE)
 #  long_name       :string(191)
 #  partner_display :boolean          default(TRUE)

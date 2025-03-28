@@ -1,20 +1,20 @@
-require 'webmock/rspec'
 module FeeCalculator
   describe IndividualService do
     include Mocks::RSolr
     include Mocks::Salesforce
     include Mocks::Stripe
 
+    let(:options) { {} }
+    let(:resource) { nil }
+    let(:no_charges_response) { { storage_fee: 0, total: 0 } }
+
+    subject { described_class.new(options, resource: resource).call }
+
     before do
       mock_solr!
       mock_salesforce!
       mock_stripe!
     end
-
-    let(:options) { {} }
-    let(:resource) { nil }
-
-    subject { described_class.new(options, resource: resource).call }
 
     describe '#fee_calculator' do
       context 'without invoice fee' do
@@ -78,7 +78,7 @@ module FeeCalculator
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
 
       context 'on first publish' do
-        let(:resource) { create(:resource, identifier: identifier) }
+        let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
         context 'without invoice fee' do
           context 'without any configuration' do
@@ -142,14 +142,14 @@ module FeeCalculator
 
         context 'without invoice fee' do
           context 'when files_size do not change' do
-            it { is_expected.to eq({ storage_fee: 0, total: 0 }) }
+            it { is_expected.to eq(no_charges_response) }
           end
 
           context 'when files_size changes' do
             context 'but does not exceed the current limit' do
               let(:new_files_size) { 5_000_000_000 }
 
-              it { is_expected.to eq({ storage_fee: 0, total: 0 }) }
+              it { is_expected.to eq(no_charges_response) }
             end
 
             context 'storage gets to next level' do
@@ -177,14 +177,14 @@ module FeeCalculator
 
         context 'with invoice fee' do
           context 'when files_size do not change' do
-            it { is_expected.to eq({ storage_fee: 0, total: 0 }) }
+            it { is_expected.to eq(no_charges_response) }
           end
 
           context 'when files_size changes' do
             context 'but does not exceed the current limit' do
               let(:new_files_size) { 5_000_000_000 }
 
-              it { is_expected.to eq({ storage_fee: 0, total: 0 }) }
+              it { is_expected.to eq(no_charges_response) }
             end
 
             context 'storage gets to next level' do
@@ -213,14 +213,14 @@ module FeeCalculator
           let(:options) { { generate_invoice: true } }
 
           context 'when files_size do not change' do
-            it { is_expected.to eq({ storage_fee: 0, invoice_fee: 199, total: 199 }) }
+            it { is_expected.to eq(no_charges_response) }
           end
 
           context 'when files_size changes' do
             context 'but does not exceed the current limit' do
               let(:new_files_size) { 5_000_000_000 }
 
-              it { is_expected.to eq({ storage_fee: 0, invoice_fee: 199, total: 199 }) }
+              it { is_expected.to eq(no_charges_response) }
             end
 
             context 'storage gets to next level' do
