@@ -53,7 +53,7 @@
                 <% end %>
               <% end %>
               <% if policy(dataset).delete? %>
-                <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
+                <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7 prevent-click', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
                   <i class="fas fa-trash-can" aria-hidden="true"></i><%= dataset&.stash_version.version > 1 ? 'Revert' : 'Delete' %><span class="screen-reader-only"> <%= dataset.identifier.identifier %></span>
                 <% end %>
               <% end %>

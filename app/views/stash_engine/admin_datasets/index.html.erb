@@ -212,4 +212,9 @@
       document.getElementById('c-input_publication_date').setAttribute('hidden', 'hidden');
     }
   }
+  var noClicks = Array.from(document.getElementsByClassName('prevent-click'));
+  noClicks.forEach(button => {
+    button.removeEventListener('click', preventClicks);
+    button.addEventListener('click', preventClicks);
+  });
 </script>
