@@ -26,13 +26,5 @@ module FeeCalculator
 
       NORMAL_SERVICE_FEE
     end
-
-    def storage_fee_tiers
-      ESTIMATED_FILES_SIZE
-    end
-
-    def dpc_fee_tiers
-      ESTIMATED_DATASETS
-    end
   end
 end

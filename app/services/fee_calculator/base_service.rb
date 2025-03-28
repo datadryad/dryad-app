@@ -66,6 +66,14 @@ module FeeCalculator
 
     private
 
+    def storage_fee_tiers
+      ESTIMATED_FILES_SIZE
+    end
+
+    def dpc_fee_tiers
+      ESTIMATED_DATASETS
+    end
+
     def add_zero_fee(value_key)
       add_fee_to_total(value_key, 0)
     end
@@ -95,7 +103,7 @@ module FeeCalculator
         items = (datasets[:range].max * percent.to_i / 100.0).round
         items_fee = items * price_by_tier(storage_fee_tiers, tier)
         res[tier] = items_fee
-        @sum += items_fee
+        @sum += items_fee if options[:cover_storage_fee]
       end
       @sum_options[:storage_by_tier] = res
     end
@@ -114,6 +122,11 @@ module FeeCalculator
 
     def add_storage_fee
       add_fee_by_range(storage_fee_tiers, :storage_size)
+    end
+
+    def add_dataset_storage_fee
+      price = price_by_range(storage_fee_tiers, resource.total_file_size)
+      add_fee_to_total(:storage_size, price)
     end
 
     def add_fee_by_tier(tier_definition, value_key)

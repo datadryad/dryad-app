@@ -86,19 +86,19 @@ module FeeCalculator
           end
 
           context 'with storage_size at max limit' do
-            let(:options) { { storage_size: 100_000_000_000 } }
+            let(:new_files_size) { 100_000_000_000 }
 
             it { is_expected.to eq({ storage_fee: 808, total: 808 }) }
           end
 
           context 'with storage_size as min limit' do
-            let(:options) { { storage_size: 100_000_000_001 } }
+            let(:new_files_size) { 100_000_000_001 }
 
             it { is_expected.to eq({ storage_fee: 1_750, total: 1_750 }) }
           end
 
           context 'with storage_size over 2TB limit' do
-            let(:options) { { storage_size: 10_000_000_000_000 } }
+            let(:new_files_size) { 10_000_000_000_000 }
 
             it 'raises an error' do
               expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
@@ -107,26 +107,26 @@ module FeeCalculator
         end
 
         context 'with invoice fee' do
-          context 'without any configuration' do
-            let(:options) { { generate_invoice: true } }
+          let(:options) { { generate_invoice: true } }
 
+          context 'without any configuration' do
             it { is_expected.to eq({ storage_fee: 150, invoice_fee: 199, total: 349 }) }
           end
 
           context 'with storage_size at max limit' do
-            let(:options) { { generate_invoice: true, storage_size: 100_000_000_000 } }
+            let(:new_files_size) { 100_000_000_000 }
 
             it { is_expected.to eq({ storage_fee: 808, invoice_fee: 199, total: 1007 }) }
           end
 
           context 'with storage_size as min limit' do
-            let(:options) { { generate_invoice: true, storage_size: 100_000_000_001 } }
+            let(:new_files_size) { 100_000_000_001 }
 
             it { is_expected.to eq({ storage_fee: 1_750, invoice_fee: 199, total: 1949 }) }
           end
 
           context 'with storage_size over 2TB limit' do
-            let(:options) { { generate_invoice: true, storage_size: 10_000_000_000_000 } }
+            let(:new_files_size) { 10_000_000_000_000 }
 
             it 'raises an error' do
               expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
@@ -164,38 +164,11 @@ module FeeCalculator
               it { is_expected.to eq({ storage_fee: 1_600, total: 1_600 }) }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 10_000_000_000_000 }
+            context 'when storage changes from non free tier to another' do
+              let(:prev_files_size) { 100_000_000_000 }
+              let(:new_files_size) { 900_000_000_000 }
 
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
-              end
-            end
-          end
-        end
-
-        context 'with invoice fee' do
-          context 'when files_size do not change' do
-            it { is_expected.to eq(no_charges_response) }
-          end
-
-          context 'when files_size changes' do
-            context 'but does not exceed the current limit' do
-              let(:new_files_size) { 5_000_000_000 }
-
-              it { is_expected.to eq(no_charges_response) }
-            end
-
-            context 'storage gets to next level' do
-              let(:new_files_size) { 5_000_000_001 }
-
-              it { is_expected.to eq({ storage_fee: 30, total: 30 }) }
-            end
-
-            context 'storage jumps a few levels' do
-              let(:new_files_size) { 250_000_000_000 }
-
-              it { is_expected.to eq({ storage_fee: 1_600, total: 1_600 }) }
+              it { is_expected.to eq({ storage_fee: 5_269, total: 5_269 }) }
             end
 
             context 'with storage_size over 2TB limit' do
@@ -234,6 +207,13 @@ module FeeCalculator
               it { is_expected.to eq({ storage_fee: 1_600, invoice_fee: 199, total: 1_799 }) }
             end
 
+            context 'when storage changes from non free tier to another' do
+              let(:prev_files_size) { 100_000_000_000 }
+              let(:new_files_size) { 900_000_000_000 }
+
+              it { is_expected.to eq({ storage_fee: 5_269, invoice_fee: 199, total: 5_468 }) }
+            end
+
             context 'with storage_size over 2TB limit' do
               let(:new_files_size) { 10_000_000_000_000 }
 
@@ -244,7 +224,6 @@ module FeeCalculator
           end
         end
       end
-
     end
   end
 end

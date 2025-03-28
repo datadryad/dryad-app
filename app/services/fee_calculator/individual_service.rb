@@ -14,8 +14,12 @@ module FeeCalculator
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
     def call
-      if resource.present? && resource.previously_published?
-        add_storage_fee_difference
+      if resource.present?
+        if resource.previously_published?
+          add_storage_fee_difference
+        else
+          add_dataset_storage_fee
+        end
       else
         add_storage_fee
       end

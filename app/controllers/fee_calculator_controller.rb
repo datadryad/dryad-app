@@ -31,7 +31,7 @@ class FeeCalculatorController < ApplicationController
 
   def institution_permit_params
     attrs = params.permit(
-      :low_middle_income_country,
+      :low_middle_income_country, :cover_storage_fee,
       :dpc_tier, :service_tier, storage_usage: %w[0 1 2 3 4 5 6]
     )
     attrs[:low_middle_income_country] = ActiveModel::Type::Boolean.new.cast(attrs[:low_middle_income_country])

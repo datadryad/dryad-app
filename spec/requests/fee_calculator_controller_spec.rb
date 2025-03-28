@@ -33,6 +33,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       context 'with all configuration attrs' do
         let(:options) do
           {
+            'cover_storage_fee' => nil,
             'low_middle_income_country' => true,
             'dpc_tier' => '1',
             'service_tier' => '3',
@@ -89,7 +90,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       end
 
       context 'with all configuration attrs' do
-        let(:options) { { 'generate_invoice' => false } }
+        let(:options) { { 'generate_invoice' => true } }
 
         before { get url, params: { type: type }.merge(options) }
 

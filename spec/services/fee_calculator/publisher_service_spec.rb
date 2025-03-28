@@ -46,14 +46,16 @@ module FeeCalculator
           let(:options) { { storage_usage: { 1 => 10, 2 => 10, 4 => 48 } } }
 
           # Does not return storage_by_tier
-          it { is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 1_000 }) }
+          it { is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 1_000,
+                                   storage_by_tier: { 1 => 259, 2 => 464, 4 => 4306 } }) }
         end
 
         context 'with dpc and storage usage percents' do
           let(:options) { { dpc_tier: 10, storage_usage: { 1 => 10, 2 => 10, 4 => 48 } } }
 
           # Does not return storage_by_tier
-          it { is_expected.to eq({ service_fee: 1_000, dpc_fee: 30_250, total: 31_250 }) }
+          it { is_expected.to eq({ service_fee: 1_000, dpc_fee: 30_250, total: 31_250,
+                                   storage_by_tier: { 1 => 7770, 2 => 13920, 4 => 310032 } }) }
         end
 
         context 'with service tier and dpc_tier' do
@@ -113,7 +115,6 @@ module FeeCalculator
           it { is_expected.to eq({ service_fee: 10_000, dpc_fee: 44_000, total: 54_000 }) }
         end
       end
-
     end
 
     describe '#dataset fee_calculator' do
@@ -365,7 +366,7 @@ module FeeCalculator
         let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
         let(:contributor) do
           create(:contributor, contributor_name: 'National Cancer Institute',
-                               contributor_type: 'funder', resource_id: resource.id)
+                 contributor_type: 'funder', resource_id: resource.id)
         end
 
         context 'and is on 2025 fee model' do
