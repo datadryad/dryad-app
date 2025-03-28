@@ -17,13 +17,19 @@ function copyEmail(e) {
 }
 
 function preventClicks(e) {
-  e.preventDefault();
   const button = e.currentTarget;
   const icon = button.querySelector('i');
-  icon.className = 'fas fa-spinner fa-spin';
-  document.body.classList.add('prevent-clicks');
-  if (button.form) button.form.submit();
-  button.disabled = true;
+  if (button.form) {
+    button.form.addEventListener('submit', () => {
+      icon.className = 'fas fa-spinner fa-spin';
+      document.body.classList.add('prevent-clicks');
+      button.disabled = true;
+    })
+  } else {
+    icon.className = 'fas fa-spinner fa-spin';
+    document.body.classList.add('prevent-clicks');
+    button.disabled = true;
+  }
 }
 
 var emails = document.getElementsByClassName('emailr');
