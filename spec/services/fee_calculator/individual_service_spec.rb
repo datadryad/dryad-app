@@ -174,7 +174,6 @@ module FeeCalculator
           end
         end
 
-
         context 'with invoice fee' do
           context 'when files_size do not change' do
             it { is_expected.to eq(no_charges_response) }

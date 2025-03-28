@@ -32,7 +32,7 @@ module FeeCalculator
       { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
     ].freeze
 
-    INVOICE_FEE = 199.freeze
+    INVOICE_FEE = 199
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
     def initialize(options, resource: nil)

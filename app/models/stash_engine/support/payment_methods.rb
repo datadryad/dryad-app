@@ -17,6 +17,7 @@ module StashEngine
         return latest_resource&.tenant if institution_will_pay?
         return journal if journal&.will_pay?
         return funder_payment_info&.payer_funder if funder_will_pay?
+
         nil
       end
 
@@ -24,9 +25,7 @@ module StashEngine
         current_payer = payer
         return false if current_payer.nil?
 
-        if current_payer.is_a?StashEngine::Journal
-          return current_payer.payment_plan_type.to_s == '2025'
-        end
+        return current_payer.payment_plan_type.to_s == '2025' if current_payer.is_a? StashEngine::Journal
 
         current_payer.payment_plan.to_s == '2025'
       end

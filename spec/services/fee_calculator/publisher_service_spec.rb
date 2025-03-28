@@ -124,7 +124,7 @@ module FeeCalculator
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
 
       context 'on first publish' do
-        let(:resource) { create(:resource, identifier:, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
+        let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
 
         context 'without invoice fee' do
           context 'when covers_ldf true' do
@@ -226,9 +226,9 @@ module FeeCalculator
       end
 
       context 'on second publish' do
-        let(:prev_resource) { create(:resource, identifier:, created_at: 1.second.ago) }
+        let(:prev_resource) { create(:resource, identifier: identifier, created_at: 1.second.ago) }
         let!(:ca) { create(:curation_activity, resource: prev_resource, status: 'published') }
-        let(:resource) { create(:resource, identifier:, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
+        let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
 
         context 'without invoice fee' do
           context 'when covers_ldf true' do
@@ -354,7 +354,7 @@ module FeeCalculator
 
       context 'when journal is a payer but not on 2025 fee model' do
         let!(:journal) { create(:journal, payment_plan_type: 'DEFERRED', covers_ldf: covers_ldf) }
-        let(:resource) { create(:resource, identifier:, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
+        let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
 
         it 'raises an error' do
           expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')
@@ -362,18 +362,20 @@ module FeeCalculator
       end
 
       context 'when payer is a funder' do
-        let(:resource) { create(:resource, identifier:, total_file_size: new_files_size) }
-        let(:contributor) { create(:contributor, contributor_name: 'National Cancer Institute',
-                                   contributor_type: 'funder', resource_id: resource.id)}
+        let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
+        let(:contributor) do
+          create(:contributor, contributor_name: 'National Cancer Institute',
+                               contributor_type: 'funder', resource_id: resource.id)
+        end
 
         context 'and is on 2025 fee model' do
-          let!(:funder) {create(:funder, name: contributor.contributor_name, payment_plan: '2025', covers_dpc: true, enabled: true)}
+          let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: '2025', covers_dpc: true, enabled: true) }
 
           it { is_expected.to eq(no_charges_response) }
         end
 
         context 'not on 2025 fee model' do
-          let!(:funder) {create(:funder, name: 'National Cancer Institute', payment_plan: 'tiered', covers_dpc: true)}
+          let!(:funder) { create(:funder, name: 'National Cancer Institute', payment_plan: 'tiered', covers_dpc: true) }
 
           it 'raises an error' do
             expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')
@@ -381,7 +383,7 @@ module FeeCalculator
         end
 
         context 'not on a payer' do
-          let!(:funder) {create(:funder, name: 'National Cancer Institute', payment_plan: nil, covers_dpc: false)}
+          let!(:funder) { create(:funder, name: 'National Cancer Institute', payment_plan: nil, covers_dpc: false) }
 
           it 'raises an error' do
             expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')

@@ -16,11 +16,10 @@ module FeeCalculator
     def call
       if resource.present? && resource.previously_published?
         add_storage_fee_difference
-        add_invoice_fee
       else
         add_storage_fee
-        add_invoice_fee
       end
+      add_invoice_fee
       @sum_options.merge(total: @sum)
     end
 

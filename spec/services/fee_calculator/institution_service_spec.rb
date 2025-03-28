@@ -118,7 +118,7 @@ module FeeCalculator
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
 
       context 'on first publish' do
-        let(:resource) { create(:resource, identifier:, tenant:, total_file_size: new_files_size) }
+        let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         context 'without invoice fee' do
           context 'when covers_ldf true' do
@@ -220,9 +220,9 @@ module FeeCalculator
       end
 
       context 'on second publish' do
-        let(:prev_resource) { create(:resource, identifier:, tenant:, created_at: 1.second.ago) }
+        let(:prev_resource) { create(:resource, identifier: identifier, tenant: tenant, created_at: 1.second.ago) }
         let!(:ca) { create(:curation_activity, resource: prev_resource, status: 'published') }
-        let(:resource) { create(:resource, identifier:, tenant:, total_file_size: new_files_size) }
+        let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         context 'without invoice fee' do
           context 'when covers_ldf true' do
@@ -348,7 +348,7 @@ module FeeCalculator
 
       context 'when tenant is a payer but not on 2025 fee model' do
         let!(:tenant) { create(:tenant, payment_plan: 'tiered', covers_dpc: true, covers_ldf: covers_ldf) }
-        let(:resource) { create(:resource, identifier:, tenant:, total_file_size: new_files_size) }
+        let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it 'raises an error' do
           expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')
@@ -357,7 +357,7 @@ module FeeCalculator
 
       context 'when tenant is not a payer' do
         let!(:tenant) { create(:tenant, payment_plan: 'tiered', covers_dpc: false, covers_ldf: covers_ldf) }
-        let(:resource) { create(:resource, identifier:, tenant:, total_file_size: new_files_size) }
+        let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it 'raises an error' do
           expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')
