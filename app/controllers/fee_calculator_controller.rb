@@ -1,29 +1,35 @@
 class FeeCalculatorController < ApplicationController
   respond_to :json
-  before_action :validate_payer_type
 
   def calculate_fee
+    type = params[:type]
+    raise NotImplementedError, 'Invalid calculator selected.' if %w[institution publisher individual].exclude?(type)
+
     render json: {
       options: options,
-      fees: FeeCalculatorService.new(params[:type]).calculate(options)
+      fees: FeeCalculatorService.new(type).calculate(options)
     }
   end
 
   def calculate_resource_fee
     resource = StashEngine::Resource.find(params[:id])
+    ident = resource.identifier
+
+    type = if ident.institution_will_pay?
+             'institution'
+           elsif ident.journal&.will_pay? || ident.funder_will_pay?
+             'publisher'
+           else
+             'individual'
+           end
 
     render json: {
       options: resource_options,
-      fees: FeeCalculatorService.new(params[:type]).calculate(resource_options, resource: resource)
+      fees: FeeCalculatorService.new(type).calculate(resource_options, resource: resource)
     }
   end
 
   private
-
-  def validate_payer_type
-    type = params[:type]
-    raise NotImplementedError, 'Invalid calculator selected.' if %w[institution publisher individual].exclude?(type)
-  end
 
   def options
     send("#{params[:type]}_permit_params").to_hash.with_indifferent_access
@@ -34,19 +40,23 @@ class FeeCalculatorController < ApplicationController
       :low_middle_income_country, :cover_storage_fee,
       :dpc_tier, :service_tier, storage_usage: %w[0 1 2 3 4 5 6]
     )
-    attrs[:low_middle_income_country] = ActiveModel::Type::Boolean.new.cast(attrs[:low_middle_income_country])
+    if attrs.key?(:low_middle_income_country)
+      attrs[:low_middle_income_country] =
+        ActiveModel::Type::Boolean.new.cast(attrs[:low_middle_income_country])
+    end
+    attrs[:cover_storage_fee] = ActiveModel::Type::Boolean.new.cast(attrs[:cover_storage_fee]) if attrs.key?(:cover_storage_fee)
     attrs
   end
 
   def publisher_permit_params
     attrs = params.permit(:dpc_tier, :service_tier, :cover_storage_fee, storage_usage: %w[0 1 2 3 4 5 6])
-    attrs[:cover_storage_fee] = ActiveModel::Type::Boolean.new.cast(attrs[:cover_storage_fee])
+    attrs[:cover_storage_fee] = ActiveModel::Type::Boolean.new.cast(attrs[:cover_storage_fee]) if attrs.key?(:cover_storage_fee)
     attrs
   end
 
   def individual_permit_params
     attrs = params.permit(%i[storage_size generate_invoice])
-    attrs[:generate_invoice] = ActiveModel::Type::Boolean.new.cast(attrs[:generate_invoice])
+    attrs[:generate_invoice] = ActiveModel::Type::Boolean.new.cast(attrs[:generate_invoice]) if attrs.key?(:generate_invoice)
     attrs
   end
 

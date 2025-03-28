@@ -1,21 +1,20 @@
 RSpec.describe 'FeeCalculatorController', type: :request do
+  let(:service_instance) { double(:FeeCalculatorService) }
+  let(:identifier) { create(:identifier) }
 
-  describe '#institutional fee' do
-    let(:type) { 'institution' }
-    let(:service_instance) { double(:FeeCalculatorService) }
-    let(:options) { { 'low_middle_income_country' => nil } }
+  describe '#fee_calculator_url' do
+    before do
+      allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
+      allow(service_instance).to receive(:calculate).with(options).and_return({ some_fee: 12 })
 
-    describe '#fee_calculator_url' do
-      let(:url) { fee_calculator_url }
+      get fee_calculator_url, params: { type: type }.merge(options)
+    end
 
-      before do
-        allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options).and_return({ some_fee: 12 })
-      end
+    describe '#institutional fee' do
+      let(:type) { 'institution' }
+      let(:options) { {} }
 
       context 'without any configuration' do
-        before { get url, params: { type: type } }
-
         it 'does not fail' do
           expect(response).to have_http_status(:ok)
           expect(json_response).to eq({ 'some_fee' => 12 })
@@ -44,8 +43,6 @@ RSpec.describe 'FeeCalculatorController', type: :request do
           }
         end
 
-        before { get url, params: { type: type }.merge(options) }
-
         it 'does not fail' do
           expect(response).to have_http_status(:ok)
           expect(json_response).to eq({ 'some_fee' => 12 })
@@ -61,71 +58,11 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       end
     end
 
-    describe '#resource_fee_calculator_url(resource)' do
-      let(:url) { resource_fee_calculator_url(resource) }
-      let(:options) { {} }
-      let(:identifier) { create(:identifier) }
-      let(:resource) { create(:resource, identifier: identifier) }
-
-      before do
-        allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options, resource: resource).and_return({ some_fee: 12 })
-      end
+    describe '#publisher fee' do
+      let(:type) { 'publisher' }
+      let(:options) { { 'cover_storage_fee' => nil } }
 
       context 'without any configuration' do
-        before { get url, params: { type: type } }
-
-        it 'does not fail' do
-          expect(response).to have_http_status(:ok)
-          expect(json_response).to eq({ 'some_fee' => 12 })
-        end
-
-        it 'calls new with the correct type' do
-          expect(FeeCalculatorService).to have_received(:new).with(type)
-        end
-
-        it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
-        end
-      end
-
-      context 'with all configuration attrs' do
-        let(:options) { { 'generate_invoice' => true } }
-
-        before { get url, params: { type: type }.merge(options) }
-
-        it 'does not fail' do
-          expect(response).to have_http_status(:ok)
-          expect(json_response).to eq({ 'some_fee' => 12 })
-        end
-
-        it 'calls new with the correct type' do
-          expect(FeeCalculatorService).to have_received(:new).with(type)
-        end
-
-        it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
-        end
-      end
-    end
-  end
-
-  describe '#publisher fee' do
-    let(:type) { 'publisher' }
-    let(:service_instance) { double(:FeeCalculatorService) }
-    let(:options) { { 'cover_storage_fee' => nil } }
-
-    describe '#fee_calculator_url' do
-      let(:url) { fee_calculator_url }
-
-      before do
-        allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options).and_return({ some_fee: 12 })
-      end
-
-      context 'without any configuration' do
-        before { get url, params: { type: type } }
-
         it 'does not fail' do
           expect(response).to have_http_status(:ok)
           expect(json_response).to eq({ 'some_fee' => 12 })
@@ -153,8 +90,6 @@ RSpec.describe 'FeeCalculatorController', type: :request do
           }
         end
 
-        before { get url, params: { type: type }.merge(options) }
-
         it 'does not fail' do
           expect(response).to have_http_status(:ok)
           expect(json_response).to eq({ 'some_fee' => 12 })
@@ -170,71 +105,11 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       end
     end
 
-    describe '#resource_fee_calculator_url(resource)' do
-      let(:url) { resource_fee_calculator_url(resource) }
-      let(:options) { {} }
-      let(:identifier) { create(:identifier) }
-      let(:resource) { create(:resource, identifier: identifier) }
-
-      before do
-        allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options, resource: resource).and_return({ some_fee: 12 })
-      end
+    describe '#individual fee' do
+      let(:type) { 'individual' }
+      let(:options) { { 'generate_invoice' => nil } }
 
       context 'without any configuration' do
-        before { get url, params: { type: type } }
-
-        it 'does not fail' do
-          expect(response).to have_http_status(:ok)
-          expect(json_response).to eq({ 'some_fee' => 12 })
-        end
-
-        it 'calls new with the correct type' do
-          expect(FeeCalculatorService).to have_received(:new).with(type)
-        end
-
-        it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
-        end
-      end
-
-      context 'with all configuration attrs' do
-        let(:options) { { 'generate_invoice' => true } }
-
-        before { get url, params: { type: type }.merge(options) }
-
-        it 'does not fail' do
-          expect(response).to have_http_status(:ok)
-          expect(json_response).to eq({ 'some_fee' => 12 })
-        end
-
-        it 'calls new with the correct type' do
-          expect(FeeCalculatorService).to have_received(:new).with(type)
-        end
-
-        it 'calls calculate on the service instance with the correct params' do
-          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
-        end
-      end
-    end
-  end
-
-  describe '#individual fee' do
-    let(:type) { 'individual' }
-    let(:service_instance) { double(:FeeCalculatorService) }
-    let(:options) { { 'generate_invoice' => nil } }
-
-    describe '#fee_calculator_url' do
-      let(:url) { fee_calculator_url }
-
-      before do
-        allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options).and_return({ some_fee: 12 })
-      end
-
-      context 'without any configuration' do
-        before { get url, params: { type: type } }
-
         it 'does not fail' do
           expect(response).to have_http_status(:ok)
           expect(json_response).to eq({ 'some_fee' => 12 })
@@ -257,8 +132,6 @@ RSpec.describe 'FeeCalculatorController', type: :request do
           }
         end
 
-        before { get url, params: { type: type }.merge(options) }
-
         it 'does not fail' do
           expect(response).to have_http_status(:ok)
           expect(json_response).to eq({ 'some_fee' => 12 })
@@ -273,28 +146,33 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
       end
     end
+  end
 
-    describe '#resource_fee_calculator_url(resource)' do
-      let(:url) { resource_fee_calculator_url(resource) }
+  describe '#resource_fee_calculator_url(resource)' do
+    before do
+      allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
+      allow(service_instance).to receive(:calculate).with(options, resource: resource).and_return({ some_fee: 12 })
+    end
+
+    describe '#institutional fee' do
       let(:options) { {} }
+      let(:type) { 'institution' }
+      let!(:tenant) { create(:tenant, payment_plan: '2025', covers_dpc: true) }
       let(:identifier) { create(:identifier) }
-      let(:resource) { create(:resource, identifier: identifier) }
+      let(:resource) { create(:resource, identifier: identifier, tenant: tenant) }
 
       before do
-        allow(FeeCalculatorService).to receive(:new).with(type).and_return(service_instance)
-        allow(service_instance).to receive(:calculate).with(options, resource: resource).and_return({ some_fee: 12 })
+        get resource_fee_calculator_url(resource), params: options
       end
 
       context 'without any configuration' do
-        before { get url, params: { type: type } }
-
         it 'does not fail' do
           expect(response).to have_http_status(:ok)
           expect(json_response).to eq({ 'some_fee' => 12 })
         end
 
         it 'calls new with the correct type' do
-          expect(FeeCalculatorService).to have_received(:new).with(type)
+          expect(FeeCalculatorService).to have_received(:new).with('institution')
         end
 
         it 'calls calculate on the service instance with the correct params' do
@@ -305,7 +183,49 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       context 'with all configuration attrs' do
         let(:options) { { 'generate_invoice' => true } }
 
-        before { get url, params: { type: type }.merge(options) }
+        it 'does not fail' do
+          expect(response).to have_http_status(:ok)
+          expect(json_response).to eq({ 'some_fee' => 12 })
+        end
+
+        it 'calls new with the correct type' do
+          expect(FeeCalculatorService).to have_received(:new).with('institution')
+        end
+
+        it 'calls calculate on the service instance with the correct params' do
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+        end
+      end
+    end
+
+    describe '#publisher fee from journal' do
+      let(:options) { {} }
+      let(:type) { 'publisher' }
+      let!(:journal) { create(:journal, payment_plan_type: '2025') }
+      let(:identifier) { create(:identifier) }
+      let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first]) }
+
+      before do
+        get resource_fee_calculator_url(resource), params: options
+      end
+
+      context 'without any configuration' do
+        it 'does not fail' do
+          expect(response).to have_http_status(:ok)
+          expect(json_response).to eq({ 'some_fee' => 12 })
+        end
+
+        it 'calls new with the correct type' do
+          expect(FeeCalculatorService).to have_received(:new).with('publisher')
+        end
+
+        it 'calls calculate on the service instance with the correct params' do
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+        end
+      end
+
+      context 'with all configuration attrs' do
+        let(:options) { { 'generate_invoice' => true } }
 
         it 'does not fail' do
           expect(response).to have_http_status(:ok)
@@ -313,7 +233,98 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
 
         it 'calls new with the correct type' do
-          expect(FeeCalculatorService).to have_received(:new).with(type)
+          expect(FeeCalculatorService).to have_received(:new).with('publisher')
+        end
+
+        it 'calls calculate on the service instance with the correct params' do
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+        end
+      end
+    end
+
+    describe '#publisher fee from funder' do
+      let(:type) { 'publisher' }
+      let(:resource) { create(:resource, identifier: identifier) }
+      let(:contributor) do
+        create(:contributor, contributor_name: 'National Cancer Institute',
+                             contributor_type: 'funder', resource_id: resource.id)
+      end
+      let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: '2025', covers_dpc: true, enabled: true) }
+
+      before do
+        get resource_fee_calculator_url(resource), params: options
+      end
+
+      context 'without any configuration' do
+        let(:options) { {} }
+
+        it 'does not fail' do
+          expect(response).to have_http_status(:ok)
+          expect(json_response).to eq({ 'some_fee' => 12 })
+        end
+
+        it 'calls new with the correct type' do
+          expect(FeeCalculatorService).to have_received(:new).with('publisher')
+        end
+
+        it 'calls calculate on the service instance with the correct params' do
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+        end
+      end
+
+      context 'with all configuration attrs' do
+        let(:options) { { 'generate_invoice' => true } }
+
+        it 'does not fail' do
+          expect(response).to have_http_status(:ok)
+          expect(json_response).to eq({ 'some_fee' => 12 })
+        end
+
+        it 'calls new with the correct type' do
+          expect(FeeCalculatorService).to have_received(:new).with('publisher')
+        end
+
+        it 'calls calculate on the service instance with the correct params' do
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+        end
+      end
+    end
+
+    describe '#individual fee' do
+      let(:type) { 'individual' }
+      let(:options) { {} }
+      let(:identifier) { create(:identifier) }
+      let(:resource) { create(:resource, identifier: identifier) }
+
+      before do
+        get resource_fee_calculator_url(resource), params: options
+      end
+
+      context 'without any configuration' do
+        it 'does not fail' do
+          expect(response).to have_http_status(:ok)
+          expect(json_response).to eq({ 'some_fee' => 12 })
+        end
+
+        it 'calls new with the correct type' do
+          expect(FeeCalculatorService).to have_received(:new).with('individual')
+        end
+
+        it 'calls calculate on the service instance with the correct params' do
+          expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+        end
+      end
+
+      context 'with all configuration attrs' do
+        let(:options) { { 'generate_invoice' => true } }
+
+        it 'does not fail' do
+          expect(response).to have_http_status(:ok)
+          expect(json_response).to eq({ 'some_fee' => 12 })
+        end
+
+        it 'calls new with the correct type' do
+          expect(FeeCalculatorService).to have_received(:new).with('individual')
         end
 
         it 'calls calculate on the service instance with the correct params' do

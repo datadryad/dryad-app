@@ -195,8 +195,10 @@ module FeeCalculator
               }
             end
 
-            it { is_expected.to eq({ service_fee: 1_000, dpc_fee: 30_250, total: 362_972,
-                                     storage_by_tier: { 1 => 7770, 2 => 13920, 4 => 310032 } }) }
+            it {
+              is_expected.to eq({ service_fee: 1_000, dpc_fee: 30_250, total: 362_972,
+                                  storage_by_tier: { 1 => 7770, 2 => 13_920, 4 => 310_032 } })
+            }
           end
 
           context 'with service tier and dpc_tier' do
