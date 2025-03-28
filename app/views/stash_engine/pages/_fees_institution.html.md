@@ -135,9 +135,7 @@ The DPC is based on the variable costs of curating, publishing, and preserving o
 </div>
 </div>
 
-
-Datasets larger than 10GB are billed individually as follows.
-
+Datasets larger than 10GB are billed individually as follows. Institutional partners may opt to cover large data fees or assign them to the author.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
@@ -309,11 +307,9 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 </div>
 </div>
 
-
 #### Lower- and middle-income countries
 
 Annual Service Fees for institutions based in lower- and middle-income countries are as follows.
-
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
