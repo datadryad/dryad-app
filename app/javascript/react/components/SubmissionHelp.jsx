@@ -2,31 +2,30 @@
 import React from 'react';
 import {ExitIcon} from './ExitButton';
 
-export default function SubmissionHelp() {
-  // need to create a version for collections
+export default function SubmissionHelp({type}) {
   return (
     <>
       <p>An average submission follows this process:</p>
       <ol id="infographic">
         <li>
           <h3><i className="fas fa-arrow-up-from-bracket" aria-hidden="true" />Initial submission</h3>
-          <p>Upload your data, complete metadata fields, and prepare a README file. Complete the checklist and carefully review the submission before you click &quot;Submit&quot;.</p>
+          <p>{type === 'dataset' && 'Upload your data, complete metadata fields, and prepare a README file. '}Complete the checklist and carefully review the submission before you click &quot;Submit&quot;.</p>
         </li>
         <li>
           <h3><i className="fas fa-eye-slash" aria-hidden="true" />Private for peer review option</h3>
-          <p>If your dataset is associated with a manuscript under review, you can choose to keep the dataset private and use a temporary sharing link for peer review. The dataset can proceed to curation once the manuscript has been accepted.</p>
+          <p>If your {type} is associated with a manuscript under review, you can choose to keep the {type} private and use a temporary sharing link for peer review. The {type} can proceed to curation once the manuscript has been accepted.</p>
         </li>
         <li>
           <h3><i className="fas fa-layer-group" aria-hidden="true" />Curation</h3>
-          <p>Our experienced data curators will thoroughly evaluate each dataset to ensure the completeness of metadata, documentation, and files, following <a href="https://www.go-fair.org/fair-principles/" target="_blank" rel="noreferrer">FAIR principles<ExitIcon /></a>.</p>
+          <p>Our experienced data curators will thoroughly evaluate each {type} to ensure the completeness of metadata{type === 'dataset' && ', documentation, and files,'} following <a href="https://www.go-fair.org/fair-principles/" target="_blank" rel="noreferrer">FAIR principles<ExitIcon /></a>.</p>
         </li>
         <li>
           <h3><i className="fas fa-arrow-rotate-left" aria-hidden="true" />Revisions</h3>
-          <p>Revise your dataset based on curator feedback.<br />Don&apos;t hesitate to contact us with questions!</p>
+          <p>Revise your {type} based on curator feedback.<br />Don&apos;t hesitate to contact us with questions!</p>
         </li>
         <li>
           <h3><i className="fas fa-database" aria-hidden="true" />Publication</h3>
-          <p>After final review, our curators will approve and publish your dataset. Your DOI will become active, and your dataset will be searchable, citable, and reusable.</p>
+          <p>After final review, our curators will approve and publish your {type}. Your DOI will become active, and your {type} will be searchable, citable, and reusable.</p>
         </li>
       </ol>
       <p>Click the Next button to get started!</p>
@@ -48,7 +47,7 @@ export function AuthHelp() {
     <>
       <p>All authors must include their name and at least one affiliation.</p>
       <p>Authors may be invited to edit this submission. One author must be the submitter. The submitter will be the point of contact for Dryad, and must approve this submission for curation and publication.</p>
-      <p>An email address is required for the submitter and for any other authors invited to edit the submission.</p>
+      <p>An email address is required for the submitter and any other authors invited to edit the submission.</p>
       <p>Check <b>Publish email</b> to display an author&apos;s email address on the public dataset. At least one published email is required.</p>
     </>
   );
@@ -57,7 +56,7 @@ export function AuthHelp() {
 export function DescHelp({type}) {
   return (
     <>
-      <p>An abstract is required.{type !== 'collection' && ' Briefly summarize the dataset’s structure and concepts including information regarding data values, contents of the dataset, reuse potential and any legal or ethical considerations.'}</p>
+      <p>An abstract is required.{type !== 'collection' && ' Briefly summarize the dataset’s structure and concepts including information regarding data values, contents of the dataset, reuse potential, and any legal or ethical considerations.'}</p>
       {type !== 'collection' && (
         <>
           <p>If this dataset is associated with an article, abstract language can be similar, but it should focus on the information relevant to the data itself, rather than to the study. See <a href="https://doi.org/10.5061/dryad.5bk4c" target="_blank" rel="noreferrer">an example of a well-composed abstract<ExitIcon /></a>.</p>
@@ -114,13 +113,13 @@ export function CompHelp() {
         Dryad cannot publish any direct identifiers or more than three indirect identifiers. Please see our{' '}
         <a href="/docs/HumanSubjectsData.pdf">
           human subjects guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" />
-        </a> for a list of potential direct and indirect identifiers.
+        </a> for a non-exhaustive list of direct and indirect identifiers.
       </p>
       <p>
-        Data involving endangered species must also be appropriate for the public domain. See our{' '}
+        Data involving threatened species or sensitive habitats must also be appropriate for the public domain. See our{' '}
         <a href="/docs/EndangeredSpeciesData.pdf">
-          species conservation guidance<span className="pdfIcon" role="img" aria-label=" (PDF)" />
-        </a> for information about masking endangered species data.
+          guidance for species data<span className="pdfIcon" role="img" aria-label=" (PDF)" />
+        </a> for information about masking threatened species data.
       </p>
     </>
   );
@@ -129,7 +128,7 @@ export function CompHelp() {
 export function FilesHelp() {
   return (
     <>
-      <p>Files may be uploaded from your computer, or by entering a publicly accessible, individual URL for each file (for files hosted on e.g. Dropbox, OneDrive, AWS, or your lab server).</p>
+      <p>Files may be uploaded from your computer, or by entering a publicly accessible, individual URL for each file (for files hosted on e.g., Dropbox, OneDrive, AWS, or your lab server).</p>
       <p>Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
       <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<ExitIcon /></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon /></a>.</p>
     </>
@@ -194,8 +193,7 @@ export function AgreeHelp({type}) {
   return (
     <>
       <p>After curation, <b>Dryad submissions are made publicly available unless otherwise specified</b>. If your submission needs to be kept private during the review of an associated manuscript, choose that option on this page.</p>
-      {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad partners<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad partner institution, make sure that is reflected here.</p>}
-      <p>You may continue to make changes to your submission from the submission preview.</p>
+      {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad partners<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad partner institution, click &quot;Add a Dryad partner institution&quot;, choose your institution, and verify your credentials.</p>}
     </>
   );
 }
