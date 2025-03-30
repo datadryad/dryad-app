@@ -148,7 +148,10 @@
   }
 
   #edit_fields-form {
-    columns: 6;
+    @media (min-width: 1071px) {
+      &.curator { columns: 5 }
+      &:not(.curator) { columns: 6 }
+    }
     @media (max-width: 1070px) { columns: 5 }
     @media (max-width: 920px) { columns: 3 }
     @media (max-width: 480px) { columns: 2 }
@@ -156,11 +159,14 @@
 
     div {
       margin-bottom: 4px;
+      break-inside: avoid-column;
+      break-inside: avoid;
     }
 
     &.show-help {
       columns: 3;
-      @media (max-width: 620px) { columns: 2 }
+      @media (max-width: 650px) { columns: 2 }
+      @media (max-width: 320px) { columns: 1 }
       div {
         display: table;
         

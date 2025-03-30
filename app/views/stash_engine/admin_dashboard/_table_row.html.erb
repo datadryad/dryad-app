@@ -27,6 +27,13 @@
       <%= render partial: 'table_description', locals: {dataset: dataset} %>
     </div>
   </div></td>
+  <% if @fields.include?('submitter') %>
+    <td>
+      <% if dataset.submitter&.orcid %><a href="<%= dataset.submitter&.orcid_link %>" target="blank"><% end %>
+      <%= "#{dataset.submitter&.first_name} #{dataset.submitter&.last_name}" %>
+      <% if dataset.submitter&.orcid %></a><% end %>
+    </td>
+  <% end %>
   <% if @fields.include?('authors') %>
     <td><%= dataset.author_string %></td>
   <% end %>
@@ -37,13 +44,6 @@
         end
         arr }.map { |aff| ([@fields.include?('affiliations') ? aff.smart_name : nil] + [@fields.include?('countries') ? aff.country_name : nil]).reject(&:blank?).join(', ') }%>
         <%= ([dataset.tenant_id == 'dryad' ? nil : ([@fields.include?('affiliations') ? dataset.tenant&.short_name : nil] + [@fields.include?('countries') ? dataset.tenant&.country_name : nil]).reject(&:blank?).join(', ')].flatten).concat(affs).uniq.reject(&:blank?).first(6).join('; ') %></td>
-  <% end %>
-  <% if @fields.include?('submitter') %>
-    <td>
-      <% if dataset.submitter&.orcid %><a href="<%= dataset.submitter&.orcid_link %>" target="blank"><% end %>
-      <%= "#{dataset.submitter&.first_name} #{dataset.submitter&.last_name}" %>
-      <% if dataset.submitter&.orcid %></a><% end %>
-    </td>
   <% end %>
   <% if @fields.include?('status') %>
     <td id="dataset_status_<%= dataset.identifier_id %>">
@@ -85,6 +85,9 @@
     <td id="dataset_curator_<%= dataset.identifier_id %>">
       <%= render partial: 'table_curator', locals: {dataset: dataset, curator_name: dataset.curator_name} %>
     </td>
+  <% end %>
+  <% if @fields.include?('editor') %>
+    <td><%= render partial: 'table_editor', locals: {dataset: dataset} %></td>
   <% end %>
   <% if @fields.include?('updated_at') %>
     <td class="c-lined-table__digits" id="dataset_updated_<%= dataset.identifier_id %>">
