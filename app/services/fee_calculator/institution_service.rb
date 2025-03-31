@@ -19,8 +19,6 @@ module FeeCalculator
     ].freeze
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
-    private
-
     def service_fee_tiers
       return LOW_MIDDLE_SERVICE_FEE if options[:low_middle_income_country]
 

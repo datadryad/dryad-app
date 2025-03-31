@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useId} from 'react';
 import {useSelect} from 'downshift';
 import {range} from 'lodash';
 import {editorViewCtx} from '@milkdown/core';
@@ -47,6 +47,8 @@ function LinkMenu({editor, editorId, active}) {
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [showRemove, setRemove] = useState(false);
+  const textId = useId();
+  const urlId = useId();
 
   const getLink = (doc, pos, schema) => {
     const $pos = doc.resolve(pos);
@@ -176,8 +178,8 @@ function LinkMenu({editor, editorId, active}) {
       >{icons.link}
       </button>
       <div className="linkMenu" id={`${editorId}linkMenu`} hidden>
-        <label>Link text <input type="text" value={text} onChange={(e) => setText(e.target.value)} /></label>
-        <label>URL <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} /></label>
+        <label htmlFor={textId}>Link text <input id={textId} type="text" value={text} onChange={(e) => setText(e.target.value)} /></label>
+        <label htmlFor={urlId}>URL <input id={urlId} type="text" value={url} onChange={(e) => setUrl(e.target.value)} /></label>
         <div className="buttons">
           <button type="button" onClick={submit}>Save</button>
           {showRemove && <button type="button" onClick={removeLink}>Remove</button>}
@@ -246,6 +248,47 @@ function List({type, editor, active}) {
       aria-label={labels[type]}
       role="menuitem"
       onClick={listWizard}
+    >{icons[type]}
+    </button>
+  );
+}
+
+function Toggle({
+  type, editor, active, disabled,
+}) {
+  const callEditorCommand = () => {
+    const view = editor()?.ctx.get(editorViewCtx);
+    const {dispatch, state} = view;
+    const {
+      doc, selection, schema, tr,
+    } = state;
+    const {from: start, to: end} = selection;
+    if (doc.rangeHasMark(start, end === start ? end + 1 : end, schema.marks[type])) {
+      const {parent} = doc.resolve(start);
+      let from = start;
+      let to = end;
+      while (from > 0 && !doc.textBetween(from - 1, start).replace(/[ ]/g, '').length) {
+        from -= 1;
+      }
+      while (to < parent.childCount && !doc.textBetween(end, to + 1).replace(/[ ]/g, '').length) {
+        to += 1;
+      }
+      tr.setSelection(TextSelection.create(doc, from, to));
+      dispatch(tr);
+    }
+    editor()?.action(callCommand(commands[type].key));
+    view.focus();
+  };
+
+  return (
+    <button
+      type="button"
+      className={active ? 'active' : undefined}
+      disabled={disabled}
+      title={labels[type]}
+      aria-label={labels[type]}
+      role="menuitem"
+      onClick={callEditorCommand}
     >{icons[type]}
     </button>
   );
@@ -442,6 +485,9 @@ function Button({
   if (activeEditor === 'visual') {
     if (type === 'link') return <LinkMenu active={active} editor={editor} editorId={editorId} />;
     if (type.includes('list')) return <List active={active} editor={editor} type={type} />;
+    if (['strong', 'emphasis', 'inlineCode', 'strike_through'].includes(type)) {
+      return <Toggle active={active} editor={editor} type={type} disabled={disabled} />;
+    }
   }
   const sharedProps = {
     active, editor, mdEditor, activeEditor,

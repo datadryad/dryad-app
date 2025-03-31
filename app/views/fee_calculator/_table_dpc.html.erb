@@ -1,0 +1,15 @@
+<% tiers = FeeCalculator::InstitutionService.new.dpc_fee_tiers %>
+<% tiers.each do |t| %>
+  <tr>
+    <td><%= t[:tier]%></td>
+    <td><%= t[:range].to_s.gsub('..', '-') %></td>
+    <td><%= number_to_currency(t[:price], precision: 0) %></td>
+  </tr>
+  <% if t == tiers.last %>
+    <tr>
+      <td><%= t[:tier] + 1 %></td>
+      <td>><%= t[:range].to_s.split('..').last %></td>
+      <td>Contact us to discuss rates</td>
+    </tr>
+  <% end %>
+<% end %>

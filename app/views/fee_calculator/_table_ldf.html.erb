@@ -1,0 +1,7 @@
+<% tiers = FeeCalculator::InstitutionService.new.storage_fee_tiers %>
+<% tiers.each do |t| %>
+  <tr>
+    <td><%= t[:range].to_s.split('..').map {|n| filesize(n.to_i) }.join('-') %></td>
+    <td><%= number_to_currency(t[:price], precision: 0) %></td>
+  </tr>
+<% end %>
