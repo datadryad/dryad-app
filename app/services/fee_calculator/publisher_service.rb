@@ -15,8 +15,6 @@ module FeeCalculator
     ].freeze
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
-    private
-
     def service_fee_tiers
       SERVICE_FEE
     end

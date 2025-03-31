@@ -35,7 +35,7 @@ module FeeCalculator
     INVOICE_FEE = 199
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
-    def initialize(options, resource: nil)
+    def initialize(options = {}, resource: nil)
       @sum = 0
       @options = options
       @sum_options = {}
@@ -64,8 +64,6 @@ module FeeCalculator
       @sum_options.merge(total: @sum)
     end
 
-    private
-
     def storage_fee_tiers
       ESTIMATED_FILES_SIZE
     end
@@ -73,6 +71,8 @@ module FeeCalculator
     def dpc_fee_tiers
       ESTIMATED_DATASETS
     end
+
+    private
 
     def add_zero_fee(value_key)
       add_fee_to_total(value_key, 0)

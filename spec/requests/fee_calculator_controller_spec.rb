@@ -34,6 +34,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
           {
             'cover_storage_fee' => nil,
             'low_middle_income_country' => true,
+            'cover_storage_fee' => false,
             'dpc_tier' => '1',
             'service_tier' => '3',
             'storage_usage' => {

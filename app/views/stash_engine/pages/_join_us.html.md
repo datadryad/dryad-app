@@ -84,9 +84,7 @@ Institutions, publishers, academic societies, and others partner with Dryad to m
 
 <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us to learn more</a> about becoming a Dryad partner. 
 
-Consult the links below to explore our detailed fee schedule.
-
-[Consult the links below to estimate fees with our fee calculator and explore our detailed fee schedule.]: #
+Consult the links below to estimate fees with our fee calculator and explore our detailed fee schedule.
 
 <div style="display: flex; align-items: center; column-gap: 2ch; row-gap: 1ch; text-align: center; flex-wrap: wrap;">
   <a href="/institutions" class="o-link__buttonlink" style="flex: 1;"><i class="fas fa-building-columns" aria-hidden="true" style="font-size: 2em;"></i><br/>Institutional partnership fees</a>
