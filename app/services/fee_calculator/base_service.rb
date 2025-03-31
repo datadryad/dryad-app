@@ -51,6 +51,7 @@ module FeeCalculator
         add_zero_fee(:service_tier)
         add_zero_fee(:dpc_tier)
         if @covers_ldf
+          verify_max_storage_size
           add_zero_fee(:storage_size)
         else
           add_storage_fee_difference
@@ -114,6 +115,10 @@ module FeeCalculator
       new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
 
       add_fee_to_total(:storage_size, new_tier_price - paid_tier_price)
+    end
+
+    def verify_max_storage_size
+      price_by_range(storage_fee_tiers, resource.total_file_size)
     end
 
     def add_storage_usage_fee(key)

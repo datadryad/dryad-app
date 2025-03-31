@@ -237,7 +237,9 @@ module FeeCalculator
             context 'with storage_size over 2TB limit' do
               let(:new_files_size) { 10_000_000_000_000 }
 
-              it { is_expected.to eq(no_charges_response) }
+              it 'raises an error' do
+                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+              end
             end
           end
 
@@ -286,7 +288,9 @@ module FeeCalculator
             context 'with storage_size over 2TB limit' do
               let(:new_files_size) { 10_000_000_000_000 }
 
-              it { is_expected.to eq(no_charges_response) }
+              it 'raises an error' do
+                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+              end
             end
           end
 
@@ -348,7 +352,9 @@ module FeeCalculator
             context 'with storage_size over 2TB limit' do
               let(:new_files_size) { 10_000_000_000_000 }
 
-              it { is_expected.to eq(no_charges_response) }
+              it 'raises an error' do
+                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+              end
             end
           end
 
@@ -411,7 +417,9 @@ module FeeCalculator
             context 'with storage_size over 2TB limit' do
               let(:new_files_size) { 10_000_000_000_000 }
 
-              it { is_expected.to eq(no_charges_response) }
+              it 'raises an error' do
+                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+              end
             end
           end
 
