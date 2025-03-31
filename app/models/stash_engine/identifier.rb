@@ -35,6 +35,8 @@ require 'http'
 module StashEngine
   # rubocop:disable Metrics/ClassLength
   class Identifier < ApplicationRecord
+    include StashEngine::Support::PaymentMethods
+
     self.table_name = 'stash_engine_identifiers'
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_one :process_date, as: :processable, dependent: :destroy
@@ -273,38 +275,6 @@ module StashEngine
       update_column :search_words, my_string
     end
 
-    # Check if the user must pay for this identifier, or if payment is
-    # otherwise covered - but send waivers to stripe
-    def user_must_pay?
-      !journal&.will_pay? && !institution_will_pay? && !funder_will_pay?
-    end
-
-    def record_payment
-      # once we have assigned payment to an entity, keep that entity
-      # unless it was a journal that was removed
-      clear_payment_for_changed_journal
-      return if payment_type.present? && payment_type != 'unknown'
-
-      if collection?
-        self.payment_type = 'no_data'
-        self.payment_id = nil
-      elsif institution_will_pay?
-        self.payment_id = latest_resource&.tenant&.id
-        self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_plan == 'tiered'}"
-      elsif journal&.will_pay?
-        self.payment_type = "journal-#{journal.payment_plan_type}"
-        self.payment_id = publication_issn
-      elsif funder_will_pay?
-        contrib = funder_payment_info
-        self.payment_type = 'funder'
-        self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
-      else
-        self.payment_type = 'unknown'
-        self.payment_id = nil
-      end
-      save
-    end
-
     def allow_review?
       # do not allow to go into peer review after already published
       return false if pub_state == 'published'
@@ -379,44 +349,16 @@ module StashEngine
       latest_resource&.resource_type&.resource_type == 'collection'
     end
 
-    def institution_will_pay?
-      tenant = latest_resource&.tenant
-      return false unless tenant&.covers_dpc
-
-      if tenant&.authentication&.strategy == 'author_match'
-        # get all unique ror_id associations for all authors
-        rors = latest_resource.authors.map do |auth|
-          auth&.affiliations&.map { |affil| affil&.ror_id }
-        end.flatten.uniq
-        return rors&.intersection(tenant&.ror_ids)&.present?
-      end
-
-      true
-    end
-
-    def funder_will_pay?
-      return false if latest_resource.nil?
-
-      latest_resource.contributors.each { |contrib| return true if contrib.payment_exempted? }
-
-      false
-    end
-
-    def funder_payment_info
-      return nil unless funder_will_pay?
-
-      latest_resource.contributors.each { |contrib| return contrib if contrib.payment_exempted? }
-    end
-
     def submitter_affiliation
       latest_resource&.owner_author&.affiliation
     end
 
-    def large_files?
-      return false if latest_resource.nil? || latest_resource.total_file_size.nil?
-
-      latest_resource.total_file_size > APP_CONFIG.payments['large_file_size']
-    end
+    # TODO: Cleanup - delete if nothing breaks
+    # def large_files?
+    #   return false if latest_resource.nil? || latest_resource.total_file_size.nil?
+    #
+    #   latest_resource.total_file_size > APP_CONFIG.payments['large_file_size']
+    # end
 
     # overrides reading the pub state so it can set it for caching if it's not set yet
     def pub_state
@@ -629,17 +571,6 @@ module StashEngine
     # Private
 
     private
-
-    def clear_payment_for_changed_journal
-      return unless payment_type.present?
-      return unless payment_type.include?('journal') || journal&.will_pay?
-      return if payment_id == journal&.single_issn
-
-      self.payment_type = nil
-      self.payment_id = nil
-      save
-      reload
-    end
 
     def abstracts
       return '' unless latest_resource.respond_to?(:descriptions)

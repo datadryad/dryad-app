@@ -1,6 +1,6 @@
 module FeeCalculator
   class BaseService
-    attr_reader :options, :for_dataset
+    attr_reader :options, :resource
 
     # rubocop:disable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
     ESTIMATED_DATASETS = [
@@ -23,27 +23,40 @@ module FeeCalculator
     ].freeze
 
     ESTIMATED_FILES_SIZE = [
-      { tier: 1, range:    10_000_000_000..   50_000_000_000, price:   259 },
+      { tier: 0, range:                 0..   10_000_000_000, price:     0 },
+      { tier: 1, range:    10_000_000_001..   50_000_000_000, price:   259 },
       { tier: 2, range:    50_000_000_001..  100_000_000_000, price:   464 },
       { tier: 3, range:   100_000_000_001..  250_000_000_000, price: 1_123 },
       { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
       { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
       { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
     ].freeze
+
+    INVOICE_FEE = 199
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
-    def initialize(options = {}, for_dataset: false)
+    def initialize(options = {}, resource: nil)
       @sum = 0
       @options = options
       @sum_options = {}
-      @for_dataset = for_dataset
+      @resource = resource
+      @payment_plan_is_2025 = resource ? resource.identifier.payer_2025? : false
+      @covers_ldf = resource ? resource.identifier.payer&.covers_ldf : false
     end
 
     def call
-      if for_dataset
-        add_zero_fee(:service_fee)
-        add_zero_fee(:dpc)
-        add_storage_fee
+      raise ActionController::BadRequest, 'Payer is not on 2025 payment plan' if resource && !@payment_plan_is_2025
+
+      if resource.present?
+        add_zero_fee(:service_tier)
+        add_zero_fee(:dpc_tier)
+        if @covers_ldf
+          verify_max_storage_size
+          add_zero_fee(:storage_size)
+        else
+          add_storage_fee_difference
+          add_invoice_fee
+        end
       else
         add_service_fee
         add_dpc_fee
@@ -52,10 +65,26 @@ module FeeCalculator
       @sum_options.merge(total: @sum)
     end
 
+    def storage_fee_tiers
+      ESTIMATED_FILES_SIZE
+    end
+
+    def dpc_fee_tiers
+      ESTIMATED_DATASETS
+    end
+
     private
 
     def add_zero_fee(value_key)
-      @sum_options[value_key] = 0
+      add_fee_to_total(value_key, 0)
+    end
+
+    def add_invoice_fee
+      return unless options[:generate_invoice]
+      return if @sum.zero?
+
+      @sum += INVOICE_FEE
+      @sum_options[:invoice_fee] = INVOICE_FEE
     end
 
     def add_dpc_fee
@@ -72,12 +101,24 @@ module FeeCalculator
       res = {}
       options[:storage_usage].each do |tier, percent|
         datasets = get_tier_by_value(dpc_fee_tiers, options[:dpc_tier])
-        items = (datasets[:range].max * percent.to_i / 100.0).round
+        items = (datasets[:range].max * percent.to_i / 100.0).ceil
         items_fee = items * price_by_tier(storage_fee_tiers, tier)
         res[tier] = items_fee
-        @sum += items_fee
+        @sum += items_fee if options[:cover_storage_fee]
       end
       @sum_options[:storage_by_tier] = res
+    end
+
+    def add_storage_fee_difference
+      paid_storage = resource.identifier.previous_invoiced_file_size
+      paid_tier_price = price_by_range(storage_fee_tiers, paid_storage)
+      new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
+
+      add_fee_to_total(:storage_size, new_tier_price - paid_tier_price)
+    end
+
+    def verify_max_storage_size
+      price_by_range(storage_fee_tiers, resource.total_file_size)
     end
 
     def add_storage_usage_fee(key)
@@ -88,10 +129,14 @@ module FeeCalculator
       add_fee_by_range(storage_fee_tiers, :storage_size)
     end
 
+    def add_dataset_storage_fee
+      price = price_by_range(storage_fee_tiers, resource.total_file_size)
+      add_fee_to_total(:storage_size, price)
+    end
+
     def add_fee_by_tier(tier_definition, value_key)
       value = price_by_tier(tier_definition, options[value_key])
-      @sum += value
-      @sum_options[output_key(value_key)] = value
+      add_fee_to_total(value_key, value)
     end
 
     def output_key(key)
@@ -111,8 +156,7 @@ module FeeCalculator
 
     def add_fee_by_range(tier_definition, value_key)
       value = price_by_range(tier_definition, options[value_key])
-      @sum += value
-      @sum_options[output_key(value_key)] = value
+      add_fee_to_total(value_key, value)
     end
 
     def price_by_range(tier_definition, value)
@@ -120,6 +164,11 @@ module FeeCalculator
       raise ActionController::BadRequest, 'The value is out of defined range' if tier.nil?
 
       tier[:price]
+    end
+
+    def add_fee_to_total(value_key, fee)
+      @sum += fee
+      @sum_options[output_key(value_key)] = fee
     end
   end
 end
