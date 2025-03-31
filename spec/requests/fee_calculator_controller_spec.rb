@@ -32,7 +32,6 @@ RSpec.describe 'FeeCalculatorController', type: :request do
       context 'with all configuration attrs' do
         let(:options) do
           {
-            'cover_storage_fee' => nil,
             'low_middle_income_country' => true,
             'cover_storage_fee' => false,
             'dpc_tier' => '1',

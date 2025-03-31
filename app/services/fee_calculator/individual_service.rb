@@ -27,8 +27,6 @@ module FeeCalculator
       @sum_options.merge(total: @sum)
     end
 
-    private
-
     def storage_fee_tiers
       INDIVIDUAL_ESTIMATED_FILES_SIZE
     end
