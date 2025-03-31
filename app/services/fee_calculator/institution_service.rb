@@ -19,24 +19,6 @@ module FeeCalculator
     ].freeze
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
-    def self.service_fee_tiers
-      NORMAL_SERVICE_FEE
-    end
-
-    def self.low_middle_tiers
-      LOW_MIDDLE_SERVICE_FEE
-    end
-
-    def self.storage_fee_tiers
-      ESTIMATED_FILES_SIZE
-    end
-
-    def self.dpc_fee_tiers
-      ESTIMATED_DATASETS
-    end
-
-    private
-
     def service_fee_tiers
       return LOW_MIDDLE_SERVICE_FEE if options[:low_middle_income_country]
 

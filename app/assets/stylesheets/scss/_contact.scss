@@ -27,7 +27,7 @@
   padding: .5ch;
   background-color: white;
   text-align: center;
-  &:before {
-    content: '$';
+  &:empty:before {
+    content: '\00a0';
   }
 }

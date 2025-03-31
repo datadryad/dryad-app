@@ -32,7 +32,7 @@ module FeeCalculator
     ].freeze
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
-    def initialize(options, for_dataset: false)
+    def initialize(options = {}, for_dataset: false)
       @sum = 0
       @options = options
       @sum_options = {}

@@ -22,9 +22,12 @@ ranges.forEach(r => {
     }
   })
 })
-$(document).on("ajax:complete", function(status, response){
+$(window).on('load', function(){
+  document.querySelector('input[value="Recalculate"]').click();
+})
+$(document).on('ajax:complete', function(status, response){
   if (response.status === 200) {
     const {fees: {total}} = response.responseJSON;
-    document.getElementById('total_estimate').innerHTML = total;
+    document.getElementById('total_estimate').innerHTML = total.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0});
   }
 })
