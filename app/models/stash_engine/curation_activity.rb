@@ -3,7 +3,6 @@
 # Table name: stash_engine_curation_activities
 #
 #  id          :integer          not null, primary key
-#  deleted_at  :datetime
 #  keywords    :string(191)
 #  note        :text(65535)
 #  status      :string(191)      default("in_progress")
@@ -14,7 +13,6 @@
 #
 # Indexes
 #
-#  index_stash_engine_curation_activities_on_deleted_at          (deleted_at)
 #  index_stash_engine_curation_activities_on_resource_id_and_id  (resource_id,id)
 #
 require 'stash/doi/datacite_gen'

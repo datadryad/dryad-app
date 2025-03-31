@@ -5,7 +5,6 @@
 #  id                        :integer          not null, primary key
 #  accepted_agreement        :boolean
 #  cedar_json                :text(65535)
-#  deleted_at                :datetime
 #  display_readme            :boolean          default(TRUE)
 #  download_uri              :text(65535)
 #  file_view                 :boolean          default(FALSE)
@@ -35,7 +34,6 @@
 # Indexes
 #
 #  index_stash_engine_resources_on_current_editor_id             (current_editor_id)
-#  index_stash_engine_resources_on_deleted_at                    (deleted_at)
 #  index_stash_engine_resources_on_identifier_id                 (identifier_id)
 #  index_stash_engine_resources_on_identifier_id_and_created_at  (identifier_id,created_at) UNIQUE
 #  index_stash_engine_resources_on_tenant_id                     (tenant_id)

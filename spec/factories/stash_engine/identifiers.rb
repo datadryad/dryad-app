@@ -3,7 +3,6 @@
 # Table name: stash_engine_identifiers
 #
 #  id                      :integer          not null, primary key
-#  deleted_at              :datetime
 #  edit_code               :string(191)
 #  identifier              :text(65535)
 #  identifier_type         :text(65535)
@@ -25,7 +24,6 @@
 # Indexes
 #
 #  admin_search_index                                     (search_words)
-#  index_stash_engine_identifiers_on_deleted_at           (deleted_at)
 #  index_stash_engine_identifiers_on_identifier           (identifier)
 #  index_stash_engine_identifiers_on_latest_resource_id   (latest_resource_id)
 #  index_stash_engine_identifiers_on_license_id           (license_id)
