@@ -1,0 +1,10 @@
+<div class="c-lined-table__with-actions" id="editor_name<%= dataset.id%>">
+  <div class="c-lined-table__data"><%= dataset.editor_name %></div>
+  <% if policy(dataset).curate? && dataset.editor_name.present? %>
+    <div class="c-lined-table__actions">
+      <%= form_with(url: logout_resource_path(id: dataset.id), method: :post, local: false) do %>
+        <button class="c-admin-edit-icon" aria-label="Logout current editor" title="Logout current editor"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+      <% end %>
+    </div>
+  <% end %>
+</div>

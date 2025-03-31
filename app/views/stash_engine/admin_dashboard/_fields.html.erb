@@ -14,7 +14,7 @@ end
   <b role="heading" aria-level="3" id="edit_fields">Display fields</b>
   <button type="button" class="o-button__plain-text7" id="edit_fields-help"><i aria-hidden="true" class="fa fa-info-circle"></i> Display field help</button>
 </div>
-<fieldset id="edit_fields-form" aria-labelledby="edit_fields">
+<fieldset id="edit_fields-form" <% if @role_object.blank? || @user_role.role == 'curator' %>class="curator"<% end %> aria-labelledby="edit_fields">
   <div>Description</div>
   <div>
     <%= check('doi', true).html_safe %>
@@ -23,6 +23,10 @@ end
   <div>
     <%= check('keywords', true).html_safe %>
     <span class="help" id="keywords-desc">Subjects entered by the submitter. Appear under Description.</span>
+  </div>
+  <div>
+    <%= check('submitter').html_safe %>
+    <span class="help" id="submitter-desc">The submitting user of the dataset linked to their <a href="https://orcid.org/" target="_blank">ORCID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.</span>
   </div>
   <div>
     <%= check('authors').html_safe %>
@@ -35,10 +39,6 @@ end
   <div>
     <%= check('countries', true).html_safe %>
     <span class="help" id="countries-desc">Up to 6 countries associated with author affiliations. Appear with Affiliations.</span>
-  </div>
-  <div>
-    <%= check('submitter').html_safe %>
-    <span class="help" id="submitter-desc">The submitting user of the dataset linked to their <a href="https://orcid.org/" target="_blank">ORCID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.</span>
   </div>
   <div>
     <%= check('status').html_safe %>
@@ -79,7 +79,11 @@ end
   <% if @role_object.blank? || @user_role.role == 'curator' %>
     <div>
       <%= check('curator').html_safe %>
-      <span class="help" id="curator-desc">The curator currently editing the dataset.</span>
+      <span class="help" id="curator-desc">The curator currently assigned to the dataset.</span>
+    </div>
+    <div>
+      <%= check('editor').html_safe %>
+      <span class="help" id="editor-desc">The user currently editing the dataset.</span>
     </div>
   <% end %>
   <div>
