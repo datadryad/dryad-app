@@ -193,7 +193,7 @@ export function AgreeHelp({type}) {
   return (
     <>
       <p>After curation, <b>Dryad submissions are made publicly available unless otherwise specified</b>. If your submission needs to be kept private during the review of an associated manuscript, choose that option on this page.</p>
-      {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad partners<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad partner institution, click &quot;Add a Dryad partner institution&quot;, choose your institution, and verify your credentials.</p>}
+      {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad partners<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad partner institution and it is not shown here, click &quot;Add a Dryad partner institution&quot;, choose your institution, and verify your credentials.</p>}
     </>
   );
 }
