@@ -512,7 +512,7 @@ module StashApi
         end
         # admin restrictions
         if %w[skipEmails preserveCurationStatus].include?(attr) && item_value.instance_of?(TrueClass) &&
-          !(@user.min_curator? || @user.journals_as_admin.intersect?(@resource&.journals))
+          !(@user.min_curator? || @user.journals_as_admin&.intersect?(@resource&.journals || []))
           render json: { error: "Unauthorized: only curators, superusers, and journal administrators may set #{attr} to true" }.to_json, status: 401
           return false
         end
