@@ -1,0 +1,8 @@
+<% tiers = calc_model.service_fee_tiers %>
+<% tiers.each do |t| %>
+  <tr>
+    <td><%= t[:tier]%></td>
+    <td><%= t[:range].to_s.split('..').map {|n| n.to_i.to_s == n ? (n.to_i > 999999 ? number_to_currency(number_to_human(n), precision: 0) : number_to_currency(n.to_i.round(-1), precision: 0)) : nil}.join('-').gsub(/\-$/, '+').downcase %></td>
+    <td><%= number_to_currency(t[:price], precision: 0) %></td>
+  </tr>
+<% end %>
