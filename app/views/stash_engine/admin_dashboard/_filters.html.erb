@@ -1,6 +1,6 @@
 <%
 def selecter(id, options)
-  h = { member: 'Dryad partner', sponsor: 'Journal sponsor', editor: 'Curator editor' }
+  h = { member: 'Dryad partner', sponsor: 'Journal sponsor' }
   label = h[id.to_sym] || id.capitalize
 
   "<label for='filter-#{id}'>#{label}:</label>" +
@@ -28,7 +28,13 @@ end
       <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
     </div>
     <div class="o-admin-form-pair half-width">
-      <%= selecter('editor', [['', '']] + editor_select).html_safe %>
+      <%= render partial: 'stash_engine/shared/multi_select', locals: {
+        id: 'editor',
+        label: 'Curator editor:',
+        field_name: 'filters[editor]',
+        options: editor_select,
+        selected: @filters.dig(:editor)
+      } %>
     </div>
   <% end %>
   <div class="o-admin-form-pair half-width">
