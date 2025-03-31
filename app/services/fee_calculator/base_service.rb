@@ -101,7 +101,7 @@ module FeeCalculator
       res = {}
       options[:storage_usage].each do |tier, percent|
         datasets = get_tier_by_value(dpc_fee_tiers, options[:dpc_tier])
-        items = (datasets[:range].max * percent.to_i / 100.0).round
+        items = (datasets[:range].max * percent.to_i / 100.0).ceil
         items_fee = items * price_by_tier(storage_fee_tiers, tier)
         res[tier] = items_fee
         @sum += items_fee if options[:cover_storage_fee]

@@ -46,7 +46,7 @@ module FeeCalculator
 
           it {
             is_expected.to eq({ service_fee: 5_000, dpc_fee: 0, total: 5_000,
-                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 4_306 } })
+                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
           }
         end
 
@@ -88,7 +88,7 @@ module FeeCalculator
 
             it {
               is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 1_000,
-                                  storage_by_tier: { 1 => 259, 2 => 464, 4 => 4_306 } })
+                                  storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
             }
           end
 
@@ -139,8 +139,8 @@ module FeeCalculator
           let(:options) { { storage_usage: { 1 => 10, 2 => 10, 4 => 48 }, cover_storage_fee: true } }
 
           it {
-            is_expected.to eq({ service_fee: 5_000, dpc_fee: 0, total: 10_029,
-                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 4_306 } })
+            is_expected.to eq({ service_fee: 5_000, dpc_fee: 0, total: 12_182,
+                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
           }
         end
 
@@ -181,8 +181,8 @@ module FeeCalculator
             let(:options) { { low_middle_income_country: true, storage_usage: { 1 => 10, 2 => 10, 4 => 48 }, cover_storage_fee: true } }
 
             it {
-              is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 6_029,
-                                  storage_by_tier: { 1 => 259, 2 => 464, 4 => 4_306 } })
+              is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 8_182,
+                                  storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
             }
           end
 
