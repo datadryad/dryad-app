@@ -112,10 +112,6 @@ export default function DragonDropList({
         },
       });
       savedWrapper.current = wrappingFunction;
-      dragon.on('grabbed', () => {
-        const sec = dragonRef.current.closest('section');
-        sec.style.minHeight = `${sec.offsetHeight}px`;
-      });
       dragon.on('dropped', () => {
         savedWrapper.current();
         dragonRef.current.closest('section').style.minHeight = 0;
