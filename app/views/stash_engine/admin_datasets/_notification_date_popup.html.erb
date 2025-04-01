@@ -3,9 +3,10 @@
   <p>The next monthly reminder email will be sent on <b><%= formatted_date(@resource.process_date.notification_date) %></b></p>
   <p>The <%= @resource.current_curation_status == 'in_progress' ? 'latest version' : 'dataset' %> will be <%= @resource.current_curation_status == 'in_progress' ? 'deleted' : 'withdrawn' %> on <b><%= formatted_date(@resource.process_date.delete_date) %></b></p>
   <p>
-  <p style="max-width: 500px;">You select a new date on which to restart the monthly emails. This will also push back the scheduled <%= @resource.current_curation_status == 'in_progress' ? 'deletion' : 'withdrawal' %> to <b><%= @resource.current_curation_status == 'peer_review' ? '6 months' : '11 months' %></b> after the new notification date.</p>
+  <p style="max-width: 510px;">You may select a new date on which to restart the monthly emails. This will also push back the scheduled <%= @resource.current_curation_status == 'in_progress' ? 'deletion' : 'withdrawal' %> to <b><%= @resource.current_curation_status == 'peer_review' ? '6 months' : '11 months' %></b> after the new notification date.</p>
+  <p>Use the buttons below, or select a specific date.</p>
   <p>
-    <span id="group-label">Push notifications back:</span>
+    <span id="group-label" class="c-input__label">From today, push notifications:</span>
     <span role="group" aria-labelledby="group-label">
       <% periods = @resource.current_curation_status == 'peer_review' ? [6.months, 9.months, 1.year] : [1.month, 3.months, 6.months]%>
       <% periods.each do |period| %>
