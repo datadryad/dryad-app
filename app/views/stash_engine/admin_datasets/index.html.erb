@@ -46,7 +46,7 @@
         </div>
       </div>
       <span class="input-line">
-        <span><b>Notification date:</b> <span id="notification_date"><%= formatted_date(r.process_date.notification_date) %></span></span>
+        <span><b>Notification date:</b> <span id="notification_date_<%= @identifier.id %>"><%= formatted_date(r.process_date.notification_date) %></span></span>
         <% if r.process_date.notification_date && policy([:stash_engine, :admin_datasets]).notification_date? %>
           <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'notification_date'), method: :get, local: false) do %>
             <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit notification date" title="Edit notification date"><i class="fas fa-pencil" aria-hidden="true"></i></button>
