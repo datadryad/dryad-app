@@ -201,6 +201,7 @@
 <%= render partial: 'dangerous_actions' %>
 <% end %>
 
+<% content_for(:doc_end) do %>
 <script type="text/javascript">
   const cancelClick = () => {
     document.getElementById('genericModalDialog').close();
@@ -218,3 +219,4 @@
     button.addEventListener('click', preventClicks);
   });
 </script>
+<% end %>
