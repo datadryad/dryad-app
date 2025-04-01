@@ -13,19 +13,10 @@ class FeeCalculatorController < ApplicationController
 
   def calculate_resource_fee
     resource = StashEngine::Resource.find(params[:id])
-    ident = resource.identifier
-
-    type = if ident.institution_will_pay?
-             'institution'
-           elsif ident.journal&.will_pay? || ident.funder_will_pay?
-             'publisher'
-           else
-             'individual'
-           end
 
     render json: {
       options: resource_options,
-      fees: FeeCalculatorService.new(type).calculate(resource_options, resource: resource)
+      fees: ResourceFeeCalculatorService.new(resource).calculate(resource_options)
     }
   end
 
