@@ -1,3 +1,4 @@
+const feeForm = document.querySelector('form[action="/fee_calculator"]')
 const ranges = document.querySelectorAll('input[type=range]')
 ranges.forEach(r => {
   r.addEventListener('change', () => {
@@ -22,8 +23,9 @@ ranges.forEach(r => {
     }
   })
 })
+feeForm.addEventListener('change', () => feeForm.requestSubmit());
 $(window).on('load', function(){
-  document.querySelector('input[value="Recalculate"]').click();
+  feeForm.requestSubmit();
 })
 $(document).on('ajax:complete', function(status, response){
   if (response.status === 200) {
