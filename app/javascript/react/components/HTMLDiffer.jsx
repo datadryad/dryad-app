@@ -21,11 +21,11 @@ export default function HTMLDiffer({current, previous}) {
 
   return (
     <>
-      <div className="input-line" style={{display: 'inline-flex', gap: '1ch', marginBottom: '1rem'}}>
+      <div className="input-line" style={{display: 'inline-flex', gap: '1ch', marginBottom: '1rem'}} role="group" aria-label="Track changes">
         <button
           type="button"
           className="diff-toggle"
-          aria-pressed={!showFinal}
+          aria-current={!showFinal}
           aria-controls={diffRefId}
           disabled={!showFinal}
           onClick={() => setShowFinal(false)}
@@ -35,7 +35,7 @@ export default function HTMLDiffer({current, previous}) {
         <button
           type="button"
           className="diff-toggle"
-          aria-pressed={showFinal}
+          aria-current={showFinal}
           aria-controls={refId}
           disabled={showFinal}
           onClick={() => setShowFinal(true)}
