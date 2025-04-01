@@ -1,5 +1,5 @@
 document.getElementById('genericModalDialog').close();
-document.getElementById('notification_date').innerHTML = '<%= formatted_date(@resource.process_date.notification_date) %>';
+document.getElementById('notification_date_<%= @identifier.id %>').innerHTML = '<%= formatted_date(@resource.process_date.notification_date) %>';
 
 if($("#curation_table th[aria-sort='ascending']").length > 0){
   $('#curation_table tr:last').after("<%= escape_javascript(

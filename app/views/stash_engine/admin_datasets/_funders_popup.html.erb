@@ -24,7 +24,7 @@
         </div>
         <div class="input-stack" style="flex: 1; min-width: 115px;">
           <%= f.label :award_description, 'Program/division', for: "desc#{funder.id}" %>
-          <%= f.text_field :award_description, class: 'c-input__text', for: "desc#{funder.id}" %>
+          <%= f.text_field :award_description, class: 'c-input__text', id: "desc#{funder.id}" %>
         </div>
         <%= submit_tag 'Save', class: 'o-button__plain-text2', style: 'align-self: flex-end' %>
       <% end %>
