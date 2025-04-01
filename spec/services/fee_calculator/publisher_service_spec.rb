@@ -48,7 +48,7 @@ module FeeCalculator
           # Does not return storage_by_tier
           it {
             is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 1_000,
-                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 4306 } })
+                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
           }
         end
 
@@ -98,8 +98,8 @@ module FeeCalculator
           let(:options) { { cover_storage_fee: true, storage_usage: { 1 => 10, 2 => 10, 4 => 48 } } }
 
           it {
-            is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 6_029,
-                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 4_306 } })
+            is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 8_182,
+                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
           }
         end
 
