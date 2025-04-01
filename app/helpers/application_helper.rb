@@ -1,4 +1,3 @@
-require 'diffy'
 require 'kramdown'
 require 'kramdown-parser-gfm'
 
