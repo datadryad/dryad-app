@@ -305,8 +305,19 @@ html.preview_submission {
             margin: 0;
           }
         }
-        form button {
-          white-space: nowrap;
+        form {
+          button {
+            white-space: nowrap;
+          }
+          &:only-child {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            row-gap: 1ch;
+            column-gap: 2ch;
+          }
         }
       }
     }

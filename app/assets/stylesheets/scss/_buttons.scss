@@ -8,9 +8,9 @@
 
   &:hover {opacity: 0.85;}
 
-  &[disabled] {
+  &[disabled], &[aria-disabled] {
     background-color: lighten($light-gray, 20%);
-    border-color: lighten($light-gray, 20%);
+    border-color: $light-gray;
     color: $dark-gray;
     opacity: 1;
   }
