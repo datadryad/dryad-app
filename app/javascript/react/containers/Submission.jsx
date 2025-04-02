@@ -16,7 +16,7 @@ import RelatedWorks, {WorksPreview, worksCheck} from '../components/MetadataEntr
 import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
 import Agreements from '../components/MetadataEntry/Agreements';
-import Payments from "../components/MetadataEntry/Payments";
+import Payments from '../components/MetadataEntry/Payments';
 import SubmissionHelp, {
   PublicationHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, CompHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
