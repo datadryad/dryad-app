@@ -6,14 +6,14 @@
 <% end %>
 
 <% unless methods.try(:description).blank? %>
-  <h2 id="methods" class="expand-button"><button aria-expanded="false" aria-controls="methods-sec">Methods</button></h2>
+  <h2 class="expand-button"><button id="methods" aria-expanded="false" aria-controls="methods-sec">Methods</button></h2>
   <div id="methods-sec" hidden class="t-landing__text-wall">
     <%= raw(display_desc(methods.description)) %>
   </div>
 <% end %>
 
 <% unless other.try(:description).blank? %>
-  <h2 id="usage" class="expand-button"><button aria-expanded="false" aria-controls="usage-sec">Usage notes</button></h2>
+  <h2 class="expand-button"><button id="usage" aria-expanded="false" aria-controls="usage-sec">Usage notes</button></h2>
   <div id="usage-sec" hidden class="t-landing__text-wall">
     <%= raw(display_desc(other.description)) %>
   </div>
