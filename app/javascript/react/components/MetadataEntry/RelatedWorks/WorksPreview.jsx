@@ -21,10 +21,10 @@ function WorksList({identifiers, previous, curator}) {
   if (identifiers.length > 0) {
     return (
       <>
-        <h3 className="o-heading__level2" style={{marginBottom: '-1rem'}}>Related works</h3>
+        <h2 style={{marginBottom: '-1rem'}}>Related works</h2>
         {Object.keys(works).map((type) => (
           <Fragment key={type}>
-            <h4 className="o-heading__level3">{nameit(type, works[type])}</h4>
+            <h3>{nameit(type, works[type])}</h3>
             <ul className="o-list">
               {works[type].map((w) => {
                 const prev = previous?.find((r) => r.related_identifier === w.related_identifier);
@@ -49,7 +49,7 @@ function WorksList({identifiers, previous, curator}) {
         ))}
         {previous?.map((p) => {
           if (identifiers.some((w) => w.related_identifier === p.related_identifier)) return null;
-          return <del style={{display: 'block'}}>p.related_identifier</del>;
+          return <del style={{display: 'block'}} key={p.id}>p.related_identifier</del>;
         })}
       </>
     );
@@ -98,7 +98,7 @@ export default function WorksPreview({resource, previous, curator}) {
 
     return (
       <>
-        <h3 className="o-heading__level2">Collected datasets</h3>
+        <h2>Collected datasets</h2>
         <div ref={colRef} />
         <WorksList identifiers={other} previous={preOther} curator={curator} />
       </>

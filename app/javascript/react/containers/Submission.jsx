@@ -60,7 +60,7 @@ function Submission({
       fail: (review || step.index > 1) && abstractCheck(resource),
       component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
-      preview: <DescPreview resource={resource} previous={previous} />,
+      preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Subjects',
