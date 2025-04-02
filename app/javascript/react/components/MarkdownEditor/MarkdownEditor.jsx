@@ -198,10 +198,20 @@ function MilkdownEditor({
             ))}
           </div>
           <div className="md_editor-toggle" role="group" aria-label="Editor type">
-            <button type="button" onClick={() => setEditType('markdown')} aria-current={editType === 'markdown'} disabled={editType === 'markdown'}>
+            <button
+              type="button"
+              onClick={() => setEditType('markdown')}
+              aria-current={editType === 'markdown'}
+              aria-disabled={editType === 'markdown' || null}
+            >
               Markdown
             </button>
-            <button type="button" onClick={() => setEditType('visual')} aria-current={editType === 'visual'} disabled={editType === 'visual'}>
+            <button
+              type="button"
+              onClick={() => setEditType('visual')}
+              aria-current={editType === 'visual'}
+              aria-disabled={editType === 'visual' || null}
+            >
               Rich text
             </button>
           </div>
