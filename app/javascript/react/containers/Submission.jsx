@@ -16,6 +16,7 @@ import RelatedWorks, {WorksPreview, worksCheck} from '../components/MetadataEntr
 import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
 import Agreements from '../components/MetadataEntry/Agreements';
+import Payments from "../components/MetadataEntry/Payments";
 import SubmissionHelp, {
   PublicationHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, CompHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
@@ -143,6 +144,22 @@ function Submission({
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
       preview: <Agreements config={config_payments} resource={resource} user={user} previous={previous} preview />,
+    },
+    {
+      name: 'Payment',
+      index: 10,
+      pass: resource.accepted_agreement,
+      fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
+      component: <Payments
+        config={config_payments}
+        resource={resource}
+        setResource={setResource}
+        user={user}
+        form={change_tenant}
+        setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
+      />,
+      help: <AgreeHelp type={resource.resource_type.resource_type} />,
+      preview: <Payments config={config_payments} resource={resource} user={user} previous={previous} preview />,
     },
   ];
 
