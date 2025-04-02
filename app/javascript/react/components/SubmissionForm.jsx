@@ -73,6 +73,7 @@ export default function SubmissionForm({
           type={!hasChanges || steps.some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator) ? 'button' : 'submit'}
           className="o-button__plain-text1"
           name="submit_button"
+          aria-describedby={steps.some((s) => s.fail) ? Array.from(document.querySelectorAll('.error-text')).map((t) => t.id).join(' ') : null}
           aria-disabled={!hasChanges || steps.some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator) ? 'true' : null}
         >
           {curator ? 'Submit changes' : `Submit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
