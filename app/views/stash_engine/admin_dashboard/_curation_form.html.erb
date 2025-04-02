@@ -10,7 +10,7 @@
       <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
           <div class="c-input">
             <%= ca.label :status, 'Status', class: 'c-input__label' %>
-            <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_status)), {include_blank: true}, {id: 'activity_status_select', class: 'c-input__select', required: true} %>
+            <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_status)), {include_blank: true}, {class: 'c-input__select', required: true} %>
           </div>
       <% end %>
     <% else %>
@@ -29,7 +29,7 @@
       <%= form.fields_for :curator, @resource do |r| %>
         <div class="c-input">
           <%= r.label :id, 'Curator', class: 'c-input__label' %>
-          <%= r.select :id, options_for_select([['(unassign)', '0']] + editor_select, @resource.user_id), {include_blank: true}, {class: 'c-input__select', id: 'curator'} %>
+          <%= r.select :id, options_for_select([['(unassign)', '0']] + editor_select, @resource.user_id), {include_blank: true}, {class: 'c-input__select'} %>
         </div>
       <% end %>
     <% end %>

@@ -24,6 +24,11 @@ input {
 		justify-content: space-between;
   	align-items: baseline;
   }
+
+  &.center {
+  	align-items: center;
+  	column-gap: 1ch;
+  }
 }
 
 .input-label {
@@ -140,7 +145,7 @@ label.optional:after {
 .c-input__select {
 	@extend %c-input__element;
 	height: $input-height;
-	padding: 0 35px 0 5px;
+	padding: 0 38px 0 5px;
 	border-radius: 0;
 	background: url('/images/scss/icon_up-down-arrows.svg') right 10px center / 12px no-repeat, linear-gradient($light-blue, $light-blue) right / $input-height $input-height no-repeat;
 	background-color: white;

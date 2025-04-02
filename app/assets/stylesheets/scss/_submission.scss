@@ -808,34 +808,22 @@ dialog#submission-step[open] {
 
   &.track-changes {
     ins, .ins, del {
-      padding: 4px 0 2px;
+      padding: 5px 0 3px;
     }
     .ins {
-      background-color: lighten($lightest-orange, 5);
+      background-color: $lightest-orange;
     }
     ins {
       text-decoration: none;
-      background-color: lighten($lightest-orange, 5);
+      background-color: $lightest-orange;
     }
-    .del {
-      display: block;
-    }
-    del {
+    del, .del {
       display: inline;
       background-color: $lightest-red;
       text-decoration: line-through;
-    }
-
-    .highlight-readme {
-      .del {
-        display: inline;
+      * {
         background-color: $lightest-red;
-      }
-      del p, ins p {
-        display: inline;
-      }
-      ins.ins-before::after {
-        content: ' ';
+        text-decoration: line-through;
       }
     }
   }

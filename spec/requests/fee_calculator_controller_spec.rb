@@ -3,7 +3,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
   describe '#institutional fee' do
     let(:type) { 'institution' }
     let(:service_instance) { double(:FeeCalculatorService) }
-    let(:options) { { 'low_middle_income_country' => nil } }
+    let(:options) { { 'low_middle_income_country' => nil, 'cover_storage_fee' => nil } }
 
     describe '#fee_calculator_url' do
       let(:url) { fee_calculator_url }
@@ -34,6 +34,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         let(:options) do
           {
             'low_middle_income_country' => true,
+            'cover_storage_fee' => false,
             'dpc_tier' => '1',
             'service_tier' => '3',
             'storage_usage' => {
@@ -89,6 +90,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         let(:options) do
           {
             'low_middle_income_country' => true,
+            'cover_storage_fee' => false,
             'dpc_tier' => '1',
             'service_tier' => '3',
             'storage_usage' => {
