@@ -28,15 +28,20 @@ module StashEngine
     self.table_name = 'stash_engine_process_dates'
     belongs_to :processable, polymorphic: true, optional: false
 
-    def notification_start_date
-      return nil unless processable.is_a?(StashEngine::Resource)
-
+    def wait_period
       status_checks = {
-        in_progress: delete_calculation_date + 1.month,
-        action_required: delete_calculation_date + 1.month,
-        peer_review: delete_calculation_date + 6.months
+        in_progress: 1.month,
+        action_required: 1.month,
+        peer_review: 6.months
       }
       status_checks[processable.current_curation_status.to_sym]
+    end
+
+    def notification_start_date
+      return nil unless processable.is_a?(StashEngine::Resource)
+      return nil unless delete_calculation_date && wait_period
+
+      delete_calculation_date + wait_period
     end
 
     def delete_date

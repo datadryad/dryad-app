@@ -90,6 +90,18 @@ input[type=file]::file-selector-button {
   text-decoration: none;
 }
 
+.button-toggle {
+  @extend %o-button__plain-text;
+  padding: 8px 12px;
+  background-color: darken($lightest-green, 10);
+
+  &[disabled] {
+    background-color: transparent;
+    color: black;
+    border-bottom: thick solid darken($lightest-green, 10);
+  }
+}
+
 %o-button__link-style {
   display: inline-block;
   border: none;
