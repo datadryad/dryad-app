@@ -370,6 +370,10 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    kramdown (2.5.1)
+      rexml (>= 3.3.9)
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     language_server-protocol (3.17.0.3)
     launchy (3.0.1)
       addressable (~> 2.8)
@@ -400,9 +404,6 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
-    markdiff (0.8.1)
-      diff-lcs
-      nokogiri
     matrix (0.4.2)
     method_source (1.1.0)
     mime-types (3.6.0)
@@ -815,13 +816,14 @@ DEPENDENCIES
   jquery-ui-rails (~> 7.0)!
   jwt (~> 2.3.0)
   kaminari (~> 1.2.2)
+  kramdown (~> 2.5)
+  kramdown-parser-gfm (~> 1.1)
   leaflet-rails (~> 1.7.0)
   letter_opener
   letter_opener_web (~> 3.0)
   listen
   loofah (~> 2.24.0)
   mail (~> 2.8)
-  markdiff (~> 0.8.1)
   mocha
   mysql2 (~> 0.5.6)
   net-ftp (~> 0.3.4)
