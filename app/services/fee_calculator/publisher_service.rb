@@ -18,21 +18,5 @@ module FeeCalculator
     def service_fee_tiers
       SERVICE_FEE
     end
-
-    def storage_fee_tiers
-      ESTIMATED_FILES_SIZE
-    end
-
-    def dpc_fee_tiers
-      ESTIMATED_DATASETS
-    end
-
-    private
-
-    def add_storage_usage_fees
-      return unless options[:cover_storage_fee]
-
-      super
-    end
   end
 end

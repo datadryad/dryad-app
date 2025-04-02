@@ -4,6 +4,7 @@
 #
 #  id           :bigint           not null, primary key
 #  covers_dpc   :boolean          default(TRUE)
+#  covers_ldf   :string(191)
 #  enabled      :boolean          default(TRUE)
 #  name         :string(191)
 #  payment_plan :integer
@@ -22,7 +23,7 @@ module StashEngine
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
 
-    enum :payment_plan, { tiered: 0 }
+    enum :payment_plan, { tiered: 0, '2025': 1 }
 
     scope :exemptions, -> { where(enabled: true, covers_dpc: true) }
   end

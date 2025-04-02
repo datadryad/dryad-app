@@ -57,6 +57,7 @@ Rails.application.routes.draw do
         get 'download'
         post 'set_internal_datum'
         post 'add_internal_datum'
+        get 'calculate_fee'
       end
       resources :related_works, shallow: false, only: 'update'
       resources :internal_data, shallow: true, path: '/internal_data'
@@ -529,5 +530,5 @@ Rails.application.routes.draw do
   get :health_check, to: 'health#check'
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
-  get :dataset_fee_calculator, to: 'fee_calculator#calculate_dataset_fee', format: :json
+  get "resource_fee_calculator/:id", to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
 end
