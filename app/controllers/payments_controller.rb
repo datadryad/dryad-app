@@ -4,6 +4,7 @@ class PaymentsController < ApplicationController
   include StashEngine::SharedSecurityController
 
   skip_before_action :verify_authenticity_token
+  before_action :load_resource
 
   layout 'stash_engine/application'
 
@@ -11,16 +12,20 @@ class PaymentsController < ApplicationController
     Stripe.api_key = APP_CONFIG.payments.key
     Stripe.api_version = '2019-02-11; custom_checkout_beta=v1;'
 
-    # TODO: following
-    # 1. create a resource_payment_info table
-    # 2. find or create resource_payment_info and store Strip checkout details
-
-    resource = StashEngine::Resource.find(create_params[:resource_id])
-    options = PaymentsService.new(current_user, resource, create_params).checkout_options
+    @payment_service = PaymentsService.new(current_user, @resource, create_params)
 
     begin
-      attrs = options.merge({ return_url: "#{callback_payments_url}?session_id={CHECKOUT_SESSION_ID}" })
+      attrs = @payment_service.checkout_options.merge({
+        return_url: "#{callback_payments_url}?resource_id=#{@resource.id}&session_id={CHECKOUT_SESSION_ID}"
+      })
       session = Stripe::Checkout::Session.create(attrs)
+      resource_payment = @resource.payment || @resource.build_payment
+      resource_payment.update(
+        payment_type: 'stripe',
+        checkout_session_id: session.id,
+        status: :created,
+        amount: @payment_service.total_amount
+      )
     rescue StandardError => e
       render json: {
         error: e.error.message
@@ -31,8 +36,20 @@ class PaymentsController < ApplicationController
   end
 
   def callback
-    # TODO: find resource_payment_info by params[:session_id] and update it based on the response
-    pp params
+    payment = @resource.payment
+    if payment && payment.checkout_session_id == params[:checkout_session_id]
+      payment.update(status: :paid)
+    else
+      Rails.logger.warn("Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:checkout_session_id]}")
+    end
+
+    # TODO: Trigger @resource submit
+  end
+
+  private
+
+  def load_resource
+    @resource = StashEngine::Resource.find(params[:resource_id])
   end
 
   def create_params

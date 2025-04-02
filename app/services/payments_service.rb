@@ -5,6 +5,7 @@ class PaymentsService
     @user = user
     @resource = resource
     @options = options
+    @fees = ResourceFeeCalculatorService.new(resource).calculate(options)
   end
 
   def checkout_options
@@ -15,11 +16,14 @@ class PaymentsService
     }
   end
 
+  def total_amount
+    @fees[:total]
+  end
+
   private
 
   def line_items
-    fees = ResourceFeeCalculatorService.new(resource).calculate(options)
-    fees.except(:total).map { |key, value| generate_line_item(key, value) }
+    @fees.except(:total).map { |key, value| generate_line_item(key, value) }
   end
 
   def generate_line_item(fee_key, value)
