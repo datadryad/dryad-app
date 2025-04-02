@@ -15,9 +15,9 @@ class PaymentsController < ApplicationController
     @payment_service = PaymentsService.new(current_user, @resource, create_params)
 
     begin
-      attrs = @payment_service.checkout_options.merge({
-        return_url: "#{callback_payments_url}?resource_id=#{@resource.id}&session_id={CHECKOUT_SESSION_ID}"
-      })
+      attrs = @payment_service.checkout_options.merge(
+        { return_url: "#{callback_payments_url}?resource_id=#{@resource.id}&session_id={CHECKOUT_SESSION_ID}" }
+      )
       session = Stripe::Checkout::Session.create(attrs)
       resource_payment = @resource.payment || @resource.build_payment
       resource_payment.update(

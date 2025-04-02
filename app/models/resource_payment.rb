@@ -21,5 +21,5 @@ class ResourcePayment < ApplicationRecord
 
   belongs_to :resource, class_name: 'StashEngine::Resource'
 
-  enum :status, {created: 1, paid: 2, failed: 3}
+  enum :status, { created: 1, paid: 2, failed: 3 }
 end

@@ -17,7 +17,7 @@
 #  index_resource_payments_on_resource_id          (resource_id)
 #  index_resource_payments_on_status               (status)
 #
-require "test_helper"
+require 'test_helper'
 
 class ResourcePaymentTest < ActiveSupport::TestCase
   # test "the truth" do
