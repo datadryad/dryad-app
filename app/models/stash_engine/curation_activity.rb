@@ -240,6 +240,8 @@ module StashEngine
           update_dates[:curation_start] = created_at
         when 'embargoed', 'published'
           update_dates[:approved] = created_at
+          # after first publication, the dataset will be switched to new payment system
+          resource.identifier.update(old_payment_system: false)
         end
       end
       update_dates[:curation_end] = created_at if previous_status == 'curation' && resource.process_date.curation_end.blank?
