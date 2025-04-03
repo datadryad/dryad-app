@@ -16,7 +16,7 @@ Our publisher and society partners also benefit from:
   <p style="text-align: center;">Learn more about <a href="/join_us">Dryad services and partner benefits</a></p>
 </div>
 
-The annual partner fee is calculated as a total of the anticipated Data Publication Charge (DPC) for the coming year, plus the Annual Service Fee. DPCs are adjusted to reflect actual usage at year-end.
+The annual partner fee is calculated as a total of the anticipated [Data Publication Charge (DPC)](#data-publication-charge) for the coming year, plus the [Annual Service Fee](#annual-service-fee). DPCs are adjusted to reflect actual usage at year-end.
 
 Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule.
 
