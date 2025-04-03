@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 const validateEmail = (value) => {
   if (value && !/^[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+$/i.test(value)) {
@@ -10,7 +10,9 @@ const validateEmail = (value) => {
   return null;
 };
 
-export default function InvoiceForm({resource, setResource}) {
+export default function InvoiceForm({
+  resource, setResource, setPayment, fees,
+}) {
   const {authors, users} = resource;
   const submitter = authors.find((a) => a.author_orcid === users.find((u) => u.role === 'submitter')?.orcid);
   const [name, setName] = useState(null);
@@ -45,7 +47,7 @@ export default function InvoiceForm({resource, setResource}) {
       }
       enableReinitialize
       innerRef={formRef}
-      onSubmit={(values, {setTouched}) => {
+      onSubmit={(values) => {
         showSavingMsg();
         axios.patch(
           '/stash_datacite/authors/invoice',
@@ -61,16 +63,17 @@ export default function InvoiceForm({resource, setResource}) {
             console.log('Response failure not a 200 response from author invoice save');
           }
           setResource((r) => ({...r, authors: r.authors.map((a) => (a.id === data.data.id ? data.data : a))}));
-          setName(values.name);
-          setEmail(values.email);
           showSavedMsg();
-          setTouched({});
+          setPayment('paid');
         });
       }}
     >
       {({errors, touched, values}) => (
         <Form>
-          <p>The invoice will be sent to:</p>
+          <p>The invoice
+            {fees?.invoice_fee ? <> with a total of <b>{fees.total.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> </> : ' '}
+            will be sent to:
+          </p>
           <p className="input-line" style={{alignItems: 'baseline'}}>
             <span className="input-line" style={{flex: 1, alignItems: 'baseline', gap: '.5ch'}}>
               <label className="input-label" htmlFor="invoice-name">Name</label>
@@ -97,16 +100,16 @@ export default function InvoiceForm({resource, setResource}) {
                 {errors.email && touched.email && <span className="c-ac__error_message" id="email_error">{errors.email}</span>}
               </span>
             </span>
+          </p>
+          <p className="o-dataset-nav">
             <button
               type="submit"
               className="o-button__plain-text1"
               disabled={
-                !(touched.name || touched.email)
-                || !values.name || !values.email
-                || (values.email === email && values.name === name)
+                !values.name || !values.email
                 || errors.email
               }
-            >Save
+            >Submit for {resource.hold_for_peer_review ? 'peer review' : 'publication'}
             </button>
           </p>
         </Form>

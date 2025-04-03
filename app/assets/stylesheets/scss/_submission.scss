@@ -306,6 +306,11 @@ html.preview_submission {
           }
         }
         form {
+          @extend %pull-background;
+          box-sizing: border-box;
+          width: 100%;
+          max-width: 1220px;
+          margin: 0 auto;
           button {
             white-space: nowrap;
           }
@@ -826,5 +831,26 @@ dialog#submission-step[open] {
         text-decoration: line-through;
       }
     }
+  }
+}
+
+#payment {
+  @extend %pull-background;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  text-align: center;
+
+  p {
+    text-align: left;
+    max-width: 888px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  div {
+    padding: 1rem 0;
   }
 }

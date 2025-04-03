@@ -1,24 +1,33 @@
 import React, {useState, useEffect} from 'react';
 
 export default function SubmissionForm({
-  steps, resource, previewRef, user,
+  steps, resource, previewRef, user, fees, payment, setPayment,
 }) {
   const [hasChanges, setChanges] = useState(!resource.previous_curated_resource);
   const [showR, setShowR] = useState(resource.display_readme);
   const [userComment, setUserComment] = useState(resource?.edit_histories?.[0]?.user_comment);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-  const {curator} = user;
+  const {curator: admin} = user;
   const {users} = resource;
   const submitter = users.find((u) => u.role === 'submitter');
   const isSubmitter = user.id === submitter.id;
+  const curator = admin && !isSubmitter;
 
   useEffect(() => {
     if (previewRef.current && resource.previous_curated_resource) {
       setChanges(!!previewRef.current.querySelector('ins, del, .ins, .del'));
     }
   }, [previewRef.current, resource]);
+
+  const submit = (e) => {
+    if (!payment || !hasChanges || steps.some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator)) {
+      e.preventDefault();
+    }
+    if (!payment) setPayment(true);
+  };
+
   return (
-    <div id="submission-submit" role="status">
+    <div id="submission-submit" role="status" className={payment ? 'screen-reader-only' : null}>
       {steps.some((s) => s.fail) && (
         <p>Edit sections and fix the errors above in order to complete your submission</p>
       )}
@@ -33,16 +42,15 @@ export default function SubmissionForm({
         </>
       )}
       <form
+        id="submit_form"
         action="/stash_datacite/resources/submission"
         method="post"
-        onSubmit={!hasChanges || steps.some((s) => s.fail) || (curator && !userComment)
-          || (!isSubmitter && !curator) ? (e) => { e.preventDefault(); } : null}
+        onSubmit={submit}
       >
         {hasChanges && !steps.some((s) => s.fail) && (
           <>
             <input type="hidden" name="authenticity_token" value={authenticity_token} />
             <input type="hidden" name="resource_id" value={resource.id} />
-            <input type="hidden" name="user_comment" value={userComment} />
             {!showR && <input type="hidden" name="hide_readme" value="true" />}
             {curator ? (
               <>
@@ -57,7 +65,8 @@ export default function SubmissionForm({
                 <textarea
                   rows={1}
                   id="user_comment"
-                  value={userComment}
+                  name="user_comment"
+                  value={userComment || ''}
                   style={{flex: 1, minWidth: '200px', maxWidth: '800px'}}
                   onChange={(e) => setUserComment(e.target.value)}
                   placeholder="Describe edits made (required)"
@@ -76,7 +85,7 @@ export default function SubmissionForm({
           aria-describedby={steps.some((s) => s.fail) ? Array.from(document.querySelectorAll('.error-text')).map((t) => t.id).join(' ') : null}
           aria-disabled={!hasChanges || steps.some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator) ? 'true' : null}
         >
-          {curator ? 'Submit changes' : `Submit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
+          {curator ? 'Submit changes' : `${fees.storage_fee ? 'Pay & S' : 'S'}ubmit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
         </button>
       </form>
     </div>
