@@ -102,7 +102,7 @@ export default function Agreements({
     <>
       {preview && (
         <>
-          <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
+          <h2>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h2>
           <div className="callout alt">
             {ppr ? (
               <p>
@@ -161,9 +161,9 @@ export default function Agreements({
           )}
         </>
       )}
-      {subType === 'collection' ? <h3>Terms</h3> : (
+      {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
+      {subType !== 'collection' && (
         <>
-          <h3 style={preview ? {} : {marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>
           {dpc.institution_will_pay && (
             <>
               <div className="callout">

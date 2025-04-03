@@ -15,7 +15,7 @@
 <p>In all of our convenings we are committed to abiding by our <a href="/code_of_conduct">Code of conduct</a>.</p>
 
 ## Get to know Dryad
-<h3 id="our-members" class="expand-button"><button aria-expanded="false" aria-controls="our-members-sec">Our partners</button></h3>
+<h3 class="expand-button"><button id="our-members" aria-expanded="false" aria-controls="our-members-sec">Our partners</button></h3>
 <div class="about-page" id="our-members-sec" hidden>
 <p>Dryadâ€™s partners are part of a non-profit, shared community working together to promote
 data publishing, curation, and preservation. The community benefits from Dryadâ€™s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/join_us">Learn about joining us as a partner organization</a>.</p>
@@ -24,15 +24,15 @@ data publishing, curation, and preservation. The community benefits from Dryadâ€
 <h4>Publishing organizations</h4>
   <%= render "members_publishers" %>
 </div>
-<h3 id="our-board" class="expand-button"><button aria-expanded="false" aria-controls="our-board-sec">Our board</button></h3>
+<h3 class="expand-button"><button id="our-board" aria-expanded="false" aria-controls="our-board-sec">Our board</button></h3>
 <div class="about-page" id="our-board-sec" hidden>
   <%= render "our_governance" %>
 </div>
-<h3 id="our-staff" class="expand-button"><button aria-expanded="false" aria-controls="our-staff-sec">Our staff</button></h3>
+<h3 class="expand-button"><button id="our-staff" aria-expanded="false" aria-controls="our-staff-sec">Our staff</button></h3>
 <div class="about-page" id="our-staff-sec" hidden>
   <%= render "our_staff" %>
 </div>
-<h3 id="our-advisors" class="expand-button"><button aria-expanded="false" aria-controls="our-advisors-sec">Our advisors</button></h3>
+<h3 class="expand-button"><button id="our-advisors" aria-expanded="false" aria-controls="our-advisors-sec">Our advisors</button></h3>
 <div class="about-page" id="our-advisors-sec" hidden>
   <%= render "our_advisors" %>
 </div>
@@ -40,7 +40,7 @@ data publishing, curation, and preservation. The community benefits from Dryadâ€
 
 ## Collaborations
 
-Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](/#our_members) and [how to join us](/join_us).
+Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](#our_members) and [how to join us](/join_us).
 
 Dryad advocates for community-adopted standards for metadata and persistent identifiers in concert with DataCite, ORCID, ROR, and Funder Registry. 
 

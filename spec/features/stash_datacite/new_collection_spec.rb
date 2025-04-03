@@ -60,7 +60,7 @@ RSpec.feature 'NewCollection', type: :feature do
       # submit button should be enabled
       submit = find_button('submit_button', disabled: :all)
       expect(submit).not_to be_nil
-      expect(submit).not_to be_disabled
+      expect(submit['aria-disabled']).to be false
 
       # submits
       submit_form

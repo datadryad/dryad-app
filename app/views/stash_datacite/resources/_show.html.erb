@@ -25,7 +25,7 @@
 <%# takes local of identifier, no_link == true means don't link metrics %>
 <% no_link = false unless defined?(no_link) %>
 <% if resource.identifier&.counter_stat&.citation_count > 0 && !no_link %>
-  <h2 id="citations" class="expand-button"><button aria-expanded="false" aria-controls="citations-sec">Works referencing this dataset</button></h2>
+  <h2 class="expand-button"><button id="citations" aria-expanded="false" aria-controls="citations-sec">Works referencing this dataset</button></h2>
   <div id="citations-section" data-load="<%= stash_url_helpers.show_citations_path(identifier_id: resource.identifier_id, format: :js) %>"></div>
 <% end %>
 
