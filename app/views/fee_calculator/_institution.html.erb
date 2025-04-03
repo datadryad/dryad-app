@@ -1,5 +1,5 @@
 <%= form_with(url: stash_url_helpers.fee_calculator_path, method: :get, local: false, html: {class: 'callout alt', style: 'padding: 0 2ch'} ) do |form| %>
-  <h2 style="font-weight: bold; text-align: center; padding-top: 1ch">Fee calculator</h2>
+  <h2 style="font-weight: bold; text-align: center; padding-top: 1ch" id="fee-calculator">Fee calculator</h2>
   <%= form.hidden_field 'type', value: 'institution' %>
   <p class="input-line center">
     <span id="legend3">Are you based in a lower- or middle-income country?</span>
