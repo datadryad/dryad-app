@@ -40,33 +40,32 @@ class PaymentsController < ApplicationController
   def callback
     payment = @resource.payment || @resource.build_payment
 
-    unless payment.paid?
-      # do not do these updates multiple times
-      @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size )
+    return if payment.paid?
 
-      payment.update(
-        status: :paid,
-        payment_checkout_session_id: params[:session_id],
-        paid_at: Time.current
-      )
-      if payment.checkout_session_id != params[:session_id]
-        Rails.logger.warn("Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:checkout_session_id]}")
-      end
+    # do not do these updates multiple times
+    @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)
 
-      begin
-        session = Stripe::Checkout::Session.retrieve(params[:session_id])
-        payment.update(
-          payment_intent: session[:payment_intent],
-          payment_status: session[:payment_status],
-          payment_email: session[:customer_email] || session[:customer_details][:email]
-        )
-      rescue StandardError => e
-        Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
-      end
-
-      # TODO: Trigger @resource submit
-
+    payment.update(
+      status: :paid,
+      payment_checkout_session_id: params[:session_id],
+      paid_at: Time.current
+    )
+    if payment.checkout_session_id != params[:session_id]
+      Rails.logger.warn("Resource #{params[:resource_id]} received a payment for wrong checkout session #{params[:checkout_session_id]}")
     end
+
+    begin
+      session = Stripe::Checkout::Session.retrieve(params[:session_id])
+      payment.update(
+        payment_intent: session[:payment_intent],
+        payment_status: session[:payment_status],
+        payment_email: session[:customer_email] || session[:customer_details][:email]
+      )
+    rescue StandardError => e
+      Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
+    end
+
+    # TODO: Trigger @resource submit
   end
 
   private
