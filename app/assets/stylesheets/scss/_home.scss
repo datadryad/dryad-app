@@ -59,6 +59,11 @@
     height: 100%;
     margin-bottom: 0;
   }
+
+  .o-global-search__input:focus,
+  *:focus, *:focus-visible {
+    outline: 2px solid white;
+  }
 }
 
 .o-banner__tagline {

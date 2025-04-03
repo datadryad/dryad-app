@@ -79,46 +79,7 @@ Authors not affiliated with a Dryad partner organization are asked to pay a DPC 
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Up to 5GB</td>
-        <td>$150</td>
-        <td>$30</td>
-      </tr>
-      <tr>
-        <td>Up to 10GB</td>
-        <td>$180</td>
-        <td>$18</td>
-      </tr>
-      <tr>
-        <td>Up to 50GB</td>
-        <td>$520</td>
-        <td>$10.40</td>
-      </tr>
-      <tr>
-        <td>Up to 100GB</td>
-        <td>$808</td>
-        <td>$8.08</td>
-      </tr>
-      <tr>
-        <td>Up to 250GB</td>
-        <td>$1,750</td>
-        <td>$7.00</td>
-      </tr>
-      <tr>
-        <td>Up to 500GB</td>
-        <td>$3,086</td>
-        <td>$6.17</td>
-      </tr>
-      <tr>
-        <td>Up to 1TB</td>
-        <td>$6,077</td>
-        <td>$6.08</td>
-      </tr>
-      <tr>
-        <td>Up to 2 TB</td>
-        <td>$12,162</td>
-        <td>$6.08</td>
-      </tr>
+      <%= render partial: 'fee_calculator/table_ind' %>
     </tbody>
   </table>
 </div>
