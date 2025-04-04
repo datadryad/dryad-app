@@ -36,7 +36,10 @@ export default function InvoiceForm({
     }
   }, []);
 
-  if (email === null) return null;
+  if (email === null) {
+    return <p style={{textAlign: 'center', color: '#888'}}><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>;
+  }
+
   return (
     <Formik
       initialValues={
@@ -105,6 +108,7 @@ export default function InvoiceForm({
             <button
               type="submit"
               className="o-button__plain-text1"
+              name="submit_invoice"
               disabled={
                 !values.name || !values.email
                 || errors.email

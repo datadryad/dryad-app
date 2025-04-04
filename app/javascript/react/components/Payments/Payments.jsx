@@ -59,29 +59,25 @@ function Payments({
     );
   }
 
-  if (!clientSecret) {
-    return (
-      <div id="payment">
-        <p style={{textAlign: 'center', color: '#888'}}><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
-      </div>
-    );
-  }
-
   return (
     <div id="payment">
       <CalculateFees resource={resource} fees={fees} setFees={setFees} />
       <p>You must complete payment to submit your dataset for curation and publication.</p>
-      <EmbeddedCheckoutProvider
-        stripe={stripePromise}
-        options={{clientSecret}}
-      >
-        <EmbeddedCheckout />
-      </EmbeddedCheckoutProvider>
+      {clientSecret ? (
+        <EmbeddedCheckoutProvider
+          stripe={stripePromise}
+          options={{clientSecret}}
+        >
+          <EmbeddedCheckout />
+        </EmbeddedCheckoutProvider>
+      ) : (
+        <p style={{textAlign: 'center', color: '#888'}}><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
+      )}
       <p style={{fontWeight: 'bold'}} role="heading" aria-level="2">Need an invoice?</p>
       <p>
         Instead of paying immediately, you may generate an invoice for later payment by another entity.{' '}
         <b>An additional administration fee will be charged.</b>{' '}
-        <button onClick={() => setInvoice(true)} type="button" className="o-button__plain-textlink">
+        <button onClick={() => setInvoice(true)} type="button" className="o-button__plain-textlink" name="get_invoice">
           Continue to the invoice generation form <i className="fas fa-circle-right" aria-hidden="true" />
         </button>
       </p>
