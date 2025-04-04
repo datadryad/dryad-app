@@ -32,6 +32,7 @@ Rack::Attack.blocklist('malicious_clients') do |req|
       req.path.include?('wp-admin') ||
       req.path.include?('wp-login') ||
       (req.ip.start_with?('172.31') && start_w_wo_stash?(req.path,'/downloads')) ||
+      (req.ip.start_with?('172.31') && start_w_wo_stash?(req.path,'/search')) ||
       (req.ip.start_with?('64.233') && start_w_wo_stash?(req.path,'/downloads')) ||
       (req.ip.start_with?('47.76') && start_w_wo_stash?(req.path,'/downloads')) ||
       (req.ip.start_with?('8.210') && start_w_wo_stash?(req.path,'/downloads')) ||
