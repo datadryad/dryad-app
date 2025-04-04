@@ -23,7 +23,7 @@
   </li>
 </ul>
 
-<%if @resource.identifier.user_must_pay? && resource.identifier.old_payment_system %>
+<%if @resource.identifier.user_must_pay? && @resource.identifier.old_payment_system %>
   <p>You will receive an invoice via email upon publication of your dataset.</p>
 <% end %>
 
