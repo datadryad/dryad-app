@@ -17,7 +17,8 @@ class PaymentsController < ApplicationController
     begin
       attrs = @payment_service.checkout_options.merge(
         {
-          return_url: "#{callback_payments_url}?resource_id=#{@resource.id}&session_id={CHECKOUT_SESSION_ID}"
+          return_url: "#{callback_payments_url}?resource_id=#{@resource.id}&session_id={CHECKOUT_SESSION_ID}",
+          customer_email: @resource.owner_author.author_email
         }
       )
       session = Stripe::Checkout::Session.create(attrs)
@@ -64,8 +65,6 @@ class PaymentsController < ApplicationController
     rescue StandardError => e
       Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
     end
-
-    # TODO: Trigger @resource submit
   end
 
   private

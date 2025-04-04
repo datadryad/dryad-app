@@ -9,7 +9,7 @@ export default function SubmissionHelp({type}) {
       <ol id="infographic">
         <li>
           <h3><i className="fas fa-arrow-up-from-bracket" aria-hidden="true" />Initial submission</h3>
-          <p>{type === 'dataset' && 'Upload your data, complete metadata fields, and prepare a README file. '}Complete the checklist and carefully review the submission before you click &quot;Submit&quot;.</p>
+          <p>{type === 'dataset' && 'Upload your data, complete metadata fields, and prepare a README file. '}Complete the checklist and carefully review the {type} before you {type === 'dataset' && 'pay and '}submit.</p>
         </li>
         <li>
           <h3><i className="fas fa-eye-slash" aria-hidden="true" />Private for peer review option</h3>

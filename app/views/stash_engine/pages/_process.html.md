@@ -15,7 +15,7 @@ Upon curator approval, the Dryad DOI is officially registered and, if applicable
 
 Once your submission has been reviewed and approved by our team of curators, you will receive a notification of publication via email and your dataset will be made publicly available.
 
-If the data publication charge is not covered by a journal or your institution, or if you are not eligible for a fee waiver, an invoice will be generated and sent upon publication. If you require assistance with paying the invoice or readdressing an invoice, please respond directly to the invoice email.
+If the data publication charge is not covered by a journal or your institution, if you have not already paid for your submission, or if you are not eligible for a fee waiver, an invoice will be generated and sent upon publication. If you require assistance with paying the invoice or readdressing an invoice, please respond directly to the invoice email.
 
 ### Software publication with Zenodo
 
