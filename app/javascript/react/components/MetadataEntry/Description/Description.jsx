@@ -94,7 +94,7 @@ export default function Description({
   const checkSubmit = useCallback(debounce(submit, 1000), []);
 
   useEffect(() => {
-    //copy and do not rerender on change
+    // copy and do not rerender on change
     setDesc(`${dcsDescription.description}`);
   }, []);
 
