@@ -71,7 +71,7 @@
   font-size: .95em;
 }
 
-.markdown_editor .md_editor-buttons .md_editor-toggle button[disabled]{
+.markdown_editor .md_editor-buttons .md_editor-toggle button[aria-disabled]{
   background-color: #fff;
   color: #000;
   border: thin solid #d0d0d0;
@@ -79,7 +79,7 @@
   margin: -2px -2px 0;
 }
 
-.markdown_editor .md_editor-buttons .md_editor-toggle button[disabled]:after {
+.markdown_editor .md_editor-buttons .md_editor-toggle button[aria-disabled]:after {
   content: '';
   display: block;
   width: 100%;
