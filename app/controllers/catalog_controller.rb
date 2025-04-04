@@ -14,6 +14,8 @@ class CatalogController < ApplicationController
 
   helper StashEngine::ApplicationHelper
   include StashEngine::SharedController
+  include StashEngine::SharedSecurityController
+  before_action :require_login
 
   # layout 'blacklight_layout'
   # layout 'stash_engine/application'
