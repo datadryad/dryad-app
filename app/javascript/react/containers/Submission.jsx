@@ -132,15 +132,17 @@ function Submission({
       pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
       component: <Agreements
-        {...{
-          resource, setResource, user, fees, setFees,
-        }}
+        resource={resource}
+        setResource={setResource}
+        subFees={fees}
+        setSubFees={setFees}
         config={config_payments}
         form={change_tenant}
+        user={user}
         setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
-      preview: <Agreements resource={resource} user={user} previous={previous} preview fees={fees} config={config_payments} setFees={setFees} />,
+      preview: <Agreements {...{resource, user, previous}} preview subFees={fees} config={config_payments} setSubFees={setFees} />,
     },
   ];
 

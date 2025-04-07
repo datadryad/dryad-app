@@ -6,7 +6,7 @@ import Calculations from './Calculations';
 import CalculateFees from '../../CalculateFees';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, config, fees, setFees, setAuthorStep, preview = false,
+  resource, setResource, user, form, previous, config, subFees, setSubFees, setAuthorStep, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -16,6 +16,7 @@ export default function Agreements({
   const isSubmitter = user.id === submitter.id;
   const formRef = useRef(null);
   const [dpc, setDPC] = useState({});
+  const [fees, setFees] = useState(subFees);
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
   const [agree, setAgree] = useState(resource.accepted_agreement);
   const [reason, setReason] = useState('');
@@ -60,6 +61,12 @@ export default function Agreements({
         }
       });
   };
+
+  useEffect(() => {
+    if (Object.keys(fees).length > 0) {
+      setSubFees(fees);
+    }
+  }, [fees]);
 
   useEffect(() => {
     if (formRef.current) {
@@ -193,7 +200,7 @@ export default function Agreements({
               /* eslint-disable max-len */
               <>
                 <CalculateFees resource={resource} fees={fees} setFees={setFees} />
-                {fees.total ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for later payment, an additional {fees.invoice_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} administration fee will be charged.</p> : ''}
+                {fees.storage_fee ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for later payment, an additional {fees.invoice_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} administration fee will be charged.</p> : ''}
               </>
               /* eslint-enable max-len */
             )}
