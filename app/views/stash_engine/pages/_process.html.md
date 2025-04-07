@@ -8,14 +8,14 @@ If Dryad curators identify questions, problems, or areas for improvement, they w
 
 If your data submission is [private for peer review](/submission_process#private-for-peer-review), it will not be processed by our curators until you have released the submission for curation, or the associated manuscript is accepted by an integrated journal and the data submission is automatically released.
 
-Upon curator approval, the Dryad DOI is officially registered and, if applicable, the Data Publishing Charge (DPC) and any overage fees are invoiced. For assistance with invoices (e.g., re-addressing an invoice), please respond directly to the email with the invoice to connect with our billing team.
+Upon curator approval, the Dryad DOI is officially registered and, if applicable, the [Data Publishing Charge (DPC)](/requirements#cost) and any overage fees are invoiced. For assistance with invoices (e.g., re-addressing an invoice), please respond directly to the email with the invoice to connect with our billing team.
 
 
 ## Dataset publication
 
 Once your submission has been reviewed and approved by our team of curators, you will receive a notification of publication via email and your dataset will be made publicly available.
 
-If the data publication charge is not covered by a journal or your institution, if you have not already paid for your submission, or if you are not eligible for a fee waiver, an invoice will be generated and sent upon publication. If you require assistance with paying the invoice or readdressing an invoice, please respond directly to the invoice email.
+If the Data Publishing Charge is not covered by a journal or your institution, if you have not already paid for your submission, or if you are not eligible for a fee waiver, an invoice will be generated and sent upon publication. If you require assistance with paying the invoice or readdressing an invoice, please respond directly to the invoice email.
 
 ### Software publication with Zenodo
 
