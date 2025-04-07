@@ -49,6 +49,8 @@
 
   a {
     @extend %o-link__primary;
+    word-break: normal;
+    overflow-wrap: anywhere;
   }
 
   button {
