@@ -47,6 +47,10 @@
     font-weight: normal;
   }
 
+  td:last-child {
+    text-align: center;
+  }
+
   a {
     @extend %o-link__primary;
     word-break: normal;
