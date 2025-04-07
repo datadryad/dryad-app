@@ -332,6 +332,30 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         end
       end
     end
+
+    describe '#waiver fee' do
+      let(:type) { 'waiver' }
+      let(:options) { {} }
+      let(:identifier) { create(:identifier, payment_type: 'waiver') }
+      let(:resource) { create(:resource, identifier: identifier) }
+
+      before do
+        get resource_fee_calculator_url(resource), params: options
+      end
+
+      it 'does not fail' do
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq({ 'some_fee' => 12 })
+      end
+
+      it 'calls new with the correct type' do
+        expect(FeeCalculatorService).to have_received(:new).with('waiver')
+      end
+
+      it 'calls calculate on the service instance with the correct params' do
+        expect(service_instance).to have_received(:calculate).with(options, resource: resource)
+      end
+    end
   end
 
   describe 'examples in documentation table' do
