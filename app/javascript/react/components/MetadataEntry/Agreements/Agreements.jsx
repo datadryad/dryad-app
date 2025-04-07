@@ -200,7 +200,7 @@ export default function Agreements({
               /* eslint-disable max-len */
               <>
                 <CalculateFees resource={resource} fees={fees} setFees={setFees} />
-                {fees.storage_fee ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for later payment, an additional {fees.invoice_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} administration fee will be charged.</p> : ''}
+                {fees.storage_fee ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for later payment, an additional {fees.invoice_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} administration fee will be charged.</p> : null}
               </>
               /* eslint-enable max-len */
             )}
