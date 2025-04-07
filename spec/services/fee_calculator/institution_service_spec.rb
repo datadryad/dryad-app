@@ -6,9 +6,9 @@ module FeeCalculator
 
     let(:options) { {} }
     let(:resource) { nil }
-    let(:no_charges_response) { { service_fee: 0, dpc_fee: 0, storage_fee: 0, total: 0 } }
+    let(:no_charges_response) { { service_fee: 0, dpc_fee: 0, storage_fee: 0, total: 0, storage_fee_label: 'Large data fee' } }
 
-    subject { described_class.new(options, resource: resource).call }
+    subject { described_class.new(options, resource: resource).call.except(:storage_fee_label) }
 
     before do
       mock_solr!
@@ -46,7 +46,7 @@ module FeeCalculator
 
           it {
             is_expected.to eq({ service_fee: 5_000, dpc_fee: 0, total: 5_000,
-                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
+              storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
           }
         end
 
@@ -56,7 +56,7 @@ module FeeCalculator
           # it would be using same values but multiplied with round(percent * range max)
           it {
             is_expected.to eq({ service_fee: 5_000, dpc_fee: 30_250, total: 35_250,
-                                storage_by_tier: { 1 => 30 * 259, 2 => 30 * 464, 4 => 144 * 2_153 } })
+              storage_by_tier: { 1 => 30 * 259, 2 => 30 * 464, 4 => 144 * 2_153 } })
           }
         end
 
@@ -88,7 +88,7 @@ module FeeCalculator
 
             it {
               is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 1_000,
-                                  storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
+                storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
             }
           end
 
@@ -98,7 +98,7 @@ module FeeCalculator
             # it would be using same values but multiplied with round(percent * range max)
             it {
               is_expected.to eq({ service_fee: 1_000, dpc_fee: 30_250, total: 31_250,
-                                  storage_by_tier: { 1 => 30 * 259, 2 => 30 * 464, 4 => 144 * 2_153 } })
+                storage_by_tier: { 1 => 30 * 259, 2 => 30 * 464, 4 => 144 * 2_153 } })
             }
           end
 
@@ -140,7 +140,7 @@ module FeeCalculator
 
           it {
             is_expected.to eq({ service_fee: 5_000, dpc_fee: 0, total: 12_182,
-                                storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
+              storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
           }
         end
 
@@ -150,7 +150,7 @@ module FeeCalculator
           # it would be using same values but multiplied with round(percent * range max)
           it {
             is_expected.to eq({ service_fee: 5_000, dpc_fee: 30_250, total: 366_972,
-                                storage_by_tier: { 1 => 30 * 259, 2 => 30 * 464, 4 => 144 * 2_153 } })
+              storage_by_tier: { 1 => 30 * 259, 2 => 30 * 464, 4 => 144 * 2_153 } })
           }
         end
 
@@ -182,7 +182,7 @@ module FeeCalculator
 
             it {
               is_expected.to eq({ service_fee: 1_000, dpc_fee: 0, total: 8_182,
-                                  storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
+                storage_by_tier: { 1 => 259, 2 => 464, 4 => 6_459 } })
             }
           end
 
@@ -197,7 +197,7 @@ module FeeCalculator
 
             it {
               is_expected.to eq({ service_fee: 1_000, dpc_fee: 30_250, total: 362_972,
-                                  storage_by_tier: { 1 => 7770, 2 => 13_920, 4 => 310_032 } })
+                storage_by_tier: { 1 => 7770, 2 => 13_920, 4 => 310_032 } })
             }
           end
 
@@ -217,7 +217,9 @@ module FeeCalculator
       let!(:tenant) { create(:tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf) }
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
 
-      context 'on first publish' do
+      subject { described_class.new(options, resource: resource).call }
+
+      context 'on first submit' do
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         context 'without invoice fee' do
@@ -257,7 +259,7 @@ module FeeCalculator
             context 'when files_size changes over free tier limit' do
               let(:new_files_size) { 100_000_000_000 }
 
-              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464 }) }
+              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464, storage_fee_label: 'Large data fee' }) }
             end
 
             context 'with storage_size over 2TB limit' do
@@ -309,7 +311,7 @@ module FeeCalculator
             context 'when files_size changes over free tier limit' do
               let(:new_files_size) { 100_000_000_000 }
 
-              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, invoice_fee: 199, total: 663 }) }
+              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, invoice_fee: 199, total: 663, storage_fee_label: 'Large data fee' }) }
             end
 
             context 'with storage_size over 2TB limit' do
@@ -323,9 +325,7 @@ module FeeCalculator
         end
       end
 
-      context 'on second publish' do
-        let(:prev_resource) { create(:resource, identifier: identifier, tenant: tenant, created_at: 1.second.ago) }
-        let!(:ca) { create(:curation_activity, resource: prev_resource, status: 'published') }
+      context 'on second submit' do
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         context 'without invoice fee' do
@@ -366,14 +366,14 @@ module FeeCalculator
             context 'when files_size changes from free tier to another' do
               let(:new_files_size) { 100_000_000_000 }
 
-              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464 }) }
+              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464, storage_fee_label: 'Large data fee' }) }
             end
 
             context 'when files_size changes from non free tier to another' do
               let(:prev_files_size) { 100_000_000_000 }
               let(:new_files_size) { 900_000_000_000 }
 
-              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 3_883, total: 3_883 }) }
+              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 3_883, total: 3_883, storage_fee_label: 'Large data fee' }) }
             end
 
             context 'with storage_size over 2TB limit' do
@@ -433,14 +433,14 @@ module FeeCalculator
             context 'when files_size changes from free tier to another' do
               let(:new_files_size) { 100_000_000_000 }
 
-              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, invoice_fee: 199, total: 663 }) }
+              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, invoice_fee: 199, total: 663, storage_fee_label: 'Large data fee' }) }
             end
 
             context 'when files_size changes from non free tier to another' do
               let(:prev_files_size) { 100_000_000_000 }
               let(:new_files_size) { 900_000_000_000 }
 
-              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 3_883, invoice_fee: 199, total: 4_082 }) }
+              it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 3_883, invoice_fee: 199, total: 4_082, storage_fee_label: 'Large data fee' }) }
             end
 
             context 'with storage_size over 2TB limit' do

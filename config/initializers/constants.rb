@@ -9,6 +9,7 @@ PRODUCT_NAME_MAPPER = {
   service_fee: 'Annual service fee',
   dpc_fee: 'Datasets count fee',
   invoice_fee: 'Invoice fee',
-  storage_fee: 'Storage fee',
+  storage_fee: 'Large data fee',
+  individual_storage_fee: 'Data Publishing Charge',
   total: 'Total'
 }
