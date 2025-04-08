@@ -135,7 +135,7 @@ Partner organizations that sponsor DPCs all fully cover author data submissions 
       All fees are listed in USD
     </caption>
     <thead>
-      <tr class="callout"><th colspan="2" style="text-align: center;">Rates for large (over 10GB) datasets<p style="font-weight: normal; margin: 0 auto">Effective March 25, 2025</p></th></tr>
+      <tr class="callout"><th colspan="2" style="text-align: center;">Rates for large (over 10GB) datasets<p style="font-weight: normal; margin: 0 auto">Effective May 1, 2025</p></th></tr>
       <tr>
         <th>Dataset size</th>
         <th>Large dataset fee</th>
