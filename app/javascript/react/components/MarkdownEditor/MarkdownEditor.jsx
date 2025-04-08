@@ -152,7 +152,10 @@ function MilkdownEditor({
   }, [initialCode]);
 
   useEffect(() => {
-    if (saveVal !== defaultVal) onChange(saveVal);
+    if (saveVal !== defaultVal) {
+      onChange(saveVal);
+      setDefaultVal(saveVal);
+    }
   }, [saveVal]);
 
   useEffect(() => {
