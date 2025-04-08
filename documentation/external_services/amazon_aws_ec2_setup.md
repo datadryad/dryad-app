@@ -414,10 +414,15 @@ make assets
 make build
 ```
 
-Configure systemd [service](./anubis@.service)
+Change configuration files 
+
+`vim run/anubis@.service` and update with [this](./anubis@.service)
+
+`vim run/default.env` and add `POLICY_FNAME=/home/ec2-user/anubis/data/botPolicies.json`
+
+Create systemd service
 ```
 cd ~/anubis/
-vim run/anubis@.service
 sudo install -D ./run/anubis@.service /etc/systemd/system
 sudo systemctl enable anubis@default.service
 sudo systemctl start anubis@default.service
@@ -433,7 +438,7 @@ apache_restart.sh
 ```
 
 ```
-RewriteRule ^/(.*)$ balancer://puma_cluster%{REQUEST_URI} [P,QSA,L,NE]
+RewriteRule ^/(.*)$ balancer://anubis_cluster%{REQUEST_URI} [P,QSA,L,NE]
 
 # Set X-Real-IP header
 RequestHeader set X-Real-IP "%{REMOTE_ADDR}s"
