@@ -99,7 +99,7 @@ const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', '
   'table', 'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
-  id, initialValue, replaceValue, onChange, buttons = defaultButtons,
+  id, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
 }) {
   const [loading, editor] = useInstance();
 
@@ -139,11 +139,11 @@ function MilkdownEditor({
         const editorView = ctx.get(editorViewCtx);
         const serializer = ctx.get(serializerCtx);
         setDefaultVal(serializer(editorView.state.doc));
-      } else if (editType === 'markdown') onChange(markdown);
+      } else if (editType === 'markdown') onReplace(markdown);
     } catch {
       setParseError(true);
       setEditType('markdown');
-      if (markdown !== initialValue) onChange(markdown);
+      if (markdown !== initialValue) onReplace(markdown);
     }
   });
 
