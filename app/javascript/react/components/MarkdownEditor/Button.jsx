@@ -27,20 +27,20 @@ const labels = {
 };
 
 const icons = {
-  undo: <i className="fa fa-undo" aria-hidden="true" />,
-  redo: <i className="fa fa-repeat" aria-hidden="true" />,
-  strong: <i className="fa fa-bold" aria-hidden="true" />,
-  emphasis: <i className="fa fa-italic" aria-hidden="true" />,
-  link: <i className="fa fa-link" aria-hidden="true" />,
-  inlineCode: <i className="fa fa-terminal" aria-hidden="true" />,
-  strike_through: <i className="fa fa-strikethrough" aria-hidden="true" />,
-  bullet_list: <i className="fa fa-list" aria-hidden="true" />,
-  ordered_list: <i className="fa fa-list-ol" aria-hidden="true" />,
-  indent: <i className="fa fa-indent" aria-hidden="true" />,
-  outdent: <i className="fa fa-outdent" aria-hidden="true" />,
-  blockquote: <i className="fa fa-quote-left" aria-hidden="true" />,
-  code_block: <i className="fa fa-code" aria-hidden="true" />,
-  table: <i className="fa fa-table" aria-hidden="true" />,
+  undo: <i className="fas fa-undo" aria-hidden="true" />,
+  redo: <i className="fas fa-rotate-right" aria-hidden="true" />,
+  strong: <i className="fas fa-bold" aria-hidden="true" />,
+  emphasis: <i className="fas fa-italic" aria-hidden="true" />,
+  link: <i className="fas fa-link" aria-hidden="true" />,
+  inlineCode: <i className="fas fa-terminal" aria-hidden="true" />,
+  strike_through: <i className="fas fa-strikethrough" aria-hidden="true" />,
+  bullet_list: <i className="fas fa-list" aria-hidden="true" />,
+  ordered_list: <i className="fas fa-list-ol" aria-hidden="true" />,
+  indent: <i className="fas fa-indent" aria-hidden="true" />,
+  outdent: <i className="fas fa-outdent" aria-hidden="true" />,
+  blockquote: <i className="fas fa-quote-left" aria-hidden="true" />,
+  code_block: <i className="fas fa-code" aria-hidden="true" />,
+  table: <i className="fas fa-table" aria-hidden="true" />,
 };
 
 function LinkMenu({editor, editorId, active}) {
