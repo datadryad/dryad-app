@@ -370,10 +370,78 @@ Set up AWS CloudWatch Agent
 ======================================
 
 AWS CloudWatch Agent is installed on all servers and is used for:
- - Serving metrics related to disk usage.
- - Stream log files to Cloudwatch
+- Serving metrics related to disk usage.
+- Stream log files to Cloudwatch
 
 Check [here](./amazon_cloudwatch_config.md) CloudWatch Agent configuration details and examples.
+
+Set up Anubis
+======================================
+
+Detailed Anubis documentation can be found [here](https://anubis.techaro.lol/).
+Anubis is installed on all servers and used as a bridge between Apache and Puma.
+
+Install requirements:
+--------------------------------------
+- Go language - version 1.24.2 or newer
+- `brotli.x86_64` package
+```
+cd ~
+sudo yum install brotli.x86_64
+wget https://dl.google.com/go/go1.24.2.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.24.2.linux-amd64.tar.gz
+rm go1.24.2.linux-amd64.tar.gz
+```
+
+Update `~/.bashrc` and add `export PATH=$PATH:/usr/local/go/bin`.
+
+Test the installation with `go version`.
+
+Download and setup Anubis
+--------------------------------------
+Download and build
+```
+cd ~
+git clone https://github.com/TecharoHQ/anubis.git
+cd anubis/
+
+make prebaked-build
+
+make deps
+npm install --save-exact --save-dev esbuild
+./node_modules/.bin/esbuild --version
+make assets
+make build
+```
+
+Configure systemd [service](./anubis@.service)
+```
+cd ~/anubis/
+vim run/anubis@.service
+sudo install -D ./run/anubis@.service /etc/systemd/system
+sudo systemctl enable anubis@default.service
+sudo systemctl start anubis@default.service
+sudo systemctl status anubis@default.service
+```
+
+Update Apache configuration
+--------------------------------------
+Add anubis cluster ando point apache to it
+```
+sudo vim ~/apache/conf.d/datadryad.org.conf
+apache_restart.sh
+```
+
+```
+RewriteRule ^/(.*)$ balancer://puma_cluster%{REQUEST_URI} [P,QSA,L,NE]
+
+# Set X-Real-IP header
+RequestHeader set X-Real-IP "%{REMOTE_ADDR}s"
+
+<Proxy balancer://anubis_cluster>
+  BalancerMember http://localhost:8923 max=64 acquire=10 timeout=600 Keepalive=On
+</Proxy>
+```
 
 Install Google Chrome Driver
 ======================================
