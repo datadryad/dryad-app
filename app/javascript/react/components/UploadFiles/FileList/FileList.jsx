@@ -30,7 +30,7 @@ const file_list = ({
             <th scope="col">Download</th>
             <th scope="col">Type</th>
             <th scope="col">Size</th>
-            <th scope="col">Actions</th>
+            <th scope="col">Remove</th>
           </tr>
         </thead>
         <tbody>
