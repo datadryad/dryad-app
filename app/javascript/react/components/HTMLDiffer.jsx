@@ -27,7 +27,7 @@ export default function HTMLDiffer({current, previous}) {
           className="diff-toggle"
           aria-current={!showFinal}
           aria-controls={diffRefId}
-          disabled={!showFinal}
+          aria-disabled={!showFinal || null}
           onClick={() => setShowFinal(false)}
         >
           View changes
@@ -37,7 +37,7 @@ export default function HTMLDiffer({current, previous}) {
           className="diff-toggle"
           aria-current={showFinal}
           aria-controls={refId}
-          disabled={showFinal}
+          aria-disabled={showFinal || null}
           onClick={() => setShowFinal(true)}
         >
           View final

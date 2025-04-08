@@ -38,11 +38,11 @@ document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   togs.forEach(tog => {
     tog.addEventListener('click', () => {
       togs.forEach(t => {
-        t.disabled = false;
+        t.removeAttribute('aria-disabled')
         t.setAttribute('aria-current', false)
       })
       document.getElementById('notification_date').value = tog.dataset.value
-      tog.disabled = true
+      tog.setAttribute('aria-disabled', true)
       tog.setAttribute('aria-current', true)
     })
   })

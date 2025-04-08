@@ -26,11 +26,11 @@
 
 <script type="text/javascript">
   document.getElementById('search_open').addEventListener('click', (e) => {
-    e.target.toggleAttribute('aria-expanded')
-    e.target.firstElementChild.classList.toggle('fa-sliders')
-    e.target.firstElementChild.classList.toggle('fa-square-caret-up')
     document.getElementById('search_form').toggleAttribute('hidden')
     document.getElementById('save_buttons').toggleAttribute('hidden')
+    e.currentTarget.setAttribute('aria-expanded', document.getElementById('search_form').hidden)
+    e.currentTarget.firstElementChild.classList.toggle('fa-sliders')
+    e.currentTarget.firstElementChild.classList.toggle('fa-square-caret-up')    
   })
   const cancelClick = (e) => {
     e.preventDefault();
