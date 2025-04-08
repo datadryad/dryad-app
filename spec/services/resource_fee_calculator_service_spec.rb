@@ -32,4 +32,11 @@ describe ResourceFeeCalculatorService do
 
     it_should_behave_like 'calling FeeCalculatorService', 'publisher'
   end
+
+  context 'with waiver type' do
+    let(:identifier) { create(:identifier, payment_type: 'waiver') }
+    let(:resource) { create(:resource, identifier: identifier) }
+
+    it_should_behave_like 'calling FeeCalculatorService', 'waiver'
+  end
 end
