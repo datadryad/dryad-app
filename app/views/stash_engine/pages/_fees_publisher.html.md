@@ -1,5 +1,7 @@
 # Publisher and society partner fees
 
+_Effective March 25, 2025_
+
 Publishing organizations of all kinds, as well as academic societies, partner with Dryad to make our services available to their researchers at a reduced rate. They trust us to provide individualized support to authors, and to curate, publish, and preserve data in the most economical way.
 
 Our publisher and society partners also benefit from:
@@ -14,20 +16,21 @@ Our publisher and society partners also benefit from:
   <p style="text-align: center;">Learn more about <a href="/join_us">Dryad services and partner benefits</a></p>
 </div>
 
+The annual partner fee is calculated as a total of the anticipated [Data Publishing Charge (DPC)](#data-publication-charge) for the coming year, plus the [Annual Service Fee](#annual-service-fee). DPCs are adjusted to reflect actual usage at year-end.
 
-The annual partner fee is calculated as a total of the anticipated Data Publication Charge (DPC) for the coming year, plus the Annual Service Fee. DPCs are adjusted to reflect actual usage at year-end.
+Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule.
 
-Read on for a detailed fee schedule.
+<div hidden>
 
-[Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule.]: #
+## Fee calculator
+
+</div>
+
+<%= render partial: 'fee_calculator/publisher' %>
 
 <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us</a> with questions, to discuss partnership, or to confirm the estimated partner fee for your organization.
 
-## Detailed fee schedule
-
-_Effective March 25, 2025_
-
-### Data Publication Charge
+## Data Publishing Charge
 
 The DPC is based on the variable costs of curating, publishing, and preserving one dataset — that is, one package of metadata and data files related to one course of investigation. Pricing is designed to scale with use, with discounts based on volume. 
 
@@ -46,91 +49,7 @@ The DPC is based on the variable costs of curating, publishing, and preserving o
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>0-5</td>
-        <td>$0</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>6-15</td>
-        <td>$1,650</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>16-25</td>
-        <td>$2,700</td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td>26-50</td>
-        <td>$5,350</td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>51-75</td>
-        <td>$7,950</td>
-      </tr>
-      <tr>
-        <td>6</td>
-        <td>76-100</td>
-        <td>$10,500</td>
-      </tr>
-      <tr>
-        <td>7</td>
-        <td>101-150</td>
-        <td>$15,600</td>
-      </tr>
-      <tr>
-        <td>8</td>
-        <td>151-200</td>
-        <td>$20,500</td>
-      </tr>
-      <tr>
-        <td>9</td>
-        <td>201-250</td>
-        <td>$25,500</td>
-      </tr>
-      <tr>
-        <td>10</td>
-        <td>251-300</td>
-        <td>$30,250</td>
-      </tr>
-      <tr>
-        <td>11</td>
-        <td>301-350</td>
-        <td>$35,000</td>
-      </tr>
-      <tr>
-        <td>12</td>
-        <td>351-400</td>
-        <td>$39,500</td>
-      </tr>
-      <tr>
-        <td>13</td>
-        <td>401-450</td>
-        <td>$44,000</td>
-      </tr>
-      <tr>
-        <td>14</td>
-        <td>451-500</td>
-        <td>$48,750</td>
-      </tr>
-      <tr>
-        <td>15</td>
-        <td>501-550</td>
-        <td>$53,500</td>
-      </tr>
-      <tr>
-        <td>16</td>
-        <td>551-600</td>
-        <td>$58,250</td>
-      </tr>
-      <tr>
-        <td>17</td>
-        <td>>600</td>
-        <td>Contact us to discuss rates</td>
-      </tr>
+      <%= render partial: 'fee_calculator/table_dpc' %>
     </tbody>
   </table>
 </div>
@@ -152,36 +71,13 @@ Datasets larger than 10GB are billed individually as follows. Publisher and soci
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>10-50GB</td>
-        <td>$259</td>
-      </tr>
-      <tr>
-        <td>50-100GB</td>
-        <td>$464</td>
-      </tr>
-      <tr>
-        <td>100-250GB</td>
-        <td>$1,132</td>
-      </tr>
-      <tr>
-        <td>250-500GB</td>
-        <td>$2,153</td>
-      </tr>
-      <tr>
-        <td>500GB-1TB</td>
-        <td>$4,347</td>
-      </tr>
-      <tr>
-        <td>1-2TB</td>
-        <td>$8,809</td>
-      </tr>
+      <%= render partial: 'fee_calculator/table_ldf' %>
     </tbody>
   </table>
 </div>
 </div>
 
-### Annual Service Fee
+## Annual Service Fee
 
 Partners pay a flat Annual Service Fee to help cover Dryad’s fixed costs for service, infrastructure and operations. Our fixed expenses include: partner support, training, and outreach; operation, maintenance and development of the Dryad platform; financial and legal administration; and leadership, oversight, and strategy development. As a global virtual organization, Dryad does not operate a physical office. Consult our [annual reports](https://github.com/datadryad/governance/tree/main/annual-reports) for details on Dryad expenses.
 
@@ -202,56 +98,7 @@ Annual Service Fees for Dryad publisher and society partners are tiered accordin
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>$500,000 and below</td>
-        <td>$1,000</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>$500,000-$1 million</td>
-        <td>$2,500</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>$1-$5 million</td>
-        <td>$5,000</td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td>$5-$10 million</td>
-        <td>$7,500</td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>$10-25 million</td>
-        <td>$10,000</td>
-      </tr>
-      <tr>
-        <td>6</td>
-        <td>$25-$50 million</td>
-        <td>$12,500</td>
-      </tr>
-      <tr>
-        <td>7</td>
-        <td>$50-$100 million</td>
-        <td>$15,000</td>
-      </tr>
-      <tr>
-        <td>8</td>
-        <td>$100-$200 million</td>
-        <td>$22,500</td>
-      </tr>
-      <tr>
-        <td>9</td>
-        <td>$200-500 million</td>
-        <td>$30,000</td>
-      </tr>
-      <tr>
-        <td>10</td>
-        <td>$500 million +</td>
-        <td>$40,000</td>
-      </tr>
+      <%= render partial: 'fee_calculator/table_asf', locals: {calc_model: FeeCalculator::PublisherService.new} %>
     </tbody>
   </table>
 </div>
@@ -281,82 +128,13 @@ To promote transparency and equity among our partners Dryad does not offer indiv
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>$500,000 and below</td>
-        <td>$500</td>
-        <td>$750</td>
-        <td>$1,000</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>$500,000-$1 million</td>
-        <td>$1,250</td>
-        <td>$1,875</td>
-        <td>$2,500</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>$1-$5 million</td>
-        <td>$2,500</td>
-        <td>$3,750</td>
-        <td>$5,000</td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td>$5-$10 million</td>
-        <td>$3,750</td>
-        <td>$5,625</td>
-        <td>$7,500</td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>$10-25 million</td>
-        <td>$5,000</td>
-        <td>$7,500</td>
-        <td>$10,000</td>
-      </tr>
-      <tr>
-        <td>6</td>
-        <td>$25-$50 million</td>
-        <td>$6,250</td>
-        <td>$9,375</td>
-        <td>$12,500</td>
-      </tr>
-      <tr>
-        <td>7</td>
-        <td>$50-$100 million</td>
-        <td>$7,500</td>
-        <td>$11,250</td>
-        <td>$15,000</td>
-      </tr>
-      <tr>
-        <td>8</td>
-        <td>$100-$200 million</td>
-        <td>$11,250</td>
-        <td>$16,875</td>
-        <td>$22,500</td>
-      </tr>
-      <tr>
-        <td>9</td>
-        <td>$200-500 million</td>
-        <td>$15,000</td>
-        <td>$22,500</td>
-        <td>$30,000</td>
-      </tr>
-      <tr>
-        <td>10</td>
-        <td>$500 million +</td>
-        <td>$20,000</td>
-        <td>$30,000</td>
-        <td>$40,000</td>
-      </tr>
+      <%= render partial: 'fee_calculator/table_myc', locals: {calc_model: FeeCalculator::PublisherService.new} %>
     </tbody>
   </table>
 </div>
 </div>
 
-### Total fees
+## Total fees
 
 The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $1,000 to $98,250 depending on the volume of data publications and organization reported publishing expenditure or revenue.
 

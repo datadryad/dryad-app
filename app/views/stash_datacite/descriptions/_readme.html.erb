@@ -1,52 +1,17 @@
 <% if !review.readme_content.blank? %>
-<% content = review.readme_content %>
-<% hide_final = false %>
-<%# if content.match(/^\\#/) %>
-  <%# reformat = markdown_render content %>
-  <%# content = ActionView::Base.full_sanitizer.sanitize(reformat) %>
-<%# end %>
-<div id="landing_readme">
-  <% if highlight_fields.include?('technical_info') %>
-    <% old_content = @resource.previous_curated_resource.complete_readme %>
-    <p><span class="ins" style="font-size: 1.3em; padding: 8px 0; margin-right: 50px">README changed</span><%if old_content %><button type="button" class="o-button__plain-text1 diff-toggle" style="margin-right: 10px" disabled>View changes</button><button type="button" class="o-button__plain-text1 diff-toggle">View final</button><% end %></p>
-    <% if old_content %>
-      <% hide_final = true %>
-      <div class="t-landing__text-wall highlight-readme">
-        <% if !content.match(/^# /) %>
-          <h2>README</h2>
-        <% end %>
-        <% old = markdown_render old_content.sub(/^# /, '# README: ') %>
-        <% newc = markdown_render content.sub(/^# /, '# README: ') %>
-        <%= markdown_differ(old, newc) %>
-      </div>
+  <% content = review.readme_content %>
+  <div id="landing_readme">
+    <% readme_html = markdown_render content.sub(/^# /, '# README: ') %>
+    <% readme_parsed = Nokogiri::HTML5::DocumentFragment.parse(readme_html) %>
+    <% h2 = readme_parsed.css('h2')&.first&.content %>
+    <% if params[:controller].include?('landing') %>
+      <h2 class="expand-button"><button id="readme" aria-expanded="false" aria-controls="readme-sec"><%= h2.presence || 'README' %></button></h2>
+    <% else %>
+      <h2><%= h2.presence || 'README' %></h2>
     <% end %>
-  <% end %>
-  <% readme_html = markdown_render content.sub(/^# /, '# README: ') %>
-  <% readme_parsed = Nokogiri::HTML5::DocumentFragment.parse(readme_html) %>
-  <% h2 = readme_parsed.css('h2')&.first&.content %>
-  <% if params[:controller].include?('landing') %>
-    <h2 tabindex="0" id="readme" class="expand-button" role="button" aria-expanded="false" aria-controls="readme-sec"><%= h2.presence || 'README' %></h2>    
-  <% else %>
-    <h2 <% if highlight_fields.include?('technical_info') %>hidden<% end %>><%= h2.presence || 'README' %></h2>
-  <% end %>
-  <div id="readme-sec" class="t-landing__text-wall" <% if params[:controller].include?('landing') || highlight_fields.include?('technical_info') %>hidden<% end %>>
-    <% readme_parsed.search('h2')&.first&.remove %>
-    <%= readme_parsed.to_html.html_safe %>
+    <div id="readme-sec" class="t-landing__text-wall" <% if params[:controller].include?('landing') %>hidden<% end %>>
+      <% readme_parsed.search('h2')&.first&.remove %>
+      <%= display_desc(readme_parsed).html_safe %>
+    </div>
   </div>
-</div>
-<% if highlight_fields.include?('technical_info') %>
-  <script type="text/javascript">
-    [...document.getElementsByClassName('diff-toggle')].forEach(button => {
-      button.addEventListener('click', (e) => {
-        p = e.target.parentElement
-        for (const b of p.querySelectorAll('button')) {
-          b.toggleAttribute('disabled')
-        }
-        p.nextElementSibling.nextElementSibling.nextElementSibling.toggleAttribute('hidden')
-        p.nextElementSibling.nextElementSibling.toggleAttribute('hidden')
-        p.nextElementSibling.toggleAttribute('hidden')        
-      })
-    })
-  </script>
-<% end %>
 <% end %>

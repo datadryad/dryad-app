@@ -59,6 +59,11 @@
     height: 100%;
     margin-bottom: 0;
   }
+
+  .o-global-search__input:focus,
+  *:focus, *:focus-visible {
+    outline: 2px solid white;
+  }
 }
 
 .o-banner__tagline {
@@ -163,6 +168,13 @@
       padding-right: 1ch;
     }
   }
+  @media (max-width: 345px) {
+    flex-direction: column;
+    .o-banner-explore {
+      border-right: none;
+      line-height: 1;
+    }
+  }
 }
 
 .o-banner__credit {
@@ -190,8 +202,8 @@
 
   @media (max-width: $screen-md-min) {
     font-size: .66rem;
-    line-height: 0;
-    margin-bottom: -1rem;
+    line-height: 1;
+    margin: -.5rem 0 -1.5rem;
   }
 }
 

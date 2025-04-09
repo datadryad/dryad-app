@@ -59,7 +59,7 @@ function Submission({
       fail: (review || step.index > 1) && abstractCheck(resource),
       component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
-      preview: <DescPreview resource={resource} previous={previous} />,
+      preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Subjects',
@@ -178,14 +178,19 @@ function Submission({
   }, [review, location]);
 
   useEffect(() => {
+    const url = window.location.search.slice(1);
     const main = document.getElementById('maincontent');
     if (review && step.name === 'Create a submission') {
       main.classList.add('submission-review');
+      if (url) document.querySelector(`*[data-slug=${url}]`)?.focus();
+      window.history.pushState(null, null, null);
     } else if (review) {
       main.classList.remove('submission-review');
-    } else if (step.name !== 'Create a submission') {
+    } else {
+      document.querySelector('#submission-header h2')?.focus();
+    }
+    if (step.name !== 'Create a submission') {
       const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
-      const url = window.location.search.slice(1);
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
     }
   }, [review, step]);
@@ -210,8 +215,11 @@ function Submission({
       } else if (steps.find((c) => c.fail || c.pass)) {
         setStep(steps.find((c) => !c.pass));
       }
-    } else if (resource.identifier.publication_date) {
-      document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
+    } else {
+      document.documentElement.classList.add('preview_submission');
+      if (resource.identifier.publication_date) {
+        document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
+      }
     }
   }, []);
 
@@ -308,7 +316,7 @@ function Submission({
           <div id="submission-step" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
             <div ref={subRef}>
               <div id="submission-header">
-                <h2 className="o-heading__level2">{step.name}</h2>
+                <h2 className="o-heading__level2" tabIndex="-1">{step.name}</h2>
                 <div role="status">
                   <div className="saving_text" hidden>Saving&hellip;</div>
                   <div className="saved_text" hidden>All progress saved</div>

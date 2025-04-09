@@ -133,7 +133,7 @@ module StashEngine
 
     amoeba do
       include_association %i[authors generic_files contributors datacite_dates descriptions geolocations temporal_coverages publication_years
-                             publisher related_identifiers resource_type rights flag sizes resources_subjects resource_publication roles]
+                             publisher related_identifiers resource_type rights flag sizes resources_subjects resource_publications roles]
       customize(->(_, new_resource) {
         # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
         new_resource.current_resource_state_id = nil
@@ -805,6 +805,13 @@ module StashEngine
     def previously_public?
       prev = self.class.where(identifier_id: identifier_id).where('created_at < ?', created_at).where(meta_view: true)
       prev.count.positive?
+    end
+
+    def previously_published?
+      # ignoring the current resource, is there an embargoed or published status previous this point for this identifier?
+      identifier.curation_activities
+        .where('stash_engine_curation_activities.resource_id < ? and status in (?)', id, %w[published embargoed])
+        .exists?
     end
 
     # -----------------------------------------------------------

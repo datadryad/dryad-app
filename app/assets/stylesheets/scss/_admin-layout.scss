@@ -148,18 +148,25 @@
   }
 
   #edit_fields-form {
-    columns: 6;
+    @media (min-width: 1071px) {
+      &.curator { columns: 5 }
+      &:not(.curator) { columns: 6 }
+    }
     @media (max-width: 1070px) { columns: 5 }
     @media (max-width: 920px) { columns: 3 }
     @media (max-width: 480px) { columns: 2 }
+    @media (max-width: 315px) { columns: 1 }
 
     div {
       margin-bottom: 4px;
+      break-inside: avoid-column;
+      break-inside: avoid;
     }
 
     &.show-help {
       columns: 3;
-      @media (max-width: 620px) { columns: 2 }
+      @media (max-width: 650px) { columns: 2 }
+      @media (max-width: 320px) { columns: 1 }
       div {
         display: table;
         
@@ -232,13 +239,15 @@
   max-height: 10000px;
   width: 100%;
   transition: max-height 0.3s ease-in;
+  visibility: visible;
 
   &[hidden] {
     display: block !important;
     overflow: hidden !important;
     max-height: 0 !important;
     width: 0 !important;
-    transition: max-height 0.3s cubic-bezier(0, 1, 0.5, 1), width 0s 0.3s;
+    visibility: hidden;
+    transition: max-height 0.3s cubic-bezier(0, 1, 0.5, 1), width 0s 0.3s, visibility 0s 0.3s;
   }
 }
 
@@ -246,13 +255,15 @@
   width: auto;
   height: auto;
   transition: width 0s 0.2s, height 0s 0.2s;
+  visibility: visible;
 
   &[hidden] {
     display: block !important;
     overflow: hidden !important;
     width: 0 !important;
     height: 0 !important;
-    transition: width 0s 0.2s, height 0s 0.2s;
+    visibility: hidden;
+    transition: width 0s 0.2s, height 0s 0.2s, visibility 0s 0.2s;
   }
 }
 
@@ -275,6 +286,8 @@
 }
 
 .admin-dashboard-buttons {
+  box-sizing: border-box;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;

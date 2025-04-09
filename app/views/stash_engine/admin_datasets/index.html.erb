@@ -46,7 +46,7 @@
         </div>
       </div>
       <span class="input-line">
-        <span><b>Notification date:</b> <span id="notification_date"><%= formatted_date(r.process_date.notification_date) %></span></span>
+        <span><b>Notification date:</b> <span id="notification_date_<%= @identifier.id %>"><%= formatted_date(r.process_date.notification_date) %></span></span>
         <% if r.process_date.notification_date && policy([:stash_engine, :admin_datasets]).notification_date? %>
           <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'notification_date'), method: :get, local: false) do %>
             <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit notification date" title="Edit notification date"><i class="fas fa-pencil" aria-hidden="true"></i></button>
@@ -64,12 +64,12 @@
         <% end %>
       </span>
       <span class="input-line">
-        <b>Current Editor:</b>
-        <span id="editor_name" class="input-line">
+        <b>Current editor:</b>
+        <span id="editor_name<%= r.id%>" class="input-line">
           <%= r.editor&.name || "<em>None</em>".html_safe %>
           <% if r.editor.present? && policy(r).curate? %>
             <%= form_with(url: logout_resource_path(id: r&.id), method: :post, local: false) do %>
-              <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Logout current editor" title="Logout current editor"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+              <button class="o-button__plain-text7" aria-label="Logout current editor" title="Logout current editor"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
             <% end %>
           <% end %>
         </span>
@@ -115,7 +115,7 @@
           <% end %>
         <% end %>
       </span>
-      <span id="related_works_list" class="child-details"><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ') %> <%= r.resource_publication&.manuscript_number&.presence || ''%></span>
+      <span id="related_works_list" class="child-details"><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ').truncate(100) %> <%= r.resource_publication&.manuscript_number&.presence || ''%></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
       <span class="input-line">
@@ -126,7 +126,7 @@
           <% end %>
         <% end %>
       </span>
-      <span id="funders_list" class="child-details"><%= r.contributors.funder&.map(&:contributor_name)&.join('; ') %></span>
+      <span id="funders_list" class="child-details"><%= r.contributors.funder&.map(&:contributor_name)&.join('; ').truncate(100) %></span>
     </div>
   </div>
 </div>
@@ -139,7 +139,9 @@
     <% end %>
   <% end %>
 </div>
-<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>"></div>
+<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>">
+  <p style="text-align: center;"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p>
+</div>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
   <div class="activity-log-header">
@@ -199,6 +201,7 @@
 <%= render partial: 'dangerous_actions' %>
 <% end %>
 
+<% content_for(:doc_end) do %>
 <script type="text/javascript">
   const cancelClick = () => {
     document.getElementById('genericModalDialog').close();
@@ -210,4 +213,10 @@
       document.getElementById('c-input_publication_date').setAttribute('hidden', 'hidden');
     }
   }
+  var noClicks = Array.from(document.getElementsByClassName('prevent-click'));
+  noClicks.forEach(button => {
+    button.removeEventListener('click', preventClicks);
+    button.addEventListener('click', preventClicks);
+  });
 </script>
+<% end %>

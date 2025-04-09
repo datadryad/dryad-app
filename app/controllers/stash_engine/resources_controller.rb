@@ -112,7 +112,7 @@ module StashEngine
       @resource.update_columns(current_editor_id: nil)
       respond_to do |format|
         format.html { redirect_to dashboard_path }
-        format.js { render js: "document.getElementById('editor_name').innerHTML='<em>None</em>';" }
+        format.js { render js: "document.getElementById('editor_name#{@resource.id}').innerHTML='<em>None</em>';" }
       end
     end
 
@@ -150,8 +150,7 @@ module StashEngine
 
     def display_readme
       review = StashDatacite::Resource::Review.new(@resource)
-      render partial: 'stash_datacite/descriptions/readme',
-             locals: { review: review, highlight_fields: params.key?(:admin) ? ['technical_info'] : [] }
+      render partial: 'stash_datacite/descriptions/readme', locals: { review: review }
     end
 
     def dpc_status

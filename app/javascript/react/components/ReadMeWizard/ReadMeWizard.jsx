@@ -38,7 +38,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
       });
   };
 
-  const checkDescription = useCallback(debounce(saveDescription, 900), []);
+  const checkDescription = useCallback(debounce(saveDescription, 600), []);
 
   const assembleValue = () => {
     let v = `# ${
@@ -64,12 +64,6 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
   };
 
   useEffect(() => {
-    if (initialValue) {
-      // deal with arrows?
-    }
-  }, [initialValue]);
-
-  useEffect(() => {
     if (wizardStep > secTitles.length) {
       const complete = assembleValue();
       saveDescription(complete);
@@ -78,6 +72,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
       wizardContent.step = wizardStep;
       saveDescription(JSON.stringify(wizardContent));
     }
+    document.querySelector('.markdown_editor')?.focus();
   }, [wizardStep]);
 
   useEffect(() => {
@@ -143,6 +138,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
           initialValue={initialValue}
           replaceValue={replaceValue}
           onChange={checkDescription}
+          onReplace={saveDescription}
         />
         <dialog
           id="restart-wizard-dialog"

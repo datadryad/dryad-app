@@ -57,6 +57,7 @@ Rails.application.routes.draw do
         get 'download'
         post 'set_internal_datum'
         post 'add_internal_datum'
+        get 'calculate_fee'
       end
       resources :related_works, shallow: false, only: 'update'
       resources :internal_data, shallow: true, path: '/internal_data'
@@ -160,6 +161,7 @@ Rails.application.routes.draw do
     match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
     get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
     get 'downloads/zenodo_file/:file_id', to: 'downloads#zenodo_file', as: 'download_zenodo'
+    get 'downloads/pre_submit/:file_id', to: 'downloads#presubmit_file_stream', as: 'download_presubmit'
     get 'data_file/preview_check/:file_id', to: 'downloads#preview_check', as: 'preview_check'
     get 'data_file/preview/:file_id', to: 'downloads#preview_file', as: 'preview_file'
     get 'share/:id', to: 'downloads#share', as: 'share'
@@ -526,4 +528,7 @@ Rails.application.routes.draw do
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
 
   get :health_check, to: 'health#check'
+
+  get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
+  get "resource_fee_calculator/:id", to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
 end

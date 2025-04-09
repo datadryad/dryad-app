@@ -22,7 +22,7 @@ Assemble all data files together. Where possible, data should be shared in [an o
 Data may be submitted and published at any time. However, if your data are associated with a journal publication, there may be special considerations:
 
 * If you received an invitation from a journal to submit data to Dryad, then that journal has integrated its submission process with Dryad. Please follow the instructions from the journal.
-* Dryad usually does not grant short- or long-term embargoes of data, but we will consider requests in specific instances (i.e., graduate students publishing thesis data that they intend to use for other parts of their thesis/dissertation; media blackouts around a study). If you wish to embargo data beyond the publication date of the associated article, we require confirmation from the publishing journal. Please submit an embargo request to <a class="emailr" href="mailto:dev@null?subject=Embargo+request&body=My+Dryad+dataset+DOI:%0D%0AEmbargo+reason:">gro.dayrdatad@pleh</a> at the time of submission.
+* Dryad usually does not grant short- or long-term embargoes of data, but we will consider requests in specific instances (i.e., graduate students publishing thesis data that they intend to use for other parts of their thesis/dissertation; media blackouts around a study). If you wish to embargo data beyond the publication date of the associated article, we require confirmation from the publishing journal. Please submit an embargo request to <a class="emailr" href="mailto:dev@null?subject=Embargo+request&body=My+Dryad+dataset+DOI:%0D%0AEmbargo+reason:" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> at the time of submission.
 * Regardless of journal, you may choose to make your data temporarily [private for peer review](/process#private-for-peer-review).
 
 
@@ -30,7 +30,7 @@ Data may be submitted and published at any time. However, if your data are assoc
 
 Dryad requires an [ORCID iD](https://orcid.org) for login. If you do not have an ORCID, you will have the opportunity to create a free, unique identifier for yourself at the login page. Dryad uses ORCID so that we can authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the website, through the API, through a journal integration, etc.). When datasets are published, they should appear in your ORCID profile along with articles and other works.
 
-For institutional members, we require a second form of authentication at login. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time. Properly verifying your institutional affiliation is essential for recognition of institutional sponsorship of data publication charges.
+For institutional partners, we require a second form of authentication at login. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time. Properly verifying your institutional affiliation is essential for recognition of institutional sponsorship of data publication charges.
 
 
 ## Create your submission
@@ -83,7 +83,7 @@ If you have questions, please see our [guide to the tabular data check alerts](/
 
 On the final page of the submission form, you’ll have the opportunity to review that your metadata is correct.
 
-Check the required acknowledgments to agree to payment of the data publication charge. If you are affiliated with a member institution or your related publication is associated with a sponsoring journal title, the option to select the acknowledgment will not be available, and a statement below will appear to confirm who is sponsoring the data publication charge. If your submission should be sponsored, but you do not see a statement indicating as much, please [contact support](/contact). 
+Check the required acknowledgments to agree to payment of the data publication charge. If you are affiliated with a partner institution or your related publication is associated with a sponsoring journal title, the option to select the acknowledgment will not be available, and a statement below will appear to confirm who is sponsoring the data publication charge. If your submission should be sponsored, but you do not see a statement indicating as much, please [contact support](/contact). 
 
 
 ### Private for peer review

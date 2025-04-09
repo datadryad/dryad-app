@@ -138,6 +138,12 @@ module StashDatacite
       false
     end
 
+    def payer_funder
+      return nil if contributor_name.blank? || contributor_type != 'funder'
+
+      StashEngine::Funder.exemptions.find_by(name: contributor_name)
+    end
+
     private
 
     def strip_whitespace

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import {
   Editor, rootCtx, schemaCtx, serializerCtx, editorViewCtx, remarkCtx, remarkStringifyOptionsCtx, rootDOMCtx,
 } from '@milkdown/core';
@@ -100,7 +99,7 @@ const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', '
   'table', 'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
-  id, initialValue, replaceValue, onChange, buttons = defaultButtons,
+  id, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
 }) {
   const [loading, editor] = useInstance();
 
@@ -140,11 +139,11 @@ function MilkdownEditor({
         const editorView = ctx.get(editorViewCtx);
         const serializer = ctx.get(serializerCtx);
         setDefaultVal(serializer(editorView.state.doc));
-      } else if (editType === 'markdown') onChange(markdown);
+      } else if (editType === 'markdown') onReplace(markdown);
     } catch {
       setParseError(true);
       setEditType('markdown');
-      if (markdown !== initialValue) onChange(markdown);
+      if (markdown !== initialValue) onReplace(markdown);
     }
   });
 
@@ -153,7 +152,10 @@ function MilkdownEditor({
   }, [initialCode]);
 
   useEffect(() => {
-    if (saveVal !== defaultVal) onChange(saveVal);
+    if (saveVal !== defaultVal) {
+      onChange(saveVal);
+      setDefaultVal(saveVal);
+    }
   }, [saveVal]);
 
   useEffect(() => {
@@ -198,9 +200,23 @@ function MilkdownEditor({
               />
             ))}
           </div>
-          <div className="md_editor-toggle">
-            <button type="button" onClick={() => setEditType('markdown')} disabled={editType === 'markdown'}>Markdown</button>
-            <button type="button" onClick={() => setEditType('visual')} disabled={editType === 'visual'}>Rich text</button>
+          <div className="md_editor-toggle" role="group" aria-label="Editor type">
+            <button
+              type="button"
+              onClick={() => setEditType('markdown')}
+              aria-current={editType === 'markdown'}
+              aria-disabled={editType === 'markdown' || null}
+            >
+              Markdown
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditType('visual')}
+              aria-current={editType === 'visual'}
+              aria-disabled={editType === 'visual' || null}
+            >
+              Rich text
+            </button>
           </div>
         </div>
       )}
@@ -245,19 +261,5 @@ function MarkdownEditor(props) {
     </div>
   );
 }
-
-MarkdownEditor.propTypes = {
-  id: PropTypes.string.isRequired,
-  initialValue: PropTypes.string,
-  replaceValue: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  buttons: PropTypes.arrayOf(PropTypes.oneOf(defaultButtons)),
-};
-
-MarkdownEditor.defaultProps = {
-  buttons: defaultButtons,
-  initialValue: '',
-  replaceValue: '',
-};
 
 export default MarkdownEditor;

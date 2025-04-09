@@ -29,7 +29,7 @@ const statusCss = (status) => {
 };
 
 function S3Check({file}) {
-  if (file.file_state === 'copied' || file.dl_url) {
+  if (file.file_state === 'copied' || file.uploaded) {
     return (
       <div className="c-uploadtable-time">
         {moment(file.upload_updated_at || file.updated_at).format('YYYY/MM/DD H:mm')} <i className="fas fa-check" role="img" aria-label="complete" />
@@ -50,7 +50,7 @@ export default function File({file, clickRemove, clickValidationReport}) {
   };
 
   const getTabularInfo = () => {
-    if (removing) return 'Removing...';
+    if (removing) return null;
     switch (file.tabularCheckStatus) {
     case TabularCheckStatus.checking:
       return (
@@ -111,8 +111,13 @@ export default function File({file, clickRemove, clickValidationReport}) {
             {ellipsize(file.url)}
           </a>
         )}
-        {!file.url && file.dl_url && (
-          <a href={file.dl_url} download title={`Download from ${file.uploadType === 'data' ? 'Dryad' : 'Zenodo'}`} target="_blank" rel="noreferrer">
+        {!file.url && file.uploaded && (
+          <a
+            href={`/downloads/pre_submit/${file.id}`}
+            title={`Download from ${file.uploadType === 'data' ? 'Dryad' : 'Zenodo'}`}
+            target="_blank"
+            rel="noreferrer"
+          >
             {file.sanitized_name}
           </a>
         )}
@@ -121,10 +126,10 @@ export default function File({file, clickRemove, clickValidationReport}) {
       <td className="c-uploadtable-size">{file.sizeKb}</td>
       <td>
         {removing ? (
-          <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" />
+          <i className="fas fa-circle-notch fa-spin" aria-hidden="true" />
         ) : (
-          <button onClick={removeClick} type="button" className="o-button__plain-textlink">
-            <i className="fas fa-trash-can" aria-hidden="true" style={{marginRight: '.5ch'}} />Remove
+          <button onClick={removeClick} type="button" className="o-button__plain-textlink" aria-label="Remove file">
+            <i className="fas fa-trash-can" aria-hidden="true" style={{marginRight: '.5ch'}} />
           </button>
         )}
       </td>

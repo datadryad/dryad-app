@@ -1,3 +1,7 @@
+html.preview_submission {
+  scroll-padding-bottom: 115px;
+}
+
 .metadata_entry_pages_find_or_create {
   max-width: none;
   padding-left: 0;
@@ -301,8 +305,19 @@
             margin: 0;
           }
         }
-        form button {
-          white-space: nowrap;
+        form {
+          button {
+            white-space: nowrap;
+          }
+          &:only-child {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            row-gap: 1ch;
+            column-gap: 2ch;
+          }
         }
       }
     }
@@ -556,11 +571,11 @@ dialog#submission-step[open] {
     margin-top: 0;
   }
 
-  *[aria-invalid] {
+  *[aria-invalid="true"] {
     border: thin solid $red !important;
   }
 
-  label:has(input[type="checkbox"][aria-invalid]) {
+  label:has(input[type="checkbox"][aria-invalid="true"]) {
     color: $red;
   }
 }
@@ -569,6 +584,12 @@ dialog#submission-step[open] {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  flex-wrap: wrap;
+  gap: 1ch;
+  margin-bottom: 1rem;
+  * {
+    margin-bottom: 0;
+  }
   & + * {
     margin-top: 0;
   }
@@ -608,20 +629,6 @@ dialog#submission-step[open] {
   color: $dark-gray;
 }
 
-.author-form, .funder-form, .work-form {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  column-gap: 1.5ch;
-  row-gap: 1ch;
-  flex: 1;
-
-  .remove-record, & + .remove-record {
-    @extend %o-button__link-style;
-    margin-top: 28px;
-  }
-}
-
 %author-form-button {
   color: $dark-blue;
   background-color: white;
@@ -631,6 +638,25 @@ dialog#submission-step[open] {
   &:hover, &:active, &:focus {
     background-color: $dark-blue;
     color: white;
+  }
+  &:focus {
+    border: thin solid white;
+  }
+}
+
+.author-form, .funder-form, .work-form {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 1.5ch;
+  row-gap: 1ch;
+  flex: 1;
+
+  .remove-record, & + .remove-record {
+    @extend %author-form-button;
+    margin-top: 28px;
+    font-size: 1.1rem;
+    padding: 4px;
   }
 }
 
@@ -782,34 +808,22 @@ dialog#submission-step[open] {
 
   &.track-changes {
     ins, .ins, del {
-      padding: 4px 0 2px;
+      padding: 5px 0 3px;
     }
     .ins {
-      background-color: lighten($lightest-orange, 5);
+      background-color: $lightest-orange;
     }
     ins {
       text-decoration: none;
-      background-color: lighten($lightest-orange, 5);
+      background-color: $lightest-orange;
     }
-    .del {
-      display: block;
-    }
-    del {
+    del, .del {
       display: inline;
       background-color: $lightest-red;
       text-decoration: line-through;
-    }
-
-    .highlight-readme {
-      .del {
-        display: inline;
+      * {
         background-color: $lightest-red;
-      }
-      del p, ins p {
-        display: inline;
-      }
-      ins.ins-before::after {
-        content: ' ';
+        text-decoration: line-through;
       }
     }
   }

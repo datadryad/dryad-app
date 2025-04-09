@@ -33,3 +33,17 @@ document.getElementById('cancel_dialog').addEventListener('click', (e) => {
     })
   <% end %>
 <% end %>
+<% if @field == 'notification_date' %>
+  var togs = document.querySelectorAll('.button-toggle')
+  togs.forEach(tog => {
+    tog.addEventListener('click', () => {
+      togs.forEach(t => {
+        t.removeAttribute('aria-disabled')
+        t.setAttribute('aria-current', false)
+      })
+      document.getElementById('notification_date').value = tog.dataset.value
+      tog.setAttribute('aria-disabled', true)
+      tog.setAttribute('aria-current', true)
+    })
+  })
+<% end %>

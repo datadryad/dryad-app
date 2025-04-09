@@ -4,7 +4,7 @@
   <%= render 'stash_engine/shared/standard_head' %>
   <%= render 'stash_engine/shared/stash_head' %>
   <%= content_for :head %>
-  <script type="text/javascript" src="/javascript/dataload.js?20250312" defer></script>
+  <script type="text/javascript" src="<%= asset_path 'dataload.js'%>" defer></script>
 </head>
 <body class='<%= "#{controller_name}_#{action_name}" %>'>
   <%= render partial: "stash_engine/shared/sandbox_message" %>
@@ -14,7 +14,7 @@
   <%= yield %>
   </main>
   <%= render partial: "stash_engine/shared/footer" %>
-  <script type="text/javascript" src="/javascript/interactions.js?20250312"></script>
+  <script type="text/javascript" src="<%= asset_path 'interactions.js'%>"></script>
   <%= render partial: "stash_engine/shared/dialog_confirm" %>
   <%= render partial: "stash_engine/shared/dialog_modal" %>
   <%= content_for :doc_end %>

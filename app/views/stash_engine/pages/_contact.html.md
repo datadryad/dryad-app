@@ -2,11 +2,11 @@
 
 ## Get help
 
-Please contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@pleh</a> for assistance with your dataset submission, or with questions about our [submission process](/submission_process) or [publication process](/process).
+Please contact <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> for assistance with your dataset submission, or with questions about our [submission process](/submission_process) or [publication process](/process).
 
 ## Get involved
 
-Is your organization interested in [joining or working with Dryad](https://datadryad.org/join_us)? Contact <a class="emailr" href="mailto:dev@null">gro.dayrdatad@spihsrentrap</a> and our partnership team will get back to you. Individual researchers do not need a Dryad membership, and should follow our [submission instructions](https://datadryad.org/submission_process) to get started.
+Is your organization interested in [joining or working with Dryad](https://datadryad.org/join_us)? Contact <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad partnership team">gro.dayrdatad@spihsrentrap</a> and our partnership team will get back to you. Individual researchers do not need a Dryad partnership, and should follow our [submission instructions](https://datadryad.org/submission_process) to get started.
 
 ## Preview changes
 
@@ -18,7 +18,7 @@ A few times a year, we ask volunteer user testers to provide feedback on sneak p
 
 Have you noticed a problem with Dryad, or a feature we’re missing? Anyone may request changes to Dryad, from the smallest wording change to major new features. All requests will be evaluated and prioritized for potential inclusion into the Dryad system.
 
-Please send feature requests to <a class="emailr" href="mailto:dev@null?subject=Feature request">gro.dayrdatad@pleh</a>, with “Feature request” in the subject line. As part of the request, please answer as many of the following questions as possible:
+Please send feature requests to <a class="emailr" href="mailto:dev@null?subject=Feature request"  aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a>, with “Feature request” in the subject line. As part of the request, please answer as many of the following questions as possible:
 
  - Who would use the feature?
  - What problem are you trying to solve for these users?
@@ -30,7 +30,7 @@ After your request is received, we will provide you with brief feedback about th
 
 ## General enquiries
 
-<p><strong>Email:</strong> <a class="emailr" href="mailto:dev@null">gro.dayrdatad@olleh</a></p>
+<p><strong>Email:</strong> <a class="emailr" href="mailto:dev@null"  aria-label="Email Dryad">gro.dayrdatad@olleh</a></p>
 <p><strong>Phone:</strong> <a href="tel:+18332925326">+1 833-292-5326</a></p>
 <p><a href="https://www.linkedin.com/company/datadryad/">LinkedIn</a> | <a href="https://www.facebook.com/profile.php?id=100075926210112">Facebook</a></p>
 
@@ -40,7 +40,7 @@ After your request is received, we will provide you with brief feedback about th
 417 Mace Blvd. , Ste J110<br>
 Davis, CA 95618<br>
 United States</p>
-<p>Jennifer Gibson, Executive Director: <a class="emailr" href="mailto:dev@null">gro.dayrdatad@nosbigj</a></p>
-<p>Jessica Herzog, Head of Publishing Services: <a class="emailr" href="mailto:dev@null">gro.dayrdatad@gozrehj</a></p>
+<p>Jennifer Gibson, Executive Director: <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad Jennifer Gibson">gro.dayrdatad@nosbigj</a></p>
+<p>Jessica Herzog, Head of Publishing Services: <a class="emailr" href="mailto:dev@null" aria-label="Email Jessica Herzog">gro.dayrdatad@gozrehj</a></p>
 <br>
 <p style="font-size: .9em;">Dryad is a 501(c)(3) nonprofit corporation under the North Carolina Nonprofit Corporation Act, registered with the U.S. IRS, EIN number 46-1685419.</p>

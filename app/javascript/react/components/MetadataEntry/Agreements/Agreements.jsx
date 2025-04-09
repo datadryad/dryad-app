@@ -102,7 +102,7 @@ export default function Agreements({
     <>
       {preview && (
         <>
-          <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
+          <h2>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h2>
           <div className="callout alt">
             {ppr ? (
               <p>
@@ -161,15 +161,15 @@ export default function Agreements({
           )}
         </>
       )}
-      {subType === 'collection' ? <h3>Terms</h3> : (
+      {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
+      {subType !== 'collection' && (
         <>
-          <h3 style={preview ? {} : {marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>
           {dpc.institution_will_pay && (
             <>
               <div className="callout">
                 <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
               </div>
-              {previous && resource.tenant !== previous.tenant && <p className="del ins">Member institution changed</p>}
+              {previous && resource.tenant !== previous.tenant && <p className="del ins">Partner institution changed</p>}
             </>
           )}
           {!dpc.institution_will_pay && dpc.journal_will_pay && (
@@ -216,15 +216,15 @@ export default function Agreements({
           {(subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay)) && (
             <>
               {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
-                <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad member.</p>
+                <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad partner.</p>
               )}
               {dpc.user_must_pay && (
                 <>
                   <div className="callout warn" style={{marginTop: '2em'}}>
-                    <p>Are you affiliated with a Dryad member institution that could sponsor this fee?</p>
+                    <p>Are you affiliated with a Dryad partner institution that could sponsor this fee?</p>
                   </div>
                   {!!dpc.aff_tenant && (
-                    <p>Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad member.</p>
+                    <p>Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad partner.</p>
                   )}
                 </>
               )}
