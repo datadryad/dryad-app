@@ -59,15 +59,9 @@ const curatorTools = '| code strikethrough forecolor backcolor';
 export default function Description({
   setResource, dcsDescription, mceLabel, curator,
 }) {
-  const [desc, setDesc] = useState(null);
+  const [desc, setDesc] = useState('');
   const editorRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-
-  const update = () => {
-    const {description_type} = dcsDescription;
-    dcsDescription.description = desc;
-    setResource((r) => ({...r, descriptions: [dcsDescription, ...r.descriptions.filter((d) => d.description_type !== description_type)]}));
-  };
 
   const submit = () => {
     if (editorRef.current) {
@@ -86,17 +80,23 @@ export default function Description({
         {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
       )
         .then((data) => {
-          if (data.data) setDesc(data.data.description);
+          if (data.data) {
+            setResource((r) => ({
+              ...r,
+              descriptions: [{...dcsDescription, description: data.data.description}, ...r.descriptions.filter((d) => d.id !== dcsDescription.id)],
+            }));
+          }
           showSavedMsg();
         });
     }
   };
 
-  const checkSubmit = useCallback(debounce(submit, 1000), []);
+  const checkSubmit = useCallback(debounce(submit, 600), []);
 
   useEffect(() => {
-    setDesc(dcsDescription.description);
-  }, [dcsDescription]);
+    // copy and do not rerender on change
+    setDesc(`${dcsDescription.description || ''}`);
+  }, []);
 
   return (
     <>
@@ -115,7 +115,7 @@ export default function Description({
         onInit={(evt, editor) => { editorRef.current = editor; }}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         licenseKey="gpl"
-        initialValue={dcsDescription?.description}
+        initialValue={desc}
         init={{
           height: 300,
           width: '100%',
@@ -138,10 +138,7 @@ export default function Description({
           paste_preprocess,
         }}
         onEditorChange={checkSubmit}
-        onBlur={() => {
-          submit();
-          update();
-        }}
+        onBlur={submit}
       />
     </>
   );

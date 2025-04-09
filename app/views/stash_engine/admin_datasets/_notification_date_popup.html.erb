@@ -10,7 +10,7 @@
     <span role="group" aria-labelledby="group-label">
       <% periods = @resource.current_curation_status == 'peer_review' ? [6.months, 9.months, 1.year] : [1.month, 3.months, 6.months]%>
       <% periods.each do |period| %>
-      <button class="button-toggle" data-value="<%= Date.today + period %>" <%if Date.today + period == Date.today + @resource.process_date.wait_period %>disabled<%end%>><%= period.inspect %></button>
+      <button type="button" class="button-toggle" data-value="<%= Date.today + period %>" <%if Date.today + period == Date.today + @resource.process_date.wait_period %>aria-disabled<%end%>><%= period.inspect %></button>
       <% end %>
     </span>
   </p>
