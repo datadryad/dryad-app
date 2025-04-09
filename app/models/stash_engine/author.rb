@@ -20,8 +20,6 @@
 #  index_stash_engine_authors_on_author_orcid  (author_orcid)
 #  index_stash_engine_authors_on_resource_id   (resource_id)
 #
-require_relative '../../../app/models/stash_datacite/affiliation'
-
 module StashEngine
   class Author < ApplicationRecord
     self.table_name = 'stash_engine_authors'
