@@ -90,7 +90,7 @@ module StashEngine
 
     def setup_filter
       @statuses = [OpenStruct.new(value: '', label: '*Select status*')]
-      @statuses << StashEngine::CurationActivity.statuses.map do |s|
+      @statuses << StashEngine::CurationActivity.statuses.keys.map do |s|
         OpenStruct.new(value: s, label: StashEngine::CurationActivity.readable_status(s))
       end
       @statuses.flatten!
