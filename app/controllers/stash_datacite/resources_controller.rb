@@ -39,19 +39,15 @@ module StashDatacite
           @resource.reload
           if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown'
             @target_page = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
-            @aff_tenant = StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id).connect_list.first
+            @aff_tenant = StashEngine::Tenant.where(ror_id: @resource.owner_author.affiliations.map(&:ror_id)).connect_list.first
           end
         end
       end
     end
 
     def submission
-      @resource.cleanup_blank_models!
-      @resource.current_state = 'processing'
-      @resource.identifier.record_payment unless @resource.identifier.publication_date.present?
-      @resource.check_add_readme_file
-      @resource.check_add_cedar_json
-
+      resource_cleanup
+      ensure_license
       update_submission_resource_info(@resource)
 
       StashEngine.repository.submit(resource_id: @resource_id)
@@ -135,6 +131,21 @@ module StashDatacite
       false
     end
 
+    def resource_cleanup
+      @resource.cleanup_blank_models!
+      @resource.current_state = 'processing'
+      @resource.identifier.record_payment unless @resource.identifier.publication_date.present?
+      @resource.check_add_readme_file
+      @resource.check_add_cedar_json
+    end
+
+    def ensure_license
+      return unless @resource.rights.empty?
+
+      license = StashEngine::License.by_id(@resource.identifier.license_id)
+      @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
+    end
+
     def revalidate_submission
       @resource_id = params[:resource_id]
       @resource = StashEngine::Resource.find(@resource_id)
@@ -143,8 +154,8 @@ module StashDatacite
 
       @resource.identifier.update_search_words!
 
-      error_items = Resource::DatasetValidations.new(resource: @resource).errors
-      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id) and return if error_items.count.positive?
+      error_items = Resource::DatasetValidations.new(resource: @resource, user: current_user).errors
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id) and return if error_items
 
       redirect_to stash_url_helpers.dashboard_path, alert: 'Dataset is already being submitted' if processing?(@resource)
     end

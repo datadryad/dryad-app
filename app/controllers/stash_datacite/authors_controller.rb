@@ -1,7 +1,7 @@
 module StashDatacite
   class AuthorsController < ApplicationController
     before_action :check_reorder_valid, only: %i[reorder]
-    before_action :set_author, only: %i[update delete check_invoice set_invoice]
+    before_action :set_author, only: %i[update delete invite check_invoice set_invoice]
     before_action :ajax_require_modifiable, only: %i[update create delete reorder]
 
     respond_to :json
@@ -26,6 +26,7 @@ module StashDatacite
     def update
       respond_to do |format|
         @author.update(author_params)
+        check_for_orcid if @author.author_orcid.blank?
         process_affiliations
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
         format.json { render json: @author.as_json(include: :affiliations) }
@@ -36,7 +37,6 @@ module StashDatacite
     def delete
       unless params[:id] == 'new'
         @resource = StashEngine::Resource.find(@author.resource_id)
-        @if_orcid = check_for_orcid(@author)
         @author.destroy
       end
       respond_to do |format|
@@ -54,6 +54,35 @@ module StashDatacite
           grouped_authors = js.index_by { |author| author[:id] }
           resp = StashEngine::Author.update(grouped_authors.keys, grouped_authors.values)
           render json: resp, status: :ok
+        end
+      end
+    end
+
+    def invite
+      return unless @author.resource
+      return unless %w[submitter collaborator].include?(params[:role])
+
+      respond_to do |format|
+        if @author.user.present?
+          if params[:role] == 'submitter'
+            @author.resource.submitter = @author.user.id
+            role = @author.resource.roles.where(role: 'submitter')&.first
+          else
+            role = @author.resource.roles.find_or_create_by(user_id: @author.user.id)
+            role.update(role: params[:role])
+          end
+          @author.resource.reload
+          StashEngine::UserMailer.invite_user(@author.user, role).deliver_now
+        else
+          @author.create_edit_code(role: params[:role])
+          @author.edit_code.send_invitation
+        end
+        @author.reload
+        format.json do
+          render json: {
+            author: @author.as_json(include: %i[affiliations edit_code]),
+            users: @resource.users.select('stash_engine_users.*', 'stash_engine_roles.role')
+          }
         end
       end
     end
@@ -103,24 +132,31 @@ module StashDatacite
                                      affiliations: %i[id ror_id long_name])
     end
 
-    def check_for_orcid(author)
-      author&.author_orcid ? true : false
+    def check_for_orcid
+      return unless @author.present?
+      return unless @author.author_email.present?
+      return unless @author.author_orcid.blank?
+
+      found = StashEngine::User.where('LOWER(email) = LOWER(?)', @author.author_email)&.first
+      return unless found && found.orcid.present?
+
+      @author.update(author_orcid: found.orcid)
     end
 
     # find correct affiliation based on long_name and ror_id and set it, create one if needed.
     def process_affiliations
-      return nil unless @author.present?
+      return unless @author.present?
 
       @author.affiliations.destroy_all
       args = aff_params
       affs = args['affiliations']&.reject { |a| a['long_name'].blank? }
-      affs.each do |aff|
+      affs&.each do |aff|
         process_affiliation(aff['long_name'].squish, aff['ror_id'])
       end
     end
 
     def process_affiliation(name, ror_val)
-      return nil unless @author.present?
+      return unless @author.present?
 
       # find a matching pre-existing affiliation
       affil = nil
@@ -153,7 +189,7 @@ module StashDatacite
       # you can only order things belonging to one resource
       render json: { error: 'bad request' }, status: :bad_request unless @authors.map(&:resource_id)&.uniq&.length == 1
 
-      @resource = StashEngine::Resource.find(@authors.first.resource_id) # set resource to check permission to modify
+      @resource = StashEngine::Resource.find(@authors.first&.resource_id) # set resource to check permission to modify
     end
 
   end

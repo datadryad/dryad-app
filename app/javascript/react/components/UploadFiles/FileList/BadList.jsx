@@ -1,4 +1,5 @@
 import React from 'react';
+import {ExitIcon} from '../../ExitButton';
 
 // checks files to see if they have validation and also status
 const filterForStatus = (status, files) => {
@@ -51,7 +52,7 @@ export default function BadList(props) {
           <p style={{marginTop: 0}}>
             These inconsistencies can affect the usability of your data.{' '}
             <a href="/data_check_guide" target="_blank">
-              Check our guide for more information<span className="screen-reader-only"> (opens in new window)</span>
+              Check our guide for more information<ExitIcon />
             </a>
             .
           </p>
@@ -62,7 +63,7 @@ export default function BadList(props) {
             </li>
             <li>Review the local copy of your file and make any desired changes.</li>
             <li>
-              If you would like to replace the file, click &quot;Remove&quot; in the <em>Actions</em> column to delete the current upload.
+              If you would like to replace the file, click the button in the <em>Remove</em> column to delete the current upload.
             </li>
             <li>
               Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.

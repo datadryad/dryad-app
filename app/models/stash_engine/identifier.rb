@@ -2,24 +2,25 @@
 #
 # Table name: stash_engine_identifiers
 #
-#  id                  :integer          not null, primary key
-#  deleted_at          :datetime
-#  edit_code           :string(191)
-#  identifier          :text(65535)
-#  identifier_type     :text(65535)
-#  import_info         :integer
-#  payment_type        :string(191)
-#  pub_state           :string
-#  publication_date    :datetime
-#  search_words        :text(65535)
-#  storage_size        :bigint
-#  waiver_basis        :string(191)
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  latest_resource_id  :integer
-#  license_id          :string(191)      default("cc0")
-#  payment_id          :text(65535)
-#  software_license_id :integer
+#  id                      :integer          not null, primary key
+#  deleted_at              :datetime
+#  edit_code               :string(191)
+#  identifier              :text(65535)
+#  identifier_type         :text(65535)
+#  import_info             :integer
+#  last_invoiced_file_size :bigint
+#  payment_type            :string(191)
+#  pub_state               :string
+#  publication_date        :datetime
+#  search_words            :text(65535)
+#  storage_size            :bigint
+#  waiver_basis            :string(191)
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  latest_resource_id      :integer
+#  license_id              :string(191)
+#  payment_id              :text(65535)
+#  software_license_id     :integer
 #
 # Indexes
 #
@@ -36,6 +37,8 @@ require 'http'
 module StashEngine
   # rubocop:disable Metrics/ClassLength
   class Identifier < ApplicationRecord
+    include StashEngine::Support::PaymentMethods
+
     self.table_name = 'stash_engine_identifiers'
     acts_as_paranoid
 
@@ -147,13 +150,6 @@ module StashEngine
                identifier, identifier_type).sum(:downloads)
     end
 
-    def resources_with_file_changes
-      Resource.distinct.where(identifier_id: id)
-        .joins(:data_files)
-        .where(stash_engine_generic_files: { file_state: %w[created deleted] })
-        .where(stash_engine_generic_files: { type: 'StashEngine::DataFile' })
-    end
-
     # these are items that are embargoed or published and can show metadata
     def latest_resource_with_public_metadata
       return nil if pub_state == 'withdrawn'
@@ -178,8 +174,8 @@ module StashEngine
     def latest_downloadable_resource(user: nil)
       return latest_resource_with_public_download if user.nil?
 
-      lr = resources_with_file_changes.submitted.last
-      return lr if lr&.permission_to_edit?(user: user)
+      lr = resources.with_file_changes.submitted.last
+      return lr if lr&.permission_to_edit?(user: user) && lr.version_number > (latest_resource_with_public_download&.version_number || 0)
 
       latest_resource_with_public_download
     end
@@ -283,42 +279,6 @@ module StashEngine
       update_column :search_words, my_string
     end
 
-    # Check if the user must pay for this identifier, or if payment is
-    # otherwise covered - but send waivers to stripe
-    def user_must_pay?
-      !journal&.will_pay? && !institution_will_pay? && !funder_will_pay?
-    end
-
-    def record_payment
-      # once we have assigned payment to an entity, keep that entity
-      # unless it was a journal that was removed or a new journal covers the dpc
-      clear_payment_for_changed_journal
-      return if payment_type.present? && payment_type != 'unknown'
-
-      if collection?
-        self.payment_type = 'no_data'
-        self.payment_id = nil
-      elsif journal&.will_pay?
-        self.payment_type = "journal-#{journal.payment_plan_type}"
-        self.payment_id = publication_issn
-      elsif institution_will_pay?
-        self.payment_id = latest_resource&.tenant&.id
-        self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_plan == 'tiered'}"
-      elsif submitter_affiliation&.fee_waivered?
-        self.payment_type = 'waiver'
-        self.waiver_basis = submitter_affiliation.country_name
-        self.payment_id = nil
-      elsif funder_will_pay?
-        contrib = funder_payment_info
-        self.payment_type = 'funder'
-        self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
-      else
-        self.payment_type = 'unknown'
-        self.payment_id = nil
-      end
-      save
-    end
-
     def allow_review?
       # do not allow to go into peer review after already published
       return false if pub_state == 'published'
@@ -393,44 +353,16 @@ module StashEngine
       latest_resource&.resource_type&.resource_type == 'collection'
     end
 
-    def institution_will_pay?
-      tenant = latest_resource&.tenant
-      return false unless tenant&.covers_dpc
-
-      if tenant&.authentication&.strategy == 'author_match'
-        # get all unique ror_id associations for all authors
-        rors = latest_resource.authors.map do |auth|
-          auth&.affiliations&.map { |affil| affil&.ror_id }
-        end.flatten.uniq
-        return rors&.intersection(tenant&.ror_ids)&.present?
-      end
-
-      true
-    end
-
-    def funder_will_pay?
-      return false if latest_resource.nil?
-
-      latest_resource.contributors.each { |contrib| return true if contrib.payment_exempted? }
-
-      false
-    end
-
-    def funder_payment_info
-      return nil unless funder_will_pay?
-
-      latest_resource.contributors.each { |contrib| return contrib if contrib.payment_exempted? }
-    end
-
     def submitter_affiliation
       latest_resource&.owner_author&.affiliation
     end
 
-    def large_files?
-      return false if latest_resource.nil? || latest_resource.total_file_size.nil?
-
-      latest_resource.total_file_size > APP_CONFIG.payments['large_file_size']
-    end
+    # TODO: Cleanup - delete if nothing breaks
+    # def large_files?
+    #   return false if latest_resource.nil? || latest_resource.total_file_size.nil?
+    #
+    #   latest_resource.total_file_size > APP_CONFIG.payments['large_file_size']
+    # end
 
     # overrides reading the pub state so it can set it for caching if it's not set yet
     def pub_state
@@ -514,7 +446,7 @@ module StashEngine
     # make the display look desireable.  We can also put the old versions back and re-process the info to get corect views for these datasets.
     def borked_file_history?
       # I have been setting resources curators don't like to the negative identifier_id on the resource foreign key to orphan them
-      return true if Resource.where(identifier_id: -id).count.positive? || resources_with_file_changes.count.zero?
+      return true if Resource.where(identifier_id: -id).count.positive? || resources.with_file_changes.count.zero?
 
       false
     end
@@ -635,20 +567,14 @@ module StashEngine
       res.publication_date || res.updated_at
     end
 
+    def previous_invoiced_file_size
+      last_invoiced_file_size.presence || latest_resource.previous_published_resource&.total_file_size
+    end
+
     # ------------------------------------------------------------
     # Private
 
     private
-
-    def clear_payment_for_changed_journal
-      return unless payment_type.present?
-      return unless payment_type.include?('journal') || journal&.will_pay?
-      return if payment_id == journal&.single_issn
-
-      self.payment_type = nil
-      self.payment_id = nil
-      save
-    end
 
     def abstracts
       return '' unless latest_resource.respond_to?(:descriptions)

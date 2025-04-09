@@ -3,11 +3,11 @@
 module StashDatacite
   module Resource
     class MetadataEntry
-      def initialize(resource, type, _tenant)
+      def initialize(resource, type, tenant_id)
         @resource = resource
         @type = type
         create_publisher
-        ensure_license
+        @resource.update(tenant_id: tenant_id)
         @resource.fill_blank_author!
         ensure_author_orcid
       end
@@ -103,13 +103,6 @@ module StashDatacite
       end
 
       private
-
-      def ensure_license
-        return unless @resource.rights.empty?
-
-        license = StashEngine::License.by_id(@resource.identifier.license_id)
-        @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
-      end
 
       def create_publisher
         publisher = Publisher.where(resource_id: @resource.id).first

@@ -68,6 +68,11 @@
 
 .c-alert__close {
 	margin: 0 0 0 12px;
+
+	&:hover, &:focus, &:active {
+		outline: none;
+		border-bottom: 3px solid white;
+	}
 }
 
 .c-alert--migration {
@@ -125,4 +130,16 @@
 	&.priority {
 		color: $red;
 	}
+	&.pending_action {
+		color: #FFDB58;
+	}
+	&.sensitive_data {
+		color: #7a0094;
+	}
+	&.careful_attention {
+		color: black;
+	}
+	&.technical_glitch {
+		color: #FF69B4;
+	} 
 }

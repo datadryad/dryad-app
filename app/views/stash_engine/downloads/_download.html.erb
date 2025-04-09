@@ -11,8 +11,8 @@
         <p id="download-select-label">Select up to <%= filesize(APP_CONFIG.maximums.zip_size) %> of files for download</p>
       <% end %>
       <button type="button" class="o-download__files js-download" id="download_zip_button" <% if resource.total_file_size > APP_CONFIG.maximums.zip_size %>disabled<%end%>>
-        <span id="download_icon"></span>
-        <% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>Download full dataset<% else %>Download selected files<%end%>
+        <span id="download_icon" aria-hidden="true"></span>
+        <span role="status"><% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>Download full dataset<% else %>Download selected files<%end%></span>
       </button>
   <% end %>
   <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>

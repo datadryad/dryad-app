@@ -25,27 +25,10 @@ module StashDatacite
           upload_date: stash_wrapper.version_date
         ).build
 
-        @tenant = double(StashEngine::Tenant)
-        allow(tenant).to receive(:identifier_service).and_return(shoulder: 'doi:10.15146/R3',
-                                                                 account: 'stash',
-                                                                 password: 'stash',
-                                                                 id_scheme: 'doi')
-        allow(tenant).to receive(:short_name).and_return('DataONE')
-        allow(tenant).to receive(:default_license).and_return('cc0')
-
-        @metadata_entry = MetadataEntry.new(resource, 'dataset', tenant)
+        @metadata_entry = MetadataEntry.new(resource, 'dataset', @user.tenant_id)
       end
 
       describe '#initialize' do
-        it 'creates a license if needed' do
-          resource.rights.clear
-          @metadata_entry = MetadataEntry.new(resource, 'dataset', tenant)
-          rights = resource.rights.first
-          expect(rights).not_to be_nil
-          expect(rights.rights).to eq('Creative Commons Zero v1.0 Universal')
-          expect(rights.rights_uri).to eq('https://spdx.org/licenses/CC0-1.0.html')
-        end
-
         it 'creates a publisher if needed' do
           resource.publisher = nil
           @metadata_entry = MetadataEntry.new(resource, 'dataset', tenant)

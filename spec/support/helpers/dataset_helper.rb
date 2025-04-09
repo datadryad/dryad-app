@@ -3,7 +3,7 @@ module DatasetHelper
   def start_new_dataset
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_button 'Start new dataset'
+    click_button 'Start new submission'
     expect(page).to have_content('Dataset submission')
   end
 
@@ -38,7 +38,7 @@ module DatasetHelper
     # e.g. `it 'should test this amazing thing', js: true do`
     page.find('#checklist-button').click unless page.has_button?('Agreements')
     click_button 'Agreements'
-    expect(page).to have_content('Publication of your files')
+    expect(page).to have_content('Are your files ready to publish')
     agree_to_everything
     click_button 'Preview submission'
     expect(page).to have_content('Dataset submission preview')
@@ -65,7 +65,7 @@ module DatasetHelper
     fill_in_author
     fill_in_research_domain
     fill_in_keywords
-    click_button 'Validation'
+    click_button 'Compliance'
     fill_in_validation
   end
 
@@ -138,6 +138,7 @@ module DatasetHelper
   end
 
   def fill_in_validation
+    check 'By checking this box, I confirm that my files are compatible with the CC0 license waiver'
     within_fieldset('Does your data contain information on human subjects?') do
       find(:label, 'No').click
     end

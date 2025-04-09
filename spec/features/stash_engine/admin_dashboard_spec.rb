@@ -34,7 +34,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
     it 'has admin links for superuser', js: true do
       visit root_path
-      click_button 'Datasets'
+      find_button('Datasets').hover
       expect(page).to have_link('Admin dashboard')
       expect(page).to have_link('Status dashboard')
       expect(page).to have_link('Submission queue')
@@ -179,7 +179,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'shows limited menus to an administrative curator', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         expect(page).to have_link('Admin dashboard')
         expect(page).to have_link('Curation stats')
         expect(page).to have_link('Journals')
@@ -189,7 +189,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'has all filters for system users', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_select('filter-member')
@@ -207,7 +207,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'limits options in the dashboard', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_content(@resource.title)
         expect(page).not_to have_selector('button.c-admin-edit-icon .fa-pencil') # no pencil editing icons for you
@@ -222,14 +222,14 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'has admin link', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         expect(page).to have_link('Admin dashboard')
         expect(page).to have_link('Publication updater')
       end
 
       it 'selects identifiers and curator fields by default', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#identifiers')).to be_checked
         expect(find('thead')).to have_text('Publication IDs')
@@ -240,13 +240,13 @@ RSpec.feature 'AdminDashboard', type: :feature do
       context :actions, js: true do
         before(:each) do
           visit root_path
-          click_button 'Datasets'
+          find_button('Datasets').hover
           click_link 'Admin dashboard'
         end
 
         it 'allows assigning a curator to a dataset' do
           click_button 'Update curator'
-          select(@curator.name_last_first, from: 'current_editor')
+          select(@curator.name_last_first, from: '_curator_id')
           click_button('Submit')
           expect(find('#search_results')).to have_text(@curator.name, count: 1)
         end
@@ -256,11 +256,11 @@ RSpec.feature 'AdminDashboard', type: :feature do
           visit stash_url_helpers.admin_dashboard_path
           expect(page).to have_text('Admin dashboard')
           click_button 'Update curator'
-          select(@curator.name_last_first, from: 'current_editor')
+          select(@curator.name_last_first, from: '_curator_id')
           click_button('Submit')
           expect(find('#search_results')).to have_text(@curator.name, count: 1)
           click_button 'Update curator'
-          select('unassign', from: 'current_editor')
+          select('unassign', from: '_curator_id')
           click_button('Submit')
           expect(find('#search_results')).not_to have_text(@curator.name)
           @resource.reload
@@ -291,7 +291,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
             expect(find('#search_results')).to have_text('Curation')
             expect(find('#search_results')).to have_text(@curator.name, count: 1)
             click_button 'Update curator'
-            select('unassign', from: 'current_editor')
+            select('unassign', from: '_curator_id')
             click_button('Submit')
             expect(find('#search_results')).not_to have_text(@curator.name)
             expect(find('#search_results')).to have_text('Submitted')
@@ -304,8 +304,8 @@ RSpec.feature 'AdminDashboard', type: :feature do
             within(:css, 'tbody tr') do
               click_button 'Update status'
             end
-            find("#activity_status_select option[value='action_required']").select_option
-            fill_in(id: 'activity_note', with: 'My cat says hi')
+            find("#_curation_activity_status option[value='action_required']").select_option
+            fill_in(id: '_curation_activity_note', with: 'My cat says hi')
             click_button('Submit')
             expect(find('tbody tr')).to have_text('Action required')
             within(:css, 'tbody tr') do
@@ -353,7 +353,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'has admin link', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         expect(page).to have_link('Admin dashboard')
       end
 
@@ -365,7 +365,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         res2 = create(:resource, identifier_id: ident2.id, user: user2, tenant_id: user2.tenant_id)
 
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_text(res1.title)
@@ -374,7 +374,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'selects affiliations field by default', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#affiliations')).to be_checked
       end
@@ -387,7 +387,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'has admin link', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         expect(page).to have_link('Admin dashboard')
       end
 
@@ -399,7 +399,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         res2 = create(:resource, identifier_id: ident2.id, user: user2, tenant_id: user2.tenant_id)
 
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_text(res1.title)
@@ -408,14 +408,14 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'selects affiliations field by default', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#affiliations')).to be_checked
       end
 
       it 'Limits options in the dashboard', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_content(@resource.title)
         expect(page).not_to have_selector('button.c-admin-edit-icon .fa-pencil') # no pencil editing icons for you
@@ -423,7 +423,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'does not allow editing a dataset from the dashboard', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         expect(page).not_to have_css('button[title="Edit dataset"]')
@@ -455,7 +455,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'shows only datasets for consortium tenants', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         assert_selector('tbody tr', count: 4)
@@ -465,7 +465,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'shows consortium admins dropdown for their tenants', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_select('filter-member')
@@ -474,7 +474,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'filters by tenant', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         select('member1', from: 'filter-member')
@@ -499,7 +499,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'has admin link', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         expect(page).to have_link('Admin dashboard')
       end
 
@@ -508,7 +508,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         res2 = create(:resource, identifier_id: ident2.id, user: @user, tenant_id: @admin.tenant_id)
 
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_text(@res1.title)
@@ -517,7 +517,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'selects identifiers field by default', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#identifiers')).to be_checked
         expect(find('thead')).to have_text('Publication IDs')
@@ -543,7 +543,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'has admin link', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         expect(page).to have_link('Admin dashboard')
       end
 
@@ -552,7 +552,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         res2 = create(:resource, identifier_id: ident2.id, user: @user, tenant_id: @admin.tenant_id)
 
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         assert_selector('tbody tr', count: 6)
@@ -562,7 +562,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'selects journal field by default', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#journal')).to be_checked
         expect(find('thead')).to have_text('Journal')
@@ -570,7 +570,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'shows sponsor admins dropdown for their journals', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_select('filter-journal')
@@ -579,7 +579,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'filters by journal', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         select(@journal.title, from: 'filter-journal')
@@ -605,7 +605,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'has admin link', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         expect(page).to have_link('Admin dashboard')
       end
 
@@ -613,7 +613,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         res2 = create(:resource, user: @user)
 
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(page).to have_text('Admin dashboard')
         expect(page).to have_text(@res1.title)
@@ -622,7 +622,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
       it 'selects and displays funders and awards field by default', js: true do
         visit root_path
-        click_button 'Datasets'
+        find_button('Datasets').hover
         click_link 'Admin dashboard'
         expect(find('#funders')).to be_checked
         expect(find('#awards')).to be_checked

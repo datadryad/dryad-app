@@ -4,33 +4,34 @@ module StashEngine
   class AdminDatasetsController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :load, only: %i[popup note_popup waiver_add flag edit_delete_reference_date update_delete_reference_date]
+    protect_from_forgery except: :activity_log
+    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates]
 
     def popup
       case @field
       when 'flag'
         authorize @resource, :flag?
+      when 'notification_date'
+        authorize %i[stash_engine admin_datasets], :notification_date?
       when 'note'
         authorize %i[stash_engine admin_datasets], :note_popup?
         @curation_activity = CurationActivity.new(
           resource_id: @resource.id,
           status: @resource.last_curation_activity&.status
         )
-      when 'publication'
-        authorize %i[stash_engine admin_datasets], :data_popup?
-        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
-      when 'preprint'
-        authorize %i[stash_engine admin_datasets], :data_popup?
-        @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
-        @field = 'publication'
+      when 'submitter'
+        authorize %i[stash_engine admin_datasets], :edit_submitter?
+      when 'publications'
+        authorize @resource, :curate?
+        setup_publications
       when 'data'
         authorize %i[stash_engine admin_datasets], :data_popup?
         setup_internal_data_list
       when 'waiver'
         authorize %i[stash_engine admin_datasets], :waiver_add?
-        @desc = 'Add fee waiver'
+      else
+        authorize @resource, :curate?
       end
-
       respond_to(&:js)
     end
 
@@ -66,42 +67,68 @@ module StashEngine
         attributes[:id] = @resource.flag.id if @resource&.flag&.present?
         @resource.update(flag_attributes: attributes)
       end
+      @resource.reload
       respond_to(&:js)
     end
 
     # show curation activities for this item
-    def activity_log
+    def index
       authorize %i[stash_engine admin_datasets]
       @identifier = Identifier.find(params[:id])
-      resource_ids = @identifier.resources.collect(&:id)
-      ord = helpers.sortable_table_order(whitelist: %w[created_at])
-      @curation_activities = CurationActivity.where(resource_id: resource_ids)
-        .includes(:resource, :user, resource: [:stash_version])
-        .order(ord, id: :asc)
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     rescue ActiveRecord::RecordNotFound
       admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
       redirect_to admin_path, notice: "Identifier ID #{params[:id]} no longer exists."
     end
 
-    def edit_delete_reference_date
-      @desc = 'Edit dataset deletion date reference'
-      @process_date = @identifier.process_date
+    def activity_log
+      @identifier = Identifier.find(params[:id])
+      resource_ids = @identifier.resources.collect(&:id)
+      ord = helpers.sortable_table_order(whitelist: %w[created_at])
+      @curation_activities = CurationActivity.where(resource_id: resource_ids)
+        .includes(:resource, :user, resource: [:stash_version])
+        .order(ord, id: :asc)
       respond_to(&:js)
     end
 
-    def update_delete_reference_date
-      delete_calculation_date = params.dig(:process_date, :delete_calculation_date)
-      return error_response('Date cannot be blank') if delete_calculation_date.blank?
+    def notification_date
+      authorize %i[stash_engine admin_datasets]
+      notification_date = params[:notification_date].to_datetime
+      return error_response('Date cannot be blank') if notification_date.blank?
+
+      delete_calculation_date = notification_date - 1.month
+      delete_calculation_date = notification_date - 6.months if @resource.current_curation_status == 'peer_review'
 
       @curation_activity = CurationActivity.create(
-        note: "Changed deletion reference date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe,
+        note: "Changed notification start date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe,
         resource_id: @resource.id, user_id: current_user.id, status: @resource.last_curation_activity&.status
       )
-      @resource.reload
 
-      @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
       @resource.process_date.update(delete_calculation_date: delete_calculation_date)
+      @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
+      @resource.reload
+      respond_to(&:js)
+    end
+
+    def edit_submitter
+      authorize %i[stash_engine admin_datasets]
+      user = StashEngine::User.where(orcid: params[:orcid])&.first
+      if user.present?
+        @resource.submitter = user.id
+        @resource.reload
+      else
+        @error_message = 'No Dryad user found with this ORCID'
+        render 'stash_engine/user_admin/update_error' and return
+      end
+      respond_to(&:js)
+    end
+
+    def pub_dates
+      params[:resources].each do |r|
+        res = StashEngine::Resource.find(r[0])
+        res.update(r[1].to_unsafe_h)
+      end
+      @identifier.reload
       respond_to(&:js)
     end
 
@@ -131,14 +158,14 @@ module StashEngine
 
     def load
       @identifier = Identifier.find(params[:id])
-      @resource = if @identifier.last_submitted_resource&.id.present?
-                    Resource.includes(:identifier,
-                                      :curation_activities).find(@identifier.last_submitted_resource.id)
-                  else
-                    @identifier.latest_resource
-                  end
-      # usually notes go on latest submitted, but there is none, so put it here
+      @resource = @identifier.latest_resource
       @field = params[:field]
+    end
+
+    def setup_publications
+      @related_work = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id)
+      @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
+      @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
     end
 
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present

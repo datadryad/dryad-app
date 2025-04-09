@@ -57,6 +57,7 @@ Rails.application.routes.draw do
         get 'download'
         post 'set_internal_datum'
         post 'add_internal_datum'
+        get 'calculate_fee'
       end
       resources :related_works, shallow: false, only: 'update'
       resources :internal_data, shallow: true, path: '/internal_data'
@@ -100,6 +101,8 @@ Rails.application.routes.draw do
         get 'display_collection'
         get 'show_files'
         patch 'import_type'
+        patch 'license_agree'
+        post 'logout'
       end
     end
 
@@ -149,11 +152,8 @@ Rails.application.routes.draw do
     get 'choose_dashboard', to: 'dashboard#choose', as: 'choose_dashboard'
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
-    get 'ajax_wait', to: 'dashboard#ajax_wait', as: 'ajax_wait'
-    get 'metadata_basics', to: 'dashboard#metadata_basics', as: 'metadata_basics'
-    get 'preparing_to_submit', to: 'dashboard#preparing_to_submit', as: 'preparing_to_submit'
-    get 'upload_basics', to: 'dashboard#upload_basics', as: 'upload_basics'
-    get 'react_basics', to: 'dashboard#react_basics', as: 'react_basics'
+    get 'dashboard/primary_article/:resource_id', to: 'dashboard#primary_article', as: 'primary_article'
+    post 'dashboard/primary_article', to: 'dashboard#save_primary_article', as: 'save_primary_article'
 
     # download related
     match 'downloads/zip_assembly_info/:resource_id', to: 'downloads#zip_assembly_info', as: 'zip_assembly_info', via: %i[get post]
@@ -161,6 +161,7 @@ Rails.application.routes.draw do
     match 'downloads/capture_email/:resource_id', to: 'downloads#capture_email', as: 'download_capture_email', via: %i[get post]
     get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
     get 'downloads/zenodo_file/:file_id', to: 'downloads#zenodo_file', as: 'download_zenodo'
+    get 'downloads/pre_submit/:file_id', to: 'downloads#presubmit_file_stream', as: 'download_presubmit'
     get 'data_file/preview_check/:file_id', to: 'downloads#preview_check', as: 'preview_check'
     get 'data_file/preview/:file_id', to: 'downloads#preview_file', as: 'preview_file'
     get 'share/:id', to: 'downloads#share', as: 'share'
@@ -172,6 +173,8 @@ Rails.application.routes.draw do
     post 'metadata_entry_pages/new_version_from_previous', to: 'metadata_entry_pages#new_version_from_previous'
     match 'metadata_entry_pages/reject_agreement', to: 'metadata_entry_pages#reject_agreement', via: [:post]
     match 'metadata_entry_pages/accept_agreement', to: 'metadata_entry_pages#accept_agreement', via: [:post]
+
+    get 'accept/:edit_code', to: 'edit_codes#accept_invite', as: 'accept_invite'
 
     # root 'sessions#index'
     root 'pages#home', as: 'pages_root'
@@ -204,6 +207,7 @@ Rails.application.routes.draw do
     get 'mission', to: 'pages#what_we_do'
     get 'contact_thanks', to: 'pages#contact_thanks'
     get 'join_us', to: 'pages#join_us'
+    get 'support_us', to: 'pages#support_us'
     get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
@@ -222,6 +226,8 @@ Rails.application.routes.draw do
     get 'privacy', to: 'pages#privacy'
     get 'accessibility', to: 'pages#accessibility'
     get 'membership', to: 'pages#membership'
+    get 'publishers', to: 'pages#fees_publisher'
+    get 'institutions', to: 'pages#fees_institution'
     get 'sandbox', to: 'pages#sandbox' unless Rails.env.include?('production') 
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
@@ -230,7 +236,7 @@ Rails.application.routes.draw do
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
     get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
-    get 'stash/404', to: 'pages#app_404', as: 'app_404'
+    get '/404', to: 'pages#app_404', as: 'app_404'
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
     get 'ip_error', to: 'pages#ip_error'
@@ -283,14 +289,17 @@ Rails.application.routes.draw do
     delete 'saved_search/:id', to: 'saved_searches#destroy', as: 'saved_search_delete'
 
     # activity log
+    get 'ds_admin/:id', to: 'admin_datasets#index', as: 'activity_log'
+    get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
-    get 'ds_admin/:id/edit_delete_reference_date', to: 'admin_datasets#edit_delete_reference_date', as: 'edit_delete_reference_date'
-    post 'ds_admin/:id/update_delete_reference_date', to: 'admin_datasets#update_delete_reference_date', as: 'update_delete_reference_date'
-    get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity_log'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
+    post 'ds_admin/:id/notification_date', to: 'admin_datasets#notification_date', as: 'notification_date'    
     post 'ds_admin/:id/waive', to: 'admin_datasets#waiver_add', as: 'ds_admin_waiver'
     post 'ds_admin/:id/flag', to: 'admin_datasets#flag', as: 'ds_admin_flag'
+    post 'ds_admin/:id/edit_submitter', to: 'admin_datasets#edit_submitter', as: 'ds_admin_edit_submitter'
+    post 'ds_admin/:id/pub_dates', to: 'admin_datasets#pub_dates', as: 'ds_admin_pub_dates'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
+    
 
     # curation notes
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
@@ -372,6 +381,7 @@ Rails.application.routes.draw do
     patch 'authors/reorder', to: 'authors#reorder', as: 'authors_reorder'
     get 'authors/:id/invoice', to: 'authors#check_invoice'
     patch 'authors/invoice', to: 'authors#set_invoice'
+    patch 'authors/invite', to: 'authors#invite'
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
@@ -518,4 +528,7 @@ Rails.application.routes.draw do
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
 
   get :health_check, to: 'health#check'
+
+  get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
+  get "resource_fee_calculator/:id", to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
 end

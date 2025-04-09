@@ -1,9 +1,10 @@
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class ResourcesController < ApplicationController
     include StashEngine::LandingHelper
 
     before_action :require_login
-    before_action :require_modify_permission, except: %i[index new]
+    before_action :require_modify_permission, except: %i[index new logout]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
     # before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
     before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
@@ -83,7 +84,7 @@ module StashEngine
     # DELETE /resources/1
     # DELETE /resources/1.json
     def destroy
-      StashEngine::DeleteDatasetsService.new(resource, current_user).call
+      StashEngine::DeleteDatasetsService.new(resource, current_user: current_user).call
 
       respond_to do |format|
         format.html do
@@ -103,6 +104,15 @@ module StashEngine
           end
         end
         format.json { head :no_content }
+      end
+    end
+
+    def logout
+      @resource = resource
+      @resource.update_columns(current_editor_id: nil)
+      respond_to do |format|
+        format.html { redirect_to dashboard_path }
+        format.js { render js: "document.getElementById('editor_name#{@resource.id}').innerHTML='<em>None</em>';" }
       end
     end
 
@@ -137,12 +147,10 @@ module StashEngine
       end
       render json: { readme_file: @file_content, file_list: @file_list }
     end
-    # rubocop:enable Metrics/AbcSize
 
     def display_readme
       review = StashDatacite::Resource::Review.new(@resource)
-      render partial: 'stash_datacite/descriptions/readme',
-             locals: { review: review, highlight_fields: params.key?(:admin) ? ['technical_info'] : [] }
+      render partial: 'stash_datacite/descriptions/readme', locals: { review: review }
     end
 
     def dpc_status
@@ -170,23 +178,30 @@ module StashEngine
     def dupe_check
       dupes = []
       if @resource.title && @resource.title.length > 3
-        other_submissions = params.key?(:admin) ? StashEngine::Resources.all : current_user.resources
+        other_submissions = params.key?(:admin) ? StashEngine::Resource.all : current_user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
         manuscript = @resource.resource_publication.manuscript_number
-        dupes = other_submissions.where(title: @resource.title)&.select(:id, :title).to_a
-        if primary_article.present?
+        dupes = other_submissions.where(title: @resource.title)&.select(:id, :title, :identifier_id).to_a
+        if primary_article.present? && !['NA', 'N/A', 'TBD', 'unknown'].include?(primary_article)
           dupes.concat(other_submissions.joins(:related_identifiers)
-              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })&.select(:id, :title).to_a)
+              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
+              &.select(:id, :title, :identifier_id).to_a)
         end
-        if manuscript.present?
+        if manuscript.present? && !['NA', 'N/A', 'TBD', 'unknown'].include?(manuscript)
           dupes.concat(
-            other_submissions.joins(:resource_publication).find_by(resource_publication: { manuscript_number: manuscript })&.select(:id, :title).to_a
+            other_submissions.joins(:resource_publication).where(resource_publication: { manuscript_number: manuscript })
+            &.select(:id, :title, :identifier_id).to_a
           )
         end
       end
-      render json: dupes.uniq
+      @dupes = dupes.uniq
+      respond_to do |format|
+        format.js { render template: 'stash_engine/admin_datasets/dupe_check', formats: [:js] }
+        format.json { render json: @dupes }
+      end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # patch request
     # Saves the setting of the import type (manuscript, published, other).  While this is set on the identifier, put it
@@ -194,6 +209,11 @@ module StashEngine
     def import_type
       @resource.identifier.update(import_info: params[:import_info])
       render json: { import_info: params[:import_info] }, status: :ok
+    end
+
+    def license_agree
+      @resource.identifier.update(license_id: params[:license_id])
+      render json: { license_id: params[:license] }, status: :ok
     end
 
     private
@@ -207,10 +227,7 @@ module StashEngine
 
       # Save the journal and manuscript information in the dataset
       pub = StashEngine::ResourcePublication.find_or_create_by(resource_id: resource.id)
-      pub.publication_issn = j.single_issn
-      pub.publication_name = j.title
-      pub.manuscript_number = params['manu']
-      pub.save
+      pub.update({ publication_issn: j.single_issn, publication_name: j.title, manuscript_number: params['manu'] })
 
       # If possible, import existing metadata from the Manuscript objects into the dataset
       manu = StashEngine::Manuscript.where(journal: j, manuscript_number: params['manu']).first
@@ -252,3 +269,5 @@ module StashEngine
     end
   end
 end
+
+# rubocop:enable Metrics/ClassLength

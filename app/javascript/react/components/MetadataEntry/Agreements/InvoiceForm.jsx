@@ -10,26 +10,27 @@ const validateEmail = (value) => {
   return null;
 };
 
-export default function InvoiceForm({resource, setResource, ownerId}) {
-  const owner = resource.authors.find((a) => a.id === ownerId);
+export default function InvoiceForm({resource, setResource}) {
+  const {authors, users} = resource;
+  const submitter = authors.find((a) => a.author_orcid === users.find((u) => u.role === 'submitter')?.orcid);
   const [name, setName] = useState(null);
   const [email, setEmail] = useState(null);
   const formRef = useRef(null);
 
   useEffect(() => {
     async function getCustomer() {
-      axios.get(`/stash_datacite/authors/${owner.id}/invoice`).then((data) => {
+      axios.get(`/stash_datacite/authors/${submitter.id}/invoice`).then((data) => {
         if (data.data.name && data.data.email) {
           setName(data.data.name);
           setEmail(data.data.email);
         }
       });
     }
-    if (owner.stripe_customer_id) {
+    if (submitter.stripe_customer_id) {
       getCustomer();
     } else {
-      setName([owner?.author_first_name, owner?.author_last_name].filter(Boolean).join(' '));
-      setEmail(owner?.author_email);
+      setName([submitter?.author_first_name, submitter?.author_last_name].filter(Boolean).join(' '));
+      setEmail(submitter?.author_email);
     }
   }, []);
 
@@ -50,7 +51,7 @@ export default function InvoiceForm({resource, setResource, ownerId}) {
           '/stash_datacite/authors/invoice',
           {
             authenticity_token: document.querySelector("meta[name='csrf-token']")?.getAttribute('content'),
-            author: {id: owner.id, resource_id: resource.id},
+            author: {id: submitter.id, resource_id: resource.id},
             customer_name: values.name,
             customer_email: values.email,
           },

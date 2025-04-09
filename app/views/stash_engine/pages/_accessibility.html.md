@@ -20,7 +20,7 @@ If you have trouble using the Dryad website or blog or accessing our content, pl
   <div class="c-input__inline">
     <div class="c-input">
       <label for="name" class="c-input__label--required">Your name</label>
-      <input class="c-input__text" required="required" type="text" name="name" id="name"/>
+      <input class="c-input__text" required="required" type="text" name="name" id="name" autocomplete="name"/>
     </div>
   </div>
   <div class="c-input">

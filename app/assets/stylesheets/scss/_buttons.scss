@@ -8,8 +8,9 @@
 
   &:hover {opacity: 0.85;}
 
-  &[disabled] {
+  &[disabled], &[aria-disabled] {
     background-color: lighten($light-gray, 20%);
+    border-color: $light-gray;
     color: $dark-gray;
     opacity: 1;
   }
@@ -23,17 +24,27 @@
 
 .o-button__plain-text0 {
   @extend %o-button__plain-text;
-  padding: 8px 12px;
-  background-color: $green;
+  padding: 6px 10px;
+  border: thin solid $dark-green;
+  background-color: $dark-green;
   color: white;
+
+  &:focus {
+    border-color: white
+  }
 }
 
 .o-button__plain-text1,
 input[type=file]::file-selector-button {
   @extend %o-button__plain-text;
-  padding: 8px 12px;
+  padding: 6px 10px;
+  border: thin solid $dark-blue;
   background-color: $dark-blue;
   color: white;
+
+  &:focus {
+    border-color: white
+  }
 }
 
 .o-button__plain-text2 {
@@ -41,6 +52,33 @@ input[type=file]::file-selector-button {
   padding: 8px 12px;
   background-color: $lighter-blue;
 }
+
+button[class*="-toggle"], input[type="button"][class*="-toggle"] {
+  @extend %o-button__plain-text;
+  padding: 8px 12px;
+
+  &[disabled], &[aria-disabled] {
+    color: black;
+    border-bottom: thick solid currentColor;
+  }
+
+  &.button-toggle {
+    background-color: darken($lightest-green, 10);
+    &[disabled], &[aria-disabled] {
+      background-color: transparent;
+      border-color: darken($lightest-green, 10);
+    }
+  }
+
+  &.diff-toggle {
+    background-color: #edba5a;
+    &[disabled], &[aria-disabled] {
+      background-color: transparent;
+      border-color: #edba5a;
+    }
+  }
+}
+
 
 .o-button__plain-text3 {
   @extend %o-button__plain-text;
@@ -66,7 +104,6 @@ input[type=file]::file-selector-button {
   color: white;
   text-decoration: none;
 }
-
 
 %o-button__link-style {
   display: inline-block;

@@ -15,24 +15,24 @@
 <p>In all of our convenings we are committed to abiding by our <a href="/code_of_conduct">Code of conduct</a>.</p>
 
 ## Get to know Dryad
-<h3 id="our-members" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="our-members-sec">Our members</h3>
+<h3 class="expand-button"><button id="our-members" aria-expanded="false" aria-controls="our-members-sec">Our partners</button></h3>
 <div class="about-page" id="our-members-sec" hidden>
-<p>Dryad’s members are part of a non-profit, shared community working together to promote
-data publishing, curation, and preservation. The community benefits from Dryad’s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/join_us">Learn about joining us as a member organization</a>.</p>
+<p>Dryad’s partners are part of a non-profit, shared community working together to promote
+data publishing, curation, and preservation. The community benefits from Dryad’s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/join_us">Learn about joining us as a partner organization</a>.</p>
 <h4>Academic and research institutions</h4>
   <%= render "members_institutional" %>
 <h4>Publishing organizations</h4>
   <%= render "members_publishers" %>
 </div>
-<h3 id="our-board" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="our-board-sec">Our board</h3>
+<h3 class="expand-button"><button id="our-board" aria-expanded="false" aria-controls="our-board-sec">Our board</button></h3>
 <div class="about-page" id="our-board-sec" hidden>
   <%= render "our_governance" %>
 </div>
-<h3 id="our-staff" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="our-staff-sec">Our staff</h3>
+<h3 class="expand-button"><button id="our-staff" aria-expanded="false" aria-controls="our-staff-sec">Our staff</button></h3>
 <div class="about-page" id="our-staff-sec" hidden>
   <%= render "our_staff" %>
 </div>
-<h3 id="our-advisors" tabindex="0" class="expand-button" role="button" aria-expanded="false" aria-controls="our-advisors-sec">Our advisors</h3>
+<h3 class="expand-button"><button id="our-advisors" aria-expanded="false" aria-controls="our-advisors-sec">Our advisors</button></h3>
 <div class="about-page" id="our-advisors-sec" hidden>
   <%= render "our_advisors" %>
 </div>
@@ -40,7 +40,7 @@ data publishing, curation, and preservation. The community benefits from Dryad�
 
 ## Collaborations
 
-Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [member list](/our_membership) and [how to join us](/join_us).
+Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](#our_members) and [how to join us](/join_us).
 
 Dryad advocates for community-adopted standards for metadata and persistent identifiers in concert with DataCite, ORCID, ROR, and Funder Registry. 
 
@@ -62,7 +62,7 @@ We are also pleased to partner with the following organizations and initiatives,
 
 This list is a work-in-progress. If you’d like to suggest an addition, please [contact us](/contact). 
 
-Dryad is grateful to the following consortia and institutions for their support of Dryad through <a href="https://scoss.org/">SCOSS</a>. Their contributions enable us to grow our outreach and promotion efforts to bring new members into our community; increase community engagement with current members and users; and stay at the forefront of best practice for data-sharing and building best practice for data reuse. 
+Dryad is grateful to the following consortia and institutions for their support of Dryad through <a href="https://scoss.org/">SCOSS</a>. Their contributions enable us to grow our outreach and promotion efforts to bring new partners into our community; increase community engagement with current partners and users; and stay at the forefront of best practice for data-sharing and building best practice for data reuse. 
 
 <ul class="member-list">
   <li><h3>Council of Australian University Libraries (CAUL)</h3><ul>
@@ -139,13 +139,13 @@ The release of this statement was deeply formative in Dryad’s development and 
   </div>
   <div>
     <dt>2023</dt>
-    <dd><a href="https://blog.datadryad.org/2023/10/20/new-at-dryad-celebrating-a-milestone-in-the-dryad-and-cdl-partnership/">CDL transitions from Dryad partner to Dryad member</a></dd>
+    <dd><a href="https://blog.datadryad.org/2023/10/20/new-at-dryad-celebrating-a-milestone-in-the-dryad-and-cdl-partnership/">CDL transitions Dryad partnership</a></dd>
   </div>
 </dl>
 
 From 2018 to 2023, Dryad was supported by in-kind investment in product management, platform development, and grants management through a partnership with the California Digital Library (CDL).
 
-In 2024, the Dryad platform represents over 50,000 data publications – the work of over 200,000 researchers in connection with over 70,000 international institutions and over 1,000 academic journals. 
+In 2025, the Dryad platform represents over 50,000 data publications – the work of over 200,000 researchers in connection with over 70,000 international institutions and over 1,000 academic journals. 
 
 For the latest figures, read our [Annual report](https://github.com/datadryad/governance/tree/main/annual-reports).
      

@@ -55,10 +55,15 @@ a {
   display: inline-block;
   border: none;
   text-decoration: none;
-  padding: 8px 12px;
+  padding: 6px 10px;
   background-color: $dark-blue;
+  border: thin solid $dark-blue;
   color: white;
-  white-space: nowrap;
+  text-align: center;
+}
+
+.o-link__buttonlink:focus {
+  border: thin solid white;
 }
 
 .o-link__buttonlink:hover, .o-link__buttonlink:active {
@@ -161,7 +166,15 @@ a {
   mask-repeat: no-repeat;
   width: 1em;
   height: 1em;
-  margin-left: .5ch;
+  margin-left: .35ch;
+}
+
+.exit-icon {
+  margin-left: .35ch;
+  margin-right: .25ch;
+  display: inline-block;
+  vertical-align: -1px;
+  font-size: .9em;
 }
 
 .copy-icon {

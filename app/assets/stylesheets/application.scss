@@ -51,6 +51,10 @@ input:focus, button:focus, *[tabindex]:focus, a:focus-visible {
 	outline: 2px solid $medium-blue;
 }
 
+*[tabindex="-1"]:focus {
+  outline: 0;
+}
+
 a:focus-visible {
 	outline-offset: 4px;
 }
@@ -94,7 +98,6 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 @import 'scss/autosave';
 @import 'scss/cedar';
 @import 'scss/columns';
-@import 'scss/datasets-heading';
 @import 'scss/data-results';
 @import 'scss/real_facets';
 @import 'scss/fieldsets';

@@ -3,7 +3,7 @@
 %o-heading__level1 {
   margin-top: $spacing-md;
   margin-bottom: $spacing-sm;
-  color: $dark-blue;
+  color: $dark-navy;
   font-size: 2rem;
   line-height: 2.5rem;
   font-weight: normal;
@@ -38,7 +38,7 @@ h2, *[class^="o-heading__level2"] {
 %o-heading__level3 {
   margin-top: calc(#{$spacing-base} * 3.5);
   margin-bottom: calc(#{$spacing-base} * 1.5);
-  color: $dark-blue;
+  color: $dark-navy;
   font-size: 1.4rem;
   line-height: 1.75rem;
   font-weight: normal;
@@ -83,7 +83,7 @@ h4, *[class^="o-heading__level4"]  {
 }
 
 h5, h6 {
-  color: $dark-blue;
+  color: $dark-navy;
   margin-top: $spacing-sm;
   margin-bottom: $spacing-base;
   font-size: 1.125rem;
@@ -92,13 +92,17 @@ h5, h6 {
 }
 
 h6 {
-  color: $dark-navy;
   font-style: italic;
 }
 
 
-.expand-button {
-  cursor: pointer;
+.expand-button button {
+  text-align: left;
+  width: 100%;
+  color: $dark-blue;
+  background-color: transparent;
+  border: none;
+  padding: 0;
   border-bottom: thin solid $green;
 
   &::after {

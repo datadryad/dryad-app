@@ -8,6 +8,9 @@
 # IPs to allow outright
 Rack::Attack.safelist_ip('127.0.0.1')
 Rack::Attack.safelist_ip('::1')
+Rack::Attack.safelist_ip('130.14.25.148') # NCBI LinkOut integrity checker
+Rack::Attack.safelist_ip('130.14.254.25') # NCBI LinkOut integrity checker
+Rack::Attack.safelist_ip('130.14.254.26') # NCBI LinkOut integrity checker
 
 def start_w_wo_stash?(path, path_match)
   path.start_with?(path_match, "/stash#{path_match}")
@@ -31,6 +34,8 @@ Rack::Attack.blocklist('malicious_clients') do |req|
       (req.ip.start_with?('172.31') && start_w_wo_stash?(req.path,'/downloads')) ||
       (req.ip.start_with?('64.233') && start_w_wo_stash?(req.path,'/downloads')) ||
       (req.ip.start_with?('47.76') && start_w_wo_stash?(req.path,'/downloads')) ||
+      (req.ip.start_with?('8.210') && start_w_wo_stash?(req.path,'/downloads')) ||
+      (req.ip.start_with?('207.241') && start_w_wo_stash?(req.path,'/downloads')) ||
       (req.ip.start_with?('43.1') && req.path.start_with?('/search')) ||
       /\S+\.php/.match?(req.path)
   end
@@ -94,16 +99,19 @@ end
 # since it is expensive to asemble the zip files.
 Rack::Attack.throttle('zip_downloads_per_hour', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_hour], period: 1.hour) do |req|
   "zip_download_per_hour_#{req.ip}" if start_w_wo_stash?(req.path, '/downloads/download_resource') ||
+                              start_w_wo_stash?(req.path, '/downloads/zip_assembly_info') ||
                               req.path.match(/api.*(version|dataset).*download/)
 end
 
 Rack::Attack.throttle('zip_downloads_per_day', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_day], period: 1.day) do |req|
   "zip_download_per_day_#{req.ip}" if start_w_wo_stash?(req.path, '/downloads/download_resource') ||
+                              start_w_wo_stash?(req.path, '/downloads/zip_assembly_info') ||
                               req.path.match(/api.*(version|dataset).*download/)
 end
 
 Rack::Attack.throttle('zip_downloads_per_month', limit: APP_CONFIG[:rate_limit][:zip_downloads_per_month], period: 30.days) do |req|
   "zip_download_per_month_#{req.ip}" if start_w_wo_stash?(req.path, '/downloads/download_resource') ||
+                              start_w_wo_stash?(req.path, '/downloads/zip_assembly_info') ||
                               req.path.match(/api.*(version|dataset).*download/)
 end
 

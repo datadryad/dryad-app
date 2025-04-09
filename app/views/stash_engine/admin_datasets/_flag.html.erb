@@ -1,9 +1,9 @@
-<h1><%= @desc %></h1>
+<h1>Flag dataset</h1>
 <%= form_with(url: ds_admin_flag_path(@identifier.id), method: :post, local: false) do |form| -%>
   <div class="o-admin-dialog">
     <div class="c-input">
       <%= label_tag :flag, 'Select flag' %>
-      <%= select_tag(:flag, options_for_select([['', nil]] + StashEngine::Flag.flags.map { |k, _v| [k.upcase_first, k] }, ''), class: 'c-input__select', style: 'flex-shrink: 1; flex-grow: 1; min-width: 0; max-width: 100%;') %> 
+      <%= select_tag(:flag, options_for_select([['', nil]] + StashEngine::Flag.flags.map { |k, _v| [k.humanize, k] }, @resource.flag&.flag), class: 'c-input__select', style: 'flex-shrink: 1; flex-grow: 1; min-width: 0; max-width: 100%;') %> 
     </div>
   </div>
   <div class="c-modal__buttons-right">

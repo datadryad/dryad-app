@@ -1,0 +1,35 @@
+<div class="table-wrapper c-lined-table-wrapper" style="margin-top: 0;" role="region" tabindex="0" aria-label="Curation table">
+  <table class="c-lined-table" id="curation_table">
+    <thead>
+    <tr>
+      <th>
+        Resource ID
+      </th>
+      <th class="c-lined-table__sort" <%= sort_display('created_at') %>>
+        <%= sortable_column_head sort_field: 'created_at', title: 'Timestamp', remote: :true %>
+      </th>
+      <th>
+        Version
+      </th>
+      <th>
+        Status
+      </th>
+      <th>
+        Action taken by
+      </th>
+      <th>
+        Notes
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @curation_activities.each do |ca| %>
+      <%= render partial: 'activity_log_row', locals: {curation_activity: ca} %>
+    <% end %>
+  </tbody>
+  </table>
+</div>
+
+<div id="announce" aria-live="polite" class="screen-reader-only">
+  <% if params[:sort] %>Results sorted by timestamp, <%= params[:direction] %>ending.<% end %>
+</div>

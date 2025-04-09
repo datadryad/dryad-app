@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useId} from 'react';
 import {useSelect} from 'downshift';
+import {range} from 'lodash';
 import {editorViewCtx} from '@milkdown/core';
 import {callCommand} from '@milkdown/utils';
 // eslint-disable-next-line import/no-unresolved
@@ -12,8 +13,8 @@ const labels = {
   redo: 'Redo',
   strong: 'Bold',
   emphasis: 'Italic',
-  link: 'Link',
-  inlineCode: 'Code',
+  link: 'Add link',
+  inlineCode: 'Monospace',
   strike_through: 'Strikethrough text',
   bullet_list: 'Create list',
   ordered_list: 'Create numbered list',
@@ -26,26 +27,28 @@ const labels = {
 };
 
 const icons = {
-  undo: <i className="fa fa-undo" aria-hidden="true" />,
-  redo: <i className="fa fa-repeat" aria-hidden="true" />,
-  strong: <i className="fa fa-bold" aria-hidden="true" />,
-  emphasis: <i className="fa fa-italic" aria-hidden="true" />,
-  link: <i className="fa fa-link" aria-hidden="true" />,
-  inlineCode: <i className="fa fa-terminal" aria-hidden="true" />,
-  strike_through: <i className="fa fa-strikethrough" aria-hidden="true" />,
-  bullet_list: <i className="fa fa-list" aria-hidden="true" />,
-  ordered_list: <i className="fa fa-list-ol" aria-hidden="true" />,
-  indent: <i className="fa fa-indent" aria-hidden="true" />,
-  outdent: <i className="fa fa-outdent" aria-hidden="true" />,
-  blockquote: <i className="fa fa-quote-left" aria-hidden="true" />,
-  code_block: <i className="fa fa-code" aria-hidden="true" />,
-  table: <i className="fa fa-table" aria-hidden="true" />,
+  undo: <i className="fas fa-undo" aria-hidden="true" />,
+  redo: <i className="fas fa-rotate-right" aria-hidden="true" />,
+  strong: <i className="fas fa-bold" aria-hidden="true" />,
+  emphasis: <i className="fas fa-italic" aria-hidden="true" />,
+  link: <i className="fas fa-link" aria-hidden="true" />,
+  inlineCode: <i className="fas fa-terminal" aria-hidden="true" />,
+  strike_through: <i className="fas fa-strikethrough" aria-hidden="true" />,
+  bullet_list: <i className="fas fa-list" aria-hidden="true" />,
+  ordered_list: <i className="fas fa-list-ol" aria-hidden="true" />,
+  indent: <i className="fas fa-indent" aria-hidden="true" />,
+  outdent: <i className="fas fa-outdent" aria-hidden="true" />,
+  blockquote: <i className="fas fa-quote-left" aria-hidden="true" />,
+  code_block: <i className="fas fa-code" aria-hidden="true" />,
+  table: <i className="fas fa-table" aria-hidden="true" />,
 };
 
 function LinkMenu({editor, editorId, active}) {
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [showRemove, setRemove] = useState(false);
+  const textId = useId();
+  const urlId = useId();
 
   const getLink = (doc, pos, schema) => {
     const $pos = doc.resolve(pos);
@@ -101,6 +104,11 @@ function LinkMenu({editor, editorId, active}) {
     setUrl('');
   };
 
+  const leaveMenu = (e) => {
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    closeMenu();
+  };
+
   const clickListener = (e) => {
     const element = document.getElementById(`${editorId}linkMenu`).parentElement;
     if (!element.contains(e.target)) {
@@ -110,10 +118,14 @@ function LinkMenu({editor, editorId, active}) {
   };
 
   const openMenu = (e) => {
-    getSettings();
-    e.currentTarget.setAttribute('aria-expanded', true);
-    document.getElementById(`${editorId}linkMenu`).removeAttribute('hidden');
-    document.addEventListener('click', clickListener);
+    if (e.currentTarget.getAttribute('aria-expanded') === 'true') {
+      closeMenu();
+    } else {
+      getSettings();
+      e.currentTarget.setAttribute('aria-expanded', true);
+      document.getElementById(`${editorId}linkMenu`).removeAttribute('hidden');
+      document.addEventListener('click', clickListener);
+    }
   };
 
   const checkNewText = () => {
@@ -154,7 +166,7 @@ function LinkMenu({editor, editorId, active}) {
   };
 
   return (
-    <div className="linkSelect" role="menuitem">
+    <div className="linkSelect" role="menuitem" onBlur={leaveMenu}>
       <button
         type="button"
         className={active ? 'active' : undefined}
@@ -166,8 +178,8 @@ function LinkMenu({editor, editorId, active}) {
       >{icons.link}
       </button>
       <div className="linkMenu" id={`${editorId}linkMenu`} hidden>
-        <label>Link text <input type="text" value={text} onChange={(e) => setText(e.target.value)} /></label>
-        <label>URL <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} /></label>
+        <label htmlFor={textId}>Link text <input id={textId} type="text" value={text} onChange={(e) => setText(e.target.value)} /></label>
+        <label htmlFor={urlId}>URL <input id={urlId} type="text" value={url} onChange={(e) => setUrl(e.target.value)} /></label>
         <div className="buttons">
           <button type="button" onClick={submit}>Save</button>
           {showRemove && <button type="button" onClick={removeLink}>Remove</button>}
@@ -241,21 +253,67 @@ function List({type, editor, active}) {
   );
 }
 
+function Toggle({
+  type, editor, active, disabled,
+}) {
+  const callEditorCommand = () => {
+    const view = editor()?.ctx.get(editorViewCtx);
+    const {dispatch, state} = view;
+    const {
+      doc, selection, schema, tr,
+    } = state;
+    const {from: start, to: end} = selection;
+    if (doc.rangeHasMark(start, end === start ? end + 1 : end, schema.marks[type])) {
+      const {parent} = doc.resolve(start);
+      let from = start;
+      let to = end;
+      while (from > 0 && !doc.textBetween(from - 1, start).replace(/[ ]/g, '').length) {
+        from -= 1;
+      }
+      while (to < parent.childCount && !doc.textBetween(end, to + 1).replace(/[ ]/g, '').length) {
+        to += 1;
+      }
+      tr.setSelection(TextSelection.create(doc, from, to));
+      dispatch(tr);
+    }
+    editor()?.action(callCommand(commands[type].key));
+    view.focus();
+  };
+
+  return (
+    <button
+      type="button"
+      className={active ? 'active' : undefined}
+      disabled={disabled}
+      title={labels[type]}
+      aria-label={labels[type]}
+      role="menuitem"
+      onClick={callEditorCommand}
+    >{icons[type]}
+    </button>
+  );
+}
+
 function Table({
   active, editor, mdEditor, activeEditor, editorId,
 }) {
-  const startNum = [1, 2, 3, 4, 5, 6];
+  const startNum = range(1, 6);
   const [rows, setRows] = useState(startNum);
   const [cols, setCols] = useState(startNum);
-  const [colNum, setColNum] = useState(0);
-  const [rowNum, setRowNum] = useState(0);
+  const [tableNums, setNums] = useState([0, 0]);
 
   const closeMenu = () => {
     const menu = document.getElementById(`${editorId}tableMenu`);
     menu.previousElementSibling.setAttribute('aria-expanded', false);
     menu.hidden = true;
+    setNums([0, 0]);
     setCols(startNum);
     setRows(startNum);
+  };
+
+  const leaveMenu = (e) => {
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    closeMenu();
   };
 
   const clickListener = (e) => {
@@ -267,44 +325,56 @@ function Table({
   };
 
   const openMenu = (e) => {
-    e.currentTarget.setAttribute('aria-expanded', true);
-    document.getElementById(`${editorId}tableMenu`).removeAttribute('hidden');
-    document.addEventListener('click', clickListener);
+    if (e.currentTarget.getAttribute('aria-expanded') === 'true') {
+      closeMenu();
+    } else {
+      e.currentTarget.setAttribute('aria-expanded', true);
+      document.getElementById(`${editorId}tableMenu`).removeAttribute('hidden');
+      document.addEventListener('click', clickListener);
+    }
   };
 
   const select = (e) => {
     const col = Number(e.currentTarget.dataset.col);
     const row = Number(e.currentTarget.parentElement.dataset.row);
-    document.querySelectorAll('.tableEntry span').forEach((s) => {
-      if (s.dataset.col <= col && s.parentElement.dataset.row <= row) s.classList.add('hovering');
-    });
-    if (col === cols.length) setCols((c) => Array.from(new Set([...c, col + 1])));
-    if (row === rows.length) setRows((r) => Array.from(new Set([...r, row + 1])));
-    setColNum(col);
-    setRowNum(row);
+    setNums([col, row]);
   };
 
   const deselect = () => {
-    document.querySelectorAll('.tableEntry span').forEach((s) => s.classList.remove('hovering'));
-    setColNum(0);
-    setRowNum(0);
+    setNums([0, 0]);
   };
 
-  const submit = () => {
-    closeMenu();
-    document.removeEventListener('click', clickListener);
+  const submit = (e) => {
+    if (e) e.preventDefault();
+    const [col, row] = tableNums;
     if (activeEditor === 'visual') {
       const view = editor()?.ctx.get(editorViewCtx);
-      editor()?.action(callCommand(commands.table.key, {row: rowNum, col: colNum}));
+      editor()?.action(callCommand(commands.table.key, {row, col}));
       view.focus();
     } else if (activeEditor === 'markdown') {
-      mdCommands.table(mdEditor, rowNum, colNum);
+      mdCommands.table(mdEditor, row, col);
       mdEditor.focus();
     }
+    closeMenu();
+    document.removeEventListener('click', clickListener);
   };
 
+  useEffect(() => {
+    const [col, row] = tableNums;
+    document.querySelectorAll('.tableEntry span').forEach((s) => s.classList.remove('hovering'));
+    if (col > 0 || row > 0) {
+      document.querySelectorAll('.tableEntry span').forEach((s) => {
+        if (s.dataset.col <= col && s.parentElement.dataset.row <= row) s.classList.add('hovering');
+      });
+      if (col === cols.length) setCols((c) => Array.from(new Set([...c, col + 1])));
+      if (row === rows.length) setRows((r) => Array.from(new Set([...r, row + 1])));
+      if (col > cols.length) setCols(() => range(1, col + 1));
+      if (row > rows.length) setRows(() => range(1, row + 1));
+    }
+  }, tableNums);
+
   return (
-    <div className="tableSelect" role="menuitem">
+    <div className="tableSelect" role="menuitem" onBlur={leaveMenu}>
       <button
         type="button"
         className={active ? 'active' : undefined}
@@ -321,11 +391,6 @@ function Table({
         hidden
         style={{width: `${2.1 + (1.3 * cols.length)}rem`, height: `${3 + (1.3 * rows.length)}rem`}}
       >
-        <div className="screen-reader-only">
-          <input type="text" aria-label="Number of rows" value={rowNum} onChange={(e) => setRowNum(e.target.value)} />
-          <input type="text" aria-label="Number of columns" value={colNum} onChange={(e) => setColNum(e.target.value)} />
-          <button type="button" onClick={submit} aria-label={`Insert ${rowNum} x ${colNum} table`} />
-        </div>
         <div className="tableEntry">
           {rows.map((r) => (
             <div key={`row${r}`} data-row={r}>
@@ -335,7 +400,21 @@ function Table({
             </div>
           ))}
         </div>
-        <p style={{fontSize: '.8rem', textAlign: 'center', margin: '.5rem auto 0'}}>{(rowNum && colNum) ? `${rowNum} x ${colNum}` : ''}</p>
+        <form onSubmit={submit}>
+          <p className="tableMenuButtons">
+            <input type="text" aria-label="Number of rows" value={tableNums[1]} onChange={(e) => setNums(([c]) => [c, Number(e.target.value)])} />
+            x
+            <input
+              type="text"
+              aria-label="Number of columns"
+              value={tableNums[0]}
+              onChange={(e) => setNums(([, r]) => [Number(e.target.value), r])}
+            />
+            <button type="submit" className="o-button__plain-textlink" aria-label={`Insert a ${tableNums[1]} x ${tableNums[0]} table`}>
+              <i className="fas fa-square-plus" />
+            </button>
+          </p>
+        </form>
       </div>
     </div>
   );
@@ -406,6 +485,9 @@ function Button({
   if (activeEditor === 'visual') {
     if (type === 'link') return <LinkMenu active={active} editor={editor} editorId={editorId} />;
     if (type.includes('list')) return <List active={active} editor={editor} type={type} />;
+    if (['strong', 'emphasis', 'inlineCode', 'strike_through'].includes(type)) {
+      return <Toggle active={active} editor={editor} type={type} disabled={disabled} />;
+    }
   }
   const sharedProps = {
     active, editor, mdEditor, activeEditor,

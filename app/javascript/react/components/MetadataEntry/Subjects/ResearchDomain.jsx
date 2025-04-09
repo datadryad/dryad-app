@@ -52,7 +52,7 @@ function ResearchDomain({resource, setResource}) {
         <option value aria-label="Select a Research domain" />
         {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
       </select>
-      <div className="input-example"><i />The main scholarly or technical field for the data or project</div>
+      <div className="input-example"><i aria-hidden="true" />The main scholarly or technical field for the data or project</div>
     </form>
   );
 }

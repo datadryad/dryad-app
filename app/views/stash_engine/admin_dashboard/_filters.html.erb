@@ -1,6 +1,6 @@
 <%
 def selecter(id, options)
-  h = { member: 'Dryad member', sponsor: 'Journal sponsor' }
+  h = { member: 'Dryad partner', sponsor: 'Journal sponsor' }
   label = h[id.to_sym] || id.capitalize
 
   "<label for='filter-#{id}'>#{label}:</label>" +
@@ -22,16 +22,25 @@ end
   </div>
   <% if @role_object.blank? || @user_role.role == 'curator' %>
     <div class="o-admin-form-pair quarter-width">
-      <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
-    </div>
-    <div class="o-admin-form-pair quarter-width">
       <%= selecter('flag', [['', '']] + flag_select).html_safe %>
     </div>
+    <div class="o-admin-form-pair half-width">
+      <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
+    </div>
+    <div class="o-admin-form-pair half-width">
+      <%= render partial: 'stash_engine/shared/multi_select', locals: {
+        id: 'editor',
+        label: 'Curator editor:',
+        field_name: 'filters[editor]',
+        options: editor_select,
+        selected: @filters.dig(:editor)
+      } %>
+    </div>
   <% end %>
-  <div class="o-admin-form-pair <%= @role_object.blank? || @user_role.role == 'curator' ? 'quarter-width' : 'half-width' %>">
+  <div class="o-admin-form-pair half-width">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
       id: 'affiliation',
-      label: 'Affiliation',
+      label: 'Affiliation:',
       field_name: 'filters[affiliation]',
       options_path: '/stash_datacite/affiliations/autocomplete?query=',
       options_label: 'name',

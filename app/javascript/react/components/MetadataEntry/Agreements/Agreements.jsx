@@ -1,15 +1,19 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import {ExitIcon} from '../../ExitButton';
 import Calculations from './Calculations';
 import InvoiceForm from './InvoiceForm';
 
 export default function Agreements({
-  resource, setResource, form, previous, ownerId, setAuthorStep, config, preview = false,
+  resource, setResource, user, form, previous, setAuthorStep, config, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
   const curated = !!resource.identifier.process_date.curation_end;
+  const {users} = resource;
+  const submitter = users.find((u) => u.role === 'submitter');
+  const isSubmitter = user.id === submitter.id;
   const formRef = useRef(null);
   const [dpc, setDPC] = useState({});
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
@@ -98,7 +102,7 @@ export default function Agreements({
     <>
       {preview && (
         <>
-          <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
+          <h2>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h2>
           <div className="callout alt">
             {ppr ? (
               <p>
@@ -119,17 +123,19 @@ export default function Agreements({
         <>
           {!curated && dpc.automatic_ppr && (
             <>
-              <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
+              <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
               <p>
                 This submission is associated with a manuscript from an{' '}
-                <a href="/journals" target="_blank">integrated journal<span className="screen-reader-only"> (opens in new window)</span></a>.
+                <a href="/journals" target="_blank">integrated journal<ExitIcon /></a>.
                 It will remain private for peer review until formal acceptance of the associated manuscript.
               </p>
             </>
           )}
           {!curated && dpc.allow_review ? (
             <fieldset onChange={togglePPR}>
-              <h3 style={{marginTop: '.5rem'}}><legend>Publication{subType === 'collection' ? '' : ' of your files'}</legend></h3>
+              <legend role="heading" aria-level="3" style={{display: 'block', margin: '0'}} className="o-heading__level3">
+                {subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?
+              </legend>
               <p className="radio_choice">
                 <label style={!ppr ? {fontWeight: 'bold'} : {}}>
                   <input type="radio" name="peer_review" value="0" defaultChecked={!ppr} />
@@ -146,7 +152,7 @@ export default function Agreements({
             </fieldset>
           ) : (
             <>
-              <h3>Publication{subType === 'collection' ? '' : ' of your files'}</h3>
+              <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
               <p>
                 The private for peer review option is not available for this submission{reason}.
                 The submission will proceed to our curation process for evaluation and publication.
@@ -155,59 +161,70 @@ export default function Agreements({
           )}
         </>
       )}
-      {subType === 'collection' ? <h3>Terms</h3> : (
+      {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
+      {subType !== 'collection' && (
         <>
-          <h3>Payment and terms</h3>
-          {dpc.journal_will_pay && (
-            <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{resource.resource_publication.publication_name}</b></p>
-            </div>
-          )}
-          {!dpc.journal_will_pay && dpc.funder_will_pay && (
-            <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
-            </div>
-          )}
-          {!dpc.journal_will_pay && !dpc.funder_will_pay && dpc.institution_will_pay && (
+          {dpc.institution_will_pay && (
             <>
               <div className="callout">
                 <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
               </div>
-              {previous && resource.tenant !== previous.tenant && <p className="del ins">Member institution changed</p>}
+              {previous && resource.tenant !== previous.tenant && <p className="del ins">Partner institution changed</p>}
             </>
           )}
-          {dpc.user_must_pay && <Calculations resource={resource} previous={previous} dpc={dpc.dpc} config={config} />}
+          {!dpc.institution_will_pay && dpc.journal_will_pay && (
+            <div className="callout">
+              <p>Payment for this submission is sponsored by <b>{resource.resource_publication.publication_name}</b></p>
+            </div>
+          )}
+          {!dpc.institution_will_pay && !dpc.journal_will_pay && dpc.funder_will_pay && (
+            <div className="callout">
+              <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
+            </div>
+          )}
+          {dpc.user_must_pay && <Calculations resource={resource} dpc={dpc.dpc} config={config} />}
         </>
       )}
-      {preview ? (
+      {preview && (
         <div>
           {resource.accepted_agreement ? (
             <p>
               <i className="fas fa-circle-check" aria-hidden="true" />{' '}
               The submitter has agreed to Dryad&apos;s{' '}
-              <a href="/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
+              <a href="/terms" target="_blank">terms of submission<ExitIcon /></a>
             </p>
           ) : (
             <p style={{fontStyle: 'italic'}}><i className="fas fa-square" aria-hidden="true" />{' '} Terms not yet accepted</p>
           )}
         </div>
-      ) : (
+      )}
+      {!preview && !isSubmitter && (
+        <div className="callout warn">
+          <p>
+            Only the submitter can agree to the terms and conditions.
+            When you are done editing, please click &nbsp;
+            <b><i className="fas fa-floppy-disk" /> Save &amp; exit</b> &nbsp;
+            and ask the submitter to complete the submission.
+          </p>
+        </div>
+      )}
+      {!preview && isSubmitter && (
         <>
           {subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && dpc.user_must_pay && (
-            <InvoiceForm resource={resource} setResource={setResource} ownerId={ownerId} />
+            <InvoiceForm resource={resource} setResource={setResource} />
           )}
           {(subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay)) && (
             <>
               {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
-                <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad member.</p>
+                <p><b>Is this correct?</b> Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is also a Dryad partner.</p>
               )}
               {dpc.user_must_pay && (
                 <>
                   <div className="callout warn" style={{marginTop: '2em'}}>
-                    <p>Are you affiliated with a Dryad member institution that could sponsor this fee?</p>
+                    <p>Are you affiliated with a Dryad partner institution that could sponsor this fee?</p>
                   </div>
                   {!!dpc.aff_tenant && (
-                    <p>Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad member.</p>
+                    <p>Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad partner.</p>
                   )}
                 </>
               )}
@@ -235,7 +252,7 @@ export default function Agreements({
             <label>
               <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
               <span className="input-label">I agree</span> to Dryad&apos;s {subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}
-              <a href="/terms" target="_blank">terms of submission <span className="screen-reader-only"> (opens in new window)</span></a>
+              <a href="/terms" target="_blank">terms of submission<ExitIcon /></a>
             </label>
           </p>
         </>

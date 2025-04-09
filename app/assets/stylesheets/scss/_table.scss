@@ -16,6 +16,12 @@
 
 table {  
   border-collapse: collapse;
+
+  caption {
+    caption-side: bottom;
+    padding: $spacing-base;
+    font-style: italic;
+  }
 }
 
 tr {
@@ -24,6 +30,14 @@ tr {
 
 tbody tr:nth-child(odd) {
   background-color: #f6f6f6;
+}
+
+tfoot tr {
+  background-color: $lightest-blue;
+}
+
+th {
+  font-weight: bold;
 }
 
 td, th {
@@ -35,6 +49,21 @@ td, th {
 
   &:last-child {
     border-color: #888;
+  }
+}
+
+table.columned {
+  tr {
+    border: none;
+  }
+  tbody, thead, tfoot {
+    border: thin solid #888;
+  }
+  td, th {
+    border-right: thin solid #888;
+  }
+  tr:not(:last-child) {
+    border-bottom: thin solid #ddd;
   }
 }
 
@@ -133,7 +162,7 @@ td, th {
   }
 
   &:hover, &:focus, &:active {
-    color: $light-green;
+    color: $medium-green;
   }
 }
 

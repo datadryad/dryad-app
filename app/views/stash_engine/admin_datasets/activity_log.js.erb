@@ -1,0 +1,2 @@
+document.getElementById('activity_log').innerHTML = "<%= escape_javascript(render partial: 'activity_log') %>";
+<% if params[:pressed].present? %>document.querySelector('*[data-sort=<%=params[:pressed]%>]').focus()<% end %>

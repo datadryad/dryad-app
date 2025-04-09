@@ -4,6 +4,7 @@
 #
 #  id                      :integer          not null, primary key
 #  allow_review_workflow   :boolean          default(TRUE)
+#  covers_ldf              :boolean          default(FALSE)
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
 #  journal_code            :string(191)
@@ -44,7 +45,7 @@ module StashEngine
 
     scope :servers, -> { where(preprint_server: true) }
 
-    def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED]
+    def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED 2025]
 
     def will_pay?
       payment_plans.include?(payment_plan_type)

@@ -23,28 +23,42 @@ const makeAuthor = (resource_id = null, author_order = null) => {
 };
 
 describe('AuthorForm', () => {
-  let author; let ownerId;
+  let author; let users; let user;
   const update = () => {};
-  const remove = () => {};
   beforeEach(() => {
     author = makeAuthor();
-    ownerId = 27;
+    users = [{
+      id: 1,
+      first_name: author.author_first_name,
+      last_name: author.author_last_name,
+      role: 'creator',
+      orcid: author.author_orcid,
+      email: author.author_email,
+    }, {
+      id: 1,
+      first_name: author.author_first_name,
+      last_name: author.author_last_name,
+      role: 'submitter',
+      orcid: author.author_orcid,
+      email: author.author_email,
+    }];
+    user = {id: 1, curator: false, superuser: false};
   });
 
   it('renders the basic author form', () => {
-    render(<AuthorForm author={author} update={update} remove={remove} admin={false} ownerId={ownerId} />);
+    render(<AuthorForm author={author} update={update} users={users} user={user} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
     expect(labeledElements.length).toBe(1);
 
     expect(screen.getByLabelText('First name')).toHaveValue(author.author_first_name);
     expect(screen.getByLabelText('Last name')).toHaveValue(author.author_last_name);
-    expect(screen.getByLabelText('Email')).toHaveValue(author.author_email);
+    expect(screen.getByLabelText('Email address')).toHaveValue(author.author_email);
   });
 
   // gives some pointers and info about act and async examples
   // https://javascript.plainenglish.io/you-probably-dont-need-act-in-your-react-tests-2a0bcd2ad65c
-  it('checks that updating author triggers the save event and does axios call', async () => {
+  it('updating author triggers the save event and does axios call', async () => {
     const promise = Promise.resolve({
       status: 200,
       data: author,
@@ -52,7 +66,7 @@ describe('AuthorForm', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm author={author} update={update} remove={remove} admin={false} ownerId={ownerId} />);
+    render(<AuthorForm author={author} update={update} users={users} user={user} />);
 
     userEvent.clear(screen.getByLabelText('First name'));
     userEvent.type(screen.getByLabelText('First name'), 'Alphred');
@@ -66,7 +80,7 @@ describe('AuthorForm', () => {
     // This gives a warning when it runs in the console since we don't have the global JS items we use to display saving message
     // but it doesn't fail and test passes.
   });
-  it('checks that updating author triggers the save event and does axios call', async () => {
+  it('updating author triggers the save event and does axios call', async () => {
     const promise = Promise.resolve({
       status: 200,
       data: author,
@@ -74,7 +88,7 @@ describe('AuthorForm', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm author={author} update={update} remove={remove} admin={false} ownerId={ownerId} />);
+    render(<AuthorForm author={author} update={update} users={users} user={user} />);
 
     userEvent.clear(screen.getByLabelText('Last name'));
     userEvent.type(screen.getByLabelText('Last name'), 'Dryadsson');
@@ -85,7 +99,7 @@ describe('AuthorForm', () => {
 
     await waitFor(() => promise); // waits for the axios promise to fulfil
   });
-  it('checks that updating author triggers the save event and does axios call', async () => {
+  it('updating author triggers the save event and does axios call', async () => {
     const promise = Promise.resolve({
       status: 200,
       data: author,
@@ -93,12 +107,12 @@ describe('AuthorForm', () => {
 
     axios.patch.mockImplementationOnce(() => promise);
 
-    render(<AuthorForm author={author} update={update} remove={remove} admin={false} ownerId={ownerId} />);
+    render(<AuthorForm author={author} update={update} users={users} user={user} />);
 
-    userEvent.clear(screen.getByLabelText('Email'));
-    userEvent.type(screen.getByLabelText('Email'), 'email@email.edu');
+    userEvent.clear(screen.getByLabelText('Email address'));
+    userEvent.type(screen.getByLabelText('Email address'), 'email@email.edu');
 
-    await waitFor(() => expect(screen.getByLabelText('Email')).toHaveValue('email@email.edu'));
+    await waitFor(() => expect(screen.getByLabelText('Email address')).toHaveValue('email@email.edu'));
 
     userEvent.tab(); // tab out of element, should trigger save on blur
 

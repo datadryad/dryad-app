@@ -3,7 +3,7 @@ import Description from './Description';
 import Cedar from './Cedar';
 
 export default function DescriptionGroup({
-  resource, setResource, admin, cedar,
+  resource, setResource, curator, cedar,
 }) {
   const [res, setRes] = useState(resource);
 
@@ -18,17 +18,17 @@ export default function DescriptionGroup({
   const abstractLabel = {
     label: 'Abstract',
     required: true,
-    describe: <><i />An introductory description of your dataset</>,
+    describe: <><i aria-hidden="true" />An introductory description of your dataset</>,
   };
   const methodsLabel = {
     label: 'Methods',
     required: false,
-    describe: <><i />A description of the collection and processing of the data</>,
+    describe: <><i aria-hidden="true" />A description of the collection and processing of the data</>,
   };
   const usageLabel = {
     label: 'Usage notes',
     required: false,
-    describe: <><i />Programs and software required to open the data files</>,
+    describe: <><i aria-hidden="true" />Programs and software required to open the data files</>,
   };
 
   useEffect(() => {
@@ -50,19 +50,19 @@ export default function DescriptionGroup({
 
   return (
     <>
-      <Description dcsDescription={abstract} setResource={setRes} mceLabel={abstractLabel} admin={admin} />
+      <Description dcsDescription={abstract} setResource={setRes} mceLabel={abstractLabel} curator={curator} />
       {resource.resource_type.resource_type !== 'collection' && (
         <>
           {openMethods ? (
             <>
               <br />
-              <Description dcsDescription={methods} setResource={setRes} mceLabel={methodsLabel} admin={admin} />
+              <Description dcsDescription={methods} setResource={setRes} mceLabel={methodsLabel} curator={curator} />
             </>
           ) : (
             <p><button type="button" className="o-button__plain-text2" onClick={() => setOpenMethods(true)}>+ Add methods section</button></p>
           )}
           {usage?.description && (
-            <Description dcsDescription={usage} setResource={setRes} mceLabel={usageLabel} admin={admin} />
+            <Description dcsDescription={usage} setResource={setRes} mceLabel={usageLabel} curator={curator} />
           )}
           {showCedar && template && (
             <Cedar resource={res} setResource={setRes} editorUrl={cedar.editorUrl} templates={cedar.templates} singleTemplate={template} />

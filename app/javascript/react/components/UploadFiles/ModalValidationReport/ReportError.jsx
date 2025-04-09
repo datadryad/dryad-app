@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {ExitIcon} from '../../ExitButton';
 import ReportTable from './ReportTable';
 
 function getRowPositions(reportError) {
@@ -27,8 +28,7 @@ function ReportError(props) {
           rel="noreferrer"
         >
           <i className="fa fa-question-circle" aria-hidden="true" />
-          <em style={{fontSize: '.98em'}}>What does this mean?</em>
-          <span className="screen-reader-only"> (opens in new window)</span>
+          <em style={{fontSize: '.98em'}}>What does this mean?</em><ExitIcon />
         </a>
       </div>
 

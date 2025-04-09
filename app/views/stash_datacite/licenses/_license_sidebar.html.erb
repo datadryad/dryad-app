@@ -3,5 +3,7 @@
   <%= render partial: 'stash_datacite/licenses/no_license_review', locals: {right: right} %>
 <% else %>
   <h2>License:</h2>
-  <a href="https://spdx.org/licenses/CC0-1.0.html" target="_blank"><i class="fab fa-creative-commons-zero" aria-hidden="true"></i>Public domain<span class="screen-reader-only"> (opens in new window)</span></a>
+  <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank">
+    Public domain<span role="img" aria-label="CC0 (opens in new window)"><i class="fab fa-creative-commons" aria-hidden="true"></i><i class="fab fa-creative-commons-zero" aria-hidden="true"></i></span>
+  </a>
 <% end %>

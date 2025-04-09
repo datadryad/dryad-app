@@ -7,7 +7,7 @@
             <span><i class="fas fa-flag inst" aria-label="Flagged" title="<%= t.flag.note %>"></i></span>
           <% end %>
         <%= form_with(url: tenant_edit_path(id: t.id), method: :get, local: false) do %>
-          <button class="c-admin-edit-icon" aria-label="Edit member" aria-haspopup="dialog" id="edit_button_<%= t.id %>">
+          <button class="c-admin-edit-icon" aria-label="Edit institution" aria-haspopup="dialog" id="edit_button_<%= t.id %>">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
         <% end %>
@@ -24,7 +24,7 @@
 <td>
   <%= t.ror_ids.map {|r|
     org = t.ror_orgs.find{ |o| o.ror_id == r }
-    "<a href='#{r}' target='_blank'>#{org ? org.name : r}</a>"}.join(', ').html_safe
+    "<a href='#{r}' target='_blank'>#{org ? org.name : r}<i class='fas fa-arrow-up-right-from-square exit-icon' aria-label=' (opens in new window)' role='img'></i></a>"}.join(', ').html_safe
   %>
 </td>
 <td><%= t.campus_contacts.join(', ') %></td>

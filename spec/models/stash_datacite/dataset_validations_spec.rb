@@ -11,10 +11,8 @@ module StashDatacite
         @author2 = create(:author, resource: @resource)
         @author3 = create(:author, resource: @resource)
         @resource.subjects << [create(:subject), create(:subject), create(:subject)]
-        create(:data_file, resource: @resource)
-        @readme = create(:data_file, resource: @resource, upload_file_name: 'README.md')
-        create(:data_file, resource: @resource)
-        create(:data_file, resource: @resource)
+        create(:description, resource: @resource, description_type: 'technicalinfo')
+        4.times { create(:data_file, resource: @resource) }
         @resource.reload
       end
 
@@ -22,109 +20,25 @@ module StashDatacite
         it 'returns no errors if things are correctly filled' do
           validations = DatasetValidations.new(resource: @resource)
           allow(validations).to receive(:s3_error_uploads).and_return([]) # don't check with live S3 for this test
-          expect(validations.errors).to be_empty
+          expect(validations.errors).to be_falsey
         end
       end
 
-      describe :title do
-        it 'returns error if title not filled' do
-          @resource.update(title: '')
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.title
-          expect(error.message).to include('dataset title')
-          expect(error.ids.first).to eq("title__#{@resource.id}")
-        end
-        it 'returns error for nondescript title' do
-          @resource.update(title: 'Figure S1 Data supplement')
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.title
-          expect(error.message).to include('descriptive title')
-          expect(error.ids.first).to eq("title__#{@resource.id}")
-        end
-        it 'returns error for ALL CAPS title' do
-          @resource.update(title: @resource.title.upcase)
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.title
-          expect(error.message).to include('Correct the casing of your')
-          expect(error.ids.first).to eq("title__#{@resource.id}")
-        end
-      end
-
-      describe :authors do
-        it 'returns error for missing firstname' do
-          @author2.update(author_first_name: '')
-          validations = DatasetValidations.new(resource: @resource)
-          errors = validations.authors
-          error = errors.first
-          expect(errors.count).to eq(1)
-          expect(error.message).to include('2nd')
-          expect(error.message).to include('first name')
-          expect(error.ids.first).to include('author_first_name__')
-        end
-
-        it 'returns error for missing affiliation' do
-          @author2.affiliation.update(long_name: '*')
-          validations = DatasetValidations.new(resource: @resource)
-          errors = validations.authors
-          error = errors.first
-          expect(errors.count).to eq(1)
-          expect(error.message).to include('2nd')
-          expect(error.message).to include('institutional affiliation')
-          expect(error.ids.first).to include('instit_affil__')
-        end
-
-        it 'returns error for missing corresponding author email' do
-          @author1.update(author_email: '')
-          validations = DatasetValidations.new(resource: @resource)
-          errors = validations.authors
-          error = errors.first
-          expect(errors.count).to eq(1)
-          expect(error.message).to include("submitting author's email")
-          expect(error.ids.first).to include('author_email__')
-        end
-      end
-
-      describe :research_domain do
-        it 'returns error an error object if research domain (FOS subject) not filled' do
-          @resource.update(subjects: [])
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.research_domain
-          expect(error.message).to include('research domain')
-          expect(error.ids.first).to eq("fos_subjects__#{@resource.id}")
-        end
-      end
-
-      describe :abstract do
-        it 'returns error for missing abstract' do
-          abstract = @resource.descriptions.where(description_type: 'abstract').first
-          abstract.update(description: '')
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.abstract
-          expect(error.message).to include('abstract')
-          expect(error.ids.first).to eq('abstract_label')
-        end
-      end
-
-      describe :article_id do
+      describe :import do
         it 'gives error for unfilled publication' do
           @resource.identifier.update(import_info: 'published')
 
           validations = DatasetValidations.new(resource: @resource)
-          error = validations.article_id.first
-
-          expect(error.message).to include('journal of the related publication')
-          expect(error.ids).to eq(%w[publication])
+          error = validations.import
+          expect(error).to eq('Journal name missing')
         end
 
-        it 'gives error for unfilled publication doi if publication' do
-          @resource.identifier.update(import_info: 'published')
-          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
+        it 'gives error for unfilled preprint server' do
+          @resource.identifier.update(import_info: 'preprint')
 
           validations = DatasetValidations.new(resource: @resource)
-          error = validations.article_id.first
-
-          expect(error.message).to include('formatted DOI')
-          expect(error.ids).to eq(%w[primary_article_doi])
+          error = validations.import
+          expect(error).to eq('Preprint server missing')
         end
 
         it 'gives error for unfilled manuscript number if manuscript' do
@@ -132,10 +46,17 @@ module StashDatacite
           create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
 
           validations = DatasetValidations.new(resource: @resource)
-          error = validations.article_id.first
+          error = validations.import
+          expect(error).to eq('Manuscript number missing')
+        end
 
-          expect(error.message).to include('manuscript number')
-          expect(error.ids).to eq(%w[msId])
+        it 'gives error for unfilled publication doi if publication' do
+          @resource.identifier.update(import_info: 'published')
+          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
+
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.import
+          expect(error).to eq('DOI missing')
         end
 
         it 'gives a formatting error when someone puts in a URL instead of a DOI' do
@@ -145,10 +66,8 @@ module StashDatacite
             'primary_article')
 
           validations = DatasetValidations.new(resource: @resource)
-          error = validations.article_id.first
-
-          expect(error.message).to include('formatted DOI')
-          expect(error.ids).to eq(%w[primary_article_doi])
+          error = validations.import
+          expect(error).to eq('DOI missing')
         end
 
         it "doesn't give error if manuscript filled" do
@@ -157,9 +76,8 @@ module StashDatacite
                  manuscript_number: '12xu')
 
           validations = DatasetValidations.new(resource: @resource)
-          errors = validations.article_id
-
-          expect(errors).to eq([])
+          error = validations.import
+          expect(error).to be_falsey
         end
 
         it "doesn't give error if DOI filled" do
@@ -169,9 +87,93 @@ module StashDatacite
                  related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
 
           validations = DatasetValidations.new(resource: @resource)
-          errors = validations.article_id
+          error = validations.import
+          expect(error).to be_falsey
+        end
+      end
 
-          expect(errors).to eq([])
+      describe :title do
+        it 'returns error if title not filled' do
+          @resource.update(title: '')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.title
+          expect(error).to eq('Blank title')
+        end
+        it 'returns error for nondescript title' do
+          @resource.update(title: 'Figure S1 Data supplement')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.title
+          expect(error).to eq('Nondescriptive title')
+        end
+        it 'returns error for ALL CAPS title' do
+          @resource.update(title: @resource.title.upcase)
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.title
+          expect(error).to eq('All caps title')
+        end
+      end
+
+      describe :authors do
+        it 'returns error for missing submitter' do
+          @author1.update(author_orcid: '')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.authors
+          expect(error).to eq('Submitter missing')
+        end
+        it 'returns error for missing submitter email' do
+          @author1.update(author_email: '')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.authors
+          expect(error).to eq('Submitter email missing')
+        end
+        it 'returns error for missing firstname' do
+          @author2.update(author_first_name: '')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.authors
+          expect(error).to eq('Names missing')
+        end
+        it 'returns error for missing affiliation' do
+          @author2.affiliation.destroy
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.authors
+          expect(error).to eq('Affiliations missing')
+        end
+        it 'returns error for duplicate name' do
+          @author2.update(author_first_name: @author1.author_first_name, author_last_name: @author1.author_last_name)
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.authors
+          expect(error).to eq('Duplicate author names')
+        end
+        it 'returns error for duplicate email' do
+          @author2.update(author_email: @author1.author_email)
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.authors
+          expect(error).to eq('Duplicate author emails')
+        end
+        it 'returns error for no corresp' do
+          @resource.authors.update_all(corresp: false)
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.authors
+          expect(error).to eq('Published email missing')
+        end
+      end
+
+      describe :abstract do
+        it 'returns error for missing abstract' do
+          abstract = @resource.descriptions.where(description_type: 'abstract').first
+          abstract.update(description: '')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.abstract
+          expect(error).to eq('Abstract missing')
+        end
+      end
+
+      describe :subjects do
+        it 'returns error an error object if research domain (FOS subject) not filled' do
+          @resource.update(subjects: [])
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.subjects
+          expect(error).to eq('Research domain missing')
         end
       end
 
@@ -189,16 +191,30 @@ module StashDatacite
 
         it 'returns collected datasets error when collection has no related identifiers' do
           validations = DatasetValidations.new(resource: @collection)
-          error = validations.collected_datasets.first
-          expect(error.message).to include('datasets in the collection')
+          error = validations.collected_datasets
+          expect(error).to eq('No datasets in the collection')
         end
 
         it 'returns no errors when collected datasets are present' do
           create(:related_identifier, relation_type: 'haspart', work_type: 'dataset', resource_id: @collection.id,
                                       related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
           validations = DatasetValidations.new(resource: @collection)
-          errors = validations.collected_datasets
-          expect(errors).to eq([])
+          error = validations.collected_datasets
+          expect(error).to be_falsey
+        end
+      end
+
+      describe :required_data_files do
+        before(:each) do
+          @resource.generic_files.each { |f| f.update(url: 'http://example.com') }
+        end
+
+        it 'requires at least one data file' do
+          @resource.data_files.destroy_all
+          create(:data_file, resource: @resource, upload_file_name: 'README.md')
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.data_required
+          expect(error).to eq('No data files')
         end
       end
 
@@ -211,11 +227,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.s3_error_uploads
-          expect(error.message).to include('Check that the following file(s) have uploaded')
-          expect(error.message).to include(files[0].upload_file_name)
-          expect(error.message).to include(files[1].upload_file_name)
-          expect(error.message).to include(files[2].upload_file_name)
-          expect(error.ids.first).to eq('filelist_id')
+          expect(error).to eq('Upload file errors')
         end
 
         it 'does not check missing files once Merritt processing is complete' do
@@ -226,7 +238,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.s3_error_uploads
-          expect(errors).to eq([])
+          expect(errors).to be_falsey
         end
 
         it 'only checks files that are new uploads and are not urls' do
@@ -240,7 +252,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.s3_error_uploads
-          expect(errors).to eq([])
+          expect(errors).to be_falsey
         end
       end
 
@@ -261,8 +273,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.url_error_validating
-
-          expect(errors).to eq([])
+          expect(errors).to be_falsey
         end
 
         it 'returns no errors when all newly created files are valid' do
@@ -273,8 +284,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           errors = validations.url_error_validating
-
-          expect(errors).to eq([])
+          expect(errors).to be_falsey
         end
 
         it 'returns error when at least one newly created file has an error' do
@@ -284,9 +294,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.url_error_validating
-
-          expect(error.message).to include('are available and publicly viewable')
-          expect(error.message).to include(@resource.data_files.first.upload_file_name)
+          expect(error).to eq('URL file errors')
         end
 
         it 'returns error when at least one Zenodo file has an error' do
@@ -302,53 +310,19 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.url_error_validating
-
-          expect(error.message).to include('are available and publicly viewable')
-          expect(error.message).to include(@resource.software_files.first.upload_file_name)
-        end
-
-      end
-
-      describe :required_readme do
-        it 'requires a README file' do
-          @readme.update(upload_file_name: 'some-bogus-filename.txt')
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.readme_required
-          expect(error.message).to include('README')
-
-          @readme.update(upload_file_name: 'README.md')
-          error = validations.readme_required
-          expect(error).to be_empty
+          expect(error).to eq('URL file errors')
         end
       end
 
-      describe :required_data_files do
-        before(:each) do
-          @resource.generic_files.each { |f| f.update(url: 'http://example.com') }
-        end
-
-        it 'requires at least one data file' do
-          @resource.data_files.destroy_all
-          create(:data_file, resource: @resource, upload_file_name: 'README.md')
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.data_required
-          expect(error.message).to include('one data file')
-        end
-      end
-
-      describe :over_file_count do
+      describe :over_max do
         it 'gives error if over file count' do
           allow(APP_CONFIG.maximums).to receive(:files).and_return(2) # limit is lower than our files
 
           validations = DatasetValidations.new(resource: @resource)
-          error = validations.over_file_count
-
-          expect(error.message).to include('limit the number of files to 2')
-          expect(error.ids.first).to eq('filelist_id')
+          error = validations.over_max
+          expect(error).to eq('Too many files')
         end
-      end
 
-      describe :over_files_size do
         it 'gives an error if over file size for merritt data files' do
           size = @resource.generic_files.sum(:upload_file_size)
           @resource.generic_files.update_all(type: 'StashEngine::DataFile')
@@ -356,10 +330,8 @@ module StashDatacite
           allow(APP_CONFIG.maximums).to receive(:merritt_size).and_return(size - 1)
 
           validations = DatasetValidations.new(resource: @resource)
-          errors = validations.over_files_size
-
-          expect(errors.first.message).to include('Data uploads are limited')
-          expect(errors.first.ids.first).to eq('filelist_id')
+          error = validations.over_max
+          expect(error).to eq('Over file size limit')
         end
 
         it 'gives an error if over file size for zenodo software files' do
@@ -370,10 +342,8 @@ module StashDatacite
           allow(APP_CONFIG.maximums).to receive(:zenodo_size).and_return(size - 1)
 
           validations = DatasetValidations.new(resource: @resource)
-          errors = validations.over_files_size
-
-          expect(errors.first.message).to include('Software uploads are limited')
-          expect(errors.first.ids.first).to eq('filelist_id')
+          error = validations.over_max
+          expect(error).to eq('Over file size limit')
         end
 
         it 'gives an error if over file size for zenodo supplemental files' do
@@ -384,10 +354,17 @@ module StashDatacite
           allow(APP_CONFIG.maximums).to receive(:zenodo_size).and_return(size - 1)
 
           validations = DatasetValidations.new(resource: @resource)
-          errors = validations.over_files_size
+          error = validations.over_max
+          expect(error).to eq('Over file size limit')
+        end
+      end
 
-          expect(errors.first.message).to include('Supplemental uploads are limited')
-          expect(errors.first.ids.first).to eq('filelist_id')
+      describe :required_readme do
+        it 'requires a README' do
+          @resource.descriptions.type_technical_info.first.destroy
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.readme_required
+          expect(error).to eq('README file missing')
         end
       end
     end

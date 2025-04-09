@@ -82,6 +82,7 @@
   margin: 0;
   padding: 0;
   display: flex;
+  flex-wrap: wrap;
 
   &#site-menu {
     display: none;
@@ -96,6 +97,7 @@
     align-items: baseline;
     margin: 0 -10px 2px;
     background-color: $lightest-blue;
+    flex-wrap: wrap;
 
     @include bp(screen1) {
       margin: 0 -20px 2px;
@@ -223,7 +225,7 @@
       top: 100%;
       right: -1px;
       margin: 0;
-      min-width: 180px;
+      min-width: 150px;
       white-space: nowrap;
       border-right: thin solid $lighter-green;
     }
@@ -380,7 +382,7 @@
   .o-global-search__input {
     font-size: 1em;
     min-width: 6ch;
-    width: calc(100% - 48px);
+    width: calc(100% - 58px);
     margin-right: -32px;
     padding-right: calc(32px + .5em);
   }

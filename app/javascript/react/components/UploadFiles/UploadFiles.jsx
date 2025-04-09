@@ -336,7 +336,7 @@ export default function UploadFiles({
                   c.id = new_file.id;
                   c.sanitized_name = new_file.upload_file_name;
                   c.status = 'Uploaded';
-                  c.dl_url = new_file.dl_url;
+                  c.uploaded = new_file.uploaded;
                 }
                 return c;
               }));
@@ -412,7 +412,7 @@ export default function UploadFiles({
 
     if (!files.valid_urls.length) return;
     let successfulUrls = files.valid_urls.map((f) => {
-      f.dl_url = f.url;
+      f.uploaded = true;
       return f;
     });
     if (chosenFiles.length) {
@@ -525,8 +525,11 @@ export default function UploadFiles({
       <p style={{fontSize: '.98rem'}}>
         By uploading files to Dryad, you agree they will be licensed as{' '}
         <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">
-          <i className="fab fa-creative-commons-zero" aria-hidden="true" style={{marginRight: '.5ch'}} />
-          Public domain<span className="screen-reader-only"> (opens in new window)</span>
+          Public domain
+          <span role="img" aria-label="CC0 (opens in new window)" style={{marginLeft: '.25ch'}}>
+            <i className="fab fa-creative-commons" aria-hidden="true" />
+            <i className="fab fa-creative-commons-zero" aria-hidden="true" />
+          </span>
         </a>
       </p>
       <p style={{fontSize: '.98rem'}} hidden={zenodo}>

@@ -58,17 +58,33 @@ We recommend:
 * **Related works**: Use this field to indicate resources, other than the primary article, that are associated with the data. Examples include related datasets, preprints, etc.
 
 
-## Cost
+## Unsponsored author fees
 
-Dryad is a nonprofit organization that provides long-term access to its contents at no cost to users. We are able to provide free access to data due to financial support from members and data submitters. Dryad's Data Publishing Charges (DPCs) are designed to recover the core costs of curating and preserving data.
+Dryad is a nonprofit organization that provides long-term access to its contents at no cost to users. We are able to provide free access to data due to financial support from partners and data submitters. Dryad's Data Publishing Charges (DPCs) are designed to recover the core costs of curating and preserving data.
 
-The base DPC per data submission is $<%=  Stash::Payments::Invoicer.data_processing_charge(identifier: StashEngine::Identifier.last) / 100 %> USD. DPCs are invoiced upon curator approval for publication, unless the submitter is based at a [member institution](/join_us#members) (determined by login credentials) or an [associated journal or publisher](/journals) has an agreement with Dryad to sponsor the DPC.
+Authors not affiliated with a Dryad partner organization are asked to pay a DPC by credit card at the time of submission. Invoices may be requested for an additional administration fee of 199 USD.
+
+<div style="text-align: center;">
+<div class="table-wrapper" role="region" tabindex="0" style="width: 500px; max-width: 100%; margin: 0 auto">
+  <table style="width: 100%;" id="cost">
+    <caption>
+      All fees are listed in USD
+    </caption>
+    <thead>
+      <tr class="callout"><th colspan="3" style="text-align: center;">Unsponsored author fees<p style="font-weight: normal; margin: 0 auto">Effective May 1, 2025</p></th></tr>
+      <tr>
+        <th>Dataset size</th>
+        <th>DPC</th>
+        <th>Per GB</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: 'fee_calculator/table_ind' %>
+    </tbody>
+  </table>
+</div>
+</div>
 
 We are sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the data publication charge, for any reason, we’ve expanded our waiver policy so that any author may request one. To submit your request for consideration, complete the [Fee Waiver Application form](https://docs.google.com/forms/d/e/1FAIpQLSekWZ4Dap7TYh0nap8JmPJ1dBTGeoBl1xnLS4xGH-REfrYCTQ/viewform).
 
 Effective June 2024, Dryad's data publication charge cannot be paid using vouchers.
-
-
-### Overage fees
-
-For submissions without a sponsor or waiver, Dryad charges excess storage fees for data totaling over 50GB. For data packages in excess of 50GB, submitters will be charged $50 for each additional 10GB, or part thereof (submissions between 50 and 60GB = $50 USD, between 60 and 70GB = $100 USD, and so on).

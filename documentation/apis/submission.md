@@ -27,7 +27,24 @@ is shown below, but typical metadata should be more complete:
         "affiliation": "University of the Example"
       }
    	 ],
-    "abstract": "Cyberneticists agree that concurrent models are an interesting new topic, and security experts concur."
+     "keywords": [
+	"Dryad",
+	"Computer",
+	"Examples",
+	"Interesting"
+    ],
+    "fieldOfScience": "Animal and dairy science",
+    "abstract": "Cyberneticists agree that concurrent models are an interesting new topic, and security experts concur.",
+     "funders": [ 
+	{
+		"organization": "Savannah River Operations Office",
+		"identifierType": "ror",
+		"identifier": "https://ror.org/05hhm9a98",
+		"awardNumber": "12345" },
+	{
+	    "organization": "The Cat Chronicles",
+	    "awardNumber": "cat383"
+	}]
   }
 ```
 
@@ -120,7 +137,7 @@ resp = RestClient.put(
 return_hash = JSON.parse(resp)
 ```
 
-After a file upload you will get a digest and digestType back in the JSON.  You can check this against your local file to be certain it was uploaded correctly if you wish.
+After a file upload you will not get a digest and digestType back in the JSON. The digest and digestType will be generated on the moment the dataset is submitted and the file is uploaded to permanent storage.
 The other method is adding by URL.  You can do a POST to {{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/urls with json something like the following:
 
 ### Upload by URL reference
@@ -143,7 +160,7 @@ To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/ap
 This will add entries to the database with the information you specify.  Only the `url` is required. Other fields, which are optional, are described below:
 
 - `path` can provide a filename when the name is not specified in the URL (this is common when the URL is using an identifier string rather than a file name)
-- `digest` and `digestType` are not required, but if they are added then they will be added to the database in place of a generated checksum. If the digest doesn't match when the file is downloaded from the internet, that will cause an error on ingesting and you'll need to check/fix it.
+- `digest` and `digestType` are not required, but if they are added then they will be added to the database in place of a generated checksum. If the digest doesn't match when the file is downloaded from the internet, that will cause an error on the moment the dataset gets submitted.
 - `skipValidation`, if true, will tell DASH to skip the step of validating the existence of the file
 
 ## Submit your dataset

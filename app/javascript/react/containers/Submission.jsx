@@ -5,9 +5,10 @@ import {BrowserRouter, useLocation} from 'react-router-dom';
 import {upCase} from '../../lib/utils';
 import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
+import ExitButton from '../components/ExitButton';
 import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Publication';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
-import Validation, {ValPreview, validationCheck} from '../components/MetadataEntry/Validation';
+import Compliance, {CompPreview, complianceCheck} from '../components/MetadataEntry/Compliance';
 import Description, {DescPreview, abstractCheck} from '../components/MetadataEntry/Description';
 import Subjects, {SubjPreview, keywordPass, keywordFail} from '../components/MetadataEntry/Subjects';
 import Support, {SuppPreview, fundingCheck} from '../components/MetadataEntry/Support';
@@ -16,12 +17,12 @@ import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
 import Agreements from '../components/MetadataEntry/Agreements';
 import SubmissionHelp, {
-  PublicationHelp, AuthHelp, SuppHelp, SubjHelp, DescHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
+  PublicationHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, CompHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
 /* eslint-disable jsx-a11y/no-autofocus */
 
 function Submission({
-  submission, ownerId, admin, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
+  submission, user, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
 }) {
   const location = useLocation();
   const subRef = useRef(null);
@@ -31,41 +32,40 @@ function Submission({
   const [open, setOpen] = useState(window.innerWidth > 600);
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
   const previous = resource.previous_curated_resource;
-  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const steps = [
     {
       name: 'Title',
       index: 0,
       pass: publicationPass(resource),
-      fail: (review || publicationPass(resource)) && publicationFail(resource),
+      fail: (review || publicationPass(resource)) && publicationFail(resource, review),
       component: <Publication resource={resource} setResource={setResource} maxSize={config_maximums.merritt_size} />,
       help: <PublicationHelp />,
-      preview: <PubPreview resource={resource} previous={previous} admin={admin} />,
+      preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Authors',
       index: 1,
-      pass: resource.authors.length > 0 && !authorCheck(resource.authors, ownerId),
-      fail: (review || step.index > 0) && authorCheck(resource.authors, ownerId),
-      component: <Authors resource={resource} setResource={setResource} admin={admin} ownerId={ownerId} />,
+      pass: resource.authors.length > 0 && !authorCheck(resource),
+      fail: (review || step.index > 0) && authorCheck(resource),
+      component: <Authors resource={resource} setResource={setResource} user={user} />,
       help: <AuthHelp />,
-      preview: <AuthPreview resource={resource} previous={previous} admin={admin} />,
+      preview: <AuthPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Description',
       index: 2,
-      pass: resource.descriptions.some((d) => !!d.description),
-      fail: (review || step.index > 3) && abstractCheck(resource),
-      component: <Description resource={resource} setResource={setResource} admin={admin} cedar={config_cedar} />,
+      pass: !abstractCheck(resource),
+      fail: (review || step.index > 1) && abstractCheck(resource),
+      component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
-      preview: <DescPreview resource={resource} previous={previous} />,
+      preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Subjects',
       index: 3,
       pass: keywordPass(resource.subjects),
-      fail: (review || step.index > 2) && keywordFail(resource.subjects),
+      fail: (review || step.index > 2) && keywordFail(resource),
       component: <Subjects resource={resource} setResource={setResource} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} previous={previous} />,
@@ -77,22 +77,22 @@ function Submission({
       fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support resource={resource} setResource={setResource} />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
-      preview: <SuppPreview resource={resource} previous={previous} />,
+      preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
-      name: 'Validation',
+      name: 'Compliance',
       index: 5,
-      pass: !validationCheck(resource),
-      fail: (review || step.index > 4) && validationCheck(resource),
-      component: <Validation resource={resource} setResource={setResource} />,
-      help: null,
-      preview: <ValPreview resource={resource} previous={previous} />,
+      pass: !complianceCheck(resource),
+      fail: (review || step.index > 4) && complianceCheck(resource),
+      component: <Compliance resource={resource} setResource={setResource} />,
+      help: <CompHelp />,
+      preview: <CompPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Files',
       index: 6,
       pass: resource.generic_files.length > 0,
-      fail: (review || step.index > 5) && filesCheck(resource.generic_files, admin, config_maximums),
+      fail: (review || step.index > 5) && filesCheck(resource, user.superuser, config_maximums),
       component: <UploadFiles
         resource={resource}
         setResource={setResource}
@@ -103,7 +103,7 @@ function Submission({
         config_payments={config_payments}
       />,
       help: <FilesHelp />,
-      preview: <FilesPreview resource={resource} previous={previous} admin={admin} maxSize={config_maximums.files} />,
+      preview: <FilesPreview resource={resource} previous={previous} curator={user.curator} maxSize={config_maximums.merritt_size} />,
     },
     {
       name: 'README',
@@ -117,7 +117,7 @@ function Submission({
         // errors={readmeCheck(resource)}
       />,
       help: <ReadMeHelp />,
-      preview: <ReadMePreview resource={resource} previous={previous} admin={admin} />,
+      preview: <ReadMePreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Related works',
@@ -126,7 +126,7 @@ function Submission({
       fail: worksCheck(resource, (review || step.index > 7)),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title'))} />,
-      preview: <WorksPreview resource={resource} previous={previous} admin={admin} />,
+      preview: <WorksPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Agreements',
@@ -137,12 +137,12 @@ function Submission({
         config={config_payments}
         resource={resource}
         setResource={setResource}
+        user={user}
         form={change_tenant}
-        ownerId={ownerId}
         setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
-      preview: <Agreements config={config_payments} resource={resource} previous={previous} preview />,
+      preview: <Agreements config={config_payments} resource={resource} user={user} previous={previous} preview />,
     },
   ];
 
@@ -178,14 +178,19 @@ function Submission({
   }, [review, location]);
 
   useEffect(() => {
+    const url = window.location.search.slice(1);
     const main = document.getElementById('maincontent');
     if (review && step.name === 'Create a submission') {
       main.classList.add('submission-review');
+      if (url) document.querySelector(`*[data-slug=${url}]`)?.focus();
+      window.history.pushState(null, null, null);
     } else if (review) {
       main.classList.remove('submission-review');
-    } else if (step.name !== 'Create a submission') {
+    } else {
+      document.querySelector('#submission-header h2')?.focus();
+    }
+    if (step.name !== 'Create a submission') {
       const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
-      const url = window.location.search.slice(1);
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
     }
   }, [review, step]);
@@ -207,29 +212,32 @@ function Submission({
       const url = window.location.search.slice(1);
       if (url) {
         setStep(steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
-      } else if (steps.find((c) => c.fail) || steps.findLast((c) => c.pass)) {
-        if (steps.find((c) => c.fail)) {
-          setStep(steps.find((c) => c.fail));
-        } else {
-          const stop = (steps.findLastIndex((c) => c.pass) + 1) > (steps.length - 1);
-          setStep(stop ? steps.findLast((c) => c.pass) : steps[steps.findLastIndex((c) => c.pass) + 1]);
-        }
+      } else if (steps.find((c) => c.fail || c.pass)) {
+        setStep(steps.find((c) => !c.pass));
       }
-    } else if (resource.identifier.publication_date) {
-      document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
+    } else {
+      document.documentElement.classList.add('preview_submission');
+      if (resource.identifier.publication_date) {
+        document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
+      }
     }
   }, []);
 
   if (review) {
     return (
       <>
-        <h1>{upCase(resource.resource_type.resource_type)} submission preview{step.name !== 'Create a submission' ? ' editor' : ''}</h1>
+        <div id="submission-heading">
+          <div>
+            <h1>{upCase(resource.resource_type.resource_type)} submission preview{step.name !== 'Create a submission' ? ' editor' : ''}</h1>
+            <ExitButton resource={resource} />
+          </div>
+        </div>
         <nav aria-label="Submission editing" className={step.name !== 'Create a submission' ? 'screen-reader-only' : null}>
           <Checklist steps={steps} step={{}} setStep={setStep} open />
         </nav>
         {step.name === 'Create a submission' && (
           <>
-            <div id="submission-preview" ref={previewRef} className={admin ? 'track-changes' : null}>
+            <div id="submission-preview" ref={previewRef} className={user.curator ? 'track-changes' : null}>
               {steps.map((s) => (
                 <section key={s.name} aria-label={s.name}>
                   {s.preview}
@@ -237,7 +245,7 @@ function Submission({
                 </section>
               ))}
             </div>
-            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} authenticityToken={authenticity_token} admin={admin} />
+            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} user={user} />
           </>
         )}
         <dialog id="submission-step" open={step.name !== 'Create a submission' || null}>
@@ -296,14 +304,19 @@ function Submission({
 
   return (
     <>
-      <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
+      <div id="submission-heading">
+        <div>
+          <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
+          <ExitButton resource={resource} />
+        </div>
+      </div>
       <div className="submission-edit">
         <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
         <div id="submission-wizard" className={open ? 'open' : null}>
           <div id="submission-step" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
             <div ref={subRef}>
               <div id="submission-header">
-                <h2 className="o-heading__level2">{step.name}</h2>
+                <h2 className="o-heading__level2" tabIndex="-1">{step.name}</h2>
                 <div role="status">
                   <div className="saving_text" hidden>Saving&hellip;</div>
                   <div className="saved_text" hidden>All progress saved</div>

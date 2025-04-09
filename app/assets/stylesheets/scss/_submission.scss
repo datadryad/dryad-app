@@ -1,3 +1,7 @@
+html.preview_submission {
+  scroll-padding-bottom: 115px;
+}
+
 .metadata_entry_pages_find_or_create {
   max-width: none;
   padding-left: 0;
@@ -23,31 +27,60 @@
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      & > h1 {
-        margin: 0 auto;
-        width: 100%;
-        padding: .5rem 1rem;
+      & > #submission-heading {
+        padding: .5rem 0;
         background-color: $lightest-green;
-        color: black;
-        box-sizing: border-box;
-        text-align: center;
-        font-size: 1.3rem;
         box-shadow: 0 3px 2px -2px $lightest-green;
+        width: 100%;
+        div {
+          margin: 0 auto;
+          box-sizing: border-box;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 2ch;
+          h1 {
+            flex: 3;
+            margin: 0;
+            margin-left: 110px;
+            color: black;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.3rem;
+          }
+          button i {
+            margin-right: .25ch;
+          }
+          @media (max-width: 600px) {
+            flex-direction: row-reverse;
+            h1 {
+              margin-left: 0;
+              margin-right: 110px;
+            }
+          }
+        }
       }
     }
     div, section {
       box-sizing: border-box;
     }
 
+    &.submission-review > div:not(.c-admin-editing-banner) > #submission-heading h1 {
+      @media (max-width: 600px) {
+        margin-right: 0;
+      }
+    }
+
     &.submission-review > div:not(.c-admin-editing-banner) {
       display: grid;
       row-gap: 1.5rem;
       grid-template-columns: 1fr 2fr;
-      grid-template-rows: repeat(11, minmax(auto, auto));
+      grid-template-rows: repeat(12, minmax(auto, auto));
       @media (max-width: 811px) {
         row-gap: .75rem;
         grid-template-columns: 100%;
-        grid-template-rows: repeat(20, minmax(auto, auto));
+        grid-template-rows: repeat(22, minmax(auto, auto));
         grid-template-areas:
           "head"
           "label1"
@@ -68,13 +101,15 @@
           "area8"
           "label9"
           "area9"
+          "label10"
+          "area10"
           "submit"
       }
       @media (min-width: 1220px){
         grid-template-columns: calc(50vw - 300px) 1fr;
       }
 
-      & > h1 {
+      & > #submission-heading {
         grid-row: 1;
         grid-column: span 2;
         margin: 0 auto -1.5rem;
@@ -91,12 +126,12 @@
 
       #submission-checklist, #submission-preview {
         display: grid;
-        grid-row: 2/span 10;
+        grid-row: 2/span 11;
         grid-template-rows: subgrid;
         max-width: 100%;
         box-sizing: border-box;
         @media (max-width: 811px) {
-          grid-row: 2/span 19;
+          grid-row: 2/span 20;
           grid-template-columns: subgrid;
           grid-column: 1;
         }
@@ -150,6 +185,9 @@
             }
             &:nth-child(9) {
               grid-area: label9;
+            }
+            &:nth-child(10) {
+              grid-area: label10;
             }
           }
         }
@@ -235,6 +273,9 @@
             &:nth-child(9) {
               grid-area: area9;
             }
+            &:nth-child(10) {
+              grid-area: area10;
+            }
           }
         }
       }
@@ -264,13 +305,24 @@
             margin: 0;
           }
         }
-        form button {
-          white-space: nowrap;
+        form {
+          button {
+            white-space: nowrap;
+          }
+          &:only-child {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            row-gap: 1ch;
+            column-gap: 2ch;
+          }
         }
       }
     }
   }
-  .c-header, #page-footer {
+  .c-header, #page-footer, #submission-heading div {
     @extend %pull-background;
     box-sizing: border-box;
     width: 100%;
@@ -519,11 +571,11 @@ dialog#submission-step[open] {
     margin-top: 0;
   }
 
-  *[aria-invalid] {
+  *[aria-invalid="true"] {
     border: thin solid $red !important;
   }
 
-  label:has(input[type="checkbox"][aria-invalid]) {
+  label:has(input[type="checkbox"][aria-invalid="true"]) {
     color: $red;
   }
 }
@@ -532,6 +584,12 @@ dialog#submission-step[open] {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  flex-wrap: wrap;
+  gap: 1ch;
+  margin-bottom: 1rem;
+  * {
+    margin-bottom: 0;
+  }
   & + * {
     margin-top: 0;
   }
@@ -571,6 +629,21 @@ dialog#submission-step[open] {
   color: $dark-gray;
 }
 
+%author-form-button {
+  color: $dark-blue;
+  background-color: white;
+  border: thin solid $medium-blue;
+  line-height: 0;
+  font-size: .98rem;
+  &:hover, &:active, &:focus {
+    background-color: $dark-blue;
+    color: white;
+  }
+  &:focus {
+    border: thin solid white;
+  }
+}
+
 .author-form, .funder-form, .work-form {
   display: flex;
   align-items: baseline;
@@ -580,24 +653,15 @@ dialog#submission-step[open] {
   flex: 1;
 
   .remove-record, & + .remove-record {
-    @extend %o-button__link-style;
+    @extend %author-form-button;
     margin-top: 28px;
-  }
-}
-
-%author-form-button {
-  color: $dark-blue;
-  background-color: white;
-  border: thin solid $medium-blue;
-  padding: 2px 5px;
-  &:hover, &:active, &:focus {
-    background-color: $dark-blue;
-    color: white;
+    font-size: 1.1rem;
+    padding: 4px;
   }
 }
 
 .author-form > div {
-  flex-basis: calc(33% - 1ch);
+  flex-basis: calc(50% - 1ch);
   flex-shrink: 1;
   flex-grow: 0;
   max-width: 100%;
@@ -605,6 +669,11 @@ dialog#submission-step[open] {
   * {
     max-width: 100%;
     text-overflow: ellipsis;
+  }
+  &.author-one-line {
+    align-self: center;
+    min-width: 0;
+    flex-basis: auto;
   }
   &.affiliation-input {
     flex: 1;
@@ -616,33 +685,48 @@ dialog#submission-step[open] {
       flex-wrap: nowrap;
       button {
         @extend %author-form-button;
-        line-height: 0;
-        font-size: .9rem;
-      }
-    }
-
-    & + span {
-      display: block;
-      align-self: start;
-      button {
-        @extend %author-form-button;
-        margin-top: 28px;
-        font-size: .98rem;
-        padding-bottom: 0;
       }
     }
   }
-  @media (max-width: $screen-lg-min) {
-    flex-basis: calc(50% - 1ch);
+  .add-aff-button {
+    @extend %author-form-button;
+    line-height: 1;
+    padding: 8px 6px 6px;
+  }
+  @media (min-width: 600px) and (max-width: 610px) {
+    flex-basis: 100%;
   }
   @media (max-width: 520px) {
     flex-basis: 100%;
   }
 }
 
-.open .author-form > div {
-  @media (max-width: 740px) {
+.author-form.email-opts {
+  flex-basis: 100%;
+  & > div:first-child {
+    flex-basis: auto;
+    flex: 1;
+    max-width: calc(50% - 1ch);
+    @media (min-width: 600px) and (max-width: 610px) {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+    @media (max-width: 520px) {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+.remove-collab-button {
+  @extend %author-form-button;
+  margin-left: 1ch;
+}
+
+.open .author-form > div, .author-form.email-opts > div:first-child {
+  @media (min-width: 600px) and (max-width: 740px) {
     flex-basis: 100%;
+    max-width: 100%;
   }
 }
 
@@ -666,6 +750,9 @@ dialog#submission-step[open] {
       max-width: 100%;
       text-overflow: ellipsis;
     }
+  }
+  & > div:first-of-type {
+    flex-basis: 100%;
   }
 }
 
@@ -721,34 +808,22 @@ dialog#submission-step[open] {
 
   &.track-changes {
     ins, .ins, del {
-      padding: 4px 0 2px;
+      padding: 5px 0 3px;
     }
     .ins {
-      background-color: lighten($lightest-orange, 5);
+      background-color: $lightest-orange;
     }
     ins {
       text-decoration: none;
-      background-color: lighten($lightest-orange, 5);
+      background-color: $lightest-orange;
     }
-    .del {
-      display: block;
-    }
-    del {
+    del, .del {
       display: inline;
       background-color: $lightest-red;
       text-decoration: line-through;
-    }
-
-    .highlight-readme {
-      .del {
-        display: inline;
+      * {
         background-color: $lightest-red;
-      }
-      del p, ins p {
-        display: inline;
-      }
-      ins.ins-before::after {
-        content: ' ';
+        text-decoration: line-through;
       }
     }
   }

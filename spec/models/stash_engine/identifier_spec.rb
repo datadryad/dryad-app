@@ -2,24 +2,25 @@
 #
 # Table name: stash_engine_identifiers
 #
-#  id                  :integer          not null, primary key
-#  deleted_at          :datetime
-#  edit_code           :string(191)
-#  identifier          :text(65535)
-#  identifier_type     :text(65535)
-#  import_info         :integer
-#  payment_type        :string(191)
-#  pub_state           :string
-#  publication_date    :datetime
-#  search_words        :text(65535)
-#  storage_size        :bigint
-#  waiver_basis        :string(191)
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  latest_resource_id  :integer
-#  license_id          :string(191)      default("cc0")
-#  payment_id          :text(65535)
-#  software_license_id :integer
+#  id                      :integer          not null, primary key
+#  deleted_at              :datetime
+#  edit_code               :string(191)
+#  identifier              :text(65535)
+#  identifier_type         :text(65535)
+#  import_info             :integer
+#  last_invoiced_file_size :bigint
+#  payment_type            :string(191)
+#  pub_state               :string
+#  publication_date        :datetime
+#  search_words            :text(65535)
+#  storage_size            :bigint
+#  waiver_basis            :string(191)
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  latest_resource_id      :integer
+#  license_id              :string(191)
+#  payment_id              :text(65535)
+#  software_license_id     :integer
 #
 # Indexes
 #
@@ -203,7 +204,7 @@ module StashEngine
         end
       end
 
-      describe '#resources_with_file_changes' do
+      describe '#resources.with_file_changes' do
         before(:each) do
           DataFile.create(resource_id: @res1.id, upload_file_name: 'cat', file_state: 'created')
           DataFile.create(resource_id: @res2.id, upload_file_name: 'cat', file_state: 'copied')
@@ -211,7 +212,7 @@ module StashEngine
         end
 
         it 'returns the version that changed' do
-          resources = @identifier.resources_with_file_changes
+          resources = @identifier.resources.with_file_changes.distinct
           expect(resources.first.id).to eq(@res1.id)
           expect(resources.count).to eq(2)
         end
@@ -488,16 +489,6 @@ module StashEngine
         expect(@identifier.payment_type).to eq('institution')
       end
 
-      xit 'records an a country-based fee waiver' do
-        affil = double(StashDatacite::Affiliation)
-        allow(affil).to receive(:fee_waivered?).and_return(true)
-        allow(affil).to receive(:country_name).and_return('Bogusland')
-        allow(@identifier).to receive(:submitter_affiliation).and_return(affil)
-        @identifier.record_payment
-        expect(@identifier.payment_type).to eq('waiver')
-        expect(@identifier.waiver_basis).to eq('Bogusland')
-      end
-
       it 'records a funder-based payment' do
         allow_any_instance_of(StashEngine::Resource).to receive(:contributors).and_return(
           [
@@ -655,22 +646,23 @@ module StashEngine
       end
     end
 
-    describe '#large_files?' do
-      it 'returns false when large files are not present' do
-        expect(@identifier.large_files?).to eq(false)
-      end
-
-      it 'returns true when large files are present' do
-        DataFile.create(
-          resource: @res3,
-          file_state: 'created',
-          upload_file_name: 'created.bin',
-          upload_file_size: 1.0e+14
-        )
-        expect(@identifier.large_files?).to eq(true)
-      end
-
-    end
+    # TODO: Cleanup - method for this is commented
+    # describe '#large_files?' do
+    #   it 'returns false when large files are not present' do
+    #     expect(@identifier.large_files?).to eq(false)
+    #   end
+    #
+    #   it 'returns true when large files are present' do
+    #     DataFile.create(
+    #       resource: @res3,
+    #       file_state: 'created',
+    #       upload_file_name: 'created.bin',
+    #       upload_file_size: 1.0e+14
+    #     )
+    #     expect(@identifier.large_files?).to eq(true)
+    #   end
+    #
+    # end
 
     describe '#calculated_pub_state' do
 

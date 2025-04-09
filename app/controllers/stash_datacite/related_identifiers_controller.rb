@@ -15,12 +15,21 @@ module StashDatacite
       @related_identifier.verified = @related_identifier.live_url_valid?
       respond_to do |format|
         if @related_identifier.save
-          format.js
+          format.js do
+            load_activity
+          end
           format.json do
             render json: @related_identifier.as_json.merge(valid_url_format: @related_identifier.valid_url_format?)
           end
         else
-          format.html { render :new }
+          errs = @related_identifier.errors.full_messages
+          @error_message = errs&.first
+          format.js do
+            render 'stash_engine/user_admin/update_error' and return if @error_message
+          end
+          format.json do
+            render json: @error_message, status: :unprocessable_entity
+          end
         end
       end
     end
@@ -30,12 +39,21 @@ module StashDatacite
       respond_to do |format|
         if @related_identifier.update(calc_related_identifier_params)
           @related_identifier.update(verified: @related_identifier.live_url_valid?)
-          format.js
+          format.js do
+            load_activity
+          end
           format.json do
             render json: @related_identifier.as_json.merge(valid_url_format: @related_identifier.valid_url_format?)
           end
         else
-          format.html { render :edit }
+          errs = @related_identifier.errors.full_messages
+          @error_message = errs&.first
+          format.js do
+            render 'stash_engine/user_admin/update_error' and return if @error_message
+          end
+          format.json do
+            render json: @error_message, status: :unprocessable_entity
+          end
         end
       end
     end
@@ -44,7 +62,9 @@ module StashDatacite
     def delete
       @related_identifier.destroy unless params[:id] == 'new'
       respond_to do |format|
-        format.js
+        format.js do
+          load_activity
+        end
         format.json { render json: @related_identifier }
       end
     end
@@ -74,6 +94,13 @@ module StashDatacite
     end
 
     private
+
+    def load_activity
+      @related_work = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id)
+      @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :primary_article)
+      @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :preprint)
+      render template: 'stash_engine/admin_datasets/publications_reload', formats: [:js]
+    end
 
     # these params are now being calculated based indirect information
     def calc_related_identifier_params

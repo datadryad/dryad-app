@@ -10,7 +10,7 @@
       <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
           <div class="c-input">
             <%= ca.label :status, 'Status', class: 'c-input__label' %>
-            <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_status)), {include_blank: true}, {id: 'activity_status_select', class: 'c-input__select'} %>
+            <%= ca.select :status, options_for_select(filter_status_select(@resource.current_curation_status)), {include_blank: true}, {class: 'c-input__select', required: true} %>
           </div>
       <% end %>
     <% else %>
@@ -21,15 +21,15 @@
       <%= form.label :publication_date, 'Publication date', class: 'c-input__label' %>
       <%= form.date_field :publication_date, class: 'c-input__text' %>
     </div>
-  <% when 'current_editor' %>
+  <% when 'curator' %>
     <p>Change curator for <em><%= @resource.title %></em></p>
     <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
     <%# Users cannot change the editor once the files are published %>
     <% if @resource.curatable? %>
-      <%= form.fields_for :current_editor, @resource do |r| %>
+      <%= form.fields_for :curator, @resource do |r| %>
         <div class="c-input">
           <%= r.label :id, 'Curator', class: 'c-input__label' %>
-          <%= r.select :id, options_for_select([['(unassign)', '0']] + editor_select, @resource.user_id), {include_blank: true}, {class: 'c-input__select', id: 'current_editor'} %>
+          <%= r.select :id, options_for_select([['(unassign)', '0']] + editor_select, @resource.user_id), {include_blank: true}, {class: 'c-input__select'} %>
         </div>
       <% end %>
     <% end %>
@@ -37,7 +37,7 @@
   <%= form.fields_for :curation_activity, @curation_activity do |ca| %>
     <div class="c-input">
       <%= ca.label :note, 'Notes', class: 'c-input__label' %>
-      <%= ca.text_area :note, class: 'c-input__textarea', id: 'activity_note', style: 'width: 100%;' %>
+      <%= ca.text_area :note, class: 'c-input__textarea', style: 'width: 100%;' %>
     </div>
   <% end %>
   <div class="c-modal__buttons-right">

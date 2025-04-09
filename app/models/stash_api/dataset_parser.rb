@@ -192,7 +192,8 @@ module StashApi
         author_email: parse_email(json_author[:email]),
         author_orcid: json_author[:orcid] || @previous_orcids["#{json_author[:firstName]} #{json_author[:lastName]}"],
         resource_id: @resource.id,
-        author_order: json_author[:order] || nil
+        author_order: json_author[:order] || nil,
+        corresp: parse_email(json_author[:email]).present?
       )
       # If the affiliation was provided, prefer the ROR id over a textual name.
       if json_author[:affiliationROR].present?
@@ -217,7 +218,8 @@ module StashApi
     def ensure_license
       return unless @resource.rights.blank?
 
-      license = StashEngine::License.by_id(@resource.identifier.license_id)
+      @resource.identifier.update(license_id: 'cc0')
+      license = StashEngine::License.by_id('cc0')
       @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
     end
 

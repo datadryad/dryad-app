@@ -2,7 +2,7 @@ import React from 'react';
 
 const cName = (name) => (name?.endsWith('*') ? name.slice(0, -1) : name);
 
-export default function SuppPreview({resource, previous, admin}) {
+export default function SuppPreview({resource, previous, curator}) {
   const facility = resource.contributors.find((c) => c.contributor_type === 'sponsor');
   const funders = resource.contributors.filter((c) => c.contributor_type === 'funder');
   const pFacility = previous?.contributors.find((c) => c.contributor_type === 'sponsor');
@@ -13,9 +13,17 @@ export default function SuppPreview({resource, previous, admin}) {
       {facility && facility.contributor_name && (
         <div className="o-metadata__group2-item">
           Research facility:{' '}
-          {previous && facility.contributor_name !== pFacility.contributor_name ? (
-            <><ins>facility.contributor_name</ins>{pFacility.contributor_name && <del>{pFacility.contributor_name}</del>}</>
+          {previous && facility.contributor_name !== pFacility?.contributor_name ? (
+            <><ins>{facility.contributor_name}</ins>{pFacility?.contributor_name && <del>{pFacility.contributor_name}</del>}</>
           ) : facility.contributor_name}
+          {curator && !facility.name_identifier_id && (
+            <i
+              className="fas fa-triangle-exclamation unmatched-icon"
+              role="note"
+              aria-label="Unmatched facility"
+              title="Unmatched facility"
+            />
+          )}
         </div>
       )}
       {(!facility || !facility.contributor_name) && pFacility?.contributor_name && (
@@ -31,13 +39,13 @@ export default function SuppPreview({resource, previous, admin}) {
                 <li key={funder.id}>
                   <span>
                     {previous && cName(funder.contributor_name) !== cName(prev?.contributor_name) ? (
-                      <ins>cName(funder.contributor_name)</ins>
+                      <ins>{cName(funder.contributor_name)}</ins>
                     ) : cName(funder.contributor_name) }
-                    {admin && !funder.name_identifier_id && (
+                    {curator && !funder.name_identifier_id && (
                       <i className="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched funder" title="Unmatched funder" />
                     )}
                     {previous && cName(funder.contributor_name) !== cName(prev?.contributor_name) && cName(prev?.contributor_name) && (
-                      <del>cName(prev?.contributor_name)</del>
+                      <del>{cName(prev?.contributor_name)}</del>
                     )}
                   </span>
                   {funder.award_number && (

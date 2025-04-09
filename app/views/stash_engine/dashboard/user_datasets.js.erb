@@ -1,8 +1,7 @@
 document.getElementById('user_datasets').innerHTML = "<%= escape_javascript(render(partial: 'user_datasets')) %>";
-(function () {
-  window.onpageshow = function(event) {
-    if (event.persisted) {
-        window.location.reload();
-      }
-  };
-})();
+
+var noClicks = Array.from(document.getElementsByClassName('prevent-click'));
+noClicks.forEach(button => {
+  button.removeEventListener('click', preventClicks);
+  button.addEventListener('click', preventClicks);
+});

@@ -1,0 +1,11 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>You have been invited to collaborate on the Dryad data submission <em><%= @resource.title %></em>. This submission can now be found on your Dryad <a href="https://datadryad.org/dashboard">My datasets page</a>.</p>
+
+<% if @role == 'submitter' %>
+  <p>You have been nominated to be the point of contact with Dryad for this submission, and will have final approval to submit it when you and your collaborators have completed it.</p>
+<% end %>
+
+<p>You may edit the submission whenever it is not being edited by a collaborator. To edit the submission, click "Edit" or "Resume" on the "My datasets" page. To save your work and close your editing session, click "Save &amp; exit".</p>
+
+<p>If you have questions, please get in touch with us at <a href="mailto:<%= @helpdesk_email %>?subject=Question regarding DOI:<%= @resource.identifier_value %>"><%= @helpdesk_email %></a>.</p>

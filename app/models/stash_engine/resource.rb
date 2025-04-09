@@ -70,7 +70,7 @@ module StashEngine
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
-    has_one :curator, class_name: 'StashEngine::User', primary_key: 'user_id', foreign_key: 'id'
+    has_one :curator, class_name: 'StashEngine::User', primary_key: 'user_id', foreign_key: 'id', touch: false, dependent: nil
     has_one :current_resource_state,
             class_name: 'StashEngine::ResourceState',
             primary_key: 'current_resource_state_id',
@@ -79,7 +79,7 @@ module StashEngine
             class_name: 'StashEngine::CurationActivity',
             primary_key: 'last_curation_activity_id',
             foreign_key: 'id'
-    has_one :editor, class_name: 'StashEngine::User', primary_key: 'current_editor_id', foreign_key: 'id'
+    has_one :editor, class_name: 'StashEngine::User', primary_key: 'current_editor_id', foreign_key: 'id', touch: false, dependent: nil
     has_many :submission_logs, class_name: 'StashEngine::SubmissionLog', dependent: :destroy
     has_many :resource_states, class_name: 'StashEngine::ResourceState', dependent: :destroy
     has_many :edit_histories, class_name: 'StashEngine::EditHistory', dependent: :destroy
@@ -114,7 +114,7 @@ module StashEngine
     has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
 
     after_create :create_process_date, unless: :process_date
-    after_update_commit :update_salesforce_metadata, if: [:saved_change_to_current_editor_id?, proc { |res| res.editor&.min_curator? }]
+    after_update_commit :update_salesforce_metadata, if: [:saved_change_to_user_id?, proc { |res| res.curator&.min_curator? }]
     after_save_commit :save_first_pub_date, if: proc { |res| res.publication_date.present? }
 
     # self.class.reflect_on_all_associations(:has_many).select{ |i| i.name.to_s.include?('file') }.map{ |i| [i.name, i.class_name] }
@@ -130,7 +130,7 @@ module StashEngine
 
     amoeba do
       include_association %i[authors generic_files contributors datacite_dates descriptions geolocations temporal_coverages publication_years
-                             publisher related_identifiers resource_type rights flag sizes subjects resource_publication roles]
+                             publisher related_identifiers resource_type rights flag sizes subjects resource_publications roles]
       customize(->(_, new_resource) {
         # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
         new_resource.current_resource_state_id = nil
@@ -223,6 +223,11 @@ module StashEngine
 
     scope :with_public_metadata, -> do
       where(meta_view: true)
+    end
+
+    scope :with_file_changes, -> do
+      joins(:data_files)
+        .where(stash_engine_generic_files: { file_state: %w[created deleted], type: 'StashEngine::DataFile' })
     end
 
     scope :files_published, -> do
@@ -428,7 +433,7 @@ module StashEngine
     # item and then never fill anything in.  This cleans up those items.  Probably useful in the review page.
     def cleanup_blank_models!
       related_identifiers.where("related_identifier is NULL or related_identifier = ''").destroy_all # no id? this related item is blank
-      return unless contributors.where(contributor_type: 'funder', contributor_name: 'N/A')
+      return if contributors.where(contributor_type: 'funder', contributor_name: 'N/A').empty?
 
       contributors.where(contributor_type: 'funder').where.not(contributor_name: 'N/A').destroy_all
       # if no funders has been selected, destroy all other funders
@@ -627,6 +632,13 @@ module StashEngine
         .order(id: :desc).first
     end
 
+    def previous_published_resource
+      StashEngine::Resource.joins(:last_curation_activity)
+        .where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
+        .where(identifier_id: identifier_id).where('stash_engine_resources.id < ?', id)
+        .order(id: :desc).first
+    end
+
     def previous_resource_published?
       %w[published embargoed].include?(previous_resource&.last_curation_activity&.status)
     end
@@ -735,7 +747,7 @@ module StashEngine
 
     # may not be able to match one up
     def owner_author
-      return nil unless submitter&.orcid.present? # apparently there are cases where user doesn't have an orcid
+      return nil unless submitter&.orcid&.present? # apparently there are cases where user doesn't have an orcid
 
       authors.where(author_orcid: submitter.orcid).first
     end
@@ -792,6 +804,13 @@ module StashEngine
       prev.count.positive?
     end
 
+    def previously_published?
+      # ignoring the current resource, is there an embargoed or published status previous this point for this identifier?
+      identifier.curation_activities
+        .where('stash_engine_curation_activities.resource_id < ? and status in (?)', id, %w[published embargoed])
+        .exists?
+    end
+
     # -----------------------------------------------------------
     # editor
 
@@ -817,7 +836,7 @@ module StashEngine
 
     # Title without "Data from:"
     def clean_title
-      title.delete_prefix('Data from:').strip
+      title&.delete_prefix('Data from:')&.strip
     end
 
     # -----------------------------------------------------------
@@ -925,8 +944,8 @@ module StashEngine
       that_technical_info = other_resource.descriptions.type_technical_info&.first&.description
       changed << 'technical_info' if this_technical_info != that_technical_info
 
-      this_other_desc = descriptions.type_other.map(&:description).reject(&:blank)
-      that_other_desc = other_resource.descriptions.type_other.map(&:description).reject(&:blank)
+      this_other_desc = descriptions.type_other&.first&.description
+      that_other_desc = other_resource.descriptions.type_other&.first&.description
       changed << 'usage_notes' if this_other_desc != that_other_desc
 
       changed.concat(changed_subjects(other_resource.subjects))

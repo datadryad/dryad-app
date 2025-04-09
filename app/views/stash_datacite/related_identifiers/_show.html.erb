@@ -9,7 +9,7 @@
 			<span class="<%= 'highlight' if highlights&.key?(:id) %>"><%= display_id(type: r.related_identifier_type,
 				       my_id: r.related_identifier) %><%= unverified %></span></li>
 		<% else %>
-		    <li><span class="<%= 'highlight' if highlights&.key?(:type) %>"><%= r.work_type_friendly %></span>:  <%= link_to "#{r.related_identifier}<span class=\"screen-reader-only\"> (opens in new window)</span>".html_safe, r.related_identifier, class: highlights&.key?(:id) ? 'highlight' : '', target: "_blank" %><%= unverified %>
+		    <li><span class="<%= 'highlight' if highlights&.key?(:type) %>"><%= r.work_type_friendly %></span>:  <%= link_to "#{r.related_identifier}".html_safe, r.related_identifier, class: highlights&.key?(:id) ? 'highlight' : '', target: "_blank" %><%= unverified %>
 		    	<% if r.work_type == 'primary_article' && journal.present? %>
 		    	 (<%= journal.title %>)
 		    	<% end %>

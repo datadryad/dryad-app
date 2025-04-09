@@ -6,9 +6,9 @@ module SessionsHelper
   # rubocop:disable Style/OptionalBooleanParameter
   def sign_in(user = create(:user), with_shib = false)
     visit root_path
-    expect(page).to have_css('h1.o-banner__tagline', text: 'Trusted, simple, community driven')
+    expect(page).to have_css('.o-banner__tagline', text: 'Trusted, simple, community driven')
     sign_out if have_text('User settings')
-    expect(page).to have_css('h1.o-banner__tagline', text: 'Trusted, simple, community driven')
+    expect(page).to have_css('.o-banner__tagline', text: 'Trusted, simple, community driven')
     case user
     when StashEngine::User
       sign_in_as_user(user, with_shib)
@@ -31,6 +31,7 @@ module SessionsHelper
     visit root_path
     click_link 'Login'
     click_link 'Login or create your ORCID iD'
+    sleep 0.1
     nil unless with_shib || user.tenant_id.blank?
   end
 

@@ -4,6 +4,7 @@
 #
 #  id                      :integer          not null, primary key
 #  allow_review_workflow   :boolean          default(TRUE)
+#  covers_ldf              :boolean          default(FALSE)
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
 #  journal_code            :string(191)
@@ -135,6 +136,11 @@ module StashEngine
 
       it 'returns true when there is a SUBSCRIPTION plan' do
         allow(@journal).to receive('payment_plan_type').and_return('SUBSCRIPTION')
+        expect(@journal.will_pay?).to be(true)
+      end
+
+      it 'returns true when there is a 2025 plan' do
+        allow(@journal).to receive('payment_plan_type').and_return('2025')
         expect(@journal.will_pay?).to be(true)
       end
 

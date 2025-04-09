@@ -1,5 +1,6 @@
 import React, {Fragment, useRef, useEffect} from 'react';
 import axios from 'axios';
+import {ExitIcon} from '../../ExitButton';
 
 const nameit = (name, arr) => {
   const plural = !['software', 'supplemental_information'].includes(name) && arr.length > 1 ? 's' : '';
@@ -7,7 +8,7 @@ const nameit = (name, arr) => {
   return `${upper.replace('_', ' ')}${plural}`;
 };
 
-function WorksList({identifiers, previous, admin}) {
+function WorksList({identifiers, previous, curator}) {
   const works = Object.groupBy(identifiers, ({work_type}) => work_type);
   const icons = {
     article: 'far fa-newspaper',
@@ -20,10 +21,10 @@ function WorksList({identifiers, previous, admin}) {
   if (identifiers.length > 0) {
     return (
       <>
-        <h3 className="o-heading__level2" style={{marginBottom: '-1rem'}}>Related works</h3>
+        <h2 style={{marginBottom: '-1rem'}}>Related works</h2>
         {Object.keys(works).map((type) => (
           <Fragment key={type}>
-            <h4 className="o-heading__level3">{nameit(type, works[type])}</h4>
+            <h3>{nameit(type, works[type])}</h3>
             <ul className="o-list">
               {works[type].map((w) => {
                 const prev = previous?.find((r) => r.related_identifier === w.related_identifier);
@@ -35,10 +36,9 @@ function WorksList({identifiers, previous, admin}) {
                       rel="noreferrer"
                       className={previous && (!prev || prev.work_type !== w.work_type) ? 'ins' : ''}
                     >
-                      <i className={icons[type]} aria-hidden="true" style={{marginRight: '.5ch'}} />{w.related_identifier}
-                      <span className="screen-reader-only"> (opens in new window)</span>
+                      <i className={icons[type]} aria-hidden="true" style={{marginRight: '.5ch'}} />{w.related_identifier}<ExitIcon />
                     </a>
-                    {admin && !w.verified && (
+                    {curator && !w.verified && (
                       <i className="fas fa-link-slash unmatched-icon" role="note" aria-label="Unverified link" title="Unverified link" />
                     )}
                   </li>
@@ -48,8 +48,8 @@ function WorksList({identifiers, previous, admin}) {
           </Fragment>
         ))}
         {previous?.map((p) => {
-          if (works.some((w) => w.related_identifier === p.related_identifier)) return null;
-          return <del style={{display: 'block'}}>p.related_identifier</del>;
+          if (identifiers.some((w) => w.related_identifier === p.related_identifier)) return null;
+          return <del style={{display: 'block'}} key={p.id}>p.related_identifier</del>;
         })}
       </>
     );
@@ -57,7 +57,7 @@ function WorksList({identifiers, previous, admin}) {
   return null;
 }
 
-export default function WorksPreview({resource, previous, admin}) {
+export default function WorksPreview({resource, previous, curator}) {
   const ris = resource.related_identifiers.filter((ri) => ri.work_type !== 'primary_article' && !!ri.related_identifier);
   const pRis = previous?.related_identifiers.filter((ri) => ri.work_type !== 'primary_article' && !!ri.related_identifier);
   const colRef = useRef(null);
@@ -98,11 +98,11 @@ export default function WorksPreview({resource, previous, admin}) {
 
     return (
       <>
-        <h3 className="o-heading__level2">Collected datasets</h3>
+        <h2>Collected datasets</h2>
         <div ref={colRef} />
-        <WorksList identifiers={other} previous={preOther} admin={admin} />
+        <WorksList identifiers={other} previous={preOther} curator={curator} />
       </>
     );
   }
-  return <WorksList identifiers={ris} previous={pRis} admin={admin} />;
+  return <WorksList identifiers={ris} previous={pRis} curator={curator} />;
 }
