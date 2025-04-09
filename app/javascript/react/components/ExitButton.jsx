@@ -2,10 +2,11 @@ import React from 'react';
 
 export default function ExitButton({resource}) {
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+  const previous = resource.previous_curated_resource;
   return (
     <form
       action={`/resources/${resource.id}/logout`}
-      data-confirm="Are you sure you want to exit without completing this submission?"
+      data-confirm={previous ? 'Are you sure you want to exit without submitting your changes?' : null}
       data-remote="false"
       method="post"
     >
