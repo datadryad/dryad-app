@@ -223,7 +223,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
   }
   return (
     <p style={{display: 'flex', alignItems: 'center', gap: '.5ch'}}>
-      <i className="fas fa-spin fa-spinner" aria-hidden="true"></i>
+      <i className="fas fa-spin fa-spinner" aria-hidden="true" />
       Loading README generator
     </p>
   );
