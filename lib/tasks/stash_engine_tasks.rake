@@ -433,7 +433,7 @@ namespace :identifiers do
     CSV.open('curation_publication_report.csv', 'w') do |csv|
       csv << %w[DOI CreatedAt Size NumFiles FileExtensions DaysSubmissionToApproval DaysInCuration]
       StashEngine::Identifier.publicly_viewable.where("created_at > '#{launch_day + 1.day}'").find_each do |i|
-        num_files = i.latest_resource.data_files.select { |f| f[:file_state] == 'copied' || f[:file_state] == 'created' }.size
+        num_files = i.latest_resource.data_files.select { |f| %w[copied created].include?(f[:file_state]) }.size
         file_extensions = i.latest_resource.data_files.map { |f| File.extname(f.upload_file_name).downcase }.uniq
 
         r = i.first_submitted_resource

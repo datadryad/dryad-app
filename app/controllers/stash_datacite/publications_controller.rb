@@ -14,7 +14,7 @@ module StashDatacite
       save_publications
       respond_to do |format|
         format.json do
-          if params[:do_import] == 'true' || params[:do_import] == true
+          if ['true', true].include?(params[:do_import])
             @error = 'Please fill in the form completely' if params[:msid]&.strip.blank? && params[:primary_article_doi]&.strip.blank?
             update_manuscript_metadata if params[:import_type] == 'manuscript'
             update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] != 'manuscript'
