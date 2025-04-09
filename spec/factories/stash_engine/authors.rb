@@ -31,8 +31,12 @@ FactoryBot.define do
     author_orcid { Faker::Pid.orcid }
     corresp { true }
 
-    after(:create) do |author|
-      author.affiliations = [create(:affiliation)]
+    transient do
+      affiliations { [create(:affiliation)] }
+    end
+
+    after(:create) do |author, evaluator|
+      author.affiliations = evaluator.affiliations
     end
   end
 end
