@@ -219,7 +219,7 @@ module StashEngine
       # Send out orcid invitations now that the citation has been registered
       email_orcid_invitations if published?
     rescue Stash::Doi::DataciteGenError => e
-      logger.error "Stash::Doi::DataciteGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
+      logger.error "Stash::Doi::DataciteGen - Unable to submit metadata changes for : '#{resource&.identifier}'"
       logger.error e.message
       StashEngine::UserMailer.error_report(resource, e).deliver_now
       raise e
