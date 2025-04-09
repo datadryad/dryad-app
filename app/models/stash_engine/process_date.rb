@@ -26,6 +26,8 @@
 module StashEngine
   class ProcessDate < ApplicationRecord
     self.table_name = 'stash_engine_process_dates'
+    has_paper_trail
+
     belongs_to :processable, polymorphic: true, optional: false
 
     def wait_period

@@ -43,6 +43,8 @@ require 'aws-sdk-lambda'
 module StashEngine
   class GenericFile < ApplicationRecord
     self.table_name = 'stash_engine_generic_files'
+    has_paper_trail
+
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_one :frictionless_report, dependent: :destroy
     has_one :sensitive_data_report, dependent: :destroy
