@@ -149,6 +149,7 @@ module StashEngine
     end
 
     def display_readme
+      @resource = resource
       review = StashDatacite::Resource::Review.new(@resource)
       render partial: 'stash_datacite/descriptions/readme', locals: { review: review }
     end
