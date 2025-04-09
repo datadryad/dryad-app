@@ -59,7 +59,7 @@ const curatorTools = '| code strikethrough forecolor backcolor';
 export default function Description({
   setResource, dcsDescription, mceLabel, curator,
 }) {
-  const [desc, setDesc] = useState(null);
+  const [desc, setDesc] = useState('');
   const editorRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -95,7 +95,7 @@ export default function Description({
 
   useEffect(() => {
     // copy and do not rerender on change
-    setDesc(`${dcsDescription.description}`);
+    setDesc(`${dcsDescription.description || ''}`);
   }, []);
 
   return (
