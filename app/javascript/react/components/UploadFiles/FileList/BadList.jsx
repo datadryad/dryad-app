@@ -63,7 +63,7 @@ export default function BadList(props) {
             </li>
             <li>Review the local copy of your file and make any desired changes.</li>
             <li>
-              If you would like to replace the file, click &quot;Remove&quot; in the <em>Actions</em> column to delete the current upload.
+              If you would like to replace the file, click the button in the <em>Remove</em> column to delete the current upload.
             </li>
             <li>
               Re-upload the corrected file using the &quot;Choose files&quot; or &quot;Enter URLs&quot; button above.

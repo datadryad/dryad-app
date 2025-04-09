@@ -571,11 +571,11 @@ dialog#submission-step[open] {
     margin-top: 0;
   }
 
-  *[aria-invalid] {
+  *[aria-invalid="true"] {
     border: thin solid $red !important;
   }
 
-  label:has(input[type="checkbox"][aria-invalid]) {
+  label:has(input[type="checkbox"][aria-invalid="true"]) {
     color: $red;
   }
 }

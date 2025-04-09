@@ -261,9 +261,9 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'shows empty progress bar if file has 0 size' do
       # Remove already attached files
-      first(:button, 'Remove').click
-      first(:button, 'Remove').click
-      first(:button, 'Remove').click
+      first(:button, 'Remove file').click
+      first(:button, 'Remove file').click
+      first(:button, 'Remove file').click
 
       attach_file('data', "#{Rails.root}/spec/fixtures/stash_engine/empty_file.txt", make_visible: { opacity: 1 })
       expect(page.has_css?('progress[value]')).to be true
@@ -336,7 +336,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'does not allow to select new FILES from file system with the same name of manifest FILES' do
-      first(:button, 'Remove').click
+      first(:button, 'Remove file').click
 
       build_valid_stub_request('http://example.org/file_10.ods')
       click_button('data_manifest')

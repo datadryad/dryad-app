@@ -50,7 +50,7 @@ export default function File({file, clickRemove, clickValidationReport}) {
   };
 
   const getTabularInfo = () => {
-    if (removing) return 'Removing...';
+    if (removing) return null;
     switch (file.tabularCheckStatus) {
     case TabularCheckStatus.checking:
       return (
@@ -126,10 +126,10 @@ export default function File({file, clickRemove, clickValidationReport}) {
       <td className="c-uploadtable-size">{file.sizeKb}</td>
       <td>
         {removing ? (
-          <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" />
+          <i className="fas fa-circle-notch fa-spin" aria-hidden="true" />
         ) : (
-          <button onClick={removeClick} type="button" className="o-button__plain-textlink">
-            <i className="fas fa-trash-can" aria-hidden="true" style={{marginRight: '.5ch'}} />Remove
+          <button onClick={removeClick} type="button" className="o-button__plain-textlink" aria-label="Remove file">
+            <i className="fas fa-trash-can" aria-hidden="true" style={{marginRight: '.5ch'}} />
           </button>
         )}
       </td>

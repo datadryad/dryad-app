@@ -1,5 +1,7 @@
 # Publisher and society partner fees
 
+_Effective March 25, 2025_
+
 Publishing organizations of all kinds, as well as academic societies, partner with Dryad to make our services available to their researchers at a reduced rate. They trust us to provide individualized support to authors, and to curate, publish, and preserve data in the most economical way.
 
 Our publisher and society partners also benefit from:
@@ -14,19 +16,21 @@ Our publisher and society partners also benefit from:
   <p style="text-align: center;">Learn more about <a href="/join_us">Dryad services and partner benefits</a></p>
 </div>
 
-The annual partner fee is calculated as a total of the anticipated Data Publication Charge (DPC) for the coming year, plus the Annual Service Fee. DPCs are adjusted to reflect actual usage at year-end.
+The annual partner fee is calculated as a total of the anticipated [Data Publishing Charge (DPC)](#data-publication-charge) for the coming year, plus the [Annual Service Fee](#annual-service-fee). DPCs are adjusted to reflect actual usage at year-end.
 
 Estimate your organization’s total fees using our fee calculator, or read on for a detailed fee schedule.
+
+<div hidden>
+
+## Fee calculator
+
+</div>
 
 <%= render partial: 'fee_calculator/publisher' %>
 
 <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">Contact us</a> with questions, to discuss partnership, or to confirm the estimated partner fee for your organization.
 
-## Detailed fee schedule
-
-_Effective March 25, 2025_
-
-### Data Publication Charge
+## Data Publishing Charge
 
 The DPC is based on the variable costs of curating, publishing, and preserving one dataset — that is, one package of metadata and data files related to one course of investigation. Pricing is designed to scale with use, with discounts based on volume. 
 
@@ -73,7 +77,7 @@ Datasets larger than 10GB are billed individually as follows. Publisher and soci
 </div>
 </div>
 
-### Annual Service Fee
+## Annual Service Fee
 
 Partners pay a flat Annual Service Fee to help cover Dryad’s fixed costs for service, infrastructure and operations. Our fixed expenses include: partner support, training, and outreach; operation, maintenance and development of the Dryad platform; financial and legal administration; and leadership, oversight, and strategy development. As a global virtual organization, Dryad does not operate a physical office. Consult our [annual reports](https://github.com/datadryad/governance/tree/main/annual-reports) for details on Dryad expenses.
 
@@ -130,7 +134,7 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 </div>
 </div>
 
-### Total fees
+## Total fees
 
 The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $1,000 to $98,250 depending on the volume of data publications and organization reported publishing expenditure or revenue.
 

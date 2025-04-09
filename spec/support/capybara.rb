@@ -28,6 +28,7 @@ end
 # change all :selenium_chrome_headless to just :selenium_chrome in this file in order to see your tests and troubleshoot in browser.
 # also, comment out --headless option.  Also change default_driver from :rack_test to :selenium_chrome
 Capybara.asset_host = 'http://localhost:33000'
+Capybara.enable_aria_label = true
 
 # Webdrivers.install_dir = '~/.webdrivers'
 # Selenium::WebDriver::Chrome.path = '~/.webdrivers/chromedriver'
