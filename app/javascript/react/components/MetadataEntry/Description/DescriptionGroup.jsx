@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Description from './Description';
 import Cedar from './Cedar';
+import cedarCheck from './cedarCheck';
 
 export default function DescriptionGroup({
   resource, setResource, curator, cedar,
@@ -32,20 +33,10 @@ export default function DescriptionGroup({
   };
 
   useEffect(() => {
-    const templ = cedar.templates.find((arr) => arr[2] === 'Human Cognitive Neuroscience Data');
-    if (templ) setTemplate({id: templ[0], title: templ[2]});
-  }, []);
-
-  useEffect(() => {
     setResource(res);
-    const abst = res.descriptions.find((d) => d.description_type === 'abstract')?.description;
-    const {title, resource_publication, subjects} = res;
-    const {publication_name} = resource_publication || {};
-    const keywords = subjects.map((s) => s.subject).join(',');
-    const bank = /neuro|cogniti|cereb|memory|consciousness|amnesia|psychopharma|brain|hippocampus/i;
-    if (bank.test(title) || bank.test(publication_name) || bank.test(keywords) || bank.test(abst)) {
-      setShowCedar(true);
-    }
+    const {check, template: templ} = cedarCheck(res, cedar.templates);
+    setShowCedar(check);
+    if (templ) setTemplate({id: templ[0], title: templ[2]});
   }, [res]);
 
   return (
