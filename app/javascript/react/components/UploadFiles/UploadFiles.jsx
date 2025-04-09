@@ -586,17 +586,13 @@ export default function UploadFiles({
             totalSize={chosenFiles.reduce((s, f) => s + f.upload_file_size, 0)}
           />
           {loading && (
-            <p className="c-upload__loading-spinner">
-              <i className="fa fa-spin fa-spinner" role="img" aria-label="Loading" style={{color: '#888'}} />
-            </p>
+            <p><i className="fas fa-spin fa-spinner" role="img" aria-label="Loading"/></p>
           )}
         </>
       ) : (
         <div>
           {loading ? (
-            <p className="c-upload__loading-spinner">
-              <i className="fa fa-spin fa-spinner" role="img" aria-label="Loading" style={{color: '#888'}} />
-            </p>
+            <p><i className="fas fa-spin fa-spinner" role="img" aria-label="Loading"/></p>
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
