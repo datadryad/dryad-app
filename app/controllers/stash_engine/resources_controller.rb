@@ -4,7 +4,7 @@ module StashEngine
     include StashEngine::LandingHelper
 
     before_action :require_login
-    before_action :require_modify_permission, except: %i[index new logout]
+    before_action :require_modify_permission, except: %i[index new logout display_readme]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
     # before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
     before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
