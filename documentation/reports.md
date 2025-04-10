@@ -66,7 +66,7 @@ Run the deferred payment reports with a command like:
 ```
 cp ~/journal-payments/shoppingcart/2024/* /tmp
 # This command must be run on the v3-prod server, to access the production database
-RAILS_ENV=production bundle exec rails identifiers:deferred_journal_reports -- --sc_report /tmp/shopping_cart_report_2024-Q1.csv
+RAILS_ENV=production bundle exec rake identifiers:deferred_journal_reports -- --sc_report /tmp/shopping_cart_report_2024-Q1.csv
 ```
 
 Copy the resultant files into their respective places in `~/journal-payments/`
@@ -86,7 +86,7 @@ Run the tiered journal payment reports with a command like:
 cp ~/journal-payments/shoppingcart/2024* /tmp
 # This command must be run on the production server, to access the production database
 
-RAILS_ENV=production bundle exec rails identifiers:tiered_journal_reports -- --sc_report /tmp/shopping_cart_report_2023-Q1.csv --base_report /tmp/shopping_cart_report_2023.csv
+RAILS_ENV=production bundle exec rake identifiers:tiered_journal_reports -- --sc_report /tmp/shopping_cart_report_2023-Q1.csv --base_report /tmp/shopping_cart_report_2023.csv
 ```
 
 For tenant institutions that have a tiered payment plan, a similar secondary task
@@ -100,7 +100,7 @@ Run the tiered institution payment reports with a command like:
 cp ~/journal-payments/shoppingcart/2024* /tmp
 # This command must be run on the production server, to access the production database
 
-RAILS_ENV=production bundle exec rails identifiers:tiered_tenant_reports -- --sc_report /tmp/shopping_cart_report_2023-Q1.csv --base_report /tmp/shopping_cart_report_2023.csv
+RAILS_ENV=production bundle exec rake identifiers:tiered_tenant_reports -- --sc_report /tmp/shopping_cart_report_2023-Q1.csv --base_report /tmp/shopping_cart_report_2023.csv
 ```
 
 Copy the resultant files into their respective places in `~/journal-payments/`
@@ -114,7 +114,7 @@ list of Dryad's contents to external users.
 
 Run it with a command like:
 ```
-RAILS_ENV=production bundle exec rails identifiers:dataset_info_report
+RAILS_ENV=production bundle exec rake identifiers:dataset_info_report
 ```
 
 Fields in the dataset info report
@@ -135,7 +135,7 @@ with their institutions and countries, in geographic_authors_report.csv.
 
 Run it with a command like:
 ```
-RAILS_ENV=production bundle exec rails identifiers:geographic_authors_report
+RAILS_ENV=production bundle exec rake identifiers:geographic_authors_report
 ```
 
 
@@ -211,7 +211,7 @@ This also gives institutions when people didn't autocomplete their ROR correctly
 Run like:
 
 ```
-RAILS_ENV=production bundle exec rails reports:from_text_institution -- --name="Planck"
+RAILS_ENV=production bundle exec rake reports:from_text_institution -- --name="Planck"
 ```
 
 Put the string you want to detect in the `name` variable.  It shows the matches in `author_affiliations`
