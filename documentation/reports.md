@@ -18,7 +18,7 @@ tracking of payments.
 
 Run it with a command like:
 ```
-RAILS_ENV=production bundle exec rails identifiers:shopping_cart_report -- --year_month 2024-01
+RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report -- --year_month 2024-01
 ```
 
 Fields in the shopping cart report
