@@ -13,6 +13,7 @@ const load_data = function() {
       // modernizeIt();
     });
     $(this).attr('data-loaded')
+    $(this).attr('aria-busy', false)
   });
 }
 
@@ -35,6 +36,7 @@ if (!!document.getElementById('blog-latest-posts')) {
       sec.appendChild(div)
       return i < limit
     })
+    sec.setAttribute('aria-busy', false)
   })
 }     
 
