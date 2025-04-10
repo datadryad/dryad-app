@@ -3,10 +3,10 @@ import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import {ExitIcon} from '../../ExitButton';
 import Calculations from './Calculations';
-import InvoiceForm from './InvoiceForm';
+import CalculateFees from '../../CalculateFees';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, setAuthorStep, config, preview = false,
+  resource, setResource, user, form, previous, config, subFees, setSubFees, setAuthorStep, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -16,6 +16,7 @@ export default function Agreements({
   const isSubmitter = user.id === submitter.id;
   const formRef = useRef(null);
   const [dpc, setDPC] = useState({});
+  const [fees, setFees] = useState(subFees);
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
   const [agree, setAgree] = useState(resource.accepted_agreement);
   const [reason, setReason] = useState('');
@@ -62,6 +63,12 @@ export default function Agreements({
   };
 
   useEffect(() => {
+    if (Object.keys(fees).length > 0) {
+      setSubFees(fees);
+    }
+  }, [fees]);
+
+  useEffect(() => {
     if (formRef.current) {
       const active_form = document.createRange().createContextualFragment(form);
       formRef.current.append(active_form);
@@ -93,7 +100,7 @@ export default function Agreements({
     getPaymentInfo();
   }, []);
 
-  if (!dpc.dpc) {
+  if (Object.keys(dpc).length === 0) {
     return (
       <p><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
     );
@@ -182,7 +189,21 @@ export default function Agreements({
               <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
             </div>
           )}
-          {dpc.user_must_pay && <Calculations resource={resource} dpc={dpc.dpc} config={config} />}
+          {resource.identifier.old_payment_system
+            ? dpc.user_must_pay && (
+              <>
+                <Calculations resource={resource} config={config} />
+                <p>The submitter may choose an invoice recipient upon submission of the dataset.</p>
+              </>
+            )
+            : (
+              /* eslint-disable max-len */
+              <>
+                <CalculateFees resource={resource} fees={fees} setFees={setFees} />
+                {fees.storage_fee ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for later payment, an additional {fees.invoice_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} administration fee will be charged.</p> : null}
+              </>
+              /* eslint-enable max-len */
+            )}
         </>
       )}
       {preview && (
@@ -210,9 +231,6 @@ export default function Agreements({
       )}
       {!preview && isSubmitter && (
         <>
-          {subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && dpc.user_must_pay && (
-            <InvoiceForm resource={resource} setResource={setResource} />
-          )}
           {(subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay)) && (
             <>
               {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
@@ -221,7 +239,7 @@ export default function Agreements({
               {dpc.user_must_pay && (
                 <>
                   <div className="callout warn" style={{marginTop: '2em'}}>
-                    <p>Are you affiliated with a Dryad partner institution that could sponsor this fee?</p>
+                    <p>Are you affiliated with a Dryad partner institution that could sponsor the DPC?</p>
                   </div>
                   {!!dpc.aff_tenant && (
                     <p>Your author list affiliation <b>{dpc.aff_tenant.long_name}</b> is a Dryad partner.</p>
