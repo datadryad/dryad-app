@@ -6,6 +6,7 @@ class PaymentsService
     @resource = resource
     @options = options
     @fees = ResourceFeeCalculatorService.new(resource).calculate(options)
+    @fees = @fees.except(:storage_fee_label)
   end
 
   def checkout_options
