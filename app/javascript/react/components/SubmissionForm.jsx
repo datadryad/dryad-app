@@ -20,7 +20,7 @@ export default function SubmissionForm({
   }, [previewRef.current, resource]);
 
   const submit = (e) => {
-    const mustPay = !payment && resource.resource_type.resource_type !== 'collection' && fees.storage_fee;
+    const mustPay = !payment && resource.resource_type.resource_type !== 'collection' && fees.total;
     if (mustPay || !hasChanges || steps.some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator)) {
       e.preventDefault();
     }
@@ -89,7 +89,7 @@ export default function SubmissionForm({
           >
             {curator
               ? 'Submit changes'
-              : `${fees.storage_fee ? 'Pay & S' : 'S'}ubmit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
+              : `${fees.total ? 'Pay & S' : 'S'}ubmit for ${resource.hold_for_peer_review ? 'peer review' : 'publication'}`}
           </button>
         </form>
       </div>
