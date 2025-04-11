@@ -4,7 +4,7 @@ module StashEngine
     include StashEngine::LandingHelper
 
     before_action :require_login
-    before_action :require_modify_permission, except: %i[index new logout display_readme]
+    before_action :require_modify_permission, except: %i[index new logout display_readme dupe_check]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
     # before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
     before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
@@ -178,18 +178,19 @@ module StashEngine
 
     def dupe_check
       dupes = []
+      @resource = resource
       if @resource.title && @resource.title.length > 3
         other_submissions = params.key?(:admin) ? StashEngine::Resource.all : current_user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
         manuscript = @resource.resource_publication.manuscript_number
         dupes = other_submissions.where(title: @resource.title)&.select(:id, :title, :identifier_id).to_a
-        if primary_article.present? && !['NA', 'N/A', 'TBD', 'unknown'].include?(primary_article)
+        if primary_article.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp(primary_article) == 0 }
           dupes.concat(other_submissions.joins(:related_identifiers)
               .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
               &.select(:id, :title, :identifier_id).to_a)
         end
-        if manuscript.present? && !['NA', 'N/A', 'TBD', 'unknown'].include?(manuscript)
+        if manuscript.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp(manuscript) == 0 }
           dupes.concat(
             other_submissions.joins(:resource_publication).where(resource_publication: { manuscript_number: manuscript })
             &.select(:id, :title, :identifier_id).to_a
