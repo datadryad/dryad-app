@@ -209,7 +209,7 @@ Processing journal emails
 
 Journals send metadata emails to Dryad, which are parsed and stored in
 preparation for the user to create an associated dataset. For details
-on the format of these emails, see [journal_metadata.md](journal_metadata.md).
+on the format of these emails, see [journal_manuscript_metadata.md](journal_manuscript_metadata.md).
 
 
 Overview of the email workflow
