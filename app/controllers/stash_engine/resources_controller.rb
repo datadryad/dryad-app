@@ -4,6 +4,7 @@ module StashEngine
     include StashEngine::LandingHelper
 
     before_action :require_login
+    before_action :assign_resource, only: %i[logout display_readme dupe_check]
     before_action :require_modify_permission, except: %i[index new logout display_readme dupe_check]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
     # before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
@@ -108,7 +109,6 @@ module StashEngine
     end
 
     def logout
-      @resource = resource
       @resource.update_columns(current_editor_id: nil)
       respond_to do |format|
         format.html { redirect_to dashboard_path }
@@ -149,7 +149,6 @@ module StashEngine
     end
 
     def display_readme
-      @resource = resource
       review = StashDatacite::Resource::Review.new(@resource)
       render partial: 'stash_datacite/descriptions/readme', locals: { review: review }
     end
@@ -178,7 +177,6 @@ module StashEngine
 
     def dupe_check
       dupes = []
-      @resource = resource
       if @resource.title && @resource.title.length > 3
         other_submissions = params.key?(:admin) ? StashEngine::Resource.all : current_user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
@@ -237,6 +235,10 @@ module StashEngine
 
       dryad_import = Stash::Import::DryadManuscript.new(resource: resource, manuscript: manu)
       dryad_import.populate
+    end
+
+    def assign_resource
+      @resource = resource
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
