@@ -15,7 +15,7 @@ module FeeCalculator
 
     def call
       if resource.present?
-        if resource.previously_published?
+        if resource.identifier.previous_invoiced_file_size.to_i > 0
           add_storage_fee_difference
         else
           add_dataset_storage_fee
@@ -23,12 +23,19 @@ module FeeCalculator
       else
         add_storage_fee
       end
+      add_storage_fee_label
       add_invoice_fee
       @sum_options.merge(total: @sum)
     end
 
     def storage_fee_tiers
       INDIVIDUAL_ESTIMATED_FILES_SIZE
+    end
+
+    private
+
+    def storage_fee_label
+      PRODUCT_NAME_MAPPER[:individual_storage_fee]
     end
   end
 end

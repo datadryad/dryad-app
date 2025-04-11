@@ -62,6 +62,7 @@ module FeeCalculator
         add_dpc_fee
         add_storage_usage_fees
       end
+      add_storage_fee_label
       @sum_options.merge(total: @sum)
     end
 
@@ -169,6 +170,14 @@ module FeeCalculator
     def add_fee_to_total(value_key, fee)
       @sum += fee
       @sum_options[output_key(value_key)] = fee
+    end
+
+    def add_storage_fee_label
+      @sum_options[:storage_fee_label] = storage_fee_label
+    end
+
+    def storage_fee_label
+      PRODUCT_NAME_MAPPER[:storage_fee]
     end
   end
 end

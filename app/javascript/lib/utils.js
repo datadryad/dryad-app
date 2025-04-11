@@ -29,6 +29,9 @@ export function ordinalNumber(n) {
 };
 
 export function formatSizeUnits(bytes) {
+  if(bytes === null) {
+    return `0 B`;
+  }
   if (bytes < 1000) {
     return `${bytes} B`;
   }

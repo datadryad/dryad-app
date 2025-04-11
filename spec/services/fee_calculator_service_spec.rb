@@ -22,6 +22,13 @@ describe FeeCalculatorService do
       end
     end
 
+    context 'with waiver type' do
+      it 'calls WaiverService' do
+        expect(FeeCalculator::WaiverService).to receive_message_chain(:new, :call).with({}, resource: nil).with(no_args)
+        described_class.new('waiver').calculate({})
+      end
+    end
+
     context 'with invalid type' do
       it 'it raises an error' do
         expect { described_class.new('something').calculate({}) }.to raise_error(NotImplementedError, 'Invalid calculator type')

@@ -8,6 +8,7 @@
 #  identifier_type         :text(65535)
 #  import_info             :integer
 #  last_invoiced_file_size :bigint
+#  old_payment_system      :boolean          default(FALSE)
 #  payment_type            :string(191)
 #  pub_state               :string
 #  publication_date        :datetime
