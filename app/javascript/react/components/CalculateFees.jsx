@@ -11,7 +11,7 @@ export default function CalculateFees({
   const calculateFees = () => {
     axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
       .then(({data}) => {
-        setFees(data.fees);
+        if (data.status === 200) setFees(data.fees);
       });
   };
 
