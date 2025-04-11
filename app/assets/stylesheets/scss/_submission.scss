@@ -810,13 +810,6 @@ dialog#submission-step[open] {
     ins, .ins, del {
       padding: 5px 0 3px;
     }
-    .ins {
-      background-color: $lightest-orange;
-    }
-    ins {
-      text-decoration: none;
-      background-color: $lightest-orange;
-    }
     del, .del {
       display: inline;
       background-color: $lightest-red;
@@ -825,6 +818,14 @@ dialog#submission-step[open] {
         background-color: $lightest-red;
         text-decoration: line-through;
       }
+    }
+    .ins {
+      text-decoration: none;
+      background-color: $lightest-orange;
+    }
+    ins {
+      text-decoration: none;
+      background-color: $lightest-orange;
     }
   }
 }
