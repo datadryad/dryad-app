@@ -23,6 +23,7 @@ module StashEngine
 
       def payer_2025?
         return false if old_payment_system
+
         current_payer = payer
         return true if current_payer.nil?
 

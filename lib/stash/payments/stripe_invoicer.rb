@@ -47,7 +47,7 @@ module Stash
         res = invoice
         # res = invoice.send_invoice
         resource.identifier.update(last_invoiced_file_size: ds_size)
-        return res
+        res
       end
 
       private
@@ -68,7 +68,7 @@ module Stash
       end
 
       def line_item_name(fee_key)
-        return "#{@fees[:storage_fee_label] } for #{resource.identifier} (#{filesize(ds_size)})" if fee_key.to_s == 'storage_fee'
+        return "#{@fees[:storage_fee_label]} for #{resource.identifier} (#{filesize(ds_size)})" if fee_key.to_s == 'storage_fee'
 
         PRODUCT_NAME_MAPPER[fee_key]
       end

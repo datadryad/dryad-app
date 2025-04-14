@@ -98,7 +98,6 @@ module Stash
       end
 
       def create_invoice(resource)
-
         payment = resource.payment
 
         # pp payment
@@ -113,7 +112,10 @@ module Stash
         return if invoicer.invoice_created?
 
         customer_id = invoicer.lookup_prior_stripe_customer_id(payment.invoice_details['customer_email'])
-        customer_id = invoicer.create_customer(payment.invoice_details['customer_name'], payment.invoice_details['customer_email']).id unless customer_id.present?
+        unless customer_id.present?
+          customer_id = invoicer.create_customer(payment.invoice_details['customer_name'],
+                                                 payment.invoice_details['customer_email']).id
+        end
         author.update(stripe_customer_id: customer_id)
 
         invoice = invoicer.create_invoice

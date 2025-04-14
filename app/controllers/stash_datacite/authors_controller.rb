@@ -94,7 +94,7 @@ module StashDatacite
     end
 
     def set_invoice
-      fees = ResourceFeeCalculatorService.new(resource).calculate({generate_invoice: true})
+      fees = ResourceFeeCalculatorService.new(resource).calculate({ generate_invoice: true })
 
       if fees[:error] && fees[:old_payment_system]
         # OLD payment system
@@ -108,7 +108,7 @@ module StashDatacite
         resource_payment.update(
           payment_type: 'stripe',
           pay_with_invoice: true,
-          invoice_details: params.permit(%i[customer_email customer_name]).merge({author_id: @author.id}),
+          invoice_details: params.permit(%i[customer_email customer_name]).merge({ author_id: @author.id }),
           status: :created,
           amount: fees[:total]
         )
