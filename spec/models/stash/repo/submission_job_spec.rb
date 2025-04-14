@@ -4,6 +4,7 @@ module Stash
   module Repo
     describe SubmissionJob do
       include Mocks::Aws
+      include Mocks::Stripe
 
       attr_reader :job
       attr_reader :logger
@@ -64,7 +65,7 @@ module Stash
           @landing_page_url = URI::HTTPS.build(host: 'stash.example.edu', path: '/doi:10.123/456').to_s
 
           @user = create(:user, tenant_id: 'dryad')
-          @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456')
+          @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/456', old_payment_system: true)
           @resource = create(:resource, identifier_id: @identifier.id, user: @user, tenant_id: 'dryad')
           allow(StashEngine::Resource).to receive(:find).with(@resource.id).and_return(@resource)
 
@@ -131,6 +132,90 @@ module Stash
           end
         end
 
+      end
+
+      context 'create invoice' do
+        let(:identifier) { create(:identifier, old_payment_system: false) }
+        let(:resource) { create(:resource, tenant_id: 'dryad', identifier: identifier) }
+        let(:author) { resource.owner_author }
+
+        subject { SubmissionJob.new(resource_id: resource.id) }
+        context 'with old payment system' do
+          let(:identifier) { create(:identifier, old_payment_system: true) }
+
+          it 'does not create any invoice' do
+            expect(Stash::Payments::StripeInvoicer).not_to receive(:new)
+            expect(subject.send(:handle_invoice_creation)).to be_nil
+          end
+        end
+
+        context 'with new payment system' do
+          context 'without a ResourcePayment record' do
+            it 'does not create any invoice' do
+              expect(Rails.logger).to receive(:warn).with("No payment found for resource ID #{resource.id}")
+              expect(Stash::Payments::StripeInvoicer).not_to receive(:new)
+              expect(subject.send(:handle_invoice_creation)).to be_nil
+            end
+          end
+
+          context 'with ResourcePayment record set not to pay_with_invoice' do
+            let!(:payment) { create(:resource_payment, resource: resource, pay_with_invoice: false) }
+
+            it 'does not create any invoice' do
+              expect(Rails.logger).to receive(:warn).with("Payment for resource ID #{resource.id} is not set to invoice")
+              expect(Stash::Payments::StripeInvoicer).not_to receive(:new)
+              expect(subject.send(:handle_invoice_creation)).to be_nil
+            end
+          end
+
+          context 'with ResourcePayment record set to pay_with_invoice' do
+            let!(:payment) do
+              create(:resource_payment,
+                     resource: resource,
+                     pay_with_invoice: true,
+                     invoice_id: nil,
+                     invoice_details: {
+                       'author_id' => author.id,
+                       'customer_name' => 'Customer Name',
+                       'customer_email' => 'customer.email@example.com'
+                     })
+            end
+
+            before do
+              mock_stripe!
+
+            end
+
+            it 'calls new invoicer class for resource' do
+              invoicer_obj = double(Stash::Payments::StripeInvoicer)
+              expect(Stash::Payments::StripeInvoicer).to receive(:new).with(resource).and_return(invoicer_obj)
+              expect(invoicer_obj).to receive(:invoice_created?).and_return(false)
+              expect(invoicer_obj).to receive(:handle_customer).with(payment.invoice_details)
+              expect(invoicer_obj).to receive(:create_invoice).and_return(OpenStruct.new(id: 'invoice-id'))
+
+              subject.send(:handle_invoice_creation)
+            end
+
+            it 'creates a new invoice' do
+              expect(subject.send(:handle_invoice_creation)).to be_truthy
+              expect(payment.reload.invoice_id).not_to be_nil
+              subject.send(:handle_invoice_creation)
+            end
+
+            context 'when invoice already exists' do
+              let!(:payment) { create(:resource_payment, resource: resource, pay_with_invoice: true, invoice_id: 'invoice-id') }
+
+              it 'returns nil' do
+                invoicer_obj = double(Stash::Payments::StripeInvoicer)
+                allow(Stash::Payments::StripeInvoicer).to receive(:new).with(resource).and_return(invoicer_obj)
+                expect(invoicer_obj).to receive(:invoice_created?).and_return(true)
+
+                expect(invoicer_obj).not_to receive(:create_invoice)
+                expect(subject.send(:handle_invoice_creation)).to be_nil
+              end
+            end
+          end
+        end
       end
     end
   end

@@ -21,16 +21,6 @@ module Stash
         @has_overage_line_item = false
       end
 
-      def create_customer(name, email)
-        Stripe::Customer.create(name: name, email: email)
-      end
-
-      def lookup_prior_stripe_customer_id(email)
-        # Each resource has its own set of authors so look through all the prior datasets
-        # for the first author to see if they have a stripe_customer_id associated with this email
-        StashEngine::Author.where(author_email: email).where.not(stripe_customer_id: nil).order(:id).first&.stripe_customer_id
-      end
-
       def invoice_created?
         resource.payment.invoice_id.present?
       end
@@ -48,6 +38,18 @@ module Stash
         # res = invoice.send_invoice
         resource.identifier.update(last_invoiced_file_size: ds_size)
         res
+      end
+
+      def handle_customer(invoice_details)
+        author = StashEngine::Author.find(invoice_details['author_id'])
+        customer_id = lookup_prior_stripe_customer_id(invoice_details['customer_email'])
+        unless customer_id.present?
+          customer_id = create_customer(
+            invoice_details['customer_name'],
+            invoice_details['customer_email']
+          ).id
+        end
+        author.update(stripe_customer_id: customer_id)
       end
 
       private
@@ -85,6 +87,16 @@ module Stash
             description: line_item_name(fee_key)
           )
         end
+      end
+
+      def create_customer(name, email)
+        Stripe::Customer.create(name: name, email: email)
+      end
+
+      def lookup_prior_stripe_customer_id(email)
+        # Each resource has its own set of authors so look through all the prior datasets
+        # for the first author to see if they have a stripe_customer_id associated with this email
+        StashEngine::Author.where(author_email: email).where.not(stripe_customer_id: nil).order(:id).first&.stripe_customer_id
       end
 
       def ds_size
