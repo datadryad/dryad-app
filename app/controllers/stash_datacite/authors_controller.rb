@@ -94,15 +94,27 @@ module StashDatacite
     end
 
     def set_invoice
-      respond_to do |format|
-        format.json do
-          inv = Stash::Payments::Invoicer.new(resource: @author.resource, curator: nil)
-          customer_id = inv.lookup_prior_stripe_customer_id(params[:customer_email])
-          customer_id = inv.create_customer(params[:customer_name], params[:customer_email]).id unless customer_id.present?
-          @author.update(stripe_customer_id: customer_id)
-          render json: @author.as_json(include: [:affiliations])
-        end
+      fees = ResourceFeeCalculatorService.new(resource).calculate({generate_invoice: true})
+
+      if fees[:error] && fees[:old_payment_system]
+        # OLD payment system
+        inv = Stash::Payments::Invoicer.new(resource: @author.resource, curator: nil)
+        customer_id = inv.lookup_prior_stripe_customer_id(params[:customer_email])
+        customer_id = inv.create_customer(params[:customer_name], params[:customer_email]).id unless customer_id.present?
+        @author.update(stripe_customer_id: customer_id)
+      else
+        # NEW payment system
+        resource_payment = resource.payment || resource.build_payment
+        resource_payment.update(
+          payment_type: 'stripe',
+          pay_with_invoice: true,
+          invoice_details: params.permit(%i[customer_email customer_name]).merge({author_id: @author.id}),
+          status: :created,
+          amount: fees[:total]
+        )
       end
+
+      render json: @author.as_json(include: [:affiliations])
     end
 
     private

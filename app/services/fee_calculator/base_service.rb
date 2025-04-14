@@ -45,7 +45,7 @@ module FeeCalculator
     end
 
     def call
-      raise ActionController::BadRequest, 'Payer is not on 2025 payment plan' if resource && !@payment_plan_is_2025
+      verify_new_payment_system
 
       if resource.present?
         add_zero_fee(:service_tier)
@@ -75,6 +75,10 @@ module FeeCalculator
     end
 
     private
+
+    def verify_new_payment_system
+      raise ActionController::BadRequest, 'Payer is not on 2025 payment plan' if resource && !@payment_plan_is_2025
+    end
 
     def add_zero_fee(value_key)
       add_fee_to_total(value_key, 0)

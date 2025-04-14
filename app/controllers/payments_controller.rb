@@ -12,10 +12,10 @@ class PaymentsController < ApplicationController
     Stripe.api_key = APP_CONFIG.payments.key
     Stripe.api_version = '2019-02-11; custom_checkout_beta=v1;'
 
-    @payment_service = PaymentsService.new(current_user, @resource, create_params)
+    payment_service = PaymentsService.new(current_user, @resource, create_params)
 
     begin
-      attrs = @payment_service.checkout_options.merge(
+      attrs = payment_service.checkout_options.merge(
         {
           return_url: "#{callback_payments_url}?resource_id=#{@resource.id}&session_id={CHECKOUT_SESSION_ID}",
           customer_email: @resource.owner_author.author_email
@@ -25,9 +25,10 @@ class PaymentsController < ApplicationController
       resource_payment = @resource.payment || @resource.build_payment
       resource_payment.update(
         payment_type: 'stripe',
+        pay_with_invoice: false,
         checkout_session_id: session.id,
         status: :created,
-        amount: @payment_service.total_amount
+        amount: payment_service.total_amount
       )
     rescue StandardError => e
       render json: {

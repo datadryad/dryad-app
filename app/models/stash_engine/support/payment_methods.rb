@@ -22,8 +22,9 @@ module StashEngine
       end
 
       def payer_2025?
+        return false if old_payment_system
         current_payer = payer
-        return false if current_payer.nil?
+        return true if current_payer.nil?
 
         return current_payer.payment_plan_type.to_s == '2025' if current_payer.is_a? StashEngine::Journal
 

@@ -23,7 +23,7 @@ function Payments({
   };
 
   useEffect(() => {
-    fetchClientSecret();
+    if(!invoice) fetchClientSecret();
   }, [invoice]);
 
   if (invoice) {

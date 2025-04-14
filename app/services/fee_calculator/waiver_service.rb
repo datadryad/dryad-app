@@ -2,6 +2,7 @@ module FeeCalculator
   class WaiverService < BaseService
 
     def call
+      verify_new_payment_system
       verify_max_storage_size
       add_zero_fee(:storage_fee)
       add_storage_fee_label

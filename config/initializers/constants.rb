@@ -12,4 +12,6 @@ PRODUCT_NAME_MAPPER = {
   storage_fee: 'Large data fee',
   individual_storage_fee: 'Data Publishing Charge',
   total: 'Total'
-}
+}.freeze
+
+OLD_PAYMENT_SYSTEM_MESSAGE = 'Payer is not on 2025 payment plan'.freeze

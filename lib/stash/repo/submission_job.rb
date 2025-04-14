@@ -70,6 +70,7 @@ module Stash
       private
 
       def do_submit!
+        create_invoice(resource)
         logger.info("Submitting resource #{resource_id} (#{resource.identifier_str})\n")
         resource.data_files.each do |f|
           case f.file_state
@@ -94,6 +95,29 @@ module Stash
         end
         resource.save!
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
+      end
+
+      def create_invoice(resource)
+
+        payment = resource.payment
+
+        # pp payment
+        # pp payment.invoice_details
+        author = StashEngine::Author.find(payment.invoice_details['author_id'])
+        # pp author
+
+        # fees = ResourceFeeCalculatorService.new(resource).calculate({generate_invoice: true})
+
+        # aaaa
+        invoicer = Stash::Payments::StripeInvoicer.new(resource)
+        return if invoicer.invoice_created?
+
+        customer_id = invoicer.lookup_prior_stripe_customer_id(payment.invoice_details['customer_email'])
+        customer_id = invoicer.create_customer(payment.invoice_details['customer_name'], payment.invoice_details['customer_email']).id unless customer_id.present?
+        author.update(stripe_customer_id: customer_id)
+
+        invoice = invoicer.create_invoice
+        payment.update(pay_with_invoice: true, invoice_id: invoice.id)
       end
 
       def copy_to_permanent_store(data_file)

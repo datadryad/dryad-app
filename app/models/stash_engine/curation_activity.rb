@@ -381,6 +381,7 @@ module StashEngine
     # ------------------------------------------
 
     def ready_for_payment?
+      return false unless resource.identifier
       return false unless resource
       return false unless first_time_in_status?
 

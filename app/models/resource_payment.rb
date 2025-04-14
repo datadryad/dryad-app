@@ -4,7 +4,9 @@
 #
 #  id                          :bigint           not null, primary key
 #  amount                      :integer
+#  invoice_details             :json
 #  paid_at                     :datetime
+#  pay_with_invoice            :boolean          default(FALSE)
 #  payment_email               :string(191)
 #  payment_intent              :string(191)
 #  payment_status              :string(191)
