@@ -127,7 +127,8 @@ module StashEngine
 
     def validate_email
       if current_user.email_token.expired?
-        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { info: 'The code entered has expired. Check your email for a new code.' }
+        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id),
+                    flash: { info: 'The code entered has expired. Check your email for a new code.' }
       elsif params[:token] == current_user.email_token.token
         current_user.roles.tenant_roles.delete_all
         current_user.update(tenant_id: current_user.email_token.tenant_id)
