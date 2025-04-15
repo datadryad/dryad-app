@@ -114,11 +114,9 @@ module Stash
         end
 
         invoicer = Stash::Payments::StripeInvoicer.new(resource)
-        return if invoicer.invoice_created?
-
         invoicer.handle_customer(payment.invoice_details)
         invoice = invoicer.create_invoice
-        payment.update(pay_with_invoice: true, invoice_id: invoice.id)
+        payment.update(pay_with_invoice: true, invoice_id: invoice.id) if invoice
       end
 
       def copy_to_permanent_store(data_file)

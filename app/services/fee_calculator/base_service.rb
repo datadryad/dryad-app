@@ -40,11 +40,13 @@ module FeeCalculator
       @options = options
       @sum_options = {}
       @resource = resource
+      @payer = resource ? resource.identifier.payer : nil
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025? : false
       @covers_ldf = resource ? resource.identifier.payer&.covers_ldf : false
     end
 
     def call
+      verify_payer
       verify_new_payment_system
 
       if resource.present?
@@ -77,7 +79,11 @@ module FeeCalculator
     private
 
     def verify_new_payment_system
-      raise ActionController::BadRequest, 'Payer is not on 2025 payment plan' if resource && !@payment_plan_is_2025
+      raise ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE if resource && !@payment_plan_is_2025
+    end
+
+    def verify_payer
+      raise ActionController::BadRequest, MISSING_PAYER_MESSAGE if resource && !@payer
     end
 
     def add_zero_fee(value_key)
@@ -166,7 +172,7 @@ module FeeCalculator
 
     def price_by_range(tier_definition, value)
       tier = tier_definition.find { |t| t[:range].include?(value.to_i) }
-      raise ActionController::BadRequest, 'The value is out of defined range' if tier.nil?
+      raise ActionController::BadRequest, OUT_OF_RANGE_MESSAGE if tier.nil?
 
       tier[:price]
     end

@@ -169,49 +169,41 @@ module Stash
           end
 
           context 'with ResourcePayment record set to pay_with_invoice' do
+            let(:invoice_id) { nil }
             let!(:payment) do
               create(:resource_payment,
-                     resource: resource,
-                     pay_with_invoice: true,
-                     invoice_id: nil,
-                     invoice_details: {
-                       'author_id' => author.id,
-                       'customer_name' => 'Customer Name',
-                       'customer_email' => 'customer.email@example.com'
-                     })
+                resource: resource,
+                pay_with_invoice: true,
+                invoice_id: invoice_id,
+                invoice_details: {
+                  'author_id' => author.id,
+                  'customer_name' => 'Customer Name',
+                  'customer_email' => 'customer.email@example.com'
+                })
             end
 
             before do
               mock_stripe!
-
             end
 
-            it 'calls new invoicer class for resource' do
-              invoicer_obj = double(Stash::Payments::StripeInvoicer)
-              expect(Stash::Payments::StripeInvoicer).to receive(:new).with(resource).and_return(invoicer_obj)
-              expect(invoicer_obj).to receive(:invoice_created?).and_return(false)
-              expect(invoicer_obj).to receive(:handle_customer).with(payment.invoice_details)
-              expect(invoicer_obj).to receive(:create_invoice).and_return(OpenStruct.new(id: 'invoice-id'))
+            context 'when invoice_id is not set' do
+              let(:invoice_id) { nil }
 
-              subject.send(:handle_invoice_creation)
-            end
-
-            it 'creates a new invoice' do
-              expect(subject.send(:handle_invoice_creation)).to be_truthy
-              expect(payment.reload.invoice_id).not_to be_nil
-              subject.send(:handle_invoice_creation)
+              it 'creates a new invoice' do
+                subject.send(:handle_invoice_creation)
+                expect(payment.reload.invoice_id).not_to be_nil
+              end
             end
 
             context 'when invoice already exists' do
-              let!(:payment) { create(:resource_payment, resource: resource, pay_with_invoice: true, invoice_id: 'invoice-id') }
+              let(:invoice_id) { 'some-id' }
 
               it 'returns nil' do
-                invoicer_obj = double(Stash::Payments::StripeInvoicer)
-                allow(Stash::Payments::StripeInvoicer).to receive(:new).with(resource).and_return(invoicer_obj)
-                expect(invoicer_obj).to receive(:invoice_created?).and_return(true)
-
-                expect(invoicer_obj).not_to receive(:create_invoice)
-                expect(subject.send(:handle_invoice_creation)).to be_nil
+                expect {
+                  subject.send(:handle_invoice_creation)
+                }.not_to change {
+                  payment.reload.invoice_id
+                }
               end
             end
           end

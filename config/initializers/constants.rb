@@ -14,4 +14,7 @@ PRODUCT_NAME_MAPPER = {
   total: 'Total'
 }.freeze
 
+# New payment system error messages
 OLD_PAYMENT_SYSTEM_MESSAGE = 'Payer is not on 2025 payment plan'.freeze
+MISSING_PAYER_MESSAGE = 'Payer is missing. Please use individual calculator.'.freeze
+OUT_OF_RANGE_MESSAGE = 'The value is out of defined range'.freeze

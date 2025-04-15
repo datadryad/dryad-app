@@ -10,7 +10,7 @@ module Stash
       # to output digital storage sizes
       include StashEngine::ApplicationHelper
 
-      attr_reader :resource, :curator
+      attr_reader :resource
 
       # Settings used by all Stripe services
       Stripe.api_key = APP_CONFIG.payments.key
@@ -18,7 +18,6 @@ module Stash
 
       def initialize(resource)
         @resource = resource
-        @has_overage_line_item = false
       end
 
       def invoice_created?
@@ -26,6 +25,8 @@ module Stash
       end
 
       def create_invoice
+        return false if invoice_created?
+
         @fees = ResourceFeeCalculatorService.new(resource).calculate({ generate_invoice: true })
         return false if @fees[:total].zero? && !stripe_user_waiver?
 
@@ -34,8 +35,7 @@ module Stash
         resource.identifier.payment_id = invoice.id
         resource.identifier.payment_type = stripe_user_waiver? ? 'waiver' : 'stripe'
         resource.identifier.save
-        res = invoice
-        # res = invoice.send_invoice
+        res = invoice.send_invoice
         resource.identifier.update(last_invoiced_file_size: ds_size)
         res
       end
@@ -60,8 +60,7 @@ module Stash
           collection_method: 'send_invoice',
           customer: stripe_user_customer_id,
           days_until_due: 30,
-          description: "Dryad deposit #{resource.identifier}, #{resource.title}",
-          metadata: { 'curator' => curator&.name }
+          description: "Dryad deposit #{resource.identifier}, #{resource.title}"
         )
       end
 
