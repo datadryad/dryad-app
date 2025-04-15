@@ -196,6 +196,8 @@ module StashEngine
       else
         resource.identifier&.record_payment
       end
+      # after first publication, the dataset will be switched to new payment system
+      resource.identifier.update(old_payment_system: false)
     end
 
     def submit_to_stripe
@@ -240,8 +242,6 @@ module StashEngine
           update_dates[:curation_start] = created_at
         when 'embargoed', 'published'
           update_dates[:approved] = created_at
-          # after first publication, the dataset will be switched to new payment system
-          resource.identifier.update(old_payment_system: false)
         end
       end
       update_dates[:curation_end] = created_at if previous_status == 'curation' && resource.process_date.curation_end.blank?
@@ -382,9 +382,12 @@ module StashEngine
 
     def ready_for_payment?
       return false unless resource
-      return false unless first_time_in_status?
+      return false unless resource.identifier
 
       resource.identifier.reload
+      return false unless resource.identifier.old_payment_system
+      return false unless first_time_in_status?
+
       APP_CONFIG&.payments&.service == 'stripe' &&
         (resource.identifier.payment_type.nil? || %w[unknown waiver stripe].include?(resource.identifier.payment_type)) &&
         %w[published embargoed].include?(status)

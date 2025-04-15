@@ -70,6 +70,7 @@ module Stash
       private
 
       def do_submit!
+        handle_invoice_creation
         logger.info("Submitting resource #{resource_id} (#{resource.identifier_str})\n")
         resource.data_files.each do |f|
           case f.file_state
@@ -94,6 +95,28 @@ module Stash
         end
         resource.save!
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
+      end
+
+      def handle_invoice_creation
+        # old system payment
+        # should be generating an invoice on publish
+        return if resource.identifier.old_payment_system
+
+        payment = resource.payment
+        if payment.nil?
+          Rails.logger.warn("No payment found for resource ID #{resource.id}")
+          return
+        end
+
+        unless payment.pay_with_invoice
+          Rails.logger.warn("Payment for resource ID #{resource.id} is not set to invoice")
+          return
+        end
+
+        invoicer = Stash::Payments::StripeInvoicer.new(resource)
+        invoicer.handle_customer(payment.invoice_details)
+        invoice = invoicer.create_invoice
+        payment.update(pay_with_invoice: true, invoice_id: invoice.id) if invoice
       end
 
       def copy_to_permanent_store(data_file)

@@ -42,7 +42,7 @@ module FeeCalculator
           let(:options) { { storage_size: 10_000_000_000_000 } }
 
           it 'raises an error' do
-            expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+            expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
           end
         end
       end
@@ -74,7 +74,7 @@ module FeeCalculator
           let(:options) { { generate_invoice: true, storage_size: 10_000_000_000_000 } }
 
           it 'raises an error' do
-            expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+            expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
           end
         end
       end
@@ -113,7 +113,7 @@ module FeeCalculator
             let(:new_files_size) { 10_000_000_000_000 }
 
             it 'raises an error' do
-              expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+              expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
             end
           end
         end
@@ -141,7 +141,7 @@ module FeeCalculator
             let(:new_files_size) { 10_000_000_000_000 }
 
             it 'raises an error' do
-              expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+              expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
             end
           end
         end
@@ -189,7 +189,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -236,7 +236,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
