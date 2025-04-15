@@ -28,6 +28,8 @@ FactoryBot.define do
     id { 'mock_tenant' }
     short_name do
       case id
+      when 'email_auth'
+        'Email Test'
       when 'dryad_ip'
         'Dryad IP Address Test'
       when 'match_tenant'
@@ -42,6 +44,8 @@ FactoryBot.define do
     end
     long_name do
       case id
+      when 'email_auth'
+        'Email Test Organization'
       when 'dryad_ip'
         'Dryad Data Platform IP Address Test'
       when 'match_tenant'
@@ -56,6 +60,8 @@ FactoryBot.define do
     end
     authentication do
       case id
+      when 'email_auth'
+        { strategy: 'email', email_domain: 'example.org' }.to_json
       when 'dryad_ip'
         { strategy: 'ip_address', ranges: ['128.48.67.15/255.255.255.0', '127.0.0.1/255.255.255.0'] }.to_json
       when 'match_tenant'
@@ -71,13 +77,13 @@ FactoryBot.define do
     enabled { true }
     partner_display do
       case id
-      when 'match_tenant', 'ucop'
+      when 'email_auth', 'match_tenant', 'ucop'
         true
       else false end
     end
     covers_dpc do
       case id
-      when 'match_tenant', 'ucop'
+      when 'email_auth', 'match_tenant', 'ucop'
         true
       else false end
     end
@@ -93,6 +99,10 @@ FactoryBot.define do
         tenant.reload
       end
     end
+  end
+
+  factory :tenant_email, parent: :tenant, class: StashEngine::Tenant do
+    id { 'email_auth' }
   end
 
   factory :tenant_ip, parent: :tenant, class: StashEngine::Tenant do
