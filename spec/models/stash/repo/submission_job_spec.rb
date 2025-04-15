@@ -172,14 +172,14 @@ module Stash
             let(:invoice_id) { nil }
             let!(:payment) do
               create(:resource_payment,
-                resource: resource,
-                pay_with_invoice: true,
-                invoice_id: invoice_id,
-                invoice_details: {
-                  'author_id' => author.id,
-                  'customer_name' => 'Customer Name',
-                  'customer_email' => 'customer.email@example.com'
-                })
+                     resource: resource,
+                     pay_with_invoice: true,
+                     invoice_id: invoice_id,
+                     invoice_details: {
+                       'author_id' => author.id,
+                       'customer_name' => 'Customer Name',
+                       'customer_email' => 'customer.email@example.com'
+                     })
             end
 
             before do
@@ -199,11 +199,11 @@ module Stash
               let(:invoice_id) { 'some-id' }
 
               it 'returns nil' do
-                expect {
+                expect do
                   subject.send(:handle_invoice_creation)
-                }.not_to change {
+                end.not_to(change do
                   payment.reload.invoice_id
-                }
+                end)
               end
             end
           end

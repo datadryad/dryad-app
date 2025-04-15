@@ -14,14 +14,14 @@ module Stash
       let(:invoice_id) { nil }
       let!(:payment) do
         create(:resource_payment,
-          resource: resource,
-          pay_with_invoice: true,
-          invoice_id: invoice_id,
-          invoice_details: {
-            'author_id' => author.id,
-            'customer_name' => 'Customer Name',
-            'customer_email' => 'customer.email@example.com'
-          })
+               resource: resource,
+               pay_with_invoice: true,
+               invoice_id: invoice_id,
+               invoice_details: {
+                 'author_id' => author.id,
+                 'customer_name' => 'Customer Name',
+                 'customer_email' => 'customer.email@example.com'
+               })
       end
 
       before do
@@ -53,7 +53,9 @@ module Stash
       describe '#create_invoice' do
         context 'if total fee is zero' do
           before do
-            allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({ storage_fee: 0, storage_fee_label: 'Some line item name', total: 0 })
+            allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return(
+              { storage_fee: 0, storage_fee_label: 'Some line item name', total: 0 }
+            )
           end
 
           it 'returns false' do
@@ -72,7 +74,7 @@ module Stash
                   collection_method: 'send_invoice',
                   customer: 'stripe_customer_id',
                   days_until_due: 30,
-                  description: "Dryad deposit #{identifier}, #{resource.title}",
+                  description: "Dryad deposit #{identifier}, #{resource.title}"
                 }
               ).and_return(invoice)
               expect(Stripe::InvoiceItem).to receive(:create).with(
@@ -93,7 +95,9 @@ module Stash
 
         context 'with total grater than 0' do
           before do
-            allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({ storage_fee: 150, storage_fee_label: 'Some line item name', invoice_fee: 199, total: 150 })
+            allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return(
+              { storage_fee: 150, storage_fee_label: 'Some line item name', invoice_fee: 199, total: 150 }
+            )
           end
 
           it 'returns true' do
@@ -104,7 +108,7 @@ module Stash
                 collection_method: 'send_invoice',
                 customer: 'stripe_customer_id',
                 days_until_due: 30,
-                description: "Dryad deposit #{identifier}, #{resource.title}",
+                description: "Dryad deposit #{identifier}, #{resource.title}"
               }
             ).and_return(invoice)
             expect(Stripe::InvoiceItem).to receive(:create).with(
@@ -122,7 +126,7 @@ module Stash
                 invoice: 1,
                 amount: 19_900,
                 currency: 'usd',
-                description: "Invoice fee"
+                description: 'Invoice fee'
               }
             ).and_return([OpenStruct.new(id: 2)])
             expect(invoice).to receive(:send_invoice).and_return(OpenStruct.new(id: 1))
@@ -161,9 +165,9 @@ module Stash
             before { author.update!(stripe_customer_id: 'some-id') }
 
             it 'the value gets updated' do
-              expect {
+              expect do
                 invoicer.handle_customer(invoice_details)
-              }.to change {
+              end.to change {
                 author.reload.stripe_customer_id
               }.from('some-id').to('stripe_customer_id')
             end
@@ -173,9 +177,9 @@ module Stash
             before { author.update!(stripe_customer_id: nil) }
 
             it 'sets a customer id value' do
-              expect {
+              expect do
                 invoicer.handle_customer(invoice_details)
-              }.to change {
+              end.to change {
                 author.reload.stripe_customer_id
               }.from(nil).to('stripe_customer_id')
             end

@@ -39,4 +39,22 @@ describe ResourceFeeCalculatorService do
 
     it_should_behave_like 'calling FeeCalculatorService', 'waiver'
   end
+
+  context 'with non 2025 fee model' do
+    let(:resource) { create(:resource, identifier: identifier) }
+    let(:contributor) do
+      create(:contributor, contributor_name: 'National Cancer Institute',
+                           contributor_type: 'funder', resource_id: resource.id)
+    end
+    let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: 'tiered', covers_dpc: true, enabled: true) }
+
+    it 'returns an error' do
+      response = ResourceFeeCalculatorService.new(resource).calculate({})
+      expect(response).to eq({
+                               error: true,
+                               message: OLD_PAYMENT_SYSTEM_MESSAGE,
+                               old_payment_system: true
+                             })
+    end
+  end
 end
