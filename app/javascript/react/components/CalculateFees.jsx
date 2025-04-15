@@ -11,7 +11,7 @@ export default function CalculateFees({
   const calculateFees = () => {
     axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
       .then(({data}) => {
-        setFees(data.fees);
+        setFees(data.fees || {});
       });
   };
 
@@ -19,7 +19,7 @@ export default function CalculateFees({
     calculateFees();
   }, []);
   /* eslint-disable max-len */
-  if (paid) {
+  if (paid && fees.storage_fee_label) {
     return (
       <>
         <p>This dataset has been previously submitted and the <a href="/requirements#cost" target="blank">{fees.storage_fee_label}<ExitIcon /></a> has been paid for {formatSizeUnits(resource.identifier.last_invoiced_file_size)}.</p>
