@@ -12,6 +12,7 @@ class ResourceFeeCalculatorService
 
   def type
     ident = @resource.identifier
+    return 'waiver' if ident.payment_type == 'waiver'
 
     if ident.institution_will_pay?
       'institution'

@@ -146,7 +146,7 @@ export default function UploadFiles({
       upload_file_name: f.sanitized_name,
       type: UploadTypetoRailsActiveRecord[f.uploadType],
     }));
-    setResource((r) => ({...r, generic_files}));
+    setResource((r) => ({...r, total_file_size: generic_files.reduce((s, f) => s + f.upload_file_size, 0), generic_files}));
   }, [chosenFiles]);
 
   useEffect(() => {
