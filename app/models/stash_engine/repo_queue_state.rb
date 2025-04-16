@@ -19,8 +19,9 @@ require 'stash/aws/s3'
 module StashEngine
   class RepoQueueState < ApplicationRecord
     self.table_name = 'stash_engine_repo_queue_states'
-    include StashEngine::Support::StringEnum
 
+    # Associations
+    # ------------------------------------------
     belongs_to :resource
 
     # Explanation of statuses:  This will log all the statuses for the resource, so the final status is the current one.
@@ -46,12 +47,11 @@ module StashEngine
       errored
       provisional_complete
     ]
-    string_enum('state', enum_vals, 'enqueued', false)
+    enum :state, enum_vals.index_by(&:to_sym), default: 'enqueued', validate: true
 
     # Validations
     # ------------------------------------------
     validates :resource, presence: true
-    validates :state, presence: true, inclusion: { in: enum_vals }
 
     # Scopes
     # ------------------------------------------

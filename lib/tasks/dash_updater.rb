@@ -36,7 +36,7 @@ module Tasks
         idg.update_identifier_metadata!
       rescue Stash::Doi::DataciteGenError => e
         tries += 1
-        puts "Try: #{tries} \tStash::Doi::DataciteGen - Unable to submit metadata changes for : '#{resource&.identifier&.to_s}'"
+        puts "Try: #{tries} \tStash::Doi::DataciteGen - Unable to submit metadata changes for : '#{resource&.identifier}'"
         puts e.message
         puts ''
         sleep retry_pause # pause for a while to let ezid/datacite stop having problems in case temporary

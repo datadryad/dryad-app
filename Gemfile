@@ -170,3 +170,5 @@ group :development do
   gem 'annotaterb', '~> 4.13.0'
   gem 'bullet'
 end
+
+gem 'acts_as_paranoid', '~> 0.10.3'
