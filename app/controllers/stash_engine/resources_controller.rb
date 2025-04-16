@@ -183,12 +183,12 @@ module StashEngine
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
         manuscript = @resource.resource_publication.manuscript_number
         dupes = other_submissions.where(title: @resource.title)&.select(:id, :title, :identifier_id).to_a
-        if primary_article.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp(primary_article) == 0 }
+        if primary_article.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp?(primary_article) }
           dupes.concat(other_submissions.joins(:related_identifiers)
               .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
               &.select(:id, :title, :identifier_id).to_a)
         end
-        if manuscript.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp(manuscript) == 0 }
+        if manuscript.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp?(manuscript) }
           dupes.concat(
             other_submissions.joins(:resource_publication).where(resource_publication: { manuscript_number: manuscript })
             &.select(:id, :title, :identifier_id).to_a
