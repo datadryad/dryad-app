@@ -1,3 +1,3 @@
-document.getElementById('funders_list').innerHTML = "<%= @resource.contributors.funder&.map(&:contributor_name)&.join('; ') %>"
+document.getElementById('funders_list').innerHTML = "<%= @resource.contributors.funder&.map(&:contributor_name)&.join('; ').truncate(100) %>"
 document.getElementById('genericModalContent').innerHTML = '';
 document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/funders_popup') %>"));
