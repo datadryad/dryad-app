@@ -89,3 +89,11 @@ pre {
     display: block;
   }
 }
+
+p:has(.fa-spinner) {
+  text-align: center;
+}
+
+.fa-spinner {
+  color: $medium-gray;
+}

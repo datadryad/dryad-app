@@ -16,8 +16,8 @@ See [how Dryad compares with other platforms](https://doi.org/10.5281/zenodo.794
 
 ## Latest news
 
-<div id="blog-latest-posts" data-count="3">
-  <%= image_tag 'stash_engine/spinner.gif', size: '80x60', alt: 'Loading spinner' %>
+<div id="blog-latest-posts" data-count="3" aria-live="polite" aria-busy="true">
+  <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
 </div>
 <p style="text-align:right"><a href="https://blog.datadryad.org">More news from Dryad →</a></p>
 

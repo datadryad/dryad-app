@@ -3,7 +3,7 @@
 <% if @preview %>
   <% case @file.preview_type %>
   <% when 'pdf' %>
-    <div id="pdf_loading" style="text-align: center; margin-top: 1rem"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></div>
+    <p id="pdf_loading"><i class="fas fa-spin fa-spinner" aria-label="Loading..." role="img"></i></p>
     <canvas id="pdf_canvas"></canvas>
   <% when 'img' %>
     <img src="<%= @file.digest.present? ? @file.s3_permanent_presigned_url : @file.s3_staged_presigned_url %>"/>

@@ -178,7 +178,7 @@ export default function Autocomplete(
           tabIndex={-1}
           hidden={!isOpen}
         >
-          {!inputItems.length && <li><i className="fa fa-circle-notch fa-spin" aria-hidden="true" /></li>}
+          {!inputItems.length && <li><i className="fas fa-circle-notch fa-spin" aria-hidden="true" /></li>}
           {inputItems.map((item, index) => {
             const id = idFunc(item);
             const name = nameFunc(item);
