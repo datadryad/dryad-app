@@ -51,7 +51,7 @@ gem 'down' # I'm not sure where this is used, but maybe in the frictionless data
 gem 'exception_notification', git: 'https://github.com/smartinez87/exception_notification.git'
 gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
-gem 'font-awesome-sass', '~> 6.1.0'
+gem 'font-awesome-sass', '~> 6.7.2'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'grover'
 gem 'http', '~> 5.0.4'
