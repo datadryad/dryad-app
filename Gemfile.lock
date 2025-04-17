@@ -280,7 +280,7 @@ GEM
       ffi (>= 1.15.5)
       rake
     filesize (0.2.0)
-    font-awesome-sass (6.1.2)
+    font-awesome-sass (6.7.2)
       sassc (~> 2.0)
     formatador (1.1.0)
     fuubar (2.5.1)
@@ -800,7 +800,7 @@ DEPENDENCIES
   faker
   faraday (~> 1.10.4)
   filesize (~> 0.2.0)
-  font-awesome-sass (~> 6.1.0)
+  font-awesome-sass (~> 6.7.2)
   fuubar
   google-apis-gmail_v1 (~> 0.14.0)
   grover

@@ -7,7 +7,6 @@
     background: transparent;
     border: none;
     padding: 0;
-    font-size: 1.65rem;
     opacity: .9;
 
     &:hover {
@@ -15,8 +14,13 @@
     }
   }
 
+  a {
+    font-size: 1.65rem;
+  }
+
   button, button:hover {
     color: $dark-gray;
+    font-size: 1.45rem;
   }
   a[data-share='email'] {
     &, &:hover, &:visited {
@@ -28,9 +32,14 @@
       color: #FF4500;
     }
   }
-  a[data-share='twitter'] {
+  a[data-share='mastodon'] {
     &, &:hover, &:visited {
-      color: #00acee;
+      color: #563ACC;
+    }
+  }
+  a[data-share='bluesky'] {
+    &, &:hover, &:visited {
+      color: rgb(10, 122, 255);
     }
   }
   a[data-share='facebook'] {
