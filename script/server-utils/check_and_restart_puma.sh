@@ -13,16 +13,7 @@ if [[ "$MAIN_PID" -eq 0 ]]; then
   exit 1
 fi
 
-# Get all Puma-related PIDs (main + children)
-PIDS=$(pgrep -P "$MAIN_PID")
-PIDS="$MAIN_PID $PIDS"
-
-# Calculate total CPU usage
-TOTAL_CPU=0
-for PID in $PIDS; do
-  CPU=$(ps -p "$PID" -o %cpu= | awk '{print $1}')
-  TOTAL_CPU=$(echo "$TOTAL_CPU + $CPU" | bc)
-done
+TOTAL_CPU=$(top -b -n1 | grep '[b]undle' | awk 'NR==1 {print $9}')
 
 # Read existing strike count (or default to 0)
 STRIKES=$(cat "$STRIKE_FILE" 2>/dev/null || echo 0)
