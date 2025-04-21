@@ -8,8 +8,8 @@
   </div>
 
   <div id="show_metrics"
-       data-load="<%= stash_url_helpers.show_metrics_path(identifier_id: @id.id) %>">
-    <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
+       data-load="<%= stash_url_helpers.show_metrics_path(identifier_id: @id.id) %>" aria-live="polite" aria-busy="true">
+    <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
   </div>
   
   <% if @resource&.identifier&.pub_state == 'published' %>
@@ -20,8 +20,8 @@
 
   <% unless @resource&.resource_type&.resource_type == 'collection' %>
     <div id="show_license"
-         data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>">
-      <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
+         data-load="<%= metadata_url_helpers.license_details_path(resource_id: @resource.id, format: :js) %>" aria-live="polite" aria-busy="true">
+      <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
     </div>
   <% end %>
 </div>
@@ -30,8 +30,8 @@
   <div id="keyword_section">
     <h2>Subject keywords</h2>
     <div id="show_subjects"
-         data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>">
-      <i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i>
+         data-load="<%= metadata_url_helpers.subjects_landing_path(resource_id: @resource.id, format: :js) %>" aria-live="polite" aria-busy="true">
+      <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
     </div>
   </div>
   <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight_fields: [] } %>
@@ -42,8 +42,8 @@
 <div class="sidebox" id="sidebox-related_works">
   <h2>Related works</h2>
   <div id="show_related_works"
-       data-load="<%= metadata_url_helpers.related_identifiers_show_path(resource_id: @resource.id, format: :js) %>">
-    <p><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p>
+       data-load="<%= metadata_url_helpers.related_identifiers_show_path(resource_id: @resource.id, format: :js) %>" aria-live="polite" aria-busy="true">
+    <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
   </div>
 </div>
 <% end %>

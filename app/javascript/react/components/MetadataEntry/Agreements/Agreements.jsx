@@ -95,7 +95,7 @@ export default function Agreements({
 
   if (!dpc.dpc) {
     return (
-      <p><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
+      <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
     );
   }
   return (
