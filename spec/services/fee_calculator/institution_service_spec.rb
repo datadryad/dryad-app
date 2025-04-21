@@ -240,7 +240,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -266,7 +266,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -291,7 +291,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -320,7 +320,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -355,7 +355,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -382,7 +382,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -420,7 +420,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -454,7 +454,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -466,7 +466,7 @@ module FeeCalculator
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it 'raises an error' do
-          expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')
+          expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
         end
       end
 
@@ -475,7 +475,7 @@ module FeeCalculator
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it 'raises an error' do
-          expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')
+          expect { subject }.to raise_error(ActionController::BadRequest, MISSING_PAYER_MESSAGE)
         end
       end
     end
