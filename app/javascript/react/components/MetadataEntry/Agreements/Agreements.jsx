@@ -169,7 +169,7 @@ export default function Agreements({
               <div className="callout">
                 <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
               </div>
-              {previous && resource.tenant !== previous.tenant && <p className="del ins">Partner institution changed</p>}
+              {previous && resource.tenant_id !== previous.tenant_id && <p className="del ins">Partner institution changed</p>}
             </>
           )}
           {!dpc.institution_will_pay && dpc.journal_will_pay && (
