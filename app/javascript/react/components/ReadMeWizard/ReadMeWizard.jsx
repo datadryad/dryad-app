@@ -222,9 +222,9 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
     );
   }
   return (
-    <p style={{display: 'flex', alignItems: 'center'}}>
-      <img src="../../../images/spinner.gif" alt="Loading spinner" style={{height: '1.5rem', marginRight: '.5ch'}} />
-          Loading README generator
+    <p style={{display: 'flex', alignItems: 'center', gap: '.5ch'}}>
+      <i className="fas fa-spin fa-spinner" aria-hidden="true" />
+      Loading README generator
     </p>
   );
 }
