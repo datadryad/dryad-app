@@ -6,7 +6,7 @@
   <h1 class="o-heading__level1"><%= r&.title %></h1>
   <%= @identifier.identifier %>
 </div>
-<div id="dupe_check" class="callout warn" data-load="<%= stash_url_helpers.dupe_check_resource_path(format: :js, id: r&.id, admin: true) %>"></div>
+<div id="dupe_check" class="callout warn" data-load="<%= stash_url_helpers.dupe_check_resource_path(format: :js, id: r&.id, admin: true) %>" aria-busy="true" role="alert"></div>
 <div class="callout alt">
   <div id="activity-at-a-glance">
     <div class="input-stack">
@@ -115,7 +115,7 @@
           <% end %>
         <% end %>
       </span>
-      <span id="related_works_list" class="child-details"><%= r.related_identifiers&.map { |w| w.work_type.humanize + "#{r.resource_publications.where(pub_type: w.work_type)&.first&.publication_name&.present? ? ", #{r.resource_publications.where(pub_type: w.work_type).first.publication_name}" : ''}"}&.join('; ').truncate(100) %> <%= r.resource_publication&.manuscript_number&.presence || ''%></span>
+      <span id="related_works_list" class="child-details"><%= r.resource_publication&.publication_name&.present? ? "#{r.resource_publication&.publication_name}, " : '' %> <%= r.resource_publication&.manuscript_number&.presence || ''%><br/><%= r.related_identifiers.empty? ? '' : "#{r.related_identifiers.size} related work#{r.related_identifiers.size > 1 ? 's' : ''}" %></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
       <span class="input-line">
@@ -139,8 +139,8 @@
     <% end %>
   <% end %>
 </div>
-<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>">
-  <p style="text-align: center;"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p>
+<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>" aria-busy="true" aria-live="polite">
+  <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
 </div>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>

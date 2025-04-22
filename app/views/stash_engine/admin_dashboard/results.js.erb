@@ -5,6 +5,7 @@ urlparams.set('page', '<%= params[:page] %>')
 <% if params[:page_size].present? %>urlparams.set('page_size', '<%= params[:page_size] %>')<% end %>
 window.history.pushState({}, null, `${window.location.pathname}?${urlparams.toString()}`)
 document.getElementById('search_results').innerHTML = "<%= escape_javascript(render(partial: 'results')) %>";
+document.getElementById('search_results').setAttribute('aria-busy', false);
 document.getElementById('save_buttons').innerHTML = "<%= escape_javascript(render(partial: 'save_buttons')) %>";
 $('#search_form').html = "<%= escape_javascript(render(partial: 'search_form')) %>";
 document.getElementById('edit_fields-help').removeEventListener('click', fieldsHelp)

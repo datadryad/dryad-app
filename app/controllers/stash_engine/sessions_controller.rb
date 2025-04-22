@@ -117,12 +117,35 @@ module StashEngine
       do_redirect
     end
 
+    def email_sso
+      @tenant = StashEngine::Tenant.find(params[:tenant_id])
+      return unless current_user.email&.end_with?(@tenant.authentication&.email_domain)
+
+      current_user.create_email_token(tenant_id: @tenant.id)
+      current_user.email_token.send_token
+    end
+
+    def validate_email
+      if current_user.email_token.expired?
+        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id),
+                    flash: { info: 'The code entered has expired. Check your email for a new code.' }
+      elsif params[:token] == current_user.email_token.token
+        current_user.roles.tenant_roles.delete_all
+        current_user.update(tenant_id: current_user.email_token.tenant_id)
+        do_redirect
+      else
+        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'Invalid code.' }
+      end
+    end
+
     # send the user to the tenant's SSO url
     def sso
       session[:target_page] = params[:target_page] if params[:target_page]
       if StashEngine::Tenant.exists?(params[:tenant_id]&.dig(:value))
         tenant = StashEngine::Tenant.find(params[:tenant_id]&.dig(:value))
         case tenant&.authentication&.strategy
+        when 'email'
+          redirect_to email_sso_path(tenant_id: tenant.id)
         when 'author_match'
           current_user.roles.tenant_roles.delete_all
           current_user.update(tenant_id: tenant.id)

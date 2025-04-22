@@ -84,6 +84,13 @@ sudo vim etc/amazon-cloudwatch-agent.d/logs_config.json
             "log_group_name": "production-others",
             "log_stream_name": "{ip_address}_{instance_id}",
             "retention_in_days": 30
+          },
+          {
+            "file_path": "/home/ec2-user/deploy/current/log/check_puma.log",
+            "log_group_class": "STANDARD",
+            "log_group_name": "production-puma",
+            "log_stream_name": "{ip_address}_{instance_id}",
+            "retention_in_days": 90
           }
         ]
       }
@@ -111,7 +118,7 @@ and create the `crons/`folder and run the following command
 cd ~/deploy/current/log/
 mkdir crons
 cd crons
-ln -s ../!(production.log*|api_requests.log|crons) ./
+ln -s ../!(production.log*|api_requests.log|crons|check_puma.log) ./
 ```
   
 Start and enable the service

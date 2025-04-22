@@ -102,7 +102,7 @@ export default function Agreements({
 
   if (Object.keys(dpc).length === 0) {
     return (
-      <p><i className="fa fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
+      <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>
     );
   }
   return (
@@ -176,7 +176,7 @@ export default function Agreements({
               <div className="callout">
                 <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
               </div>
-              {previous && resource.tenant !== previous.tenant && <p className="del ins">Partner institution changed</p>}
+              {previous && resource.tenant_id !== previous.tenant_id && <p className="del ins">Partner institution changed</p>}
             </>
           )}
           {!dpc.institution_will_pay && dpc.journal_will_pay && (

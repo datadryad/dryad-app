@@ -64,7 +64,7 @@ Datasets larger than 10GB are billed individually as follows. Publisher and soci
       All fees are listed in USD
     </caption>
     <thead>
-      <tr class="callout"><th colspan="2" style="text-align: center;">Institutional partner DPC rates for large (over 10GB) datasets<p style="font-weight: normal; margin: 0 auto">Effective March 25, 2025</p></th></tr>
+      <tr class="callout"><th colspan="2" style="text-align: center;">Publisher partner DPC rates for large (over 10GB) datasets<p style="font-weight: normal; margin: 0 auto">Effective March 25, 2025</p></th></tr>
       <tr>
         <th>Dataset size</th>
         <th>Individual dataset fee</th>

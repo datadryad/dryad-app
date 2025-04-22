@@ -105,7 +105,8 @@ module StashEngine
         strategy: edit_params[:authentication][:strategy],
         ranges: edit_params[:authentication][:ranges].present? ? edit_params[:authentication][:ranges].split("\n").map(&:strip) : nil,
         entity_id: edit_params[:authentication][:entity_id].presence,
-        entity_domain: edit_params[:authentication][:entity_domain].presence
+        entity_domain: edit_params[:authentication][:entity_domain].presence,
+        email_domain: edit_params[:authentication][:email_domain].presence
       }
       update[:authentication] = auth.compact.to_json
       update
@@ -133,7 +134,7 @@ module StashEngine
     def edit_params
       params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled,
                     :covers_dpc, :partner_display, :ror_orgs, :sponsor_id, :flag, :note,
-                    authentication: %i[strategy ranges entity_id entity_domain])
+                    authentication: %i[strategy ranges entity_id entity_domain email_domain])
     end
 
   end

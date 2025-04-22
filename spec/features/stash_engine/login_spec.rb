@@ -24,14 +24,14 @@ RSpec.feature 'Session', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'User fails ORCID authentication', js: true do
-      # OmniAuth.config.test_mode = true
-      # OmniAuth.config.add_mock(:orcid, uid: nil, credentials: {}, info: {}, extra: {})
-      # visit root_path
-      # click_link 'Login'
-      # click_link 'Login or create your ORCID iD'
-      # User should have been redirected to the homepage
-      # expect(page).to have_text('Login')
+    xit 'User fails ORCID authentication', js: true do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:orcid, uid: nil, credentials: {}, info: {}, extra: {})
+      visit root_path
+      click_link 'Login'
+      click_link 'Login or create your ORCID iD'
+      User should have been redirected to the homepage
+      expect(page).to have_text('Login')
     end
 
     it 'existing user signs in successfully', js: true do
@@ -70,23 +70,53 @@ RSpec.feature 'Session', type: :feature do
     end
   end
 
-  # for author match authentication
-  describe :author_match, js: true do
+  describe :other_authentication, js: true do
 
     before(:each) do
       create(:tenant_match)
-      user = create(:user, tenant_id: nil)
-      mock_orcid!(user)
+      create(:tenant_email)
+      @user = create(:user, tenant_id: nil)
+      mock_orcid!(@user)
       OmniAuth.config.test_mode = true
       visit root_path
       click_link 'Login'
     end
 
-    xit 'logs in without shibboleth auth for configured tenant' do
+    # for author match authentication
+    it 'logs in without shibboleth auth for configured tenant' do
       click_link 'Login or create your ORCID iD'
-      fill_in 'tenant_id', with: 'Match Tenant'
+      find('#searchselect-tenant__input').click
+      within('#searchselect-tenant__list') do
+        find('li', text: 'Match Tenant').click
+      end
       click_button 'Login to verify'
       expect(page).to have_text('My datasets')
+      expect(page).to have_text('match_tenant')
+    end
+
+    # for email authentication
+    it 'sends and requires a code for configured tenant' do
+      click_link 'Login or create your ORCID iD'
+      find('#searchselect-tenant__input').click
+      within('#searchselect-tenant__list') do
+        find('li', text: 'Email Test').click
+      end
+      click_button 'Login to verify'
+      expect(page).to have_text('Enter confirmation code')
+      # enter and erase email
+      fill_in 'email', with: 'test@example.org'
+      click_button 'Save email'
+      click_button 'Remove and enter a new email'
+      fill_in 'email', with: 'test@example.org'
+      click_button 'Save email'
+      expect(page).to have_text('Enter confirmation code')
+      # refresh code
+      click_link 'Send another code'
+      expect(page).to have_text('Enter confirmation code')
+      # enter code
+      fill_in 'email_code', with: StashEngine::EmailToken.all.last.token
+      expect(page).to have_text('My datasets')
+      expect(page).to have_text('email_auth')
     end
   end
 end

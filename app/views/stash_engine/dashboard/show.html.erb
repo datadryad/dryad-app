@@ -10,7 +10,7 @@
     <i class="fas fa-plus" aria-hidden="true"></i>Start new submission
   <% end %>
 </div>
-<div id="user_datasets" data-load="<%= stash_url_helpers.dashboard_user_datasets_path(format: :js) %>">
-  <p style="text-align: center;"><i class="fa fa-spin fa-spinner" aria-hidden="true" style="color: #888"></i></p>
+<div id="user_datasets" data-load="<%= stash_url_helpers.dashboard_user_datasets_path(format: :js) %>" aria-live="polite" aria-busy="true">
+  <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
 </div>
 <p style="text-align:right; font-size: .9em;"><a href="/feedback?m=4&l=dashboard" class="o-link__buttonlink"><i class="fa fa-commenting-o" aria-hidden="true" style="margin-right: .5ch"></i>Help direct the future of Dryad</a></p>

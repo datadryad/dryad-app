@@ -100,7 +100,7 @@ function Submission({
         resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments,
       }}
       />,
-      help: <FilesHelp />,
+      help: <FilesHelp date={resource.identifier.publication_date} maxFiles={config_maximums.files} />,
       preview: <FilesPreview resource={resource} previous={previous} curator={user.curator} maxSize={config_maximums.merritt_size} />,
     },
     {

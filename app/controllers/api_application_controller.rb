@@ -115,9 +115,10 @@ class ApiApplicationController < StashEngine::ApplicationController
   # based on user and resource set in "require_api_user" and 'require_resource_in_progress'
   def require_permission
     return if @resource.nil? # this not needed for dataset upsert with identifier
+    return if @resource.permission_to_edit?(user: @user)
 
     api_logger.error('require_permission')
-    render json: { error: 'unauthorized' }.to_json, status: 401 unless @resource.permission_to_edit?(user: @user)
+    render json: { error: 'unauthorized' }.to_json, status: 401
   end
 
   def require_superuser
