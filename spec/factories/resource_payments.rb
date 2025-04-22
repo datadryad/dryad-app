@@ -26,10 +26,13 @@
 #  index_resource_payments_on_resource_id          (resource_id)
 #  index_resource_payments_on_status               (status)
 #
-require 'test_helper'
+FactoryBot.define do
 
-class ResourcePaymentTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  factory :resource_payment do
+    resource
+
+    amount { 10_000 }
+    payment_type { 'stripe' }
+    status { 'created' }
+  end
 end
