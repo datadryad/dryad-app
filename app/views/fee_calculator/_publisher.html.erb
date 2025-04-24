@@ -10,7 +10,7 @@
     <%= form.select :dpc_tier, options_for_select(FeeCalculator::PublisherService.new.dpc_fee_tiers.map {|t| [t[:range].to_s.gsub('..', '-'), t[:tier]]}), {}, {class: 'c-input__select'} %>
   </p>
   <p class="input-line center" style="margin-top: 2rem;">
-    <span id="legend2">Will you cover large data storage fees for your authors?</span>
+    <span id="legend2">Will you cover large data fees for your authors?</span>
     <span role="group" aria-labelledby="legend2" class="radio_choice">
       <label><input type="radio" name="cover_storage_fee" value="1" checked/>Yes</label>
       <label><input type="radio" name="cover_storage_fee" value="0"/>No</label>

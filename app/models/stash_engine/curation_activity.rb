@@ -63,7 +63,7 @@ module StashEngine
       in_progress: %w[in_progress],
       processing: %w[in_progress processing],
       submitted: %w[submitted curation withdrawn peer_review],
-      peer_review: %w[peer_review curation withdrawn],
+      peer_review: %w[peer_review submitted curation withdrawn],
       curation: (enum_vals - %w[in_progress submitted]),
       action_required: (enum_vals - %w[in_progress submitted]),
       withdrawn: %w[withdrawn curation],
