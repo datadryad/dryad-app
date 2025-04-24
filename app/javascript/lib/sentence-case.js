@@ -74,11 +74,11 @@ export function sentenceCase(input, options = {}) {
       result += whiteSpace;
       continue;
     }
-    // Ignore URLs, email addresses, acronyms, etc.
+    // ignore URLs, email addresses, acronyms with dots, etc.
     if (IS_SPECIAL_CASE.test(token)) {
       const acronym = token.match(IS_ACRONYM);
-      // The period at the end of an acronym is not a new sentence,
-      // but we should uppercase first for i.e., e.g., etc.
+      // the period at the end of an acronym is not a new sentence,
+      // but uppercase first letter for i.e., e.g., etc.
       if (acronym) {
         const [_, prefix = "", suffix = ""] = acronym;
         result += !isNewSentence ? token : upperAt(token, prefix.length, locale);
@@ -87,8 +87,7 @@ export function sentenceCase(input, options = {}) {
       }
       result += token;
       isNewSentence = terminators.has(token.charAt(token.length - 1));
-    }
-    else {
+    } else {
       const matches = Array.from(token.matchAll(ALPHANUMERIC_PATTERN));
       let value = token;
       let isSentenceEnd = false;
@@ -98,22 +97,35 @@ export function sentenceCase(input, options = {}) {
         isSentenceEnd = terminators.has(nextChar);
         const tag = brill[lower(word, locale)] || brill[upperAt(lower(word), 0, locale)];
         if (IS_MANUAL_CASE.test(word)) {
+          // keep manual casing
           value = value;
           continue;
         } else if (smallWords.has(lower(word)) || !isNaN(wordsToNumbers(word))) {
+          // lowercase all small/common/counting words
           value = lower(value, locale)
-        } else if (tag && tag.includes('NNP')) {
+        } else if (tag && (tag.includes('NNP') || tag.includes('NNPS'))) {
+          // uppercase recognized proper nouns
           value = upperAt(lower(value), wordIndex, locale);
         } else if (tag) {
+          // lowercase if word is not a proper noun but is recognized
           value = lower(value, locale)
         } else {
+          // if the word is all upper or lowercase
           if (word === lower(word, locale) || word === upper(word, locale)) {
-            value = value
+            // force lowercase if the whole sentence is all caps
+            if (input === upper(input, locale)) {
+              value = lower(value, locale)
+            } else {
+              // otherwise keep existing upper or lower casing
+              // for acronyms without dots
+              value = value
+            }
           } else {
+            // if all else fails, uppercase first letter
             value = upperAt(lower(value), wordIndex, locale);
           }
         }
-        // Always the capitalize first word and reset "new sentence".
+        // always capitalize the first word and reset "new sentence"
         if (isNewSentence) {
           value = upperAt(value, wordIndex, locale);
           isNewSentence = false;
