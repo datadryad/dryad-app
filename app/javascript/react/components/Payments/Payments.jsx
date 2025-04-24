@@ -23,7 +23,7 @@ function Payments({
   };
 
   useEffect(() => {
-    fetchClientSecret();
+    if (!invoice) fetchClientSecret();
   }, [invoice]);
 
   if (invoice) {
@@ -43,13 +43,13 @@ function Payments({
                 <i className="fas fa-circle-left" aria-hidden="true" /> Back to immediate payment
               </button>
             </p>
-            <CalculateFees resource={resource} fees={fees} setFees={setFees} />
+            <CalculateFees resource={resource} fees={fees} setFees={setFees} invoice={invoice} />
             <p>By submitting the following form, you agree:</p>
             <p>
               Instead of paying immediately, I want to generate an invoice for later payment by another entity.{' '}
               <b>
                 I understand that this will incur an additional{' '}
-                {fees.invoice_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
+                {fees?.invoice_fee?.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
               </b>
             </p>
           </>
@@ -61,7 +61,7 @@ function Payments({
 
   return (
     <div id="payment">
-      <CalculateFees resource={resource} fees={fees} setFees={setFees} />
+      <CalculateFees resource={resource} fees={fees} setFees={setFees} invoice={invoice} />
       <p>You must complete payment to submit your dataset for curation and publication.</p>
       {clientSecret ? (
         <EmbeddedCheckoutProvider

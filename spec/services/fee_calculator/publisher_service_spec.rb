@@ -150,7 +150,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -176,7 +176,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -201,7 +201,7 @@ module FeeCalculator
               let(:new_files_size) { 2_000_000_000_001 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -230,7 +230,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -265,7 +265,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -292,7 +292,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -330,7 +330,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -364,7 +364,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -376,7 +376,7 @@ module FeeCalculator
         let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
 
         it 'raises an error' do
-          expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')
+          expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
         end
       end
 
@@ -394,18 +394,26 @@ module FeeCalculator
         end
 
         context 'not on 2025 fee model' do
-          let!(:funder) { create(:funder, name: 'National Cancer Institute', payment_plan: 'tiered', covers_dpc: true) }
+          let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: 'tiered', covers_dpc: true, enabled: true) }
 
           it 'raises an error' do
-            expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')
+            expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
+          end
+        end
+
+        context 'on 2025 fee model but is not enabled' do
+          let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: '2025', covers_dpc: true, enabled: false) }
+
+          it 'raises an error' do
+            expect { subject }.to raise_error(ActionController::BadRequest, MISSING_PAYER_MESSAGE)
           end
         end
 
         context 'not on a payer' do
-          let!(:funder) { create(:funder, name: 'National Cancer Institute', payment_plan: nil, covers_dpc: false) }
+          let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: nil, covers_dpc: false) }
 
           it 'raises an error' do
-            expect { subject }.to raise_error(ActionController::BadRequest, 'Payer is not on 2025 payment plan')
+            expect { subject }.to raise_error(ActionController::BadRequest, MISSING_PAYER_MESSAGE)
           end
         end
       end

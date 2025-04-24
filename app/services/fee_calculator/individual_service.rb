@@ -14,6 +14,8 @@ module FeeCalculator
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
     def call
+      verify_new_payment_system
+
       if resource.present?
         if resource.identifier.previous_invoiced_file_size.to_i > 0
           add_storage_fee_difference
