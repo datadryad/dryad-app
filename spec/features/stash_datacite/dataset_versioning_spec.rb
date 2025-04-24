@@ -39,6 +39,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       create(:description, resource: @resource, description_type: 'technicalinfo')
       create(:description, resource: @resource, description_type: 'usage_notes', description: nil)
       create(:data_file, resource: @resource)
+      @resource.reload
+      @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)
       Timecop.return
     end
 
@@ -144,8 +146,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
     context :after_ppr_and_curation do
       it 'does not go to ppr when prior version was curated', js: true do
-        @resource.update(hold_for_peer_review: true)
-        @resource.update(current_editor_id: @curator.id)
+        @resource.update(hold_for_peer_review: true, current_editor_id: @curator.id)
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
         create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'action_required')
         @resource.reload

@@ -8,7 +8,7 @@ module FeeCalculator
     let(:resource) { nil }
     let(:no_charges_response) { { storage_fee: 0, total: 0 } }
 
-    subject { described_class.new(options, resource: resource).call }
+    subject { described_class.new(options, resource: resource).call.except(:storage_fee_label) }
 
     before do
       mock_solr!
@@ -18,6 +18,10 @@ module FeeCalculator
 
     describe '#fee_calculator' do
       context 'without invoice fee' do
+        it 'has proper storage fee label' do
+          expect(described_class.new(options, resource: resource).call[:storage_fee_label]).to eq('Data Publishing Charge')
+        end
+
         context 'without any configuration' do
           it { is_expected.to eq({ storage_fee: 150, total: 150 }) }
         end
@@ -38,12 +42,16 @@ module FeeCalculator
           let(:options) { { storage_size: 10_000_000_000_000 } }
 
           it 'raises an error' do
-            expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+            expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
           end
         end
       end
 
       context 'with invoice fee' do
+        it 'has proper storage fee label' do
+          expect(described_class.new(options, resource: resource).call[:storage_fee_label]).to eq('Data Publishing Charge')
+        end
+
         context 'without any configuration' do
           let(:options) { { generate_invoice: true } }
 
@@ -66,21 +74,25 @@ module FeeCalculator
           let(:options) { { generate_invoice: true, storage_size: 10_000_000_000_000 } }
 
           it 'raises an error' do
-            expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+            expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
           end
         end
       end
     end
 
     describe '#dataset fee_calculator' do
-      let(:prev_files_size) { 100 }
+      let(:prev_files_size) { 0 }
       let(:new_files_size) { 100 }
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
 
-      context 'on first publish' do
+      context 'on first submit' do
         let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
         context 'without invoice fee' do
+          it 'has proper storage fee label' do
+            expect(described_class.new(options, resource: resource).call[:storage_fee_label]).to eq('Data Publishing Charge')
+          end
+
           context 'without any configuration' do
             it { is_expected.to eq({ storage_fee: 150, total: 150 }) }
           end
@@ -101,7 +113,7 @@ module FeeCalculator
             let(:new_files_size) { 10_000_000_000_000 }
 
             it 'raises an error' do
-              expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+              expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
             end
           end
         end
@@ -129,15 +141,14 @@ module FeeCalculator
             let(:new_files_size) { 10_000_000_000_000 }
 
             it 'raises an error' do
-              expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+              expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
             end
           end
         end
       end
 
-      context 'on second publish' do
-        let(:prev_resource) { create(:resource, identifier: identifier, created_at: 1.second.ago) }
-        let!(:ca) { create(:curation_activity, resource: prev_resource, status: 'published') }
+      context 'on second submit' do
+        let(:prev_files_size) { 100 }
         let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
         context 'without invoice fee' do
@@ -155,6 +166,9 @@ module FeeCalculator
             context 'storage gets to next level' do
               let(:new_files_size) { 5_000_000_001 }
 
+              it 'has proper storage fee label' do
+                expect(described_class.new(options, resource: resource).call[:storage_fee_label]).to eq('Data Publishing Charge')
+              end
               it { is_expected.to eq({ storage_fee: 30, total: 30 }) }
             end
 
@@ -175,7 +189,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
@@ -198,6 +212,10 @@ module FeeCalculator
             context 'storage gets to next level' do
               let(:new_files_size) { 5_000_000_001 }
 
+              it 'has proper storage fee label' do
+                expect(described_class.new(options, resource: resource).call[:storage_fee_label]).to eq('Data Publishing Charge')
+              end
+
               it { is_expected.to eq({ storage_fee: 30, invoice_fee: 199, total: 229 }) }
             end
 
@@ -218,7 +236,7 @@ module FeeCalculator
               let(:new_files_size) { 10_000_000_000_000 }
 
               it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, 'The value is out of defined range')
+                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
               end
             end
           end
