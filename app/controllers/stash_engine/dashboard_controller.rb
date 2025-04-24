@@ -41,6 +41,10 @@ module StashEngine
       end
     end
 
+    def contact_helpdesk
+      respond_to(&:js)
+    end
+
     def primary_article
       @related_work = StashDatacite::RelatedIdentifier.new(resource_id: params[:resource_id], work_type: :primary_article)
       @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: params[:resource_id], pub_type: :primary_article)

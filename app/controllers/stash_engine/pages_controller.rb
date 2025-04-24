@@ -25,5 +25,18 @@ module StashEngine
     def app_404
       render status: :not_found
     end
+
+    def helpdesk
+      keywords = JSON.parse(contact_params.to_json, symbolize_names: true)
+      keywords[:id] = StashEngine::Identifier.find(params[:identifier]) if params[:identifier].present?
+      Stash::Salesforce.create_email_case(**keywords)
+      render js: "var cform = document.getElementById('contact_form')\n
+        cform.innerHTML = '<p>Your query has been submitted to the Dryad helpdesk.</p>'\n
+        cform.classList.add('alt')"
+    end
+
+    def contact_params
+      params.permit(:email, :subject, :body, :sname)
+    end
   end
 end
