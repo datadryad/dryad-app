@@ -4,7 +4,7 @@ require 'down'
 
 module Stash
   class Checksums
-    BUFSIZE = 32_000
+    BUFSIZE = 40_000_000
 
     class CheckDigest < Checksums
       attr_accessor :type, :algorithm, :checksum, :checksum_type, :input_size
