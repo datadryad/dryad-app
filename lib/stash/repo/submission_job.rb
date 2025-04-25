@@ -190,7 +190,7 @@ module Stash
 
       def get_chunk_size(size)
         # AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
-        return 200 * 1024 * 1024 if size > 300_000_000_000
+        return 250 * 1024 * 1024 if size > 300_000_000_000
         return 30 * 1024 * 1024 if size > 100_000_000_000
         return 10 * 1024 * 1024 if size > 10_000_000_000
 
