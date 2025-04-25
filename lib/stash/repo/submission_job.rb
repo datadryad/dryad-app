@@ -125,9 +125,16 @@ module Stash
         permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
         permanent_key = "v3/#{data_file.s3_staged_path}"
         logger.info("file #{data_file.id} #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
-        s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
-                to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
-                size: data_file.upload_file_size)
+
+        # do not upload the file again if it exists on permanent store
+        # in case a previous job uploaded the file but failed on generating checksum
+        if permanent_s3.exists?(s3_key: permanent_key)
+          logger.info("file copy skipped #{data_file.id} ==> #{permanent_bucket}/#{permanent_key} already exists")
+          s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
+                  to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
+                  size: data_file.upload_file_size)
+        end
+
         update = { storage_version_id: resource.id }
         if data_file.digest.nil?
           digest_type = 'sha-256'
@@ -203,6 +210,10 @@ module Stash
 
       def s3
         @s3 ||= Stash::Aws::S3.new
+      end
+
+      def permanent_s3
+        @permanent_s3 ||= Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
       end
 
       def id_helper
