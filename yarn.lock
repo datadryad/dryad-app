@@ -2092,11 +2092,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/cookie@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@types/cookie/-/cookie-0.6.0.tgz#eac397f28bf1d6ae0ae081363eca2f425bedf0d5"
-  integrity sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==
-
 "@types/debug@^4.0.0":
   version "4.1.12"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.12.tgz#a155f21690871953410df4b6b6f53187f0500917"
@@ -8304,18 +8299,17 @@ react-property@2.0.0:
   integrity sha512-kzmNjIgU32mO4mmH5+iUyrqlpFQhF8K2k7eZ4fdLSOPFrD1XgEuSBv9LDEgxRXTMBqMd8ppT0x6TIzqE5pdGdw==
 
 react-router-dom@^7.0.2:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.0.2.tgz#cbd7ce2db7112f1bc3e9eee3657ad32d7515a913"
-  integrity sha512-VJOQ+CDWFDGaWdrG12Nl+d7yHtLaurNgAQZVgaIy7/Xd+DojgmYLosFfZdGz1wpxmjJIAkAMVTKWcvkx1oggAw==
+  version "7.5.2"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.5.2.tgz#fb00e4ac7e1fcc6cb9861458d3ddb2d1b074ca79"
+  integrity sha512-yk1XW8Fj7gK7flpYBXF3yzd2NbX6P7Kxjvs2b5nu1M04rb5pg/Zc4fGdBNTeT4eDYL2bvzWNyKaIMJX/RKHTTg==
   dependencies:
-    react-router "7.0.2"
+    react-router "7.5.2"
 
-react-router@7.0.2:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.0.2.tgz#2820e107cb8cec8acc5db15a17470c056ea86022"
-  integrity sha512-m5AcPfTRUcjwmhBzOJGEl6Y7+Crqyju0+TgTQxoS4SO+BkWbhOrcfZNq6wSWdl2BBbJbsAoBUb8ZacOFT+/JlA==
+react-router@7.5.2:
+  version "7.5.2"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.5.2.tgz#889137b9ce91dadc06eb40997f57f08199845973"
+  integrity sha512-9Rw8r199klMnlGZ8VAsV/I8WrIF6IyJ90JQUdboupx1cdkgYqwnrYjH+I/nY/7cA1X5zia4mDJqH36npP7sxGQ==
   dependencies:
-    "@types/cookie" "^0.6.0"
     cookie "^1.0.1"
     set-cookie-parser "^2.6.0"
     turbo-stream "2.4.0"
