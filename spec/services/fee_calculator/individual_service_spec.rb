@@ -185,6 +185,21 @@ module FeeCalculator
               it { is_expected.to eq({ storage_fee: 5_269, total: 5_269 }) }
             end
 
+            context 'when storage changes decrease from one tier to another' do
+              let(:prev_files_size) { 100_000_000_001 }
+              let(:new_files_size) { 100_000_000_000 }
+
+              it { is_expected.to eq(no_charges_response) }
+            end
+
+            context 'when storage changes increase but the author already paid for the new tier' do
+              let(:prev_files_size) { 100_000_000_000 }
+              let(:new_files_size) { 100_000_000_001 }
+              let(:identifier) { create(:identifier, last_invoiced_file_size: 100_000_000_001) }
+
+              it { is_expected.to eq(no_charges_response) }
+            end
+
             context 'with storage_size over 2TB limit' do
               let(:new_files_size) { 10_000_000_000_000 }
 
@@ -230,6 +245,13 @@ module FeeCalculator
               let(:new_files_size) { 900_000_000_000 }
 
               it { is_expected.to eq({ storage_fee: 5_269, invoice_fee: 199, total: 5_468 }) }
+            end
+
+            context 'when storage changes decrease from one tier to another' do
+              let(:prev_files_size) { 100_000_000_001 }
+              let(:new_files_size) { 100_000_000_000 }
+
+              it { is_expected.to eq(no_charges_response) }
             end
 
             context 'with storage_size over 2TB limit' do
