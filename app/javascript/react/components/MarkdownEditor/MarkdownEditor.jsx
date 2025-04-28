@@ -184,8 +184,8 @@ function MilkdownEditor({
   return (
     <>
       {!loading && (
-        <div className="md_editor-buttons" role="menubar">
-          <div className="md_editor-toolbar">
+        <div className="md_editor-buttons">
+          <div className="md_editor-toolbar" role="menubar">
             {buttons.map((button, i) => (
               <Button
                 active={active.includes(button) || (editType === 'markdown' && button.includes('list') && activeList())}
