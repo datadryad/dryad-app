@@ -125,7 +125,10 @@ module FeeCalculator
       paid_tier_price = price_by_range(storage_fee_tiers, paid_storage)
       new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
 
-      add_fee_to_total(:storage_size, new_tier_price - paid_tier_price)
+      diff = new_tier_price - paid_tier_price
+      diff = 0 if diff < 0
+
+      add_fee_to_total(:storage_size, diff)
     end
 
     def verify_max_storage_size
