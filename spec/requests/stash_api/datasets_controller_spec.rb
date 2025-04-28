@@ -866,7 +866,7 @@ module StashApi
             @tenant_ids              = StashEngine::Tenant.enabled.map(&:id)
             user2                    = create(:user, tenant_id: @tenant_ids.first, orcid: @ds_info['authors'].first['orcid'])
             @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-              owner_id: user2.id, owner_type: 'StashEngine::User')
+                                                                       owner_id: user2.id, owner_type: 'StashEngine::User')
             @access_token            = get_access_token(doorkeeper_application: @doorkeeper_application2)
 
             # HACK: in update to make this regular user the owner/editor of this item
@@ -877,15 +877,15 @@ module StashApi
 
           context 'when there is no fee to pay' do
             before do
-              allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({total: 0, storage_fee_label: 'Submission fee'})
+              allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({ total: 0, storage_fee_label: 'Submission fee' })
             end
 
             it 'succeeds' do
               response_code = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
-                params: @patch_body,
-                headers: default_json_headers.merge(
-                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
-                )
+                                    params: @patch_body,
+                                    headers: default_json_headers.merge(
+                                      'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                    )
               expect(response_code).to eq(202)
               expect(response_body_hash['abstract']).to eq(@ds_info['abstract'])
             end
@@ -893,15 +893,16 @@ module StashApi
 
           context 'when there is a fee to pay' do
             before do
-              allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({total: 123, storage_fee_label: 'Submission fee'})
+              allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({ total: 123,
+                                                                                                      storage_fee_label: 'Submission fee' })
             end
 
             it 'allows submission if done by owner of the dataset (resource)' do
               response_code = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
-                params: @patch_body,
-                headers: default_json_headers.merge(
-                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
-                )
+                                    params: @patch_body,
+                                    headers: default_json_headers.merge(
+                                      'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                    )
               expect(response_code).to eq(403)
               expect(response_body_hash[:error]).to eq('You need to pay a Submission fee of $123 in order to submit.')
             end
@@ -970,7 +971,7 @@ module StashApi
 
       describe 'PATCH to update curationStatus or publicationISSN' do
         before(:each) do
-          allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({total: 0, storage_fee_label: 'Submission fee'})
+          allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({ total: 0, storage_fee_label: 'Submission fee' })
 
           # create a dataset in peer-review status
           @super_user             = create(:user, role: 'superuser')
