@@ -85,6 +85,9 @@ class MultipleSelect {
           this.list.lastElementChild.firstElementChild.focus()
         }
         break
+      case 'Tab':
+        this.close()
+        break
       default:
         break
     }
