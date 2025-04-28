@@ -25,7 +25,7 @@ module SubmissionMixin
   def check_dataset_completions
     validation_service = StashDatacite::Resource::DatasetValidations.new(resource: @resource, user: @user)
     error = validation_service.errors
-    error = validation_service.check_payment if error === false
+    error ||= validation_service.check_payment
 
     if @resource.identifier&.processing?
       error = 'Your previous version is still being processed, please wait until it completes before submitting again'
