@@ -10,7 +10,6 @@ export function Checklist({
           <li
             key={s.name}
             aria-current={step.name === s.name ? 'step' : null}
-            aria-describedby={(s.fail && 'step-error') || (s.pass && 'step-complete') || 'step-todo'}
           >
             <button
               type="button"
@@ -18,6 +17,7 @@ export function Checklist({
               onClick={() => setStep(s)}
               aria-controls="submission-step"
               data-slug={s.name.split(/[^a-z]/i)[0].toLowerCase()}
+              aria-describedby={(s.fail && 'step-error') || (s.pass && 'step-complete') || 'step-todo'}
             >
               <span className="checklist-icon">
                 <i className="fas fa-square" aria-hidden="true" />
