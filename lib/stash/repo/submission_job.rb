@@ -126,9 +126,11 @@ module Stash
         permanent_key = "v3/#{data_file.s3_staged_path}"
         logger.info("file #{data_file.id} #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
 
-        # do not upload the file again if it exists on permanent store
+        # SKIP uploading the file again if
+        #   it exists on permanent store
+        #   it hase the same
         # in case a previous job uploaded the file but failed on generating checksum
-        if permanent_s3.exists?(s3_key: permanent_key)
+        if !permanent_s3.exists?(s3_key: permanent_key) || !permanent_s3.size(s3_key: permanent_key) == data_file.upload_file_size
           logger.info("file copy skipped #{data_file.id} ==> #{permanent_bucket}/#{permanent_key} already exists")
           s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
                   to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
