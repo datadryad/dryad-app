@@ -11,11 +11,15 @@ Dryad accepts all research data and is intended for complete, re-usable, open re
 
 ## Preferred file formats
 
-Most types of files can be submitted (e.g., text, spreadsheets, video, photographs, code) including compressed archives of multiple files. Dryad welcomes the submission of *data in multiple formats* to enable various reuse scenarios. For instance, Dryad's preferred format for tabular data is CSV, however, an Excel spreadsheet may optimize reuse in some cases. Thus, Dryad accepts more than just the preservation-friendly formats listed below.
+Use CSV, TSV, or ODF formats for tabular data. Excel files (XLS or XLSX) with formatting can reduce accessibility and complicate downstream analysis. If Excel is necessary, remove any non-essential elements such as additional pages, merged cells, highlighting, embedded figures, frozen panes, comments, hyperlinks, formulas, and filters. If any of these features are essential for understanding the data, explain them clearly in the accompanying README file.
+
+Dryad welcomes the submission of *data in multiple formats* to enable various reuse scenarios. For best practice, always submit a clean, unformatted version of the dataset in CSV, TSV, or ODF format alongside any formatted Excel files.
+
+Most types of files can be submitted (e.g., text, spreadsheets, video, photographs, code) including compressed archives of multiple files. Preservation-friendly, open formats for files include:
 
 * **Text**:
     * README files should be in Markdown (`MD`)
-    * Comma-separated values (`CSV`) for tabular data
+    * Comma- or tab-separated values (`CSV, TSV`) for tabular data
     * Semi-structured plain text formats for non-tabular data (e.g., protein sequences)
     * Structured plain text (`XML, JSON`)
 * **Images**: `PDF, JPEG, PNG, TIFF, SVG`
