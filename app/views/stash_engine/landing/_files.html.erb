@@ -6,7 +6,9 @@
     resources = dataset_identifier.resources.files_published.by_version  # the public ones
     if @user_type == 'privileged' # add any non-public, submitted to merritt resources with changes
       res_ver = resources.last&.version_number || 0
-      resources = resources.to_a + dataset_identifier.resources.with_file_changes.submitted.by_version.where('stash_engine_versions.version > ?', res_ver).to_a.uniq
+      new_res = dataset_identifier.resources.with_file_changes.submitted.by_version.where('stash_engine_versions.version > ?', res_ver).to_a.uniq
+      # show admins all versions but authors just the latest
+      resources = current_user.min_admin? ? resources.to_a + new_res : resources.to_a.push(new_res.last)
     end
     dl_resource = dataset_identifier.latest_downloadable_resource(user: @user_type == 'privileged' ? current_user : nil)
   end
