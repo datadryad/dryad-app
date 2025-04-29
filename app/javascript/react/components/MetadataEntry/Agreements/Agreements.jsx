@@ -113,7 +113,8 @@ export default function Agreements({
           <div className="callout alt">
             {ppr ? (
               <p>
-                {subType === 'collection' ? 'This collection will be ' : 'These files will be '}kept private while your manuscript is in peer review
+                {subType === 'collection' ? 'This collection will be ' : 'These files will be '}
+                kept private while your manuscript undergoes peer review
               </p>
             ) : (
               <p>
@@ -153,7 +154,7 @@ export default function Agreements({
               <p className="radio_choice" style={{marginBottom: 0}}>
                 <label style={ppr ? {fontWeight: 'bold'} : {}}>
                   <input type="radio" name="peer_review" value="1" defaultChecked={ppr} />
-                  Keep my {subType === 'collection' ? 'collection' : 'files'} private while my manuscript is in peer review
+                  Keep my {subType === 'collection' ? 'collection' : 'files'} private while my manuscript undergoes peer review
                 </label>
               </p>
             </fieldset>
