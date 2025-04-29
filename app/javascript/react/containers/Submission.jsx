@@ -1,6 +1,7 @@
 import React, {
   Fragment, useRef, useState, useEffect,
 } from 'react';
+import axios from 'axios';
 import {BrowserRouter, useLocation} from 'react-router-dom';
 import {upCase} from '../../lib/utils';
 import ChecklistNav, {Checklist} from '../components/Checklist';
@@ -91,19 +92,18 @@ function Submission({
     {
       name: 'Files',
       index: 6,
-      pass: resource.generic_files.length > 0,
+      pass: resource.generic_files?.length > 0,
       fail: (review || step.index > 5) && filesCheck(resource, user.superuser, config_maximums),
-      component: <UploadFiles
-        resource={resource}
-        setResource={setResource}
-        previous={previous}
-        s3_dir_name={s3_dir_name}
-        config_s3={config_s3}
-        config_maximums={config_maximums}
-        config_payments={config_payments}
-      />,
+      component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
+        <UploadFiles {...{
+          resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments,
+        }}
+        />
+      ),
       help: <FilesHelp date={resource.identifier.publication_date} maxFiles={config_maximums.files} />,
-      preview: <FilesPreview resource={resource} previous={previous} curator={user.curator} maxSize={config_maximums.merritt_size} />,
+      preview: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
+        <FilesPreview resource={resource} previous={previous} curator={user.curator} maxSize={config_maximums.merritt_size} />
+      ),
     },
     {
       name: 'README',
@@ -208,6 +208,17 @@ function Submission({
   }, [subRef.current]);
 
   useEffect(() => {
+    if (step.name === 'Files') setStep(steps.find((c) => c.name === 'Files'));
+  }, [resource.generic_files]);
+
+  useEffect(() => {
+    async function getFileData() {
+      axios.get(`/stash_datacite/metadata_entry_pages/${resource.id}/files`).then((data) => {
+        const {generic_files, previous_files} = data.data;
+        if (previous && previous_files) previous.generic_files = previous_files;
+        setResource((r) => ({...r, generic_files, previous_curated_resource: previous}));
+      });
+    }
     if (!review) {
       const url = window.location.search.slice(1);
       if (url) {
@@ -221,6 +232,7 @@ function Submission({
         document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
       }
     }
+    getFileData();
   }, []);
 
   if (review) {
