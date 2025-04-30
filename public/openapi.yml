@@ -484,7 +484,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 
   '/datasets/{doi}/urls':
-    put:
+    post:
       summary: Stage a file submission by URL
       tags:
         - files

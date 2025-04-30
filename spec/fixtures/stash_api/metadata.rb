@@ -40,8 +40,8 @@ module Fixtures
         @metadata[field_name.to_sym] = value
       end
 
-      def add_title
-        @metadata.merge!(title: Faker::Book.title)
+      def add_title(title = nil)
+        @metadata.merge!(title: title || Faker::Book.title)
       end
 
       def add_author(order: nil)

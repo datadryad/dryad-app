@@ -9,8 +9,8 @@ module Helpers
 
   def get_access_token(doorkeeper_application:)
     post '/oauth/token',
-         params: { grant_type: 'client_credentials', client_id: doorkeeper_application.uid, client_secret: doorkeeper_application.secret },
-         as: :json
+      params: { grant_type: 'client_credentials', client_id: doorkeeper_application.uid, client_secret: doorkeeper_application.secret },
+      as: :json
     response_body_hash[:access_token]
   end
 
@@ -31,8 +31,8 @@ module Helpers
     { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
   end
 
-  def default_authenticated_headers
-    default_json_headers.merge('Authorization' => "Bearer #{@access_token}")
+  def default_authenticated_headers(access_token = nil)
+    default_json_headers.merge('Authorization' => "Bearer #{access_token || @access_token}")
   end
 
 end
