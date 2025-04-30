@@ -48,24 +48,27 @@ RSpec.describe 'SubmissionFlow', type: :request do
     expect(json_response[:total]).to eq(0)
 
     ### CREATE dataset
-    create_params = metadata_builder.json
     metadata_hash = metadata_builder.hash
-    response_code = post '/api/v2/datasets', params: create_params, headers: headers
+    metadata_hash[:authors][0][:affiliation] = journal.title
+    response_code = post '/api/v2/datasets', params: metadata_hash.to_json, headers: headers
     json_response = response_body_hash
     expect(response_code).to eq(201)
+
     doi = json_response[:identifier]
     identifier = StashEngine::Identifier.find_by(identifier: doi.split(':').last)
-    resource = StashEngine::Resource.find(json_response[:id])
-    resource.submitter.update(orcid: resource.authors.first.author_orcid)
+    resource_id = json_response[:id]
+    in_author = metadata_hash[:authors].first
+    out_author = json_response[:authors].first
+    # Update user as primary author
+    user.update(orcid: out_author[:orcid])
 
     expect(/doi:10./).to match(doi)
     expect(metadata_hash[:title]).to eq(json_response[:title])
     expect(metadata_hash[:abstract]).to eq(json_response[:abstract])
-    in_author = metadata_hash[:authors].first
-    out_author = json_response[:authors].first
-    expect(json_response[:id]).to eq(resource.id)
+    expect(json_response[:id]).to eq(resource_id)
     expect(out_author[:email]).to eq(in_author[:email])
     expect(out_author[:affiliation]).to eq(in_author[:affiliation])
+    expect(out_author[:affiliation]).to eq(journal.title)
     expect(json_response[:title]).to eq(title)
     expect(json_response[:keywords]).to eq(metadata_hash[:keywords])
     expect(json_response[:fieldOfScience]).to eq(metadata_hash[:fieldOfScience])
@@ -83,7 +86,7 @@ RSpec.describe 'SubmissionFlow', type: :request do
     json_response = response_body_hash
     expect(response_code).to eq(200)
     expect(json_response[:identifier]).to eq(doi)
-    expect(json_response[:id]).to eq(resource.id)
+    expect(json_response[:id]).to eq(resource_id)
 
     ### UPDATE dataset
     update_params = metadata_hash.merge({ abstract: 'New abstract', methods: 'New Method' })
@@ -91,7 +94,7 @@ RSpec.describe 'SubmissionFlow', type: :request do
     json_response = response_body_hash
     expect(response_code).to eq(200)
     expect(json_response[:identifier]).to eq(doi)
-    expect(json_response[:id]).to eq(resource.id)
+    expect(json_response[:id]).to eq(resource_id)
     expect(json_response[:abstract]).to eq(update_params[:abstract])
     expect(json_response[:methods]).to eq(update_params[:methods])
 
@@ -122,14 +125,13 @@ RSpec.describe 'SubmissionFlow', type: :request do
     expect(json_response[:_embedded]['stash:files'].map { |f| f[:path] }).to match_array(['README.md', 'test_zip.zip'])
     expect(json_response[:_embedded]['stash:files'].map { |f| f[:status] }).to match_array(%w[created created])
 
-    ### UPDATE dataset status
+    ### SUBMIT dataset
     params = { op: 'replace', path: '/versionStatus', value: 'submitted' }
-
     response_code = patch "/api/v2/datasets/#{CGI.escape(doi)}", params: params.to_json, headers: headers
     json_response = response_body_hash
     expect(response_code).to eq(202)
     expect(json_response[:identifier]).to eq(doi)
-    expect(json_response[:id]).to eq(resource.id)
+    expect(json_response[:id]).to eq(resource_id)
     expect(json_response[:versionStatus]).to eq('processing')
     expect(json_response[:curationStatus]).to eq('In progress')
   end
