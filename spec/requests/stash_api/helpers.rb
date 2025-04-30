@@ -9,8 +9,8 @@ module Helpers
 
   def get_access_token(doorkeeper_application:)
     post '/oauth/token',
-      params: { grant_type: 'client_credentials', client_id: doorkeeper_application.uid, client_secret: doorkeeper_application.secret },
-      as: :json
+         params: { grant_type: 'client_credentials', client_id: doorkeeper_application.uid, client_secret: doorkeeper_application.secret },
+         as: :json
     response_body_hash[:access_token]
   end
 
