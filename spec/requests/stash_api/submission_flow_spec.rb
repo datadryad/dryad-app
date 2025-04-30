@@ -10,8 +10,8 @@ RSpec.describe 'SubmissionFlow', type: :request do
   include Mocks::Salesforce
   include Mocks::Stripe
 
-  let(:tenant) { create(:tenant_dryad) }
-  let(:user) { create(:user, role: 'admin', tenant_id: tenant.id) }
+  let(:journal) { create(:journal) }
+  let(:user) { create(:user, role: 'admin', tenant_id: journal.id) }
   let(:doorkeeper_application) do
     create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', owner_id: user.id, owner_type: 'StashEngine::User')
   end
@@ -29,7 +29,7 @@ RSpec.describe 'SubmissionFlow', type: :request do
     mock_stripe!
     mock_datacite!
 
-    allow_any_instance_of(::Aws::S3::Object).to receive(:exists?).and_return(true)
+    allow_any_instance_of(Aws::S3::Object).to receive(:exists?).and_return(true)
 
     metadata_builder.make_minimal
     metadata_builder.add_title(title)
@@ -114,13 +114,13 @@ RSpec.describe 'SubmissionFlow', type: :request do
     expect(json_response[:status]).to eq('created')
 
     ### LIST dataset version files
-    response_code = get "/api/v2/versions/1/files", headers: headers
+    response_code = get '/api/v2/versions/1/files', headers: headers
     json_response = response_body_hash
     expect(response_code).to eq(200)
     expect(json_response[:count]).to eq(2)
     expect(json_response[:total]).to eq(2)
     expect(json_response[:_embedded]['stash:files'].map { |f| f[:path] }).to match_array(['README.md', 'test_zip.zip'])
-    expect(json_response[:_embedded]['stash:files'].map { |f| f[:status] }).to match_array(['created', 'created'])
+    expect(json_response[:_embedded]['stash:files'].map { |f| f[:status] }).to match_array(%w[created created])
 
     ### UPDATE dataset status
     params = { op: 'replace', path: '/versionStatus', value: 'submitted' }
