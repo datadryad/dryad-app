@@ -11,7 +11,7 @@ RSpec.describe 'SubmissionFlow', type: :request do
   include Mocks::Stripe
 
   let(:tenant) { create(:tenant_dryad) }
-  let(:user) { create(:user, role: 'superuser', tenant_id: tenant.id) }
+  let(:user) { create(:user, role: 'admin', tenant_id: tenant.id) }
   let(:doorkeeper_application) do
     create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', owner_id: user.id, owner_type: 'StashEngine::User')
   end
