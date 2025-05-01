@@ -7,6 +7,7 @@ export {default as FilesPreview} from './FilesPreview';
 export const filesCheck = (resource, superuser, maximums) => {
   const {generic_files: files, identifier: {publication_date}} = resource;
   const {files: maxFiles, zenodo_size: maxZenodo, merritt_size: maxSize} = maximums;
+  if (files === undefined) return false;
   if (files.length > 0) {
     const present = files.filter((f) => f.file_state !== 'deleted');
     const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.upload_file_name !== 'README.md');
