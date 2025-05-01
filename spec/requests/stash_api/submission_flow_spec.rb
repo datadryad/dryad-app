@@ -116,8 +116,18 @@ RSpec.describe 'SubmissionFlow', type: :request do
     expect(json_response[:path]).to eq('README.md')
     expect(json_response[:status]).to eq('created')
 
+    ### LIST dataset versions
+    response_code = get "/api/v2/datasets/#{CGI.escape(doi)}/versions", headers: headers
+    json_response = response_body_hash
+    expect(response_code).to eq(200)
+    expect(json_response[:count]).to eq(1)
+    expect(json_response[:total]).to eq(1)
+    expect(json_response[:_embedded]['stash:versions'].first[:title]).to eq(title)
+    expect(json_response[:_embedded]['stash:versions'].first[:versionNumber]).to eq(1)
+    version_files_path = json_response[:_embedded]['stash:versions'].first['_links']['stash:files'][:href]
+
     ### LIST dataset version files
-    response_code = get '/api/v2/versions/1/files', headers: headers
+    response_code = get version_files_path, headers: headers
     json_response = response_body_hash
     expect(response_code).to eq(200)
     expect(json_response[:count]).to eq(2)
