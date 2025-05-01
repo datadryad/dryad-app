@@ -19,7 +19,6 @@ module StashDatacite
                     } }]
       )
       @submission[:users] = @resource.users.select('stash_engine_users.*', 'stash_engine_roles.role')
-      find_files
       @submission = @submission.to_json
 
       @resource.update(updated_at: Time.current, current_editor_id: current_user.id)
@@ -34,22 +33,24 @@ module StashDatacite
       respond_to(&:js)
     end
 
+    def find_files
+      files = {}
+      files[:generic_files] = @resource.generic_files.includes(:frictionless_report).validated_table.as_json(
+        methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
+      )
+      if @resource.previous_curated_resource.present?
+        files[:previous_files] = @resource.previous_curated_resource.generic_files.includes(:frictionless_report).validated_table.as_json(
+          methods: :type, include: { frictionless_report: { only: %i[report status] } }
+        )
+      end
+
+      render json: files
+    end
+
     private
 
     def find_resource
       @resource = StashEngine::Resource.find(params[:resource_id].to_i) unless params[:resource_id].blank?
-    end
-
-    def find_files
-      @submission[:generic_files] = @resource.generic_files.includes(:frictionless_report).validated_table.as_json(
-        methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
-      )
-      return unless @resource.previous_curated_resource.present?
-
-      @submission['previous_curated_resource'][:generic_files] = @resource.previous_curated_resource.generic_files
-        .includes(:frictionless_report).validated_table.as_json(
-          methods: :type, include: { frictionless_report: { only: %i[report status] } }
-        )
     end
   end
 end
