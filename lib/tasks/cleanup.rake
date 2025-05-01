@@ -24,11 +24,11 @@ namespace :cleanup do
   task delete_orphan_records: :environment do
     puts ''
     puts "Delete orphan records #{Time.current}:"
-    curation_activities = StashEngine::CurationActivity.left_joins(:resource).where(stash_engine_resources: {id: nil})
+    curation_activities = StashEngine::CurationActivity.left_joins(:resource).where(stash_engine_resources: { id: nil })
     puts "Deleting CurationActivity with IDs: #{curation_activities.ids}"
     curation_activities.destroy_all
 
-    versions = StashEngine::Version.left_joins(:resource).where(stash_engine_resources: {id: nil})
+    versions = StashEngine::Version.left_joins(:resource).where(stash_engine_resources: { id: nil })
     puts "Deleting Version with IDs: #{versions.ids}"
     versions.destroy_all
   end
