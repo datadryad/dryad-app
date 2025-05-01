@@ -387,6 +387,7 @@ export default function UploadFiles({
       const maxSize = newFiles.reduce((p, c) => (p > c.size ? p : c.size), 0);
       if (maxSize > 10000000000) partSize = 10 * 1024 * 1024;
       if (maxSize > 100000000000) partSize = 30 * 1024 * 1024;
+      if (maxSize > 300000000000) partSize = 250 * 1024 * 1024;
       const config = {
         aws_key: key,
         bucket,
