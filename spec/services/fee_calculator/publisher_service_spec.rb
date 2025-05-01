@@ -261,6 +261,13 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
+            context 'when storage changes decrease from one tier to another' do
+              let(:prev_files_size) { 100_000_000_001 }
+              let(:new_files_size) { 100_000_000_000 }
+
+              it { is_expected.to eq(no_charges_response) }
+            end
+
             context 'with storage_size over 2TB limit' do
               let(:new_files_size) { 10_000_000_000_000 }
 
@@ -286,6 +293,13 @@ module FeeCalculator
               let(:new_files_size) { 900_000_000_000 }
 
               it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 3_883, total: 3_883, storage_fee_label: 'Large data fee' }) }
+            end
+
+            context 'when storage changes decrease from one tier to another' do
+              let(:prev_files_size) { 100_000_000_001 }
+              let(:new_files_size) { 100_000_000_000 }
+
+              it { is_expected.to eq(no_charges_response) }
             end
 
             context 'with storage_size over 2TB limit' do
@@ -326,6 +340,13 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
+            context 'when storage changes decrease from one tier to another' do
+              let(:prev_files_size) { 100_000_000_001 }
+              let(:new_files_size) { 100_000_000_000 }
+
+              it { is_expected.to eq(no_charges_response) }
+            end
+
             context 'with storage_size over 2TB limit' do
               let(:new_files_size) { 10_000_000_000_000 }
 
@@ -358,6 +379,13 @@ module FeeCalculator
                 is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 3_883, invoice_fee: 199, total: 4_082,
                                     storage_fee_label: 'Large data fee' })
               }
+            end
+
+            context 'when storage changes decrease from one tier to another' do
+              let(:prev_files_size) { 100_000_000_001 }
+              let(:new_files_size) { 100_000_000_000 }
+
+              it { is_expected.to eq(no_charges_response) }
             end
 
             context 'with storage_size over 2TB limit' do

@@ -36,7 +36,7 @@ module Stash
         resource.identifier.payment_type = stripe_user_waiver? ? 'waiver' : 'stripe'
         resource.identifier.save
         res = invoice.send_invoice
-        resource.identifier.update(last_invoiced_file_size: ds_size)
+        resource.identifier.update(last_invoiced_file_size: ds_size) if resource.identifier.last_invoiced_file_size.to_i < ds_size
         res
       end
 
