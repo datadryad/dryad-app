@@ -5,6 +5,7 @@ export {default as ReadMePreview} from './ReadMePreview';
 
 export const readmeCheck = (resource) => {
   const {descriptions, identifier: {publication_date}, generic_files: files} = resource;
+  if (files === undefined) return false;
   const readme = descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
   const markdownFile = files.filter((f) => f.file_state !== 'deleted' && f.type === 'StashEngine::DataFile' && f.upload_file_name === 'README.md');
   const readmeFile = files.filter((f) => f.file_state !== 'deleted' && f.type === 'StashEngine::DataFile' && f.upload_file_name.startsWith('README'));
