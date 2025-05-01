@@ -23,3 +23,6 @@ then
     cd /home/ec2-user/deploy/current/cron
     ./counter.sh >> /home/ec2-user/deploy/shared/log/counter.log 2>&1
 fi
+
+# Delete orphan records
+bundle exec rails cleanup:delete_orphan_records >> /home/ec2-user/deploy/shared/log/delete_orphan_records.log 2>&1
