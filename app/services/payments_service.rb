@@ -6,7 +6,7 @@ class PaymentsService
     @resource = resource
     @options = options
     @fees = ResourceFeeCalculatorService.new(resource).calculate(options)
-    @fees = @fees.except(:storage_fee_label)
+    @storage_fee_label = @fees.delete(:storage_fee_label)
   end
 
   def checkout_options
@@ -33,10 +33,15 @@ class PaymentsService
       price_data: {
         currency: 'usd',
         product_data: {
-          name: PRODUCT_NAME_MAPPER[fee_key]
+          name: product_name(fee_key)
         },
         unit_amount: value * 100 # Convert to cents
       }
     }
+  end
+
+  def product_name(fee_key)
+    name = fee_key == :storage_fee ? @storage_fee_label : PRODUCT_NAME_MAPPER[fee_key]
+    "#{name} for #{resource.identifier} (#{filesize(resource.total_file_size)})"
   end
 end
