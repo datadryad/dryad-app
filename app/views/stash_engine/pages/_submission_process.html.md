@@ -61,7 +61,7 @@ Dryad is a platform for the raw data that were used to support the conclusions p
 <img src="/images/dryad_upload.png" alt="Screenshot of file upload options" />
 
 
-The "Data" category should include your primary, underlying data that has not been processed for use. Common file types include `.csv, .xlsx, .txt` and compressed file archives: `TAR.GZ, 7Z, ZIP`.
+The "Data" category should include your primary, underlying data that has not been processed for use. Common file types include `.csv, .tsv, .odf, .txt` and compressed file archives: `TAR.GZ, 7Z, ZIP`.
 
 The "Software" category is reserved for code packages (R files, Python scripts, etc.) that outline all steps in processing and analyzing your data, ensuring reproducibility.
 

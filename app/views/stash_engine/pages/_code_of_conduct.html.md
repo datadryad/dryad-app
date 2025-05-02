@@ -55,7 +55,7 @@ This Code of Conduct applies to all spaces managed by Dryad, which include Slack
     </ul>
   </li>
   <li>
-    <strong>When we disagree, listen</strong>,   Disagreements, both social and technical, happen all the time 
+    <strong>When we disagree, listen.</strong> Disagreements, both social and technical, happen all the time 
     and we are no exception. It is important that we listen to each other and work to resolve disagreements 
     constructively.
   </li>
