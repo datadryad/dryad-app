@@ -10,7 +10,7 @@ RSpec.describe 'SubmissionFlow', type: :request do
   include Mocks::Salesforce
   include Mocks::Stripe
 
-  let(:journal) { create(:journal) }
+  let(:journal) { create(:journal, payment_plan_type: 'TIERED') }
   let(:user) { create(:user, role: 'admin', tenant_id: journal.id) }
   let(:doorkeeper_application) do
     create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', owner_id: user.id, owner_type: 'StashEngine::User')
@@ -33,116 +33,32 @@ RSpec.describe 'SubmissionFlow', type: :request do
 
     metadata_builder.make_minimal
     metadata_builder.add_title(title)
-  end
+    metadata_builder.add_journal(journal)
 
-  it 'has proper flow' do
-    ### Test token - returns welcome message and authenticated user id
-    post '/api/v2/test', headers: headers
-    json_response = response_body_hash
-    expect(/Welcome application owner.+$/).to match(json_response[:message])
-    expect(user.id).to eql(json_response[:user_id])
-
-    ### LIST dataset - returns no datasets
-    get '/api/v2/datasets', headers: headers
-    json_response = response_body_hash
-    expect(json_response[:total]).to eq(0)
-
-    ### CREATE dataset
+    ### CREATE dataset metadata
     metadata_hash = metadata_builder.hash
     metadata_hash[:authors][0][:affiliation] = journal.title
-    response_code = post '/api/v2/datasets', params: metadata_hash.to_json, headers: headers
-    json_response = response_body_hash
-    expect(response_code).to eq(201)
+    @metadata_hash = metadata_hash
+  end
 
-    doi = json_response[:identifier]
-    identifier = StashEngine::Identifier.find_by(identifier: doi.split(':').last)
-    resource_id = json_response[:id]
-    in_author = metadata_hash[:authors].first
-    out_author = json_response[:authors].first
-    # Update user as primary author
-    user.update(orcid: out_author[:orcid])
+  context 'for old system payer journal ' do
+    let(:journal) { create(:journal, payment_plan_type: 'TIERED') }
 
-    expect(/doi:10./).to match(doi)
-    expect(metadata_hash[:title]).to eq(json_response[:title])
-    expect(metadata_hash[:abstract]).to eq(json_response[:abstract])
-    expect(json_response[:id]).to eq(resource_id)
-    expect(out_author[:email]).to eq(in_author[:email])
-    expect(out_author[:affiliation]).to eq(in_author[:affiliation])
-    expect(out_author[:affiliation]).to eq(journal.title)
-    expect(json_response[:title]).to eq(title)
-    expect(json_response[:keywords]).to eq(metadata_hash[:keywords])
-    expect(json_response[:fieldOfScience]).to eq(metadata_hash[:fieldOfScience])
-    expect(json_response[:versionNumber]).to eq(1)
-    expect(json_response[:versionStatus]).to eq('in_progress')
-    expect(json_response[:curationStatus]).to eq('In progress')
-    expect(json_response[:lastModificationDate]).to eq(Date.today.to_s)
-    expect(json_response[:visibility]).to eq('restricted')
-    expect(json_response[:userId]).to eq(user.id)
-    expect(json_response[:license]).to eq(Stash::Wrapper::License::CC_ZERO.uri.to_s)
-    expect(json_response[:editLink]).to eq("/edit/#{CGI.escape(doi)}/#{identifier.edit_code}")
+    # can submit
+    it_should_behave_like 'API submission flow', true, { status: 202 }
+  end
 
-    ### SHOW dataset
-    response_code = get "/api/v2/datasets/#{CGI.escape(doi)}", headers: headers
-    json_response = response_body_hash
-    expect(response_code).to eq(200)
-    expect(json_response[:identifier]).to eq(doi)
-    expect(json_response[:id]).to eq(resource_id)
+  context 'for new system payer journal' do
+    let(:journal) { create(:journal, payment_plan_type: '2025', covers_ldf: false) }
 
-    ### UPDATE dataset
-    update_params = metadata_hash.merge({ abstract: 'New abstract', methods: 'New Method' })
-    response_code = put "/api/v2/datasets/#{CGI.escape(doi)}", params: update_params.to_json, headers: headers
-    json_response = response_body_hash
-    expect(response_code).to eq(200)
-    expect(json_response[:identifier]).to eq(doi)
-    expect(json_response[:id]).to eq(resource_id)
-    expect(json_response[:abstract]).to eq(update_params[:abstract])
-    expect(json_response[:methods]).to eq(update_params[:methods])
+    # can submit
+    it_should_behave_like 'API submission flow', true, { status: 202 }
+  end
 
-    ### UPLOAD file
-    file = fixture_file_upload('spec/fixtures/zipfiles/test_zip.zip')
-    response_code = put "/api/v2/datasets/#{CGI.escape(doi)}/files/test_zip.zip", params: { file: file }, headers: headers
-    json_response = response_body_hash
-    expect(response_code).to eq(201)
-    expect(json_response[:url]).to be_nil
-    expect(json_response[:path]).to eq('test_zip.zip')
-    expect(json_response[:status]).to eq('created')
+  context 'for non payer journal' do
+    let(:journal) { create(:journal) }
 
-    ### UPLOAD README file
-    file = fixture_file_upload('spec/fixtures/README.md')
-    response_code = put "/api/v2/datasets/#{CGI.escape(doi)}/files/README.md", params: { file: file }, headers: headers
-    json_response = response_body_hash
-    expect(response_code).to eq(201)
-    expect(json_response[:url]).to be_nil
-    expect(json_response[:path]).to eq('README.md')
-    expect(json_response[:status]).to eq('created')
-
-    ### LIST dataset versions
-    response_code = get "/api/v2/datasets/#{CGI.escape(doi)}/versions", headers: headers
-    json_response = response_body_hash
-    expect(response_code).to eq(200)
-    expect(json_response[:count]).to eq(1)
-    expect(json_response[:total]).to eq(1)
-    expect(json_response[:_embedded]['stash:versions'].first[:title]).to eq(title)
-    expect(json_response[:_embedded]['stash:versions'].first[:versionNumber]).to eq(1)
-    version_files_path = json_response[:_embedded]['stash:versions'].first['_links']['stash:files'][:href]
-
-    ### LIST dataset version files
-    response_code = get version_files_path, headers: headers
-    json_response = response_body_hash
-    expect(response_code).to eq(200)
-    expect(json_response[:count]).to eq(2)
-    expect(json_response[:total]).to eq(2)
-    expect(json_response[:_embedded]['stash:files'].map { |f| f[:path] }).to match_array(['README.md', 'test_zip.zip'])
-    expect(json_response[:_embedded]['stash:files'].map { |f| f[:status] }).to match_array(%w[created created])
-
-    ### SUBMIT dataset
-    params = { op: 'replace', path: '/versionStatus', value: 'submitted' }
-    response_code = patch "/api/v2/datasets/#{CGI.escape(doi)}", params: params.to_json, headers: headers
-    json_response = response_body_hash
-    expect(response_code).to eq(202)
-    expect(json_response[:identifier]).to eq(doi)
-    expect(json_response[:id]).to eq(resource_id)
-    expect(json_response[:versionStatus]).to eq('processing')
-    expect(json_response[:curationStatus]).to eq('In progress')
+    # can NOT submit, due to payment required
+    it_should_behave_like 'API submission flow', false, { status: 403, error: 'You need to pay a Data Publishing Charge of $150 in order to submit.' }
   end
 end

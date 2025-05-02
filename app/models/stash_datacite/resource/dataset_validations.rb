@@ -191,7 +191,7 @@ module StashDatacite
 
       def check_payment
         fee = ResourceFeeCalculatorService.new(@resource).calculate({})
-        return false if fee[:total].zero?
+        return false if fee[:old_payment_system] || fee[:total].zero?
 
         "You need to pay a #{fee[:storage_fee_label]} of $#{fee[:total]} in order to submit."
       end

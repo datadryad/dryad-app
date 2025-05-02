@@ -132,6 +132,17 @@ module Fixtures
         )
       end
 
+      def add_journal(journal = nil)
+        if journal
+          @metadata[:publicationISSN] = journal.issns.first.id
+          @metadata[:publicationName] = journal.title
+          return
+        end
+
+        @metadata[:publicationISSN] = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+        @metadata[:publicationName] = Faker::Company.unique.industry
+      end
+
       def create_key_and_array(key:)
         @metadata[key] = [] unless @metadata[key]
       end
