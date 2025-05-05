@@ -43,7 +43,7 @@ html.preview_submission {
           h1 {
             flex: 3;
             margin: 0;
-            margin-left: 110px;
+            margin-left: 210px;
             color: black;
             box-sizing: border-box;
             text-align: center;
@@ -52,11 +52,18 @@ html.preview_submission {
           button i {
             margin-right: .25ch;
           }
-          @media (max-width: 600px) {
-            flex-direction: row-reverse;
+          @media (max-width: 750px) {
+            flex-wrap: wrap;
             h1 {
               margin-left: 0;
-              margin-right: 110px;
+              margin-right: 50px;
+              order: 3;
+            }
+          }
+          @media (max-width: 520px) {
+            h1 {
+              margin-right: 0;
+              flex-basis: 100%;
             }
           }
         }
