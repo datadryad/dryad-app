@@ -31,7 +31,7 @@ plan_radios = [ ['', 'None'] ]
       <%= radio_button_tag('payment_plan_type', plan.first, @journal.payment_plan_type == plan.first || '' == plan.first) %> <label for="<%= "payment_plan_type_#{plan.first}" %>"><%= plan[1] %></label></br>
   <% end %>
 </fieldset>
-<p><%= form.check_box :covers_ldf, {checked: @journal.covers_ldf}, 1, 0 %> <%= form.label :covers_dpc, "When checked, journal covers Large Data Fees" %></p>
+<p><%= form.check_box :covers_ldf, {checked: @journal.covers_ldf}, 1, 0 %> <%= form.label :covers_ldf, "When checked, journal covers Large Data Fees" %></p>
 <h3>Peer review</h3>
 <p><%= form.check_box :default_to_ppr, {checked: @journal.default_to_ppr, disabled: !@journal.allow_review_workflow}, 1, 0 %> <%= form.label :default_to_ppr, "When checked, submissions enter PPR by default" %></p>
 <p><%= form.check_box :allow_review_workflow, {checked: !@journal.allow_review_workflow}, 0, 1 %> <%= form.label :allow_review_workflow, "When checked, PPR is not allowed for submissions" %></p>

@@ -132,7 +132,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled,
+      params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled, :covers_ldf,
                     :covers_dpc, :partner_display, :ror_orgs, :sponsor_id, :flag, :note,
                     authentication: %i[strategy ranges entity_id entity_domain email_domain])
     end

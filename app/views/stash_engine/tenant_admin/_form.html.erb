@@ -45,7 +45,7 @@
 <p>This setting controls whether <%= @tenant.short_name.presence || 'the institution'%> covers the cost of Dryad for its users. Partners must be <b>active</b>, <b>displayed</b>, and <b>cover the DPC</b> for users to be invited to connect to them.</p>
 <p><%= form.check_box :covers_dpc, {checked: @tenant.covers_dpc}, 1, 0 %> <%= form.label :covers_dpc, "Partner covers the DPC", class: 'c-input__label' %></p>
 <p>This setting controls whether <%= @tenant.short_name.presence || 'the institution'%> covers Large Data Fees for its users.</p>
-<p><%= form.check_box :covers_ldf, {checked: @tenant.covers_ldf}, 1, 0 %> <%= form.label :covers_dpc, "Partner covers Large Data Fees", class: 'c-input__label' %></p>
+<p><%= form.check_box :covers_ldf, {checked: @tenant.covers_ldf}, 1, 0 %> <%= form.label :covers_ldf, "Partner covers Large Data Fees", class: 'c-input__label' %></p>
 <h2>Sponsor</h2>
 <p>Are the institution's fees sponsored by another institution?</p>
 <div class="c-input">

@@ -116,7 +116,7 @@ module StashEngine
 
     def edit_params
       params.permit(:id, :title, :issn, :alt_title, :payment_plan_type, :notify_contacts, :review_contacts, :preprint_server,
-                    :default_to_ppr, :allow_review_workflow, :sponsor_id, :flag, :note)
+                    :covers_ldf, :default_to_ppr, :allow_review_workflow, :sponsor_id, :flag, :note)
     end
   end
 end
