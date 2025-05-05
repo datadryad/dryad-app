@@ -81,7 +81,7 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[title preprint_server default_to_ppr allow_review_workflow]
+      valid = %i[title preprint_server default_to_ppr allow_review_workflow covers_ldf]
       update = edit_params.slice(*valid).to_h
       update[:sponsor_id] = edit_params[:sponsor_id].presence
       update[:payment_plan_type] = edit_params[:payment_plan_type].presence
