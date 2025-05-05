@@ -77,7 +77,7 @@ Authors not affiliated with a Dryad partner organization are asked to pay a DPC 
       All fees are listed in USD
     </caption>
     <thead>
-      <tr class="callout"><th colspan="3" style="text-align: center;">Unsponsored author fees<p style="font-weight: normal; margin: 0 auto">Effective May 1, 2025</p></th></tr>
+      <tr class="callout"><th colspan="3" style="text-align: center;">Unsponsored author fees<p style="font-weight: normal; margin: 0 auto">Effective May 6, 2025</p></th></tr>
       <tr>
         <th>Dataset size</th>
         <th>DPC</th>
@@ -100,7 +100,7 @@ Partner organizations that sponsor DPCs fully cover author data submissions up t
       All fees are listed in USD
     </caption>
     <thead>
-      <tr class="callout"><th colspan="2" style="text-align: center;">Rates for large (over 10 GB) datasets<p style="font-weight: normal; margin: 0 auto">Effective May 1, 2025</p></th></tr>
+      <tr class="callout"><th colspan="2" style="text-align: center;">Rates for large (over 10 GB) datasets<p style="font-weight: normal; margin: 0 auto">Effective May 6, 2025</p></th></tr>
       <tr>
         <th>Dataset size</th>
         <th>Large dataset fee</th>
