@@ -186,13 +186,6 @@ module Stash
       sf_client&.user_info
     end
 
-    def self.routing_address
-      result = db_query("SELECT Id FROM EmailRoutingAddress WHERE Address = '#{APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'}'")
-      return unless result && result.size > 0
-
-      result.first['Id']
-    end
-
     def self.email_queue
       result = db_query("SELECT Id FROM Group WHERE Type = 'Queue' and Name = 'Email to Case'")
       return unless result && result.size > 0
