@@ -21,7 +21,7 @@ gem 'ed25519', '>= 1.2', '< 2.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
 gem 'rubocop', '~> 1.67.0', require: false
 # Use Puma as the app server
-gem 'puma', '6.5.0', group: :puma, require: false
+gem 'puma', '6.6.0', group: :puma, require: false
 
 # ############################################################
 # UI
@@ -51,7 +51,7 @@ gem 'down' # I'm not sure where this is used, but maybe in the frictionless data
 gem 'exception_notification', git: 'https://github.com/smartinez87/exception_notification.git'
 gem 'ezid-client', '~> 1.9.2'
 gem 'filesize', '~> 0.2.0'
-gem 'font-awesome-sass', '~> 6.1.0'
+gem 'font-awesome-sass', '~> 6.7.2'
 gem 'google-apis-gmail_v1', '~> 0.14.0'
 gem 'grover'
 gem 'http', '~> 5.0.4'
@@ -62,9 +62,10 @@ gem 'jquery-turbolinks', '~> 2.1.0'
 gem 'jquery-ui-rails', '~> 7.0', git: 'https://github.com/jquery-ui-rails/jquery-ui-rails.git', tag: 'v7.0.0'
 gem 'jwt', '~> 2.3.0'
 gem 'kaminari', '~> 1.2.2'
+gem 'kramdown', '~> 2.5'
+gem 'kramdown-parser-gfm', '~> 1.1'
 gem 'leaflet-rails', '~> 1.7.0'
 gem 'loofah', '~> 2.24.0'
-gem 'markdiff', '~> 0.8.1'
 gem 'net-ftp', '~> 0.3.4'
 gem 'net-sftp'
 gem 'noid', '~> 0.9.0'

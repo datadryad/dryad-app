@@ -16,6 +16,22 @@ function copyEmail(e) {
   });
 }
 
+function preventClicks(e) {
+  const button = e.currentTarget;
+  const icon = button.querySelector('i');
+  if (button.form) {
+    button.form.addEventListener('submit', () => {
+      icon.className = 'fas fa-circle-notch fa-spin';
+      document.body.classList.add('prevent-clicks');
+      button.disabled = true;
+    })
+  } else {
+    icon.className = 'fas fa-circle-notch fa-spin';
+    document.body.classList.add('prevent-clicks');
+    button.disabled = true;
+  }
+}
+
 var emails = document.getElementsByClassName('emailr');
 for (var i=0; i < emails.length; i++) {
   const element = emails[i];
@@ -132,17 +148,6 @@ expandButtons.forEach(button => {
       e.preventDefault()
       expandButtonMenu(e)
     }
-  });
-});
-
-var noClicks = Array.from(document.getElementsByClassName('prevent-click'));
-noClicks.forEach(button => {
-  button.addEventListener('click', (e) => {
-    var icon = button.querySelector('i');
-    icon.className = 'fas fa-spinner fa-spin';
-    document.body.classList.add('prevent-clicks');
-    if (button.form) button.form.submit();
-    button.disabled = true;
   });
 });
 

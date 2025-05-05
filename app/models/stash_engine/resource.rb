@@ -108,6 +108,7 @@ module StashEngine
     has_one :journal, through: :journal_issn
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
+    has_one :payment, class_name: 'ResourcePayment'
 
     after_create :create_process_date, unless: :process_date
     after_update_commit :update_salesforce_metadata, if: [:saved_change_to_user_id?, proc { |res| res.curator&.min_curator? }]
@@ -163,12 +164,20 @@ module StashEngine
     def remove_identifier_with_no_resources
       # if no more resources after a removal for a StashEngine::Identifier then there is no remaining content for that Identifier
       # only in-progress resources are destroyed, but there may be earlier submitted ones
-      return if identifier_id.nil?
+      return if identifier_id.nil? || identifier.nil?
 
-      res_count = Resource.where(identifier_id: identifier_id).count
-      return if res_count.positive?
+      identifier.reload
+      if identifier.resources.count.zero?
+        identifier.destroy
+      else
+        # ensure identifier latest_resource_id is being updated to previous resource
+        return unless identifier.latest_resource_id == id
 
-      Identifier.destroy(identifier_id) if Identifier.exists?(identifier_id)
+        prev = previous_resource
+        return if prev.nil?
+
+        identifier.update(latest_resource_id: prev.id)
+      end
     end
 
     def remove_s3_temp_files
@@ -798,6 +807,13 @@ module StashEngine
     def previously_public?
       prev = self.class.where(identifier_id: identifier_id).where('created_at < ?', created_at).where(meta_view: true)
       prev.count.positive?
+    end
+
+    def previously_published?
+      # ignoring the current resource, is there an embargoed or published status previous this point for this identifier?
+      identifier.curation_activities
+        .where('stash_engine_curation_activities.resource_id < ? and status in (?)', id, %w[published embargoed])
+        .exists?
     end
 
     # -----------------------------------------------------------

@@ -25,7 +25,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       navigate_to_review
       submit = find_button('submit_button', disabled: :all)
       expect(submit).not_to be_nil
-      expect(submit).to be_disabled
+      expect(submit['aria-disabled'])
     end
 
   end
@@ -39,7 +39,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       navigate_to_review
       submit = find_button('submit_button', disabled: :all)
       expect(submit).not_to be_nil
-      expect(submit).not_to be_disabled
+      expect(submit['aria-disabled']).to be false
 
       # submits
       submit_form

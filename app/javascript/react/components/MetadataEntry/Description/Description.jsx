@@ -1,4 +1,6 @@
-import React, {useRef, useCallback} from 'react';
+import React, {
+  useRef, useState, useEffect, useCallback,
+} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import axios from 'axios';
 import {debounce} from 'lodash';
@@ -57,14 +59,9 @@ const curatorTools = '| code strikethrough forecolor backcolor';
 export default function Description({
   setResource, dcsDescription, mceLabel, curator,
 }) {
+  const [desc, setDesc] = useState('');
   const editorRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-
-  const update = () => {
-    const {description_type} = dcsDescription;
-    dcsDescription.description = editorRef.current.getContent();
-    setResource((r) => ({...r, descriptions: [dcsDescription, ...r.descriptions.filter((d) => d.description_type !== description_type)]}));
-  };
 
   const submit = () => {
     if (editorRef.current) {
@@ -82,32 +79,43 @@ export default function Description({
         subJson,
         {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
       )
-        .then(() => {
+        .then((data) => {
+          if (data.data) {
+            setResource((r) => ({
+              ...r,
+              descriptions: [{...dcsDescription, description: data.data.description}, ...r.descriptions.filter((d) => d.id !== dcsDescription.id)],
+            }));
+          }
           showSavedMsg();
         });
     }
   };
 
-  const checkSubmit = useCallback(debounce(submit, 1000), []);
+  const checkSubmit = useCallback(debounce(submit, 600), []);
+
+  useEffect(() => {
+    // copy and do not rerender on change
+    setDesc(`${dcsDescription.description || ''}`);
+  }, []);
 
   return (
     <>
       <div className="input-line spaced">
         <label
           className={`input-label xl${(mceLabel.required ? ' required' : ' optional')}`}
-          id={`${dcsDescription.description_type}_label`}
-          htmlFor={`editor_${dcsDescription.description_type}`}
+          id={`${dcsDescription?.description_type}_label`}
+          htmlFor={`editor_${dcsDescription?.description_type}`}
         >
           {mceLabel.label}
         </label>
         {mceLabel.describe && <div id={`${mceLabel.label}-ex`}>{mceLabel.describe}</div>}
       </div>
       <Editor
-        id={`editor_${dcsDescription.description_type}`}
+        id={`editor_${dcsDescription?.description_type}`}
         onInit={(evt, editor) => { editorRef.current = editor; }}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         licenseKey="gpl"
-        initialValue={dcsDescription?.description}
+        initialValue={desc}
         init={{
           height: 300,
           width: '100%',
@@ -130,7 +138,7 @@ export default function Description({
           paste_preprocess,
         }}
         onEditorChange={checkSubmit}
-        onBlur={update}
+        onBlur={submit}
       />
     </>
   );

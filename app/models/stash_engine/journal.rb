@@ -4,6 +4,7 @@
 #
 #  id                      :integer          not null, primary key
 #  allow_review_workflow   :boolean          default(TRUE)
+#  covers_ldf              :boolean          default(FALSE)
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
 #  journal_code            :string(191)

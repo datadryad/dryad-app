@@ -63,7 +63,7 @@ module StashEngine
       in_progress: %w[in_progress],
       processing: %w[in_progress processing],
       submitted: %w[submitted curation withdrawn peer_review],
-      peer_review: %w[peer_review curation withdrawn],
+      peer_review: %w[peer_review submitted curation withdrawn],
       curation: (enum_vals - %w[in_progress submitted]),
       action_required: (enum_vals - %w[in_progress submitted]),
       withdrawn: %w[withdrawn curation],
@@ -196,6 +196,8 @@ module StashEngine
       else
         resource.identifier&.record_payment
       end
+      # after first publication, the dataset will be switched to new payment system
+      resource.identifier.update(old_payment_system: false)
     end
 
     def submit_to_stripe
@@ -380,9 +382,12 @@ module StashEngine
 
     def ready_for_payment?
       return false unless resource
-      return false unless first_time_in_status?
+      return false unless resource.identifier
 
       resource.identifier.reload
+      return false unless resource.identifier.old_payment_system
+      return false unless first_time_in_status?
+
       APP_CONFIG&.payments&.service == 'stripe' &&
         (resource.identifier.payment_type.nil? || %w[unknown waiver stripe].include?(resource.identifier.payment_type)) &&
         %w[published embargoed].include?(status)

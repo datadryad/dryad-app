@@ -8,6 +8,7 @@
 #  identifier_type         :text(65535)
 #  import_info             :integer
 #  last_invoiced_file_size :bigint
+#  old_payment_system      :boolean          default(FALSE)
 #  payment_type            :string(191)
 #  pub_state               :string
 #  publication_date        :datetime
@@ -644,22 +645,23 @@ module StashEngine
       end
     end
 
-    describe '#large_files?' do
-      it 'returns false when large files are not present' do
-        expect(@identifier.large_files?).to eq(false)
-      end
-
-      it 'returns true when large files are present' do
-        DataFile.create(
-          resource: @res3,
-          file_state: 'created',
-          upload_file_name: 'created.bin',
-          upload_file_size: 1.0e+14
-        )
-        expect(@identifier.large_files?).to eq(true)
-      end
-
-    end
+    # TODO: Cleanup - method for this is commented
+    # describe '#large_files?' do
+    #   it 'returns false when large files are not present' do
+    #     expect(@identifier.large_files?).to eq(false)
+    #   end
+    #
+    #   it 'returns true when large files are present' do
+    #     DataFile.create(
+    #       resource: @res3,
+    #       file_state: 'created',
+    #       upload_file_name: 'created.bin',
+    #       upload_file_size: 1.0e+14
+    #     )
+    #     expect(@identifier.large_files?).to eq(true)
+    #   end
+    #
+    # end
 
     describe '#calculated_pub_state' do
 

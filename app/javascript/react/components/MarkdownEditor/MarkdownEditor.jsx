@@ -99,7 +99,7 @@ const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', '
   'table', 'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
-  id, initialValue, replaceValue, onChange, buttons = defaultButtons,
+  id, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
 }) {
   const [loading, editor] = useInstance();
 
@@ -139,11 +139,11 @@ function MilkdownEditor({
         const editorView = ctx.get(editorViewCtx);
         const serializer = ctx.get(serializerCtx);
         setDefaultVal(serializer(editorView.state.doc));
-      } else if (editType === 'markdown') onChange(markdown);
+      } else if (editType === 'markdown') onReplace(markdown);
     } catch {
       setParseError(true);
       setEditType('markdown');
-      if (markdown !== initialValue) onChange(markdown);
+      if (markdown !== initialValue) onReplace(markdown);
     }
   });
 
@@ -152,7 +152,10 @@ function MilkdownEditor({
   }, [initialCode]);
 
   useEffect(() => {
-    if (saveVal !== defaultVal) onChange(saveVal);
+    if (saveVal !== defaultVal) {
+      onChange(saveVal);
+      setDefaultVal(saveVal);
+    }
   }, [saveVal]);
 
   useEffect(() => {
@@ -181,8 +184,8 @@ function MilkdownEditor({
   return (
     <>
       {!loading && (
-        <div className="md_editor-buttons" role="menubar">
-          <div className="md_editor-toolbar">
+        <div className="md_editor-buttons">
+          <div className="md_editor-toolbar" role="menubar">
             {buttons.map((button, i) => (
               <Button
                 active={active.includes(button) || (editType === 'markdown' && button.includes('list') && activeList())}
@@ -197,11 +200,21 @@ function MilkdownEditor({
               />
             ))}
           </div>
-          <div className="md_editor-toggle">
-            <button type="button" onClick={() => setEditType('markdown')} aria-pressed={editType === 'markdown'} disabled={editType === 'markdown'}>
+          <div className="md_editor-toggle" role="group" aria-label="Editor type">
+            <button
+              type="button"
+              onClick={() => setEditType('markdown')}
+              aria-current={editType === 'markdown'}
+              aria-disabled={editType === 'markdown' || null}
+            >
               Markdown
             </button>
-            <button type="button" onClick={() => setEditType('visual')} aria-pressed={editType === 'visual'} disabled={editType === 'visual'}>
+            <button
+              type="button"
+              onClick={() => setEditType('visual')}
+              aria-current={editType === 'visual'}
+              aria-disabled={editType === 'visual' || null}
+            >
               Rich text
             </button>
           </div>

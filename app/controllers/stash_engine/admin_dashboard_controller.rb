@@ -16,7 +16,7 @@ module StashEngine
     def results
       @datasets = StashEngine::Resource.latest_per_dataset.select(
         :id, :title, :total_file_size, :user_id, :tenant_id, :identifier_id, :last_curation_activity_id, :publication_date,
-        :user_id, :current_resource_state_id
+        :current_editor_id, :current_resource_state_id
       ).distinct
 
       add_fields
@@ -27,8 +27,8 @@ module StashEngine
       if params[:sort].present? || @search_string.present?
         order_string = 'relevance desc'
         if params[:sort].present?
-          order_list = %w[title author_string status total_file_size view_count curator_name created_at
-                          updated_at submit_date publication_date first_sub_date first_pub_date queue_date]
+          order_list = %w[title author_string status total_file_size view_count curator_name editor_name
+                          created_at updated_at submit_date publication_date first_sub_date first_pub_date queue_date]
           order_string = helpers.sortable_table_order(whitelist: order_list)
           order_string = "stash_engine_curation_activities.#{order_string}" if @sort == 'updated_at'
           order_string = "stash_engine_identifiers.#{order_string}" if @sort == 'created_at'
@@ -147,7 +147,10 @@ module StashEngine
       if @filters[:status].present? || %w[status updated_at].include?(@sort) || @filters[:updated_at]&.values&.any?(&:present?)
         @datasets = @datasets.joins(:last_curation_activity)
       end
-      curator_field if current_user.min_app_admin? && (@fields.include?('curator') || @filters[:curator].present?)
+      if current_user.min_app_admin?
+        curator_field if @fields.include?('curator') || @filters[:curator].present?
+        editor_field if @fields.include?('editor') || @filters[:editor].present?
+      end
       author_field if @fields.include?('authors') || @sort == 'author_string'
       date_fields
       @datasets = @datasets.select('stash_engine_curation_activities.status') if @sort == 'status'
@@ -170,6 +173,12 @@ module StashEngine
     def curator_field
       @datasets = @datasets.left_outer_joins(:curator)
         .select("CONCAT_WS(' ', stash_engine_users.first_name, stash_engine_users.last_name) as curator_name")
+    end
+
+    def editor_field
+      @datasets = @datasets.joins(
+        'left outer join stash_engine_users eds ON eds.id = stash_engine_resources.current_editor_id'
+      ).select("CONCAT_WS(' ', eds.first_name, eds.last_name) as editor_name")
     end
 
     def author_field
@@ -221,9 +230,12 @@ module StashEngine
     end
 
     def user_filters
-      @datasets = @datasets.where(
-        'stash_engine_users.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
-      ) if @filters[:curator].present? && current_user.min_app_admin?
+      if current_user.min_app_admin?
+        @datasets = @datasets.where(
+          'stash_engine_users.id': Integer(@filters[:curator], exception: false) ? @filters[:curator] : nil
+        ) if @filters[:curator].present?
+        @datasets = @datasets.where(current_editor_id: @filters[:editor]) if @filters[:editor].present?
+      end
       @datasets = @datasets.joins(users: :flag) if @filters[:flag] == 'user'
     end
 
@@ -351,8 +363,8 @@ module StashEngine
 
       decipher_curation_activity
       @note = params.dig(:curation_activity, :note)
-      @resource.user_id = current_user.id
       @resource.publication_date = @pub_date
+      @resource.user_id = current_user.id if @status == 'curation'
       @resource.hold_for_peer_review = true if @status == 'peer_review'
       @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
       @resource.save

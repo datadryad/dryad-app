@@ -2,7 +2,7 @@ html.preview_submission {
   scroll-padding-bottom: 115px;
 }
 
-.metadata_entry_pages_find_or_create {
+.metadata_entry_pages_find_or_create, .payments_callback {
   max-width: none;
   padding-left: 0;
   padding-right: 0;
@@ -289,24 +289,44 @@ html.preview_submission {
         grid-column: span 2;
         margin: -1.5rem auto 0;
         width: 100%;
-        display: flex;
-        gap: 2ch;
-        align-items: center;
-        justify-content: flex-end;
         box-shadow: $lightest-blue 0px -5px 5px -6px;
+        & > div {
+          @extend %pull-background;
+          box-sizing: border-box;
+          max-width: 1220px;
+          margin: 0 auto;
+          width: 100%;
+          display: flex;
+          gap: 2ch;
+          align-items: center;
+          justify-content: flex-end;
+        }
         @media (max-width: 811px){
           grid-area: submit;
           grid-column: 1;
           margin-top: -.75rem;
-          flex-wrap: wrap;
-          justify-content: center;
           padding: 2rem 1rem;
-          *:first-child {
-            margin: 0;
+          & > div {
+            flex-wrap: wrap;
+            justify-content: center;
+            *:first-child {
+              margin: 0;
+            }
           }
         }
-        form button {
-          white-space: nowrap;
+        form {
+          button {
+            white-space: nowrap;
+          }
+          &:only-child {            
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            row-gap: 1ch;
+            column-gap: 2ch;
+          }
         }
       }
     }
@@ -560,11 +580,11 @@ dialog#submission-step[open] {
     margin-top: 0;
   }
 
-  *[aria-invalid] {
+  *[aria-invalid="true"] {
     border: thin solid $red !important;
   }
 
-  label:has(input[type="checkbox"][aria-invalid]) {
+  label:has(input[type="checkbox"][aria-invalid="true"]) {
     color: $red;
   }
 }
@@ -797,35 +817,45 @@ dialog#submission-step[open] {
 
   &.track-changes {
     ins, .ins, del {
-      padding: 4px 0 2px;
+      padding: 5px 0 3px;
     }
-    .ins {
-      background-color: lighten($lightest-orange, 5);
-    }
-    ins {
-      text-decoration: none;
-      background-color: lighten($lightest-orange, 5);
-    }
-    .del {
-      display: block;
-    }
-    del {
+    del, .del {
       display: inline;
       background-color: $lightest-red;
       text-decoration: line-through;
-    }
-
-    .highlight-readme {
-      .del {
-        display: inline;
+      * {
         background-color: $lightest-red;
-      }
-      del p, ins p {
-        display: inline;
-      }
-      ins.ins-before::after {
-        content: ' ';
+        text-decoration: line-through;
       }
     }
+    .ins {
+      text-decoration: none;
+      background-color: $lightest-orange;
+    }
+    ins {
+      text-decoration: none;
+      background-color: $lightest-orange;
+    }
+  }
+}
+
+#payment {
+  @extend %pull-background;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  text-align: center;
+
+  p {
+    text-align: left;
+    max-width: 888px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  div {
+    padding: 1rem 0;
   }
 }

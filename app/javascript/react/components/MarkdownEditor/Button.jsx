@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useId} from 'react';
 import {useSelect} from 'downshift';
 import {range} from 'lodash';
 import {editorViewCtx} from '@milkdown/core';
@@ -27,26 +27,28 @@ const labels = {
 };
 
 const icons = {
-  undo: <i className="fa fa-undo" aria-hidden="true" />,
-  redo: <i className="fa fa-repeat" aria-hidden="true" />,
-  strong: <i className="fa fa-bold" aria-hidden="true" />,
-  emphasis: <i className="fa fa-italic" aria-hidden="true" />,
-  link: <i className="fa fa-link" aria-hidden="true" />,
-  inlineCode: <i className="fa fa-terminal" aria-hidden="true" />,
-  strike_through: <i className="fa fa-strikethrough" aria-hidden="true" />,
-  bullet_list: <i className="fa fa-list" aria-hidden="true" />,
-  ordered_list: <i className="fa fa-list-ol" aria-hidden="true" />,
-  indent: <i className="fa fa-indent" aria-hidden="true" />,
-  outdent: <i className="fa fa-outdent" aria-hidden="true" />,
-  blockquote: <i className="fa fa-quote-left" aria-hidden="true" />,
-  code_block: <i className="fa fa-code" aria-hidden="true" />,
-  table: <i className="fa fa-table" aria-hidden="true" />,
+  undo: <i className="fas fa-undo" aria-hidden="true" />,
+  redo: <i className="fas fa-rotate-right" aria-hidden="true" />,
+  strong: <i className="fas fa-bold" aria-hidden="true" />,
+  emphasis: <i className="fas fa-italic" aria-hidden="true" />,
+  link: <i className="fas fa-link" aria-hidden="true" />,
+  inlineCode: <i className="fas fa-terminal" aria-hidden="true" />,
+  strike_through: <i className="fas fa-strikethrough" aria-hidden="true" />,
+  bullet_list: <i className="fas fa-list" aria-hidden="true" />,
+  ordered_list: <i className="fas fa-list-ol" aria-hidden="true" />,
+  indent: <i className="fas fa-indent" aria-hidden="true" />,
+  outdent: <i className="fas fa-outdent" aria-hidden="true" />,
+  blockquote: <i className="fas fa-quote-left" aria-hidden="true" />,
+  code_block: <i className="fas fa-code" aria-hidden="true" />,
+  table: <i className="fas fa-table" aria-hidden="true" />,
 };
 
 function LinkMenu({editor, editorId, active}) {
   const [text, setText] = useState('');
   const [url, setUrl] = useState('');
   const [showRemove, setRemove] = useState(false);
+  const textId = useId();
+  const urlId = useId();
 
   const getLink = (doc, pos, schema) => {
     const $pos = doc.resolve(pos);
@@ -176,8 +178,8 @@ function LinkMenu({editor, editorId, active}) {
       >{icons.link}
       </button>
       <div className="linkMenu" id={`${editorId}linkMenu`} hidden>
-        <label>Link text <input type="text" value={text} onChange={(e) => setText(e.target.value)} /></label>
-        <label>URL <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} /></label>
+        <label htmlFor={textId}>Link text <input id={textId} type="text" value={text} onChange={(e) => setText(e.target.value)} /></label>
+        <label htmlFor={urlId}>URL <input id={urlId} type="text" value={url} onChange={(e) => setUrl(e.target.value)} /></label>
         <div className="buttons">
           <button type="button" onClick={submit}>Save</button>
           {showRemove && <button type="button" onClick={removeLink}>Remove</button>}
@@ -246,6 +248,47 @@ function List({type, editor, active}) {
       aria-label={labels[type]}
       role="menuitem"
       onClick={listWizard}
+    >{icons[type]}
+    </button>
+  );
+}
+
+function Toggle({
+  type, editor, active, disabled,
+}) {
+  const callEditorCommand = () => {
+    const view = editor()?.ctx.get(editorViewCtx);
+    const {dispatch, state} = view;
+    const {
+      doc, selection, schema, tr,
+    } = state;
+    const {from: start, to: end} = selection;
+    if (doc.rangeHasMark(start, end === start ? end + 1 : end, schema.marks[type])) {
+      const {parent} = doc.resolve(start);
+      let from = start;
+      let to = end;
+      while (from > 0 && !doc.textBetween(from - 1, start).replace(/[ ]/g, '').length) {
+        from -= 1;
+      }
+      while (to < parent.childCount && !doc.textBetween(end, to + 1).replace(/[ ]/g, '').length) {
+        to += 1;
+      }
+      tr.setSelection(TextSelection.create(doc, from, to));
+      dispatch(tr);
+    }
+    editor()?.action(callCommand(commands[type].key));
+    view.focus();
+  };
+
+  return (
+    <button
+      type="button"
+      className={active ? 'active' : undefined}
+      disabled={disabled}
+      title={labels[type]}
+      aria-label={labels[type]}
+      role="menuitem"
+      onClick={callEditorCommand}
     >{icons[type]}
     </button>
   );
@@ -442,6 +485,9 @@ function Button({
   if (activeEditor === 'visual') {
     if (type === 'link') return <LinkMenu active={active} editor={editor} editorId={editorId} />;
     if (type.includes('list')) return <List active={active} editor={editor} type={type} />;
+    if (['strong', 'emphasis', 'inlineCode', 'strike_through'].includes(type)) {
+      return <Toggle active={active} editor={editor} type={type} disabled={disabled} />;
+    }
   }
   const sharedProps = {
     active, editor, mdEditor, activeEditor,

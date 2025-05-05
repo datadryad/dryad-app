@@ -1,11 +1,13 @@
 import React, {
   Fragment, useRef, useState, useEffect,
 } from 'react';
+import axios from 'axios';
 import {BrowserRouter, useLocation} from 'react-router-dom';
 import {upCase} from '../../lib/utils';
 import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
 import ExitButton from '../components/ExitButton';
+import Payments from '../components/Payments';
 import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Publication';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
 import Compliance, {CompPreview, complianceCheck} from '../components/MetadataEntry/Compliance';
@@ -31,6 +33,8 @@ function Submission({
   const [step, setStep] = useState({name: 'Create a submission'});
   const [open, setOpen] = useState(window.innerWidth > 600);
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
+  const [payment, setPayment] = useState(false);
+  const [fees, setFees] = useState({});
   const previous = resource.previous_curated_resource;
 
   const steps = [
@@ -59,7 +63,7 @@ function Submission({
       fail: (review || step.index > 1) && abstractCheck(resource),
       component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
-      preview: <DescPreview resource={resource} previous={previous} />,
+      preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Subjects',
@@ -91,19 +95,18 @@ function Submission({
     {
       name: 'Files',
       index: 6,
-      pass: resource.generic_files.length > 0,
+      pass: resource.generic_files?.length > 0,
       fail: (review || step.index > 5) && filesCheck(resource, user.superuser, config_maximums),
-      component: <UploadFiles
-        resource={resource}
-        setResource={setResource}
-        previous={previous}
-        s3_dir_name={s3_dir_name}
-        config_s3={config_s3}
-        config_maximums={config_maximums}
-        config_payments={config_payments}
-      />,
-      help: <FilesHelp />,
-      preview: <FilesPreview resource={resource} previous={previous} curator={user.curator} maxSize={config_maximums.merritt_size} />,
+      component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
+        <UploadFiles {...{
+          resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments,
+        }}
+        />
+      ),
+      help: <FilesHelp date={resource.identifier.publication_date} maxFiles={config_maximums.files} />,
+      preview: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
+        <FilesPreview resource={resource} previous={previous} curator={user.curator} maxSize={config_maximums.merritt_size} />
+      ),
     },
     {
       name: 'README',
@@ -134,15 +137,17 @@ function Submission({
       pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
       component: <Agreements
-        config={config_payments}
         resource={resource}
         setResource={setResource}
-        user={user}
+        subFees={fees}
+        setSubFees={setFees}
+        config={config_payments}
         form={change_tenant}
+        user={user}
         setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
-      preview: <Agreements config={config_payments} resource={resource} user={user} previous={previous} preview />,
+      preview: <Agreements {...{resource, user, previous}} preview subFees={fees} config={config_payments} setSubFees={setFees} />,
     },
   ];
 
@@ -180,7 +185,12 @@ function Submission({
   useEffect(() => {
     const url = window.location.search.slice(1);
     const main = document.getElementById('maincontent');
-    if (review && step.name === 'Create a submission') {
+    if (payment === 'paid') {
+      document.getElementById('submit_form').submit();
+    } else if (payment) {
+      main.classList.remove('submission-review');
+      window.history.pushState(null, null, '?payment');
+    } else if (review && step.name === 'Create a submission') {
       main.classList.add('submission-review');
       if (url) document.querySelector(`*[data-slug=${url}]`)?.focus();
       window.history.pushState(null, null, null);
@@ -193,7 +203,7 @@ function Submission({
       const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
     }
-  }, [review, step]);
+  }, [review, step, payment]);
 
   useEffect(() => {
     if (subRef.current) {
@@ -208,6 +218,17 @@ function Submission({
   }, [subRef.current]);
 
   useEffect(() => {
+    if (step.name === 'Files') setStep(steps.find((c) => c.name === 'Files'));
+  }, [resource.generic_files]);
+
+  useEffect(() => {
+    async function getFileData() {
+      axios.get(`/stash_datacite/metadata_entry_pages/${resource.id}/files`).then((data) => {
+        const {generic_files, previous_files} = data.data;
+        if (previous && previous_files) previous.generic_files = previous_files;
+        setResource((r) => ({...r, generic_files, previous_curated_resource: previous}));
+      });
+    }
     if (!review) {
       const url = window.location.search.slice(1);
       if (url) {
@@ -221,6 +242,7 @@ function Submission({
         document.querySelector('#submission-checklist li:last-child button').setAttribute('disabled', true);
       }
     }
+    getFileData();
   }, []);
 
   if (review) {
@@ -228,16 +250,24 @@ function Submission({
       <>
         <div id="submission-heading">
           <div>
-            <h1>{upCase(resource.resource_type.resource_type)} submission preview{step.name !== 'Create a submission' ? ' editor' : ''}</h1>
-            <ExitButton resource={resource} />
+            <h1>
+              {upCase(resource.resource_type.resource_type)} submission
+              {payment ? ' payment' : ' preview'}
+              {step.name !== 'Create a submission' ? ' editor' : ''}
+            </h1>
+            {payment ? (
+              <button className="o-button__plain-text7" type="button" onClick={() => setPayment(false)}>
+                <i className="fas fa-circle-left" aria-hidden="true" />Back to preview
+              </button>
+            ) : <ExitButton resource={resource} />}
           </div>
         </div>
-        <nav aria-label="Submission editing" className={step.name !== 'Create a submission' ? 'screen-reader-only' : null}>
+        <nav aria-label="Submission editing" className={step.name !== 'Create a submission' || payment ? 'screen-reader-only' : null}>
           <Checklist steps={steps} step={{}} setStep={setStep} open />
         </nav>
         {step.name === 'Create a submission' && (
           <>
-            <div id="submission-preview" ref={previewRef} className={user.curator ? 'track-changes' : null}>
+            <div id="submission-preview" ref={previewRef} className={`${user.curator ? 'track-changes' : ''} ${payment ? 'screen-reader-only' : ''}`}>
               {steps.map((s) => (
                 <section key={s.name} aria-label={s.name}>
                   {s.preview}
@@ -245,10 +275,18 @@ function Submission({
                 </section>
               ))}
             </div>
-            <SubmissionForm steps={steps} resource={resource} previewRef={previewRef} user={user} />
+            <SubmissionForm {...{
+              steps, resource, fees, payment, setPayment, previewRef, user,
+            }}
+            />
           </>
         )}
-        <dialog id="submission-step" open={step.name !== 'Create a submission' || null}>
+        <dialog id="submission-step" open={step.name !== 'Create a submission' || payment || null}>
+          {payment && (
+            <div className="submission-edit">
+              <Payments config={config_payments} resource={resource} setResource={setResource} setPayment={setPayment} />
+            </div>
+          )}
           {step.name !== 'Create a submission' && (
             <div className="submission-edit">
               <nav id="submission-nav" className="open" aria-label="Back">

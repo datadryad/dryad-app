@@ -4,7 +4,8 @@ module StashEngine
     include StashEngine::LandingHelper
 
     before_action :require_login
-    before_action :require_modify_permission, except: %i[index new logout]
+    before_action :assign_resource, only: %i[logout display_readme dupe_check]
+    before_action :require_modify_permission, except: %i[index new logout display_readme dupe_check]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
     # before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
     before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
@@ -108,11 +109,10 @@ module StashEngine
     end
 
     def logout
-      @resource = resource
       @resource.update_columns(current_editor_id: nil)
       respond_to do |format|
         format.html { redirect_to dashboard_path }
-        format.js { render js: "document.getElementById('editor_name').innerHTML='<em>None</em>';" }
+        format.js { render js: "document.getElementById('editor_name#{@resource.id}').innerHTML='<em>None</em>';" }
       end
     end
 
@@ -150,18 +150,15 @@ module StashEngine
 
     def display_readme
       review = StashDatacite::Resource::Review.new(@resource)
-      render partial: 'stash_datacite/descriptions/readme',
-             locals: { review: review, highlight_fields: params.key?(:admin) ? ['technical_info'] : [] }
+      render partial: 'stash_datacite/descriptions/readme', locals: { review: review }
     end
 
     def dpc_status
       dpc_checks = {
-        dpc: Stash::Payments::Invoicer.data_processing_charge(identifier: @resource.identifier) / 100,
         journal_will_pay: @resource.identifier.journal&.will_pay?,
         institution_will_pay: @resource.identifier.institution_will_pay?,
         funder_will_pay: @resource.identifier.funder_will_pay?,
         user_must_pay: @resource.identifier.user_must_pay?,
-        payment_type: @resource.identifier.payment_type,
         paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
         aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.partner_list&.first,
         allow_review: @resource.identifier.allow_review?,
@@ -182,14 +179,14 @@ module StashEngine
         other_submissions = params.key?(:admin) ? StashEngine::Resource.all : current_user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
-        manuscript = @resource.resource_publication.manuscript_number
-        dupes = other_submissions.where(title: @resource.title)&.select(:id, :title, :identifier_id).to_a
-        if primary_article.present? && !['NA', 'N/A', 'TBD', 'unknown'].include?(primary_article)
+        manuscript = @resource.resource_publication&.manuscript_number
+        dupes = other_submissions.where('LOWER(title) = LOWER(?)', @resource.title)&.select(:id, :title, :identifier_id).to_a
+        if primary_article.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp?(primary_article) }
           dupes.concat(other_submissions.joins(:related_identifiers)
               .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
               &.select(:id, :title, :identifier_id).to_a)
         end
-        if manuscript.present? && !['NA', 'N/A', 'TBD', 'unknown'].include?(manuscript)
+        if manuscript.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp?(manuscript) }
           dupes.concat(
             other_submissions.joins(:resource_publication).where(resource_publication: { manuscript_number: manuscript })
             &.select(:id, :title, :identifier_id).to_a
@@ -236,6 +233,10 @@ module StashEngine
 
       dryad_import = Stash::Import::DryadManuscript.new(resource: resource, manuscript: manu)
       dryad_import.populate
+    end
+
+    def assign_resource
+      @resource = resource
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

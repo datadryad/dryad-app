@@ -280,7 +280,7 @@ GEM
       ffi (>= 1.15.5)
       rake
     filesize (0.2.0)
-    font-awesome-sass (6.1.2)
+    font-awesome-sass (6.7.2)
       sassc (~> 2.0)
     formatador (1.1.0)
     fuubar (2.5.1)
@@ -370,6 +370,10 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    kramdown (2.5.1)
+      rexml (>= 3.3.9)
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     language_server-protocol (3.17.0.3)
     launchy (3.0.1)
       addressable (~> 2.8)
@@ -400,9 +404,6 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
-    markdiff (0.8.1)
-      diff-lcs
-      nokogiri
     matrix (0.4.2)
     method_source (1.1.0)
     mime-types (3.6.0)
@@ -425,7 +426,7 @@ GEM
     net-ftp (0.3.8)
       net-protocol
       time
-    net-imap (0.5.6)
+    net-imap (0.5.7)
       date
       net-protocol
     net-pop (0.1.2)
@@ -442,11 +443,11 @@ GEM
     netrc (0.11.0)
     nio4r (2.7.4)
     noid (0.9.0)
-    nokogiri (1.18.4-arm64-darwin)
+    nokogiri (1.18.8-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.4-x86_64-darwin)
+    nokogiri (1.18.8-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.4-x86_64-linux-gnu)
+    nokogiri (1.18.8-x86_64-linux-gnu)
       racc (~> 1.4)
     notiffany (0.1.3)
       nenv (~> 0.1)
@@ -492,7 +493,7 @@ GEM
     pry-rails (0.3.11)
       pry (>= 0.13.0)
     public_suffix (6.0.1)
-    puma (6.5.0)
+    puma (6.6.0)
       nio4r (~> 2.0)
     pundit (2.4.0)
       activesupport (>= 3.0.0)
@@ -799,7 +800,7 @@ DEPENDENCIES
   faker
   faraday (~> 1.10.4)
   filesize (~> 0.2.0)
-  font-awesome-sass (~> 6.1.0)
+  font-awesome-sass (~> 6.7.2)
   fuubar
   google-apis-gmail_v1 (~> 0.14.0)
   grover
@@ -815,13 +816,14 @@ DEPENDENCIES
   jquery-ui-rails (~> 7.0)!
   jwt (~> 2.3.0)
   kaminari (~> 1.2.2)
+  kramdown (~> 2.5)
+  kramdown-parser-gfm (~> 1.1)
   leaflet-rails (~> 1.7.0)
   letter_opener
   letter_opener_web (~> 3.0)
   listen
   loofah (~> 2.24.0)
   mail (~> 2.8)
-  markdiff (~> 0.8.1)
   mocha
   mysql2 (~> 0.5.6)
   net-ftp (~> 0.3.4)
@@ -835,7 +837,7 @@ DEPENDENCIES
   posix-spawn (~> 0.3.15)
   pry
   pry-rails
-  puma (= 6.5.0)
+  puma (= 6.6.0)
   pundit (~> 2.3)
   rack-attack
   rack-mini-profiler

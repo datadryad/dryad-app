@@ -1,5 +1,4 @@
 RSpec.shared_examples('send email notifications tasks') do |count, date|
-
   it 'should send emails' do
     Timecop.travel(date + 1.day) do
       expect do

@@ -38,7 +38,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
       });
   };
 
-  const checkDescription = useCallback(debounce(saveDescription, 900), []);
+  const checkDescription = useCallback(debounce(saveDescription, 600), []);
 
   const assembleValue = () => {
     let v = `# ${
@@ -62,12 +62,6 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
     setWizardStep(0);
     saveDescription(null);
   };
-
-  useEffect(() => {
-    if (initialValue) {
-      // deal with arrows?
-    }
-  }, [initialValue]);
 
   useEffect(() => {
     if (wizardStep > secTitles.length) {
@@ -144,6 +138,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
           initialValue={initialValue}
           replaceValue={replaceValue}
           onChange={checkDescription}
+          onReplace={saveDescription}
         />
         <dialog
           id="restart-wizard-dialog"
@@ -227,9 +222,9 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
     );
   }
   return (
-    <p style={{display: 'flex', alignItems: 'center'}}>
-      <img src="../../../images/spinner.gif" alt="Loading spinner" style={{height: '1.5rem', marginRight: '.5ch'}} />
-          Loading README generator
+    <p style={{display: 'flex', alignItems: 'center', gap: '.5ch'}}>
+      <i className="fas fa-spin fa-spinner" aria-hidden="true" />
+      Loading README generator
     </p>
   );
 }

@@ -227,11 +227,10 @@ describe('UploadFiles', () => {
     info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
 
-    const button = screen.getByText('Remove');
+    const button = screen.getByLabelText('Remove file');
     userEvent.click(button);
 
-    expect(screen.queryByText('Remove')).not.toBeInTheDocument();
-    expect(screen.getByText('Removing...')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Remove file')).not.toBeInTheDocument();
 
     await waitFor(() => 'OK');
 

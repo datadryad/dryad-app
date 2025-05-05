@@ -53,7 +53,7 @@
                 <% end %>
               <% end %>
               <% if policy(dataset).delete? %>
-                <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
+                <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7 prevent-click', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
                   <i class="fas fa-trash-can" aria-hidden="true"></i><%= dataset&.stash_version.version > 1 ? 'Revert' : 'Delete' %><span class="screen-reader-only"> <%= dataset.identifier.identifier %></span>
                 <% end %>
               <% end %>
@@ -66,7 +66,7 @@
               <i class="fa fa-paper-plane" aria-hidden="true"></i>Release<span class="screen-reader-only"> <%= dataset.identifier.identifier %></span> for curation
             <% end %>
           <% end %>
-          <% if policy(dataset).delete? %>
+          <% if policy(dataset).revise? %>
           <% if ['submitted', 'action_required'].include?(dataset&.last_curation_activity.status) || dataset.sort_order == 2 || dataset.sort_order >= 4 %>
             <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: dataset.id), method: :post, class: 'o-button__inline-form') do %>
               <button class="o-button__plain-text7 prevent-click" name="update"><i class="fas fa-pencil" aria-hidden="true"></i>Revise submission<span class="screen-reader-only"> <%= dataset.identifier.identifier %></span></button>
@@ -77,6 +77,9 @@
             <%= form_with(url: primary_article_path(resource_id: dataset.id), method: :get, local: false, class: 'o-button__inline-form', id: "#{dataset.id}_pub_form") do %>
               <button class="o-button__plain-text7"><i class="fas fa-newspaper" aria-hidden="true"></i>Link article<span class="screen-reader-only"> to <%= dataset.identifier.identifier %></span></button>
             <% end %>
+          <% end %>
+          <%= form_with(url: contact_helpdesk_form_path(id: dataset.identifier.id), method: :get, local: false, class: 'o-button__inline-form', style: 'margin-left: auto', id: "#{dataset.id}_contact_form") do %>
+              <button class="o-button__plain-text7"><i class="fas fa-circle-question" aria-hidden="true"></i>Get help<span class="screen-reader-only"> with <%= dataset.identifier.identifier %></span></button>
           <% end %>
         </div>
       </div>
