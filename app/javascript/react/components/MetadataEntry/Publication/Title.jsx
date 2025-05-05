@@ -1,8 +1,9 @@
-import React, {useRef} from 'react';
+import React, {useRef, useCallback} from 'react';
 // see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import {debounce} from 'lodash';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 /* Formik makes it difficult to get a hold of some of the context to do some things manually unless you make the forms very
@@ -22,25 +23,31 @@ import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 function Title({resource, setResource}) {
   const formRef = useRef();
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
+  const submit = (values) => {
+    showSavingMsg();
+    axios.patch(
+      '/stash_datacite/titles/update',
+      values,
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    )
+      .then((data) => {
+        if (data.status !== 200) {
+          console.log('Not a 200 response while saving Title form');
+        }
+        showSavedMsg();
+      });
+  };
+
+  const checkSubmit = useCallback(debounce(submit, 600), []);
+
   return (
     <Formik
       initialValues={{title: (resource.title || ''), id: resource.id, authenticity_token}}
       innerRef={formRef}
-      onSubmit={(values, {setSubmitting}) => {
-        showSavingMsg();
-        axios.patch(
-          '/stash_datacite/titles/update',
-          values,
-          {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
-        )
-          .then((data) => {
-            if (data.status !== 200) {
-              console.log('Not a 200 response while saving Title form');
-            }
-            setResource((r) => ({...r, title: values.title}));
-            showSavedMsg();
-            setSubmitting(false);
-          });
+      onSubmit={(values) => {
+        submit(values);
+        setResource((r) => ({...r, title: values.title}));
       }}
     >
       {(formik) => (
@@ -54,6 +61,10 @@ function Title({resource, setResource}) {
             className="title c-input__text"
             id={`title__${resource.id}`}
             onBlur={formik.handleSubmit}
+            onChange={(e) => {
+              formik.setFieldValue('title', e.target.value);
+              checkSubmit(formik.values);
+            }}
             required
             aria-describedby="title-ex"
             aria-errormessage="title_error"
