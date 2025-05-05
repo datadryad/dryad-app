@@ -97,7 +97,20 @@ module Stash
         case_hash[:Institutional_Affiliation__c] = find_account_by_name(id.latest_resource&.submitter&.tenant&.long_name)
       end
 
-      sf_client.create('Case', **case_hash)
+      case_id = sf_client.create('Case', **case_hash)
+      sf_client.create(
+        'EmailMessage',
+        ToAddress: APP_CONFIG['helpdesk_email'] || 'help@datadryad.org',
+        Subject: subject,
+        TextBody: body,
+        FromAddress: email,
+        FromName: sname,
+        Incoming: true,
+        ParentId: case_id,
+        RelatedToId: case_id,
+        Status: 0
+      )
+      case_id
     end
 
     def self.create_case(identifier:, owner:)
@@ -171,6 +184,13 @@ module Stash
 
     def self.sf_user
       sf_client&.user_info
+    end
+
+    def self.routing_address
+      result = db_query("SELECT Id FROM EmailRoutingAddress WHERE Address = '#{APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'}'")
+      return unless result && result.size > 0
+
+      result.first['Id']
     end
 
     def self.email_queue
