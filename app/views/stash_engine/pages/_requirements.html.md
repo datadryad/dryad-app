@@ -77,7 +77,7 @@ Authors not affiliated with a Dryad partner organization are asked to pay a DPC 
       All fees are listed in USD
     </caption>
     <thead>
-      <tr class="callout"><th colspan="3" style="text-align: center;">Unsponsored author fees<p style="font-weight: normal; margin: 0 auto">Effective May 1, 2025</p></th></tr>
+      <tr class="callout"><th colspan="3" style="text-align: center;">Unsponsored author fees<p style="font-weight: normal; margin: 0 auto">Effective May 6, 2025</p></th></tr>
       <tr>
         <th>Dataset size</th>
         <th>DPC</th>
@@ -100,7 +100,7 @@ Partner organizations that sponsor DPCs fully cover author data submissions up t
       All fees are listed in USD
     </caption>
     <thead>
-      <tr class="callout"><th colspan="2" style="text-align: center;">Rates for large (over 10 GB) datasets<p style="font-weight: normal; margin: 0 auto">Effective May 1, 2025</p></th></tr>
+      <tr class="callout"><th colspan="2" style="text-align: center;">Rates for large (over 10 GB) datasets<p style="font-weight: normal; margin: 0 auto">Effective May 6, 2025</p></th></tr>
       <tr>
         <th>Dataset size</th>
         <th>Large dataset fee</th>
@@ -113,6 +113,6 @@ Partner organizations that sponsor DPCs fully cover author data submissions up t
 </div>
 </div>
 
-We are sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the Data Publishing Charge, we’ve expanded our waiver policy so that any author may request one. To submit your request for consideration, complete the [Fee waiver application form](https://docs.google.com/forms/d/e/1FAIpQLSekWZ4Dap7TYh0nap8JmPJ1dBTGeoBl1xnLS4xGH-REfrYCTQ/viewform).
+We are sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the Data Publishing Charge, we’ve expanded our waiver policy so that any author may request one. To submit your request for consideration, complete the [Fee waiver application form](https://docs.google.com/forms/d/e/1FAIpQLSekWZ4Dap7TYh0nap8JmPJ1dBTGeoBl1xnLS4xGH-REfrYCTQ/viewform). Waivers will not be approved for data submissions exceeding 300GB.
 
 Effective June 2024, Dryad's Data Publishing Charge cannot be paid using vouchers.

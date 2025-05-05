@@ -77,7 +77,9 @@ module StashDatacite
         return 'Submitter missing' if @resource.owner_author.nil?
         return 'Submitter email missing' if @resource.owner_author.author_email.blank?
         return 'Names missing' if @resource.authors.any? { |a| a.author_first_name.blank? && a.author_org_name.blank? }
-        return 'Affiliations missing' if @resource.authors.any? { |a| a.affiliation.nil? || a.affiliation.long_name.blank? }
+        return 'Affiliations missing' if @resource.authors.any? do |a|
+          a.author_org_name.blank? && (a.affiliation.nil? || a.affiliation.long_name.blank?)
+        end
         return 'Duplicate author names' if @resource.authors.map(&:author_full_name).uniq.any? do |n|
           @resource.authors.map(&:author_full_name).count(n) > 1
         end

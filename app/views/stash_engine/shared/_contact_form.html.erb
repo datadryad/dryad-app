@@ -3,7 +3,7 @@
     'Status of my dataset',
     'Reporting an issue with my dataset',
     'Reporting an issue with someone else\'s dataset',
-    'Action Required',
+    'Action required',
     'Feature request',
     'API request',
     'Other'
@@ -20,17 +20,18 @@
   </div>
   <div class="c-input__inline">
     <div class="c-input">
-      <%= form.label :sname, "Your full name:" %>
+      <%= form.label :sname, "Your full name:", class: 'c-input__label' %>
       <%= form.text_field :sname, class: 'c-input__text', autocomplete: 'name', required: true, value: current_user ? "#{current_user&.first_name} #{current_user&.last_name}" : '' %>
     </div>
     <div class="c-input">
-      <%= form.label :email, "Your email address:" %>
+      <%= form.label :email, "Your email address:", class: 'c-input__label' %>
       <%= form.email_field :email, required: true, class: 'c-input__text', autocomplete: 'email', value: current_user&.email %>
     </div>
   </div>
   <div class="c-input">
     <label for="body" class="c-input__label--required">Describe your issue or question:</label>
-    <textarea class="c-input__textarea" style="width:100%" rows="8" required="required" name="body" id="body"></textarea>
+    <% unless local_assigns.key?(:identifier) %><p style="margin: 0; font-size: .98rem;" id="body-desc">Include your dataset DOI (<code>10.5061/dryad...</code>), if you have one, for swift assistance</p><% end %>
+    <textarea class="c-input__textarea" style="width:100%" rows="8" required="required" name="body" id="body" <% unless local_assigns.key?(:identifier) %>aria-describedby="body-desc"<% end %>></textarea>
   </div>
   <p style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2ch">
     <span style="color: rgb(209, 44, 29);"><b>*</b> Fields are required</span>

@@ -174,7 +174,7 @@ module Stash
     end
 
     def self.email_queue
-      result = db_query("SELECT Id FROM Group WHERE Type = 'Queue' and Name = 'Email_to_Case'")
+      result = db_query("SELECT Id FROM Group WHERE Type = 'Queue' and Name = 'Email to Case'")
       return unless result && result.size > 0
 
       result.first['Id']

@@ -91,7 +91,7 @@ module StashEngine
 
     # rubocop:disable Metrics/AbcSize
     def update_hash
-      valid = %i[covers_dpc partner_display enabled short_name long_name]
+      valid = %i[covers_dpc covers_ldf partner_display enabled short_name long_name]
       update = edit_params.slice(*valid)
       update[:sponsor_id] = edit_params[:sponsor_id].presence
       update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json
@@ -132,7 +132,7 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled,
+      params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled, :covers_ldf,
                     :covers_dpc, :partner_display, :ror_orgs, :sponsor_id, :flag, :note,
                     authentication: %i[strategy ranges entity_id entity_domain email_domain])
     end
