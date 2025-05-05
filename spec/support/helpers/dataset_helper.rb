@@ -90,7 +90,13 @@ module DatasetHelper
 
   def submit_form
     click_button 'Preview submission' if page.has_button?('Preview submission')
+    # page.scroll_to(find('footer'))
+    expect(page).to have_content('Data Publishing Charge')
     click_button 'submit_button'
+    return unless page.has_content?('You must complete payment to submit')
+
+    click_button 'get_invoice'
+    click_button 'submit_invoice'
   end
 
   def fill_manuscript_info(name:, issn:, msid:)

@@ -70,6 +70,7 @@ module Stash
       private
 
       def do_submit!
+        handle_invoice_creation
         logger.info("Submitting resource #{resource_id} (#{resource.identifier_str})\n")
         resource.data_files.each do |f|
           case f.file_state
@@ -96,15 +97,46 @@ module Stash
         Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
       end
 
+      def handle_invoice_creation
+        # old system payment
+        # should be generating an invoice on publish
+        return if resource.identifier.old_payment_system
+
+        payment = resource.payment
+        if payment.nil?
+          Rails.logger.warn("No payment found for resource ID #{resource.id}")
+          return
+        end
+
+        unless payment.pay_with_invoice
+          Rails.logger.warn("Payment for resource ID #{resource.id} is not set to invoice")
+          return
+        end
+
+        invoicer = Stash::Payments::StripeInvoicer.new(resource)
+        invoicer.handle_customer(payment.invoice_details)
+        invoice = invoicer.create_invoice
+        payment.update(pay_with_invoice: true, invoice_id: invoice.id) if invoice
+      end
+
       def copy_to_permanent_store(data_file)
         staged_bucket = APP_CONFIG[:s3][:bucket]
         staged_key = data_file.s3_staged_path
         permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
         permanent_key = "v3/#{data_file.s3_staged_path}"
         logger.info("file #{data_file.id} #{staged_bucket}/#{staged_key} ==> #{permanent_bucket}/#{permanent_key}")
-        s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
-                to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
-                size: data_file.upload_file_size)
+
+        # SKIP uploading the file again if
+        #   it exists on permanent store
+        #   it hase the same
+        # in case a previous job uploaded the file but failed on generating checksum
+        if !permanent_s3.exists?(s3_key: permanent_key) || !permanent_s3.size(s3_key: permanent_key) == data_file.upload_file_size
+          logger.info("file copy skipped #{data_file.id} ==> #{permanent_bucket}/#{permanent_key} already exists")
+          s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
+                  to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
+                  size: data_file.upload_file_size)
+        end
+
         update = { storage_version_id: resource.id }
         if data_file.digest.nil?
           digest_type = 'sha-256'
@@ -167,6 +199,7 @@ module Stash
 
       def get_chunk_size(size)
         # AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
+        return 250 * 1024 * 1024 if size > 300_000_000_000
         return 30 * 1024 * 1024 if size > 100_000_000_000
         return 10 * 1024 * 1024 if size > 10_000_000_000
 
@@ -179,6 +212,10 @@ module Stash
 
       def s3
         @s3 ||= Stash::Aws::S3.new
+      end
+
+      def permanent_s3
+        @permanent_s3 ||= Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
       end
 
       def id_helper

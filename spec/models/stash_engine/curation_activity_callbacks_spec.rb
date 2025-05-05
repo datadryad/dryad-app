@@ -148,7 +148,7 @@ module StashEngine
         end
 
         describe 'calls proper Stash::Payments::Invoicer method' do
-          let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123') }
+          let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123', old_payment_system: true) }
           let(:res_1) { create(:resource, identifier: identifier, total_file_size: 103_807_000_000, skip_datacite_update: false) }
           let(:curator) { create(:user, role: 'curator') }
           subject { Stash::Payments::Invoicer.new(resource: res_1, curator: curator) }
@@ -171,15 +171,15 @@ module StashEngine
 
           context 'on second publish' do
             context 'if identifier has no last_invoiced_file_size value' do
-              it 'cals #check_new_overages with previous published resource total_file_size' do
+              it 'it should not be processed by any invoicer' do
                 expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
                 expect(subject).to receive(:charge_user_via_invoice).and_return(true)
                 create(:curation_activity, resource: res_1, status: 'published', note: 'first publish', user: curator)
 
                 Timecop.travel(1.minute) do
                   res_2 = create(:resource, identifier: identifier, total_file_size: 104_807_000_000)
-                  expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_2, curator: curator).and_return(subject)
-                  expect(subject).to receive(:check_new_overages).with(res_1.total_file_size).and_return(true)
+                  expect(Stash::Payments::Invoicer).not_to receive(:new)
+                  expect(Stash::Payments::StripeInvoicer).not_to receive(:new)
 
                   create(:curation_activity, resource: res_2, status: 'published', note: 'second publish', user: curator)
                 end
@@ -187,17 +187,19 @@ module StashEngine
             end
 
             context 'if identifier has last_invoiced_file_size value' do
-              let(:identifier) { create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123', last_invoiced_file_size: 100_000) }
+              let(:identifier) do
+                create(:identifier, payment_type: 'stripe', payment_id: 'stripe-123', last_invoiced_file_size: 100_000, old_payment_system: true)
+              end
 
-              it 'cals #check_new_overages with identifier last_invoiced_file_size' do
+              it 'it should not be processed by any invoicer' do
                 expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_1, curator: curator).and_return(subject)
                 expect(subject).to receive(:charge_user_via_invoice).and_return(true)
                 create(:curation_activity, resource: res_1, status: 'published', note: 'first publish', user: curator)
 
                 Timecop.travel(1.minute) do
                   res_2 = create(:resource, identifier: identifier, total_file_size: 104_807_000_000)
-                  expect(Stash::Payments::Invoicer).to receive(:new).with(resource: res_2, curator: curator).and_return(subject)
-                  expect(subject).to receive(:check_new_overages).with(100_000).and_return(true)
+                  expect(Stash::Payments::Invoicer).not_to receive(:new)
+                  expect(Stash::Payments::StripeInvoicer).not_to receive(:new)
 
                   create(:curation_activity, resource: res_2, status: 'published', note: 'second publish', user: curator)
                 end

@@ -2,7 +2,7 @@ html.preview_submission {
   scroll-padding-bottom: 115px;
 }
 
-.metadata_entry_pages_find_or_create {
+.metadata_entry_pages_find_or_create, .payments_callback {
   max-width: none;
   padding-left: 0;
   padding-right: 0;
@@ -289,27 +289,36 @@ html.preview_submission {
         grid-column: span 2;
         margin: -1.5rem auto 0;
         width: 100%;
-        display: flex;
-        gap: 2ch;
-        align-items: center;
-        justify-content: flex-end;
         box-shadow: $lightest-blue 0px -5px 5px -6px;
+        & > div {
+          @extend %pull-background;
+          box-sizing: border-box;
+          max-width: 1220px;
+          margin: 0 auto;
+          width: 100%;
+          display: flex;
+          gap: 2ch;
+          align-items: center;
+          justify-content: flex-end;
+        }
         @media (max-width: 811px){
           grid-area: submit;
           grid-column: 1;
           margin-top: -.75rem;
-          flex-wrap: wrap;
-          justify-content: center;
           padding: 2rem 1rem;
-          *:first-child {
-            margin: 0;
+          & > div {
+            flex-wrap: wrap;
+            justify-content: center;
+            *:first-child {
+              margin: 0;
+            }
           }
         }
         form {
           button {
             white-space: nowrap;
           }
-          &:only-child {
+          &:only-child {            
             width: 100%;
             display: flex;
             align-items: center;
@@ -827,5 +836,26 @@ dialog#submission-step[open] {
       text-decoration: none;
       background-color: $lightest-orange;
     }
+  }
+}
+
+#payment {
+  @extend %pull-background;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  text-align: center;
+
+  p {
+    text-align: left;
+    max-width: 888px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  div {
+    padding: 1rem 0;
   }
 }

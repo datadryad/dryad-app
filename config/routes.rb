@@ -536,4 +536,11 @@ Rails.application.routes.draw do
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
   get "resource_fee_calculator/:id", to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
+
+  resources :payments, only: [] do
+    collection do
+      post ':resource_id', to: 'payments#create'
+      get :callback
+    end
+  end
 end

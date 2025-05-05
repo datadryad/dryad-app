@@ -62,11 +62,13 @@ We recommend:
 * **Related works**: Use this field to indicate resources, other than the primary article, that are associated with the data. Examples include related datasets, preprints, etc.
 
 
-## Unsponsored author fees
+## Author fees
 
 Dryad is a nonprofit organization that provides long-term access to its contents at no cost to users. We are able to provide free access to data due to financial support from partners and data submitters. Dryad's Data Publishing Charges (DPCs) are designed to recover the core costs of curating and preserving data.
 
-Authors not affiliated with a Dryad partner organization are asked to pay a DPC by credit card at the time of submission. Invoices may be requested for an additional administration fee of 199 USD.
+Authors may be affiliated with a [Dryad partner organization](/about#our-members) through their affiliated institution or the journal associated with their submission.
+
+Authors not affiliated with a Dryad partner organization are asked to pay a DPC by credit card at the time of submission. Invoices may be requested for an additional administration fee of $199.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="width: 500px; max-width: 100%; margin: 0 auto">
@@ -89,6 +91,28 @@ Authors not affiliated with a Dryad partner organization are asked to pay a DPC 
 </div>
 </div>
 
-We are sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the data publication charge, for any reason, we’ve expanded our waiver policy so that any author may request one. To submit your request for consideration, complete the [Fee Waiver Application form](https://docs.google.com/forms/d/e/1FAIpQLSekWZ4Dap7TYh0nap8JmPJ1dBTGeoBl1xnLS4xGH-REfrYCTQ/viewform).
+Partner organizations that sponsor DPCs fully cover author data submissions up to 10 GB. For datasets larger than 10 GB, a large data fee will be charged to either the author or their sponsoring organization, depending on the specific partner agreement with Dryad. Large data fees are billed as follows:
 
-Effective June 2024, Dryad's data publication charge cannot be paid using vouchers.
+<div style="text-align: center;">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+  <table style="width: 100%;">
+    <caption>
+      All fees are listed in USD
+    </caption>
+    <thead>
+      <tr class="callout"><th colspan="2" style="text-align: center;">Rates for large (over 10 GB) datasets<p style="font-weight: normal; margin: 0 auto">Effective May 1, 2025</p></th></tr>
+      <tr>
+        <th>Dataset size</th>
+        <th>Large dataset fee</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: 'fee_calculator/table_ldf' %>
+    </tbody>
+  </table>
+</div>
+</div>
+
+We are sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the Data Publishing Charge, we’ve expanded our waiver policy so that any author may request one. To submit your request for consideration, complete the [Fee waiver application form](https://docs.google.com/forms/d/e/1FAIpQLSekWZ4Dap7TYh0nap8JmPJ1dBTGeoBl1xnLS4xGH-REfrYCTQ/viewform).
+
+Effective June 2024, Dryad's Data Publishing Charge cannot be paid using vouchers.
