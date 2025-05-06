@@ -4,6 +4,7 @@
 #
 #  id                          :bigint           not null, primary key
 #  amount                      :integer
+#  deleted_at                  :datetime
 #  invoice_details             :json
 #  paid_at                     :datetime
 #  pay_with_invoice            :boolean          default(FALSE)
@@ -22,6 +23,7 @@
 # Indexes
 #
 #  index_resource_payments_on_checkout_session_id  (checkout_session_id)
+#  index_resource_payments_on_deleted_at           (deleted_at)
 #  index_resource_payments_on_paid_at              (paid_at)
 #  index_resource_payments_on_resource_id          (resource_id)
 #  index_resource_payments_on_status               (status)
