@@ -77,20 +77,58 @@ module Stash
       cases_found
     end
 
+    def self.create_email_case(email:, subject:, body:, sname:, id: nil)
+      return unless email && sname && subject && body
+
+      case_hash = {
+        Origin: 'Email',
+        Subject: subject,
+        Description: body,
+        SuppliedName: sname,
+        SuppliedEmail: email
+      }
+
+      case_hash[:OwnerId] = email_queue if email_queue
+
+      if id.present?
+        case_hash[:DOI__c] = id.identifier
+        case_hash[:Dataset_Title__c] = id.latest_resource&.title&.truncate(255)
+        case_hash[:Journal__c] = find_account_by_name(id.journal&.title)
+        case_hash[:Institutional_Affiliation__c] = find_account_by_name(id.latest_resource&.submitter&.tenant&.long_name)
+      end
+
+      case_id = sf_client.create('Case', **case_hash)
+      sf_client.create(
+        'EmailMessage',
+        ToAddress: APP_CONFIG['helpdesk_email'] || 'help@datadryad.org',
+        Subject: subject,
+        TextBody: body,
+        FromAddress: email,
+        FromName: sname,
+        Incoming: true,
+        ParentId: case_id,
+        RelatedToId: case_id,
+        Status: 0
+      )
+      case_id
+    end
+
     def self.create_case(identifier:, owner:)
       return unless identifier && owner && sf_client
 
       case_user = identifier.latest_resource&.owner_author || identifier.latest_resource&.submitter
 
-      case_id = sf_client.create('Case',
-                                 Subject: "Your Dryad data submission - DOI:#{identifier.identifier}",
-                                 DOI__c: identifier.identifier,
-                                 Dataset_Title__c: identifier.latest_resource&.title&.truncate(255),
-                                 Origin: 'Web',
-                                 SuppliedName: user_name(case_user),
-                                 SuppliedEmail: user_email(case_user),
-                                 Journal__c: find_account_by_name(identifier.journal&.title),
-                                 Institutional_Affiliation__c: find_account_by_name(identifier.latest_resource&.submitter&.tenant&.long_name))
+      case_id = sf_client.create(
+        'Case',
+        Subject: "Your Dryad data submission - DOI:#{identifier.identifier}",
+        DOI__c: identifier.identifier,
+        Dataset_Title__c: identifier.latest_resource&.title&.truncate(255),
+        Origin: 'Web',
+        SuppliedName: user_name(case_user),
+        SuppliedEmail: user_email(case_user),
+        Journal__c: find_account_by_name(identifier.journal&.title),
+        Institutional_Affiliation__c: find_account_by_name(identifier.latest_resource&.submitter&.tenant&.long_name)
+      )
 
       # Update the OwnerId after the case is created, because if the Id does not match
       # an existing SF user with the correct permissions, it would prevent the case from being created.
@@ -146,6 +184,13 @@ module Stash
 
     def self.sf_user
       sf_client&.user_info
+    end
+
+    def self.email_queue
+      result = db_query("SELECT Id FROM Group WHERE Type = 'Queue' and Name = 'Email to Case'")
+      return unless result && result.size > 0
+
+      result.first['Id']
     end
 
     def self.find_user_by_orcid(orcid)

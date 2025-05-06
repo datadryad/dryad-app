@@ -40,12 +40,14 @@ module FeeCalculator
       @options = options
       @sum_options = {}
       @resource = resource
+      @payer = resource ? resource.identifier.payer : nil
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025? : false
       @covers_ldf = resource ? resource.identifier.payer&.covers_ldf : false
     end
 
     def call
-      raise ActionController::BadRequest, 'Payer is not on 2025 payment plan' if resource && !@payment_plan_is_2025
+      verify_payer
+      verify_new_payment_system
 
       if resource.present?
         add_zero_fee(:service_tier)
@@ -62,6 +64,7 @@ module FeeCalculator
         add_dpc_fee
         add_storage_usage_fees
       end
+      add_storage_fee_label
       @sum_options.merge(total: @sum)
     end
 
@@ -74,6 +77,14 @@ module FeeCalculator
     end
 
     private
+
+    def verify_new_payment_system
+      raise ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE if resource && !@payment_plan_is_2025
+    end
+
+    def verify_payer
+      raise ActionController::BadRequest, MISSING_PAYER_MESSAGE if resource && !@payer
+    end
 
     def add_zero_fee(value_key)
       add_fee_to_total(value_key, 0)
@@ -114,7 +125,10 @@ module FeeCalculator
       paid_tier_price = price_by_range(storage_fee_tiers, paid_storage)
       new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
 
-      add_fee_to_total(:storage_size, new_tier_price - paid_tier_price)
+      diff = new_tier_price - paid_tier_price
+      diff = 0 if diff < 0
+
+      add_fee_to_total(:storage_size, diff)
     end
 
     def verify_max_storage_size
@@ -161,7 +175,7 @@ module FeeCalculator
 
     def price_by_range(tier_definition, value)
       tier = tier_definition.find { |t| t[:range].include?(value.to_i) }
-      raise ActionController::BadRequest, 'The value is out of defined range' if tier.nil?
+      raise ActionController::BadRequest, OUT_OF_RANGE_MESSAGE if tier.nil?
 
       tier[:price]
     end
@@ -169,6 +183,14 @@ module FeeCalculator
     def add_fee_to_total(value_key, fee)
       @sum += fee
       @sum_options[output_key(value_key)] = fee
+    end
+
+    def add_storage_fee_label
+      @sum_options[:storage_fee_label] = storage_fee_label
+    end
+
+    def storage_fee_label
+      PRODUCT_NAME_MAPPER[:storage_fee]
     end
   end
 end

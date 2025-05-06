@@ -31,8 +31,8 @@ module Helpers
     { 'Accept' => 'application/json', 'Content-Type' => 'application/json' }
   end
 
-  def default_authenticated_headers
-    default_json_headers.merge('Authorization' => "Bearer #{@access_token}")
+  def default_authenticated_headers(access_token = nil)
+    default_json_headers.merge('Authorization' => "Bearer #{access_token || @access_token}")
   end
 
 end

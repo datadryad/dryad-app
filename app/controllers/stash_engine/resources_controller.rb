@@ -155,12 +155,10 @@ module StashEngine
 
     def dpc_status
       dpc_checks = {
-        dpc: Stash::Payments::Invoicer.data_processing_charge(identifier: @resource.identifier) / 100,
         journal_will_pay: @resource.identifier.journal&.will_pay?,
         institution_will_pay: @resource.identifier.institution_will_pay?,
         funder_will_pay: @resource.identifier.funder_will_pay?,
         user_must_pay: @resource.identifier.user_must_pay?,
-        payment_type: @resource.identifier.payment_type,
         paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
         aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.partner_list&.first,
         allow_review: @resource.identifier.allow_review?,
@@ -181,7 +179,7 @@ module StashEngine
         other_submissions = params.key?(:admin) ? StashEngine::Resource.all : current_user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
-        manuscript = @resource.resource_publication.manuscript_number
+        manuscript = @resource.resource_publication&.manuscript_number
         dupes = other_submissions.where('LOWER(title) = LOWER(?)', @resource.title)&.select(:id, :title, :identifier_id).to_a
         if primary_article.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp?(primary_article) }
           dupes.concat(other_submissions.joins(:related_identifiers)

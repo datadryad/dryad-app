@@ -40,8 +40,8 @@ module Fixtures
         @metadata[field_name.to_sym] = value
       end
 
-      def add_title
-        @metadata.merge!(title: Faker::Book.title)
+      def add_title(title = nil)
+        @metadata.merge!(title: title || Faker::Book.title)
       end
 
       def add_author(order: nil)
@@ -130,6 +130,17 @@ module Fixtures
           point: random_point,
           box: random_box
         )
+      end
+
+      def add_journal(journal = nil)
+        if journal
+          @metadata[:publicationISSN] = journal.issns.first.id
+          @metadata[:publicationName] = journal.title
+          return
+        end
+
+        @metadata[:publicationISSN] = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+        @metadata[:publicationName] = Faker::Company.unique.industry
       end
 
       def create_key_and_array(key:)

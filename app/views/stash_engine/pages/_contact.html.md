@@ -2,7 +2,9 @@
 
 ## Get help
 
-Please contact <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> for assistance with your dataset submission, or with questions about our [submission process](/submission_process) or [publication process](/process).
+Need assistance with your dataset submission, or with questions about our [submission process](/submission_process) or [publication process](/process)? Please complete this form:
+
+<%= render partial: 'stash_engine/shared/contact_form' %>
 
 ## Get involved
 

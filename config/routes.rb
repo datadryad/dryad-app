@@ -153,6 +153,7 @@ Rails.application.routes.draw do
     get 'dashboard', to: 'dashboard#show', as: 'dashboard'
     get 'dashboard/user_datasets', to: 'dashboard#user_datasets'
     get 'dashboard/primary_article/:resource_id', to: 'dashboard#primary_article', as: 'primary_article'
+    get 'dashboard/contact_helpdesk/:id', to: 'dashboard#contact_helpdesk', as: 'contact_helpdesk_form'
     post 'dashboard/primary_article', to: 'dashboard#save_primary_article', as: 'save_primary_article'
 
     # download related
@@ -200,6 +201,7 @@ Rails.application.routes.draw do
     post 'sessions/email_code', to: 'sessions#validate_email', as: 'validate_email'
     get 'feedback', to: 'sessions#feedback', as: 'feedback'
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
+    post 'helpdesk', to: 'pages#helpdesk', as: 'contact_helpdesk'
 
     get 'close_page', to: 'pages#close_page'
     get 'requirements', to: 'pages#requirements'
@@ -459,6 +461,7 @@ Rails.application.routes.draw do
 
     # get composite views or items that begin at the resource level
     get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', as: :datacite_metadata_entry_pages
+    get 'metadata_entry_pages/:resource_id/files', to: 'metadata_entry_pages#find_files', as: 'find_files'
     get 'resources/review', to: 'resources#review'
     match 'resources/submission' => 'resources#submission', as: :resources_submission, via: :post
     get 'resources/show', to: 'resources#show'
@@ -533,4 +536,11 @@ Rails.application.routes.draw do
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
   get "resource_fee_calculator/:id", to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
+
+  resources :payments, only: [] do
+    collection do
+      post ':resource_id', to: 'payments#create'
+      get :callback
+    end
+  end
 end
