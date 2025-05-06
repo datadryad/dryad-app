@@ -1,5 +1,3 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 # == Schema Information
 #
 # Table name: resource_payments
@@ -30,16 +28,12 @@
 #  index_resource_payments_on_resource_id          (resource_id)
 #  index_resource_payments_on_status               (status)
 #
-one:
-  resource_id: 1
-  payment_type: MyString
-  amount: 1
-  checkout_session_id: MyString
-  status: 1
+module StashEngine
 
-two:
-  resource_id: 1
-  payment_type: MyString
-  amount: 1
-  checkout_session_id: MyString
-  status: 1
+  describe ResourcePayment, type: :model do
+
+    describe '#destroy' do
+      it_should_behave_like 'soft delete record', :resource_payment
+    end
+  end
+end
