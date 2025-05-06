@@ -209,7 +209,8 @@ module StashDatacite
         return
       end
 
-      @resource = @resource.previous_curated_resource.present? ? cr.populate_pub_update! : cr.populate_resource!
+      work_type = params[:import_type] == 'preprint' ? 'preprint' : 'primary_article'
+      @resource = @resource.previous_curated_resource.present? ? cr.populate_pub_update! : cr.populate_resource!(work_type)
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
       @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
     end

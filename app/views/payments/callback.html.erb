@@ -1,0 +1,19 @@
+<div>
+  <div id="submission-heading"><div><h1>Dataset submission payment</h1></div></div>
+  <div id="submission-step">
+    <div class="submission-edit">
+      <div id="payment">
+        <p style="text-align: center;">Thank you, your payment was successful. The dataset is now submitting.</p>
+        <%= form_with(url: '/stash_datacite/resources/submission', method: :post, html: {id: 'submit_form'}) do %>
+          <input type="hidden" name="resource_id" value="<%=@resource.id%>" />
+          <p style="text-align: center; color: #888;"><i class="fa fa-spinner fa-spin" role="img" aria-label="Loading..."></i></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  window.addEventListener('load', (event) => {
+    document.getElementById('submit_form').submit();
+  });
+</script>

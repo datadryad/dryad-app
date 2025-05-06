@@ -236,7 +236,7 @@ function PublicationForm({
           <p id="population-warnings" className="o-metadata__autopopulate-message">
             {importError}
           </p>
-          {loading && <p><i className="fa fa fa-spinner fa-spin" aria-hidden="true" /><span className="screen-reader-only">Loading...</span></p>}
+          {loading && <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>}
           <dialog
             id="overwrite-dialog"
             className="modalDialog"

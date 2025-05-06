@@ -7,6 +7,7 @@ export {default as FilesPreview} from './FilesPreview';
 export const filesCheck = (resource, superuser, maximums) => {
   const {generic_files: files, identifier: {publication_date}} = resource;
   const {files: maxFiles, zenodo_size: maxZenodo, merritt_size: maxSize} = maximums;
+  if (files === undefined) return false;
   if (files.length > 0) {
     const present = files.filter((f) => f.file_state !== 'deleted');
     const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.upload_file_name !== 'README.md');
@@ -20,48 +21,54 @@ export const filesCheck = (resource, superuser, maximums) => {
     if (!publication_date || publication_date > new Date('2025-03-12')) {
       if (data.length > maxFiles) {
         return (
-          <p className="error-text" id="data_error">A maximum of {maxFiles} data files can be uploaded per submission. Remove files to proceed</p>
+          <p className="error-text" id="data_error">
+          A maximum of {maxFiles} data files can be uploaded per dataset.
+          To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
+          </p>
         );
       }
       if (software.length > maxFiles) {
         return (
           <p className="error-text" id="software_error">
-            A maximum of {maxFiles} software files can be uploaded per submission. Remove software files to proceed
+          A maximum of {maxFiles} software files can be uploaded per dataset.
+          To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
           </p>
         );
       }
       if (supp.length > maxFiles) {
         return (
           <p className="error-text" id="supp_error">
-            A maximum of {maxFiles} supplemental files can be uploaded per submission. Remove files to proceed
+          A maximum of {maxFiles} supplemental files can be uploaded per dataset.
+          To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
           </p>
         );
       }
     } else if (files.length > 1000) {
       return (
         <p className="error-text" id="data_error">
-            A maximum of 1000 files can be uploaded per submission. Remove files to proceed
+        A maximum of 1000 files can be uploaded per dataset.
+        To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
         </p>
       );
     }
     if (!superuser && data.reduce((sum, f) => sum + f.upload_file_size, 0) > maxSize) {
       return (
         <p className="error-text" id="data_error">
-        Total data file uploads are limited to {formatSizeUnits(maxSize)} per submission. Remove data files to proceed
+        Total data file uploads are limited to {formatSizeUnits(maxSize)} per submission. Compress or remove files to proceed
         </p>
       );
     }
     if (software.reduce((sum, f) => sum + f.upload_file_size, 0) > maxZenodo) {
       return (
         <p className="error-text" id="software_error">
-        Total software file uploads are limited to {formatSizeUnits(maxZenodo)} per submission. Remove software files to proceed
+        Total software file uploads are limited to {formatSizeUnits(maxZenodo)} per submission. Compress or remove software files to proceed
         </p>
       );
     }
     if (supp.reduce((sum, f) => sum + f.upload_file_size, 0) > maxZenodo) {
       return (
         <p className="error-text" id="supp_error">
-        Total supplemental file uploads are limited to {formatSizeUnits(maxZenodo)} per submission. Remove supplemental files to proceed
+        Total supplemental file uploads are limited to {formatSizeUnits(maxZenodo)} per submission. Compress or remove supplemental files to proceed
         </p>
       );
     }

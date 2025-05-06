@@ -146,7 +146,7 @@ export default function UploadFiles({
       upload_file_name: f.sanitized_name,
       type: UploadTypetoRailsActiveRecord[f.uploadType],
     }));
-    setResource((r) => ({...r, generic_files}));
+    setResource((r) => ({...r, total_file_size: generic_files.reduce((s, f) => s + f.upload_file_size, 0), generic_files}));
   }, [chosenFiles]);
 
   useEffect(() => {
@@ -387,6 +387,7 @@ export default function UploadFiles({
       const maxSize = newFiles.reduce((p, c) => (p > c.size ? p : c.size), 0);
       if (maxSize > 10000000000) partSize = 10 * 1024 * 1024;
       if (maxSize > 100000000000) partSize = 30 * 1024 * 1024;
+      if (maxSize > 300000000000) partSize = 250 * 1024 * 1024;
       const config = {
         aws_key: key,
         bucket,
@@ -586,17 +587,13 @@ export default function UploadFiles({
             totalSize={chosenFiles.reduce((s, f) => s + f.upload_file_size, 0)}
           />
           {loading && (
-            <p className="c-upload__loading-spinner">
-              <i className="fa fa-spin fa-spinner" role="img" aria-label="Loading" style={{color: '#888'}} />
-            </p>
+            <p><i className="fas fa-spin fa-spinner" role="img" aria-label="Loading" /></p>
           )}
         </>
       ) : (
         <div>
           {loading ? (
-            <p className="c-upload__loading-spinner">
-              <i className="fa fa-spin fa-spinner" role="img" aria-label="Loading" style={{color: '#888'}} />
-            </p>
+            <p><i className="fas fa-spin fa-spinner" role="img" aria-label="Loading" /></p>
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}

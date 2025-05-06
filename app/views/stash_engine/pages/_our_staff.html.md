@@ -82,12 +82,6 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/evangeline.jpg" alt="Headshot of Evangeline Janani">
-  <h5>Evangeline Janani</h5><br/>
-  <p><em>Data Curator</em><br/>
-  Evangeline has a B.Tech in Information Technology. For the last 3 years she has worked in different sectors of the scholarly publishing industry, as a Senior Sales Advisor, an Editorial Quality Analyst, and a Copyeditor, and brings a diverse skill set and experience to data curation. In her spare time, Evangeline enjoys gardening, painting, cooking, and arts & crafts.</p>
-</div>
-<div class="bio">
   <img src="/images/kathiyayini.jpg" alt="Headshot of Kathiyayini Jayaraman">
   <h5>Kathiyayini Jayaraman</h5><br/>
   <p><em>Data Curator</em><br/>Kathiyayini holds an M.Sc. in Biochemistry. She has three years of experience as a curator of life science literature and has previously worked for two different companies as a research analyst and scientific analyst. In her role as a scientific analyst, Kathiyayini coordinated interviews, served as a trainer, and oversaw quality control. In her free time, she enjoys pencil drawing, painting, and listening to music.</p>

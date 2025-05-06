@@ -83,12 +83,12 @@ module Stash
       end
 
       # populate the full resource from the crossref metadata, this is for a new record and populating data that the user does, I think
-      def populate_resource!
+      def populate_resource!(work_type = 'primary_article')
         return unless @sm.present? && @resource.present?
 
         populate_abstract
         populate_authors
-        populate_article_type(article_type: 'primary_article')
+        populate_article_type(article_type: work_type)
         populate_funders
         populate_publication_issn
         populate_publication_name

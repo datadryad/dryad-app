@@ -72,6 +72,11 @@ partner display list.
 
 `authentication`: an object containing a `strategy` and other information dependant on the strategy.
 - `strategy`: the method by which users identify with the institution.
+    - A strategy of `shibboleth` allows login using our [shibboleth][shibboleth/README.md] setup. As of 2025 we are only accepting shibboleth setups through InCommon. The following additional keys should be included in the object:
+        - `entity_id` discoverable in https://incommon.org/community-organizations/
+        - `entity_domain` is simply the domain portion of the entity_id
+    - A strategy of `email` allows a code to be sent to an affiliated email. The user inputting this code authenticates the user.
+        - `email_domain` should be included in the object. The user must receive email at an address at this domain.
     - A strategy of `author_match` allows login by that institution without login validation,
       but requires an author to list an affiliation from the same tenant (ROR ID must match).
     - A strategy of `ip_address` allows validating membership by requiring that
@@ -80,11 +85,6 @@ partner display list.
           in the object under the key `ranges`.  The format is those accepted by ipaddr.rb which
           could be in CIDR (ie "192.168.1.0/24") or network mask formats like "192.168.1.0/255.255.255.0"
           (see their docs).  It also supports IPv6 (which we're not currently using).
-    - A strategy of `shibboleth` allows login using our [shibboleth][shibboleth/README.md] setup,
-      usually through InCommon. The following additional keys should be included in the object:
-        - `entity_id` often discoverable in https://incommon.org/community-organizations/.
-          Organizations not in InCommon must be configured separately.
-        - `entity_domain` is simply the domain portion of the entity_id
 
 `campus_contacts`: the list of email addresses that will be copied on
 each submission to this tenant.

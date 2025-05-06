@@ -13,6 +13,10 @@ module StashEngine
       create?
     end
 
+    def revise?
+      @record.users.include?(@user)
+    end
+
     def delete?
       @record.creator == @user || @record.submitter == @user
     end

@@ -106,7 +106,7 @@ label.optional:after {
 
 	&::after {
       content: ' *';
-      color: $dark-orange;
+      color: $red;
 	}
 
 }
@@ -140,6 +140,27 @@ label.optional:after {
 	width: 300px;
 	max-width: 100%;
 	padding: 3px 5px;
+}
+
+.c-input__token {
+	@extend %c-input__element;
+	border: none;
+	font-family: monospace;
+	font-size: 3em;
+	height: 1.5ch;
+	width: 7.75ch;
+	letter-spacing: .25ch;
+	background: repeating-linear-gradient(90deg, 
+		dimgrey 0, dimgrey 1ch, 
+		transparent 0, transparent 1.25ch) 
+		0 100%/ 7.5ch 2px no-repeat;
+	&:focus {
+		outline: none;
+		background: repeating-linear-gradient(90deg, 
+		$medium-blue 0, $medium-blue 1ch, 
+		transparent 0, transparent 1.25ch) 
+		0 100%/ 7.5ch 2px no-repeat;
+	}
 }
 
 .c-input__select {

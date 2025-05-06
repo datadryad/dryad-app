@@ -9,7 +9,7 @@ export default function SubmissionHelp({type}) {
       <ol id="infographic">
         <li>
           <h3><i className="fas fa-arrow-up-from-bracket" aria-hidden="true" />Initial submission</h3>
-          <p>{type === 'dataset' && 'Upload your data, complete metadata fields, and prepare a README file. '}Complete the checklist and carefully review the submission before you click &quot;Submit&quot;.</p>
+          <p>{type === 'dataset' && 'Upload your data, complete metadata fields, and prepare a README file. '}Complete the checklist and carefully review the {type} before you {type === 'dataset' && 'pay and '}submit.</p>
         </li>
         <li>
           <h3><i className="fas fa-eye-slash" aria-hidden="true" />Private for peer review option</h3>
@@ -36,7 +36,7 @@ export default function SubmissionHelp({type}) {
 export function PublicationHelp() {
   return (
     <>
-      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/requirements#cost" target="_blank">data publishing charge<ExitIcon /></a>.</p>
+      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/requirements#cost" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
       <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some journals.</p>
     </>
   );
@@ -80,7 +80,7 @@ export function SuppHelp({type}) {
   return (
     <>
       <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can help connect your data with other systems and works.</p>
-      <p>Your funder may cover the Dryad <a href="/requirements#cost" target="_blank">data publishing charge<ExitIcon /></a>.</p>
+      <p>Your funder may cover the Dryad <a href="/requirements#cost" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
     </>
   );
 }
@@ -125,11 +125,11 @@ export function CompHelp() {
   );
 }
 
-export function FilesHelp() {
+export function FilesHelp({date, maxFiles}) {
   return (
     <>
       <p>Files may be uploaded from your computer, or by entering a publicly accessible, individual URL for each file (for files hosted on e.g., Dropbox, OneDrive, AWS, or your lab server).</p>
-      <p>Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
+      <p>{!date || date > new Date('2025-03-12') ? `A maximum of ${maxFiles} files can be uploaded for each publication. ` : ''}Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
       <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<ExitIcon /></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon /></a>.</p>
     </>
   );
@@ -192,7 +192,7 @@ export function WorksHelp({setTitleStep}) {
 export function AgreeHelp({type}) {
   return (
     <>
-      <p>After curation, <b>Dryad submissions are made publicly available unless otherwise specified</b>. If your submission needs to be kept private during the review of an associated manuscript, choose that option on this page.</p>
+      <p>After <a href="/mission#our-curation-and-publication-process" target="_blank">curation<ExitIcon /></a>, <b>Dryad submissions are made publicly available</b>. If curation should be delayed because your submission needs to be kept private while the associated manuscript undergoes peer review, choose that option on this page.</p>
       {type !== 'collection' && <p>Many <a href="/join_us#members" target="_blank" rel="noreferrer">Dryad partners<ExitIcon /></a> sponsor the cost of submitting a dataset to Dryad. If you belong to a Dryad partner institution and it is not shown here, click &quot;Add a Dryad partner institution&quot;, choose your institution, and verify your credentials.</p>}
     </>
   );

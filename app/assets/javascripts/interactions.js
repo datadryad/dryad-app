@@ -21,12 +21,12 @@ function preventClicks(e) {
   const icon = button.querySelector('i');
   if (button.form) {
     button.form.addEventListener('submit', () => {
-      icon.className = 'fas fa-spinner fa-spin';
+      icon.className = 'fas fa-circle-notch fa-spin';
       document.body.classList.add('prevent-clicks');
       button.disabled = true;
     })
   } else {
-    icon.className = 'fas fa-spinner fa-spin';
+    icon.className = 'fas fa-circle-notch fa-spin';
     document.body.classList.add('prevent-clicks');
     button.disabled = true;
   }

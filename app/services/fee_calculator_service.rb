@@ -18,6 +18,8 @@ class FeeCalculatorService
       'FeeCalculator::PublisherService'
     when 'individual'
       'FeeCalculator::IndividualService'
+    when 'waiver'
+      'FeeCalculator::WaiverService'
     else
       raise NotImplementedError, 'Invalid calculator type'
     end

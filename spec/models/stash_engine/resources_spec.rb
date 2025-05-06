@@ -2,6 +2,7 @@ module StashEngine
 
   describe Resource, type: :model do
     include Mocks::Salesforce
+    include Mocks::Aws
 
     attr_reader :user
     attr_reader :skip_emails
@@ -1659,12 +1660,66 @@ module StashEngine
       end
     end
 
-    describe 'destroy' do
+    describe '#destroy' do
+      let(:identifier) { create(:identifier, created_at: 2.minute.ago) }
+
       before do
-        allow_any_instance_of(Stash::Aws::S3).to receive(:delete_dir)
+        mock_aws!
       end
 
       it_should_behave_like 'soft delete record', :resource
+
+      context 'when the deleted resource is the only one on the identifier' do
+        let!(:resource) { create(:resource, identifier: identifier) }
+
+        it 'destroys the resource and the identifier' do
+          expect { resource.destroy }.to change { StashEngine::Resource.count }.by(-1)
+            .and change { StashEngine::Identifier.count }.by(-1)
+        end
+      end
+
+      context 'when the deleted resource is NOT the only one on the identifier' do
+        context 'when deleting the last resource' do
+          let!(:first_resource) { create(:resource, identifier: identifier, created_at: 1.minute.ago) }
+          let!(:resource) { create(:resource, identifier: identifier) }
+
+          it 'destroys only the resource' do
+            expect { resource.destroy }.to change { StashEngine::Resource.count }.by(-1)
+              .and change { StashEngine::Identifier.count }.by(0)
+              .and change { identifier.reload.latest_resource_id }.to(first_resource.id)
+          end
+
+          it 'updates identifier latest_resource_id' do
+            expect(identifier.reload.latest_resource_id).to eq(resource.id)
+            resource.destroy
+            expect(identifier.reload.latest_resource_id).to eq(first_resource.id)
+          end
+        end
+
+        context 'when deleting a resource that is not the last resource' do
+          let!(:first_resource) { create(:resource, identifier: identifier, created_at: 2.minutes.ago) }
+          let!(:ca1) { create(:curation_activity, resource: first_resource, status: 'submitted', created_at: 2.minutes.ago) }
+          let!(:resource) { create(:resource, identifier: identifier, created_at: 1.minute.ago) }
+          let!(:ca2) { create(:curation_activity, resource: resource, status: 'submitted', created_at: 1.minute.ago) }
+          let!(:last_resource) { create(:resource, identifier: identifier) }
+
+          before do
+            identifier.update!(latest_resource_id: last_resource.id)
+            identifier.reload
+          end
+
+          it 'destroys only the resource' do
+            expect { resource.destroy }.to change { StashEngine::Resource.count }.by(-1)
+              .and change { StashEngine::Identifier.count }.by(0)
+          end
+
+          it 'does not update the identifier latest_resource_id' do
+            expect(identifier.reload.latest_resource_id).to eq(last_resource.id)
+            expect { resource.destroy }.not_to(change { identifier.reload.latest_resource_id })
+            expect(identifier.reload.latest_resource_id).to eq(last_resource.id)
+          end
+        end
+      end
     end
   end
 end

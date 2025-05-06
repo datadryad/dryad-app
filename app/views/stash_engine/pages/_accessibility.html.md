@@ -32,7 +32,7 @@ If you have trouble using the Dryad website or blog or accessing our content, pl
     <textarea class="c-input__textarea" style="width:100%" rows="5" required="required" name="body" id="body"></textarea>
   </div>
   <p style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2ch">
-    <span style="color: #cf4817;">* Fields are required</span>
+    <span style="color: rgb(209, 44, 29);">* Fields are required</span>
     <button type="submit" class="o-button__submit">Create email</button>
   </p>
 </form>

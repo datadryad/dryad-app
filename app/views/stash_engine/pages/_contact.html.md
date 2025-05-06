@@ -2,7 +2,9 @@
 
 ## Get help
 
-Please contact <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> for assistance with your dataset submission, or with questions about our [submission process](/submission_process) or [publication process](/process).
+Need assistance with your dataset submission, or with questions about our [submission process](/submission_process) or [publication process](/process)? Please complete this form:
+
+<%= render partial: 'stash_engine/shared/contact_form' %>
 
 ## Get involved
 
@@ -32,7 +34,7 @@ After your request is received, we will provide you with brief feedback about th
 
 <p><strong>Email:</strong> <a class="emailr" href="mailto:dev@null"  aria-label="Email Dryad">gro.dayrdatad@olleh</a></p>
 <p><strong>Phone:</strong> <a href="tel:+18332925326">+1 833-292-5326</a></p>
-<p><a href="https://www.linkedin.com/company/datadryad/">LinkedIn</a> | <a href="https://www.facebook.com/profile.php?id=100075926210112">Facebook</a></p>
+<p><a href="https://bsky.app/profile/datadryad.bsky.social">BlueSky</a> | <a href="https://mstdn.science/@datadryad">Mastodon</a> | <a href="https://www.linkedin.com/company/datadryad/">LinkedIn</a></p>
 
 ## Head office
 
