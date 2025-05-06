@@ -106,7 +106,6 @@ module Stash
         FromAddress: email,
         FromName: sname,
         Incoming: true,
-        ParentId: case_id,
         RelatedToId: case_id,
         Status: 0
       )
