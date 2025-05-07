@@ -8,9 +8,9 @@
     'API request',
     'Other'
 ]%>
-
+<div>
 <div class="callout" id="contact_form">
-<%= form_with(url: stash_url_helpers.contact_helpdesk_path, method: :post, local: false) do |form| %>
+<%= form_with(url: stash_url_helpers.contact_helpdesk_path, method: :post, local: false, id: 'contact_form_form') do |form| %>
   <% if local_assigns.key?(:identifier) %>
     <%= form.hidden_field :identifier, value: identifier %> 
   <% end %>
@@ -33,9 +33,25 @@
     <% unless local_assigns.key?(:identifier) %><p style="margin: 0; font-size: .98rem;" id="body-desc">Include your dataset DOI (<code>10.5061/dryad...</code>), if you have one, for swift assistance</p><% end %>
     <textarea class="c-input__textarea" style="width:100%" rows="8" required="required" name="body" id="body" <% unless local_assigns.key?(:identifier) %>aria-describedby="body-desc"<% end %>></textarea>
   </div>
+  <% if !current_user %>
+    <%= recaptcha_tags %>
+  <% end %>
   <p style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2ch">
     <span style="color: rgb(209, 44, 29);"><b>*</b> Fields are required</span>
     <button type="submit" class="o-button__plain-text1">Contact the helpdesk</button>
   </p>
 <% end %>
+</div>
+<script type="text/javascript">
+  var form = document.getElementById('contact_form_form');
+  form.addEventListener('submit', () => {
+    const icon = document.createElement('i');
+    icon.classList.add('fas', 'fa-spin', 'fa-circle-notch');
+    icon.setAttribute('role', 'img');
+    icon.setAttribute('aria-label', 'Loading...');
+    icon.style.marginRight = '.5ch';
+    form.querySelector('button').disabled = true;
+    form.querySelector('button').prepend(icon);
+  })
+</script>
 </div>

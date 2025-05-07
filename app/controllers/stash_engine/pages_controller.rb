@@ -28,6 +28,8 @@ module StashEngine
 
     def helpdesk
       keywords = JSON.parse(contact_params.to_json, symbolize_names: true)
+      return nil if keywords.any? { |_k, v| v.empty? }
+
       keywords[:id] = StashEngine::Identifier.find(params[:identifier]) if params[:identifier].present?
       Stash::Salesforce.create_email_case(**keywords)
       render js: "var cform = document.getElementById('contact_form')\n
