@@ -1,4 +1,6 @@
 class PaymentsService
+  include StashEngine::ApplicationHelper
+
   attr_reader :user, :resource, :options
 
   def initialize(user, resource, options)

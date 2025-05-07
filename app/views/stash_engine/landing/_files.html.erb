@@ -1,3 +1,5 @@
+
+<%= @user_type %>
 <%
   if share.present?
     resources = [share[:resource]]
@@ -10,6 +12,7 @@
       # show admins all versions but authors just the latest
       resources = current_user.min_admin? ? resources.to_a + new_res : resources.to_a.push(new_res.last)
     end
+    resources = resources.compact
     dl_resource = dataset_identifier.latest_downloadable_resource(user: @user_type == 'privileged' ? current_user : nil)
   end
 %>

@@ -32,7 +32,7 @@ class PaymentsController < ApplicationController
       )
     rescue StandardError => e
       render json: {
-        error: e.error.message
+        error: e.message
       }, status: :unprocessable_entity and return
     end
 
