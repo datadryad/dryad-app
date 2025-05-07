@@ -32,7 +32,7 @@
   	<% affs.map do |aff| %>
   		<li id="aff<%= aff[0] %>"><% if aff[2].present? %><a href="/search?q=<%= URI.encode_www_form_component(aff[2]) %>"><%= aff[1] %></a><% else %><%= aff[1] %><%if current_user&.min_app_admin? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched affiliation" title="Unmatched affiliation"></i><%end%><%end%></li>
   	<% end %>
-  	</l>
+  	</ol>
   </div>
   <script type="text/javascript">
   	document.getElementById('affiliation-list-button').addEventListener('click', (e) => {
@@ -49,7 +49,7 @@
   	})
   	const openHash = () => {
   		const hashed = document.getElementById(window.location.hash.substring(1))
-	    if (hashed.parentElement.hasAttribute('hidden')) {
+			if (hashed && hashed.parentElement.hasAttribute('hidden')) {
 	    	document.getElementById('affiliation-list-button').click()
 	    }
   	}
