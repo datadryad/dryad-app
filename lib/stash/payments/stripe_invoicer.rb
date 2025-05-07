@@ -14,7 +14,7 @@ module Stash
 
       # Settings used by all Stripe services
       Stripe.api_key = APP_CONFIG.payments.key
-      Stripe.api_version = '2022-11-15'
+      Stripe.api_version = '2025-03-31.basil'
 
       def initialize(resource)
         @resource = resource
