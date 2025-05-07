@@ -173,7 +173,7 @@ module Stash
                   customer: 'stripe_customer_id',
                   invoice: 1,
                   currency: 'usd',
-                  unit_amount: APP_CONFIG.payments.additional_storage_chunk_cost,
+                  unit_amount_decimal: APP_CONFIG.payments.additional_storage_chunk_cost,
                   quantity: 6,
                   description: <<~TEXT.squish
                     Oversize submission charges for #{identifier}. Overage amount is 53.81 GB @ $50.00
@@ -242,7 +242,7 @@ module Stash
                   customer: 'stripe_customer_id',
                   invoice: 2,
                   currency: 'usd',
-                  unit_amount: APP_CONFIG.payments.additional_storage_chunk_cost,
+                  unit_amount_decimal: APP_CONFIG.payments.additional_storage_chunk_cost,
                   quantity: 3,
                   description: <<~TEXT.squish
                     Oversize submission charges for #{identifier}. Overage amount is 26 GB @ $50.00

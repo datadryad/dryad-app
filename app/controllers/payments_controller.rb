@@ -10,7 +10,7 @@ class PaymentsController < ApplicationController
 
   def create
     Stripe.api_key = APP_CONFIG.payments.key
-    Stripe.api_version = '2019-02-11; custom_checkout_beta=v1;'
+    Stripe.api_version = '2025-03-31.basil'
 
     payment_service = PaymentsService.new(current_user, @resource, create_params)
 
