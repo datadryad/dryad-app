@@ -81,7 +81,7 @@ module Stash
       return unless email && sname && subject && body
 
       case_hash = {
-        Origin: 'Email',
+        Origin: 'Form',
         Subject: subject,
         Description: body,
         SuppliedName: sname,
@@ -106,6 +106,7 @@ module Stash
         FromAddress: email,
         FromName: sname,
         Incoming: true,
+        EmailRoutingAddressId: routing,
         RelatedToId: case_id,
         Status: 0
       )
@@ -183,6 +184,13 @@ module Stash
 
     def self.sf_user
       sf_client&.user_info
+    end
+
+    def self.routing
+      result = db_query("SELECT Id FROM EmailRoutingAddress WHERE PersonalName = 'Dryad Helpdesk'")
+      return unless result && result.size > 0
+
+      result.first['Id']
     end
 
     def self.email_queue
