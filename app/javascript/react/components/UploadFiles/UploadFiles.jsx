@@ -310,7 +310,7 @@ export default function UploadFiles({
           name: evaporateUrl,
           file,
           xAmzHeadersAtInitiate: {
-            'x-amz-storage-class': 'INTELLIGENT_TIERING'
+            'x-amz-storage-class': 'INTELLIGENT_TIERING',
           },
           contentType: file.type,
           progress: (progressValue) => {
