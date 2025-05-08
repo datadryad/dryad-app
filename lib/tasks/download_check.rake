@@ -8,7 +8,8 @@ namespace :download_check do
   task merritt: :environment do
     sql = 'SELECT * FROM stash_engine_identifiers ids ' \
           'WHERE ids.pub_state = "published" ' \
-          'AND id IN (SELECT DISTINCT identifier_id FROM stash_engine_resources WHERE tenant_id = "dataone")'
+          'AND ids.deleted_at IS NULL ' \
+          'AND id IN (SELECT DISTINCT identifier_id FROM stash_engine_resources WHERE tenant_id = "dataone" AND deleted_at IS NULL)'
 
     ids = StashEngine::Identifier.find_by_sql(sql)
     dl_merritt = Tasks::DownloadCheck::Merritt.new(identifiers: ids)

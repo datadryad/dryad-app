@@ -1667,6 +1667,8 @@ module StashEngine
         mock_aws!
       end
 
+      it_should_behave_like 'soft delete record', :resource
+
       context 'when the deleted resource is the only one on the identifier' do
         let!(:resource) { create(:resource, identifier: identifier) }
 

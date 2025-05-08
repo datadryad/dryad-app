@@ -3,6 +3,7 @@
 # Table name: stash_engine_identifiers
 #
 #  id                      :integer          not null, primary key
+#  deleted_at              :datetime
 #  edit_code               :string(191)
 #  identifier              :text(65535)
 #  identifier_type         :text(65535)
@@ -25,6 +26,7 @@
 # Indexes
 #
 #  admin_search_index                                     (search_words)
+#  index_stash_engine_identifiers_on_deleted_at           (deleted_at)
 #  index_stash_engine_identifiers_on_identifier           (identifier)
 #  index_stash_engine_identifiers_on_latest_resource_id   (latest_resource_id)
 #  index_stash_engine_identifiers_on_license_id           (license_id)
@@ -39,6 +41,8 @@ module StashEngine
     include StashEngine::Support::PaymentMethods
 
     self.table_name = 'stash_engine_identifiers'
+    acts_as_paranoid
+
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_one :process_date, as: :processable, dependent: :destroy
     has_many :orcid_invitations, class_name: 'StashEngine::OrcidInvitation', dependent: :destroy

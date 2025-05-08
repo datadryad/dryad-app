@@ -25,7 +25,6 @@ module StashEngine
   # is not meant to be able to create/update/delete this data
   class ExternalReference < ApplicationRecord
     self.table_name = 'stash_engine_external_references'
-    include StashEngine::Support::StringEnum
 
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
 
@@ -40,9 +39,8 @@ module StashEngine
       protein
       taxonomy
     ]
-    string_enum('source', enum_vals, 'nuccore', false)
+    enum :source, enum_vals.index_by(&:to_sym), default: 'nuccore', validate: { message: '%{value} is not a valid source' }
 
-    validates :source, inclusion: { in: enum_vals, message: '%{value} is not a valid source' }
     validates :identifier, :value, presence: true
     validates :source, uniqueness: { case_sensitive: false, scope: :identifier, message: 'the dataset already has an entry for %{value}' }
   end

@@ -24,7 +24,7 @@ class AddDatesTable < ActiveRecord::Migration[7.0]
       dir.up do
         execute ALL_IDENTIFIERS
         execute ALL_RESOURCES
-        StashEngine::Identifier.joins(:latest_resource).find_each do |identifier|
+        StashEngine::Identifier.unscoped.joins("INNER JOIN `stash_engine_resources` ON `stash_engine_resources`.`id` = `stash_engine_identifiers`.`latest_resource_id`").find_each do |identifier|
           identifier.resources.each do |resource|
             dates = {}
             status_changes = resource.curation_activities.pluck(:status, :created_at).uniq(&:first)

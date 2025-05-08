@@ -25,10 +25,10 @@ module Tasks
           res = ActiveRecord::Base.connection.execute <<~SQL
             select  count(distinct(users.orcid))
             from stash_engine_users as users
-            inner join stash_engine_resources as user_res on user_res.user_id = users.id
-            INNER JOIN stash_engine_identifiers ON user_res.id = stash_engine_identifiers.latest_resource_id
+            inner join stash_engine_resources as user_res on user_res.user_id = users.id AND user_res.deleted_at IS NULL
+            INNER JOIN stash_engine_identifiers ON user_res.id = stash_engine_identifiers.latest_resource_id AND stash_engine_identifiers.deleted_at IS NULL
             inner join stash_engine_authors as user_author on user_author.author_orcid = users.orcid and user_res.id != user_author.resource_id
-            inner join stash_engine_resources as author_res on user_author.resource_id=author_res.id
+            inner join stash_engine_resources as author_res on user_author.resource_id=author_res.id AND author_res.deleted_at IS NULL
             where user_res.created_at > author_res.created_at
           SQL
           submitters_as_coauthors = res.first[0]
@@ -45,10 +45,10 @@ module Tasks
           res = ActiveRecord::Base.connection.execute <<~SQL
             select  count(distinct(users.orcid))
             from stash_engine_users as users
-            inner join stash_engine_resources as user_res on user_res.user_id = users.id
-            INNER JOIN stash_engine_identifiers ON user_res.id = stash_engine_identifiers.latest_resource_id
+            inner join stash_engine_resources as user_res on user_res.user_id = users.id AND user_res.deleted_at IS NULL
+            INNER JOIN stash_engine_identifiers ON user_res.id = stash_engine_identifiers.latest_resource_id AND stash_engine_identifiers.deleted_at IS NULL
             inner join stash_engine_authors as user_author on user_author.author_orcid = users.orcid and user_res.id != user_author.resource_id
-            inner join stash_engine_resources as author_res on user_author.resource_id=author_res.id
+            inner join stash_engine_resources as author_res on user_author.resource_id=author_res.id AND author_res.deleted_at IS NULL
             where user_res.created_at < author_res.created_at
           SQL
           submitters_as_coauthors = res.first[0]

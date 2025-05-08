@@ -45,7 +45,7 @@ module StashEngine
     end
 
     def s3_staged_path
-      return nil if file_state == 'copied' || file_state == 'deleted' # no current file to have a path for
+      return nil if %w[copied deleted].include?(file_state) # no current file to have a path for
 
       "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
     end

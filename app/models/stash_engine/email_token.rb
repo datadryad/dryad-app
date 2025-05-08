@@ -3,12 +3,12 @@
 # Table name: stash_engine_email_tokens
 #
 #  id         :bigint           not null, primary key
-#  tenant_id     :string(191)
-#  user_id     :integer
-#  token      :string(191)
 #  expires_at :datetime
+#  token      :string(191)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  tenant_id  :string(191)
+#  user_id    :integer
 #
 require 'securerandom'
 
