@@ -41,5 +41,33 @@ describe PaymentsService do
     it 'has correct values' do
       expect(subject.checkout_options).to eq(checkout_options)
     end
+
+    context 'if there is an institution that does not cover LDF' do
+      let(:prev_files_size) { 0 }
+      let(:new_files_size) { 11_000_000_000 }
+      let(:covers_ldf) { false }
+      let!(:tenant) { create(:tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf) }
+      let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
+      let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
+
+      it 'has correct values and does not show keys with 0 fee' do
+        expect(subject.checkout_options).to eq(
+          {
+            mode: 'payment',
+            ui_mode: 'embedded',
+            line_items: [{
+              quantity: 1,
+              price_data: {
+                currency: 'usd',
+                product_data: {
+                  name: "Large data fee for #{identifier} (11 GB)"
+                },
+                unit_amount: 25_900
+              }
+            }]
+          }
+        )
+      end
+    end
   end
 end

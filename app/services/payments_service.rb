@@ -26,7 +26,9 @@ class PaymentsService
   private
 
   def line_items
-    @fees.except(:total).map { |key, value| generate_line_item(key, value) }
+    @fees.except(:total)
+      .reject { |_k, v| v.zero? }
+      .map { |key, value| generate_line_item(key, value) }
   end
 
   def generate_line_item(fee_key, value)
