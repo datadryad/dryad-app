@@ -1223,7 +1223,8 @@ module StashEngine
       end
       return unless target_curator.present?
 
-      update(user_id: target_curator.id) unless curator&.id == target_curator.id
+      reload
+      update(user_id: target_curator.id)
 
       curation_activities << StashEngine::CurationActivity.create(
         user_id: target_curator.id, status: target_status,
