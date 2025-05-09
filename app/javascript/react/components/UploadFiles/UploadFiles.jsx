@@ -309,6 +309,9 @@ export default function UploadFiles({
         const addConfig = {
           name: evaporateUrl,
           file,
+          xAmzHeadersAtInitiate: {
+            'x-amz-storage-class': 'INTELLIGENT_TIERING',
+          },
           contentType: file.type,
           progress: (progressValue) => {
             document.getElementById(

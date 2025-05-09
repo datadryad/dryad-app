@@ -105,7 +105,7 @@ module Stash
 
         bucket = s3_resource.bucket(from_bucket_name)
         object = bucket.object(from_s3_key)
-        object.copy_to({ bucket: to_bucket_name, key: to_s3_key }, options_hash)
+        object.copy_to({ bucket: to_bucket_name, key: to_s3_key, storage_class: 'INTELLIGENT_TIERING' }, options_hash)
       end
 
       private
