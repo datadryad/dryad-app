@@ -1,21 +1,49 @@
 openapi: 3.1.0
 
 info:
-  title: dryad-api
+  title: Dryad API
   description: |
-    The API for the [Dryad](https://datadryad.org) data publication and
-    preservation platform.
+    Dryad's REST API allows detailed interaction and programmatic interfacing with Dryad contents. The most common case is to use GET requests to retrieve information about datasets, versions, and files.
 
-    In addition to this documentation, please see the [descriptive API documentation](https://github.com/datadryad/dryad-app/tree/main/documentation/apis),
-    particularly the [API Submission Examples](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md) which give concrete
-    examples of submission through the Dryad API.
+    When using the API, any DOI included must be <a href="https://www.w3schools.com/tags/ref_urlencode.ASP" target="blank">URL-encoded<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> to ensure correct processing. Anonymous users of the API are limited to 30 requests per minute, with a lower limit for downloads of data files. 
 
-    Our [Github documentation directory](https://github.com/datadryad/dryad-app/tree/main/documentation) will also be expanded further in the future as more
-    documentation is created (though not all of it may be relevant to API users).
+    Examples:
 
-    Rate limits:
-      - Anonymous users of the API are limited to 30 requests per minute, with a lower limit for downloads of data files.
-      - Authenticated users of the API are limited to 120 requests per minute.
+    - [List datasets](https://datadryad.org/api/v2/datasets)
+    - [Search for datasets](https://datadryad.org/api/v2/search?q=carbon)
+    - [Get information about a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7)
+    - [See versions of a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/versions)
+    - [Get files from a version](https://datadryad.org/api/v2/versions/26724/files)
+    - [Download the most recent version of a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/download)
+
+    Detailed documentation:
+
+    - For details on all of our REST API operations, click the links in the menu on this page.
+    - [Search API](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/search.md)
+    - [Submission API](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md)
+
+    ## API accounts 
+
+    To access more powerful features, an API account is required. API accounts allow users to:
+
+    - Access the API at higher rates (authenticated users may make up to 120 requests per minute)
+    - Access datasets that are not yet public, but are associated with the account's community (institution, journal, etc.)
+    - Update datasets associated with the account's community
+
+    See the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md" target="blank">API accounts document<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> for more information on requesting an API account and using it to access datasets.
+
+
+    ## Submission
+
+    The Submission API is used by institutions that partner closely with Dryad, and use systems to create dataset submissions directly. Please contact us if you are [interested in partnering with Dryad](/contact#get-involved), and setting up an API account for submission.
+
+    The <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md" target="blank">API submission examples document<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> gives concrete examples of submission through the Dryad API.
+
+
+    ### Dryad sandbox
+
+    <a href="https://sandbox.datadryad.org/" target="blank">Dryad's sandbox server<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> allows users to experiment with data submission and the Dryad API, without worrying about the effects on "real" data. Anyone may create an account on the sandbox server for testing purposes. When creating an account, keep in mind that Dryad's sandbox relies on the <a href="https://sandbox.orcid.org/" target="_blank">sandbox version of ORCID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>, which allows you to make test ORCID accounts. Sandbox ORCID IDs should be used in the Dryad sandbox, while use of Dryad's production system requires a real ORCID ID.
+
   version: "2.1.0"
 
 servers:
@@ -54,8 +82,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/root_links'
               examples:
-                success:           
-                  externalValue: api/v2/docs/examples/root.json
+                success:
+                  $ref: api/v2/docs/examples/root.json
         '406':
           $ref: '#/components/responses/Unacceptable'
 
@@ -67,11 +95,11 @@ paths:
       summary: Test OAuth2 and bearer authentication
       tags:
         - root 
-      description: "Test your <a href='/api#api-accounts'>API account authentication</a> by sending authenticated headers:  **'Accept: application/json'**, **'Content-Type: application/json'**, **'Authorization: Bearer {your-token}'**. \n\n **Accept** header is optional if you are using **'Content-Type: application/json'**."
+      description: "Test your <a href='/api#api-accounts'>API account authentication</a> by sending authenticated headers:  `Accept: application/json`, `Content-Type: application/json`, `Authorization: Bearer {your-token}`. \n\n `Accept` header is optional if you are using `Content-Type: application/json`."
 
       responses:
         '200':
-          description: a welcome message if successful
+          description: Shows a welcome message if successful
           content:
             application/json:
               schema:
@@ -109,15 +137,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/datasets'
               examples:
-                success: 
-                  externalValue: api/v2/docs/examples/datasets.json
+                success:
+                  $ref: api/v2/docs/examples/datasets.json
         '406':
           $ref: '#/components/responses/Unacceptable'
     post:
       summary: Create a new dataset with an automatically-generated DOI
       tags:
         - datasets 
-      description: You must be <a href="/api#api-accounts">logged in</a>. Use a JSON structure as shown below. If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "declare no funding" example). For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
+      description: You must be <a href="/api#api-accounts">logged in</a>. Use a JSON structure as shown below. If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "Set no funding" example). For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
       security:
         - bearerAuth: []
       requestBody:
@@ -139,10 +167,10 @@ paths:
                     loosenValidation:
                       type: boolean
             examples:
-              request:
-                externalValue: api/v2/docs/examples/dataset_post_request.json
-              declare no funding: 
-                externalValue: api/v2/docs/examples/dataset_post_request_nf.json
+              Post:
+                $ref: api/v2/docs/examples/dataset_post_request.json
+              Set no funding:
+                $ref: api/v2/docs/examples/dataset_post_request_nf.json
       responses:
         '201':
           description: response showing dataset info that has been saved
@@ -151,10 +179,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/datasets'
               examples:
-                success:
-                  externalValue: api/v2/docs/examples/dataset_post_response.json
-                no funding:
-                  externalValue: api/v2/docs/examples/dataset_post_response_nf.json
+                Success:
+                  $ref: api/v2/docs/examples/dataset_post_response.json
+                Without funding:
+                  $ref: api/v2/docs/examples/dataset_post_response_nf.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -179,9 +207,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/dataset'
-            examples:
-              success:
-                externalValue: api/v2/docs/examples/dataset.json
+              examples:
+                success:
+                  $ref: api/v2/docs/examples/dataset.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -202,8 +230,8 @@ paths:
             schema:
               $ref: '#/components/schemas/dc_metadata'
             examples:
-              request:
-                externalValue: api/v2/docs/examples/dataset_post_request.json
+              success:
+                $ref: api/v2/docs/examples/dataset_post_request.json
       responses:
         '200':
           description: response showing dataset info that has been saved
@@ -213,7 +241,7 @@ paths:
                 $ref: '#/components/schemas/datasets'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/dataset.json
+                  $ref: api/v2/docs/examples/dataset.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -245,7 +273,7 @@ paths:
                 $ref: '#/components/schemas/dataset'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/dataset.json
+                  $ref: api/v2/docs/examples/dataset.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -292,7 +320,7 @@ paths:
                 $ref: '#/components/schemas/versions'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/versions.json
+                  $ref: api/v2/docs/examples/versions.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -322,7 +350,7 @@ paths:
                           type: string
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/version.json
+                  $ref: api/v2/docs/examples/version.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -347,7 +375,7 @@ paths:
                 $ref: '#/components/schemas/files'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/files.json
+                  $ref: api/v2/docs/examples/files.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -371,7 +399,7 @@ paths:
                 format: binary
         '404':
           description: 'not found'
-          $ref: '#components/content/Error'
+          $ref: '#/components/content/Error'
         '401':
           $ref: '#/components/responses/Unauthorized'
 
@@ -392,7 +420,7 @@ paths:
                 $ref: '#/components/schemas/file'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/file.json
+                  $ref: api/v2/docs/examples/file.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -415,7 +443,7 @@ paths:
                 $ref: '#/components/schemas/file'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/file.json
+                  $ref: api/v2/docs/examples/file.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -479,7 +507,7 @@ paths:
                       type: string
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/upload_file.json
+                  $ref: api/v2/docs/examples/upload_file.json
         '401':
           $ref: '#/components/responses/Unauthorized'
 
@@ -511,7 +539,7 @@ paths:
                       type: string
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/upload_file.json
+                  $ref: api/v2/docs/examples/upload_file.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -706,7 +734,7 @@ paths:
           schema:
             type: string
           description:
-            A *ROR* identifier specifying an institutional
+            A ROR identifier specifying an institutional
             affiliation that must be present in the list of dataset authors. The
             identifier should be in the full "https" format and should be
             URL-encoded, e.g., `https%3A%2F%2Fror.org%2F00x6h5n95`.
@@ -715,7 +743,7 @@ paths:
           schema:
             type: string
           description:
-            The abbreviation for a "tenant" organization in
+            The abbreviation for a partner organization in
             Dryad. This will automatically search all affiliations associated
             with the given tenant. If both a *tenant* and *affiliation* are
             specified, the tenant will be ignored.
@@ -764,7 +792,7 @@ paths:
                 $ref: '#/components/schemas/datasets'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/datasets.json
+                  $ref: api/v2/docs/examples/datasets.json
         '400':
           description:
             Dryad encountered an error parsing the query options for the search.
