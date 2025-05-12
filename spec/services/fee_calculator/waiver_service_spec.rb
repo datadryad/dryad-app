@@ -25,13 +25,7 @@ module FeeCalculator
             it { is_expected.to eq(no_charges_response) }
           end
 
-          context 'with storage_size over 2TB limit' do
-            let(:new_files_size) { 10_000_000_000_000 }
-
-            it 'raises an error' do
-              expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-            end
-          end
+          it_behaves_like 'it has 1TB max limit'
         end
       end
 
@@ -70,13 +64,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 10_000_000_000_000 }
-
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-              end
-            end
+            it_behaves_like 'it has 1TB max limit'
           end
         end
       end
