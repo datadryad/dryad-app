@@ -1,6 +1,6 @@
 # Accessibility
 
-*Updated: January 30, 2024*
+*Updated: May 20, 2025*
 
 This accessibility statement applies to [datadryad.org](https://datadryad.org/) and its subdomain [blog.datadryad.org](https://blog.datadryad.org/).
 
