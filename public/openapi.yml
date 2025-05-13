@@ -76,7 +76,7 @@ paths:
       description: Displays links to root level API objects, like the list of datasets.
       responses:
         '200':
-          description: The root of the API
+          description: The root of the API.
           content:
             application/json:
               schema:
@@ -99,7 +99,7 @@ paths:
 
       responses:
         '200':
-          description: Shows a welcome message if successful
+          description: Shows a welcome message if successful.
           content:
             application/json:
               schema:
@@ -173,7 +173,7 @@ paths:
                 $ref: api/v2/docs/examples/dataset_post_request_nf.json
       responses:
         '201':
-          description: response showing dataset info that has been saved
+          description: Show the dataset information that has been saved.
           content:
             application/json:
               schema:
@@ -202,7 +202,7 @@ paths:
         - $ref: '#/components/parameters/doi'
       responses:
         '200':
-          description: A dataset
+          description: Dataset information retrieved.
           content:
             application/json:
               schema:
@@ -234,7 +234,7 @@ paths:
                 $ref: api/v2/docs/examples/dataset_post_request.json
       responses:
         '200':
-          description: response showing dataset info that has been saved
+          description:  Show the dataset information that has been saved.
           content:
             application/json:
               schema:
@@ -266,7 +266,7 @@ paths:
                 $ref: '#/components/schemas/dataset_submission'
       responses:
         '202':
-          description: Submission taking place, watch the dataset versionStatus for changes
+          description: Submission taking place, watch the dataset versionStatus for changes.
           content:
             application/json:
               schema:
@@ -313,7 +313,7 @@ paths:
         - $ref: '#/components/parameters/per_page'
       responses:
         '200':
-          description: A list of a dataset's versions
+          description: A list of a dataset's versions.
           content:
             application/json:
               schema:
@@ -337,7 +337,7 @@ paths:
         - $ref: '#/components/parameters/version_id'
       responses:
         '200':
-          description: The version of the dataset
+          description: The requested version of the dataset.
           content:
             application/json:
               schema:
@@ -361,14 +361,14 @@ paths:
       summary: List the files and file metadata in this version
       tags:
         - versions
-      description: Returns the list of files and file metadata for a known version of a dataset with the version id you specify.
+      description: Returns the list of files and file metadata for a known version of a dataset with the version ID you specify.
       parameters:
         - $ref: '#/components/parameters/version_id'
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/per_page'
       responses:
         '200':
-          description: A list of the files in the version
+          description: A list of the files in the version.
           content:
             application/json:
               schema:
@@ -391,7 +391,7 @@ paths:
         - $ref: '#/components/parameters/version_id'
       responses:
         '200':
-          description: The binary content for a compressed archive
+          description: The binary content for a compressed archive.
           content:
             application/zip:
               schema:
@@ -408,12 +408,12 @@ paths:
       summary: Get metadata information about a file
       tags:
         - files
-      description: Returns file metadata information visible to the user (or public) by the file id.  The version file list embeds this metadata and also lists the file ids.
+      description: Returns file metadata information visible to the user (or public) by the file ID.  The version file list embeds this metadata and also lists the file IDs.
       parameters:
         - $ref: '#/components/parameters/file_id'
       responses:
         '200':
-          description: A single file
+          description: A single file.
           content:
             application/json:
               schema:
@@ -449,7 +449,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          description: 'This file must be part of an an in-progress version'
+          description: This file must be part of an an in-progress version.
           $ref: '#/components/content/Error'
 
   '/files/{id}/download':
@@ -480,14 +480,14 @@ paths:
       summary: Upload and stage a file for an in-progress dataset
       tags:
         - files
-      description: Allows uploading a file to be staged for submission to the storage repository. The files will be stored in the storage repository after the dataset is submitted.  The body of the request will be the file you are uploading.  Set the **'Content-Type'** http header to the appropriate mimetype for your file when uploading.
+      description: Allows uploading a file to be staged for submission to the storage repository. The files will be stored in the storage repository after the dataset is submitted.  The body of the request will be the file you are uploading.  Set the `Content-Type` http header to the appropriate mimetype for your file when uploading.
       security:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/doi'
         - $ref: '#/components/parameters/filename'
       requestBody:
-        description: a binary file with content-type set
+        description: A binary file with `Content-Type` set.
         required: true
         content:
           "*/*":
@@ -496,7 +496,7 @@ paths:
               format: binary
       responses:
         '201':
-          description: file was created on the server
+          description: File was created on the server.
           content:
             application/json:
               schema:
@@ -528,7 +528,7 @@ paths:
               $ref: '#/components/schemas/url_json'
       responses:
         '201':
-          description: Metadata for the URL was saved and the response json indicates information populated for a file object based on the URL.
+          description: Metadata for the URL was saved and the response JSON indicates information populated for a file object based on the URL.
           content:
             application/json:
               schema:
@@ -550,15 +550,15 @@ paths:
     get:
       security:
         - bearerAuth: [ ]
-      summary: Get processor results for the id given
+      summary: Get processor results for the ID given
       tags:
         - internal
-      description: Shows the processor results stored in the database for the given ID
+      description: Shows the processor results stored in the database for the given ID.
       parameters:
         - $ref: '#/components/parameters/processor_result_id'
       responses:
         '200':
-          description: A json representation of processor results
+          description: A JSON representation of processor results.
           content:
             application/json:
               schema:
@@ -571,7 +571,7 @@ paths:
     put:
       security:
         - bearerAuth: [ ]
-      summary: Overwrite processor results for the id given
+      summary: Overwrite processor results for the ID given
       tags:
         - internal
       description: Overwrite the processor results stored in the database for the given ID, resource_id, dates can't be manually changed
@@ -579,7 +579,7 @@ paths:
         - $ref: '#/components/parameters/processor_result_id'
       responses:
         '200':
-          description: A json representation of processor results that were saved
+          description: A JSON representation of processor results that were saved.
           content:
             application/json:
               schema:
@@ -602,7 +602,7 @@ paths:
         - $ref: '#/components/parameters/version_id'
       responses:
         '200':
-          description: A json representation of processor results for the version id
+          description: A JSON representation of processor results for the version ID.
           content:
             application/json:
               schema:
@@ -615,15 +615,15 @@ paths:
     post:
       security:
         - bearerAuth: [ ]
-      summary: Create processor results for the id given
+      summary: Create processor results for the ID given
       tags:
         - internal
-      description: Create new processor result in the database
+      description: Create a new processor result in the database.
       parameters:
         - $ref: '#/components/parameters/processor_result_id'
       responses:
         '200':
-          description: A json representation of processor results that were saved
+          description: A JSON representation of processor results that were saved.
           content:
             application/json:
               schema:
@@ -644,16 +644,16 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/related_type'
-      summary: Update related works for a dryad doi
+      summary: Update related works for a Dryad DOI
       tags:
         - internal
-      description: Adds or updates related works for a dryad doi
+      description: Adds or updates related works for a Dryad DOI.
       parameters:
         - $ref: '#/components/parameters/doi'
         - $ref: '#/components/parameters/doi'
       responses:
         '200':
-          description: A json representation of related work that was saved
+          description: A JSON representation of the related work that was saved.
           content:
             application/json:
               schema:
@@ -691,7 +691,7 @@ paths:
           schema:
             type: string
           required: true
-          description: "The name of a report."
+          description: The name of a report.
       responses:
         '200':
           description: A report (CSV download)
@@ -703,10 +703,10 @@ paths:
         '406':
           $ref: '#/components/responses/Unacceptable'
         '500':
-          description: Unable to render report file
+          description: Unable to render report file.
           $ref: '#/components/content/Error'
         '404':
-          description: Could not find requested report {name}
+          description: Could not find requested report {name}.
           $ref: '#/components/content/Error'
 
   # --- search ---
@@ -776,7 +776,7 @@ paths:
           schema:
             type: string
           description:
-            The identifier that is present in a related work. It allows `*` as a wildcard at the beginning and/or end of the value
+            The identifier that is present in a related work. It allows `*` as a wildcard at the beginning and/or end of the value.
         - in: query
           name: relatedWorkRelationship
           schema:
@@ -808,7 +808,7 @@ components:
   responses:
 
     Unacceptable:
-      description: "406 - unacceptable: please set your Content-Type or Accept headers for application/json. **Accept** header is optional if you are using **'Content-Type: application/json'**."
+      description: "406 - unacceptable: please set your `Content-Type` or `Accept` headers for application/json. `Accept` header is optional if you are using `Content-Type: application/json`."
       $ref: '#/components/content/Error'
 
     NotFound:
@@ -816,7 +816,7 @@ components:
       $ref: '#/components/content/Error'
 
     Unauthorized:
-      description: 'Unauthorized, must have current bearer token'
+      description: 'Unauthorized, must have current bearer token.'
       $ref: '#/components/content/Error'
 
     UnprocessableEntity:
@@ -1188,7 +1188,7 @@ components:
           type: string
         identifier:
           type: string
-          description: The organization identifier, for example a ROR id.
+          description: The organization identifier, for example a ROR ID.
           example: 'https://ror.org/00x6h5n95'
         identifierType:
           description: Type of identifier — ror, isni, grid, crossref_funder_id or other.
@@ -1394,7 +1394,7 @@ components:
       schema:
         type: integer
       required: true
-      description: "The version id is a unique integer and can be obtained from the list of versions for a dataset"
+      description: "The version ID is a unique integer and can be obtained from the list of versions for a dataset."
 
     processor_result_id:
       in: path
@@ -1402,7 +1402,7 @@ components:
       schema:
         type: integer
       required: true
-      description: "The processor results id for a single item"
+      description: "The processor results ID for a single item."
 
     file_id:
       in: path
@@ -1410,7 +1410,7 @@ components:
       schema:
         type: integer
       required: true
-      description: "The file id is a unique integer and can be obtained from the list of files for a version of a dataset"
+      description: "The file ID is a unique integer and can be obtained from the list of files for a version of a dataset."
 
     filename:
       in: path
