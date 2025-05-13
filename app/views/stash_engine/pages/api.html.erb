@@ -1,6 +1,6 @@
 <% @page_title = 'Dryad APIs' %>
 <% content_for(:head) do %>
-  <script type="module" src="/openapi-explorer/openapi-explorer.min.js"></script>
+  <script type="module" src="/openapi-explorer.min.js"></script>
 <% end %>
 
 <openapi-explorer id="api-explorer" spec-url="/openapi.yml" hide-components default-schema-tab="body">
@@ -42,6 +42,11 @@
               .main-content-inner {
                 padding: 2px !important;
                 padding-right: 5ch !important;
+              }
+              @media screen and (max-width: 760px) {
+                .main-content-inner {
+                  padding-right: 2px !important;
+                }
               }
               .section-gap--focused-mode {
                 padding: 5px 0 0 !important;
