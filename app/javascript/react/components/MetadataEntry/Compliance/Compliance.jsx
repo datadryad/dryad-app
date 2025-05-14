@@ -132,7 +132,7 @@ export default function Compliance({resource, setResource}) {
           </label>
         </p>
       </fieldset>
-      <fieldset onChange={setBool} style={{display: 'block'}} aria-labelledby="hsi_legend">
+      <fieldset onChange={setBool} style={{display: 'block'}} aria-labelledby="hsi_legend" id="hsi_fieldset">
         <h3 style={{margin: '2rem 0 0'}} id="hsi_legend">
           Does your data contain information on human subjects?
         </h3>
