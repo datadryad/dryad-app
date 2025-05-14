@@ -147,7 +147,14 @@ function Submission({
         setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
-      preview: <Agreements {...{resource, user, previous}} preview subFees={fees} config={config_payments} setSubFees={setFees} />,
+      preview: <Agreements
+        {...{resource, user, previous}}
+        config={config_payments}
+        subFees={fees}
+        setSubFees={setFees}
+        form={change_tenant}
+        preview
+      />,
     },
   ];
 
