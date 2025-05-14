@@ -104,7 +104,14 @@ export default function Compliance({resource, setResource}) {
       </p>
       <p>
         CC0 means others can freely share, modify, adapt, and use the data in any way, without conditions such as providing attribution.
-        If data comes from a copyrighted source or has a license other than CC0, it cannot be shared on Dryad.
+      </p>
+      <div className="callout warn">
+        <p>
+          <i className="fas fa-triangle-exclamation" role="img" aria-label="Warning:" />{' '}
+          If data comes from a copyrighted source or has a license other than CC0, it cannot be shared on Dryad.
+        </p>
+      </div>
+      <p>
         Authors are legally responsible for ensuring their dataset does not violate copyright claims over material generated or published by others.
       </p>
       <fieldset>
@@ -125,10 +132,10 @@ export default function Compliance({resource, setResource}) {
           </label>
         </p>
       </fieldset>
-      <fieldset onChange={setBool} style={{display: 'block'}}>
-        <legend role="heading" aria-level="3" style={{display: 'block', margin: '2rem 0 0'}} className="o-heading__level3">
+      <fieldset onChange={setBool} style={{display: 'block'}} aria-labelledby="hsi_legend">
+        <h3 style={{margin: '2rem 0 0'}} id="hsi_legend">
           Does your data contain information on human subjects?
-        </legend>
+        </h3>
         <p className="radio_choice">
           <label><input name="hsi" type="radio" value="yes" defaultChecked={hsi === true ? 'checked' : null} />Yes</label>
           <label><input name="hsi" type="radio" value="no" required defaultChecked={hsi === false ? 'checked' : null} />No</label>
