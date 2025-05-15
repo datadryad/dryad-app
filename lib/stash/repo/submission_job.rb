@@ -98,17 +98,22 @@ module Stash
       end
 
       def handle_invoice_creation
-        # old system payment
-        # should be generating an invoice on publish
+        # this method is for 2025 payment system
+        # old payment system id generating an invoice on publish
         return if resource.identifier.old_payment_system
 
         payment = resource.payment
         if payment.nil?
-          Rails.logger.warn("No payment found for resource ID #{resource.id}")
-          return
+          if resource.identifier.waiver? && resource.identifier.payment_id.blank?
+            payment = create_missing_invoice
+            return if payment.nil?
+          else
+            Rails.logger.warn("No payment found for resource ID #{resource.id}")
+            return
+          end
         end
 
-        unless payment.pay_with_invoice
+        if payment && !payment.pay_with_invoice
           Rails.logger.warn("Payment for resource ID #{resource.id} is not set to invoice")
           return
         end
@@ -117,6 +122,31 @@ module Stash
         invoicer.handle_customer(payment.invoice_details)
         invoice = invoicer.create_invoice
         payment.update(pay_with_invoice: true, invoice_id: invoice.id) if invoice
+      end
+
+      def create_missing_invoice
+        payment_service = PaymentsService.new(nil, resource, {})
+        if payment_service.total_amount > 0
+          Rails.logger.warn("No payment found for resource ID #{resource.id} as waiver that should pay LDF rate")
+          return
+        end
+        payment = resource.build_payment
+        payment.update(
+          payment_type: 'stripe',
+          pay_with_invoice: true,
+          status: :created,
+          amount: 0,
+          has_discount: payment_service.has_discount,
+          invoice_details: {
+            author_id: resource.owner_author.id,
+            customer_name: resource.owner_author.author_full_name,
+            customer_email: resource.owner_author.author_email
+          }
+        )
+        payment
+      rescue StandardError => e
+        Rails.logger.warn("Error creating waiver payment for #{resource.id}, error: #{e.full_message}")
+        nil
       end
 
       def copy_to_permanent_store(data_file)
@@ -128,7 +158,7 @@ module Stash
 
         # SKIP uploading the file again if
         #   it exists on permanent store
-        #   it hase the same
+        #   it has the same size
         # in case a previous job uploaded the file but failed on generating checksum
         if !permanent_s3.exists?(s3_key: permanent_key) || !permanent_s3.size(s3_key: permanent_key) == data_file.upload_file_size
           logger.info("file copy skipped #{data_file.id} ==> #{permanent_bucket}/#{permanent_key} already exists")
@@ -194,6 +224,7 @@ module Stash
 
         data_file.update(update)
       end
+
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 

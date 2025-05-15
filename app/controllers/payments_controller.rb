@@ -28,7 +28,8 @@ class PaymentsController < ApplicationController
         pay_with_invoice: false,
         checkout_session_id: session.id,
         status: :created,
-        amount: payment_service.total_amount
+        amount: payment_service.total_amount,
+        has_discount: payment_service.has_discount
       )
     rescue StandardError => e
       render json: {

@@ -11,7 +11,8 @@ PRODUCT_NAME_MAPPER = {
   invoice_fee: 'Invoice fee',
   storage_fee: 'Large data fee',
   individual_storage_fee: 'Data Publishing Charge',
-  total: 'Total'
+  total: 'Total',
+  waiver_discount: 'Fee waiver discount',
 }.freeze
 
 # New payment system error messages
