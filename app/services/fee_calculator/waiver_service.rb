@@ -2,12 +2,7 @@ module FeeCalculator
   class WaiverService < IndividualService
 
     DISCOUNT_STORAGE_COUPON_ID = 'FEE_WAIVER_2025'.freeze
-    # FREE_STORAGE_SIZE = 10_000_000_000.freeze
-    if Rails.env.development?
-      FREE_STORAGE_SIZE = 10_000_000.freeze
-    else
-      FREE_STORAGE_SIZE = 10_000_000_000.freeze
-    end
+    FREE_STORAGE_SIZE = 10_000_000_000 # 10 GB
 
     private
 

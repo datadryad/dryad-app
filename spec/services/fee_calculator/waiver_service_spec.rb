@@ -16,7 +16,7 @@ module FeeCalculator
       charge_response(amount, amount)
     end
 
-    def charge_response(amount, discount, invoice_fee = false)
+    def charge_response(amount, discount, invoice_fee: false)
       res = {
         storage_fee: amount,
         storage_fee_label: 'Data Publishing Charge',
@@ -31,7 +31,7 @@ module FeeCalculator
       res
     end
 
-    def no_discount_response(amount, invoice_fee = false)
+    def no_discount_response(amount, invoice_fee: false)
       res = {
         storage_fee: amount,
         storage_fee_label: 'Data Publishing Charge',
@@ -157,7 +157,7 @@ module FeeCalculator
           context 'with storage_size over the max free limit' do
             let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
 
-            it { is_expected.to eq(charge_response(520, 180, true)) }
+            it { is_expected.to eq(charge_response(520, 180, invoice_fee: true)) }
           end
 
           it_behaves_like 'it has 1TB max limit'
@@ -189,7 +189,7 @@ module FeeCalculator
             context 'storage jumps a few levels' do
               let(:new_files_size) { 60_000_000_000 }
 
-              it { is_expected.to eq(no_discount_response(808 - 180, true)) }
+              it { is_expected.to eq(no_discount_response(808 - 180, invoice_fee: true)) }
             end
 
             context 'with storage_size at max free limit' do
@@ -201,7 +201,7 @@ module FeeCalculator
             context 'with storage_size over the max free limit' do
               let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
 
-              it { is_expected.to eq(no_discount_response(520 - 180, true)) }
+              it { is_expected.to eq(no_discount_response(520 - 180, invoice_fee: true)) }
             end
 
             it_behaves_like 'it has 1TB max limit'
@@ -221,7 +221,7 @@ module FeeCalculator
             context 'storage gets to next level does not add discount again' do
               let(:new_files_size) { 50_000_000_001 }
 
-              it { is_expected.to eq(no_discount_response(808 - 520, true)) }
+              it { is_expected.to eq(no_discount_response(808 - 520, invoice_fee: true)) }
             end
 
             it_behaves_like 'it has 1TB max limit'
