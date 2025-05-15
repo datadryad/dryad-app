@@ -89,12 +89,12 @@ describe PaymentsService do
                 product_data: {
                   name: "Data Publishing Charge for #{identifier} (16.32 GB)"
                 },
-                unit_amount: 34_000
+                unit_amount: 52_000
               }
             }]
           }
         )
-        expect(subject.total_amount).to eq(160)
+        expect(subject.total_amount).to eq(340)
       end
     end
   end
@@ -109,11 +109,12 @@ describe PaymentsService do
     context 'when fees contain a coupon ID' do
       context 'when payer is a waiver' do
         let(:identifier) { create(:identifier, payment_type: 'waiver') }
+
         context 'under free limit' do
           let(:total_file_size) { 6_320_000_000 }
 
           it 'is true' do
-            expect(subject.has_discount).to be_falsey
+            expect(subject.has_discount).to be_truthy
           end
         end
 
@@ -131,7 +132,7 @@ describe PaymentsService do
         context 'under free limit' do
           let(:total_file_size) { 6_320_000_000 }
 
-          it 'is true' do
+          it 'is false' do
             expect(subject.has_discount).to be_falsey
           end
         end
@@ -139,7 +140,7 @@ describe PaymentsService do
         context 'over free limit' do
           let(:total_file_size) { 16_320_000_000 }
 
-          it 'is true' do
+          it 'is false' do
             expect(subject.has_discount).to be_falsey
           end
         end

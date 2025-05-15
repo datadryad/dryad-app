@@ -195,6 +195,7 @@ module FeeCalculator
 
     def add_storage_discount_fee(value_key, storage_size)
       value = price_by_range(storage_fee_tiers, storage_size)
+      value = [value, @sum].min
       add_fee_to_total(value_key, -value)
     end
 

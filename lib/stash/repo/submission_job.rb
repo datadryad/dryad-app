@@ -117,7 +117,6 @@ module Stash
           Rails.logger.warn("Payment for resource ID #{resource.id} is not set to invoice")
           return
         end
-
         invoicer = Stash::Payments::StripeInvoicer.new(resource)
         invoicer.handle_customer(payment.invoice_details)
         invoice = invoicer.create_invoice

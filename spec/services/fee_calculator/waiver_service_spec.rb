@@ -12,6 +12,38 @@ module FeeCalculator
       stub_const 'FeeCalculator::WaiverService::FREE_STORAGE_SIZE', 10_000_000_000 # 10GB
     end
 
+    def no_charge_response(amount)
+      charge_response(amount, amount)
+    end
+
+    def charge_response(amount, discount, invoice_fee = false)
+      res = {
+        storage_fee: amount,
+        storage_fee_label: 'Data Publishing Charge',
+        coupon_id: coupon_id,
+        waiver_discount: -discount,
+        total: amount - discount
+      }
+      if invoice_fee
+        res[:invoice_fee] = 199
+        res[:total] += 199
+      end
+      res
+    end
+
+    def no_discount_response(amount, invoice_fee = false)
+      res = {
+        storage_fee: amount,
+        storage_fee_label: 'Data Publishing Charge',
+        total: amount
+      }
+      if invoice_fee
+        res[:invoice_fee] = 199
+        res[:total] += 199
+      end
+      res
+    end
+
     describe '#dataset fee_calculator' do
       let(:prev_files_size) { 0 }
       let(:new_files_size) { 100 }
@@ -22,29 +54,19 @@ module FeeCalculator
           let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
           context 'without any configuration' do
-            it { is_expected.to eq(no_charges_response) }
+            it { is_expected.to eq(no_charge_response(150)) }
           end
 
           context 'with storage_size at max free limit' do
             let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE }
 
-            it { is_expected.to eq(no_charges_response) }
+            it { is_expected.to eq(no_charge_response(180)) }
           end
 
           context 'with storage_size over the max free limit' do
             let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
 
-            it do
-              is_expected.to eq(
-                {
-                  storage_fee: 340,
-                  storage_fee_label: 'Data Publishing Charge',
-                  coupon_id: coupon_id,
-                  waiver_discount: -180,
-                  total: 160
-                }
-              )
-            end
+            it { is_expected.to eq(charge_response(520, 180)) }
           end
 
           it_behaves_like 'it has 1TB max limit'
@@ -52,6 +74,8 @@ module FeeCalculator
 
         context 'on second submit' do
           let(:prev_files_size) { 100 }
+          let(:first_resource) { create(:resource, identifier: identifier, total_file_size: prev_files_size, created_at: 2.minutes.ago) }
+          let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true) }
           let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
           context 'when files_size do not change' do
@@ -68,35 +92,25 @@ module FeeCalculator
             context 'storage gets to next level' do
               let(:new_files_size) { 5_000_000_001 }
 
-              it { is_expected.to eq(no_charges_response) }
+              it { is_expected.to eq(no_discount_response(0)) }
             end
 
             context 'storage jumps a few levels' do
-              let(:new_files_size) { 10_000_000_000 }
+              let(:new_files_size) { 60_000_000_000 }
 
-              it { is_expected.to eq(no_charges_response) }
+              it { is_expected.to eq(no_discount_response(808 - 180)) }
             end
 
             context 'with storage_size at max free limit' do
               let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE }
 
-              it { is_expected.to eq(no_charges_response) }
+              it { is_expected.to eq(no_discount_response(0)) }
             end
 
             context 'with storage_size over the max free limit' do
               let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
 
-              it do
-                is_expected.to eq(
-                  {
-                    storage_fee: 340,
-                    storage_fee_label: 'Data Publishing Charge',
-                    coupon_id: coupon_id,
-                    waiver_discount: -180,
-                    total: 160
-                  }
-                )
-              end
+              it { is_expected.to eq(no_discount_response(520 - 180)) }
             end
 
             it_behaves_like 'it has 1TB max limit'
@@ -104,7 +118,8 @@ module FeeCalculator
 
           context 'when discount was previously applied' do
             let(:prev_files_size) { 15_000_000_000 }
-            let!(:payment) { create(:resource_payment, resource: resource, has_discount: true) }
+            let(:first_resource) { create(:resource, identifier: identifier, total_file_size: prev_files_size, created_at: 2.minutes.ago) }
+            let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true) }
 
             context 'but does not exceed the current limit' do
               let(:new_files_size) { 50_000_000_000 }
@@ -115,7 +130,7 @@ module FeeCalculator
             context 'storage gets to next level does not add discount again' do
               let(:new_files_size) { 50_000_000_001 }
 
-              it { is_expected.to eq({ storage_fee: 288, storage_fee_label: 'Data Publishing Charge', total: 288 }) }
+              it { is_expected.to eq(no_discount_response(808 - 520)) }
             end
 
             it_behaves_like 'it has 1TB max limit'
@@ -130,30 +145,19 @@ module FeeCalculator
           let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
           context 'without any configuration' do
-            it { is_expected.to eq(no_charges_response) }
+            it { is_expected.to eq(no_charge_response(150)) }
           end
 
           context 'with storage_size at max free limit' do
             let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE }
 
-            it { is_expected.to eq(no_charges_response) }
+            it { is_expected.to eq(no_charge_response(180)) }
           end
 
           context 'with storage_size over the max free limit' do
             let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
 
-            it do
-              is_expected.to eq(
-                {
-                  storage_fee: 340,
-                  storage_fee_label: 'Data Publishing Charge',
-                  coupon_id: coupon_id,
-                  waiver_discount: -180,
-                  invoice_fee: 199,
-                  total: 359
-                }
-              )
-            end
+            it { is_expected.to eq(charge_response(520, 180, true)) }
           end
 
           it_behaves_like 'it has 1TB max limit'
@@ -161,6 +165,8 @@ module FeeCalculator
 
         context 'on second submit' do
           let(:prev_files_size) { 100 }
+          let(:first_resource) { create(:resource, identifier: identifier, total_file_size: prev_files_size, created_at: 2.minutes.ago) }
+          let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true) }
           let(:resource) { create(:resource, identifier: identifier, total_file_size: new_files_size) }
 
           context 'when files_size do not change' do
@@ -181,9 +187,9 @@ module FeeCalculator
             end
 
             context 'storage jumps a few levels' do
-              let(:new_files_size) { 10_000_000_000 }
+              let(:new_files_size) { 60_000_000_000 }
 
-              it { is_expected.to eq(no_charges_response) }
+              it { is_expected.to eq(no_discount_response(808 - 180, true)) }
             end
 
             context 'with storage_size at max free limit' do
@@ -195,18 +201,7 @@ module FeeCalculator
             context 'with storage_size over the max free limit' do
               let(:new_files_size) { FeeCalculator::WaiverService::FREE_STORAGE_SIZE + 1 }
 
-              it do
-                is_expected.to eq(
-                  {
-                    storage_fee: 340,
-                    storage_fee_label: 'Data Publishing Charge',
-                    coupon_id: coupon_id,
-                    waiver_discount: -180,
-                    invoice_fee: 199,
-                    total: 359
-                  }
-                )
-              end
+              it { is_expected.to eq(no_discount_response(520 - 180, true)) }
             end
 
             it_behaves_like 'it has 1TB max limit'
@@ -214,7 +209,8 @@ module FeeCalculator
 
           context 'when discount was previously applied' do
             let(:prev_files_size) { 15_000_000_000 }
-            let!(:payment) { create(:resource_payment, resource: resource, has_discount: true) }
+            let(:first_resource) { create(:resource, identifier: identifier, total_file_size: prev_files_size, created_at: 2.minutes.ago) }
+            let!(:payment) { create(:resource_payment, resource: first_resource, has_discount: true) }
 
             context 'but does not exceed the current limit' do
               let(:new_files_size) { 50_000_000_000 }
@@ -225,7 +221,7 @@ module FeeCalculator
             context 'storage gets to next level does not add discount again' do
               let(:new_files_size) { 50_000_000_001 }
 
-              it { is_expected.to eq({ storage_fee: 288, storage_fee_label: 'Data Publishing Charge', invoice_fee: 199, total: 487 }) }
+              it { is_expected.to eq(no_discount_response(808 - 520, true)) }
             end
 
             it_behaves_like 'it has 1TB max limit'
