@@ -137,6 +137,12 @@ function PublicationForm({
           <div className="callout alt">
             <p><i className="fas fa-file-import" /> Enter your publication information to import the title and other metadata</p>
           </div>
+          {importType === 'manuscript' && (
+            <p style={{fontSize: '.98rem'}}>
+              Are you currently submitting your manuscript?
+              Enter <code>NA</code> as the Manuscript number. This can be updated once a number is assigned by the journal.
+            </p>
+          )}
           <div className="input-line">
             <div className="input-stack">
               <Journal
