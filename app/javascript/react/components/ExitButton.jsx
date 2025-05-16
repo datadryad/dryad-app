@@ -1,6 +1,7 @@
 import React from 'react';
 
 export default function ExitButton({resource}) {
+  const editors = [...new Set(resource.users.map((u) => u.id))];
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const previous = resource.previous_curated_resource;
   return (
@@ -15,7 +16,11 @@ export default function ExitButton({resource}) {
       </form>
       <form
         action={`/resources/${resource.id}/logout`}
-        data-confirm={previous ? 'Are you sure you want to exit without submitting your changes?' : null}
+        data-confirm={
+          (previous && 'Are you sure you want to exit without submitting your changes?')
+          || (editors.length === 1 && 'Are you sure you want to exit without completing your submission?')
+          || null
+        }
         data-remote="false"
         method="post"
       >
