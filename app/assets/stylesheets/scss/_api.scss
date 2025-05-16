@@ -1,0 +1,67 @@
+openapi-explorer {
+  --border-radius: 0;
+  --layout: column;
+  --nav-path-padding: 7px 0 7px 1.5rem;
+  --resp-area-height: 300px;
+  --font-size-regular: 1.1rem;
+  --font-size-small: .98rem;
+  --font-mono: Monaco, monospace, monospace;
+  --font-size-mono: .98em;
+  --dialog-z-index: 1000;
+  --bg: #ffffff;
+  --bg2: #fafafa;
+  --bg3: #f0f0f0;
+  --light-bg: #{lightest-gray};
+  --fg: #000;
+  --fg2: #444444;
+  --fg3: #555555;
+  --light-fg: #{$dark-gray};
+  --selection-bg: #{$lightest-orange};
+  --selection-fg: currentColor;
+  --overlay-bg: rgba(0, 0, 0, 0.4);
+  --border-color: #d9d9d9;
+  --light-border-color: #e8e8e8;
+  --code-border-color: transparent;
+  --input-bg: #ffffff;
+  --placeholder-color: #9e9e9e;
+  --hover-color: #{$medium-blue};
+  --purple: #{$link-body-visited-color};
+  --red: #{$red};
+  --orange: #{$dark-orange};
+  --yellow: #857014;
+  --green: #{$dark-green};
+  --blue: #{$link-body-color};
+  --gray: #465865;
+  --pink: #e83e8c;
+  --white: #fff;
+  --light-purple: #F3F0FA;
+  --light-red: #{$lightest-red};
+  --light-orange: #{$light-orange};
+  --light-yellow: #{$lightest-orange};
+  --light-green: #{$light-green};
+  --light-blue: #{$light-blue};
+  --light-gray: #{$light-gray};
+  --header-bg: #3E6077;
+  --header-fg: #ffffff;
+  --header-color-darker: #2a4c63;
+  --header-color-border: #486a81;
+  --nav-bg-color:  #{$lightest-blue};
+  --nav-text-color: #{$link-body-color};
+  --nav-hover-bg-color: #{white};
+  --nav-hover-scrollbar-color: #204259;
+  --nav-hover-text-color: #{$link-body-color};
+  --code-fg: #666;
+  --inline-code-fg: #{$dark-gray};
+  --code-property-color: #905;
+  --code-keyword-color: #07a;
+  --code-operator-color: #9a6e3a;
+  --primary-color: #{$dark-navy};
+  --secondary-color: #{$dark-blue};
+  --primary-btn-text-color: #FFFFFF;
+  --spacing-base: #{$spacing-base};
+}
+
+openapi-explorer::part(label-overview-title) {
+  @extend %o-heading__level1;
+  margin-top: 0;
+}
