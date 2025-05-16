@@ -399,7 +399,7 @@ module StashApi
         dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
         expect do
           dp.parse
-        end.to raise_error(ActionController::BadRequest,
+        end.to raise_error(StashApi::Error::BadRequestError,
                            'The userId orcid is not known to Dryad. Please supply a matching orcid in the dataset author list.')
       end
 
