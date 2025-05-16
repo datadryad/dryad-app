@@ -1,0 +1,37 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+.tox .tox-edit-area::before {
+  border-color: #0071a8 !important;
+}
+
+.tox .tox-collection--list .tox-collection__item--active {
+  background-color: #0071a8 !important;
+}
+
+.tox .tox-collection--list .tox-collection__item--active.tox-collection__item--state-disabled {
+  background-color: #767676 !important;
+  color: white !important;
+}
+
+.tox .tox-textfield, .tox .tox-listboxfield .tox-listbox--select,
+.tox .tox-insert-table-picker .tox-insert-table-picker__selected,
+.tox .tox-insert-table-picker > div {
+  border-color: #949494 !important;
+}
+
+.tox .tox-textfield:focus, .tox .tox-listboxfield .tox-listbox--select:focus {
+  box-shadow: 0 0 0 1px #0071a8 !important;
+}
+
+.tox .tox-split-button__chevron {
+  width: 24px !important;
+}
+
+.tox-statusbar__path-item {
+  height: 24px !important;
+  min-width: 24px;
+  text-align: center !important;
+}

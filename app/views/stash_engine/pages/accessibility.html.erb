@@ -2,11 +2,24 @@
 <% content_for(:doc_end) do %>
 <script type="text/javascript">
   const form = document.getElementById('accessibility-email');
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', () => {
+    const icon = document.createElement('i');
+    icon.classList.add('fas', 'fa-spin', 'fa-circle-notch');
+    icon.setAttribute('role', 'img');
+    icon.setAttribute('aria-label', 'Loading...');
+    icon.style.marginRight = '.5ch';
+    form.querySelector('button').disabled = true;
+    form.querySelector('button').prepend(icon);
+  })
+  const button = form.querySelector('button')
+  button.addEventListener('click', (e) => {
     e.preventDefault();
-    if (!form.elements['name'].value || !form.elements['url'].value || !form.elements['body'].value) return false;
-    const body = `Name: ${form.elements['name'].value}\n\nURL: ${form.elements['url'].value}\n\nMessage: ${form.elements['body'].value}`
-    window.open(`mailto:<%= APP_CONFIG.contact_us_uri %>?subject=Accessibility+problem+report&body=${encodeURIComponent(body)}`)
+    let body = 'URL of problem:\n'
+    body += form.elements['url'].value
+    body += '\n\nReport:\n'
+    body += form.elements['report'].value
+    form.elements['body'].value = body;
+    form.requestSubmit();
   });
 </script>
 <% end %>

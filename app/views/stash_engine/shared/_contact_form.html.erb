@@ -8,7 +8,7 @@
     'API request',
     'Other'
 ]%>
-<div id="contact_form">
+<div id="contact_form" aria-live="polite">
   <div class="callout">
   <%= form_with(url: stash_url_helpers.contact_helpdesk_path, method: :post, local: false, id: 'contact_form_form') do |form| %>
     <% if local_assigns.key?(:identifier) %>
