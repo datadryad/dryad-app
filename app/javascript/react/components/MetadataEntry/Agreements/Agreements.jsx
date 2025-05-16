@@ -74,7 +74,7 @@ export default function Agreements({
       const active_form = document.createRange().createContextualFragment(form);
       formRef.current.append(active_form);
     }
-    if (!!dpc.aff_tenant && formRef.current) {
+    if (!!dpc.aff_tenant && existing) {
       document.getElementById('edit_tenant').hidden = true;
       document.getElementById('edit-tenant-form').hidden = false;
       document.getElementById('searchselect-tenant__value').value = dpc.aff_tenant.id;
