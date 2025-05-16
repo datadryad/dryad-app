@@ -18,6 +18,8 @@
 module StashEngine
   class ResourceState < ApplicationRecord
     self.table_name = 'stash_engine_resource_states'
+    has_paper_trail
+
     belongs_to :user
     belongs_to :resource
 

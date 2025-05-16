@@ -29,6 +29,8 @@
 #  index_resource_payments_on_status               (status)
 #
 class ResourcePayment < ApplicationRecord
+  acts_as_paranoid
+  has_paper_trail
 
   belongs_to :resource, class_name: 'StashEngine::Resource'
 
