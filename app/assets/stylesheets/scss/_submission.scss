@@ -587,7 +587,7 @@ dialog#submission-step[open] {
     margin-top: 0;
   }
 
-  *[aria-invalid="true"] {
+  *[aria-invalid="true"]:not(.milkdown) {
     border: thin solid $red !important;
   }
 

@@ -7,8 +7,13 @@
   margin: 1em auto;
 }
 
+.markdown_editor:has(.milkdown[aria-invalid]) {
+  border-color: rgb(209, 44, 29);
+}
+
 .markdown_editor:focus-within {
   border-color: #0071a8;
+  outline: thin solid #0071a8;
 }
 
 .md_editor_textarea {
