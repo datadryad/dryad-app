@@ -37,7 +37,14 @@ namespace :merritt_status do
     catch(:sigint) do
       loop do
         Rails.logger.info('Starting round of processing')
-        StashEngine::RepoQueueState.latest_per_resource.where(state: %w[processing provisional_complete]).each do |queue_state|
+        queues = StashEngine::RepoQueueState.latest_per_resource.where(state: %w[processing provisional_complete])
+
+        if queues.count >= SUBMISSION_QUEUE_NOTIFICATION_LIMIT && Rails.cache.read('submission_queue_too_large').blank?
+          StashEngine::NotificationsMailer.submission_queue_too_large(queues.count).deliver_now
+          Rails.cache.write('submission_queue_too_large', 'email_sent', expires_in: SUBMISSION_QUEUE_NOTIFICATION_EVERY)
+        end
+
+        queues.each do |queue_state|
           if queue_state.possibly_set_as_completed
             Rails.logger.info("  Resource #{queue_state.resource_id} available in storage and finalized")
           elsif queue_state.updated_at < 1.day.ago # older than 1 day ago
