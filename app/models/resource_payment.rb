@@ -5,6 +5,7 @@
 #  id                          :bigint           not null, primary key
 #  amount                      :integer
 #  deleted_at                  :datetime
+#  has_discount                :boolean          default(FALSE)
 #  invoice_details             :json
 #  paid_at                     :datetime
 #  pay_with_invoice            :boolean          default(FALSE)
@@ -33,4 +34,7 @@ class ResourcePayment < ApplicationRecord
   belongs_to :resource, class_name: 'StashEngine::Resource'
 
   enum :status, { created: 1, paid: 2, failed: 3 }
+
+  scope :with_discount, -> { where(has_discount: true) }
+
 end
