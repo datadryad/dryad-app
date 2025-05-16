@@ -97,7 +97,7 @@ module StashApi
         begin
           StashEngine::User.find(@hash['userId']).id
         rescue ActiveRecord::RecordNotFound
-          raise ActionController::BadRequest,
+          raise StashApi::Error::BadRequestError,
                 'The userId is not known to Dryad. Please supply the id of an existing Dryad user, or an orcid matching an author of the dataset.'
         end
       else
@@ -119,7 +119,7 @@ module StashApi
           end
         end
         unless found_author
-          raise ActionController::BadRequest,
+          raise StashApi::Error::BadRequestError,
                 'The userId orcid is not known to Dryad. Please supply a matching orcid in the dataset author list.'
         end
 
