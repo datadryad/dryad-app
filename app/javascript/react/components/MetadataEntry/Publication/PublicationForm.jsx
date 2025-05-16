@@ -97,8 +97,8 @@ function PublicationForm({
             journal: j,
             related_identifiers,
           }));
-          setJournal(j.title || journal);
-          setIssn(j.issn || issn);
+          setJournal(j?.title || journal);
+          setIssn(j?.issn || issn);
         }
         setImportError(error || ((importType === 'manuscript' && apiJournal) && apiError) || '');
         showSavedMsg();
