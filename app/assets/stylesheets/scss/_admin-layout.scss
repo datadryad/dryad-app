@@ -344,6 +344,7 @@
   }
   .input-line {
     column-gap: .5ch;
+    align-items: baseline;
   }
   .c-admin-edit-icon {
     color: $dark-blue;

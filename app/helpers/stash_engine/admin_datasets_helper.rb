@@ -40,7 +40,7 @@ module StashEngine
 
       # Stripe invoice references
       if instring.start_with?('in_') && !instring.start_with?('in_progress')
-        return render inline: link_to(instring, "https://dashboard.stripe.com/invoices/#{instring}",
+        return render inline: link_to('invoice', "https://dashboard.stripe.com/invoices/#{instring}",
                                       target: :_blank)
       end
 
