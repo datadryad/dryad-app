@@ -55,7 +55,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         visit stash_url_helpers.admin_dashboard_path
 
         # Edit the Dataset as an admin
-        click_button 'Edit dataset'
+        within(:css, "#dataset_description_#{@resource.identifier_id}") do
+          click_button 'Edit dataset'
+        end
         expect(page).to have_text("You are editing #{@author.name}'s dataset.")
         update_dataset(curator: true)
         @resource.reload
@@ -288,7 +290,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def update_dataset(curator: false)
     # Add a value to the dataset, submit it and then mock a successful submission
     click_button 'Authors'
-    all('[id^=instit_affil_]').last.set('test institution')
+    all('[id^=instit_affil_]').last.set(Faker::Company.name)
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.set(true) }
@@ -298,7 +300,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     fill_in_keywords
     click_button 'Preview changes'
     click_button 'Related works'
-    doi = 'https://doi.org/10.5061/dryad.888gm50'
+    doi = Faker::Internet.url
     mock_good_doi_resolution(doi: doi)
     fill_in 'DOI or other URL', with: doi
     page.send_keys(:tab)
