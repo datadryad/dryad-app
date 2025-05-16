@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import MarkdownEditor from '../MarkdownEditor';
 
 const formatList = (fileList) => fileList.map((f) => {
@@ -15,6 +15,8 @@ export const secTitles = ['Data description', 'Files and variables', 'Code/softw
 export default function ReadMeSteps({
   step, setStep, content, fileList, save,
 }) {
+  const [initialValue, setInitialValue] = useState(null);
+
   const saveContent = (markdown) => {
     if (markdown.trim()) {
       content[`step${step}`] = markdown;
@@ -51,6 +53,10 @@ export default function ReadMeSteps({
     },
   };
 
+  useEffect(() => {
+    setInitialValue(`${sections[step].content}`);
+  }, []);
+
   return (
     <>
       <div className="steps-wrapper">
@@ -79,7 +85,7 @@ export default function ReadMeSteps({
       </div>
       <MarkdownEditor
         id="readme_step_editor"
-        {...(step === 1 ? {initialValue: '', replaceValue: sections[step].content} : {initialValue: sections[step].content})}
+        initialValue={initialValue}
         onChange={saveContent}
       />
       <div className="o-dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>

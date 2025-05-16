@@ -1,13 +1,10 @@
-import React, {
-  useRef, useState, useEffect, useCallback,
-} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import {debounce} from 'lodash';
 import {ExitIcon} from '../../ExitButton';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 export default function Compliance({resource, setResource}) {
-  const hsiRef = useRef(null);
   const [hsi, setHSI] = useState(null);
   const [desc, setDesc] = useState('');
   const [license, setLicense] = useState(resource.identifier.license_id);
@@ -31,9 +28,8 @@ export default function Compliance({resource, setResource}) {
       });
   };
 
-  const submit = () => {
+  const submit = (value) => {
     if (disclaimer) {
-      const {value} = hsiRef.current || {};
       if (disclaimer.description !== value || (!hsi && !!desc)) {
         const subJson = {
           authenticity_token,
@@ -77,7 +73,7 @@ export default function Compliance({resource, setResource}) {
     if (v === 'yes') setHSI(true);
   };
 
-  const checkSubmit = useCallback(debounce(submit, 900), []);
+  const checkSubmit = useCallback(debounce(submit, 600), []);
 
   useEffect(() => {
     if (disclaimer) {
@@ -85,13 +81,11 @@ export default function Compliance({resource, setResource}) {
     }
   }, [disclaimer]);
 
-  useEffect(() => checkSubmit(), [desc]);
-
   useEffect(() => submit(), [hsi]);
 
   useEffect(() => {
     setHSI(disclaimer ? disclaimer?.description !== null : null);
-    setDesc(disclaimer?.description);
+    setDesc(`${disclaimer?.description}`);
   }, []);
 
   return (
@@ -157,14 +151,16 @@ export default function Compliance({resource, setResource}) {
             </p>
           </div>
           <textarea
-            ref={hsiRef}
             className="c-input__textarea"
             style={{width: '100%'}}
             id="disclaimer-area"
             rows={5}
             value={desc || ''}
-            onBlur={submit}
-            onChange={(e) => setDesc(e.target.value)}
+            onBlur={(e) => submit(e.target.value)}
+            onChange={(e) => {
+              setDesc(e.target.value);
+              checkSubmit(e.target.value);
+            }}
             aria-describedby="hsi-desc"
             aria-labelledby="hsi-label"
             aria-errormessage="hsi_error"

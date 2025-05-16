@@ -27,7 +27,7 @@ function Submission({
   submission, user, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
 }) {
   const location = useLocation();
-  const subRef = useRef(null);
+  const subRef = useRef([]);
   const previewRef = useRef(null);
   const [resource, setResource] = useState(JSON.parse(submission));
   const [step, setStep] = useState({name: 'Create a submission'});
@@ -37,7 +37,7 @@ function Submission({
   const [fees, setFees] = useState({});
   const previous = resource.previous_curated_resource;
 
-  const steps = [
+  const steps = () => [
     {
       name: 'Title',
       index: 0,
@@ -61,7 +61,7 @@ function Submission({
       index: 2,
       pass: !abstractCheck(resource),
       fail: (review || step.index > 1) && abstractCheck(resource),
-      component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} />,
+      component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} step={step.name} />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -77,8 +77,8 @@ function Submission({
     {
       name: 'Support',
       index: 4,
-      pass: resource.contributors.find((c) => c.contributor_type === 'funder'),
-      fail: fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
+      pass: !fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
+      fail: (review || step.index > 3) && fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support resource={resource} setResource={setResource} />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
       preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,
@@ -99,7 +99,7 @@ function Submission({
       fail: (review || step.index > 5) && filesCheck(resource, user.superuser, config_maximums),
       component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
         <UploadFiles {...{
-          resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments,
+          resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments, step,
         }}
         />
       ),
@@ -113,12 +113,7 @@ function Submission({
       index: 7,
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
       fail: (review || step.index > 6) && readmeCheck(resource),
-      component: <ReadMeWizard
-        dcsDescription={resource.descriptions.find((d) => d.description_type === 'technicalinfo')}
-        resource={resource}
-        setResource={setResource}
-        // errors={readmeCheck(resource)}
-      />,
+      component: <ReadMeWizard resource={resource} setResource={setResource} step={step.name} />,
       help: <ReadMeHelp />,
       preview: <ReadMePreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -128,7 +123,7 @@ function Submission({
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource, (review || step.index > 7)),
       component: <RelatedWorks resource={resource} setResource={setResource} />,
-      help: <WorksHelp setTitleStep={() => setStep(steps.find((l) => l.name === 'Title'))} />,
+      help: <WorksHelp setTitleStep={() => setStep(steps().find((l) => l.name === 'Title'))} />,
       preview: <WorksPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
@@ -139,12 +134,13 @@ function Submission({
       component: <Agreements
         resource={resource}
         setResource={setResource}
+        step={step.name}
         subFees={fees}
         setSubFees={setFees}
         config={config_payments}
         form={change_tenant}
         user={user}
-        setAuthorStep={() => setStep(steps.find((l) => l.name === 'Authors'))}
+        setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
       preview: <Agreements
@@ -159,16 +155,16 @@ function Submission({
   ];
 
   if (resource.resource_type.resource_type === 'collection') {
-    steps.splice(5, 3);
+    steps().splice(5, 3);
   }
 
-  const markInvalid = () => {
-    const et = document.querySelector('.error-text');
+  const markInvalid = (el) => {
+    const et = el.querySelector('.error-text');
     if (et) {
       const ind = et.dataset.index;
       const inv = ind
-        ? document.querySelectorAll(`*[aria-errormessage="${et.id}"]`)[ind]
-        : document.querySelector(`*[aria-errormessage="${et.id}"]`);
+        ? el.querySelectorAll(`*[aria-errormessage="${et.id}"]`)[ind]
+        : el.querySelector(`*[aria-errormessage="${et.id}"]`);
       if (inv) inv.setAttribute('aria-invalid', true);
     }
   };
@@ -176,14 +172,14 @@ function Submission({
   const move = async (dir) => {
     /* eslint-disable-next-line no-undef */
     await awaitSelector('.saving_text[hidden]');
-    setStep(steps[steps.findIndex((l) => l.name === step.name) + dir] || (dir === -1 && {name: 'Create a submission'}));
+    setStep(steps()[steps().findIndex((l) => l.name === step.name) + dir] || (dir === -1 && {name: 'Create a submission'}));
   };
 
   useEffect(() => {
     if (!review) {
       const url = location.search.slice(1);
       if (url) {
-        const n = steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
+        const n = steps().find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
         if (n.name !== step.name) setStep(n);
       }
     }
@@ -213,20 +209,18 @@ function Submission({
   }, [review, step, payment]);
 
   useEffect(() => {
-    if (subRef.current) {
-      markInvalid();
-      const observer = new MutationObserver(() => {
-        const old = document.querySelector('*[aria-invalid]');
-        if (old) old.removeAttribute('aria-invalid');
-        markInvalid();
+    if (subRef.current.length === steps().length) {
+      steps().forEach((s, i) => {
+        markInvalid(subRef.current[i]);
+        const observer = new MutationObserver(() => {
+          const old = subRef.current[i].querySelector('*[aria-invalid]');
+          if (old) old.removeAttribute('aria-invalid');
+          markInvalid(subRef.current[i]);
+        });
+        observer.observe(subRef.current[i], {subtree: true, childList: true, attributeFilter: ['id', 'data-index']});
       });
-      observer.observe(subRef.current, {subtree: true, childList: true, attributeFilter: ['id', 'data-index']});
     }
   }, [subRef.current]);
-
-  useEffect(() => {
-    if (step.name === 'Files') setStep(steps.find((c) => c.name === 'Files'));
-  }, [resource.generic_files]);
 
   useEffect(() => {
     async function getFileData() {
@@ -239,9 +233,9 @@ function Submission({
     if (!review) {
       const url = window.location.search.slice(1);
       if (url) {
-        setStep(steps.find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
-      } else if (steps.find((c) => c.fail || c.pass)) {
-        setStep(steps.find((c) => !c.pass));
+        setStep(steps().find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
+      } else if (steps().find((c) => c.fail || c.pass)) {
+        setStep(steps().find((c) => !c.pass));
       }
     } else {
       document.documentElement.classList.add('preview_submission');
@@ -275,7 +269,7 @@ function Submission({
         {step.name === 'Create a submission' && (
           <>
             <div id="submission-preview" ref={previewRef} className={`${user.curator ? 'track-changes' : ''} ${payment ? 'screen-reader-only' : ''}`}>
-              {steps.map((s) => (
+              {steps().map((s) => (
                 <section key={s.name} aria-label={s.name}>
                   {s.preview}
                   {s.fail}
@@ -313,7 +307,7 @@ function Submission({
                 </div>
               </nav>
               <div id="submission-wizard" className="open">
-                <div ref={subRef}>
+                <div>
                   <div>
                     <div id="submission-header">
                       <h2 className="o-heading__level2">{step.name}</h2>
@@ -322,8 +316,12 @@ function Submission({
                         <div className="saved_text" hidden>All progress saved</div>
                       </div>
                     </div>
-                    {step.component}
-                    {steps.find((s) => s.name === step.name).fail}
+                    {steps().map((s, i) => (
+                      <div hidden={step.name !== s.name || null} key={s.name} ref={(el) => { subRef.current[i] = el; }}>
+                        {s.component}
+                        {steps().find((si) => si.name === s.name).fail}
+                      </div>
+                    ))}
                   </div>
                   <div id="submission-help">
                     <button
@@ -359,7 +357,7 @@ function Submission({
         <ChecklistNav steps={steps} step={step} setStep={setStep} open={open} setOpen={setOpen} />
         <div id="submission-wizard" className={open ? 'open' : null}>
           <div id="submission-step" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
-            <div ref={subRef}>
+            <div>
               <div id="submission-header">
                 <h2 className="o-heading__level2" tabIndex="-1">{step.name}</h2>
                 <div role="status">
@@ -368,10 +366,14 @@ function Submission({
                 </div>
               </div>
               {step.name === 'Create a submission' && (<SubmissionHelp type={resource.resource_type.resource_type} />)}
-              {step.component}
-              {!['Create a submission', 'README'].includes(step.name) && (
-                steps.find((s) => s.name === step.name).fail
-              )}
+              {steps().map((s, i) => (
+                <div hidden={step.name !== s.name || null} key={s.name} ref={(el) => { subRef.current[i] = el; }}>
+                  {s.component}
+                  {s.name !== 'README' && (
+                    steps().find((si) => si.name === s.name).fail
+                  )}
+                </div>
+              ))}
             </div>
             <div id="submission-help">
               <div className="o-dataset-nav">

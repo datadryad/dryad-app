@@ -6,7 +6,7 @@ import Calculations from './Calculations';
 import CalculateFees from '../../CalculateFees';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, config, subFees, setSubFees, setAuthorStep, preview = false,
+  resource, setResource, user, form, previous, config, subFees, setSubFees, step, setAuthorStep, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -62,6 +62,16 @@ export default function Agreements({
       });
   };
 
+  const getPaymentInfo = async () => {
+    axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
+      if (!preview && !curated) {
+        if (data.data.automatic_ppr && !ppr) postPPR(true);
+        else if (!data.data.allow_review && ppr) postPPR(false);
+      }
+      setDPC(data.data);
+    });
+  };
+
   useEffect(() => {
     if (Object.keys(fees).length > 0) {
       setSubFees(fees);
@@ -69,7 +79,8 @@ export default function Agreements({
   }, [fees]);
 
   useEffect(() => {
-    if (formRef.current) {
+    const existing = document.getElementById('dryad-member');
+    if (formRef.current && !existing) {
       const active_form = document.createRange().createContextualFragment(form);
       formRef.current.append(active_form);
     }
@@ -95,17 +106,10 @@ export default function Agreements({
   }, [dpc]);
 
   useEffect(() => {
-    async function getPaymentInfo() {
-      axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
-        if (!preview && !curated) {
-          if (data.data.automatic_ppr && !ppr) postPPR(true);
-          else if (!data.data.allow_review && ppr) postPPR(false);
-        }
-        setDPC(data.data);
-      });
+    if (preview || step === 'Agreements') {
+      getPaymentInfo();
     }
-    getPaymentInfo();
-  }, []);
+  }, [step, preview]);
 
   if (Object.keys(dpc).length === 0) {
     return (
