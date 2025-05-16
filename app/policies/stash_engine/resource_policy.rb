@@ -22,6 +22,8 @@ module StashEngine
     end
 
     def curate?
+      return @record.tenant_id == @user.tenant_id if @user.roles.tenant_roles.curator.present?
+
       @user.min_curator?
     end
 

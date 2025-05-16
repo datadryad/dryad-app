@@ -281,6 +281,8 @@ module StashEngine
         tenant_orgs = []
       end
 
+      tenant_orgs = [] if @filters[:submitter_limit].present?
+
       @datasets = @datasets.left_outer_joins(authors: :affiliations).left_outer_joins(:funders).where(
         'stash_engine_resources.tenant_id in (?) or stash_engine_identifiers.payment_id in (?)
         or dcs_affiliations.ror_id in (?) or dcs_contributors.name_identifier_id in (?)',
