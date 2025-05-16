@@ -5,9 +5,9 @@ import Cedar from './Cedar';
 export default function DescriptionGroup({
   resource, setResource, curator, cedar, step,
 }) {
-  const methods = resource.descriptions.find((d) => d.description_type === 'methods');
-  const usage = resource.descriptions.find((d) => d.description_type === 'other');
-  const abstract = resource.descriptions.find((d) => d.description_type === 'abstract');
+  const methods = resource?.descriptions?.find((d) => d.description_type === 'methods') || {};
+  const usage = resource?.descriptions?.find((d) => d.description_type === 'other') || {};
+  const abstract = resource?.descriptions?.find((d) => d.description_type === 'abstract') || {};
 
   const [openMethods, setOpenMethods] = useState(!!methods?.description);
   const [showCedar, setShowCedar] = useState(!!resource.cedar_json);
@@ -48,9 +48,9 @@ export default function DescriptionGroup({
   }, [resource, abstract]);
 
   useEffect(() => {
-    const templ = cedar.templates.find((arr) => arr[2] === 'Human Cognitive Neuroscience Data');
+    const templ = cedar?.templates?.find((arr) => arr[2] === 'Human Cognitive Neuroscience Data');
     if (templ) setTemplate({id: templ[0], title: templ[2]});
-  }, []);
+  }, [cedar]);
 
   return (
     <>

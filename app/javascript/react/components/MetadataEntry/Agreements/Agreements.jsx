@@ -62,16 +62,6 @@ export default function Agreements({
       });
   };
 
-  const getPaymentInfo = async () => {
-    axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
-      if (!preview && !curated) {
-        if (data.data.automatic_ppr && !ppr) postPPR(true);
-        else if (!data.data.allow_review && ppr) postPPR(false);
-      }
-      setDPC(data.data);
-    });
-  };
-
   useEffect(() => {
     if (Object.keys(fees).length > 0) {
       setSubFees(fees);
@@ -106,6 +96,15 @@ export default function Agreements({
   }, [dpc]);
 
   useEffect(() => {
+    const getPaymentInfo = async () => {
+      axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
+        if (!preview && !curated) {
+          if (data.data.automatic_ppr && !ppr) postPPR(true);
+          else if (!data.data.allow_review && ppr) postPPR(false);
+        }
+        setDPC(data.data);
+      });
+    };
     if (preview || step === 'Agreements') {
       getPaymentInfo();
     }

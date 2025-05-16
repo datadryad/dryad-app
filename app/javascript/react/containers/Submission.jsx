@@ -70,7 +70,7 @@ function Submission({
       index: 3,
       pass: keywordPass(resource.subjects),
       fail: (review || step.index > 2) && keywordFail(resource),
-      component: <Subjects resource={resource} setResource={setResource} />,
+      component: <Subjects step={step.name} resource={resource} setResource={setResource} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} previous={previous} />,
     },
@@ -211,13 +211,15 @@ function Submission({
   useEffect(() => {
     if (subRef.current.length === steps().length) {
       steps().forEach((s, i) => {
-        markInvalid(subRef.current[i]);
-        const observer = new MutationObserver(() => {
-          const old = subRef.current[i].querySelector('*[aria-invalid]');
-          if (old) old.removeAttribute('aria-invalid');
+        if (subRef.current[i]) {
           markInvalid(subRef.current[i]);
-        });
-        observer.observe(subRef.current[i], {subtree: true, childList: true, attributeFilter: ['id', 'data-index']});
+          const observer = new MutationObserver(() => {
+            const old = subRef.current[i].querySelector('*[aria-invalid]');
+            if (old) old.removeAttribute('aria-invalid');
+            markInvalid(subRef.current[i]);
+          });
+          observer.observe(subRef.current[i], {subtree: true, childList: true, attributeFilter: ['id', 'data-index']});
+        }
       });
     }
   }, [subRef.current]);
