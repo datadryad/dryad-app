@@ -5,12 +5,12 @@ import Cedar from './Cedar';
 export default function DescriptionGroup({
   resource, setResource, curator, cedar, step,
 }) {
-  const methods = resource?.descriptions?.find((d) => d.description_type === 'methods') || {};
-  const usage = resource?.descriptions?.find((d) => d.description_type === 'other') || {};
-  const abstract = resource?.descriptions?.find((d) => d.description_type === 'abstract') || {};
+  const [methods, setMethods] = useState(null);
+  const [usage, setUsage] = useState(null);
+  const [abstract, setAbstract] = useState(null);
 
-  const [openMethods, setOpenMethods] = useState(!!methods?.description);
-  const [showCedar, setShowCedar] = useState(!!resource.cedar_json);
+  const [openMethods, setOpenMethods] = useState(false);
+  const [showCedar, setShowCedar] = useState(false);
   const [template, setTemplate] = useState(null);
 
   const abstractLabel = {
@@ -29,28 +29,38 @@ export default function DescriptionGroup({
     describe: <><i aria-hidden="true" />Programs and software required to open the data files</>,
   };
 
-  const bank = /neuro|cogniti|cereb|memory|consciousness|amnesia|psychopharma|brain|hippocampus/i;
+  const checkCedar = () => {
+    const bank = /neuro|cogniti|cereb|memory|consciousness|amnesia|psychopharma|brain|hippocampus/i;
+    const {title, resource_publication, subjects} = resource;
+    const {publication_name} = resource_publication || {};
+    const keywords = subjects.map((s) => s.subject).join(',');
+    return bank.test(title) || bank.test(publication_name) || bank.test(keywords) || bank.test(abstract?.description);
+  };
 
   useEffect(() => {
     if (step === 'Description') {
-      const {title, resource_publication, subjects} = resource;
-      const {publication_name} = resource_publication || {};
-      const keywords = subjects.map((s) => s.subject).join(',');
-      setShowCedar(bank.test(title) || bank.test(publication_name) || bank.test(keywords) || bank.test(abstract?.description));
+      const hasMethods = resource.descriptions.find((d) => d.description_type === 'methods');
+      setShowCedar(checkCedar());
+      setMethods(hasMethods);
+      setUsage(resource.descriptions.find((d) => d.description_type === 'other'));
+      setAbstract(resource.descriptions.find((d) => d.description_type === 'abstract'));
+      setShowCedar(!!resource.cedar_json);
+      setOpenMethods(!!hasMethods?.description);
     }
   }, [step]);
 
   useEffect(() => {
-    const {title, resource_publication, subjects} = resource;
-    const {publication_name} = resource_publication || {};
-    const keywords = subjects.map((s) => s.subject).join(',');
-    if (bank.test(title) || bank.test(publication_name) || bank.test(keywords) || bank.test(abstract?.description)) setShowCedar(true);
+    if (checkCedar()) setShowCedar(true);
   }, [resource, abstract]);
 
   useEffect(() => {
     const templ = cedar?.templates?.find((arr) => arr[2] === 'Human Cognitive Neuroscience Data');
     if (templ) setTemplate({id: templ[0], title: templ[2]});
   }, [cedar]);
+
+  if (!abstract?.id) {
+    return <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>;
+  }
 
   return (
     <>

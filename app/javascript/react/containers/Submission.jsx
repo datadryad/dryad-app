@@ -52,7 +52,7 @@ function Submission({
       index: 1,
       pass: resource.authors.length > 0 && !authorCheck(resource),
       fail: (review || step.index > 0) && authorCheck(resource),
-      component: <Authors resource={resource} setResource={setResource} user={user} />,
+      component: <Authors step={step.name} resource={resource} setResource={setResource} user={user} />,
       help: <AuthHelp />,
       preview: <AuthPreview resource={resource} previous={previous} curator={user.curator} />,
     },
