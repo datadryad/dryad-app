@@ -66,7 +66,7 @@ If you would like your funder, institution or publisher to sponsor your <span ro
 
    4. *Compliance*. Each of the <span role="emphasis" aria-describedby="term-desc">Submitter</span> and Dryad shall perform under this Agreement in compliance with all laws, rules, and regulations of any jurisdiction which is or may be applicable to its business and activities, including anti-corruption, copyright, privacy, and data protection laws, rules, and regulations.
 
-   The <span role="emphasis" aria-describedby="term-desc">Submitter</span> warrants that neither s/he nor any co-author(s) or co-creator(s) is a person whose name appears on the list of Specially Designated Nationals and Blocked Persons published by the Office of Foreign Assets Control, U.S. Department of Treasury (“OFAC”);
+        The <span role="emphasis" aria-describedby="term-desc">Submitter</span> warrants that neither s/he nor any co-author(s) or co-creator(s) is a person whose name appears on the list of Specially Designated Nationals and Blocked Persons published by the Office of Foreign Assets Control, U.S. Department of Treasury (“OFAC”);
 
 3. **Fees**.
 
@@ -110,7 +110,7 @@ If you would like your funder, institution or publisher to sponsor your <span ro
 
 8. **Termination**. Dryad reserves the right to suspend use by any End User if that party engages in, or is suspected of engaging in, Prohibited Usage as set forth in Sections 4(c) and 5(c).
 
-   Dryad has tax-exempt status with the United States Internal Revenue Service (“IRS”), and reserves the right to modify or terminate any <span role="emphasis" aria-describedby="term-desc">Publication</span> arrangement subject to a <span role="emphasis" aria-describedby="term-desc">Data Publishing Charge</span> if it is advised by the IRS or legal counsel that continuation would jeopardize the exempt status of Dryad; provided that in the event of such termination, Dryad would provide the Submitter with as much notice as reasonably practicable and a pro-rata refund.
+    Dryad has tax-exempt status with the United States Internal Revenue Service (“IRS”), and reserves the right to modify or terminate any <span role="emphasis" aria-describedby="term-desc">Publication</span> arrangement subject to a <span role="emphasis" aria-describedby="term-desc">Data Publishing Charge</span> if it is advised by the IRS or legal counsel that continuation would jeopardize the exempt status of Dryad; provided that in the event of such termination, Dryad would provide the Submitter with as much notice as reasonably practicable and a pro-rata refund.
 
 9. **Enforcement**. Dryad shall take reasonable steps to enforce these Terms, provided that Dryad shall not be obligated to take any action with respect to any <span role="emphasis" aria-describedby="term-desc">Dataset</span> that is the subject of an intellectual property dispute, but reserves the right, in its sole discretion, to remove or suspend access from, to or through such Dataset or to take any other action it deems appropriate.
 
