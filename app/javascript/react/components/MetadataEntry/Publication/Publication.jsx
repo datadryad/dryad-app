@@ -103,7 +103,7 @@ export default function Publication({resource, setResource, maxSize}) {
         setCaseWarning(false);
       }
     }
-  }, [resource.resource_publication, resource.title, resource.related_identifiers]);
+  }, [resource.journal, resource.resource_publication, resource.title, resource.related_identifiers]);
 
   useEffect(() => {
     const it = resource.identifier.import_info;

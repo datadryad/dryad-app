@@ -194,37 +194,26 @@ function PublicationForm({
             )}
             <div className="input-stack">
               <span style={{height: '23px'}} />
-              {resource.title ? (
-                <button
-                  type="button"
-                  name="commit"
-                  className="o-button__plain-text5"
-                  hidden={hide}
-                  disabled={disable}
-                  aria-controls="overwrite-dialog"
-                  onClick={() => document.getElementById('overwrite-dialog').showModal()}
-                >
-                  {loading ? <i className="fas fa-circle-notch fa-spin" role="img" aria-label="Loading..." />
-                    : <i className="fas fa-file-import" aria-hidden="true" />}{' '}
-                  Overwrite metadata
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  name="commit"
-                  className="o-button__plain-text5"
-                  hidden={hide}
-                  disabled={disable}
-                  onClick={() => {
+              <button
+                type="button"
+                name="commit"
+                className="o-button__plain-text5"
+                hidden={hide}
+                disabled={disable}
+                aria-controls="overwrite-dialog"
+                onClick={() => {
+                  if (resource.title) {
+                    document.getElementById('overwrite-dialog').showModal();
+                  } else {
                     formRef.current.values.isImport = true;
                     formik.handleSubmit();
-                  }}
-                >
-                  {loading ? <i className="fas fa-circle-notch fa-spin" role="img" aria-label="Loading..." />
-                    : <i className="fas fa-file-import" aria-hidden="true" />}{' '}
-                  Import metadata
-                </button>
-              )}
+                  }
+                }}
+              >
+                {loading ? <i className="fas fa-circle-notch fa-spin" role="img" aria-label="Loading..." />
+                  : <i className="fas fa-file-import" aria-hidden="true" />}{' '}
+                {resource.title ? 'Overwrite' : 'Import'} metadata
+              </button>
             </div>
           </div>
           <p id="population-warnings" className="o-metadata__autopopulate-message">
