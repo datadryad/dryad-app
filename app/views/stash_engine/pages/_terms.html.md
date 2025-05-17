@@ -34,7 +34,7 @@ If you would like your funder, institution or publisher to sponsor your Data Pub
 
 ## Terms
 
-1. **Permission**
+1. **Permission**.
 
    1. By Submitting a Dataset to Dryad, the Submitter grants Dryad irrevocable permission to make the Dataset available to the public under a CC0 instrument.
 
@@ -52,7 +52,7 @@ If you would like your funder, institution or publisher to sponsor your Data Pub
 
    4. Submitters may, at their discretion, update Metadata for Published Datasets and Submit new and/or updated files to a Published Dataset without being required to pay an additional Data Publishing Charge (Large Data Fees may still apply. See Section 3(c)).
 
-2. **Submitter Representations and Warranties**
+2. **Submitter Representations and Warranties**.
 
    1. *Rights*. The Submitter represents and warrants that s/he is an author of the Submitted Dataset or has been granted authority by the authors to Submit and Publish the Dataset on the Dryad Website.
 
@@ -68,7 +68,7 @@ If you would like your funder, institution or publisher to sponsor your Data Pub
 
    The Submitter warrants that neither s/he nor any co-author(s) or co-creator(s) is a person whose name appears on the list of Specially Designated Nationals and Blocked Persons published by the Office of Foreign Assets Control, U.S. Department of Treasury (“OFAC”);
 
-3. **Fees**
+3. **Fees**.
 
    1. *Charges*. Fees shall be calculated pursuant to the Fee Schedule. Dryad only Accepts Submissions that meet the content criteria described in [Publication policies, obligations & warranties](/publication_policy), Section 1.
 
@@ -82,7 +82,7 @@ If you would like your funder, institution or publisher to sponsor your Data Pub
 
    3. *Fee Schedule*. Dryad reserves the right to adjust the Fees, as set forth in the [Fee Schedule](/join_us#fees), annually. Fees for Partners will be calculated annually based on the actual metrics from the preceding calendar year, in accordance with the tiered structure set forth in the Fee Schedule. For each renewal period, the applicable Fee tier will be determined by the prior year's actual data volume, publishing revenue, or other relevant metric, as specified in the Fee Schedule. Adjustments to Fees, if any, will be reflected in the invoice for the subsequent year.
 
-4. **Usage**
+4. **Usage**.
 
    1. *Dataset Usage*. Users are allowed and encouraged to reuse Datasets published on the Dryad Website in any manner except as set forth in Section 4(c).
 
