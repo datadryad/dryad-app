@@ -30,7 +30,7 @@ function RelatedWorkForm(
     if (urlCheck(values.related_identifier)) {
       fetch(values.related_identifier, {method: 'HEAD', mode: 'cors'})
         .then((res) => {
-          if (res.ok) sdri.verified = true;
+          sdri.verified = !!res.ok;
         }).catch();
     }
 
@@ -47,15 +47,15 @@ function RelatedWorkForm(
       },
     ).then((data) => {
       if (data.status !== 200) {
-        console.log('Response failure not a 200 response from funders save');
+        console.log('Response failure not a 200 response from related works save');
       }
       // forces data update in the collection containing me
       updateWork(data.data);
       showSavedMsg();
     }).catch((error) => {
-      console.log('Response failure not a 200 response from funders save');
+      console.log('Response failure not a 200 response from related works save');
       showSavedMsg();
-      setSaveError(error.response.data);
+      setSaveError(error.response?.data);
     });
   };
 

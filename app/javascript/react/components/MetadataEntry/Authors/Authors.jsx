@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import {isEqual} from 'lodash';
 import DragonDropList, {DragonListItem, orderedItems} from '../DragonDropList';
 import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/utils';
 import AuthorForm from './AuthorForm';
 
 export default function Authors({
-  resource, setResource, user,
+  resource, setResource, user, step,
 }) {
   const [users, setUsers] = useState(resource.users);
   const [authors, setAuthors] = useState(resource.authors);
@@ -93,8 +94,17 @@ export default function Authors({
   };
 
   useEffect(() => {
-    setResource((r) => ({...r, authors, users}));
-  }, [authors]);
+    if (!isEqual(resource.authors, authors) || !isEqual(resource.users, users)) {
+      setResource((r) => ({...r, authors, users}));
+    }
+  }, [authors, users]);
+
+  useEffect(() => {
+    if (step === 'Authors') {
+      setAuthors(resource.authors);
+      setUsers(resource.users);
+    }
+  }, [step]);
 
   return (
     <>

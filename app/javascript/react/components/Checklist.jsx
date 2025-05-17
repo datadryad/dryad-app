@@ -6,7 +6,7 @@ export function Checklist({
   return (
     <>
       <ul id="submission-checklist" hidden={!open}>
-        {steps.map((s) => (
+        {steps().map((s) => (
           <li
             key={s.name}
             aria-current={step.name === s.name ? 'step' : null}

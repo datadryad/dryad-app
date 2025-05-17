@@ -6,7 +6,7 @@ import Calculations from './Calculations';
 import CalculateFees from '../../CalculateFees';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, config, subFees, setSubFees, setAuthorStep, preview = false,
+  resource, setResource, user, form, previous, config, subFees, setSubFees, step, setAuthorStep, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -69,11 +69,12 @@ export default function Agreements({
   }, [fees]);
 
   useEffect(() => {
-    if (formRef.current) {
+    const existing = document.getElementById('dryad-member');
+    if (formRef.current && !existing) {
       const active_form = document.createRange().createContextualFragment(form);
       formRef.current.append(active_form);
     }
-    if (!!dpc.aff_tenant && formRef.current) {
+    if (!!dpc.aff_tenant && existing) {
       document.getElementById('edit_tenant').hidden = true;
       document.getElementById('edit-tenant-form').hidden = false;
       document.getElementById('searchselect-tenant__value').value = dpc.aff_tenant.id;
@@ -95,7 +96,7 @@ export default function Agreements({
   }, [dpc]);
 
   useEffect(() => {
-    async function getPaymentInfo() {
+    const getPaymentInfo = async () => {
       axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
         if (!preview && !curated) {
           if (data.data.automatic_ppr && !ppr) postPPR(true);
@@ -103,9 +104,11 @@ export default function Agreements({
         }
         setDPC(data.data);
       });
+    };
+    if (preview || step === 'Agreements') {
+      getPaymentInfo();
     }
-    getPaymentInfo();
-  }, []);
+  }, [step, preview]);
 
   if (Object.keys(dpc).length === 0) {
     return (

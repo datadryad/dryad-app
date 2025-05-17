@@ -96,7 +96,7 @@ export default function Description({
   useEffect(() => {
     // copy and do not rerender on change
     setDesc(`${dcsDescription.description || ''}`);
-  }, []);
+  }, [dcsDescription]);
 
   return (
     <>

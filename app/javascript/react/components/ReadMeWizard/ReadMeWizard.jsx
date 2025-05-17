@@ -8,7 +8,29 @@ import {ExitIcon} from '../ExitButton';
 import MarkdownEditor from '../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
-export default function ReadMe({dcsDescription, resource, setResource}) {
+export default function ReadMeWizard({resource, setResource, step}) {
+  const [desc, setDesc] = useState(null);
+
+  useEffect(() => {
+    if (step === 'README') {
+      setDesc(JSON.parse(JSON.stringify(resource.descriptions.find((d) => d.description_type === 'technicalinfo'))));
+    }
+  }, [step]);
+
+  if (desc?.id) {
+    return <ReadMe dcsDescription={desc} title={resource.title} doi={resource.identifier.identifier} setResource={setResource} />;
+  }
+  return (
+    <p style={{display: 'flex', alignItems: 'center', gap: '.5ch'}}>
+      <i className="fas fa-spin fa-spinner" aria-hidden="true" />
+      Loading README generator
+    </p>
+  );
+}
+
+function ReadMe({
+  dcsDescription, title, doi, setResource,
+}) {
   const [initialValue, setInitialValue] = useState(null);
   const [replaceValue, setReplaceValue] = useState(null);
   const [fileList, setFileList] = useState([]);
@@ -58,7 +80,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
     // deal with arrows?
     setInitialValue(null);
     setReplaceValue(null);
-    setWizardContent({title: resource.title, doi: resource.identifier.identifier, step: 0});
+    setWizardContent({title, doi, step: 0});
     setWizardStep(0);
     saveDescription(null);
   };
@@ -77,14 +99,14 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
 
   useEffect(() => {
     async function getFiles() {
-      axios.get(`/resources/${resource.id}/prepare_readme`).then((data) => {
+      axios.get(`/resources/${dcsDescription.resource_id}/prepare_readme`).then((data) => {
         const {file_list, readme_file} = data.data;
         setFileList(file_list);
         if (!dcsDescription.description) {
           if (readme_file) {
             setInitialValue(readme_file);
           } else {
-            setWizardContent({title: resource.title, doi: resource.identifier.identifier, step: 0});
+            setWizardContent({title, doi, step: 0});
           }
         }
       });
@@ -229,7 +251,7 @@ export default function ReadMe({dcsDescription, resource, setResource}) {
   );
 }
 
-ReadMe.propTypes = {
+ReadMeWizard.propTypes = {
   resource: PropTypes.object.isRequired,
   setResource: PropTypes.func.isRequired,
 };
