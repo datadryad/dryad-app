@@ -1,4 +1,4 @@
-<% @page_title = 'End User Terms of Service' %>
+<% @page_title = 'Partner Terms of Service' %>
 <% content_for(:head) do %>
 <style type="text/css">
   ol {
@@ -10,6 +10,9 @@
   ol ol ol {
     list-style-type: lower-roman;
   }
+ #page-content > ol:first-of-type {
+  list-style-type: upper-alpha;
+ }
 </style>
 <% end %>
-<%= render "layouts/page_columns", page_content: "terms" %>
+<%= render "layouts/page_columns", page_content: "terms_partner" %>

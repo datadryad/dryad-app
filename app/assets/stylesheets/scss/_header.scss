@@ -136,8 +136,6 @@
   text-align: center;
   text-decoration: none;
 
-
-
   @include bp(screen3) {
     flex: 0 1 auto;
     text-align: left;
@@ -308,6 +306,14 @@
 .c-second__nav-item {
   position: relative;
   @include c-header__nav-item;
+
+  a[aria-current="page"] {
+    &:link, &:visited, &:hover, &:focus, &:active {
+      color: black;
+      text-decoration: none;
+      cursor: default;
+    }
+  }
 }
 
 #mobile-nav-bar .c-header__nav-item,
