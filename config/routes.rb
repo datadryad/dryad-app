@@ -189,8 +189,6 @@ Rails.application.routes.draw do
     match 'auth/:provider/callback', to: 'sessions#callback', via: %i[get post]
     match 'session/test_login', to: 'sessions#test_login', via: [:get, :post],  as: 'test_login'
 
-    match 'terms/view', to: 'dashboard#view_terms', via: %i[get post]
-
     get 'auth/failure', to: redirect('/')
     match 'sessions/destroy', to: 'sessions#destroy', via: %i[get post]
     get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
@@ -221,6 +219,7 @@ Rails.application.routes.draw do
     get 'why_use', to: 'pages#why_use'
     get 'dda', to: 'pages#dda' # data deposit agreement
     get 'terms', to: 'pages#terms'
+    get 'partner_terms', to: 'pages#terms_partner'
     get 'editor', to: 'pages#editor'
     get 'web_crawling', to: 'pages#web_crawling'
     get 'about', to: 'pages#who_we_are'
@@ -499,6 +498,7 @@ Rails.application.routes.draw do
   get '/stash/faq', to: redirect('/requirements')
   get '/pages/organization', to: redirect('/mission')
   get '/pages/policies', to: redirect('/terms')
+  get 'terms/view', to: redirect('/terms')
   get '/pages/publicationBlackout', to: redirect('/pb_tombstone')
   get '/publicationBlackout', to: redirect('/pb_tombstone')
   get '/pages/searching', to: redirect('search')
