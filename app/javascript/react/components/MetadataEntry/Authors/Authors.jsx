@@ -136,7 +136,7 @@ export default function Authors({
         <button type="button" className="o-button__plain-text1" onClick={() => addNewAuthor(false)}>
           + Add author
         </button>
-        <i className="fas fa-slash" role="img" alt=" or " />
+        <i className="fas fa-slash" role="img" aria-label=" or " />
         <button type="button" className="o-button__plain-text4" onClick={() => addNewAuthor(true)}>
           + Add group author
         </button>
