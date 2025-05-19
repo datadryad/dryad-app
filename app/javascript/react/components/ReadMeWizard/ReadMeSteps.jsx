@@ -12,20 +12,25 @@ const formatList = (fileList) => fileList.map((f) => {
 
 export const secTitles = ['Data description', 'Files and variables', 'Code/software', 'Access information'];
 
+function StepEditor({content, saveContent, hidden}) {
+  const [initialValue, setInitialValue] = useState(null);
+
+  useEffect(() => {
+    setInitialValue(`${content}`);
+  }, []);
+
+  return (
+    <MarkdownEditor
+      hidden={hidden}
+      initialValue={initialValue}
+      onChange={saveContent}
+    />
+  );
+}
+
 export default function ReadMeSteps({
   step, setStep, content, fileList, save,
 }) {
-  const [initialValue, setInitialValue] = useState(null);
-
-  const saveContent = (markdown) => {
-    if (markdown.trim()) {
-      content[`step${step}`] = markdown;
-    } else {
-      delete content[`step${step}`];
-    }
-    save(JSON.stringify(content));
-  };
-
   const sections = {
     1: {
       desc: <p>Provide a short description of the experimental efforts for which the data was collected.</p>,
@@ -53,9 +58,13 @@ export default function ReadMeSteps({
     },
   };
 
-  useEffect(() => {
-    setInitialValue(`${sections[step].content}`);
-  }, []);
+  const saveContent = (s, markdown) => {
+    if (markdown.trim()) {
+      save((w) => ({...w, [`step${s}`]: markdown}));
+    } else {
+      save((w) => ({...(delete w[`step${s}`] && w)}));
+    }
+  };
 
   return (
     <>
@@ -83,11 +92,11 @@ export default function ReadMeSteps({
       <div style={{margin: '-.5em 0'}} id="md_editor_desc">
         {sections[step].desc}
       </div>
-      <MarkdownEditor
-        id="readme_step_editor"
-        initialValue={initialValue}
-        onChange={saveContent}
-      />
+      <div id="readme_step_editor">
+        {Object.keys(sections).map((i) => (
+          <StepEditor key={`step${i}`} hidden={i != step || null} content={sections[i].content} saveContent={(m) => saveContent(i, m)} />
+        ))}
+      </div>
       <div className="o-dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
         <button type="button" className="o-button__plain-text1" onClick={() => setStep(step + 1)}>
           {step === secTitles.length ? (

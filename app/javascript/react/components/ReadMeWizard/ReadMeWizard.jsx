@@ -86,13 +86,18 @@ function ReadMe({
   };
 
   useEffect(() => {
+    if (wizardContent?.step > 0) {
+      checkDescription(JSON.stringify(wizardContent));
+    }
+  }, [wizardContent]);
+
+  useEffect(() => {
     if (wizardStep > secTitles.length) {
       const complete = assembleValue();
       saveDescription(complete);
       setInitialValue(complete);
     } else if (wizardStep > 0) {
-      wizardContent.step = wizardStep;
-      saveDescription(JSON.stringify(wizardContent));
+      setWizardContent((w) => ({...w, step: wizardStep}));
     }
     document.querySelector('.markdown_editor')?.focus();
   }, [wizardStep]);
@@ -114,8 +119,8 @@ function ReadMe({
     if (dcsDescription.description) {
       try {
         const template = JSON.parse(dcsDescription.description);
-        setWizardContent(template);
         setWizardStep(template.step);
+        setWizardContent(template);
       } catch {
         setInitialValue(dcsDescription.description);
       }
@@ -239,7 +244,7 @@ function ReadMe({
         step={wizardStep}
         setStep={setWizardStep}
         fileList={fileList}
-        save={checkDescription}
+        save={setWizardContent}
       />
     );
   }
