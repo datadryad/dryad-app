@@ -1,6 +1,4 @@
-import React, {
-  useRef, useState, useEffect, useCallback,
-} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import axios from 'axios';
 import {debounce} from 'lodash';
@@ -60,35 +58,32 @@ export default function Description({
   setResource, dcsDescription, mceLabel, curator,
 }) {
   const [desc, setDesc] = useState('');
-  const editorRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-  const submit = () => {
-    if (editorRef.current) {
-      const subJson = {
-        authenticity_token,
-        description: {
-          description: editorRef.current.getContent(),
-          resource_id: dcsDescription.resource_id,
-          id: dcsDescription.id,
-        },
-      };
-      showSavingMsg();
-      axios.patch(
-        '/stash_datacite/descriptions/update',
-        subJson,
-        {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
-      )
-        .then((data) => {
-          if (data.data) {
-            setResource((r) => ({
-              ...r,
-              descriptions: [{...dcsDescription, description: data.data.description}, ...r.descriptions.filter((d) => d.id !== dcsDescription.id)],
-            }));
-          }
-          showSavedMsg();
-        });
-    }
+  const submit = (value) => {
+    const subJson = {
+      authenticity_token,
+      description: {
+        description: value,
+        resource_id: dcsDescription.resource_id,
+        id: dcsDescription.id,
+      },
+    };
+    showSavingMsg();
+    axios.patch(
+      '/stash_datacite/descriptions/update',
+      subJson,
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    )
+      .then((data) => {
+        if (data.data) {
+          setResource((r) => ({
+            ...r,
+            descriptions: [{...dcsDescription, description: data.data.description}, ...r.descriptions.filter((d) => d.id !== dcsDescription.id)],
+          }));
+        }
+        showSavedMsg();
+      });
   };
 
   const checkSubmit = useCallback(debounce(submit, 600), []);
@@ -112,7 +107,6 @@ export default function Description({
       </div>
       <Editor
         id={`editor_${dcsDescription?.description_type}`}
-        onInit={(evt, editor) => { editorRef.current = editor; }}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         licenseKey="gpl"
         initialValue={desc}
@@ -138,7 +132,7 @@ export default function Description({
           paste_preprocess,
         }}
         onEditorChange={checkSubmit}
-        onBlur={submit}
+        onBlur={(_e, editor) => submit(editor.getContent())}
       />
     </>
   );
