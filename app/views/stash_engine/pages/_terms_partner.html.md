@@ -13,7 +13,7 @@
 
 These Terms of Service (these “Terms”) set forth the terms and conditions applicable to entities who enter into a partnership agreement with Dryad, a non-profit corporation.
 
-<p id="term-desc">Capitalized terminology used herein shall have the meanings ascribed to such terminology on the <a href="/definitions">Definitions</a> page.</p>
+<p id="term-desc">Capitalized terms used herein shall have the meanings ascribed to such terms on the <a href="/definitions">Definitions</a> page.</p>
 
 
 ## Background

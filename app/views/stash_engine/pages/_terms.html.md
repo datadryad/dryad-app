@@ -14,7 +14,7 @@ These End User Terms of Service (these “Terms”) set forth the terms and cond
 
 If there is any conflict between an entity’s Partnership Agreement (“Agreement”) and these Terms, the Agreement will prevail.
 
-<p id="term-desc">Capitalized terminology used herein shall have the meanings ascribed to such terminology on the <a href="/definitions">Definitions</a> page.</p>
+<p id="term-desc">Capitalized terms used herein shall have the meanings ascribed to such terms on the <a href="/definitions">Definitions</a> page.</p>
 
 ## Background
 
