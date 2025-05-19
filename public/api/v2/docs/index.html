@@ -1,69 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Stash API</title>
-  <link rel="stylesheet" type="text/css" href="./swagger-ui.css" />
-  <link rel="stylesheet" type="text/css" href="index.css" />
-  <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
-  <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
-  <style>
-    html
-    {
-      box-sizing: border-box;
-      overflow: -moz-scrollbars-vertical;
-      overflow-y: scroll;
-    }
-    *,
-    *:before,
-    *:after
-    {
-      box-sizing: inherit;
-    }
-
-    body {
-      margin:0;
-      background: #fafafa;
-    }
-  </style>
-
-  <script>
-    // force to have a slash at the end because otherwise Swagger doesn't load correctly and it's annoying.
-    the_url = window.location.pathname;
-    if(!the_url.endsWith('/')){
-      window.location.href = "/api/v2/docs/"
-    }
-  </script>
-</head>
-
-<body>
-
-<div id="swagger-ui"></div>
-<script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
-<script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
-<script src="./swagger-initializer.js" charset="UTF-8"> </script>
-<script>
-window.onload = function() {
-
-  // Build a system
-  const ui = SwaggerUIBundle({
-    url: "/openapi.yml",
-    dom_id: '#swagger-ui',
-    deepLinking: true,
-    presets: [
-      SwaggerUIBundle.presets.apis,
-      SwaggerUIStandalonePreset
-    ],
-    plugins: [
-      SwaggerUIBundle.plugins.DownloadUrl
-    ],
-    //layout: "StandaloneLayout",
-    defaultModelsExpandDepth: 0,
-    //supportedSubmitMethods: ['get'],
-  })
-
-  window.ui = ui
-}
-</script>
-</body>
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content="0;url=/api" />
+    <title></title>
+  </head>
+  <body>    
+  </body>
 </html>

@@ -10,9 +10,15 @@
   <%= render partial: "stash_engine/shared/sandbox_message" %>
   <%= render 'stash_engine/shared/top_area' %>
   <%= render partial: "stash_engine/shared/flash_messages" %>
-  <main id="maincontent">
-  <%= yield %>
-  </main>
+  <% if current_page?(api_path) %>
+    <div id="maincontent">
+    <%= yield %>
+    </div>
+  <% else %>
+    <main id="maincontent">
+    <%= yield %>
+    </main>
+  <% end %>
   <%= render partial: "stash_engine/shared/footer" %>
   <script type="text/javascript" src="<%= asset_path 'interactions.js'%>"></script>
   <%= render partial: "stash_engine/shared/dialog_confirm" %>
