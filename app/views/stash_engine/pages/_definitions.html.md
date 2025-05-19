@@ -41,11 +41,6 @@
   </div>
 
   <div>
-  <dt>Data Publishing Charge (DPC).</dt>
-  <dd>A one-time fee for Publication of an Accepted Dataset on the Dryad Website. A DPC is only applied when a Dataset is Accepted by Dryad Curation personnel.</dd>
-  </div>
-
-  <div>
   <dt>Dryad Community.</dt>
   <dd>All partners, supporters, researchers, and engaged authors.</dd>
   </div>
@@ -82,11 +77,6 @@
   
   <div>
   <dt>Large Data Fee.</dt>
-  <dd>An entity that is a signatory to a Dryad Membership Agreement/the fact of being a Member.</dd>
-  </div>
-
-  <div>
-  <dt>Membership Agreement.</dt>
   <dd>The fee charged for larger datasets, as set out in the Fee Schedule. Large Data Fees may be incurred at the point of initial Submission or following a Versioning of the Dataset.</dd>
   </div>
 
@@ -147,7 +137,7 @@
 
   <div>
   <dt>Terms of Service.</dt>
-  <dd>The terms and conditions applicable to partner entities.</dd>
+  <dd>The terms and conditions applicable to Partner entities.</dd>
   </div>
 
   <div>
