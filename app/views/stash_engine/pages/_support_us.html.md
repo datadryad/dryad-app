@@ -14,7 +14,7 @@ Investing in Dryad is an investment in:
 
 Supporters are recognized on the Dryad website and warmly welcomed at all our community events. Supporters wishing to contribute to Dryad’s direction are encouraged to apply to join one of our [committees, task forces, or advisory groups](/about#our-advisors). 
 
-We welcome contributions in any amount, from $100 to $100,000 or more.
+We welcome contributions in any amount, from $100 to $100,000 USD or more.
 
 * Checks and bank drafts may be sent by mail to Dryad, 417 Mace Blvd., Ste J110, Davis, CA 95618 USA
 * To pay by wire, bank transfer, or credit card, please [complete our donor invoice form](https://fs30.formsite.com/cxore/a6lmmnv9yd/index) to receive an invoice and payment instructions.
