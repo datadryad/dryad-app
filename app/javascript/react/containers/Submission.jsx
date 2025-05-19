@@ -150,6 +150,8 @@ function Submission({
         subFees={fees}
         setSubFees={setFees}
         form={change_tenant}
+        user={user}
+        setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
         preview
       />,
     },
