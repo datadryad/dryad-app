@@ -39,7 +39,7 @@ class ApiApplicationController < StashEngine::ApplicationController
 
     # TODO: update error messages that are returned by pundit
     #       https://github.com/elabs/pundit#creating-custom-error-messages
-    render json: { errors: StashApi::Error::Render.from(object) }, status: response_status
+    render json: { error: StashApi::Error::Render.from(object).first&.message }, status: response_status
   end
 
   def page
