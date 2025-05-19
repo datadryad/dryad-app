@@ -1,9 +1,14 @@
-<h1>Add fee waiver</h1>
+<h1>Add fee discount</h1>
 <%= form_with(url: ds_admin_waiver_path(@identifier.id), method: :post, local: false) do |form| -%>
-  <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
-  <p class="c-alert--notification">This dataset has been approved for publication</p>
-  <p>The submitter has already received an invoice. Please ensure invoice <b><%= @identifier.payment_id %></b> is voided.</p>
+  <% pr = @identifier.resources.by_version_desc.find {|r| r.payment} %>
+  <% if pr&.payment&.status == 'paid' %>
+    <p class="c-alert--notification">The DPC for this dataset has been paid</p>
+    <p>The DPC for this dataset has already been paid. Payment will need to be refunded in order to apply a discount.</p>
+  <% elsif @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
+    <p class="c-alert--notification">An invoice has been sent</p>
+    <p>The submitter has already received an invoice. Please ensure invoice <b><%= @identifier.payment_id %></b> is voided.</p>
   <% else %>
+    <p>The fee waiver discount covers the DPC for datasets up to 10 GB</p>
     <div class="c-input">
       <div id="select_div" class="c-input">
         <label class="c-input__label" for="waiver_basis">Please provide a reason for applying a waiver</label>

@@ -110,7 +110,7 @@ RSpec.feature 'CurationActivity', type: :feature do
       it 'allows superuser to set a fee waiver', js: true do
         expect(@resource.identifier.payment_type).to be(nil)
         expect(page).to have_text('Payment:')
-        click_button('Apply fee waiver')
+        click_button('Apply fee discount')
         expect(page).to have_text('Please provide a reason')
         find("#select_div option[value='no_funds']").select_option
         click_button('Submit')
