@@ -36,6 +36,7 @@ function Submission({
   const [payment, setPayment] = useState(false);
   const [fees, setFees] = useState({});
   const previous = resource.previous_curated_resource;
+  const observers = [];
 
   const steps = () => [
     {
@@ -213,12 +214,14 @@ function Submission({
       steps().forEach((s, i) => {
         if (subRef.current[i]) {
           markInvalid(subRef.current[i]);
-          const observer = new MutationObserver(() => {
-            const old = subRef.current[i].querySelector('*[aria-invalid]');
-            if (old) old.removeAttribute('aria-invalid');
-            markInvalid(subRef.current[i]);
+          observers[i] = new MutationObserver(() => {
+            if (subRef.current[i]) {
+              const old = subRef.current[i].querySelector('*[aria-invalid]');
+              if (old) old.removeAttribute('aria-invalid');
+              markInvalid(subRef.current[i]);
+            } else { observers[i].disconnect(); }
           });
-          observer.observe(subRef.current[i], {subtree: true, childList: true, attributeFilter: ['id', 'data-index']});
+          observers[i].observe(subRef.current[i], {subtree: true, childList: true, attributeFilter: ['id', 'data-index']});
         }
       });
     }
