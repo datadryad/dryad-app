@@ -90,7 +90,7 @@ export default function UploadFiles({
   const interval = useRef(null);
 
   const oldSize = resource.identifier.old_payment_system
-              || (resource.tenant && !resource.tenant.payment_plan)
+              || (resource.tenant && resource.tenant.payment_plan !== '2025')
               || (resource.journal?.payment_plan_type && resource.journal.payment_plan_type !== '2025');
   const {files: maxFiles, merritt_size, upload_size} = config_maximums;
   const maxSize = oldSize ? merritt_size : upload_size;

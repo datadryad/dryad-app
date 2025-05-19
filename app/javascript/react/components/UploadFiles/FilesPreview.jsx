@@ -52,7 +52,7 @@ export default function FilesPreview({
           <>
             {curator
             && (resource.identifier.old_payment_system
-              || (resource.tenant && !resource.tenant.payment_plan)
+              || (resource.tenant && resource.tenant.payment_plan !== '2025')
               || (resource.journal?.payment_plan_type && resource.journal.payment_plan_type !== '2025'))
             && resource.total_file_size > maxSize && (
               <div className="callout warn">

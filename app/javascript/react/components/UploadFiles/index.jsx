@@ -54,7 +54,7 @@ export const filesCheck = (resource, superuser, maximums) => {
       );
     }
     if (old_payment_system
-      || (resource.tenant && !resource.tenant.payment_plan)
+      || (resource.tenant && resource.tenant.payment_plan !== '2025')
       || (resource.journal?.payment_plan_type && resource.journal.payment_plan_type !== '2025')) {
       if (!superuser && data.reduce((sum, f) => sum + f.upload_file_size, 0) > oldSize) {
         return (
