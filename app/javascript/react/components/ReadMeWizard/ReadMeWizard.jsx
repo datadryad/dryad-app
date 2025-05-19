@@ -60,7 +60,7 @@ function ReadMe({
       });
   };
 
-  const checkDescription = useCallback(debounce(saveDescription, 600), []);
+  const checkDescription = useCallback(debounce(saveDescription, 500), []);
 
   const assembleValue = () => {
     let v = `# ${
@@ -94,7 +94,7 @@ function ReadMe({
   useEffect(() => {
     if (wizardStep > secTitles.length) {
       const complete = assembleValue();
-      saveDescription(complete);
+      checkDescription(complete);
       setInitialValue(complete);
     } else if (wizardStep > 0) {
       setWizardContent((w) => ({...w, step: wizardStep}));
