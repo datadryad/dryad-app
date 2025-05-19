@@ -89,12 +89,17 @@ export default function UploadFiles({
   const modalValidationRef = useRef(null);
   const interval = useRef(null);
 
-  const maxFiles = config_maximums.files;
+  const oldSize = resource.identifier.old_payment_system
+              || (resource.tenant && !resource.tenant.payment_plan)
+              || (resource.journal?.payment_plan_type && resource.journal.payment_plan_type !== '2025');
+  const {files: maxFiles, merritt_size, upload_size} = config_maximums;
+  const maxSize = oldSize ? merritt_size : upload_size;
   const Messages = {
     fileReadme: 'Please prepare your README on the README page.',
     fileAlreadySelected: 'A file of the same name is already in the table. The new file was not added.',
     filesAlreadySelected: 'Files of the same name are already in the table. New files were not added.',
     tooManyFiles: `You may not upload more than ${maxFiles} individual files of this type.`,
+    filesTooBig: `You may not submit more than ${formatSizeUnits(maxSize)} of files.`,
     // eslint-disable-next-line max-len
     rarTypeFiles: 'RAR files were not added. RAR is a proprietary compression format that cannot be opened universally. Please use an open-access format, such as TAR.GZ, 7Z, or ZIP.',
   };
@@ -367,7 +372,9 @@ export default function UploadFiles({
     setWarning([]);
     const files = discardFiles([...event.target.files], uploadType);
     const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
-    if (fileCount > maxFiles) {
+    if (chosenFiles.reduce((a, c) => a + c.upload_file_size, 0) + files.reduce((a, c) => a + c.size, 0) > maxSize) {
+      setWarning([...warning, Messages.filesTooBig]);
+    } else if (fileCount > maxFiles) {
       setWarning([...warning, Messages.tooManyFiles]);
     } else {
       displayAriaMsg('Your files were added and are being uploaded.');
@@ -387,10 +394,10 @@ export default function UploadFiles({
       const {key, bucket, region} = config_s3.table;
       // AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
       let partSize = 5 * 1024 * 1024;
-      const maxSize = newFiles.reduce((p, c) => (p > c.size ? p : c.size), 0);
-      if (maxSize > 10000000000) partSize = 10 * 1024 * 1024;
-      if (maxSize > 100000000000) partSize = 30 * 1024 * 1024;
-      if (maxSize > 300000000000) partSize = 250 * 1024 * 1024;
+      const maxFSize = newFiles.reduce((p, c) => (p > c.size ? p : c.size), 0);
+      if (maxFSize > 10000000000) partSize = 10 * 1024 * 1024;
+      if (maxFSize > 100000000000) partSize = 30 * 1024 * 1024;
+      if (maxFSize > 300000000000) partSize = 250 * 1024 * 1024;
       const config = {
         aws_key: key,
         bucket,
