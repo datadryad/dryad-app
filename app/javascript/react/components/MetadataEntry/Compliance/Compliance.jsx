@@ -85,7 +85,7 @@ export default function Compliance({resource, setResource}) {
 
   useEffect(() => {
     setHSI(disclaimer ? disclaimer?.description !== null : null);
-    setDesc(`${disclaimer?.description}`);
+    setDesc(`${disclaimer?.description || ''}`);
   }, []);
 
   return (
