@@ -63,8 +63,8 @@ export default function DescPreview({resource, previous, curator}) {
         <DescSection
           key={t}
           title={t === 'other' ? 'Usage notes' : upCase(t)}
-          current={resource.descriptions.find((d) => d.description_type === t)?.description}
-          prev={previous?.descriptions.find((d) => d.description_type === t)?.description}
+          current={resource?.descriptions?.find((d) => d.description_type === t)?.description}
+          prev={previous?.descriptions?.find((d) => d.description_type === t)?.description}
           previous={!!previous}
           curator={curator}
         />

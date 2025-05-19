@@ -343,6 +343,8 @@ module Stash
       def populate_funders
         return unless @sm['funder'].present? && @sm['funder'].is_a?(Array) && @sm['funder'].any?
 
+        @resource.contributors.where(contributor_type: 'funder', contributor_name: ['', nil]).destroy_all
+
         @sm['funder'].each do |xr_funder|
           next if xr_funder['name'].blank?
 

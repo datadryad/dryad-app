@@ -34,7 +34,6 @@ const capitals = (t) => {
 
 export default function Publication({resource, setResource, maxSize}) {
   const subType = resource.resource_type.resource_type;
-  const [res, setRes] = useState(resource);
   const [assoc, setAssoc] = useState(null);
   const [showTitle, setShowTitle] = useState(false);
   const [importType, setImportType] = useState(resource.identifier.import_info);
@@ -47,7 +46,7 @@ export default function Publication({resource, setResource, maxSize}) {
   const optionChange = (choice) => {
     showSavingMsg();
     setImportType(choice);
-    setRes((r) => ({...r, identifier: {...r.identifier, import_info: choice}}));
+    setResource((r) => ({...r, identifier: {...r.identifier, import_info: choice}}));
     axios.patch(
       `/resources/${resource.id}/import_type`,
       {authenticity_token, import_info: choice},
@@ -77,21 +76,20 @@ export default function Publication({resource, setResource, maxSize}) {
 
   useEffect(() => {
     if (assoc === false) setShowTitle(true);
-    if (assoc === true && !res.title) setShowTitle(false);
+    if (assoc === true && !resource.title) setShowTitle(false);
   }, [assoc]);
 
   useEffect(() => {
-    setResource(res);
-    const {publication_name, manuscript_number} = res.resource_publication;
-    const primary_article = res.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
-    const {publication_name: preprint_server} = res.resource_preprint || {};
-    const preprint = res.related_identifiers.find((r) => r.work_type === 'preprint')?.related_identifier;
+    const {publication_name, manuscript_number} = resource.resource_publication;
+    const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
+    const {publication_name: preprint_server} = resource.resource_preprint || {};
+    const preprint = resource.related_identifiers.find((r) => r.work_type === 'preprint')?.related_identifier;
     if ((!!publication_name && (!!manuscript_number || !!primary_article))
       || (!!preprint_server && !!preprint)) {
       setShowTitle(true);
     }
-    setSponsored(!!res.journal?.payment_plan_type && (manuscript_number || primary_article) ? res.journal.title : false);
-    if (res.title) {
+    setSponsored(!!resource.journal?.payment_plan_type && (manuscript_number || primary_article) ? resource.journal.title : false);
+    if (resource.title) {
       if (!resource.identifier.process_date?.processing) {
         axios.get(`/resources/${resource.id}/dupe_check.json`).then((data) => {
           setDupeWarning(data.data?.[0]?.title || false);
@@ -99,13 +97,13 @@ export default function Publication({resource, setResource, maxSize}) {
       } else {
         setDupeWarning(false);
       }
-      if (capitals(res.title)) {
+      if (capitals(resource.title)) {
         setCaseWarning(true);
       } else {
         setCaseWarning(false);
       }
     }
-  }, [res]);
+  }, [resource.journal, resource.resource_publication, resource.title, resource.related_identifiers]);
 
   useEffect(() => {
     const it = resource.identifier.import_info;
@@ -165,17 +163,17 @@ export default function Publication({resource, setResource, maxSize}) {
       )}
 
       {importType && importType !== 'other' && (
-        <PublicationForm resource={res} setResource={setRes} setSponsored={setSponsored} importType={importType} key={importType} />
+        <PublicationForm resource={resource} setResource={setResource} setSponsored={setSponsored} importType={importType} key={importType} />
       )}
 
       {showTitle && (
-        <Title key={res.title} resource={res} setResource={setRes} />
+        <Title key={resource.title} resource={resource} setResource={setResource} />
       )}
 
       {caseWarning && (
         <div className="callout warn">
           <p style={{fontSize: '.98rem'}}>Please correct your dataset title to sentence case, which could look like:</p>
-          <p><span>{sentenceCase(res.title)}</span>
+          <p><span>{sentenceCase(resource.title)}</span>
             <span
               className="copy-icon"
               role="button"
