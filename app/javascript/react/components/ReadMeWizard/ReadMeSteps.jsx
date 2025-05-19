@@ -77,10 +77,10 @@ export default function ReadMeSteps({
             aria-current={step == i ? 'step' : null}
             role="button"
             tabIndex={0}
-            onClick={() => setStep(i)}
+            onClick={() => setStep(Number(i))}
             onKeyDown={(e) => {
               if (['Enter', 'Space'].includes(e.key)) {
-                setStep(i);
+                setStep(Number(i));
               }
             }}
           >
@@ -98,7 +98,7 @@ export default function ReadMeSteps({
         ))}
       </div>
       <div className="o-dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
-        <button type="button" className="o-button__plain-text1" onClick={() => setStep(step + 1)}>
+        <button type="button" className="o-button__plain-text1" onClick={() => setStep((s) => Number(s) + 1)}>
           {step === secTitles.length ? (
             <>Complete &amp; generate README</>
           ) : (
@@ -106,7 +106,7 @@ export default function ReadMeSteps({
           )}
         </button>
         {step > 1 && (
-          <button type="button" className="o-button__plain-text0" onClick={() => setStep(step - 1)}>
+          <button type="button" className="o-button__plain-text0" onClick={() => setStep((s) => Number(s) - 1)}>
             <i className="fa fa-caret-left" aria-hidden="true" /> Previous
           </button>
         )}

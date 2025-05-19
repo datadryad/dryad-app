@@ -86,7 +86,7 @@ function ReadMe({
   };
 
   useEffect(() => {
-    if (wizardContent?.step > 0) {
+    if (wizardContent?.step) {
       checkDescription(JSON.stringify(wizardContent));
     }
   }, [wizardContent]);
@@ -119,7 +119,7 @@ function ReadMe({
     if (dcsDescription.description) {
       try {
         const template = JSON.parse(dcsDescription.description);
-        setWizardStep(template.step);
+        setWizardStep(Number(template.step));
         setWizardContent(template);
       } catch {
         setInitialValue(dcsDescription.description);
