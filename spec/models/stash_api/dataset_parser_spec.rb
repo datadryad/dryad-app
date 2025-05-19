@@ -262,7 +262,7 @@ module StashApi
             dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
 
             expect { dp.parse }.to raise_error(
-              ActionController::BadRequest,
+              StashApi::Error::BadRequestError,
               'Dataset owner does not have an email address in order to send the Submission email.'
             )
           end
@@ -283,7 +283,7 @@ module StashApi
             dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
 
             expect { dp.parse }.not_to raise_error(
-              ActionController::BadRequest,
+              StashApi::Error::BadRequestError,
               'Dataset owner does not have an email address in order to send the Submission email.'
             )
           end
@@ -307,7 +307,7 @@ module StashApi
             dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
 
             expect { dp.parse }.not_to raise_error(
-              ActionController::BadRequest,
+              StashApi::Error::BadRequestError,
               'Dataset owner does not have an email address in order to send the Submission email.'
             )
           end

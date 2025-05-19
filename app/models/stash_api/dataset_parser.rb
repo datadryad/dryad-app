@@ -254,7 +254,7 @@ module StashApi
     def validate_submit_invitation(owning_user)
       return if @hash['triggerSubmitInvitation'] != true || owning_user.email.present?
 
-      raise ActionController::BadRequest, 'Dataset owner does not have an email address in order to send the Submission email.'
+      raise StashApi::Error::BadRequestError, 'Dataset owner does not have an email address in order to send the Submission email.'
     end
   end
 end
