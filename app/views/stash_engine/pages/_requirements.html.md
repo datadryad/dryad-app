@@ -68,7 +68,7 @@ Dryad is a nonprofit organization that provides long-term access to its contents
 
 Authors may be affiliated with a [Dryad partner organization](/about#our-members) through their affiliated institution or the journal associated with their submission.
 
-Authors not affiliated with a Dryad partner organization are asked to pay a DPC by credit card at the time of submission. Invoices may be requested for an additional administration fee of $199.
+Authors not affiliated with a Dryad partner organization are asked to pay a DPC by credit card at the time of submission. Invoices may be requested for an additional administration fee of $199 USD.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="width: 500px; max-width: 100%; margin: 0 auto">

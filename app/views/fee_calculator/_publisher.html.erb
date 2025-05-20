@@ -3,7 +3,7 @@
   <%= form.hidden_field 'type', value: 'publisher' %>
   <p class="input-line center">
     <%= form.label :service_tier, 'Your annual publishing revenue/expenditure:' %>
-    <%= form.select :service_tier, options_for_select(FeeCalculator::PublisherService.new.service_fee_tiers.map {|t| [t[:range].to_s.split('..').map {|n| n.to_i.to_s == n ? (n.to_i > 999999 ? number_to_currency(number_to_human(n), precision: 0) : number_to_currency(n.to_i.round(-1), precision: 0)) : nil}.join('-').gsub(/\-$/, '+').downcase, t[:tier]]}), {}, {class: 'c-input__select'} %>
+    <%= form.select :service_tier, options_for_select(FeeCalculator::PublisherService.new.service_fee_tiers.map {|t| [t[:range].to_s.split('..').map {|n| n.to_i.to_s == n ? (n.to_i > 999999 ? number_to_currency(number_to_human(n), precision: 0) : number_to_currency(n.to_i.round(-1), precision: 0)) : nil}.join('-').gsub(/\-$/, '+').downcase + ' USD', t[:tier]]}), {}, {class: 'c-input__select'} %>
   </p>
   <p class="input-line center">
     <%= form.label :dpc_tier, 'Estimated number of datasets sent to Dryad each year:' %>
