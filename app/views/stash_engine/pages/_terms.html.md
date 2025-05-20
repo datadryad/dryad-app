@@ -55,7 +55,7 @@ If you would like your institution to join Dryad, please direct your administrat
         1. if a Submission is related to a Dryad Member, the Data Publishing Charge is covered by the Member in accordance with the terms of its Membership Agreement;
         2. if the Submitter is granted a Waiver, no Data Publishing Charge will be incurred;
         3. if none of the above applies, the Submitter or the responsible party designated by the Submitter will be charged.
-    3. _Additional Charges_. In all instances, other than where a Waiver is granted or or a Submission is related to a Membership Agreement, Submitters will be charged additional fees for large Datasets.
+    3. _Additional Charges_. In all instances, other than where a Waiver is granted or a Submission is related to a Membership Agreement, Submitters will be charged additional fees for large Datasets.
     4. Data Publishing Charges and additional fees for large Datasets are not refundable.
 4. **Usage**
     1. _Dataset Usage_. Users are allowed and encouraged to reuse Datasets published on the Dryad Website in any manner except as set forth in Section 4(c). 

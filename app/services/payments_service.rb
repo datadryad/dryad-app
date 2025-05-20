@@ -1,22 +1,25 @@
 class PaymentsService
   include StashEngine::ApplicationHelper
 
-  attr_reader :user, :resource, :options
+  attr_reader :user, :resource, :options, :has_discount
 
   def initialize(user, resource, options)
     @user = user
     @resource = resource
     @options = options
+    @has_discount = false
     @fees = ResourceFeeCalculatorService.new(resource).calculate(options)
-    @storage_fee_label = @fees.delete(:storage_fee_label)
+    process_options
   end
 
   def checkout_options
-    {
+    res = {
       mode: 'payment',
       ui_mode: 'embedded',
       line_items: line_items
     }
+    res[:discounts] = discounts if discounts.any?
+    res
   end
 
   def total_amount
@@ -47,5 +50,19 @@ class PaymentsService
   def product_name(fee_key)
     name = fee_key == :storage_fee ? @storage_fee_label : PRODUCT_NAME_MAPPER[fee_key]
     "#{name} for #{resource.identifier} (#{filesize(resource.total_file_size)})"
+  end
+
+  def discounts
+    return [] if @coupon_id.blank?
+
+    [{ coupon: @coupon_id.to_s }]
+  end
+
+  def process_options
+    @storage_fee_label = @fees.delete(:storage_fee_label)
+    @coupon_id = @fees.delete(:coupon_id)
+
+    @has_discount = true if @coupon_id.present?
+    @fees.delete_if { |_, value| value.negative? }
   end
 end

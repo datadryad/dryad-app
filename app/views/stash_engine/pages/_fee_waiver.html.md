@@ -8,7 +8,7 @@
 
 <p>Prior to applying for a waiver, it is necessary for you to investigate and exhaust all available funding sources. These include funding from your institution, grant funding agencies, supporting or research foundations, and government agencies, or other sources of funds.</p>
 
-<p><b>Note:</b> Waivers will only be considered for data submissions less than 50GB in size (overage fees will apply for submissions exceeding this size). Requests made post-publication will not be considered.</p>
+<p><b>Note:</b> Waivers will only be considered for data submissions less than 10 GB in size (overage fees will apply for submissions exceeding this size). Requests made post-publication will not be considered.</p>
 
 <%= form_with(url: stash_url_helpers.contact_helpdesk_path, method: :post, local: false, id: 'fee_waiver_email') do |form| %>
   <%= form.hidden_field :subject %>
