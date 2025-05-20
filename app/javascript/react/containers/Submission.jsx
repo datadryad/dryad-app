@@ -44,7 +44,7 @@ function Submission({
       index: 0,
       pass: publicationPass(resource),
       fail: (review || publicationPass(resource)) && publicationFail(resource, review),
-      component: <Publication resource={resource} setResource={setResource} maxSize={config_maximums.merritt_size} />,
+      component: <Publication resource={resource} setResource={setResource} />,
       help: <PublicationHelp />,
       preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
     },

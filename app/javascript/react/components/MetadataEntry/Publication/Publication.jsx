@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {sentenceCase} from '../../../../lib/sentence-case';
-import {showSavedMsg, showSavingMsg, formatSizeUnits} from '../../../../lib/utils';
+import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import PublicationForm from './PublicationForm';
 import Title from './Title';
 
@@ -32,7 +32,7 @@ const capitals = (t) => {
   return false;
 };
 
-export default function Publication({resource, setResource, maxSize}) {
+export default function Publication({resource, setResource}) {
   const subType = resource.resource_type.resource_type;
   const [assoc, setAssoc] = useState(null);
   const [showTitle, setShowTitle] = useState(false);
@@ -208,7 +208,7 @@ export default function Publication({resource, setResource, maxSize}) {
             </form> if you did not intend to create it.
           </div>
           <p>
-            Do you have more than {formatSizeUnits(maxSize)} of files and need to split a dataset into multiple submissions?
+            Do you need to split a dataset into multiple submissions?
             Please ensure the title of this submission distinguishes it, or marks it as part of a series.
           </p>
         </div>
