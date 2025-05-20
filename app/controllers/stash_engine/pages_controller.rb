@@ -1,3 +1,6 @@
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
+
 module StashEngine
   class PagesController < ApplicationController
     # the homepage shows latest plans and other things, so more than a static page
@@ -27,12 +30,27 @@ module StashEngine
     end
 
     def helpdesk
-      keywords = JSON.parse(contact_params.to_json, symbolize_names: true)
-      keywords[:id] = StashEngine::Identifier.find(params[:identifier]) if params[:identifier].present?
-      Stash::Salesforce.create_email_case(**keywords)
-      render js: "var cform = document.getElementById('contact_form')\n
-        cform.innerHTML = '<p>Your query has been submitted to the Dryad helpdesk.</p>'\n
-        cform.classList.add('alt')"
+      if current_user || verify_recaptcha
+        keywords = JSON.parse(contact_params.to_json, symbolize_names: true)
+        if %i[email subject body sname].any? { |k| keywords[k].blank? }
+          render js: "var cform = document.getElementById('contact_form')\n
+            var error = document.createElement('div')
+            error.classList.add('callout', 'err')
+            error.innerHTML = '<p>Please fill all required fields</p>'
+            cform.prepend(error)"
+        else
+          keywords[:id] = StashEngine::Identifier.find(params[:identifier]) if params[:identifier].present?
+          Stash::Salesforce.create_email_case(**keywords)
+          render js: "var cform = document.getElementById('contact_form')\n
+            cform.innerHTML = '<div class=\"callout alt\"><p>Your query has been submitted to the Dryad helpdesk.</p></div>'\n"
+        end
+      else
+        render js: "var cform = document.getElementById('contact_form')\n
+          var error = document.createElement('div')
+          error.classList.add('callout', 'err')
+          error.innerHTML = '<p>Please fill in reCAPTCHA</p>'
+          cform.prepend(error)"
+      end
     end
 
     def contact_params

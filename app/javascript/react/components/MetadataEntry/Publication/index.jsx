@@ -1,4 +1,5 @@
 import React from 'react';
+import {urlCheck} from '../RelatedWorks/RelatedWorksErrors';
 
 export {default} from './Publication';
 export {default as PubPreview} from './PubPreview';
@@ -65,6 +66,15 @@ export const publicationFail = (resource, review) => {
       }
     } else {
       return <p className="error-text" id="title_error">Title is required</p>;
+    }
+    const pa = resource.related_identifiers.find((ri) => ri.work_type === 'primary_article');
+    if (pa && !urlCheck(pa.related_identifier)) {
+      return (
+        <p className="error-text" id="doi_error">
+        You have entered an invalid DOI or URL for a published article.
+        Please select &quot;Published article&quot; from the import list, and fix or remove the DOI entry to continue.
+        </p>
+      );
     }
   }
   return false;

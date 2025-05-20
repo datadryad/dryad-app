@@ -23,5 +23,6 @@ FactoryBot.define do
     version { 1 }
     merritt_version { 1 }
     zip_filename { nil }
+    deleted_at { nil }
   end
 end

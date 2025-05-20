@@ -13,7 +13,7 @@ export default function ReadMePreview({resource, previous, curator}) {
   const getREADME = () => {
     axios.get(`/resources/${resource.id}/display_readme`).then((data) => {
       if (diff && curator) setCurrent(data.data || '<div></div>');
-      else readmeRef.current.append(document.createRange().createContextualFragment(data.data));
+      else if (readmeRef.current) readmeRef.current.append(document.createRange().createContextualFragment(data.data));
     });
     if (diff && curator) {
       axios.get(`/resources/${previous.id}/display_readme`).then((data) => {

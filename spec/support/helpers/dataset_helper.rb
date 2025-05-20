@@ -145,7 +145,7 @@ module DatasetHelper
 
   def fill_in_validation
     check 'By checking this box, I confirm that my files are compatible with the CC0 license waiver'
-    within_fieldset('Does your data contain information on human subjects?') do
+    within_fieldset('hsi_fieldset') do
       find(:label, 'No').click
     end
   end

@@ -161,7 +161,7 @@ Annual Service Fees for institutions based in lower- and middle-income countries
 
 ## Total fees
 
-The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $5,000 to $108,250 depending on the institution’s data publications and annual research expenditure.
+The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $5,000 to $108,250 USD depending on the institution’s data publications and annual research expenditure.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">

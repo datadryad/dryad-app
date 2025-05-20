@@ -149,6 +149,7 @@ module StashDatacite
         false
       end
 
+      # rubocop:disable Metrics/AbcSize
       def over_max
         return 'Too many files' if @resource.generic_files.present_files.count > 1000
 
@@ -160,13 +161,19 @@ module StashDatacite
           return 'Too many files'
         end
 
-        return 'Over file size limit' if (@resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size &&
-          !@user&.superuser?) ||
-          @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size ||
+        if !@resource.identifier.payer_2025?
+          return 'Over file size limit' if @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size &&
+          !@user&.superuser?
+        elsif @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.upload_size
+          return 'Over file size limit'
+        end
+
+        return 'Over file size limit' if @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size ||
           @resource.supp_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
 
         false
       end
+      # rubocop:enable Metrics/AbcSize
 
       def readme_required
         readme_md_require_date = '2022-09-28'

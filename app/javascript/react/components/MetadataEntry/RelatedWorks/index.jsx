@@ -22,7 +22,8 @@ export const worksCheck = (resource, touched) => {
       }
     }
   } else {
-    const urlError = resource.related_identifiers.findIndex((ri) => !urlCheck(ri.related_identifier));
+    const ris = resource.related_identifiers.filter((ri) => ri.work_type !== 'primary_article');
+    const urlError = ris.findIndex((ri) => !urlCheck(ri.related_identifier));
     if (urlError >= 0) {
       return (
         <p className="error-text" id="works_error" data-index={urlError}>

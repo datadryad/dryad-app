@@ -5,7 +5,7 @@ export {default} from './Support';
 export {default as SuppPreview} from './SuppPreview';
 
 export const fundingCheck = (funders) => {
-  if (funders.length < 1) return false;
+  if (funders.length < 1) return true;
   const orgError = funders.findIndex((f) => !f.contributor_name);
   if (orgError >= 0) {
     return (

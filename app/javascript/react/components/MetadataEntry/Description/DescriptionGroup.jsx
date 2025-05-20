@@ -3,16 +3,14 @@ import Description from './Description';
 import Cedar from './Cedar';
 
 export default function DescriptionGroup({
-  resource, setResource, curator, cedar,
+  resource, setResource, curator, cedar, step,
 }) {
-  const [res, setRes] = useState(resource);
+  const [methods, setMethods] = useState(null);
+  const [usage, setUsage] = useState(null);
+  const [abstract, setAbstract] = useState(null);
 
-  const methods = res.descriptions.find((d) => d.description_type === 'methods');
-  const usage = res.descriptions.find((d) => d.description_type === 'other');
-  const abstract = res.descriptions.find((d) => d.description_type === 'abstract');
-
-  const [openMethods, setOpenMethods] = useState(!!methods?.description);
-  const [showCedar, setShowCedar] = useState(!!res.cedar_json);
+  const [openMethods, setOpenMethods] = useState(false);
+  const [showCedar, setShowCedar] = useState(false);
   const [template, setTemplate] = useState(null);
 
   const abstractLabel = {
@@ -31,41 +29,57 @@ export default function DescriptionGroup({
     describe: <><i aria-hidden="true" />Programs and software required to open the data files</>,
   };
 
-  useEffect(() => {
-    const templ = cedar.templates.find((arr) => arr[2] === 'Human Cognitive Neuroscience Data');
-    if (templ) setTemplate({id: templ[0], title: templ[2]});
-  }, []);
-
-  useEffect(() => {
-    setResource(res);
-    const abst = res.descriptions.find((d) => d.description_type === 'abstract')?.description;
-    const {title, resource_publication, subjects} = res;
+  const checkCedar = () => {
+    const bank = /neuro|cogniti|cereb|memory|consciousness|amnesia|psychopharma|brain|hippocampus/i;
+    const {title, resource_publication, subjects} = resource;
     const {publication_name} = resource_publication || {};
     const keywords = subjects.map((s) => s.subject).join(',');
-    const bank = /neuro|cogniti|cereb|memory|consciousness|amnesia|psychopharma|brain|hippocampus/i;
-    if (bank.test(title) || bank.test(publication_name) || bank.test(keywords) || bank.test(abst)) {
-      setShowCedar(true);
+    return bank.test(title) || bank.test(publication_name) || bank.test(keywords) || bank.test(abstract?.description);
+  };
+
+  useEffect(() => {
+    if (step === 'Description') {
+      const hasMethods = resource.descriptions.find((d) => d.description_type === 'methods');
+      setShowCedar(checkCedar());
+      setMethods(hasMethods);
+      setUsage(resource.descriptions.find((d) => d.description_type === 'other'));
+      setAbstract(resource.descriptions.find((d) => d.description_type === 'abstract'));
+      setShowCedar(!!resource.cedar_json);
+      setOpenMethods(!!hasMethods?.description);
     }
-  }, [res]);
+  }, [step]);
+
+  useEffect(() => {
+    if (checkCedar()) setShowCedar(true);
+  }, [resource, abstract]);
+
+  useEffect(() => {
+    const templ = cedar?.templates?.find((arr) => arr[2] === 'Human Cognitive Neuroscience Data');
+    if (templ) setTemplate({id: templ[0], title: templ[2]});
+  }, [cedar]);
+
+  if (!abstract?.id) {
+    return <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>;
+  }
 
   return (
     <>
-      <Description dcsDescription={abstract} setResource={setRes} mceLabel={abstractLabel} curator={curator} />
+      <Description dcsDescription={abstract} setResource={setResource} mceLabel={abstractLabel} curator={curator} />
       {resource.resource_type.resource_type !== 'collection' && (
         <>
           {openMethods ? (
             <>
               <br />
-              <Description dcsDescription={methods} setResource={setRes} mceLabel={methodsLabel} curator={curator} />
+              <Description dcsDescription={methods} setResource={setResource} mceLabel={methodsLabel} curator={curator} />
             </>
           ) : (
             <p><button type="button" className="o-button__plain-text2" onClick={() => setOpenMethods(true)}>+ Add methods section</button></p>
           )}
           {usage?.description && (
-            <Description dcsDescription={usage} setResource={setRes} mceLabel={usageLabel} curator={curator} />
+            <Description dcsDescription={usage} setResource={setResource} mceLabel={usageLabel} curator={curator} />
           )}
           {showCedar && template && (
-            <Cedar resource={res} setResource={setRes} editorUrl={cedar.editorUrl} templates={cedar.templates} singleTemplate={template} />
+            <Cedar resource={resource} setResource={setResource} editorUrl={cedar.editorUrl} templates={cedar.templates} singleTemplate={template} />
           )}
         </>
       )}

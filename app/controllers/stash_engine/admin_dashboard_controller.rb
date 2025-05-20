@@ -52,7 +52,8 @@ module StashEngine
 
     def count
       if session[:admin_search_count].blank?
-        session[:admin_search_count] = StashEngine::Resource.select('count(*) as total').from("(#{params[:sql]}) subquery").map(&:total).first
+        session[:admin_search_count] =
+          StashEngine::Resource.unscoped.select('count(*) as total').from("(#{params[:sql]}) subquery").map(&:total).first
       end
       @count = session[:admin_search_count]
       respond_to(&:js)
@@ -279,6 +280,8 @@ module StashEngine
         tenant_limit = tenant_limit.where(id: flagged)
         tenant_orgs = []
       end
+
+      tenant_orgs = [] if @filters[:submitter_limit].present?
 
       @datasets = @datasets.left_outer_joins(authors: :affiliations).left_outer_joins(:funders).where(
         'stash_engine_resources.tenant_id in (?) or stash_engine_identifiers.payment_id in (?)

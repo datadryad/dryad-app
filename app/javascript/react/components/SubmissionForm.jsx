@@ -21,7 +21,7 @@ export default function SubmissionForm({
 
   const submit = (e) => {
     const mustPay = !payment && resource.resource_type.resource_type !== 'collection' && fees.total;
-    if (mustPay || !hasChanges || steps.some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator)) {
+    if (mustPay || !hasChanges || steps().some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator)) {
       e.preventDefault();
     }
     if (mustPay) setPayment(true);
@@ -30,10 +30,10 @@ export default function SubmissionForm({
   return (
     <div id="submission-submit" role="status" className={payment ? 'screen-reader-only' : null}>
       <div>
-        {steps.some((s) => s.fail) && (
+        {steps().some((s) => s.fail) && (
           <p>Edit sections and fix the errors above in order to complete your submission</p>
         )}
-        {!steps.some((s) => s.fail) && !hasChanges && (
+        {!steps().some((s) => s.fail) && !hasChanges && (
           <>
             <p>No changes have been made to the submission. Make changes to submit, or delete this version to revert to the one already submitted</p>
             <form action={`/resources/${resource.id}`} method="post">
@@ -49,7 +49,7 @@ export default function SubmissionForm({
           method="post"
           onSubmit={submit}
         >
-          {hasChanges && !steps.some((s) => s.fail) && (
+          {hasChanges && !steps().some((s) => s.fail) && (
             <>
               <input type="hidden" name="authenticity_token" value={authenticity_token} />
               <input type="hidden" name="resource_id" value={resource.id} />
@@ -81,11 +81,11 @@ export default function SubmissionForm({
             </>
           )}
           <button
-            type={!hasChanges || steps.some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator) ? 'button' : 'submit'}
+            type={!hasChanges || steps().some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator) ? 'button' : 'submit'}
             className="o-button__plain-text1"
             name="submit_button"
-            aria-describedby={steps.some((s) => s.fail) ? Array.from(document.querySelectorAll('.error-text')).map((t) => t.id).join(' ') : null}
-            aria-disabled={!hasChanges || steps.some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator) ? 'true' : null}
+            aria-describedby={steps().some((s) => s.fail) ? Array.from(document.querySelectorAll('.error-text')).map((t) => t.id).join(' ') : null}
+            aria-disabled={!hasChanges || steps().some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator) ? 'true' : null}
           >
             {curator
               ? 'Submit changes'

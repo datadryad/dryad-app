@@ -28,8 +28,8 @@ module FeeCalculator
       { tier: 2, range:    50_000_000_001..  100_000_000_000, price:   464 },
       { tier: 3, range:   100_000_000_001..  250_000_000_000, price: 1_123 },
       { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
-      { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
-      { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
+      { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 }
+      # { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
     ].freeze
 
     INVOICE_FEE = 199
@@ -120,9 +120,9 @@ module FeeCalculator
       @sum_options[:storage_by_tier] = res
     end
 
-    def add_storage_fee_difference
-      paid_storage = resource.identifier.previous_invoiced_file_size
-      paid_tier_price = price_by_range(storage_fee_tiers, paid_storage)
+    def add_storage_fee_difference(paid_storage_size = nil)
+      paid_storage_size ||= resource.identifier.previous_invoiced_file_size
+      paid_tier_price = price_by_range(storage_fee_tiers, paid_storage_size)
       new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
 
       diff = new_tier_price - paid_tier_price
@@ -191,6 +191,16 @@ module FeeCalculator
 
     def storage_fee_label
       PRODUCT_NAME_MAPPER[:storage_fee]
+    end
+
+    def add_storage_discount_fee(value_key, storage_size)
+      value = price_by_range(storage_fee_tiers, storage_size)
+      value = [value, @sum].min
+      add_fee_to_total(value_key, -value)
+    end
+
+    def add_coupon(coupon_id)
+      @sum_options[:coupon_id] = coupon_id
     end
   end
 end

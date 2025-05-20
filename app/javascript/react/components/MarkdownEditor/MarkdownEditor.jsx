@@ -254,7 +254,7 @@ function MilkdownEditor({
 
 function MarkdownEditor(props) {
   return (
-    <div id={props.id} className="markdown_editor">
+    <div id={props.id} hidden={props.hidden} className="markdown_editor">
       <MilkdownProvider>
         <MilkdownEditor {...props} />
       </MilkdownProvider>

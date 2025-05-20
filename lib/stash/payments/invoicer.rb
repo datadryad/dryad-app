@@ -14,7 +14,7 @@ module Stash
 
       # Settings used by all Stripe services
       Stripe.api_key = APP_CONFIG.payments.key
-      Stripe.api_version = '2022-11-15'
+      Stripe.api_version = '2025-03-31.basil'
 
       def self.find_recent_voids
         d = Date.today - 2.months
@@ -154,7 +154,7 @@ module Stash
           items.push(Stripe::InvoiceItem.create(
                        customer: customer_id,
                        invoice: invoice_id,
-                       unit_amount: APP_CONFIG.payments.additional_storage_chunk_cost,
+                       unit_amount_decimal: APP_CONFIG.payments.additional_storage_chunk_cost,
                        currency: 'usd',
                        quantity: over_chunks,
                        description: overage_message(over_bytes)

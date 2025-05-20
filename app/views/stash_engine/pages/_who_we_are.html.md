@@ -62,29 +62,6 @@ We are also pleased to partner with the following organizations and initiatives,
 
 This list is a work-in-progress. If you’d like to suggest an addition, please [contact us](/contact). 
 
-Dryad is grateful to the following consortia and institutions for their support of Dryad through <a href="https://scoss.org/">SCOSS</a>. Their contributions enable us to grow our outreach and promotion efforts to bring new partners into our community; increase community engagement with current partners and users; and stay at the forefront of best practice for data-sharing and building best practice for data reuse. 
-
-<ul class="member-list">
-  <li><h3>Council of Australian University Libraries (CAUL)</h3><ul>
-    <li>Auckland University</li>
-    <li>University of New South Wales</li>
-    <li>University of Melbourne</li></ul></li>
-  <li><h3>Canadian Research Knowledge Network (CRKN)</h3><ul>
-    <li>Mount Royal University</li>
-    <li>Toronto Metropolitan University</li>
-    <li>University of Alberta</li>
-    <li>University of the Fraser Valley</li>
-    <li>University of Saskatchewan</li>
-    <li>University of Waterloo</li></ul></li>
-  <li><h3>SwissUniversities</h3><ul>
-    <li>ETH Zürich</li>
-    <li>Lib4RI</li>
-    <li>Université de Lausanne</li></ul></li>
-  <li><h3>Independent contributions</h3><ul>
-    <li>Iowa State University</li></ul></li>
-</ul>
-
-Our most current grants and funding initiatives are listed in our [Annual report](https://github.com/datadryad/governance/tree/main/annual-reports).
 
 ## Origins
 

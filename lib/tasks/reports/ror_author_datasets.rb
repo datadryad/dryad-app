@@ -29,8 +29,10 @@ module Tasks
     	          ON affil_auth.`author_id` = auth.`id`
     	        JOIN stash_engine_resources res
     	          ON auth.`resource_id` = res.id
+    	          AND res.deleted_at IS NULL
     	        JOIN stash_engine_identifiers se_id
     	          ON se_id.id = res.identifier_id
+    	          AND se_id.deleted_at IS NULL
     	        JOIN stash_engine_resource_states se_rs
     	          ON res.id = se_rs.resource_id
     	        WHERE
@@ -38,11 +40,14 @@ module Tasks
     	          AND se_rs.resource_state = 'submitted') as unique_ids
             JOIN stash_engine_resources res2
               ON unique_ids.identifier_id = res2.identifier_id
+              AND res2.deleted_at IS NULL
             GROUP BY unique_ids.identifier_id) as ident_and_res#{'	'}
           JOIN stash_engine_identifiers se_id3
             ON se_id3.id = ident_and_res.identifier_id
+            AND se_id3.deleted_at IS NULL
           JOIN stash_engine_resources se_res3
             ON se_res3.id = ident_and_res.last_submitted_resource
+            AND se_res3.deleted_at IS NULL
           JOIN stash_engine_authors se_auth3
             ON se_res3.id = se_auth3.`resource_id`
           JOIN dcs_affiliations_authors dcs_affils_authors3

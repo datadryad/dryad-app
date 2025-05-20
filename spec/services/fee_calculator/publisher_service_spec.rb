@@ -146,13 +146,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 10_000_000_000_000 }
-
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-              end
-            end
+            it_behaves_like 'it has 1TB max limit'
           end
 
           context 'when covers_ldf false' do
@@ -172,13 +166,7 @@ module FeeCalculator
               it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464, storage_fee_label: 'Large data fee' }) }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 10_000_000_000_000 }
-
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-              end
-            end
+            it_behaves_like 'it has 1TB max limit'
           end
         end
 
@@ -197,13 +185,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 2_000_000_000_001 }
-
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-              end
-            end
+            it_behaves_like 'it has 1TB max limit'
           end
 
           context 'when covers_ldf false' do
@@ -226,13 +208,7 @@ module FeeCalculator
               }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 10_000_000_000_000 }
-
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-              end
-            end
+            it_behaves_like 'it has 1TB max limit'
           end
         end
       end
@@ -268,13 +244,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 10_000_000_000_000 }
-
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-              end
-            end
+            it_behaves_like 'it has 1TB max limit'
           end
 
           context 'when covers_ldf false' do
@@ -302,13 +272,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 10_000_000_000_000 }
-
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-              end
-            end
+            it_behaves_like 'it has 1TB max limit'
           end
         end
 
@@ -347,13 +311,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 10_000_000_000_000 }
-
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-              end
-            end
+            it_behaves_like 'it has 1TB max limit'
           end
 
           context 'when covers_ldf false' do
@@ -388,13 +346,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            context 'with storage_size over 2TB limit' do
-              let(:new_files_size) { 10_000_000_000_000 }
-
-              it 'raises an error' do
-                expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
-              end
-            end
+            it_behaves_like 'it has 1TB max limit'
           end
         end
       end

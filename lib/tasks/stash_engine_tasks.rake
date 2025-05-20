@@ -86,9 +86,11 @@ namespace :identifiers do
     query = <<-SQL
       SELECT ser.id, ser.identifier_id, seca.user_id
       FROM stash_engine_identifiers sei
-        JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id
-        LEFT OUTER JOIN stash_engine_curation_activities seca ON ser.last_curation_activity_id = seca.id
-      WHERE seca.status != 'embargoed' AND ser.publication_date >
+        JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id AND ser.deleted_at IS NULL
+        LEFT OUTER JOIN stash_engine_curation_activities seca ON ser.last_curation_activity_id = seca.id AND seca.deleted_at IS NULL
+      WHERE seca.status != 'embargoed'
+        AND sei.deleted_at IS NULL
+        AND ser.publication_date >
     SQL
 
     query += " '#{now.strftime('%Y-%m-%d %H:%M:%S')}'"
@@ -431,7 +433,7 @@ namespace :identifiers do
     CSV.open('curation_publication_report.csv', 'w') do |csv|
       csv << %w[DOI CreatedAt Size NumFiles FileExtensions DaysSubmissionToApproval DaysInCuration]
       StashEngine::Identifier.publicly_viewable.where("created_at > '#{launch_day + 1.day}'").find_each do |i|
-        num_files = i.latest_resource.data_files.select { |f| f[:file_state] == 'copied' || f[:file_state] == 'created' }.size
+        num_files = i.latest_resource.data_files.select { |f| %w[copied created].include?(f[:file_state]) }.size
         file_extensions = i.latest_resource.data_files.map { |f| File.extname(f.upload_file_name).downcase }.uniq
 
         r = i.first_submitted_resource

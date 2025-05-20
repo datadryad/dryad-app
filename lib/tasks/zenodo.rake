@@ -19,6 +19,7 @@ namespace :zenodo do
         LEFT JOIN (SELECT id, identifier_id FROM stash_engine_zenodo_copies WHERE copy_type = 'data') cops
         ON ids.id = cops.identifier_id
       WHERE ids.pub_state = 'published'
+        AND ids.deleted_at IS NULL
         AND cops.id IS NULL
         AND ids.storage_size > 5e+10
       ORDER BY RAND()

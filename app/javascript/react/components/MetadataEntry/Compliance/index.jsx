@@ -17,7 +17,7 @@ export const complianceCheck = (resource) => {
   }
   if (disclaimer.description !== null) {
     if (disclaimer.description.split(/\s/).length < 10) {
-      return <p className="error-text" id="hsi_error">Completion of the human subjects statement is required</p>;
+      return <p className="error-text" id="hsi_error">A human subjects statement of at least 10 words is required</p>;
     }
   }
   return false;

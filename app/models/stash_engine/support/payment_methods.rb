@@ -87,6 +87,10 @@ module StashEngine
         latest_resource.contributors.each { |contrib| return contrib if contrib.payment_exempted? }
       end
 
+      def waiver?
+        payment_type == 'waiver'
+      end
+
       private
 
       def clear_payment_for_changed_journal

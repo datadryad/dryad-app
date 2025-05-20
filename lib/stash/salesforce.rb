@@ -81,7 +81,7 @@ module Stash
       return unless email && sname && subject && body
 
       case_hash = {
-        Origin: 'Email',
+        Origin: 'Form',
         Subject: subject,
         Description: body,
         SuppliedName: sname,

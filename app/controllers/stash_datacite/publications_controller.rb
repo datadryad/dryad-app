@@ -5,7 +5,7 @@ require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
 
-# rubocop:disable Metrics/ClassLength, Metrics/AbcSize
+# rubocop:disable Metrics/ClassLength, Metrics/AbcSize, Metrics/MethodLength
 module StashDatacite
   class PublicationsController < ApplicationController
     def update
@@ -14,19 +14,22 @@ module StashDatacite
       save_publications
       respond_to do |format|
         format.json do
-          if params[:do_import] == 'true' || params[:do_import] == true
+          if ['true', true].include?(params[:do_import])
             @error = 'Please fill in the form completely' if params[:msid]&.strip.blank? && params[:primary_article_doi]&.strip.blank?
             update_manuscript_metadata if params[:import_type] == 'manuscript'
             update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] != 'manuscript'
             if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
               manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier)
             end
+            @resource.reload
             import_data = {
               title: @resource.title,
               authors: @resource.authors.as_json(include: [:affiliations]),
               descriptions: @resource.descriptions,
               subjects: @resource.subjects,
-              contributors: @resource.contributors
+              contributors: @resource.contributors,
+              resource_preprint: @resource.resource_preprint,
+              resource_publication: @resource.resource_publication
             }
             render json: {
               error: @error,
@@ -40,6 +43,7 @@ module StashDatacite
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     # GET /publications/autocomplete?term={query_term}
     def autocomplete

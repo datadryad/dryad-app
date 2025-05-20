@@ -26,8 +26,8 @@ function PublicationForm({
   resource, setResource, setSponsored, importType,
 }) {
   const formRef = useRef();
-  const {resource_publication, resource_preprint = {}} = resource;
-  const {publication_name, publication_issn, manuscript_number} = importType === 'preprint' ? resource_preprint : resource_publication;
+  const {resource_publication: res_pub, resource_preprint: res_pre = {}} = resource;
+  const {publication_name, publication_issn, manuscript_number} = importType === 'preprint' ? res_pre : res_pub;
   const primary_article = resource.related_identifiers.find((r) => r.work_type === (importType === 'preprint' ? 'preprint' : 'primary_article'));
   const [importError, setImportError] = useState('');
   const [journal, setJournal] = useState(publication_name);
@@ -68,17 +68,13 @@ function PublicationForm({
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     ).then((data) => {
       if (data.status === 200) {
-        const res_pub = {
-          publication_name: journal || null,
-          publication_issn: issn || null,
-          manuscript_number: values.msid || null,
-        };
         const {
           error, journal: j, related_identifiers, import_data,
         } = data.data;
         if (import_data) {
           const {
-            title, authors, descriptions, subjects, contributors,
+            title, authors, descriptions, subjects, contributors, resource_preprint,
+            resource_publication,
           } = import_data;
           setResource((r) => ({
             ...r,
@@ -88,26 +84,22 @@ function PublicationForm({
             contributors,
             descriptions,
             journal: j,
-            ...(importType === 'preprint' ? {
-              resource_preprint: res_pub,
-            } : {
-              resource_publication: res_pub,
-            }),
+            resource_preprint,
+            resource_publication,
             related_identifiers,
           }));
+          const {publication_name: jtitle, publication_issn: jissn} = importType === 'preprint' ? resource_preprint : resource_publication;
+          setJournal(jtitle);
+          setIssn(jissn);
         } else {
           setResource((r) => ({
             ...r,
             journal: j,
-            ...(importType === 'preprint' ? {
-              resource_preprint: res_pub,
-            } : {
-              resource_publication: res_pub,
-            }),
             related_identifiers,
           }));
+          setJournal(j?.title || journal);
+          setIssn(j?.issn || issn);
         }
-
         setImportError(error || ((importType === 'manuscript' && apiJournal) && apiError) || '');
         showSavedMsg();
         setLoading(false);
@@ -137,6 +129,12 @@ function PublicationForm({
           <div className="callout alt">
             <p><i className="fas fa-file-import" /> Enter your publication information to import the title and other metadata</p>
           </div>
+          {importType === 'manuscript' && (
+            <p style={{fontSize: '.98rem'}}>
+              Are you currently submitting your manuscript?
+              Enter <code>NA</code> as the Manuscript number. This can be updated once a number is assigned by the journal.
+            </p>
+          )}
           <div className="input-line">
             <div className="input-stack">
               <Journal
@@ -202,41 +200,31 @@ function PublicationForm({
             )}
             <div className="input-stack">
               <span style={{height: '23px'}} />
-              {resource.title ? (
-                <button
-                  type="button"
-                  name="commit"
-                  className="o-button__plain-text5"
-                  hidden={hide}
-                  disabled={disable}
-                  aria-controls="overwrite-dialog"
-                  onClick={() => document.getElementById('overwrite-dialog').showModal()}
-                >
-                  <i className="fas fa-file-import" />{' '}
-                  Overwrite metadata
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  name="commit"
-                  className="o-button__plain-text5"
-                  hidden={hide}
-                  disabled={disable}
-                  onClick={() => {
+              <button
+                type="button"
+                name="commit"
+                className="o-button__plain-text5"
+                hidden={hide}
+                disabled={disable}
+                aria-controls="overwrite-dialog"
+                onClick={() => {
+                  if (resource.title) {
+                    document.getElementById('overwrite-dialog').showModal();
+                  } else {
                     formRef.current.values.isImport = true;
                     formik.handleSubmit();
-                  }}
-                >
-                  <i className="fas fa-file-import" />{' '}
-                  Import metadata
-                </button>
-              )}
+                  }
+                }}
+              >
+                {loading ? <i className="fas fa-circle-notch fa-spin" role="img" aria-label="Loading..." />
+                  : <i className="fas fa-file-import" aria-hidden="true" />}{' '}
+                {resource.title ? 'Overwrite' : 'Import'} metadata
+              </button>
             </div>
           </div>
           <p id="population-warnings" className="o-metadata__autopopulate-message">
             {importError}
           </p>
-          {loading && <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>}
           <dialog
             id="overwrite-dialog"
             className="modalDialog"

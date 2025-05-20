@@ -8,7 +8,7 @@ module StashEngine
     end
 
     def status_select(statuses = [])
-      statuses = StashEngine::CurationActivity.statuses if statuses.empty?
+      statuses = StashEngine::CurationActivity.statuses.keys if statuses.empty?
       statuses.sort { |a, b| a <=> b }.map do |status|
         [StashEngine::CurationActivity.readable_status(status), status]
       end
@@ -40,7 +40,7 @@ module StashEngine
 
       # Stripe invoice references
       if instring.start_with?('in_') && !instring.start_with?('in_progress')
-        return render inline: link_to(instring, "https://dashboard.stripe.com/invoices/#{instring}",
+        return render inline: link_to('invoice', "https://dashboard.stripe.com/invoices/#{instring}",
                                       target: :_blank)
       end
 
