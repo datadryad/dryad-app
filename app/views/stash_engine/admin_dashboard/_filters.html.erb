@@ -51,6 +51,10 @@ end
   <% if @tenant_limit.length > 1 %>
     <div class="o-admin-form-pair half-width">
       <%= selecter('member', [['', '']] + @tenant_limit.map { |t| [t.short_name, t.id] }).html_safe %>
+      <span class="limiter">
+        <%= check_box_tag 'submitter_limit', name: 'filters[submitter_limit]' %>
+        <label for="submitter_limit">Exclude coauthors</span>
+      </span>
     </div>
   <% end %>
   <% if @journal_limit.present? %>

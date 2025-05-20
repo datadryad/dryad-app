@@ -9,5 +9,11 @@ module StashEngine
 
       mail(to: 'devs@datadryad.org', subject: "#{rails_env}Health check status changed - #{status_code}")
     end
+
+    def submission_queue_too_large(count)
+      @count = count
+
+      mail(to: 'devs@datadryad.org', subject: "#{rails_env}Submission queue too large")
+    end
   end
 end

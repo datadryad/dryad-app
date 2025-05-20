@@ -1,6 +1,6 @@
 <div class="callout<% if @resource&.identifier&.pub_state == 'published' %> alt<%end%>" id="privilege_banner">
   <% role = @resource&.roles&.find {|ro| ro.user_id == current_user.id} %>
-  <p>This is the <%= role ? role.role : 'administrator' %> view of this <%= resource&.resource_type&.resource_type %>, including any unpublished changes.
+  <p>This is the <%= role ? role.role : 'administrator' %> view of this <%= resource&.resource_type&.resource_type %>, including any unpublished, submitted changes.
     <span>      
       <% if @resource&.identifier&.pub_state == 'published' %>
         <a href="<%= stash_url_helpers.show_path(id: @resource.identifier_str, public: true) %>"><i class="fas fa-eye" aria-hidden="true"></i>Public view</a>

@@ -5,7 +5,7 @@ require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
 
-# rubocop:disable Metrics/ClassLength, Metrics/AbcSize
+# rubocop:disable Metrics/ClassLength, Metrics/AbcSize, Metrics/MethodLength
 module StashDatacite
   class PublicationsController < ApplicationController
     def update
@@ -21,12 +21,15 @@ module StashDatacite
             if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
               manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier)
             end
+            @resource.reload
             import_data = {
               title: @resource.title,
               authors: @resource.authors.as_json(include: [:affiliations]),
               descriptions: @resource.descriptions,
               subjects: @resource.subjects,
-              contributors: @resource.contributors
+              contributors: @resource.contributors,
+              resource_preprint: @resource.resource_preprint,
+              resource_publication: @resource.resource_publication
             }
             render json: {
               error: @error,
@@ -40,6 +43,7 @@ module StashDatacite
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     # GET /publications/autocomplete?term={query_term}
     def autocomplete

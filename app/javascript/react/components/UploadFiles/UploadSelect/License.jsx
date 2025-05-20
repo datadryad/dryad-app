@@ -21,10 +21,12 @@ export default function License({license, resourceId, setResource}) {
   useEffect(() => {
     async function getList() {
       axios.get(`/software_license_select?select=${license?.id || ''}`).then((data) => {
-        const active_form = document.createRange().createContextualFragment(data.data);
-        divRef.current.append(active_form);
-        document.getElementById('searchselect-license__input').addEventListener('blur', submit);
-        submit();
+        if (divRef.current) {
+          const active_form = document.createRange().createContextualFragment(data.data);
+          divRef.current.append(active_form);
+          document.getElementById('searchselect-license__input').addEventListener('blur', submit);
+          submit();
+        }
       });
     }
     if (divRef.current) getList();
