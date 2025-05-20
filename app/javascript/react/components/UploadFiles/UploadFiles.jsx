@@ -89,11 +89,8 @@ export default function UploadFiles({
   const modalValidationRef = useRef(null);
   const interval = useRef(null);
 
-  const oldSize = resource.identifier.old_payment_system
-              || (resource.tenant && resource.tenant.payment_plan !== '2025')
-              || (resource.journal?.payment_plan_type && resource.journal.payment_plan_type !== '2025');
   const {files: maxFiles, merritt_size, upload_size} = config_maximums;
-  const maxSize = oldSize ? merritt_size : upload_size;
+  const maxSize = resource.identifier['payer_2025?'] ? upload_size : merritt_size;
   const Messages = {
     fileReadme: 'Please prepare your README on the README page.',
     fileAlreadySelected: 'A file of the same name is already in the table. The new file was not added.',

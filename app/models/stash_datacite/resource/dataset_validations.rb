@@ -161,9 +161,7 @@ module StashDatacite
           return 'Too many files'
         end
 
-        if @resource.identifier.old_payment_system ||
-          (@resource.tenant && @resource.tenant.payment_plan != '2025') ||
-          (@resource.journal && @resource.journal.payment_plan_type != '2025')
+        if !@resource.identifier.payer_2025?
           return 'Over file size limit' if @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size &&
           !@user&.superuser?
         elsif @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.upload_size

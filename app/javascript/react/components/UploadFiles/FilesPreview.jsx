@@ -50,11 +50,7 @@ export default function FilesPreview({
       <>
         {data.length > 0 && (
           <>
-            {curator
-            && (resource.identifier.old_payment_system
-              || (resource.tenant && resource.tenant.payment_plan !== '2025')
-              || (resource.journal?.payment_plan_type && resource.journal.payment_plan_type !== '2025'))
-            && resource.total_file_size > maxSize && (
+            {curator && !resource.identifier['payer_2025?'] && resource.total_file_size > maxSize && (
               <div className="callout warn">
                 <p>
                   This dataset&apos;s total file size is {formatSizeUnits(resource.total_file_size)} (max {formatSizeUnits(maxSize)}).

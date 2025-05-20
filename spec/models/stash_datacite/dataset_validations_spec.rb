@@ -323,8 +323,20 @@ module StashDatacite
           expect(error).to eq('Too many files')
         end
 
+        it 'gives an error if over file size for data files' do
+          size = @resource.generic_files.sum(:upload_file_size)
+          @resource.generic_files.update_all(type: 'StashEngine::DataFile')
+
+          allow(APP_CONFIG.maximums).to receive(:upload_size).and_return(size - 1)
+
+          validations = DatasetValidations.new(resource: @resource)
+          error = validations.over_max
+          expect(error).to eq('Over file size limit')
+        end
+
         it 'gives an error if over file size for merritt data files' do
           size = @resource.generic_files.sum(:upload_file_size)
+          @resource.identifier.update(old_payment_system: true)
           @resource.generic_files.update_all(type: 'StashEngine::DataFile')
 
           allow(APP_CONFIG.maximums).to receive(:merritt_size).and_return(size - 1)

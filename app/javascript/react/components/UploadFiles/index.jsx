@@ -5,7 +5,7 @@ export {default} from './UploadFiles';
 export {default as FilesPreview} from './FilesPreview';
 
 export const filesCheck = (resource, superuser, maximums) => {
-  const {generic_files: files, identifier: {publication_date, old_payment_system}} = resource;
+  const {generic_files: files, identifier: {publication_date, 'payer_2025?': new_payment}} = resource;
   const {
     files: maxFiles, zenodo_size: maxZenodo, merritt_size: oldSize, upload_size: maxSize,
   } = maximums;
@@ -53,9 +53,7 @@ export const filesCheck = (resource, superuser, maximums) => {
         </p>
       );
     }
-    if (old_payment_system
-      || (resource.tenant && resource.tenant.payment_plan !== '2025')
-      || (resource.journal?.payment_plan_type && resource.journal.payment_plan_type !== '2025')) {
+    if (!new_payment) {
       if (!superuser && data.reduce((sum, f) => sum + f.upload_file_size, 0) > oldSize) {
         return (
           <p className="error-text" id="data_error">
