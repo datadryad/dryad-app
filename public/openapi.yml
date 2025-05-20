@@ -1,21 +1,49 @@
 openapi: 3.1.0
 
 info:
-  title: dryad-api
+  title: Dryad API
   description: |
-    The API for the [Dryad](https://datadryad.org) data publication and
-    preservation platform.
+    Dryad's REST API allows detailed interaction and programmatic interfacing with Dryad contents. The most common case is to use GET requests to retrieve information about datasets, versions, and files.
 
-    In addition to this documentation, please see the [descriptive API documentation](https://github.com/datadryad/dryad-app/tree/main/documentation/apis),
-    particularly the [API Submission Examples](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md) which give concrete
-    examples of submission through the Dryad API.
+    When using the API, any DOI included must be <a href="https://www.w3schools.com/tags/ref_urlencode.ASP" target="blank">URL-encoded<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> to ensure correct processing. Anonymous users of the API are limited to 30 requests per minute, with a lower limit for downloads of data files. 
 
-    Our [Github documentation directory](https://github.com/datadryad/dryad-app/tree/main/documentation) will also be expanded further in the future as more
-    documentation is created (though not all of it may be relevant to API users).
+    Examples:
 
-    Rate limits:
-      - Anonymous users of the API are limited to 30 requests per minute, with a lower limit for downloads of data files.
-      - Authenticated users of the API are limited to 120 requests per minute.
+    - [List datasets](https://datadryad.org/api/v2/datasets)
+    - [Search for datasets](https://datadryad.org/api/v2/search?q=carbon)
+    - [Get information about a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7)
+    - [See versions of a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/versions)
+    - [Get files from a version](https://datadryad.org/api/v2/versions/26724/files)
+    - [Download the most recent version of a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/download)
+
+    Detailed documentation:
+
+    - For details on all of our REST API operations, click the links in the menu on this page.
+    - [Search API](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/search.md)
+    - [Submission API](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md)
+
+    ## API accounts 
+
+    To access more powerful features, an API account is required. API accounts allow users to:
+
+    - Access the API at higher rates (authenticated users may make up to 120 requests per minute)
+    - Access datasets that are not yet public, but are associated with the account's community (institution, journal, etc.)
+    - Update datasets associated with the account's community
+
+    See the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md" target="blank">API accounts document<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> for more information on requesting an API account and using it to access datasets.
+
+
+    ## Submission
+
+    The Submission API is used by institutions that partner closely with Dryad, and use systems to create dataset submissions directly. Please contact us if you are [interested in partnering with Dryad](/contact#get-involved), and setting up an API account for submission.
+
+    The <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md" target="blank">API submission examples document<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> gives concrete examples of submission through the Dryad API.
+
+
+    ### Dryad sandbox
+
+    <a href="https://sandbox.datadryad.org/" target="blank">Dryad's sandbox server<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> allows users to experiment with data submission and the Dryad API, without worrying about the effects on "real" data. Anyone may create an account on the sandbox server for testing purposes. When creating an account, keep in mind that Dryad's sandbox relies on the <a href="https://sandbox.orcid.org/" target="_blank">sandbox version of ORCID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>, which allows you to make test ORCID accounts. Sandbox ORCID IDs should be used in the Dryad sandbox, while use of Dryad's production system requires a real ORCID ID.
+
   version: "2.1.0"
 
 servers:
@@ -48,14 +76,14 @@ paths:
       description: Displays links to root level API objects, like the list of datasets.
       responses:
         '200':
-          description: The root of the API
+          description: The root of the API.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/root_links'
               examples:
-                success:           
-                  externalValue: api/v2/docs/examples/root.json
+                success:
+                  $ref: api/v2/docs/examples/root.json
         '406':
           $ref: '#/components/responses/Unacceptable'
 
@@ -67,11 +95,11 @@ paths:
       summary: Test OAuth2 and bearer authentication
       tags:
         - root 
-      description: "Test your <a href='/api#api-accounts'>API account authentication</a> by sending authenticated headers:  **'Accept: application/json'**, **'Content-Type: application/json'**, **'Authorization: Bearer {your-token}'**. \n\n **Accept** header is optional if you are using **'Content-Type: application/json'**."
+      description: "Test your <a href='/api#api-accounts'>API account authentication</a> by sending authenticated headers:  `Accept: application/json`, `Content-Type: application/json`, `Authorization: Bearer {your-token}`. \n\n `Accept` header is optional if you are using `Content-Type: application/json`."
 
       responses:
         '200':
-          description: a welcome message if successful
+          description: Shows a welcome message if successful.
           content:
             application/json:
               schema:
@@ -109,15 +137,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/datasets'
               examples:
-                success: 
-                  externalValue: api/v2/docs/examples/datasets.json
+                success:
+                  $ref: api/v2/docs/examples/datasets.json
         '406':
           $ref: '#/components/responses/Unacceptable'
     post:
       summary: Create a new dataset with an automatically-generated DOI
       tags:
         - datasets 
-      description: You must be <a href="/api#api-accounts">logged in</a>. Use a JSON structure as shown below. If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "declare no funding" example). For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
+      description: You must be <a href="/api#api-accounts">logged in</a>. Use a JSON structure as shown below. If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "Set no funding" example). For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
       security:
         - bearerAuth: []
       requestBody:
@@ -139,22 +167,22 @@ paths:
                     loosenValidation:
                       type: boolean
             examples:
-              request:
-                externalValue: api/v2/docs/examples/dataset_post_request.json
-              declare no funding: 
-                externalValue: api/v2/docs/examples/dataset_post_request_nf.json
+              Post:
+                $ref: api/v2/docs/examples/dataset_post_request.json
+              Set no funding:
+                $ref: api/v2/docs/examples/dataset_post_request_nf.json
       responses:
         '201':
-          description: response showing dataset info that has been saved
+          description: Show the dataset information that has been saved.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/datasets'
               examples:
-                success:
-                  externalValue: api/v2/docs/examples/dataset_post_response.json
-                no funding:
-                  externalValue: api/v2/docs/examples/dataset_post_response_nf.json
+                Success:
+                  $ref: api/v2/docs/examples/dataset_post_response.json
+                Without funding:
+                  $ref: api/v2/docs/examples/dataset_post_response_nf.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -174,14 +202,14 @@ paths:
         - $ref: '#/components/parameters/doi'
       responses:
         '200':
-          description: A dataset
+          description: Dataset information retrieved.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/dataset'
-            examples:
-              success:
-                externalValue: api/v2/docs/examples/dataset.json
+              examples:
+                success:
+                  $ref: api/v2/docs/examples/dataset.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -202,18 +230,18 @@ paths:
             schema:
               $ref: '#/components/schemas/dc_metadata'
             examples:
-              request:
-                externalValue: api/v2/docs/examples/dataset_post_request.json
+              success:
+                $ref: api/v2/docs/examples/dataset_post_request.json
       responses:
         '200':
-          description: response showing dataset info that has been saved
+          description:  Show the dataset information that has been saved.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/datasets'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/dataset.json
+                  $ref: api/v2/docs/examples/dataset.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -238,14 +266,14 @@ paths:
                 $ref: '#/components/schemas/dataset_submission'
       responses:
         '202':
-          description: Submission taking place, watch the dataset versionStatus for changes
+          description: Submission taking place, watch the dataset versionStatus for changes.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/dataset'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/dataset.json
+                  $ref: api/v2/docs/examples/dataset.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -285,14 +313,14 @@ paths:
         - $ref: '#/components/parameters/per_page'
       responses:
         '200':
-          description: A list of a dataset's versions
+          description: A list of a dataset's versions.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/versions'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/versions.json
+                  $ref: api/v2/docs/examples/versions.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -309,7 +337,7 @@ paths:
         - $ref: '#/components/parameters/version_id'
       responses:
         '200':
-          description: The version of the dataset
+          description: The requested version of the dataset.
           content:
             application/json:
               schema:
@@ -322,7 +350,7 @@ paths:
                           type: string
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/version.json
+                  $ref: api/v2/docs/examples/version.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -333,21 +361,21 @@ paths:
       summary: List the files and file metadata in this version
       tags:
         - versions
-      description: Returns the list of files and file metadata for a known version of a dataset with the version id you specify.
+      description: Returns the list of files and file metadata for a known version of a dataset with the version ID you specify.
       parameters:
         - $ref: '#/components/parameters/version_id'
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/per_page'
       responses:
         '200':
-          description: A list of the files in the version
+          description: A list of the files in the version.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/files'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/files.json
+                  $ref: api/v2/docs/examples/files.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -363,7 +391,7 @@ paths:
         - $ref: '#/components/parameters/version_id'
       responses:
         '200':
-          description: The binary content for a compressed archive
+          description: The binary content for a compressed archive.
           content:
             application/zip:
               schema:
@@ -371,7 +399,7 @@ paths:
                 format: binary
         '404':
           description: 'not found'
-          $ref: '#components/content/Error'
+          $ref: '#/components/content/Error'
         '401':
           $ref: '#/components/responses/Unauthorized'
 
@@ -380,19 +408,19 @@ paths:
       summary: Get metadata information about a file
       tags:
         - files
-      description: Returns file metadata information visible to the user (or public) by the file id.  The version file list embeds this metadata and also lists the file ids.
+      description: Returns file metadata information visible to the user (or public) by the file ID.  The version file list embeds this metadata and also lists the file IDs.
       parameters:
         - $ref: '#/components/parameters/file_id'
       responses:
         '200':
-          description: A single file
+          description: A single file.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/file'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/file.json
+                  $ref: api/v2/docs/examples/file.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -415,13 +443,13 @@ paths:
                 $ref: '#/components/schemas/file'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/file.json
+                  $ref: api/v2/docs/examples/file.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          description: 'This file must be part of an an in-progress version'
+          description: This file must be part of an an in-progress version.
           $ref: '#/components/content/Error'
 
   '/files/{id}/download':
@@ -452,14 +480,14 @@ paths:
       summary: Upload and stage a file for an in-progress dataset
       tags:
         - files
-      description: Allows uploading a file to be staged for submission to the storage repository. The files will be stored in the storage repository after the dataset is submitted.  The body of the request will be the file you are uploading.  Set the **'Content-Type'** http header to the appropriate mimetype for your file when uploading.
+      description: Allows uploading a file to be staged for submission to the storage repository. The files will be stored in the storage repository after the dataset is submitted.  The body of the request will be the file you are uploading.  Set the `Content-Type` http header to the appropriate mimetype for your file when uploading.
       security:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/doi'
         - $ref: '#/components/parameters/filename'
       requestBody:
-        description: a binary file with content-type set
+        description: A binary file with `Content-Type` set.
         required: true
         content:
           "*/*":
@@ -468,7 +496,7 @@ paths:
               format: binary
       responses:
         '201':
-          description: file was created on the server
+          description: File was created on the server.
           content:
             application/json:
               schema:
@@ -479,7 +507,7 @@ paths:
                       type: string
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/upload_file.json
+                  $ref: api/v2/docs/examples/upload_file.json
         '401':
           $ref: '#/components/responses/Unauthorized'
 
@@ -500,7 +528,7 @@ paths:
               $ref: '#/components/schemas/url_json'
       responses:
         '201':
-          description: Metadata for the URL was saved and the response json indicates information populated for a file object based on the URL.
+          description: Metadata for the URL was saved and the response JSON indicates information populated for a file object based on the URL.
           content:
             application/json:
               schema:
@@ -511,7 +539,7 @@ paths:
                       type: string
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/upload_file.json
+                  $ref: api/v2/docs/examples/upload_file.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -522,15 +550,15 @@ paths:
     get:
       security:
         - bearerAuth: [ ]
-      summary: Get processor results for the id given
+      summary: Get processor results for the ID given
       tags:
         - internal
-      description: Shows the processor results stored in the database for the given ID
+      description: Shows the processor results stored in the database for the given ID.
       parameters:
         - $ref: '#/components/parameters/processor_result_id'
       responses:
         '200':
-          description: A json representation of processor results
+          description: A JSON representation of processor results.
           content:
             application/json:
               schema:
@@ -543,7 +571,7 @@ paths:
     put:
       security:
         - bearerAuth: [ ]
-      summary: Overwrite processor results for the id given
+      summary: Overwrite processor results for the ID given
       tags:
         - internal
       description: Overwrite the processor results stored in the database for the given ID, resource_id, dates can't be manually changed
@@ -551,7 +579,7 @@ paths:
         - $ref: '#/components/parameters/processor_result_id'
       responses:
         '200':
-          description: A json representation of processor results that were saved
+          description: A JSON representation of processor results that were saved.
           content:
             application/json:
               schema:
@@ -574,7 +602,7 @@ paths:
         - $ref: '#/components/parameters/version_id'
       responses:
         '200':
-          description: A json representation of processor results for the version id
+          description: A JSON representation of processor results for the version ID.
           content:
             application/json:
               schema:
@@ -587,15 +615,15 @@ paths:
     post:
       security:
         - bearerAuth: [ ]
-      summary: Create processor results for the id given
+      summary: Create processor results for the ID given
       tags:
         - internal
-      description: Create new processor result in the database
+      description: Create a new processor result in the database.
       parameters:
         - $ref: '#/components/parameters/processor_result_id'
       responses:
         '200':
-          description: A json representation of processor results that were saved
+          description: A JSON representation of processor results that were saved.
           content:
             application/json:
               schema:
@@ -616,16 +644,16 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/related_type'
-      summary: Update related works for a dryad doi
+      summary: Update related works for a Dryad DOI
       tags:
         - internal
-      description: Adds or updates related works for a dryad doi
+      description: Adds or updates related works for a Dryad DOI.
       parameters:
         - $ref: '#/components/parameters/doi'
         - $ref: '#/components/parameters/doi'
       responses:
         '200':
-          description: A json representation of related work that was saved
+          description: A JSON representation of the related work that was saved.
           content:
             application/json:
               schema:
@@ -663,7 +691,7 @@ paths:
           schema:
             type: string
           required: true
-          description: "The name of a report."
+          description: The name of a report.
       responses:
         '200':
           description: A report (CSV download)
@@ -675,10 +703,10 @@ paths:
         '406':
           $ref: '#/components/responses/Unacceptable'
         '500':
-          description: Unable to render report file
+          description: Unable to render report file.
           $ref: '#/components/content/Error'
         '404':
-          description: Could not find requested report {name}
+          description: Could not find requested report {name}.
           $ref: '#/components/content/Error'
 
   # --- search ---
@@ -706,7 +734,7 @@ paths:
           schema:
             type: string
           description:
-            A *ROR* identifier specifying an institutional
+            A ROR identifier specifying an institutional
             affiliation that must be present in the list of dataset authors. The
             identifier should be in the full "https" format and should be
             URL-encoded, e.g., `https%3A%2F%2Fror.org%2F00x6h5n95`.
@@ -715,7 +743,7 @@ paths:
           schema:
             type: string
           description:
-            The abbreviation for a "tenant" organization in
+            The abbreviation for a partner organization in
             Dryad. This will automatically search all affiliations associated
             with the given tenant. If both a *tenant* and *affiliation* are
             specified, the tenant will be ignored.
@@ -748,7 +776,7 @@ paths:
           schema:
             type: string
           description:
-            The identifier that is present in a related work. It allows `*` as a wildcard at the beginning and/or end of the value
+            The identifier that is present in a related work. It allows `*` as a wildcard at the beginning and/or end of the value.
         - in: query
           name: relatedWorkRelationship
           schema:
@@ -764,7 +792,7 @@ paths:
                 $ref: '#/components/schemas/datasets'
               examples:
                 success:
-                  externalValue: api/v2/docs/examples/datasets.json
+                  $ref: api/v2/docs/examples/datasets.json
         '400':
           description:
             Dryad encountered an error parsing the query options for the search.
@@ -780,7 +808,7 @@ components:
   responses:
 
     Unacceptable:
-      description: "406 - unacceptable: please set your Content-Type or Accept headers for application/json. **Accept** header is optional if you are using **'Content-Type: application/json'**."
+      description: "406 - unacceptable: please set your `Content-Type` or `Accept` headers for application/json. `Accept` header is optional if you are using `Content-Type: application/json`."
       $ref: '#/components/content/Error'
 
     NotFound:
@@ -788,7 +816,7 @@ components:
       $ref: '#/components/content/Error'
 
     Unauthorized:
-      description: 'Unauthorized, must have current bearer token'
+      description: 'Unauthorized, must have current bearer token.'
       $ref: '#/components/content/Error'
 
     UnprocessableEntity:
@@ -1160,7 +1188,7 @@ components:
           type: string
         identifier:
           type: string
-          description: The organization identifier, for example a ROR id.
+          description: The organization identifier, for example a ROR ID.
           example: 'https://ror.org/00x6h5n95'
         identifierType:
           description: Type of identifier — ror, isni, grid, crossref_funder_id or other.
@@ -1366,7 +1394,7 @@ components:
       schema:
         type: integer
       required: true
-      description: "The version id is a unique integer and can be obtained from the list of versions for a dataset"
+      description: "The version ID is a unique integer and can be obtained from the list of versions for a dataset."
 
     processor_result_id:
       in: path
@@ -1374,7 +1402,7 @@ components:
       schema:
         type: integer
       required: true
-      description: "The processor results id for a single item"
+      description: "The processor results ID for a single item."
 
     file_id:
       in: path
@@ -1382,7 +1410,7 @@ components:
       schema:
         type: integer
       required: true
-      description: "The file id is a unique integer and can be obtained from the list of files for a version of a dataset"
+      description: "The file ID is a unique integer and can be obtained from the list of files for a version of a dataset."
 
     filename:
       in: path

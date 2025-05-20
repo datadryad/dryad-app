@@ -1,4 +1,4 @@
-{
+value: {
   "_links": {
     "self": {
       "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QV3KZ2K"

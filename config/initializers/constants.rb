@@ -19,3 +19,6 @@ PRODUCT_NAME_MAPPER = {
 OLD_PAYMENT_SYSTEM_MESSAGE = 'Payer is not on 2025 payment plan'.freeze
 MISSING_PAYER_MESSAGE = 'Payer is missing. Please use individual calculator.'.freeze
 OUT_OF_RANGE_MESSAGE = 'The value is out of defined range'.freeze
+
+SUBMISSION_QUEUE_NOTIFICATION_LIMIT = 10.freeze
+SUBMISSION_QUEUE_NOTIFICATION_EVERY = 30.minutes.freeze

@@ -136,7 +136,7 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 
 ## Total fees
 
-The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $1,000 to $98,250 depending on the volume of data publications and organization reported publishing expenditure or revenue.
+The DPC and Annual Service Fee are combined to calculate the total annual fee, which can range from $1,000 to $98,250 USD depending on the volume of data publications and organization reported publishing expenditure or revenue.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">

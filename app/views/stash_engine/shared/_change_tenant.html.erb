@@ -4,10 +4,10 @@
       <%= logo_path({style: 'max-height: 50px'}) if current_tenant.logo&.data&.present? %>
       <%= current_tenant.long_name %>
       <span style="flex-grow: 1"></span>
-      <button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-pencil" aria-hidden="true"></i> Edit affiliation</button>
+      <button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-pencil" aria-hidden="true" style="margin-right: .25ch"></i>Edit affiliation</button>
     </p>
   <% else %>
-  <p><button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a Dryad partner institution</button></p>
+  <p><button class="o-button__plain-text7" id="edit_tenant" aria-expanded="false" aria-controls="edit_tenant-form"><i class="fa fa-plus-circle" aria-hidden="true" style="margin-right: .25ch"></i>Add a Dryad partner institution</button></p>
   <% end %>
 </div>
 <div id="edit-tenant-form" hidden>

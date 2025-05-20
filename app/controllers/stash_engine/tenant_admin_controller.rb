@@ -122,7 +122,7 @@ module StashEngine
 
       if edit_params.key?(:ror_orgs)
         orgs = edit_params[:ror_orgs].split("\n")
-        if @tenant.ror_ids.difference(orgs).any?
+        if @tenant.ror_ids.difference(orgs).any? || orgs.difference(@tenant.ror_ids).any?
           @tenant.tenant_ror_orgs.destroy_all
           orgs.each { |o| StashEngine::TenantRorOrg.create(ror_id: o.strip, tenant_id: @tenant.id) }
         end
