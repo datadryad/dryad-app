@@ -146,7 +146,7 @@ not be used ever again, you can install it yourself.
 
 
 Web access to data files
-========================
+------------------------
 
 To transfer files off of the VE, copy the files you want into
 `C:\DryadData\PublicWebfiles`, and they will then be available from other
@@ -161,7 +161,7 @@ Microsoft's IIS server. The configuration has been changed to make the
 
 
 Connecting from a Chromebook
-============================
+----------------------------
 
 Chromebooks cannot use the Microsoft Remote Desktop protocol; they use the
 Chrome Remote Desktop.
