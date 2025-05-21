@@ -15,7 +15,7 @@ module StashEngine
     # this is the place omniauth calls back for shibboleth logins
     def callback
       current_user.roles.tenant_roles.delete_all
-      current_user.update(tenant_id: params[:tenant_id])
+      current_user.update(tenant_id: params[:tenant_id], tenant_auth_date: Time.current)
       do_redirect
     end
 
@@ -131,7 +131,7 @@ module StashEngine
                     flash: { info: 'The code entered has expired. Check your email for a new code.' }
       elsif params[:token] == current_user.email_token.token
         current_user.roles.tenant_roles.delete_all
-        current_user.update(tenant_id: current_user.email_token.tenant_id)
+        current_user.update(tenant_id: current_user.email_token.tenant_id, tenant_auth_date: Time.current)
         do_redirect
       else
         redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'Invalid code.' }
@@ -148,7 +148,7 @@ module StashEngine
           redirect_to email_sso_path(tenant_id: tenant.id)
         when 'author_match'
           current_user.roles.tenant_roles.delete_all
-          current_user.update(tenant_id: tenant.id)
+          current_user.update(tenant_id: tenant.id, tenant_auth_date: Time.current)
           do_redirect
         when 'ip_address'
           validate_ip(tenant: tenant) # this redirects internally
@@ -301,7 +301,7 @@ module StashEngine
         next unless net.include?(IPAddr.new(request.remote_ip))
 
         current_user.roles.tenant_roles.delete_all
-        current_user.update(tenant_id: tenant.id)
+        current_user.update(tenant_id: tenant.id, tenant_auth_date: Time.current)
         do_redirect
         return nil # adding nil here to jump out of loop and return early since rubocop sucks & requires a return value
       end
