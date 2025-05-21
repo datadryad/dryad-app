@@ -172,3 +172,4 @@ group :development do
 end
 
 gem 'acts_as_paranoid', '~> 0.10.3'
+gem 'aws-sdk-sns'
