@@ -78,6 +78,7 @@ test:
     merritt_bucket: a-merritt-test-bucket
     key: abcdefg
     secret: HIJKLMNOP
+    sns_arn: some:arn
   lambda_id:
     dataZip: abcdefg
   maximums:
@@ -201,6 +202,7 @@ defaults: &DEFAULTS
     reports_bucket: dryad-reports
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+    sns_arn: <%= Rails.application.credentials[Rails.env.to_sym][:s3_sns_arn] %>
   lambda_id:
     dataZip: w27i4vubmmwkssdf6xpszafmhq0rffog
   waf_key: <%= Rails.application.credentials[Rails.env.to_sym][:aws_waf_key] %>

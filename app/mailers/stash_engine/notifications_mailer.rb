@@ -15,5 +15,11 @@ module StashEngine
 
       mail(to: 'devs@datadryad.org', subject: "#{rails_env}Submission queue too large")
     end
+
+    def certbot_expiration(expiration_days)
+      @expiration_days = expiration_days
+
+      mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 Shibboleth SSL Cert expires in #{expiration_days} days!")
+    end
   end
 end

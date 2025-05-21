@@ -130,6 +130,9 @@ GEM
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
+    aws-sdk-sns (1.99.0)
+      aws-sdk-core (~> 3, >= 3.216.0)
+      aws-sigv4 (~> 1.5)
     aws-sigv4 (1.11.0)
       aws-eventstream (~> 1, >= 1.0.2)
     babel-source (5.8.35)
@@ -771,6 +774,7 @@ DEPENDENCIES
   annotaterb (~> 4.13.0)
   aws-sdk-lambda
   aws-sdk-s3 (~> 1.113)
+  aws-sdk-sns
   bcrypt_pbkdf (~> 1.0)
   binding_of_caller
   blacklight (~> 8.8.0)
