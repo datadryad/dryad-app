@@ -10,7 +10,6 @@
 #  migration_token  :string(191)
 #  old_dryad_email  :string(191)
 #  orcid            :string(191)
-#  tenant_auth_date :datetime
 #  validation_tries :integer          default(0)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
