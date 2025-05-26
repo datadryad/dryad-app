@@ -13,7 +13,6 @@
     const observer = new MutationObserver((mutationsList, observer) => {
       for(let mutation of mutationsList) {
         if (mutation.type === 'childList' && apiExplorer.shadowRoot) {
-          observer.disconnect();
           const style = apiExplorer.shadowRoot.querySelector('style')
           if (style) {
             style.append(`
@@ -98,6 +97,7 @@
                 outline: thin solid var(--hover-color) !important;
               }
             `)
+            observer.disconnect();
           }
         }
       }
