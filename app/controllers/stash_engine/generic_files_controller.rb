@@ -75,10 +75,7 @@ module StashEngine
               file_state: 'created',
               original_filename: params[:original]
             )
-          json_file = db_file.as_json
-          json_file[:type] = db_file.type
-          json_file[:uploaded] = Stash::Aws::S3.new.exists?(s3_key: db_file.s3_staged_path)
-          render json: { new_file: json_file }
+          render json: { new_file: db_file.as_json(methods: %i[type uploaded]) }
         end
       end
     end
