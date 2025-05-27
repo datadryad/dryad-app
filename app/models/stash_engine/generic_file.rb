@@ -237,14 +237,14 @@ module StashEngine
     end
 
     def uploaded_success_url
-      dl_url = s3_staged_presigned_url if file_state.nil? || file_state == 'created'
+      dl_url = s3_staged_presigned_url unless digest? || storage_version_id.present?
       dl_url ||= public_download_url
       dl_url ||= url
       dl_url
     end
 
     def uploaded
-      return Stash::Aws::S3.new.exists?(s3_key: s3_staged_path) if url.nil? && (file_state.nil? || file_state == 'created')
+      return Stash::Aws::S3.new.exists?(s3_key: s3_staged_path) unless digest? || storage_version_id.present?
 
       uploaded_success_url.present?
     end
