@@ -8,17 +8,7 @@ module StashApi
       class Authors < MetadataItem
 
         def value
-          @resource.authors.map do |a|
-            {
-              firstName: a.author_first_name,
-              lastName: a.author_last_name,
-              email: a.author_email,
-              affiliation: a.try(:affiliation).try(:smart_name),
-              affiliationROR: a.try(:affiliation).try(:ror_id),
-              orcid: a.author_orcid,
-              order: a.author_order
-            }
-          end
+          @resource.authors.map(&:as_json)
         end
       end
     end

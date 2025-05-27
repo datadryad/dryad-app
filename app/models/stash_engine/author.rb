@@ -120,6 +120,19 @@ module StashEngine
       orcid_invite.landing(path)
     end
 
+    def as_json(_options = {})
+      {
+        firstName: author_first_name,
+        lastName: author_last_name,
+        email: author_email,
+        affiliation: affiliation&.smart_name,
+        affiliationROR: affiliation.ror_id,
+        affiliations: affiliations.map(&:as_json),
+        orcid: author_orcid,
+        order: author_order
+      }
+    end
+
     private
 
     def strip_whitespace
