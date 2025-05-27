@@ -244,6 +244,8 @@ module StashEngine
     end
 
     def uploaded
+      return Stash::Aws::S3.new.exists?(s3_key: s3_staged_path) if url.nil? && file_state == 'created'
+
       uploaded_success_url.present?
     end
 
