@@ -8,7 +8,7 @@ module StashApi
       class Authors < MetadataItem
 
         def value
-          @resource.authors.map(&:as_json)
+          @resource.authors.map(&:as_api_json)
         end
       end
     end

@@ -975,8 +975,8 @@ module StashEngine
       changed = []
       edits = []
       edits << { deleted: other_authors.length - authors.length } if other_authors.length > authors.length
-      this_authors = authors.map(&:as_json)
-      that_authors = other_authors.map(&:as_json)
+      this_authors = authors.map(&:as_api_json)
+      that_authors = other_authors.map(&:as_api_json)
       this_authors.each_with_index do |a, i|
         diff = a.diff(that_authors[i] || {})
         edits << { index: i }.merge(diff) unless diff.empty?
