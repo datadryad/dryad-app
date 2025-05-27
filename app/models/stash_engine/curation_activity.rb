@@ -358,7 +358,7 @@ module StashEngine
 
       return if %w[withdrawn embargoed peer_review].include?(status)
 
-      # find out if there were not file changes since last publication and reset file_view, if so.
+      # find out if there were no file changes since last publication and reset file_view, if so.
       changed = false # want to see that none are changed
       resource.identifier.resources.reverse_each do |res|
         break if res.id != resource.id && res&.last_curation_activity&.status == 'published' # break once reached previous published
