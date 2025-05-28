@@ -37,6 +37,7 @@ FactoryBot.define do
     last_name { Faker::Name.unique.last_name }
     email { Faker::Internet.unique.email }
     tenant_id { 'mock_tenant' }
+    tenant_auth_date { Time.now }
     orcid { Faker::Pid.orcid }
     old_dryad_email { Faker::Internet.unique.email }
     eperson_id { rand(10_000) }

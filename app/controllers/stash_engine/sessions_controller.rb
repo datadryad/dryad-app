@@ -100,7 +100,6 @@ module StashEngine
     end
 
     def choose_sso
-      set_default_tenant
       tenants = StashEngine::Tenant.connect_list.map { |t| { id: t.id, name: t.short_name } }
       # If no tenants are defined redirect to the no_parter path
       if tenants.empty?
@@ -108,6 +107,7 @@ module StashEngine
       else
         @tenants = tenants
       end
+      set_default_tenant if current_user.tenant_id.blank?
     end
 
     # no partner, so set as generic dryad tenant without membership benefits
