@@ -146,6 +146,14 @@ module StashEngine
           file.file_state = 'copied' if file.file_state == 'created'
         end
 
+        new_resource.related_identifiers.each_with_index do |ri, i|
+          if new_resource.related_identifiers[0, i].any? { |r| ri.related_identifier == r.related_identifier }
+            ri.delete
+          elsif ri.work_type == 'primary_article' && new_resource.related_identifiers[0, i].any? { |_r| ri.work_type == 'primary_article' }
+            ri.work_type = 'article'
+          end
+        end
+
         # I think there was something weird about Amoeba that required this approach
         deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
         deleted_files.each(&:destroy)
