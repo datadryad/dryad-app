@@ -248,6 +248,8 @@ Rails.application.routes.draw do
     # user management
     get 'account', to: 'user_account#index', as: 'my_account'
     post 'account/edit', to: 'user_account#edit', as: 'edit_account'
+    post 'account/api', to: 'user_account#api_application', as: 'get_api'
+    post 'account/token', to: 'user_account#api_token', as: 'get_token'
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     # page for viewing a single user

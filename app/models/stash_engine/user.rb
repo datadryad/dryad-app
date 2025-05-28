@@ -42,14 +42,9 @@ module StashEngine
             class_name: 'Doorkeeper::Application',
             foreign_key: :owner_id,
             dependent: :destroy # or :destroy if you need callbacks
-    has_many :access_grants,
-             class_name: 'Doorkeeper::AccessGrant',
-             foreign_key: :resource_owner_id,
-             dependent: :delete_all # or :destroy if you need callbacks
-    has_many :access_tokens,
-             class_name: 'Doorkeeper::AccessToken',
-             foreign_key: :resource_owner_id,
-             dependent: :delete_all # or :destroy if you need callbacks
+    has_many :access_tokens, through: :api_application,
+                             class_name: 'Doorkeeper::AccessToken',
+                             dependent: :delete_all # or :destroy if you need callbacks
 
     accepts_nested_attributes_for :roles, :flag
 
