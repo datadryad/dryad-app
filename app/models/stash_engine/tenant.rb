@@ -94,13 +94,13 @@ module StashEngine
     # shibboleth.sso
     def shibboleth_login_path(params = nil)
       extra_params = (params ? "?#{params.to_param}" : '')
-      "https://#{Rails.application.default_url_options[:host]}/Shibboleth.sso/Login?" \
+      "#{ROOT_URL}/Shibboleth.sso/Login?" \
         "target=#{CGI.escape("#{callback_path_begin}shibboleth/callback#{extra_params}")}" \
         "&entityID=#{CGI.escape(authentication.entity_id)}"
     end
 
     def callback_path_begin
-      "https://#{Rails.application.default_url_options[:host]}/auth/"
+      "#{ROOT_URL}/auth/"
     end
 
     def full_url(path)
