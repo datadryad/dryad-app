@@ -55,30 +55,6 @@
 <% end %>
 
 <script type="text/javascript">
-  function copyItem(e) {
-    const item = e.currentTarget.dataset.item
-    const icon = e.currentTarget.firstElementChild
-    const citation = e.currentTarget.nextElementSibling.innerText
-    window.navigator.clipboard.writeText(citation).then(() => {
-      icon.classList.remove('fa-paste');
-      icon.classList.add('fa-check');
-      icon.innerHTML = `<span class="screen-reader-only">${item} copied</span>`
-      setTimeout(function(){
-        icon.parentElement.setAttribute('title', `Copy ${item.toLowerCase()}`);
-        icon.classList.add('fa-paste');
-        icon.classList.remove('fa-check');
-        icon.innerHTML = '';
-      }, 2000);
-    });
-  }
-  document.querySelectorAll('.copy-icon').forEach((button) => {
-    button.addEventListener('click', copyItem)
-    button.addEventListener('keydown', (e) => {
-      if (event.key === ' ' || event.key === 'Enter') {
-        copyItem(e)
-      }
-    });
-  });
   document.querySelectorAll('.t-landing__text-wall a').forEach((link) => {
     const span = document.createElement('i')
     span.classList.add('fas', 'fa-arrow-up-right-from-square', 'exit-icon')
