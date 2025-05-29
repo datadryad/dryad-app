@@ -1,0 +1,18 @@
+<% @page_title = 'Partner Terms of Service' %>
+<% content_for(:head) do %>
+<style type="text/css">
+  ol {
+    margin-left: 0;
+  }
+  ol ol {
+    list-style-type: lower-alpha;
+  }
+  ol ol ol {
+    list-style-type: lower-roman;
+  }
+ #page-content > ol:first-of-type {
+  list-style-type: upper-alpha;
+ }
+</style>
+<% end %>
+<%= render "layouts/page_columns", page_content: "terms_partner" %>

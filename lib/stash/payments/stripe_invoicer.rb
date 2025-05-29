@@ -14,7 +14,7 @@ module Stash
 
       # Settings used by all Stripe services
       Stripe.api_key = APP_CONFIG.payments.key
-      Stripe.api_version = '2022-11-15'
+      Stripe.api_version = '2025-03-31.basil'
 
       def initialize(resource)
         @resource = resource
@@ -75,7 +75,7 @@ module Stash
       end
 
       def create_invoice_items(invoice_id)
-        @fees.except(:storage_fee_label, :total).map do |fee_key, amount|
+        @fees.except(:storage_fee_label, :total, :coupon_id).map do |fee_key, amount|
           next if amount.zero? && !stripe_user_waiver?
 
           Stripe::InvoiceItem.create(
@@ -84,6 +84,7 @@ module Stash
             amount: processed_amount(amount),
             currency: 'usd',
             description: line_item_name(fee_key)
+            # discounts: [{coupon: 'FEE_WAIVER_100_OFF'}]
           )
         end
       end

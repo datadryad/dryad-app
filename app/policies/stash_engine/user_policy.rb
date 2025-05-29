@@ -20,6 +20,10 @@ module StashEngine
       edit?
     end
 
+    def api_application?
+      edit?
+    end
+
     def user_profile?
       @user.system_user?
     end

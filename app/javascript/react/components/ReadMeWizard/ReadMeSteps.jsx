@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import MarkdownEditor from '../MarkdownEditor';
 
 const formatList = (fileList) => fileList.map((f) => {
@@ -12,18 +12,25 @@ const formatList = (fileList) => fileList.map((f) => {
 
 export const secTitles = ['Data description', 'Files and variables', 'Code/software', 'Access information'];
 
+function StepEditor({content, saveContent, hidden}) {
+  const [initialValue, setInitialValue] = useState(null);
+
+  useEffect(() => {
+    setInitialValue(`${content}`);
+  }, []);
+
+  return (
+    <MarkdownEditor
+      hidden={hidden}
+      initialValue={initialValue}
+      onChange={saveContent}
+    />
+  );
+}
+
 export default function ReadMeSteps({
   step, setStep, content, fileList, save,
 }) {
-  const saveContent = (markdown) => {
-    if (markdown.trim()) {
-      content[`step${step}`] = markdown;
-    } else {
-      delete content[`step${step}`];
-    }
-    save(JSON.stringify(content));
-  };
-
   const sections = {
     1: {
       desc: <p>Provide a short description of the experimental efforts for which the data was collected.</p>,
@@ -51,6 +58,14 @@ export default function ReadMeSteps({
     },
   };
 
+  const saveContent = (s, markdown) => {
+    if (markdown.trim()) {
+      save((w) => ({...w, [`step${s}`]: markdown}));
+    } else {
+      save((w) => ({...(delete w[`step${s}`] && w)}));
+    }
+  };
+
   return (
     <>
       <div className="steps-wrapper">
@@ -62,10 +77,10 @@ export default function ReadMeSteps({
             aria-current={step == i ? 'step' : null}
             role="button"
             tabIndex={0}
-            onClick={() => setStep(i)}
+            onClick={() => setStep(Number(i))}
             onKeyDown={(e) => {
               if (['Enter', 'Space'].includes(e.key)) {
-                setStep(i);
+                setStep(Number(i));
               }
             }}
           >
@@ -77,13 +92,13 @@ export default function ReadMeSteps({
       <div style={{margin: '-.5em 0'}} id="md_editor_desc">
         {sections[step].desc}
       </div>
-      <MarkdownEditor
-        id="readme_step_editor"
-        {...(step === 1 ? {initialValue: '', replaceValue: sections[step].content} : {initialValue: sections[step].content})}
-        onChange={saveContent}
-      />
+      <div id="readme_step_editor">
+        {Object.keys(sections).map((i) => (
+          <StepEditor key={`step${i}`} hidden={i != step || null} content={sections[i].content} saveContent={(m) => saveContent(i, m)} />
+        ))}
+      </div>
       <div className="o-dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
-        <button type="button" className="o-button__plain-text1" onClick={() => setStep(step + 1)}>
+        <button type="button" className="o-button__plain-text1" onClick={() => setStep((s) => Number(s) + 1)}>
           {step === secTitles.length ? (
             <>Complete &amp; generate README</>
           ) : (
@@ -91,7 +106,7 @@ export default function ReadMeSteps({
           )}
         </button>
         {step > 1 && (
-          <button type="button" className="o-button__plain-text0" onClick={() => setStep(step - 1)}>
+          <button type="button" className="o-button__plain-text0" onClick={() => setStep((s) => Number(s) - 1)}>
             <i className="fa fa-caret-left" aria-hidden="true" /> Previous
           </button>
         )}

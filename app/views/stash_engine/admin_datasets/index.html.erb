@@ -77,16 +77,20 @@
       <% if policy(r).curate? %>
         <span class="input-line" style="column-gap: .5ch">
           <b>Payment:</b>
-          <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
-            User
-          <% else %>
-            <%= @identifier.payment_type %>
-          <% end %>
+          <span id="payment_desc">            
+            <% pr = @identifier.resources.by_version_desc.find {|r| r.payment} %>
+            <% if pr&.payment %>$<%= pr.payment.amount %><% end %>
+            <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
+              <%= pr&.payment&.status.present? ? "bill #{pr&.payment&.status}" : 'Unknown' %>
+            <% else %>
+              <%= @identifier.payment_type %>
+            <% end %>
+          </span>
           <%= format_external_references(@identifier.payment_id) %>
           <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
-            <%= @identifier.waiver_basis %>
+            <span id="waiver_basis"><%= @identifier.waiver_basis %></span>
             <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
-              <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Apply fee waiver" title="Apply fee waiver"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+              <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Apply fee discount" title="Apply fee discount"><i class="fas fa-comment-dollar" aria-hidden="true"></i></button>
             <% end %>
           <% end %>
         </span>

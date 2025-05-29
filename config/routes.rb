@@ -189,8 +189,6 @@ Rails.application.routes.draw do
     match 'auth/:provider/callback', to: 'sessions#callback', via: %i[get post]
     match 'session/test_login', to: 'sessions#test_login', via: [:get, :post],  as: 'test_login'
 
-    match 'terms/view', to: 'dashboard#view_terms', via: %i[get post]
-
     get 'auth/failure', to: redirect('/')
     match 'sessions/destroy', to: 'sessions#destroy', via: %i[get post]
     get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
@@ -221,6 +219,7 @@ Rails.application.routes.draw do
     get 'why_use', to: 'pages#why_use'
     get 'dda', to: 'pages#dda' # data deposit agreement
     get 'terms', to: 'pages#terms'
+    get 'partner_terms', to: 'pages#terms_partner'
     get 'editor', to: 'pages#editor'
     get 'web_crawling', to: 'pages#web_crawling'
     get 'about', to: 'pages#who_we_are'
@@ -249,6 +248,8 @@ Rails.application.routes.draw do
     # user management
     get 'account', to: 'user_account#index', as: 'my_account'
     post 'account/edit', to: 'user_account#edit', as: 'edit_account'
+    post 'account/api', to: 'user_account#api_application', as: 'get_api'
+    post 'account/token', to: 'user_account#api_token', as: 'get_token'
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     # page for viewing a single user
@@ -258,6 +259,7 @@ Rails.application.routes.draw do
     post 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
     get 'user_admin/:id/edit', to: 'user_admin#edit', as: 'user_edit'
     post 'user_admin/:id', to: 'user_admin#update', as: 'user_update'
+    post 'user_admin/:id/api', to: 'user_admin#api_application', as: 'user_api'
     # admin tenant management
     get 'tenant_admin', to: 'tenant_admin#index'
     get 'tenant_admin/:id/edit', to: 'tenant_admin#edit', as: 'tenant_edit'
@@ -499,6 +501,7 @@ Rails.application.routes.draw do
   get '/stash/faq', to: redirect('/requirements')
   get '/pages/organization', to: redirect('/mission')
   get '/pages/policies', to: redirect('/terms')
+  get 'terms/view', to: redirect('/terms')
   get '/pages/publicationBlackout', to: redirect('/pb_tombstone')
   get '/publicationBlackout', to: redirect('/pb_tombstone')
   get '/pages/searching', to: redirect('search')

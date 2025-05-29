@@ -8,23 +8,16 @@ module FeeCalculator
       { tier: 4, range:    50_000_000_001..  100_000_000_000, price:    808 },
       { tier: 5, range:   100_000_000_001..  250_000_000_000, price:  1_750 },
       { tier: 6, range:   250_000_000_001..  500_000_000_000, price:  3_086 },
-      { tier: 7, range:   500_000_000_001..1_000_000_000_000, price:  6_077 },
-      { tier: 8, range: 1_000_000_000_001..2_000_000_000_000, price: 12_162 }
+      { tier: 7, range:   500_000_000_001..1_000_000_000_000, price:  6_077 }
+      # { tier: 8, range: 1_000_000_000_001..2_000_000_000_000, price: 12_162 }
     ].freeze
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
     def call
       verify_new_payment_system
+      verify_max_storage_size if resource
 
-      if resource.present?
-        if resource.identifier.previous_invoiced_file_size.to_i > 0
-          add_storage_fee_difference
-        else
-          add_dataset_storage_fee
-        end
-      else
-        add_storage_fee
-      end
+      add_individual_storage_fee
       add_storage_fee_label
       add_invoice_fee
       @sum_options.merge(total: @sum)
@@ -38,6 +31,18 @@ module FeeCalculator
 
     def storage_fee_label
       PRODUCT_NAME_MAPPER[:individual_storage_fee]
+    end
+
+    def add_individual_storage_fee
+      if resource.present?
+        if resource.identifier.previous_invoiced_file_size.to_i > 0
+          add_storage_fee_difference
+        else
+          add_dataset_storage_fee
+        end
+      else
+        add_storage_fee
+      end
     end
   end
 end

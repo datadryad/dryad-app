@@ -1,6 +1,6 @@
 # Application to waive data publication charge
 
-<div id="contact_form">
+<div id="contact_form" aria-live="polite">
 
 <p>Dryad is a nonprofit organization that provides long-term access to its contents at no cost to users. We are able to provide free access to data due to financial support from members and data submitters. Dryad's Data Publishing Charges (DPCs) are designed to recover the core costs of curating and preserving data.</p>
 
@@ -8,7 +8,7 @@
 
 <p>Prior to applying for a waiver, it is necessary for you to investigate and exhaust all available funding sources. These include funding from your institution, grant funding agencies, supporting or research foundations, and government agencies, or other sources of funds.</p>
 
-<p><b>Note:</b> Waivers will only be considered for data submissions less than 50GB in size (overage fees will apply for submissions exceeding this size). Requests made post-publication will not be considered.</p>
+<p><b>Note:</b> Waivers will only be considered for data submissions less than 10 GB in size (overage fees will apply for submissions exceeding this size). Requests made post-publication will not be considered.</p>
 
 <%= form_with(url: stash_url_helpers.contact_helpdesk_path, method: :post, local: false, id: 'fee_waiver_email') do |form| %>
   <%= form.hidden_field :subject %>
@@ -144,7 +144,7 @@
     </div>
     <p style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2ch">
       <span style="color: rgb(209, 44, 29);">* Fields are required</span>
-      <button type="button" class="o-button__submit" id="waiver_submit">Send waiver request</button>
+      <button type="button" class="o-button__plain-text1">Send waiver request</button>
     </p>
   </div>
 <% end %>

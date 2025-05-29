@@ -6,28 +6,21 @@ An API account is required to use advanced features of Dryad's APIs.
 Obtain a Dryad API account
 --------------------------
 
-Before you can submit from the API, you must have an account for the
-API. It is easiest if you first create an account through the Dryad
-web interface. Dryad staff can then add API capabilities to this
-account. Log in to Dryad at least once to create a user record and (if
+Before you can submit from the API, you must have a Dryad account and an account for the API.
+
+1. First you must create a Dryad account, using an ORCID login,through the Dryad
+web interface. 
+2. Log in to Dryad at least once to create a user record and (if
 applicable) associate it with your associated campus/organization.
+3. You may then create an API account using the interface on your [_My account_](https://datadryad.org/account) page
 
-In some cases, an API account will be needed that is not attached to a
-single user. In this case, the account will not be associated with an
-ORCID, which means that the API account will not be able to log in to
-the Dryad web interface. We will still need an email address to
-receive notifications associated with the account.
-
-Please [contact us](mailto:help@datadryad.org) to request API access. In your
-request, please specify whether you are associated with an institution
-or journal that is a Dryad member. Dryad developers will then [grant
-you the necessary permissions](adding_api_accounts.md).
+In some cases, such as for association with a journal publishing system, an API account will be needed that is not attached to a single user. In this case, the account will not be associated with an ORCID, and will not be able to log in to the Dryad web interface. For such a use, please [contact us](mailto:help@datadryad.org) to request API access. In your request, please specify whether you are associated with an institution or journal that is a Dryad member, and provide the email address that will receive API account notifications.
 
 
 Get a token for making requests for secure parts of the API
 -----------------------------------------------------------
 
-Before making secure requests to the Dryad API, you'll need a token.  Currently our tokens last 10 hours and a token will need to be renewed when it expires.  You may get a token using these examples from a few programming environments.  Replace &lt;bracketed&gt; items with the values you were given.  For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
+Before making secure requests to the Dryad API, you'll need a token. Currently our tokens last 10 hours and a token will need to be renewed when it expires. You may get a token from your account page in the web interface, or by using these examples from a few programming environments. Replace &lt;bracketed&gt; items with the values associated with your API account. For testing, you may choose to use a bash shell, a programming environment or a tool such as Postman.
 
 
 ```bash
@@ -54,14 +47,14 @@ token = JSON.parse(response)['access_token']
 
 ### Renewing your token
 
-Tokens are only valid for a limited amount of time.  See documentation
+Tokens are only valid for a limited amount of time. See documentation
 about [retrying_requests made with expired tokens](retrying_expired.md) for more information.
 
 
 Test that your token works
 --------------------------
 
-Now make sure you can use your token to access secured areas of the API.  Test with some code like the following.
+Now make sure you can use your token to access secured areas of the API. Test with some code like the following.
 
 ```bash
 curl -i -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -X GET https://<domain>/api/v2/test

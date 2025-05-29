@@ -16,6 +16,10 @@
   }
 }
 
+*[role="button"] {
+  cursor: pointer;
+}
+
 .o-button__plain-text {
   @extend %o-button__plain-text;
   padding: 8px 12px;

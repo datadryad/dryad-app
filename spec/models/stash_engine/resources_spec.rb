@@ -1721,5 +1721,31 @@ module StashEngine
         end
       end
     end
+
+    describe '#auto_assign_curator' do
+      let!(:non_curator) { create(:user) }
+      let!(:curator) { create(:user, role: 'curator', first_name: 'Curator', last_name: 'User') }
+      let!(:resource) { create(:resource, user: non_curator) }
+
+      context 'when user is changed' do
+        before do
+          resource.update!(user_id: non_curator.id)
+          allow(StashEngine::User).to receive_message_chain(:curators, :to_a).and_return([curator])
+        end
+
+        it 'successfully updates the curator' do
+          expect(resource.reload.curator).to eq(non_curator)
+          resource.send(:auto_assign_curator, target_status: 'in_progress')
+          expect(resource.reload.curator).to eq(curator)
+        end
+
+        it 'created a curation activity' do
+          expect do
+            resource.send(:auto_assign_curator, target_status: 'in_progress')
+          end.to change { StashEngine::CurationActivity.count }.by(1)
+          expect(resource.reload.last_curation_activity.note).to eq('System auto-assigned curator Curator User')
+        end
+      end
+    end
   end
 end
