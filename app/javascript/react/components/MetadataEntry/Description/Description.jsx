@@ -1,6 +1,4 @@
-import React, {
-  useRef, useState, useEffect, useCallback,
-} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 import axios from 'axios';
 import {debounce} from 'lodash';
@@ -60,35 +58,32 @@ export default function Description({
   setResource, dcsDescription, mceLabel, curator,
 }) {
   const [desc, setDesc] = useState('');
-  const editorRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-  const submit = () => {
-    if (editorRef.current) {
-      const subJson = {
-        authenticity_token,
-        description: {
-          description: editorRef.current.getContent(),
-          resource_id: dcsDescription.resource_id,
-          id: dcsDescription.id,
-        },
-      };
-      showSavingMsg();
-      axios.patch(
-        '/stash_datacite/descriptions/update',
-        subJson,
-        {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
-      )
-        .then((data) => {
-          if (data.data) {
-            setResource((r) => ({
-              ...r,
-              descriptions: [{...dcsDescription, description: data.data.description}, ...r.descriptions.filter((d) => d.id !== dcsDescription.id)],
-            }));
-          }
-          showSavedMsg();
-        });
-    }
+  const submit = (value) => {
+    const subJson = {
+      authenticity_token,
+      description: {
+        description: value,
+        resource_id: dcsDescription.resource_id,
+        id: dcsDescription.id,
+      },
+    };
+    showSavingMsg();
+    axios.patch(
+      '/stash_datacite/descriptions/update',
+      subJson,
+      {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+    )
+      .then((data) => {
+        if (data.data) {
+          setResource((r) => ({
+            ...r,
+            descriptions: [{...dcsDescription, description: data.data.description}, ...r.descriptions.filter((d) => d.id !== dcsDescription.id)],
+          }));
+        }
+        showSavedMsg();
+      });
   };
 
   const checkSubmit = useCallback(debounce(submit, 600), []);
@@ -96,23 +91,34 @@ export default function Description({
   useEffect(() => {
     // copy and do not rerender on change
     setDesc(`${dcsDescription.description || ''}`);
-  }, []);
+  }, [dcsDescription]);
 
   return (
     <>
       <div className="input-line spaced">
-        <label
+        <span
           className={`input-label xl${(mceLabel.required ? ' required' : ' optional')}`}
           id={`${dcsDescription?.description_type}_label`}
-          htmlFor={`editor_${dcsDescription?.description_type}`}
         >
           {mceLabel.label}
-        </label>
-        {mceLabel.describe && <div id={`${mceLabel.label}-ex`}>{mceLabel.describe}</div>}
+        </span>
+        {mceLabel.describe && <div id={`${dcsDescription?.description_type}-ex`}>{mceLabel.describe}</div>}
       </div>
       <Editor
         id={`editor_${dcsDescription?.description_type}`}
-        onInit={(evt, editor) => { editorRef.current = editor; }}
+        onInit={(evt, editor) => {
+          editor.getContainer().querySelector('.tox-statusbar__resize-handle').setAttribute('role', 'button');
+          Array.from(editor.getContainer().querySelectorAll('div.tox-collection__item[aria-label]:not([role])')).forEach((b) => {
+            b.setAttribute('role', 'button');
+          });
+          Array.from(editor.getContainer().querySelectorAll('.tox-menu[role="menu"] .tox-collection__group:not([role])')).forEach((g) => {
+            g.setAttribute('role', 'group');
+          });
+          editor.getBody().setAttribute('aria-label', `${mceLabel.label} editor`);
+          editor.getContainer().setAttribute('aria-labelledby', `${dcsDescription?.description_type}_label`);
+          editor.getContainer().setAttribute('aria-errormessage', `${dcsDescription?.description_type}_error`);
+          if (mceLabel.describe) editor.getContainer().setAttribute('aria-describedby', `${dcsDescription?.description_type}-ex`);
+        }}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         licenseKey="gpl"
         initialValue={desc}
@@ -133,12 +139,13 @@ export default function Description({
             th: 'width height',
             td: 'width height',
           },
+          help_tabs: ['shortcuts', 'keyboardnav'],
           branding: false,
           paste_block_drop: true,
           paste_preprocess,
         }}
         onEditorChange={checkSubmit}
-        onBlur={submit}
+        onBlur={(_e, editor) => submit(editor.getContent())}
       />
     </>
   );

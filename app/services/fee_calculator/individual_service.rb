@@ -15,16 +15,9 @@ module FeeCalculator
 
     def call
       verify_new_payment_system
+      verify_max_storage_size if resource
 
-      if resource.present?
-        if resource.identifier.previous_invoiced_file_size.to_i > 0
-          add_storage_fee_difference
-        else
-          add_dataset_storage_fee
-        end
-      else
-        add_storage_fee
-      end
+      add_individual_storage_fee
       add_storage_fee_label
       add_invoice_fee
       @sum_options.merge(total: @sum)
@@ -38,6 +31,18 @@ module FeeCalculator
 
     def storage_fee_label
       PRODUCT_NAME_MAPPER[:individual_storage_fee]
+    end
+
+    def add_individual_storage_fee
+      if resource.present?
+        if resource.identifier.previous_invoiced_file_size.to_i > 0
+          add_storage_fee_difference
+        else
+          add_dataset_storage_fee
+        end
+      else
+        add_storage_fee
+      end
     end
   end
 end

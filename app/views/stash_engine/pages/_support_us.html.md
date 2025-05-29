@@ -14,9 +14,36 @@ Investing in Dryad is an investment in:
 
 Supporters are recognized on the Dryad website and warmly welcomed at all our community events. Supporters wishing to contribute to Dryad’s direction are encouraged to apply to join one of our [committees, task forces, or advisory groups](/about#our-advisors). 
 
-We welcome contributions in any amount, from $100 to $100,000 or more.
+We welcome contributions in any amount, from $100 to $100,000 USD or more.
 
 * Checks and bank drafts may be sent by mail to Dryad, 417 Mace Blvd., Ste J110, Davis, CA 95618 USA
 * To pay by wire, bank transfer, or credit card, please [complete our donor invoice form](https://fs30.formsite.com/cxore/a6lmmnv9yd/index) to receive an invoice and payment instructions.
 
 You can also pledge to Dryad as essential open science infrastructure recognized by [SCOSS](https://scoss.org/what-is-scoss/scossfamily/) (Global Sustainability Coalition for Open Science Services). 
+
+
+## Thank you to our supporters
+
+Dryad is grateful to the following consortia and institutions for their support of Dryad through <a href="https://scoss.org/">SCOSS</a>. Their contributions enable us to grow our outreach and promotion efforts to bring new partners into our community; increase community engagement with current partners and users; and stay at the forefront of best practice for data-sharing and building best practice for data reuse. 
+
+<ul class="member-list">
+  <li><h3>Council of Australian University Libraries (CAUL)</h3><ul>
+    <li>Auckland University</li>
+    <li>University of New South Wales</li>
+    <li>University of Melbourne</li></ul></li>
+  <li><h3>Canadian Research Knowledge Network (CRKN)</h3><ul>
+    <li>Mount Royal University</li>
+    <li>Toronto Metropolitan University</li>
+    <li>University of Alberta</li>
+    <li>University of the Fraser Valley</li>
+    <li>University of Saskatchewan</li>
+    <li>University of Waterloo</li></ul></li>
+  <li><h3>SwissUniversities</h3><ul>
+    <li>ETH Zürich</li>
+    <li>Lib4RI</li>
+    <li>Université de Lausanne</li></ul></li>
+  <li><h3>Independent contributions</h3><ul>
+    <li>Iowa State University</li></ul></li>
+</ul>
+
+Our most current grants and funding initiatives are listed in our [Annual report](https://github.com/datadryad/governance/tree/main/annual-reports).

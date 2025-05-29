@@ -3,7 +3,11 @@ class FeeCalculatorController < ApplicationController
 
   def calculate_fee
     type = params[:type]
-    raise NotImplementedError, 'Invalid calculator selected.' if %w[institution publisher individual].exclude?(type)
+    if %w[institution publisher individual].exclude?(type)
+      raise NotImplementedError, 'Invalid calculator selected.' if request.xhr?
+
+      raise ActionController::RoutingError, 'Not Found'
+    end
 
     render json: {
       options: options,

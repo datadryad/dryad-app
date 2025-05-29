@@ -4,7 +4,7 @@
 
 These Dryad Terms of Membership (these “Terms”) set forth the terms and conditions of Membership in Dryad, a nonprofit corporation under the laws of North Carolina, USA.
 
-<p id="term-desc">Capitalized terminology used herein shall have the meanings ascribed to such terminology on the <a href="/definitions">Definitions</a> page.</p>
+<p id="term-desc">Capitalized terms used herein shall have the meanings ascribed to such terms on the <a href="/definitions">Definitions</a> page.</p>
 
 
 ## Background

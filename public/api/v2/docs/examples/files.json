@@ -1,4 +1,4 @@
-{
+value: {
   "_links": {
     "self": {
       "href": "/api/v2/versions/32/files"

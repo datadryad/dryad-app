@@ -1,6 +1,16 @@
 <% @page_title = 'Fee waiver application' %>
 <% content_for(:doc_end) do %>
 <script type="text/javascript">
+  const form = document.getElementById('fee_waiver_email');
+  form.addEventListener('submit', () => {
+    const icon = document.createElement('i');
+    icon.classList.add('fas', 'fa-spin', 'fa-circle-notch');
+    icon.setAttribute('role', 'img');
+    icon.setAttribute('aria-label', 'Loading...');
+    icon.style.marginRight = '.5ch';
+    form.querySelector('button').disabled = true;
+    form.querySelector('button').prepend(icon);
+  })
   const labelPlusValue = (input) => {
     return `${input.labels[0].textContent}: ${input.value}\n\n`
   }
@@ -16,10 +26,9 @@
     })
     return `${legend.textContent}: ${value.join('; ')}\n\n`
   }
-  const button = document.getElementById('waiver_submit')
+  const button = form.querySelector('button')
   button.addEventListener('click', (e) => {
     e.preventDefault();
-    const form = document.getElementById('fee_waiver_email');
     let body = labelPlusValue(form.elements['doi'])
     body += 'Submitting author information:\n\n'
     form.elements['author-set'].querySelectorAll('input').forEach(input => {
@@ -35,7 +44,7 @@
     if (form.elements['other-apc-discount'].value) body += `${form.elements['other-apc-discount'].value}\n\n`
     body += labelPlusValue(form.elements['journal'])
     body += labelPlusValue(form.elements['comments'])
-    const data = new FormData();
+    form.elements['body'].value = body;
     form.elements['subject'].value = 'Application to waive data publication charge';
     form.elements['sname'].value = `${form.elements['name'].value} ${form.elements['surname'].value}`;
     form.requestSubmit();

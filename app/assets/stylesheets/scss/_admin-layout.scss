@@ -90,6 +90,18 @@
   align-items: center;
   flex-wrap: wrap;
   max-width: 100%;
+
+  .limiter {
+    display: inline-flex;
+    align-items: flex-start;
+    font-size: .98rem;
+    line-height: 1;
+    margin-left: .25ch;
+    gap: .25ch;
+    label {
+      white-space: wrap !important;
+    }
+  }
 }
 
 #search-pair {
@@ -344,6 +356,7 @@
   }
   .input-line {
     column-gap: .5ch;
+    align-items: baseline;
   }
   .c-admin-edit-icon {
     color: $dark-blue;
