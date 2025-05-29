@@ -149,7 +149,7 @@ module StashEngine
         new_resource.related_identifiers.each_with_index do |ri, i|
           if new_resource.related_identifiers[0, i].any? { |r| ri.related_identifier == r.related_identifier }
             ri.delete
-          elsif ri.work_type == 'primary_article' && new_resource.related_identifiers[0, i].any? { |_r| ri.work_type == 'primary_article' }
+          elsif ri.work_type == 'primary_article' && new_resource.related_identifiers[0, i].any? { |r| r.work_type == 'primary_article' }
             ri.work_type = 'article'
           end
         end
