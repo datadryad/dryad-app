@@ -1,6 +1,12 @@
 module StashEngine
   describe AbandonedDatasetService do
     before do
+      today = Date.today
+      # Set the fake time to the 20th of the current month and year
+      # So we do not have to handle dates of 29, 30, 31 that we travel to and do not exist, like on February
+      fake_time = Time.new(today.year, today.month, 20, 12, 0, 0) # 12:00 noon on 20th
+      Timecop.freeze(fake_time)
+
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_salesforce_metadata).and_return(true)
     end
 
