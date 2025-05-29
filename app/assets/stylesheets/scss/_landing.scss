@@ -205,7 +205,20 @@
   }
 }
 
-#privilege_share .copy-icon, #sidebox-cite .copy-icon {
+.api_info {
+  display: flex;
+  flex-direction: column;
+  gap: 1ch;
+  span {
+    display: flex;
+    gap: 1ch;
+    button {
+      order: 3;
+    }
+  }
+}
+
+#privilege_share .copy-icon, #sidebox-cite .copy-icon, .api_info .copy-icon {
   border: none;
   background-color: transparent;
   box-shadow: none;
