@@ -85,6 +85,14 @@ namespace :status_dashboard do
       documentation: 'Dryad uses Wordpress to host its blog, and uses the RSS feed generated there to show latest posts on the main Dryad site. ',
       internally_managed: false,
       status: 1
+    },
+    {
+      abbreviation: 'shibboleth',
+      name: 'Shibboleth',
+      description: 'Shibboleth login',
+      documentation: 'Dryad uses Shibboleth to validate that users are affiliated with member institutions. ',
+      internally_managed: true,
+      status: 1
     }
   ].freeze
   # rubocop:enable Layout/LineLength
