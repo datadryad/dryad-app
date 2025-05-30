@@ -16,7 +16,7 @@ module StashEngine
       mock_stripe!
       Timecop.travel(Time.now.utc - 1.minute)
       @identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.123/123')
-      @resource = create(:resource, identifier_id: @identifier.id)
+      @resource = create(:resource, identifier_id: @identifier.id, created_at: 5.minutes.ago)
       @curator = create(:user, role: 'curator')
       # reload so that it picks up any associated models that are initialized
       # (e.g. CurationActivity and ResourceState)
@@ -294,7 +294,6 @@ module StashEngine
       end
 
       context :update_publication_flags do
-
         it 'sets flags for embargo' do
           create(:curation_activity, status: 'embargoed', resource: @resource)
           @identifier.reload
@@ -304,17 +303,180 @@ module StashEngine
           expect(@resource.file_view).to eq(false)
         end
 
-        it 'sets flags for published with file changes' do
-          @resource.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
-          @resource.reload
-          create(:curation_activity, resource: @resource, status: 'published')
+        context 'changing status to published' do
+          it 'sets flags for published with file changes' do
+            @resource.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+            @resource.reload
+            create(:curation_activity, resource: @resource, status: 'published')
 
-          @identifier.reload
-          @resource.reload
+            @identifier.reload
+            @resource.reload
 
-          expect(@identifier.pub_state).to eq('published')
-          expect(@resource.meta_view).to eq(true)
-          expect(@resource.file_view).to eq(true)
+            expect(@identifier.pub_state).to eq('published')
+            expect(@resource.meta_view).to eq(true)
+            expect(@resource.file_view).to eq(true)
+          end
+
+          context 'when there is another published resource' do
+            it 'sets flags for published with file changes' do
+              @resource.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+              @resource.reload
+              create(:curation_activity, resource: @resource, status: 'published')
+
+              @identifier.reload
+              @resource.reload
+
+              expect(@identifier.pub_state).to eq('published')
+              expect(@resource.meta_view).to eq(true)
+              expect(@resource.file_view).to eq(true)
+
+              # new version
+              new_resource = create(:resource, identifier_id: @identifier.id, created_at: 4.minutes.ago)
+              # @resource.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+              # new_resource.reload
+              create(:curation_activity, resource: new_resource, status: 'published')
+
+              @identifier.reload
+              new_resource.reload
+
+              expect(@identifier.pub_state).to eq('published')
+              expect(new_resource.meta_view).to eq(true)
+              expect(new_resource.file_view).to eq(false)
+            end
+          end
+
+          context 'when the resource is set to embargoed after publishing' do
+            # set initial resource to published
+            # set initial resource to embargoed => file_view = false
+            # create new version
+            # set to publish after without files changes => file_view = false
+            # set initial resource to published => file_view = false
+            it 'sets flags for published with file changes' do
+              # set initial resource to published
+              @resource.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+              @resource.reload
+              create(:curation_activity, resource: @resource, status: 'published')
+
+              @identifier.reload
+              @resource.reload
+
+              expect(@identifier.pub_state).to eq('published')
+              expect(@resource.meta_view).to eq(true)
+              expect(@resource.file_view).to eq(true)
+              # set initial resource to embargoed => file_view = false
+              create(:curation_activity, resource: @resource, status: 'embargoed')
+
+              # create new version
+              resource_2 = create(:resource, identifier_id: @identifier.id, created_at: 4.minutes.ago)
+              resource_2.reload
+
+              # set to publish after without files changes => file_view = false
+              create(:curation_activity, resource: resource_2, status: 'published')
+              @identifier.reload
+              resource_2.reload
+              @resource.reload
+
+              expect(@identifier.pub_state).to eq('published')
+
+              expect(@resource.meta_view).to eq(true)
+              expect(@resource.file_view).to eq(false)
+              expect(resource_2.meta_view).to eq(true)
+              expect(resource_2.file_view).to eq(false)
+
+              # set initial resource to published => file_view = false
+              create(:curation_activity, resource: @resource, status: 'published')
+              @identifier.reload
+              resource_2.reload
+              @resource.reload
+
+              expect(@identifier.pub_state).to eq('published')
+
+              expect(@resource.meta_view).to eq(true)
+              expect(@resource.file_view).to eq(false)
+              expect(resource_2.meta_view).to eq(true)
+              expect(resource_2.file_view).to eq(false)
+            end
+          end
+
+          context 'when there is another published resource' do
+            # set initial resource to published
+            # create new version
+            # set to publish without file changes => file_view = false
+            # create another version
+            # set to publish after adding a file => file_view = true
+            # create another version
+            # set to publish without file changes => file_view = false
+            # create another version
+            # set to publish after adding a file => file_view = true
+            it 'sets flags for published with file changes' do
+              # set initial resource to published
+              @resource.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+              @resource.reload
+              create(:curation_activity, resource: @resource, status: 'published')
+
+              @identifier.reload
+              @resource.reload
+
+              expect(@identifier.pub_state).to eq('published')
+              expect(@resource.meta_view).to eq(true)
+              expect(@resource.file_view).to eq(true)
+
+              # create new version
+              resource_2 = create(:resource, identifier_id: @identifier.id, created_at: 4.minutes.ago)
+              resource_2.reload
+              # set to publish without file changes => file_view = false
+              create(:curation_activity, resource: resource_2, status: 'published')
+
+              @identifier.reload
+              resource_2.reload
+
+              expect(@identifier.pub_state).to eq('published')
+              expect(resource_2.meta_view).to eq(true)
+              expect(resource_2.file_view).to eq(false)
+
+              # create another version
+              resource_3 = create(:resource, identifier_id: @identifier.id, created_at: 3.minutes.ago)
+              resource_3.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+              resource_3.reload
+
+              # set to publish after adding a file => file_view = true
+              create(:curation_activity, resource: resource_3, status: 'published')
+
+              @identifier.reload
+              resource_3.reload
+
+              expect(@identifier.pub_state).to eq('published')
+              expect(resource_3.meta_view).to eq(true)
+              expect(resource_3.file_view).to eq(true)
+
+              # create another version
+              resource_3 = create(:resource, identifier_id: @identifier.id, created_at: 2.minutes.ago)
+              resource_3.reload
+              # set to publish without file changes => file_view = false
+              create(:curation_activity, resource: resource_3, status: 'published')
+
+              @identifier.reload
+              resource_3.reload
+
+              expect(@identifier.pub_state).to eq('published')
+              expect(resource_3.meta_view).to eq(true)
+              expect(resource_3.file_view).to eq(false)
+
+              # create another version
+              resource_3 = create(:resource, identifier_id: @identifier.id, created_at: 1.minutes.ago)
+              resource_3.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+              resource_3.reload
+              # set to publish after adding a file => file_view = true
+              create(:curation_activity, resource: resource_3, status: 'published')
+
+              @identifier.reload
+              resource_3.reload
+
+              expect(@identifier.pub_state).to eq('published')
+              expect(resource_3.meta_view).to eq(true)
+              expect(resource_3.file_view).to eq(true)
+            end
+          end
         end
 
         it 'sets flags for withdrawn' do
