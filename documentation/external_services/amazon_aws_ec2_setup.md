@@ -300,7 +300,7 @@ curl --insecure -vvI https://localhost 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL con
 To renew the LetsEncrypt certificates
 --------------------------------------
 
-1. Set load balancerr to only point to the first server, which is the one with certbot installed
+1. Set load balancer to only point to the first server, which is the one with certbot installed
 2. Ensure the config includes both port 80 and port 443
 ```
 sudo emacs apache/conf.d/datadryad.org.conf
@@ -317,7 +317,7 @@ sudo cp /etc/letsencrypt/live/sandbox.datadryad.org/privkey.pem /etc/pki/tls/pri
 ```
 5. Restart apache to use new certs
 ```
-sudo systemctl restart https
+sudo systemctl restart httpd
 ```
 6. Copy certs to other servers and restart their Apaches too
 7. Verify certificates (on all servers)
