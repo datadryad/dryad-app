@@ -82,6 +82,11 @@
   </p>
 </div>
 <div class="bio">
+  <img src="/images/alex.jpg" alt="Headshot of Alex Hall">
+  <h5>Alex Hall</h5><br/>
+  <p><em>Data Curator</em><br/>Alex is an interdisciplinary scientist with a B.S. in Animal Behavior and Ph.D. in Biology. He has published a dozen papers on topics such as parthenogenesis, artificial light at night, and image processing. He has been an advocate for open science and open data sharing practices, through, for example, BioImaging North America and Non-Clinical Tomography Users Research Network. Alex enjoys greyhound rescue, pottery, house music, birdwatching, and reptiles.</p>
+</div>
+<div class="bio">
   <img src="/images/kathiyayini.jpg" alt="Headshot of Kathiyayini Jayaraman">
   <h5>Kathiyayini Jayaraman</h5><br/>
   <p><em>Data Curator</em><br/>Kathiyayini holds an M.Sc. in Biochemistry. She has three years of experience as a curator of life science literature and has previously worked for two different companies as a research analyst and scientific analyst. In her role as a scientific analyst, Kathiyayini coordinated interviews, served as a trainer, and oversaw quality control. In her free time, she enjoys pencil drawing, painting, and listening to music.</p>
