@@ -119,4 +119,42 @@ RSpec.feature 'Session', type: :feature do
       expect(page).to have_text('email_auth')
     end
   end
+
+  describe :reauthentication, js: true do
+
+    before(:each) do
+      @tenant = create(:tenant_email)
+      @user = create(:user, tenant_id: @tenant.id, tenant_auth_date: 2.months.ago)
+      mock_orcid!(@user)
+      OmniAuth.config.test_mode = true
+      sign_in(@user)
+      visit root_path
+      click_link 'My datasets'
+    end
+
+    it 'requries reauthentication when auth date is more than 1 month ago' do
+      expect(page).to have_text('email_auth')
+      expect(page).to have_text('Reconnect')
+    end
+
+    it 'successfully reauthenticates' do
+      expect(page).to have_text('Reconnect')
+      click_button 'Login to verify'
+      expect(page).to have_text('Enter confirmation code')
+      # enter and erase email
+      fill_in 'email', with: 'test@example.org'
+      click_button 'Save email'
+      click_button 'Remove and enter a new email'
+      fill_in 'email', with: 'test@example.org'
+      click_button 'Save email'
+      expect(page).to have_text('Enter confirmation code')
+      # refresh code
+      click_link 'Send another code'
+      expect(page).to have_text('Enter confirmation code')
+      # enter code
+      fill_in 'email_code', with: StashEngine::EmailToken.all.last.token
+      expect(page).to have_text('My datasets')
+      expect(page).to have_text('email_auth')
+    end
+  end
 end
