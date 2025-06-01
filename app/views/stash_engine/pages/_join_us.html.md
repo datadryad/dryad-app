@@ -27,12 +27,6 @@ Dryad partners enjoy:
 
 <figure>
 <blockquote>
-  <p>Joining the Dryad community has helped us build stronger connections with researchers, engage more fully in the management and sharing of research data, and become part of the broader open science community.</p>
-</blockquote>
-<figcaption><cite>— Director of Research & Instruction, Lane Medical Library, Stanford University</cite></figcaption>
-</figure>
-<figure>
-<blockquote>
   <p>Dryad is recognised and supported by communities of authors, reviewers, and editors as providing a simple solution for data sharing and compliance with funder policies. Partnering with Dryad over many years has been vital in realizing our data sharing policy.</p>
 </blockquote>
 <figcaption><cite>– Publisher, the Royal Society</cite></figcaption>
