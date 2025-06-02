@@ -295,58 +295,56 @@ function Submission({
               <Payments config={config_payments} resource={resource} setResource={setResource} setPayment={setPayment} />
             </div>
           )}
-          {step.name !== 'Create a submission' && (
-            <div className="submission-edit">
-              <nav id="submission-nav" className="open" aria-label="Back">
-                <div style={{textAlign: 'right', fontSize: '1.3rem'}}>
+          <div className="submission-edit" hidden={step.name === 'Create a submission' || null}>
+            <nav id="submission-nav" className="open" aria-label="Back">
+              <div style={{textAlign: 'right', fontSize: '1.3rem'}}>
+                <button
+                  type="button"
+                  className="checklist-link"
+                  autoFocus
+                  aria-controls="submission-step"
+                  aria-expanded="true"
+                  onClick={() => setStep({name: 'Create a submission'})}
+                >
+                  <span className="checklist-icon">
+                    <i className="fas fa-chevron-left" aria-hidden="true" />
+                  </span>Back to preview
+                </button>
+              </div>
+            </nav>
+            <div id="submission-wizard" className="open">
+              <div>
+                <div>
+                  <div id="submission-header">
+                    <h2 className="o-heading__level2">{step.name}</h2>
+                    <div role="status">
+                      <div className="saving_text" hidden>Saving&hellip;</div>
+                      <div className="saved_text" hidden>All progress saved</div>
+                    </div>
+                  </div>
+                  {steps().map((s, i) => (
+                    <div hidden={step.name !== s.name || null} key={s.name} ref={(el) => { subRef.current[i] = el; }}>
+                      {s.component}
+                      {steps().find((si) => si.name === s.name).fail}
+                    </div>
+                  ))}
+                </div>
+                <div id="submission-help">
                   <button
                     type="button"
-                    className="checklist-link"
-                    autoFocus
-                    aria-controls="submission-step"
-                    aria-expanded="true"
+                    className="o-button__plain-text2"
                     onClick={() => setStep({name: 'Create a submission'})}
                   >
-                    <span className="checklist-icon">
-                      <i className="fas fa-chevron-left" aria-hidden="true" />
-                    </span>Back to preview
+                    Preview changes
                   </button>
-                </div>
-              </nav>
-              <div id="submission-wizard" className="open">
-                <div>
-                  <div>
-                    <div id="submission-header">
-                      <h2 className="o-heading__level2">{step.name}</h2>
-                      <div role="status">
-                        <div className="saving_text" hidden>Saving&hellip;</div>
-                        <div className="saved_text" hidden>All progress saved</div>
-                      </div>
-                    </div>
-                    {steps().map((s, i) => (
-                      <div hidden={step.name !== s.name || null} key={s.name} ref={(el) => { subRef.current[i] = el; }}>
-                        {s.component}
-                        {steps().find((si) => si.name === s.name).fail}
-                      </div>
-                    ))}
+                  <div id="submission-help-text">
+                    {step.help}
                   </div>
-                  <div id="submission-help">
-                    <button
-                      type="button"
-                      className="o-button__plain-text2"
-                      onClick={() => setStep({name: 'Create a submission'})}
-                    >
-                      Preview changes
-                    </button>
-                    <div id="submission-help-text">
-                      {step.help}
-                    </div>
-                    <i className="fas fa-circle-question" aria-hidden="true" />
-                  </div>
+                  <i className="fas fa-circle-question" aria-hidden="true" />
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </dialog>
       </>
     );
