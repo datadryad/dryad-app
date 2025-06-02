@@ -34,6 +34,7 @@ module StashEngine
   # since this set of states is very simple
   class ZenodoCopy < ApplicationRecord
     self.table_name = 'stash_engine_zenodo_copies'
+    has_paper_trail
 
     belongs_to :identifier, class_name: 'StashEngine::Identifier'
     belongs_to :resource, class_name: 'StashEngine::Resource'

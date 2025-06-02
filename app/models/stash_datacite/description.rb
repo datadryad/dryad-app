@@ -18,6 +18,8 @@
 module StashDatacite
   class Description < ApplicationRecord
     self.table_name = 'dcs_descriptions'
+    has_paper_trail
+
     belongs_to :resource, class_name: StashEngine::Resource.to_s
 
     DescriptionTypes = Datacite::Mapping::DescriptionType.map(&:value)
