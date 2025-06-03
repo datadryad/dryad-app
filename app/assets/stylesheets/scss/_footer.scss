@@ -27,10 +27,9 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-
-  span {
-    margin-bottom: $spacing-sm;
-  }
+  column-gap: 4ch;
+  row-gap: 2ch;
+  margin-bottom: $spacing-sm;
 }
 
 .c-footer__policy-group,
@@ -38,16 +37,17 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  text-align: left;
+  justify-content: space-around;
+  column-gap: 4ch;
+  row-gap: 2ch;
 
   a {
     @extend %o-link__primary;
-    margin: 0 $spacing-md $spacing-sm 0;
     i {
-      font-size: 1.5em;
+      font-size: 1.1em;
       display: inline-flex;
-      margin-right: 3px;
-      vertical-align: -4px;
+      margin-right: .25ch;
+      vertical-align: -1px;
     }
   }
 

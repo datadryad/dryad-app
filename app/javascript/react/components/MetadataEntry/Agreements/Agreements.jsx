@@ -75,13 +75,13 @@ export default function Agreements({
       formRef.current.append(active_form);
     }
     if (!!dpc.aff_tenant && existing) {
-      document.getElementById('edit_tenant').hidden = true;
+      document.getElementById('dryad-member').hidden = true;
       document.getElementById('edit-tenant-form').hidden = false;
       document.getElementById('searchselect-tenant__value').value = dpc.aff_tenant.id;
       document.getElementById('searchselect-tenant__label').value = dpc.aff_tenant.short_name;
       document.getElementById('searchselect-tenant__input').value = dpc.aff_tenant.short_name;
     }
-  }, [dpc, formRef]);
+  }, [dpc, formRef.current]);
 
   useEffect(() => {
     if (resource.identifier.pub_state === 'published') {
