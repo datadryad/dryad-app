@@ -1,4 +1,4 @@
-<small>Updated January 28, 2025</small>
+<small>Updated June 4, 2025</small>
 
 Dryad committees, advisory groups and task forces are appointed by the Board to support the healthy, transparent operation of the organization and the powerful realization of Dryad strategy. Community participation is warmly invited through semi-annual, open calls for application ([For example](https://blog.datadryad.org/2023/12/18/join-us-invitation-to-participate-in-dryad-committees/)). Follow us to get the latest.
 
