@@ -214,6 +214,12 @@ module StashEngine
       render json: { license_id: params[:license] }, status: :ok
     end
 
+    def payer_check
+      render json: {
+        'payer_2025?' => @resource.identifier.payer_2025?
+      }, status: :ok
+    end
+
     private
 
     # We have parameters requesting to match to a Manuscript object; prefill journal info and import metadata if possible

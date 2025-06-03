@@ -103,6 +103,7 @@ Rails.application.routes.draw do
         patch 'import_type'
         patch 'license_agree'
         post 'logout'
+        get :payer_check
       end
     end
 
@@ -539,7 +540,7 @@ Rails.application.routes.draw do
   get :health_check, to: 'health#check'
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
-  get "resource_fee_calculator/:id", to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
+  get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
 
   resources :payments, only: [] do
     collection do

@@ -7,7 +7,7 @@ import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/ut
 import AuthorForm from './AuthorForm';
 
 export default function Authors({
-  resource, setResource, user, step,
+  resource, setResource, recheckPayer, user, step,
 }) {
   const [users, setUsers] = useState(resource.users);
   const [authors, setAuthors] = useState(resource.authors);
@@ -96,6 +96,7 @@ export default function Authors({
   useEffect(() => {
     if (!isEqual(resource.authors, authors) || !isEqual(resource.users, users)) {
       setResource((r) => ({...r, authors, users}));
+      recheckPayer()
     }
   }, [authors, users]);
 
@@ -148,5 +149,6 @@ export default function Authors({
 Authors.propTypes = {
   resource: PropTypes.object.isRequired,
   setResource: PropTypes.func.isRequired,
+  recheckPayer: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
 };
