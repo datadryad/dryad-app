@@ -349,8 +349,8 @@ module StashEngine
             # set initial resource to published
             # set initial resource to embargoed => file_view = false
             # create new version
-            # set to publish after without files changes => file_view = false
-            # set initial resource to published => file_view = false
+            # set to published without files changes => file_view = false
+            # set initial resource to published => file_view = true
             it 'sets flags for published with file changes' do
               # set initial resource to published
               @resource.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
@@ -370,7 +370,7 @@ module StashEngine
               resource_2 = create(:resource, identifier_id: @identifier.id, created_at: 4.minutes.ago)
               resource_2.reload
 
-              # set to publish after without files changes => file_view = false
+              # set to published without files changes => file_view = false
               create(:curation_activity, resource: resource_2, status: 'published')
               @identifier.reload
               resource_2.reload
@@ -383,7 +383,7 @@ module StashEngine
               expect(resource_2.meta_view).to eq(true)
               expect(resource_2.file_view).to eq(false)
 
-              # set initial resource to published => file_view = false
+              # set initial resource to published => file_view = true
               create(:curation_activity, resource: @resource, status: 'published')
               @identifier.reload
               resource_2.reload
@@ -392,7 +392,7 @@ module StashEngine
               expect(@identifier.pub_state).to eq('published')
 
               expect(@resource.meta_view).to eq(true)
-              expect(@resource.file_view).to eq(false)
+              expect(@resource.file_view).to eq(true)
               expect(resource_2.meta_view).to eq(true)
               expect(resource_2.file_view).to eq(false)
             end
@@ -436,7 +436,7 @@ module StashEngine
 
               # create another version
               resource_3 = create(:resource, identifier_id: @identifier.id, created_at: 3.minutes.ago)
-              resource_3.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+              resource_3.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun2.cat', upload_file_size: 666)
               resource_3.reload
 
               # set to publish after adding a file => file_view = true
@@ -464,7 +464,7 @@ module StashEngine
 
               # create another version
               resource_3 = create(:resource, identifier_id: @identifier.id, created_at: 1.minutes.ago)
-              resource_3.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+              resource_3.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun3.cat', upload_file_size: 666)
               resource_3.reload
               # set to publish after adding a file => file_view = true
               create(:curation_activity, resource: resource_3, status: 'published')
