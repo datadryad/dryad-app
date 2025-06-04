@@ -638,8 +638,18 @@ module StashEngine
     end
     private :increment_version!
 
+    def previous_resources(include_self = false)
+      res = StashEngine::Resource.where(identifier_id: identifier_id)
+      res = if include_self
+              res.where('id <= ?', id)
+            else
+              res.where('id < ?', id)
+            end
+      res.order(id: :desc)
+    end
+
     def previous_resource
-      StashEngine::Resource.where(identifier_id: identifier_id).where('id < ?', id).order(id: :desc).first
+      previous_resources.first
     end
 
     def previous_curated_resource
