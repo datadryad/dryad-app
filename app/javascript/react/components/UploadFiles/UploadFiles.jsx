@@ -371,7 +371,7 @@ export default function UploadFiles({
     const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
     if (chosenFiles.reduce((a, c) => a + c.upload_file_size, 0) + files.reduce((a, c) => a + c.size, 0) > maxSize) {
       setWarning([...warning, Messages.filesTooBig]);
-    } 
+    }
     if (fileCount > maxFiles) {
       setWarning([...warning, Messages.tooManyFiles]);
     } else {
