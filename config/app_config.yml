@@ -306,8 +306,8 @@ development:
   submission_error_email: [dryad.submission.error.emails@mailinator.com]
   send_journal_published_notices: false
   maximums:
-    merritt_size: 10_000_000
-    upload_size: 20_000_000
+    merritt_size: 200_000_000
+    upload_size: 500_000_000
     zenodo_size: 50_000_000_000
     zip_size: 11_000_000_000
     api_zip_size: 200_000_000

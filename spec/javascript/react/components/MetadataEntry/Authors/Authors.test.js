@@ -6,6 +6,7 @@ import axios from 'axios';
 import Authors from '../../../../../../app/javascript/react/components/MetadataEntry/Authors';
 
 jest.mock('axios');
+const recheckPayer = jest.fn();
 
 const makeAuthor = (resource_id, myOrder) => {
   const sect = () => faker.datatype.number({min: 1000, max: 9999});
@@ -52,7 +53,7 @@ describe('Authors', () => {
   });
 
   it('renders multiple authors in authors section', () => {
-    render(<Authors resource={resource} setResource={setResource} user={user} />);
+    render(<Authors resource={resource} setResource={setResource} user={user} recheckPayer={recheckPayer} />);
 
     const labeledElements = screen.getAllByLabelText('Institutional affiliation', {exact: false});
     expect(labeledElements.length).toBe(3);
@@ -72,7 +73,7 @@ describe('Authors', () => {
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} setResource={setResource} user={user} />);
+    render(<Authors resource={resource} setResource={setResource} user={user} recheckPayer={recheckPayer} />);
 
     let removes = screen.getAllByLabelText('Remove author');
     expect(removes.length).toBe(3);
@@ -103,7 +104,7 @@ describe('Authors', () => {
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Authors resource={resource} setResource={setResource} user={user} />);
+    render(<Authors resource={resource} setResource={setResource} user={user} recheckPayer={recheckPayer} />);
 
     const removes = screen.getAllByLabelText('Remove author');
     expect(removes.length).toBe(3);
@@ -118,8 +119,7 @@ describe('Authors', () => {
   it('should trigger drag and drop', async () => {
     const promise = Promise.resolve({status: 200, data: []});
     axios.patch.mockImplementationOnce(() => promise);
-
-    render(<Authors resource={resource} setResource={setResource} user={user} />);
+    render(<Authors resource={resource} setResource={setResource} user={user} recheckPayer={recheckPayer} />);
 
     await waitFor(() => {
       expect(screen.getAllByRole('listitem').length).toBe(3);
