@@ -32,6 +32,10 @@ module StashEngine
         current_payer.payment_plan.to_s == '2025'
       end
 
+      def sponsored
+        payer.present?
+      end
+
       def record_payment
         # once we have assigned payment to an entity, keep that entity
         # unless it was a journal that was removed

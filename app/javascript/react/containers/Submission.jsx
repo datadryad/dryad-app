@@ -41,10 +41,9 @@ function Submission({
   const recheckPayer = () => {
     axios.get(`/resources/${resource.id}/payer_check`)
       .then(({data}) => {
-        console.log('set payer data: payer_2025? =', data['payer_2025?']);
-        setResource((res) => ({ ...res, identifier: { ...resource.identifier, 'payer_2025?': data['payer_2025?'] } } ))
+        setResource((res) => ({...res, identifier: {...resource.identifier, 'payer_2025?': data['payer_2025?'], sponsored: data.sponsored}}));
       });
-  }
+  };
 
   const steps = () => [
     {
@@ -217,8 +216,8 @@ function Submission({
       const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
     }
-    if(step.name === 'Files') {
-      recheckPayer()
+    if (step.name === 'Files') {
+      recheckPayer();
     }
   }, [review, step, payment]);
 

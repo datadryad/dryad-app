@@ -216,7 +216,8 @@ module StashEngine
 
     def payer_check
       render json: {
-        'payer_2025?' => @resource.identifier.payer_2025?
+        'payer_2025?' => @resource.identifier.payer_2025?,
+        sponsored: @resource.identifier.sponsored
       }, status: :ok
     end
 

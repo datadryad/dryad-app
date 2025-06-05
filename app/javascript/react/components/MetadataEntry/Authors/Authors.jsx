@@ -96,7 +96,7 @@ export default function Authors({
   useEffect(() => {
     if (!isEqual(resource.authors, authors) || !isEqual(resource.users, users)) {
       setResource((r) => ({...r, authors, users}));
-      recheckPayer()
+      recheckPayer();
     }
   }, [authors, users]);
 
