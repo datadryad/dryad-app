@@ -78,7 +78,7 @@ gem 'posix-spawn', '~> 0.3.15'
 gem 'pundit', '~> 2.3'
 gem 'rack-attack'
 gem 'rb-readline', require: false
-gem 'recaptcha', '~> 5.14'
+gem 'recaptcha', '~> 5.19'
 gem 'redcarpet', '~> 3.6'
 gem 'responders', '~> 3.0.1' # do we use this?
 gem 'rest-client', '~> 2.1.0' # yet another http gem, not sure it's used

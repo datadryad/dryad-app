@@ -563,7 +563,7 @@ GEM
       execjs
       railties (>= 3.2)
       tilt
-    recaptcha (5.17.0)
+    recaptcha (5.19.0)
     redcarpet (3.6.0)
     regexp_parser (2.9.2)
     reline (0.6.0)
@@ -853,7 +853,7 @@ DEPENDENCIES
   rb-readline
   rdoc (~> 6.1.1)
   react-rails (~> 2.6.2)
-  recaptcha (~> 5.14)
+  recaptcha (~> 5.19)
   redcarpet (~> 3.6)
   responders (~> 3.0.1)
   rest-client (~> 2.1.0)
