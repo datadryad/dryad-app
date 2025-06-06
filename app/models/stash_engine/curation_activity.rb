@@ -199,7 +199,9 @@ module StashEngine
         resource.identifier&.record_payment
       end
       # after first publication, the dataset will be switched to new payment system
-      resource.identifier.update(old_payment_system: false)
+      return unless resource.identifier.old_payment_system
+
+      resource.identifier.update(old_payment_system: false, last_invoiced_file_size: resource.total_file_size)
     end
 
     def submit_to_stripe
