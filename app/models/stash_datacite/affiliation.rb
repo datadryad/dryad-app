@@ -93,6 +93,13 @@ module StashDatacite
       Affiliation.new(long_name: ror_org.name, ror_id: ror_org.id) if ror_org.present?
     end
 
+    def as_api_json
+      {
+        name: smart_name,
+        ror_id: ror_id
+      }
+    end
+
     private
 
     def strip_whitespace
