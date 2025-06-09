@@ -1,4 +1,4 @@
-<small>Updated January 28, 2005</small>
+<small>Updated June 4, 2025</small>
 
 Dryad committees, advisory groups and task forces are appointed by the Board to support the healthy, transparent operation of the organization and the powerful realization of Dryad strategy. Community participation is warmly invited through semi-annual, open calls for application ([For example](https://blog.datadryad.org/2023/12/18/join-us-invitation-to-participate-in-dryad-committees/)). Follow us to get the latest.
 
@@ -48,14 +48,17 @@ Dryad committees, advisory groups and task forces are appointed by the Board to 
 * **Matthew Goerg**, Amazon
 * **Ann James**, George Washington University
 * **Zhiwu Xie**, University of California Riverside
-* **Sarah Lippincott**, Dryad
 
 #### Member Model Task Force
+
+* **Ali Andalibi**, Charles R. Drew University
 * **Karl Benedict**, Retired, University of New Mexico Libraries
 * **Vicky Johnson**, John Wiley and Sons
+* **Joe Lucia**, Temple University
+* **Angela R. Maranville**, Greater Western Library Alliance (GWLA)
 * **Johan Nilsson**, Nordic Society Oikos
 * **Rob O'Donnell**, Rockefeller University Press
-* **Matt Wascavage**, Alliance of Crop, Soil, and Environmental Science Societies (ACSESS)
 * **Shawn Ross**, Australian Research Data Commons (ARDC)
-* **Jen Gibson**, Dryad
+* **Matt Wascavage**, Alliance of Crop, Soil, and Environmental Science Societies (ACSESS)
+* **Jennifer Gibson**, Dryad
 * **Maria Guerreiro**, Dryad

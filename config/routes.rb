@@ -546,6 +546,8 @@ Rails.application.routes.draw do
     collection do
       post ':resource_id', to: 'payments#create'
       get :callback
+
+      delete '/reset_payment/:identifier_id', to: 'payments#reset_payment', as: :reset_payment
     end
   end
 end

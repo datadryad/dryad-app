@@ -1202,6 +1202,11 @@ components:
         affiliationROR:
           type: string
           description: Preferred identifier for the author affiliation.
+        affiliations:
+          type: array
+          items:
+            name: string
+            ror_id: string
         affiliationISNI:
           type: string
         orcid:
