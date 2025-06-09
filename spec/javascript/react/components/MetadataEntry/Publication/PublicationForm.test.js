@@ -58,18 +58,32 @@ describe('PublicationFormManuscript', () => {
 
   it('checks that updating fields triggers axios save on blur', async () => {
     axios.get.mockResolvedValueOnce(api);
-    axios.patch.mockResolvedValueOnce(update);
     render(<PublicationForm {...info} />);
 
-    userEvent.clear(screen.getByLabelText('Manuscript number'));
-    userEvent.type(screen.getByLabelText('Manuscript number'), 'GUD-MS-387-555');
+    await waitFor(() => api);
 
-    await waitFor(() => expect(screen.getByLabelText('Manuscript number')).toHaveValue('GUD-MS-387-555'));
+    const options = {status: 200, data: [{id: 'GUD-MS-387-555', authors: [], title: 'Test'}]};
+    axios.get.mockResolvedValueOnce(options);
 
-    userEvent.tab(); // tab out of element, should trigger save on blur
+    const input = screen.getByLabelText('Manuscript number');
 
-    await waitFor(() => expect(screen.getByText('Import metadata')).toHaveFocus());
-    await waitFor(() => update); // waits for the axios promise to fulfil
+    userEvent.clear(input);
+    userEvent.type(input, 'GUD-MS-387-555');
+
+    await waitFor(() => options);
+
+    const data = {status: 200, data: {error: null}};
+    axios.patch.mockResolvedValueOnce(data);
+
+    await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(1));
+
+    userEvent.click(document.body);
+
+    await waitFor(() => data);
+
+    await waitFor(() => {
+      expect(input).toHaveAttribute('value', 'GUD-MS-387-555');
+    });
   });
 
   it('checks that clicking button triggers axios save', async () => {

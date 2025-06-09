@@ -57,7 +57,7 @@ export default function Autocomplete(
       setAcID(match.id);
       clearErrors();
       setAutoBlurred(true);
-    } else if (isRequired) {
+    } else if (isRequired && !saveOnEnter) {
       setShowError(true);
     } else {
       setAutoBlurred(true);
