@@ -41,6 +41,7 @@ module StashDatacite
       respond_to do |format|
         if @related_identifier.update(calc_related_identifier_params)
           @related_identifier.update(verified: @related_identifier.live_url_valid?) if @related_indentifier.verified.blank?
+          @resource.reload
           release_resource(@resource) if @resource.identifier&.publication_article_doi
           format.js do
             load_activity
