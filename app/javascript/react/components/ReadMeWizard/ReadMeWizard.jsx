@@ -244,6 +244,7 @@ function ReadMe({
         step={wizardStep}
         setStep={setWizardStep}
         fileList={fileList}
+        restart={restartWizard}
         save={setWizardContent}
       />
     );
