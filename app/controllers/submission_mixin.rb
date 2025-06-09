@@ -36,7 +36,7 @@ module SubmissionMixin
   end
 
   def pre_submission_updates
-    @resource.identifier.update(accepted_agreement: true)
+    @resource.update(accepted_agreement: true)
     StashDatacite::DataciteDate.set_date_available(resource_id: @resource.id)
     StashEngine::EditHistory.create(resource_id: @resource.id, user_comment: 'submitted from API')
   end
