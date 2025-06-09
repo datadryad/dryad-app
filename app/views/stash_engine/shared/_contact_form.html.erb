@@ -50,6 +50,7 @@
       icon.setAttribute('role', 'img');
       icon.setAttribute('aria-label', 'Loading...');
       icon.style.marginRight = '.5ch';
+      document.querySelectorAll('#contact_form .callout.err').forEach(el => el.remove());
       form.querySelector('button').disabled = true;
       form.querySelector('button').prepend(icon);
     })
