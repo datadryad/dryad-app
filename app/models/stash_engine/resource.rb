@@ -638,7 +638,7 @@ module StashEngine
     end
     private :increment_version!
 
-    def previous_resources(include_self = false)
+    def previous_resources(include_self: false)
       res = StashEngine::Resource.where(identifier_id: identifier_id)
       res = if include_self
               res.where('id <= ?', id)

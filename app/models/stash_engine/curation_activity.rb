@@ -360,10 +360,11 @@ module StashEngine
 
       # find out if there were no file changes since last publication and reset file_view, if so.
       changed = false # want to see that none are changed
-      resource.previous_resources(true).each do |res|
+      resource.previous_resources(include_self: true).each do |res|
         break if res.id != resource.id && res&.last_curation_activity&.status == 'published' # break once reached previous published
 
         next unless res.files_changed?(association: 'data_files')
+
         changed = true
         break
       end
