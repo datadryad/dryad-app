@@ -5,7 +5,7 @@ export {default} from './UploadFiles';
 export {default as FilesPreview} from './FilesPreview';
 
 export const filesCheck = (resource, superuser, maximums) => {
-  const {generic_files: files, identifier: {publication_date, sponsored}} = resource;
+  const {generic_files: files, identifier: {publication_date, new_upload_size_limit}} = resource;
   const {
     files: maxFiles, zenodo_size: maxZenodo, merritt_size: oldSize, upload_size: maxSize,
   } = maximums;
@@ -53,7 +53,7 @@ export const filesCheck = (resource, superuser, maximums) => {
         </p>
       );
     }
-    if (!sponsored) {
+    if (!new_upload_size_limit) {
       if (!superuser && data.reduce((sum, f) => sum + f.upload_file_size, 0) > oldSize) {
         return (
           <p className="error-text" id="data_error">

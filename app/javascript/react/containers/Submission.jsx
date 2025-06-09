@@ -38,13 +38,6 @@ function Submission({
   const previous = resource.previous_curated_resource;
   const observers = [];
 
-  const recheckPayer = () => {
-    axios.get(`/resources/${resource.id}/payer_check`)
-      .then(({data}) => {
-        setResource((res) => ({...res, identifier: {...resource.identifier, 'payer_2025?': data['payer_2025?'], sponsored: data.sponsored}}));
-      });
-  };
-
   const steps = () => [
     {
       name: 'Title',
@@ -60,7 +53,7 @@ function Submission({
       index: 1,
       pass: resource.authors.length > 0 && !authorCheck(resource),
       fail: (review || step.index > 0) && authorCheck(resource),
-      component: <Authors step={step.name} resource={resource} setResource={setResource} user={user} recheckPayer={recheckPayer} />,
+      component: <Authors step={step.name} resource={resource} setResource={setResource} user={user} />,
       help: <AuthHelp />,
       preview: <AuthPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -168,6 +161,25 @@ function Submission({
     steps().splice(5, 3);
   }
 
+  const recheckPayer = () => {
+    axios.get(`/resources/${resource.id}/payer_check`)
+      .then(({data}) => {
+        setResource((res) => ({
+          ...res,
+          identifier: {
+            ...resource.identifier,
+            'payer_2025?': data['payer_2025?'],
+            sponsored: data.sponsored,
+            new_upload_size_limit: data.new_upload_size_limit,
+          },
+        }));
+      });
+  };
+
+  useEffect(() => {
+    recheckPayer();
+  }, [resource.authors, resource.journal, resource.contributors]);
+
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');
     if (et) {
@@ -215,9 +227,6 @@ function Submission({
     if (step.name !== 'Create a submission') {
       const slug = step.name.split(/[^a-z]/i)[0].toLowerCase();
       if (slug !== url) window.history.pushState(null, null, `?${slug}`);
-    }
-    if (step.name === 'Files') {
-      recheckPayer();
     }
   }, [review, step, payment]);
 

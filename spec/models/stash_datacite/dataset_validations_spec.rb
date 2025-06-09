@@ -327,7 +327,7 @@ module StashDatacite
           size = @resource.generic_files.sum(:upload_file_size)
           @resource.generic_files.update_all(type: 'StashEngine::DataFile')
 
-          allow_any_instance_of(StashEngine::Identifier).to receive(:sponsored).and_return(true)
+          allow_any_instance_of(StashEngine::Identifier).to receive(:new_upload_size_limit).and_return(true)
           allow(APP_CONFIG.maximums).to receive(:upload_size).and_return(size - 1)
 
           validations = DatasetValidations.new(resource: @resource)

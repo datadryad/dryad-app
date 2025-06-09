@@ -1,7 +1,5 @@
 require 'active_support/concern'
 
-# Provides support for enums stored as Strings in the DB
-# This can be dropped in Rails 5
 module StashEngine
   module Support
     module PaymentMethods
