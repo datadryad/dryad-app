@@ -384,7 +384,7 @@ module StashEngine
             @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
             @res3.data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            expect(@identifier.latest_resource_with_public_download).to eql(@res2)
+            expect(@identifier.latest_resource_with_public_download).to eql(@res1)
           end
 
           it 'finds published resource' do

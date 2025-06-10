@@ -109,7 +109,7 @@ function ReadMe({
         setFileList(file_list);
         if (!dcsDescription.description) {
           if (readme_file) {
-            setInitialValue(readme_file);
+            setReplaceValue(readme_file);
           } else {
             setWizardContent({title, doi, step: 0});
           }
@@ -244,6 +244,7 @@ function ReadMe({
         step={wizardStep}
         setStep={setWizardStep}
         fileList={fileList}
+        restart={restartWizard}
         save={setWizardContent}
       />
     );

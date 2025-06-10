@@ -1,7 +1,5 @@
 require 'active_support/concern'
 
-# Provides support for enums stored as Strings in the DB
-# This can be dropped in Rails 5
 module StashEngine
   module Support
     module PaymentMethods
@@ -30,6 +28,10 @@ module StashEngine
         return current_payer.payment_plan_type.to_s == '2025' if current_payer.is_a? StashEngine::Journal
 
         current_payer.payment_plan.to_s == '2025'
+      end
+
+      def sponsored
+        payer.present?
       end
 
       def record_payment

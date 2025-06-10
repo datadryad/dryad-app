@@ -75,10 +75,7 @@ module StashEngine
               file_state: 'created',
               original_filename: params[:original]
             )
-          json_file = db_file.as_json
-          json_file[:type] = db_file.type
-          json_file[:uploaded] = db_file.s3_staged_presigned_url.present?
-          render json: { new_file: json_file }
+          render json: { new_file: db_file.as_json(methods: %i[type uploaded]) }
         end
       end
     end

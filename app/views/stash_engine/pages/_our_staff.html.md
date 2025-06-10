@@ -27,7 +27,7 @@
 <div class="bio">
   <img src="/images/JHerzog.jpg" alt="Headshot of Jess Herzog">
   <h5>Jess Herzog</h5><br/>
-  <p><em>Head of Publishing Services</em><br/>
+  <p><em>Partner Experience Manager</em><br/>
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
 </div>
 <div class="bio">
@@ -80,6 +80,11 @@
   <p><em>Senior Data Curator I</em><br/>
   Molly holds a Ph.D. in Ecology and Evolutionary Biology from the University of Michigan, where she studied genomics and sperm biology in hybridizing Platyrrhine primates. She gained extensive experience and a passion for curation as a graduate student curatorial assistant for nearly all UM Museum of Zoology and Herbarium divisions. Molly can be found cuddling her cats, reading, traveling the world as a naturalist, gardening, ice skating, and spoiling her nephew.
   </p>
+</div>
+<div class="bio">
+  <img src="/images/alex.jpg" alt="Headshot of Alex Hall">
+  <h5>Alex Hall</h5><br/>
+  <p><em>Data Curator</em><br/>Alex is an interdisciplinary scientist with a B.S. in Animal Behavior and Ph.D. in Biology. He has published a dozen papers on topics such as parthenogenesis, artificial light at night, and image processing. He has been an advocate for open science and open data sharing practices, through, for example, BioImaging North America and Non-Clinical Tomography Users Research Network. Alex enjoys greyhound rescue, pottery, house music, birdwatching, and reptiles.</p>
 </div>
 <div class="bio">
   <img src="/images/kathiyayini.jpg" alt="Headshot of Kathiyayini Jayaraman">

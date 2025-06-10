@@ -90,7 +90,7 @@ export default function UploadFiles({
   const interval = useRef(null);
 
   const {files: maxFiles, merritt_size, upload_size} = config_maximums;
-  const maxSize = resource.identifier['payer_2025?'] ? upload_size : merritt_size;
+  const maxSize = resource.identifier.new_upload_size_limit ? upload_size : merritt_size;
   const Messages = {
     fileReadme: 'Please prepare your README on the README page.',
     fileAlreadySelected: 'A file of the same name is already in the table. The new file was not added.',
@@ -371,7 +371,8 @@ export default function UploadFiles({
     const fileCount = chosenFiles.filter((f) => f.uploadType === uploadType).length + files.length;
     if (chosenFiles.reduce((a, c) => a + c.upload_file_size, 0) + files.reduce((a, c) => a + c.size, 0) > maxSize) {
       setWarning([...warning, Messages.filesTooBig]);
-    } else if (fileCount > maxFiles) {
+    }
+    if (fileCount > maxFiles) {
       setWarning([...warning, Messages.tooManyFiles]);
     } else {
       displayAriaMsg('Your files were added and are being uploaded.');

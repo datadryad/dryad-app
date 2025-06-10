@@ -1,3 +1,44 @@
+function preventClicks(e) {
+  const button = e.currentTarget;
+  const icon = button.querySelector('i');
+  if (button.form) {
+    button.form.addEventListener('submit', () => {
+      icon.className = 'fas fa-circle-notch fa-spin';
+      document.body.classList.add('prevent-clicks');
+      button.disabled = true;
+    })
+  } else {
+    icon.className = 'fas fa-circle-notch fa-spin';
+    document.body.classList.add('prevent-clicks');
+    button.disabled = true;
+  }
+}
+
+function copyItem(e) {
+  const item = e.currentTarget.dataset.item
+  const icon = e.currentTarget.firstElementChild
+  const citation = e.currentTarget.nextElementSibling.innerText
+  window.navigator.clipboard.writeText(citation).then(() => {
+    icon.classList.remove('fa-paste');
+    icon.classList.add('fa-check');
+    icon.innerHTML = `<span class="screen-reader-only">${item} copied</span>`
+    setTimeout(function(){
+      icon.parentElement.setAttribute('title', `Copy ${item.toLowerCase()}`);
+      icon.classList.add('fa-paste');
+      icon.classList.remove('fa-check');
+      icon.innerHTML = '';
+    }, 2000);
+  });
+}
+document.querySelectorAll('.copy-icon').forEach((button) => {
+  button.addEventListener('click', copyItem)
+  button.addEventListener('keydown', (e) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      copyItem(e)
+    }
+  });
+});
+
 function copyEmail(e) {
   const copyButton = e.currentTarget.firstElementChild;
   const email = e.currentTarget.previousSibling.textContent.split('').reverse().join('');
@@ -14,22 +55,6 @@ function copyEmail(e) {
       copyButton.innerHTML = '';
     }, 2000);
   });
-}
-
-function preventClicks(e) {
-  const button = e.currentTarget;
-  const icon = button.querySelector('i');
-  if (button.form) {
-    button.form.addEventListener('submit', () => {
-      icon.className = 'fas fa-circle-notch fa-spin';
-      document.body.classList.add('prevent-clicks');
-      button.disabled = true;
-    })
-  } else {
-    icon.className = 'fas fa-circle-notch fa-spin';
-    document.body.classList.add('prevent-clicks');
-    button.disabled = true;
-  }
 }
 
 var emails = document.getElementsByClassName('emailr');

@@ -298,7 +298,8 @@ module StashEngine
                           digest: 'fake_digest',
                           resource: @resource,
                           file_state: 'created',
-                          upload_file_name: 'mytest.csv')
+                          upload_file_name: 'mytest.csv',
+                          storage_version_id: @resource.id)
         allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
         allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload2).and_return(@upload2)
       end

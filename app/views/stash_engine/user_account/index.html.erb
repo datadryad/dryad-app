@@ -16,8 +16,44 @@
         <p class="c-input__label">Dryad partner affiliation</p>
         <%= render partial: 'stash_engine/shared/change_tenant' %>
       </div>
-      <div id="admin_searches">
-        <% if current_user.min_admin? %>
+      <div>
+        <h2>API account</h2>
+        <p>Use a <a href="/api">Dryad API</a> account to access API results at higher request rates.</p>
+        <% if current_user.api_application %>
+          <p>Your account ID and secret enable you to generate tokens that allow modification of your datasets through the Dryad API. Do not share them.</p>
+          <div class="callout">
+            <p class="api_info">
+              <span><b>Account ID:</b><button title="Copy account ID" aria-label="Copy account ID" class="copy-icon" data-item="Account ID"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= current_user.api_application.uid %></code></span>
+              <span><b>Secret:</b><button title="Copy account secret" aria-label="Copy account secret" class="copy-icon" data-item="Secret"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= current_user.api_application.secret %></code></span>
+            </p>
+          </div>
+          <p>Tokens expire in 10 hours. See more instructions for <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md">using the Dryad API</a>, including getting new tokens programmatically.</p>          
+          <% current_user.access_tokens.reverse.filter {|t| !t.expired? }.each do |token| %>
+            <div class="callout" style="background-color: #f6f6f6;">
+              <p class="api_info">
+                <span><b>Token:</b><button title="Copy token" aria-label="Copy token" class="copy-icon" data-item="Token"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= token.token %></code> <b style="order: 4">Expires in:</b> <span style="order: 5; align-self: flex-end; font-size: .98rem"><%= distance_of_time_in_words(DateTime.now, token.created_at + token.expires_in) %></span></span>
+              </p>
+            </div>
+          <% end %>
+          <% if current_user.access_tokens.reverse.filter {|t| !t.expired? }.empty? %>
+            <div style="display: flex; align-items: baseline; column-gap: 3ch; row-gap: 1ch;">
+              <em>All tokens expired.</em>
+              <%= form_with(url: get_token_path, method: :post, local: false, class: 'o-button__inline-form') do %>
+              <button class="o-button__plain-textlink"><i class="fas fa-rotate-right" aria-hidden="true" style="margin-right: .25ch"></i>Get a new API token</button>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <div style="display: flex; align-items: baseline; column-gap: 3ch; row-gap: 1ch;">
+            <em>No API account exists for this user.</em>
+            <%= form_with(url: get_api_path, method: :post, local: false, class: 'o-button__inline-form') do %>
+              <button class="o-button__plain-textlink"><i class="fas fa-user-gear" aria-hidden="true" style="margin-right: .25ch"></i>Create a Dryad API account</button>
+            <% end %>
+          </div>
+        <% end %>        
+      </div>
+      <% if current_user.min_admin? %>
+        <div id="admin_searches">    
           <h2 id="saved">Saved searches</h2>
           <% if current_user.admin_searches.empty? %>
             <p>Save searches from the new <%= link_to 'Admin dashboard', admin_dashboard_path %></p>
@@ -29,8 +65,8 @@
               <% end %>
             </ol>
           <% end %>
-        <% end %>
-      </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

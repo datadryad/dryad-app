@@ -70,6 +70,16 @@ class PaymentsController < ApplicationController
     end
   end
 
+  def reset_payment
+    identifier = StashEngine::Identifier.find(params[:identifier_id])
+    identifier.update(last_invoiced_file_size: nil, payment_type: nil, payment_id: nil)
+    payment = identifier.payments.last
+    payment.void_invoice
+    payment.destroy
+
+    redirect_to activity_log_path(id: identifier.id), notice: 'Payment information was reset.'
+  end
+
   private
 
   def load_resource

@@ -126,6 +126,26 @@ RSpec.feature 'UserAdmin', type: :feature do
       end
 
       describe 'Users with roles' do
+        describe 'no orcid users' do
+          before(:each) do
+            journal = create(:journal)
+            create(:role, user: @user, role_object: journal)
+            @user.update(orcid: nil)
+            within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
+              find('.c-admin-edit-icon').click
+            end
+          end
+          it 'shows the button to create an API account' do
+            expect(page).to have_text('API account')
+            expect(page).to have_text('Create a Dryad API account')
+          end
+          it 'adds and shows API account information' do
+            find_button("Create a Dryad API account for #{@user.name}").click
+            expect(page).to have_text('Account ID')
+            expect(page).to have_text('Secret')
+          end
+        end
+
         describe 'system role' do
           before(:each) do
             create(:role, user: @user)

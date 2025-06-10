@@ -29,7 +29,7 @@ function StepEditor({content, saveContent, hidden}) {
 }
 
 export default function ReadMeSteps({
-  step, setStep, content, fileList, save,
+  step, setStep, content, fileList, save, restart,
 }) {
   const sections = {
     1: {
@@ -105,9 +105,13 @@ export default function ReadMeSteps({
             <>Next <i className="fa fa-caret-right" aria-hidden="true" /></>
           )}
         </button>
-        {step > 1 && (
+        {step > 1 ? (
           <button type="button" className="o-button__plain-text0" onClick={() => setStep((s) => Number(s) - 1)}>
             <i className="fa fa-caret-left" aria-hidden="true" /> Previous
+          </button>
+        ) : (
+          <button type="button" className="o-button__plain-text1" onClick={restart}>
+            <i className="fa fa-times" aria-hidden="true" /> Cancel
           </button>
         )}
       </div>

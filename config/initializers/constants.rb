@@ -22,3 +22,9 @@ OUT_OF_RANGE_MESSAGE = 'The value is out of defined range'.freeze
 
 SUBMISSION_QUEUE_NOTIFICATION_LIMIT = 10.freeze
 SUBMISSION_QUEUE_NOTIFICATION_EVERY = 30.minutes.freeze
+
+ROOT_URL = if Rails.application.default_url_options[:port].present?
+  "http://#{Rails.application.default_url_options[:host]}:#{Rails.application.default_url_options[:port]}".freeze
+else
+  "https://#{Rails.application.default_url_options[:host]}".freeze
+end

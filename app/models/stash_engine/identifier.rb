@@ -39,6 +39,7 @@ module StashEngine
   # rubocop:disable Metrics/ClassLength
   class Identifier < ApplicationRecord
     include StashEngine::Support::PaymentMethods
+    include StashEngine::Support::Limits
 
     self.table_name = 'stash_engine_identifiers'
     acts_as_paranoid

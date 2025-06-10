@@ -4,6 +4,7 @@ module GenericFilesHelper
 
   def generic_before
     mock_salesforce!
+    allow_any_instance_of(StashEngine::GenericFile).to receive(:uploaded).and_return(true)
     @user = create(:user, role: 'superuser')
     @resource = create(:resource, user_id: @user.id)
     @resource.current_resource_state.update(resource_state: 'submitted')
@@ -39,9 +40,7 @@ module GenericFilesHelper
     expect(response_code).to eql(200)
     body = JSON.parse(response.body)
     new_file = StashEngine::GenericFile.first
-    with_dl = new_file.as_json
-    with_dl[:type] = new_file.type
-    with_dl[:uploaded] = new_file.s3_staged_presigned_url.present?
+    with_dl = new_file.as_json(methods: %i[type uploaded])
     expect(body['new_file'].to_json).to eql(with_dl.to_json)
   end
 

@@ -1,6 +1,6 @@
 <h1>Update user information</h1>
 <p style="display: flex; align-items: baseline; justify-content: space-between; column-gap: 2ch; flex-wrap: wrap;">
-  <span><%= "#{@user.first_name} #{@user.last_name}".strip %></span>
+  <span><%= @user.name %></span>
   <% if @user.orcid.present? %>
     <a href="<%= @user.orcid_link %>" target="_blank"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a>
   <% end %>
@@ -34,4 +34,26 @@
     <%= submit_tag 'Submit', class: 'o-button__plain-text2' %>
     <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
   </div>
+<% end %>
+<div>
+<% if @user.roles.admin_roles.where.not(role_object_type: nil) && @user.orcid.blank? %>
+  <h2>API account</h2>
+  <p>A Dryad API account can be created for admin users without an ORCID (generally for journal publishing systems). Normal users with ORCID logins can manage their own API accounts from the <em>My account</em> page.</p>
+  <% if @user.api_application %>
+    <div class="callout">
+      <p class="api_info">
+        <span><b>Account ID:</b><button title="Copy account ID" aria-label="Copy account ID" class="copy-icon" data-item="Account ID"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= @user.api_application.uid %></code></span>
+        <span><b>Secret:</b><button title="Copy account secret" aria-label="Copy account secret" class="copy-icon" data-item="Secret"><i class="fa fa-paste" role="status"></i><span>Copy</span></button><code><%= @user.api_application.secret %></code></span>
+      </p>
+    </div>
+    <p>New API users should see the instructions for <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md">using the Dryad API</a>, including getting tokens programmatically.</p>
+  <% else %>
+    <div style="display: flex; align-items: baseline; column-gap: 3ch; row-gap: 1ch;">
+      <em>No API account exists for this user.</em>
+      <%= form_with(url: user_api_path, method: :post, local: false, class: 'o-button__inline-form') do %>
+        <button class="o-button__plain-textlink"><i class="fas fa-user-gear" aria-hidden="true" style="margin-right: .25ch"></i>Create a Dryad API account for <%= @user.name %></button>
+      <% end %>
+    </div>
+  <% end %>
+  <br/>
 <% end %>

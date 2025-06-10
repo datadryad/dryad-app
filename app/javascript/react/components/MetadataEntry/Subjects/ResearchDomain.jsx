@@ -49,7 +49,7 @@ function ResearchDomain({step, resource, setResource}) {
     <form className="input-stack" style={{marginBottom: '1.5em'}}>
       <label htmlFor="r_domain">Research domain</label>
       <select ref={fieldRef} id="r_domain" aria-errormessage="domain_error" className="c-input__select" onChange={submit} value={subject}>
-        <option value aria-label="Select a Research domain" />
+        <option value="" aria-label="Select a Research domain" />
         {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
       </select>
       <div className="input-example"><i aria-hidden="true" />The main scholarly or technical field for the data or project</div>

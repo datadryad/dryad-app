@@ -17,22 +17,31 @@ module StashEngine
     end
 
     def require_login
-      if current_user.present? && current_user.tenant_id.present?
-        target_page = session[:target_page]
-        if target_page.present?
-          # This session had originally been navigating to a specific target_page and was redirected
-          # to the login page. Now that they are logged in, we will redirect to the target_page,
-          # but first clear it from the session so we don't continually redirect to it.
-          session[:target_page] = nil
-          redirect_to target_page and return
-        end
-        return
+      unless current_user.present?
+        flash[:alert] = 'You must be logged in.'
+        redirect_to stash_url_helpers.choose_login_path and return
       end
 
-      return if valid_edit_code?
+      unless current_user.tenant_id.present?
+        flash[:alert] = 'You must select an institution (or Continue).'
+        redirect_to stash_url_helpers.choose_sso_path and return
+      end
 
-      flash[:alert] = 'You must log in and select an institution (or none).'
-      redirect_to stash_url_helpers.choose_login_path
+      if %w[email shibboleth].include?(current_user.tenant.authentication&.strategy) &&
+        (current_user.tenant_auth_date.blank? || current_user.tenant_auth_date.before?(1.month.ago))
+        redirect_to stash_url_helpers.choose_sso_path(reverify: true) and return
+      end
+
+      target_page = session[:target_page]
+      if target_page.present?
+        # This session had originally been navigating to a specific target_page and was redirected
+        # to the login page. Now that they are logged in, we will redirect to the target_page,
+        # but first clear it from the session so we don't continually redirect to it.
+        session[:target_page] = nil
+        redirect_to target_page and return
+      end
+
+      nil
     end
 
     def bust_cache

@@ -64,6 +64,19 @@ module StashEngine
       respond_to(&:js)
     end
 
+    def api_application
+      @user = authorize User.find(params[:id])
+      if @user.api_application
+        setup_roles
+        render :edit and return
+      end
+
+      Doorkeeper::Application.create(name: @user.name, owner_id: @user.id, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', owner_type: 'StashEngine::User')
+      @user.reload
+      setup_roles
+      render :edit and return
+    end
+
     def merge_popup
       authorize %i[stash_engine user]
       selected_users = params['selected_users'].split(',')
