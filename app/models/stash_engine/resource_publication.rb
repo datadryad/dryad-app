@@ -24,6 +24,5 @@ module StashEngine
     # connecting a resource with the publication for a manuscript and/or a primary_article related_identifier
     belongs_to :resource
     belongs_to :journal_issn, class_name: 'StashEngine::JournalIssn', foreign_key: :publication_issn, optional: true
-    belongs_to :manuscript, class_name: 'StashEngine::Manuscript', primary_key: :manuscript_number, foreign_key: :manuscript_number, optional: true
   end
 end
