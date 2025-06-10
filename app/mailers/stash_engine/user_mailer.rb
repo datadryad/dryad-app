@@ -95,11 +95,7 @@ module StashEngine
       @user_name = user_name(edit_code.author)
       @resource = edit_code.author.resource
       @role = edit_code.role
-      if Rails.application.default_url_options[:port].present?
-        host = "http://#{Rails.application.default_url_options[:host]}:#{Rails.application.default_url_options[:port]}"
-      end
-      host ||= "https://#{Rails.application.default_url_options[:host]}"
-      @url = "#{host}#{Rails.application.routes.url_helpers.accept_invite_path(edit_code: edit_code.edit_code)}"
+      @url = "#{ROOT_URL}#{Rails.application.routes.url_helpers.accept_invite_path(edit_code: edit_code.edit_code)}"
       mail(to: user_email(edit_code.author), subject: "#{rails_env}Invitation to edit submission \"#{@resource.title}\"")
     end
 
