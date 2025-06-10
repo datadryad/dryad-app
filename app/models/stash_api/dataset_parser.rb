@@ -97,7 +97,7 @@ module StashApi
         begin
           StashEngine::User.find(@hash['userId']).id
         rescue ActiveRecord::RecordNotFound
-          raise StashApi::Error::BadRequestError,
+          raise ActionController::BadRequest,
                 'The userId is not known to Dryad. Please supply the id of an existing Dryad user, or an orcid matching an author of the dataset.'
         end
       else
@@ -119,7 +119,7 @@ module StashApi
           end
         end
         unless found_author
-          raise StashApi::Error::BadRequestError,
+          raise ActionController::BadRequest,
                 'The userId orcid is not known to Dryad. Please supply a matching orcid in the dataset author list.'
         end
 
@@ -254,7 +254,7 @@ module StashApi
     def validate_submit_invitation(owning_user)
       return if @hash['triggerSubmitInvitation'] != true || owning_user.email.present?
 
-      raise StashApi::Error::BadRequestError, 'Dataset owner does not have an email address in order to send the Submission email.'
+      raise ActionController::BadRequest, 'Dataset owner does not have an email address in order to send the Submission email.'
     end
   end
 end
