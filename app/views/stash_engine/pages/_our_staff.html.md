@@ -27,7 +27,7 @@
 <div class="bio">
   <img src="/images/JHerzog.jpg" alt="Headshot of Jess Herzog">
   <h5>Jess Herzog</h5><br/>
-  <p><em>Head of Publishing Services</em><br/>
+  <p><em>Partner Experience Manager</em><br/>
   Jess has over 20 years of experience in scientific publishing and publications management. Prior to joining Dryad, she worked for Public Library of Science (PLOS) and Elsevier in various roles related to journal management, system design and training, and customer relations.</p>
 </div>
 <div class="bio">
