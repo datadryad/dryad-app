@@ -167,9 +167,7 @@ function Submission({
         setResource((res) => ({
           ...res,
           identifier: {
-            ...resource.identifier,
-            'payer_2025?': data['payer_2025?'],
-            sponsored: data.sponsored,
+            ...res.identifier,
             new_upload_size_limit: data.new_upload_size_limit,
           },
         }));

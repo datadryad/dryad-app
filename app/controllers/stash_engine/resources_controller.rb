@@ -216,8 +216,6 @@ module StashEngine
 
     def payer_check
       render json: {
-        'payer_2025?' => @resource.identifier.payer_2025?,
-        sponsored: @resource.identifier.sponsored,
         new_upload_size_limit: @resource.identifier.new_upload_size_limit
       }, status: :ok
     end
