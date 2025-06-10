@@ -29,14 +29,18 @@ Dryad is grateful to the following consortia and institutions for their support 
 <ul class="member-list">
   <li><h3>Council of Australian University Libraries (CAUL)</h3><ul>
     <li>Auckland University</li>
+    <li>Auckland University of Technology</li>
+    <li>University of Melbourne</li>
     <li>University of New South Wales</li>
-    <li>University of Melbourne</li></ul></li>
+    <li>University of Western Australia</li></ul>
+  </li>
   <li><h3>Canadian Research Knowledge Network (CRKN)</h3><ul>
     <li>Mount Royal University</li>
     <li>Toronto Metropolitan University</li>
     <li>University of Alberta</li>
     <li>University of the Fraser Valley</li>
     <li>University of Saskatchewan</li>
+    <li>University of Toronto</li>
     <li>University of Waterloo</li></ul></li>
   <li><h3>SwissUniversities</h3><ul>
     <li>ETH Zürich</li>
