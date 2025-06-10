@@ -146,6 +146,14 @@ module StashEngine
           file.file_state = 'copied' if file.file_state == 'created'
         end
 
+        new_resource.related_identifiers.each_with_index do |ri, i|
+          if new_resource.related_identifiers[0, i].any? { |r| ri.related_identifier == r.related_identifier }
+            ri.delete
+          elsif ri.work_type == 'primary_article' && new_resource.related_identifiers[0, i].any? { |r| r.work_type == 'primary_article' }
+            ri.work_type = 'article'
+          end
+        end
+
         # I think there was something weird about Amoeba that required this approach
         deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
         deleted_files.each(&:destroy)
@@ -630,8 +638,18 @@ module StashEngine
     end
     private :increment_version!
 
+    def previous_resources(include_self: false)
+      res = StashEngine::Resource.where(identifier_id: identifier_id)
+      res = if include_self
+              res.where('id <= ?', id)
+            else
+              res.where('id < ?', id)
+            end
+      res.order(id: :desc)
+    end
+
     def previous_resource
-      StashEngine::Resource.where(identifier_id: identifier_id).where('id < ?', id).order(id: :desc).first
+      previous_resources.first
     end
 
     def previous_curated_resource
@@ -975,12 +993,8 @@ module StashEngine
       changed = []
       edits = []
       edits << { deleted: other_authors.length - authors.length } if other_authors.length > authors.length
-      this_authors = authors.map do |a|
-        { author_full_name: a.author_full_name, affiliation: "#{a.affiliation&.long_name}#{a.affiliation&.ror_id}", email: a.author_email }
-      end
-      that_authors = other_authors.map do |a|
-        { author_full_name: a.author_full_name, affiliation: "#{a.affiliation&.long_name}#{a.affiliation&.ror_id}", email: a.author_email }
-      end
+      this_authors = authors.map(&:as_api_json)
+      that_authors = other_authors.map(&:as_api_json)
       this_authors.each_with_index do |a, i|
         diff = a.diff(that_authors[i] || {})
         edits << { index: i }.merge(diff) unless diff.empty?

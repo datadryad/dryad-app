@@ -37,4 +37,11 @@ class ResourcePayment < ApplicationRecord
 
   scope :with_discount, -> { where(has_discount: true) }
 
+  def void_invoice
+    rails 'Payment is not an invoice' unless pay_with_invoice
+
+    Stripe.api_key     = APP_CONFIG.payments.key
+    Stripe.api_version = '2025-03-31.basil'
+    Stripe::Invoice.void_invoice(invoice_id)
+  end
 end

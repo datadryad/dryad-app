@@ -7,6 +7,12 @@ module StashEngine
         @record.resources.first.curation_activities.pluck(:status).uniq == ['in_progress']
     end
 
+    def reset_payments?
+      @user.superuser? &&
+        @record.payments.count == 1 &&
+        @record.payments.first.pay_with_invoice
+    end
+
     class Scope
       def initialize(user, scope)
         @user = user

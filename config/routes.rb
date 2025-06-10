@@ -103,6 +103,7 @@ Rails.application.routes.draw do
         patch 'import_type'
         patch 'license_agree'
         post 'logout'
+        get :payer_check
       end
     end
 
@@ -248,6 +249,8 @@ Rails.application.routes.draw do
     # user management
     get 'account', to: 'user_account#index', as: 'my_account'
     post 'account/edit', to: 'user_account#edit', as: 'edit_account'
+    post 'account/api', to: 'user_account#api_application', as: 'get_api'
+    post 'account/token', to: 'user_account#api_token', as: 'get_token'
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     # page for viewing a single user
@@ -257,6 +260,7 @@ Rails.application.routes.draw do
     post 'user_admin/merge', to: 'user_admin#merge', as: 'user_admin_merge'
     get 'user_admin/:id/edit', to: 'user_admin#edit', as: 'user_edit'
     post 'user_admin/:id', to: 'user_admin#update', as: 'user_update'
+    post 'user_admin/:id/api', to: 'user_admin#api_application', as: 'user_api'
     # admin tenant management
     get 'tenant_admin', to: 'tenant_admin#index'
     get 'tenant_admin/:id/edit', to: 'tenant_admin#edit', as: 'tenant_edit'
@@ -536,12 +540,14 @@ Rails.application.routes.draw do
   get :health_check, to: 'health#check'
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
-  get "resource_fee_calculator/:id", to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
+  get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
 
   resources :payments, only: [] do
     collection do
       post ':resource_id', to: 'payments#create'
       get :callback
+
+      delete '/reset_payment/:identifier_id', to: 'payments#reset_payment', as: :reset_payment
     end
   end
 end

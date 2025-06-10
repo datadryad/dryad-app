@@ -1,5 +1,7 @@
 module StashDatacite
   class RelatedIdentifiersController < ApplicationController
+    include PublicationMixin
+
     before_action :set_related_identifier, only: %i[update delete]
     before_action :ajax_require_modifiable, only: %i[update create delete]
 
@@ -38,7 +40,9 @@ module StashDatacite
     def update
       respond_to do |format|
         if @related_identifier.update(calc_related_identifier_params)
-          @related_identifier.update(verified: @related_identifier.live_url_valid?)
+          @related_identifier.update(verified: @related_identifier.live_url_valid?) unless @related_indentifier.verified?
+          @resource.reload
+          release_resource(@resource) if @resource.identifier&.publication_article_doi
           format.js do
             load_activity
           end

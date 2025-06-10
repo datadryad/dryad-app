@@ -26,3 +26,4 @@ fi
 
 # Delete orphan records
 bundle exec rails cleanup:delete_orphan_records >> /home/ec2-user/deploy/shared/log/delete_orphan_records.log 2>&1
+bundle exec rails certbot:check_and_notify >> /home/ec2-user/deploy/shared/log/certbot.log 2>&1

@@ -1,5 +1,7 @@
 module StashEngine
   class ResourcePublicationsController < ApplicationController
+    include PublicationMixin
+
     before_action :require_user_login
 
     def index; end
@@ -9,9 +11,10 @@ module StashEngine
     def update
       publication = authorize StashEngine::ResourcePublication.find(params[:id])
       publication.update(up_params)
+      @resource = StashEngine::Resource.find(publication.resource_id)
+      release_resource(@resource) if @resource.identifier&.has_accepted_manuscript?
       respond_to do |format|
         format.js do
-          @resource = StashEngine::Resource.find(publication.resource_id)
           @related_work = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id)
           @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :primary_article)
           @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :preprint)
@@ -25,8 +28,8 @@ module StashEngine
     private
 
     def up_params
-      p = params.permit(stash_engine_resource_publication: %i[publication_name publication_issn manuscript_number])
-      p[:stash_engine_resource_publication]
+      pa = params.permit(stash_engine_resource_publication: %i[publication_name publication_issn manuscript_number])
+      pa[:stash_engine_resource_publication]
     end
   end
 end

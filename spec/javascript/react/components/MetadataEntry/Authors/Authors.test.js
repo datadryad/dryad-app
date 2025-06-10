@@ -118,7 +118,6 @@ describe('Authors', () => {
   it('should trigger drag and drop', async () => {
     const promise = Promise.resolve({status: 200, data: []});
     axios.patch.mockImplementationOnce(() => promise);
-
     render(<Authors resource={resource} setResource={setResource} user={user} />);
 
     await waitFor(() => {

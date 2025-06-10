@@ -145,7 +145,14 @@ paths:
       summary: Create a new dataset with an automatically-generated DOI
       tags:
         - datasets 
-      description: You must be <a href="/api#api-accounts">logged in</a>. Use a JSON structure as shown below. If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "Set no funding" example). For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
+      description: 
+        You must be <a href="/api#api-accounts">logged in</a>. Use a JSON structure as shown below.
+
+
+        If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "Set no funding" example). If human subject information is in the dataset, include a statement explaining how the data was de-identified (see the 'Include HSI statement' example).
+
+
+        For a more full list of properties that can be sent, check the Model below and the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
       security:
         - bearerAuth: []
       requestBody:
@@ -164,6 +171,8 @@ paths:
                       type: boolean
                     preserveCurationStatus:
                       type: boolean
+                    triggerSubmitInvitation:
+                      type: boolean
                     loosenValidation:
                       type: boolean
             examples:
@@ -171,6 +180,8 @@ paths:
                 $ref: api/v2/docs/examples/dataset_post_request.json
               Set no funding:
                 $ref: api/v2/docs/examples/dataset_post_request_nf.json
+              Include HSI statement:
+                $ref: api/v2/docs/examples/dataset_post_request_hsi.json
       responses:
         '201':
           description: Show the dataset information that has been saved.
@@ -183,6 +194,8 @@ paths:
                   $ref: api/v2/docs/examples/dataset_post_response.json
                 Without funding:
                   $ref: api/v2/docs/examples/dataset_post_response_nf.json
+                With HSI statement:
+                  $ref: api/v2/docs/examples/dataset_post_response_hsi.json
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
@@ -1134,6 +1147,9 @@ components:
         fieldOfScience:
           type: string
           description: A term from the FOS (Fields of Science and Technology) controlled vocabulary. The main category of the dataset.
+        hsiStatement:
+          type: string
+          description: A statement explaining the de-identification of any human subject data in the dataset.
         methods:
           type: string
           description: The methods by which the data was produced. Not required for publication.
@@ -1166,6 +1182,11 @@ components:
         affiliationROR:
           type: string
           description: Preferred identifier for the author affiliation.
+        affiliations:
+          type: array
+          items:
+            name: string
+            ror_id: string
         affiliationISNI:
           type: string
         orcid:
