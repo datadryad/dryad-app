@@ -161,6 +161,23 @@ function Submission({
     steps().splice(5, 3);
   }
 
+  const recheckPayer = () => {
+    axios.get(`/resources/${resource.id}/payer_check`)
+      .then(({data}) => {
+        setResource((res) => ({
+          ...res,
+          identifier: {
+            ...res.identifier,
+            new_upload_size_limit: data.new_upload_size_limit,
+          },
+        }));
+      });
+  };
+
+  useEffect(() => {
+    recheckPayer();
+  }, [resource.authors, resource.journal, resource.contributors]);
+
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');
     if (et) {
