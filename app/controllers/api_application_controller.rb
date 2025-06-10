@@ -14,6 +14,34 @@ class ApiApplicationController < StashEngine::ApplicationController
   before_action :check_requested_version
   skip_before_action :verify_authenticity_token
 
+  rescue_from(*StashApi::Error::RESCUABLE_EXCEPTIONS) do |err|
+    err_klass = err.class
+    response_status = 500
+    object = err
+
+    if err_klass == ActiveRecord::RecordInvalid
+      object = err.record
+      response_status = 422
+    elsif err_klass == ActiveRecord::RecordNotFound
+      response_status = 404
+    elsif err_klass <= StashApi::SafeError
+      response_status = err.http_status
+    elsif err_klass <= Exception
+      if Rails.env.development? || Rails.env.test?
+        logger.error(err.message)
+        logger.error(err.backtrace.join("\n "))
+      end
+
+      # TODO: hook into bugsnag when we get to it
+      # Bugsnag.notify(err)
+      object = StashApi::Error::ServerError.new(err.message, original: err)
+    end
+
+    # TODO: update error messages that are returned by pundit
+    #       https://github.com/elabs/pundit#creating-custom-error-messages
+    render json: { error: StashApi::Error::Render.from(object).first&.message }, status: response_status
+  end
+
   def page
     @page ||= (params[:page].respond_to?(:to_i) && params[:page].to_i.positive? ? params[:page].to_i : 1)
   end
