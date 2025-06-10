@@ -178,6 +178,7 @@ module StashEngine
       if @resource.title && @resource.title.length > 3
         other_submissions = params.key?(:admin) ? StashEngine::Resource.all : current_user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
+          .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
         manuscript = @resource.resource_publication&.manuscript_number
         dupes = other_submissions.where('LOWER(title) = LOWER(?)', @resource.title)&.select(:id, :title, :identifier_id).to_a
