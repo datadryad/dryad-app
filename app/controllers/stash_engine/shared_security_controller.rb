@@ -19,17 +19,17 @@ module StashEngine
     def require_login
       unless current_user.present?
         flash[:alert] = 'You must be logged in.'
-        redirect_to stash_url_helpers.choose_login_path
+        redirect_to stash_url_helpers.choose_login_path and return
       end
 
       unless current_user.tenant_id.present?
         flash[:alert] = 'You must select an institution (or Continue).'
-        redirect_to stash_url_helpers.choose_sso_path
+        redirect_to stash_url_helpers.choose_sso_path and return
       end
 
       if %w[email shibboleth].include?(current_user.tenant.authentication&.strategy) &&
         (current_user.tenant_auth_date.blank? || current_user.tenant_auth_date.before?(1.month.ago))
-        redirect_to stash_url_helpers.choose_sso_path(reverify: true)
+        redirect_to stash_url_helpers.choose_sso_path(reverify: true) and return
       end
 
       target_page = session[:target_page]
