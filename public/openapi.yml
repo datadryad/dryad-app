@@ -171,6 +171,8 @@ paths:
                       type: boolean
                     preserveCurationStatus:
                       type: boolean
+                    triggerSubmitInvitation:
+                      type: boolean
                     loosenValidation:
                       type: boolean
             examples:
