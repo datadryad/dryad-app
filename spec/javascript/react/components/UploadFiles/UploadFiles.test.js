@@ -40,6 +40,17 @@ jest.mock('../../../../../app/javascript/react/components/UploadFiles/pollingDel
   pollingDelay: 100,
 }));
 
+const setLoaded = (obj) => {
+  const loaded = JSON.parse(JSON.stringify(obj));
+  loaded.uploaded = true;
+  loaded.type = 'StashEngine::DataFile';
+  loaded.frictionless_report = {
+    report: '{}',
+    status: 'noissues',
+  };
+  return loaded;
+};
+
 describe('UploadFiles', () => {
   let info; let files; let datafile; let setfile; let loaded;
   const setResource = () => {};
@@ -93,12 +104,7 @@ describe('UploadFiles', () => {
       compressed_try: 0,
       type: 'StashEngine::DataFile',
     };
-    loaded = JSON.parse(JSON.stringify(datafile));
-    loaded.type = 'StashEngine::DataFile';
-    loaded.frictionless_report = {
-      report: '{}',
-      status: 'noissues',
-    };
+    loaded = setLoaded(datafile);
 
     info = {
       setResource,
@@ -241,6 +247,50 @@ describe('UploadFiles', () => {
     });
   });
 
+  it('renames an uploaded file', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+    datafile.download_filename = 'dataChanged.csv';
+    axios.patch.mockResolvedValueOnce({data: datafile});
+
+    info.resource.generic_files = [loaded];
+    render(<UploadFiles {...info} />);
+
+    const button = screen.getByLabelText('Rename file data.csv');
+    userEvent.click(button);
+
+    const input = screen.getByLabelText('Rename file data.csv');
+    userEvent.type(input, 'Changed');
+    const save = screen.getByLabelText('Save new name for data.csv');
+    userEvent.click(save);
+
+    await waitFor(() => {
+      expect(screen.getByText('dataChanged.csv')).toBeInTheDocument();
+    });
+  });
+
+  it('does not rename to a used filename', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+    axios.patch.mockResolvedValueOnce({data: {error: 'Filename data.csv is in use'}});
+
+    info.resource.generic_files = [loaded, setLoaded(setfile)];
+    render(<UploadFiles {...info} />);
+
+    const button = screen.getByLabelText('Rename file set.csv');
+    userEvent.click(button);
+
+    const input = screen.getByLabelText('Rename file set.csv');
+    userEvent.clear(input);
+    userEvent.type(input, 'data');
+    const save = screen.getByLabelText('Save new name for set.csv');
+    userEvent.click(save);
+
+    await waitFor(() => {
+      expect(screen.getByText('Filename data.csv is in use')).toBeInTheDocument();
+    });
+  });
+
   it('does not allow duplicate files', async () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
@@ -263,6 +313,7 @@ describe('UploadFiles', () => {
     datafile.type = 'StashEngine::SoftwareFile';
     const postA = {status: 200, data: {new_file: setfile}};
     datafile.id += 2;
+    datafile.upload_file_name = 'f36a99b7-0c5d-4aee-943a-7ed4f34a208f.csv';
     const postB = {status: 200, data: {new_file: datafile}};
     axios.post.mockResolvedValueOnce(postA);
     axios.post.mockResolvedValueOnce(postB);
@@ -278,7 +329,7 @@ describe('UploadFiles', () => {
     userEvent.upload(input, files);
     await waitFor(() => postA);
     await waitFor(() => postB);
-    expect(screen.getAllByText('data.csv').length).toEqual(2);
+    expect(screen.getAllByText('data.csv').length).toEqual(3);
     expect(screen.queryByText('A file of the same name is already in the table. The new file was not added.')).not.toBeInTheDocument();
   });
 

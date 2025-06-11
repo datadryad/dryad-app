@@ -5,8 +5,8 @@ module StashEngine
   class GenericFilesController < ApplicationController
 
     before_action :setup_class_info, :require_login
-    before_action :set_file_info, only: %i[destroy_manifest]
-    before_action :ajax_require_modifiable, only: %i[destroy_manifest validate_urls presign_upload upload_complete]
+    before_action :set_file_info, only: %i[destroy_manifest rename]
+    before_action :ajax_require_modifiable, only: %i[destroy_manifest rename validate_urls presign_upload upload_complete]
 
     # apply Pundit?
 
@@ -122,6 +122,19 @@ module StashEngine
       files = files.select { |f| f&.frictionless_report&.report.present? && f&.frictionless_report&.status != 'checking' }
 
       render json: files.as_json(
+        methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
+      )
+    end
+
+    def rename
+      return if @file.file_state == 'deleted'
+
+      check_files = @resource.generic_files.where(type: @file.type).present_files
+      duplicates = check_files.where('lower(download_filename) = ?', params[:newfilename].downcase)
+      render json: { error: "Filename #{params[:newfilename]} is in use" } and return if duplicates.present?
+
+      @file.update(download_filename: params[:newfilename])
+      render json: @file.as_json(
         methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
       )
     end

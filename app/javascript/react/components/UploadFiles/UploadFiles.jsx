@@ -451,6 +451,24 @@ export default function UploadFiles({
     displayAriaMsg(`${file.sanitized_name} removed`);
   };
 
+  const renameFileHandler = (id, newname) => {
+    setWarning([]);
+    const file = chosenFiles.find((f) => f.id === id);
+    const newfilename = sanitize(newname);
+    if (file.status !== 'Pending') {
+      axios.patch(`/${file.uploadType}_files/${id}/rename`, {resource_id: resource.id, newfilename})
+        .then((data) => {
+          if (data.data.error) {
+            setWarning([data.data.error]);
+          } else {
+            const transformed = transformData([data.data]);
+            setChosenFiles((cf) => cf.map((f) => (f.id === id ? transformed[0] : f)));
+          }
+        });
+    }
+    // displayAriaMsg(`${}`);
+  };
+
   const hideModal = (event) => {
     if (modalRef.current && (event.type === 'submit' || event.type === 'click'
             || (event.type === 'keydown' && event.keyCode === 27))) {
@@ -593,6 +611,7 @@ export default function UploadFiles({
           <FileList
             config={config_payments}
             chosenFiles={chosenFiles}
+            renameFile={renameFileHandler}
             clickedRemove={removeFileHandler}
             clickedValidationReport={(file) => setValFile(file)}
             totalSize={chosenFiles.reduce((s, f) => s + f.upload_file_size, 0)}
