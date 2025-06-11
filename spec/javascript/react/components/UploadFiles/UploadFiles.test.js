@@ -71,7 +71,8 @@ describe('UploadFiles', () => {
 
     datafile = {
       id: faker.datatype.number(999),
-      upload_file_name: 'data.csv',
+      download_filename: 'data.csv',
+      upload_file_name: '383cd2f9-49a7-4d3e-a8cb-2393fda58ba2.csv',
       upload_content_type: 'text/csv',
       upload_file_size: 180000,
       resource_id: resourceId,
@@ -82,7 +83,8 @@ describe('UploadFiles', () => {
     };
     setfile = {
       id: datafile.id + 1,
-      upload_file_name: 'set.csv',
+      download_filename: 'set.csv',
+      upload_file_name: 'dbf18952-6007-4668-9497-b098c4659780.csv',
       upload_content_type: 'text/csv',
       upload_file_size: 130000,
       resource_id: resourceId,
@@ -192,7 +194,7 @@ describe('UploadFiles', () => {
 
     userEvent.click(buttons[0]);
     await waitFor(() => {
-      expect(screen.getByText(`Formatting report: ${errorFiles[0].upload_file_name}`)).toBeVisible();
+      expect(screen.getByText(`Formatting report: ${errorFiles[0].download_filename}`)).toBeVisible();
     });
   });
 
@@ -207,7 +209,7 @@ describe('UploadFiles', () => {
     const buttons = screen.getAllByText(/View \d*\s?alerts/);
     userEvent.click(buttons[0]);
 
-    const head = screen.getByText(`Formatting report: ${errorFiles[0].upload_file_name}`);
+    const head = screen.getByText(`Formatting report: ${errorFiles[0].download_filename}`);
     await waitFor(() => {
       expect(head).toBeVisible();
     });
@@ -381,7 +383,7 @@ describe('UploadFiles', () => {
     const badfiles = filenames.map((name, i) => {
       const file = JSON.parse(JSON.stringify(datafile));
       file.id += i;
-      file.upload_file_name = name;
+      file.download_filename = name;
       file.original_filename = name;
       file.url = urls[i];
       file.status_code = codes[i];

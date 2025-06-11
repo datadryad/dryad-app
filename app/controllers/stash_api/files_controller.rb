@@ -5,6 +5,7 @@
 require 'fileutils'
 require 'stash/aws/s3'
 require 'stash/download/file_presigned'
+require 'securerandom'
 
 module StashApi
   class FilesController < ApiApplicationController
@@ -82,7 +83,8 @@ module StashApi
     # prevent people doing badness like filenames like ../../../foobar
     def setup_file_path
       @sanitized_name = sanitize_filename(params[:filename])
-      @file_path = "#{@resource.s3_dir_name(type: 'data')}/#{@sanitized_name}"
+      @uuid = "#{SecureRandom.uuid}#{::File.extname(@sanitized_name)}"
+      @file_path = "#{@resource.s3_dir_name(type: 'data')}/#{@uuid}"
     end
 
     # prevent people from sending bad filenames
@@ -124,7 +126,8 @@ module StashApi
     def save_file_to_db
       handle_previous_duplicates(upload_filename: @sanitized_name)
       StashEngine::DataFile.create(
-        upload_file_name: @sanitized_name,
+        download_filename: @sanitized_name,
+        upload_file_name: @uuid,
         upload_content_type: file_content_type,
         upload_file_size: Stash::Aws::S3.new.size(s3_key: @file_path),
         resource_id: @resource.id,
@@ -142,7 +145,7 @@ module StashApi
     end
 
     def handle_previous_duplicates(upload_filename:)
-      StashEngine::DataFile.where(resource_id: @resource.id, upload_file_name: upload_filename).each do |data_file|
+      StashEngine::DataFile.where(resource_id: @resource.id, download_filename: upload_filename).each do |data_file|
         if data_file.file_state == 'copied'
           data_file.update(file_state: 'deleted')
         else

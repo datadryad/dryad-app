@@ -84,7 +84,7 @@ module StashEngine
       # see if all files created for this resource/version are available in the v3 structure with the expected size
       # Note: this doesn't walk the version history -- it only checks the files created for the current version
       resource.data_files.where(file_state: 'created').each do |data_file|
-        puts "checking #{data_file.upload_file_name}"
+        puts "checking #{data_file.download_filename}"
         return false if data_file.digest.nil?
 
         permanent_key = "v3/#{data_file.s3_staged_path}"

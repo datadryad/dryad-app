@@ -9,12 +9,12 @@ module Stash
 
       def initialize(file_model:, zenodo_bucket_url:, zc_id:)
         # on one end we'll have S3 or an HTTP URL and on the other end of the pipe the zenodo put request that looks like
-        # PUT "#{@bucket_url}/#{ERB::Util.url_encode(file_model.upload_file_name)}"
+        # PUT "#{@bucket_url}/#{ERB::Util.url_encode(file_model.download_filename)}"
         # ZC.standard_request(:put, upload_url, body: File.open(upload_file, 'rb'), headers: { 'Content-Type': nil })
 
         @zc_id = zc_id
         @file_model = file_model
-        @upload_url = "#{zenodo_bucket_url}/#{ERB::Util.url_encode(file_model.upload_file_name)}"
+        @upload_url = "#{zenodo_bucket_url}/#{ERB::Util.url_encode(file_model.download_filename)}"
       end
 
       # some useful information that may be helpful if we need ot modify this later
@@ -75,12 +75,12 @@ module Stash
           raise Stash::ZenodoReplicate::ZenodoError,
                 "Size of http body doesn't match Content-Length for file:\n #{@file_model.class}," \
                 "\n cumulative_size: #{size}, Content-Length from server: #{response.headers['Content-Length']}" \
-                "\n file_id: #{@file_model.id}, name: #{@file_model.upload_file_name}\n url: #{@file_model.url}"
+                "\n file_id: #{@file_model.id}, name: #{@file_model.download_filename}\n url: #{@file_model.url}"
         end
 
         { response: put_response, digests: digests_obj.hex_digests }
       rescue Stash::Download::S3CustomError => e
-        raise Stash::ZenodoReplicate::ZenodoError, "Couldn't create presigned URL for id: #{@file_model.id}, fn: #{@file_model.upload_file_name}\n" \
+        raise Stash::ZenodoReplicate::ZenodoError, "Couldn't create presigned URL for id: #{@file_model.id}, fn: #{@file_model.download_filename}\n" \
                                                    "Original error: #{e}\n#{e.full_message}"
       rescue HTTP::Error => e
         raise Stash::ZenodoReplicate::ZenodoError, "Error retrieving HTTP URL for duplication #{@file_model.zenodo_replication_url}\n" \

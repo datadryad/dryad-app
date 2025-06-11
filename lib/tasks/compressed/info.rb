@@ -15,7 +15,7 @@ module Tasks
             tar_gz_info = Stash::Compressed::TarGz.new(presigned_url: db_file.s3_permanent_presigned_url)
             tar_gz_info.entries_with_fallback
           else
-            raise Stash::Compressed::Error, "Unknown file type for #{db_file.upload_file_name}"
+            raise Stash::Compressed::Error, "Unknown file type for #{db_file.download_filename}"
           end
 
         output = []

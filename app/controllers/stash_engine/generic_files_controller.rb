@@ -63,11 +63,12 @@ module StashEngine
       respond_to do |format|
         format.any(:json, :html) do
           # It can maintain previous deletions for the file (both same and different case), but delete non-deletions
-          @resource.send(@resource_assoc).where('lower(upload_file_name) = ?', params[:name]&.downcase)
+          @resource.send(@resource_assoc).where('lower(download_filename) = ?', params[:name]&.downcase)
             .where.not(file_state: 'deleted').destroy_all
           db_file =
             @file_model.create(
-              upload_file_name: params[:name],
+              download_filename: params[:name],
+              upload_file_name: params[:uuid],
               upload_content_type: params[:type],
               upload_file_size: params[:size],
               resource_id: @resource.id,

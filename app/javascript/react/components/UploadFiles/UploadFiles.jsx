@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
+import {v4 as uuid} from 'uuid';
 import AWS from 'aws-sdk';
 import sanitize from '../../../lib/sanitize_filename';
 import {formatSizeUnits} from '../../../lib/utils';
@@ -48,7 +49,7 @@ export const displayAriaMsg = (msg) => {
 
 const transformData = (files) => files.map((file) => ({
   ...file,
-  sanitized_name: file.upload_file_name,
+  sanitized_name: file.download_filename,
   status: 'Uploaded',
   uploadType: RailsActiveRecordToUploadType[file.type],
   sizeKb: formatSizeUnits(file.upload_file_size),
@@ -145,7 +146,8 @@ export default function UploadFiles({
     });
     const generic_files = chosenFiles.map((f) => ({
       ...f,
-      upload_file_name: f.sanitized_name,
+      download_filename: f.sanitized_name,
+      upload_file_name: f.uuid,
       type: UploadTypetoRailsActiveRecord[f.uploadType],
     }));
     setResource((r) => ({...r, total_file_size: generic_files.reduce((s, f) => s + f.upload_file_size, 0), generic_files}));
@@ -307,7 +309,7 @@ export default function UploadFiles({
     fileList.map((file) => {
       if (file.status === 'Pending') {
         // TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
-        const evaporateUrl = `${s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.sanitized_name}`;
+        const evaporateUrl = `${s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.uuid}`;
         const addConfig = {
           name: evaporateUrl,
           file,
@@ -328,6 +330,7 @@ export default function UploadFiles({
               `/${file.uploadType}_file/upload_complete/${resource.id}`,
               {
                 resource_id: resource.id,
+                uuid: file.uuid,
                 name: file.sanitized_name,
                 size: file.size,
                 type: file.type,
@@ -336,10 +339,9 @@ export default function UploadFiles({
             ).then((response) => {
               const {new_file} = response.data;
               setChosenFiles((cf) => cf.map((c) => {
-                if (c.name === new_file.original_filename
+                if (c.sanitized_name === new_file.download_filename
                   && UploadTypetoRailsActiveRecord[c.uploadType] === new_file.type) {
                   c.id = new_file.id;
-                  c.sanitized_name = new_file.upload_file_name;
                   c.status = 'Uploaded';
                   c.uploaded = new_file.uploaded;
                 }
@@ -379,6 +381,7 @@ export default function UploadFiles({
       // TODO: make a function?; future: unify adding file attributes
       const newFiles = files.map((file, index) => {
         file.id = `pending${timestamp + index / 1000}`;
+        file.uuid = `${uuid()}${file.name.split('.').pop()}`;
         file.sanitized_name = sanitize(file.name);
         file.status = 'Pending';
         file.url = null;
