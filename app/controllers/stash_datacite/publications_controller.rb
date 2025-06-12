@@ -73,10 +73,7 @@ module StashDatacite
       # clean the partial_term of unwanted characters so it doesn't cause errors
       partial_term.gsub!(/~!@%&"/, '')
       found = StashEngine::Manuscript.where(journal_id: params[:jid]).where('manuscript_number like ?', "%#{partial_term}%").limit(40).to_a
-      results = found.map do |m|
-        { id: parse_msid(msid: m.manuscript_number, jid: params[:jid]), title: m.metadata['ms title'], authors: m.metadata['ms authors'].take(3) }
-      end
-      matches = results.uniq { |m| m[:id] }
+      matches = found.map { |m| { id: m.manuscript_number, title: m.metadata['ms title'], authors: m.metadata['ms authors'].take(3) } }
       render json: matches
     end
 
@@ -101,8 +98,7 @@ module StashDatacite
     def save_publications
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
-      jid = StashEngine::Journal.find_by_issn(params[:publication_issn])&.id
-      @msid = params[:msid].present? ? parse_msid(jid: jid, msid: params[:msid]) : nil
+      @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
       if params[:primary_article_doi].blank?
         @resource.related_identifiers.where(work_type: params[:import_type] == 'preprint' ? 'preprint' : 'primary_article').destroy_all
       end
@@ -172,9 +168,9 @@ module StashDatacite
     end
 
     # parse out the "relevant" part of the manuscript ID, ignoring the parts that the journal changes for different versions of the same item
-    def parse_msid(jid:, msid:)
-      logger.debug("Parsing msid #{msid} for journal #{jid}")
-      regex = StashEngine::Journal.where(id: jid).first&.manuscript_number_regex
+    def parse_msid(issn:, msid:)
+      logger.debug("Parsing msid #{msid} for journal #{issn}")
+      regex = @se_id.journal&.manuscript_number_regex
       return msid if regex.blank?
 
       logger.debug("- found regex /#{regex}/")
