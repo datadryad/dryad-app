@@ -523,12 +523,12 @@ module StashEngine
       end
 
       it 'is true when matching manuscript is accepted' do
-        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'accepted', journal: create(:journal, issn: @fake_issn))
+        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'accepted')
         expect(@identifier.has_accepted_manuscript?).to be(true)
       end
 
       it 'is false when matching manuscript is submitted' do
-        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'submitted', journal: create(:journal, issn: @fake_issn))
+        create(:manuscript, manuscript_number: @fake_manuscript_number, status: 'submitted')
         expect(@identifier.has_accepted_manuscript?).to be(false)
       end
     end

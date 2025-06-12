@@ -63,7 +63,6 @@ module StashEngine
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
-    has_many :manuscripts, class_name: 'StashEngine::Manuscript'
     belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense', optional: true
     has_many :curation_activities, class_name: 'StashEngine::CurationActivity', through: :resources
     has_many :payments, class_name: 'ResourcePayment', through: :resources
@@ -313,7 +312,7 @@ module StashEngine
     end
 
     def latest_manuscript
-      StashEngine::Manuscript.where('manuscript_number like ?', "%#{manuscript_number}%").where(journal: journal).last
+      latest_resource&.manuscript
     end
 
     def preprint_issn
