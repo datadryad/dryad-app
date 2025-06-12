@@ -40,7 +40,7 @@ module StashDatacite
     def update
       respond_to do |format|
         if @related_identifier.update(calc_related_identifier_params)
-          @related_identifier.update(verified: @related_identifier.live_url_valid?) unless @related_indentifier.verified?
+          @related_identifier.update(verified: @related_identifier.live_url_valid?) unless @related_identifier.verified?
           @resource.reload
           release_resource(@resource) if @resource.identifier&.publication_article_doi
           format.js do

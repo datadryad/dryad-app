@@ -126,7 +126,7 @@ module StashEngine
         lastName: author_last_name,
         email: author_email,
         affiliation: affiliation&.smart_name,
-        affiliationROR: affiliation.ror_id,
+        affiliationROR: affiliation&.ror_id,
         affiliations: affiliations.map(&:as_api_json),
         orcid: author_orcid,
         order: author_order
