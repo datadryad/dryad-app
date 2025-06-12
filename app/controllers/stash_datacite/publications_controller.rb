@@ -190,7 +190,7 @@ module StashDatacite
         @error = 'Journal not integrated with Dryad. Please fill in your title manually.'
         return
       end
-      manu = StashEngine::Manuscript.where(journal: journal, manuscript_number: @msid).first
+      manu = StashEngine::Manuscript.where(journal: journal, manuscript_number: @msid).last
       if manu.blank?
         @error = 'We could not find metadata to import for this manuscript. Please fill in your title manually.'
         return

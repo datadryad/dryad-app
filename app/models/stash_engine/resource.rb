@@ -107,7 +107,7 @@ module StashEngine
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
     has_many :journal_issns, through: :resource_publications
     has_many :journals, through: :journal_issns
-    has_one :manuscript, through: :resource_publication
+    has_many :manuscripts, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
     has_one :journal, through: :journal_issn
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
@@ -668,6 +668,10 @@ module StashEngine
 
     def previous_resource_published?
       %w[published embargoed].include?(previous_resource&.last_curation_activity&.status)
+    end
+
+    def manuscript
+      manuscripts&.last
     end
 
     # -----------------------------------------------------------
