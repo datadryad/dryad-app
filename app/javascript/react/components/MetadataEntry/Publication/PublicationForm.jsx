@@ -5,15 +5,12 @@ import {
 } from 'formik';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import Journal from './Journal';
-import Manuscript from './Manuscript';
 
-function ImportCheck({
-  importType, journal, msid, setDisable,
-}) {
+function ImportCheck({importType, journal, setDisable}) {
   const {values} = useFormikContext();
 
   useEffect(() => {
-    if (importType === 'manuscript' && (!journal || !msid)) {
+    if (importType === 'manuscript' && (!journal || !values.msid)) {
       setDisable(true);
     } else if (importType === 'published' && (!journal || !values.primary_article_doi)) {
       setDisable(true);
@@ -22,7 +19,7 @@ function ImportCheck({
     } else {
       setDisable(false);
     }
-  }, [importType, values, journal, msid]);
+  }, [importType, values, journal]);
 }
 
 function PublicationForm({
@@ -35,7 +32,6 @@ function PublicationForm({
   const [importError, setImportError] = useState('');
   const [jTitle, setJTitle] = useState(publication_name);
   const [issn, setISSN] = useState(publication_issn);
-  const [msid, setMSID] = useState(manuscript_number);
   const [apiJournal, setAPIJournal] = useState(false);
   const [hide, setHide] = useState(false);
   const [disable, setDisable] = useState(false);
@@ -63,7 +59,7 @@ function PublicationForm({
       publication_issn: issn,
       do_import: values.isImport,
       primary_article_doi: values.primary_article_doi || null,
-      msid: msid || null,
+      msid: values.msid || null,
     };
     if (values.isImport) setLoading(true);
     axios.patch(
@@ -116,6 +112,7 @@ function PublicationForm({
       initialValues={
         {
           primary_article_doi: primary_article?.related_identifier || '',
+          msid: manuscript_number || '',
           isImport: false,
         }
       }
@@ -127,7 +124,7 @@ function PublicationForm({
     >
       {(formik) => (
         <Form style={{margin: '1em auto'}}>
-          <ImportCheck importType={importType} journal={jTitle} msid={msid} setDisable={setDisable} />
+          <ImportCheck importType={importType} journal={jTitle} setDisable={setDisable} />
           <Field name="isImport" type="hidden" />
           <div className="callout alt">
             <p><i className="fas fa-file-import" /> Enter your publication information to import the title and other metadata</p>
@@ -182,21 +179,21 @@ function PublicationForm({
             )}
             {importType === 'manuscript' && (
               <div className="input-stack">
-                <Manuscript
-                  formRef={formRef}
-                  msid={msid}
-                  setMSID={setMSID}
-                  jid={resource?.journal?.id}
-                  controlOptions={
-                    {
-                      labelText: 'Manuscript number',
-                      htmlId: 'msid',
-                      isRequired: true,
-                      saveOnEnter: true,
-                      errorId: 'msid_error',
-                      desBy: 'man-ex',
-                    }
-                  }
+                <label className="input-label" htmlFor="msid">
+                  Manuscript number
+                </label>
+                <Field
+                  className="c-input__text"
+                  type="text"
+                  name="msid"
+                  id="msid"
+                  onBlur={() => { // defaults to formik.handleBlur
+                    formRef.current.values.isImport = false;
+                    formik.handleSubmit();
+                  }}
+                  aria-describedby="man-ex"
+                  aria-errormessage="msid_error"
+                  required
                 />
                 <div id="man-ex"><i aria-hidden="true" />APPS-D-17-00113</div>
               </div>

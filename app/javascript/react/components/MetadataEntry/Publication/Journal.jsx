@@ -6,7 +6,7 @@ import Autocomplete from '../Autocomplete';
 export default function Journal({
   formRef, title, setTitle, issn, setIssn, setAPIJournal, controlOptions,
 }) {
-  const [prevTitle, setPrevTitle] = useState(`${title}`);
+  const [prevTitle, setPrevTitle] = useState(`${title || ''}`);
   const [prevISSN, setPrevISSN] = useState(issn);
   const [autoBlurred, setAutoBlurred] = useState(false);
   const [api_journals, setAPIJournals] = useState([]);
