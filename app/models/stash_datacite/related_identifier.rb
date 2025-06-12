@@ -34,6 +34,8 @@ module StashDatacite
 
   class RelatedIdentifier < ApplicationRecord
     self.table_name = 'dcs_related_identifiers'
+    has_paper_trail
+
     belongs_to :resource, class_name: StashEngine::Resource.to_s
 
     scope :completed, -> { where("TRIM(IFNULL(related_identifier, '')) > ''") } # only non-null & blank
