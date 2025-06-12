@@ -46,7 +46,7 @@
             if (i['country'] || i['acronyms']) {
               htmlString += `<br/><small>${i.acronyms.length > 0 ? `(${i.acronyms.join(', ')}) ` : ''}${i.country}</small>`
             }
-            if (i['title'] || i['authors']) {
+            if (i['title'] && i['authors']) {
               htmlString += `<br/><small>${i.title.substring(0, 45)}...${i.authors.length > 0 ? ` (${i.authors.map((a) => a.family_name).join(', ')})` : ''}</small>`
             }
             li.innerHTML = htmlString;
