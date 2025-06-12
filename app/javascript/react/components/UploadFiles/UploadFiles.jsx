@@ -381,7 +381,7 @@ export default function UploadFiles({
       // TODO: make a function?; future: unify adding file attributes
       const newFiles = files.map((file, index) => {
         file.id = `pending${timestamp + index / 1000}`;
-        file.uuid = `${uuid()}${file.name.split('.').pop()}`;
+        file.uuid = `${uuid()}.${file.name.split('.').pop()}`;
         file.sanitized_name = sanitize(file.name);
         file.status = 'Pending';
         file.url = null;
