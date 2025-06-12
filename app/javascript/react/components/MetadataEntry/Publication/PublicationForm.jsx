@@ -6,20 +6,30 @@ import {
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import Journal from './Journal';
 
-function ImportCheck({importType, journal, setDisable}) {
+function ImportCheck({importType, jTitle, setDisable}) {
   const {values} = useFormikContext();
 
   useEffect(() => {
-    if (importType === 'manuscript' && (!journal || !values.msid)) {
+    if (importType === 'manuscript' && (!jTitle || !values.msid)) {
       setDisable(true);
-    } else if (importType === 'published' && (!journal || !values.primary_article_doi)) {
+    } else if (importType === 'published' && (!jTitle || !values.primary_article_doi)) {
       setDisable(true);
-    } else if (importType === 'preprint' && (!journal || !values.primary_article_doi)) {
+    } else if (importType === 'preprint' && (!jTitle || !values.primary_article_doi)) {
       setDisable(true);
     } else {
       setDisable(false);
     }
-  }, [importType, values, journal]);
+  }, [importType, values, jTitle]);
+}
+
+function ManNumPrefix({journal, msid}) {
+  const {setFieldValue} = useFormikContext();
+
+  useEffect(() => {
+    const regex = new RegExp(journal?.manuscript_number_regex);
+    const [, prefix] = journal?.manuscript_number_regex?.match(/\(([a-z]+[-_]*)/i) || [];
+    if (!regex.test(msid)) setFieldValue('msid', prefix || '');
+  }, [journal?.manuscript_number_regex]);
 }
 
 function PublicationForm({
@@ -124,7 +134,8 @@ function PublicationForm({
     >
       {(formik) => (
         <Form style={{margin: '1em auto'}}>
-          <ImportCheck importType={importType} journal={jTitle} setDisable={setDisable} />
+          <ImportCheck importType={importType} jTitle={jTitle} setDisable={setDisable} />
+          <ManNumPrefix journal={resource.journal} msid={manuscript_number} />
           <Field name="isImport" type="hidden" />
           <div className="callout alt">
             <p><i className="fas fa-file-import" /> Enter your publication information to import the title and other metadata</p>
