@@ -48,8 +48,10 @@ class ComboboxAutocomplete {
       prev.setAttribute('aria-selected', false)
     }
     const selected = this.list.querySelector(`[data-value="${value}"]`)
-    selected.classList.add('selected-option')
-    selected.setAttribute('aria-selected', true)
+    if (selected) {
+      selected.classList.add('selected-option')
+      selected.setAttribute('aria-selected', true)
+    }
     this.selection({value, label})
     this.textbox.value = label
   }
