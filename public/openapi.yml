@@ -202,6 +202,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
+        '400':
+          $ref: '#/components/responses/BadRequest'
 
   '/datasets/{doi}':
     get:
@@ -227,6 +229,8 @@ paths:
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
     put:
       summary: Update (overwrite) dataset metadata for DOI
       tags:
@@ -259,6 +263,8 @@ paths:
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
     patch:
       parameters:
         - $ref: '#/components/parameters/doi'
@@ -294,6 +300,8 @@ paths:
         '403':
           description: 'Your dataset cannot be updated now'
           $ref: '#/components/content/Error'
+        '400':
+          $ref: '#/components/responses/BadRequest'
 
   '/datasets/{doi}/download':
     get:
@@ -313,6 +321,8 @@ paths:
                 format: binary
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   '/datasets/{doi}/versions':
     get:
@@ -338,6 +348,8 @@ paths:
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   # --- versions uris ---
   '/versions/{id}':
@@ -368,6 +380,8 @@ paths:
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   '/versions/{id}/files':
     get:
@@ -393,6 +407,8 @@ paths:
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   '/versions/{id}/download':
     get:
@@ -438,6 +454,9 @@ paths:
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
     delete:
       security:
         - bearerAuth: []
@@ -464,6 +483,8 @@ paths:
         '403':
           description: This file must be part of an an in-progress version.
           $ref: '#/components/content/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   '/files/{id}/download':
     get:
@@ -481,11 +502,10 @@ paths:
               schema:
                 type: string
                 format: binary
-        '404':
-          description: 'Not found'
-          $ref: '#/components/content/Error'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   # --- upload a file in body with filename in url ---
   '/datasets/{doi}/files/{filename}':
@@ -523,6 +543,8 @@ paths:
                   $ref: api/v2/docs/examples/upload_file.json
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   '/datasets/{doi}/urls':
     post:
@@ -557,6 +579,8 @@ paths:
           $ref: '#/components/responses/Unacceptable'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   # --- internal ---
   '/processor_results/{id}':
@@ -581,6 +605,8 @@ paths:
         '401':
           description: unauthorized
           $ref: '#/components/content/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
     put:
       security:
         - bearerAuth: [ ]
@@ -602,6 +628,8 @@ paths:
         '401':
           description: unauthorized
           $ref: '#/components/content/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   '/versions/{version_id}/processor_results':
     get:
@@ -625,6 +653,9 @@ paths:
         '401':
           description: unauthorized
           $ref: '#/components/content/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
     post:
       security:
         - bearerAuth: [ ]
@@ -646,6 +677,8 @@ paths:
         '401':
           description: unauthorized
           $ref: '#/components/content/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   '/datasets/{doi}/related_works/{related_doi}':
     put:
@@ -676,6 +709,8 @@ paths:
         '401':
           description: unauthorized
           $ref: '#/components/content/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   # --- reports ---
   /reports:
@@ -824,8 +859,12 @@ components:
       description: "406 - unacceptable: please set your `Content-Type` or `Accept` headers for application/json. `Accept` header is optional if you are using `Content-Type: application/json`."
       $ref: '#/components/content/Error'
 
+    BadRequest:
+      description: "400 - Bad Request"
+      $ref: '#/components/content/Error'
+
     NotFound:
-      description: 'not-found'
+      description: 'Not Found'
       $ref: '#/components/content/Error'
 
     Unauthorized:
@@ -840,16 +879,13 @@ components:
       $ref: '#/components/content/Error'
 
   content:
-
     Error:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
 
-
   schemas:
-
     # --- root ---
     root:
       type: object
