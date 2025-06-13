@@ -36,7 +36,8 @@ module Reports
             end
             next if sponsor_summary.blank?
 
-            write_sponsor_summary(name: org.name, file_prefix: prefix, report_period: time_period, table: sponsor_summary, payment_plan: @payment_plan)
+            write_sponsor_summary(name: org.name, file_prefix: prefix, report_period: time_period, table: sponsor_summary,
+                                  payment_plan: @payment_plan)
             sponsor_summary     = []
             sponsor_total_count = 0
           end
