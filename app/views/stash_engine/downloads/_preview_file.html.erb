@@ -1,5 +1,5 @@
 <div class="file_preview preview_<%= @file.preview_type %>" role="region" tabindex="0" aria-labelledby="preview_file_name">
-<p role="heading" level="3" id="preview_file_name"><span>Preview: <%= @file.upload_file_name %></span><button class="o-button__plain-text7" aria-label="Close preview" onclick="close_preview()"><i class="fas fa-times" aria-hidden="true"></i></button></p>
+<p role="heading" level="3" id="preview_file_name"><span>Preview: <%= @file.download_filename %></span><button class="o-button__plain-text7" aria-label="Close preview" onclick="close_preview()"><i class="fas fa-times" aria-hidden="true"></i></button></p>
 <% if @preview %>
   <% case @file.preview_type %>
   <% when 'pdf' %>
@@ -26,7 +26,7 @@
       </tbody>
     </table>
   <% when 'txt' %>
-    <% if @file.upload_file_name.end_with?('.md') %>
+    <% if @file.download_filename.end_with?('.md') %>
       <div class="preview_markdown"><%= markdown_render @preview %></div>
     <% else %>
       <pre><%= @preview %></pre>

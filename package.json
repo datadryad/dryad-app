@@ -114,6 +114,7 @@
     "style-loader": "^3.3.3",
     "terser-webpack-plugin": "5",
     "truncate-utf8-bytes": "^1.0.2",
+    "uuid": "^11.1.0",
     "webpack": "5",
     "webpack-assets-manifest": "5",
     "webpack-cli": "5",

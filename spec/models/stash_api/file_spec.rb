@@ -34,7 +34,7 @@ module StashApi
 
     describe :file_display do
       it 'has correct path' do
-        expect(@metadata[:path]).to eq(@data_file.upload_file_name)
+        expect(@metadata[:path]).to eq(@data_file.download_filename)
       end
 
       it 'has correct size' do

@@ -6,7 +6,7 @@ const filterForStatus = (status, files) => {
   const fns = files.map((file) => {
     if (!Object.prototype.hasOwnProperty.call(file, 'frictionless_report')) return null;
 
-    if (file.frictionless_report?.status === status) return file.upload_file_name;
+    if (file.frictionless_report?.status === status) return file.download_filename;
 
     return null;
   });
