@@ -22,16 +22,6 @@ function ImportCheck({importType, jTitle, setDisable}) {
   }, [importType, values, jTitle]);
 }
 
-function ManNumPrefix({journal, msid}) {
-  const {setFieldValue} = useFormikContext();
-
-  useEffect(() => {
-    const regex = new RegExp(journal?.manuscript_number_regex);
-    const [, prefix] = journal?.manuscript_number_regex?.match(/\(([a-z]+[-_]*)/i) || [];
-    if (!regex.test(msid)) setFieldValue('msid', prefix || '');
-  }, [journal?.manuscript_number_regex]);
-}
-
 function PublicationForm({
   resource, setResource, setSponsored, importType,
 }) {
@@ -40,6 +30,7 @@ function PublicationForm({
   const {publication_name, publication_issn, manuscript_number} = importType === 'preprint' ? res_pre : res_pub;
   const primary_article = resource.related_identifiers.find((r) => r.work_type === (importType === 'preprint' ? 'preprint' : 'primary_article'));
   const [importError, setImportError] = useState('');
+  const [prefix, setPrefix] = useState('');
   const [jTitle, setJTitle] = useState(publication_name);
   const [issn, setISSN] = useState(publication_issn);
   const [apiJournal, setAPIJournal] = useState(false);
@@ -57,6 +48,11 @@ function PublicationForm({
     setHide(importType === 'manuscript' && apiJournal);
     setImportError(importType === 'manuscript' && apiJournal ? apiError : '');
   }, [importType, apiJournal]);
+
+  useEffect(() => {
+    const [, pref] = resource?.journal?.manuscript_number_regex?.match(/\(([a-z]+[-_]*)/i) || [];
+    setPrefix(pref || '');
+  }, [resource?.journal?.manuscript_number_regex]);
 
   const submitForm = (values) => {
     showSavingMsg();
@@ -135,7 +131,6 @@ function PublicationForm({
       {(formik) => (
         <Form style={{margin: '1em auto'}}>
           <ImportCheck importType={importType} jTitle={jTitle} setDisable={setDisable} />
-          <ManNumPrefix journal={resource.journal} msid={manuscript_number} />
           <Field name="isImport" type="hidden" />
           <div className="callout alt">
             <p><i className="fas fa-file-import" /> Enter your publication information to import the title and other metadata</p>
@@ -204,6 +199,7 @@ function PublicationForm({
                   }}
                   aria-describedby="man-ex"
                   aria-errormessage="msid_error"
+                  placeholder={prefix}
                   required
                 />
                 <div id="man-ex"><i aria-hidden="true" />APPS-D-17-00113</div>
