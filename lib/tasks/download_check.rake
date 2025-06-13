@@ -49,7 +49,7 @@ namespace :download_check do
 
           next unless res.current_resource_state.resource_state == 'submitted'
 
-          d_files = res.data_files.newly_created
+          d_files = res.data_files.newly_created.without_deleted_files
           d_files.each do |df|
             s3_check = Tasks::DownloadCheck::S3Check.new(file: df)
             s3_chk = s3_check.check_file
