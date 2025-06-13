@@ -191,5 +191,24 @@ module StashEngine
         end
       end
     end
+
+    describe 'scopes' do
+      describe 'without_deleted_files' do
+        let!(:file) { create(:generic_file, file_deleted_at: nil) }
+        let!(:deleted_file) { create(:generic_file, file_deleted_at: Time.current) }
+
+        context 'without scope' do
+          it 'returns all files' do
+            expect(StashEngine::GenericFile.all.ids).to contain_exactly(file.id, deleted_file.id)
+          end
+        end
+
+        context 'without scope applied' do
+          it 'returns undeleted files only' do
+            expect(StashEngine::GenericFile.without_deleted_files.ids).to contain_exactly(file.id)
+          end
+        end
+      end
+    end
   end
 end
