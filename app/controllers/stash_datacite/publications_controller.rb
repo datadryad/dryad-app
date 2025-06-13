@@ -28,17 +28,18 @@ module StashDatacite
               descriptions: @resource.descriptions,
               subjects: @resource.subjects,
               contributors: @resource.contributors,
-              resource_preprint: @resource.resource_preprint,
-              resource_publication: @resource.resource_publication
+              resource_preprint: @resource.resource_preprint
             }
             render json: {
               error: @error,
               journal: @resource.journal,
+              resource_publication: @resource.resource_publication,
               related_identifiers: @resource.related_identifiers,
               import_data: @error ? false : import_data
             }
           else
-            render json: { error: @error, journal: @resource.journal, related_identifiers: @resource.related_identifiers, import_data: false }
+            render json: { error: @error, journal: @resource.journal, import_data: false, resource_publication: @resource.resource_publication,
+                           related_identifiers: @resource.related_identifiers }
           end
         end
       end
@@ -62,6 +63,18 @@ module StashDatacite
         end
         render json: bubble_up_exact_matches(result_list: matches.uniq { |j| j[:id] }, term: partial_term)
       end
+    end
+
+    # GET /publications/automsid?term={query_term}
+    def automsid
+      partial_term = params[:term]
+      render json: nil and return if partial_term.blank?
+
+      # clean the partial_term of unwanted characters so it doesn't cause errors
+      partial_term.gsub!(/~!@%&"/, '')
+      found = StashEngine::Manuscript.where(journal_id: params[:jid]).where('manuscript_number like ?', "%#{partial_term}%").limit(40).to_a
+      matches = found.map { |m| { id: m.manuscript_number, title: m.metadata['ms title'], authors: m.metadata['ms authors'].take(3) } }
+      render json: matches
     end
 
     # GET /publications/api_list
