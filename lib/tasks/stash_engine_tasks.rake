@@ -198,6 +198,9 @@ namespace :identifiers do
               perm_bucket.delete_dir(s3_key: "v3/#{s3_dir}")
             end
 
+            # mark all files as deleted
+            r.generic_files.update(file_deleted_at: Time.current)
+
             # Important! Retain the metadata for this dataset, so curators can determine what happened to it
           end
         end

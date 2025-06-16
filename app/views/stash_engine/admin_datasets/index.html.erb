@@ -78,7 +78,7 @@
         <span class="input-line" style="column-gap: .5ch">
           <b>Payment:</b>
           <span id="payment_desc">            
-            <% pr = @identifier.resources.by_version_desc.find {|r| r.payment} %>
+            <% pr = @identifier.resources.by_version_desc.includes(:payment).find {|r| r.payment} %>
             <% if pr&.payment %>$<%= pr.payment.amount %><% end %>
             <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
               <%= pr&.payment&.status.present? ? "bill #{pr&.payment&.status}" : 'Unknown' %>
@@ -107,7 +107,7 @@
       </span>
       <div class="input-stack child-details">
         <span><b>First:</b> <span id="dataset_first_published_<%= @identifier.id %>"><%= formatted_date(@identifier.date_first_published) %></span></span>
-        <span><b>Latest:</b> <span id="dataset_published_<%= @identifier.id %>"><%= formatted_date(@identifier.date_last_published) %></span>
+        <span><b>Latest:</b> <span id="dataset_published_<%= @identifier.id %>"><%= formatted_date(@identifier.date_last_published) %></span></span>
       </div>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
