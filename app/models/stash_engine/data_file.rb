@@ -222,6 +222,7 @@ module StashEngine
 
     # check if file may be previewed
     def preview_type
+      return nil if file_deleted_at
       return nil if upload_file_name == 'README.md'
 
       return 'csv' if upload_file_name.end_with?('.csv', '.tsv') ||
