@@ -568,6 +568,10 @@ GEM
       tilt
     recaptcha (5.19.0)
     redcarpet (3.6.0)
+    redis (5.4.0)
+      redis-client (>= 0.22.0)
+    redis-client (0.24.0)
+      connection_pool
     regexp_parser (2.9.2)
     reline (0.6.0)
       io-console (~> 0.5)
@@ -861,6 +865,7 @@ DEPENDENCIES
   react-rails (~> 2.6.2)
   recaptcha (~> 5.19)
   redcarpet (~> 3.6)
+  redis (~> 5.4)
   responders (~> 3.0.1)
   rest-client (~> 2.1.0)
   restforce (~> 8.0.0)
