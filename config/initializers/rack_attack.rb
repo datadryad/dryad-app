@@ -2,6 +2,10 @@
 # Rack-Attack configuration for rate limiting
 ###############################################
 
+# Cache config
+# ------------------
+Rack::Attack.cache.store = Redis.new(url: APP_CONFIG[:cache][:rack_attack_url])
+
 # Exemptions
 # ------------------
 

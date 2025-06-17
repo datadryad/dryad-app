@@ -270,6 +270,9 @@ defaults: &DEFAULTS
     - ["b7f291ea-d548-43dc-8685-dc74e73892a5", "EEB",  "Ecology and Evolutionary Biology"]
     - ["ea716306-5263-4f7a-9155-b7958f566933", "NCBI-MIAIRR", "MiAIRR V1.1.0"]
     - ["dc3fa214-88f4-49dd-b56b-f4552b2d3474", "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
+  cache:
+    app_url: 'redis://localhost:6382/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 dev: &DEV
   <<: *DEFAULTS
@@ -300,6 +303,9 @@ dev: &DEV
     dpc_change_date: 2022-12-14
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
+  cache:
+    app_url: 'redis://localhost:6382/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 development:
   <<: *DEV
@@ -335,6 +341,9 @@ stage:
     merritt_bucket: dryad-assetstore-merritt-stage
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+  cache:
+    app_url: 'redis://localhost:6382/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 production:
   <<: *DEFAULTS
@@ -415,5 +424,8 @@ production:
     sandbox: false
   cedar_templates:
     - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
+  cache:
+    app_url: 'redis://localhost:6382/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 <% end %>
