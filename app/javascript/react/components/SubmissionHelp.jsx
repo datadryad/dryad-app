@@ -36,7 +36,7 @@ export default function SubmissionHelp({type}) {
 export function PublicationHelp() {
   return (
     <>
-      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/requirements#cost" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
       <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some journals.</p>
     </>
   );
@@ -80,7 +80,7 @@ export function SuppHelp({type}) {
   return (
     <>
       <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can help connect your data with other systems and works.</p>
-      <p>Your funder may cover the Dryad <a href="/requirements#cost" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      <p>Your funder may cover the Dryad <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
     </>
   );
 }
