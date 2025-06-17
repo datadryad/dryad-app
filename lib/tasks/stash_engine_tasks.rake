@@ -131,7 +131,7 @@ namespace :identifiers do
     end
   end
 
-  # example: RAILS_ENV=production bundle exec rails identifiers:remove_abandoned_datasets -- --dry_run true
+  # example: RAILS_ENV=production bundle exec rake identifiers:remove_abandoned_datasets -- --dry_run true
   desc 'remove abandoned, unpublished datasets that will never be published'
   task remove_abandoned_datasets: :environment do
     args = Tasks::ArgsParser.parse :dry_run
@@ -206,7 +206,7 @@ namespace :identifiers do
     exit
   end
 
-  # example: RAILS_ENV=production bundle exec rails identifiers:remove_old_versions -- --dry_run true
+  # example: RAILS_ENV=production bundle exec rake identifiers:remove_old_versions -- --dry_run true
   desc 'clean up in_progress versions and temporary files that are disconnected from datasets'
   task remove_old_versions: :environment do
     # This task cleans up garbage versions of datasets, which may have been abandoned, but they may also have been accidentally created
@@ -691,7 +691,7 @@ namespace :identifiers do
     end
   end
 
-  # example: RAILS_ENV=production bundle exec rails identifiers:shopping_cart_report -- --year_month 2024-05
+  # example: RAILS_ENV=production bundle exec rake identifiers:shopping_cart_report -- --year_month 2024-05
   desc 'Generate a report of items that have been published in a given month'
   task shopping_cart_report: :environment do
     args = Tasks::ArgsParser.parse(:year_month)
@@ -732,7 +732,7 @@ namespace :identifiers do
     exit
   end
 
-  # example: RAILS_ENV=production bundle exec rails identifiers:deferred_journal_reports -- --sc_report /path/to/file
+  # example: RAILS_ENV=production bundle exec rake identifiers:deferred_journal_reports -- --sc_report /path/to/file
   desc 'Generate reports of items that should be billed for deferred journals'
   task deferred_journal_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report)
@@ -764,7 +764,8 @@ namespace :identifiers do
       sponsor_summary = []
       StashEngine::Journal.where(payment_plan_type: 'DEFERRED').order(:sponsor_id, :title).each do |j|
         if j.sponsor&.name != curr_sponsor
-          write_deferred_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
+          Reports::Payments::Base.new.write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period,
+                                                            table: sponsor_summary, payment_plan: 'deferred')
           sponsor_summary = []
           curr_sponsor = j.sponsor&.name
         end
@@ -777,14 +778,47 @@ namespace :identifiers do
         end
         csv << [j.sponsor&.name, j.title, journal_item_count]
       end
-      write_deferred_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary)
+      Reports::Payments::Base.new.write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period, table: sponsor_summary,
+                                                        payment_plan: 'deferred')
     end
 
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
     exit
   end
 
-  # example: RAILS_ENV=production bundle exec rails identifiers:tiered_journal_reports -- --base_report /path/to/base_report --sc_report /path/to/file
+  # example: RAILS_ENV=production bundle exec rake identifiers:journal_2025_reports -- --sc_report /path/to/file
+  desc 'Generate reports of items that should be billed for tiered journals'
+  task journal_2025_fee_reports: :environment do
+    args = Tasks::ArgsParser.parse(:sc_report)
+    # Get the input shopping cart report in --base_report and --sc_report arguments.
+    if args.sc_report.blank?
+      log 'Usage: journal_2025_fee_reports -- --base_report <shopping_cart_base_filename>'
+      exit
+    end
+
+    Reports::Payments::Journal2025Fees.new.call(args)
+
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
+  # example: RAILS_ENV=production bundle exec rake identifiers:tenant_2025_fee_reports -- --sc_report /path/to/file
+  desc 'Generate reports of items that should be billed for tiered journals'
+  task tenant_2025_fee_reports: :environment do
+    args = Tasks::ArgsParser.parse(:sc_report)
+    # Get the input shopping cart report in --base_report and --sc_report arguments.
+    if args.sc_report.blank?
+      log 'Usage: tenant_2025_fee_reports -- --base_report <shopping_cart_base_filename>'
+      exit
+    end
+
+    Reports::Payments::Tenant2025Fees.new.call(args)
+
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
+  # example: RAILS_ENV=production bundle exec rake identifiers:tiered_journal_reports -- --base_report /path/to/base_report --sc_report /path/to/file
   desc 'Generate reports of items that should be billed for tiered journals'
   task tiered_journal_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report, :base_report)
@@ -837,8 +871,8 @@ namespace :identifiers do
 
         base = base_values[org.name] || 0
         csv << [org.name, 'TOTAL', sponsor_total_count, tiered_price(sponsor_total_count, base)]
-        write_tiered_sponsor_summary(name: org.name, file_prefix: prefix, report_period: time_period,
-                                     table: sponsor_summary)
+        Reports::Payments::Base.new.write_sponsor_summary(name: org.name, file_prefix: prefix, report_period: time_period,
+                                                          table: sponsor_summary, payment_plan: 'tiered')
         sponsor_summary = []
         sponsor_total_count = 0
       end
@@ -895,94 +929,7 @@ namespace :identifiers do
     "$#{current_count * base_price}"
   end
 
-  # Write a PDF that Dryad can send to the sponsor, summarizing the datasets published
-  # rubocop:disable Metrics/MethodLength
-  def write_deferred_sponsor_summary(name:, file_prefix:, report_period:, table:)
-    return if name.blank? || table.blank?
-
-    filename = "#{file_prefix}deferred_submissions_#{StashEngine::GenericFile.sanitize_file_name(name)}_#{report_period}.pdf"
-    log "Writing sponsor summary to #{filename}"
-    table_content = ''
-    table.each do |row|
-      table_content << "<tr><td>#{row[0]}</td><td>#{row[1]}</td><td>#{row[2]}</td></tr>"
-    end
-    html_content = <<-HTMLEND
-      <head><style>
-      tr:nth-child(even) {
-          background-color: #f2f2f2;
-      }
-      th {
-          background-color: #005581;
-          color: white;
-          text-align: left;
-          padding: 10px;
-      }
-      td {
-          padding: 10px;
-      }
-      </style></head>
-      <h1>#{name}</h1>
-      <p>Dryad submissions accepted under a deferred payment plan.<br/>
-      Reporting period: #{report_period}<br/>
-      Report generated on: #{Date.today}</p>
-      <table>
-       <tr><th width="25%">DOI</th>
-           <th width="55%">Journal Name</th>
-           <th width="20%">Approval Date</th></tr>
-       #{table_content}
-      </table>
-    HTMLEND
-
-    pdf = Grover.new(html_content).to_pdf
-    File.open(filename, 'wb') do |file|
-      file << pdf
-    end
-  end
-
-  def write_tiered_sponsor_summary(name:, file_prefix:, report_period:, table:)
-    return if name.blank? || table.blank?
-
-    filename = "#{file_prefix}tiered_submissions_#{StashEngine::GenericFile.sanitize_file_name(name)}_#{report_period}.pdf"
-    log "Writing sponsor summary to #{filename}"
-    table_content = ''
-    table.each do |row|
-      table_content << "<tr><td>#{row[0]}</td><td>#{row[1]}</td><td>#{row[2]}</td></tr>"
-    end
-    html_content = <<-HTMLEND
-      <head><style>
-      tr:nth-child(even) {
-          background-color: #f2f2f2;
-      }
-      th {
-          background-color: #005581;
-          color: white;
-          text-align: left;
-          padding: 10px;
-      }
-      td {
-          padding: 10px;
-      }
-      </style></head>
-      <h1>#{name}</h1>
-      <p>Dryad submissions accepted under a tiered payment plan.<br/>
-      Reporting period: #{report_period}<br/>
-      Report generated on: #{Date.today}</p>
-      <table>
-       <tr><th width="25%">DOI</th>
-           <th width="55%">Journal Name</th>
-           <th width="20%">Approval Date</th></tr>
-       #{table_content}
-      </table>
-    HTMLEND
-
-    pdf = Grover.new(html_content).to_pdf
-    File.open(filename, 'wb') do |file|
-      file << pdf
-    end
-  end
-  # rubocop:enable Metrics/MethodLength
-
-  # example: RAILS_ENV=production bundle exec rails identifiers:tiered_tenant_reports -- --base_report /path/to/base_report --sc_report /path/to/file
+  # example: RAILS_ENV=production bundle exec rake identifiers:tiered_tenant_reports -- --base_report /path/to/base_report --sc_report /path/to/file
   desc 'Generate reports of items that should be billed for tiered tenant institutions'
   task tiered_tenant_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report, :base_report)
@@ -1035,8 +982,8 @@ namespace :identifiers do
 
         base = base_values[tenant.short_name] || 0
         csv << [tenant.short_name, 'TOTAL', sponsor_total_count, tiered_price(sponsor_total_count, base)]
-        write_tiered_sponsor_summary(name: tenant.short_name, file_prefix: prefix, report_period: time_period,
-                                     table: sponsor_summary)
+        Reports::Payments::Base.new.write_sponsor_summary(name: tenant.short_name, file_prefix: prefix, report_period: time_period,
+                                                          table: sponsor_summary, payment_plan: 'tiered')
         sponsor_summary = []
         sponsor_total_count = 0
       end
@@ -1070,7 +1017,7 @@ namespace :identifiers do
     base_values
   end
 
-  # example: RAILS_ENV=production bundle exec rails identifiers:geographic_authors_report -- --year_month 2024-05
+  # example: RAILS_ENV=production bundle exec rake identifiers:geographic_authors_report -- --year_month 2024-05
   desc 'Generate a report of Dryad authors and their countries'
   task geographic_authors_report: :environment do
     args = Tasks::ArgsParser.parse(:year_month)
@@ -1106,7 +1053,7 @@ namespace :identifiers do
     exit
   end
 
-  # example: RAILS_ENV=production bundle exec rails identifiers:dataset_info_report -- --year_month 2024-05
+  # example: RAILS_ENV=production bundle exec rake identifiers:dataset_info_report -- --year_month 2024-05
   desc 'Generate a summary report of all items in Dryad'
   task dataset_info_report: :environment do
     args = Tasks::ArgsParser.parse(:year_month)
@@ -1427,7 +1374,7 @@ namespace :journals do
     nil
   end
 
-  # example: RAILS_ENV=production bundle exec rails journals:check_salesforce_sync -- --dry_run true
+  # example: RAILS_ENV=production bundle exec rake journals:check_salesforce_sync -- --dry_run true
   desc 'Compare journal differences between Dryad and Salesforce'
   task check_salesforce_sync: :environment do
     args = Tasks::ArgsParser.parse(:dry_run)
