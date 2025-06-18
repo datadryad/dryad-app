@@ -40,8 +40,6 @@ module Dash2
     config.active_record.default_timezone = :utc
     config.active_support.to_time_preserves_timezone = :zone
 
-    config.active_job.queue_adapter = :delayed_job
-
     # Do not compare the origin of HTTP requests with the current state of the request.
     # Our Apache config changes HTTPS to HTTP when contacting Passenger, so the origin
     # will not be the same.
