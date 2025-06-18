@@ -1,0 +1,13 @@
+---
+:concurrency: 5
+staging:
+  :concurrency: 10
+production:
+  :concurrency: 10
+:queues:
+  - zenodo_software
+  - zenodo_supp
+  - zenodo_copy
+  - critical
+  - default
+  - low
