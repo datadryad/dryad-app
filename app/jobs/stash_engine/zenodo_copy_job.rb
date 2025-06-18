@@ -1,8 +1,9 @@
 require 'stash/zenodo_replicate'
 
 module StashEngine
-  class ZenodoCopyJob < ApplicationJob
-    queue_as :zenodo_copy
+  class ZenodoCopyJob
+    include Sidekiq::Worker
+    sidekiq_options queue: :zenodo_copy, retry: false
 
     DEFERRED_TOUCH_FILE = Rails.root.join('..', 'defer_jobs.txt').to_s
 
@@ -39,7 +40,7 @@ module StashEngine
     def self.enqueue_deferred
       StashEngine::ZenodoCopy.data.where(state: 'deferred').each do |zc|
         zc.update(state: 'enqueued')
-        perform_later(zc.resource_id)
+        perform_async(zc.resource_id)
       end
     end
   end

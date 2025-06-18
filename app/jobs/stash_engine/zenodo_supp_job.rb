@@ -1,8 +1,9 @@
 require 'stash/zenodo_software'
 
 module StashEngine
-  class ZenodoSuppJob < ApplicationJob
-    queue_as :zenodo_supp
+  class ZenodoSuppJob
+    include Sidekiq::Worker
+    sidekiq_options queue: :zenodo_supp, retry: false
 
     attr_accessor :job_entry
 
@@ -27,7 +28,7 @@ module StashEngine
     def self.enqueue_deferred
       StashEngine::ZenodoCopy.supp.where(state: 'deferred').each do |zc|
         zc.update(state: 'enqueued')
-        perform_later(zc.id)
+        perform_async(zc.id)
       end
     end
   end
