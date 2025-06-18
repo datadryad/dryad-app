@@ -173,6 +173,7 @@ end
 
 gem 'acts_as_paranoid', '~> 0.10.3'
 gem 'aws-sdk-sns'
+gem 'mock_redis', '~> 0.50.0'
 gem 'paper_trail', '~> 16.0'
 gem 'redis', '~> 5.4'
 gem 'sidekiq'

@@ -416,6 +416,8 @@ GEM
     mize (0.6.0)
     mocha (2.7.1)
       ruby2_keywords (>= 0.0.5)
+    mock_redis (0.50.0)
+      redis (~> 5)
     msgpack (1.7.3)
     multi_json (1.15.0)
     multi_xml (0.7.1)
@@ -842,6 +844,7 @@ DEPENDENCIES
   loofah (~> 2.24.0)
   mail (~> 2.8)
   mocha
+  mock_redis (~> 0.50.0)
   mysql2 (~> 0.5.6)
   net-ftp (~> 0.3.4)
   net-sftp

@@ -127,7 +127,7 @@ namespace :dev_ops do
     StashEngine::ZenodoCopy.where('retries < 4').where(state: 'error').order(:resource_id).each do |zc|
       puts "Adding resource_id: #{zc.resource_id}"
       zc.update(state: 'enqueued')
-      StashEngine::ZenodoCopyJob.perform_later(zc.resource_id)
+      StashEngine::ZenodoCopyJob.perform_async(zc.resource_id)
     end
   end
 
