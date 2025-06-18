@@ -15,7 +15,6 @@ module StashEngine
     end
 
     describe '#perform' do
-
       it 'calls to add to zenodo' do
         zc = create(:zenodo_copy, state: 'enqueued', copy_type: 'software', identifier_id: @resource.identifier_id, resource_id: @resource.id)
         expect(@new_zen).to receive(:add_to_zenodo)
@@ -46,20 +45,16 @@ module StashEngine
     end
 
     describe 'self.enqueue_deferred' do
-      include ActiveJob::TestHelper
+      after { Sidekiq::Worker.clear_all }
 
       it 're-enqueues the deferred items' do
         zc = create(:zenodo_copy, state: 'deferred', copy_type: 'software', identifier_id: @resource.identifier_id, resource_id: @resource.id)
         ZenodoSoftwareJob.enqueue_deferred
         @resource.reload
         expect(@resource.zenodo_copies.software.first.state).to eq('enqueued')
-        expect(enqueued_jobs).to match([a_hash_including(job: StashEngine::ZenodoSoftwareJob, args: [zc.id], queue: 'zenodo_software')])
-      end
-
-      after(:each) do
-        clear_enqueued_jobs
+        expect(StashEngine::ZenodoSoftwareJob.jobs.size).to eq(1)
+        expect(StashEngine::ZenodoSoftwareJob.jobs.first['args']).to eq([zc.id])
       end
     end
-
   end
 end
