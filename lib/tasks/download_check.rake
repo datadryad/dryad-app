@@ -56,7 +56,7 @@ namespace :download_check do
             next if s3_chk.nil?
 
             csv << [se_id.id, se_id.identifier, res.id,
-                    df.id, df.upload_file_name, s3_check.mrt_version, df.upload_file_size,
+                    df.id, df.download_filename, s3_check.mrt_version, df.upload_file_size,
                     s3_chk[:before][0], s3_chk[:before][1],
                     s3_chk[:after][0], s3_chk[:after][1]]
           end

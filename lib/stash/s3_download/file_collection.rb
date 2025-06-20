@@ -34,7 +34,7 @@ module Stash
           status = @smdf.download_file(db_file: f)
           raise Stash::S3Download::DownloadError, "Download: #{status[:error]}\nfile.id #{f.id}" unless status[:success]
 
-          @info_hash[f.upload_file_name] = status
+          @info_hash[f.download_filename] = status
         end
       end
 

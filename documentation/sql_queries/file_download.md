@@ -33,7 +33,7 @@ FROM stash_engine_resources res
     JOIN stash_engine_identifiers ids
         ON res.identifier_id = ids.id
 WHERE res.identifier_id = 27114 AND
-      gf.upload_file_name = 'kinesis & standard errors (by species).csv';
+      gf.download_filename = 'kinesis & standard errors (by species).csv';
 ```
 
 To examine the files in S3, you can look in the web console and brows to the correct bucket and path.

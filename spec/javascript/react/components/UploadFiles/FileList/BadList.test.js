@@ -6,7 +6,7 @@ describe('BadList', () => {
   it("displays if couldn't read a file", () => {
     const testBad = [
       {
-        upload_file_name: 'cat.csv',
+        download_filename: 'cat.csv',
         frictionless_report: {
           status: 'error',
         },
@@ -23,7 +23,7 @@ describe('BadList', () => {
   it('displays issues if they are present', () => {
     const testIssue = [
       {
-        upload_file_name: 'simon.csv',
+        download_filename: 'simon.csv',
         frictionless_report: {
           status: 'issues',
         },
@@ -40,7 +40,7 @@ describe('BadList', () => {
   it("doesn't display anything if no frictionless on file", () => {
     const testFiles = [
       {
-        upload_file_name: 'cassandra.jpg',
+        download_filename: 'cassandra.jpg',
       },
     ];
 
@@ -54,7 +54,7 @@ describe('BadList', () => {
   it("doesn't display anything if frictionless passed", () => {
     const testFiles = [
       {
-        upload_file_name: 'awesome.csv',
+        download_filename: 'awesome.csv',
         frictionless_report: {
           status: 'noissues',
         },

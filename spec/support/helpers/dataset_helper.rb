@@ -216,7 +216,7 @@ module DatasetHelper
   end
 
   def expect_new_entry_to_have(fu)
-    expect(fu.upload_file_name).to eq('funbar.txt')
+    expect(fu.download_filename).to eq('funbar.txt')
     expect(fu.upload_content_type).to eq('text/plain')
     expect(fu.upload_file_size).to eq(37_221)
   end

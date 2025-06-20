@@ -190,7 +190,7 @@ module StashEngine
         translator = Stash::UrlTranslator.new('http://ftp.datadryad.org/InCuration/test-sfisher/My%20cAT%20hAS%20FlEaS.jpg')
         result = url_validator.upload_attributes_from(translator: translator, resource: resource, association: 'data_files')
 
-        expect(result[:upload_file_name]).to eq('My_cAT_hAS_FlEaS.jpg')
+        expect(result[:download_filename]).to eq('My_cAT_hAS_FlEaS.jpg')
         expect(result[:original_filename]).to eq('My cAT hAS FlEaS.jpg')
       end
 
@@ -205,7 +205,7 @@ module StashEngine
         resource = create(:resource)
         result = url_validator.upload_attributes_from(translator: translator, resource: resource, association: 'data_files')
 
-        expect(result[:upload_file_name]).to eq('sample_dataset.json')
+        expect(result[:download_filename]).to eq('sample_dataset.json')
         expect(result[:original_filename]).to eq('sample_dataset.json')
         expect(result[:url]).to eq(translated_url)
         expect(result[:original_url]).to eq(file_url)
