@@ -10,11 +10,12 @@ const fileList = (list, previous) => {
     <>
       <ul className="c-review-files__list">
         {list.map((f) => {
-          const isNew = f.file_state === 'created' || !previous.some((p) => p.upload_file_name === f.upload_file_name && p.digest === f.digest);
+          const isNew = previous
+            && (f.file_state === 'created' || !previous.some((p) => p.upload_file_name === f.upload_file_name && p.digest === f.digest));
           const listing = <>{f.upload_file_name} <span className="file_size">{formatSizeUnits(f.upload_file_size)}</span></>;
           return (
             <li key={f.id}>
-              {previous && isNew ? <ins>{listing}</ins> : listing}
+              {isNew ? <ins>{listing}</ins> : listing}
             </li>
           );
         })}
