@@ -104,6 +104,8 @@ The annual fee for institutions is based on annual research expenditure.
 </div>
 </div>
 
+For campus-based publishers where both the library and the press are Dryad partners, we levy a single Annual Service Fee paid by the institution based on research expenditure. Each entity is responsible for the Data Publishing Charges for their respective authors.
+
 To promote transparency and equity among our partners Dryad does not offer individual discounts. However, to support growth and development, especially of new data-sharing programs, we offer tiered pricing for three-year agreements, as follows. Three-year agreements are exempt from annual inflationary increases.
 
 <div style="text-align: center;">
@@ -158,6 +160,52 @@ Annual Service Fees for institutions based in lower- and middle-income countries
   </table>
 </div>
 </div>
+
+### Consortium offers
+
+Our consortial fee structures reflect the reduction in administrative burden and recruitment benefit that consortia can provide. Annual Service Fees are discounted to reflect that savings and benefit, and scale with the number of participating institutions.
+
+
+<div style="text-align: center;">
+<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+  <table style="width: 100%;">
+    <caption>
+      All fees are listed in USD
+    </caption>
+    <thead>
+      <tr class="callout">
+        <th colspan="2" scope="row" style="text-align: right;">Number of participating institutions</th>
+        <td>5-10</td><td>11-25</td><td>26+</td>
+      </tr>
+      <tr class="callout alt">
+        <th colspan="2" scope="row" style="text-align: right;">Discount</th>
+        <td>10%</td><td>15%</td><td>20%</td>
+      </tr>
+      <tr>
+        <th scope="col">Service tier</th>
+        <th scope="col">Base fee</th>
+        <th colspan="3" scope="col">Discounted Annual Service Fee</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>$5,000</td><td>$4,500</td><td>$4,250</td><td>$4,000</td></tr>
+      <tr><td>2</td><td>$10,000</td><td>$9,000</td><td>$8,500</td><td>$8,000</td></tr>
+      <tr><td>3</td><td>$20,000</td><td>$18,000</td><td>$17,000</td><td>$16,000</td></tr>
+      <tr><td>4</td><td>$30,000</td><td>$27,000</td><td>$25,500</td><td>$24,000</td></tr>
+      <tr><td>5</td><td>$40,000</td><td>$36,000</td><td>$34,000</td><td>$32,000</td></tr>
+      <tr><td>6</td><td>$50,000</td><td>$45,000</td><td>$42,500</td><td>$40,000</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+
+Discounts are dependent on centralized billing arranged by the consortium. Separate Data Publication Charges and Large Data Fees (optional) apply, and are also billed to the consortium.
+
+Consortium discounts are applied after pro-ration for institutions joining part-way through the year, and after any applicable multi-year discounting.
+
+Colleagues interested in a consortium-level partnership are invited to please contact partnerships@datadryad.org
+
 
 ## Total fees
 
