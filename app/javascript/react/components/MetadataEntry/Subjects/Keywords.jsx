@@ -71,6 +71,7 @@ function Keywords({resource, setResource}) {
             isRequired: false,
             saveOnEnter: true,
             errorId: 'subj_error',
+            desBy: 'keywords-ex',
           }
         }
       />

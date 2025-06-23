@@ -10,13 +10,9 @@ function SubjectSelect({
       </label>
       <div
         className="c-keywords__container"
-        role="listbox"
-        aria-labelledby={`label_${id}`}
-        aria-multiselectable="true"
-        aria-describedby={`${id}-ex`}
       >
         {selected.map((subj) => (
-          <span className="c-keywords__keyword" aria-selected="true" key={subj.id || subj}>
+          <span className="c-keywords__keyword" key={subj.id || subj}>
             {subj.subject || subj}
             <span className="delete_keyword">
               <button
@@ -34,6 +30,7 @@ function SubjectSelect({
         ))}
         {children}
       </div>
+      <div className="screen-reader-only" role="status">Selected: {selected.map((s) => s.subject || s).join(', ')}</div>
       {example}
     </div>
   );
