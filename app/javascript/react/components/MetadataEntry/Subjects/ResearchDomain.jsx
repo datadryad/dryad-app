@@ -40,7 +40,7 @@ function ResearchDomain({step, resource, setResource}) {
   };
 
   useEffect(() => {
-    const oldSelected = resource.subjects?.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)).map((s) => s.subject) || []
+    const oldSelected = resource.subjects?.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)).map((s) => s.subject) || [];
     if (xor(oldSelected, selected).length) {
       submit(selected);
     }
