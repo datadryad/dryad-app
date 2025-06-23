@@ -11,13 +11,13 @@ import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 export default function ReadMeWizard({resource, setResource, step}) {
   const [desc, setDesc] = useState(null);
   const [fileList, setFileList] = useState([]);
-  const [readmeFile, setFile] = useState(null);
+  const [readmeFile, setReadmeFile] = useState(null);
 
   const getFiles = async () => {
     axios.get(`/resources/${resource.id}/prepare_readme`).then((data) => {
       const {file_list, readme_file} = data.data;
       setFileList(file_list);
-      setFile(readme_file);
+      setReadmeFile(readme_file);
     });
   };
 
