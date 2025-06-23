@@ -11,6 +11,7 @@ Rack::Attack.safelist_ip('::1')
 Rack::Attack.safelist_ip('130.14.25.148') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.25') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.26') # NCBI LinkOut integrity checker
+Rack::Attack.safelist_ip('157.182.206.32') # WVU security checker
 
 def start_w_wo_stash?(path, path_match)
   path.start_with?(path_match, "/stash#{path_match}")
