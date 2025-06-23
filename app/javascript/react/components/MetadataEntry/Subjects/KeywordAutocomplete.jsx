@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import stringSimilarity from 'string-similarity';
 import PropTypes from 'prop-types';
@@ -17,7 +17,6 @@ export default function KeywordAutocomplete({
   const [prevText, setPrevText] = useState(name);
   const [prevID, setPrevID] = useState(id);
   const [autoBlurred, setAutoBlurred] = useState(false);
-  const nameRef = useRef(null);
 
   // do something when blurring from the autocomplete, passed up here, probably want to save on blur, but save
   // action may be different depending on autocomplete context inside another form or may save directly.
@@ -68,21 +67,17 @@ export default function KeywordAutocomplete({
   const idFunc = (item) => item.id;
 
   return (
-    <>
-      <Autocomplete
-        acText={acText || ''}
-        setAcText={setAcText}
-        acID={acID}
-        setAcID={setAcID}
-        setAutoBlurred={setAutoBlurred}
-        supplyLookupList={supplyLookupList}
-        nameFunc={nameFunc}
-        idFunc={idFunc}
-        controlOptions={controlOptions}
-      />
-      <input ref={nameRef} type="hidden" value={acText} className="js-affil-longname" name="author[affiliation][long_name]" />
-      <input type="hidden" value={acID} className="js-affil-id" name="author[affiliation][ror_id]" />
-    </>
+    <Autocomplete
+      acText={acText || ''}
+      setAcText={setAcText}
+      acID={acID}
+      setAcID={setAcID}
+      setAutoBlurred={setAutoBlurred}
+      supplyLookupList={supplyLookupList}
+      nameFunc={nameFunc}
+      idFunc={idFunc}
+      controlOptions={controlOptions}
+    />
   );
   /* eslint-enable react/jsx-no-bind */
 }

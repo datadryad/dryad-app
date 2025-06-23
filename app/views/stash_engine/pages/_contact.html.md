@@ -42,6 +42,7 @@ After your request is received, we will provide you with brief feedback about th
 417 Mace Blvd. , Ste J110<br>
 Davis, CA 95618<br>
 United States</p>
-<p>Jennifer Gibson, Executive Director: <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad Jennifer Gibson">gro.dayrdatad@nosbigj</a></p>
+<p>Jennifer Gibson, Executive Director: <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad Jennifer Gibson">gro.dayrdatad@rotcerid</a></p>
+<p>Accounting &amp; finance: <a class="emailr" href="mailto:dev@null" aria-label="Email Dryad Accounting">gro.dayrdatad@ecnanif</a></p>
 <br>
 <p style="font-size: .9em;">Dryad is a 501(c)(3) nonprofit corporation under the North Carolina Nonprofit Corporation Act, registered with the U.S. IRS, EIN number 46-1685419.</p>

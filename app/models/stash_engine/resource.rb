@@ -52,6 +52,7 @@ module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
+    has_paper_trail
 
     # ------------------------------------------------------------
     # Relations
@@ -64,7 +65,6 @@ module StashEngine
     has_many :data_files, class_name: 'StashEngine::DataFile', dependent: :destroy
     has_many :software_files, class_name: 'StashEngine::SoftwareFile', dependent: :destroy
     has_many :supp_files, class_name: 'StashEngine::SuppFile', dependent: :destroy
-    has_many :edit_histories, class_name: 'StashEngine::EditHistory'
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles, class_name: 'StashEngine::User'
     has_one :stash_version, class_name: 'StashEngine::Version', dependent: :destroy
@@ -101,13 +101,16 @@ module StashEngine
     has_one :resource_type, class_name: 'StashDatacite::ResourceType', dependent: :destroy
     has_many :rights, class_name: 'StashDatacite::Right', dependent: :destroy
     has_many :sizes, class_name: 'StashDatacite::Size', dependent: :destroy
-    has_and_belongs_to_many :subjects, class_name: 'StashDatacite::Subject', through: 'StashDatacite::ResourceSubject', dependent: :destroy
+
+    has_many :resources_subjects, class_name: 'StashDatacite::ResourcesSubjects'
+    has_many :subjects, class_name: 'StashDatacite::Subject', through: :resources_subjects
+
     has_many :alternate_identifiers, class_name: 'StashDatacite::AlternateIdentifier', dependent: :destroy
     has_many :formats, class_name: 'StashDatacite::Format', dependent: :destroy
     has_many :processor_results, class_name: 'StashEngine::ProcessorResult', dependent: :destroy
     has_many :journal_issns, through: :resource_publications
     has_many :journals, through: :journal_issns
-    has_one :manuscript, through: :resource_publication
+    has_many :manuscripts, through: :resource_publication
     has_one :journal_issn, through: :resource_publication
     has_one :journal, through: :journal_issn
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
@@ -131,7 +134,7 @@ module StashEngine
 
     amoeba do
       include_association %i[authors generic_files contributors datacite_dates descriptions geolocations temporal_coverages publication_years
-                             publisher related_identifiers resource_type rights flag sizes subjects resource_publications roles]
+                             publisher related_identifiers resource_type rights flag sizes resources_subjects resource_publications roles]
       customize(->(_, new_resource) {
         # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
         new_resource.current_resource_state_id = nil
@@ -668,6 +671,10 @@ module StashEngine
 
     def previous_resource_published?
       %w[published embargoed].include?(previous_resource&.last_curation_activity&.status)
+    end
+
+    def manuscript
+      manuscripts&.last
     end
 
     # -----------------------------------------------------------
