@@ -122,7 +122,7 @@ module FeeCalculator
     end
 
     describe '#dataset fee_calculator' do
-      let(:prev_files_size) { 0 }
+      let(:prev_files_size) { nil }
       let(:new_files_size) { 100 }
       let(:covers_ldf) { false }
       let!(:journal) { create(:journal, payment_plan_type: '2025', covers_ldf: covers_ldf) }
