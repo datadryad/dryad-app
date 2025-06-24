@@ -342,10 +342,11 @@ export default function UploadFiles({
                   c.sanitized_name = new_file.upload_file_name;
                   c.status = 'Uploaded';
                   c.uploaded = new_file.uploaded;
+                  c.file_state = new_file.file_state;
                 }
                 return c;
               }));
-              displayAriaMsg(`${file.original_filename} finished uploading`);
+              displayAriaMsg(`${new_file.original_filename} finished uploading`);
             }).catch((error) => console.log(error));
           },
         };
