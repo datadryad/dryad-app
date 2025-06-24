@@ -20,14 +20,15 @@
 #  index_stash_engine_authors_on_author_orcid  (author_orcid)
 #  index_stash_engine_authors_on_resource_id   (resource_id)
 #
-require_relative '../../../app/models/stash_datacite/affiliation'
-
 module StashEngine
   class Author < ApplicationRecord
     self.table_name = 'stash_engine_authors'
+    has_paper_trail
+
     belongs_to :resource, class_name: 'StashEngine::Resource'
+    has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor', dependent: :destroy
+    has_many :affiliations, class_name: 'StashDatacite::Affiliation', through: :affiliation_authors
     has_one :edit_code, class_name: 'StashEngine::EditCode', dependent: :destroy
-    has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation', join_table: 'dcs_affiliations_authors'
 
     # I believe the default to ordering by author oder is fin and it falls back to the ID order (order of creation) as secondary
     default_scope { order(author_order: :asc, id: :asc) }
@@ -41,7 +42,7 @@ module StashEngine
     scope :names_filled, -> { where("TRIM(IFNULL(author_first_name,'')) <> '' AND TRIM(IFNULL(author_last_name,'')) <> ''") }
 
     amoeba do
-      enable
+      clone :affiliation_authors
     end
 
     def ==(other)
@@ -126,7 +127,7 @@ module StashEngine
         lastName: author_last_name,
         email: author_email,
         affiliation: affiliation&.smart_name,
-        affiliationROR: affiliation.ror_id,
+        affiliationROR: affiliation&.ror_id,
         affiliations: affiliations.map(&:as_api_json),
         orcid: author_orcid,
         order: author_order

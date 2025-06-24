@@ -9,11 +9,19 @@ const fileList = (list, previous) => {
     <>
       <ul className="c-review-files__list">
         {list.map((f) => {
-          const isNew = f.file_state === 'created';
-          const listing = <>{f.download_filename} <span className="file_size">{formatSizeUnits(f.upload_file_size)}</span></>;
+          const isNew = previous
+            && (f.file_state === 'created' || !previous.some((p) => p.upload_file_name === f.upload_file_name));
+          const oldName = previous
+            && !isNew && previous.find((p) => p.upload_file_name === f.upload_file_name && p.download_filename !== f.download_filename);
+          const listing = (
+            <>{f.download_filename} {
+              oldName ? <del>{oldName.download_filename}{' '}</del> : ''
+            }<span className="file_size">{formatSizeUnits(f.upload_file_size)}</span>
+            </>
+          );
           return (
             <li key={f.id}>
-              {previous && isNew ? <ins>{listing}</ins> : listing}
+              {isNew ? <ins>{listing}</ins> : listing}
             </li>
           );
         })}

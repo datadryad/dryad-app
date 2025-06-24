@@ -20,10 +20,13 @@
 #
 module StashDatacite
   class Affiliation < ApplicationRecord
-
     self.table_name = 'dcs_affiliations'
-    has_and_belongs_to_many :authors, class_name: 'StashEngine::Author', join_table: 'dcs_affiliations_authors'
+    has_paper_trail
+
     has_and_belongs_to_many :contributors, class_name: 'StashDatacite::Contributor'
+    has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor', dependent: :destroy
+    has_many :authors, class_name: 'StashEngine::Author', through: :affiliation_authors
+
     belongs_to :ror_org, class_name: 'StashEngine::RorOrg', primary_key: 'ror_id', foreign_key: 'ror_id', optional: true
 
     validates :long_name, presence: true

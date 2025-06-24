@@ -45,6 +45,8 @@ require 'aws-sdk-lambda'
 module StashEngine
   class GenericFile < ApplicationRecord
     self.table_name = 'stash_engine_generic_files'
+    has_paper_trail
+
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_one :frictionless_report, dependent: :destroy
     has_one :sensitive_data_report, dependent: :destroy
@@ -246,7 +248,7 @@ module StashEngine
     end
 
     def uploaded
-      return Stash::Aws::S3.new.exists?(s3_key: s3_staged_path) if !digest? && storage_version_id.blank?
+      return Stash::Aws::S3.new.exists?(s3_key: s3_staged_path) if !digest? && storage_version_id.blank? && s3_staged_path
 
       uploaded_success_url.present?
     end

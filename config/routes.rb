@@ -402,6 +402,7 @@ Rails.application.routes.draw do
 
     get 'publications/new', to: 'publications#new'
     get 'publications/autocomplete', to: 'publications#autocomplete'
+    get 'publications/automsid', to: 'publications#automsid'
     get 'publications/api_list', to: 'publications#api_list'
     get 'publications/issn/:id', to: 'publications#issn'
     post 'publications/create', to: 'publications#create'

@@ -27,6 +27,8 @@
 module StashDatacite
   class Contributor < ApplicationRecord
     self.table_name = 'dcs_contributors'
+    has_paper_trail
+
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     belongs_to :name_identifier, optional: true
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'

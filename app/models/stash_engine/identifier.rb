@@ -43,6 +43,7 @@ module StashEngine
 
     self.table_name = 'stash_engine_identifiers'
     acts_as_paranoid
+    has_paper_trail
 
     has_many :resources, class_name: 'StashEngine::Resource', dependent: :destroy
     has_one :process_date, as: :processable, dependent: :destroy

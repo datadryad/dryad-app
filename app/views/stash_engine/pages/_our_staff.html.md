@@ -3,7 +3,7 @@
 <h4>Head office</h4>
 <div class="about-bios">
 <div class="bio">
-  <img src="/images/jgibson.jpeg" alt="Headshot of Jennifer Gibson">
+  <img src="/images/jgibson.png" alt="Headshot of Jennifer Gibson">
   <h5>Jennifer Gibson</h5><br/>
   <p><em>Executive Director</em><br/>
   Jen joined Dryad as Executive Director in October 2021. Since 2005, she has

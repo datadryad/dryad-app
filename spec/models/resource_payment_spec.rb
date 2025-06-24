@@ -29,10 +29,12 @@
 #  index_resource_payments_on_resource_id          (resource_id)
 #  index_resource_payments_on_status               (status)
 #
-require 'test_helper'
+module StashEngine
 
-class ResourcePaymentTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  describe ResourcePayment, type: :model do
+
+    describe '#destroy' do
+      it_should_behave_like 'soft delete record', :resource_payment
+    end
+  end
 end
