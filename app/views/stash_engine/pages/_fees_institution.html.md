@@ -194,7 +194,7 @@ Our consortial fee structures reflect the reduction in administrative burden and
           <td><%= t[:tier]%></td>
           <td><%= number_to_currency(t[:price], precision: 0) %></td>
           <td><%= number_to_currency(t[:price] - t[:price] * 0.1, precision: 0) %></td>
-          <td><%= number_to_currency(t[:price] - t[:price] * 0.5, precision: 0) %></td>
+          <td><%= number_to_currency(t[:price] - t[:price] * 0.15, precision: 0) %></td>
           <td><%= number_to_currency(t[:price] - t[:price] * 0.2, precision: 0) %></td>
         </tr>
       <% end %>
