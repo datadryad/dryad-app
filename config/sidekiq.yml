@@ -8,6 +8,9 @@ production:
   - zenodo_software
   - zenodo_supp
   - zenodo_copy
+  - submission
+  - submission_file
+  - submission_check
   - critical
   - default
   - low

@@ -1,4 +1,5 @@
 require "sidekiq/web" # require the web UI
+require "sidekiq_unique_jobs/web"
 require_relative '../lib/sidekiq_access_constraint'
 
 Rails.application.routes.draw do

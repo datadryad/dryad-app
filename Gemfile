@@ -142,6 +142,7 @@ group :test do
   gem 'simplecov-console', require: false
   gem 'timecop'
   gem 'webmock'
+  gem 'mock_redis', '~> 0.50.0'
 end
 
 group :development, :test, :dev do
@@ -173,7 +174,7 @@ end
 
 gem 'acts_as_paranoid', '~> 0.10.3'
 gem 'aws-sdk-sns'
-gem 'mock_redis', '~> 0.50.0'
 gem 'paper_trail', '~> 16.0'
 gem 'redis', '~> 5.4'
 gem 'sidekiq'
+gem 'sidekiq-unique-jobs'
