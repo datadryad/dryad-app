@@ -22,7 +22,7 @@ export default function CalculateFees({
   if (paid && fees.storage_fee_label) {
     return (
       <>
-        <p>This dataset has been previously submitted and the <a href="/requirements#cost" target="blank">{fees.storage_fee_label}<ExitIcon /></a> has been paid for {formatSizeUnits(resource.identifier.last_invoiced_file_size)}.</p>
+        <p>This dataset has been previously submitted and the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> has been paid for {formatSizeUnits(resource.identifier.last_invoiced_file_size)}.</p>
         {fees.total ? (
           <p>Since the dataset size has increased to {formatSizeUnits(resource.total_file_size)}, submitting this new version will come with an additional charge of <b>{fees.storage_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>.</p>
         ) : null}
@@ -32,7 +32,7 @@ export default function CalculateFees({
 
   if (fees.total) {
     return (
-      <p>This {formatSizeUnits(resource.total_file_size)} dataset has a <a href="/requirements#cost" target="blank">{fees.storage_fee_label}<ExitIcon /></a> of <b>{fees.storage_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>.</p>
+      <p>This {formatSizeUnits(resource.total_file_size)} dataset has a <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> of <b>{fees.storage_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>.</p>
     );
   }
   /* eslint-enable max-len */

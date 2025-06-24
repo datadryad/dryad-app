@@ -45,7 +45,7 @@ describe PaymentsService do
     end
 
     context 'if there is an institution that does not cover LDF' do
-      let(:prev_files_size) { 0 }
+      let(:prev_files_size) { nil }
       let(:new_files_size) { 11_000_000_000 }
       let(:covers_ldf) { false }
       let!(:tenant) { create(:tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf) }

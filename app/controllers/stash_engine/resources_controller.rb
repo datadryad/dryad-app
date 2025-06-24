@@ -118,7 +118,7 @@ module StashEngine
 
     # rubocop:disable Metrics/AbcSize
     def prepare_readme
-      @file_list = @resource.data_files.reject { |f| f.upload_file_name == 'README.md' }.map do |f|
+      @file_list = @resource.data_files.present_files.reject { |f| f.upload_file_name == 'README.md' }.map do |f|
         h = { name: f.upload_file_name }
         if f.upload_file_name.end_with?('.csv', '.tsv', '.xlsx', '.xls', '.rdata', '.rda', '.mat', '.txt')
           h[:variables] = []
