@@ -2,7 +2,7 @@
 
 As a community-driven non-profit organization, Dryad is committed to enabling the open availability and routine reuse of all research data. We strive to make high-quality data publishing affordable as well as easy. All our fees are set on a cost-recovery basis and designed to keep Dryad’s systems running strong, while putting our services within reach for as many researchers as possible. 
 
-Our Data Publishing Charge (DPC) is based on the variable costs of curating, publishing, and preserving one dataset.
+Our Data Publishing Charge (DPC) is based on the variable costs of curating, publishing, and preserving a dataset.
 
 
 ## Author fees
@@ -35,7 +35,7 @@ Authors not affiliated with a Dryad partner organization are asked to pay a DPC 
 Partner organizations that sponsor DPCs fully cover author data submissions up to 10 GB. For datasets larger than 10 GB, a large data fee will be charged to either the author or their sponsoring organization, depending on the specific partner agreement with Dryad. Large data fees are billed as follows:
 
 <div style="text-align: center;">
-<div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
+<div class="table-wrapper" role="region" tabindex="0" style="width: 500px; max-width: 100%; margin: 0 auto">
   <table style="width: 100%;">
     <caption>
       All fees are listed in USD
@@ -63,11 +63,10 @@ Effective June 2024, Dryad's Data Publishing Charge cannot be paid using voucher
 
 We aim to handle refund requests fairly and transparently. The specific cases in which a refund of the Data Publishing Charge (DPC) may be granted include:
 
-* If it is determined that Dryad is unable to publish the dataset due to concerns involving sensitive data such as human subjects information (HSI) or species data, licensing conflicts, or other policy constraints. The DPC and any additional fees for large data will be refunded to the original method of payment. 
+* If it is determined that Dryad is unable to publish the dataset due to concerns involving sensitive data such as human subjects information (HSI) or species data, licensing conflicts, or other policy constraints. 
 * If the curation process has not yet started and the author(s) have decided to withdraw the data submission. 
 * If the metadata entered upon submission is incorrect or incomplete, and sponsorship of the DPC by a journal or institution was not confirmed before the author was charged.
 
-Please note that refunds can only be processed before a dataset enters curation and Dryad incurs associated costs. In cases where the curation process has begun and a curator determines that Dryad cannot publish a submission for any reason, a $25 assessment fee may be applied, with the balance refunded to the original payment method. 
+In cases where a refund is approved, the DPC and any additional fees for large data will be refunded to the original method of payment. Please note that full refunds can only be processed before a dataset enters curation and Dryad incurs associated costs. In cases where the curation process has begun and a curator determines that Dryad cannot publish a submission for any reason, a $25 assessment fee may be applied, with the balance refunded to the original payment method. 
 
-Refund requests supported by a detailed explanation should be submitted to help@datadryad.org for review and consideration. The administration fee associated with requests for an invoice is not refundable. 
-
+Refund requests supported by a detailed explanation should be submitted to <a class="emailr" href="mailto:dev@null?subject=Refund request" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> for review and consideration. The administration fee associated with requests for an invoice is not refundable.
