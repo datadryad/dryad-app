@@ -104,6 +104,8 @@ Annual Service Fees for Dryad publisher and society partners are tiered accordin
 </div>
 </div>
 
+For campus-based publishers where both the library and the press are Dryad partners, we levy a single Annual Service Fee paid by the institution based on research expenditure. Each entity is responsible for the Data Publishing Charges for their respective authors.
+
 To promote transparency and equity among our partners Dryad does not offer individual discounts. However, to support growth and development, especially of new data-sharing programs, we offer tiered pricing for three-year agreements, as follows. Three-year agreements are exempt from annual inflationary increases.
 
 <div style="text-align: center;">
