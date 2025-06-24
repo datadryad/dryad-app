@@ -204,7 +204,7 @@ Discounts are dependent on centralized billing arranged by the consortium. Separ
 
 Consortium discounts are applied after pro-ration for institutions joining part-way through the year, and after any applicable multi-year discounting.
 
-Colleagues interested in a consortium-level partnership are invited to please contact <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">partnerships@datadryad.org</a>
+Colleagues interested in a consortium-level partnership are invited to please <a href="mailto:partnerships@datadryad.org?subject=Dryad partnership inquiry">contact us</a>.
 
 
 ## Total fees
