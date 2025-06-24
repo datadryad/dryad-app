@@ -188,12 +188,16 @@ Our consortial fee structures reflect the reduction in administrative burden and
       </tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>$5,000</td><td>$4,500</td><td>$4,250</td><td>$4,000</td></tr>
-      <tr><td>2</td><td>$10,000</td><td>$9,000</td><td>$8,500</td><td>$8,000</td></tr>
-      <tr><td>3</td><td>$20,000</td><td>$18,000</td><td>$17,000</td><td>$16,000</td></tr>
-      <tr><td>4</td><td>$30,000</td><td>$27,000</td><td>$25,500</td><td>$24,000</td></tr>
-      <tr><td>5</td><td>$40,000</td><td>$36,000</td><td>$34,000</td><td>$32,000</td></tr>
-      <tr><td>6</td><td>$50,000</td><td>$45,000</td><td>$42,500</td><td>$40,000</td></tr>
+      <% tiers = FeeCalculator::InstitutionService.new.service_fee_tiers %>
+      <% tiers.each do |t| %>
+        <tr>
+          <td><%= t[:tier]%></td>
+          <td><%= number_to_currency(t[:price], precision: 0) %></td>
+          <td><%= number_to_currency(t[:price] - t[:price] * 0.1, precision: 0) %></td>
+          <td><%= number_to_currency(t[:price] - t[:price] * 0.5, precision: 0) %></td>
+          <td><%= number_to_currency(t[:price] - t[:price] * 0.2, precision: 0) %></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 </div>
