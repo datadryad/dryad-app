@@ -82,7 +82,6 @@ module FeeCalculator
             it { is_expected.to eq(no_charges_response) }
           end
 
-
           context 'when paid for 0B' do
             let(:prev_files_size) { 0 }
 
@@ -90,7 +89,6 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
           end
-
 
           context 'when files_size changes' do
             context 'but does not exceed the current limit' do
