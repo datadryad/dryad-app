@@ -17,6 +17,7 @@ import Button from './Button';
 import dryadConfig from './milkdownConfig';
 import {selectionListener, selectionCtx} from './selectionListener';
 import htmlSchema from './htmlSchema';
+import heading from './heading';
 import {
   bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
 } from './milkdownCommands';
@@ -30,6 +31,8 @@ const allowSpans = [
   'titleApostrophe',
   'paragraph',
   'listItem',
+  'headingSetext',
+  'headingAtx',
 ];
 
 /* eslint-disable consistent-return */
@@ -60,6 +63,7 @@ function MilkdownCore({onChange, setActive, setLevel}) {
             exit();
             return value;
           },
+          heading,
         },
         join: [joinListItems],
         unsafe: [
