@@ -30,7 +30,7 @@ Data may be submitted and published at any time. However, if your data are assoc
 
 Dryad requires an [ORCID iD](https://orcid.org) for login. If you do not have an ORCID, you will have the opportunity to create a free, unique identifier for yourself at the login page. Dryad uses ORCID so that we can authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the website, through the API, through a journal integration, etc.). When datasets are published, they should appear in your ORCID profile along with articles and other works.
 
-For institutional partners, we require a second form of authentication at login. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time. Properly verifying your institutional affiliation is essential for recognition of institutional sponsorship of the [Data Publishing Charge](/requirements#cost).
+For institutional partners, we require a second form of authentication at login. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time. Properly verifying your institutional affiliation is essential for recognition of institutional sponsorship of the [Data Publishing Charge](/costs).
 
 
 ## Create your submission
@@ -83,7 +83,7 @@ If you have questions, please see our [guide to the tabular data check alerts](/
 
 On the final page of the submission form, you’ll have the opportunity to review that your metadata is correct.
 
-Check the required acknowledgments to agree to payment of the [Data Publishing Charge](/requirements#cost). You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.
+Check the required acknowledgments to agree to payment of the [Data Publishing Charge](/costs). You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.
 
 If you are affiliated with a partner institution or your related publication is associated with a sponsoring journal title, a statement below will appear to confirm who is sponsoring the Data Publishing Charge. If your submission should be sponsored, but you do not see a statement indicating as much, please [contact support](/contact). 
 

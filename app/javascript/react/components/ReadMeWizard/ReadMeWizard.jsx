@@ -10,15 +10,35 @@ import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
 export default function ReadMeWizard({resource, setResource, step}) {
   const [desc, setDesc] = useState(null);
+  const [fileList, setFileList] = useState([]);
+  const [readmeFile, setReadmeFile] = useState(null);
+
+  const getFiles = async () => {
+    axios.get(`/resources/${resource.id}/prepare_readme`).then((data) => {
+      const {file_list, readme_file} = data.data;
+      setFileList(file_list);
+      setReadmeFile(readme_file);
+    });
+  };
 
   useEffect(() => {
     if (step === 'README') {
+      getFiles();
       setDesc(JSON.parse(JSON.stringify(resource.descriptions.find((d) => d.description_type === 'technicalinfo'))));
     }
   }, [step]);
 
   if (desc?.id) {
-    return <ReadMe dcsDescription={desc} title={resource.title} doi={resource.identifier.identifier} setResource={setResource} />;
+    return (
+      <ReadMe
+        dcsDescription={desc}
+        title={resource.title}
+        doi={resource.identifier.identifier}
+        setResource={setResource}
+        fileList={fileList}
+        readmeFile={readmeFile}
+      />
+    );
   }
   return (
     <p style={{display: 'flex', alignItems: 'center', gap: '.5ch'}}>
@@ -29,11 +49,10 @@ export default function ReadMeWizard({resource, setResource, step}) {
 }
 
 function ReadMe({
-  dcsDescription, title, doi, setResource,
+  dcsDescription, title, doi, setResource, fileList, readmeFile,
 }) {
   const [initialValue, setInitialValue] = useState(null);
   const [replaceValue, setReplaceValue] = useState(null);
-  const [fileList, setFileList] = useState([]);
   const [wizardContent, setWizardContent] = useState(null);
   const [wizardStep, setWizardStep] = useState(0);
 
@@ -103,19 +122,6 @@ function ReadMe({
   }, [wizardStep]);
 
   useEffect(() => {
-    async function getFiles() {
-      axios.get(`/resources/${dcsDescription.resource_id}/prepare_readme`).then((data) => {
-        const {file_list, readme_file} = data.data;
-        setFileList(file_list);
-        if (!dcsDescription.description) {
-          if (readme_file) {
-            setReplaceValue(readme_file);
-          } else {
-            setWizardContent({title, doi, step: 0});
-          }
-        }
-      });
-    }
     if (dcsDescription.description) {
       try {
         const template = JSON.parse(dcsDescription.description);
@@ -124,8 +130,11 @@ function ReadMe({
       } catch {
         setInitialValue(dcsDescription.description);
       }
+    } else if (readmeFile) {
+      setReplaceValue(readmeFile);
+    } else {
+      setWizardContent({title, doi, step: 0});
     }
-    getFiles();
   }, []);
 
   if (initialValue || replaceValue) {
