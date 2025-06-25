@@ -8,7 +8,7 @@ If Dryad curators identify questions, problems, or areas for improvement, they w
 
 If your data submission is [private for peer review](/submission_process#private-for-peer-review), it will not be processed by our curators until you have released the submission for curation, or the associated manuscript is accepted by an integrated journal and the data submission is automatically released.
 
-Upon curator approval, the Dryad DOI is officially registered and, if applicable, the [Data Publishing Charge (DPC)](/requirements#cost) and any overage fees are invoiced. For assistance with invoices (e.g., re-addressing an invoice), please respond directly to the email with the invoice to connect with our billing team.
+Upon curator approval, the Dryad DOI is officially registered and, if applicable, the [Data Publishing Charge (DPC)](/costs) and any overage fees are invoiced. For assistance with invoices (e.g., re-addressing an invoice), please respond directly to the email with the invoice to connect with our billing team.
 
 
 ## Dataset publication
@@ -37,4 +37,4 @@ As soon as you start a data submission, a DOI is reserved for that dataset in th
 
 You can update your data by clicking on the "Revise submission" link for your dataset in your [Dryad dashboard](/dashboard). Any edits made will build upon the last submitted version of the dataset; the DOI will remain the same. Once the latest version has been approved by our curation team and published, only the most recent version of your dataset will be packaged and available for download via the "Download dataset" button. If the dataset is versioned, prior versions can be accessed via the "Data files" section which is organized by the date of publication.
 
-Newly created versions will not incur a [Data Publishing Charge (DPC)](/requirements#cost) unless the DPC for the file size of the new version exceeds the DPC already paid, in which case the difference will be charged.
+Newly created versions will not incur a [Data Publishing Charge (DPC)](/costs) unless the DPC for the file size of the new version exceeds the DPC already paid, in which case the difference will be charged.
