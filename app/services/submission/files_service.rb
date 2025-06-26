@@ -7,30 +7,32 @@ module Submission
       @resource = file.resource
     end
 
-    def submit
+    def copy_file
       case file.file_state
-        when 'created'
-          Rails.logger.info(" -- created file moving to permanent store #{file.upload_file_name} -- #{file.s3_staged_path}")
-          if file.url && !s3.exists?(s3_key: file.s3_staged_path)
-            copy_external_to_permanent_store
-          else
-            copy_to_permanent_store
-          end
-        when 'copied'
-          # Files aren't actually copied, we just reference the file from the previous version of the dataset
-          Rails.logger.info(" -- copied file #{file.upload_file_name}")
-        when 'deleted'
-          # Files aren't actually deleted, we just don't migrate the file description to future versions of the dataset
-          Rails.logger.info(" -- deleted file #{file.upload_file_name}")
+      when 'created'
+        Rails.logger.info(" -- created file moving to permanent store #{file.upload_file_name} -- #{file.s3_staged_path}")
+        if file.url && !s3.exists?(s3_key: file.s3_staged_path)
+          copy_external_to_permanent_store
         else
-          message = "Unable to determine what to do with file #{f.upload_file_name}"
-          Rails.logger.error(message)
-          return Stash::Repo::SubmissionResult.failure(resource_id: resource.id, request_desc: description, error: StandardError.new(message))
+          copy_to_permanent_store
+        end
+      when 'copied'
+        # Files aren't actually copied, we just reference the file from the previous version of the dataset
+        Rails.logger.info(" -- copied file #{file.upload_file_name}")
+      when 'deleted'
+        # Files aren't actually deleted, we just don't migrate the file description to future versions of the dataset
+        Rails.logger.info(" -- deleted file #{file.upload_file_name}")
+      else
+        message = "Unable to determine what to do with file #{file.upload_file_name}"
+        Rails.logger.error(message)
+        Stash::Repo::SubmissionResult.failure(resource_id: resource.id, request_desc: description, error: StandardError.new(message))
       end
     end
 
     private
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def copy_to_permanent_store
       staged_bucket = APP_CONFIG[:s3][:bucket]
       staged_key = file.s3_staged_path
@@ -45,8 +47,8 @@ module Submission
       if !permanent_s3.exists?(s3_key: permanent_key) || !permanent_s3.size(s3_key: permanent_key) == file.upload_file_size
         Rails.logger.info("file copy skipped #{file.id} ==> #{permanent_bucket}/#{permanent_key} already exists")
         s3.copy(from_bucket_name: staged_bucket, from_s3_key: staged_key,
-          to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
-          size: file.upload_file_size)
+                to_bucket_name: permanent_bucket, to_s3_key: permanent_key,
+                size: file.upload_file_size)
       end
 
       update = { storage_version_id: resource.id }
@@ -63,8 +65,6 @@ module Submission
       file.update(update)
     end
 
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
     def copy_external_to_permanent_store
       permanent_bucket = APP_CONFIG[:s3][:merritt_bucket]
       permanent_key = "v3/#{file.s3_staged_path}"

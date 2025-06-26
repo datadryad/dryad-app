@@ -64,7 +64,7 @@ module StashEngine
     def enqueue_submissions(resource_ids:)
       authorize %i[stash_engine repo_queue_state], :index?
       resource_ids.each do |res_id|
-        StashEngine.repository.submit(resource_id: res_id)
+        Submission::SubmissionJob.perform_async(res_id)
       end
     end
   end

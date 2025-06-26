@@ -106,9 +106,9 @@ module StashEngine
 
       resource_submission_service = Submission::ResourcesService.new(resource.id)
 
-      resource_submission_service.harvested
+      resource_submission_service.finalize
       if StashEngine::RepoQueueState.where(resource_id: resource_id, state: 'completed').count < 1
-        resource_submission_service.update_repo_queue_state(resource_id: resource_id, state: 'completed')
+        resource_submission_service.update_repo_queue_state(state: 'completed')
       end
 
       id = resource.identifier

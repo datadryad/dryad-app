@@ -424,7 +424,7 @@ module StashApi
       when '/versionStatus'
         ensure_in_progress { yield }
         pre_submission_updates
-        StashEngine.repository.submit(resource_id: @resource.id)
+        Submission::SubmissionJob.perform_async(@resource.id)
         ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
         render json: ds.metadata, status: 202
       when '/curationStatus'

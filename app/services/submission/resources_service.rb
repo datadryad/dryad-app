@@ -9,31 +9,37 @@ module Submission
 
     def submit
       Rails.logger.info("Submitting resource #{resource_id} (#{resource.identifier_str})\n")
-      update_repo_queue_state(resource_id: resource_id, state: 'processing')
+      update_repo_queue_state(state: 'processing')
 
       handle_invoice_creation
 
-      resource.data_files.each do |file|
-        Submission::CopyFileJob.perform_async(file.id)
+      # only copy newly created files
+      new_files = resource.data_files.newly_created
+      if new_files.any?
+        new_files.each do |file|
+          Submission::CopyFileJob.perform_async(file.id)
+        end
+      else
+        Submission::CheckStatusJob.perform_async(resource_id)
       end
     end
 
     def handle_success(result)
-      result.log_to(logger)
+      result.log_to(Rails.logger)
       update_submission_log(result)
 
       # don't set new queue state on deferred submission results until the merrit_status checker does it for us, it's still
       # in progress until that happens.
-      update_repo_queue_state(resource_id: result.resource_id, state: 'provisional_complete') unless result.deferred?
+      update_repo_queue_state(state: 'provisional_complete') unless result.deferred?
     rescue StandardError => e
       # errors here don't constitute a submission failure, so we don't change the resource state
       Rails.logger.error(e.full_message)
     end
 
     def handle_failure(result)
-      result.log_to(logger)
+      result.log_to(Rails.logger)
       update_submission_log(result)
-      update_repo_queue_state(resource_id: result.resource_id, state: 'errored')
+      update_repo_queue_state(state: 'errored')
       resource = StashEngine::Resource.find(result.resource_id)
       StashEngine::UserMailer.error_report(resource, result.error).deliver_now
     rescue StandardError => e
@@ -43,8 +49,7 @@ module Submission
     end
 
     # Register that a dataset has completed processing into the storage system
-    # TODO: rename this... "harvested" is a weird term left over from old versions of this system
-    def harvested
+    def finalize
       return unless resource.present?
       return unless resource == resource.identifier&.processing_resource
 
@@ -55,7 +60,7 @@ module Submission
       saved
     end
 
-    def update_repo_queue_state(resource_id:, state:)
+    def update_repo_queue_state(state:)
       StashEngine::RepoQueueState.create(resource_id: resource_id, state: state)
     end
 

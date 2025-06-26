@@ -5,7 +5,7 @@ require "sidekiq-unique-jobs"
 
 log_file_path = Rails.root.join('log', 'sidekiq.log')
 sidekiq_logger = Logger.new(log_file_path)
-sidekiq_logger.level = Rails.env.development? ? Logger::DEBUG : Logger::INFO
+sidekiq_logger.level = Logger::INFO
 sidekiq_logger.formatter = Sidekiq::Logger::Formatters::Pretty.new
 
 Sidekiq.default_job_options = {

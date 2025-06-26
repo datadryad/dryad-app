@@ -139,10 +139,10 @@ group :test do
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
+  gem 'mock_redis', '~> 0.50.0'
   gem 'simplecov-console', require: false
   gem 'timecop'
   gem 'webmock'
-  gem 'mock_redis', '~> 0.50.0'
 end
 
 group :development, :test, :dev do

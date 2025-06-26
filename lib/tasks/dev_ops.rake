@@ -401,19 +401,14 @@ namespace :dev_ops do
       puts "attempting resubmitting recent errors #{Time.new}"
       resource_ids = StashEngine::RepoQueueState.where(state: 'errored').where(['updated_at > ?', 1.day.ago]).map(&:resource_id)
 
-      resource_ids.each do |res|
-        states = StashEngine::RepoQueueState.where(resource_id: res)
+      resource_ids.each do |res_id|
+        states = StashEngine::RepoQueueState.where(resource_id: res_id)
         states[1..].each(&:destroy) # destroy all but the first state in the series
         states.first.update(state: 'rejected_shutting_down', hostname: 'uc3-dryadui01x2-prd') # change info on 1st state
-        StashEngine.repository.submit(resource_id: res) # resubmit it
+        Submission::SubmissionJob.perform_async(res_id) # resubmit it
       end
       sleep 300 # wait 5 minutes before checking again
       # note: if you don't leave some time after running the resubmissions, then they don't go through since the request
-      # processes that the StashEngine.repository class creates get killed if this task exits immediately.
-      #
-      # The StashEngine.repository class it uses is a different instance than the one that runs inside the UI processes.
-      #
-      # We really probably would be better off moving the submissions outside the UI processes.
     end
   end
 end
