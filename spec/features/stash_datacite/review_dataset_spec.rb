@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.feature 'ReviewDataset', type: :feature do
 
   include DatasetHelper
-  include Mocks::Repository
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::DataFile
@@ -11,7 +10,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
   before(:each) do
     mock_solr!
-    mock_repository!
     mock_salesforce!
     mock_file_content!
     mock_aws!

@@ -7,7 +7,6 @@ RSpec.feature 'Landing', type: :feature, js: true do
   include DatasetHelper
   include DatabaseHelper
   include Mocks::Datacite
-  include Mocks::Repository
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
@@ -15,7 +14,6 @@ RSpec.feature 'Landing', type: :feature, js: true do
 
   before(:each) do
     # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
-    mock_repository!
     mock_solr!
     mock_datacite!
     mock_salesforce!

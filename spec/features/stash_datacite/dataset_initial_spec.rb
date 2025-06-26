@@ -7,7 +7,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   include DatasetHelper
   include Mocks::CurationActivity
   include Mocks::Datacite
-  include Mocks::Repository
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
@@ -15,7 +14,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   include Mocks::Aws
 
   before(:each) do
-    mock_repository!
     mock_salesforce!
     mock_solr!
     mock_aws!

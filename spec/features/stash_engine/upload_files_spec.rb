@@ -9,7 +9,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include DatabaseHelper
   include GenericFilesHelper
   include Mocks::Datacite
-  include Mocks::Repository
   include Mocks::RSolr
   include Mocks::Stripe
   include Mocks::Aws
@@ -17,7 +16,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
   include Mocks::DataFile
 
   before(:each) do
-    mock_repository!
     mock_solr!
     mock_datacite!
     mock_stripe!
