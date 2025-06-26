@@ -8,6 +8,7 @@
 #  description         :text(65535)
 #  digest              :string(191)
 #  digest_type         :string(8)
+#  file_deleted_at     :datetime
 #  file_state          :string(7)
 #  original_filename   :text(65535)
 #  original_url        :text(65535)
@@ -27,6 +28,7 @@
 #
 # Indexes
 #
+#  index_stash_engine_generic_files_on_file_deleted_at   (file_deleted_at)
 #  index_stash_engine_generic_files_on_file_state        (file_state)
 #  index_stash_engine_generic_files_on_resource_id       (resource_id)
 #  index_stash_engine_generic_files_on_status_code       (status_code)
@@ -186,6 +188,25 @@ module StashEngine
 
           expect(@upload2.sensitive_data_report.id).not_to eq(@upload.sensitive_data_report.id)
           expect(@upload2.sensitive_data_report.report).to eq(@upload.sensitive_data_report.report)
+        end
+      end
+    end
+
+    describe 'scopes' do
+      describe 'without_deleted_files' do
+        let!(:file) { create(:generic_file, file_deleted_at: nil) }
+        let!(:deleted_file) { create(:generic_file, file_deleted_at: Time.current) }
+
+        context 'without scope' do
+          it 'returns all files' do
+            expect(StashEngine::GenericFile.all.ids).to contain_exactly(file.id, deleted_file.id)
+          end
+        end
+
+        context 'without scope applied' do
+          it 'returns undeleted files only' do
+            expect(StashEngine::GenericFile.without_deleted_files.ids).to contain_exactly(file.id)
+          end
         end
       end
     end
