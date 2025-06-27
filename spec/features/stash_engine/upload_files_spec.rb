@@ -63,9 +63,9 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       expect(page).to have_content('e.g., figures, supporting tables')
 
       # 'shows files already uploaded'
-      expect(page).to have_content(@file1.upload_file_name)
+      expect(page).to have_content(@file1.download_filename)
       expect(page).to have_content(@file2.url)
-      expect(page).to have_content(@file3.upload_file_name)
+      expect(page).to have_content(@file3.download_filename)
       expect(page.has_css?('i[aria-label="complete"]', count: 3)).to be true
 
       # 'shows only files with status different of "deleted"'
@@ -77,12 +77,12 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       @file = create_data_file(@resource_id)
       @file.update(
         original_filename: '\u0000 ssh*authorized?keys.csv',
-        upload_file_name: '_u0000_ssh_authorized_keys.csv'
+        download_filename: '_u0000_ssh_authorized_keys.csv'
       )
       @manifest_file = create_software_file(@resource_id)
       @manifest_file.update(
         original_filename: 'new example*2.com',
-        upload_file_name: 'new_example2.com',
+        download_filename: 'new_example2.com',
         url: 'http://example.com/new%20example*2.com'
       )
       refresh
@@ -163,7 +163,7 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'validates file URL equal to other file URL from other upload types' do
       @manifest = create_software_file(@resource_id)
-      @manifest.update(url: @valid_url_manifest, upload_file_name: @file_name1)
+      @manifest.update(url: @valid_url_manifest, download_filename: @file_name1)
 
       find('span', text: '+ Add files for simultaneous publication at Zenodo').click
       click_button('data_manifest')

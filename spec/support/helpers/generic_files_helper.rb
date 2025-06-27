@@ -29,7 +29,7 @@ module GenericFilesHelper
   end
 
   def generic_new_db_entry_expects(json_hash, new_file)
-    expect(new_file.upload_file_name).to eql(json_hash[:name])
+    expect(new_file.download_filename).to eql(json_hash[:name])
     expect(new_file.upload_file_size).to eql(json_hash[:size])
     expect(new_file.upload_content_type).to eql(json_hash[:type])
     expect(new_file.original_filename).to eql(json_hash[:original])
@@ -51,7 +51,7 @@ module GenericFilesHelper
 
     body = JSON.parse(response.body)
     valid_url = body['valid_urls'].first
-    expect(valid_url['upload_file_name']).to eql('funbar.txt')
+    expect(valid_url['download_filename']).to eql('funbar.txt')
     expect(valid_url['upload_file_size']).to eql(37_221)
     expect(valid_url['file_state']).to eql('created')
     expect(valid_url['url']).to eql('http://example.org/funbar.txt')

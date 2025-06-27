@@ -45,7 +45,7 @@ module StashApi
         info = @resource.data_files.present_files.map do |f|
           {
             size: f.upload_file_size,
-            filename: f.upload_file_name,
+            filename: f.download_filename,
             url: f.s3_permanent_presigned_url
           }
         end

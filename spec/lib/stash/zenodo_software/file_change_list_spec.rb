@@ -33,7 +33,7 @@ module Stash
 
       describe '#delete_list' do
         it 'gives list of items to remove' do
-          expect(@file_change_list.delete_list).to eq(@resource.software_files.deleted_from_version.map(&:upload_file_name))
+          expect(@file_change_list.delete_list).to eq(@resource.software_files.deleted_from_version.map(&:download_filename))
         end
       end
     end

@@ -24,13 +24,13 @@ module StashEngine
     end
 
     def self.make_unique(resource:, filename:, association:)
-      dups = resource.send(association).present_files.where(upload_file_name: filename)
+      dups = resource.send(association).present_files.where(download_filename: filename)
       return filename unless dups.count > 0
 
       ext = File.extname(filename)
       core_name = File.basename(filename, ext)
       counter = 2
-      counter += 1 while resource.send(association).present_files.where(upload_file_name: "#{core_name}-#{counter}#{ext}").count > 0
+      counter += 1 while resource.send(association).present_files.where(download_filename: "#{core_name}-#{counter}#{ext}").count > 0
       "#{core_name}-#{counter}#{ext}"
     end
 
@@ -89,7 +89,7 @@ module StashEngine
           .make_unique(resource: resource, filename: CGI.unescape(filename), association: association))
 
       upload_attributes.merge(
-        upload_file_name: sanitized_filename,
+        download_filename: sanitized_filename,
         original_filename: UrlValidator.make_unique(resource: resource, filename: CGI.unescape(filename), association: association),
         upload_content_type: mime_type,
         upload_file_size: size

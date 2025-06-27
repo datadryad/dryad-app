@@ -382,11 +382,11 @@ module StashEngine
       sql = <<-SQL
         SELECT *
         FROM stash_engine_generic_files AS a
-        JOIN (SELECT upload_file_name
+        JOIN (SELECT download_filename
           FROM stash_engine_generic_files
           WHERE resource_id = ? AND (file_state IS NULL OR file_state = 'created') AND type = ?
-          GROUP BY upload_file_name HAVING count(*) >= 2) AS b
-        ON a.upload_file_name = b.upload_file_name
+          GROUP BY download_filename HAVING count(*) >= 2) AS b
+        ON a.download_filename = b.download_filename
         WHERE a.resource_id = ? AND type = ?
       SQL
       # get the correct ActiveRecord model based on the method name
@@ -1133,6 +1133,7 @@ module StashEngine
 
       db_file =
         StashEngine::DataFile.create(
+          download_filename: filename,
           upload_file_name: filename,
           upload_content_type: 'text/markdown',
           upload_file_size: content.bytesize,

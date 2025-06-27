@@ -28,6 +28,7 @@ module DatabaseHelper
     StashEngine::GenericFile.create(
       {
         original_filename: filename,
+        download_filename: filename,
         upload_file_name: filename,
         resource_id: resource_id,
         upload_content_type: 'text/plain',
@@ -45,6 +46,7 @@ module DatabaseHelper
     StashEngine::DataFile.create(
       {
         original_filename: filename,
+        download_filename: filename,
         upload_file_name: filename,
         resource_id: resource_id,
         upload_content_type: 'text/plain',
@@ -60,6 +62,7 @@ module DatabaseHelper
     StashEngine::SoftwareFile.create(
       {
         original_filename: filename,
+        download_filename: filename,
         upload_file_name: filename,
         resource_id: resource_id,
         upload_content_type: 'text/plain',
@@ -75,6 +78,7 @@ module DatabaseHelper
     StashEngine::SuppFile.create(
       {
         original_filename: filename,
+        download_filename: filename,
         upload_file_name: filename,
         resource_id: resource_id,
         upload_content_type: 'text/plain',
