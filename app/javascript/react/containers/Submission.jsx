@@ -153,7 +153,9 @@ function Submission({
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
       preview: <Agreements
-        {...{resource, user, previous}}
+        {...{
+          resource, setResource, user, previous,
+        }}
         config={config_payments}
         subFees={fees}
         setSubFees={setFees}

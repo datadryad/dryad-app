@@ -102,6 +102,7 @@ export default function Agreements({
           if (data.data.automatic_ppr && !ppr) postPPR(true);
           else if (!data.data.allow_review && ppr) postPPR(false);
         }
+        setResource((r) => ({...r, total_file_size: data.data.total_file_size}));
         setDPC(data.data);
       });
     };
