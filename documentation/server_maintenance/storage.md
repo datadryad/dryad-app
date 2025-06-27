@@ -41,8 +41,8 @@ THEN, on one server, in the Rails console:
 ```ruby
 resource_ids =
   StashEngine::RepoQueueState.latest_per_resource.where(state: 'rejected_shutting_down').order(:updated_at).map(&:resource_id)
-resource_ids.each do |res_id| 
-  Submission::SubmissionJob.perform_async(res_id)
+resource_ids.each do |res_id|
+   Submission::ResourcesService.new(res_id).trigger_submission
 end
 ```
 
@@ -52,9 +52,9 @@ the RepoQueueState:
 resource_ids =
   StashEngine::RepoQueueState.latest_per_resource.where(state: 'errored').order(:updated_at).map(&:resource_id)
 resource_ids.each do |res_id|
- repo_queue_id = StashEngine::RepoQueueState.where(state: 'processing', resource_id: res_id).last.id
- StashEngine::RepoQueueState.find(repo_queue_id).destroy
- Submission::SubmissionJob.perform_async(res_id)
+  repo_queue_id = StashEngine::RepoQueueState.where(state: 'processing', resource_id: res_id).last.id
+  StashEngine::RepoQueueState.find(repo_queue_id).destroy
+  Submission::ResourcesService.new(res_id).trigger_submission
 end
 ```
 

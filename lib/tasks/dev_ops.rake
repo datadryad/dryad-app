@@ -404,8 +404,8 @@ namespace :dev_ops do
       resource_ids.each do |res_id|
         states = StashEngine::RepoQueueState.where(resource_id: res_id)
         states[1..].each(&:destroy) # destroy all but the first state in the series
-        states.first.update(state: 'rejected_shutting_down', hostname: 'uc3-dryadui01x2-prd') # change info on 1st state
-        Submission::SubmissionJob.perform_async(res_id) # resubmit it
+        states.first.update(state: 'rejected_shutting_down') # change info on 1st state
+        Submission::ResourcesService.new(@resource_id).trigger_submission # resubmit it
       end
       sleep 300 # wait 5 minutes before checking again
       # note: if you don't leave some time after running the resubmissions, then they don't go through since the request

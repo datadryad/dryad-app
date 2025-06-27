@@ -7,7 +7,7 @@ module Submission
 
     def perform(resource_id)
       resource = StashEngine::Resource.find(resource_id)
-      pp queue = resource.repo_queue_states.last
+      queue = resource.repo_queue_states.last
       return unless queue.state.in?(%w[processing provisional_complete])
 
       if queue.possibly_set_as_completed

@@ -9,7 +9,7 @@ module Submission
 
     def submit
       Rails.logger.info("Submitting resource #{resource_id} (#{resource.identifier_str})\n")
-      update_repo_queue_state(state: 'processing')
+      update_repo_queue_state(state: 'processing') unless resource.repo_queue_states.order(:created_at).last.processing?
 
       handle_invoice_creation
 
@@ -22,6 +22,12 @@ module Submission
       else
         Submission::CheckStatusJob.perform_async(resource_id)
       end
+    end
+
+    def trigger_submission
+      update_repo_queue_state(state: 'processing')
+      resource.current_state = 'processing'
+      Submission::SubmissionJob.perform_async(resource_id)
     end
 
     def handle_success(result)
