@@ -62,7 +62,13 @@ function Submission({
       index: 2,
       pass: !abstractCheck(resource),
       fail: (review || step.index > 1) && abstractCheck(resource),
-      component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} step={step.name} />,
+      component: <Description
+        current={step.name === 'Description'}
+        resource={resource}
+        setResource={setResource}
+        curator={user.curator}
+        cedar={config_cedar}
+      />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
     },

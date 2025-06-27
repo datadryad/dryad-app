@@ -3,7 +3,7 @@ import Description from './Description';
 import Cedar from './Cedar';
 
 export default function DescriptionGroup({
-  resource, setResource, curator, cedar, step,
+  resource, setResource, curator, cedar, current,
 }) {
   const [methods, setMethods] = useState(null);
   const [usage, setUsage] = useState(null);
@@ -31,14 +31,17 @@ export default function DescriptionGroup({
 
   const checkCedar = () => {
     const bank = /neuro|cogniti|cereb|memory|consciousness|amnesia|psychopharma|brain|hippocampus/i;
-    const {title, resource_publication, subjects} = resource;
+    const {
+      title, resource_publication, subjects, descriptions,
+    } = resource;
     const {publication_name} = resource_publication || {};
     const keywords = subjects.map((s) => s.subject).join(',');
-    return bank.test(title) || bank.test(publication_name) || bank.test(keywords) || bank.test(abstract?.description);
+    const abst = descriptions.find((d) => d.description_type === 'abstract');
+    return bank.test(title) || bank.test(publication_name) || bank.test(keywords) || bank.test(abst?.description);
   };
 
   useEffect(() => {
-    if (step === 'Description') {
+    if (current) {
       const hasMethods = resource.descriptions.find((d) => d.description_type === 'methods');
       setShowCedar(checkCedar());
       setMethods(hasMethods);
@@ -47,11 +50,11 @@ export default function DescriptionGroup({
       setShowCedar(!!resource.cedar_json);
       setOpenMethods(!!hasMethods?.description);
     }
-  }, [step]);
+  }, [current]);
 
   useEffect(() => {
     if (checkCedar()) setShowCedar(true);
-  }, [resource, abstract]);
+  }, [resource]);
 
   useEffect(() => {
     const templ = cedar?.templates?.find((arr) => arr[2] === 'Human Cognitive Neuroscience Data');
