@@ -43,10 +43,12 @@ const joinListItems = (left, right, parent) => {
 };
 /* eslint-enable consistent-return */
 
-function MilkdownCore({onChange, setActive, setLevel}) {
+function MilkdownCore({
+  onChange, attr, setActive, setLevel,
+}) {
   useEditor((root) => Editor
     .make()
-    .config(dryadConfig)
+    .config((ctx) => dryadConfig(ctx, attr))
     .config((ctx) => {
       ctx.set(rootCtx, root);
       ctx.set(remarkStringifyOptionsCtx, {
@@ -99,7 +101,7 @@ const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', '
   'table', 'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
-  id, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
+  id, attr, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
 }) {
   const [loading, editor] = useInstance();
 
@@ -236,8 +238,9 @@ function MilkdownEditor({
             />
           </div>
         )}
-        <MilkdownCore onChange={setSaveVal} setActive={setActive} setLevel={setHeadingLevel} />
+        <MilkdownCore onChange={setSaveVal} setActive={setActive} setLevel={setHeadingLevel} attr={attr} />
         <CodeEditor
+          attr={attr}
           content={initialCode}
           onChange={saveMarkdown}
           hidden={editType === 'visual'}
