@@ -8,7 +8,7 @@ import {ExitIcon} from '../ExitButton';
 import MarkdownEditor from '../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
-export default function ReadMeWizard({resource, setResource, step}) {
+export default function ReadMeWizard({resource, setResource, current}) {
   const [desc, setDesc] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [readmeFile, setReadmeFile] = useState(null);
@@ -22,11 +22,11 @@ export default function ReadMeWizard({resource, setResource, step}) {
   };
 
   useEffect(() => {
-    if (step === 'README') {
+    if (current) {
       getFiles();
       setDesc(JSON.parse(JSON.stringify(resource.descriptions.find((d) => d.description_type === 'technicalinfo'))));
     }
-  }, [step]);
+  }, [current]);
 
   if (desc?.id) {
     return (

@@ -4,7 +4,7 @@ import stringSimilarity from 'string-similarity';
 import Autocomplete from '../Autocomplete';
 
 export default function Journal({
-  formRef, title, setTitle, issn, setIssn, setAPIJournal, controlOptions,
+  current, formRef, title, setTitle, issn, setIssn, setAPIJournal, controlOptions,
 }) {
   const [prevTitle, setPrevTitle] = useState(`${title || ''}`);
   const [prevISSN, setPrevISSN] = useState(issn);
@@ -36,8 +36,8 @@ export default function Journal({
         setAPIJournals(data.data.api_journals);
       });
     }
-    getList();
-  }, []);
+    if (current && !api_journals.length) getList();
+  }, [current, api_journals]);
 
   const supplyLookupList = (qt) => axios.get(
     `/stash_datacite/publications/autocomplete${controlOptions?.labelText === 'Preprint server' ? '?preprint' : ''}`,

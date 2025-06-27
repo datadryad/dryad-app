@@ -63,7 +63,9 @@ module StashEngine
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
     scope :validated_table, -> {
-                              present_files.where.not(upload_file_name: 'README.md', type: StashEngine::DataFile).validated.order(created_at: :desc)
+                              present_files
+                                .where.not(upload_file_name: ['README.md', 'DisciplineSpecificMetadata.json'], type: StashEngine::DataFile)
+                                .validated.order(created_at: :desc)
                             }
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')

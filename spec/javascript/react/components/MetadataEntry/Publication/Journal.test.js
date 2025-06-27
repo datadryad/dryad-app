@@ -11,6 +11,7 @@ describe('Journal', () => {
     formRef = {};
     setAPIJournal = () => {};
     info = {
+      current: true,
       formRef,
       title,
       setTitle,

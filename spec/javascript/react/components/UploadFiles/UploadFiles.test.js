@@ -99,6 +99,7 @@ describe('UploadFiles', () => {
     };
 
     info = {
+      current: true,
       setResource,
       resource: {
         id: resourceId,

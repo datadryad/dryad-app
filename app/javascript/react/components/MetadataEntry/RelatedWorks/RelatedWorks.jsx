@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import RelatedWorkForm from './RelatedWorkForm';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-function RelatedWorks({resource, setResource}) {
+function RelatedWorks({resource, setResource, current}) {
   const resourceType = resource.resource_type.resource_type;
   const related_works = resource.related_identifiers.filter((ri) => ri.work_type !== 'primary_article');
   const [works, setWorks] = useState(related_works);
@@ -75,8 +75,8 @@ function RelatedWorks({resource, setResource}) {
         setWorkTypes(worktypes);
       });
     }
-    getTypes();
-  }, []);
+    if (current && !workTypes.length) getTypes();
+  }, [current]);
 
   return (
     <>

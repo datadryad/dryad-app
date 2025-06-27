@@ -154,7 +154,10 @@ module StashEngine
     end
 
     def dpc_status
+      @resource.check_add_readme_file
+      @resource.check_add_cedar_json
       dpc_checks = {
+        total_file_size: @resource.total_file_size,
         journal_will_pay: @resource.identifier.journal&.will_pay?,
         institution_will_pay: @resource.identifier.institution_will_pay?,
         funder_will_pay: @resource.identifier.funder_will_pay?,
