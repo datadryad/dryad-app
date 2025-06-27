@@ -8,14 +8,12 @@ RSpec.feature 'ReviewAndSubmit', type: :feature, js: true do
   include DatasetHelper
   include DatabaseHelper
   include Mocks::Datacite
-  include Mocks::Repository
   include Mocks::RSolr
   include Mocks::Stripe
   include Mocks::Aws
   include Mocks::Salesforce
 
   before(:each) do
-    mock_repository!
     mock_solr!
     mock_datacite!
     mock_salesforce!

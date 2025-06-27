@@ -11,7 +11,6 @@ module StashApi
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::CurationActivity
-    include Mocks::Repository
     include Mocks::Salesforce
     # set up some versions with different curation statuses (visibility)
     before(:each) do
