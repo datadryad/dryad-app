@@ -1137,7 +1137,7 @@ module StashEngine
           file_state: 'created',
           original_filename: filename,
           digest_type: digest_type,
-          digest: digest,
+          digest: digest
         )
 
       update(total_file_size: StashEngine::DataFile
