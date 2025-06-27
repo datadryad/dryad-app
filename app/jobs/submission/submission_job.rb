@@ -1,7 +1,7 @@
 module Submission
   class SubmissionJob
     include Sidekiq::Worker
-    sidekiq_options queue: :submission, retry: 4
+    sidekiq_options queue: :submission, retry: 1, lock: :until_and_while_executing
 
     attr_reader :resource_id, :resource, :service
 

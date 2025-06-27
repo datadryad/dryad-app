@@ -2,7 +2,7 @@ module Submission
   class CheckStatusJob
     include Sidekiq::Worker
     # TODO: need to find a solution to make this uniq
-    # sidekiq_options queue: :submission_check, lock: :until_executed, retry: 2
+    # sidekiq_options queue: :submission_check, lock: :until_executing, retry: 2
     sidekiq_options queue: :submission_check, retry: 2
 
     def perform(resource_id)

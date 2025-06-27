@@ -1,7 +1,7 @@
 module Submission
   class CopyFileJob
     include Sidekiq::Worker
-    sidekiq_options queue: :submission_file, lock: :until_executed, retry: 1
+    sidekiq_options queue: :submission_file, lock: :until_and_while_executing, retry: 1
 
     def perform(file_id)
       file = StashEngine::DataFile.find(file_id)
