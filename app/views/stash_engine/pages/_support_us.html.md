@@ -47,7 +47,9 @@ Dryad is grateful to the following consortia and institutions for their support 
     <li>Lib4RI</li>
     <li>Université de Lausanne</li></ul></li>
   <li><h3>Independent contributions</h3><ul>
-    <li>Iowa State University</li></ul></li>
+    <li>Hindawi</li>
+    <li>Iowa State University</li>
+    <li>PLOS (Public Library of Science)</li></ul></li>
 </ul>
 
 Our most current grants and funding initiatives are listed in our [Annual report](https://github.com/datadryad/governance/tree/main/annual-reports).
