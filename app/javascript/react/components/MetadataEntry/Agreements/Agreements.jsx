@@ -6,7 +6,7 @@ import Calculations from './Calculations';
 import CalculateFees from '../../CalculateFees';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, config, subFees, setSubFees, step, setAuthorStep, preview = false,
+  resource, setResource, user, form, previous, config, subFees, setSubFees, current, setAuthorStep, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -105,10 +105,10 @@ export default function Agreements({
         setDPC(data.data);
       });
     };
-    if (preview || step === 'Agreements') {
+    if (preview || current) {
       getPaymentInfo();
     }
-  }, [step, preview]);
+  }, [current, preview]);
 
   if (Object.keys(dpc).length === 0) {
     return (

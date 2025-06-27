@@ -3,7 +3,7 @@ import License from './License';
 
 export default function UploadType(
   {
-    name, description, type, changed, clickedModal, licenses, resource, setResource,
+    name, description, type, changed, clickedModal, licenses, resource, setResource, current,
   },
 ) {
   const dragover = (e) => {
@@ -43,7 +43,7 @@ export default function UploadType(
       {licenses.length === 1 ? (
         <p>{name} license: {licenses[0]}</p>
       ) : (
-        <License license={resource.identifier.software_license} resourceId={resource.id} setResource={setResource} />
+        <License current={current} license={resource.identifier.software_license} resourceId={resource.id} setResource={setResource} />
       )}
     </div>
   );

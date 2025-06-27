@@ -2,7 +2,7 @@ import React from 'react';
 import UploadType from './UploadType';
 
 function UploadSelect({
-  changed, clickedModal, resource, setResource,
+  current, changed, clickedModal, resource, setResource,
 }) {
   const upload_types = [
     {
@@ -23,6 +23,7 @@ function UploadSelect({
       {upload_types.map((upload_type) => (
         <UploadType
           key={upload_type.type}
+          current={current}
           changed={(e) => changed(e, upload_type.type)}
           clickedModal={() => clickedModal(upload_type.type)}
           type={upload_type.type}

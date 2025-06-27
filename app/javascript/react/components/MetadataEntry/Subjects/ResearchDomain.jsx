@@ -3,7 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-function ResearchDomain({step, resource, setResource}) {
+function ResearchDomain({current, resource, setResource}) {
   const fieldRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const [subject, setSubject] = useState(resource.subjects.find((s) => ['fos', 'bad_fos'].includes(s.subject_scheme))?.subject);
@@ -42,8 +42,8 @@ function ResearchDomain({step, resource, setResource}) {
         setSubjects(data.data);
       });
     }
-    if (fieldRef.current && step === 'Subjects') getList();
-  }, [fieldRef, step]);
+    if (fieldRef.current && current) getList();
+  }, [fieldRef, current]);
 
   return (
     <form className="input-stack" style={{marginBottom: '1.5em'}}>

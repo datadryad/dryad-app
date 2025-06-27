@@ -23,7 +23,7 @@ function ImportCheck({importType, jTitle, setDisable}) {
 }
 
 function PublicationForm({
-  resource, setResource, setSponsored, importType,
+  current, resource, setResource, setSponsored, importType,
 }) {
   const formRef = useRef();
   const {resource_publication: res_pub, resource_preprint: res_pre = {}} = resource;
@@ -144,6 +144,7 @@ function PublicationForm({
           <div className="input-line">
             <div className="input-stack">
               <Journal
+                current={current}
                 formRef={formRef}
                 title={jTitle}
                 setTitle={setJTitle}

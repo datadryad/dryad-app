@@ -18,6 +18,7 @@ describe('Publication', () => {
     api_journals = (new Array(3).fill(null)).map(() => makeIssn());
     journals = {data: {api_journals}};
     info = {
+      current: true,
       setResource,
       resource: {
         id: faker.datatype.number(),
