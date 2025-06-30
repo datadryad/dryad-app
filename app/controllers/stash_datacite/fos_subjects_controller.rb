@@ -12,7 +12,7 @@ module StashDatacite
             ResourcesSubjects.where(resource_id: resource, subject_id: subj).destroy_all
           end
           params[:fos_subjects].each do |subj|
-            resource.subjects << make_or_get_subject(subj) unless params[:fos_subjects].blank?
+            resource.subjects << make_or_get_subject(subj)
           end
           render json: resource.subjects.permissive_fos
         end
