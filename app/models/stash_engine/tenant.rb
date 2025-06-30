@@ -50,6 +50,7 @@ module StashEngine
     scope :partner_list, -> { enabled.where(partner_display: true) }
     scope :connect_list, -> { partner_list.where(covers_dpc: true) }
     scope :tiered, -> { enabled.where(payment_plan: :tiered) }
+    scope :fees_2025, -> { enabled.where(payment_plan: '2025') }
     scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 
     def authentication
