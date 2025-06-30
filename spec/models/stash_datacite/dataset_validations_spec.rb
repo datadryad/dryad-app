@@ -211,7 +211,7 @@ module StashDatacite
 
         it 'requires at least one data file' do
           @resource.data_files.destroy_all
-          create(:data_file, resource: @resource, upload_file_name: 'README.md')
+          create(:data_file, resource: @resource, download_filename: 'README.md')
           validations = DatasetValidations.new(resource: @resource)
           error = validations.data_required
           expect(error).to eq('No data files')

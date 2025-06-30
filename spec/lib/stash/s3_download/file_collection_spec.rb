@@ -49,7 +49,7 @@ module Stash
           allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
           @fc.download_files
 
-          expect(@fc.info_hash.keys).to include(@data_file.upload_file_name)
+          expect(@fc.info_hash.keys).to include(@data_file.download_filename)
         end
       end
     end

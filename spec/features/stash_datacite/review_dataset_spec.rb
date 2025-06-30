@@ -54,7 +54,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
       @identifier.edit_code = Faker::Number.number(digits: 5)
       @identifier.save
       @res = create(:resource, identifier: @identifier)
-      create(:data_file, file_state: 'copied', resource: @res, upload_file_name: 'README.md')
+      create(:data_file, file_state: 'copied', resource: @res, download_filename: 'README.md', upload_file_name: 'README.md')
       create(:data_file, file_state: 'copied', resource: @res)
       create(:description, description_type: 'technicalinfo', resource: @res)
       # Edit link for the above dataset, including a returnURL that should redirect to a documentation page

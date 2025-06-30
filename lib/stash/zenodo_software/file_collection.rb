@@ -87,16 +87,16 @@ module Stash
 
         file_errors = []
         dry_files.each do |dry_file|
-          zen_file = zen_hsh[dry_file.upload_file_name]
+          zen_file = zen_hsh[dry_file.download_filename]
 
           if zen_file.blank?
-            file_errors << "#{dry_file.upload_file_name} (id: #{dry_file.id}) exists in the Dryad database but not in Zenodo " \
+            file_errors << "#{dry_file.download_filename} (id: #{dry_file.id}) exists in the Dryad database but not in Zenodo " \
                            'after Zenodo indicated a successful upload'
             next
           end
 
           if zen_file[:filesize] != dry_file.upload_file_size
-            file_errors << "Dryad and Zenodo file sizes do not match for #{dry_file.upload_file_name} (id: #{dry_file.id}): " \
+            file_errors << "Dryad and Zenodo file sizes do not match for #{dry_file.download_filename} (id: #{dry_file.id}): " \
                            "Dryad size is #{dry_file.upload_file_size} and Zenodo size is #{zen_file[:filesize]}"
           end
         end

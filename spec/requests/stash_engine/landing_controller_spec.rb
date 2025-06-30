@@ -102,9 +102,9 @@ module StashEngine
       expect(response.body).to include(res.title)
       expect(response.body).not_to include(res2.title)
       expect(response.body).not_to include('This dataset is embargoed')
-      expect(response.body).to include(res.data_files.first.upload_file_name)
+      expect(response.body).to include(res.data_files.first.download_filename)
       # shows old file, but not new file that isn't published yet
-      expect(response.body).not_to include(res2.data_files.where(file_state: 'created').first.upload_file_name)
+      expect(response.body).not_to include(res2.data_files.where(file_state: 'created').first.download_filename)
     end
 
   end

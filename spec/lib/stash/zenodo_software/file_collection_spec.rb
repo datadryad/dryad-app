@@ -128,7 +128,7 @@ module Stash
           create(:data_file, resource_id: @resource.id)
 
           stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
-                              filenames: @files.map(&:upload_file_name),
+                              filenames: @files.map(&:download_filename),
                               filesizes: @files.map(&:upload_file_size))
 
           expect do
@@ -141,7 +141,7 @@ module Stash
 
         it 'raises an exception if Zenodo has an extra file' do
           stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
-                              filenames: @files.map(&:upload_file_name),
+                              filenames: @files.map(&:download_filename),
                               filesizes: @files.map(&:upload_file_size))
 
           @resource.generic_files.where(id: @files.last.id).destroy_all
@@ -157,7 +157,7 @@ module Stash
         it 'raises an exception if files are missing from zenodo' do
           f = @files.last
           stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
-                              filenames: @files.map(&:upload_file_name)[0..-2],
+                              filenames: @files.map(&:download_filename)[0..-2],
                               filesizes: @files.map(&:upload_file_size)[0..-2])
 
           expect do
@@ -165,12 +165,12 @@ module Stash
                                                resource_method: :software_files,
                                                deposition_id: @zenodo_copy.deposition_id,
                                                zc_id: @zenodo_copy.id)
-          end.to raise_error(FileError, /#{f.upload_file_name} \(id: #{f.id}\) exists in the Dryad database but not in Zenodo/)
+          end.to raise_error(FileError, /#{f.download_filename} \(id: #{f.id}\) exists in the Dryad database but not in Zenodo/)
         end
 
         it "raises an exception if size doesn't match" do
           stub_existing_files(deposition_id: @zenodo_copy.deposition_id,
-                              filenames: @files.map(&:upload_file_name),
+                              filenames: @files.map(&:download_filename),
                               filesizes: @files.map(&:upload_file_size))
 
           f = @files.last
@@ -181,7 +181,7 @@ module Stash
                                                resource_method: :software_files,
                                                deposition_id: @zenodo_copy.deposition_id,
                                                zc_id: @zenodo_copy.id)
-          end.to raise_error(FileError, /Dryad and Zenodo file sizes do not match for #{f.upload_file_name}/)
+          end.to raise_error(FileError, /Dryad and Zenodo file sizes do not match for #{f.download_filename}/)
         end
       end
     end

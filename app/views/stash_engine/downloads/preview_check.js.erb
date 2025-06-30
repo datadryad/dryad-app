@@ -1,5 +1,5 @@
 document.getElementById("file_preview_check<%= @file.id %>").innerHTML = `<% if @file.previewable? %>
 <%= button_to '<i class="fa fa-eye c-file-group__preview" aria-hidden="true"></i>Preview'.html_safe, preview_file_path(@file.id), remote: true, class: 'o-button__plain-text7',
-    title: "Preview #{@file.upload_file_name}", 'aria-label': "Preview #{@file.upload_file_name}",
-    method: 'get', onclick: "load_preview('#{@file.upload_file_name}')" %>
+    title: "Preview #{@file.download_filename}", 'aria-label': "Preview #{@file.download_filename}",
+    method: 'get', onclick: "load_preview('#{@file.download_filename}')" %>
 <% end %>`
