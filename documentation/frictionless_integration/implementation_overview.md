@@ -1,8 +1,8 @@
 # Frictionless Implementation Overview
 
 ## Background
-1. Frictionless is a Python library that runs in an AWS Lambda function.  You can also run it locally for
-   and manually to see the output of validation, but it doesn't work with our code this way.  Our 
+1. Frictionless is a Python library that runs in an AWS Lambda function. You can also run it locally for
+   and manually to see the output of validation, but it doesn't work with our code this way. Our 
    current code for the lambda is at `script/py-frictionless/lambda.py`.
 2. The AWS lambda takes these parameters `download_url, token, callback_url` in the event being passed in.
 3. Once AWS lambda has finished validating it calls the callback_url (our API) with the API token that
@@ -13,7 +13,7 @@ specific file that was validated.
 
 The AWS Lambda was put into the AWS console and uses a Lambda Layer (Python version and libraries that include the 
 frictionless ones)
-created under the AWS cloudshell.  I believe I followed
+created under the AWS cloudshell. I believe I followed
 [this article](https://www.linkedin.com/pulse/add-external-python-libraries-aws-lambda-using-layers-gabe-olokun/).
 
 In order to use the lambda from a development environment you need to either:
@@ -23,7 +23,7 @@ In order to use the lambda from a development environment you need to either:
 OR
 
 - Create a Rails environment for your server with correctly set server domain name information in the environment
-  configuration file.  The server needs to be accessible on the internet so that the Lambda can access the
+  configuration file. The server needs to be accessible on the internet so that the Lambda can access the
   callback URL of the server's API to update the results of the frictionless validation.
 
 ## Additional info

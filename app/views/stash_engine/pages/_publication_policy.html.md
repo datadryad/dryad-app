@@ -92,7 +92,7 @@ All of the above functions and offerings, including associated systems, hardware
     1. Dryad shall include updated files within the Dryad Infrastructure and Services while retaining and allowing access to the original files and all prior Published Versions.
     2. The Metadata of the Dataset will be updated to include information about the order of the Versions.
     3. The Dataset Identifier and Dryad search results point to the most recent Version of a Dataset, which displays a history that allows Users to navigate to earlier Versions.
-    4.  Prior Versions can be accessed via the “Data Files” section of the dataset landing page and are organized by the date of publication.
+    4. Prior Versions can be accessed via the “Data Files” section of the dataset landing page and are organized by the date of publication.
     5. New Versions will be preserved following the preservation procedures set forth in Section 5.
 4. **Sustainability**.
     1. *Technical Approach*. Dryad is built with open-source, agile software development methodologies.

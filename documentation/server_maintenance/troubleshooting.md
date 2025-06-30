@@ -94,9 +94,9 @@ Dealing with submission problems/resubmitting
 ---------------------------
 
 Go to the `Submission queue` page, check the box and click `Resend checked submissions` if there is
-a problem.  If there is weirdness in the queuing and resubmitting you can look at `stash_engine_repo_queue_states`
-and search by the resource_id.  A normal submission goes through 'enqueued', 'processing', 
-'provisional_complete' and 'complete'.  `provisional_complete' means we got a success message from 
+a problem. If there is weirdness in the queuing and resubmitting you can look at `stash_engine_repo_queue_states`
+and search by the resource_id. A normal submission goes through 'enqueued', 'processing', 
+'provisional_complete' and 'complete'. `provisional_complete' means we got a success message from 
 Merritt SWORD but we haven't seen it show up in Merritt as really completed yet and we wait to see
 a real completion before taking actions since it may be delayed or rarely has a problem in Merritt.
 
@@ -180,7 +180,7 @@ when it's submitted by them again.
 Transfer Ownership / Change "Corresponding Author"
 ==================================================
 
-The curators should give the dataset and ORCID information for who ownership goes to.  If you
+The curators should give the dataset and ORCID information for who ownership goes to. If you
 discover that this user has never logged in then you cannot transfer ownership until
 that user has logged in and has a record in the users table.
 
@@ -197,7 +197,7 @@ Lookup the current user and note the ORCID, name (you already have their user.id
 StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last.submitter
 ```
 
-Lookup the desired user to transfer ownership to.  Curator should've given the ORCID.  Note their user.id.
+Lookup the desired user to transfer ownership to. Curator should've given the ORCID. Note their user.id.
 ```ruby
 StashEngine::User.find_by(orcid: '<new-owner-orcid>');
 ```
@@ -210,7 +210,7 @@ StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last(2).upda
 
 Often, a user or curator has completely destroyed the correct association between the
 author and their ORCID by retyping someone else's name for the author that
-had a verified ORCID.  Check to see.
+had a verified ORCID. Check to see.
 
 ```ruby
 StashEngine::Identifier.find_by(identifier: '<bare-doi>').resources.last.authors
@@ -227,7 +227,7 @@ with ORCIDs for wrong people.
 We need a corporate author instead of an accountable individual author
 ----------------------------------------------------------------------
 
-In rare cases, we've allowed this, though, rarely.  Have a user submit the dataset like normal and when it is time
+In rare cases, we've allowed this, though, rarely. Have a user submit the dataset like normal and when it is time
 to change to a corporate author, do the following:
 
 - Find the author in the `stash_engine_authors` table for the dataset.
@@ -235,7 +235,7 @@ to change to a corporate author, do the following:
   - Change last name to the corporate author
   - Change or fill the desired email
   - Remove the ORCID from the record
-- Most will likely want the affiliation gone, also.  Remove the linking record in `dcs_affiliations_authors`
+- Most will likely want the affiliation gone, also. Remove the linking record in `dcs_affiliations_authors`
 - Check the landing page to be sure it appears correctly.
 - There may be additional things someone wants done such as waiving payment or other things.
 
@@ -310,9 +310,9 @@ select id,state,deposition_id,resource_id, copy_type from stash_engine_zenodo_co
 For each finished `data`, `supp_publish` and `software_publish` record in the
 `stash_engine_zenodo_copies` table do the following procedure. (see last query above)
 
-Now run a command like the one one below for each of these published to Zenodo.  It will
+Now run a command like the one one below for each of these published to Zenodo. It will
 re-open the published record, set embargo and publish it again with the
-embargo date.  You can find the deposition_id in the stash_engine_zenodo_copies
+embargo date. You can find the deposition_id in the stash_engine_zenodo_copies
 table. The zenodo_copy_id is the `stash_engine_zenodo_copies.id` from that same table.
 
 
@@ -360,7 +360,7 @@ to `Registered` instead of `Findable` so at least it's not searchable.
 # A dataset has an extra file when downloading the zip vs the individual files
 
 First check that Merritt and Dryad have the same number of versions. (Get the Merritt URL from
-the resource.download_uri and change `/d/` to `/m/` in the url).  If the number of versions is
+the resource.download_uri and change `/d/` to `/m/` in the url). If the number of versions is
 different between the two systems it may be that the zip is downloading the wrong version
 and it may need to be tweaked in the `stash_engine_versions` table (perhaps Merritt has an extra version).
 
@@ -370,7 +370,7 @@ uploaded to their dataset (shouldn't be a problem for these changes within the s
 To fix the latest version of the dataset in Merritt, you'll need to do a manual reversion in a new
 version to remove this file:
 
-1. Find the dataset in the curation dashboard and begin editing it as a curator.  Write down the resource_id (in url).
+1. Find the dataset in the curation dashboard and begin editing it as a curator. Write down the resource_id (in url).
 2. In the database set the `skip_emails` to `1` for the resource you're editing.
 3. Open the `stash_engine_generic_files` table and find the last time the file existed for this dataset and
    duplicate the row.
@@ -385,8 +385,8 @@ version to remove this file:
    the `status` to the previous version state (usually `published`), with your user_id and add a note like
    're-submitted to remove extra file'.
 7. Assuming the previous version was the published one, go back to `stash_engine_resources` and
-   set `meta_view` and `file_view` for the previous version to 0.  Set those to 1 for the current
-   version you just resubmitted.  This will make this the new published version with the merritt files removed.
+   set `meta_view` and `file_view` for the previous version to 0. Set those to 1 for the current
+   version you just resubmitted. This will make this the new published version with the merritt files removed.
 
 
 Permanently removing data that was accidentally published (and should never be)
@@ -399,7 +399,7 @@ Dataset removal should not be taken lightly. Make sure you "really" need to
 remove it, due to highly sensitive data and/or serious copyright issues.
 
 If it was published to zenodo, you may want to embargo it all for a long time until
-Alex can remove if it is time-critical.  Do it before deleting it everywhere else since
+Alex can remove if it is time-critical. Do it before deleting it everywhere else since
 it is harder to do after removal.
 
 ```
@@ -567,7 +567,7 @@ might be happening.
   for any errors).
 - The code should be polling an endpoint waiting for the report to appear in our database on the file upload
   page (you should also see this polling in the web browser javascript console)
-- Log into the AWS Console and examine the AWS Lambda function.  You can browse logs stored on amazon to see
+- Log into the AWS Console and examine the AWS Lambda function. You can browse logs stored on amazon to see
   if there are any errors for recent runs of the Lambda function that validates.
 - When the validation completes it will call a URL in our API to deposit the results of the validation
   which happens asynchronously in the background (this explains the polling a couple points above).

@@ -18,7 +18,7 @@ On the DSpace system:
       transfer will be done *except* the submission to Merritt (i.e.,
       the submission will remain "in progress" in the user's
       workspace). This is useful for dev servers that don't have access
-      to Merritt.  
+      to Merritt. 
     - `default.dash.submissions.delaySeconds` = number of seconds to
     delay after each data package is submitted, to not overwhelm the
     dash server (a good default is 10) 

@@ -77,12 +77,12 @@ bottom of that page).
 ```
 
 The buckets for local-server development environments have an additional hash added based
-on the machine or server name.  This keeps multiple developers from interfering with the
+on the machine or server name. This keeps multiple developers from interfering with the
 storage (and possibly duplicate resource IDs in different local databases and collisions).
 These look like 2c6f1ccc-25 (the first part is a shortened hash/digest and the part after the dash
 is the resource id).
 
-See the method `resource.s3_dir_name` to understand how this works.  You can also run a rails console
+See the method `resource.s3_dir_name` to understand how this works. You can also run a rails console
 and use this method to see what the hash is for your machine and a resource
 `StashEngine::Resource.find(<id>).s3_dir_name`.
 
@@ -92,7 +92,7 @@ application, and so the
 [:s3][:secret] is never exposed in any client side code, but only the results
 of the signing requests. It is then able
 to upload directly to S3 from the user's browser rather than going through
-an intermediary server.  It also splits uploads into multiple parts so it
+an intermediary server. It also splits uploads into multiple parts so it
 can handle large (> 5GB) uploads which are not supported by single s3 requests.
 
 The library is set up using npm modules.
@@ -153,7 +153,7 @@ INPUT json example:
 - Go to *app/config/environments* and add a new file for your new environment
   - Change the settings for `config.action_mailer.default_url_options` and 
     `Rails.application.default_url_options` so it has the correct hostname (and port if needed) to
-    create correct URLs in your environment.  See the other environment files for examples
+    create correct URLs in your environment. See the other environment files for examples
     (especially the development environment).
 - Add the environment to other config files (it might inherit most settings from development).
   - `app_config.yml`
@@ -165,7 +165,7 @@ INPUT json example:
   Grant in this case and based on a user with appropriate permissions to write for all datasets.)
 - In the table `stash_engine_api_tokens` add a row and add the `app_id` and `secret` for the user account above.
   For the `expires_at`, `created_at` and `updated_at` dates, type in a date at least a few days old.
-  Save the row.  This will be used to generate the tokens for our API that will be used with the
+  Save the row. This will be used to generate the tokens for our API that will be used with the
   callback and our code will keep them up to date and create new tokens when one is about to expire.
   Our code uses the public doorkeeper (http) API to obtain/update tokens to avoid against internal
   changes and using internal methods in the doorkeeper library.

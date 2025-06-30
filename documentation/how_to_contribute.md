@@ -21,7 +21,7 @@ The basic flow of this model would be:
     branch daily (and before creating your final PR).
   - When code and tests are complete for your feature, do a pull request to merge
   the changes into the main branch for the repository and assign another core developer
-  to review your changes.  (More about PR checklist below.)
+  to review your changes. (More about PR checklist below.)
 
 ## Testing
 
@@ -51,8 +51,8 @@ or so to run.
 - After we've had our end-of-sprint activities and review we generally make a tag of
 all the stable code that has been accepted into main and approved by the
 team and the product manager.
-- In some cases, there may be very *minor* fixes requested before tagging.  We don't want
-to hold up tagging too long for changes since we want to time-box our sprints.  It is also possible
+- In some cases, there may be very *minor* fixes requested before tagging. We don't want
+to hold up tagging too long for changes since we want to time-box our sprints. It is also possible
 to tag and then tag again as needed since tags are cheap.
 - The deployment page has more specific instructions for tagging.
 - We generally want to add release notes for a tag explaining the major features
@@ -67,17 +67,17 @@ complexity from other outside methods or services.
 - We don't have tests for all controller methods, but have tested some critical
   ones and the API with requests tests (which test the controller and
   optionally returned http output)
-- **It has *feature* tests for major UI functionality**.  No need for
+- **It has *feature* tests for major UI functionality**. No need for
 tests for simple text changes in the UI
-unless a text change breaks an existing test.  *Feature tests* load a page (or pages)
+unless a text change breaks an existing test. *Feature tests* load a page (or pages)
 through an automated web browser using Capybara/Selenium and also can execute client-side
 Javascript and other complex items.
-- **It has *request* tests for API changes**.  Request tests are good for testing
+- **It has *request* tests for API changes**. Request tests are good for testing
 a controller or for testing the request/response cycle for something that doesn't
 need to execute any client-side Javascript code.
 - **It links to any tickets if they're needed to understand the feature or function**.
 - **It adds documentation or configuration changes** if either needs to be changed.
-- **It supplies a little information about how to test, if it's not obvious**.  For
+- **It supplies a little information about how to test, if it's not obvious**. For
 example, if you need a specific identifier or specific data to test, then please note
 in the PR.
 - Other things?

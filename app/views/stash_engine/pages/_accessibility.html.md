@@ -8,13 +8,13 @@ Dryad is committed to making our website accessible to everyone, including indiv
 
 Our website is built to be accessible via screen readers, keyboard navigation, and mobile devices. Older, legacy pages may not meet these standards yet, but we are working to update them on an ongoing basis. We conduct accessibility tests continuously as we develop new features or refine existing ones.
 
-Dryad has a [Voluntary Product Accessibility Template](/docs/DryadVPAT.pdf) (VPAT), assessing conformance with Web Content Accessibility Guidelines 2.2.  
+Dryad has a [Voluntary Product Accessibility Template](/docs/DryadVPAT.pdf) (VPAT), assessing conformance with Web Content Accessibility Guidelines 2.2. 
 
 Dataset files are shared on the Dryad platform in a variety of formats. Not all data files and formats will be accessible to users who use screen readers or other assistive technologies.
 
 ## Report an accessibility problem
 
-If you have trouble using the Dryad website or blog or accessing our content, please let us know.  Send us an email using the form below, and we will do our best to provide the information you are seeking as soon as we can.
+If you have trouble using the Dryad website or blog or accessing our content, please let us know. Send us an email using the form below, and we will do our best to provide the information you are seeking as soon as we can.
 
 <div id="contact_form" aria-live="polite">
 <%= form_with(url: stash_url_helpers.contact_helpdesk_path, method: :post, local: false, id: 'accessibility-email') do |form| %>

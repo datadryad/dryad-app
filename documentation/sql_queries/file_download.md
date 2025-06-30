@@ -3,7 +3,7 @@
 The file model is deep in the heirarchy, so in order to get useful information
 you need to join many tables and select the most relevant information.
 
-Some useful example queries, below.  Replace the items in the WHERE clause with your values.
+Some useful example queries, below. Replace the items in the WHERE clause with your values.
 
 ```sql
 /* get information about the file and up to the identifier */
@@ -39,5 +39,5 @@ WHERE res.identifier_id = 27114 AND
 To examine the files in S3, you can look in the web console and brows to the correct bucket and path.
 
 When you're inside a path such as `13030` you may want to filter to something like `m500516c|1|producer` to
-see what files actually exist in different versions there.  (The `|` is a delimiter between the parts of the
+see what files actually exist in different versions there. (The `|` is a delimiter between the parts of the
 end of the ark, version and we're concerned with producer files here.
