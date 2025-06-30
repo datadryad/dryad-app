@@ -147,7 +147,6 @@ export default function UploadFiles({
     const generic_files = chosenFiles.map((f) => ({
       ...f,
       download_filename: f.sanitized_name,
-      upload_file_name: f.uuid,
       type: UploadTypetoRailsActiveRecord[f.uploadType],
     }));
     setResource((r) => ({...r, total_file_size: generic_files.reduce((s, f) => s + f.upload_file_size, 0), generic_files}));
@@ -345,6 +344,8 @@ export default function UploadFiles({
                   c.status = 'Uploaded';
                   c.uploaded = new_file.uploaded;
                   c.file_state = new_file.file_state;
+                  c.upload_file_name = new_file.upload_file_name;
+                  c.download_filename = new_file.download_filename;
                 }
                 return c;
               }));
