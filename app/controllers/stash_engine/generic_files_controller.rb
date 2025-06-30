@@ -5,8 +5,8 @@ module StashEngine
   class GenericFilesController < ApplicationController
 
     before_action :setup_class_info, :require_login
-    before_action :set_file_info, only: %i[destroy_manifest]
-    before_action :ajax_require_modifiable, only: %i[destroy_manifest validate_urls presign_upload upload_complete]
+    before_action :set_file_info, only: %i[destroy_manifest rename]
+    before_action :ajax_require_modifiable, only: %i[destroy_manifest rename validate_urls presign_upload upload_complete]
 
     # apply Pundit?
 
@@ -63,11 +63,12 @@ module StashEngine
       respond_to do |format|
         format.any(:json, :html) do
           # It can maintain previous deletions for the file (both same and different case), but delete non-deletions
-          @resource.send(@resource_assoc).where('lower(upload_file_name) = ?', params[:name]&.downcase)
+          @resource.send(@resource_assoc).where('lower(download_filename) = ?', params[:name]&.downcase)
             .where.not(file_state: 'deleted').destroy_all
           db_file =
             @file_model.create(
-              upload_file_name: params[:name],
+              download_filename: params[:name],
+              upload_file_name: params[:uuid],
               upload_content_type: params[:type],
               upload_file_size: params[:size],
               resource_id: @resource.id,
@@ -121,6 +122,19 @@ module StashEngine
       files = files.select { |f| f&.frictionless_report&.report.present? && f&.frictionless_report&.status != 'checking' }
 
       render json: files.as_json(
+        methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
+      )
+    end
+
+    def rename
+      return if @file.file_state == 'deleted'
+
+      check_files = @resource.generic_files.where(type: @file.type).present_files
+      duplicates = check_files.where('lower(download_filename) = ?', params[:newfilename].downcase)
+      render json: { error: "Filename #{params[:newfilename]} is in use" } and return if duplicates.present?
+
+      @file.update(download_filename: params[:newfilename])
+      render json: @file.as_json(
         methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
       )
     end

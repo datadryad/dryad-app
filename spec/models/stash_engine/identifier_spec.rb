@@ -65,7 +65,7 @@ module StashEngine
         DataFile.create(
           resource: @res3,
           file_state: 'created',
-          upload_file_name: "created#{i}.bin",
+          download_filename: "created#{i}.bin",
           upload_file_size: i * 3
         )
 
@@ -207,9 +207,9 @@ module StashEngine
 
       describe '#resources.with_file_changes' do
         before(:each) do
-          DataFile.create(resource_id: @res1.id, upload_file_name: 'cat', file_state: 'created')
-          DataFile.create(resource_id: @res2.id, upload_file_name: 'cat', file_state: 'copied')
-          DataFile.create(resource_id: @res3.id, upload_file_name: 'cat', file_state: 'created')
+          DataFile.create(resource_id: @res1.id, download_filename: 'cat', file_state: 'created')
+          DataFile.create(resource_id: @res2.id, download_filename: 'cat', file_state: 'copied')
+          DataFile.create(resource_id: @res3.id, download_filename: 'cat', file_state: 'created')
         end
 
         it 'returns the version that changed' do
@@ -376,25 +376,25 @@ module StashEngine
         describe '#latest_resource_with_public_download' do
 
           it 'finds the last download resource' do
-            @res1.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+            @res1.data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
             @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res2.data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+            @res2.data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
             @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res3.data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+            @res3.data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             expect(@identifier.latest_resource_with_public_download).to eql(@res1)
           end
 
           it 'finds published resource' do
-            @res1.data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+            @res1.data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
             @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res2.data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+            @res2.data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
             @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res2.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
-            @res3.data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+            @res3.data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             expect(@identifier.latest_resource_with_public_download).to eql(@res1)
           end
@@ -657,7 +657,7 @@ module StashEngine
     #     DataFile.create(
     #       resource: @res3,
     #       file_state: 'created',
-    #       upload_file_name: 'created.bin',
+    #       download_filename: 'created.bin',
     #       upload_file_size: 1.0e+14
     #     )
     #     expect(@identifier.large_files?).to eq(true)
@@ -770,7 +770,7 @@ module StashEngine
         resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
         resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
 
-        resources[0].data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
 
         @identifier.fill_resource_view_flags
 
@@ -789,10 +789,10 @@ module StashEngine
         resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
         resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
 
-        resources[0].data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
-        resources[1].data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
+        resources[1].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
         resources[2].data_files.destroy_all
-        resources[2].data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[2].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
 
         @identifier.fill_resource_view_flags
 
@@ -811,10 +811,10 @@ module StashEngine
         resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
         resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
 
-        resources[0].data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
-        resources[1].data_files << DataFile.create(file_state: 'deleted', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
+        resources[1].data_files << DataFile.create(file_state: 'deleted', download_filename: 'fun.cat', upload_file_size: 666)
         resources[2].data_files.destroy_all
-        resources[2].data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[2].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
 
         @identifier.fill_resource_view_flags
 
@@ -833,10 +833,10 @@ module StashEngine
         resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
         resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
 
-        resources[0].data_files << DataFile.create(file_state: 'created', upload_file_name: 'fun.cat', upload_file_size: 666)
-        resources[1].data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
+        resources[1].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
         resources[2].data_files.destroy_all
-        resources[2].data_files << DataFile.create(file_state: 'deleted', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[2].data_files << DataFile.create(file_state: 'deleted', download_filename: 'fun.cat', upload_file_size: 666)
 
         @identifier.fill_resource_view_flags
         @identifier.reload
@@ -877,7 +877,7 @@ module StashEngine
 
         resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
 
-        resources[2].data_files << DataFile.create(file_state: 'copied', upload_file_name: 'fun.cat', upload_file_size: 666)
+        resources[2].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
         resources[2].data_files.each { |fu| fu.update(file_state: 'copied') } # make them all copied, so invalid file history
         @identifier.reload
 
@@ -1035,7 +1035,7 @@ module StashEngine
 
     describe '#has_zenodo_software' do
       before(:each) do
-        @software_file = SoftwareFile.create(upload_file_name: 'test', file_state: 'created')
+        @software_file = SoftwareFile.create(download_filename: 'test', file_state: 'created')
       end
 
       it 'correctly detects current zenodo software' do
@@ -1055,7 +1055,7 @@ module StashEngine
 
     describe '#has_zenodo_supp' do
       before(:each) do
-        @supp_file = SuppFile.create(upload_file_name: 'test', file_state: 'created')
+        @supp_file = SuppFile.create(download_filename: 'test', file_state: 'created')
       end
 
       it 'correctly detects current zenodo supplemental' do

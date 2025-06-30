@@ -219,15 +219,15 @@ module StashDatacite
       # Checks for existing data files, Dryad is a data repository and shouldn't be used only as a way to deposit in Zenodo
       # There must be at least one file *other than* the README file.
       def contains_data?
-        @resource.data_files.present_files.where("UPPER(upload_file_name) NOT LIKE 'README%'").count.positive?
+        @resource.data_files.present_files.where("UPPER(download_filename) NOT LIKE 'README%'").count.positive?
       end
 
       def readme_files
-        @resource.data_files.present_files.where("UPPER(upload_file_name) LIKE 'README%'")
+        @resource.data_files.present_files.where("UPPER(download_filename) LIKE 'README%'")
       end
 
       def readme_md_files
-        @resource.data_files.present_files.where(upload_file_name: 'README.md')
+        @resource.data_files.present_files.where(download_filename: 'README.md')
       end
 
     end

@@ -78,7 +78,7 @@ module StashDatacite
 
       def readme_content
         if @resource.complete_readme.blank?
-          readme_file = @resource.current_file_uploads.where(upload_file_name: 'README.md')&.first
+          readme_file = @resource.current_file_uploads.where(download_filename: 'README.md')&.first
           # Render only README file content in UTF 8 encoding
           content = readme_file&.file_content || ''
           @readme_content ||= content.encoding == Encoding::UTF_8 ? content : ''

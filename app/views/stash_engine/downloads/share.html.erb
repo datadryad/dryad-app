@@ -17,15 +17,15 @@
 
   <% if sfw.count.positive? && @resource.zenodo_copies.software.done.count.positive? %>
     <h3>Software files available at Zenodo</h3>
-    <% sfw.order("lower(upload_file_name) ASC").each do |s| %>
-      <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
+    <% sfw.order("lower(download_filename) ASC").each do |s| %>
+      <%= link_to s.download_filename, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
     <% end %>
   <% end %>
 
   <% if supp.count.positive? && @resource.zenodo_copies.supp.done.count.positive? %>
     <h3>Supplemental files available at Zenodo</h3>
-    <% supp.order("lower(upload_file_name) ASC").each do |s| %>
-      <%= link_to s.upload_file_name, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
+    <% supp.order("lower(download_filename) ASC").each do |s| %>
+      <%= link_to s.download_filename, download_zenodo_path(file_id: s.id, share: params[:id]), target: '_blank' %><br/><br/>
     <% end %>
   <% end %>
 

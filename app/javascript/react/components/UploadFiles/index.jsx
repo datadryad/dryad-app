@@ -14,7 +14,7 @@ export const filesCheck = (resource, superuser, maximums) => {
     const data = files.filter((f) => f.type === 'StashEngine::DataFile');
     const software = files.filter((f) => f.type === 'StashEngine::SoftwareFile');
     const supp = files.filter((f) => f.type === 'StashEngine::SuppFile');
-    if (!data.some((f) => !f.upload_file_name.includes('README'))) {
+    if (!data.some((f) => !f.download_filename.includes('README'))) {
       return (
         <p className="error-text" id="data_error">Data files submitted to Dryad are required</p>
       );
@@ -87,7 +87,7 @@ export const filesCheck = (resource, superuser, maximums) => {
         <p className="error-text" id="data_error">
           Files cannot be retrieved from the URLs for the following URL uploads.
           Please remove them and try again, ensuring the URLs are valid, publically accessible, and point to individual files:<br />
-          {urlErrors.map((f) => f.upload_file_name).join(', ')}
+          {urlErrors.map((f) => f.download_filename).join(', ')}
         </p>
       );
     }
@@ -96,7 +96,7 @@ export const filesCheck = (resource, superuser, maximums) => {
       return (
         <p className="error-text" id="data_error">
           There was an error with the following upload{uploadErrors.length > 1 && 's'}. Please remove them and try again:<br />
-          {uploadErrors.map((f) => f.upload_file_name).join(', ')}
+          {uploadErrors.map((f) => f.download_filename).join(', ')}
         </p>
       );
     }

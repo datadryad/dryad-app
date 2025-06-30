@@ -7,7 +7,7 @@ export const readmeCheck = (resource) => {
   const {descriptions, identifier: {publication_date}, generic_files: files} = resource;
   if (files === undefined) return false;
   const readme = descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
-  const readmeFile = files.find((f) => f.type === 'StashEngine::DataFile' && /readme/i.test(f.upload_file_name));
+  const readmeFile = files.find((f) => f.type === 'StashEngine::DataFile' && /readme/i.test(f.download_filename));
   if (readme) {
     try {
       const obj = JSON.parse(readme);

@@ -47,17 +47,17 @@ module Stash
           .joins(:resource)
           .where('stash_engine_resources.identifier_id = ?', @resource.identifier_id)
           .where('stash_engine_generic_files.resource_id > ? AND stash_engine_generic_files.resource_id <= ?', ppr.id, @resource.id)
-          .where("file_state = 'created' OR file_state IS NULL").distinct.pluck(:upload_file_name)
+          .where("file_state = 'created' OR file_state IS NULL").distinct.pluck(:download_filename)
 
         # this will pick up any missing files that we have locally, but not on zenodo, may be required for old datasets that
         # have been published before, but never had files sent to zenodo because we weren't sending old datasets
         not_in_zenodo = StashEngine::DataFile
           .where(resource_id: @resource.id)
           .present_files
-          .where.not(upload_file_name: @existing_zenodo_filenames).distinct.pluck(:upload_file_name)
+          .where.not(download_filename: @existing_zenodo_filenames).distinct.pluck(:download_filename)
 
         # and limit to only items that still exist in the current version: eliminates duplicates and recently deleted files
-        @resource.data_files.where(upload_file_name: (changed + not_in_zenodo)).present_files
+        @resource.data_files.where(download_filename: (changed + not_in_zenodo)).present_files
       end
 
       # list of filenames for deletion from zenodo
@@ -65,7 +65,7 @@ module Stash
         return [] unless published_previously?
 
         # existing zenodo filenames on Zenodo server minus current existing database filenames leaves the ones to delete
-        @existing_zenodo_filenames - @resource.data_files.present_files.distinct.pluck(:upload_file_name)
+        @existing_zenodo_filenames - @resource.data_files.present_files.distinct.pluck(:download_filename)
       end
 
       def published_previously?
