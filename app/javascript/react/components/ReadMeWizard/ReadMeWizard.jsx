@@ -7,6 +7,7 @@ import ReadMeSteps, {secTitles} from './ReadMeSteps';
 import {ExitIcon} from '../ExitButton';
 import MarkdownEditor from '../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import ReadmeWarning from './ReadmeWarning';
 
 export default function ReadMeWizard({resource, setResource, current}) {
   const [desc, setDesc] = useState(null);
@@ -37,6 +38,7 @@ export default function ReadMeWizard({resource, setResource, current}) {
         setResource={setResource}
         fileList={fileList}
         readmeFile={readmeFile}
+        warning={<ReadmeWarning resource={resource} />}
       />
     );
   }
@@ -49,7 +51,7 @@ export default function ReadMeWizard({resource, setResource, current}) {
 }
 
 function ReadMe({
-  dcsDescription, title, doi, setResource, fileList, readmeFile,
+  dcsDescription, title, doi, setResource, fileList, readmeFile, warning,
 }) {
   const [initialValue, setInitialValue] = useState(null);
   const [replaceValue, setReplaceValue] = useState(null);
@@ -169,6 +171,7 @@ function ReadMe({
             </div>
           </div>
         </div>
+        {warning}
         <MarkdownEditor
           id="readme_editor"
           attr={{
