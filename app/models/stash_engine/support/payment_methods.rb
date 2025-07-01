@@ -66,7 +66,7 @@ module StashEngine
 
         if tenant&.authentication&.strategy == 'author_match'
           # get all unique ror_id associations for all authors
-          rors = latest_resource.authors.map do |auth|
+          rors = latest_resource.authors.includes(:affiliations).map do |auth|
             auth&.affiliations&.map { |affil| affil&.ror_id }
           end.flatten.uniq
           return rors&.intersection(tenant&.ror_ids)&.present?
