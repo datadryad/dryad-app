@@ -311,6 +311,8 @@ module StashDatacite
         contributor_name: dcs_funding_reference.name,
         contributor_type: Datacite::Mapping::ContributorType::FUNDER.value.downcase,
         award_number: (award_number.value if award_number),
+        award_uri: (award_number.uri if award_number),
+        award_title: dcs_funding_reference.award_title,
         resource_id: se_resource_id
       )
     end
