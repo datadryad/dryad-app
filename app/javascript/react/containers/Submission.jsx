@@ -382,7 +382,6 @@ function Submission({
       <div id="submission-heading">
         <div>
           <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
-          <ExitButton resource={resource} />
         </div>
       </div>
       <div className="submission-edit">
@@ -408,39 +407,44 @@ function Submission({
               ))}
             </div>
             <div id="submission-help">
-              <div className="o-dataset-nav">
-                {step.name === 'Agreements' ? (
-                  <button
-                    type="button"
-                    className="o-button__plain-text2"
-                    disabled={!resource.accepted_agreement}
-                    onClick={() => {
-                      setStep({name: 'Create a submission'});
-                      setReview(true);
-                    }}
-                  >
-                  Preview submission
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="o-button__plain-text2"
-                    aria-controls="submission-step"
-                    onClick={() => move(1)}
-                  >
-                  Next <i className="fa fa-caret-right" aria-hidden="true" />
-                  </button>
-                )}
-                {step.name !== 'Create a submission' && (
-                  <button
-                    type="button"
-                    className="o-button__plain-text"
-                    aria-controls="submission-step"
-                    onClick={() => move(-1)}
-                  >
-                    <i className="fa fa-caret-left" aria-hidden="true" /> Previous
-                  </button>
-                )}
+              <div className="dataset-nav-container">
+                <div className="dataset-nav">
+                  {step.name === 'Agreements' ? (
+                    <button
+                      type="button"
+                      className="o-button__plain-text2"
+                      disabled={!resource.accepted_agreement}
+                      onClick={() => {
+                        setStep({name: 'Create a submission'});
+                        setReview(true);
+                      }}
+                    >
+                    Preview submission
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="o-button__plain-text2"
+                      aria-controls="submission-step"
+                      onClick={() => move(1)}
+                    >
+                    Next <i className="fa fa-caret-right" aria-hidden="true" />
+                    </button>
+                  )}
+                  {step.name !== 'Create a submission' && (
+                    <button
+                      type="button"
+                      className="o-button__plain-text"
+                      aria-controls="submission-step"
+                      onClick={() => move(-1)}
+                    >
+                      <i className="fa fa-caret-left" aria-hidden="true" /> Previous
+                    </button>
+                  )}
+                </div>
+                <div className="dataset-nav-ltr">
+                  <ExitButton resource={resource} />
+                </div>
               </div>
               <div id="submission-help-text" aria-label="Section help">
                 {step.name === 'Create a submission' && (

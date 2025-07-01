@@ -105,7 +105,7 @@ export default function ReadMeSteps({
           <StepEditor key={`step${i}`} step={i} hidden={i != step || null} content={sections[i].content} saveContent={(m) => saveContent(i, m)} />
         ))}
       </div>
-      <div className="o-dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
+      <div className="dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
         <button type="button" className="o-button__plain-text1" onClick={() => setStep((s) => Number(s) + 1)}>
           {step === secTitles.length ? (
             <>Complete &amp; generate README</>
