@@ -1,7 +1,8 @@
 [
   {
     "id": 15165,
-    "upload_file_name": "invalid.xml",
+    "download_filename": "invalid.xml",
+    "upload_file_name": "14046513-a1ae-4f33-81c6-4b71191cbbf3.xml",
     "upload_content_type": "text/xml",
     "upload_file_size": 120510,
     "file_state": "created",
@@ -23,7 +24,8 @@
   },
   {
     "id": 15164,
-    "upload_file_name": "invalid.json",
+    "download_filename": "invalid.json",
+    "upload_file_name": "880303f2-53ad-45e7-ae12-7be7d2683bf5.xml",
     "upload_content_type": "application/json",
     "upload_file_size": 3482,
     "file_state": "created",
@@ -45,7 +47,8 @@
   },
   {
     "id": 15163,
-    "upload_file_name": "simple-frictionless-test.csv",
+    "download_filename": "simple-frictionless-test.csv",
+    "upload_file_name": "383cd2f9-49a7-4d3e-a8cb-2393fda58ba2.xml",
     "upload_content_type": "text/csv",
     "upload_file_size": 47,
     "file_state": "created",

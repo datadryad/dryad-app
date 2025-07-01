@@ -69,7 +69,7 @@ Security
 - We do security by limiting access to the relevant EC2 IP addresses. If you start/stop one of the Dryad servers, it may be assigned a
   new IP address, which will cause searches to be blocked by the SOLR server's
   security group. You will need to edit the security group to allow the Rails
-  server to access SOLR again.  
+  server to access SOLR again. 
 
 
 Backing up SOLR
@@ -79,10 +79,10 @@ We haven't done formal backups of the SOLR data since it is fairly easy to repop
 and in fact we have regenerated it on multiple occasions (every time we make schema changes or add facets).
 
 SOLR also offers a backup and restore functionality, so it could be manually backed up from one server and
-restored onto another.  The [SOLR backup and restore documentation](https://solr.apache.org/guide/solr/latest/deployment-guide/backup-restore.html)
+restored onto another. The [SOLR backup and restore documentation](https://solr.apache.org/guide/solr/latest/deployment-guide/backup-restore.html)
 gives information about how to back up a core and restore it.
 
 While it's possible to use this option rather than repopulating the indexes from the database, I suspect it
-would not offer much of an advantage over running the repopulation rake task.  There may be other reasons
+would not offer much of an advantage over running the repopulation rake task. There may be other reasons
 we want to keep backups or automate them, though.
 

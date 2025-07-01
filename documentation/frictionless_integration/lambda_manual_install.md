@@ -4,8 +4,8 @@ We probably want to have a more managed process of updating lambdas, but the cur
 follow the following procedure to create or update a lambda function.
 
 1. If you're using more than the built-in Python libraries and boto (the Amazon AWS library), you'll need to get
-   the extra libraries in somehow.  For a simply installing a small number of libraries people recommend using a Lambda 
-   Layer.  We're using the basic gameplan outlined at this [LinkedIn article](https://www.linkedin.com/pulse/add-external-python-libraries-aws-lambda-using-layers-gabe-olokun/).
+   the extra libraries in somehow. For a simply installing a small number of libraries people recommend using a Lambda 
+   Layer. We're using the basic gameplan outlined at this [LinkedIn article](https://www.linkedin.com/pulse/add-external-python-libraries-aws-lambda-using-layers-gabe-olokun/).
    Which creates the layer in AWS Cloudshell, zips it and uploads it to S3 for use as a layer.
 2. Update and test code in the AWS UI console for the lambda function as needed. Also set up test
    events with JSON that gets passed into the lambda function if you want to 
@@ -13,7 +13,7 @@ follow the following procedure to create or update a lambda function.
    limited so it's only a few hundred lines of code for all of them and can be copied and pasted
    into the editor in the AWS console.
 3. Ensure that the user has permission to invoke the Lambda from Dryad code using IAM.
-4. Write code in the application that invokes the Lambda.  You can see examples of this with
+4. Write code in the application that invokes the Lambda. You can see examples of this with
    the `trigger_frictionless` method or the `trigger_excel_to_csv` in the generic_file.rb model.
 5. The AWS Lambdas we have tend to be stateless and almost all information is passed
    in when invoked and results are passed back out to our own API upon completion. You can do things in

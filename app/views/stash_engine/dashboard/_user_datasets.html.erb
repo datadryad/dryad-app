@@ -78,9 +78,9 @@
               <button class="o-button__plain-text7"><i class="fas fa-newspaper" aria-hidden="true"></i>Link article<span class="screen-reader-only"> to <%= dataset.identifier.identifier %></span></button>
             <% end %>
           <% end %>
-          <%= form_with(url: contact_helpdesk_form_path(id: dataset.identifier.id), method: :get, local: false, class: 'o-button__inline-form', style: 'margin-left: auto', id: "#{dataset.id}_contact_form") do %>
-              <button class="o-button__plain-text7"><i class="fas fa-circle-question" aria-hidden="true"></i>Get help<span class="screen-reader-only"> with <%= dataset.identifier.identifier %></span></button>
-          <% end %>
+          <% #form_with(url: contact_helpdesk_form_path(id: dataset.identifier.id), method: :get, local: false, class: 'o-button__inline-form', style: 'margin-left: auto', id: "#{dataset.id}_contact_form") do %>
+              <!--button class="o-button__plain-text7"><i class="fas fa-circle-question" aria-hidden="true"></i>Get help<span class="screen-reader-only"> with <%= dataset.identifier.identifier %></span></button-->
+          <% #end %>
         </div>
       </div>
     </div>

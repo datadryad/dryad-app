@@ -49,14 +49,14 @@ namespace :download_check do
 
           next unless res.current_resource_state.resource_state == 'submitted'
 
-          d_files = res.data_files.newly_created
+          d_files = res.data_files.newly_created.without_deleted_files
           d_files.each do |df|
             s3_check = Tasks::DownloadCheck::S3Check.new(file: df)
             s3_chk = s3_check.check_file
             next if s3_chk.nil?
 
             csv << [se_id.id, se_id.identifier, res.id,
-                    df.id, df.upload_file_name, s3_check.mrt_version, df.upload_file_size,
+                    df.id, df.download_filename, s3_check.mrt_version, df.upload_file_size,
                     s3_chk[:before][0], s3_chk[:before][1],
                     s3_chk[:after][0], s3_chk[:after][1]]
           end

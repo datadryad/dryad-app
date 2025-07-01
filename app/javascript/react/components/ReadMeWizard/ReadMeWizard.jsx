@@ -7,8 +7,9 @@ import ReadMeSteps, {secTitles} from './ReadMeSteps';
 import {ExitIcon} from '../ExitButton';
 import MarkdownEditor from '../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import ReadmeWarning from './ReadmeWarning';
 
-export default function ReadMeWizard({resource, setResource, step}) {
+export default function ReadMeWizard({resource, setResource, current}) {
   const [desc, setDesc] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [readmeFile, setReadmeFile] = useState(null);
@@ -22,11 +23,11 @@ export default function ReadMeWizard({resource, setResource, step}) {
   };
 
   useEffect(() => {
-    if (step === 'README') {
+    if (current) {
       getFiles();
       setDesc(JSON.parse(JSON.stringify(resource.descriptions.find((d) => d.description_type === 'technicalinfo'))));
     }
-  }, [step]);
+  }, [current]);
 
   if (desc?.id) {
     return (
@@ -37,6 +38,7 @@ export default function ReadMeWizard({resource, setResource, step}) {
         setResource={setResource}
         fileList={fileList}
         readmeFile={readmeFile}
+        warning={<ReadmeWarning resource={resource} />}
       />
     );
   }
@@ -49,7 +51,7 @@ export default function ReadMeWizard({resource, setResource, step}) {
 }
 
 function ReadMe({
-  dcsDescription, title, doi, setResource, fileList, readmeFile,
+  dcsDescription, title, doi, setResource, fileList, readmeFile, warning,
 }) {
   const [initialValue, setInitialValue] = useState(null);
   const [replaceValue, setReplaceValue] = useState(null);
@@ -169,8 +171,14 @@ function ReadMe({
             </div>
           </div>
         </div>
+        {warning}
         <MarkdownEditor
           id="readme_editor"
+          attr={{
+            'aria-errormessage': 'readme_error',
+            'aria-labelledby': 'md_editor_label',
+            'aria-describedby': 'md_editor_desc',
+          }}
           initialValue={initialValue}
           replaceValue={replaceValue}
           onChange={checkDescription}

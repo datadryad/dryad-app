@@ -34,7 +34,7 @@ module Stash
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(false)
           expect(dl_status[:error]).to include('500')
-          expect(dl_status[:error]).to include(@data_file.upload_file_name)
+          expect(dl_status[:error]).to include(@data_file.download_filename)
           expect(dl_status[:error]).to include("resource #{@resource.id}")
         end
 
@@ -46,7 +46,7 @@ module Stash
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(false)
           expect(dl_status[:error]).to include('404')
-          expect(dl_status[:error]).to include(@data_file.upload_file_name)
+          expect(dl_status[:error]).to include(@data_file.download_filename)
           expect(dl_status[:error]).to include("resource #{@resource.id}")
         end
 
@@ -57,7 +57,7 @@ module Stash
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(false)
           expect(dl_status[:error]).to include('500')
-          expect(dl_status[:error]).to include(@data_file.upload_file_name)
+          expect(dl_status[:error]).to include(@data_file.download_filename)
           expect(dl_status[:error]).to include("resource #{@resource.id}")
         end
 
@@ -67,7 +67,7 @@ module Stash
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(true)
-          expect(::File.exist?(::File.join(@file_dl_obj.path, @data_file.upload_file_name))).to eq(true)
+          expect(::File.exist?(::File.join(@file_dl_obj.path, @data_file.download_filename))).to eq(true)
         end
 
         it 'expects downloads to have correct digests' do

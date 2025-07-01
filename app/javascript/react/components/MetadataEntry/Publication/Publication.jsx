@@ -32,7 +32,7 @@ const capitals = (t) => {
   return false;
 };
 
-export default function Publication({resource, setResource}) {
+export default function Publication({current, resource, setResource}) {
   const subType = resource.resource_type.resource_type;
   const [assoc, setAssoc] = useState(null);
   const [showTitle, setShowTitle] = useState(false);
@@ -163,7 +163,14 @@ export default function Publication({resource, setResource}) {
       )}
 
       {importType && importType !== 'other' && (
-        <PublicationForm resource={resource} setResource={setResource} setSponsored={setSponsored} importType={importType} key={importType} />
+        <PublicationForm
+          current={current}
+          resource={resource}
+          setResource={setResource}
+          setSponsored={setSponsored}
+          importType={importType}
+          key={importType}
+        />
       )}
 
       {showTitle && (

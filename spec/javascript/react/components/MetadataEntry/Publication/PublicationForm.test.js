@@ -24,6 +24,7 @@ describe('PublicationFormManuscript', () => {
       manuscript_number: 'TEST-MAN-NUM',
     };
     info = {
+      current: true,
       setResource,
       setSponsored,
       importType: 'manuscript',
@@ -103,6 +104,7 @@ describe('PublicationForm', () => {
       work_type: 'primary_article',
     }];
     info = {
+      current: true,
       setResource,
       setSponsored,
       importType: 'published',

@@ -118,9 +118,9 @@ module StashEngine
 
     # rubocop:disable Metrics/AbcSize
     def prepare_readme
-      @file_list = @resource.data_files.present_files.reject { |f| f.upload_file_name == 'README.md' }.map do |f|
-        h = { name: f.upload_file_name }
-        if f.upload_file_name.end_with?('.csv', '.tsv', '.xlsx', '.xls', '.rdata', '.rda', '.mat', '.txt')
+      @file_list = @resource.data_files.present_files.reject { |f| f.download_filename == 'README.md' }.map do |f|
+        h = { name: f.download_filename }
+        if f.download_filename.end_with?('.csv', '.tsv', '.xlsx', '.xls', '.rdata', '.rda', '.mat', '.txt')
           h[:variables] = []
           if f.previewable? && (sep = SniffColSeparator.find(f.sniff_file))
             h[:variables] = f.sniff_file.lines.first.chomp.split(sep).map { |c| c.delete_prefix('"').delete_suffix('"') }
@@ -131,7 +131,7 @@ module StashEngine
       if @resource.descriptions.type_technical_info.try(:description) && !@resource.descriptions.type_technical_info.try(:description).empty?
         @file_content = nil
       else
-        readme_file = @resource&.data_files&.present_files&.where(upload_file_name: 'README.md')&.first
+        readme_file = @resource&.data_files&.present_files&.where(download_filename: 'README.md')&.first
         # Load correctly encoded README.md for editing and otherwise display an error.
         if readme_file&.file_content
           content_string = readme_file.file_content
@@ -154,7 +154,10 @@ module StashEngine
     end
 
     def dpc_status
+      @resource.check_add_readme_file
+      @resource.check_add_cedar_json
       dpc_checks = {
+        total_file_size: @resource.total_file_size,
         journal_will_pay: @resource.identifier.journal&.will_pay?,
         institution_will_pay: @resource.identifier.institution_will_pay?,
         funder_will_pay: @resource.identifier.funder_will_pay?,

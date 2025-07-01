@@ -1,10 +1,10 @@
 # Query for recent stalled items in Merritt
 
-Unless manual changes were applied or a long submission times out, items in the queue state table have 2 success messages.  The first
-happens when we get an acceptance from Merritt Sword.  The second happens when we retrive the item from the OAI-PMH feed to verify
+Unless manual changes were applied or a long submission times out, items in the queue state table have 2 success messages. The first
+happens when we get an acceptance from Merritt Sword. The second happens when we retrive the item from the OAI-PMH feed to verify
 information and completion status in Merritt.
 
-This query finds the most recent submissions (between 2-72 hours old) that have not received a 2nd success message.  Most of these
+This query finds the most recent submissions (between 2-72 hours old) that have not received a 2nd success message. Most of these
 would be errors in Merritt, but there might be exceptions for large submissions that take longer than 2 hours or for items that timed
 out before receiving an initial success confirmation from Merritt on submission.
 

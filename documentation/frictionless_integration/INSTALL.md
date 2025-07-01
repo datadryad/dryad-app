@@ -77,7 +77,7 @@ we'll see and log them from our Rails app.
 ## Frictionless UI component library
 
 Our fork of the frictionless React/Typescript library is at
-`git@github.com:CDL-Dryad/components.git`.  Be sure to clone it into
+`git@github.com:CDL-Dryad/components.git`. Be sure to clone it into
 your own directory to begin modifying it.
 
 Our npmjs.com organization is called `cdl-dryad` which I hope allows all

@@ -37,11 +37,11 @@ Our demo instance of Dryad is available at [https://sandbox.datadryad.org](https
 
 * A (somewhat dated) database [Entity-Relationship diagram](other_files/dash_er_2018-06.pdf).
 
-    * Note most things are related to stash_engine_resources if you have trouble following all the lines.  stash_engine_identifiers has many resources.
+    * Note most things are related to stash_engine_resources if you have trouble following all the lines. stash_engine_identifiers has many resources.
 
     * "dcs" means DataCite Schema
 
-* [Dataset submission flow](submission_flow.md), one of our longest and more complicated flows.  (Login is also somewhat complicated, but people don’t spend a lot of time doing it.)
+* [Dataset submission flow](submission_flow.md), one of our longest and more complicated flows. (Login is also somewhat complicated, but people don’t spend a lot of time doing it.)
 
 * Please see [how to set up and run tests locally](local_testing_setup.md) so you can add tests and run current tests to be sure nothing breaks.
 

@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import Evaporate from 'evaporate';
+import {v4 as uuid} from 'uuid';
 import AWS from 'aws-sdk';
 import sanitize from '../../../lib/sanitize_filename';
 import {formatSizeUnits} from '../../../lib/utils';
@@ -48,7 +49,7 @@ export const displayAriaMsg = (msg) => {
 
 const transformData = (files) => files.map((file) => ({
   ...file,
-  sanitized_name: file.upload_file_name,
+  sanitized_name: file.download_filename,
   status: 'Uploaded',
   uploadType: RailsActiveRecordToUploadType[file.type],
   sizeKb: formatSizeUnits(file.upload_file_size),
@@ -71,7 +72,7 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name,
+  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name, current,
 }) {
   const [chosenFiles, setChosenFiles] = useState([]);
   const [validating, setValidating] = useState([]);
@@ -145,7 +146,7 @@ export default function UploadFiles({
     });
     const generic_files = chosenFiles.map((f) => ({
       ...f,
-      upload_file_name: f.sanitized_name,
+      download_filename: f.sanitized_name,
       type: UploadTypetoRailsActiveRecord[f.uploadType],
     }));
     setResource((r) => ({...r, total_file_size: generic_files.reduce((s, f) => s + f.upload_file_size, 0), generic_files}));
@@ -307,7 +308,7 @@ export default function UploadFiles({
     fileList.map((file) => {
       if (file.status === 'Pending') {
         // TODO: Certify if file.uploadType has an entry in AllowedUploadFileTypes
-        const evaporateUrl = `${s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.sanitized_name}`;
+        const evaporateUrl = `${s3_dir_name}/${AllowedUploadFileTypes[file.uploadType]}/${file.uuid}`;
         const addConfig = {
           name: evaporateUrl,
           file,
@@ -328,6 +329,7 @@ export default function UploadFiles({
               `/${file.uploadType}_file/upload_complete/${resource.id}`,
               {
                 resource_id: resource.id,
+                uuid: file.uuid,
                 name: file.sanitized_name,
                 size: file.size,
                 type: file.type,
@@ -336,13 +338,14 @@ export default function UploadFiles({
             ).then((response) => {
               const {new_file} = response.data;
               setChosenFiles((cf) => cf.map((c) => {
-                if (c.name === new_file.original_filename
+                if (c.sanitized_name === new_file.download_filename
                   && UploadTypetoRailsActiveRecord[c.uploadType] === new_file.type) {
                   c.id = new_file.id;
-                  c.sanitized_name = new_file.upload_file_name;
                   c.status = 'Uploaded';
                   c.uploaded = new_file.uploaded;
                   c.file_state = new_file.file_state;
+                  c.upload_file_name = new_file.upload_file_name;
+                  c.download_filename = new_file.download_filename;
                 }
                 return c;
               }));
@@ -380,6 +383,7 @@ export default function UploadFiles({
       // TODO: make a function?; future: unify adding file attributes
       const newFiles = files.map((file, index) => {
         file.id = `pending${timestamp + index / 1000}`;
+        file.uuid = `${uuid()}.${file.name.split('.').pop()}`;
         file.sanitized_name = sanitize(file.name);
         file.status = 'Pending';
         file.url = null;
@@ -447,6 +451,24 @@ export default function UploadFiles({
       setChosenFiles((cf) => cf.filter((f) => f.id !== id));
     }
     displayAriaMsg(`${file.sanitized_name} removed`);
+  };
+
+  const renameFileHandler = (id, newname) => {
+    setWarning([]);
+    const file = chosenFiles.find((f) => f.id === id);
+    const newfilename = sanitize(newname);
+    if (file.status !== 'Pending') {
+      axios.patch(`/${file.uploadType}_files/${id}/rename`, {resource_id: resource.id, newfilename})
+        .then((data) => {
+          if (data.data.error) {
+            setWarning([data.data.error]);
+          } else {
+            const transformed = transformData([data.data]);
+            setChosenFiles((cf) => cf.map((f) => (f.id === id ? transformed[0] : f)));
+          }
+        });
+    }
+    // displayAriaMsg(`${}`);
   };
 
   const hideModal = (event) => {
@@ -580,7 +602,7 @@ export default function UploadFiles({
           ><i className="fas fa-caret-up" aria-hidden="true" style={{marginRight: '.5ch'}} />Close
           </span>
         </p>
-        <UploadSelect resource={resource} setResource={setResource} changed={addFilesHandler} clickedModal={showModalHandler} />
+        <UploadSelect current={current} resource={resource} setResource={setResource} changed={addFilesHandler} clickedModal={showModalHandler} />
       </div>
       {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={removeFailedUrlHandler} />}
       {chosenFiles.length > 0 ? (
@@ -591,6 +613,7 @@ export default function UploadFiles({
           <FileList
             config={config_payments}
             chosenFiles={chosenFiles}
+            renameFile={renameFileHandler}
             clickedRemove={removeFileHandler}
             clickedValidationReport={(file) => setValFile(file)}
             totalSize={chosenFiles.reduce((s, f) => s + f.upload_file_size, 0)}

@@ -6,7 +6,7 @@ I'm adding them here so we don't have to keep re-inventing them and there
 isn't a UC systemwide tenant now that has all the RORs for using UI reporting.
 
 IDK if all these queries are perfect but it was an "oh by the way" request from
-someone who wanted information right away.  They may also be useful for more
+someone who wanted information right away. They may also be useful for more
 one-off requests in the future.
 
 The following gives published items with an author at one of the UC RORs
@@ -26,7 +26,7 @@ WHERE ror_id IN
 AND pub_state = 'published'
 ```
 
-UC Authors of datasets grouped by publication year.  I'm assuming the first resource
+UC Authors of datasets grouped by publication year. I'm assuming the first resource
 where the files show up is the one with the publication year that is correct.
 ```sql
 SELECT pub_year, count(pub_year) as number FROM
@@ -52,7 +52,7 @@ ORDER BY pub_year;
 ```
 
 Published datasets by the submitter and their current affiliation as a UC tenant. It could
-probably be optimized by using the tenant_id in the resource instead.  There may be some difference
+probably be optimized by using the tenant_id in the resource instead. There may be some difference
 in number since users may move affiliations as they change jobs and the original tenant was the
 one that was present on initial submission.
 ```sql

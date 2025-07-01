@@ -11,7 +11,7 @@ module Tasks
 
         @ark = @file.resource.merritt_ark
         @mrt_version = @file.resource.stash_version.merritt_version
-        @fn = @file.upload_file_name
+        @fn = @file.download_filename
       end
 
       # returns information about where this file was uploaded in S3 if it doesn't match the expected location

@@ -204,8 +204,8 @@ Datasets affiliated with an institution
 =======================================
 
 When talking to institutions, we may want to give them information about datasets with some
-connection to their institution.  This takes into account both author affiliations and funding
-related to the institution.  It takes a string and returns any that have that as a substring.
+connection to their institution. This takes into account both author affiliations and funding
+related to the institution. It takes a string and returns any that have that as a substring.
 This also gives institutions when people didn't autocomplete their ROR correctly.
 
 Run like:
@@ -214,18 +214,18 @@ Run like:
 RAILS_ENV=production bundle exec rake reports:from_text_institution -- --name="Planck"
 ```
 
-Put the string you want to detect in the `name` variable.  It shows the matches in `author_affiliations`
+Put the string you want to detect in the `name` variable. It shows the matches in `author_affiliations`
 and `contributor_affiliations` in the tabular data output.
 
 
 Authors at an institution report (from SQL)
 ===========================================
 
-This SQL may be more complicated than it needs to be, but it seems to work.  It gives information about
+This SQL may be more complicated than it needs to be, but it seems to work. It gives information about
 published and embargoed items with authors at an institution based on the ROR ids you put into the query
 (look and replace in two separate places).
-It can then be exported from SQL as TSV/CSV or whatever.  There are duplicate rows per dataset if more
-than one author is from the institution that contributed to the same dataset.  The views and downloads may
+It can then be exported from SQL as TSV/CSV or whatever. There are duplicate rows per dataset if more
+than one author is from the institution that contributed to the same dataset. The views and downloads may
 be off if we go to a model where we retrieve them in real-time from DataCite because they come from
 multiple sources (like us and Zenodo) and we don't pre-populate them all the time.
 
@@ -337,7 +337,7 @@ SELECT DISTINCT ids.identifier
 Unique authors from ROR institutions (from SQL)
 ===============================================
 
-This is an example of a query getting unique author last, first and institution names.  This is an example of UCs and Lawrence Berkeley Lab.
+This is an example of a query getting unique author last, first and institution names. This is an example of UCs and Lawrence Berkeley Lab.
 
 There are lots of duplicate authors who seem to be entering their names in slightly different ways or saying they're from different institutions (or spelling them differently).
 

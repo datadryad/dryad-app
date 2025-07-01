@@ -9,30 +9,30 @@ Information on setting up shibboleth at a member institution is available in the
 Authentication options
 ======================
 
-Everyday login takes place using a researcher’s ORCID.  However on the first
+Everyday login takes place using a researcher’s ORCID. However on the first
 sign in the user is asked if their institution is a Dryad member institution and
-normally they log into their single sign on (InCommon/Shibboleth) then.  
+normally they log into their single sign on (InCommon/Shibboleth) then. 
 
 When the user has done this once, they’re no longer prompted for this again on
-other logins (just the ORCID login).  (Though we’ve talked about making this a
+other logins (just the ORCID login). (Though we’ve talked about making this a
 periodic re-validation such as yearly to ensure our user data doesn’t go stale.) 
  
 Current Validation Methods (most to least preferred)
 1. **InCommon/Shibboleth** – as described above.
 2. **IP Address validation** – In this scenario an institution can give us IP
-  address ranges.  Rather than validating with an institutional login for the
-  first time, we then validate the IP address falls in the correct range.  If
+  address ranges. Rather than validating with an institutional login for the
+  first time, we then validate the IP address falls in the correct range. If
   they’re not in the correct IP address range they get a message telling them that
   they need to use a campus network for their first login to the service. If
   successful, it shows they’ve validated and logged in successfully from that
-  campus.  The downside of this method is keeping the IP address ranges up to date
+  campus. The downside of this method is keeping the IP address ranges up to date
   if they change and it’s a little broader validation. 
 3. **One of the authors belongs to us**  --  In this method, anyone can claim to
-  be a member of a campus community without validation.  However, in order to get
+  be a member of a campus community without validation. However, in order to get
   a free deposit, the chosen affiliation of at least one author needs to match the
-  chosen user-account affiliation.  If an author affiliation doesn’t match the
+  chosen user-account affiliation. If an author affiliation doesn’t match the
   asserted member affiliation then the depositing author will still be invoiced
-  and asked to pay on publication.  I think we have only used this with one other
+  and asked to pay on publication. I think we have only used this with one other
   institution and it is the least preferred of the 3 options. 
  
 

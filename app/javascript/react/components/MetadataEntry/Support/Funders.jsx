@@ -5,7 +5,7 @@ import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/ut
 import DragonDropList, {DragonListItem, orderedItems} from '../DragonDropList';
 import FunderForm from './FunderForm';
 
-function Funders({resource, setResource}) {
+function Funders({current, resource, setResource}) {
   const contributors = resource.contributors.filter((c) => c.contributor_type === 'funder');
   const [funders, setFunders] = useState(contributors);
   const [disabled, setDisabled] = useState(contributors[0]?.name_identifier_id === '0');
@@ -103,8 +103,8 @@ function Funders({resource, setResource}) {
         setGroupings(data.data);
       });
     }
-    getList();
-  }, []);
+    if (current && !groupings.length) getList();
+  }, [current, groupings]);
 
   return (
     <div style={{marginBottom: '20px'}}>

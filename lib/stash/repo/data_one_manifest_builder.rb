@@ -17,7 +17,7 @@ module Stash
 
       def contents
         files = uploads.map do |upload|
-          OpenStruct.new(file_name: upload.upload_file_name, mime_type: upload.upload_content_type)
+          OpenStruct.new(file_name: upload.download_filename, mime_type: upload.upload_content_type)
         end
         # manifest = ::Merritt::Manifest::DataONE.new(files: files)
         # manifest.write_to_string

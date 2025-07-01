@@ -44,7 +44,7 @@ function Submission({
       index: 0,
       pass: publicationPass(resource),
       fail: (review || publicationPass(resource)) && publicationFail(resource, review),
-      component: <Publication resource={resource} setResource={setResource} />,
+      component: <Publication current={step.name === 'Title'} resource={resource} setResource={setResource} />,
       help: <PublicationHelp />,
       preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -53,7 +53,7 @@ function Submission({
       index: 1,
       pass: resource.authors.length > 0 && !authorCheck(resource),
       fail: (review || step.index > 0) && authorCheck(resource),
-      component: <Authors step={step.name} resource={resource} setResource={setResource} user={user} />,
+      component: <Authors current={step.name === 'Authors'} resource={resource} setResource={setResource} user={user} />,
       help: <AuthHelp />,
       preview: <AuthPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -62,7 +62,13 @@ function Submission({
       index: 2,
       pass: !abstractCheck(resource),
       fail: (review || step.index > 1) && abstractCheck(resource),
-      component: <Description resource={resource} setResource={setResource} curator={user.curator} cedar={config_cedar} step={step.name} />,
+      component: <Description
+        current={step.name === 'Description'}
+        resource={resource}
+        setResource={setResource}
+        curator={user.curator}
+        cedar={config_cedar}
+      />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -71,7 +77,7 @@ function Submission({
       index: 3,
       pass: keywordPass(resource.subjects),
       fail: (review || step.index > 2) && keywordFail(resource),
-      component: <Subjects step={step.name} resource={resource} setResource={setResource} />,
+      component: <Subjects current={step.name === 'Subjects'} resource={resource} setResource={setResource} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} previous={previous} />,
     },
@@ -80,7 +86,7 @@ function Submission({
       index: 4,
       pass: !fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       fail: (review || step.index > 3) && fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      component: <Support resource={resource} setResource={setResource} />,
+      component: <Support current={step.name === 'Support'} resource={resource} setResource={setResource} />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
       preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -99,9 +105,11 @@ function Submission({
       pass: resource.generic_files?.length > 0,
       fail: (review || step.index > 5) && filesCheck(resource, user.superuser, config_maximums),
       component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
-        <UploadFiles {...{
-          resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments, step,
-        }}
+        <UploadFiles
+          {...{
+            resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments,
+          }}
+          current={step.name === 'Files'}
         />
       ),
       help: <FilesHelp date={resource.identifier.publication_date} maxFiles={config_maximums.files} />,
@@ -114,7 +122,7 @@ function Submission({
       index: 7,
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
       fail: (review || step.index > 6) && readmeCheck(resource),
-      component: <ReadMeWizard resource={resource} setResource={setResource} step={step.name} />,
+      component: <ReadMeWizard resource={resource} setResource={setResource} current={step.name === 'README'} />,
       help: <ReadMeHelp />,
       preview: <ReadMePreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -123,7 +131,7 @@ function Submission({
       index: 8,
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource, (review || step.index > 7)),
-      component: <RelatedWorks resource={resource} setResource={setResource} />,
+      component: <RelatedWorks current={step.name === 'Related works'} resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps().find((l) => l.name === 'Title'))} />,
       preview: <WorksPreview resource={resource} previous={previous} curator={user.curator} />,
     },
@@ -135,7 +143,7 @@ function Submission({
       component: <Agreements
         resource={resource}
         setResource={setResource}
-        step={step.name}
+        current={step.name === 'Agreements'}
         subFees={fees}
         setSubFees={setFees}
         config={config_payments}
@@ -145,7 +153,9 @@ function Submission({
       />,
       help: <AgreeHelp type={resource.resource_type.resource_type} />,
       preview: <Agreements
-        {...{resource, user, previous}}
+        {...{
+          resource, setResource, user, previous,
+        }}
         config={config_payments}
         subFees={fees}
         setSubFees={setFees}
@@ -372,7 +382,6 @@ function Submission({
       <div id="submission-heading">
         <div>
           <h1>{upCase(resource.resource_type.resource_type)} submission</h1>
-          <ExitButton resource={resource} />
         </div>
       </div>
       <div className="submission-edit">
@@ -398,39 +407,44 @@ function Submission({
               ))}
             </div>
             <div id="submission-help">
-              <div className="o-dataset-nav">
-                {step.name === 'Agreements' ? (
-                  <button
-                    type="button"
-                    className="o-button__plain-text2"
-                    disabled={!resource.accepted_agreement}
-                    onClick={() => {
-                      setStep({name: 'Create a submission'});
-                      setReview(true);
-                    }}
-                  >
-                  Preview submission
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="o-button__plain-text2"
-                    aria-controls="submission-step"
-                    onClick={() => move(1)}
-                  >
-                  Next <i className="fa fa-caret-right" aria-hidden="true" />
-                  </button>
-                )}
-                {step.name !== 'Create a submission' && (
-                  <button
-                    type="button"
-                    className="o-button__plain-text"
-                    aria-controls="submission-step"
-                    onClick={() => move(-1)}
-                  >
-                    <i className="fa fa-caret-left" aria-hidden="true" /> Previous
-                  </button>
-                )}
+              <div className="dataset-nav-container">
+                <div className="dataset-nav">
+                  {step.name === 'Agreements' ? (
+                    <button
+                      type="button"
+                      className="o-button__plain-text2"
+                      disabled={!resource.accepted_agreement}
+                      onClick={() => {
+                        setStep({name: 'Create a submission'});
+                        setReview(true);
+                      }}
+                    >
+                    Preview submission
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="o-button__plain-text2"
+                      aria-controls="submission-step"
+                      onClick={() => move(1)}
+                    >
+                    Next <i className="fa fa-caret-right" aria-hidden="true" />
+                    </button>
+                  )}
+                  {step.name !== 'Create a submission' && (
+                    <button
+                      type="button"
+                      className="o-button__plain-text"
+                      aria-controls="submission-step"
+                      onClick={() => move(-1)}
+                    >
+                      <i className="fa fa-caret-left" aria-hidden="true" /> Previous
+                    </button>
+                  )}
+                </div>
+                <div className="dataset-nav-ltr">
+                  <ExitButton resource={resource} />
+                </div>
               </div>
               <div id="submission-help-text" aria-label="Section help">
                 {step.name === 'Create a submission' && (

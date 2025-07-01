@@ -978,28 +978,25 @@ module StashEngine
           @res1 = create(:resource, user_id: user.id)
           Timecop.return
           @created_files = Array.new(3) do |i|
-            DataFile.create(
-              resource: @res1,
-              file_state: 'created',
-              upload_file_name: "created#{i}.bin",
-              upload_file_size: i * 3
-            )
+            create(:data_file,
+                   resource: @res1,
+                   file_state: 'created',
+                   download_filename: "created#{i}.bin",
+                   upload_file_size: i * 3)
           end
           @copied_files = Array.new(3) do |i|
-            DataFile.create(
-              resource: @res1,
-              file_state: 'copied',
-              upload_file_name: "copied#{i}.bin",
-              upload_file_size: i * 5
-            )
+            create(:data_file,
+                   resource: @res1,
+                   file_state: 'copied',
+                   download_filename: "copied#{i}.bin",
+                   upload_file_size: i * 5)
           end
           @deleted_files = Array.new(3) do |i|
-            DataFile.create(
-              resource: @res1,
-              file_state: 'deleted',
-              upload_file_name: "deleted#{i}.bin",
-              upload_file_size: i * 7
-            )
+            create(:data_file,
+                   resource: @res1,
+                   file_state: 'deleted',
+                   download_filename: "deleted#{i}.bin",
+                   upload_file_size: i * 7)
           end
         end
 
@@ -1022,14 +1019,14 @@ module StashEngine
           end
 
           it 'copies the non-deleted records' do
-            created_and_copied = (created_files + copied_files).map(&:upload_file_name)
-            new_names = @res2.data_files.map(&:upload_file_name)
+            created_and_copied = (created_files + copied_files).map(&:download_filename)
+            new_names = @res2.data_files.map(&:download_filename)
             expect(new_names).to match_array(created_and_copied)
           end
 
           it 'copies all current records' do
-            old_current_names = @res1.current_file_uploads.map(&:upload_file_name)
-            new_current_names = @res2.current_file_uploads.map(&:upload_file_name)
+            old_current_names = @res1.current_file_uploads.map(&:download_filename)
+            new_current_names = @res2.current_file_uploads.map(&:download_filename)
             expect(new_current_names).to match_array(old_current_names)
           end
 
@@ -1102,6 +1099,7 @@ module StashEngine
             new_latest = @uploads.each_with_index.map do |f, _i|
               create(:data_file,
                      resource: f.resource,
+                     download_filename: f.download_filename,
                      upload_file_name: f.upload_file_name,
                      file_state: :copied)
             end
@@ -1115,10 +1113,10 @@ module StashEngine
         describe :duplicate_filenames do
           it 'identifies duplicate files' do
             original = @uploads[0]
-            file_name = original.upload_file_name
+            file_name = original.download_filename
             duplicate = create(:data_file,
                                resource_id: @resource.id,
-                               upload_file_name: file_name,
+                               download_filename: file_name,
                                file_state: :created)
             duplicates = @resource.duplicate_filenames
             expect(duplicates.count).to eq(2)

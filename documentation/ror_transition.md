@@ -8,7 +8,7 @@ RAILS_ENV=development bundle exec rails affiliation_import:populate_nih_ror_grou
 
 ## task to re-import the latest CrossRef to ROR mapping data
 
-Truncate the table to remove all current entries.  The table is called `stash_engine_xref_funder_to_rors`.
+Truncate the table to remove all current entries. The table is called `stash_engine_xref_funder_to_rors`.
 You can download the latest ROR exports at https://doi.org/10.5281/zenodo.6347574 .
 
 ```bash
@@ -33,7 +33,7 @@ CREATE TABLE dcs_contributors_fundref_backup AS SELECT * FROM dcs_contributors;
 
 ## Query to update CrossRef Funder data to ROR
 
-You can see what identifier ids wouldn't be converted.  There are around ~1100 of these.
+You can see what identifier ids wouldn't be converted. There are around ~1100 of these.
 ```sql
 SELECT DISTINCT contrib.name_identifier_id
   FROM dcs_contributors contrib
@@ -47,8 +47,8 @@ WHERE contrib.contributor_type - 'funder'
 To update these IDs to the new ROR values.
 
 If you would like to test this out on a different table, you can use that table name instead of
-`dcs_contributors` in the query below.  Perhaps try on a copied table (see above on how to copy table contents)
-if you  want to see the results before doing it.  You wouldn't want to do this on your backup table, though, since it 
+`dcs_contributors` in the query below. Perhaps try on a copied table (see above on how to copy table contents)
+if you  want to see the results before doing it. You wouldn't want to do this on your backup table, though, since it 
 would transform the data and no longer be a backup after that.
 
 ```sql

@@ -30,7 +30,7 @@ Data published at Dryad is intended to remain permanently archived and available
 
 ## Citing your dataset
 
-As soon as you start a data submission, a DOI is reserved for that dataset in the format `https://doi.org/10.5061/dryad.XXXX`. This, and a full citation in a standard format, is included in the Citation section of a published dataset.  If you need the DOI before you submit your dataset, for instance to include in a manuscript submission, you can find it on your Dryad Dashboard. The DOI provided will remain unchanged through publication of the dataset.
+As soon as you start a data submission, a DOI is reserved for that dataset in the format `https://doi.org/10.5061/dryad.XXXX`. This, and a full citation in a standard format, is included in the Citation section of a published dataset. If you need the DOI before you submit your dataset, for instance to include in a manuscript submission, you can find it on your Dryad Dashboard. The DOI provided will remain unchanged through publication of the dataset.
 
 
 ## Updating your dataset

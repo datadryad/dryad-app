@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import SubjectSelect from './SubjectSelect';
 import KeywordAutocomplete from './KeywordAutocomplete';
 
 function Keywords({resource, setResource}) {
@@ -28,7 +29,7 @@ function Keywords({resource, setResource}) {
     });
   };
 
-  function deleteKeyword(id) {
+  const deleteKeyword = (id) => {
     showSavingMsg();
     axios.delete(`/stash_datacite/subjects/${id}/delete`, {
       data: {authenticity_token, resource_id: resource.id},
@@ -41,60 +42,40 @@ function Keywords({resource, setResource}) {
       // removes the item we just deleted from the list based on id
       setSubjs(subjs.filter((item) => (item.id !== data.data.id)));
     });
-  }
+  };
 
   useEffect(() => {
     setResource((r) => ({...r, subjects: [...r.subjects.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)), ...subjs]}));
   }, [subjs]);
 
   return (
-    <div className="c-keywords">
-      <label className="input__label required" id="label_keyword_ac" htmlFor="keyword_ac">
-        Subject keywords
-        <span className="details">(at least 3)</span>
-      </label>
-      <div
-        id="js-keywords__container"
-        className="c-keywords__container"
-        role="listbox"
-        aria-label="Subject keywords and search"
-        aria-multiselectable="true"
-        aria-describedby="keywords-ex"
-      >
-        {subjs.map((subj) => (
-          <span className="c-keywords__keyword" aria-selected="true" key={subj.id}>
-            {subj.subject}
-            <span className="delete_keyword">
-              <button
-                id={`sub_remove_${subj.id}`}
-                aria-label={`Remove keyword ${subj.subject}`}
-                title="Remove"
-                type="button"
-                className="c-keywords__keyword-remove"
-                onClick={() => deleteKeyword(subj.id)}
-              >
-                <i className="fas fa-times" aria-hidden="true" />
-              </button>
-            </span>
-          </span>
-        ))}
-        <KeywordAutocomplete
-          id=""
-          name=""
-          saveFunction={saveKeyword}
-          controlOptions={
-            {
-              htmlId: 'keyword_ac',
-              labelText: '',
-              isRequired: false,
-              saveOnEnter: true,
-              errorId: 'subj_error',
-            }
+    <SubjectSelect
+      selected={subjs}
+      id="keyword_ac"
+      label={<>Subject keywords<span className="details">(at least 3)</span></>}
+      example={(
+        <div id="keywords-ex">
+          <i aria-hidden="true" />Other research domains, scientific names, method types, or keywords from your related article
+        </div>
+      )}
+      remove={deleteKeyword}
+    >
+      <KeywordAutocomplete
+        id=""
+        name=""
+        saveFunction={saveKeyword}
+        controlOptions={
+          {
+            htmlId: 'keyword_ac',
+            labelText: '',
+            isRequired: false,
+            saveOnEnter: true,
+            errorId: 'subj_error',
+            desBy: 'keywords-ex',
           }
-        />
-      </div>
-      <div id="keywords-ex"><i aria-hidden="true" />Scientific names, method types, or keywords from your related article</div>
-    </div>
+        }
+      />
+    </SubjectSelect>
   );
 }
 

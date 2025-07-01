@@ -104,7 +104,7 @@ export default function InvoiceForm({
               </span>
             </span>
           </p>
-          <p className="o-dataset-nav">
+          <p className="dataset-nav">
             <button
               type="submit"
               className="o-button__plain-text1"
