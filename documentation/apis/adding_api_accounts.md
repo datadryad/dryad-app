@@ -18,7 +18,7 @@ To create an API account:
 1. Log into Dryad with a user that has the superuser role (set the
    role of your user record to 'superuser' if you need to). Go to the
    path `/oauth/applications` on the server and add a new application.
-2. Fill in an application name and a redirect uri.  The redirect URI
+2. Fill in an application name and a redirect uri. The redirect URI
    isn't used for this case, but it forces a fill-in, anyway.
 3. Figure out the user id in our database for the user who will access
    the API, also have the application id for this newly-created

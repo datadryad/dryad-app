@@ -182,7 +182,7 @@ These Terms of Service (these “Terms”) set forth the terms and conditions ap
 
     3. the <span role="emphasis" aria-describedby="term-desc">Partner</span> acquired the origin party’s consent for the data to be transferred to the United States for processing.
 
-    The <span role="emphasis" aria-describedby="term-desc">Partner</span> further agrees that it will maintain appropriate mechanisms to ensure that it will provide natural person(s) whose personal data it provides to Dryad with a means to have access to, to correct, and to delete such data and understands that the burden is on the <span role="emphasis" aria-describedby="term-desc">Partner</span> to communicate such corrections or deletions to Dryad.  
+    The <span role="emphasis" aria-describedby="term-desc">Partner</span> further agrees that it will maintain appropriate mechanisms to ensure that it will provide natural person(s) whose personal data it provides to Dryad with a means to have access to, to correct, and to delete such data and understands that the burden is on the <span role="emphasis" aria-describedby="term-desc">Partner</span> to communicate such corrections or deletions to Dryad.
 
     Dryad represents and warrants that:  
 

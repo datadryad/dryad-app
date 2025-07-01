@@ -2,11 +2,11 @@
 
 ## The report and the tool
 
-This is the report for the Counter CoP on which our counter stats are based.  https://www.projectcounter.org/wp-content/uploads/2019/02/Research_Data_20190227.pdf .
+This is the report for the Counter CoP on which our counter stats are based. https://www.projectcounter.org/wp-content/uploads/2019/02/Research_Data_20190227.pdf .
 
 The Python tool is at https://github.com/CDLUC3/counter-processor and was originally
 designed around preliminary versions of the report and design-by-committee meetings when
-the spec wasn't complete.  It has problems for large-scale processing and is quite slow
+the spec wasn't complete. It has problems for large-scale processing and is quite slow
 because it is trying to calculate "unique size" which was later dropped. It was also created
 against a smaller amount of traffic in the logs and has half-completed features like creating
 CSV files (which didn't turn out to be a feature the committee decided to prioritize).
@@ -31,14 +31,14 @@ lots of workarounds in place.
   - Weekly processing script at `cron/counter.sh` in our config repo.
   - `bundle exec rails counter:clear_cache` completely clears our database table that contains counts.
   - `bundle exec rails counter:cop_manual` reads every month out of the json files and accumulates
-  the stats for each dataset into the database (month by month).  I happens after we run stats every
+  the stats for each dataset into the database (month by month). I happens after we run stats every
   week.
 
 ## The Counter Uploader tool
 
 We reworked the [counter-uploader](../script/stash/counter-uploader/readme.md) so that it can independently
-upload counter files outside of the Python tool.  (At least for the time being) the idea
+upload counter files outside of the Python tool. (At least for the time being) the idea
 is that we'll process the counter files, populate numbers into our daatabase manually and
-then once a month we can upload any missing reports to DataCite.  The tool should be
+then once a month we can upload any missing reports to DataCite. The tool should be
 able to do that without requiring a lot of saved state information besides what it gets from
 querying DataCite and the files in the directory.

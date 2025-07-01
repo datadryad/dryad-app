@@ -20,9 +20,9 @@ GET /widgets/bannerForPub
 
 When making a GET request to
 http://datadryad.org/widgets/bannerForPub, it will respond with an
-image.  If the provided Article identifier (parameter `pubId`) is
+image. If the provided Article identifier (parameter `pubId`) is
 linked to a data package in Dryad, the response is the 'Data in Dryad'
-image banner.  If the Article identifier is not found, the pipeline
+image banner. If the Article identifier is not found, the pipeline
 returns a 1x1 transparent gif.
 
 Parameters:
@@ -32,7 +32,7 @@ Parameters:
   `doi%3A10.1186%2F1471-2148-12-60`
 * `referrer`: a self-created identifier for the tool/entity using the
     widget, URL encoded. Required, but not currently used in
-    determining the response.  This code is logged internally so Dryad
+    determining the response. This code is logged internally so Dryad
     can provide statistics related to use of the widget. Examples:
     BMC, Elsevier, JournalOfDataSharing
 

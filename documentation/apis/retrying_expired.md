@@ -7,7 +7,7 @@ When you are granted a token, you will see some information such as this:
 {"access_token"=>"c1ec...2fec", "token_type"=>"Bearer", "expires_in"=>36000, "created_at"=>1552520063}
 ```
 
-The *expires_in* indicates how long the token is granted to you.  After that
+The *expires_in* indicates how long the token is granted to you. After that
 you will need to get a new token.
 
 The easiest way to handle an expired token is to add retry logic for your
@@ -21,11 +21,11 @@ This means you will want to build *limited* retry logic into your application.
 - You will want to get a new token and retry your request if it expired.
 - You will want to retry *a limited number of times* in response to a 401
   status code since there may be other reasons for this status code such
-  as having bad credentials.  You do not want to retry an infinite number
+  as having bad credentials. You do not want to retry an infinite number
   of times since bad credentials will not be solved by retrying in that case.
 
 The [retry client](retry_client.rb) shows an example of how to retry and
-renew credentials.  The class also wraps some parts of the RestClient library
+renew credentials. The class also wraps some parts of the RestClient library
 to avoid some repetitive code that is sent with most requests, but the main thing to note is the retry code.
 
 Similar retry logic can be incorporated in most programming

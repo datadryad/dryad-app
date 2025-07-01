@@ -5,7 +5,7 @@ Basic Dryad Submission Flow
 2. Upload files
     * See [upload flow](technical_notes/upload_flow.md)
     * Upload files directly (get copied to temporary storage until successful submission)
-    * Or choose URLs where files are located and can be retrieved by http(s).  They are validated that they exist and a download can start.
+    * Or choose URLs where files are located and can be retrieved by http(s). They are validated that they exist and a download can start.
       * Also some transformations of Google Drive/Box/Dropbox URLs into the download links
 3. Review before submit
     * Missing required data shown

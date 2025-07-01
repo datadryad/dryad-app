@@ -22,7 +22,7 @@ these cases.
 ## Authorization Code Grant
 
 The Authorization Code grant is a familiar workflow when one web application wants to
-obtain information from another service.  The process is already familiar from social media
+obtain information from another service. The process is already familiar from social media
 sites that may allow their logins to be used with other services.
 
 When an Authorization Code grant is used, the outside application (the one Dryad issues an Application Id
