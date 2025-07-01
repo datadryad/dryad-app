@@ -91,7 +91,9 @@ module DatasetHelper
   def submit_form
     click_button 'Preview submission' if page.has_button?('Preview submission')
     # page.scroll_to(find('footer'))
-    expect(page).to have_content('Data Publishing Charge')
+    expect(page).to have_content('submission preview')
+    expect(page).to have_content('ready to publish?')
+
     click_button 'submit_button'
     return unless page.has_content?('You must complete payment to submit')
 
@@ -216,7 +218,7 @@ module DatasetHelper
   end
 
   def expect_new_entry_to_have(fu)
-    expect(fu.upload_file_name).to eq('funbar.txt')
+    expect(fu.download_filename).to eq('funbar.txt')
     expect(fu.upload_content_type).to eq('text/plain')
     expect(fu.upload_file_size).to eq(37_221)
   end

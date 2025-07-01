@@ -18,7 +18,7 @@ export default function ExitButton({resource}) {
         action={`/resources/${resource.id}/logout`}
         data-confirm={
           (previous && 'Are you sure you want to exit without submitting your changes?')
-          || (editors.length === 1 && 'Are you sure you want to exit without completing your submission?')
+          || (editors.length === 1 && 'Are you sure you want to exit without submitting your data?')
           || null
         }
         data-remote="false"

@@ -8,6 +8,7 @@
 #  description         :text(65535)
 #  digest              :string(191)
 #  digest_type         :string(8)
+#  download_filename   :text(65535)
 #  file_state          :string(7)
 #  original_filename   :text(65535)
 #  original_url        :text(65535)
@@ -27,11 +28,12 @@
 #
 # Indexes
 #
-#  index_stash_engine_generic_files_on_file_state        (file_state)
-#  index_stash_engine_generic_files_on_resource_id       (resource_id)
-#  index_stash_engine_generic_files_on_status_code       (status_code)
-#  index_stash_engine_generic_files_on_upload_file_name  (upload_file_name)
-#  index_stash_engine_generic_files_on_url               (url)
+#  index_stash_engine_generic_files_on_download_filename  (download_filename)
+#  index_stash_engine_generic_files_on_file_state         (file_state)
+#  index_stash_engine_generic_files_on_resource_id        (resource_id)
+#  index_stash_engine_generic_files_on_status_code        (status_code)
+#  index_stash_engine_generic_files_on_upload_file_name   (upload_file_name)
+#  index_stash_engine_generic_files_on_url                (url)
 #
 require 'zaru'
 require 'cgi'
@@ -59,11 +61,13 @@ module StashEngine
     scope :present_files, -> { where("file_state = 'created' OR file_state IS NULL OR file_state = 'copied'") }
     scope :url_submission, -> { where('url IS NOT NULL') }
     scope :file_submission, -> { where('url IS NULL') }
-    scope :with_filename, -> { where('upload_file_name IS NOT NULL') }
+    scope :with_filename, -> { where('download_filename IS NOT NULL') }
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
     scope :validated_table, -> {
-                              present_files.where.not(upload_file_name: 'README.md', type: StashEngine::DataFile).validated.order(created_at: :desc)
+                              present_files
+                                .where.not(download_filename: ['README.md', 'DisciplineSpecificMetadata.json'], type: StashEngine::DataFile)
+                                .validated.order(created_at: :desc)
                             }
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')
@@ -130,13 +134,13 @@ module StashEngine
                 AND versions.deleted_at IS NULL
               WHERE uploads.type = '#{self.class}'
                 AND resource.identifier_id = ?
-                AND uploads.upload_file_name = ?
+                AND uploads.download_filename = ?
                 AND uploads.file_state = 'created'
               ORDER BY versions.version DESC
               LIMIT 1;
       SQL
 
-      Version.find_by_sql([sql, resource.identifier_id, upload_file_name]).first
+      Version.find_by_sql([sql, resource.identifier_id, download_filename]).first
     end
 
     # figures out how to delete file based on previous state
@@ -147,7 +151,7 @@ module StashEngine
 
       # convert to hash so we still have after destroying them
       prev_files = case_insensitive_previous_files.map do |pf|
-        { upload_file_name: pf.upload_file_name, upload_content_type: pf.upload_content_type }
+        { download_filename: pf.download_filename, upload_content_type: pf.upload_content_type }
       end
 
       # get rid of dependent report
@@ -155,11 +159,11 @@ module StashEngine
       SensitiveDataReport.where(generic_file_id: id).destroy_all
 
       # destroy previous state for this filename
-      self.class.where(resource_id: resource_id).where('lower(upload_file_name) = ?', upload_file_name.downcase).destroy_all
+      self.class.where(resource_id: resource_id).where('lower(download_filename) = ?', download_filename.downcase).destroy_all
 
       # now add delete actions for all files with same previous filenames, could be more than 1 possibly with different cases
       prev_files.each do |prev_file|
-        self.class.create(upload_file_name: prev_file[:upload_file_name], upload_content_type: prev_file[:upload_content_type],
+        self.class.create(download_filename: prev_file[:download_filename], upload_content_type: prev_file[:upload_content_type],
                           resource_id: resource_id, file_state: 'deleted')
       end
 
@@ -171,7 +175,7 @@ module StashEngine
       return [] if prev_res.nil?
 
       # tested to identify duplicates, also of different capitalization (at least on our dev server, may depend on mysql collation)
-      self.class.where(resource_id: prev_res.id).where('lower(upload_file_name) = ?', upload_file_name.downcase)
+      self.class.where(resource_id: prev_res.id).where('lower(download_filename) = ?', download_filename.downcase)
         .where.not(file_state: 'deleted').order(id: :desc)
     end
 

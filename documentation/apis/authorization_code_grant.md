@@ -39,7 +39,7 @@ If you do not want to enter all this manually, you may [download the code](https
 from our git repository (and fill in items such as your API keys in the code).
 
 This is an application in Ruby and Rails, but the concepts will be very similar in many frameworks and
-languages.  
+languages. 
 1. Create an application in Rails.
 2. Add `http.rb` to the Gemfile and run `bundle install` to make the gem (library) available.
 3. Create a controller called `test_controller.rb` to the appropriate place.
@@ -54,7 +54,7 @@ languages.
 <%= link_to 'Click to authorize Dryad access', TestController::OAUTH_URL %>
 ```
 5. Create a very basic response page that shows that you are able to access the API with
-   permissions for the User's account.  It is named `callback.html.erb` in the `test` views.
+   permissions for the User's account. It is named `callback.html.erb` in the `test` views.
 ```html
 <h1>Accessed the API for the following user</h1>
 

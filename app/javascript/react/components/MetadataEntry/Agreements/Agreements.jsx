@@ -6,7 +6,7 @@ import Calculations from './Calculations';
 import CalculateFees from '../../CalculateFees';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, config, subFees, setSubFees, step, setAuthorStep, preview = false,
+  resource, setResource, user, form, previous, config, subFees, setSubFees, current, setAuthorStep, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -69,17 +69,17 @@ export default function Agreements({
   }, [fees]);
 
   useEffect(() => {
-    const existing = document.getElementById('dryad-member');
+    const existing = formRef.current?.querySelector('#dryad-member');
     if (formRef.current && !existing) {
       const active_form = document.createRange().createContextualFragment(form);
       formRef.current.append(active_form);
     }
     if (!!dpc.aff_tenant && existing) {
-      document.getElementById('dryad-member').hidden = true;
-      document.getElementById('edit-tenant-form').hidden = false;
-      document.getElementById('searchselect-tenant__value').value = dpc.aff_tenant.id;
-      document.getElementById('searchselect-tenant__label').value = dpc.aff_tenant.short_name;
-      document.getElementById('searchselect-tenant__input').value = dpc.aff_tenant.short_name;
+      formRef.current.querySelector('#dryad-member').hidden = true;
+      formRef.current.querySelector('#edit-tenant-form').hidden = false;
+      formRef.current.querySelector('#searchselect-tenant__value').value = dpc.aff_tenant.id;
+      formRef.current.querySelector('#searchselect-tenant__label').value = dpc.aff_tenant.short_name;
+      formRef.current.querySelector('#searchselect-tenant__input').value = dpc.aff_tenant.short_name;
     }
   }, [dpc, formRef.current]);
 
@@ -102,13 +102,14 @@ export default function Agreements({
           if (data.data.automatic_ppr && !ppr) postPPR(true);
           else if (!data.data.allow_review && ppr) postPPR(false);
         }
+        setResource((r) => ({...r, total_file_size: data.data.total_file_size}));
         setDPC(data.data);
       });
     };
-    if (preview || step === 'Agreements') {
+    if (preview || current) {
       getPaymentInfo();
     }
-  }, [step, preview]);
+  }, [current, preview]);
 
   if (Object.keys(dpc).length === 0) {
     return (

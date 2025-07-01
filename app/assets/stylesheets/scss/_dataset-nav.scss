@@ -1,12 +1,34 @@
 // ##### Dataset Navigation ##### //
 
-.o-dataset-nav {
+.dataset-nav-container {
 	display: flex;
-	flex-direction: row-reverse;
+	flex-direction: column;
+	align-self: stretch;
+	justify-content: space-between;
+	gap: 2ch;
+
+	@media (max-width: 811px) {
+		flex-direction: row-reverse;
+		flex-basis: 100%;
+	}
+}
+
+.dataset-nav, .dataset-nav-ltr {
+	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 2ch;
 	flex-wrap: wrap;
+
+	button {
+		display: inline-flex;
+		align-items: baseline;
+		gap: .35ch;
+	}
+}
+
+.dataset-nav {
+	flex-direction: row-reverse;
 }
 
 .saving_text, .saved_text {

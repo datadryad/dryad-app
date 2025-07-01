@@ -20,7 +20,7 @@ Security: kernel-6.1.77-99.164.amzn2023.x86_64 is the currently running version
   ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
    ~~       V~' '->
     ~~~         /
-      ~~._.   _/
+      ~~._.  _/
          _/ _/
        _/m/'
 ```
