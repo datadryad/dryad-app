@@ -29,7 +29,7 @@ export default function ReadMePreview({resource, previous, curator}) {
     if (readmeRef.current) {
       getREADME();
     }
-  }, [resource, readmeRef.current]);
+  }, [readmeRef]);
 
   if (readme) {
     return (

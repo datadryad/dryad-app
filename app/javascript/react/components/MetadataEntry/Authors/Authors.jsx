@@ -7,7 +7,7 @@ import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/ut
 import AuthorForm from './AuthorForm';
 
 export default function Authors({
-  resource, setResource, user, step,
+  resource, setResource, user, current,
 }) {
   const [users, setUsers] = useState(resource.users);
   const [authors, setAuthors] = useState(resource.authors);
@@ -100,11 +100,11 @@ export default function Authors({
   }, [authors, users]);
 
   useEffect(() => {
-    if (step === 'Authors') {
+    if (current) {
       setAuthors(resource.authors);
       setUsers(resource.users);
     }
-  }, [step]);
+  }, [current]);
 
   return (
     <>

@@ -42,17 +42,15 @@ const fileList = (list, previous) => {
 export default function FilesPreview({
   resource, previous, curator, maxSize,
 }) {
-  const present = resource.generic_files.filter((f) => f.file_state !== 'deleted');
-  const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.download_filename !== 'README.md');
-  const software = present.filter((f) => f.type === 'StashEngine::SoftwareFile');
-  const supp = present.filter((f) => f.type === 'StashEngine::SuppFile');
+  const data = resource.generic_files.filter((f) => f.type === 'StashEngine::DataFile');
+  const software = resource.generic_files.filter((f) => f.type === 'StashEngine::SoftwareFile');
+  const supp = resource.generic_files.filter((f) => f.type === 'StashEngine::SuppFile');
 
-  const prev_files = previous?.generic_files.filter((f) => f.file_state !== 'deleted');
-  const prev_data = prev_files?.filter((f) => f.type === 'StashEngine::DataFile' && f.download_filename !== 'README.md');
-  const prev_soft = prev_files?.filter((f) => f.type === 'StashEngine::SoftwareFile');
-  const prev_supp = prev_files?.filter((f) => f.type === 'StashEngine::SuppFile');
+  const prev_data = previous?.generic_files?.filter((f) => f.type === 'StashEngine::DataFile');
+  const prev_soft = previous?.generic_files?.filter((f) => f.type === 'StashEngine::SoftwareFile');
+  const prev_supp = previous?.generic_files?.filter((f) => f.type === 'StashEngine::SuppFile');
 
-  if (present.length > 0) {
+  if (resource.generic_files.length > 0) {
     return (
       <>
         {data.length > 0 && (
