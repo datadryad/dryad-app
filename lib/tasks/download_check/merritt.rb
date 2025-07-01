@@ -22,12 +22,12 @@ module Tasks
           begin
             file.s3_permanent_presigned_url
             @accumulator.push(
-              { doi: identifier.identifier, resource: res.id, file: file.upload_file_name,
+              { doi: identifier.identifier, resource: res.id, file: file.download_filename,
                 dl_uri: res.download_uri, error: false }
             )
           rescue Stash::Download::S3CustomError, HTTP::Error => e
             @accumulator.push(
-              { doi: identifier.identifier, resource: res.id, file: file.upload_file_name,
+              { doi: identifier.identifier, resource: res.id, file: file.download_filename,
                 dl_uri: res.download_uri, error: e.to_s }
             )
           end
@@ -80,9 +80,9 @@ module Tasks
       def save_error(resource:, file:, error:)
         ark = %r{/d/(.+)$}.match(resource.download_uri)
         ark = (ark.nil? ? 'unknown' : ark[1])
-        puts "  Found error in file #{file&.upload_file_name}"
+        puts "  Found error in file #{file&.download_filename}"
         @accumulator.push(
-          { doi: resource.identifier.identifier, resource: resource.id, file: file&.upload_file_name,
+          { doi: resource.identifier.identifier, resource: resource.id, file: file&.download_filename,
             merritt_version: resource&.stash_version&.merritt_version, ark: CGI.unescape(ark),
             error: error.to_s }
         )

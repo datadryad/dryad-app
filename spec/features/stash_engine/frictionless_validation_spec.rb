@@ -64,7 +64,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows nothing For Validation for non-tabular files' do
-      @file.update(upload_file_name: 'non_tabular', upload_content_type: 'application/pdf', original_filename: 'non_tabular')
+      @file.update(upload_file_name: 'non_tabular', upload_content_type: 'application/pdf', original_filename: 'non_tabular',
+                   download_filename: 'non_tabular')
       refresh
       navigate_to_upload
 
@@ -74,7 +75,8 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
     end
 
     it 'shows Too Large For Validation for tabular files greater than the size limit' do
-      @file.update(upload_file_size: APP_CONFIG[:maximums][:frictionless] + 1, upload_file_name: 'tabular.csv', original_filename: 'tabular.csv')
+      @file.update(upload_file_size: APP_CONFIG[:maximums][:frictionless] + 1, upload_file_name: 'tabular.csv', original_filename: 'tabular.csv',
+                   download_filename: 'tabular.csv')
       refresh
       navigate_to_upload
 

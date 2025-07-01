@@ -72,7 +72,7 @@ const headingClasses = {
 };
 
 export default function CodeEditor({
-  hidden, content, onChange, setMDEditor, setActive, setLevel,
+  attr, hidden, content, onChange, setMDEditor, setActive, setLevel,
 }) {
   const editor = useRef();
   const prevSelection = useRef();
@@ -106,9 +106,7 @@ export default function CodeEditor({
           extensions: [markdownTags],
         }),
         EditorView.contentAttributes.of({
-          'aria-labelledby': 'md_editor_label',
-          'aria-describedby': 'md_editor_desc',
-          'aria-errormessage': 'readme_error',
+          ...attr,
         }),
         EditorView.updateListener.of((v) => {
           if (v.docChanged) {

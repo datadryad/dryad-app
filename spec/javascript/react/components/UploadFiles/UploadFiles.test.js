@@ -40,6 +40,17 @@ jest.mock('../../../../../app/javascript/react/components/UploadFiles/pollingDel
   pollingDelay: 100,
 }));
 
+const setLoaded = (obj) => {
+  const loaded = JSON.parse(JSON.stringify(obj));
+  loaded.uploaded = true;
+  loaded.type = 'StashEngine::DataFile';
+  loaded.frictionless_report = {
+    report: '{}',
+    status: 'noissues',
+  };
+  return loaded;
+};
+
 describe('UploadFiles', () => {
   let info; let files; let datafile; let setfile; let loaded;
   const setResource = () => {};
@@ -71,7 +82,8 @@ describe('UploadFiles', () => {
 
     datafile = {
       id: faker.datatype.number(999),
-      upload_file_name: 'data.csv',
+      download_filename: 'data.csv',
+      upload_file_name: '383cd2f9-49a7-4d3e-a8cb-2393fda58ba2.csv',
       upload_content_type: 'text/csv',
       upload_file_size: 180000,
       resource_id: resourceId,
@@ -82,7 +94,8 @@ describe('UploadFiles', () => {
     };
     setfile = {
       id: datafile.id + 1,
-      upload_file_name: 'set.csv',
+      download_filename: 'set.csv',
+      upload_file_name: 'dbf18952-6007-4668-9497-b098c4659780.csv',
       upload_content_type: 'text/csv',
       upload_file_size: 130000,
       resource_id: resourceId,
@@ -91,14 +104,10 @@ describe('UploadFiles', () => {
       compressed_try: 0,
       type: 'StashEngine::DataFile',
     };
-    loaded = JSON.parse(JSON.stringify(datafile));
-    loaded.type = 'StashEngine::DataFile';
-    loaded.frictionless_report = {
-      report: '{}',
-      status: 'noissues',
-    };
+    loaded = setLoaded(datafile);
 
     info = {
+      current: true,
       setResource,
       resource: {
         id: resourceId,
@@ -192,7 +201,7 @@ describe('UploadFiles', () => {
 
     userEvent.click(buttons[0]);
     await waitFor(() => {
-      expect(screen.getByText(`Formatting report: ${errorFiles[0].upload_file_name}`)).toBeVisible();
+      expect(screen.getByText(`Formatting report: ${errorFiles[0].download_filename}`)).toBeVisible();
     });
   });
 
@@ -207,7 +216,7 @@ describe('UploadFiles', () => {
     const buttons = screen.getAllByText(/View \d*\s?alerts/);
     userEvent.click(buttons[0]);
 
-    const head = screen.getByText(`Formatting report: ${errorFiles[0].upload_file_name}`);
+    const head = screen.getByText(`Formatting report: ${errorFiles[0].download_filename}`);
     await waitFor(() => {
       expect(head).toBeVisible();
     });
@@ -239,6 +248,50 @@ describe('UploadFiles', () => {
     });
   });
 
+  it('renames an uploaded file', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+    datafile.download_filename = 'dataChanged.csv';
+    axios.patch.mockResolvedValueOnce({data: datafile});
+
+    info.resource.generic_files = [loaded];
+    render(<UploadFiles {...info} />);
+
+    const button = screen.getByLabelText('Rename file data.csv');
+    userEvent.click(button);
+
+    const input = screen.getByLabelText('Rename file data.csv');
+    userEvent.type(input, 'Changed');
+    const save = screen.getByLabelText('Save new name for data.csv');
+    userEvent.click(save);
+
+    await waitFor(() => {
+      expect(screen.getByText('dataChanged.csv')).toBeInTheDocument();
+    });
+  });
+
+  it('does not rename to a used filename', async () => {
+    axios.get.mockResolvedValueOnce(form);
+    axios.post.mockResolvedValueOnce(software_data);
+    axios.patch.mockResolvedValueOnce({data: {error: 'Filename data.csv is in use'}});
+
+    info.resource.generic_files = [loaded, setLoaded(setfile)];
+    render(<UploadFiles {...info} />);
+
+    const button = screen.getByLabelText('Rename file set.csv');
+    userEvent.click(button);
+
+    const input = screen.getByLabelText('Rename file set.csv');
+    userEvent.clear(input);
+    userEvent.type(input, 'data');
+    const save = screen.getByLabelText('Save new name for set.csv');
+    userEvent.click(save);
+
+    await waitFor(() => {
+      expect(screen.getByText('Filename data.csv is in use')).toBeInTheDocument();
+    });
+  });
+
   it('does not allow duplicate files', async () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
@@ -261,6 +314,7 @@ describe('UploadFiles', () => {
     datafile.type = 'StashEngine::SoftwareFile';
     const postA = {status: 200, data: {new_file: setfile}};
     datafile.id += 2;
+    datafile.upload_file_name = 'f36a99b7-0c5d-4aee-943a-7ed4f34a208f.csv';
     const postB = {status: 200, data: {new_file: datafile}};
     axios.post.mockResolvedValueOnce(postA);
     axios.post.mockResolvedValueOnce(postB);
@@ -276,7 +330,7 @@ describe('UploadFiles', () => {
     userEvent.upload(input, files);
     await waitFor(() => postA);
     await waitFor(() => postB);
-    expect(screen.getAllByText('data.csv').length).toEqual(2);
+    expect(screen.getAllByText('data.csv').length).toEqual(3);
     expect(screen.queryByText('A file of the same name is already in the table. The new file was not added.')).not.toBeInTheDocument();
   });
 
@@ -381,7 +435,7 @@ describe('UploadFiles', () => {
     const badfiles = filenames.map((name, i) => {
       const file = JSON.parse(JSON.stringify(datafile));
       file.id += i;
-      file.upload_file_name = name;
+      file.download_filename = name;
       file.original_filename = name;
       file.url = urls[i];
       file.status_code = codes[i];

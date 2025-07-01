@@ -77,7 +77,7 @@ bundle exec cap $CAP_ENV deploy:symlink:shared
 bundle exec cap $CAP_ENV deploy BRANCH="$MY_BRANCH"
 ```
 
-- [ ] Watch out for disk filling up.  You can go delete the temp-cap directory you created earlier here. Maybe clean
+- [ ] Watch out for disk filling up. You can go delete the temp-cap directory you created earlier here. Maybe clean
 up some things in ~/install or logs
 
 ## Check the disk isn't full
@@ -88,5 +88,5 @@ up some things in ~/install or logs
 ```
 
 ## Wrapping up
-- [ ] Things should be working.  If so, put back into ALB rotation.
+- [ ] Things should be working. If so, put back into ALB rotation.
 - [ ] After both deploys, unpause the submission queue or any other typical tasks around deploys.

@@ -63,7 +63,7 @@ module Stash
 
       def to_stash_file(upload)
         StashFile.new(
-          pathname: upload.upload_file_name,
+          pathname: upload.download_filename,
           size_bytes: upload.upload_file_size,
           mime_type: upload.upload_content_type
         )

@@ -41,28 +41,34 @@ html.preview_submission {
           flex-wrap: wrap;
           gap: 2ch;
           h1 {
-            flex: 3;
-            margin: 0;
-            margin-left: 210px;
+            margin: 0 auto;
             color: black;
             box-sizing: border-box;
             text-align: center;
             font-size: 1.3rem;
           }
-          button i {
-            margin-right: .25ch;
+          button {
+            display: inline-flex;
+            gap: .35ch;
+            align-items: baseline;
+          }
+          & > button {
+            margin-left: -140px;
+          }
+          form:first-of-type {
+            margin-left: -210px;
           }
           @media (max-width: 750px) {
-            flex-wrap: wrap;
-            h1 {
-              margin-left: 0;
-              margin-right: 50px;
-              order: 3;
+            & > button, form:first-of-type {
+              margin: 0;
             }
           }
           @media (max-width: 520px) {
+            h1:first-child:last-child {
+              margin-right: 50px;
+            }            
             h1 {
-              margin-right: 0;
+              order: 3;
               flex-basis: 100%;
             }
           }
@@ -71,12 +77,6 @@ html.preview_submission {
     }
     div, section {
       box-sizing: border-box;
-    }
-
-    &.submission-review > div:not(.c-admin-editing-banner) > #submission-heading h1 {
-      @media (max-width: 600px) {
-        margin-right: 0;
-      }
     }
 
     &.submission-review > div:not(.c-admin-editing-banner) {

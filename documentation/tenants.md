@@ -82,16 +82,16 @@ partner display list.
     - A strategy of `ip_address` allows validating membership by requiring that
       the user logs in from their organization network the first time.
           - The organization supplies the network ranges that are allowed, and we include an array
-          in the object under the key `ranges`.  The format is those accepted by ipaddr.rb which
+          in the object under the key `ranges`. The format is those accepted by ipaddr.rb which
           could be in CIDR (ie "192.168.1.0/24") or network mask formats like "192.168.1.0/255.255.255.0"
-          (see their docs).  It also supports IPv6 (which we're not currently using).
+          (see their docs). It also supports IPv6 (which we're not currently using).
 
 `campus_contacts`: the list of email addresses that will be copied on
 each submission to this tenant.
 
 `payment_plan`: in indication for the type of payment plan agreed to by the tenant
 
-`enabled`: true or false.  If false then that tenant will not show up or allow log in.
+`enabled`: true or false. If false then that tenant will not show up or allow log in.
 
 `partner_display`: true or false. Whether the (enabled) tenant should be displayed on the member list. 
 

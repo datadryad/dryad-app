@@ -16,7 +16,7 @@
 		     else
 		       nil
 		     end
-	     }.join(', ')
+	     }.join('')
 	    str += af unless af.blank?
 	    str += "<a href='mailto:#{author.author_email}' class='o-metadata__link' aria-label='Email #{author.author_standard_name}' target='_blank' title='#{author.author_email}'><i class='fa fa-envelope' aria-hidden='true'></i></a>" if author.corresp && author.author_email.present?
 	    str += "<a href='#{author_orcid_link(author)}' class='o-metadata__link' target='_blank' aria-label='#{author.author_standard_name} ORCID profile (opens in new window)' title='ORCID: #{author.author_orcid}'><i class='fab fa-orcid' aria-hidden='true'></i></a>" if author.author_orcid.present?

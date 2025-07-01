@@ -2,7 +2,7 @@
 
 ## The ingredients
 
-You'll need the following parts installed and configured on a (local) UI development server to do development on the full UI application.  Don't worry, there are more detailed installation instructions in other sections below and this is meant to give an overview of the larger dependencies to configure.
+You'll need the following parts installed and configured on a (local) UI development server to do development on the full UI application. Don't worry, there are more detailed installation instructions in other sections below and this is meant to give an overview of the larger dependencies to configure.
 
 - (Recommended) A ruby version manager such as [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
 - The [bare Dryad application](https://github.com/datadryad/dryad-app) cloned from github
@@ -88,7 +88,7 @@ set global log_bin_trust_function_creators=1;
 Now edit the config/database.yml file to fill in the user and password you set above in the development environment for that configuration file. (For a local database install, you should not need to change anything.)
 
 ### Solr
-Solr requires a Java runtime.  Try *java -version* and if it says that "java can be found in the following packages" rather than giving you a version you probably need to install java with a command like *sudo apt-get install default-jre* .
+Solr requires a Java runtime. Try *java -version* and if it says that "java can be found in the following packages" rather than giving you a version you probably need to install java with a command like *sudo apt-get install default-jre* .
 
 [See the SOLR cofiguration README for detailed SOLR install information](../config/solr_config/README.md)
 
@@ -101,11 +101,11 @@ Verify Solr is set up correctly from the Admin UI:
 
 1. Choose the dryad core from the core selector list.<br>![core selctor](images/solr2.png)
 
-2. You can then click the *query* sidebar tab and scroll down to the bottom of the form to submit a blank query.  While the document will not return any results yet because there are no documents in SOLR, you should see it execute and you can verify that Solr queries are running.<br>![query test](images/solr3.png)
+2. You can then click the *query* sidebar tab and scroll down to the bottom of the form to submit a blank query. While the document will not return any results yet because there are no documents in SOLR, you should see it execute and you can verify that Solr queries are running.<br>![query test](images/solr3.png)
 
 ## Getting the Rails application running
 
-I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for a local development environment as a way to manage Ruby versions.  Follow the installation instructions given on the rbenv site to install it, but make sure the `rbenv init` command is run in every shell (e.g., add it to .bashrc). Install the [Ruby build plugin](https://github.com/rbenv/ruby-build#readme) to make it easy to install different Ruby versions as needed.
+I'd *strongly* recommend installing [rbenv](https://github.com/rbenv/rbenv) for a local development environment as a way to manage Ruby versions. Follow the installation instructions given on the rbenv site to install it, but make sure the `rbenv init` command is run in every shell (e.g., add it to .bashrc). Install the [Ruby build plugin](https://github.com/rbenv/ruby-build#readme) to make it easy to install different Ruby versions as needed.
 
 ```
 # make sure some basic libraries are installed that are probably required later (Ubuntu example)
@@ -170,17 +170,17 @@ Some portions of Dryad's interface rely on Node and React. See the [Node Install
 Dryad's submission system validates files with the Frictionless Data
 toolkit. The [Frictionless
 Installation](frictionless_integration/INSTALL.md) instructions are deprecated since it uses an
-AWS Lambda for validating files.  The [implementation overview](frictionless_integration/implementation_overview.md) 
-gives a few details.  In order to get your local server to work with the callbacks, you'll need to have them
+AWS Lambda for validating files. The [implementation overview](frictionless_integration/implementation_overview.md) 
+gives a few details. In order to get your local server to work with the callbacks, you'll need to have them
 publicly accessible and create an environment with the correct domain name or use an environment that uses
-our dev database.  To mock the functionality, you could manually
+our dev database. To mock the functionality, you could manually
 insert a validation report into the stash_engine_frictionless_reports table to examine UI elements.
 
 ## Final search configuration
 
 To configure where the search interface draws its
 data from, modify the `config/blacklight.yml` to change the endpoint for the
-development server.  When running locally, the default server is the Dryad
+development server. When running locally, the default server is the Dryad
 development server, but it can be overridden with the `SOLR_URL` environment
 variable.
 
@@ -230,7 +230,7 @@ Type
 RAILS_ENV=production rails funders:set_nih
 ```
 
-which makes the rails database have a special structure for NIH to include sub-funders.  Other
+which makes the rails database have a special structure for NIH to include sub-funders. Other
 umbrella funders may be added later.
   
 'op '

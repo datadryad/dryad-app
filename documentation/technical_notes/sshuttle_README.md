@@ -47,7 +47,7 @@ If it doesn't forward your local public key then you'll need to add the key for 
 
 ## Install sshuttle on your machine
 
-This will vary based on your OS type.  Use something like apt, yum or homebrew to install sshuttle.
+This will vary based on your OS type. Use something like apt, yum or homebrew to install sshuttle.
 
 ## Run the sshuttle.sh script
 
@@ -83,5 +83,5 @@ $
 ```
 
 Note: production servers will not work with this currently since IAS refused to allow access to
-them through the `ftp.datadryad.org` server and only from other UC servers.  Those would require
+them through the `ftp.datadryad.org` server and only from other UC servers. Those would require
 double-tunneling (first to `ftp.datadryad.org` and then to some other server inside our IAS accounts).

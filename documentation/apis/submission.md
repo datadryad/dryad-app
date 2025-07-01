@@ -1,7 +1,7 @@
 Dryad Submission API
 ====================
 
-The Dryad Submission API enables submission and update of datasets.  For authentication, it uses an OAuth2 client credentials grant (see [A Guide To OAuth 2.0 Grants](https://alexbilbie.com/guide-to-oauth-2-grants/)).
+The Dryad Submission API enables submission and update of datasets. For authentication, it uses an OAuth2 client credentials grant (see [A Guide To OAuth 2.0 Grants](https://alexbilbie.com/guide-to-oauth-2-grants/)).
 
 This document gives practical information for working with the API in order to submit a dataset and [fuller API documentation is available](https://datadryad.org/api).
 
@@ -88,7 +88,7 @@ return_hash = JSON.parse(resp)
 
 # If you want to see a pretty version, use pretty-print--require 'pp' and pp(return_hash).
 # Some of the main things to notice (besides the metadata you submitted) is the id and
-# versionStatus are set.  We'll save the doi for later use.
+# versionStatus are set. We'll save the doi for later use.
 
 # we'll use the DOI later
 doi = return_hash['id']
@@ -101,9 +101,9 @@ You may upload multiple files for your dataset. Only all direct file uploads or 
 
 ### Direct file upload
 
-Find a file on your file system to upload, get its path and determine its Content-Type.  You would send it to the server like the example below by changing the file\_path and content\_type values.
+Find a file on your file system to upload, get its path and determine its Content-Type. You would send it to the server like the example below by changing the file\_path and content\_type values.
 
-For direct file uploads, do a PUT to {{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/files/{{filename-encoded}} and the body being sent would be the binary file.  Set the HTTP "Content-Description" header to add a short description.  Set the HTTP Content-Type appropriately for the file type (for example image/jpeg).
+For direct file uploads, do a PUT to {{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/files/{{filename-encoded}} and the body being sent would be the binary file. Set the HTTP "Content-Description" header to add a short description. Set the HTTP Content-Type appropriately for the file type (for example image/jpeg).
 
 ```bash
 curl --data-binary "@</path/to/my/file>" -i -X PUT "https://<domain-name>/api/v2/datasets/<encoded-doi>/files/<encoded-file-name>" -H "Authorization: Bearer <token>" -H "Content-Type: <mime-type>" -H "Accept: application/json"
@@ -138,7 +138,7 @@ return_hash = JSON.parse(resp)
 ```
 
 After a file upload you will not get a digest and digestType back in the JSON. The digest and digestType will be generated on the moment the dataset is submitted and the file is uploaded to permanent storage.
-The other method is adding by URL.  You can do a POST to {{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/urls with json something like the following:
+The other method is adding by URL. You can do a POST to {{url-domain-name}}/api/v2/datasets/{{doi_encoded}}/urls with json something like the following:
 
 ### Upload by URL reference
 
@@ -157,7 +157,7 @@ To upload a file that is referenced by URL, do a POST to `{{url-domain-name}}/ap
 }
 ```
 
-This will add entries to the database with the information you specify.  Only the `url` is required. Other fields, which are optional, are described below:
+This will add entries to the database with the information you specify. Only the `url` is required. Other fields, which are optional, are described below:
 
 - `path` can provide a filename when the name is not specified in the URL (this is common when the URL is using an identifier string rather than a file name)
 - `digest` and `digestType` are not required, but if they are added then they will be added to the database in place of a generated checksum. If the digest doesn't match when the file is downloaded from the internet, that will cause an error on the moment the dataset gets submitted.
@@ -196,7 +196,7 @@ resp = RestClient.patch(
 )
 
 # A successful response will be a 202 and you should receive a json response
-# with information about the submission.  You may continue to do GET requests
+# with information about the submission. You may continue to do GET requests
 # on the dataset /api/v2/datasets/<encoded-doi> to see the status changes until
 # a successful ingest which will be 'submitted'.
 

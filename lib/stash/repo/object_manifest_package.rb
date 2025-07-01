@@ -51,15 +51,15 @@ module Stash
       end
 
       def data_file_entry(upload)
-        upload_file_name = upload.upload_file_name
+        file_name = upload.download_filename
         upload_url = upload.url || upload.s3_staged_presigned_url
-        throw ArgumentError, "No upload URL for upload #{upload.id} ('#{upload_file_name}')" unless upload_url
+        throw ArgumentError, "No upload URL for upload #{upload.id} ('#{file_name}')" unless upload_url
 
         upload_file_size = upload.upload_file_size
         OpenStruct.new(
           file_url: upload_url,
           file_size: (upload_file_size if upload_file_size > 0),
-          file_name: upload_file_name,
+          file_name: file_name,
           hash_algorithm: (upload.digest_type if upload.digest?),
           hash_value: (upload.digest if upload.digest?)
         )

@@ -12,7 +12,7 @@ module StashApi
     end
 
     def metadata
-      { _links: links }.merge(path: @se_data_file.upload_file_name,
+      { _links: links }.merge(path: @se_data_file.download_filename,
                               size: @se_data_file.upload_file_size,
                               mimeType: @se_data_file.upload_content_type,
                               status: @se_data_file.file_state,

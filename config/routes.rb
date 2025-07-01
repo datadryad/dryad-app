@@ -126,6 +126,7 @@ Rails.application.routes.draw do
     resources :data_files, :software_files, :supp_files do
       member do
         patch 'destroy_manifest' # destroy file from manifest method
+        patch 'rename'
       end
     end
 

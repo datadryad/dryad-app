@@ -382,11 +382,11 @@ module StashEngine
       sql = <<-SQL
         SELECT *
         FROM stash_engine_generic_files AS a
-        JOIN (SELECT upload_file_name
+        JOIN (SELECT download_filename
           FROM stash_engine_generic_files
           WHERE resource_id = ? AND (file_state IS NULL OR file_state = 'created') AND type = ?
-          GROUP BY upload_file_name HAVING count(*) >= 2) AS b
-        ON a.upload_file_name = b.upload_file_name
+          GROUP BY download_filename HAVING count(*) >= 2) AS b
+        ON a.download_filename = b.download_filename
         WHERE a.resource_id = ? AND type = ?
       SQL
       # get the correct ActiveRecord model based on the method name
@@ -431,20 +431,18 @@ module StashEngine
       readme = complete_readme
       return if !readme || readme.empty?
 
-      # check if new content
-      old_readme = previous_resource&.complete_readme
-      return if readme == old_readme
-
       add_data_as_file(filename, readme)
     end
 
     def check_add_cedar_json
       filename = 'DisciplineSpecificMetadata.json'
-      return if !cedar_json || cedar_json.empty?
 
-      # check if new content
-      old_info = previous_resource&.cedar_json
-      return if cedar_json == old_info
+      # remove previous file and exit if file has been deleted
+      if !cedar_json || cedar_json.empty?
+        old_file = data_files.present_files.where(upload_file_name: filename).first
+        old_file.smart_destroy! if old_file&.digest
+        return
+      end
 
       add_data_as_file(filename, cedar_json)
     end
@@ -1111,14 +1109,15 @@ module StashEngine
     end
 
     def add_data_as_file(filename, content)
-      # check content against file
+      # check content against existing file
+      digest_type = 'sha-256'
+      sums = Stash::Checksums.get_checksums([digest_type], StringIO.new(content))
+      digest = sums.get_checksum(digest_type)
       old_file = data_files.present_files.where(upload_file_name: filename).first
-      file_content = old_file&.file_content
-
-      return if content == file_content
+      return if digest == old_file&.digest
 
       # remove old file
-      old_file.smart_destroy! if file_content
+      old_file.smart_destroy! if old_file&.digest
 
       # add file
       Stash::Aws::S3.new.put_stream(
@@ -1128,11 +1127,9 @@ module StashEngine
       send('data_files').where('lower(upload_file_name) = ?', filename.downcase)
         .where.not(file_state: 'deleted').destroy_all
 
-      digest_type = 'sha-256'
-      sums = Stash::Checksums.get_checksums([digest_type], StringIO.new(content))
-
       db_file =
         StashEngine::DataFile.create(
+          download_filename: filename,
           upload_file_name: filename,
           upload_content_type: 'text/markdown',
           upload_file_size: content.bytesize,
@@ -1141,7 +1138,7 @@ module StashEngine
           file_state: 'created',
           original_filename: filename,
           digest_type: digest_type,
-          digest: sums.get_checksum(digest_type)
+          digest: digest
         )
 
       update(total_file_size: StashEngine::DataFile

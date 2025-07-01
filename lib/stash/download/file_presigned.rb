@@ -34,7 +34,7 @@ module Stash
                        "than when the actual Merritt deposit took place. Or this could be caused by some other issues.\n" \
                        "\n" \
                        "File id: #{file.id}\n" \
-                       "Filename: #{file.upload_file_name}\n"
+                       "Filename: #{file.download_filename}\n"
           StashEngine::UserMailer.general_error(file&.resource, error_text).deliver_now
         else
           cc.redirect_to url, allow_other_host: true
@@ -63,7 +63,7 @@ module Stash
                        "than when the actual Merritt deposit took place. Or this could be caused by some other issues.\n" \
                        "\n" \
                        "File id: #{file.id}\n" \
-                       "Filename: #{file.upload_file_name}\n"
+                       "Filename: #{file.download_filename}\n"
           StashEngine::UserMailer.general_error(file&.resource, error_text).deliver_now
         else
           cc.redirect_to url, allow_other_host: true
