@@ -8,6 +8,7 @@
 #  description         :text(65535)
 #  digest              :string(191)
 #  digest_type         :string(8)
+#  download_filename   :text(65535)
 #  file_deleted_at     :datetime
 #  file_state          :string(7)
 #  original_filename   :text(65535)
@@ -28,12 +29,13 @@
 #
 # Indexes
 #
-#  index_stash_engine_generic_files_on_file_deleted_at   (file_deleted_at)
-#  index_stash_engine_generic_files_on_file_state        (file_state)
-#  index_stash_engine_generic_files_on_resource_id       (resource_id)
-#  index_stash_engine_generic_files_on_status_code       (status_code)
-#  index_stash_engine_generic_files_on_upload_file_name  (upload_file_name)
-#  index_stash_engine_generic_files_on_url               (url)
+#  index_stash_engine_generic_files_on_download_filename  (download_filename)
+#  index_stash_engine_generic_files_on_file_deleted_at    (file_deleted_at)
+#  index_stash_engine_generic_files_on_file_state         (file_state)
+#  index_stash_engine_generic_files_on_resource_id        (resource_id)
+#  index_stash_engine_generic_files_on_status_code        (status_code)
+#  index_stash_engine_generic_files_on_upload_file_name   (upload_file_name)
+#  index_stash_engine_generic_files_on_url                (url)
 #
 module StashEngine
   class SoftwareFile < GenericFile
@@ -48,7 +50,7 @@ module StashEngine
       copy = ZenodoCopy.where(resource_id: resource_id, copy_type: 'software_publish').last
       return '#' if copy.nil? || copy.deposition_id.nil? || copy.state != 'finished' || file_state == 'deleted'
 
-      "#{APP_CONFIG[:zenodo][:base_url]}/record/#{copy.deposition_id}/files/#{ERB::Util.url_encode(upload_file_name)}?download=1"
+      "#{APP_CONFIG[:zenodo][:base_url]}/record/#{copy.deposition_id}/files/#{ERB::Util.url_encode(download_filename)}?download=1"
     end
 
     def zenodo_presigned_url
@@ -56,7 +58,7 @@ module StashEngine
       dep_id = resource.zenodo_copies.software&.last&.deposition_id
       raise "Zenodo presigned downloads must have deposition ids for resource #{resource.id}" if dep_id.blank?
 
-      rat.magic_url(deposition_id: dep_id, filename: upload_file_name)
+      rat.magic_url(deposition_id: dep_id, filename: download_filename)
     end
 
     def public_download_url
@@ -69,7 +71,7 @@ module StashEngine
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
     def s3_staged_presigned_url
-      Stash::Aws::S3.new.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'software')}/#{upload_file_name}")
+      Stash::Aws::S3.new.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'software')}/#{upload_file_name}", filename: download_filename)
     end
 
     # the URL we use for replication from other source (Presigned or URL) up to Zenodo

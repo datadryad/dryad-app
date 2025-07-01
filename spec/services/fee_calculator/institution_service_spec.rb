@@ -211,7 +211,7 @@ module FeeCalculator
     end
 
     describe '#dataset fee_calculator' do
-      let(:prev_files_size) { 0 }
+      let(:prev_files_size) { nil }
       let(:new_files_size) { 100 }
       let(:covers_ldf) { false }
       let!(:tenant) { create(:tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf) }

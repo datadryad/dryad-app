@@ -45,7 +45,7 @@ module FeeCalculator
     end
 
     describe '#dataset fee_calculator' do
-      let(:prev_files_size) { 0 }
+      let(:prev_files_size) { nil }
       let(:new_files_size) { 100 }
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size, payment_type: 'waiver') }
 
@@ -80,6 +80,14 @@ module FeeCalculator
 
           context 'when files_size do not change' do
             it { is_expected.to eq(no_charges_response) }
+          end
+
+          context 'when paid for 0B' do
+            let(:prev_files_size) { 0 }
+
+            context 'when files_size do not change' do
+              it { is_expected.to eq(no_charges_response) }
+            end
           end
 
           context 'when files_size changes' do

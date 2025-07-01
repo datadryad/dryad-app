@@ -8,6 +8,7 @@
 #  description         :text(65535)
 #  digest              :string(191)
 #  digest_type         :string(8)
+#  download_filename   :text(65535)
 #  file_deleted_at     :datetime
 #  file_state          :string(7)
 #  original_filename   :text(65535)
@@ -28,13 +29,21 @@
 #
 # Indexes
 #
-#  index_stash_engine_generic_files_on_file_deleted_at   (file_deleted_at)
-#  index_stash_engine_generic_files_on_file_state        (file_state)
-#  index_stash_engine_generic_files_on_resource_id       (resource_id)
-#  index_stash_engine_generic_files_on_status_code       (status_code)
-#  index_stash_engine_generic_files_on_upload_file_name  (upload_file_name)
-#  index_stash_engine_generic_files_on_url               (url)
+#  index_stash_engine_generic_files_on_download_filename  (download_filename)
+#  index_stash_engine_generic_files_on_file_deleted_at    (file_deleted_at)
+#  index_stash_engine_generic_files_on_file_state         (file_state)
+#  index_stash_engine_generic_files_on_resource_id        (resource_id)
+#  index_stash_engine_generic_files_on_status_code        (status_code)
+#  index_stash_engine_generic_files_on_upload_file_name   (upload_file_name)
+#  index_stash_engine_generic_files_on_url                (url)
 #
+#  index_stash_engine_generic_files_on_download_filename  (download_filename)
+#  index_stash_engine_generic_files_on_file_deleted_at    (file_deleted_at)
+#  index_stash_engine_generic_files_on_file_state         (file_state)
+#  index_stash_engine_generic_files_on_resource_id        (resource_id)
+#  index_stash_engine_generic_files_on_status_code        (status_code)
+#  index_stash_engine_generic_files_on_upload_file_name   (upload_file_name)
+#  index_stash_engine_generic_files_on_url                (url)
 require 'fileutils'
 require 'byebug'
 require 'cgi'
@@ -55,7 +64,7 @@ module StashEngine
       @upload = create(:data_file,
                        resource: @resource,
                        file_state: 'created',
-                       upload_file_name: 'foo.bar')
+                       download_filename: 'foo.bar')
       Timecop.return
     end
 
@@ -79,15 +88,15 @@ module StashEngine
 
       before(:each) do
         @files = [
-          create(:data_file, upload_file_name: 'noggin1.jpg', file_state: 'created', resource: @resource),
-          create(:data_file, upload_file_name: 'noggin3.jpg', file_state: 'created', resource: @resource)
+          create(:data_file, download_filename: 'noggin1.jpg', file_state: 'created', resource: @resource),
+          create(:data_file, download_filename: 'noggin3.jpg', file_state: 'created', resource: @resource)
         ]
 
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @files2 = [
-          create(:data_file, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource: @resource2),
-          create(:data_file, upload_file_name: 'noggin2.jpg', file_state: 'created', resource: @resource2),
-          create(:data_file, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource: @resource2)
+          create(:data_file, download_filename: 'noggin1.jpg', file_state: 'copied', resource: @resource2),
+          create(:data_file, download_filename: 'noggin2.jpg', file_state: 'created', resource: @resource2),
+          create(:data_file, download_filename: 'noggin3.jpg', file_state: 'deleted', resource: @resource2)
         ]
       end
 
@@ -96,7 +105,7 @@ module StashEngine
         expect_any_instance_of(Stash::Aws::S3).to receive(:delete_file)
         @files2[1].smart_destroy!
         @resource2.reload
-        expect(@resource2.data_files.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
+        expect(@resource2.data_files.map(&:download_filename).include?('noggin2.jpg')).to eq(false)
       end
 
       it "deletes from database even if the s3 file doesn't exist" do
@@ -104,36 +113,36 @@ module StashEngine
         expect_any_instance_of(Stash::Aws::S3).not_to receive(:delete_file)
         @files2[1].smart_destroy!
         @resource2.reload
-        expect(@resource2.data_files.map(&:upload_file_name).include?('noggin2.jpg')).to eq(false)
+        expect(@resource2.data_files.map(&:download_filename).include?('noggin2.jpg')).to eq(false)
       end
 
       it "doesn't add another Merritt deletion if one already exists" do
         @files2[2].smart_destroy!
-        expect(@resource2.data_files.where(upload_file_name: 'noggin3.jpg').count).to eq(1)
+        expect(@resource2.data_files.where(download_filename: 'noggin3.jpg').count).to eq(1)
       end
 
       it 'gets rid of extra deletions for the same files' do
-        @files2 << create(:data_file, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource: @resource2)
+        @files2 << create(:data_file, download_filename: 'noggin3.jpg', file_state: 'deleted', resource: @resource2)
         @files2[2].smart_destroy!
-        expect(@resource2.data_files.where(upload_file_name: 'noggin3.jpg').count).to eq(1)
+        expect(@resource2.data_files.where(download_filename: 'noggin3.jpg').count).to eq(1)
       end
 
       it 'removes a copied file and only keeps deletion if it is removed' do
         @files2[0].smart_destroy!
-        expect(@resource2.data_files.where(upload_file_name: @files2[0].upload_file_name).count).to eq(1)
-        expect(@resource2.data_files.where(upload_file_name: @files2[0].upload_file_name).first.file_state).to eq('deleted')
+        expect(@resource2.data_files.where(download_filename: @files2[0].download_filename).count).to eq(1)
+        expect(@resource2.data_files.where(download_filename: @files2[0].download_filename).first.file_state).to eq('deleted')
       end
 
       it 'makes merritt remove request for a file of different capitalization' do
-        changed_case = @resource2.data_files.where(upload_file_name: 'noggin3.jpg').first
-        changed_case.update(upload_file_name: 'NoGgIn3.JpG')
+        changed_case = @resource2.data_files.where(download_filename: 'noggin3.jpg').first
+        changed_case.update(download_filename: 'NoGgIn3.JpG')
         changed_case.smart_destroy!
         destroy_file = @resource2.data_files.where(file_state: 'deleted').first
 
-        expect(destroy_file.upload_file_name).to eq('noggin3.jpg')
+        expect(destroy_file.download_filename).to eq('noggin3.jpg')
 
         # not NoGgIn3.JpG for the current version and that is just gone
-        expect(@resource2.data_files.where(upload_file_name: 'noggin3.jpg').count).to eq(1) # only destroy file and not former file
+        expect(@resource2.data_files.where(download_filename: 'noggin3.jpg').count).to eq(1) # only destroy file and not former file
       end
 
       it 'clears frictionless reports' do
@@ -154,7 +163,7 @@ module StashEngine
     describe :s3_staged_path do
       it 'returns path in uploads containing resource_id and filename' do
         cs3p = @upload.s3_staged_path
-        expect(cs3p).to end_with('/data/foo.bar')
+        expect(cs3p).to end_with("/data/#{@upload.upload_file_name}")
         expect(cs3p).to include(@resource.id.to_s)
       end
 
@@ -179,6 +188,7 @@ module StashEngine
       end
 
       it 'returns the url to get the merritt presigned url to s3' do
+        @upload.upload_file_name = 'foo.bar'
         expect(@upload.merritt_presign_info_url).to eq(
           'https://merritt.example.com/api/presign-file/ark%3A%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true'
         )
@@ -209,7 +219,7 @@ module StashEngine
       end
 
       it 'raises Stash::Download::S3CustomError for unsuccessful response' do
-        stub_request(:get, 'https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true')
+        stub_request(:get, "https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2F#{@upload.upload_file_name}?no_redirect=true")
           .with(
             headers: {
               'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
@@ -221,7 +231,7 @@ module StashEngine
       end
 
       it 'returns a URL based on json response and url in the data' do
-        stub_request(:get, 'https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2Ffoo.bar?no_redirect=true')
+        stub_request(:get, "https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2F#{@upload.upload_file_name}?no_redirect=true")
           .with(
             headers: {
               'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
@@ -233,41 +243,22 @@ module StashEngine
 
         expect(@upload.merritt_s3_presigned_url).to eq('http://my.presigned.url/is/great/39768945')
       end
-
-      it "doesn't create a mangled URL because http.rb has modified the URL with some foreign characters so it no longer matches" do
-        str = 'javois%CC%8C_et_al_data.xls'
-        fn = CGI.unescape(str)
-        stub_request(:get, "https://merritt.example.com/api/presign-file/ark:%2F12345%2F38568/1/producer%2F#{str}?no_redirect=true")
-          .with(
-            headers: {
-              'Authorization' => 'Basic aG9yc2VjYXQ6TXlIb3JzZUNhdFBhc3N3b3Jk',
-              'Host' => 'merritt.example.com'
-            }
-          )
-          .to_return(status: 200, body: '{"url": "http://my.presigned.url/is/great/34snak"}',
-                     headers: { 'Content-Type': 'application/json' })
-        @upload2 = create(:data_file,
-                          resource: @resource,
-                          file_state: 'created',
-                          upload_file_name: fn)
-        expect(@upload2.merritt_s3_presigned_url).to eq('http://my.presigned.url/is/great/34snak') # returned the value from matching the url
-      end
     end
 
     # even though this exists in the base class, the versioning should only be used in individual classes
     describe '#in_previous_version' do
       before(:each) do
         @files = [
-          create(:data_file, upload_file_name: 'noggin1.jpg', file_state: 'created', resource_id: @resource.id),
-          create(:data_file, upload_file_name: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
+          create(:data_file, download_filename: 'noggin1.jpg', file_state: 'created', resource_id: @resource.id),
+          create(:data_file, download_filename: 'noggin3.jpg', file_state: 'created', resource_id: @resource.id)
         ]
 
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
 
         @files2 = [
-          create(:data_file, upload_file_name: 'noggin1.jpg', file_state: 'copied', resource_id: @resource2.id),
-          create(:data_file, upload_file_name: 'noggin2.jpg', file_state: 'created', resource_id: @resource2.id),
-          create(:data_file, upload_file_name: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
+          create(:data_file, download_filename: 'noggin1.jpg', file_state: 'copied', resource_id: @resource2.id),
+          create(:data_file, download_filename: 'noggin2.jpg', file_state: 'created', resource_id: @resource2.id),
+          create(:data_file, download_filename: 'noggin3.jpg', file_state: 'deleted', resource_id: @resource2.id)
         ]
       end
 
@@ -300,7 +291,7 @@ module StashEngine
                           digest: 'fake_digest',
                           resource: @resource,
                           file_state: 'created',
-                          upload_file_name: 'mytest.csv',
+                          download_filename: 'mytest.csv',
                           storage_version_id: @resource.id)
         allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
         allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload2).and_return(@upload2)
@@ -331,7 +322,7 @@ module StashEngine
         @upload2 = create(:data_file,
                           resource: @resource,
                           file_state: 'created',
-                          upload_file_name: 'README.md')
+                          download_filename: 'README.md')
         allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload).and_return(@upload)
         allow(DataFile).to receive(:find_merritt_deposit_file).with(file: @upload2).and_return(@upload2)
       end
@@ -355,11 +346,11 @@ module StashEngine
 
     describe :populate_container_files_from_last do
       it 'copies the files from the last version of the resource' do
-        df1 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'created', resource_id: @resource.id)
+        df1 = create(:data_file, download_filename: 'fromulent.zip', file_state: 'created', resource_id: @resource.id)
         fromulent_contain1 = create(:container_file, data_file: df1)
 
         resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
-        df2 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'copied', resource_id: resource2.id)
+        df2 = create(:data_file, download_filename: 'fromulent.zip', file_state: 'copied', resource_id: resource2.id)
         df2.populate_container_files_from_last
 
         df2.reload
@@ -371,11 +362,11 @@ module StashEngine
       end
 
       it "ignores copying if this isn't a container file type" do
-        df1 = create(:data_file, upload_file_name: 'fromulent.blog', file_state: 'created', resource_id: @resource.id)
+        df1 = create(:data_file, download_filename: 'fromulent.blog', file_state: 'created', resource_id: @resource.id)
         create(:container_file, data_file: df1)
 
         resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
-        df2 = create(:data_file, upload_file_name: 'fromulent.blog', file_state: 'copied', resource_id: resource2.id)
+        df2 = create(:data_file, download_filename: 'fromulent.blog', file_state: 'copied', resource_id: resource2.id)
         df2.populate_container_files_from_last
 
         df2.reload
@@ -384,11 +375,11 @@ module StashEngine
       end
 
       it 'ignores copying if this was a deleted file type' do
-        df1 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'deleted', resource_id: @resource.id)
+        df1 = create(:data_file, download_filename: 'fromulent.zip', file_state: 'deleted', resource_id: @resource.id)
         create(:container_file, data_file: df1)
 
         resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
-        df2 = create(:data_file, upload_file_name: 'fromulent.zip', file_state: 'created', resource_id: resource2.id)
+        df2 = create(:data_file, download_filename: 'fromulent.zip', file_state: 'created', resource_id: resource2.id)
         df2.populate_container_files_from_last
 
         df2.reload
@@ -437,11 +428,13 @@ module StashEngine
         Timecop.travel(Time.now.utc - 1.hour)
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource2.current_resource_state.update(resource_state: 'submitted')
-        @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'copied', download_filename: 'foo.bar',
+                                    upload_file_name: @upload.upload_file_name)
         Timecop.return
         @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource3.current_resource_state.update(resource_state: 'submitted')
-        @file3 = create(:data_file, resource: @resource3, file_state: 'copied', upload_file_name: 'foo.bar')
+        @file3 = create(:data_file, resource: @resource3, file_state: 'copied', download_filename: 'foo.bar',
+                                    upload_file_name: @upload.upload_file_name)
 
         expect(@file3.original_deposit_file).to eq(@upload)
       end
@@ -451,15 +444,17 @@ module StashEngine
         Timecop.travel(Time.now.utc - 2.hours)
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource2.current_resource_state.update(resource_state: 'submitted')
-        @file2 = create(:data_file, resource: @resource2, file_state: 'deleted', upload_file_name: 'foo.bar')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'deleted', download_filename: 'foo.bar',
+                                    upload_file_name: @upload.upload_file_name)
         Timecop.travel(Time.now.utc + 1.hour)
         @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource3.current_resource_state.update(resource_state: 'submitted')
-        @file3 = create(:data_file, resource: @resource3, file_state: 'created', upload_file_name: 'foo.bar')
+        @file3 = create(:data_file, resource: @resource3, file_state: 'created', download_filename: 'foo.bar')
         Timecop.return
         @resource4 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource4.current_resource_state.update(resource_state: 'submitted')
-        @file4 = create(:data_file, resource: @resource4, file_state: 'copied', upload_file_name: 'foo.bar')
+        @file4 = create(:data_file, resource: @resource4, file_state: 'copied', download_filename: 'foo.bar',
+                                    upload_file_name: @file3.upload_file_name)
 
         expect(@file4.original_deposit_file).to eq(@file3)
       end
@@ -469,15 +464,17 @@ module StashEngine
         Timecop.travel(Time.now.utc - 2.hours)
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource2.current_resource_state.update(resource_state: 'submitted')
-        @file2 = create(:data_file, resource: @resource2, file_state: 'copied', upload_file_name: 'foo.bar')
+        @file2 = create(:data_file, resource: @resource2, file_state: 'copied', download_filename: 'foo.bar',
+                                    upload_file_name: @upload.upload_file_name)
         Timecop.travel(Time.now.utc + 1.hour)
         @resource3 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource3.current_resource_state.update(resource_state: 'submitted')
-        @file3 = create(:data_file, resource: @resource3, file_state: 'copied', upload_file_name: 'foo.bar')
+        @file3 = create(:data_file, resource: @resource3, file_state: 'copied', download_filename: 'foo.bar',
+                                    upload_file_name: @upload.upload_file_name)
         Timecop.return
         @resource4 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource4.current_resource_state.update(resource_state: 'submitted')
-        @file4 = create(:data_file, resource: @resource4, file_state: 'created', upload_file_name: 'foo.bar')
+        @file4 = create(:data_file, resource: @resource4, file_state: 'created', download_filename: 'foo.bar')
 
         expect(@file4.original_deposit_file).to eq(@file4)
       end
@@ -512,8 +509,8 @@ module StashEngine
 
         @resource2 = create(:resource, user: @user, tenant_id: 'ucop', identifier: @identifier)
         @resource2.current_resource_state.update(resource_state: 'submitted')
-        @file2 = create(:data_file, resource: @resource2, file_state: 'created', upload_file_name: 'foo.bar',
-                                    upload_file_size: @upload.upload_file_size)
+        @file2 = create(:data_file, resource: @resource2, file_state: 'created', download_filename: 'foo.bar',
+                                    upload_file_name: @upload.upload_file_name, upload_file_size: @upload.upload_file_size)
 
         expect(DataFile.find_merritt_deposit_file(file: @file2)).to eq(@upload)
       end
@@ -556,7 +553,7 @@ module StashEngine
         allow_any_instance_of(Stash::Aws::S3).to receive(:exists?).and_return(true)
 
         @resource.current_resource_state.update(resource_state: 'submitted')
-        expect(@upload.s3_permanent_path).to include("-#{@resource.id}/data/foo.bar")
+        expect(@upload.s3_permanent_path).to include("-#{@resource.id}/data/#{@upload.upload_file_name}")
       end
     end
 

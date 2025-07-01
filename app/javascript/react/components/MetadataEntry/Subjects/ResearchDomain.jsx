@@ -1,22 +1,25 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import {xor} from 'lodash';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
+import SubjectSelect from './SubjectSelect';
 
 function ResearchDomain({step, resource, setResource}) {
   const fieldRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-  const [subject, setSubject] = useState(resource.subjects.find((s) => ['fos', 'bad_fos'].includes(s.subject_scheme))?.subject);
+  const [selected, setSelected] = useState(
+    resource.subjects?.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)).map((s) => s.subject) || [],
+  );
   const [subjects, setSubjects] = useState([]);
 
-  const submit = (e) => {
-    setSubject(e.target.value);
+  const submit = (items) => {
     showSavingMsg();
     axios.patch(
       '/stash_datacite/fos_subjects/update',
       {
         authenticity_token,
-        fos_subjects: e.target.value,
+        fos_subjects: items,
         id: resource.id,
       },
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
@@ -37,6 +40,13 @@ function ResearchDomain({step, resource, setResource}) {
   };
 
   useEffect(() => {
+    const oldSelected = resource.subjects?.filter((s) => ['fos', 'bad_fos'].includes(s.subject_scheme)).map((s) => s.subject) || [];
+    if (xor(oldSelected, selected).length) {
+      submit(selected);
+    }
+  }, [selected]);
+
+  useEffect(() => {
     async function getList() {
       axios.get('/stash_datacite/fos_subjects').then((data) => {
         setSubjects(data.data);
@@ -46,13 +56,25 @@ function ResearchDomain({step, resource, setResource}) {
   }, [fieldRef, step]);
 
   return (
-    <form className="input-stack" style={{marginBottom: '1.5em'}}>
-      <label htmlFor="r_domain">Research domain</label>
-      <select ref={fieldRef} id="r_domain" aria-errormessage="domain_error" className="c-input__select" onChange={submit} value={subject}>
-        <option value="" aria-label="Select a Research domain" />
-        {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
-      </select>
-      <div className="input-example"><i aria-hidden="true" />The main scholarly or technical field for the data or project</div>
+    <form className="input-stack" ref={fieldRef} style={{marginBottom: '1.5em'}}>
+      <SubjectSelect
+        selected={selected}
+        id="r_domain"
+        label="Research domains"
+        example={<div id="r_domain-ex"><i aria-hidden="true" />The main scholarly or technical fields for the data or project</div>}
+        remove={(subj) => setSelected((s) => s.filter((k) => k !== subj))}
+      >
+        <select
+          id="r_domain"
+          aria-describedby="r_domain-ex"
+          aria-errormessage="domain_error"
+          className="c-input__select"
+          onChange={(e) => setSelected((s) => s.concat(e.target.value))}
+        >
+          <option value="">Select Research domain</option>
+          {subjects.filter((s) => !selected.includes(s)).map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+      </SubjectSelect>
     </form>
   );
 }

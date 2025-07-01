@@ -8,11 +8,13 @@ export default function ReadMePreview({resource, previous, curator}) {
   const readmeRef = useRef(null);
   const readme = resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
   const prev = previous?.descriptions.find((d) => d.description_type === 'technicalinfo')?.description;
-  const diff = previous && readme !== prev;
+  const hsi = resource.descriptions.find((d) => d.description_type === 'usage_notes')?.description;
+  const prevHSI = previous?.descriptions.find((d) => d.description_type === 'usage_notes')?.description;
+  const diff = previous && (readme !== prev || hsi !== prevHSI);
 
   const getREADME = () => {
     axios.get(`/resources/${resource.id}/display_readme`).then((data) => {
-      const existing = document.getElementById('landing_readme');
+      const existing = readmeRef.current.querySelector('#landing_readme');
       if (diff && curator) setCurrent(data.data || '<div></div>');
       else if (readmeRef.current && !existing) readmeRef.current.append(document.createRange().createContextualFragment(data.data));
     });

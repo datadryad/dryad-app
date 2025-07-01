@@ -4,17 +4,24 @@ import {ExitIcon} from '../ExitButton';
 
 const fileList = (list, previous) => {
   const deleted = previous?.filter((p) => !list.some((f) => f.file_state === 'copied'
-    && f.upload_file_name === p.upload_file_name && f.digest === p.digest
-    && f.storage_version_id === p.storage_version_id));
+    && f.upload_file_name === p.upload_file_name && f.storage_version_id === p.storage_version_id));
   return (
     <>
       <ul className="c-review-files__list">
         {list.map((f) => {
-          const isNew = f.file_state === 'created';
-          const listing = <>{f.upload_file_name} <span className="file_size">{formatSizeUnits(f.upload_file_size)}</span></>;
+          const isNew = previous
+            && (f.file_state === 'created' || !previous.some((p) => p.upload_file_name === f.upload_file_name));
+          const oldName = previous
+            && !isNew && previous.find((p) => p.upload_file_name === f.upload_file_name && p.download_filename !== f.download_filename);
+          const listing = (
+            <>{f.download_filename} {
+              oldName ? <del>{oldName.download_filename}{' '}</del> : ''
+            }<span className="file_size">{formatSizeUnits(f.upload_file_size)}</span>
+            </>
+          );
           return (
             <li key={f.id}>
-              {previous && isNew ? <ins>{listing}</ins> : listing}
+              {isNew ? <ins>{listing}</ins> : listing}
             </li>
           );
         })}
@@ -23,7 +30,7 @@ const fileList = (list, previous) => {
         <ul className="c-review-files__list del">
           {deleted.map((d) => (
             <li key={d.id}>
-              <del>{d.upload_file_name} <span className="file_size">{formatSizeUnits(d.upload_file_size)}</span></del>
+              <del>{d.download_filename} <span className="file_size">{formatSizeUnits(d.upload_file_size)}</span></del>
             </li>
           ))}
         </ul>
@@ -36,12 +43,12 @@ export default function FilesPreview({
   resource, previous, curator, maxSize,
 }) {
   const present = resource.generic_files.filter((f) => f.file_state !== 'deleted');
-  const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.upload_file_name !== 'README.md');
+  const data = present.filter((f) => f.type === 'StashEngine::DataFile' && f.download_filename !== 'README.md');
   const software = present.filter((f) => f.type === 'StashEngine::SoftwareFile');
   const supp = present.filter((f) => f.type === 'StashEngine::SuppFile');
 
   const prev_files = previous?.generic_files.filter((f) => f.file_state !== 'deleted');
-  const prev_data = prev_files?.filter((f) => f.type === 'StashEngine::DataFile' && f.upload_file_name !== 'README.md');
+  const prev_data = prev_files?.filter((f) => f.type === 'StashEngine::DataFile' && f.download_filename !== 'README.md');
   const prev_soft = prev_files?.filter((f) => f.type === 'StashEngine::SoftwareFile');
   const prev_supp = prev_files?.filter((f) => f.type === 'StashEngine::SuppFile');
 

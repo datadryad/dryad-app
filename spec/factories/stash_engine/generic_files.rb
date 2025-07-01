@@ -8,6 +8,7 @@
 #  description         :text(65535)
 #  digest              :string(191)
 #  digest_type         :string(8)
+#  download_filename   :text(65535)
 #  file_deleted_at     :datetime
 #  file_state          :string(7)
 #  original_filename   :text(65535)
@@ -28,19 +29,21 @@
 #
 # Indexes
 #
-#  index_stash_engine_generic_files_on_file_deleted_at   (file_deleted_at)
-#  index_stash_engine_generic_files_on_file_state        (file_state)
-#  index_stash_engine_generic_files_on_resource_id       (resource_id)
-#  index_stash_engine_generic_files_on_status_code       (status_code)
-#  index_stash_engine_generic_files_on_upload_file_name  (upload_file_name)
-#  index_stash_engine_generic_files_on_url               (url)
+#  index_stash_engine_generic_files_on_download_filename  (download_filename)
+#  index_stash_engine_generic_files_on_file_deleted_at    (file_deleted_at)
+#  index_stash_engine_generic_files_on_file_state         (file_state)
+#  index_stash_engine_generic_files_on_resource_id        (resource_id)
+#  index_stash_engine_generic_files_on_status_code        (status_code)
+#  index_stash_engine_generic_files_on_upload_file_name   (upload_file_name)
+#  index_stash_engine_generic_files_on_url                (url)
 #
 FactoryBot.define do
 
   factory :generic_file, class: StashEngine::GenericFile do
     resource
 
-    upload_file_name { File.basename(Faker::File.file_name) }
+    download_filename { File.basename(Faker::File.file_name) }
+    upload_file_name { "#{Faker::Internet.uuid}#{File.extname(download_filename)}" }
     upload_content_type { Faker::File.mime_type }
     upload_file_size { Faker::Number.between(from: 1, to: 100_000_000) }
     file_state { 'created' }

@@ -118,6 +118,7 @@ Rails.application.routes.draw do
     resources :data_files, :software_files, :supp_files do
       member do
         patch 'destroy_manifest' # destroy file from manifest method
+        patch 'rename'
       end
     end
 
@@ -204,6 +205,7 @@ Rails.application.routes.draw do
 
     get 'close_page', to: 'pages#close_page'
     get 'requirements', to: 'pages#requirements'
+    get 'costs', to: 'pages#costs'
     get 'reuse', to: 'pages#reuse'
     get 'contact', to: 'pages#contact'
     get 'best_practices', to: 'pages#best_practices'

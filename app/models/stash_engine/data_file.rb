@@ -8,6 +8,7 @@
 #  description         :text(65535)
 #  digest              :string(191)
 #  digest_type         :string(8)
+#  download_filename   :text(65535)
 #  file_deleted_at     :datetime
 #  file_state          :string(7)
 #  original_filename   :text(65535)
@@ -28,12 +29,13 @@
 #
 # Indexes
 #
-#  index_stash_engine_generic_files_on_file_deleted_at   (file_deleted_at)
-#  index_stash_engine_generic_files_on_file_state        (file_state)
-#  index_stash_engine_generic_files_on_resource_id       (resource_id)
-#  index_stash_engine_generic_files_on_status_code       (status_code)
-#  index_stash_engine_generic_files_on_upload_file_name  (upload_file_name)
-#  index_stash_engine_generic_files_on_url               (url)
+#  index_stash_engine_generic_files_on_download_filename  (download_filename)
+#  index_stash_engine_generic_files_on_file_deleted_at    (file_deleted_at)
+#  index_stash_engine_generic_files_on_file_state         (file_state)
+#  index_stash_engine_generic_files_on_resource_id        (resource_id)
+#  index_stash_engine_generic_files_on_status_code        (status_code)
+#  index_stash_engine_generic_files_on_upload_file_name   (upload_file_name)
+#  index_stash_engine_generic_files_on_url                (url)
 #
 require 'byebug'
 module StashEngine
@@ -149,7 +151,7 @@ module StashEngine
     # the permanent storage URL, not the staged storage URL
     def s3_permanent_presigned_url
       bucket = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
-      bucket.presigned_download_url(s3_key: s3_permanent_path, filename: upload_file_name)
+      bucket.presigned_download_url(s3_key: s3_permanent_path, filename: download_filename)
     end
 
     def s3_permanent_presigned_url_inline
@@ -211,7 +213,7 @@ module StashEngine
     # rather than a file that was indicated by a URL reference
     def s3_staged_presigned_url
       s3_key = "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
-      Stash::Aws::S3.new.presigned_download_url(s3_key: s3_key)
+      Stash::Aws::S3.new.presigned_download_url(s3_key: s3_key, filename: download_filename)
     end
 
     # the URL we use for replication to zenodo, for software it's always the merritt url, but for software we have the same
@@ -223,24 +225,24 @@ module StashEngine
     # check if file may be previewed
     def preview_type
       return nil if file_deleted_at
-      return nil if upload_file_name == 'README.md'
+      return nil if download_filename == 'README.md'
 
-      return 'csv' if upload_file_name.end_with?('.csv', '.tsv') ||
+      return 'csv' if download_filename.end_with?('.csv', '.tsv') ||
         ['text/csv', 'text/tab-separated-values'].include?(upload_content_type)
 
-      return 'txt' if upload_file_name.end_with?('.txt', '.md') ||
+      return 'txt' if download_filename.end_with?('.txt', '.md') ||
         upload_content_type == 'text/plain'
 
       # Images < 5MB
       return nil if upload_file_size && upload_file_size > 5 * 1024 * 1024
 
-      return 'img' if upload_file_name.end_with?('.png', '.gif', '.jpg', '.jpeg', '.svg') ||
+      return 'img' if download_filename.end_with?('.png', '.gif', '.jpg', '.jpeg', '.svg') ||
       ['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'].include?(upload_content_type)
 
       # PDF < 1MB
       return nil if upload_file_size && upload_file_size > 1 * 1024 * 1024
 
-      return 'pdf' if upload_file_name.end_with?('.pdf') || upload_content_type == 'application/pdf'
+      return 'pdf' if download_filename.end_with?('.pdf') || upload_content_type == 'application/pdf'
 
       nil
     end
@@ -252,7 +254,7 @@ module StashEngine
 
         false
       when 'img'
-        return true if upload_file_name.end_with?('svg') || ['image/svg+xml'].include?(upload_content_type)
+        return true if download_filename.end_with?('svg') || ['image/svg+xml'].include?(upload_content_type)
         return false unless (number = sniff_file(4, encode: false))
         return true if number[0, 4] == "\x89PNG".b || number[0, 4] == 'GIF8'.b || number[0, 2] == "\xFF\xD8".b
 
@@ -324,7 +326,7 @@ module StashEngine
     # It will fail getting previous version if the record isn't saved and has no id or resource_id yet.
     def populate_container_files_from_last
       @container_file_exts ||= APP_CONFIG[:container_file_extensions].map { |ext| ".#{ext}" }
-      return unless upload_file_name&.end_with?(*@container_file_exts)
+      return unless download_filename&.end_with?(*@container_file_exts)
 
       old_files = case_insensitive_previous_files
       return if old_files.empty? || old_files.first.file_state == 'deleted'

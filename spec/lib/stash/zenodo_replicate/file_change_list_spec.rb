@@ -118,12 +118,12 @@ module Stash
 
           zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
-                              filenames: @resources.first.data_files.map(&:upload_file_name) +
-                                @resources.last.data_files.map(&:upload_file_name))
+                              filenames: @resources.first.data_files.map(&:download_filename) +
+                                @resources.last.data_files.map(&:download_filename))
           @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)
 
           # because the first files show as present in zenodo (from stub), but they are not part of the current files
-          expect(@fcl.delete_list).to eq(@resources.first.data_files.map(&:upload_file_name))
+          expect(@fcl.delete_list).to eq(@resources.first.data_files.map(&:download_filename))
         end
       end
 
@@ -137,13 +137,13 @@ module Stash
           @resources << second_res
           new_files = [create(:data_file), create(:data_file)]
           @resources.last.data_files << ([
-            create(:data_file, upload_file_name: first_files[0].upload_file_name, file_state: 'copied'),
-            create(:data_file, upload_file_name: first_files[1].upload_file_name, file_state: 'copied')
+            create(:data_file, download_filename: first_files[0].download_filename, file_state: 'copied'),
+            create(:data_file, download_filename: first_files[1].download_filename, file_state: 'copied')
           ] + new_files)
 
           zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
           stub_existing_files(deposition_id: @resources.last.zenodo_copies.first.deposition_id,
-                              filenames: first_files.map(&:upload_file_name))
+                              filenames: first_files.map(&:download_filename))
           @fcl = Stash::ZenodoReplicate::FileChangeList.new(resource: @resources.last, zc_id: zc.id)
 
           # only new files since last submission need to be sent
@@ -159,8 +159,8 @@ module Stash
           @resources << second_res
           new_files = [create(:data_file), create(:data_file)]
           @resources.last.data_files << ([
-            create(:data_file, upload_file_name: first_files[0].upload_file_name, file_state: 'copied'),
-            create(:data_file, upload_file_name: first_files[1].upload_file_name, file_state: 'copied')
+            create(:data_file, download_filename: first_files[0].download_filename, file_state: 'copied'),
+            create(:data_file, download_filename: first_files[1].download_filename, file_state: 'copied')
           ] + new_files)
 
           zc = create(:zenodo_copy, resource: second_res, identifier: second_res.identifier)
