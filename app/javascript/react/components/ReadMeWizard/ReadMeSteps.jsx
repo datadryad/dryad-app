@@ -12,7 +12,9 @@ const formatList = (fileList) => fileList.map((f) => {
 
 export const secTitles = ['Data description', 'Files and variables', 'Code/software', 'Access information'];
 
-function StepEditor({content, saveContent, hidden}) {
+function StepEditor({
+  step, content, saveContent, hidden,
+}) {
   const [initialValue, setInitialValue] = useState(null);
 
   useEffect(() => {
@@ -21,6 +23,12 @@ function StepEditor({content, saveContent, hidden}) {
 
   return (
     <MarkdownEditor
+      id={`readme_editor${step}`}
+      attr={{
+        'aria-errormessage': 'readme_error',
+        'aria-labelledby': 'md_editor_label',
+        'aria-describedby': 'md_editor_desc',
+      }}
       hidden={hidden}
       initialValue={initialValue}
       onChange={saveContent}
@@ -94,7 +102,7 @@ export default function ReadMeSteps({
       </div>
       <div id="readme_step_editor">
         {Object.keys(sections).map((i) => (
-          <StepEditor key={`step${i}`} hidden={i != step || null} content={sections[i].content} saveContent={(m) => saveContent(i, m)} />
+          <StepEditor key={`step${i}`} step={i} hidden={i != step || null} content={sections[i].content} saveContent={(m) => saveContent(i, m)} />
         ))}
       </div>
       <div className="o-dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>

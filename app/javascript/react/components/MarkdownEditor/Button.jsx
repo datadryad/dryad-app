@@ -395,7 +395,7 @@ function Table({
           {rows.map((r) => (
             <div key={`row${r}`} data-row={r}>
               {cols.map((c) => (
-                <span key={`col${c}`} data-col={c} onClick={submit} onMouseEnter={select} onMouseLeave={deselect} aria-hidden="true" />
+                <span key={`col${c}`} data-col={c} tabIndex={-1} onClick={submit} onMouseEnter={select} onMouseLeave={deselect} aria-hidden="true" />
               ))}
             </div>
           ))}

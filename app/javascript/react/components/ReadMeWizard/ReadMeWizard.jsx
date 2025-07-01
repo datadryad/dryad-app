@@ -171,6 +171,11 @@ function ReadMe({
         </div>
         <MarkdownEditor
           id="readme_editor"
+          attr={{
+            'aria-errormessage': 'readme_error',
+            'aria-labelledby': 'md_editor_label',
+            'aria-describedby': 'md_editor_desc',
+          }}
           initialValue={initialValue}
           replaceValue={replaceValue}
           onChange={checkDescription}
