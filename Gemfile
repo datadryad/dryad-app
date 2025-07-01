@@ -174,3 +174,4 @@ end
 gem 'acts_as_paranoid', '~> 0.10.3'
 gem 'aws-sdk-sns'
 gem 'paper_trail', '~> 16.0'
+gem 'redis', '~> 5.4'
