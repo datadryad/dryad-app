@@ -40,7 +40,7 @@ SELECT DISTINCT c.contributor_name as xref_name, c.name_identifier_id
     AND c.name_identifier_id <> '' AND x.ror_id IS NULL;
 ```
 
-See the unmatched fundref IDs with a count of number of times they occur.  This is probably the one
+See the unmatched fundref IDs with a count of number of times they occur. This is probably the one
 to export as CSV or similar for the ROR team to analyze and see if there are funder IDs to add:
 
 ```sql

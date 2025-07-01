@@ -14,7 +14,7 @@ export default function ReadMePreview({resource, previous, curator}) {
 
   const getREADME = () => {
     axios.get(`/resources/${resource.id}/display_readme`).then((data) => {
-      const existing = document.getElementById('landing_readme');
+      const existing = readmeRef.current.querySelector('#landing_readme');
       if (diff && curator) setCurrent(data.data || '<div></div>');
       else if (readmeRef.current && !existing) readmeRef.current.append(document.createRange().createContextualFragment(data.data));
     });

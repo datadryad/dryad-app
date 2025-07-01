@@ -2,7 +2,7 @@ document.getElementById('file_preview_box').innerHTML = `<%= render partial: 'pr
 <% if @file.preview_type == 'pdf' %>
 var { pdfjsLib } = globalThis;
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.mjs';
-var url = '<%= @file.digest? || @file.storage_version_id.present? ? @file.s3_permanent_presigned_url_inline : @file.s3_staged_presigned_url %>'.replace(/&amp;/g, "&");
+var url = '<%= @file.s3_permanent_presigned_url_inline %>'.replace(/&amp;/g, "&");
 pdfjsLib.getDocument(url).promise.then((pdf) => {
   pdf.getPage(1).then((page) => {
     var viewport = page.getViewport({scale: 1});

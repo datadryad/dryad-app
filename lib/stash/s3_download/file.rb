@@ -26,7 +26,7 @@ module Stash
 
         unless s3_resp.status.success?
           return { success: false,
-                   error: "#{s3_resp.status.code} status code retrieving '#{db_file.upload_file_name}' " \
+                   error: "#{s3_resp.status.code} status code retrieving '#{db_file.download_filename}' " \
                           "for resource #{@resource.id}" }
         end
 
@@ -34,7 +34,7 @@ module Stash
         sha256 = Digest::SHA256.new
 
         # this doesn't load everything into memory at once and writes in chunks and calculates digests at the same time
-        ::File.open(::File.join(@path, db_file.upload_file_name), 'wb') do |f|
+        ::File.open(::File.join(@path, db_file.download_filename), 'wb') do |f|
           s3_resp.body.each do |chunk|
             f.write(chunk)
             md5.update(chunk)

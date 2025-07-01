@@ -4,7 +4,7 @@ import File from './File';
 import BadList from './BadList';
 
 const file_list = ({
-  config, chosenFiles, clickedRemove, clickedValidationReport, totalSize,
+  config, chosenFiles, renameFile, clickedRemove, clickedValidationReport, totalSize,
 }) => (
   <>
     <BadList chosenFiles={chosenFiles} />
@@ -24,7 +24,7 @@ const file_list = ({
       <table className="c-uploadtable">
         <thead>
           <tr>
-            <th scope="col">Filename</th>
+            <th scope="col" id="filename_label">Filename</th>
             <th scope="col">Status</th>
             <th scope="col">Tabular data check</th>
             <th scope="col">Download</th>
@@ -36,7 +36,8 @@ const file_list = ({
         <tbody>
           {chosenFiles.map((file) => (
             <File
-              key={file.id}
+              key={file.id + file.sanitized_name}
+              renameFile={renameFile}
               clickRemove={clickedRemove}
               clickValidationReport={() => clickedValidationReport(file)}
               file={file}
