@@ -2,7 +2,9 @@ import React, {useEffect, useRef} from 'react';
 import axios from 'axios';
 import {showSavingMsg, showSavedMsg} from '../../../../lib/utils';
 
-export default function License({license, resourceId, setResource}) {
+export default function License({
+  current, license, resourceId, setResource,
+}) {
   const divRef = useRef(null);
 
   const submit = () => {
@@ -29,8 +31,8 @@ export default function License({license, resourceId, setResource}) {
         }
       });
     }
-    if (divRef.current) getList();
-  }, [divRef]);
+    if (current && divRef.current) getList();
+  }, [divRef, current]);
 
   return (
     <div className="license-select" ref={divRef} />

@@ -5,7 +5,7 @@ import {xor} from 'lodash';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import SubjectSelect from './SubjectSelect';
 
-function ResearchDomain({step, resource, setResource}) {
+function ResearchDomain({current, resource, setResource}) {
   const fieldRef = useRef(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
   const [selected, setSelected] = useState(
@@ -52,8 +52,8 @@ function ResearchDomain({step, resource, setResource}) {
         setSubjects(data.data);
       });
     }
-    if (fieldRef.current && step === 'Subjects') getList();
-  }, [fieldRef, step]);
+    if (fieldRef.current && current) getList();
+  }, [fieldRef, current]);
 
   return (
     <form className="input-stack" ref={fieldRef} style={{marginBottom: '1.5em'}}>

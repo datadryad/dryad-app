@@ -9,6 +9,7 @@
 #  digest              :string(191)
 #  digest_type         :string(8)
 #  download_filename   :text(65535)
+#  file_deleted_at     :datetime
 #  file_state          :string(7)
 #  original_filename   :text(65535)
 #  original_url        :text(65535)
@@ -29,6 +30,7 @@
 # Indexes
 #
 #  index_stash_engine_generic_files_on_download_filename  (download_filename)
+#  index_stash_engine_generic_files_on_file_deleted_at    (file_deleted_at)
 #  index_stash_engine_generic_files_on_file_state         (file_state)
 #  index_stash_engine_generic_files_on_resource_id        (resource_id)
 #  index_stash_engine_generic_files_on_status_code        (status_code)
@@ -57,6 +59,7 @@ module StashEngine
     end
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
+    scope :without_deleted_files, -> { where(file_deleted_at: nil) }
     scope :newly_created, -> { where("file_state = 'created' OR file_state IS NULL") }
     scope :present_files, -> { where("file_state = 'created' OR file_state IS NULL OR file_state = 'copied'") }
     scope :url_submission, -> { where('url IS NOT NULL') }
@@ -65,7 +68,9 @@ module StashEngine
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
     scope :validated_table, -> {
-                              present_files.where.not(download_filename: 'README.md', type: StashEngine::DataFile).validated.order(created_at: :desc)
+                              present_files
+                                .where.not(download_filename: ['README.md', 'DisciplineSpecificMetadata.json'], type: StashEngine::DataFile)
+                                .validated.order(created_at: :desc)
                             }
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')

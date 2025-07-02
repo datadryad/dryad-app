@@ -107,6 +107,7 @@ describe('UploadFiles', () => {
     loaded = setLoaded(datafile);
 
     info = {
+      current: true,
       setResource,
       resource: {
         id: resourceId,

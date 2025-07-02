@@ -209,6 +209,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'is automatically published with simple changes', js: true do
+        @resource.check_add_readme_file
         create(:curation_activity, :published, user: @curator, resource: @resource)
         sign_in(@author)
         click_link 'My datasets'

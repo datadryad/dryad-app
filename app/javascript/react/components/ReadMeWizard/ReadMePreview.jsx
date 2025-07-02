@@ -1,6 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import axios from 'axios';
 import HTMLDiffer from '../HTMLDiffer';
+import ReadmeWarning from './ReadmeWarning';
 
 export default function ReadMePreview({resource, previous, curator}) {
   const [current, setCurrent] = useState(null);
@@ -29,18 +30,21 @@ export default function ReadMePreview({resource, previous, curator}) {
     if (readmeRef.current) {
       getREADME();
     }
-  }, [resource, readmeRef.current]);
+  }, [readmeRef]);
 
   if (readme) {
     return (
-      <div ref={readmeRef}>
-        {diff && (
-          <>
-            <ins />
-            {curator && prevRM && current && (<HTMLDiffer current={current} previous={prevRM} />)}
-          </>
-        )}
-      </div>
+      <>
+        <ReadmeWarning resource={resource} />
+        <div ref={readmeRef}>
+          {diff && (
+            <>
+              <ins />
+              {curator && prevRM && current && (<HTMLDiffer current={current} previous={prevRM} />)}
+            </>
+          )}
+        </div>
+      </>
     );
   }
   if (prev) {

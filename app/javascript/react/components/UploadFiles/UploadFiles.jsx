@@ -72,7 +72,7 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name,
+  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name, current,
 }) {
   const [chosenFiles, setChosenFiles] = useState([]);
   const [validating, setValidating] = useState([]);
@@ -602,7 +602,7 @@ export default function UploadFiles({
           ><i className="fas fa-caret-up" aria-hidden="true" style={{marginRight: '.5ch'}} />Close
           </span>
         </p>
-        <UploadSelect resource={resource} setResource={setResource} changed={addFilesHandler} clickedModal={showModalHandler} />
+        <UploadSelect current={current} resource={resource} setResource={setResource} changed={addFilesHandler} clickedModal={showModalHandler} />
       </div>
       {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={removeFailedUrlHandler} />}
       {chosenFiles.length > 0 ? (
