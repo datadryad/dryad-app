@@ -142,11 +142,19 @@ module Datacite
       end
 
       def add_dates(dcs_resource)
-        iss_dt = se_resource&.identifier&.datacite_issued_date
-        avail_dt = se_resource&.identifier&.datacite_available_date
+        available = se_resource&.identifier&.datacite_available_date
+        update = se_resource&.identifier&.date_last_published
+        dates = {
+          ISSUED: se_resource&.identifier&.datacite_issued_date,
+          AVAILABLE: available,
+          CREATED: se_resource&.identifier&.process_date&.processing,
+          SUBMITTED: se_resource&.identifier&.process_date&.submitted,
+          UPDATED: update == available ? nil : update
+        }
 
-        dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType::ISSUED, value: iss_dt) if iss_dt
-        dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType::AVAILABLE, value: avail_dt) if avail_dt
+        dates.each do |type, date|
+          dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType.const_get(type), value: date) if date.present?
+        end
       end
 
       def add_subjects(dcs_resource)

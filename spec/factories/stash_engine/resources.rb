@@ -117,6 +117,7 @@ FactoryBot.define do
       create(:curation_activity,
              :published, resource: resource,
                          user: create(:user, role: 'admin', role_object: resource.submitter.tenant, tenant_id: resource.submitter.tenant_id)).id
+      create(:publication_year, resource: resource, publication_year: Time.now.year)
     end
 
   end
