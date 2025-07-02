@@ -57,7 +57,6 @@ module StashDatacite
       stash_files.each { |stash_file| add_stash_file(stash_file) }
       dcs_resource.contributors.each { |dcs_creator| add_se_author(dcs_creator) }
       dcs_resource.titles.each { |dcs_title| add_se_title(dcs_title) }
-      set_sd_publisher(dcs_resource.publisher)
       dcs_resource.subjects.each { |dcs_subject| add_sd_subject(dcs_subject) }
       dcs_resource.contributors.each { |dcs_contributor| add_sd_contributor(dcs_contributor) }
       set_sd_language(dcs_resource.language)
@@ -115,10 +114,6 @@ module StashDatacite
       return if dcs_title.type
 
       se_resource.title = dcs_title && dcs_title.value.strip
-    end
-
-    def set_sd_publisher(dcs_publisher)
-      Publisher.create(publisher: dcs_publisher&.value, resource_id: se_resource_id) unless dcs_publisher.blank?
     end
 
     def add_sd_subject(dcs_subject)
