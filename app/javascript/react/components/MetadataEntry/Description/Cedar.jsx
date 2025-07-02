@@ -96,6 +96,10 @@ export default function Cedar({
     templateRef.current = template;
   }, [template]);
 
+  useEffect(() => {
+    setTemplate(singleTemplate);
+  }, [singleTemplate]);
+
   // Save form content when changed
   const checkSave = () => {
     const currentMetadata = JSON.parse(JSON.stringify(editor.current.currentMetadata));
@@ -155,11 +159,15 @@ export default function Cedar({
     }
     if (dialog.current?.dataset.template !== template.id) {
       if (editorUrl) {
-        const script = document.createElement('script');
-        script.src = editorUrl;
-        script.async = true;
-        script.onload = () => modalSetup();
-        dialog.current.appendChild(script);
+        if (dialog.current.querySelector('script')) {
+          modalSetup();
+        } else {
+          const script = document.createElement('script');
+          script.src = editorUrl;
+          script.async = true;
+          script.onload = () => modalSetup();
+          dialog.current.appendChild(script);
+        }
         dialog.current.dataset.template = template.id;
       }
     }
