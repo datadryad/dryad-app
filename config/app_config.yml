@@ -262,7 +262,7 @@ defaults: &DEFAULTS
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
-  cedar_editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js?1-0-14"
+  cedar_editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js?1-5-0"
   cedar_templates:
     # - ["9ce4b66a-1597-47cb-b465-24d9d33fbb88", "Files", "File Description"]
     # - ["ea716306-5263-4f7a-9155-b7958f566933", "NCBI-MIAIRR", "MiAIRR V1.1.0"]
