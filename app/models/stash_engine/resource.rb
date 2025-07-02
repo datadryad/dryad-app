@@ -1029,10 +1029,10 @@ module StashEngine
       changed = []
       edits = []
       this_funders = contributors.where(contributor_type: 'funder').map do |f|
-        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description, title: f.award_title }
       end
       that_funders = other_resource.contributors.where(contributor_type: 'funder').map do |f|
-        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description, title: f.award_title }
       end
       edits << { deleted: that_funders.length - this_funders.length } if that_funders.length > this_funders.length
       this_funders.each_with_index do |f, i|

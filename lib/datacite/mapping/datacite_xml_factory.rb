@@ -216,7 +216,8 @@ module Datacite
           FundingReference.new(
             name: c.contributor_name,
             identifier: dmfi,
-            award_number: c.award_number
+            award_number: c.award_uri.present? ? AwardNumber.new(uri: c.award_uri, value: c.award_number) : c.award_number,
+            award_title: c.award_title
           )
         end
       end
