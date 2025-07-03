@@ -152,9 +152,10 @@ module StashDatacite
       end
 
       def temporal_coverages
-        ((@resource.publication_years ? @resource.publication_years.map(&:publication_year) : []) +
-            (@resource.datacite_dates ? @resource.datacite_dates.map(&:date) : []) +
-            TemporalCoverage.where(resource_id: @resource.id).to_a.map(&:temporal_coverages)).compact
+        (
+          @resource.datacite_dates.values.reject(&:blank?) +
+          TemporalCoverage.where(resource_id: @resource.id).to_a.map(&:temporal_coverages)
+        ).compact
       end
 
       def spatial_coverages

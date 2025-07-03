@@ -112,10 +112,6 @@ module StashDatacite
         @geolocation_places ||= GeolocationPlace.from_resource_id(@resource.id)
       end
 
-      def publisher
-        @publisher ||= @resource.publisher
-      end
-
       def geolocation_data?
         geolocation_points.exists? || geolocation_places.exists? || geolocation_boxes.exists?
       end

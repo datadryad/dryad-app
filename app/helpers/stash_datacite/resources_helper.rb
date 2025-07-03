@@ -38,10 +38,6 @@ module StashDatacite
       (version == 'v1' ? nil : html_escape(version))
     end
 
-    def escape_publisher(publisher)
-      html_escape(publisher.try(:publisher))
-    end
-
     def escape_resource_type(resource_type)
       html_escape(resource_type.try(:resource_type_general_friendly))
     end
