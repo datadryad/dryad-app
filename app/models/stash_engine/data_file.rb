@@ -54,22 +54,6 @@ module StashEngine
       "#{resource.s3_dir_name(type: 'data')}/#{upload_file_name}"
     end
 
-    # The first "created" file of the same name before this one if this one isn't created.
-    # In an ideal world, this would have an exact correspondence to where the item is stored in S3, but we don't live in that world.
-    def original_deposit_file
-      return nil if file_state == 'deleted' # no current file to have a path for
-
-      return self if file_state == 'created' # if this is the first created file, it's the original deposit file
-
-      resources = resource.identifier.resources.joins(:current_resource_state)
-        .where(current_resource_state: { resource_state: 'submitted' })
-        .where('stash_engine_resources.id < ?', resource.id)
-
-      # this gets the last time this file was in a previous version in the "created" state ie. the last creation
-      DataFile.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name,
-                     file_state: 'created').order(id: :desc).first
-    end
-
     # fixes the deposit file for merritt, since they base creating new deposit on sha-256 digest, filename/size
     # rather than an actual re-deposit request. Some people remove files and then re-upload the same file again
     # sometime later
