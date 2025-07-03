@@ -73,7 +73,7 @@ export default function Compliance({resource, setResource}) {
     if (v === 'yes') setHSI(true);
   };
 
-  const checkSubmit = useCallback(debounce(submit, 600), []);
+  const checkSubmit = useCallback(debounce(submit, 900), []);
 
   useEffect(() => {
     if (disclaimer) {

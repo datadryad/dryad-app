@@ -35,11 +35,13 @@ function Title({resource, setResource}) {
         if (data.status !== 200) {
           console.log('Not a 200 response while saving Title form');
         }
+        const {descriptions} = data.data;
+        if (descriptions) setResource((r) => ({...r, descriptions}));
         showSavedMsg();
       });
   };
 
-  const checkSubmit = useCallback(debounce(submit, 600), []);
+  const checkSubmit = useCallback(debounce(submit, 900), []);
 
   return (
     <Formik
