@@ -71,6 +71,8 @@ module StashEngine
     # the presigned URL for a file that was "directly" uploaded to Dryad,
     # rather than a file that was indicated by a URL reference
     def s3_staged_presigned_url
+      return original_deposit_file.s3_staged_presigned_url if %w[copied deleted].include?(file_state)
+
       Stash::Aws::S3.new.presigned_download_url(s3_key: "#{resource.s3_dir_name(type: 'supplemental')}/#{upload_file_name}",
                                                 filename: download_filename)
     end
