@@ -68,7 +68,7 @@ module StashEngine
         expect(Submission::ResourcesService).to receive(:new).with(@resource.id).and_return(mock_service)
         expect(mock_service).to receive(:finalize).and_return(true)
         expect(mock_service).to receive(:cleanup_files).and_return(true)
-        expect(mock_service).to receive(:update_repo_queue_state).with({ state: 'completed' }).and_return(true)
+        expect(@resource).to receive(:update_repo_queue_state).with({ state: 'completed' }).and_return(true)
         expect(@states[1].possibly_set_as_completed).to eql(true)
       end
 
