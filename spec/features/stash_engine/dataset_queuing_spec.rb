@@ -6,7 +6,6 @@ RSpec.feature 'DatasetQueuing', type: :feature do
   include DatasetHelper
   include Mocks::Datacite
   include Mocks::CurationActivity
-  include Mocks::SubmissionJob
   include Mocks::RSolr
   include Mocks::Stripe
   include Mocks::Salesforce
@@ -15,7 +14,6 @@ RSpec.feature 'DatasetQueuing', type: :feature do
     FileUtils.rm_f(hold_submissions_path)
     # for this we don't want to mock the whole repository, but just the actual submission to that happens in
     # the queue, Stash::Repo::SubmissionJob.do_submit!
-    mock_submission_job!
     mock_solr!
     mock_datacite_gen!
     mock_stripe!

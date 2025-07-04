@@ -25,7 +25,7 @@ module Submission
       else
         message = "Unable to determine what to do with file #{file.upload_file_name}"
         Rails.logger.error(message)
-        Stash::Repo::SubmissionResult.failure(resource_id: resource.id, request_desc: description, error: StandardError.new(message))
+        raise StandardError, message
       end
     end
 
@@ -125,25 +125,6 @@ module Submission
 
     def permanent_s3
       @permanent_s3 ||= Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
-    end
-
-    # Describes this submission job. This may include the resource ID, the type
-    # of submission (create vs. update), and any configuration information (repository
-    # URLs etc.) useful for debugging, but should not include any secret information
-    # such as repository credentials, as it will be logged.
-    # return [String] a description of the job
-    def description
-      @description ||= begin
-        resource = StashEngine::Resource.find(resource_id)
-        description_for(resource)
-      rescue StandardError => e
-        logger.error("Can't find resource #{resource_id}: #{e}\n#{e.full_message}\n")
-        "#{self.class} for missing resource #{resource_id}"
-      end
-    end
-
-    def description_for(resource)
-      "#{self.class} for resource #{resource_id} (#{resource.identifier_str}): posting update to storage"
     end
   end
 end

@@ -519,6 +519,10 @@ module StashEngine
     end
     private :init_state
 
+    def update_repo_queue_state(state:)
+      repo_queue_states.create(state: state)
+    end
+
     # ------------------------------------------------------------
     # Curation helpers
     def curatable?

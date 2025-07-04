@@ -1,10 +1,12 @@
 module Submission
-  class CopyFileJob
+  class CopyFileJob < Submission::BaseJob
     include Sidekiq::Worker
     sidekiq_options queue: :submission_file, lock: :until_and_while_executing, retry: 1
 
     def perform(file_id)
       file = StashEngine::DataFile.find(file_id)
+      @resource = file.resource
+
       begin
         Timeout.timeout(1.day) do
           Submission::FilesService.new(file).copy_file
@@ -19,6 +21,10 @@ module Submission
         exception.set_backtrace(caller)
         StashEngine::UserMailer.error_report(queue.resource, exception).deliver_now
         raise exception
+      rescue StandardError => e
+        handle_failure(
+          Stash::Repo::SubmissionResult.failure(resource_id: resource.id, request_desc: description, error: e)
+        )
       end
     end
   end

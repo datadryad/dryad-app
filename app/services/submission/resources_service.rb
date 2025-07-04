@@ -7,10 +7,14 @@ module Submission
       @resource = StashEngine::Resource.find(resource_id)
     end
 
+    def trigger_submission
+      resource.current_state = 'processing'
+      Submission::SubmissionJob.perform_async(resource_id)
+    end
+
     def submit
       Rails.logger.info("Submitting resource #{resource_id} (#{resource.identifier_str})\n")
-      update_repo_queue_state(state: 'processing') unless resource.repo_queue_states.order(:created_at).last.processing?
-
+      resource.update_repo_queue_state(state: 'processing')
       handle_invoice_creation
 
       # only copy newly created files
@@ -24,36 +28,6 @@ module Submission
       end
     end
 
-    def trigger_submission
-      update_repo_queue_state(state: 'processing')
-      resource.current_state = 'processing'
-      Submission::SubmissionJob.perform_async(resource_id)
-    end
-
-    def handle_success(result)
-      result.log_to(Rails.logger)
-      update_submission_log(result)
-
-      # don't set new queue state on deferred submission results until the merrit_status checker does it for us, it's still
-      # in progress until that happens.
-      update_repo_queue_state(state: 'provisional_complete') unless result.deferred?
-    rescue StandardError => e
-      # errors here don't constitute a submission failure, so we don't change the resource state
-      Rails.logger.error(e.full_message)
-    end
-
-    def handle_failure(result)
-      result.log_to(Rails.logger)
-      update_submission_log(result)
-      update_repo_queue_state(state: 'errored')
-      resource = StashEngine::Resource.find(result.resource_id)
-      StashEngine::UserMailer.error_report(resource, result.error).deliver_now
-    rescue StandardError => e
-      Rails.logger.error(e.full_message)
-    ensure
-      resource.current_state = 'error' if resource.present?
-    end
-
     # Register that a dataset has completed processing into the storage system
     def finalize
       return unless resource.present?
@@ -64,10 +38,6 @@ module Submission
       saved = resource.save
       @resource.reload
       saved
-    end
-
-    def update_repo_queue_state(state:)
-      StashEngine::RepoQueueState.create(resource_id: resource_id, state: state)
     end
 
     def cleanup_files
@@ -135,14 +105,6 @@ module Submission
     rescue StandardError => e
       Rails.logger.warn("Error creating waiver payment for #{resource.id}, error: #{e.full_message}")
       nil
-    end
-
-    def update_submission_log(result)
-      StashEngine::SubmissionLog.create(
-        resource_id: result.resource_id,
-        archive_submission_request: result.request_desc,
-        archive_response: result.message || result.error.to_s
-      )
     end
 
     def remove_public_dir
