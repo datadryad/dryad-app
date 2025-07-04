@@ -1089,7 +1089,6 @@ namespace :identifiers do
     exit
   end
 
-  
   # example: RAILS_ENV=production bundle exec rake identifiers:biorxiv_report --
   desc 'Generate a summary report of all bioRxiv and medRxiv items in Dryad'
   task biorxiv_report: :environment do
@@ -1107,43 +1106,42 @@ namespace :identifiers do
       medrxiv = StashEngine::JournalIssn.find('3067-2007').journal
       c = 0
       StashEngine::Identifier.find_each do |i|
-        c = c + 1
+        c += 1
         puts ". Identifier #{c}" if c % 1000 == 0
         ps = i.preprint_server
-        next unless ps == 'bioRxiv' or ps == 'medRxiv' or i.journal == biorxiv or i.journal == medrxiv
+        next unless ps == 'bioRxiv' || ps == 'medRxiv' || i.journal == biorxiv || i.journal == medrxiv
+
         ii.add(i)
       end
 
       # find by related identifiers
       c = 0
       StashDatacite::RelatedIdentifier.find_each do |ri|
-        c = c + 1
+        c += 1
         puts ". RelatedIdentifier #{c}" if c % 1000 == 0
         next unless ri.related_identifier.include?('10.1101')
+
         ii.add(ri.resource.identifier)
-      end                                                                                                                                                   
-                                                                                                                                                            
+      end
+
       # process results
       ii.each do |i|
-      r = i.latest_resource
-      preprint_link = nil
-      r.related_identifiers.each do |ri|
-        if ri.related_identifier.include?('10.1101')
-          preprint_link = ri.related_identifier
-        end                                                                                                                                                
-      end
-      csv << [i.identifier, r.current_curation_status, i.preprint_server, preprint_link,
-              i.publication_name, i.publication_article_doi, r&.title,
-              i.storage_size, i.submitter_affiliation&.long_name,
-              r.submitter.first_name, r.submitter.last_name, r.submitter.email]
+        r = i.latest_resource
+        preprint_link = nil
+        r.related_identifiers.each do |ri|
+          preprint_link = ri.related_identifier if ri.related_identifier.include?('10.1101')
+        end
+        csv << [i.identifier, r.current_curation_status, i.preprint_server, preprint_link,
+                i.publication_name, i.publication_article_doi, r&.title,
+                i.storage_size, i.submitter_affiliation&.long_name,
+                r.submitter.first_name, r.submitter.last_name, r.submitter.email]
       end
     end
 
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
     exit
-  end                        
+  end
 
-  
   desc 'populate payment info'
   task load_payment_info: :environment do
     log 'Populating payment information for published/embargoed items'
