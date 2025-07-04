@@ -1,5 +1,6 @@
 require 'stash/aws/s3'
 require 'aws-sdk-lambda'
+require 'securerandom'
 
 module StashEngine
   class GenericFilesController < ApplicationController
@@ -157,6 +158,7 @@ module StashEngine
       attributes = validator.upload_attributes_from(
         translator: url_translator, resource: resource, association: @resource_assoc
       )
+      attributes[:upload_file_name] = "#{SecureRandom.uuid}#{::File.extname(attributes[:download_filename])}"
       if attributes[:status_code] == 200
         @file_model.create(attributes)
       else
