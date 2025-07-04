@@ -348,15 +348,26 @@ namespace :identifiers do
     end
   end
 
+  # example: RAILS_ENV=production bundle exec rake identifiers:in_progress_reminder_1_day
+  desc 'Email the submitter when a dataset has been `in_progress` for 1 day'
+  task in_progress_reminder_1_day: :environment do
+    send_in_progress_emails_by_day(1)
+  end
+
+  # example: RAILS_ENV=production bundle exec rake identifiers:in_progress_reminder_3_days
   desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
-  task in_progess_reminder: :environment do
-    log "Mailing users whose datasets have been in_progress since #{3.days.ago}"
+  task in_progress_reminder_3_days: :environment do
+    send_in_progress_emails_by_day(3)
+  end
+
+  def send_in_progress_emails_by_day(days_number)
+    log "Mailing users whose datasets have been in_progress since #{days_number.days.ago}"
     StashEngine::Resource.joins(:current_resource_state)
       .where("stash_engine_resource_states.resource_state = 'in_progress'")
-      .where('stash_engine_resources.updated_at <= ?', 3.days.ago)
+      .where('stash_engine_resources.updated_at <= ?', days_number.days.ago)
       .each do |r|
 
-      reminder_flag = 'in_progress_reminder CRON'
+      reminder_flag = "#{days_number} days in_progress_reminder CRON"
       if r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
         if Rails.env.production?
           log "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
@@ -371,7 +382,6 @@ namespace :identifiers do
       end
     rescue StandardError => e
       log "    Exception! #{e.message}"
-
     end
   end
 
