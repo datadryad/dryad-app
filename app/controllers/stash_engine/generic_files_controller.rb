@@ -159,7 +159,6 @@ module StashEngine
         translator: url_translator, resource: resource, association: @resource_assoc
       )
       if attributes[:status_code] == 200
-        attributes[:upload_file_name] = "#{SecureRandom.uuid}#{::File.extname(attributes[:download_filename])}"
         @file_model.create(attributes)
       else
         { url: attributes[:url], status_code: attributes[:status_code] }
