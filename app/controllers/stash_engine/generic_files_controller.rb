@@ -1,6 +1,5 @@
 require 'stash/aws/s3'
 require 'aws-sdk-lambda'
-require 'securerandom'
 
 module StashEngine
   class GenericFilesController < ApplicationController
