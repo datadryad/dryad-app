@@ -182,8 +182,10 @@ module StashEngine
 
       # now add delete actions for all files with same previous filenames, could be more than 1 possibly with different cases
       prev_files.each do |prev_file|
-        self.class.create(download_filename: prev_file[:download_filename], upload_content_type: prev_file[:upload_content_type],
-                          resource_id: resource_id, file_state: 'deleted')
+        self.class.create(
+          download_filename: prev_file[:download_filename], upload_file_name: prev_file[:upload_file_name],
+          upload_content_type: prev_file[:upload_content_type], resource_id: resource_id, file_state: 'deleted'
+        )
       end
 
       resource.reload

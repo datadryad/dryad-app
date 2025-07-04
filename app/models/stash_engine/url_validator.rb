@@ -3,6 +3,7 @@ require 'net/http'
 require 'fileutils'
 require 'cgi'
 require 'byebug'
+require 'securerandom'
 
 # getting cert errors, maybe https://www.engineyard.com/blog/ruby-ssl-error-certificate-verify-failed fixes it ?
 
@@ -91,6 +92,7 @@ module StashEngine
       upload_attributes.merge(
         download_filename: sanitized_filename,
         original_filename: UrlValidator.make_unique(resource: resource, filename: CGI.unescape(filename), association: association),
+        upload_file_name: "#{SecureRandom.uuid}#{::File.extname(sanitized_filename)}",
         upload_content_type: mime_type,
         upload_file_size: size
       )
