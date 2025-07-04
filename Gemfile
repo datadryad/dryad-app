@@ -45,7 +45,7 @@ gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'
 gem 'datacite-mapping', git: 'https://github.com/CDLUC3/datacite-mapping.git'
 gem 'data_migrate'
-gem 'delayed_job_active_record', '~> 4.1.7'
+# gem 'delayed_job_active_record', '~> 4.1.7'
 gem 'doorkeeper', '~> 5.5'
 gem 'down' # I'm not sure where this is used, but maybe in the frictionless data that Cassiano worked on to dl files
 gem 'exception_notification', git: 'https://github.com/smartinez87/exception_notification.git'
@@ -139,6 +139,7 @@ group :test do
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
+  gem 'mock_redis', '~> 0.50.0'
   gem 'simplecov-console', require: false
   gem 'timecop'
   gem 'webmock'
@@ -175,3 +176,5 @@ gem 'acts_as_paranoid', '~> 0.10.3'
 gem 'aws-sdk-sns'
 gem 'paper_trail', '~> 16.0'
 gem 'redis', '~> 5.4'
+gem 'sidekiq'
+gem 'sidekiq-unique-jobs'

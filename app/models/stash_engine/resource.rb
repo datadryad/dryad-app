@@ -519,6 +519,10 @@ module StashEngine
     end
     private :init_state
 
+    def update_repo_queue_state(state:)
+      repo_queue_states.create(state: state)
+    end
+
     # ------------------------------------------------------------
     # Curation helpers
     def curatable?
@@ -896,7 +900,7 @@ module StashEngine
         existing_copy = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: 'data', note: note)
       end
 
-      ZenodoCopyJob.perform_later(id) if existing_copy.state == 'enqueued'
+      ZenodoCopyJob.perform_async(id) if existing_copy.state == 'enqueued'
     end
 
     # if publish: true then it just publishes, which is a separate operation than updating files
@@ -907,7 +911,7 @@ module StashEngine
       return if ZenodoCopy.where(resource_id: id, copy_type: rep_type).count.positive? # don't add again if it's already sent
 
       zc = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: rep_type)
-      ZenodoSoftwareJob.perform_later(zc.id)
+      ZenodoSoftwareJob.perform_async(zc.id)
     end
 
     # if publish: true then it just publishes, which is a separate operation than updating files
@@ -918,7 +922,7 @@ module StashEngine
       return if ZenodoCopy.where(resource_id: id, copy_type: rep_type).count.positive? # don't add again if it's already sent
 
       zc = ZenodoCopy.create(state: 'enqueued', identifier_id: identifier_id, resource_id: id, copy_type: rep_type)
-      ZenodoSuppJob.perform_later(zc.id)
+      ZenodoSuppJob.perform_async(zc.id)
     end
 
     # type can currently be data, software or supplemental

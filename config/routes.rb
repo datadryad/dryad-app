@@ -1,3 +1,7 @@
+require "sidekiq/web" # require the web UI
+require "sidekiq_unique_jobs/web"
+require_relative '../lib/sidekiq_access_constraint'
+
 Rails.application.routes.draw do
   constraints(:host => /datadryad.com/) do
     match "/(*path)" => redirect {|params, req| "https://datadryad.org/#{params[:path]}"},  via: [:get, :post]
@@ -14,6 +18,10 @@ Rails.application.routes.draw do
   root to: 'stash_engine/pages#home'
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development? || Rails.env.dev?
+
+  constraints SidekiqAccessConstraint.new do
+    mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
+  end
 
   # this is a rack way of showing a 404 for some crazy old/speculative link that Google has stuck in its craw
   get '/search/facet/dc_creator_sm', to: proc { [410, {}, ['']] }
