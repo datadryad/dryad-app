@@ -4,7 +4,6 @@ require 'stash/nih'
 require 'stash/salesforce'
 require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
-require_relative '../stash/action_required_reminder'
 
 # rubocop:disable Metrics/BlockLength
 namespace :identifiers do
@@ -271,59 +270,6 @@ namespace :identifiers do
     exit
   end
 
-  # This task is deprecated, since we no longer want to automatically expire the review date,
-  # we send reminders instead (below)
-  desc 'Set datasets to `submitted` when their peer review period has expired'
-  task expire_peer_review: :environment do
-    now = Date.today
-    log "Setting resources whose peer_review_end_date <= '#{now}' to 'submitted' curation status"
-    StashEngine::Resource.where(hold_for_peer_review: true)
-      .where('stash_engine_resources.peer_review_end_date <= ?', now).find_each do |r|
-      if r.current_curation_status == 'peer_review'
-        log "Expiring peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id}"
-        r.update(hold_for_peer_review: false, peer_review_end_date: nil)
-        StashEngine::CurationActivity.create(
-          resource_id: r.id,
-          user_id: 0,
-          status: 'submitted',
-          note: 'Expire Peer Review CRON - reached the peer review expiration date, changing status to `submitted`'
-        )
-      else
-        log "Removing peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id} due to non-peer_review curation status"
-        r.update(hold_for_peer_review: false, peer_review_end_date: nil)
-      end
-    rescue StandardError => e
-      log "    Exception! #{e.message}"
-
-    end
-  end
-
-  desc 'Email the submitter when a dataset has been in `peer_review` past the deadline, and the last reminder was too long ago'
-  task peer_review_reminder: :environment do
-    log 'Mailing users whose datasets have been in peer_review for a while...'
-    StashEngine::Resource.where(hold_for_peer_review: true)
-      .where('stash_engine_resources.peer_review_end_date <= ? OR stash_engine_resources.peer_review_end_date IS NULL', Date.today)
-      .find_each do |r|
-
-      reminder_flag = 'peer_review_reminder CRON'
-      last_reminder = r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
-      if r.current_curation_status == 'peer_review' &&
-         r.identifier.latest_resource_id == r.id &&
-         (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
-        log "Reminding submitter about peer_review dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
-        StashEngine::UserMailer.peer_review_reminder(r).deliver_now
-        StashEngine::CurationActivity.create(
-          resource_id: r.id,
-          user_id: 0,
-          status: r.last_curation_activity.status,
-          note: "#{reminder_flag} - reminded submitter that this item is still in `peer_review`"
-        )
-      end
-    rescue StandardError => e
-      log "    Exception! #{e.message}"
-    end
-  end
-
   desc 'Email the submitter 1 time 6 months from publication, when a primary article is not linked'
   task doi_linking_invitation: :environment do
     log 'Mailing users whose datasets have no primary article and were published 6 months ago...'
@@ -351,68 +297,18 @@ namespace :identifiers do
   # example: RAILS_ENV=production bundle exec rake identifiers:in_progress_reminder_1_day
   desc 'Email the submitter when a dataset has been `in_progress` for 1 day'
   task in_progress_reminder_1_day: :environment do
-    send_in_progress_emails_by_day(1)
+    DatasetRemindersService.new.send_in_progress_reminders_by_day(1)
   end
 
   # example: RAILS_ENV=production bundle exec rake identifiers:in_progress_reminder_3_days
   desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
   task in_progress_reminder_3_days: :environment do
-    send_in_progress_emails_by_day(3)
-  end
-
-  def send_in_progress_emails_by_day(days_number)
-    log "Mailing users whose datasets have been in_progress since #{days_number.days.ago}"
-    StashEngine::Resource.joins(:current_resource_state)
-      .where("stash_engine_resource_states.resource_state = 'in_progress'")
-      .where('stash_engine_resources.updated_at <= ?', days_number.days.ago)
-      .each do |r|
-
-      reminder_flag = "#{days_number} days in_progress_reminder CRON"
-      if r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
-        if Rails.env.production?
-          log "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
-        end
-        StashEngine::UserMailer.in_progress_reminder(r).deliver_now
-        StashEngine::CurationActivity.create(
-          resource_id: r.id,
-          user_id: 0,
-          status: r.last_curation_activity.status,
-          note: "#{reminder_flag} - reminded submitter that this item is still `in_progress`"
-        )
-      end
-    rescue StandardError => e
-      log "    Exception! #{e.message}"
-    end
+    DatasetRemindersService.new.send_in_progress_reminders_by_day(3)
   end
 
   desc "Email the submitter when a dataset is in 'action_required' 1 time at 2 weeks"
   task action_required_reminder: :environment do
-    # require 'stash_engine/tasks/stash_engine_tasks/action_required_reminder'
-    items = Stash::ActionRequiredReminder.find_action_required_items
-    # each item looks like
-    # {:set_at=>Wed, 16 Aug 2023 21:09:13.000000000 UTC +00:00,
-    #   :reminder_1=>nil,
-    #   :reminder_2=>nil,
-    #   :identifier=> activeRecord object for identifier}
-
-    items.each do |item|
-      resource = item[:identifier]&.latest_resource
-      next if resource.nil?
-
-      # Only send for resources where the ID ends in 00, so we can stagger the load on the curators
-      next if (resource.id % 100) > 0
-
-      # send out reminder at two weeks
-      next if item[:set_at] > 2.weeks.ago || item[:reminder_1].present?
-
-      StashEngine::UserMailer.chase_action_required1(resource).deliver_now
-      StashEngine::CurationActivity.create(
-        resource_id: resource.id,
-        user_id: 0,
-        status: resource.last_curation_activity.status,
-        note: 'CRON: mailed action required reminder 1'
-      )
-    end
+    DatasetRemindersService.new.action_required_reminder
   end
 
   desc 'Update NIH funder entry'
