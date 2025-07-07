@@ -1,5 +1,5 @@
-module StashEngine
-  class DatasetRemindersService < StashEngine::RemindersBaseService
+module Reminders
+  class DatasetRemindersService < Reminders::BaseService
 
     # Send In Progress delete email notification
     # - email is sent monthly starting from first month until 1 year
@@ -9,13 +9,13 @@ module StashEngine
       StashEngine::Resource.joins(:current_resource_state)
         .where("stash_engine_resource_states.resource_state = 'in_progress'")
         .where('stash_engine_resources.updated_at <= ?', days_number.days.ago)
-        .each do |r|
+        .each do |resource|
 
         reminder_flag = "#{days_number} days in_progress_reminder CRON"
-        if r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
+        if resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
           log_data_for_status('in_progress', resource)
-          StashEngine::UserMailer.in_progress_reminder(r).deliver_now
-          create_activity(reminder_flag, r)
+          StashEngine::UserMailer.in_progress_reminder(resource).deliver_now
+          create_activity(reminder_flag, resource)
         end
       rescue StandardError => e
         log "    Exception! #{e.message}"
@@ -41,7 +41,7 @@ module StashEngine
         next if item[:set_at] > 2.weeks.ago || item[:reminder_1].present?
 
         StashEngine::UserMailer.chase_action_required1(resource).deliver_now
-        create_activity(nil, r, note: 'CRON: mailed action required reminder 1')
+        create_activity(nil, resource, note: 'CRON: mailed action required reminder 1')
       end
     end
 

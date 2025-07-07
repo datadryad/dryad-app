@@ -297,18 +297,18 @@ namespace :identifiers do
   # example: RAILS_ENV=production bundle exec rake identifiers:in_progress_reminder_1_day
   desc 'Email the submitter when a dataset has been `in_progress` for 1 day'
   task in_progress_reminder_1_day: :environment do
-    DatasetRemindersService.new.send_in_progress_reminders_by_day(1)
+    Reminders::DatasetRemindersService.new.send_in_progress_reminders_by_day(1)
   end
 
   # example: RAILS_ENV=production bundle exec rake identifiers:in_progress_reminder_3_days
   desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
   task in_progress_reminder_3_days: :environment do
-    DatasetRemindersService.new.send_in_progress_reminders_by_day(3)
+    Reminders::DatasetRemindersService.new.send_in_progress_reminders_by_day(3)
   end
 
   desc "Email the submitter when a dataset is in 'action_required' 1 time at 2 weeks"
   task action_required_reminder: :environment do
-    DatasetRemindersService.new.action_required_reminder
+    Reminders::DatasetRemindersService.new.action_required_reminder
   end
 
   desc 'Update NIH funder entry'

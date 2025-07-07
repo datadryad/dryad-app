@@ -1,5 +1,5 @@
-module StashEngine
-  class AbandonedDatasetService < StashEngine::RemindersBaseService
+module Reminders
+  class AbandonedDatasetService < Reminders::BaseService
 
     # Send In Progress delete email notification
     # - email is sent monthly starting from first month until 1 year

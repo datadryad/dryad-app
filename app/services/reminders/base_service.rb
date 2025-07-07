@@ -1,5 +1,5 @@
-module StashEngine
-  class RemindersBaseService
+module Reminders
+  class BaseService
     attr_reader :logging
 
     def initialize(logging: false)
