@@ -9,6 +9,7 @@ class PubStateService
     identifier.update(pub_state: from_ca_status(status))
   end
 
+  # update identifier pub_state based on CurationActivity history
   def update_from_history
     identifier.update(pub_state: identifier.calculated_pub_state)
   end
