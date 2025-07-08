@@ -647,24 +647,6 @@ module StashEngine
       end
     end
 
-    # TODO: Cleanup - method for this is commented
-    # describe '#large_files?' do
-    #   it 'returns false when large files are not present' do
-    #     expect(@identifier.large_files?).to eq(false)
-    #   end
-    #
-    #   it 'returns true when large files are present' do
-    #     DataFile.create(
-    #       resource: @res3,
-    #       file_state: 'created',
-    #       download_filename: 'created.bin',
-    #       upload_file_size: 1.0e+14
-    #     )
-    #     expect(@identifier.large_files?).to eq(true)
-    #   end
-    #
-    # end
-
     describe '#calculated_pub_state' do
 
       it 'detects withdrawn state' do

@@ -343,22 +343,16 @@ module StashEngine
       case status
       when 'withdrawn'
         resource.update_columns(meta_view: false, file_view: false)
-        target_pub_state = 'withdrawn'
-      when 'peer_review'
-        target_pub_state = 'unpublished'
       when 'embargoed'
         resource.update_columns(meta_view: true, file_view: false)
-        target_pub_state = 'embargoed'
       when 'published'
         resource.update_columns(meta_view: true, file_view: true)
-        target_pub_state = 'published'
       end
 
       return if resource&.identifier.nil?
 
-      resource.identifier.update_column(:pub_state, target_pub_state)
-
-      return if %w[withdrawn embargoed peer_review].include?(status)
+      PubStateService.new(resource.identifier).update_for_ca_status(status)
+      return unless status == 'published'
 
       # find out if there were no file changes since last publication and reset file_view, if so.
       changed = false # want to see that none are changed
