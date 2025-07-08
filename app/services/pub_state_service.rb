@@ -6,7 +6,11 @@ class PubStateService
 
   # update identifier pub_state based on CurationActivity status
   def update_for_ca_status(status)
-    identifier.update_column(:pub_state, from_ca_status(status))
+    identifier.update(pub_state: from_ca_status(status))
+  end
+
+  def update_from_history
+    identifier.update(pub_state: identifier.calculated_pub_state)
   end
 
   private

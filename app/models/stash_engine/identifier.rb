@@ -103,9 +103,6 @@ module StashEngine
         .order('stash_engine_identifiers.identifier')
     end
 
-    # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
-    # before_create :build_associations
-
     # used to build counter stat if needed, trickery to be sure one always exists to begin with
     # https://stackoverflow.com/questions/3808782/rails-best-practice-how-to-create-dependent-has-one-relations
     def counter_stat
@@ -580,11 +577,6 @@ module StashEngine
         ActionView::Base.full_sanitizer.sanitize(description.description)
       end.join(' ')
     end
-
-    # it's ok to defer adding this unless someone asks for the counter_stat
-    # def build_associations
-    #   counter_stat || true
-    # end
   end
   # rubocop:enable Metrics/ClassLength
 end
