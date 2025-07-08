@@ -91,6 +91,7 @@ module StashEngine
 
     # the publication flags need to be set before creating datacite metadata (after create below)
     after_create :update_publication_flags, if: proc { |ca| %w[published embargoed peer_review withdrawn].include?(ca.status) }
+    after_create :update_pub_state
 
     # When the status is published/embargoed send to Stripe and DataCite
     after_create :process_resource
@@ -350,9 +351,7 @@ module StashEngine
       end
 
       return if resource&.identifier.nil?
-
-      PubStateService.new(resource.identifier).update_for_ca_status(status)
-      return unless status == 'published'
+      return if %w[withdrawn embargoed peer_review].include?(status)
 
       # find out if there were no file changes since last publication and reset file_view, if so.
       changed = false # want to see that none are changed
@@ -366,6 +365,10 @@ module StashEngine
       end
       resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
       resource.update_column(:file_view, false) unless resource.current_file_uploads.present?
+    end
+
+    def update_pub_state
+      PubStateService.new(resource.identifier).update_for_ca_status(status)
     end
 
     def update_salesforce_metadata
