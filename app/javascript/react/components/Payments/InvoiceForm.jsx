@@ -2,6 +2,7 @@ import React, {useRef, useState, useEffect} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
+import {ExitIcon} from '../ExitButton';
 
 const validateEmail = (value) => {
   if (value && !/^[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+$/i.test(value)) {
@@ -113,8 +114,12 @@ export default function InvoiceForm({
                 !values.name || !values.email
                 || errors.email
               }
-            >Submit for {resource.hold_for_peer_review ? 'peer review' : 'publication'}
+            >Send invoice &amp; Submit for {resource.hold_for_peer_review ? 'peer review' : 'publication'}
             </button>
+          </p>
+          <br />
+          <p style={{fontSize: '.98rem', textAlign: 'center'}}>
+            <a href="/costs" target="_blank">All about the Data Publishing Charge, payment methods, and refund policies<ExitIcon /></a>
           </p>
         </Form>
       )}
