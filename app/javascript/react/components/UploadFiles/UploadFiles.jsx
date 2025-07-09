@@ -264,9 +264,10 @@ export default function UploadFiles({
       && sanitize(filename).toLowerCase() !== 'readme.md');
   };
 
-  const discardUnwantedFiles = (files) => {
+  const discardUnwantedFiles = (files, uploadType) => {
     const rarfile = (f) => f.type === 'application/vnd.rar' || f.name.endsWith('.rar');
-    const zerofile = (f) => f.uploadType !== 'data' && !f.size;
+    const zerofile = (f) => uploadType !== 'data' && !f.size;
+    console.log(files);
     if (files.some((f) => rarfile(f))) {
       setWarning((w) => [...w, Messages.rarTypeFiles]);
     }
@@ -287,7 +288,7 @@ export default function UploadFiles({
       setWarningRepeatedFile(countRepeated);
       if (filenames.includes('README.md')) setWarning((w) => [...w, Messages.fileReadme]);
     }
-    newFiles = discardUnwantedFiles(newFiles);
+    newFiles = discardUnwantedFiles(newFiles, uploadType);
     return newFiles;
   };
 
