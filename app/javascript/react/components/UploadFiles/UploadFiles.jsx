@@ -267,7 +267,6 @@ export default function UploadFiles({
   const discardUnwantedFiles = (files, uploadType) => {
     const rarfile = (f) => f.type === 'application/vnd.rar' || f.name.endsWith('.rar');
     const zerofile = (f) => uploadType !== 'data' && !f.size;
-    console.log(files);
     if (files.some((f) => rarfile(f))) {
       setWarning((w) => [...w, Messages.rarTypeFiles]);
     }
