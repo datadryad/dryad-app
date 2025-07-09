@@ -29,7 +29,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
     @resource.update(meta_view: true, file_view: true, publication_date: Time.new)
     @resource.reload
     @token = create(:download_token, resource_id: @resource.id, available: Time.new + 5.minutes.to_i)
-    create(:counter_stat, identifier_id: @resource.identifier.id)    
+    create(:counter_stat, identifier_id: @resource.identifier.id)
   end
 
   it 'shows the share icons, metrics when published' do
