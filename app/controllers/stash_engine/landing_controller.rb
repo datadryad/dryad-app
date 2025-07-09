@@ -6,7 +6,7 @@ module StashEngine
     # - has_geolocation?
     include StashDatacite::LandingMixin
 
-    before_action :require_identifier_and_resource, only: %i[show]
+    before_action :require_identifier_and_resource, only: %i[show linkset]
     protect_from_forgery(except: [:update])
 
     # ############################################################
@@ -47,7 +47,11 @@ module StashEngine
     # Actions
 
     def show
-      ensure_has_geolocation!
+      response.set_header(
+        'Link',
+        "<#{linkset_url(id: resource.identifier_str)}>; rel=\"linkset\"; type=\"application/linkset\",
+        <#{linkset_url(id: resource.identifier_str)}.json>; rel=\"linkset\"; type=\"application/linkset+json\""
+      )
       @invitations = (params[:invitation] ? OrcidInvitation.where(secret: params[:invitation]).where(identifier_id: id.id) : nil)
       respond_to(&:html)
     end
@@ -62,6 +66,19 @@ module StashEngine
       respond_to(&:js)
     end
 
+    def linkset
+      respond_to do |format|
+        format.html do
+          response.set_header('Content-Type', 'application/linkset')
+          render body: lset_linkset
+        end
+        format.json do
+          response.set_header('Content-Type', 'application/linkset+json')
+          render json: json_linkset
+        end
+      end
+    end
+
     # ############################################################
     # Private
 
@@ -70,15 +87,6 @@ module StashEngine
     def require_identifier_and_resource
       # at least one of these will be nil when it doesn't exist or the user doesn't have permission
       render('not_available', status: 404) unless id && resource
-    end
-
-    def ensure_has_geolocation!
-      old_value = resource.has_geolocation
-      new_value = geolocation_data?
-      return unless old_value != new_value
-
-      resource.has_geolocation = new_value
-      resource.save!
     end
 
     def identifier_from(params)
@@ -95,5 +103,113 @@ module StashEngine
       identifiers.first
     end
 
+    # rubocop:disable Metrics/MethodLength
+
+    def lset_linkset
+      anchor = show_url(id: resource.identifier_str)
+      list = [
+        {
+          link: "https://doi.org/#{@id.identifier}",
+          rel: 'cite-as'
+        },
+        {
+          link: 'https://schema.org/Dataset',
+          rel: 'type'
+        },
+        {
+          link: 'https://schema.org/AboutPage',
+          rel: 'type'
+        },
+        {
+          link: resource.rights.first.rights_uri,
+          rel: 'license'
+        },
+        {
+          link: "https://doi.org/#{@id.identifier}",
+          rel: 'describedby',
+          type: 'application/vnd.datacite.datacite+json'
+        }
+      ]
+      resource.authors.with_orcid.each do |a|
+        list.push({
+                    link: "https://orcid.org/#{a.author_orcid}",
+                    rel: 'author'
+                  })
+      end
+      resource.data_files.each do |f|
+        list.push({
+                    link: download_stream_url(file_id: f.id),
+                    rel: 'item',
+                    type: f.upload_content_type
+                  })
+        list.push({
+                    link: show_url(id: resource.identifier_str),
+                    rel: 'collection',
+                    type: 'text/html',
+                    anchor: download_stream_url(file_id: f.id)
+                  })
+        list.push({
+                    link: 'https://schema.org/DataDownload',
+                    rel: 'type',
+                    anchor: download_stream_url(file_id: f.id)
+                  })
+      end
+
+      map = list.map do |l|
+        link = "<#{l[:link]}>; rel=\"#{l[:rel]}\""
+        link += "; type=\"#{l[:type]}\"" if l[:type]&.present?
+        link += "; anchor=\"#{l[:anchor]&.presence || anchor}\""
+        link
+      end
+      map.join(',')
+    end
+
+    def json_linkset
+      description = {
+        anchor: show_url(id: resource.identifier_str),
+        'cite-as': [
+          { href: "https://doi.org/#{@id.identifier}" }
+        ],
+        type: [
+          { href: 'https://schema.org/Dataset' },
+          { href: 'https://schema.org/AboutPage' }
+        ],
+        license: [{ href: resource.rights.first.rights_uri }],
+        describedby: [
+          {
+            href: "https://doi.org/#{@id.identifier}",
+            type: 'application/vnd.datacite.datacite+json'
+          }
+        ]
+      }
+      description[:author] = resource.authors.with_orcid.map do |a|
+        { href: "https://orcid.org/#{a.author_orcid}" }
+      end
+      description[:item] = resource.data_files.map do |f|
+        {
+          href: download_stream_url(file_id: f.id),
+          type: f.upload_content_type
+        }
+      end
+      collection = resource.data_files.map do |f|
+        {
+          anchor: download_stream_url(file_id: f.id),
+          type: [{ href: 'https://schema.org/DataDownload' }],
+          collection: [
+            {
+              href: show_url(id: resource.identifier_str),
+              type: 'text/html'
+            }
+          ]
+        }
+      end
+      {
+        linkset: [
+          description,
+          collection
+        ]
+      }
+    end
   end
+  # rubocop:enable Metrics/MethodLength
 end
