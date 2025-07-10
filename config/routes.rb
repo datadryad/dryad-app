@@ -196,9 +196,11 @@ Rails.application.routes.draw do
     get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
     get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
     get 'sessions/:tenant_id/email', to: 'sessions#email_sso', as: 'email_sso'
+    post 'sessions/email_code', to: 'sessions#validate_sso_email', as: 'validate_sso_email'
     match 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner', via: [:get, :post]
     post 'sessions/sso', to: 'sessions#sso', as: 'sso'
-    post 'sessions/email_code', to: 'sessions#validate_email', as: 'validate_email'
+    get 'sessions/email_validate', to: 'sessions#email_validate', as: 'email_validate'
+    post 'sessions/validate_email', to: 'sessions#validate_email', as: 'validate_email'
     get 'feedback', to: 'sessions#feedback', as: 'feedback'
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
     post 'helpdesk', to: 'pages#helpdesk', as: 'contact_helpdesk'

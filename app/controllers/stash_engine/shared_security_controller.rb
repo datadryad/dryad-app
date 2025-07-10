@@ -1,4 +1,4 @@
-# rubocop:disable Metrics/ModuleLength
+# rubocop:disable Metrics/ModuleLength, Metrics/AbcSize
 module StashEngine
   module SharedSecurityController
 
@@ -10,17 +10,14 @@ module StashEngine
     end
 
     def require_user_login
-      return if current_user.present?
+      return nil if current_user.present?
 
       flash[:alert] = 'You must be logged in.'
-      redirect_to stash_url_helpers.choose_login_path
+      redirect_to stash_url_helpers.choose_login_path and return
     end
 
     def require_login
-      unless current_user.present?
-        flash[:alert] = 'You must be logged in.'
-        redirect_to stash_url_helpers.choose_login_path and return
-      end
+      require_user_login
 
       unless current_user.tenant_id.present?
         flash[:alert] = 'You must select an institution (or Continue).'
@@ -30,6 +27,11 @@ module StashEngine
       if %w[email shibboleth].include?(current_user.tenant.authentication&.strategy) &&
         (current_user.tenant_auth_date.blank? || current_user.tenant_auth_date.before?(1.month.ago))
         redirect_to stash_url_helpers.choose_sso_path(reverify: true) and return
+      end
+
+      unless current_user.validated?
+        flash[:alert] = 'Please validate your email address'
+        redirect_to stash_url_helpers.email_validate_path and return
       end
 
       target_page = session[:target_page]
@@ -168,4 +170,4 @@ module StashEngine
 
   end
 end
-# rubocop:enable Metrics/ModuleLength
+# rubocop:enable Metrics/ModuleLength, Metrics/AbcSize
