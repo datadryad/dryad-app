@@ -1089,6 +1089,59 @@ namespace :identifiers do
     exit
   end
 
+  # example: RAILS_ENV=production bundle exec rake identifiers:biorxiv_report --
+  desc 'Generate a summary report of all bioRxiv and medRxiv items in Dryad'
+  task biorxiv_report: :environment do
+    filename = "biorxiv_report-#{Date.today.strftime('%Y-%m-%d')}.csv"
+    log "Writing biorxiv report to file #{filename}"
+    CSV.open(filename, 'w') do |csv|
+      csv << ['Dataset DOI', 'Status', 'Preprint Server', 'Preprint Link',
+              'Journal Name', 'Article DOI', 'Title',
+              'Size', 'Institution Name',
+              'Submitter First', 'Submitter Last', 'Submitter Email']
+      ii = Set[]
+
+      # find matches by preprint server or journal
+      biorxiv = StashEngine::JournalIssn.find('2692-8205').journal
+      medrxiv = StashEngine::JournalIssn.find('3067-2007').journal
+      c = 0
+      StashEngine::Identifier.find_each do |i|
+        c += 1
+        puts ". Identifier #{c}" if c % 1000 == 0
+        ps = i.preprint_server
+        next unless ps == 'bioRxiv' || ps == 'medRxiv' || i.journal == biorxiv || i.journal == medrxiv
+
+        ii.add(i)
+      end
+
+      # find by related identifiers
+      c = 0
+      StashDatacite::RelatedIdentifier.find_each do |ri|
+        c += 1
+        puts ". RelatedIdentifier #{c}" if c % 1000 == 0
+        next unless ri.related_identifier.include?('10.1101')
+
+        ii.add(ri.resource.identifier)
+      end
+
+      # process results
+      ii.each do |i|
+        r = i.latest_resource
+        preprint_link = nil
+        r.related_identifiers.each do |ri|
+          preprint_link = ri.related_identifier if ri.related_identifier.include?('10.1101')
+        end
+        csv << [i.identifier, r.current_curation_status, i.preprint_server, preprint_link,
+                i.publication_name, i.publication_article_doi, r&.title,
+                i.storage_size, i.submitter_affiliation&.long_name,
+                r.submitter.first_name, r.submitter.last_name, r.submitter.email]
+      end
+    end
+
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
   desc 'populate payment info'
   task load_payment_info: :environment do
     log 'Populating payment information for published/embargoed items'
