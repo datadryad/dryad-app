@@ -333,7 +333,7 @@ module StashEngine
     end
 
     def do_redirect
-      redirect_to email_validate_path unless current_user.validated?
+      redirect_to email_validate_path and return unless current_user.validated?
 
       target_page = session[:target_page]
       if target_page.present?
