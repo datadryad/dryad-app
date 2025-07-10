@@ -25,10 +25,10 @@ module StashEngine
           StashEngine::ResourceMailer.in_progress_delete_notification(resource).deliver_now
           create_activity(reminder_flag, resource)
         end
-        return true
       rescue StandardError => e
         p "    Exception! #{e.message}"
       end
+      true
     end
 
     # Send Action Required delete email notification
@@ -54,10 +54,43 @@ module StashEngine
           StashEngine::ResourceMailer.action_required_delete_notification(resource).deliver_now
           create_activity(reminder_flag, resource)
         end
-        return true
       rescue StandardError => e
         p "    Exception! #{e.message}"
       end
+      true
+    end
+
+    # Send Action Required delete email notification from manual triggered script
+    # - sends older ones first
+    # - receives a number of emails it should send
+    # Usage: StashEngine::AbandonedDatasetService.new(logging: true).send_manual_action_required_emails(1)
+    def send_manual_action_required_emails(count)
+      emails_sent = 0
+
+      StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
+        .where(stash_engine_curation_activities: { status: 'action_required' })
+        # .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..1.months.ago.end_of_day })
+        .order("stash_engine_process_dates.last_status_date desc")
+        .each do |resource|
+
+        reminder_flag = 'action_required_deletion_notice'
+        last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
+
+        if resource.current_curation_status == 'action_required' &&
+          resource.identifier.latest_resource_id == resource.id &&
+          (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
+
+          log_data_for_status('action_required', resource)
+          StashEngine::ResourceMailer.action_required_delete_notification(resource).deliver_now
+          emails_sent += 1
+          create_activity(reminder_flag, resource)
+        end
+
+        return if emails_sent == count
+      rescue StandardError => e
+        p "    Exception! #{e.message}"
+      end
+      true
     end
 
     # Send Peer Review delete email notification
