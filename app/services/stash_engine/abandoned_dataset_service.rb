@@ -69,7 +69,7 @@ module StashEngine
 
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'action_required' })
-        # .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..1.months.ago.end_of_day })
+        .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..1.months.ago.end_of_day })
         .order('stash_engine_process_dates.last_status_date desc')
         .each do |resource|
 
