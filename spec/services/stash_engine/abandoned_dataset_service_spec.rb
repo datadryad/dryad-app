@@ -209,7 +209,7 @@ module StashEngine
             Timecop.travel(month_num.months.from_now + 1.day)
 
             expect(StashEngine::ResourceMailer).to receive_message_chain(:action_required_delete_notification,
-              :deliver_now).with(resource).with(no_args)
+                                                                         :deliver_now).with(resource).with(no_args)
             expect(subject).to receive(:create_activity).with('action_required_deletion_notice', resource).once
 
             subject.send_manual_action_required_emails(10)
@@ -441,7 +441,8 @@ module StashEngine
           it 'sends notification email at 1 year' do
             Timecop.travel(1.year.from_now)
 
-            expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification, :deliver_now).with(resource).with(no_args)
+            expect(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification,
+                                                                         :deliver_now).with(resource).with(no_args)
 
             subject.auto_withdraw
           end
@@ -464,12 +465,12 @@ module StashEngine
             Timecop.travel(1.year.from_now)
 
             # for resource
-            r1_mail_double = double("Mail", deliver_now: true)
+            r1_mail_double = double('Mail', deliver_now: true)
             expect(StashEngine::ResourceMailer).to receive(:send_set_to_withdrawn_notification).with(resource).once.and_return r1_mail_double
             expect(r1_mail_double).to receive(:deliver_now).once
 
             # for resource2
-            r2_mail_double = double("Mail", deliver_now: true)
+            r2_mail_double = double('Mail', deliver_now: true)
             expect(StashEngine::ResourceMailer).to receive(:send_set_to_withdrawn_notification).with(resource2).once.and_return r2_mail_double
             expect(r2_mail_double).to receive(:deliver_now).once
 
@@ -572,12 +573,12 @@ module StashEngine
           Timecop.travel(9.months.from_now)
 
           # for resource
-          r1_mail_double = double("Mail", deliver_now: true)
+          r1_mail_double = double('Mail', deliver_now: true)
           expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).with(resource).once.and_return r1_mail_double
           expect(r1_mail_double).to receive(:deliver_now).once
 
           # for resource2
-          r2_mail_double = double("Mail", deliver_now: true)
+          r2_mail_double = double('Mail', deliver_now: true)
           expect(StashEngine::ResourceMailer).to receive(:send_final_withdrawn_notification).with(resource2).once.and_return r2_mail_double
           expect(r2_mail_double).to receive(:deliver_now).once
 
