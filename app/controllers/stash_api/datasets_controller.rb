@@ -543,20 +543,7 @@ module StashApi
     end
 
     def duplicate_resource
-      begin
-        nr = @resource.amoeba_dup
-        nr.current_editor_id = @user.id
-        nr.save!
-      rescue ActiveRecord::RecordNotUnique
-        @resource.identifier.reload
-        nr = @resource.identifier.latest_resource unless @resource.identifier.latest_resource_id == @resource.id
-        nr ||= @resource.amoeba_dup
-        nr.current_editor_id = @user.id
-        nr.save!
-      end
-      nr.curation_activities&.update_all(user_id: @user.id)
-      nr.data_files.each(&:populate_container_files_from_last)
-      @resource = nr
+      @resource = DuplicateResourceService.new(@resource, @user).call
     end
 
     def paged_datasets(datasets:)
