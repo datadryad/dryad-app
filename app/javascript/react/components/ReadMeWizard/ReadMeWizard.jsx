@@ -137,7 +137,7 @@ function ReadMe({
     } else {
       setWizardContent({title, doi, step: 0});
     }
-  }, []);
+  }, [dcsDescription.description]);
 
   if (initialValue || replaceValue) {
     return (

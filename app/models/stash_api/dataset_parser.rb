@@ -211,7 +211,6 @@ module StashApi
     # certain things need setting up on initialization based on tenant
     def add_default_values
       ensure_license
-      ensure_publisher
       ensure_resource_type
     end
 
@@ -221,15 +220,6 @@ module StashApi
       @resource.identifier.update(license_id: 'cc0')
       license = StashEngine::License.by_id('cc0')
       @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
-    end
-
-    def ensure_publisher
-      return unless @resource.publisher.blank?
-
-      publisher = StashDatacite::Publisher.where(resource_id: @resource.id).first
-      return if publisher
-
-      StashDatacite::Publisher.create(publisher: 'Dryad', resource_id: @resource.id) if @resource.tenant
     end
 
     def ensure_resource_type
