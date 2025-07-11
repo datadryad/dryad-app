@@ -6,7 +6,6 @@ module StashDatacite
       def initialize(resource, type, tenant_id)
         @resource = resource
         @type = type
-        create_publisher
         @resource.update(tenant_id: tenant_id)
         @resource.fill_blank_author!
         ensure_author_orcid
@@ -103,11 +102,6 @@ module StashDatacite
       end
 
       private
-
-      def create_publisher
-        publisher = Publisher.where(resource_id: @resource.id).first
-        @publisher = publisher.present? ? publisher : Publisher.create(publisher: 'Dryad', resource_id: @resource.id)
-      end
 
       # ensures that one author has the orcid of the owner of this dataset
       def ensure_author_orcid

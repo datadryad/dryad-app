@@ -86,7 +86,7 @@ export default function Description({
       });
   };
 
-  const checkSubmit = useCallback(debounce(submit, 600), []);
+  const checkSubmit = useCallback(debounce(submit, 900), []);
 
   useEffect(() => {
     // copy and do not rerender on change

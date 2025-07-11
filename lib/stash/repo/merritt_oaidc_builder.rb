@@ -62,8 +62,8 @@ module Stash
       end
 
       def add_pub_year(xml)
-        pub_year = resource.publication_years.first
-        xml.send(:'dc:date', pub_year.publication_year) if pub_year
+        pub_year = resource.publication_date&.year
+        xml.send(:'dc:date', pub_year) if pub_year
       end
 
       def add_publisher(xml)
