@@ -23,7 +23,9 @@ module StashApi
             identifier_type: funder['identifierType'] || 'crossref_funder_id',
             name_identifier_id: funder['identifier'],
             award_number: funder['awardNumber'],
-            award_description: funder['awardDescription']
+            award_uri: funder['awardURI'],
+            award_description: funder['awardDescription'],
+            award_title: funder['awardTitle']
           )
         end
       end

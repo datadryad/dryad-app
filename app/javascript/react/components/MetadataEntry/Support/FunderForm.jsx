@@ -40,6 +40,7 @@ function FunderForm({
         name_identifier_id: acID,
         award_number: values.award_number,
         award_description: values.award_description,
+        award_title: values.award_title,
         resource_id: resourceId,
       },
     };
@@ -79,6 +80,7 @@ function FunderForm({
       initialValues={
         {
           award_description: (contributor.award_description || ''),
+          award_title: (contributor.award_title || ''),
           award_number: (contributor.award_number || ''),
           id: (contributor.id || ''),
         }
@@ -143,7 +145,19 @@ function FunderForm({
               aria-describedby={`${contributor.id}desc-ex`}
               onBlur={formik.handleSubmit}
             />
-            <div id={`${contributor.id}desc-ex`}><i aria-hidden="true" />Section of the funder</div>
+          </div>
+          <div className="input-stack" style={{flexBasis: '100%'}}>
+            <label className="input-label optional" htmlFor={`contributor_award_title__${contributor.id}`}>Award title
+            </label>
+            <Field
+              id={`contributor_award_title__${contributor.id}`}
+              name="award_title"
+              type="text"
+              className="js-award_description c-input__text"
+              aria-describedby={`${contributor.id}title-ex`}
+              onBlur={formik.handleSubmit}
+            />
+            <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the grant awarded</div>
           </div>
         </Form>
       )}
