@@ -165,6 +165,7 @@ module Stash
         else
           # if there are no files the empty draft can be deleted
           @deposit.delete
+          StashDatacite::RelatedIdentifier.set_latest_zenodo_relations(resource: @resource)
         end
 
         @copy.update(state: 'finished')
