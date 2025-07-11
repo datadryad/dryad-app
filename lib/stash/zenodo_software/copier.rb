@@ -97,9 +97,10 @@ module Stash
         @copy.update(state: 'replicating')
         @copy.increment!(:retries)
 
-        # TODO: This should probably also consider a deposition_id in the current item in case it got one and failed
         @resp = if @previous_copy
                   @deposit.get_by_deposition(deposition_id: @previous_copy.deposition_id)
+                elsif @copy.deposition_id.present?
+                  @deposit.get_by_deposition(deposition_id: @copy.deposition_id)
                 else
                   @deposit.new_deposition
                 end
@@ -158,7 +159,14 @@ module Stash
         # Zenodo only allows publishing if there are file changes in this version, so it's different depending on status
         @deposit.reopen_for_editing if @resp[:state] == 'done'
         @deposit.update_metadata(dataset_type: @dataset_type, doi: @copy.software_doi)
-        @deposit.publish if @resource.send(@resource_method).present_files.count > 0 # do not actually publish unless there are files
+        # do not actually publish unless there are files
+        if @resource.send(@resource_method).present_files.count > 0
+          @deposit.publish
+        else
+          # if there are no files the empty draft can be deleted
+          @deposit.delete
+        end
+
         @copy.update(state: 'finished')
       rescue Stash::ZenodoReplicate::ZenodoError => e
         revert_to_previous_version if e.message.include?('Validation error') && e.message.include?('files must differ from all previous versions')
