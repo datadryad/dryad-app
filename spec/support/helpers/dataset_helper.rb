@@ -13,7 +13,7 @@ module DatasetHelper
     click_button 'Next'
     page.find('#checklist-button').click unless page.has_button?('Title')
     click_button 'Title'
-    expect(page).to have_content('Is your data used in a research article?')
+    expect(page).to have_content('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?')
   end
 
   def navigate_to_readme
@@ -57,7 +57,7 @@ module DatasetHelper
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-    within_fieldset('Is your data used in a research article?') do
+    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'No').click
     end
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 6)
@@ -103,11 +103,11 @@ module DatasetHelper
 
   def fill_manuscript_info(name:, issn:, msid:)
     navigate_to_metadata
-    within_fieldset('Is your data used in a research article?') do
+    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'Yes').click
     end
-    expect(page).to have_content('From what source would you like to import information?')
-    within_fieldset('From what source would you like to import information?') do
+    expect(page).to have_content('Which would you like to connect?')
+    within_fieldset('Which would you like to connect?') do
       find(:label, 'Submitted manuscript').click
     end
     page.execute_script("$('#publication').val('#{name}')")
@@ -119,8 +119,8 @@ module DatasetHelper
   def fill_crossref_info(name:, doi:)
     navigate_to_metadata
     find(:label, 'Yes').click
-    expect(page).to have_content('From what source would you like to import information?')
-    within_fieldset('From what source would you like to import information?') do
+    expect(page).to have_content('Which would you like to connect?')
+    within_fieldset('Which would you like to connect?') do
       find(:label, 'Published article').click
     end
     fill_in 'publication', with: name

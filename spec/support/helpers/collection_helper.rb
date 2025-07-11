@@ -22,7 +22,7 @@ module CollectionHelper
     click_button 'Next'
     page.find('#checklist-button').click unless page.has_button?('Title')
     click_button 'Title'
-    expect(page).to have_content('Is your collection associated with a research article?')
+    expect(page).to have_content('Is your collection associated with a preprint, an article, or a manuscript submitted to a journal?')
   end
 
   def navigate_to_review
@@ -47,7 +47,7 @@ module CollectionHelper
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-    within_fieldset('Is your collection associated with a research article?') do
+    within_fieldset('Is your collection associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'No').click
     end
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 6)
