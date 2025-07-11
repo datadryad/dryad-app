@@ -41,11 +41,19 @@ end
 module Stash
   module Indexer
     describe IndexingResource do
+      include Mocks::Salesforce
+      include Mocks::Datacite
+      include Mocks::RSolr
+
       # tried before :all and it randomly made certain tests fail and reloading returned nils, maybe something resetting it
-      before :each do
+      before(:each) do
+        mock_salesforce!
+        mock_datacite_gen!
+        mock_solr!
+        Timecop.travel(Time.utc(2018, 11, 14))
         @user = create(:user)
         @identifier = create(:identifier)
-        @resource = create(:resource, identifier_id: @identifier.id, user_id: @user.id)
+        @resource = create(:resource, :submitted, identifier_id: @identifier.id, user_id: @user.id)
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'manuscriptNumber', value: 'manuscript123')
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'pubmedID', value: 'pubmed123')
         create(:internal_datum, identifier_id: @identifier.id, data_type: 'mismatchedDOI', value: 'doi987')
@@ -66,7 +74,6 @@ module Stash
         @author2.update(affiliations: [@affil2])
         @resource.contributors = [] # erase the default funder
         @contributor = create(:contributor, resource_id: @resource.id)
-        @datacite_date = create(:datacite_date, resource_id: @resource.id)
         @description1 = create(:description, resource_id: @resource.id)
         @description2 = create(:description, description: '<p>My methods were meticulous</p>', description_type: 'methods', resource_id: @resource.id)
         @description3 = create(:description, description:
@@ -83,8 +90,6 @@ module Stash
         @geolocation3 = create(:geolocation, place_id: @geo_place3.id, resource_id: @resource.id)
         @geolocation4 = create(:geolocation, box_id: @geo_box2.id, resource_id: @resource.id)
         @geolocation5 = create(:geolocation, point_id: @geo_point2.id, resource_id: @resource.id)
-        @publication_year = create(:publication_year, resource_id: @resource.id)
-        @publisher = create(:publisher, resource_id: @resource.id)
         @related_identifier = create(:related_identifier)
         @resource_type = create(:resource_type, resource_id: @resource.id)
         @right = create(:right, resource_id: @resource.id)
@@ -93,6 +98,10 @@ module Stash
         @subject2 = create(:subject, subject: 'parsimonious', resources: [@resource])
         @data_files = [create(:data_file, resource_id: @resource.id),
                        create(:data_file, resource_id: @resource.id), create(:data_file, resource_id: @resource.id)]
+        Timecop.travel(Time.utc(2019, 1, 1))
+        @resource.update(publication_date: Time.now.utc)
+        create(:curation_activity, :published, resource: @resource)
+        Timecop.return
         @resource.reload
         @ir = IndexingResource.new(resource: @resource)
       end
@@ -177,7 +186,7 @@ module Stash
 
       describe '#issued_date' do
         it 'returns a correct issued date' do
-          expect(@ir.issued_date[0..9]).to eql(Time.now.utc.strftime('%Y-%m-%d'))
+          expect(@ir.issued_date[0..9]).to eql('2019-01-01')
         end
       end
 
@@ -189,7 +198,7 @@ module Stash
 
       describe '#publisher' do
         it 'returns publisher name' do
-          expect(@ir.publisher).to eql(@publisher.publisher)
+          expect(@ir.publisher).to eql('Dryad')
         end
       end
 
@@ -299,14 +308,7 @@ module Stash
 
       describe '#dct_temporal_dates' do
         it 'gets those dates' do
-          expect(@ir.dct_temporal_dates).to eql(['2018-11-14'])
-        end
-
-        context 'with bad date' do
-          it 'does not fail' do
-            allow(@resource).to receive(:datacite_dates).and_return [OpenStruct.new(date: 'bad date'), OpenStruct.new(date: '2024-10-21T00:00:00Z')]
-            expect(@ir.dct_temporal_dates).to eq(['2024-10-21'])
-          end
+          expect(@ir.dct_temporal_dates).to eql(%w[2018-11-14 2018-11-14 2019-01-01 2019-01-01])
         end
       end
 
@@ -346,8 +348,8 @@ module Stash
             solr_year_i: 2019,
             dct_issued_dt: @resource.publication_date.utc.iso8601,
             dc_rights_s: 'Creative Commons Zero v1.0 Universal',
-            dc_publisher_s: @resource.publisher.publisher,
-            dct_temporal_sm: ['2018-11-14'],
+            dc_publisher_s: 'Dryad',
+            dct_temporal_sm: %w[2018-11-14 2018-11-14 2019-01-01 2019-01-01],
             dryad_author_affiliation_id_sm: ['https://ror.example.org/16xx22bs', 'https://ror.example.org/18dl67sn1'],
             dryad_author_affiliation_name_sm: [@affil1.long_name,
                                                @affil2.long_name],

@@ -28,17 +28,6 @@ module StashDatacite
         @metadata_entry = MetadataEntry.new(resource, 'dataset', @user.tenant_id)
       end
 
-      describe '#initialize' do
-        it 'creates a publisher if needed' do
-          resource.publisher = nil
-          @metadata_entry = MetadataEntry.new(resource, 'dataset', tenant)
-          publisher = metadata_entry.instance_variable_get(:@publisher)
-          expect(publisher).to be_a(Publisher)
-          expect(publisher.publisher).to eq('Dryad')
-          expect(publisher.resource_id).to eq(resource.id)
-        end
-      end
-
       describe '#title' do
         it 'extracts the main title' do
           expect(metadata_entry.title).to eq(resource.title)

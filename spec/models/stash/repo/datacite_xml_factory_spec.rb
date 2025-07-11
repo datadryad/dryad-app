@@ -4,20 +4,26 @@ require 'nokogiri'
 module Datacite
   module Mapping
     describe DataciteXMLFactory do
+      include Mocks::Salesforce
+      include Mocks::Datacite
+      include Mocks::RSolr
 
       before(:each) do
+        mock_salesforce!
+        mock_datacite_gen!
+        mock_solr!
         total_size_bytes = 3_286_679
 
         @dc4_xml = File.read('spec/data/archive/mrt-datacite.xml')
         @dcs_resource = Datacite::Mapping::Resource.parse_xml(@dc4_xml)
-        Timecop.travel(Time.now.utc - 2.minutes)
+        Timecop.travel(Time.utc(2018, 1, 1))
         user = create(:user,
                       first_name: 'Lisa',
                       last_name: 'Muckenhaupt',
                       email: 'lmuckenhaupt@example.edu',
                       tenant_id: 'dataone')
 
-        @resource = create(:resource,
+        @resource = create(:resource_published,
                            user: user,
                            tenant_id: 'dataone')
         Timecop.return
@@ -111,8 +117,7 @@ module Datacite
           expect(doc.xpath('//resourceType/@resourceTypeGeneral').first.value).to eq('Dataset')
         end
 
-        it 'sets the correct issued and available dates' do
-          @resource.update(publication_date: Time.utc(2018, 1, 1), meta_view: true)
+        it 'sets the correct dates' do
           Timecop.travel(Time.now.utc - 1.minute)
           @res2 = create(:resource, identifier: @resource.identifier, meta_view: true, file_view: true, publication_date: Time.utc(2018, 2, 1))
           Timecop.return
@@ -129,8 +134,12 @@ module Datacite
           contents = builder.contents
           doc = Nokogiri::XML(contents)
           doc.remove_namespaces! # to simplify the xpath expressions for convenience
+
+          expect(doc.xpath("//dates/date[@dateType = 'Created']").first.child.text).to start_with('2018-01-01')
+          expect(doc.xpath("//dates/date[@dateType = 'Submitted']").first.child.text).to start_with('2018-01-01')
           expect(doc.xpath("//dates/date[@dateType = 'Issued']").first.child.text).to start_with('2018-01-01')
           expect(doc.xpath("//dates/date[@dateType = 'Available']").first.child.text).to start_with('2018-02-01')
+          expect(doc.xpath("//dates/date[@dateType = 'Updated']").first.child.text).to start_with('2018-03-01')
         end
 
         it 'adds subjects to XML with the scheme and uri if available' do

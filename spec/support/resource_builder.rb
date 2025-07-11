@@ -57,11 +57,8 @@ module StashDatacite
       stash_files.each { |stash_file| add_stash_file(stash_file) }
       dcs_resource.contributors.each { |dcs_creator| add_se_author(dcs_creator) }
       dcs_resource.titles.each { |dcs_title| add_se_title(dcs_title) }
-      set_sd_publisher(dcs_resource.publisher)
-      set_sd_pubyear(dcs_resource.publication_year)
       dcs_resource.subjects.each { |dcs_subject| add_sd_subject(dcs_subject) }
       dcs_resource.contributors.each { |dcs_contributor| add_sd_contributor(dcs_contributor) }
-      dcs_resource.dates.each { |dcs_date| add_sd_date(dcs_date) }
       set_sd_language(dcs_resource.language)
       set_sd_resource_type(dcs_resource.resource_type)
       dcs_resource.alternate_identifiers.each { |dcs_alternate_ident| add_sd_alternate_ident(dcs_alternate_ident) }
@@ -119,16 +116,6 @@ module StashDatacite
       se_resource.title = dcs_title && dcs_title.value.strip
     end
 
-    def set_sd_publisher(dcs_publisher)
-      Publisher.create(publisher: dcs_publisher&.value, resource_id: se_resource_id) unless dcs_publisher.blank?
-    end
-
-    def set_sd_pubyear(dcs_publication_year)
-      return if dcs_publication_year.blank?
-
-      PublicationYear.create(publication_year: dcs_publication_year, resource_id: se_resource_id)
-    end
-
     def add_sd_subject(dcs_subject)
       sd_subject_id = sd_subject_id_for(dcs_subject)
       ResourcesSubjects.create(resource_id: se_resource_id, subject_id: sd_subject_id)
@@ -144,15 +131,6 @@ module StashDatacite
       )
       sd_contributor.affiliation_ids = dcs_contributor.affiliations.map { |affiliation_obj| sd_affiliation_id_for(affiliation_obj) }
       sd_contributor
-    end
-
-    def add_sd_date(dcs_date)
-      date_type = dcs_date.type
-      DataciteDate.create(
-        date: dcs_date.value && dcs_date.value.strip,
-        date_type_friendly: (date_type.value if date_type),
-        resource_id: se_resource_id
-      )
     end
 
     def set_sd_language(dcs_language)
