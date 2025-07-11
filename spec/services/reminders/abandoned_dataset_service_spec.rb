@@ -1,4 +1,4 @@
-module StashEngine
+module Reminders
   describe AbandonedDatasetService do
     before do
       today = Date.today
@@ -10,7 +10,7 @@ module StashEngine
       allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_salesforce_metadata).and_return(true)
     end
 
-    after :each do
+    after do
       Timecop.return
     end
 

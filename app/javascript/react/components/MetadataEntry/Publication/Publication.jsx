@@ -36,7 +36,7 @@ export default function Publication({current, resource, setResource}) {
   const subType = resource.resource_type.resource_type;
   const [assoc, setAssoc] = useState(null);
   const [showTitle, setShowTitle] = useState(false);
-  const [importType, setImportType] = useState(resource.identifier.import_info);
+  const [importType, setImportType] = useState(null);
   const [sponsored, setSponsored] = useState(false);
   const [caseWarning, setCaseWarning] = useState(false);
   const [dupeWarning, setDupeWarning] = useState(false);
@@ -107,6 +107,7 @@ export default function Publication({current, resource, setResource}) {
 
   useEffect(() => {
     const it = resource.identifier.import_info;
+    setImportType(it);
     if (it === 'other') setAssoc(false);
     if (['published', 'preprint', 'manuscript'].includes(it)) setAssoc(true);
   }, []);
@@ -174,7 +175,7 @@ export default function Publication({current, resource, setResource}) {
       )}
 
       {showTitle && (
-        <Title key={resource.title} resource={resource} setResource={setResource} />
+        <Title resource={resource} setResource={setResource} />
       )}
 
       {caseWarning && (

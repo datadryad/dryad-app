@@ -88,13 +88,10 @@ module StashEngine
     has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
     # download tokens are for validating zip assembly requests by the zipping lambda
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
-    has_many :publication_years, class_name: 'StashDatacite::PublicationYear', dependent: :destroy
-    has_one :publisher, class_name: 'StashDatacite::Publisher', dependent: :destroy
     has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy
     has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy
     has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy
     has_many :funders, -> { where(contributor_type: 'funder') }, class_name: 'StashDatacite::Contributor'
-    has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy
     has_many :geolocations, class_name: 'StashDatacite::Geolocation', dependent: :destroy
     has_many :temporal_coverages, class_name: 'StashDatacite::TemporalCoverage', dependent: :destroy
     has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier', dependent: :destroy
@@ -133,8 +130,8 @@ module StashEngine
     end
 
     amoeba do
-      include_association %i[authors generic_files contributors datacite_dates descriptions geolocations temporal_coverages publication_years
-                             publisher related_identifiers resource_type rights flag sizes resources_subjects resource_publications roles]
+      include_association %i[authors generic_files contributors descriptions geolocations temporal_coverages
+                             related_identifiers resource_type rights flag sizes resources_subjects resource_publications roles]
       customize(->(_, new_resource) {
         # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
         new_resource.current_resource_state_id = nil
@@ -549,6 +546,18 @@ module StashEngine
     # (for peer_review datasets, the date at which it came out of peer_review)
     def curation_start_date
       process_date.curation_start
+    end
+
+    def datacite_dates
+      available = identifier.datacite_available_date
+      update = identifier.date_last_published
+      {
+        CREATED: identifier.process_date.processing,
+        SUBMITTED: identifier.process_date.submitted,
+        ISSUED: identifier.datacite_issued_date,
+        AVAILABLE: available,
+        UPDATED: update == available ? nil : update
+      }
     end
 
     # ------------------------------------------------------------
@@ -1029,10 +1038,10 @@ module StashEngine
       changed = []
       edits = []
       this_funders = contributors.where(contributor_type: 'funder').map do |f|
-        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description, title: f.award_title }
       end
       that_funders = other_resource.contributors.where(contributor_type: 'funder').map do |f|
-        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description, title: f.award_title }
       end
       edits << { deleted: that_funders.length - this_funders.length } if that_funders.length > this_funders.length
       this_funders.each_with_index do |f, i|

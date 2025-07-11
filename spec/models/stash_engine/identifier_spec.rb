@@ -283,7 +283,7 @@ module StashEngine
             @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            expect(@identifier.latest_resource_with_public_metadata).to eql(@res2)
+            expect(@identifier.reload.latest_resource_with_public_metadata).to eql(@res2)
           end
 
           it 'finds embargoed published resource' do
@@ -292,14 +292,14 @@ module StashEngine
             @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res2.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            expect(@identifier.latest_resource_with_public_metadata).to eql(@res2)
+            expect(@identifier.reload.latest_resource_with_public_metadata).to eql(@res2)
           end
 
           it 'finds no published resource' do
             @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
+            expect(@identifier.reload.latest_resource_with_public_metadata).to eql(nil)
           end
 
           it 'disallows any access if latest state is withdrawn' do
@@ -309,7 +309,7 @@ module StashEngine
             @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res3.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
-            expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
+            expect(@identifier.reload.latest_resource_with_public_metadata).to eql(nil)
           end
 
         end
@@ -413,7 +413,7 @@ module StashEngine
             @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
             @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
             @res3.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
-            expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
+            expect(@identifier.reload.latest_resource_with_public_metadata).to eql(nil)
           end
 
         end
@@ -647,24 +647,6 @@ module StashEngine
       end
     end
 
-    # TODO: Cleanup - method for this is commented
-    # describe '#large_files?' do
-    #   it 'returns false when large files are not present' do
-    #     expect(@identifier.large_files?).to eq(false)
-    #   end
-    #
-    #   it 'returns true when large files are present' do
-    #     DataFile.create(
-    #       resource: @res3,
-    #       file_state: 'created',
-    #       download_filename: 'created.bin',
-    #       upload_file_size: 1.0e+14
-    #     )
-    #     expect(@identifier.large_files?).to eq(true)
-    #   end
-    #
-    # end
-
     describe '#calculated_pub_state' do
 
       it 'detects withdrawn state' do
@@ -731,7 +713,7 @@ module StashEngine
         it 'detects embargoed_until_article' do
           @res3.curation_activities << CurationActivity.create(status: 'embargoed', user: @user,
                                                                note: 'Adding 1-year blackout period due to journal settings.')
-          expect(@identifier.embargoed_until_article_appears?).to be(true)
+          expect(@identifier.reload.embargoed_until_article_appears?).to be(true)
         end
       end
     end

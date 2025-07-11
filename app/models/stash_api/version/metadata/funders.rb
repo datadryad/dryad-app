@@ -14,7 +14,9 @@ module StashApi
               identifierType: funder.identifier_type,
               identifier: funder.name_identifier_id,
               awardNumber: funder.award_number,
+              awardURI: funder.award_uri,
               awardDescription: funder.award_description,
+              awardTitle: funder.award_title,
               order: funder.funder_order
             }
           end
