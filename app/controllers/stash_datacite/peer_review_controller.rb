@@ -1,6 +1,5 @@
 module StashDatacite
   class PeerReviewController < ApplicationController
-    include StashEngine::MetadataEntryPagesHelper
     respond_to :json
 
     # PATCH /peer_review/toggle
@@ -28,7 +27,7 @@ module StashDatacite
           @resource.reload
 
           if @errors
-            duplicate_resource
+            @new_res = DuplicateResourceService.new(@resource, current_user).call
             @new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
             redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(
               resource_id: @new_res.id
