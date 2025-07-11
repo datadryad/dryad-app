@@ -8,6 +8,7 @@
 # IPs to allow outright
 Rack::Attack.safelist_ip('127.0.0.1')
 Rack::Attack.safelist_ip('::1')
+Rack::Attack.safelist_ip('217.123.8.63') # Markus Englund, research on data fabrication
 Rack::Attack.safelist_ip('130.14.25.148') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.25') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.26') # NCBI LinkOut integrity checker

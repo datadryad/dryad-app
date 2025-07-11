@@ -49,6 +49,10 @@ module StashApi
         out_author = output[:authors].first
         expect(out_author[:email]).to eq(in_author[:email])
         expect(out_author[:affiliation]).to eq(in_author[:affiliation])
+
+        identifier = StashEngine::Identifier.find_by(identifier: output[:identifier].gsub('doi:', ''))
+        expect(identifier).not_to be_nil
+        expect(identifier.pub_state).to eq('unpublished')
       end
 
       it 'creates a new dataset from minimal metadata and ordered authors (title, author info, abstract)' do

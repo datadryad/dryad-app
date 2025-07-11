@@ -24,7 +24,7 @@ module Datacite
       end
 
       def build_resource(datacite_3: false) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-        pub_year = se_resource.publication_years[0] # TODO: make this has_one instead of has_many
+        pub_year = se_resource.publication_date&.year
 
         dcs_resource = Resource.new(
           identifier: Identifier.from_doi(doi_value),
@@ -50,7 +50,7 @@ module Datacite
             )
           end,
           titles: [Title.new(value: se_resource.title, type: nil)],
-          publisher: to_dcs_publisher(se_resource.publisher),
+          publisher: add_publisher(datacite_3: datacite_3),
           publication_year: to_dcs_pub_year(pub_year)
         )
 
@@ -142,11 +142,9 @@ module Datacite
       end
 
       def add_dates(dcs_resource)
-        iss_dt = se_resource&.identifier&.datacite_issued_date
-        avail_dt = se_resource&.identifier&.datacite_available_date
-
-        dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType::ISSUED, value: iss_dt) if iss_dt
-        dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType::AVAILABLE, value: avail_dt) if avail_dt
+        se_resource.datacite_dates.each do |type, date|
+          dcs_resource.dates << Date.new(type: Datacite::Mapping::DateType.const_get(type), value: date) if date.present?
+        end
       end
 
       def add_subjects(dcs_resource)
@@ -216,9 +214,21 @@ module Datacite
           FundingReference.new(
             name: c.contributor_name,
             identifier: dmfi,
-            award_number: c.award_number
+            award_number: c.award_uri.present? ? AwardNumber.new(uri: c.award_uri, value: c.award_number) : c.award_number,
+            award_title: c.award_title
           )
         end
+      end
+
+      def add_publisher(datacite_3: false)
+        return Publisher.new(value: 'Dryad') if datacite_3
+
+        Publisher.new(
+          identifier: 'https://ror.org/00x6h5n95',
+          identifier_scheme: 'ROR',
+          scheme_uri: 'https://ror.org/',
+          value: 'Dryad'
+        )
       end
 
       def to_dcs_funder(contrib)
@@ -257,21 +267,10 @@ module Datacite
         )
       end
 
-      def to_dcs_publisher(sd_publisher)
-        return Publisher.new(value: 'unknown') unless sd_publisher
-
-        Publisher.new(
-          identifier: 'https://ror.org/00x6h5n95',
-          identifier_scheme: 'ROR',
-          scheme_uri: 'https://ror.org/',
-          value: sd_publisher.publisher
-        )
-      end
-
       def to_dcs_pub_year(sd_pub_year)
         return ::Date.today.year unless sd_pub_year
 
-        sd_pub_year.publication_year
+        sd_pub_year
       end
 
       def to_uri(uri_or_str)

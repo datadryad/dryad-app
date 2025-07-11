@@ -21,7 +21,7 @@ require 'rake'
 require 'timecop'
 Timecop.travel(2.months.from_now)
 Rails.application.load_tasks
-Rake::Task['identifiers:in_progess_reminder'].execute
+Rake::Task['identifiers:in_progress_reminder_3_days'].execute
 ```
 
 Issues

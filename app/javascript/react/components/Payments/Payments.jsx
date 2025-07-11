@@ -4,6 +4,7 @@ import {loadStripe} from '@stripe/stripe-js';
 import {EmbeddedCheckoutProvider, EmbeddedCheckout} from '@stripe/react-stripe-js';
 import Calculations from '../MetadataEntry/Agreements/Calculations';
 import CalculateFees from '../CalculateFees';
+import {ExitIcon} from '../ExitButton';
 import InvoiceForm from './InvoiceForm';
 
 function Payments({
@@ -46,9 +47,9 @@ function Payments({
             <CalculateFees resource={resource} fees={fees} setFees={setFees} invoice={invoice} />
             <p>By submitting the following form, you agree:</p>
             <p>
-              Instead of paying immediately, I want to generate an invoice for later payment by another entity.{' '}
+              I want to generate an invoice, due upon receipt, for payment by another entity.{' '}
               <b>
-                I understand that this will incur an additional{' '}
+                I understand that this will incur an additional, nonrefundable{' '}
                 {fees?.invoice_fee?.toLocaleString('en-US', {style: 'currency', currency: 'USD', maximumFractionDigits: 0})} fee.
               </b>
             </p>
@@ -75,11 +76,15 @@ function Payments({
       )}
       <p style={{fontWeight: 'bold'}} role="heading" aria-level="2">Need an invoice?</p>
       <p>
-        Instead of paying immediately, you may generate an invoice for later payment by another entity.{' '}
-        <b>An additional administration fee will be charged.</b>{' '}
+        If your organization requires an invoice to be sent to a specific email address, one may be generated.{' '}
+        <b>An additional, nonrefundable administration fee will be charged for this service.</b>{' '}
         <button onClick={() => setInvoice(true)} type="button" className="o-button__plain-textlink" name="get_invoice">
           Continue to the invoice generation form <i className="fas fa-circle-right" aria-hidden="true" />
         </button>
+      </p>
+      <br />
+      <p style={{fontSize: '.98rem', textAlign: 'center'}}>
+        <a href="/costs" target="_blank">All about the Data Publishing Charge, payment methods, and refund policies<ExitIcon /></a>
       </p>
     </div>
   );

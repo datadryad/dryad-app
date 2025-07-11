@@ -54,7 +54,7 @@ Partner organizations that sponsor DPCs fully cover author data submissions up t
 </div>
 </div>
 
-We are sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the Data Publishing Charge, we’ve expanded our waiver policy so that any author may request one. To submit your request for consideration, complete the [Fee waiver application form](https://docs.google.com/forms/d/e/1FAIpQLSekWZ4Dap7TYh0nap8JmPJ1dBTGeoBl1xnLS4xGH-REfrYCTQ/viewform). Waivers will not be approved for data submissions exceeding 10 GB.
+We are sensitive to the fact that fees for individual researchers are a burden and create inequities. To better accommodate researchers who lack funds to pay the Data Publishing Charge, we’ve expanded our waiver policy so that any author may request one. To submit your request for consideration, complete the [Fee waiver application form](https://docs.google.com/forms/d/e/1FAIpQLSekWZ4Dap7TYh0nap8JmPJ1dBTGeoBl1xnLS4xGH-REfrYCTQ/viewform), and await a response before submitting your dataset. Waivers will not be approved for data submissions exceeding 10 GB.
 
 Effective June 2024, Dryad's Data Publishing Charge cannot be paid using vouchers.
 

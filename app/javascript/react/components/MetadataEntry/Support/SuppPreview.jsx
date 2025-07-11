@@ -68,6 +68,16 @@ export default function SuppPreview({resource, previous, curator}) {
                     </>
                   )}
                   {!funder.award_description && previous && prev?.award_description && <del>prev.award_description</del>}
+                  {funder.award_title && (
+                    <>:{' '}
+                      <span>
+                        {previous && funder.award_title !== prev?.award_title ? (
+                          <><ins>{funder.award_title}</ins>{prev?.award_title && <del>{prev?.award_title}</del>}</>
+                        ) : funder.award_title}
+                      </span>
+                    </>
+                  )}
+                  {!funder.award_title && previous && prev?.award_title && <del>prev.award_title</del>}
                 </li>
               );
             })}

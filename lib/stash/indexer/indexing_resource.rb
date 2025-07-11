@@ -122,7 +122,7 @@ module Stash
       end
 
       def publication_year
-        @resource.publication_years&.first&.publication_year&.to_i
+        @resource.publication_date&.year
       end
 
       def issued_date
@@ -135,7 +135,7 @@ module Stash
       end
 
       def publisher
-        @resource&.publisher&.publisher
+        'Dryad'
       end
 
       def grant_number
@@ -197,13 +197,11 @@ module Stash
       # method takes the values supplied and also adds every year for a range so people can search for
       # any of those years which may not be explicitly named
       def dct_temporal_dates
-        items = @resource.datacite_dates.map(&:date).reject(&:blank?)
+        items = @resource.datacite_dates.values.reject(&:blank?)
         items.map! do |dt|
-
-          Date.iso8601(dt)&.strftime('%Y-%m-%d')
+          dt.strftime('%Y-%m-%d')
         rescue ArgumentError
           nil
-
         end
         items.compact
 

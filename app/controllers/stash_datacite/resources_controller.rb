@@ -92,9 +92,6 @@ module StashDatacite
         resource.update(display_readme: true)
       end
 
-      # TODO: put this somewhere more reliable
-      StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
-
       StashEngine::EditHistory.create(resource_id: resource.id, user_comment: params[:user_comment])
 
       # this is here because they want it in curation notes, in addition to the edit history table

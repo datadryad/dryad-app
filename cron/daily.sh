@@ -5,8 +5,10 @@
 cd /home/ec2-user/deploy/current/
 export RAILS_ENV="$1"
 
+# In Progress reminder - at 1 day
+bundle exec rails identifiers:in_progress_reminder_1_day >> /home/ec2-user/deploy/shared/log/in_progess_reminder.log 2>&1
 # In Progress reminder - at 3 days
-bundle exec rails identifiers:in_progess_reminder >> /home/ec2-user/deploy/shared/log/in_progess_reminder.log 2>&1
+bundle exec rails identifiers:in_progress_reminder_3_days >> /home/ec2-user/deploy/shared/log/in_progess_reminder.log 2>&1
 # In Progress reminders - monthly
 bundle exec rails dataset_deletion:in_progress_reminders >> /home/ec2-user/deploy/shared/log/in_progess_reminder.log 2>&1
 

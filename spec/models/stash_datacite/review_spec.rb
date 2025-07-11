@@ -77,10 +77,6 @@ module StashDatacite
         expect(@review.geolocation_places).to eq(GeolocationPlace.from_resource_id(@resource.id))
       end
 
-      it 'extracts the publisher' do
-        expect(@review.publisher).to eq(@resource.publisher)
-      end
-
       it 'identifies the presence of geolocation data' do
         place = create(:geolocation_place)
         point = create(:geolocation_point)

@@ -8,7 +8,7 @@
     </div>
   <% end %>
   <span class="o-metadata__group2-item"><% if resource.identifier.date_first_published.blank? %>Forthcoming<% else %>Published <%= formatted_date(resource.identifier.date_first_published) %><% end %><% if resource.publication_date != resource.identifier.date_first_published %>; Update<% if resource.publication_date.blank? %> Forthcoming<% else %>d <%= formatted_date(resource.publication_date) %><% end %><% end %></span>
-  on <span class="o-metadata__group2-item"><%= resource.try(:publisher).try(:publisher) %></span>.
+  on <span class="o-metadata__group2-item">Dryad</span>.
   <% if resource.identifier %>
     <span class="o-metadata__group2-item">
       <%= display_id_plain(type: resource.identifier.identifier_type,

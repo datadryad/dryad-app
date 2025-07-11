@@ -40,7 +40,7 @@ data publishing, curation, and preservation. The community benefits from Dryadâ€
 
 ## Collaborations
 
-Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](#our_members) and [how to join us](/join_us).
+Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](#our-members) and [how to join us](/join_us).
 
 Dryad advocates for community-adopted standards for metadata and persistent identifiers in concert with DataCite, ORCID, ROR, and Funder Registry. 
 
