@@ -11,7 +11,7 @@
   </div>
   <div class="c-input">
     <%= f.label :email, "Email", class: 'c-input__label' %>
-    <%= f.text_field :email, class: 'c-input__text', value: current_user.email %>
+    <%= f.text_field :email, class: 'c-input__text', required: true, value: current_user.email %>
   </div>
   <p style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2ch">
     <span style="color: rgb(209, 44, 29);">* Fields are required</span>

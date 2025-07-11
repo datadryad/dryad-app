@@ -78,6 +78,15 @@ module StashEngine
            subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
     end
 
+    def check_email(email_token)
+      return unless email_token.user&.email&.present?
+
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @user_name = user_name(email_token.user)
+      @token = email_token.token
+      mail(to: user_email(email_token.user), subject: "#{rails_env}Your Dryad account code")
+    end
+
     def check_tenant_email(email_token)
       return unless email_token.user&.email&.end_with?(email_token.tenant&.authentication&.email_domain)
 

@@ -4,8 +4,6 @@ module StashEngine
     before_action :ensure_tenant, only: %i[show user_datasets]
     protect_from_forgery except: %i[user_datasets primary_article]
 
-    MAX_VALIDATION_TRIES = 5
-
     def choose
       return redirect_to admin_dashboard_path if current_user&.min_admin?
 

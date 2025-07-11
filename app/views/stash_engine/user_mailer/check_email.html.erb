@@ -1,0 +1,11 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>Use the following code to confirm your email address with Dryad.</p>
+
+<p style="text-align: center; font-size: 36px"><%= @token %></p>
+
+<p>The code above is required to confirm your email address. It will expire in 15 minutes.</p>
+
+<p>If you did not request this code, please ignore this email.</p>
+
+<p>If you have questions, please get in touch with us at <a href="mailto:<%= @helpdesk_email %>"><%= @helpdesk_email %></a>.</p>
