@@ -320,7 +320,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.over_max
-          expect(error).to eq('Too many files')
+          expect(error).to eq('Too many data files (more than 100)')
         end
 
         it 'gives an error if over file size for data files' do
@@ -332,7 +332,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.over_max
-          expect(error).to eq('Over file size limit')
+          expect(error).to eq('Over dataset file size limit')
         end
 
         it 'gives an error if over file size for merritt data files' do
@@ -356,7 +356,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.over_max
-          expect(error).to eq('Over file size limit')
+          expect(error).to eq('Over zenodo file size limit')
         end
 
         it 'gives an error if over file size for zenodo supplemental files' do
@@ -368,7 +368,7 @@ module StashDatacite
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.over_max
-          expect(error).to eq('Over file size limit')
+          expect(error).to eq('Over zenodo file size limit')
         end
       end
 
