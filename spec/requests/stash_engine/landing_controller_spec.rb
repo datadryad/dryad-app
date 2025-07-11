@@ -107,5 +107,21 @@ module StashEngine
       expect(response.body).not_to include(res2.data_files.where(file_state: 'created').first.download_filename)
     end
 
+    it 'loads the linkset' do
+      res = @identifier.resources.first
+      res.update(meta_view: true, file_view: true, publication_date: Time.new)
+      get linkset_path(id: @identifier.to_s)
+      expect(response.content_type).to eq('application/linkset')
+    end
+
+    it 'loads the correct linkset json' do
+      res = @identifier.resources.first
+      res.update(meta_view: true, file_view: true, publication_date: Time.new)
+      get linkset_path(id: @identifier.to_s, format: :json)
+      expect(response.content_type).to eq('application/linkset+json')
+      expect(response.body).to include(res.authors.first.author_orcid)
+      expect(response.body).to include(download_stream_url(file_id: res.data_files.present_files.first.id))
+    end
+
   end
 end

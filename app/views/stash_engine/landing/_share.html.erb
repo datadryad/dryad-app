@@ -1,5 +1,5 @@
 <% url = CGI.escape(show_url("doi:#{identifier.identifier}")) %>
-<% citation = CGI.escape(ActionController::Base.helpers.strip_tags(citation(resource.authors, resource.title, resource.resource_type, review.identifier.identifier, (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year)))) %>
+<% citation = CGI.escape(ActionController::Base.helpers.strip_tags(citation(resource.authors, resource.title, resource.resource_type, identifier.identifier, (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year)))) %>
 <% title = CGI.escape("Dryad dataset: " + resource.title) %>
 <% abstract = CGI.escape("Abstract: " + ActionController::Base.helpers.strip_tags((review&.abstract&.description).to_s))%>
 <div id="share_buttons">
