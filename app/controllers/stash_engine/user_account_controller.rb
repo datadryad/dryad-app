@@ -1,6 +1,7 @@
 module StashEngine
   class UserAccountController < ApplicationController
-    before_action :require_user_login
+    before_action :require_user_login, only: :index
+    before_action :require_login, except: %i[index edit]
 
     def index
       @target_page = stash_url_helpers.my_account_path
@@ -9,7 +10,8 @@ module StashEngine
     def edit
       return render(nothing: true, status: :unauthorized) unless current_user
 
-      current_user.update(email: params[:email], first_name: params[:first_name], last_name: params[:last_name])
+      validated = current_user.email&.downcase == params[:email].squish.downcase
+      current_user.update(email: params[:email].squish, first_name: params[:first_name], last_name: params[:last_name], validated: validated)
       respond_to(&:js)
     end
 

@@ -18,7 +18,7 @@ class ApplicationMailer < ActionMailer::Base
 
   def assign_variables(resource)
     @resource = resource
-    @user = resource.owner_author || resource.submitter
+    @user = resource.submitter || resource.owner_author
     @user_name = user_name(@user)
     @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
     @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]

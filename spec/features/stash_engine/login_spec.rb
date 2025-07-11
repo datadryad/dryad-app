@@ -106,7 +106,7 @@ RSpec.feature 'Session', type: :feature do
       # enter and erase email
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
-      click_button 'Remove and enter a new email'
+      click_button 'Enter a new email address'
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
       expect(page).to have_text('Enter confirmation code')
@@ -144,7 +144,7 @@ RSpec.feature 'Session', type: :feature do
       # enter and erase email
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
-      click_button 'Remove and enter a new email'
+      click_button 'Enter a new email address'
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
       expect(page).to have_text('Enter confirmation code')

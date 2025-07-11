@@ -11,7 +11,7 @@
 #  old_dryad_email  :string(191)
 #  orcid            :string(191)
 #  tenant_auth_date :datetime
-#  validation_tries :integer          default(0)
+#  validated        :boolean          default(FALSE)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  affiliation_id   :integer
@@ -41,7 +41,7 @@ FactoryBot.define do
     orcid { Faker::Pid.orcid }
     old_dryad_email { Faker::Internet.unique.email }
     eperson_id { rand(10_000) }
-    validation_tries { 0 }
+    validated { true }
 
     after(:create) do |user, e|
       create(:tenant, id: user.tenant_id) if user.tenant_id.present? && !StashEngine::Tenant.exists?(user.tenant_id)
