@@ -115,7 +115,7 @@ export default function Publication({current, resource, setResource}) {
     if (primary_article) selected.push('published');
     if (preprint) selected.push('preprint');
     setConnections(selected);
-    if (!!selected.length) setAssoc(true);
+    if (selected.length) setAssoc(true);
   }, []);
 
   return (
