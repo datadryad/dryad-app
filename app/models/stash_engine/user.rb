@@ -55,6 +55,10 @@ module StashEngine
 
     validates :email, format: { with: EMAIL_REGEX, message: '%{value} is not a valid email address' }, allow_blank: true
 
+    def self.system_user
+      find(0)
+    end
+
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
 
