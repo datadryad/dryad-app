@@ -90,6 +90,12 @@ module StashEngine
       check_for_sharing
       data_file = DataFile.where(id: params[:file_id]).present_files.first
       if data_file&.resource&.may_download?(ui_user: current_user) || @sharing_link
+        response.set_header(
+          'Link',
+          "<#{file_linkset_url(id: data_file.id)}>; rel=\"linkset\"; type=\"application/linkset\",
+          <#{file_linkset_url(id: data_file.id)}.json>; rel=\"linkset\"; type=\"application/linkset+json\",
+          <#{show_url(id: data_file.resource.identifier_str)}> ; rel=\"collection\" ; type=\"text/html\""
+        )
         @file_presigned.download(file: data_file)
       else
         render status: 403, plain: 'You may not download this file.'
@@ -103,6 +109,20 @@ module StashEngine
         @file_presigned.in_submission_download(file: file)
       else
         render status: 403, plain: 'You may not download this file.'
+      end
+    end
+
+    def linkset
+      @file = DataFile.where(id: params[:file_id]).present_files.first
+      respond_to do |format|
+        format.html do
+          response.set_header('Content-Type', 'application/linkset')
+          render body: lset_linkset
+        end
+        format.json do
+          response.set_header('Content-Type', 'application/linkset+json')
+          render json: json_linkset
+        end
       end
     end
 
@@ -149,6 +169,26 @@ module StashEngine
     end
 
     private
+
+    def lset_linkset
+      "<#{show_url(id: @file.resource.identifier_str)}>; rel=\"collection\" type=\"text/html\" anchor=\"#{download_stream_url(file_id: @file.id)}\",
+      <https://schema.org/DataDownload>; rel=\"type\" anchor=\"#{download_stream_url(file_id: @file.id)}\""
+    end
+
+    def json_linkset
+      {
+        linkset: [
+          anchor: download_stream_url(file_id: @file.id),
+          type: [{ href: 'https://schema.org/DataDownload' }],
+          collection: [
+            {
+              href: show_url(id: @file.resource.identifier_str),
+              type: 'text/html'
+            }
+          ]
+        ]
+      }
+    end
 
     def non_ajax_response_for_download
       @status_hash = @version_presigned.download
