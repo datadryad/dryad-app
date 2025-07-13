@@ -41,7 +41,7 @@ function PublicationForm({
   const apiError = 'To import metadata, this journal requires that you start your Dryad submission from within their manuscript system.';
 
   useEffect(() => {
-    setSponsored(false);
+    if (jTitle !== publication_name) setSponsored(false);
   }, [jTitle]);
 
   useEffect(() => {
@@ -83,6 +83,7 @@ function PublicationForm({
           } = import_data;
           setResource((r) => ({
             ...r,
+            identifier: {...r.identifier, import_info: importType},
             title,
             authors,
             subjects,
@@ -132,9 +133,6 @@ function PublicationForm({
         <Form style={{margin: '1em auto'}}>
           <ImportCheck importType={importType} jTitle={jTitle} setDisable={setDisable} />
           <Field name="isImport" type="hidden" />
-          <div className="callout alt">
-            <p><i className="fas fa-file-import" /> Enter your publication information to import the title and other metadata</p>
-          </div>
           {importType === 'manuscript' && (
             <p style={{fontSize: '.98rem'}}>
               Are you currently submitting your manuscript?
@@ -164,7 +162,7 @@ function PublicationForm({
               <div id="journal-ex"><i aria-hidden="true" />{importType === 'preprint' ? 'bioRxiv, SSRN' : 'Nature, Science'}</div>
             </div>
             {importType !== 'manuscript' && (
-              <div className="input-stack">
+              <div className="input-stack" style={{flex: 2}}>
                 <label className="input-label required" htmlFor="primary_article_doi">
                   DOI
                 </label>
