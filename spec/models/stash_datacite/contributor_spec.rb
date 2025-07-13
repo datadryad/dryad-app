@@ -5,6 +5,8 @@
 #  id                 :integer          not null, primary key
 #  award_description  :string(191)
 #  award_number       :text(65535)
+#  award_title        :string(191)
+#  award_uri          :string(191)
 #  contributor_name   :text(65535)
 #  contributor_type   :string           default("funder")
 #  funder_order       :integer
