@@ -150,12 +150,20 @@
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
   <div class="activity-log-header">
     <h2 id="salesforce-cases">Salesforce cases</h2>
-    <%= button_to "Create SF case",
-                  stash_url_helpers.create_salesforce_case_path(id: @identifier&.id, only_path: false),
-                  method: :get,
-                  class: 'o-button__plain-text2',
-                  form: { target: '_blank' }
-    %>
+    <div class="activity-log-header">
+      <%= button_to "Create SF case",
+                    stash_url_helpers.create_salesforce_case_path(id: @identifier&.id, only_path: false),
+                    method: :get,
+                    class: 'o-button__plain-text2',
+                    id: 'salesforce-create',
+                    form: { target: '_blank' }
+      %>
+      <% if ['curation', 'action_required'].include?(r.last_curation_activity.status) %>
+        <a href="<%= require_action_path(id: @identifier.id)%>" target="AARreport" id="aar_popup" class="o-button__plain-text0" style="color: #fff">Create AAR report</a>
+      <% else %>
+        <em>AAR requires Curation status</em>
+      <% end %>
+    </div>
   </div>
   <% sf_links = salesforce_links(@identifier.identifier) %>
   <% if sf_links %>
@@ -222,5 +230,10 @@
     button.removeEventListener('click', preventClicks);
     button.addEventListener('click', preventClicks);
   });
+  const aar = document.getElementById('aar_popup')
+  if (aar) aar.addEventListener('click', () => {
+    window.open(aar.href, "AARreport", "popup=true,width=700px,height=900px")
+    document.getElementById('salesforce-create').click();
+  })
 </script>
 <% end %>

@@ -15,7 +15,7 @@ module StashDatacite
                     identifier: { methods: %i[new_upload_size_limit], include: %i[process_date software_license] },
                     previous_curated_resource: {
                       include: [:tenant, :subjects, :descriptions, :resource_publication, :journal, :related_identifiers, :contributors,
-                                { authors: { include: [:affiliations] } }]
+                                :action_reports, { authors: { include: [:affiliations] } }]
                     } }]
       )
       @submission[:users] = @resource.users.select('stash_engine_users.*', 'stash_engine_roles.role')

@@ -7,6 +7,8 @@ module StashEngine
     protect_from_forgery except: :activity_log
     before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates]
 
+    STEPS = ['Title', 'Authors', 'Description', 'Subjects', 'Support', 'Compliance', 'Files', 'README', 'Related works', 'Agreements'].freeze
+
     def popup
       case @field
       when 'flag'
@@ -79,6 +81,25 @@ module StashEngine
     rescue ActiveRecord::RecordNotFound
       admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
       redirect_to admin_path, notice: "Identifier ID #{params[:id]} no longer exists."
+    end
+
+    def require_action
+      @identifier = Identifier.find(params[:id])
+      @steps = STEPS
+      @report = @identifier.latest_resource.action_reports.last&.report
+      render layout: false
+    end
+
+    def make_report
+      @resource = Identifier.find(params[:id]).latest_resource
+      @last_state = @resource.last_curation_activity.status
+
+      return unless CurationActivity.allowed_states(@last_state, current_user).include?('action_required')
+
+      @resource.action_reports << ActionRequiredReport.create(report: report_params.to_json, user: current_user)
+      @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: 'action_required',
+                                                               note: 'Action required report created')
+      respond_to(&:js)
     end
 
     def activity_log
@@ -181,6 +202,10 @@ module StashEngine
       StashEngine::InternalDatum.where(identifier_id: @internal_datum.identifier_id).where(data_type: only_one_options).each do |existing_item|
         @options.delete(existing_item.data_type)
       end
+    end
+
+    def report_params
+      params.permit(STEPS.map(&:to_sym))
     end
 
   end

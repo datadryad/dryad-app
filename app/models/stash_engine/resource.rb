@@ -112,6 +112,7 @@ module StashEngine
     has_one :journal, through: :journal_issn
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_many :flags, ->(resource) { unscope(where: :resource_id).where(flaggable: [resource.journal, resource.tenant, resource.users]) }
+    has_many :action_reports, class_name: 'ActionRequiredReport'
     has_one :payment, class_name: 'ResourcePayment'
 
     after_create :create_process_date, unless: :process_date

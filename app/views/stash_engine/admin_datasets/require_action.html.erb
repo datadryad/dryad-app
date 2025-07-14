@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%= render 'stash_engine/shared/standard_head' %>
+  <%= render 'stash_engine/shared/stash_head' %>
+  <% @page_title = "Require submitter actions for #{@identifier.to_s}" %>
+  <script type="text/javascript" src="<%= asset_path 'dataload.js'%>" defer></script>
+</head>
+<body class='<%= "#{controller_name}_#{action_name}" %>'>
+  <%= render partial: "stash_engine/shared/flash_messages" %>
+  <main id="maincontent"  style="min-height: 100%; display: flex; flex-direction: column;">
+    <%= form_with(url: make_report_path(id: @identifier&.id), method: :post, local: false) do %>
+    <form style="flex: 1; display: flex; flex-direction: column;">
+      <div>
+        <h1>Action required report for <%= @identifier.to_s %></h1>
+        <p>Mark submission sections as containing errors requiring author edits, and describe those errors for the author to review. You may copy text from the Salesforce case email you should send at the same time.</p>
+        <p>Request author action for specific sections:</p>
+        <% @steps.map do |step| %>
+          <p class="radio_choice"><label for="<%=step.downcase%>_check"><%= check_box_tag "#{step.downcase}_check", name: nil %><%= step %></label></p>
+          <%= text_area_tag step, nil, class: 'c-input__textarea', style: 'width: 100%', "aria-label": "Edits needed in #{step}", hidden: true %>
+        <% end %>
+      </div>
+      <div class="c-modal__buttons-right" style="margin-top: auto; padding-bottom: 1rem;">
+        <%= submit_tag 'Submit errors & set to Action required', class: 'o-button__plain-text2', id: 'popup_submit' %>
+        <%= button_tag 'Cancel', type: 'button', id: 'cancel_escape', class: 'o-button__plain-text7' %>
+      </div>
+    <% end %>
+  </main>
+  <script type="text/javascript" src="<%= asset_path 'interactions.js'%>"></script>
+  <script type="text/javascript">
+    const checks = document.querySelectorAll('input[type="checkbox"]')
+    checks.forEach(check => check.addEventListener('click', () => {
+      const block = check.parentElement.parentElement.nextElementSibling
+      if (check.checked) block.removeAttribute('hidden')
+      else block.hidden = true
+    }))
+    document.getElementById('cancel_escape').addEventListener('click', () => window.close())
+  </script>
+</body>
+</html>
