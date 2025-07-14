@@ -129,12 +129,12 @@ module StashEngine
       if current_user.email_token.expired?
         redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id),
                     flash: { info: 'The code entered has expired. Check your email for a new code.' }
-      elsif params[:token] == current_user.email_token.token
+      elsif params[:token].downcase == current_user.email_token.token&.downcase
         current_user.roles.tenant_roles.delete_all
         current_user.update(tenant_id: current_user.email_token.tenant_id, tenant_auth_date: Time.current, validated: true)
         do_redirect
       else
-        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'Invalid code.' }
+        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'Invalid code. Check your email for a new code.' }
       end
     end
 
@@ -170,12 +170,12 @@ module StashEngine
     def validate_email
       if current_user.email_token.expired?
         redirect_to email_validate_path, flash: { info: 'The code entered has expired. Check your email for a new code.' }
-      elsif params[:token] == current_user.email_token.token
+      elsif params[:token].downcase == current_user.email_token.token&.downcase
         current_user.update(validated: true)
         flash[:notice] = 'Your email has been validated. It can be modified on the My account page.'
         do_redirect
       else
-        redirect_to email_validate_path, flash: { alert: 'Invalid code.' }
+        redirect_to email_validate_path, flash: { alert: 'Invalid code. Check your email for a new code.' }
       end
     end
 
