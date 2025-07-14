@@ -90,8 +90,8 @@ module Stash
         populate_authors
         populate_article_type(article_type: work_type)
         populate_funders
-        populate_publication_issn
-        populate_publication_name
+        populate_publication_issn(pub_type: work_type)
+        populate_publication_name(pub_type: work_type)
         populate_title
         populate_subjects
         @resource.save
@@ -364,14 +364,14 @@ module Stash
         @resource.publication_date = date_parts_to_date(publication_date)
       end
 
-      def populate_publication_name
+      def populate_publication_name(pub_type: 'primary_article')
         return unless publisher.present?
         # We do not want to overwrite correct journal names with nonstandardized names
         # only update the journal name if the dataset is not already set with this journal ISSN
         return if @sm['ISSN'].present? && @sm['ISSN'].first.present? && @resource.journal.present? &&
           @resource.journal.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first)&.id
 
-        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id, pub_type: pub_type)
         datum.publication_name = publisher
         journal = StashEngine::Journal.find_by_title(publisher)
         # If the publication name matches an existing journal, populate/update the ISSN
@@ -380,7 +380,7 @@ module Stash
         datum.save
       end
 
-      def populate_publication_issn
+      def populate_publication_issn(pub_type: 'primary_article')
         return unless @sm['ISSN'].present? && @sm['ISSN'].first.present?
 
         # Do not change the ISSN if one for this journal is already set
@@ -389,7 +389,7 @@ module Stash
 
         # First look up the ISSN from the journal name (populate_publication_name).
         # If we do not know the ISSN, save it for quarterly checking and addition to our db
-        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id, pub_type: pub_type)
         datum.publication_issn = @sm['ISSN'].first
         datum.save
       end

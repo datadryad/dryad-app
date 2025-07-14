@@ -40,6 +40,7 @@ module StashEngine
     before_save :strip_whitespace
 
     scope :names_filled, -> { where("TRIM(IFNULL(author_first_name,'')) <> '' AND TRIM(IFNULL(author_last_name,'')) <> ''") }
+    scope :with_orcid, -> { where.not(author_orcid: [nil, '']) }
 
     amoeba do
       clone :affiliation_authors

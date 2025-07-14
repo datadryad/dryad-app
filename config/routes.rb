@@ -165,6 +165,7 @@ Rails.application.routes.draw do
     get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
     get 'downloads/zenodo_file/:file_id', to: 'downloads#zenodo_file', as: 'download_zenodo'
     get 'downloads/pre_submit/:file_id', to: 'downloads#presubmit_file_stream', as: 'download_presubmit'
+    get 'downloads/:file_id/linkset', to: 'downloads#linkset', as: 'file_linkset'
     get 'data_file/preview_check/:file_id', to: 'downloads#preview_check', as: 'preview_check'
     get 'data_file/preview/:file_id', to: 'downloads#preview_file', as: 'preview_file'
     get 'share/:id', to: 'downloads#share', as: 'share'
@@ -241,6 +242,7 @@ Rails.application.routes.draw do
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
     # All our identifiers seem to have either /dryad or /FK2 or /[A-Z]\d in them, replaces the first occurrence of %2F with /
+    get 'dataset/*id/linkset', to: 'landing#linkset', as: 'linkset', constraints: { id: /\S+/ }
     get 'dataset/*id', to: redirect{ |params| "/dataset/#{params[:id].sub('%2F', '/') }"}, status: 302,
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
