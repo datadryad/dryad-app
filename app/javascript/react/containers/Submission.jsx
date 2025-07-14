@@ -4,6 +4,7 @@ import React, {
 import axios from 'axios';
 import {BrowserRouter, useLocation} from 'react-router-dom';
 import {upCase} from '../../lib/utils';
+import aarCheck from '../components/aarCheck';
 import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
 import ExitButton from '../components/ExitButton';
@@ -38,10 +39,9 @@ function Submission({
   const previous = resource.previous_curated_resource;
   const observers = [];
 
-  const steps = () => [
-    {
+  const steps = () => {
+    const stepArray = [{
       name: 'Title',
-      index: 0,
       pass: publicationPass(resource),
       fail: (review || publicationPass(resource)) && publicationFail(resource, review),
       component: <Publication current={step.name === 'Title'} resource={resource} setResource={setResource} />,
@@ -50,7 +50,6 @@ function Submission({
     },
     {
       name: 'Authors',
-      index: 1,
       pass: resource.authors.length > 0 && !authorCheck(resource),
       fail: (review || step.index > 0) && authorCheck(resource),
       component: <Authors current={step.name === 'Authors'} resource={resource} setResource={setResource} user={user} />,
@@ -59,7 +58,6 @@ function Submission({
     },
     {
       name: 'Description',
-      index: 2,
       pass: !abstractCheck(resource),
       fail: (review || step.index > 1) && abstractCheck(resource),
       component: <Description
@@ -164,8 +162,13 @@ function Submission({
         setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
         preview
       />,
-    },
-  ];
+    }];
+    return stepArray.map((s, i) => {
+      s.index = i;
+      s.fail = s.fail || aarCheck(previous, s.name, previewRef.current);
+      return s;
+    });
+  };
 
   if (resource.resource_type.resource_type === 'collection') {
     steps().splice(5, 3);
