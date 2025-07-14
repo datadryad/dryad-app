@@ -93,7 +93,7 @@ This is primarily used for related primary articles. Look at unmatched primary a
 StashEngine::Resource.latest_per_dataset.joins('join dcs_related_identifiers r on r.resource_id = stash_engine_resources.id and r.work_type = 6 and r.related_identifier is not null').joins(:resource_publication, :identifier).left_outer_joins(:journal).where(journal: {id: nil}).where.not(identifier: {pub_state: 'withdrawn'}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.id', 'stash_engine_identifiers.identifier', 'r.related_identifier', 'stash_engine_resource_publications.publication_name', 'stash_engine_resource_publications.publication_issn')
 ```
 
-You can sort by the entered publication (regardless of case and starting with 'the') to group them in order of title and see which are used more than once: `.sort_by {|s| [s[3]&.downcase&.gsub(/^the /, '') ? 1 : 0, s[3]&.downcase&.gsub(/^the /, '')]}`. This returns an array of arrays of the following format:
+You can sort by the entered publication (regardless of case and starting with 'the') to group them in order of title and see which are used more than once: `.sort_by {|s| [s[4]&.downcase&.gsub(/^the /, '') ? 1 : 0, s[4]&.downcase&.gsub(/^the /, '')]}`. This returns an array of arrays of the following format:
 
 `[<resource ID>, <identifier ID>, <dryad DOI>, <primary article DOI>, <unmatched publication_name (or nil)>, <unmatched publication_issn (or nil)>]`
 
