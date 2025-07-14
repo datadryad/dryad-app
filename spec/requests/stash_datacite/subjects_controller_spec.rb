@@ -32,9 +32,9 @@ module StashDatacite
         resource.resources_subjects.delete_all
         params_hash = { resource_id: resource.id, subject: 'aaa, aaa' }
 
-        expect {
+        expect do
           post '/stash_datacite/subjects/create', params: params_hash, headers: default_authenticated_headers, as: :json
-        }.to change(StashDatacite::ResourcesSubjects, :count).by(1)
+        end.to change(StashDatacite::ResourcesSubjects, :count).by(1)
 
         expect(resource.subjects.pluck(:subject)).to eq(['aaa'])
       end
