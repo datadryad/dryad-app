@@ -36,7 +36,7 @@ export default function Publication({current, resource, setResource}) {
   const subType = resource.resource_type.resource_type;
   const [assoc, setAssoc] = useState(null);
   const [showTitle, setShowTitle] = useState(false);
-  const [connections, setConnections] = useState([]);
+  const [importType, setImportType] = useState(null);
   const [sponsored, setSponsored] = useState(false);
   const [caseWarning, setCaseWarning] = useState(false);
   const [dupeWarning, setDupeWarning] = useState(false);
@@ -45,6 +45,7 @@ export default function Publication({current, resource, setResource}) {
 
   const optionChange = (choice) => {
     showSavingMsg();
+    setImportType(choice);
     setResource((r) => ({...r, identifier: {...r.identifier, import_info: choice}}));
     axios.patch(
       `/resources/${resource.id}/import_type`,
@@ -63,17 +64,14 @@ export default function Publication({current, resource, setResource}) {
     const v = e.target.value;
     if (v === 'no') {
       setAssoc(false);
-      setConnections([]);
       optionChange('other');
     }
     if (v === 'yes') setAssoc(true);
   };
 
   const setOption = (e) => {
-    const checked = e.currentTarget.querySelectorAll('input:checked');
-    const selected = [...checked].map((i) => i.value);
-    setConnections(selected);
-    optionChange(selected[0]);
+    const v = e.target.value;
+    optionChange(v);
   };
 
   useEffect(() => {
@@ -108,24 +106,17 @@ export default function Publication({current, resource, setResource}) {
   }, [resource.journal, resource.resource_publication, resource.title, resource.related_identifiers]);
 
   useEffect(() => {
-    const selected = [];
-    const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
-    const preprint = resource.related_identifiers.find((r) => r.work_type === 'preprint')?.related_identifier;
-    if (resource.resource_publication.manuscript_number) selected.push('manuscript');
-    if (primary_article) selected.push('published');
-    if (preprint) selected.push('preprint');
-    setConnections(selected);
-    if (selected.length) setAssoc(true);
+    const it = resource.identifier.import_info;
+    setImportType(it);
+    if (it === 'other') setAssoc(false);
+    if (['published', 'preprint', 'manuscript'].includes(it)) setAssoc(true);
   }, []);
 
   return (
     <>
-      <div className="callout alt">
-        <p><i className="fas fa-circle-info" /> If your data is connected to a journal, the Data Publishing Charge may be sponsored</p>
-      </div>
       <fieldset onChange={setImport}>
         <legend>
-          Is your {subType} associated with a preprint, an article, or a manuscript submitted to a journal?
+          Is your {subType === 'collection' ? 'collection associated with' : 'data used in'} a research article?
         </legend>
         <p className="radio_choice">
           <label><input name="assoc" type="radio" value="yes" defaultChecked={assoc === true ? 'checked' : null} />Yes</label>
@@ -134,31 +125,36 @@ export default function Publication({current, resource, setResource}) {
       </fieldset>
 
       {assoc && (
-        <fieldset onChange={setOption} style={{margin: '2rem 0'}}>
-          <legend>
-              Which would you like to connect?
-          </legend>
-          <ul className="o-list" style={{marginTop: '1rem'}}>
-            <li className="radio_choice">
-              <label>
-                <input name="import" type="checkbox" value="manuscript" defaultChecked={connections.includes('manuscript') ? 'checked' : null} />
+        <>
+          <div className="callout alt">
+            <p><i className="fas fa-circle-info" /> The title and other metadata can be imported from some article sources.</p>
+          </div>
+          <fieldset onChange={setOption} style={{margin: '2rem 0'}}>
+            <legend>
+              From what source would you like to import information?
+            </legend>
+            <ul className="o-list" style={{marginTop: '1rem'}}>
+              <li className="radio_choice">
+                <label>
+                  <input name="import" type="radio" value="manuscript" defaultChecked={importType === 'manuscript' ? 'checked' : null} />
                   Submitted manuscript
-              </label>
-            </li>
-            <li className="radio_choice">
-              <label>
-                <input name="import" type="checkbox" value="published" defaultChecked={connections.includes('published') ? 'checked' : null} />
-                  Published article
-              </label>
-            </li>
-            <li className="radio_choice">
-              <label>
-                <input name="import" type="checkbox" value="preprint" defaultChecked={connections.includes('preprint') ? 'checked' : null} />
+                </label>
+              </li>
+              <li className="radio_choice">
+                <label>
+                  <input name="import" type="radio" value="preprint" defaultChecked={importType === 'preprint' ? 'checked' : null} />
                   Preprint
-              </label>
-            </li>
-          </ul>
-        </fieldset>
+                </label>
+              </li>
+              <li className="radio_choice">
+                <label>
+                  <input name="import" type="radio" value="published" defaultChecked={importType === 'published' ? 'checked' : null} />
+                  Published article
+                </label>
+              </li>
+            </ul>
+          </fieldset>
+        </>
       )}
 
       {sponsored && (
@@ -167,36 +163,19 @@ export default function Publication({current, resource, setResource}) {
         </div>
       )}
 
-      {!!connections.length && (
-        <div className="callout alt">
-          <p>
-            <i className="fas fa-file-import" />{' '}
-            The title and other metadata can sometimes be imported. Choose a source and click the button to import
-          </p>
-        </div>
-      )}
-
-      {connections.map((type) => (
+      {importType && importType !== 'other' && (
         <PublicationForm
           current={current}
-          connections={connections}
           resource={resource}
           setResource={setResource}
           setSponsored={setSponsored}
-          importType={type}
-          key={type}
+          importType={importType}
+          key={importType}
         />
-      ))}
+      )}
 
       {showTitle && (
-        <>
-          {!!connections.length && (
-            <div className="callout alt">
-              <p><i className="fas fa-info-circle" /> Type in or import your dataset title</p>
-            </div>
-          )}
-          <Title resource={resource} setResource={setResource} />
-        </>
+        <Title resource={resource} setResource={setResource} />
       )}
 
       {caseWarning && (

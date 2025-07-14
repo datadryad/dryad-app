@@ -41,10 +41,7 @@ describe('Publication', () => {
     render(<Publication {...info} />);
 
     await waitFor(() => journals);
-    expect(screen.getByRole(
-      'group',
-      {name: 'Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?'},
-    )).toBeInTheDocument();
+    expect(screen.getByRole('group', {name: 'Is your data used in a research article?'})).toBeInTheDocument();
   });
 
   it('changes radio button and sends json request', async () => {
@@ -53,10 +50,7 @@ describe('Publication', () => {
 
     render(<Publication {...info} />);
 
-    const radios = screen.getByRole(
-      'group',
-      {name: 'Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?'},
-    );
+    const radios = screen.getByRole('group', {name: 'Is your data used in a research article?'});
     expect(radios).toBeInTheDocument();
     expect(within(radios).getByLabelText('Yes')).not.toHaveAttribute('checked');
     expect(within(radios).getByLabelText('No')).not.toHaveAttribute('checked');
@@ -75,10 +69,7 @@ describe('Publication', () => {
 
     render(<Publication {...info} />);
 
-    const radios = screen.getByRole(
-      'group',
-      {name: 'Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?'},
-    );
+    const radios = screen.getByRole('group', {name: 'Is your data used in a research article?'});
     expect(radios).toBeInTheDocument();
     expect(within(radios).getByLabelText('Yes')).not.toHaveAttribute('checked');
     expect(within(radios).getByLabelText('No')).not.toHaveAttribute('checked');
@@ -87,7 +78,7 @@ describe('Publication', () => {
     await waitFor(() => first);
     userEvent.click(within(radios).getByLabelText('Yes'));
 
-    const nextRadios = screen.getByRole('group', {name: 'Which would you like to connect?'});
+    const nextRadios = screen.getByRole('group', {name: 'From what source would you like to import information?'});
     expect(nextRadios).toBeInTheDocument();
     expect(within(nextRadios).getByLabelText('Submitted manuscript')).not.toHaveAttribute('checked');
     expect(within(nextRadios).getByLabelText('Preprint')).not.toHaveAttribute('checked');
@@ -105,10 +96,7 @@ describe('Publication', () => {
 
     render(<Publication {...info} />);
 
-    const radios = screen.getByRole(
-      'group',
-      {name: 'Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?'},
-    );
+    const radios = screen.getByRole('group', {name: 'Is your data used in a research article?'});
     expect(radios).toBeInTheDocument();
     expect(within(radios).getByLabelText('Yes')).not.toHaveAttribute('checked');
     expect(within(radios).getByLabelText('No')).not.toHaveAttribute('checked');
