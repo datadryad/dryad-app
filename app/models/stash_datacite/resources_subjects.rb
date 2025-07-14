@@ -22,5 +22,7 @@ module StashDatacite
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
     belongs_to :subject, class_name: 'StashDatacite::Subject'
+
+    validates :subject_id, presence: true, uniqueness: { scope: :resource_id }
   end
 end
