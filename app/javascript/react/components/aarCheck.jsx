@@ -1,7 +1,7 @@
 import React from 'react';
 
 function aarCheck(previous, step, preview) {
-  const [last] = previous.action_reports?.slice(-1) || [];
+  const [last] = previous?.action_reports?.slice(-1) || [];
   const {report} = last || {};
   if (preview) {
     if (report?.[step]) {
