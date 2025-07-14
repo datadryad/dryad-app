@@ -186,3 +186,11 @@ The DPC and Annual Service Fee are combined to calculate the total annual fee, w
   </table>
 </div>
 </div>
+
+<div style="font-size: .98rem;">
+<h3 style="font-size: 1.1rem">Change log</h3>
+<ul>
+  <li>June 18, 2025: Clarified policy for cases where both an institutional library and a campus-based publisher have partner agreements</li>
+  <li>May 15, 2025: Applied the format ‘$100 USD’ to prices that appear in text and included the phrase ‘All fees are listed in USD’ with all relevant tables
+</ul>
+</div>
