@@ -114,7 +114,7 @@ If the journal name is present and is a reasonable variation for the journal, co
 StashEngine::JournalTitle.create(title: 'Some new title', journal_id: <the journal id>, show_in_autocomplete: false)
 ```
 
-**NOTE: ONLY add journals that have more than 1 deposit in Dryad.**
+**NOTE: ONLY add journals that have more than 1 published deposit in Dryad.**
 
 If there is no corresponding journal, you can create an entry for a new journal in the system. You must also create entries for each of the journal's ISSNs:
 ```ruby
@@ -128,7 +128,7 @@ If all primary articles are processed, you can do a similar process for results 
 
 ```ruby
 # manuscripts with no matched journal, a relevant subset of all unmatched publications
-StashEngine::Resource.latest_per_dataset.joins(:resource_publication, :identifier).left_outer_joins(:journal).where(journal: {id: nil}).where.not(resource_publication: {manuscript_number: [nil, ''], publication_name: [nil, '']}).where.not(identifier: {pub_state: 'withdrawn'}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.id', 'stash_engine_identifiers.identifier', 'resource_publication.manuscript_number', 'resource_publication.publication_name', 'resource_publication.publication_issn')
+StashEngine::Resource.latest_per_dataset.joins(:resource_publication, :identifier).left_outer_joins(:journal).where(journal: {id: nil}).where("resource_publication.manuscript_number REGEXP '[0-9]'").where.not(resource_publication: {publication_name: [nil, '']}).where.not(identifier: {pub_state: 'withdrawn'}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.id', 'stash_engine_identifiers.identifier', 'resource_publication.manuscript_number', 'resource_publication.publication_name', 'resource_publication.publication_issn')
 ```
 
 You can sort by the entered publication to group them in order of title and see which are used more than once: `.sort_by {|s| [s[4]&.downcase&.gsub(/^the /, '') ? 1 : 0, s[4]&.downcase&.gsub(/^the /, '')]}`. Or, group them by manuscript number, which can be in standard formats for our partner journals: `.sort_by {|s| [s[3]&.downcase ? 1 : 0, s[3]&.downcase]}`. This returns an array of arrays of the following format:
@@ -137,7 +137,7 @@ You can sort by the entered publication to group them in order of title and see 
 
 Ignore any results for which the manuscript number or publication name are gibberish, or otherwise wrong. If they seem real and relevant, you can check and add journals as above.
 
-**NOTE: ONLY add journals that have more than 1 deposit in Dryad.**
+**NOTE: ONLY add journals that have more than 1 published deposit in Dryad.**
 
 
 Updating journals for payment plans and integrations
