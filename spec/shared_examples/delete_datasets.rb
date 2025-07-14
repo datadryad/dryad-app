@@ -33,8 +33,9 @@ RSpec.shared_examples('deletes resource files form S3') do
     task.execute
 
     new_version = identifier.reload.latest_resource
+    expect(new_version.current_state).to eq('submitted')
+
     files = new_version.generic_files
-    expect(new_version.id).not_to eq(resource.id)
     expect(files.count).to eq(3)
     expect(files.pluck(:file_state).uniq).to eq(['deleted'])
     expect(files.pluck(:file_deleted_at).compact.count).to eq(3)

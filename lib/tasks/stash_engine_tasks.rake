@@ -206,6 +206,7 @@ namespace :identifiers do
           # create a new version to mark all files as deleted
           new_res = DuplicateResourceService.new(i.latest_resource, StashEngine::User.system_user).call
           new_res.generic_files.update(file_deleted_at: Time.current, file_state: 'deleted')
+          new_res.current_state = 'submitted'
 
           # Record the file deletion
           StashEngine::CurationActivity.create(
