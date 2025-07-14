@@ -373,6 +373,7 @@ module StashEngine
       @resource.save
       @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
       @resource.reload
+      @curation_activity = @resource.curation_activities.last
     end
 
     def decipher_curation_activity
