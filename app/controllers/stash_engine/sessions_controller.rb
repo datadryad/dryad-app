@@ -14,7 +14,7 @@ module StashEngine
 
     # this is the place omniauth calls back for shibboleth logins
     def callback
-      current_user.roles.tenant_roles.delete_all if current_user.tenant_id != tenant.id
+      current_user.roles.tenant_roles.delete_all if current_user.tenant_id != params[:tenant_id]
       current_user.update(tenant_id: params[:tenant_id], tenant_auth_date: Time.current)
       do_redirect
     end
@@ -130,7 +130,7 @@ module StashEngine
         redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id),
                     flash: { info: 'The code entered has expired. Check your email for a new code.' }
       elsif params[:token] == current_user.email_token.token
-        current_user.roles.tenant_roles.delete_all if current_user.tenant_id != tenant.id
+        current_user.roles.tenant_roles.delete_all if current_user.tenant_id != current_user.email_token.tenant_id
         current_user.update(tenant_id: current_user.email_token.tenant_id, tenant_auth_date: Time.current)
         do_redirect
       else
