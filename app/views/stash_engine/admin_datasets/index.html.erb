@@ -79,8 +79,8 @@
           <b>Payment:</b>
           <span id="payment_desc">            
             <% pr = @identifier.resources.by_version_desc.includes(:payment).find {|r| r.payment} %>
-            <% if pr&.payment %>$<%= pr.payment.amount %><% end %>
             <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
+              <% if pr&.payment %>$<%= pr.payment.amount %><% end %>
               <%= pr&.payment&.status.present? ? "bill #{pr&.payment&.status}" : 'Unknown' %>
             <% else %>
               <%= @identifier.payment_type %>
