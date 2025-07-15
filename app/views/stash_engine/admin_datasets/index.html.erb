@@ -94,6 +94,11 @@
             <% end %>
           <% end %>
         </span>
+        <% if @identifier.payment_type == 'institution' && @identifier.payment_id != r.submitter.tenant_id %>
+          <span class="child-details error-text">
+            <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Submitter institution no longer authenticated
+          </span>
+        <% end %>
       <% end %>
     </div>
     <div class="input-stack">
