@@ -88,7 +88,7 @@
           </span>
           <%= format_external_references(@identifier.payment_id) %>
           <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
-            <span id="waiver_basis"><%= @identifier.waiver_basis %></span>
+            <% if @identifier.waiver_basis %><span id="waiver_basis"><%= @identifier.waiver_basis %></span><% end %>
             <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
               <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Apply fee discount" title="Apply fee discount"><i class="fas fa-comment-dollar" aria-hidden="true"></i></button>
             <% end %>
