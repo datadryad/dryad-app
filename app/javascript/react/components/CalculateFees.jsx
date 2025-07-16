@@ -18,7 +18,7 @@ export default function CalculateFees({
   useEffect(() => {
     calculateFees();
   }, [ppr]);
-  
+
   /* eslint-disable max-len */
   if (paid && fees.storage_fee_label) {
     return (
