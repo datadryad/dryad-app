@@ -155,7 +155,7 @@ module StashDatacite
 
         files_date = '2025-03-12'
         if (@resource.identifier.publication_date.blank? || @resource.identifier.publication_date > files_date) &&
-          (@resource.data_files.present_files.count > APP_CONFIG.maximums.files)
+          (@resource.data_files.present_files.uploaded.count > APP_CONFIG.maximums.files)
           return 'Too many data files (more than 100)'
         end
 
