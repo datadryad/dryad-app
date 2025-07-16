@@ -5,7 +5,7 @@ class GetUserEmail < ActiveRecord::Migration[8.0]
     StashEngine::User.where(email: [nil, '']).joins(:resources).distinct.find_each do |u|
       r = u.resources.last
       a = r.authors.where(author_orcid: u.orcid).first
-      return unless a&.author_email.present?
+      next unless a&.author_email.present?
 
       u.update_columns(email: a.author_email)
     end

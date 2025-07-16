@@ -10,7 +10,7 @@ module StashEngine
     end
 
     def require_user_login
-      return nil if current_user.present?
+      return if current_user.present?
 
       flash[:alert] = 'You must be logged in.'
       redirect_to stash_url_helpers.choose_login_path
