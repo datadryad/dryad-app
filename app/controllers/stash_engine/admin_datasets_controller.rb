@@ -97,8 +97,7 @@ module StashEngine
       return unless CurationActivity.allowed_states(@last_state, current_user).include?('action_required')
 
       @resource.action_reports << ActionRequiredReport.create(report: report_params.to_json, user: current_user)
-      @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: 'action_required',
-                                                               note: 'Action required report created')
+      @resource.curation_activities << CurationActivity.create(user: current_user, status: 'action_required', note: 'Action required report created')
       respond_to(&:js)
     end
 

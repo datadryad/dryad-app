@@ -16,8 +16,8 @@
         <p>Mark submission sections as containing errors requiring author edits, and describe those errors for the author to review. You may copy text from the Salesforce case email you should send at the same time.</p>
         <p>Request author action for specific sections:</p>
         <% @steps.map do |step| %>
-          <p class="radio_choice"><label for="<%=step.downcase%>_check"><%= check_box_tag "#{step.downcase}_check", name: nil %><%= step %></label></p>
-          <%= text_area_tag step, nil, class: 'c-input__textarea', style: 'width: 100%', "aria-label": "Edits needed in #{step}", hidden: true %>
+          <p class="radio_choice"><label for="<%=step.downcase%>_check"><%= check_box_tag "#{step.downcase}_check", nil, @report&.dig(step)&.present?, name: nil %><%= step %></label></p>
+          <%= text_area_tag step, @report&.dig(step), class: 'c-input__textarea', style: 'width: 100%', "aria-label": "Edits needed in #{step}", hidden: @report&.dig(step)&.blank? %>
         <% end %>
       </div>
       <div class="c-modal__buttons-right" style="margin-top: auto; padding-bottom: 1rem;">
@@ -32,7 +32,10 @@
     checks.forEach(check => check.addEventListener('click', () => {
       const block = check.parentElement.parentElement.nextElementSibling
       if (check.checked) block.removeAttribute('hidden')
-      else block.hidden = true
+      else {
+        block.hidden = true
+        block.value = ''
+      }
     }))
     document.getElementById('cancel_escape').addEventListener('click', () => window.close())
   </script>

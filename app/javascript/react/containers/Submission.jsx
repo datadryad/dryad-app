@@ -72,7 +72,6 @@ function Submission({
     },
     {
       name: 'Subjects',
-      index: 3,
       pass: keywordPass(resource.subjects),
       fail: (review || step.index > 2) && keywordFail(resource),
       component: <Subjects current={step.name === 'Subjects'} resource={resource} setResource={setResource} />,
@@ -81,7 +80,6 @@ function Submission({
     },
     {
       name: 'Support',
-      index: 4,
       pass: !fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       fail: (review || step.index > 3) && fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support current={step.name === 'Support'} resource={resource} setResource={setResource} />,
@@ -90,7 +88,6 @@ function Submission({
     },
     {
       name: 'Compliance',
-      index: 5,
       pass: !complianceCheck(resource),
       fail: (review || step.index > 4) && complianceCheck(resource),
       component: <Compliance resource={resource} setResource={setResource} />,
@@ -99,7 +96,6 @@ function Submission({
     },
     {
       name: 'Files',
-      index: 6,
       pass: resource.generic_files?.length > 0,
       fail: (review || step.index > 5) && filesCheck(resource, user.superuser, config_maximums),
       component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
@@ -117,7 +113,6 @@ function Submission({
     },
     {
       name: 'README',
-      index: 7,
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
       fail: (review || step.index > 6) && readmeCheck(resource),
       component: <ReadMeWizard resource={resource} setResource={setResource} current={step.name === 'README'} />,
@@ -126,7 +121,6 @@ function Submission({
     },
     {
       name: 'Related works',
-      index: 8,
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
       fail: worksCheck(resource, (review || step.index > 7)),
       component: <RelatedWorks current={step.name === 'Related works'} resource={resource} setResource={setResource} />,
@@ -135,7 +129,6 @@ function Submission({
     },
     {
       name: 'Agreements',
-      index: 9,
       pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
       component: <Agreements
