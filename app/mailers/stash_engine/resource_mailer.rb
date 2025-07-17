@@ -10,10 +10,13 @@ module StashEngine
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
 
+      template_name = 'in_progress_reminder'
+      template_name = 'published_in_progress_reminder' if resource.previously_published?
+
       mail(to: user_email(@user),
            subject: "#{rails_env}REMINDER: Dryad submission \"#{@resource.title}\"",
            template_path: 'stash_engine/user_mailer',
-           template_name: 'in_progress_reminder')
+           template_name: template_name)
     end
 
     def peer_review_delete_notification(resource)
