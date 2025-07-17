@@ -409,7 +409,7 @@ module Stash
 
       def publisher
         pub = @sm['container-title'].presence
-        pub ||= @sm['institution'].first ? @sm['institution'].first['name'] : nil
+        pub ||= @sm['institution']&.first ? @sm['institution'].first['name'] : nil
         pub ||= @sm['publisher']
         pub.is_a?(Array) ? pub.first : pub
       end
