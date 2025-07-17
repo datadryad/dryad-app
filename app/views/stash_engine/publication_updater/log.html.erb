@@ -1,0 +1,72 @@
+<% @page_title = "Publication updater history" %>
+<div class="admin-dashboard-header">
+<h1 class="o-heading__level1" id="pubupdate-label">Publication updater: Match history</h1>
+<a href="<%= publication_updater_path %>">Publication updater</a>
+</div>
+
+<div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="pubupdate-label">
+  <table class="c-lined-table">
+    <thead>
+      <tr>
+        <th class="c-lined-table__sort c-proposed-change-table__column-large" <%= sort_display('stash_engine_proposed_changes.updated_at') %> >
+          <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.updated_at', title: 'Timestamp' %>
+        </th>
+        <th>
+          Decision
+        </th>
+        <th class="c-lined-table__sort c-proposed-change-table__column-large" <%= sort_display('stash_engine_proposed_changes.title') %> >
+          <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.title', title: 'Title' %>
+        </th>
+        <th class="c-lined-table__sort c-proposed-change-table__column-small" <%= sort_display('publication_name') %>>
+          <%= sortable_column_head sort_field: 'publication_name', title: 'Publication' %>
+        </th>
+        <th class="c-lined-table__sort c-proposed-change-table__column-small" <%= sort_display('publication_issn') %>>
+          <%= sortable_column_head sort_field: 'publication_issn', title: 'ISSN' %>
+        </th>
+        <th class="c-lined-table__sort c-proposed-change-table__column" <%= sort_display('publication_doi') %>>
+          <%= sortable_column_head sort_field: 'publication_doi', title: 'DOI' %>
+        </th>
+        <th class="c-lined-table__sort c-proposed-change-table__column-small" <%= sort_display('stash_engine_proposed_changes.publication_date') %>>
+          <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.publication_date', title: 'Published' %>
+        </th>
+        <th class="c-lined-table__sort c-proposed-change-table__column-medium" <%= sort_display('authors') %>>
+          <%= sortable_column_head sort_field: 'authors', title: 'Authors' %>
+        </th>
+      </tr>
+      <% @proposed_changes.each do |proposed_change| %>
+        <tbody>
+          <%
+            existing_pubname = resource.resource_publication&.publication_name || 'Not available'
+            existing_pubissn = resource.journal&.issn_array || resource.resource_publication&.publication_issn || 'Not available'
+            existing_pubdoi = fetch_related_primary_article(resource: resource)
+          %>
+          <tr class="c-lined-table__row">
+            <td><%= formatted_datetime(proposed_change.updated_at) %></td>
+            <td><%= proposed_change.accepted? ? 'Accepted' : 'Rejected' %></td>
+            <%= render partial: 'current_metadata', locals: { resource: resource, existing_pubdoi: existing_pubdoi, existing_pubissn: existing_pubissn, existing_pubname: existing_pubname } %>
+          </tr>
+          <tr class="c-lined-table__row" id="proposed_<%= proposed_change.id %>">
+            <%= render partial: 'proposed_history', locals: { proposed_change: proposed_change, existing_pubdoi: existing_pubdoi, existing_pubissn: existing_pubissn, existing_pubname: existing_pubname, resource: resource } %>
+          </tr>
+        </tbody>
+      <% end %>
+    </thead>
+  </table>
+</div>
+
+<div class="c-space-paginator">
+  <%= paginate @proposed_changes, params: { page_size: @page_size } %>
+      <div class="c-paginator-page_size">
+    Page size:
+    <%
+      current_ps = params[:page_size].to_i
+      current_ps = 10 if current_ps == 0
+      [10, 50, 100].each do |ps| %>
+      <% if ps == current_ps %>
+        <span class="page-current"><%= ps %></span>
+      <% else %>
+        <%= link_to(ps, stash_url_helpers.publication_updater_log_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1)), 'aria-label': "#{ps} results per page") %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
