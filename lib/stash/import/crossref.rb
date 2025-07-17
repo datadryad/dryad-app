@@ -74,11 +74,11 @@ module Stash
       # populate just a few fields for pub_updater, this isn't as drastic as below and is only for pub updater.
       # to ONLY populate the relationship, use update_type: 'relationship'
       # article types accepted are 'primary_article', 'article', 'preprint'
-      def populate_pub_update!
+      def populate_pub_update!(work_type = 'primary_article')
         return nil unless @sm.present? && @resource.present?
 
-        populate_publication_name
-        populate_publication_issn
+        populate_publication_name(pub_type: work_type)
+        populate_publication_issn(pub_type: work_type)
         @resource.reload
       end
 
@@ -408,7 +408,9 @@ module Stash
       end
 
       def publisher
-        pub = @sm['container-title'].present? ? @sm['container-title'] : @sm['publisher']
+        pub = @sm['container-title'].presence
+        pub ||= @sm['institution'].first ? @sm['institution'].first['name'] : nil
+        pub ||= @sm['publisher']
         pub.is_a?(Array) ? pub.first : pub
       end
 
