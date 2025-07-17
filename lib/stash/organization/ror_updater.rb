@@ -191,11 +191,7 @@ module Stash
           record.fetch('relationships', []).each do |rel|
             next unless rel['type'] == 'child'
 
-            children.push({
-                            contributor_name: rel['label'],
-                            identifier_type: 'ror',
-                            name_identifier_id: rel['id']
-                          })
+            children.push({ contributor_name: rel['label'], identifier_type: 'ror', name_identifier_id: rel['id'] })
           end
           ror_display = record.fetch('names', []).find { |n| n['types'].include?('ror_display') } || {}
           website_link = record.fetch('links', []).find { |l| l['type'] == 'website' } || {}
