@@ -31,10 +31,10 @@ namespace :publication_updater do
       next if StashEngine::CurationActivity.where(resource_id: result.resource_id)
         .where('stash_engine_curation_activities.note LIKE ?', "%#{StashEngine::ProposedChange::CROSSREF_UPDATE_MESSAGE}").any?
 
-      begin
-        resource = StashEngine::Resource.find(result.resource_id)
-        next if resource.nil? || resource.identifier.blank? || resource.identifier.pub_state == 'withdrawn'
+      resource = StashEngine::Resource.find(result.resource_id)
+      next if resource.nil? || resource.identifier.blank? || resource.identifier.pub_state == 'withdrawn'
 
+      begin
         # Hit Crossref for info
         cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: result.doi) if result.doi.present?
         cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
@@ -52,6 +52,10 @@ namespace :publication_updater do
       # Tweakable threshold for scoring (score is ours ... 1 == DOI match, < 1 is title+authors matching)
       #                                 (provenance_score is Crossref's score)
       next unless pc.present? && pc.score >= 0.6
+      # exclude very big year differences
+      next if resource.identifier.created_at.year - pc.publication_date.year > 4
+      # exclude articles with fewer authors than the dataset
+      next if resource.authors.count > JSON.parse(pc.authors).count
 
       p "  found changes for: #{result.resource_id} (#{result.status}) - #{result.title}" if pc.present?
       pc.save if pc.present?
