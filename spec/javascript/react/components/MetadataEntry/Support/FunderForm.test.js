@@ -3,7 +3,7 @@ import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
-import groupings from './funderGroupings.json';
+import grouping from './funderGrouping.json';
 import FunderForm from '../../../../../../app/javascript/react/components/MetadataEntry/Support/FunderForm';
 
 jest.mock('axios');
@@ -33,11 +33,12 @@ describe('FunderForm', () => {
       reorderPath: faker.system.directoryPath(),
       removeFunction: jest.fn(),
       updateFunder: jest.fn(),
-      groupings,
     };
   });
 
   it('renders the basic funders form', () => {
+    const group = {status: 200, data: null};
+    axios.post.mockResolvedValueOnce(group);
     render(<FunderForm {...info} />);
 
     const labeledElements = screen.getAllByLabelText('Granting organization', {exact: false});
@@ -64,6 +65,8 @@ describe('FunderForm', () => {
     });
 
     axios.get.mockImplementationOnce(() => options);
+    const group = {status: 200, data: null};
+    axios.post.mockResolvedValue(group);
 
     render(<FunderForm {...info} />);
 
@@ -99,32 +102,34 @@ describe('FunderForm', () => {
     });
   });
 
-  it('shows sub-list when groupings exist and selects from it', async () => {
+  it('shows sub-list when grouping exists and selects from it', async () => {
     const {contributor} = info;
-    contributor.contributor_name = 'National Institutes of Health';
-    contributor.name_identifier_id = 'https://ror.org/01cwqze88';
-    contributor.name_identifier_type = 'ror';
+    contributor.contributor_name = grouping.contributor_name;
+    contributor.name_identifier_id = grouping.name_identifier_id;
 
-    const group = groupings[0].json_contains;
+    const options = {status: 200, data: grouping};
+    axios.post.mockResolvedValueOnce(options);
 
-    const promise = Promise.resolve({status: 200, data: group[8]});
+    const selection = grouping.json_contains[8];
 
+    const promise = Promise.resolve({status: 200, data: selection});
     axios.patch.mockImplementationOnce(() => promise);
 
     const {contributor: c, ...rest} = info;
 
     render(<FunderForm contributor={contributor} {...rest} />);
 
-    const select = screen.getByLabelText('NIH Directorate', {exact: false});
+    await waitFor(() => options);
 
-    userEvent.selectOptions(select, group[8].contributor_name);
+    const select = screen.getByLabelText(grouping.group_label, {exact: false});
+    userEvent.selectOptions(select, selection.contributor_name);
 
     const input = screen.getByLabelText('Granting organization');
 
     await waitFor(() => promise);
 
     await waitFor(() => {
-      expect(input).toHaveAttribute('value', group[8].contributor_name);
+      expect(input).toHaveAttribute('value', selection.contributor_name);
     });
   });
 
@@ -137,6 +142,8 @@ describe('FunderForm', () => {
     });
 
     axios.patch.mockImplementationOnce(() => promise);
+    const group = {status: 200, data: null};
+    axios.post.mockResolvedValueOnce(group);
 
     render(<FunderForm {...info} />);
 
@@ -160,6 +167,8 @@ describe('FunderForm', () => {
     });
 
     axios.patch.mockImplementationOnce(() => promise);
+    const group = {status: 200, data: null};
+    axios.post.mockResolvedValueOnce(group);
 
     render(<FunderForm {...info} />);
 
