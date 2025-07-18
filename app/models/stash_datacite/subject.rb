@@ -18,7 +18,6 @@
 module StashDatacite
   class Subject < ApplicationRecord
     self.table_name = 'dcs_subjects'
-    has_paper_trail
 
     has_many :resources_subjects, class_name: 'StashDatacite::ResourcesSubjects'
     has_many :resources, through: :resources_subjects
