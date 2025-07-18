@@ -25,7 +25,7 @@ class DuplicateResourceService
 
   def build_new_resource
     res = resource.amoeba_dup
-    res.current_editor_id = user.id == 0 ? nil : user.id
+    res.current_editor_id = user.id.nonzero?
     res
   end
 end
