@@ -1,6 +1,5 @@
 module StashDatacite
   class PeerReviewController < ApplicationController
-    include StashEngine::MetadataEntryPagesHelper
     respond_to :json
 
     # PATCH /peer_review/toggle
@@ -27,12 +26,12 @@ module StashDatacite
           @not_paid = @resource.identifier.payment_needed?
 
           if @errors || @not_paid
-            duplicate_resource
-            @new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
+            new_res = DuplicateResourceService.new(@resource, current_user).call
+            new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
 
             flash[:alert] = 'Unable to submit dataset for curation. Please correct submission errors' if @errors
             flash[:notice] = 'Please pay the remaining DPC to submit for curation and publication' if @not_paid
-            redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
+            redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: new_res.id)
           else
             @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
             @resource.curation_activities << StashEngine::CurationActivity.create(

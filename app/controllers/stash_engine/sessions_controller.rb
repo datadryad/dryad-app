@@ -14,7 +14,7 @@ module StashEngine
 
     # this is the place omniauth calls back for shibboleth logins
     def callback
-      current_user.roles.tenant_roles.delete_all
+      current_user.roles.tenant_roles.delete_all if current_user.tenant_id != params[:tenant_id]
       current_user.update(tenant_id: params[:tenant_id], tenant_auth_date: Time.current)
       do_redirect
     end
@@ -125,16 +125,16 @@ module StashEngine
       current_user.email_token.send_token
     end
 
-    def validate_email
+    def validate_sso_email
       if current_user.email_token.expired?
         redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id),
                     flash: { info: 'The code entered has expired. Check your email for a new code.' }
-      elsif params[:token] == current_user.email_token.token
-        current_user.roles.tenant_roles.delete_all
-        current_user.update(tenant_id: current_user.email_token.tenant_id, tenant_auth_date: Time.current)
+      elsif params[:token].downcase == current_user.email_token.token&.downcase
+        current_user.roles.tenant_roles.delete_all if current_user.tenant_id != current_user.email_token.tenant_id
+        current_user.update(tenant_id: current_user.email_token.tenant_id, tenant_auth_date: Time.current, validated: true)
         do_redirect
       else
-        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'Invalid code.' }
+        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'Invalid code. Check your email for a new code.' }
       end
     end
 
@@ -147,7 +147,7 @@ module StashEngine
         when 'email'
           redirect_to email_sso_path(tenant_id: tenant.id)
         when 'author_match'
-          current_user.roles.tenant_roles.delete_all
+          current_user.roles.tenant_roles.delete_all if current_user.tenant_id != tenant.id
           current_user.update(tenant_id: tenant.id, tenant_auth_date: Time.current)
           do_redirect
         when 'ip_address'
@@ -157,6 +157,25 @@ module StashEngine
         end
       else
         render :choose_sso, alert: 'You must select a partner institution from the list.'
+      end
+    end
+
+    def email_validate
+      return unless current_user.email.present?
+
+      current_user.create_email_token
+      current_user.email_token.send_token
+    end
+
+    def validate_email
+      if current_user.email_token.expired?
+        redirect_to email_validate_path, flash: { info: 'The code entered has expired. Check your email for a new code.' }
+      elsif params[:token].downcase == current_user.email_token.token&.downcase
+        current_user.update(validated: true)
+        flash[:notice] = 'Your email has been validated. It can be modified on the My account page.'
+        do_redirect
+      else
+        redirect_to email_validate_path, flash: { alert: 'Invalid code. Check your email for a new code.' }
       end
     end
 
@@ -300,7 +319,7 @@ module StashEngine
         net = IPAddr.new(range)
         next unless net.include?(IPAddr.new(request.remote_ip))
 
-        current_user.roles.tenant_roles.delete_all
+        current_user.roles.tenant_roles.delete_all if current_user.tenant_id != tenant.id
         current_user.update(tenant_id: tenant.id, tenant_auth_date: Time.current)
         do_redirect
         return nil # adding nil here to jump out of loop and return early since rubocop sucks & requires a return value
@@ -314,6 +333,8 @@ module StashEngine
     end
 
     def do_redirect
+      redirect_to email_validate_path and return unless current_user.validated?
+
       target_page = session[:target_page]
       if target_page.present?
         session[:target_page] = nil
@@ -325,7 +346,7 @@ module StashEngine
     def set_default_tenant
       return unless current_user.present?
 
-      current_user.roles.tenant_roles.delete_all
+      current_user.roles.tenant_roles.delete_all if current_user.tenant_id != APP_CONFIG.default_tenant
       current_user.update(tenant_id: APP_CONFIG.default_tenant)
     end
   end

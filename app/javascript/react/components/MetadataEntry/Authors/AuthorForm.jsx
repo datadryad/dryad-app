@@ -141,6 +141,11 @@ export default function AuthorForm({
                 </div>
                 <Editor author={author} editor={editor} permission={isCreator || user.curator} invite={invite} />
               </div>
+              {(editor && user.id === editor.id && author.author_email !== editor.email) && (
+                <p style={{marginTop: 0, fontSize: '.98rem'}}>
+                  You can update your email address for Dryad communications from <a href="/account">My account</a>
+                </p>
+              )}
             </>
           )}
         </Form>

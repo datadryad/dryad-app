@@ -213,6 +213,7 @@ module Stash
           it 'calls to reopen closed (published) for metadata updates and no file changes' do
             @zc2.update(state: 'finished')
             @resource2 = create(:resource, identifier_id: @resource.identifier_id)
+            create(:software_file, resource: @resource2, file_state: 'copied')
             @zc3 = create(:zenodo_copy, resource: @resource2, identifier: @resource2.identifier, copy_type: 'software_publish',
                                         deposition_id: @zc.deposition_id)
             @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc3.id)
@@ -221,8 +222,7 @@ module Stash
             deposit = @zsc.instance_eval('@deposit', __FILE__, __LINE__) # get at private member variable
             expect(deposit).to receive(:update_metadata)
             expect(deposit).to receive(:reopen_for_editing)
-            # shouldn't receive publish because no file changes and zenodo won't let us
-            # expect(deposit).to receive(:publish)
+            expect(deposit).to receive(:publish)
             @zsc.add_to_zenodo
             @zc2.reload
             expect(@zc2.state).to eq('finished')
@@ -238,13 +238,15 @@ module Stash
             expect(@zc2.deposition_id).to eq(@zc.deposition_id)
           end
 
-          it "doesn't call @deposit.publish if the user has removed all current files" do
+          it 'calls @deposit.delete on publish if the user has removed all current files' do
+            stub_delete_existing_ds(deposition_id: @zc2.deposition_id)
             @resource.software_files.each { |sup| sup.update(file_state: 'deleted') }
             @zsc.instance_variable_set(:@resp, { state: 'open' }) # so as not to try re-opening it for modification
             deposit = @zsc.instance_variable_get(:@deposit)
             allow(deposit).to receive(:update_metadata)
             allow_any_instance_of(Stash::Aws::S3).to receive(:delete_dir)
             expect(deposit).not_to receive(:publish)
+            expect(deposit).to receive(:delete)
             @zsc.publish_dataset
             expect(@zc.reload.state).to eq('finished')
           end
@@ -293,7 +295,7 @@ module Stash
 
         describe '(regular) file updates' do
           it 'submits a new dataset for file changes' do
-
+            @zc.update(deposition_id: nil, conceptrecid: nil, software_doi: nil)
             deposition_id, bucket_link = stub_new_dataset
             stub_put_metadata(deposition_id: deposition_id)
 
@@ -301,7 +303,6 @@ module Stash
             expect(file_coll).to receive(:synchronize_to_zenodo).with(bucket_url: bucket_link).and_return(nil)
             expect(Stash::ZenodoSoftware::FileCollection).to receive(:check_uploaded_list).and_return(nil) # don't check against zenodo
             expect_any_instance_of(Stash::Aws::S3).to receive(:delete_dir).and_return(nil) # because it will try to delete the dir when done
-
             @zsc.add_to_zenodo
             @zc.reload
             expect(@zc.state).to eq('finished')
@@ -383,9 +384,7 @@ module Stash
                                           software_doi: "10.meow/zenodo.#{@zc.deposition_id + 1}")
               @zsc = Stash::ZenodoSoftware::Copier.new(copy_id: @zc4.id)
 
-              @stub = stub_request(:delete, "https://sandbox.zenodo.org/api/deposit/depositions/#{@zc2.deposition_id + 1}?" \
-                                            'access_token=ThisIsAFakeToken')
-                .to_return(status: 201, body: '', headers: {})
+              @stub = stub_delete_existing_ds(deposition_id: @zc2.deposition_id + 1)
             end
 
             it 'reverts to a previous version' do
