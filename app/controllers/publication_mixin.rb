@@ -1,4 +1,5 @@
 module PublicationMixin
+
   private
 
   def release_resource(resource)
