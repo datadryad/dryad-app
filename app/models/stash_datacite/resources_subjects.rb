@@ -18,11 +18,14 @@
 module StashDatacite
   class ResourcesSubjects < ApplicationRecord
     self.table_name = 'dcs_subjects_stash_engine_resources'
-    has_paper_trail
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
     belongs_to :subject, class_name: 'StashDatacite::Subject'
 
     validates :subject_id, presence: true, uniqueness: { scope: :resource_id }
+
+    after_commit do
+      resource.paper_trail.save_with_version
+    end
   end
 end
