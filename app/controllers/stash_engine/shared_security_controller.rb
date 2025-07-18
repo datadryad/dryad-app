@@ -1,4 +1,4 @@
-# rubocop:disable Metrics/ModuleLength
+# rubocop:disable Metrics/ModuleLength, Metrics/AbcSize
 module StashEngine
   module SharedSecurityController
 
@@ -32,6 +32,11 @@ module StashEngine
         !current_user.tenant_id&.start_with?('uc') &&
         (current_user.tenant_auth_date.blank? || current_user.tenant_auth_date.before?(1.month.ago))
         redirect_to stash_url_helpers.choose_sso_path(reverify: true) and return
+      end
+
+      unless current_user.validated?
+        flash[:alert] = 'Please validate your email address'
+        redirect_to stash_url_helpers.email_validate_path and return
       end
 
       target_page = session[:target_page]
@@ -170,4 +175,4 @@ module StashEngine
 
   end
 end
-# rubocop:enable Metrics/ModuleLength
+# rubocop:enable Metrics/ModuleLength, Metrics/AbcSize

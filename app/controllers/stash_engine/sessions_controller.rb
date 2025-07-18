@@ -125,16 +125,16 @@ module StashEngine
       current_user.email_token.send_token
     end
 
-    def validate_email
+    def validate_sso_email
       if current_user.email_token.expired?
         redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id),
                     flash: { info: 'The code entered has expired. Check your email for a new code.' }
-      elsif params[:token] == current_user.email_token.token
+      elsif params[:token].downcase == current_user.email_token.token&.downcase
         current_user.roles.tenant_roles.delete_all if current_user.tenant_id != current_user.email_token.tenant_id
-        current_user.update(tenant_id: current_user.email_token.tenant_id, tenant_auth_date: Time.current)
+        current_user.update(tenant_id: current_user.email_token.tenant_id, tenant_auth_date: Time.current, validated: true)
         do_redirect
       else
-        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'Invalid code.' }
+        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'Invalid code. Check your email for a new code.' }
       end
     end
 
@@ -157,6 +157,25 @@ module StashEngine
         end
       else
         render :choose_sso, alert: 'You must select a partner institution from the list.'
+      end
+    end
+
+    def email_validate
+      return unless current_user.email.present?
+
+      current_user.create_email_token
+      current_user.email_token.send_token
+    end
+
+    def validate_email
+      if current_user.email_token.expired?
+        redirect_to email_validate_path, flash: { info: 'The code entered has expired. Check your email for a new code.' }
+      elsif params[:token].downcase == current_user.email_token.token&.downcase
+        current_user.update(validated: true)
+        flash[:notice] = 'Your email has been validated. It can be modified on the My account page.'
+        do_redirect
+      else
+        redirect_to email_validate_path, flash: { alert: 'Invalid code. Check your email for a new code.' }
       end
     end
 
@@ -314,6 +333,8 @@ module StashEngine
     end
 
     def do_redirect
+      redirect_to email_validate_path and return unless current_user.validated?
+
       target_page = session[:target_page]
       if target_page.present?
         session[:target_page] = nil
