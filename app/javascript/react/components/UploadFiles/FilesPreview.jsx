@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useState, useRef, useEffect} from 'react';
+import axios from 'axios';
 import {formatSizeUnits} from '../../../lib/utils';
+import HTMLDiffer from '../HTMLDiffer';
 import {ExitIcon} from '../ExitButton';
 
 const fileList = (list, previous) => {
@@ -42,6 +44,10 @@ const fileList = (list, previous) => {
 export default function FilesPreview({
   resource, previous, curator, maxSize,
 }) {
+  const logRef = useRef(null);
+  const [current, setCurrent] = useState(null);
+  const [prev, setPrev] = useState(null);
+
   const data = resource.generic_files.filter((f) => f.type === 'StashEngine::DataFile');
   const software = resource.generic_files.filter((f) => f.type === 'StashEngine::SoftwareFile');
   const supp = resource.generic_files.filter((f) => f.type === 'StashEngine::SuppFile');
@@ -49,6 +55,28 @@ export default function FilesPreview({
   const prev_data = previous?.generic_files?.filter((f) => f.type === 'StashEngine::DataFile');
   const prev_soft = previous?.generic_files?.filter((f) => f.type === 'StashEngine::SoftwareFile');
   const prev_supp = previous?.generic_files?.filter((f) => f.type === 'StashEngine::SuppFile');
+
+  const changelog = resource.descriptions.find((d) => d.description_type === 'changelog');
+  const prevlog = previous?.descriptions.find((d) => d.description_type === 'changelog');
+  const diff = prevlog && changelog.description !== prevlog.description;
+  const getChanges = () => {
+    axios.get(`/stash_datacite/descriptions/${changelog.id}?markdown`).then((res) => {
+      const existing = logRef.current.querySelector('#content');
+      if (diff && curator) setCurrent(res.data || '<div></div>');
+      else if (logRef.current && !existing) logRef.current.append(document.createRange().createContextualFragment(res.data));
+    });
+    if (diff && curator) {
+      axios.get(`/stash_datacite/descriptions/${prevlog.id}?markdown`).then((res) => {
+        setPrev(res.data || '<div></div>');
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (logRef.current) {
+      getChanges();
+    }
+  }, [logRef]);
 
   if (resource.generic_files.length > 0) {
     return (
@@ -77,6 +105,19 @@ export default function FilesPreview({
           <>
             <h3 className="o-heading__level2">Supplemental files hosted by <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon /></a></h3>
             {fileList(supp, prev_supp)}
+          </>
+        )}
+        {changelog && changelog.description && (
+          <>
+            <h3 className="o-heading__level2">Change log</h3>
+            <div ref={logRef}>
+              {diff && (
+                <>
+                  <ins />
+                  {curator && prev && current && (<HTMLDiffer current={current} previous={prev} />)}
+                </>
+              )}
+            </div>
           </>
         )}
       </>

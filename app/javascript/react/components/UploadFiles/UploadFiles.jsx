@@ -635,8 +635,8 @@ export default function UploadFiles({
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
-      {previous && chosenFiles.some((f) => f.status !== 'Pending' && f.file_state !== 'copied') && (
-        <TrackChanges resource={resource} />
+      {previous && chosenFiles.some((f) => f.uploadType === 'data' && f.status !== 'Pending' && f.file_state !== 'copied') && (
+        <TrackChanges resource={resource} setResource={setResource} />
       )}
       <ModalUrl
         ref={modalRef}

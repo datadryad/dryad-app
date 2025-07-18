@@ -4,7 +4,7 @@ import {debounce} from 'lodash';
 import {ExitIcon} from '../../ExitButton';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-export default function Compliance({resource, setResource}) {
+export default function Compliance({resource, setResource, current}) {
   const [hsi, setHSI] = useState(null);
   const [desc, setDesc] = useState('');
   const [license, setLicense] = useState(resource.identifier.license_id);
@@ -76,17 +76,19 @@ export default function Compliance({resource, setResource}) {
   const checkSubmit = useCallback(debounce(submit, 900), []);
 
   useEffect(() => {
-    if (disclaimer) {
+    if (disclaimer?.id) {
       setResource((r) => ({...r, descriptions: [disclaimer, ...r.descriptions.filter((d) => d.description_type !== 'hsi_statement')]}));
     }
   }, [disclaimer]);
 
-  useEffect(() => submit(), [hsi]);
+  useEffect(() => submit(hsi), [hsi]);
 
   useEffect(() => {
-    setHSI(disclaimer ? disclaimer?.description !== null : null);
-    setDesc(`${disclaimer?.description || ''}`);
-  }, []);
+    if (current) {
+      setHSI(disclaimer ? disclaimer?.description !== null : null);
+      setDesc(`${disclaimer?.description || ''}`);
+    }
+  }, [current]);
 
   return (
     <>
