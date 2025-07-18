@@ -8,7 +8,7 @@ export default function Compliance({resource, setResource}) {
   const [hsi, setHSI] = useState(null);
   const [desc, setDesc] = useState('');
   const [license, setLicense] = useState(resource.identifier.license_id);
-  const [disclaimer, setDisclaimer] = useState(resource.descriptions.find((d) => d.description_type === 'usage_notes'));
+  const [disclaimer, setDisclaimer] = useState(resource.descriptions.find((d) => d.description_type === 'hsi_statement'));
   const submitted = !!resource.identifier.process_date.processing;
 
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -57,7 +57,7 @@ export default function Compliance({resource, setResource}) {
     axios.post(
       '/stash_datacite/descriptions/create',
       {
-        authenticity_token, resource_id: resource.id, type: 'usage_notes', val,
+        authenticity_token, resource_id: resource.id, type: 'hsi_statement', val,
       },
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     ).then((data) => {
@@ -77,7 +77,7 @@ export default function Compliance({resource, setResource}) {
 
   useEffect(() => {
     if (disclaimer) {
-      setResource((r) => ({...r, descriptions: [disclaimer, ...r.descriptions.filter((d) => d.description_type !== 'usage_notes')]}));
+      setResource((r) => ({...r, descriptions: [disclaimer, ...r.descriptions.filter((d) => d.description_type !== 'hsi_statement')]}));
     }
   }, [disclaimer]);
 
