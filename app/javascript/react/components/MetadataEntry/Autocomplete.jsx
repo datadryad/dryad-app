@@ -145,6 +145,7 @@ export default function Autocomplete(
                 if (acText !== value) {
                   setAcText(value);
                   setAcID('');
+                  setTextEnter(false);
                 }
                 // only autocomplete with 3 or more characters so as not to waste queries
                 if (value?.length >= 3) {

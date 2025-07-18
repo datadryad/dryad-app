@@ -94,8 +94,9 @@ module Stash
         @resource_type = create(:resource_type, resource_id: @resource.id)
         @right = create(:right, resource_id: @resource.id)
         @resource.subjects = []
-        @subject1 = create(:subject, resources: [@resource])
-        @subject2 = create(:subject, subject: 'parsimonious', resources: [@resource])
+        @subject1 = create(:subject)
+        @subject2 = create(:subject, subject: 'parsimonious')
+        @resource.subjects = [@subject1, @subject2]
         @data_files = [create(:data_file, resource_id: @resource.id),
                        create(:data_file, resource_id: @resource.id), create(:data_file, resource_id: @resource.id)]
         Timecop.travel(Time.utc(2019, 1, 1))

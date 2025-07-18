@@ -1,5 +1,3 @@
-require 'byebug'
-
 describe 'identifiers:datasets_with_possible_articles_report', type: :task do
   let(:report_path) { File.join(REPORTS_DIR, 'datasets_with_possible_articles.csv') }
 
@@ -53,5 +51,99 @@ describe 'identifiers:datasets_with_possible_articles_report', type: :task do
     #   expect(row['ISSN']).not_to be_nil
     #   expect(row['ISSN']).to eq(identifier.publication_issn)
     # end
+  end
+end
+
+describe 'identifiers:remove_abandoned_datasets', type: :task do
+  include Mocks::Salesforce
+  include Mocks::RSolr
+
+  let!(:system_user) { create(:user, id: 0) }
+  let(:user) { create(:user) }
+  let(:identifier) { create(:identifier, publication_date: nil) }
+  let!(:resource) { create(:resource, identifier: identifier, publication_date: nil) }
+  let!(:data_file) { create(:data_file, resource_id: resource.id) }
+  let!(:software_file) { create(:software_file, resource_id: resource.id) }
+  let!(:supp_file) { create(:supp_file, resource_id: resource.id) }
+  let(:double_aws) { double('AWS', delete_dir: true, delete_file: true) }
+
+  it 'preloads the Rails environment' do
+    expect(task.prerequisites).to include 'environment'
+  end
+
+  before do
+    mock_salesforce!
+    mock_solr!
+    allow(Stash::Aws::S3).to receive(:new).and_return(double_aws)
+    allow(Kernel).to receive(:exit).and_return(true)
+  end
+
+  after { Timecop.return }
+
+  context 'when resource is in_progress' do
+    let!(:ca) { create(:curation_activity, status: 'in_progress', resource: resource, user_id: user.id) }
+
+    context 'after less then 2 years' do
+      let(:action_time) { 2.years.from_now - 1.day }
+
+      include_examples 'does not delete files'
+    end
+
+    context 'after more then 2 years' do
+      let(:action_time) { 2.years.from_now + 1.day }
+
+      include_examples 'deletes resource files form S3'
+    end
+  end
+
+  context 'when resource is withdrawn' do
+    let!(:ca) { create(:curation_activity, status: 'withdrawn', resource: resource, user_id: user.id) }
+
+    context 'after less then 2 years' do
+      let(:action_time) { 2.years.from_now - 1.day }
+
+      include_examples 'does not delete files'
+    end
+
+    context 'after more then 2 years' do
+      let(:action_time) { 2.years.from_now + 1.day }
+
+      include_examples 'deletes resource files form S3'
+    end
+  end
+
+  (StashEngine::CurationActivity.statuses.values - %w[withdrawn in_progress]).each do |status|
+    context "when resource is in `#{status}` status" do
+      let!(:ca) { create(:curation_activity, status: status, resource: resource, user_id: user.id) }
+
+      context 'after less then 2 years' do
+        let(:action_time) { 2.years.from_now - 1.day }
+
+        include_examples 'does not delete files'
+      end
+
+      context 'after more then 2 years' do
+        let(:action_time) { 2.years.from_now + 1.day }
+
+        include_examples 'does not delete files'
+      end
+    end
+  end
+
+  context 'when resource is in progress but was at one pint published' do
+    let!(:ca) { create(:curation_activity, status: 'published', resource: resource, user_id: user.id, created_at: 1.minute.ago) }
+    let!(:ca2) { create(:curation_activity, status: 'in_progress', resource: resource, user_id: user.id) }
+
+    context 'after less then 2 years' do
+      let(:action_time) { 2.years.from_now - 1.day }
+
+      include_examples 'does not delete files'
+    end
+
+    context 'after more then 2 years' do
+      let(:action_time) { 2.years.from_now + 1.day }
+
+      include_examples 'does not delete files'
+    end
   end
 end

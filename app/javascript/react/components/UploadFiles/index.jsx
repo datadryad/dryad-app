@@ -28,26 +28,26 @@ export const filesCheck = (resource, superuser, maximums) => {
           </p>
         );
       }
-      if (software.length > maxFiles) {
-        return (
-          <p className="error-text" id="software_error">
-          A maximum of {maxFiles} software files can be uploaded per dataset.
-          To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
-          </p>
-        );
-      }
-      if (supp.length > maxFiles) {
-        return (
-          <p className="error-text" id="supp_error">
-          A maximum of {maxFiles} supplemental files can be uploaded per dataset.
-          To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
-          </p>
-        );
-      }
     } else if (files.length > 1000) {
       return (
         <p className="error-text" id="data_error">
         A maximum of 1000 files can be uploaded per dataset.
+        To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
+        </p>
+      );
+    }
+    if (software.length > maxFiles) {
+      return (
+        <p className="error-text" id="software_error">
+        A maximum of {maxFiles} software files can be uploaded per dataset.
+        To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
+        </p>
+      );
+    }
+    if (supp.length > maxFiles) {
+      return (
+        <p className="error-text" id="supp_error">
+        A maximum of {maxFiles} supplemental files can be uploaded per dataset.
         To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
         </p>
       );

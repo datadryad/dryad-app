@@ -17,12 +17,27 @@
 ## Get to know Dryad
 <h3 class="expand-button"><button id="our-members" aria-expanded="false" aria-controls="our-members-sec">Our partners</button></h3>
 <div class="about-page" id="our-members-sec" hidden>
-<p>Dryad’s partners are part of a non-profit, shared community working together to promote
-data publishing, curation, and preservation. The community benefits from Dryad’s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/join_us">Learn about joining us as a partner organization</a>.</p>
+<p>Dryad partners are part of a global non-profit community working together to promote data curation, publication, and preservation across all scientific disciplines. Partners sponsor the cost of Dryad services for affiliated researchers at a reduced rate, and receive access to our administrative dashboard, as well as support, training, and outreach. Partnership is open to all organizations, including institutions, publishers, academic societies, and others. <a href="/join_us">Learn more about partnering with Dryad.</a>.</p>
+<p>We’re enormously proud of our current partnerships, which include the following organizations:</p>
 <h4>Academic and research institutions</h4>
   <%= render "members_institutional" %>
 <h4>Publishing organizations</h4>
   <%= render "members_publishers" %>
+<p>We wish to express our enduring gratitude to our founding partners:</p>
+<ul>
+  <li>American Association for the Advancement of Science (AAAS)
+  <li>American Genetic Association (AGA)
+  <li>American Society of Naturalists
+  <li>Association for Tropical Biology and Conservation (ATBC)
+  <li>British Ecological Society
+  <li>European Society for Evolutionary Biology (ESEB)
+  <li>Nordic Society Oikos
+  <li>Oxford University Press (OUP)
+  <li>Society for the Study of Evolution
+  <li>The Royal Society
+  <li>Society of Systematic Biologists
+  <li>John Wiley & Sons
+</ul>
 </div>
 <h3 class="expand-button"><button id="our-board" aria-expanded="false" aria-controls="our-board-sec">Our board</button></h3>
 <div class="about-page" id="our-board-sec" hidden>

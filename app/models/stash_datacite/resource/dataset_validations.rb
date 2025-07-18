@@ -155,20 +155,23 @@ module StashDatacite
 
         files_date = '2025-03-12'
         if (@resource.identifier.publication_date.blank? || @resource.identifier.publication_date > files_date) &&
-          (@resource.data_files.present_files.count > APP_CONFIG.maximums.files ||
-            @resource.software_files.present_files.count > APP_CONFIG.maximums.files ||
-            @resource.supp_files.present_files.count > APP_CONFIG.maximums.files)
-          return 'Too many files'
+          (@resource.data_files.present_files.uploaded.count > APP_CONFIG.maximums.files)
+          return 'Too many data files (more than 100)'
+        end
+
+        if @resource.software_files.present_files.count > APP_CONFIG.maximums.files ||
+            @resource.supp_files.present_files.count > APP_CONFIG.maximums.files
+          return 'Too many zenodo upload files (more than 100)'
         end
 
         if !@resource.identifier.new_upload_size_limit
           return 'Over file size limit' if @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.merritt_size &&
           !@user&.superuser?
         elsif @resource.data_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.upload_size
-          return 'Over file size limit'
+          return 'Over dataset file size limit'
         end
 
-        return 'Over file size limit' if @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size ||
+        return 'Over zenodo file size limit' if @resource.software_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size ||
           @resource.supp_files.present_files.sum(:upload_file_size) > APP_CONFIG.maximums.zenodo_size
 
         false

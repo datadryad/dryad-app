@@ -152,7 +152,7 @@ module StashDatacite
       @resource.identifier.update_search_words!
 
       error_items = Resource::DatasetValidations.new(resource: @resource, user: current_user).errors
-      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id) and return if error_items
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), alert: error_items and return if error_items
 
       redirect_to stash_url_helpers.dashboard_path, alert: 'Dataset is already being submitted' if processing?(@resource)
     end

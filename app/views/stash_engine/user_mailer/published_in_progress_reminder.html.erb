@@ -1,0 +1,30 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>
+  Your Dryad dataset titled, “<%= @resource.title %>” with the
+  DOI “<%= @resource.identifier_value %>”, is currently "In Progress".
+  Although a previous version was submitted and/or published, the most recent version of your submission is
+  'In Progress' (an active working version of the dataset has been created but not submitted)
+</p>
+
+<p>
+  If this new version of your dataset is left “In Progress” for one year without action, the version will be deleted,
+  and your dataset will revert to the last submitted or published version.
+</p>
+
+<p>If you intend to publish this new version of your dataset, follow these steps:</p>
+<ol>
+  <li><a href="https://datadryad.org">Login to https://datadryad.org</a></li>
+  <li>Click on "My datasets"</li>
+  <li>Locate your submission with the status "In Progress"</li>
+  <li>Click "Resume" to access your submission</li>
+  <li>Incorporate pending edits, if any</li>
+  <li>Click "Submit"</li>
+</ol>
+
+<p>
+  If you do not intend to proceed with the publication of the new version of the dataset, you may either select "Revert"
+  from your dashboard if this option is available to you, or contact us with your dataset DOI at
+  <a href="mailto:<%= @helpdesk_email %>?subject=Withdraw <%= @resource.identifier_value %>"><%= @helpdesk_email %></a>
+  to request that it be removed.
+</p>
