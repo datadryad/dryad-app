@@ -59,7 +59,7 @@ function FunderForm({resourceId, contributor, updateFunder}) {
         ror_id: acID,
       }).then((data) => {
         setShowSelect(data.data);
-        updateFunder({...contributor, group_required: true});
+        if (data.data?.required) updateFunder({...contributor, group_required: true});
       });
     }
     if (acID) getGroup();
