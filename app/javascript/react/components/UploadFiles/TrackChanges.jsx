@@ -4,19 +4,55 @@ import axios from 'axios';
 import MarkdownEditor from '../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
-export default function TrackChanges({resource, setResource}) {
+export function ChangeNote({resource}) {
   const [note, setNote] = useState({});
   const [value, setValue] = useState('');
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
+  const postNote = (e) => {
+    axios.post(`/file_note/${note.id}`, {authenticity_token, note: e.currentTarget.value});
+  };
+
+  useEffect(() => {
+    async function getNote() {
+      axios.get(`/file_note/${resource.id}`).then((data) => {
+        setNote(data.data);
+        setValue(data.data.note);
+      });
+    }
+    getNote();
+  }, []);
+
+  if (note) {
+    return (
+      <div className="input-stack" style={{margin: '1em 0'}}>
+        <label className="input-label" htmlFor="file-note-area">Describe your file changes for our data curators</label>
+        <textarea
+          className="c-input__textarea"
+          id="file-note-area"
+          rows={3}
+          value={value || ''}
+          onBlur={postNote}
+          onChange={(e) => setValue(e.currentTarget.value)}
+        />
+      </div>
+    );
+  }
+  return null;
+}
+
+export default function TrackChanges({resource, setResource, current}) {
   const [log, setLog] = useState(resource.descriptions?.find((d) => d.description_type === 'changelog'));
+  const [desc, setDesc] = useState('');
 
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
-  const submit = (desc) => {
-    if (log && log.description !== desc) {
+  const submit = (value) => {
+    if (log && log.description !== value) {
       const subJson = {
         authenticity_token,
         description: {
-          description: desc,
+          description: value,
           resource_id: resource.id,
           id: log.id,
         },
@@ -49,10 +85,6 @@ export default function TrackChanges({resource, setResource}) {
     });
   };
 
-  const postNote = (e) => {
-    axios.post(`/file_note/${note.id}`, {authenticity_token, note: e.currentTarget.value});
-  };
-
   useEffect(() => {
     if (log?.id) {
       setResource((r) => ({
@@ -63,52 +95,30 @@ export default function TrackChanges({resource, setResource}) {
   }, [log]);
 
   useEffect(() => {
-    async function getNote() {
-      axios.get(`/file_note/${resource.id}`).then((data) => {
-        setNote(data.data);
-        setValue(data.data.note);
-      });
-    }
-    getNote();
-    if (resource.identifier.pub_state === 'published') {
-      if (!log) create(null);
-    }
+    if (current) setDesc(`${log.description || ''}`);
+  }, [current]);
+
+  useEffect(() => {
+    if (!log) create(null);
   }, []);
 
   return (
-    <>
-      {note && (
-        <div className="input-stack" style={{margin: '1em 0'}}>
-          <label className="input-label" htmlFor="file-note-area">Describe your file changes for our data curators</label>
-          <textarea
-            className="c-input__textarea"
-            id="file-note-area"
-            rows={3}
-            value={value || ''}
-            onBlur={postNote}
-            onChange={(e) => setValue(e.currentTarget.value)}
-          />
-        </div>
-      )}
-      {resource.identifier.pub_state === 'published' && (
-        <div style={{marginTop: '2em'}}>
-          <h4 id="log-label">Public change log</h4>
-          <p id="log-desc">
-            Your dataset has been published, so a written statement listing changes made to published files is required.
-            This change log will appear with the next published version of your dataset.
-          </p>
-          <MarkdownEditor
-            id="changelog-editor"
-            attr={{
-              'aria-errormessage': 'log_error',
-              'aria-labelledby': 'log-label',
-              'aria-describedby': 'log-desc',
-            }}
-            initialValue={log.description}
-            onChange={checkSubmit}
-          />
-        </div>
-      )}
-    </>
+    <div style={{marginTop: '2em'}}>
+      <h4 id="log-label">Public change log</h4>
+      <p id="log-desc">
+        Your dataset has been published, so a written statement listing changes made to published files is required.
+        This change log will appear with the next published version of your dataset.
+      </p>
+      <MarkdownEditor
+        id="changelog-editor"
+        attr={{
+          'aria-errormessage': 'log_error',
+          'aria-labelledby': 'log-label',
+          'aria-describedby': 'log-desc',
+        }}
+        initialValue={desc}
+        onChange={checkSubmit}
+      />
+    </div>
   );
 }

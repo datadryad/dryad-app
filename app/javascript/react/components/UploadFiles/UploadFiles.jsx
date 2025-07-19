@@ -13,7 +13,7 @@ import ModalUrl from './ModalUrl';
 import ModalValidationReport from './ModalValidationReport/ModalValidationReport';
 import UploadData from './UploadSelect/UploadData';
 import UploadSelect from './UploadSelect/UploadSelect';
-import TrackChanges from './TrackChanges';
+import TrackChanges, {ChangeNote} from './TrackChanges';
 
 /**
  * Constants
@@ -102,6 +102,10 @@ export default function UploadFiles({
     // eslint-disable-next-line max-len
     rarTypeFiles: 'RAR files were not added. RAR is a proprietary compression format that cannot be opened universally. Please use an open-access format, such as TAR.GZ, 7Z, or ZIP.',
   };
+
+  const changes = previous && chosenFiles.some((f) => f.uploadType === 'data' && f.status !== 'Pending' && f.file_state !== 'copied');
+  const publishedChanges = resource.identifier.pub_state === 'published'
+    && (changes || resource.descriptions?.find((d) => d.description_type === 'changelog'));
 
   const isValidTabular = (file) => (ValidTabular.extensions.includes(file.sanitized_name.split('.').pop())
             || ValidTabular.mime_types.includes(file.upload_content_type))
@@ -635,9 +639,8 @@ export default function UploadFiles({
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
-      {previous && chosenFiles.some((f) => f.uploadType === 'data' && f.status !== 'Pending' && f.file_state !== 'copied') && (
-        <TrackChanges resource={resource} setResource={setResource} />
-      )}
+      {changes && <ChangeNote resource={resource} /> }
+      {publishedChanges && <TrackChanges resource={resource} setResource={setResource} current={current} />}
       <ModalUrl
         ref={modalRef}
         key={manFileType}
