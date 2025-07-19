@@ -25,6 +25,13 @@ export default function Cedar({
   const formObserver = useRef(null);
   const editorLoaded = useRef(null);
 
+  const unloadEditor = () => {
+    if (editorLoaded.current) {
+      editorLoaded.current.disconnect();
+      editorLoaded.current = null;
+    }
+  };
+
   useEffect(() => {
     setCsrf(document.querySelector("meta[name='csrf-token']")?.getAttribute('content'));
     const json = resource.cedar_json ? JSON.parse(resource.cedar_json) : {};
@@ -42,10 +49,7 @@ export default function Cedar({
         formObserver.current.disconnect();
         formObserver.current = null;
       }
-      if (editorLoaded.current) {
-        editorLoaded.current.disconnect();
-        editorLoaded.current = null;
-      }
+      unloadEditor();
     };
   }, []);
 
@@ -96,6 +100,10 @@ export default function Cedar({
     templateRef.current = template;
   }, [template]);
 
+  useEffect(() => {
+    if (singleTemplate) setTemplate(singleTemplate);
+  }, [singleTemplate]);
+
   // Save form content when changed
   const checkSave = () => {
     const currentMetadata = JSON.parse(JSON.stringify(editor.current.currentMetadata));
@@ -137,12 +145,12 @@ export default function Cedar({
     };
     editor.current.dataset.template = template.id;
     // restore metadata
+    unloadEditor();
     editorLoaded.current = new MutationObserver(() => {
       const app = document.querySelector('app-cedar-embeddable-metadata-editor');
       if (app && !!metadata) {
         editor.current.instanceObject = metadata;
-        editorLoaded.current.disconnect();
-        editorLoaded.current = null;
+        unloadEditor();
       }
     });
     editorLoaded.current.observe(editor.current, {childList: true});
@@ -155,11 +163,15 @@ export default function Cedar({
     }
     if (dialog.current?.dataset.template !== template.id) {
       if (editorUrl) {
-        const script = document.createElement('script');
-        script.src = editorUrl;
-        script.async = true;
-        script.onload = () => modalSetup();
-        dialog.current.appendChild(script);
+        if (dialog.current.querySelector('script')) {
+          modalSetup();
+        } else {
+          const script = document.createElement('script');
+          script.src = editorUrl;
+          script.async = true;
+          script.onload = () => modalSetup();
+          dialog.current.appendChild(script);
+        }
         dialog.current.dataset.template = template.id;
       }
     }
@@ -228,7 +240,7 @@ export default function Cedar({
                     onBlur={formik.handleBlur}
                   >
                     <option key="0" value="" label="- Select one -" />
-                    {templates.map((templ) => (<option key={templ[0]} value={templ[0]} label={templ[2]} />))}
+                    {templates.map((templ) => (<option key={templ[0]} value={templ[0]} label={templ[1]} />))}
                   </select>
                   <button disabled={!template} type="submit" className="o-button__add">
                     Add metadata form
