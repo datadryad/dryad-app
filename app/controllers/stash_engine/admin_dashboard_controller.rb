@@ -1,6 +1,7 @@
 module StashEngine
   # rubocop:disable Metrics/ClassLength
   class AdminDashboardController < ApplicationController
+    include PublicationMixin
     helper SortableTableHelper
     helper AdminHelper
     helper AdminDashboardHelper
@@ -364,15 +365,19 @@ module StashEngine
 
       return state_error unless CurationActivity.allowed_states(@last_state, current_user).include?(@status)
 
-      decipher_curation_activity
-      @note = params.dig(:curation_activity, :note)
-      @resource.publication_date = @pub_date
-      @resource.user_id = current_user.id if @status == 'curation'
-      @resource.hold_for_peer_review = true if @status == 'peer_review'
-      @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
-      @resource.save
-      @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
-      @resource.reload
+      if @status == 'submitted' && @last_state == 'peer_review'
+        release_resource(@resource)
+      else
+        decipher_curation_activity
+        @note = params.dig(:curation_activity, :note)
+        @resource.publication_date = @pub_date
+        @resource.user_id = current_user.id if @status == 'curation'
+        @resource.hold_for_peer_review = true if @status == 'peer_review'
+        @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
+        @resource.save
+        @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
+        @resource.reload
+      end
     end
 
     def decipher_curation_activity
