@@ -3,7 +3,12 @@
   <%= link_to resource.title, show_path(id: resource.identifier.to_s), target: '_blank' %>
   <p><strong>Status:</strong> <%= StashEngine::CurationActivity.readable_status(resource.current_curation_status) %></p>
 </td>
-<td><%= existing_pubname %></td>
+<td>
+  <%= existing_pubname %>
+  <% if resource.identifier.payment_id && StashEngine::Journal.find_by_issn(existing_pubissn)&.issn_array&.include?(resource.identifier.payment_id)%>
+    <p class="error-text"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Payment journal</p>
+  <% end %> 
+</td>
 <td><%= existing_pubissn.is_a?(Array) ? existing_pubissn.join(', ') : existing_pubissn %></td>
 <td><%= existing_pubdoi %></td>
 <td><%= formatted_date(resource.publication_date) %></td>
