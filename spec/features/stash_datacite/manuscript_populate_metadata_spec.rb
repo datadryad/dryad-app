@@ -21,7 +21,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
 
     it 'gives disable submit manuscript not filled' do
       navigate_to_metadata
-      within_fieldset('Is your data used in a research article?') do
+      within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
         find(:label, 'No').click
       end
       expect(page).not_to have_button('Import metadata')
