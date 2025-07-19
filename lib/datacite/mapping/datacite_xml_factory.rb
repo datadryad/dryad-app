@@ -99,7 +99,7 @@ module Datacite
       def add_descriptions(dcs_resource)
         se_resource.descriptions.where.not(description: nil).each do |d|
           next if d.description.blank?
-          next if d.description_type == 'usage_notes'
+          next unless Datacite::Mapping::DescriptionType.map(&:value).map(&:downcase).include?(d.description_type)
 
           d.description = se_resource.complete_readme if d.description_type == 'technicalinfo'
 
