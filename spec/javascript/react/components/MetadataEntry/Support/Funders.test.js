@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
 import Funders from '../../../../../../app/javascript/react/components/MetadataEntry/Support/Funders';
-import groupings from './funderGroupings.json';
 
 jest.mock('axios');
 
@@ -39,11 +38,11 @@ describe('Funders', () => {
   });
 
   it('renders multiple funder forms as funder section', async () => {
-    const options = {status: 200, data: groupings};
-    axios.get.mockResolvedValue(options);
+    const group = {status: 200, data: null};
+    axios.post.mockResolvedValue(group);
+
     render(<Funders resource={resource} setResource={setResource} />);
 
-    await waitFor(() => options);
     const labeledElements = screen.getAllByLabelText('Granting organization');
     expect(labeledElements.length).toBe(3);
     const awardNums = screen.getAllByLabelText('Award number', {exact: false});
