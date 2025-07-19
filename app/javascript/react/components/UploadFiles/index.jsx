@@ -100,6 +100,12 @@ export const filesCheck = (resource, superuser, maximums) => {
         </p>
       );
     }
+    const changelog = resource.descriptions.find((d) => d.description_type === 'changelog');
+    if (changelog && !changelog.description) {
+      return (
+        <p className="error-text" id="log_error">A log describing changes to published files is required</p>
+      );
+    }
     return false;
   }
   return <p className="error-text" id="data_error">Files are required</p>;

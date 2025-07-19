@@ -418,7 +418,7 @@ module StashEngine
       technical_info = descriptions.type_technical_info&.first&.description
       return nil if !technical_info || technical_info.empty?
 
-      disclaimer = descriptions.where(description_type: 'usage_notes')&.first&.description
+      disclaimer = descriptions.where(description_type: 'hsi_statement')&.first&.description
       technical_info = "#{technical_info}\n\n## Human subjects data\n\n#{disclaimer}" if disclaimer.present?
       technical_info
     end

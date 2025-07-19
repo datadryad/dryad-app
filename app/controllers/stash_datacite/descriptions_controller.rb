@@ -1,5 +1,6 @@
 module StashDatacite
   class DescriptionsController < ApplicationController
+    include ::ApplicationHelper
     before_action :set_description, only: %i[update destroy]
     before_action :ajax_require_modifiable, only: %i[update destroy]
 
@@ -8,6 +9,14 @@ module StashDatacite
     # GET /descriptions/new
     def new
       @description = Description.new
+    end
+
+    # GET /descriptions/1
+    def show
+      @description = Description.find(params[:id])
+      content = @description.description
+      content = markdown_render(content) if params.key?(:markdown)
+      render html: display_desc(content).html_safe
     end
 
     # POST /descriptions

@@ -381,6 +381,7 @@ Rails.application.routes.draw do
     post 'titles/create', to: 'titles#create'
     patch 'titles/update', to: 'titles#update'
 
+    get 'descriptions/:id', to: 'descriptions#show'
     get 'descriptions/new', to: 'descriptions#new'
     post 'descriptions/create', to: 'descriptions#create'
     patch 'descriptions/update', to: 'descriptions#update'
