@@ -10,7 +10,9 @@
       "app/javascript"
     ],
     "moduleNameMapper": {
-      "\\.css$": "identity-obj-proxy"
+      "\\.css$": "identity-obj-proxy",
+      "^@milkdown/prose/(.*)$": "<rootDir>/node_modules/@milkdown/prose/lib/$1.js",
+      "^@milkdown/(.*)$": "<rootDir>/node_modules/@milkdown/$1"
     },
     "testPathIgnorePatterns": [
       "ReadMe"
@@ -19,7 +21,8 @@
       "\\.[jt]sx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/?!(nanoid/.*)"
+      "node_modules/?!(nanoid/.*)",
+      "node_modules/htmldiff-js/.*"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/spec/javascript/setupTests.js"
