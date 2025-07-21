@@ -26,7 +26,7 @@ export function ChangeNote({resource}) {
   if (note) {
     return (
       <div className="input-stack" style={{margin: '1em 0'}}>
-        <label className="input-label" htmlFor="file-note-area">Describe your file changes for our data curators</label>
+        <label className="input-label" htmlFor="file-note-area">Describe your file changes for our data curators. These comments are not published.</label>
         <textarea
           className="c-input__textarea"
           id="file-note-area"
