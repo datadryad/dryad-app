@@ -7,7 +7,7 @@ module StashEngine
   class SessionsController < ApplicationController
 
     before_action :bust_cache
-    before_action :require_user_login, only: %i[choose_sso no_partner callback sso]
+    before_action :require_user_login, only: %i[choose_sso no_partner callback sso email_validate]
     skip_before_action :verify_authenticity_token, only: %i[callback orcid_callback] # omniauth takes care of this differently
     before_action :callback_basics, only: %i[callback]
     before_action :orcid_preprocessor, only: [:orcid_callback] # do not go to main action if it's just a metadata set, not a login
@@ -120,6 +120,7 @@ module StashEngine
     def email_sso
       @tenant = StashEngine::Tenant.find(params[:tenant_id])
       return unless current_user.email&.end_with?(@tenant.authentication&.email_domain)
+      return if current_user.email_token && !params.key?(:refresh)
 
       current_user.create_email_token(tenant_id: @tenant.id)
       current_user.email_token.send_token
@@ -127,14 +128,14 @@ module StashEngine
 
     def validate_sso_email
       if current_user.email_token.expired?
-        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id),
+        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id, refresh: true),
                     flash: { info: 'The code entered has expired. Check your email for a new code.' }
       elsif params[:token].downcase == current_user.email_token.token&.downcase
         current_user.roles.tenant_roles.delete_all if current_user.tenant_id != current_user.email_token.tenant_id
         current_user.update(tenant_id: current_user.email_token.tenant_id, tenant_auth_date: Time.current, validated: true)
         do_redirect
       else
-        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'Invalid code. Check your email for a new code.' }
+        redirect_to email_sso_path(tenant_id: current_user.email_token.tenant_id), flash: { alert: 'The code is invalid, please try again.' }
       end
     end
 
@@ -161,7 +162,8 @@ module StashEngine
     end
 
     def email_validate
-      return unless current_user.email.present?
+      return unless current_user&.email&.present?
+      return if current_user.email_token && !params.key?(:refresh)
 
       current_user.create_email_token
       current_user.email_token.send_token
@@ -169,13 +171,13 @@ module StashEngine
 
     def validate_email
       if current_user.email_token.expired?
-        redirect_to email_validate_path, flash: { info: 'The code entered has expired. Check your email for a new code.' }
+        redirect_to email_validate_path(refresh: true), flash: { info: 'The code entered has expired. Check your email for a new code.' }
       elsif params[:token].downcase == current_user.email_token.token&.downcase
         current_user.update(validated: true)
         flash[:notice] = 'Your email has been validated. It can be modified on the My account page.'
         do_redirect
       else
-        redirect_to email_validate_path, flash: { alert: 'Invalid code. Check your email for a new code.' }
+        redirect_to email_validate_path, flash: { alert: 'The code is invalid, please try again.' }
       end
     end
 

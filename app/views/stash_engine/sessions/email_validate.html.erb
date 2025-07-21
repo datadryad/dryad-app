@@ -11,7 +11,7 @@
         </div>
       <% end %>
       <p>If you do not see the email, please check your spam filter.</p>
-      <p>The code sent will expire after 15 minutes. <a href="<%= email_validate_path %>">Send another code</a></p>
+      <p>The code sent will expire after 15 minutes. <a href="<%= email_validate_path(refresh: true) %>">Send another code</a></p>
       Is the email address incorrect?
       <%= form_with(url: edit_account_path, method: :post, class: 'o-button__inline-form', local: false) do |f| %>
         <%= f.hidden_field :first_name, value: current_user.first_name %>
