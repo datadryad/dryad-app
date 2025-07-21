@@ -119,10 +119,11 @@ end
 
 # Helpdesk requests have a much lower limit than other requests, since
 # we don't want people to spam our helpdesk team
-Rack::Attack.throttle('helpdesk_forms_per_month', limit: APP_CONFIG[:rate_limit][:helpdesk_forms_per_month], period: 30.days) do |req|
-  "helpdesk_forms_per_month_#{req.ip}" if start_w_wo_stash?(req.path, '/helpdesk')
-end   
-
+Rack::Attack.blocklist('helpdesk_form_limit') do |req|
+  Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 10, findtime: 1.day, bantime: 2.weeks) do
+    req.path.include?('/helpdesk')
+  end
+end
 
 # Registered API users get preferential treatment over anonymous users. Assume API users have
 # a valid auth code. If the auth data is bad, it will be caught and blocked by the API controllers.

@@ -99,7 +99,6 @@ test:
     zip_downloads_per_hour: 2
     zip_downloads_per_day: 5
     zip_downloads_per_month: 10
-    helpdesk_forms_per_month: 3
     all_requests: 10
     api_requests_anon: 5
     api_requests_auth: 10
@@ -234,7 +233,6 @@ defaults: &DEFAULTS
     zip_downloads_per_hour: 20
     zip_downloads_per_day: 100
     zip_downloads_per_month: 500
-    helpdesk_forms_per_month: 3
     # all other rates are number of requests allowed per minute
     all_requests: 120
     api_requests_anon: 30
