@@ -95,7 +95,7 @@ module Reminders
           end
 
           it 'does not send in_progress_reminder if is more than 4 days ago' do
-            Timecop.travel((6.days).from_now)
+            Timecop.travel(6.days.from_now)
             expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).never
             expect(subject).to receive(:create_activity).never
 
