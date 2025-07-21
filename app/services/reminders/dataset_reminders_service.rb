@@ -2,17 +2,17 @@ module Reminders
   class DatasetRemindersService < Reminders::BaseService
 
     # Send In Progress delete email notification
-    # - email is sent monthly starting from first month until 1 year
-    # - after 1 year the resource should get deleted
+    # - email is sent after a certain number of days after the resource is in_progress state
     def send_in_progress_reminders_by_day(days_number)
       log "Mailing users whose datasets have been in_progress since #{days_number.days.ago}"
       StashEngine::Resource.joins(:current_resource_state)
         .where("stash_engine_resource_states.resource_state = 'in_progress'")
-        .where('stash_engine_resources.updated_at <= ?', days_number.days.ago)
+        .where('stash_engine_resources.updated_at BETWEEN ? AND ?', (days_number + 1).days.ago, days_number.days.ago)
         .each do |resource|
 
+        old_reminder_flag = 'in_progress_reminder CRON'
         reminder_flag = "#{days_number} days in_progress_reminder CRON"
-        if resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
+        if resource.curation_activities.where('note LIKE ? OR note LIKE ?', "%#{reminder_flag}%", "#{old_reminder_flag}%").empty?
           log_data_for_status('in_progress', resource)
           StashEngine::UserMailer.in_progress_reminder(resource).deliver_now
           create_activity(reminder_flag, resource)

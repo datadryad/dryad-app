@@ -55,6 +55,14 @@ module Reminders
             subject.send_in_progress_reminders_by_day(1)
             subject.send_in_progress_reminders_by_day(1)
           end
+
+          it 'does not send in_progress_reminder if is more than 2 days ago' do
+            Timecop.travel(49.hours.from_now)
+            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).never
+            expect(subject).to receive(:create_activity).never
+
+            subject.send_in_progress_reminders_by_day(1)
+          end
         end
       end
 
@@ -83,6 +91,14 @@ module Reminders
             expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).once
 
             subject.send_in_progress_reminders_by_day(3)
+            subject.send_in_progress_reminders_by_day(3)
+          end
+
+          it 'does not send in_progress_reminder if is more than 4 days ago' do
+            Timecop.travel((4.days + 1.minute).from_now)
+            expect(StashEngine::UserMailer).to receive(:in_progress_reminder).with(resource).never
+            expect(subject).to receive(:create_activity).never
+
             subject.send_in_progress_reminders_by_day(3)
           end
         end
