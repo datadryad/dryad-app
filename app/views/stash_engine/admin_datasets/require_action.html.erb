@@ -17,7 +17,7 @@
         <p>Request author action for specific sections:</p>
         <% @steps.map do |step| %>
           <p class="radio_choice"><label for="<%=step.downcase%>_check"><%= check_box_tag "#{step.downcase}_check", nil, @report&.dig(step)&.present?, name: nil %><%= step %></label></p>
-          <%= text_area_tag step, @report&.dig(step), class: 'c-input__textarea', style: 'width: 100%', "aria-label": "Edits needed in #{step}", hidden: @report&.dig(step)&.blank? %>
+          <%= text_area_tag step, @report&.dig(step), class: 'c-input__textarea', style: 'width: 100%', "aria-label": "Edits needed in #{step}", hidden: @report ? @report&.dig(step)&.blank? : true %>
         <% end %>
       </div>
       <div class="c-modal__buttons-right" style="margin-top: auto; padding-bottom: 1rem;">
