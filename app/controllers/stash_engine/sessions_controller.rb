@@ -120,7 +120,7 @@ module StashEngine
     def email_sso
       @tenant = StashEngine::Tenant.find(params[:tenant_id])
       return unless current_user.email&.end_with?(@tenant.authentication&.email_domain)
-      return if current_user.email_token || params.key?(:refresh)
+      return if current_user.email_token && !params.key?(:refresh)
 
       current_user.create_email_token(tenant_id: @tenant.id)
       current_user.email_token.send_token
@@ -163,7 +163,7 @@ module StashEngine
 
     def email_validate
       return unless current_user&.email&.present?
-      return if current_user.email_token && params.key?(:refresh)
+      return if current_user.email_token && !params.key?(:refresh)
 
       current_user.create_email_token
       current_user.email_token.send_token
