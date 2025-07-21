@@ -233,7 +233,9 @@
   const aar = document.getElementById('aar_popup')
   if (aar) aar.addEventListener('click', () => {
     window.open(aar.href, "AARreport", "popup=true,width=700px,height=900px")
-    document.getElementById('salesforce-create').click();
+    <% if (r.last_curation_activity.status != 'action_required') %>
+      document.getElementById('salesforce-create').click();
+    <% end %>
   })
 </script>
 <% end %>
