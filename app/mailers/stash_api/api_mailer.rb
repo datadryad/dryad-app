@@ -5,6 +5,7 @@ module StashApi
 
     def send_submit_request(resource, metadata)
       @resource = resource
+      @journal = StashEngine::Journal.find_by_issn(metadata[:relatedPublicationISSN])
       @user = @resource.authors.where.not(author_email: [nil, '']).first
       return unless @user.present? && user_email(@user).present?
 
