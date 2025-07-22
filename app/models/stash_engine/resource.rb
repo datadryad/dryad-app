@@ -332,17 +332,12 @@ module StashEngine
 
     # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads(my_class: StashEngine::DataFile)
-      subquery = my_class.where(resource_id: id).where("file_state <> 'deleted' AND " \
-                                                       '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
-        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      my_class.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_class.where(resource_id: id).present_files.validated.order(download_filename: :asc)
     end
 
     # gets new files in this version
     def new_data_files
-      subquery = DataFile.where(resource_id: id).where("file_state = 'created'")
-        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      DataFile.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      data_files.where(file_state: 'created').order(download_filename: :asc)
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
@@ -350,7 +345,7 @@ module StashEngine
       my_model = model.constantize
       subquery = my_model.where(resource_id: id)
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(download_filename: :asc)
     end
 
     # the size of this resource (created + copied files)
