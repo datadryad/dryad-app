@@ -371,7 +371,10 @@ module StashEngine
         decipher_curation_activity
         @note = params.dig(:curation_activity, :note)
         @resource.publication_date = @pub_date
-        @resource.user_id = current_user.id if @status == 'curation'
+        if @status == 'curation'
+          @resource.user_id = current_user.id
+          @curator_name = current_user.name
+        end
         @resource.hold_for_peer_review = true if @status == 'peer_review'
         @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
         @resource.save

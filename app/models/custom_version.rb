@@ -2,15 +2,16 @@
 #
 # Table name: paper_trail_versions
 #
-#  id             :bigint           not null, primary key
-#  event          :string(191)      not null
-#  item_type      :string(191)      not null
-#  object         :json
-#  object_changes :json
-#  whodunnit      :string(191)
-#  created_at     :datetime
-#  item_id        :string(191)      not null
-#  resource_id    :integer
+#  id              :bigint           not null, primary key
+#  additional_info :json
+#  event           :string(191)      not null
+#  item_type       :string(191)      not null
+#  object          :json
+#  object_changes  :json
+#  whodunnit       :string(191)
+#  created_at      :datetime
+#  item_id         :string(191)      not null
+#  resource_id     :integer
 #
 # Indexes
 #

@@ -467,10 +467,10 @@ In the console, select the disk, modify, and give it the new size.
 # See the size of the disk and partitions
 sudo lsblk
 
-# Grow a partition to use the new space
+# Grow a partition to use the new space (not required if there is no partition)
 sudo growpart /dev/nvme0n1 1
 
-# Verify that it grew
+# Verify that it grew (not required if there is no partition)
 sudo lsblk
 
 # See where the partition is mounted

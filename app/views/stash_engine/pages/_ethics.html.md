@@ -3,7 +3,7 @@
 <p>
   Dryad follows community best practices on data publishing ethics and aligns
   with the recommendations and workflows published by the
-  <a href="https://zenodo.org/record/5391293" target="_blank">FORCE11 & COPE Research Data Publishing Ethics WG<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a><sup>*</sup>.
+  <a href="https://zenodo.org/record/5391293" target="_blank" rel="noreferrer">FORCE11 & COPE Research Data Publishing Ethics WG<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a><sup>*</sup>.
 </p>
 
 <p>
@@ -53,4 +53,4 @@
 
 <p style="font-size: smaller">* Puebla, Iratxe, Lowenberg, Daniella, & FORCE11 Research Data Publishing Ethics WG. (2021).
   Joint FORCE11 & COPE Research Data Publishing Ethics Working Group Recommendations.
-  Zenodo. <a href="https://doi.org/10.5281/zenodo.5391293" target="_blank">https://doi.org/10.5281/zenodo.5391293<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a></p>
+  Zenodo. <a href="https://doi.org/10.5281/zenodo.5391293" target="_blank" rel="noreferrer">https://doi.org/10.5281/zenodo.5391293<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a></p>

@@ -14,7 +14,7 @@
   funder-backed initiative to transform science publishing. She is a former Chair of the
   Board of Directors for OASPA (2020-2022) and a former member of the board for
   FORCE11 (2018-2020). Learn more about Jen at
-  <a href="https://www.linkedin.com/in/jmclenna/" target="_blank">LinkedIn<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.
+  <a href="https://www.linkedin.com/in/jmclenna/" target="_blank" rel="noreferrer">LinkedIn<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.
   </p>
 </div>
 <div class="bio">

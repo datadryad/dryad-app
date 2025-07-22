@@ -2,7 +2,7 @@
 <p style="display: flex; align-items: baseline; justify-content: space-between; column-gap: 2ch; flex-wrap: wrap;">
   <span><%= @user.name %></span>
   <% if @user.orcid.present? %>
-    <a href="<%= @user.orcid_link %>" target="_blank"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a>
+    <a href="<%= @user.orcid_link %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a>
   <% end %>
 </div>
 <%= form_with(url: user_update_path(@user.id), method: :post, local: false) do |form| %>
