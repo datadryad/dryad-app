@@ -25,7 +25,7 @@ module StashDatacite
     validates :subject_id, presence: true, uniqueness: { scope: :resource_id }
 
     after_commit do
-      resource.paper_trail.save_with_version
+      resource.paper_trail.save_with_version if resource
     end
   end
 end
