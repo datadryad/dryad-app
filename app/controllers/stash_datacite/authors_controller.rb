@@ -25,8 +25,14 @@ module StashDatacite
     # PATCH/PUT /authors/1
     def update
       @author.update(author_params)
+      aff = @author.affiliations.pluck(:long_name).sort
+
       check_for_orcid if @author.author_orcid.blank?
       process_affiliations
+
+      # IF affiliations changed
+      # trigger new version creation manually
+      @author.paper_trail.save_with_version if @author.affiliations.pluck(:long_name).sort != aff
 
       respond_to do |format|
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
