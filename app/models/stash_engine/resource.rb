@@ -1122,7 +1122,7 @@ module StashEngine
       digest_type = 'sha-256'
       sums = Stash::Checksums.get_checksums([digest_type], StringIO.new(content))
       digest = sums.get_checksum(digest_type)
-      old_file = data_files.present_files.where(upload_file_name: filename).first
+      old_file = data_files.present_files.where(upload_file_name: filename).first&.original_deposit_file
       return if digest == old_file&.digest
 
       # remove old file
