@@ -337,7 +337,7 @@ module StashEngine
 
     # gets new files in this version
     def new_data_files
-      data_files.where(file_state: 'created').order(download_filename: :asc)
+      data_files.newly_created.order(download_filename: :asc)
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
@@ -350,12 +350,12 @@ module StashEngine
 
     # the size of this resource (created + copied files)
     def size(association: 'data_files')
-      public_send(association.intern).where(file_state: %w[copied created]).sum(:upload_file_size)
+      public_send(association.intern).present_files.sum(:upload_file_size)
     end
 
     # just the size of the new files
     def new_size(association: 'data_files')
-      public_send(association.intern).where(file_state: %w[created]).sum(:upload_file_size)
+      public_send(association.intern).newly_created.sum(:upload_file_size)
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
@@ -386,7 +386,7 @@ module StashEngine
     end
 
     def url_in_version?(url:, association: 'data_files')
-      send(association).where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
+      send(association).newly_created.where(url: url).where(status_code: 200).count > 0
     end
 
     def files_unchanged?(association: 'data_files')
