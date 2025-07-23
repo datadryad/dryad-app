@@ -116,7 +116,7 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
     def prepare_readme
       @file_list = @resource.data_files.present_files.reject { |f| f.download_filename == 'README.md' }.map do |f|
         h = { name: f.download_filename }
@@ -203,7 +203,7 @@ module StashEngine
         format.json { render json: @dupes }
       end
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
     # patch request
     # Saves the setting of the import type (manuscript, published, other).  While this is set on the identifier, put it
