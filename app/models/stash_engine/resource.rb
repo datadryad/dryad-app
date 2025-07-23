@@ -52,12 +52,14 @@ module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
-    has_paper_trail on: %i[create update touch destroy],
-                    meta: { additional_info: proc { |record|
-                      {
-                        subjects_list: record.subjects.map { |a| a.slice(:subject, :scheme_URI) }
-                      }
-                    } }
+    has_paper_trail meta: {
+      resource_id: proc(&:id),
+      additional_info: proc { |record|
+        {
+          subjects_list: record.subjects.map { |a| a.slice(:subject, :scheme_URI) }
+        }
+      }
+    }
 
     # ------------------------------------------------------------
     # Relations
