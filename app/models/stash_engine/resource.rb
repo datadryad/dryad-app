@@ -339,17 +339,12 @@ module StashEngine
 
     # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads(my_class: StashEngine::DataFile)
-      subquery = my_class.where(resource_id: id).where("file_state <> 'deleted' AND " \
-                                                       '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
-        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      my_class.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_class.where(resource_id: id).present_files.validated.order(download_filename: :asc)
     end
 
     # gets new files in this version
     def new_data_files
-      subquery = DataFile.where(resource_id: id).where("file_state = 'created'")
-        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      DataFile.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      data_files.newly_created.order(download_filename: :asc)
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
@@ -357,17 +352,17 @@ module StashEngine
       my_model = model.constantize
       subquery = my_model.where(resource_id: id)
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(download_filename: :asc)
     end
 
     # the size of this resource (created + copied files)
     def size(association: 'data_files')
-      public_send(association.intern).where(file_state: %w[copied created]).sum(:upload_file_size)
+      public_send(association.intern).present_files.sum(:upload_file_size)
     end
 
     # just the size of the new files
     def new_size(association: 'data_files')
-      public_send(association.intern).where(file_state: %w[created]).sum(:upload_file_size)
+      public_send(association.intern).newly_created.sum(:upload_file_size)
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
@@ -398,7 +393,7 @@ module StashEngine
     end
 
     def url_in_version?(url:, association: 'data_files')
-      send(association).where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
+      send(association).newly_created.where(url: url).where(status_code: 200).count > 0
     end
 
     def files_unchanged?(association: 'data_files')
