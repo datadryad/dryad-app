@@ -128,7 +128,7 @@ module StashEngine
         end
         h
       end
-      if @resource.descriptions.type_technical_info.try(:description) && !@resource.descriptions.type_technical_info.try(:description).empty?
+      if @resource.descriptions.type_technical_info.first&.description&.present?
         @file_content = nil
       else
         readme_file = @resource&.data_files&.present_files&.where(download_filename: 'README.md')&.first
