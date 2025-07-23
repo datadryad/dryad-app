@@ -23,7 +23,10 @@
 module StashEngine
   class Author < ApplicationRecord
     self.table_name = 'stash_engine_authors'
-    has_paper_trail meta: { additional_info: proc { |record| { affiliations_list: record.affiliations.map { |a| a.slice(:long_name, :ror_id) } } } }
+    has_paper_trail meta: {
+      resource_id: proc(&:resource_id),
+      additional_info: proc { |record| { affiliations_list: record.affiliations.map { |a| a.slice(:long_name, :ror_id) } } }
+    }
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
     has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor', dependent: :destroy
