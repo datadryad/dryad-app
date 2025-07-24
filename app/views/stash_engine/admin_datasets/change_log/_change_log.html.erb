@@ -40,6 +40,10 @@ partials = {
   </thead>
   <tbody>
     <% changes.map do |c| %>
+      <% 
+        first = @changes.find{ |i| i.item_type == c.item_type && i.item_id == c.item_id }.clone.freeze
+        c.object = c.object.merge(c.object_changes.transform_values { |v| v[1] })
+      %>
       <tr>
         <td><%= c.whodunnit.to_i.nonzero? ? "<a href=\"#{user_admin_profile_path(id: c.whodunnit)}\">#{c.user&.name}</a>".html_safe : 'System' %></td>
         <td><%= formatted_datetime(c.created_at) %></td>
@@ -50,3 +54,16 @@ partials = {
     <% end %>
   </tbody>
 </table>
+
+<script type="module">
+  import HtmlDiff from '/htmldiff.min.js'
+  document.querySelectorAll('.desc-changes').forEach(sec => {
+    const original = document.getElementById(`desc_original${sec.dataset.id}`).innerHTML
+    const latest = document.getElementById(`desc_latest${sec.dataset.id}`).innerHTML
+    sec.innerHTML = HtmlDiff.execute(original, latest)
+  })
+  document.querySelectorAll('.desc-changes-button').forEach(button => button.addEventListener('click', () => {
+    document.getElementById(button.getAttribute('aria-controls')).removeAttribute('hidden')
+    button.setAttribute('aria-expanded', true)
+  }))
+</script>

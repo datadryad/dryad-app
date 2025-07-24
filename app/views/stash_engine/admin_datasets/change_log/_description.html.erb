@@ -8,11 +8,26 @@ desc_types = {
   usage_notes: 'HSI statement',
   changelog: 'file change log'
 }
+original = first.object['description'] || ''
+latest = c.object['description'] || ''
+
+if ['technicalinfo', 'changelog', 'hsi_statement', 'usage_notes'].include?(c.object['description_type'])
+  original = markdown_render(original).to_s
+  latest = markdown_render(latest).to_s
+end
 %>
 <% if c.event != 'update' %>
 Deleted <%= desc_types[c.object['description_type'].to_sym] %>
 <% else %>
 <div class="c-autosave-header">
   Updated <%= desc_types[c.object['description_type'].to_sym] %>
-</div> 
+  <% if original.present? || latest.present? %>
+    <button class="o-button__plain-text7 desc-changes-button" aria-controls="desc_changes<%= c.id%>" aria-expanded="false">
+      <i class="fas fa-eye" aria-hidden="true"></i> View changes
+    </button>
+  <% end %>
+</div>
+<div class="desc-changes" id="desc_changes<%= c.id%>" data-id="<%=c.id %>" hidden></div>
+<div id="desc_original<%= c.id%>" hidden><%= original.html_safe %></div>
+<div id="desc_latest<%= c.id%>" hidden><%=latest.html_safe%></div> 
 <% end %>
