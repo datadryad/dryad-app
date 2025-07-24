@@ -25,4 +25,6 @@ end
 
 class CustomVersion < ApplicationVersion
   self.table_name = :paper_trail_versions
+
+  has_one :user, class_name: 'StashEngine::User', primary_key: 'whodunnit', foreign_key: 'id', touch: false, dependent: nil
 end

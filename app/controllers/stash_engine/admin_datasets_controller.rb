@@ -71,10 +71,11 @@ module StashEngine
       respond_to(&:js)
     end
 
-    # show curation activities for this item
     def index
       authorize %i[stash_engine admin_datasets]
-      @identifier = Identifier.find(params[:id])
+      @identifier = Identifier.includes(
+        latest_resource: %i[last_curation_activity editor], resources: %i[stash_version last_curation_activity editor]
+      ).find(params[:id])
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
     rescue ActiveRecord::RecordNotFound
       admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
@@ -82,12 +83,18 @@ module StashEngine
     end
 
     def activity_log
-      @identifier = Identifier.find(params[:id])
-      resource_ids = @identifier.resources.collect(&:id)
-      ord = helpers.sortable_table_order(whitelist: %w[created_at])
-      @curation_activities = CurationActivity.where(resource_id: resource_ids)
-        .includes(:resource, :user, resource: [:stash_version])
-        .order(ord, id: :asc)
+      @resource = Resource.find(params[:id])
+      @curation_activities = @resource.curation_activities.includes(:user)
+      respond_to(&:js)
+    end
+
+    def change_log
+      @resource = Resource.find(params[:id])
+      types = ['StashEngine::Resource', 'StashEngine::ResourcePublication',
+               'StashDatacite::RelatedIdentifier', 'StashEngine::Author',
+               'StashDatacite::Contributor', 'StashDatacite::Description']
+      versions = CustomVersion.where(resource_id: params[:id])
+      @changes = versions.where(item_type: types).where.not(event: 'create').order(:created_at).includes(:user)
       respond_to(&:js)
     end
 

@@ -1,0 +1,18 @@
+<%
+desc_types = {
+  abstract: 'abstract',
+  methods: 'methods',
+  other: 'usage notes',
+  technicalinfo: 'README',
+  hsi_statement: 'HSI statement',
+  usage_notes: 'HSI statement',
+  changelog: 'file change log'
+}
+%>
+<% if c.event != 'update' %>
+Deleted <%= desc_types[c.object['description_type'].to_sym] %>
+<% else %>
+<div class="c-autosave-header">
+  Updated <%= desc_types[c.object['description_type'].to_sym] %>
+</div> 
+<% end %>

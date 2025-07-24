@@ -1,0 +1,52 @@
+<% 
+sub_list = [];
+changes = @changes.reject do |change|
+  case change.item_type
+  when 'StashEngine::Resource'
+    if change.object_changes.keys.length == 1 && ['current_resource_state_id', 'total_file_size', 'user_id', 'current_editor_id', 'file_view', 'meta_view', 'solr_indexed', 'cedar_json'].include?(change.object_changes.keys[0])
+      true
+    elsif change.object_changes.empty? && change.additional_info&.dig('subjects_list') == sub_list
+      true
+    elsif change.object_changes.empty? && @changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.empty? }
+      true
+    else
+      sub_list = change.additional_info&.dig('subjects_list') || []
+      false
+    end
+  else
+    if @changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type)}
+      true
+    else
+      false
+    end
+  end
+end
+partials = {
+  'StashEngine::Resource': 'resource',
+  'StashDatacite::Description': 'description',
+  'StashEngine::Author': 'author',
+  'StashEngine::ResourcePublication': 'publication',
+  'StashDatacite::RelatedIdentifier': 'work',
+  'StashDatacite::Contributor': 'contributor',
+}
+%>
+<table class="c-lined-table" id="curation_table_<%= @resource.id %>">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Timestamp</th>
+      <th style="width: 65%;">Changes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% changes.map do |c| %>
+      <tr>
+        <td><%= c.whodunnit.to_i.nonzero? ? "<a href=\"#{user_admin_profile_path(id: c.whodunnit)}\">#{c.user&.name}</a>".html_safe : 'System' %></td>
+        <td><%= formatted_datetime(c.created_at) %></td>
+        <td>
+          <%= render partial: "stash_engine/admin_datasets/change_log/#{partials[c.item_type.to_sym]}", locals: {c: c, first: first}%>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

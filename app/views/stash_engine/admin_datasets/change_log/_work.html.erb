@@ -1,0 +1,11 @@
+<% if c.event != 'update' %>
+Deleted related work (<%= c.object_changes['related_identifier'][0].presence || "<em>empty</em>".html_safe %>)
+<% else %>
+  <span>Set related work:</span>
+  <dl>
+    <div><dt>Work type:</dt><dd><%= c.object['work_type']%></dd></div>
+    <% if c.object['related_identifier'].present? %>
+      <div><dt>DOI/URL:</dt><dd><a href="<%= c.object['related_identifier'] %>" target="_blank" rel="noreferrer"><%= c.object['related_identifier']%></a></dd></div>
+    <% end %>
+  </dl>
+<% end %>

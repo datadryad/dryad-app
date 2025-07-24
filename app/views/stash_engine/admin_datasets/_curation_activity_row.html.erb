@@ -1,0 +1,6 @@
+<tr class="c-lined-table__row">
+  <td><%= curation_activity.readable_status %></td>
+  <td><%= formatted_datetime(curation_activity.created_at) %></td>
+  <td><%= curation_activity.user ? "<a href=\"#{user_admin_profile_path(id: curation_activity.user.id)}\">#{curation_activity.user.name}</a>".html_safe : "System" %></td>
+  <td><%= format_external_references(curation_activity.note) %></td>
+</tr>
