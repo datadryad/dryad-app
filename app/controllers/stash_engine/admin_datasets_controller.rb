@@ -98,6 +98,13 @@ module StashEngine
       respond_to(&:js)
     end
 
+    def file_log
+      @resource = Resource.find(params[:id])
+      @changes = CustomVersion.where(resource_id: params[:id], item_type: 'StashEngine::GenericFile')
+        .where.not(whodunnit: 0).order(:created_at).includes(:user)
+      respond_to(&:js)
+    end
+
     def notification_date
       authorize %i[stash_engine admin_datasets]
       notification_date = params[:notification_date].to_datetime

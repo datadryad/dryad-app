@@ -25,6 +25,11 @@
                 <button class="c-admin-edit-icon log-button" title="Metadata changes" aria-label="File changes" aria-controls="changes_<%= resource.id %>" aria-expanded="false">
                   <i class="fas fa-user-pen" aria-hidden="true"></i>
                 </button>
+                <% if resource.files_changed? %>
+                  <button class="c-admin-edit-icon log-button" title="File changes" aria-label="Metadata changes" aria-controls="file_changes_<%= resource.id %>" aria-expanded="false">
+                    <i class="fas fa-file-pen" aria-hidden="true"></i>
+                  </button>
+                <% end %>
               <% end %>
             </div>
           </td>
@@ -51,6 +56,19 @@
               </button>
             </div>
             <div id="change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.change_log_path(format: :js, id: resource.id) %>" aria-busy="true" aria-live="polite">
+              <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
+            </div>
+          </td>
+        </tr>
+        <tr id="file_changes_<%= resource.id %>" hidden>
+          <td colspan="6">
+            <div class="c-autosave-header">
+              <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> file changes</p>
+              <button class="c-admin-edit-icon log-close" aria-label="Close">
+                <i class="fas fa-lg fa-close" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div id="file_change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.file_log_path(format: :js, id: resource.id) %>" aria-busy="true" aria-live="polite">
               <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
             </div>
           </td>
