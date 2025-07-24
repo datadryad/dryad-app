@@ -1,4 +1,6 @@
-<% @datasets.each_with_index do |dataset, i| %>
+<% @datasets.each_with_index do |dataset, i| 
+  if dataset.present? && dataset.identifier.present?
+%>
   <% title = dataset.title.blank? ? '[No title supplied]' : dataset.title %>
   <% delete_confirm = 'Are you sure you want to remove this dataset'
     if dataset&.stash_version.version > 1
@@ -88,5 +90,6 @@
   <% if i == @datasets.length - 1 %>
     </ul>
   <% end %>
+<% end %>
 <% end %>
 <%= paginate @datasets, params: {page_size: @page_size}, remote: true %>

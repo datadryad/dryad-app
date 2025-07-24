@@ -3,15 +3,7 @@
 const load_data = function() {
   $("[data-load]:not([data-loaded])").filter((i, el) => el.checkVisibility()).each(function () {
     var path = $(this).attr('data-load');
-    // $(this).load(path);
-    $.ajax({
-      url: path,
-      //data,
-      // success: success,
-      dataType: 'script'
-    }).always(function() {
-      // modernizeIt();
-    });
+    $.get(path)
     $(this).attr('data-loaded')
     $(this).attr('aria-busy', false)
   });
