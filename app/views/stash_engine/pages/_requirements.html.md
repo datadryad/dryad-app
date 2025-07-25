@@ -36,7 +36,7 @@ Most types of files can be submitted (e.g., text, spreadsheets, video, photograp
 
 We recommend that individual files should not exceed 10GB. This ensures files are easily accessed and downloaded by Dryad users.
 
-There is a limit of 300GB per data publication uploaded through the web interface.
+There is a limit of 1TB per data publication uploaded through the web interface.
 
 
 ## Metadata requirements
