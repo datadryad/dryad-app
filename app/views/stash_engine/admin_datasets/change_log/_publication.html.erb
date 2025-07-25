@@ -1,0 +1,12 @@
+<span>Set associated publication:</span>
+<dl>
+  <% if c.object['pub_type'] == 'primary_article' %>
+    <div><dt>Publication name:</dt><dd><%= c.object['publication_name']%></dd></div>
+    <div><dt>Publication ISSN:</dt><dd><%= c.object['publication_issn']%></dd></div>
+    <div><dt>Manuscript number:</dt><dd><%= c.object['manuscript_number']%></dd></div>
+  <% end %>
+  <% if c.object['pub_type'] == 'preprint' %>
+    <div><dt>Preprint server:</dt><dd><%= c.object['publication_name']%></dd></div>
+    <div><dt>Server ISSN:</dt><dd><%= c.object['publication_issn']%></dd></div>
+  <% end %>
+</dl>
