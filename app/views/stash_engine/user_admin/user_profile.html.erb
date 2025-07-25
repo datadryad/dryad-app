@@ -36,7 +36,7 @@
 <div class="user-admin-header">
   <h1 class="o-heading__level1"><%= "#{@user.first_name} #{@user.last_name}".strip %></h1>
   <% if @user.orcid.present? %>
-    <p><a href="<%= @user.orcid_link %>" target="_blank"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a></p>
+    <p><a href="<%= @user.orcid_link %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a></p>
   <% end %>
   <% if policy([:stash_engine, :user]).edit? %>
     <%= form_with(url: user_edit_path(id: @user.id), method: :get, local: false) do %>
