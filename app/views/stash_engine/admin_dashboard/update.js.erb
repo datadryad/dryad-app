@@ -24,6 +24,17 @@ if (document.getElementById('dataset_pub_state_<%= @identifier.id %>')){
 document.getElementById('genericModalDialog').close();
 <% if @field == 'curation_activity' %>
   document.getElementById('curation_activity_button_<%=@identifier.id%>').focus()
+  if(document.getElementById('curation_table')) {
+    if($("#curation_table th[aria-sort='ascending']").length > 0){
+      $('#curation_table tr:last').after("<%= escape_javascript(
+        render partial: 'stash_engine/admin_datasets/activity_log_row', locals: { curation_activity: @curation_activity })
+      %>");
+    }else{
+      $('#curation_table thead').after("<%= escape_javascript(
+        render partial: 'stash_engine/admin_datasets/activity_log_row', locals: { curation_activity: @curation_activity })
+      %>");
+    }
+  }
 <% elsif @field == 'curator' %>
   document.getElementById('curator_button_<%=@identifier.id%>').focus()
 <% end %>
