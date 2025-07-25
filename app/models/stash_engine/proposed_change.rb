@@ -39,6 +39,7 @@ module StashEngine
     has_one :latest_resource, class_name: 'StashEngine::Resource', through: :identifier
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id', optional: true
 
+    scope :processed, -> { where('approved = true OR rejected = true') }
     scope :unprocessed, -> { where(approved: false, rejected: false) }
     # Unprocessed and the DOI is not already in the resource
     scope :unmatched, -> {

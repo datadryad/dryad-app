@@ -5,6 +5,10 @@ module StashEngine
       @user.min_curator?
     end
 
+    def log?
+      index?
+    end
+
     def update?
       @user.min_curator?
     end
