@@ -116,6 +116,15 @@ Rack::Attack.throttle('zip_downloads_per_month', limit: APP_CONFIG[:rate_limit][
                               req.path.match(/api.*(version|dataset).*download/)
 end
 
+
+# Helpdesk requests have a much lower limit than other requests, since
+# we don't want people to spam our helpdesk team
+Rack::Attack.blocklist('helpdesk_form_limit') do |req|
+  Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 10, findtime: 1.day, bantime: 2.weeks) do
+    req.path.include?('/helpdesk')
+  end
+end
+
 # Registered API users get preferential treatment over anonymous users. Assume API users have
 # a valid auth code. If the auth data is bad, it will be caught and blocked by the API controllers.
 Rack::Attack.throttle('API_requests_by_registered_users', limit: APP_CONFIG[:rate_limit][:api_requests_auth], period: 1.minute) do |req|
