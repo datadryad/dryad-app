@@ -1,0 +1,34 @@
+<% 
+def orcid_link(orcid)
+  return "https://sandbox.orcid.org/#{orcid}" if APP_CONFIG.orcid.site == 'https://sandbox.orcid.org/'
+
+  "https://orcid.org/#{orcid}"
+end
+%>
+<% if c.event != 'update' %>
+Deleted author (<%= "#{c.object_changes['author_first_name'][0]} #{c.object_changes['author_last_name'][0]}".presence || "<em>empty</em>".html_safe %>)
+<% else %>
+  <span>Set author information:</span>
+  <dl>
+    <div><dt>Name:</dt><dd><%= c.object['author_first_name']%> <%= c.object['author_last_name']%></dd></div>
+    <% if c.object['author_orcid'].present? %>
+      <div><dt>ORCID:</dt><dd><a href="<%= orcid_link(c.object['author_orcid']) %>" target="_blank" rel="noreferrer"><%= c.object['author_orcid']%></a></dd></div>
+    <% end %>
+    <% if c.object['author_email'].present? %>
+      <div><dt>Email:</dt><dd><%= c.object['author_email']%></dd></div>
+      <div><dt>Publish email:</dt><dd><%= c.object['corresp']%></dd></div>
+    <% end %>
+    <% unless c.additional_info['affiliations_list'].empty? %>
+      <div>
+        <dt>Affiliations:</dt>
+        <dd>
+          <%= c.additional_info['affiliations_list'].map { |aff| %>
+            <% if aff['ror_id'].present? %><a href="<%= aff['ror_id'] %>" target="_blank" rel="noreferrer"><% end %>
+            <%= aff['long_name'] %>
+            <% if aff['ror_id'].present? %></a><% end %>
+          <% }.join(', ')%>
+        </dd>
+      </div>      
+    <% end %>
+  </dl>
+<% end %>

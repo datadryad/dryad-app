@@ -306,6 +306,8 @@ Rails.application.routes.draw do
     # activity log
     get 'ds_admin/:id', to: 'admin_datasets#index', as: 'activity_log'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity'
+    get 'ds_admin/:id/change_log', to: 'admin_datasets#change_log', as: 'change_log'
+    get 'ds_admin/:id/file_log', to: 'admin_datasets#file_log', as: 'file_log'
     get 'ds_admin/:id/require_action', to: 'admin_datasets#require_action', as: 'require_action'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'

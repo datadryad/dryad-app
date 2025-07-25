@@ -1,2 +1,1 @@
-document.getElementById('activity_log').innerHTML = "<%= escape_javascript(render partial: 'activity_log') %>";
-<% if params[:pressed].present? %>document.querySelector('*[data-sort=<%=params[:pressed]%>]').focus()<% end %>
+document.getElementById('activity_log_<%= @resource.id %>').innerHTML = "<%= escape_javascript(render partial: 'curation_activity') %>";

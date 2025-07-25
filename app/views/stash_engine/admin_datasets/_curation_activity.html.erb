@@ -1,0 +1,15 @@
+<table class="c-lined-table" id="curation_table_<%= @resource.id %>">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Timestamp</th>
+      <th>Action taken by</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @curation_activities.each do |ca| %>
+      <%= render partial: 'curation_activity_row', locals: {curation_activity: ca} %>
+    <% end %>
+  </tbody>
+</table>
