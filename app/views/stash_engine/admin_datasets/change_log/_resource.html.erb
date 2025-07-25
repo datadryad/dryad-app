@@ -5,23 +5,19 @@
   </div></dl>
 <% else %>
   <% c.object_changes.each do |k, v| %>
-    <% if k == 'title' %>
+    <% case k %>
+    <% when 'title' %>
       <dl><div><dt>Submission title:</dt><dd><%= v[1] %></dd></div></dl>
-    <% end %>
-    <% if k == 'hold_for_peer_review' %>
-      <%= v[1] ? 'Set' : 'Removed' %> peer review hold
-    <% end %>
-    <% if k == 'accepted_agreement' %>
-      <%= v[1] ? 'Accepted' : 'Removed acceptance of' %> Dryad terms and conditions
-    <% end %>
-    <% if k == 'publication_date' %>
-      Set publication date to <%= formatted_date(v[1]) %>
-    <% end %>
-    <% if k == 'tenant_id' %>
-      Submission institution ID is now <%= v[1] %>
-    <% end %>
-    <% if k == 'display_readme' %>
-      README <%= v[1] ? 'will' : 'will not' %> be displayed
+    <% when 'hold_for_peer_review' %>
+      <div><%= v[1] ? 'Set' : 'Removed' %> peer review hold</div>
+    <% when 'accepted_agreement' %>
+      <div><%= v[1] ? 'Accepted' : 'Removed acceptance of' %> Dryad terms and conditions</div>
+    <% when 'publication_date' %>
+      <div>Set publication date to <%= formatted_date(v[1]) %></div>
+    <% when 'tenant_id' %>
+      <div>Submission institution ID is now <%= v[1] %></div>
+    <% when 'display_readme' %>
+      <div>README <%= v[1] ? 'will' : 'will not' %> be displayed</div>
     <% end %>
   <% end %>
 <% end %>
