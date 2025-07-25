@@ -30,6 +30,8 @@ module StashDatacite
 
       it 'does not create duplicates' do
         resource.resources_subjects.delete_all
+        resource.reload
+
         params_hash = { resource_id: resource.id, subject: 'aaa, aaa' }
 
         expect do

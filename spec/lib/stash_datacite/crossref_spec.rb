@@ -196,6 +196,7 @@ module Stash
 
         it 'populates affiliations' do
           @cr.send(:populate_authors)
+          @resource.authors.first.reload
           expect(@resource.authors.first.affiliation.long_name).to eql('Hotel California')
         end
 

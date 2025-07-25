@@ -21,7 +21,6 @@
 module StashDatacite
   class Affiliation < ApplicationRecord
     self.table_name = 'dcs_affiliations'
-    has_paper_trail
 
     has_and_belongs_to_many :contributors, class_name: 'StashDatacite::Contributor'
     has_many :affiliation_authors, class_name: 'StashDatacite::AffiliationAuthor', dependent: :destroy

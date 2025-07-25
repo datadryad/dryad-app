@@ -14,7 +14,14 @@
   funder-backed initiative to transform science publishing. She is a former Chair of the
   Board of Directors for OASPA (2020-2022) and a former member of the board for
   FORCE11 (2018-2020). Learn more about Jen at
-  <a href="https://www.linkedin.com/in/jmclenna/" target="_blank">LinkedIn<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.
+  <a href="https://www.linkedin.com/in/jmclenna/" target="_blank" rel="noreferrer">LinkedIn<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.
+  </p>
+</div>
+<div class="bio">
+  <img src="/images/dan.jpg" alt="Headshot of Dan Edwards">
+  <h5>Dan Edwards</h5><br/>
+  <p><em>Head of Data Publishing</em><br/>
+  Dan joined Dryad as Head of Data Publishing in July 2025. Dan has a strong background as a senior scholarly communications professional and brings to his new role a wealth of experience in science journal publishing, research integrity, and team leadership — including experience in editorial services for KGL, the International Institute for Strategic Studies, RCVS Knowledge, the Royal College of Obstetricians and Gynaecologists, Cambridge University Press, and more. He specializes in bringing together teams and skilled professionals, and coaching them to success. Dan also volunteers as an STM mentor. In his spare time he enjoys photography, learning new languages, and travel.
   </p>
 </div>
 <div class="bio">

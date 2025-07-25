@@ -5,7 +5,7 @@
     <div style="display: flex; align-items: center; justify-content: space-between; row-gap: 2ch">
       <h1>My account</h1>
       <% if current_user.orcid %>
-        <p><a href="<%= current_user.orcid_link %>" target="_blank"><i class="fab fa-orcid" role="img" aria-label="ORCID profile (opens in new tab): " style="margin-right: 3px;"></i><%= current_user.orcid %></a></p>
+        <p><a href="<%= current_user.orcid_link %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" role="img" aria-label="ORCID profile (opens in new tab): " style="margin-right: 3px;"></i><%= current_user.orcid %></a></p>
       <% end %>
     </div>
     <div id="user_profile">

@@ -43,7 +43,7 @@ export function ChangeNote({resource}) {
   return null;
 }
 
-export default function TrackChanges({resource, setResource, current}) {
+export default function TrackChanges({resource, setResource}) {
   const [log, setLog] = useState(resource.descriptions?.find((d) => d.description_type === 'changelog'));
   const [desc, setDesc] = useState('');
 
@@ -97,10 +97,20 @@ export default function TrackChanges({resource, setResource, current}) {
   }, [log]);
 
   useEffect(() => {
-    if (current) setDesc(`${log.description || ''}`);
-  }, [current]);
-
-  useEffect(() => {
+    async function getPubDates() {
+      axios.get(`/resources/${resource.id}/file_pub_dates`).then((data) => {
+        const dates = data.data;
+        let logStr = `${log?.description || ''}`;
+        dates.forEach((d) => {
+          const date = new Date(d).toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric'});
+          if (!logStr.includes(date)) {
+            logStr += `**After ${date}:** \n\n`;
+          }
+        });
+        setDesc(logStr);
+      });
+    }
+    getPubDates();
     if (!log) create(null);
   }, []);
 
@@ -108,7 +118,7 @@ export default function TrackChanges({resource, setResource, current}) {
     <div style={{marginTop: '2em'}}>
       <h4 id="log-label">Public change log</h4>
       <p id="log-desc">
-        Your dataset has been published, so a written statement listing changes made to published files is required.
+        Your dataset has been published, so a written statement describing file changes since the previous version is required.
         This change log will appear with the next published version of your dataset.
       </p>
       <MarkdownEditor

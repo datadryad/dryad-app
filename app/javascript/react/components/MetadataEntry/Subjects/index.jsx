@@ -11,14 +11,15 @@ export const keywordPass = (subjects) => {
 
 export const keywordFail = (resource) => {
   const {subjects, identifier: {publication_date}} = resource;
+  const pub_date = new Date(publication_date);
   const keywords = subjects.filter((s) => !['fos', 'bad_fos'].includes(s.subject_scheme));
   const subject = subjects.find((s) => ['fos', 'bad_fos'].includes(s.subject_scheme));
-  if (!subject && (!publication_date || publication_date > new Date('2021-12-20'))) {
+  if (!subject && (!publication_date || pub_date > new Date('2021-12-20'))) {
     return (
       <p className="error-text" id="domain_error">A research domain is required</p>
     );
   }
-  if (keywords.length < 3 && (!publication_date || publication_date > new Date('2023-06-07'))) {
+  if (keywords.length < 3 && (!publication_date || pub_date > new Date('2023-06-07'))) {
     return (
       <p className="error-text" id="subj_error">At least 3 subject keywords are required</p>
     );

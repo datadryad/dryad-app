@@ -1,7 +1,9 @@
-<% @datasets.each_with_index do |dataset, i| %>
+<% @datasets.each_with_index do |dataset, i| 
+  if dataset.present? && dataset.identifier.present?
+%>
   <% title = dataset.title.blank? ? '[No title supplied]' : dataset.title %>
   <% delete_confirm = 'Are you sure you want to remove this dataset'
-    if dataset&.stash_version.version > 1
+    if dataset.stash_version&.version > 1
       delete_confirm << ' version?'
       if dataset.identifier.pub_state == 'published'
         delete_confirm << ' The published version will still be available.'
@@ -40,9 +42,9 @@
     </div>
       <div>
       <div class="c-user-datasets-status">
-        <span class="dataset-status <%case dataset.sort_order%><%when 0%>error-status<%when 3%>info-status<%when 4%>success-status<%else%>warning-status<%end%>"><%= dataset&.last_curation_activity&.readable_status %></span>
+        <span class="dataset-status <%case dataset.sort_order%><%when 0%>error-status<%when 3%>info-status<%when 4%>success-status<%else%>warning-status<%end%>"><%= dataset.last_curation_activity&.readable_status %></span>
         <div class="c-user-datasets-actions">
-          <% if dataset&.last_curation_activity.status == 'in_progress' %>
+          <% if dataset.last_curation_activity&.status == 'in_progress' %>
             <% if dataset.current_editor_id.nil? || dataset.current_editor_id == current_user&.id %>
               <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
                 <i class="fas fa-pencil" aria-hidden="true"></i><%= dataset.current_editor_id.nil? ? "Edit" : "Resume" %><span class="screen-reader-only"> <%= dataset.identifier.identifier %></span>
@@ -54,7 +56,7 @@
               <% end %>
               <% if policy(dataset).delete? %>
                 <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7 prevent-click', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
-                  <i class="fas fa-trash-can" aria-hidden="true"></i><%= dataset&.stash_version.version > 1 ? 'Revert' : 'Delete' %><span class="screen-reader-only"> <%= dataset.identifier.identifier %></span>
+                  <i class="fas fa-trash-can" aria-hidden="true"></i><%= dataset.stash_version&.version > 1 ? 'Revert' : 'Delete' %><span class="screen-reader-only"> <%= dataset.identifier.identifier %></span>
                 <% end %>
               <% end %>
             <% elsif dataset.current_editor_id.present? %>
@@ -67,7 +69,7 @@
             <% end %>
           <% end %>
           <% if policy(dataset).revise? %>
-          <% if ['submitted', 'action_required'].include?(dataset&.last_curation_activity.status) || dataset.sort_order == 2 || dataset.sort_order >= 4 %>
+          <% if ['submitted', 'action_required'].include?(dataset.last_curation_activity&.status) || dataset.sort_order == 2 || dataset.sort_order >= 4 %>
             <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: dataset.id), method: :post, class: 'o-button__inline-form') do %>
               <button class="o-button__plain-text7 prevent-click" name="update"><i class="fas fa-pencil" aria-hidden="true"></i>Revise submission<span class="screen-reader-only"> <%= dataset.identifier.identifier %></span></button>
             <% end %>
@@ -88,5 +90,6 @@
   <% if i == @datasets.length - 1 %>
     </ul>
   <% end %>
+<% end %>
 <% end %>
 <%= paginate @datasets, params: {page_size: @page_size}, remote: true %>

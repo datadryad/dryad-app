@@ -18,6 +18,8 @@
 module StashEngine
   class ResourcePublication < ApplicationRecord
     self.table_name = 'stash_engine_resource_publications'
+    has_paper_trail
+
     enum :pub_type, { primary_article: 0, preprint: 1 }
 
     validates :pub_type, uniqueness: { scope: :resource_id }
