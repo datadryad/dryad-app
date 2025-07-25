@@ -18,7 +18,7 @@ Deleted author (<%= "#{c.object_changes['author_first_name'][0]} #{c.object_chan
       <div><dt>Email:</dt><dd><%= c.object['author_email']%></dd></div>
       <div><dt>Publish email:</dt><dd><%= c.object['corresp']%></dd></div>
     <% end %>
-    <% unless c.additional_info&.dig('affiliations_list')&.empty? %>
+    <% if c.additional_info&.dig('affiliations_list')&.present? %>
       <div>
         <dt>Affiliations:</dt>
         <dd>
