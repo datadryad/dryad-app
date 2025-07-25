@@ -17,7 +17,7 @@ if ['technicalinfo', 'changelog', 'hsi_statement', 'usage_notes'].include?(c.obj
 end
 %>
 <% if c.event != 'update' %>
-Deleted <%= desc_types[c.object['description_type'].to_sym] %>
+Deleted <%= desc_types[c.object_changes['description_type'].dig(0)&.to_sym] %>
 <% else %>
 <div class="c-autosave-header">
   Updated <%= desc_types[c.object['description_type'].to_sym] %>

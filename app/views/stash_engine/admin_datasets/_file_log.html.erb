@@ -2,9 +2,9 @@
   if change.object_changes['file_state']&.dig(1) == 'copied'
     true
   elsif change.object_changes['file_state']&.dig(1) == 'created' &&
-    @changes.any? { |v| v.event == 'destroy' && v.object['id'] == change.object_changes['id'][1] }
+    @changes.any? { |v| v.event == 'destroy' && v.item_id == change.item_id }
     true
-  elsif change.event == 'destroy'
+  elsif change.event == 'destroy' || change.whodunnit == '0'
     true
   else
     false
@@ -33,7 +33,7 @@ end
             <%= c.object_changes['file_state']&.dig(1)&.capitalize %>:
             <% file = @resource.generic_files.find(c.object_changes['id']&.dig(1)) %>
             <% if file.original_deposit_file %>
-              <a href="<%= file.original_deposit_file.uploaded_success_url %>"><%= c.object_changes['download_filename']&.dig(1) %></a>
+              <a href="<%= file.original_deposit_file.uploaded_success_url %>"><%= c.object_changes['download_filename']&.dig(1) || c.object_changes['upload_file_name']&.dig(1) %></a>
               (<%= filesize(c.object_changes['upload_file_size']&.dig(1)) %>)
             <% else %>
               <em><%= c.object_changes['download_filename']&.dig(1) %></em>
