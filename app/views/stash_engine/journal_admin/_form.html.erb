@@ -32,20 +32,32 @@ plan_radios = [ ['', 'None'] ]
   <% end %>
 </fieldset>
 <p><%= form.check_box :covers_ldf, {checked: @journal.covers_ldf}, 1, 0 %> <%= form.label :covers_ldf, "When checked, journal covers Large Data Fees" %></p>
+<%= form.label :manuscript_number_regex, "Manuscript number RegEx"%>
+<%= form.text_field(:manuscript_number_regex, value: @journal.manuscript_number_regex, class: 'c-input__text', style: 'width:100%; font-family: Monaco, monospace; font-size: .8em;') %>
+</div>
 <h3>Peer review</h3>
 <p><%= form.check_box :default_to_ppr, {checked: @journal.default_to_ppr, disabled: !@journal.allow_review_workflow}, 1, 0 %> <%= form.label :default_to_ppr, "When checked, submissions enter PPR by default" %></p>
 <p><%= form.check_box :allow_review_workflow, {checked: !@journal.allow_review_workflow}, 0, 1 %> <%= form.label :allow_review_workflow, "When checked, PPR is not allowed for submissions" %></p>
-<h3>Publication contacts</h3>
-<p>These addresses will emailed when related submissions are published</p>
+<%= form.label :peer_review_custom_text, "Custom HTML included in peer review emails sent to users"%>
+<%= form.text_area(:peer_review_custom_text, value: @journal.peer_review_custom_text, class: 'c-input__textarea', style: 'width:100%', rows: 4) %>
+</div>
+<h3>API submission contacts</h3>
+<p>These addresses will be BCCed on invitations from API submissions</p>
 <div class="c-input">
-<%= form.label :notify_contacts, "Place each email address on a new line:"%>
-<%= form.text_area(:notify_contacts, value: @journal.notify_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
+<%= form.label :api_contacts, "Place each email address on a new line:"%>
+<%= form.text_area(:api_contacts, value: @journal.api_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
 </div>
 <h3>Review contacts</h3>
-<p>These addresses will emailed when related submissions enter PPR</p>
+<p>These addresses will be emailed when related submissions enter PPR</p>
 <div class="c-input">
 <%= form.label :review_contacts, "Place each email address on a new line:"%>
 <%= form.text_area(:review_contacts, value: @journal.review_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
+</div>
+<h3>Publication contacts</h3>
+<p>These addresses will be emailed when related submissions are published</p>
+<div class="c-input">
+<%= form.label :notify_contacts, "Place each email address on a new line:"%>
+<%= form.text_area(:notify_contacts, value: @journal.notify_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
 </div>
 <h3>Parent org</h3>
 <div class="c-input">

@@ -39,7 +39,7 @@ module StashApi
     describe '#send_submit_request' do
       it 'sends email' do
         ApiMailer.send_submit_request(@resource, metadata).deliver_now
-        delivery = assert_email("[test] To be defined \"#{@resource.title}\"")
+        delivery = assert_email("[test] Submit data for \"#{@resource.title}\"")
         expect(delivery.body.to_s).to include('https://site.root/some/link')
         expect(delivery.to).to eq([@user.email])
       end

@@ -1,8 +1,9 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>
-<% if journal_name = @resource.journal&.title %>
-  <%= journal_name %> has informed us of your recent manuscript titled "<%= @resource.title %>", and you are invited to deposit data associated with the manuscript to Dryad.
+<% if journal_name = @journal&.title %>
+  <% source = @journal.preprint_server? ? 'preprint' : 'manuscript' %>
+  <%= journal_name %> has informed us of your recent <%= source %> titled "<%= @resource.title %>", and you are invited to deposit data associated with the <%= source %> to Dryad.
 <% else %>
   You are invited to deposit data associated with the manuscript "<%= @resource.title %>" to Dryad.
 <% end %>

@@ -4,15 +4,20 @@ module StashApi
   class ApiMailer < ApplicationMailer
 
     def send_submit_request(resource, metadata)
-      assign_variables(resource)
+      @resource = resource
+      @journal = StashEngine::Journal.find_by_issn(metadata[:relatedPublicationISSN])
+      @user = @resource.authors.where.not(author_email: [nil, '']).first
       return unless @user.present? && user_email(@user).present?
 
-      status = resource.last_curation_activity.status
+      @user_name = user_name(@user)
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
       @edit_url = "#{Rails.application.routes.url_helpers.root_url.chomp('/')}#{metadata[:editLink]}"
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}To be defined \"#{@resource.title}\"")
+           subject: "#{rails_env}Submit data for \"#{@resource.title}\"",
+           bcc: @journal&.api_contacts)
 
+      status = @resource.last_curation_activity.status
       update_activities(resource: resource, message: 'Send submit email requested through API. Submit ', status: status)
     end
 
