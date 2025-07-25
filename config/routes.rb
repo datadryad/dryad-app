@@ -98,6 +98,7 @@ Rails.application.routes.draw do
         get 'display_readme'
         get 'dpc_status'
         get 'dupe_check'
+        get 'file_pub_dates'
         get 'display_collection'
         get 'show_files'
         patch 'import_type'

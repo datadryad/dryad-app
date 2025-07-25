@@ -639,8 +639,8 @@ export default function UploadFiles({
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
-      {publishedChanges && <TrackChanges resource={resource} setResource={setResource} current={current} />}
-      {changes && <ChangeNote resource={resource} /> }
+      {publishedChanges && <TrackChanges resource={resource} setResource={setResource} />}
+      {changes && !publishedChanges && <ChangeNote resource={resource} /> }
       <ModalUrl
         ref={modalRef}
         key={manFileType}

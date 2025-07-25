@@ -4,8 +4,8 @@ module StashEngine
     include StashEngine::LandingHelper
 
     before_action :require_login
-    before_action :assign_resource, only: %i[logout display_readme dupe_check]
-    before_action :require_modify_permission, except: %i[index new logout display_readme dupe_check]
+    before_action :assign_resource, only: %i[logout display_readme dupe_check file_pub_dates]
+    before_action :require_modify_permission, except: %i[index new logout display_readme dupe_check file_pub_dates]
     before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
     # before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
     before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
@@ -202,6 +202,11 @@ module StashEngine
         format.js { render template: 'stash_engine/admin_datasets/dupe_check', formats: [:js] }
         format.json { render json: @dupes }
       end
+    end
+
+    def file_pub_dates
+      dates = @resource.identifier.resources.files_published.pluck(:publication_date)
+      render json: dates, status: :ok
     end
     # rubocop:enable Metrics/AbcSize
 
