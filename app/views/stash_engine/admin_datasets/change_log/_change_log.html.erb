@@ -9,6 +9,8 @@ changes = @changes.reject do |change|
       true
     elsif change.object_changes.empty? && @changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.empty? }
       true
+    elsif @changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.keys == change.object_changes.keys }
+      true
     else
       sub_list = change.additional_info&.dig('subjects_list') || []
       false

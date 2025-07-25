@@ -100,8 +100,7 @@ module StashEngine
 
     def file_log
       @resource = Resource.find(params[:id])
-      @changes = CustomVersion.where(resource_id: params[:id], item_type: 'StashEngine::GenericFile')
-        .where.not(whodunnit: 0).order(:created_at).includes(:user)
+      @changes = CustomVersion.where(resource_id: params[:id], item_type: 'StashEngine::GenericFile').order(:created_at).includes(:user)
       respond_to(&:js)
     end
 
