@@ -25,9 +25,13 @@ module StashEngine
     self.table_name = 'stash_engine_curation_activities'
     acts_as_paranoid
 
+    attr_accessor :skip_emails
+    after_initialize :set_skip_emails_defaults
+
     # Associations
     # ------------------------------------------
     belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
+    has_one :identifier, class_name: 'StashEngine::Identifier', through: :resource
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id'
 
     # Explanation of statuses
@@ -90,7 +94,8 @@ module StashEngine
     after_create :process_dates, if: %i[curation_status_changed?]
 
     # the publication flags need to be set before creating datacite metadata (after create below)
-    after_create :update_publication_flags, if: proc { |ca| %w[published embargoed peer_review withdrawn].include?(ca.status) }
+    after_create :update_publication_flags, if: proc { |ca| can_update_pub_state?(ca.status) }
+    after_create :update_pub_state
 
     # When the status is published/embargoed send to Stripe and DataCite
     after_create :process_resource
@@ -101,7 +106,7 @@ module StashEngine
 
     # Email the author and/or journal about status changes
     after_create :email_status_change_notices,
-                 if: proc { |_ca| curation_status_changed? && !resource.skip_emails }
+                 if: proc { |_ca| curation_status_changed? && !resource.skip_emails && !skip_emails }
 
     # Email invitations to register ORCIDs to authors when published
     after_create :email_orcid_invitations,
@@ -343,21 +348,13 @@ module StashEngine
       case status
       when 'withdrawn'
         resource.update_columns(meta_view: false, file_view: false)
-        target_pub_state = 'withdrawn'
-      when 'peer_review'
-        target_pub_state = 'unpublished'
       when 'embargoed'
         resource.update_columns(meta_view: true, file_view: false)
-        target_pub_state = 'embargoed'
       when 'published'
         resource.update_columns(meta_view: true, file_view: true)
-        target_pub_state = 'published'
       end
 
-      return if resource&.identifier.nil?
-
-      resource.identifier.update_column(:pub_state, target_pub_state)
-
+      return if identifier.nil?
       return if %w[withdrawn embargoed peer_review].include?(status)
 
       # find out if there were no file changes since last publication and reset file_view, if so.
@@ -372,6 +369,16 @@ module StashEngine
       end
       resource.update_column(:file_view, false) unless changed # if nothing changed between previous published and this, don't view same files again
       resource.update_column(:file_view, false) unless resource.current_file_uploads.present?
+    end
+
+    def update_pub_state
+      return if identifier.pub_state.in?(%w[published embargoed]) && !can_update_pub_state?(status)
+
+      PubStateService.new(identifier).update_for_ca_status(status)
+    end
+
+    def can_update_pub_state?(status)
+      %w[published embargoed peer_review withdrawn].include?(status)
     end
 
     def update_salesforce_metadata
@@ -421,6 +428,10 @@ module StashEngine
       return created_at if existing_date.blank?
 
       [created_at, existing_date].max
+    end
+
+    def set_skip_emails_defaults
+      self.skip_emails = false if skip_emails.nil?
     end
   end
 end

@@ -128,8 +128,10 @@ module StashApi
       # Add funding info if it was not added by the submitter
       if @resource.contributors.blank? && art_params['funding_information'].present?
         art_params['funding_information'].each do |f|
-          @resource.contributors << StashDatacite::Contributor.create(contributor_name: f['funder'], contributor_type: 'funder',
-                                                                      award_number: f['award_number'], award_description: f['award_description'])
+          @resource.contributors << StashDatacite::Contributor.create(
+            contributor_name: f['funder'], contributor_type: 'funder',
+            award_number: f['award_number'], award_description: f['award_description'], award_title: f['award_title']
+          )
         end
         fields_changed << 'Funders'
       end
@@ -218,7 +220,9 @@ module StashApi
             {
               organization: f['funder'],
               awardNumber: f['award_number'],
-              awardDescription: f['award_description']
+              awardDescription: f['award_description'],
+              awardTitle: f['award_title'],
+              awardURI: f['award_uri']
             }
           end
           em_params['funders'] = em_funders
@@ -543,20 +547,7 @@ module StashApi
     end
 
     def duplicate_resource
-      begin
-        nr = @resource.amoeba_dup
-        nr.current_editor_id = @user.id
-        nr.save!
-      rescue ActiveRecord::RecordNotUnique
-        @resource.identifier.reload
-        nr = @resource.identifier.latest_resource unless @resource.identifier.latest_resource_id == @resource.id
-        nr ||= @resource.amoeba_dup
-        nr.current_editor_id = @user.id
-        nr.save!
-      end
-      nr.curation_activities&.update_all(user_id: @user.id)
-      nr.data_files.each(&:populate_container_files_from_last)
-      @resource = nr
+      @resource = DuplicateResourceService.new(@resource, @user).call
     end
 
     def paged_datasets(datasets:)

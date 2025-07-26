@@ -92,9 +92,6 @@ module StashDatacite
         resource.update(display_readme: true)
       end
 
-      # TODO: put this somewhere more reliable
-      StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
-
       StashEngine::EditHistory.create(resource_id: resource.id, user_comment: params[:user_comment])
 
       # this is here because they want it in curation notes, in addition to the edit history table
@@ -155,7 +152,7 @@ module StashDatacite
       @resource.identifier.update_search_words!
 
       error_items = Resource::DatasetValidations.new(resource: @resource, user: current_user).errors
-      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id) and return if error_items
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), alert: error_items and return if error_items
 
       redirect_to stash_url_helpers.dashboard_path, alert: 'Dataset is already being submitted' if processing?(@resource)
     end

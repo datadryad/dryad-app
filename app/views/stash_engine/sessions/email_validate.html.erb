@@ -1,0 +1,43 @@
+<% @page_title = "Email confirmation" %>
+<%= javascript_pack_tag 'application' %>
+<div class="t-login__section">
+  <div class="t-login__choose">
+    <h1>Verify your email address</h1>
+    <% if current_user.email.present? %>
+      <p>To verify your email address, please enter the 6 character code you received by email at <b><%= current_user.email %></b>.
+      <%= form_with(url: validate_email_path, method: :post, local: false) do |f| %>
+        <div style="text-align: center">
+          <%= f.text_field :token, class: 'c-input__token', id: 'email_code', maxlength: 6, required: true %>
+        </div>
+      <% end %>
+      <p>If you do not see the email, please check your spam filter.</p>
+      <p>The code sent will expire after 15 minutes. <a href="<%= email_validate_path(refresh: true) %>">Send another code</a></p>
+      Is the email address incorrect?
+      <%= form_with(url: edit_account_path, method: :post, class: 'o-button__inline-form', local: false) do |f| %>
+        <%= f.hidden_field :first_name, value: current_user.first_name %>
+        <%= f.hidden_field :last_name, value: current_user.last_name %>
+        <%= f.hidden_field :email, value: '' %>
+        <%= f.submit 'Enter a new email address', class: 'o-button__plain-textlink', style: 'text-decoration: underline'%>  
+      <% end %>
+      <script type="text/javascript">
+        const code = document.getElementById('email_code')
+        code.addEventListener('input', () => {
+          if (code.value.length === 6) code.form.submit()
+        })
+      </script>
+    <% else %>
+      <p>Dryad requires an email address for communication about the progress of your data submissions.</p>
+      <p>Please enter a valid email address:</b></p>
+      <%= form_with(url: edit_account_path, method: :post, local: false, id: 'user_edit_form', class: 'input-line') do |f| %>
+        <%= f.hidden_field :first_name, value: current_user.first_name %>
+        <%= f.hidden_field :last_name, value: current_user.last_name %>
+        <div class="c-input" style="text-align:left">
+          <%= f.label :email, "Email", class: 'c-input__label' %>
+          <%= f.text_field :email, class: 'c-input__text', required: true %>
+        </div>
+        <%= f.submit 'Save email', id: 'edit_submit', class: 'o-button__plain-text2', style: 'align-self: center '%>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render partial: 'login_info' %>
+</div>

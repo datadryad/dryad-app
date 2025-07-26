@@ -165,6 +165,7 @@ Rails.application.routes.draw do
     get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
     get 'downloads/zenodo_file/:file_id', to: 'downloads#zenodo_file', as: 'download_zenodo'
     get 'downloads/pre_submit/:file_id', to: 'downloads#presubmit_file_stream', as: 'download_presubmit'
+    get 'downloads/:file_id/linkset', to: 'downloads#linkset', as: 'file_linkset'
     get 'data_file/preview_check/:file_id', to: 'downloads#preview_check', as: 'preview_check'
     get 'data_file/preview/:file_id', to: 'downloads#preview_file', as: 'preview_file'
     get 'share/:id', to: 'downloads#share', as: 'share'
@@ -196,9 +197,11 @@ Rails.application.routes.draw do
     get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
     get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
     get 'sessions/:tenant_id/email', to: 'sessions#email_sso', as: 'email_sso'
+    post 'sessions/email_code', to: 'sessions#validate_sso_email', as: 'validate_sso_email'
     match 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner', via: [:get, :post]
     post 'sessions/sso', to: 'sessions#sso', as: 'sso'
-    post 'sessions/email_code', to: 'sessions#validate_email', as: 'validate_email'
+    get 'sessions/email_validate', to: 'sessions#email_validate', as: 'email_validate'
+    post 'sessions/validate_email', to: 'sessions#validate_email', as: 'validate_email'
     get 'feedback', to: 'sessions#feedback', as: 'feedback'
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
     post 'helpdesk', to: 'pages#helpdesk', as: 'contact_helpdesk'
@@ -239,6 +242,7 @@ Rails.application.routes.draw do
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
     # All our identifiers seem to have either /dryad or /FK2 or /[A-Z]\d in them, replaces the first occurrence of %2F with /
+    get 'dataset/*id/linkset', to: 'landing#linkset', as: 'linkset', constraints: { id: /\S+/ }
     get 'dataset/*id', to: redirect{ |params| "/dataset/#{params[:id].sub('%2F', '/') }"}, status: 302,
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }

@@ -19,27 +19,37 @@ module StashEngine
         resource.current_resource_state.update(resource_state: 'in_progress')
       end
 
+      context 'called at 1 day, sends 1 email' do
+        # send 1 day email reminder
+        it_should_behave_like 'send email notifications tasks', 1, (1.days + 10.minutes).from_now
+      end
+
       context 'called at 3 days, sends 1 email' do
+        # no 1 day email reminder
+        # send 3 days email reminder
         it_should_behave_like 'send email notifications tasks', 1, (3.days + 10.minutes).from_now
       end
 
-      context 'called at 14 days, sends 1 email' do
-        # sends only 3 days email reminder
-        it_should_behave_like 'send email notifications tasks', 1, (14.days + 10.minutes).from_now
+      context 'called at 14 days, sends no email' do
+        # no 1 day email reminder
+        # no 3 days email reminder
+        it_should_behave_like 'send email notifications tasks', 0, (14.days + 10.minutes).from_now
       end
 
-      #  sends 3 days email reminder
-      #  sends monthly reminder
+      # no 1 day email reminder
+      # no 3 days email reminder
+      # sends monthly reminder
       [1, 6, 11].each do |months_number|
-        context "called at #{months_number} months, sends 2 emails" do
-          it_should_behave_like 'send email notifications tasks', 2, (months_number.months + 10.minutes).from_now
+        context "called at #{months_number} months, sends 1 emails" do
+          it_should_behave_like 'send email notifications tasks', 1, (months_number.months + 10.minutes).from_now
         end
       end
 
-      context 'called after 1 year, sends 1 email' do
-        # sends only 3 days email reminder
+      context 'called after 1 year, sends no emails' do
+        # no 1 day email reminder
+        # no 3 days email reminder
         # no monthly reminder since it should be deleted at 1 year
-        it_should_behave_like 'send email notifications tasks', 1, (1.year + 10.minutes).from_now
+        it_should_behave_like 'send email notifications tasks', 0, (1.year + 10.minutes).from_now
       end
     end
 
@@ -50,9 +60,9 @@ module StashEngine
         resource.current_resource_state.update(resource_state: 'processing')
       end
 
-      #  sends no monthly reminder fro this status
+      #  sends no monthly reminder for this status
       [1, 6, 11, 12, 24].each do |months_number|
-        context "called at #{months_number} months, sends 2 emails" do
+        context "called at #{months_number} months, sends no emails" do
           it_should_behave_like 'send email notifications tasks', 0, (months_number.months + 10.minutes).from_now
         end
       end

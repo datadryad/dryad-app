@@ -1,7 +1,7 @@
 <% if review.collected_datasets.count.positive? %>
   <ul style="list-style: ''; padding: 0; margin: 0;">
   <% review.collected_datasets.each do |d| %>
-    <% publication = "#{d.publication_date.blank? ? "Forthcoming " : ''}#{d.publication_years&.first&.publication_year&.to_i}" %>
+    <% publication = "#{d.publication_date.blank? ? "Forthcoming " : ''}#{d.publication_date.year}" %>
     <li style="padding-left: 0" id="col<%= d.id %>"><a href="<%= d.identifier_uri %>"><%= d.title %></a><br/>
     <%= author_citation_format(d.authors) %> (<%=publication %>)</li>
   <% end %>

@@ -31,6 +31,7 @@ module StashDatacite
       respond_to do |format|
         contributor_params[:contributor_name] = contributor_params[:contributor_name].squish if contributor_params[:contributor_name].present?
         contributor_params[:award_description] = contributor_params[:award_description].squish if contributor_params[:award_description].present?
+        contributor_params[:award_title] = contributor_params[:award_title].squish if contributor_params[:award_title].present?
         if @contributor.update(contributor_params)
           format.json { render json: @contributor }
           format.js do
@@ -104,8 +105,10 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def contributor_params
-      params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id,
-                                          :affiliation_id, :award_number, :award_description, :funder_order, :resource_id)
+      params.require(:contributor).permit(
+        :id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id, :affiliation_id, :funder_order, :resource_id,
+        :award_number, :award_uri, :award_title, :award_description
+      )
     end
 
     def find_or_initialize
@@ -118,9 +121,10 @@ module StashDatacite
                                         "#{contrib_name}*")&.last
       end
       if contributor.present?
-        if contributor.award_number.blank? || contributor.award_description.blank?
+        if contributor.award_number.blank? || contributor.award_description.blank? || contributor.award_title.blank?
           contributor.award_number = contributor_params[:award_number]
           contributor.award_description = contributor_params[:award_description].squish if contributor_params[:award_description].present?
+          contributor.award_title = contributor_params[:award_title].squish if contributor_params[:award_title].present?
         else
           contributor.funder_order = contributor_params[:funder_order]
         end

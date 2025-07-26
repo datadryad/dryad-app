@@ -67,11 +67,8 @@ module StashEngine
     scope :with_filename, -> { where('download_filename IS NOT NULL') }
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
-    scope :validated_table, -> {
-                              present_files
-                                .where.not(download_filename: ['README.md', 'DisciplineSpecificMetadata.json'], type: StashEngine::DataFile)
-                                .validated.order(created_at: :desc)
-                            }
+    scope :uploaded, -> { where.not(download_filename: ['README.md', 'DisciplineSpecificMetadata.json'], type: StashEngine::DataFile) }
+    scope :validated_table, -> { present_files.uploaded.validated.order(download_filename: :asc) }
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')
         .or(present_files.where('upload_file_name LIKE ?', '%.csv'))
@@ -122,6 +119,22 @@ module StashEngine
       !digest.blank? && !digest_type.nil?
     end
 
+    # The first "created" file of the same name before this one if this one isn't created.
+    # In an ideal world, this would have an exact correspondence to where the item is stored in S3, but we don't live in that world.
+    def original_deposit_file
+      return nil if file_state == 'deleted' # no current file to have a path for
+
+      return self if file_state == 'created' # if this is the first created file, it's the original deposit file
+
+      resources = resource.identifier.resources.joins(:current_resource_state)
+        .where(current_resource_state: { resource_state: 'submitted' })
+        .where('stash_engine_resources.id < ?', resource.id)
+
+      # this gets the last time this file was in a previous version in the "created" state ie. the last creation
+      self.class.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name,
+                       file_state: 'created').order(id: :desc).first
+    end
+
     # returns the latest version number in which this filename was created
     def version_file_created_in
       return resource.stash_version if file_state == 'created' || file_state.blank?
@@ -166,8 +179,10 @@ module StashEngine
 
       # now add delete actions for all files with same previous filenames, could be more than 1 possibly with different cases
       prev_files.each do |prev_file|
-        self.class.create(download_filename: prev_file[:download_filename], upload_content_type: prev_file[:upload_content_type],
-                          resource_id: resource_id, file_state: 'deleted')
+        self.class.create(
+          download_filename: prev_file[:download_filename], upload_file_name: prev_file[:upload_file_name],
+          upload_content_type: prev_file[:upload_content_type], resource_id: resource_id, file_state: 'deleted'
+        )
       end
 
       resource.reload
