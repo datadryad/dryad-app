@@ -212,6 +212,7 @@ module Stash
             grouping.identifier_type = 'ror'
             grouping.group_label = grouping.group_label.presence || 'Child institutions'
             grouping.json_contains = children.to_json
+            grouping.save
           end
           true
         rescue StandardError => e
