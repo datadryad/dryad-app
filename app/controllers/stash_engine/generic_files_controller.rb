@@ -204,7 +204,7 @@ module StashEngine
       previous = @file.versions.map { |v| v.object_changes.slice('download_filename').values.flatten }.reject(&:blank?).map { |a| a[1] }
       newest = previous.pop
 
-      readme.update(description: readme.try(:description).gsub(/#{previous.reverse.first}/, newest))
+      readme.update(description: readme.try(:description).gsub(/#{previous.last}/, newest))
     end
   end
 end
