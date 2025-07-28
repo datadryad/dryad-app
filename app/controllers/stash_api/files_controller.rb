@@ -176,7 +176,7 @@ module StashApi
         resource = prev_resources.first unless prev_resources.blank?
       end
 
-      visible = resource.data_files.present_files
+      visible = resource.data_files.present_files.order(download_filename: :asc)
       all_count = visible.count
       data_files = visible.limit(per_page).offset(per_page * (page - 1))
       results = data_files.map { |i| StashApi::File.new(file_id: i.id, user: @user).metadata }

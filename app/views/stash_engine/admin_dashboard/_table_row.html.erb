@@ -29,7 +29,7 @@
   </div></td>
   <% if @fields.include?('submitter') %>
     <td>
-      <% if dataset.submitter&.orcid %><a href="<%= dataset.submitter&.orcid_link %>" target="blank"><% end %>
+      <% if dataset.submitter&.orcid %><a href="<%= dataset.submitter&.orcid_link %>" target="blank" rel="noreferrer"><% end %>
       <%= "#{dataset.submitter&.first_name} #{dataset.submitter&.last_name}" %>
       <% if dataset.submitter&.orcid %></a><% end %>
     </td>

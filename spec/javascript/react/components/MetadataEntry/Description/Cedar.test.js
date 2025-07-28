@@ -25,7 +25,7 @@ describe('Cedar', () => {
     };
     editorUrl = 'https://raw.githubusercontent.com/datadryad/dryad-app/main/public/cedar-embeddable-editor/cedar-embeddable-editor.js';
     templateName = faker.lorem.words(3);
-    templates = [[1, 'Nothing', 'Empty template'], [2, 'Faked', templateName]];
+    templates = [[1, 'Empty template'], [2, templateName]];
   });
 
   it('does not render when there are no templates', () => {
@@ -45,11 +45,7 @@ describe('Cedar', () => {
   });
 
   it('renders an indicator that metadata is present', () => {
-    resource = {
-      id: faker.datatype.number(),
-      title: faker.lorem.sentence(),
-      cedar_json: `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`,
-    };
+    resource.cedar_json = `{ "template": {"id":"2","title":"${templateName}"}, "metadata": 2, "updated": 3 }`;
     render(<Cedar resource={resource} setResource={setResource} editorUrl={editorUrl} templates={templates} />);
 
     expect(screen.getByText(templateName)).toBeInTheDocument();
@@ -58,11 +54,7 @@ describe('Cedar', () => {
   });
 
   it('opens the editor modal', async () => {
-    resource = {
-      id: faker.datatype.number(),
-      title: faker.lorem.sentence(),
-      cedar_json: `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`,
-    };
+    resource.cedar_json = `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`;
     render(<Cedar resource={resource} setResource={setResource} editorUrl={editorUrl} templates={templates} />);
 
     userEvent.click(screen.getByText('Edit form'));
@@ -72,11 +64,7 @@ describe('Cedar', () => {
   });
 
   it('deletes a metadata form', async () => {
-    resource = {
-      id: faker.datatype.number(),
-      title: faker.lorem.sentence(),
-      cedar_json: `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`,
-    };
+    resource.cedar_json = `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`;
     render(<Cedar resource={resource} setResource={setResource} editorUrl={editorUrl} templates={templates} />);
 
     userEvent.click(screen.queryByText('Delete form'));
@@ -90,11 +78,7 @@ describe('Cedar', () => {
   });
 
   it('does not delete a metadata form', async () => {
-    resource = {
-      id: faker.datatype.number(),
-      title: faker.lorem.sentence(),
-      cedar_json: `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`,
-    };
+    resource.cedar_json = `{ "template": {"id":"1","title":"${templateName}"}, "metadata": 2, "updated": 3 }`;
     render(<Cedar resource={resource} setResource={setResource} editorUrl={editorUrl} templates={templates} />);
 
     userEvent.click(screen.queryByText('Delete form'));

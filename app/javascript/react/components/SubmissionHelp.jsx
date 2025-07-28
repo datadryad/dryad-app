@@ -129,7 +129,7 @@ export function FilesHelp({date, maxFiles}) {
   return (
     <>
       <p>Files may be uploaded from your computer, or by entering a publicly accessible, individual URL for each file (for files hosted on e.g., Dropbox, OneDrive, AWS, or your lab server).</p>
-      <p>{!date || date > new Date('2025-03-12') ? `A maximum of ${maxFiles} files can be uploaded for each publication. ` : ''}Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
+      <p>{!date || new Date(date) > new Date('2025-03-12') ? `A maximum of ${maxFiles} files can be uploaded for each publication. ` : ''}Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
       <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<ExitIcon /></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon /></a>.</p>
       <div className="callout warn">
         <p><i className="fas fa-triangle-exclamation" /> If submitting your data to a journal with double-anonymous review, be sure to remove author names and any other identifying information from your data files and README. Reviewers will have access to all files during the journal&apos;s peer review process.</p>
