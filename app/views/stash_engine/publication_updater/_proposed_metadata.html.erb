@@ -2,7 +2,7 @@
   ['Primary', 'primary'],
   ['Related article', 'related'],
 ]
-options.insert(params[:match_type] == 'preprints' ? 0 : 2, ['Preprint', 'preprint'])
+options.insert(proposed_change.publication_issn.blank? ? 0 : 2, ['Preprint', 'preprint'])
 %>
 
 <td>

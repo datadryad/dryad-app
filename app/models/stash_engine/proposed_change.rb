@@ -42,12 +42,13 @@ module StashEngine
     scope :processed, -> { where('approved = true OR rejected = true') }
     scope :unprocessed, -> { where(approved: false, rejected: false) }
     # Unprocessed and the DOI is not already in the resource
-    scope :unmatched, -> {
-                        unprocessed.joins(:latest_resource).joins("
-                          LEFT OUTER JOIN `dcs_related_identifiers` ON `dcs_related_identifiers`.`resource_id` = `stash_engine_resources`.`id` AND
-                          REGEXP_SUBSTR(`dcs_related_identifiers`.`related_identifier`, '(10..+)') = `stash_engine_proposed_changes`.`publication_doi`
-                        ").where('`dcs_related_identifiers`.`id` IS NULL')
-                      }
+    scope :unmatched,
+          -> {
+            unprocessed.joins(:latest_resource).joins("
+              LEFT OUTER JOIN `dcs_related_identifiers` ON `dcs_related_identifiers`.`resource_id` = `stash_engine_resources`.`id` AND
+              REGEXP_SUBSTR(`dcs_related_identifiers`.`related_identifier`, '(10..+)') = `stash_engine_proposed_changes`.`publication_doi`
+            ").where('`dcs_related_identifiers`.`id` IS NULL')
+          }
 
     CROSSREF_PUBLISHED_MESSAGE = 'reported that the related manuscript has been accepted'.freeze
     CROSSREF_UPDATE_MESSAGE = 'provided information about a'.freeze

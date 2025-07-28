@@ -5,7 +5,7 @@
 </div>
 
 <div>
-  <p>Matches are based on the title and author list returned by Crossref.</p>
+  <p>Matches are based on the title and author list returned by Crossref. Matches with no ISSN are likely preprint servers.</p>
   <h2>Instructions</h2>
   <ol>
     <li>Evaluate the relationship between the dataset and the publication</li>
@@ -14,34 +14,28 @@
       <br/>Note: <span class="callout" style="padding: .3rem .4rem">Choosing "Primary" will replace any existing primary article, update the dataset Publication, and will release datasets in PPR for curation</span></li>
     <li>Make your type selection from the dropdown, and click "Accept"</li>
   </ol>
-
-  <div style="display: flex; align-items: baseline; column-gap: 30px; flex-wrap: wrap; margin-top: 2rem">
-  <h2 class="o-heading__level2">Limit to</h2>
-    <ul class="c-header__nav-group" style="height: 22.2667px; font-size: 1rem;">
-      <% 
-        atext = "Likely articles (#{@article_count})"
-        pretext = "Likely preprints (#{@preprint_count})"
-      %>
-      <li class="c-second__nav-item"><%= params[:match_type] == 'preprints' ? link_to(atext, stash_url_helpers.publication_updater_path(request.parameters.except(:action, :controller).merge(match_type: 'articles'))) : atext %></li>
-      <li class="c-second__nav-item"><%= params[:match_type] == 'preprints' ? pretext : link_to(pretext, stash_url_helpers.publication_updater_path(request.parameters.except(:action, :controller).merge(match_type: 'preprints'))) %></li>
-    </ul>
-  </div>
+  <h2>Limit to:</h2>
   <%= form_with url: stash_url_helpers.publication_updater_path, method: :get do |form| %>  
   <div class="o-admin-form-inline">
     <div class="o-admin-form-pair">
       <label for="list_search">Search:</label>
-      <%= text_field_tag 'list_search', params[:list_search], {size: 30, class: 'c-input__text', placeholder: 'Search words (all are required)'} %>
+      <%= text_field_tag 'list_search', params[:list_search], {class: 'c-input__text'} %>
     </div>
     <div class="o-admin-form-pair">
       <label for="status">Curation status:</label>
       <%= select_tag :status, options_from_collection_for_select(@statuses, "value", "label", params[:status]), class: 'c-input__text' %>
+    </div>
+    <div class="o-admin-form-pair">
+      <label for="match_type">Type:</label>
+      <%= select_tag :match_type, options_for_select([['', ''], ['Likely articles', 'articles'], ['Likely preprints', 'preprints']], params[:match_type]), class: 'c-input__text' %>
     </div>
     <%= submit_tag('Search', class: 'o-button__submit', name: nil ) %>
     <%= button_tag "Reset", type: :reset, id: 'reset_button', class: "o-button__remove" %>
   </div>
   <% end %>
 
-  <div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="pubupdate-label">
+  <p style="margin-bottom: 0; text-align: right"><%= @proposed_changes.total_count %> results</p>
+  <div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="pubupdate-label" style="margin-top: 0">
     <table class="c-lined-table c-proposed-change-table">
       <thead>
       <tr>
@@ -55,7 +49,7 @@
           <%= sortable_column_head sort_field: 'publication_issn', title: 'ISSN' %>
         </th>
         <th class="c-lined-table__sort c-proposed-change-table__column" <%= sort_display('publication_doi') %>>
-          <%= sortable_column_head sort_field: 'publication_doi', title: 'DOI' %>
+          <%= sortable_column_head sort_field: 'publication_doi', title: 'Publication DOI' %>
         </th>
         <th class="c-lined-table__sort c-proposed-change-table__column-small" <%= sort_display('stash_engine_proposed_changes.publication_date') %>>
           <%= sortable_column_head sort_field: 'stash_engine_proposed_changes.publication_date', title: 'Published' %>
@@ -104,6 +98,8 @@
     $("#reset_button").on("click", function(e) {
       e.preventDefault();
       $("#list_search").val("");
+      $("#match_type").val("");
+      $("#status").val("");
       e.target.form.submit();
     });
   </script>

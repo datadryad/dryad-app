@@ -29,12 +29,10 @@ module StashEngine
     def index
       proposed_changes = authorize StashEngine::ProposedChange.unmatched
         .preload(:latest_resource)
+        .joins(latest_resource: [:last_curation_activity])
+        .where("stash_engine_curation_activities.status NOT IN('in_progress', 'processing', 'embargoed')")
         .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         .select('stash_engine_proposed_changes.*')
-
-      setup_counts(proposed_changes)
-
-      params[:match_type] = 'articles' if params[:match_type].blank?
 
       proposed_changes = add_param_filters(proposed_changes)
 
@@ -108,15 +106,11 @@ module StashEngine
 
     def setup_filter
       @statuses = [OpenStruct.new(value: '', label: '*Select status*')]
-      @statuses << StashEngine::CurationActivity.statuses.keys.map do |s|
+      excluded = StashEngine::CurationActivity.statuses.except(:in_progress, :processing, :embargoed, :withdrawn)
+      @statuses << excluded.keys.map do |s|
         OpenStruct.new(value: s, label: StashEngine::CurationActivity.readable_status(s))
       end
       @statuses.flatten!
-    end
-
-    def setup_counts(proposed_changes)
-      @article_count = proposed_changes.where('stash_engine_proposed_changes.publication_issn is not null').count('*')
-      @preprint_count = proposed_changes.where('stash_engine_proposed_changes.publication_issn is null').count('*')
     end
 
     def check_status
