@@ -81,8 +81,9 @@ module StashEngine
       cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
       add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, latest_resource, approve_type)
 
+      cr.populate_pub_update!(article_type) unless article_type == 'article'
+
       if article_type == 'primary_article'
-        cr.populate_pub_update!
         identifier.record_payment if latest_resource.submitted? && identifier.publication_date.blank?
         release_updated_resource(latest_resource) if latest_resource.current_curation_status == 'peer_review'
       end
