@@ -42,7 +42,7 @@
           %>
           <tr class="c-lined-table__row">
             <td><%= formatted_datetime(proposed_change.updated_at) %></td>
-            <td><%= proposed_change.accepted? ? 'Accepted' : 'Rejected' %></td>
+            <td><%= proposed_change.approved? ? 'Approved' : 'Rejected' %></td>
             <%= render partial: 'current_metadata', locals: { resource: resource, existing_pubdoi: existing_pubdoi, existing_pubissn: existing_pubissn, existing_pubname: existing_pubname } %>
           </tr>
           <tr class="c-lined-table__row" id="proposed_<%= proposed_change.id %>">
