@@ -34,8 +34,6 @@ module StashEngine
         .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         .select('stash_engine_proposed_changes.*')
 
-      params[:match_type] = 'articles' if params[:match_type].blank?
-
       proposed_changes = add_param_filters(proposed_changes)
 
       params[:sort] = 'score' if params[:sort].blank?
