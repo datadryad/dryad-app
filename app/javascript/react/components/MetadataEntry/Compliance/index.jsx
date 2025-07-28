@@ -12,7 +12,7 @@ export const complianceCheck = (resource) => {
   }
   if (!disclaimer) {
     return (
-      <p className="error-text" id="hsi_error">Completion of the compliance questionnaire is required</p>
+      <p className="error-text" id="hsi_choice_error">Completion of the compliance questionnaire is required</p>
     );
   }
   if (disclaimer.description !== null) {

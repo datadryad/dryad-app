@@ -81,7 +81,9 @@ export default function Compliance({resource, setResource, current}) {
     }
   }, [disclaimer]);
 
-  useEffect(() => submit(hsi), [hsi]);
+  useEffect(() => {
+    if (hsi === false) submit(null);
+  }, [hsi]);
 
   useEffect(() => {
     if (current) {
@@ -128,7 +130,7 @@ export default function Compliance({resource, setResource, current}) {
           </label>
         </p>
       </fieldset>
-      <fieldset onChange={setBool} style={{display: 'block'}} aria-labelledby="hsi_legend" id="hsi_fieldset">
+      <fieldset onChange={setBool} style={{display: 'block'}} aria-labelledby="hsi_legend" aria-errormessage="hsi_choice_error" id="hsi_fieldset">
         <h3 style={{margin: '2rem 0 0'}} id="hsi_legend">
           Does your data contain information on human subjects?
         </h3>
