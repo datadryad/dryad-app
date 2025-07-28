@@ -134,9 +134,14 @@ module StashEngine
       render json: { error: "Filename #{params[:newfilename]} is in use" } and return if duplicates.present?
 
       @file.update(download_filename: params[:newfilename])
-      render json: @file.as_json(
-        methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
-      )
+      readme_update
+
+      render json: {
+        file: @file.as_json(
+          methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
+        ),
+        descriptions: @resource.descriptions
+      }
     end
 
     # everything below this in the file is protected (accessible by the class and those that inherit from it)
@@ -190,6 +195,16 @@ module StashEngine
 
     def hexhmac(key, value)
       OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), key, value)
+    end
+
+    def readme_update
+      readme = @resource.descriptions.where(description_type: :technicalinfo).first
+      return unless readme.try(:description).present?
+
+      previous = @file.versions.map { |v| v.object_changes.slice('download_filename').values.flatten }.reject(&:blank?).map { |a| a[1] }
+      newest = previous.pop
+
+      readme.update(description: readme.try(:description).gsub(/#{previous.reverse.first}/, newest))
     end
   end
 end
