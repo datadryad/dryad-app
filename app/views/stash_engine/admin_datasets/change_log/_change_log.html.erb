@@ -3,7 +3,7 @@ sub_list = [];
 changes = @changes.reject do |change|
   case change.item_type
   when 'StashEngine::Resource'
-    if change.object_changes.keys.length == 1 && ['current_resource_state_id', 'total_file_size', 'user_id', 'current_editor_id', 'file_view', 'meta_view', 'solr_indexed', 'cedar_json'].include?(change.object_changes.keys[0])
+    if change.object_changes.present? && (change.object_changes.keys & ['title', 'hold_for_peer_review', 'accepted_agreement', 'publication_date', 'tenant_id', 'display_readme']).empty?
       true
     elsif change.object_changes.empty? && change.additional_info&.dig('subjects_list') == sub_list
       true
