@@ -4,7 +4,6 @@
 #
 #  id                 :bigint           not null, primary key
 #  contributor_name   :text(65535)
-#  contributor_type   :integer          default("funder")
 #  group_label        :string(191)
 #  identifier_type    :integer          default("crossref_funder_id")
 #  json_contains      :json
