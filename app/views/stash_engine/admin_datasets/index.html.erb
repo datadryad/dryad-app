@@ -126,7 +126,7 @@
       </span>
       <span id="related_works_list" class="child-details"><%= r.resource_publication&.publication_name&.present? ? "#{r.resource_publication&.publication_name}, " : '' %> <%= r.resource_publication&.manuscript_number&.presence || ''%>
         <% if r.manuscript %>
-          <% status = manuscript.accepted? && 'accepted' || manuscript.rejected? && 'rejected' || 'submitted' %>
+          <% status = r.manuscript.accepted? && 'accepted' || r.manuscript.rejected? && 'rejected' || 'submitted' %>
           <span id="status-label" class="<%= status%>"><%= status%></span>
         <% end %>
         <br/><%= r.related_identifiers.empty? ? '' : "#{r.related_identifiers.size} related work#{r.related_identifiers.size > 1 ? 's' : ''}" %></span>
