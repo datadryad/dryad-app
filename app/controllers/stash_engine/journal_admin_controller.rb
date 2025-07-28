@@ -81,12 +81,13 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[title preprint_server default_to_ppr allow_review_workflow covers_ldf]
+      valid = %i[title preprint_server default_to_ppr allow_review_workflow covers_ldf manuscript_number_regex peer_review_custom_text]
       update = edit_params.slice(*valid).to_h
       update[:sponsor_id] = edit_params[:sponsor_id].presence
       update[:payment_plan_type] = edit_params[:payment_plan_type].presence
-      update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json
-      update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json
+      %i[api_contacts notify_contacts review_contacts].each do |contacts|
+        update[contacts] = edit_params[contacts].split("\n").map(&:strip).to_json
+      end
       update[:issns_attributes] = update_issns
       update[:alternate_titles_attributes] = update_alts
       if edit_params.key?(:flag)
@@ -115,8 +116,9 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :title, :issn, :alt_title, :payment_plan_type, :notify_contacts, :review_contacts, :preprint_server,
-                    :covers_ldf, :default_to_ppr, :allow_review_workflow, :sponsor_id, :flag, :note)
+      params.permit(:id, :title, :issn, :alt_title, :payment_plan_type, :notify_contacts, :review_contacts, :api_contacts,
+                    :preprint_server, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
+                    :covers_ldf, :default_to_ppr, :allow_review_workflow, :flag, :note)
     end
   end
 end
