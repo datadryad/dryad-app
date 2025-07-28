@@ -142,7 +142,7 @@ RSpec.describe 'Rack::Attack', type: :request do
           get '/', headers: badheaders
           puts response.status
           puts response.body
-          expect(response).to have_http_status(:forbidden)
+          expect(response).to have_http_status(:bad_request)
         end
       end
       # Banned from the rest of the site
