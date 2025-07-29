@@ -23,11 +23,14 @@ export const complianceCheck = (resource) => {
   return false;
 };
 
-export function CompPreview({resource}) {
+export function CompPreview({resource, previous}) {
   const {license_id} = resource.identifier;
   const disclaimer = resource.descriptions.find((d) => d.description_type === 'usage_notes');
+  const prev = previous?.descriptions.find((d) => d.description_type === 'usage_notes');
+  const diff = previous && disclaimer?.description !== prev?.description;
   return (
     <>
+      {diff && <ins />}
       {license_id === 'cc0' && (
         <p>
           <i className="fa-solid fa-circle-check" aria-hidden="true" />{' '}
