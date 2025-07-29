@@ -1,5 +1,5 @@
 <% 
-sub_list = [];
+sub_list = @changes.find { |c| c.object_changes.empty? }&.additional_info&.dig('subjects_list') || [];
 changes = @changes.reject do |change|
   case change.item_type
   when 'StashEngine::Resource'
@@ -12,7 +12,6 @@ changes = @changes.reject do |change|
     elsif @changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.keys == change.object_changes.keys }
       true
     else
-      sub_list = change.additional_info&.dig('subjects_list') || []
       false
     end
   else
