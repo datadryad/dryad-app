@@ -162,6 +162,7 @@ module StashEngine
     end
 
     def email_validate
+      do_redirect and return if current_user.validated? && !params.key?(:refresh)
       return unless current_user&.email&.present?
       return if current_user.email_token && !params.key?(:refresh)
 
