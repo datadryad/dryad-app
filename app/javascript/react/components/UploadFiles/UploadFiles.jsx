@@ -14,7 +14,7 @@ import ModalValidationReport from './ModalValidationReport/ModalValidationReport
 import UploadData from './UploadSelect/UploadData';
 import UploadSelect from './UploadSelect/UploadSelect';
 import TrackChanges from './TrackChanges';
-import ChangeNote from './ChangeNote';
+import ChangeLog from './ChangeLog';
 
 /**
  * Constants
@@ -658,8 +658,8 @@ export default function UploadFiles({
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
-      {pubChanges && <TrackChanges resource={resource} setResource={setResource} />}
-      {changes && !pubChanges && <ChangeNote resource={resource} /> }
+      {pubChanges && <ChangeLog resource={resource} setResource={setResource} />}
+      {changes && !pubChanges && <TrackChanges resource={resource} /> }
       <ModalUrl
         ref={modalRef}
         key={manFileType}
