@@ -5,8 +5,9 @@ import HTMLDiffer from '../HTMLDiffer';
 import {ExitIcon} from '../ExitButton';
 
 const fileList = (list, previous) => {
-  const deleted = previous?.filter((p) => !list.some((f) => f.file_state === 'copied'
-    && f.upload_file_name === p.upload_file_name && f.storage_version_id === p.storage_version_id));
+  const deleted = previous?.filter(
+    (p) => !list.some((f) => f.upload_file_name === p.upload_file_name && f.storage_version_id === p.storage_version_id),
+  );
   return (
     <>
       <ul className="c-review-files__list">
