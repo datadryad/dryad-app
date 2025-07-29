@@ -162,6 +162,11 @@ module StashEngine
     end
 
     def email_validate
+      if current_user.validated? && !params.key?(:refresh)
+        flash[:notice] = 'Your email is already validated.'
+        do_redirect and return
+      end
+
       return unless current_user&.email&.present?
       return if current_user.email_token && !params.key?(:refresh)
 

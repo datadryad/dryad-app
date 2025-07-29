@@ -32,5 +32,43 @@ module StashEngine
         expect(@user.reload.tenant_id).to eql(APP_CONFIG.default_tenant)
       end
     end
+
+    describe '#email_validate' do
+      let(:valid_email) { false }
+      let!(:user) { create(:user, tenant_id: 'dryad_ip', validated: valid_email) }
+
+      before do
+        # allow_any_instance_of(SessionsController).to receive(:current_user).and_return(user)
+        allow_any_instance_of(SessionsController).to receive(:session).and_return({ user_id: user.id }.to_ostruct)
+      end
+      subject { get email_validate_path }
+
+      context 'when email is not validated' do
+        it 'creates a new token' do
+          expect { subject }.to change { StashEngine::EmailToken.count }.by(1)
+          expect(user.email_token).not_to be_nil
+        end
+      end
+
+      context 'when email is already validated' do
+        let(:valid_email) { true }
+
+        it 'does not create a new token' do
+          subject
+
+          expect(user).to receive(:create_email_token).never
+          expect(flash[:notice]).to eq('Your email is already validated.')
+        end
+
+        context 'when refresh param is set' do
+          subject { get email_validate_path(refresh: true) }
+
+          it 'creates a new token' do
+            expect { subject }.to change { StashEngine::EmailToken.count }.by(1)
+            expect(user.email_token).not_to be_nil
+          end
+        end
+      end
+    end
   end
 end
