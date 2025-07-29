@@ -4,49 +4,7 @@ import axios from 'axios';
 import MarkdownEditor from '../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 
-export function ChangeNote({resource}) {
-  const [note, setNote] = useState({});
-  const [value, setValue] = useState('');
-  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
-
-  const postNote = (e) => {
-    axios.post(`/file_note/${note.id}`, {authenticity_token, note: e.currentTarget.value});
-  };
-
-  useEffect(() => {
-    async function getNote() {
-      axios.get(`/file_note/${resource.id}`).then((data) => {
-        setNote(data.data);
-        setValue(data.data.note);
-      });
-    }
-    getNote();
-  }, []);
-
-  if (note) {
-    return (
-      <div className="input-stack" style={{margin: '1em 0'}}>
-        <label className="input-label" htmlFor="file-note-area">
-          Describe your file changes for our data curators. These comments are not published.
-        </label>
-        <textarea
-          className="c-input__textarea"
-          id="file-note-area"
-          rows={3}
-          value={value || ''}
-          onBlur={postNote}
-          onChange={(e) => setValue(e.currentTarget.value)}
-        />
-      </div>
-    );
-  }
-  return null;
-}
-
-export default function TrackChanges({resource, setResource}) {
-  const [log, setLog] = useState(resource.descriptions?.find((d) => d.description_type === 'changelog'));
-  const [desc, setDesc] = useState('');
-
+function Editor({initial, log, setLog}) {
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const submit = (value) => {
@@ -55,7 +13,7 @@ export default function TrackChanges({resource, setResource}) {
         authenticity_token,
         description: {
           description: value,
-          resource_id: resource.id,
+          resource_id: log.resource_id,
           id: log.id,
         },
       };
@@ -73,6 +31,26 @@ export default function TrackChanges({resource, setResource}) {
 
   const checkSubmit = useCallback(debounce(submit, 900), []);
 
+  return (
+    <MarkdownEditor
+      id="changelog-editor"
+      attr={{
+        'aria-errormessage': 'log_error',
+        'aria-labelledby': 'log-label',
+        'aria-describedby': 'log-desc',
+      }}
+      initialValue={initial}
+      onChange={checkSubmit}
+    />
+  );
+}
+
+export default function TrackChanges({resource, setResource}) {
+  const [desc, setDesc] = useState('');
+  const [log, setLog] = useState(resource.descriptions.find((d) => d.description_type === 'changelog'));
+
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
   const create = (val) => {
     showSavingMsg();
     axios.post(
@@ -89,10 +67,7 @@ export default function TrackChanges({resource, setResource}) {
 
   useEffect(() => {
     if (log?.id) {
-      setResource((r) => ({
-        ...r,
-        descriptions: [log, ...r.descriptions.filter((d) => d.id !== log.id)],
-      }));
+      setResource((r) => ({...r, descriptions: [log, ...r.descriptions.filter((d) => d.if !== log.id)]}));
     }
   }, [log]);
 
@@ -104,14 +79,16 @@ export default function TrackChanges({resource, setResource}) {
         dates.forEach((d) => {
           const date = new Date(d).toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric'});
           if (!logStr.includes(date)) {
-            logStr += `**After ${date}:** \n\n`;
+            logStr += `**After ${date}:**&nbsp;\n\n`;
           }
         });
         setDesc(logStr);
       });
     }
     getPubDates();
-    if (!log) create(null);
+    const existing = resource.descriptions.find((d) => d.description_type === 'changelog');
+    if (existing) setLog(existing);
+    else create(null);
   }, []);
 
   return (
@@ -121,16 +98,9 @@ export default function TrackChanges({resource, setResource}) {
         Your dataset has been published, so a written statement describing file changes since the previous version is required.
         This change log will appear with the next published version of your dataset.
       </p>
-      <MarkdownEditor
-        id="changelog-editor"
-        attr={{
-          'aria-errormessage': 'log_error',
-          'aria-labelledby': 'log-label',
-          'aria-describedby': 'log-desc',
-        }}
-        initialValue={desc}
-        onChange={checkSubmit}
-      />
+      {log?.id && (
+        <Editor initial={desc} log={log} setLog={setLog} />
+      )}
     </div>
   );
 }

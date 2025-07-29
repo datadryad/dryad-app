@@ -13,7 +13,8 @@ import ModalUrl from './ModalUrl';
 import ModalValidationReport from './ModalValidationReport/ModalValidationReport';
 import UploadData from './UploadSelect/UploadData';
 import UploadSelect from './UploadSelect/UploadSelect';
-import TrackChanges, {ChangeNote} from './TrackChanges';
+import TrackChanges from './TrackChanges';
+import ChangeNote from './ChangeNote';
 
 /**
  * Constants
