@@ -51,6 +51,10 @@ module StashEngine
       payment_plans.include?(payment_plan_type)
     end
 
+    def api_journal?
+      StashEngine::Journal.api_journals.map(&:id).include?(id)
+    end
+
     def top_level_org
       return nil unless sponsor
 
@@ -116,6 +120,12 @@ module StashEngine
       return nil if issn.blank? || issn.size < 9
 
       StashEngine::JournalIssn.find_by(id: issn)&.journal
+    end
+
+    def self.api_journals
+      api_journals = StashEngine::Journal.joins(users: :api_application).distinct
+      api_journals2 = StashEngine::JournalOrganization.joins(users: :api_application).map(&:journals_sponsored_deep).flatten
+      api_journals | api_journals2
     end
 
     # Replace an uncontrolled journal name (typically containing '*')
