@@ -44,7 +44,7 @@ module StashDatacite
       rescue StandardError
         # text replace
         readme.update(description:
-          readme.try(:description).gsub(/^\# #{"(#{previous.reverse.map { |t| Regexp.escape(t) }.join('|')}).*$"}/, "# #{newest}"))
+          readme.description.gsub(/^\# #{"(#{previous.reverse.map { |t| Regexp.escape(t) }.join('|')}).*$"}/, "# #{newest}"))
       end
     end
   end

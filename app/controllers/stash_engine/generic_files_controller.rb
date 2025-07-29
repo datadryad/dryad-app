@@ -201,10 +201,8 @@ module StashEngine
       readme = @resource.descriptions.where(description_type: :technicalinfo).first
       return unless readme.try(:description).present?
 
-      previous = @file.versions.map { |v| v.object_changes.slice('download_filename').values.flatten }.reject(&:blank?).map { |a| a[1] }
-      newest = previous.pop
-
-      readme.update(description: readme.try(:description).gsub(/#{previous.last}/, newest))
+      previous, newest = @file.versions.last.object_changes['download_filename']
+      readme.update(description: readme.description.gsub(/#{Regexp.escape(previous)}/, newest))
     end
   end
 end
