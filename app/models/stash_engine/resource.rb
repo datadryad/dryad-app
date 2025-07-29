@@ -1018,7 +1018,7 @@ module StashEngine
 
     def changed_descriptions(other_descriptions)
       changed = []
-      desc_types = %w[abstract methods technical_info hsi_statement changelog usage_notes]
+      desc_types = %w[abstract methods technical_info other hsi_statement changelog]
       desc_types.each do |type|
         this = descriptions.where(description_type: type)&.first&.description
         that = other_descriptions.where(description_type: type)&.first&.description
