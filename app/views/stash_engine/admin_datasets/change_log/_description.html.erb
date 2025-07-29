@@ -19,7 +19,7 @@ end
 <% if c.event != 'update' %>
 Deleted <%= desc_types[c.object_changes['description_type'].dig(0)&.to_sym] %>
 <% else %>
-<div class="c-autosave-header">
+<div class="changes-header">
   Updated <%= desc_types[c.object['description_type'].to_sym] %>
   <% if original.present? || latest.present? %>
     <button class="o-button__plain-text7 desc-changes-button" aria-controls="desc_changes<%= c.id%>" aria-expanded="false">

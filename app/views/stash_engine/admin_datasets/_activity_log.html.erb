@@ -36,7 +36,7 @@
         </tr>
         <tr id="activity_<%=resource.id %>" hidden>
           <td colspan="6">
-            <div class="c-autosave-header">
+            <div class="changes-header">
               <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> curation activity</p>
               <button class="c-admin-edit-icon log-close" aria-label="Close">
                 <i class="fas fa-lg fa-close" aria-hidden="true"></i>
@@ -49,7 +49,7 @@
         </tr>
         <tr id="changes_<%= resource.id %>" hidden>
           <td colspan="6">
-            <div class="c-autosave-header">
+            <div class="changes-header">
               <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> changes</p>
               <button class="c-admin-edit-icon log-close" aria-label="Close">
                 <i class="fas fa-lg fa-close" aria-hidden="true"></i>
@@ -62,7 +62,7 @@
         </tr>
         <tr id="file_changes_<%= resource.id %>" hidden>
           <td colspan="6">
-            <div class="c-autosave-header">
+            <div class="changes-header">
               <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> file changes</p>
               <button class="c-admin-edit-icon log-close" aria-label="Close">
                 <i class="fas fa-lg fa-close" aria-hidden="true"></i>
