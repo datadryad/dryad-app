@@ -77,7 +77,9 @@ export default function ChangeLog({resource, setResource}) {
         const dates = data.data;
         let logStr = `${log?.description || ''}`;
         dates.forEach((d) => {
-          const date = new Date(d).toLocaleString('en-US', {month: 'short', day: 'numeric', year: 'numeric'});
+          const date = new Intl.DateTimeFormat('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
+          }).format(new Date(d));
           if (!logStr.includes(date)) {
             logStr += `**After ${date}:**&nbsp;\n\n`;
           }
