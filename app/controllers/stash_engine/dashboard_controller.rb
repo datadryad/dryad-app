@@ -11,6 +11,7 @@ module StashEngine
     end
 
     def show
+      session[:target_page] = dashboard_path
       @doi = CGI.escape(params[:doi] || '')
     end
 
