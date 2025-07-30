@@ -7,12 +7,12 @@ module StashEngine
     def index
       setup_sponsors
 
-      @journals = authorize StashEngine::Journal.includes(%i[issns sponsor flag])
+      @journals = authorize StashEngine::Journal.left_outer_joins(%i[issns sponsor flag payment_configuration])
 
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.left_outer_joins(:issns, :alternate_titles).distinct
+        @journals = @journals.left_outer_joins(:issns, :alternate_titles, :payment_configuration).distinct
           .where(
             'LOWER(stash_engine_journals.title) LIKE LOWER(?)
             OR LOWER(stash_engine_journal_titles.title) LIKE LOWER(?)
@@ -21,7 +21,7 @@ module StashEngine
           )
       end
 
-      ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan_type default_to_ppr])
+      ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan default_to_ppr])
       @journals = @journals.order(ord)
 
       @journals = @journals.where('sponsor_id= ?', params[:sponsor]) if params[:sponsor].present?
@@ -81,12 +81,13 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[title preprint_server default_to_ppr allow_review_workflow covers_ldf manuscript_number_regex peer_review_custom_text]
+      pp edit_params
+      valid = %i[title preprint_server default_to_ppr allow_review_workflow manuscript_number_regex peer_review_custom_text
+                 payment_configuration_attributes]
       update = edit_params.slice(*valid).to_h
       update[:sponsor_id] = edit_params[:sponsor_id].presence
-      update[:payment_plan_type] = edit_params[:payment_plan_type].presence
       %i[api_contacts notify_contacts review_contacts].each do |contacts|
-        update[contacts] = edit_params[contacts].split("\n").map(&:strip).to_json
+        update[contacts] = edit_params[contacts].to_s.split("\n").map(&:strip).to_json
       end
       update[:issns_attributes] = update_issns
       update[:alternate_titles_attributes] = update_alts
@@ -116,9 +117,10 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :title, :issn, :alt_title, :payment_plan_type, :notify_contacts, :review_contacts, :api_contacts,
+      params.permit(:id, :title, :issn, :alt_title, :notify_contacts, :review_contacts, :api_contacts,
                     :preprint_server, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
-                    :covers_ldf, :default_to_ppr, :allow_review_workflow, :flag, :note)
+                    :default_to_ppr, :allow_review_workflow, :flag, :note,
+                    payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit])
     end
   end
 end

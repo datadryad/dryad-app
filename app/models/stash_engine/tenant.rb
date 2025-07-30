@@ -41,9 +41,12 @@ module StashEngine
     has_many :users, through: :roles
     has_many :email_tokens, class_name: 'StashEngine::EmailToken', dependent: :destroy
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
+    has_one :payment_configuration, as: :partner, dependent: :destroy
 
     accepts_nested_attributes_for :flag
     enum :payment_plan, { tiered: 0, '2025': 1 }
+
+    delegate :payment_plan, :covers_dpc, :covers_ldf, to: :payment_configuration, allow_nil: true
 
     # return all enabled tenants sorted by name
     scope :enabled, -> { where(enabled: true).order(:short_name) }

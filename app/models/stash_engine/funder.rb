@@ -22,6 +22,7 @@ module StashEngine
     belongs_to :ror_org, class_name: 'StashEngine::RorOrg', primary_key: 'ror_id', foreign_key: 'ror_id', optional: true
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
+    has_one :payment_configuration, as: :partner, dependent: :destroy
 
     enum :payment_plan, { tiered: 0, '2025': 1 }
 

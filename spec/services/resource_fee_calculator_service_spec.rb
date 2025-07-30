@@ -10,7 +10,7 @@ describe ResourceFeeCalculatorService do
   end
 
   context 'with publisher type' do
-    let!(:journal) { create(:journal, payment_plan_type: '2025') }
+    let!(:journal) { create(:journal, payment_plan: '2025') }
     let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first]) }
 
     it_should_behave_like 'calling FeeCalculatorService', 'publisher'

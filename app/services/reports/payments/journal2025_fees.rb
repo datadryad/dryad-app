@@ -22,7 +22,7 @@ module Reports
           StashEngine::JournalOrganization.all.each do |org|
             journals = org.journals_sponsored_deep
             journals.each do |j|
-              next unless j.payment_plan_type == '2025' && j.top_level_org == org
+              next unless j.payment_configuration.payment_plan == '2025' && j.top_level_org == org
 
               journal_item_count = 0
               sc_report.each do |item|

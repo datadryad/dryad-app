@@ -451,7 +451,7 @@ module StashEngine
       end
 
       it 'returns false if journal will pay' do
-        create(:journal, issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
+        create(:journal, issn: @fake_issn, payment_plan: 'SUBSCRIPTION')
         expect(@identifier.user_must_pay?).to eq(false)
       end
 
@@ -469,13 +469,13 @@ module StashEngine
       end
 
       it 'records a journal payment' do
-        create(:journal, issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
+        create(:journal, issn: @fake_issn, payment_plan: 'SUBSCRIPTION')
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/journal/)
       end
 
       it 'replaces a journal payment when the associated journal has changed' do
-        create(:journal, issn: @fake_issn, payment_plan_type: 'SUBSCRIPTION')
+        create(:journal, issn: @fake_issn, payment_plan: 'SUBSCRIPTION')
         @identifier.record_payment
         expect(@identifier.payment_type).to match(/journal/)
         @pub.update(publication_issn: '0000-0000')

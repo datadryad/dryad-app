@@ -201,7 +201,7 @@ RSpec.describe 'FeeCalculatorController', type: :request do
     describe '#publisher fee from journal' do
       let(:options) { {} }
       let(:type) { 'publisher' }
-      let!(:journal) { create(:journal, payment_plan_type: '2025') }
+      let!(:journal) { create(:journal, payment_plan: '2025') }
       let(:identifier) { create(:identifier) }
       let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first]) }
 

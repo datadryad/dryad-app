@@ -25,7 +25,7 @@ module StashEngine
         current_payer = payer
         return true if current_payer.nil?
 
-        return current_payer.payment_plan_type.to_s == '2025' if current_payer.is_a? StashEngine::Journal
+        return current_payer.payment_configuration&.payment_plan.to_s == '2025' if current_payer.is_a? StashEngine::Journal
 
         current_payer.payment_plan.to_s == '2025'
       end
@@ -45,9 +45,9 @@ module StashEngine
           self.payment_id = nil
         elsif institution_will_pay?
           self.payment_id = latest_resource&.tenant&.id
-          self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_plan == 'tiered'}"
+          self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'tiered'}"
         elsif journal&.will_pay?
-          self.payment_type = "journal-#{journal.payment_plan_type}"
+          self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
         elsif funder_will_pay?
           contrib = funder_payment_info

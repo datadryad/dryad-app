@@ -1,0 +1,21 @@
+# == Schema Information
+#
+# Table name: payment_configurations
+#
+#  id           :bigint           not null, primary key
+#  covers_dpc   :boolean
+#  covers_ldf   :boolean
+#  ldf_limit    :integer
+#  partner_type :string(191)
+#  payment_plan :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  partner_id   :string(191)
+#
+class PaymentConfiguration < ApplicationRecord
+  has_paper_trail
+
+  belongs_to :partner, polymorphic: true, optional: true
+
+  enum :payment_plan, { tiered: 1, '2025': 2, SUBSCRIPTION: 3, PREPAID: 4, DEFERRED: 5, TIERED: 6 }
+end

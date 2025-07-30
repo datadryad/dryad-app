@@ -29,6 +29,8 @@
 module StashEngine
   class Journal < ApplicationRecord
     self.table_name = 'stash_engine_journals'
+    PAYMENT_PLANS = %w[SUBSCRIPTION PREPAID DEFERRED TIERED 2025].freeze
+
     validates :title, presence: true
     validate :email_array
 
@@ -39,16 +41,16 @@ module StashEngine
     has_many :manuscripts, -> { order(created_at: :desc) }, class_name: 'StashEngine::Manuscript'
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
+    has_one :payment_configuration, as: :partner, dependent: :destroy
 
     validates_associated :issns
-    accepts_nested_attributes_for :issns, :alternate_titles, :flag
+    accepts_nested_attributes_for :issns, :alternate_titles, :flag, :payment_configuration
 
     scope :servers, -> { where(preprint_server: true) }
-
-    def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED 2025]
+    scope :sponsoring, -> { joins(:payment_configuration).where(payment_configuration: { payment_plan: PAYMENT_PLANS }) }
 
     def will_pay?
-      payment_plans.include?(payment_plan_type)
+      PAYMENT_PLANS.include?(payment_configuration&.payment_plan)
     end
 
     def api_journal?

@@ -88,7 +88,8 @@ export default function Publication({current, resource, setResource}) {
       || (!!preprint_server && !!preprint)) {
       setShowTitle(true);
     }
-    setSponsored(!!resource.journal?.payment_plan_type && (manuscript_number || primary_article) ? resource.journal.title : false);
+    console.log(resource.journal);
+    setSponsored(!!resource.journal?.payment_configuration?.payment_plan && (manuscript_number || primary_article) ? resource.journal.title : false);
     if (resource.title) {
       if (!resource.identifier.process_date?.processing) {
         axios.get(`/resources/${resource.id}/dupe_check.json`).then((data) => {

@@ -125,7 +125,7 @@ module FeeCalculator
       let(:prev_files_size) { nil }
       let(:new_files_size) { 100 }
       let(:covers_ldf) { false }
-      let!(:journal) { create(:journal, payment_plan_type: '2025', covers_ldf: covers_ldf) }
+      let!(:journal) { create(:journal, payment_plan: '2025', covers_ldf: covers_ldf) }
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
       subject { described_class.new(options, resource: resource).call }
 
@@ -352,7 +352,7 @@ module FeeCalculator
       end
 
       context 'when journal is a payer but not on 2025 fee model' do
-        let!(:journal) { create(:journal, payment_plan_type: 'DEFERRED', covers_ldf: covers_ldf) }
+        let!(:journal) { create(:journal, payment_plan: 'DEFERRED', covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
 
         it 'raises an error' do
