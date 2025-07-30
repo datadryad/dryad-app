@@ -1,5 +1,9 @@
 // ##### Input Component ##### //
 
+*::placeholder {
+  color: $medium-gray;
+}
+
 input {
 	accent-color: $medium-green;
 

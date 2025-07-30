@@ -81,10 +81,10 @@ module StashDatacite
       end
     end
 
-    # GET /contributors/groupings
-    def groupings
-      groupings = StashDatacite::ContributorGrouping.all
-      render json: groupings
+    # POST /contributors/grouping?ror_id={ror_id}
+    def grouping
+      grouping = StashDatacite::ContributorGrouping.where(name_identifier_id: params[:ror_id]).first
+      render json: grouping
     end
 
     private
