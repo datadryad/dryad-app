@@ -119,7 +119,6 @@ module StashEngine
 
     def email_sso
       @tenant = StashEngine::Tenant.find(params[:tenant_id])
-      do_redirect and return if current_user.tenant_auth_date&.after?(1.month.ago)
       return unless current_user.email&.end_with?(@tenant.authentication&.email_domain)
       return if current_user.email_token && !params.key?(:refresh)
 
@@ -147,7 +146,9 @@ module StashEngine
         tenant = StashEngine::Tenant.find(params[:tenant_id]&.dig(:value))
         case tenant&.authentication&.strategy
         when 'email'
-          redirect_to email_sso_path(tenant_id: tenant.id, refresh: params.key?(:reverify))
+          h = { tenant_id: tenant.id }
+          h[:refresh] = true if params.key?(:reverify)
+          redirect_to email_sso_path(h)
         when 'author_match'
           current_user.roles.tenant_roles.delete_all if current_user.tenant_id != tenant.id
           current_user.update(tenant_id: tenant.id, tenant_auth_date: Time.current)
