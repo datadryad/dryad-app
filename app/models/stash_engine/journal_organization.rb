@@ -18,6 +18,7 @@ module StashEngine
 
     has_many :children, class_name: 'JournalOrganization', primary_key: :id, foreign_key: :parent_org_id, inverse_of: :parent_org
     belongs_to :parent_org, class_name: 'JournalOrganization', optional: true, inverse_of: :children
+    has_many :journals_sponsored, class_name: 'StashEngine::Journal', foreign_key: :sponsor_id
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
 
@@ -36,16 +37,11 @@ module StashEngine
       end
     end
 
-    # journals sponsored directly by this org
-    def journals_sponsored
-      StashEngine::Journal.where(sponsor_id: id)
-    end
-
     # journals sponsored at any level by this org and its children
     def journals_sponsored_deep
-      j = StashEngine::Journal.where(sponsor_id: id)
+      j = journals_sponsored
       orgs_included&.each do |suborg|
-        j += suborg.journals_sponsored
+        j |= suborg.journals_sponsored
       end
       j
     end
@@ -59,7 +55,7 @@ module StashEngine
 
       children.each do |sub|
         all_orgs << sub
-        all_orgs += sub.orgs_included if sub.orgs_included.present?
+        all_orgs |= sub.orgs_included if sub.children.present?
       end
       all_orgs
     end
