@@ -140,8 +140,6 @@ RSpec.describe 'Rack::Attack', type: :request do
       freeze_time do
         2.times do
           get '/', headers: badheaders
-          puts response.status
-          puts response.body
           expect(response).to have_http_status(:bad_request)
         end
       end

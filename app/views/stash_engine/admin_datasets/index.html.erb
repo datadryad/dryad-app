@@ -98,6 +98,12 @@
           <span class="child-details error-text">
             <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Submitter institution no longer authenticated
           </span>
+        <% elsif @identifier.payer&.class&.name == 'StashEngine::Journal' %>
+          <% if r.journal.api_journal? && !r.creator.journals_as_admin.include?(journal) %>
+            <span class="child-details error-text">
+              <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Not submitted via API for API journal
+            </span>
+          <% end %>
         <% end %>
       <% end %>
     </div>
@@ -124,7 +130,12 @@
           <% end %>
         <% end %>
       </span>
-      <span id="related_works_list" class="child-details"><%= r.resource_publication&.publication_name&.present? ? "#{r.resource_publication&.publication_name}, " : '' %> <%= r.resource_publication&.manuscript_number&.presence || ''%><br/><%= r.related_identifiers.empty? ? '' : "#{r.related_identifiers.size} related work#{r.related_identifiers.size > 1 ? 's' : ''}" %></span>
+      <span id="related_works_list" class="child-details"><%= r.resource_publication&.publication_name&.present? ? "#{r.resource_publication&.publication_name}, " : '' %> <%= r.resource_publication&.manuscript_number&.presence || ''%>
+        <% if r.manuscript %>
+          <% status = r.manuscript.accepted? && 'accepted' || r.manuscript.rejected? && 'rejected' || 'submitted' %>
+          <span id="status-label" class="<%= status%>"><%= status%></span>
+        <% end %>
+        <br/><%= r.related_identifiers.empty? ? '' : "#{r.related_identifiers.size} related work#{r.related_identifiers.size > 1 ? 's' : ''}" %></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
       <span class="input-line">

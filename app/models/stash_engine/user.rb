@@ -136,7 +136,7 @@ module StashEngine
 
     def journals_as_admin
       admin_org_journals = journal_organizations.map(&:journals_sponsored_deep).flatten
-      (journals + admin_org_journals).uniq
+      journals | admin_org_journals
     end
 
     # Merges the other user into this user.  Updates so that this user owns other user's old stuff and has their critical info.

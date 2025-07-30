@@ -341,6 +341,7 @@ Rails.application.routes.draw do
 
     # Publication updater page - Allows admins to accept/reject metadata changes from external sources like Crrossref
     get 'publication_updater', to: 'publication_updater#index'
+    get 'publication_updater/log', to: 'publication_updater#log'
     put 'publication_updater/:id', to: 'publication_updater#update'
     delete 'publication_updater/:id', to: 'publication_updater#destroy'
 
@@ -401,7 +402,7 @@ Rails.application.routes.draw do
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
-    get 'contributors/groupings', to: 'contributors#groupings'
+    post 'contributors/grouping', to: 'contributors#grouping'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
     patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'

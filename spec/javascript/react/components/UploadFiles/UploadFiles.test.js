@@ -252,7 +252,7 @@ describe('UploadFiles', () => {
     axios.get.mockResolvedValueOnce(form);
     axios.post.mockResolvedValueOnce(software_data);
     datafile.download_filename = 'dataChanged.csv';
-    axios.patch.mockResolvedValueOnce({data: datafile});
+    axios.patch.mockResolvedValueOnce({data: {file: datafile}});
 
     info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);

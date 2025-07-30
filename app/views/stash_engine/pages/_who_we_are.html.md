@@ -24,19 +24,33 @@
 <h4>Publishing organizations</h4>
   <%= render "members_publishers" %>
 <p>We wish to express our enduring gratitude to our founding partners:</p>
-<ul>
-  <li>American Association for the Advancement of Science (AAAS)
-  <li>American Genetic Association (AGA)
-  <li>American Society of Naturalists
-  <li>Association for Tropical Biology and Conservation (ATBC)
-  <li>British Ecological Society
-  <li>European Society for Evolutionary Biology (ESEB)
-  <li>Nordic Society Oikos
-  <li>Oxford University Press (OUP)
-  <li>Society for the Study of Evolution
-  <li>The Royal Society
-  <li>Society of Systematic Biologists
-  <li>John Wiley & Sons
+<ul class="member-list">
+  <li>American Association for the Advancement of Science (AAAS)</li>
+  <li>American Genetic Association (AGA)</li>
+  <li>American Society of Naturalists</li>
+  <li>Association for Tropical Biology and Conservation (ATBC)</li>
+  <li>Biological Journal of the Lennean Society</li>
+  <li>BioMed Central</li>
+  <li>British Ecological Society</li>
+  <li>BMJ Open</li>
+  <li>Ecology Letters, Centre National de la Recherche Scientifique</li>
+  <li>Ecological Society of America</li>
+  <li>European Society for Evolutionary Biology (ESEB)</li>
+  <li>Evolutionary Applications</li>
+  <li>Genetics Society</li>
+  <li>Journal of Paleontology and Paleobiology, The Paleontological Society</li>
+  <li>Molecular Biology and Evolution, Society for Molecular Biology and Evolution</li>
+  <li>Molecular Ecology</li>
+  <li>Molecular Ecology Resources</li>
+  <li>Nordic Society Oikos</li>
+  <li>Oxford University Press (OUP)</li>
+  <li>Pensoft Publishers</li>
+  <li>PLOS (Public Library of Science)</li>
+  <li>Society for the Study of Evolution</li>
+  <li>The Royal Society</li>
+  <li>Society of Systematic Biologists</li>
+  <li>US Fish and Wildlife Service</li>
+  <li>John Wiley &amp; Sons, Inc</li>
 </ul>
 </div>
 <h3 class="expand-button"><button id="our-board" aria-expanded="false" aria-controls="our-board-sec">Our board</button></h3>

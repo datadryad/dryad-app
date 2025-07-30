@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Description from './Description';
 import Cedar from './Cedar';
+import cedarCheck from './cedarCheck';
 
 export default function DescriptionGroup({
   resource, setResource, curator, cedar, current,
@@ -29,21 +30,9 @@ export default function DescriptionGroup({
     describe: <><i aria-hidden="true" />Programs and software required to open the data files</>,
   };
 
-  const checkCedar = () => {
-    const bank = /neuro|cogniti|cereb|memory|consciousness|amnesia|psychopharma|brain|hippocampus/i;
-    const {
-      title, resource_publication, subjects, descriptions,
-    } = resource;
-    const {publication_name} = resource_publication || {};
-    const keywords = subjects.map((s) => s.subject).join(',');
-    const abst = descriptions.find((d) => d.description_type === 'abstract');
-    return bank.test(title) || bank.test(publication_name) || bank.test(keywords) || bank.test(abst?.description);
-  };
-
   useEffect(() => {
     if (current) {
       const hasMethods = resource.descriptions.find((d) => d.description_type === 'methods');
-      setShowCedar(checkCedar());
       setMethods(hasMethods);
       setUsage(resource.descriptions.find((d) => d.description_type === 'other'));
       setAbstract(resource.descriptions.find((d) => d.description_type === 'abstract'));
@@ -53,13 +42,12 @@ export default function DescriptionGroup({
   }, [current]);
 
   useEffect(() => {
-    if (checkCedar()) setShowCedar(true);
-  }, [resource]);
-
-  useEffect(() => {
-    const templ = cedar?.templates?.find((arr) => arr[2] === 'Human Cognitive Neuroscience Data');
-    if (templ) setTemplate({id: templ[0], title: templ[2]});
-  }, [cedar]);
+    if (current) {
+      const {check, template: templ} = cedarCheck(resource, cedar.templates);
+      setShowCedar(check);
+      if (templ) setTemplate({id: templ[0], title: templ[1]});
+    }
+  }, [current, resource]);
 
   if (!abstract?.id) {
     return <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>;

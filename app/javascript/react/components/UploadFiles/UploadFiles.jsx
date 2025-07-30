@@ -489,10 +489,12 @@ export default function UploadFiles({
     if (file.status !== 'Pending') {
       axios.patch(`/${file.uploadType}_files/${id}/rename`, {resource_id: resource.id, newfilename})
         .then((data) => {
-          if (data.data.error) {
-            setWarning([data.data.error]);
+          const {error, file: renamed, descriptions} = data.data;
+          if (error) {
+            setWarning([error]);
           } else {
-            const transformed = transformData([data.data]);
+            if (descriptions) setResource((r) => ({...r, descriptions}));
+            const transformed = transformData([renamed]);
             setChosenFiles((cf) => cf.map((f) => (f.id === id ? transformed[0] : f)));
           }
         });
