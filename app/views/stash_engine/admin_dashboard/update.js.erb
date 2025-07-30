@@ -24,6 +24,9 @@ if (document.getElementById('dataset_pub_state_<%= @identifier.id %>')){
 document.getElementById('genericModalDialog').close();
 <% if @field == 'curation_activity' %>
   document.getElementById('curation_activity_button_<%=@identifier.id%>').focus()
+  if(document.getElementById('curation_table_<%= @identifier.latest_resource_id %>')) {
+    $('#curation_table_<%= @resource.id %> tr:last').after("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/curation_activity_row', locals: { curation_activity: @curation_activity }) %>");
+  }
 <% elsif @field == 'curator' %>
   document.getElementById('curator_button_<%=@identifier.id%>').focus()
 <% end %>
