@@ -81,7 +81,8 @@ export default function ChangeLog({resource, setResource}) {
             month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
           }).format(new Date(d));
           if (!logStr.includes(date)) {
-            logStr += `**After ${date}:**&nbsp;\n\n`;
+            if (logStr) logStr += '\n\n';
+            logStr += `**After ${date}:**&nbsp;`;
           }
         });
         setDesc(logStr);
