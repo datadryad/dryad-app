@@ -78,12 +78,12 @@ module StashEngine
     def log
       proposed_changes = authorize StashEngine::ProposedChange.processed.joins(:identifier).preload(:latest_resource)
 
-      params[:sort] = 'score' if params[:sort].blank?
+      params[:sort] = 'updated_at' if params[:sort].blank?
       params[:direction] = 'desc' if params[:direction].blank?
 
       ord = helpers.sortable_table_order(whitelist:
          %w[stash_engine_proposed_changes.updated_at stash_engine_proposed_changes.title publication_name publication_issn publication_doi
-            stash_engine_proposed_changes.publication_date authors score])
+            stash_engine_proposed_changes.publication_date authors])
 
       if request.format.to_s == 'text/csv' # we want all the results to put in csv
         @page = 1
