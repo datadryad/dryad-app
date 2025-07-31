@@ -135,7 +135,8 @@ module StashEngine
 
       if params[:match_type].present?
         proposed_changes = proposed_changes.where(
-          "stash_engine_proposed_changes.publication_issn is #{params[:match_type] == 'preprints' ? 'null' : 'not null'}"
+          "stash_engine_proposed_changes.publication_issn is #{params[:match_type] == 'preprints' ? 'null' : 'not null'} OR
+          stash_engine_proposed_changes.xref_type #{params[:match_type] == 'preprints' ? '=' : '<>'} 'posted-content'"
         )
       end
 
