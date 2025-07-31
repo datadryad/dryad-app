@@ -2,7 +2,7 @@
   ['Primary', 'primary'],
   ['Related article', 'related'],
 ]
-likely_pre = proposed_change.publication_issn.blank? || proposed_change.xref_type == 'posted-content'
+likely_pre = proposed_change.xref_type == 'posted-content'
 options.insert(likely_pre ? 0 : 2, ['Preprint', 'preprint'])
 %>
 
