@@ -61,9 +61,10 @@ module StashApi
     end
 
     def send_submit_invitation_email(metadata)
-      return if !ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || @resource.api_notification_author.blank?
+      author = notification_author(@resource)
+      return if !ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || author.blank?
 
-      StashApi::ApiMailer.send_submit_request(@resource, metadata).deliver_now
+      StashApi::ApiMailer.send_submit_request(@resource, metadata, author).deliver_now
     end
 
     def resource_uniq?
@@ -249,6 +250,10 @@ module StashApi
       return if !ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || email_address.present?
 
       raise StashApi::Error::BadRequestError, 'None of the authors have an email address in order to send the Submission email.'
+    end
+
+    def notification_author(resource)
+      resource.authors.where.not(author_email: [nil, '']).first
     end
   end
 end
