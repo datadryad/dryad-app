@@ -21,7 +21,7 @@
 </div>
 <p><%= form.check_box :preprint_server, {checked: @journal.preprint_server}, 1, 0 %> <%= form.label :preprint_server, "When checked, the journal is included on lists of preprint servers" %></p>
 <%= fields_for :payment_configuration_attributes do |pf| %>
-  <%= pf.hidden_field :id, value: @journal.payment_configuration.id %>
+  <%= pf.hidden_field :id, value: @payment_configuration.id %>
   <%
     plan_radios = [ ['', 'None'] ] + StashEngine::Journal::PAYMENT_PLANS.map {|p| [p, p.capitalize]}
   %>
@@ -29,19 +29,19 @@
   <fieldset class="c-fieldset">
     <legend>Payment plan type:</legend>
     <% plan_radios.each do |plan| %>
-      <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @journal.payment_configuration.payment_plan %>
+      <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @payment_configuration.payment_plan %>
       <label for="<%= "payment_configuration_attributes_payment_plan_#{plan.first.downcase}" %>"><%= plan[1] %></label>
       <br />
     <% end %>
   </fieldset>
 
   <p>
-    <%= pf.check_box :covers_ldf, {checked: @journal.payment_configuration.covers_ldf}, 1, 0 %>
+    <%= pf.check_box :covers_ldf, {checked: @payment_configuration.covers_ldf}, 1, 0 %>
     <%= pf.label :covers_ldf, "When checked, journal covers Large Data Fees" %>
   </p>
   <p>
-    <%= pf.label :ldf_limit, "Covered Large Data Fee limit" %>
-    <%= pf.text_field :ldf_limit, value: @journal.payment_configuration.ldf_limit, class: 'c-input__text', style: 'width:100%; font-family: Monaco, monospace; font-size: .8em;' %>
+    <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
+    <%= pf.number_field :ldf_limit, value: @payment_configuration.ldf_limit, class: 'c-input__text', style: 'width:100%; font-family: Monaco, monospace; font-size: .8em;', disabled: !@payment_configuration.covers_ldf %>
   </p>
 <% end %>
 

@@ -17,3 +17,10 @@ ppr.addEventListener('change', () => {
   def.disabled = ppr.checked
   if (ppr.checked) def.checked = false
 })
+
+var ldf = document.getElementById('payment_configuration_attributes_covers_ldf')
+ldf.addEventListener('change', () => {
+  var limit = document.getElementById('payment_configuration_attributes_ldf_limit')
+  limit.disabled = !ldf.checked
+  if (!ldf.checked) limit.value = ''
+})

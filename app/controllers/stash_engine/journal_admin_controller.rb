@@ -12,7 +12,9 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.left_outer_joins(:issns, :alternate_titles, :payment_configuration).distinct
+        @journals = @journals.select('stash_engine_journals.*, payment_configurations.payment_plan')
+          .left_outer_joins(:issns, :alternate_titles, :payment_configuration)
+          .distinct
           .where(
             'LOWER(stash_engine_journals.title) LIKE LOWER(?)
             OR LOWER(stash_engine_journal_titles.title) LIKE LOWER(?)
@@ -32,6 +34,7 @@ module StashEngine
 
     def edit
       @journal = authorize StashEngine::Journal.find(params[:id])
+      @payment_configuration = @journal.payment_configuration || @journal.build_payment_configuration
       respond_to(&:js)
     end
 
@@ -49,6 +52,7 @@ module StashEngine
 
     def new
       @journal = authorize StashEngine::Journal.new
+      @payment_configuration = @journal.build_payment_configuration
       respond_to(&:js)
     end
 
