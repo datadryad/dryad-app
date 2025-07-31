@@ -25,7 +25,7 @@ module StashApi
       if @resource.user_edit_permission?(user: @user)
         owning_user_id = establish_owning_user_id
         owning_user = StashEngine::User.find(owning_user_id)
-        validate_submit_invitation(owning_user)
+        validate_submit_invitation
         user_note = "Created by API user, assigned ownership to #{owning_user&.name} (#{owning_user_id})"
         @resource.curation_activities << StashEngine::CurationActivity.create(
           status: @resource.current_curation_status || 'in_progress',
@@ -61,7 +61,7 @@ module StashApi
     end
 
     def send_submit_invitation_email(metadata)
-      return if @hash['triggerSubmitInvitation'] != true || @resource.submitter.email.blank?
+      return if !ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || @resource.notification_author.blank?
 
       StashApi::ApiMailer.send_submit_request(@resource, metadata).deliver_now
     end
@@ -242,10 +242,13 @@ module StashApi
       email_string
     end
 
-    def validate_submit_invitation(owning_user)
-      return if @hash['triggerSubmitInvitation'] != true || owning_user.email.present?
+    def validate_submit_invitation
+      email_address = @hash[:authors]&.map { |author| parse_email(author[:email]) }
+      email_address = email_address.reject(&:blank?).first if email_address.present?
 
-      raise StashApi::Error::BadRequestError, 'Dataset owner does not have an email address in order to send the Submission email.'
+      return if !ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || email_address.present?
+
+      raise StashApi::Error::BadRequestError, 'None of the authors have an email address in order to send the Submission email.'
     end
   end
 end

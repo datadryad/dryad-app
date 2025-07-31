@@ -1118,6 +1118,10 @@ module StashEngine
       first_withdrawn.user_id != 0
     end
 
+    def notification_author
+      authors.where.not(author_email: [nil, '']).first
+    end
+
     private
 
     def save_first_pub_date
