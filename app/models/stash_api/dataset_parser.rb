@@ -61,7 +61,7 @@ module StashApi
     end
 
     def send_submit_invitation_email(metadata)
-      return if !ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || @resource.notification_author.blank?
+      return if !ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || @resource.api_notification_author.blank?
 
       StashApi::ApiMailer.send_submit_request(@resource, metadata).deliver_now
     end

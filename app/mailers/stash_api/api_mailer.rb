@@ -6,7 +6,7 @@ module StashApi
     def send_submit_request(resource, metadata)
       @resource = resource
       @journal = StashEngine::Journal.find_by_issn(metadata[:relatedPublicationISSN])
-      @user = @resource.notification_author
+      @user = @resource.api_notification_author
       return unless @user.present? && user_email(@user).present?
 
       @user_name = user_name(@user)
