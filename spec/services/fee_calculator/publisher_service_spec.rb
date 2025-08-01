@@ -393,8 +393,20 @@ module FeeCalculator
         end
 
         context 'not on a payer' do
-          it 'raises an error' do
-            expect { subject }.to raise_error(ActionController::BadRequest, MISSING_PAYER_MESSAGE)
+          context 'when there is not payment_configuration record' do
+            before { funder.payment_configuration.destroy }
+
+            it 'raises an error' do
+              expect { subject }.to raise_error(ActionController::BadRequest, MISSING_PAYER_MESSAGE)
+            end
+          end
+
+          context 'when payment_configuration covers_dpc is set to false' do
+            before { funder.payment_configuration.update(covers_dpc: false) }
+
+            it 'raises an error' do
+              expect { subject }.to raise_error(ActionController::BadRequest, MISSING_PAYER_MESSAGE)
+            end
           end
         end
       end

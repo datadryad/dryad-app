@@ -16,6 +16,16 @@ FactoryBot.define do
 
   factory :payment_configuration do
     id { Faker::Number.number }
+    partner { '1' }
+    payment_plan { nil }
+    covers_dpc {nil}
+    covers_ldf {nil}
+    ldf_limit {nil}
+
+    to_create do |instance|
+      record = PaymentConfiguration.find_or_initialize_by(partner: instance.partner)
+      record.update(instance.attributes.compact)
+    end
   end
 
 end
