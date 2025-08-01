@@ -3,10 +3,10 @@ module StashApi
   # Mails users about submissions
   class ApiMailer < ApplicationMailer
 
-    def send_submit_request(resource, metadata)
+    def send_submit_request(resource, metadata, author)
       @resource = resource
       @journal = StashEngine::Journal.find_by_issn(metadata[:relatedPublicationISSN])
-      @user = @resource.notification_author
+      @user = author
       return unless @user.present? && user_email(@user).present?
 
       @user_name = user_name(@user)

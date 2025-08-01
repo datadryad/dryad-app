@@ -99,7 +99,7 @@
             <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Submitter institution no longer authenticated
           </span>
         <% elsif @identifier.payer&.class&.name == 'StashEngine::Journal' %>
-          <% if r.journal.api_journal? && !r.creator.journals_as_admin.include?(journal) %>
+          <% if r.journal&.api_journal? && !r.creator.journals_as_admin.include?(r.journal) %>
             <span class="child-details error-text">
               <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Not submitted via API for API journal
             </span>

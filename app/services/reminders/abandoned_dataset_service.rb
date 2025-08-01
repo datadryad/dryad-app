@@ -61,7 +61,7 @@ module Reminders
     # Send Action Required delete email notification from manual triggered script
     # - sends older ones first
     # - receives a number of emails it should send
-    # Usage: StashEngine::AbandonedDatasetService.new(logging: true).send_manual_action_required_emails(1)
+    # Usage: Reminders::AbandonedDatasetService.new(logging: true).send_manual_action_required_emails(1)
     def send_manual_action_required_emails(count)
       emails_sent = 0
 

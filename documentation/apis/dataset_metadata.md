@@ -70,11 +70,9 @@ be included:
 - `manuscriptNumber` - The internal manuscript number assigned to an
   associated article before publication. For journals that integrate
   their publication process with Dryad, the `manuscriptNumber` is
-  required to coordinate publication of the dataset and article.
+  required to coordinate publication of the dataset and article. It is
+  also a searchable value from our API and admin dashboard.
 
-Journal administrators that are creating a dataset on behalf of
-another user *must* include the `publicationISSN` field to indicate
-the associated journal. They *may* also include `publicationName` and `manuscriptNumber`.
 
 Administrator options
 ======================
@@ -97,6 +95,27 @@ have access to the fields that are appropriate for your needs:
 Rarely-used options
 -------------------
 
+Administrative users (including curators and journal administrators) have access to
+the following options:
+- `skipEmails` - Defaults to false. If true, prevents emails from
+  being sent to users on submission. Prevents emails regardless of
+  whether the submission is successful or an error. Also suppresses
+  the emails that ask co-authors to register their ORCID. Does *not*
+  stop the internal emails that are sent to Dryad admins if there is a
+  submission error.
+- `triggerSubmitInvitation` - Defaults to false. Used when the submitting
+  author does not have an ORCID or Dryad account, or this information is not
+  known to the journal. If true, sends an invitation to edit and complete the
+  Dryad submission to the first author listed with an email address.
+- `preserveCurationStatus` - Defaults to false. If true, prevents
+  Dryad from automatically setting the curation status when the dataset is
+  processed. This is useful when the current version of the dataset has been 
+  explicitly given a curation status in a prior API call, or one will be set
+  in a later API call. Note: If a curation status is not explicitly set,
+  the resultant status is not defined.
+- `holdForPeerReview` - Defaults to false. Allows a dataset to be set in
+  hold for peer review status when it is created
+
 Superusers have access to some extra options that control a dataset's
 behavior:
 - `invoiceId` - Indicates the ID of an invoice that has already been
@@ -112,23 +131,6 @@ behavior:
   some basic validation of the dataset. This should only be used when
   datasets are being replicated from another system and it is not
   feasible to provide complete metadata.
-
-Administrative users (including curators and journal administrators) have access to
-the following options:
-- `skipEmails` - Defaults to false. If true, prevents emails from
-  being sent to users on submission. Prevents emails regardless of
-  whether the submission is successful or an error. Also suppresses
-  the emails that ask co-authors to register their ORCID. Does *not*
-  stop the internal emails that are sent to Dryad admins if there is a
-  submission error.
-- `preserveCurationStatus` - Defaults to false. If true, prevents
-  Dryad from automatically setting the curation status when the datset is
-  processed. This is useful when the current version of the dataset has been 
-  explicitly given a curation status in a prior API call, or one will be set
-  in a later API call. Note: If a curation status is not explicitly set,
-  the resultant status is not defined.
-- `holdForPeerReview` - Defaults to false. Allows a dataset to be set in
-  hold for peer review status when it is created
 
 The above settings get carried with a dataset into future API
 submissions, but Dryad's web interface resets these values to `false` (except
