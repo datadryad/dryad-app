@@ -11,9 +11,6 @@ module Stash
 
       include Amatch
 
-      CROSSREF_FIELD_LIST = %w[abstract author container-title DOI funder institution published-online
-                               published-print publisher score title type URL subject].freeze
-
       def initialize(resource:, crossref_json:)
         @resource = resource
         crossref_json = JSON.parse(crossref_json) if crossref_json.is_a?(String)
@@ -36,8 +33,7 @@ module Stash
           return nil if resource.blank? || resource.title&.strip.blank?
 
           issn, title_query, author_query = title_author_query_params(resource)
-          resp = Serrano.works(issn: issn, select: CROSSREF_FIELD_LIST, query: title_query,
-                               query_author: author_query, limit: 20, sort: 'score', order: 'desc')
+          resp = Serrano.works(issn: issn, query: title_query, query_author: author_query, limit: 20, sort: 'score', order: 'desc')
           resp = resp.first if resp.is_a?(Array)
           return nil unless valid_serrano_works_response(resp)
 
