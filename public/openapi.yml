@@ -162,22 +162,12 @@ paths:
             schema:
               allOf:
                 - $ref: '#/components/schemas/dc_metadata'
-                - properties:
-                    userId:
-                      type: integer
-                    skipDataciteUpdate:
-                      type: boolean
-                    skipEmails: 
-                      type: boolean
-                    preserveCurationStatus:
-                      type: boolean
-                    triggerSubmitInvitation:
-                      type: boolean
-                    loosenValidation:
-                      type: boolean
+                - $ref: '#/components/schemas/admin_values'
             examples:
               Post:
                 $ref: api/v2/docs/examples/dataset_post_request.json
+              Include journal information:
+                $ref: api/v2/docs/examples/dataset_post_request_jr.json
               Set no funding:
                 $ref: api/v2/docs/examples/dataset_post_request_nf.json
               Include HSI statement:
@@ -192,6 +182,8 @@ paths:
               examples:
                 Success:
                   $ref: api/v2/docs/examples/dataset_post_response.json
+                With journal:
+                  $ref: api/v2/docs/examples/dataset_post_response_jr.json
                 Without funding:
                   $ref: api/v2/docs/examples/dataset_post_response_nf.json
                 With HSI statement:
@@ -245,7 +237,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/dc_metadata'
+              allOf:
+                - $ref: '#/components/schemas/dc_metadata'
+                - properties:
+                    identifier:
+                      type: string
+                      description: The Dryad dataset DOI
+                - $ref: '#/components/schemas/admin_values'
             examples:
               success:
                 $ref: api/v2/docs/examples/dataset_post_request.json
@@ -1204,6 +1202,47 @@ components:
         - title
         - authors
         - abstract
+
+    admin_values:
+      userId:
+        type: integer
+        description: The ORCID ID of the user who will submit the dataset
+      publicationISSN:
+        type: string
+        description: An ISSN for the associated journal
+      publicationName:
+        type: string
+        description: The title of the associated journal
+      manuscriptNumber:
+        type: string
+        description: The internal manuscript number assigned to an associated article before publication
+      skipEmails: 
+        type: boolean
+        default: false
+        description: Administrator value. Prevents emails being sent automatically.
+      triggerSubmitInvitation:
+        type: boolean
+        default: false
+        description: Administrator value. Sends an editing invitation email to the first author.
+      preserveCurationStatus:
+        type: boolean
+        default: false
+        description: Administrator value. Prevents automatic curation status changes.
+      holdForPeerReview:
+        type: boolean
+        default: false
+        description: Administrator value. Sets whether the submission will be sent to curation or a peer review hold status. 
+      loosenValidation:
+        type: boolean
+        default: false
+        description: For superusers only.
+      skipDataciteUpdate:
+        type: boolean
+        default: false
+        description: For superusers only.
+      invoiceId:
+        type: string
+        description: For superusers only.
 
     author:
       properties:

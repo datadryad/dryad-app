@@ -35,6 +35,14 @@ value: {
     }
   ],
   "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning.</p>\r\n",
+  "funders": [
+    {
+      "organization": "Stichting Sem Presser Archief",
+      "identifierType": "ror",
+      "identifier": "https://ror.org/02f5r3008",
+      "awardNumber": "12345"
+    }
+  ],
   "keywords": [
     "Cat",
     "Host",
@@ -51,5 +59,8 @@ value: {
   ],
   "versionNumber": 1,
   "versionStatus": "in_progress",
-  "userId": "0000-0000-0000-0000"
+  "userId": "0000-0000-0000-0000",
+  "publicationName": "The Journal of Dataset Examples",
+  "publicationISSN": "0000-000X",
+  "manuscriptNumber": "JDE-2025-0001"
 }

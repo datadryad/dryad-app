@@ -35,10 +35,10 @@
     "methods": "My cat will help you to discover why you can't get the data to work.",
     "usageNotes": "Use carefully and parse results underwater.",
     "keywords": [
-	"Cat",
-	"Computer",
-	"Noodlecast",
-	"Intercropping"
+		"Cat",
+		"Computer",
+		"Noodlecast",
+		"Intercropping"
     ],
     "fieldOfScience": "Animal and dairy science",
     "locations": [ 
@@ -70,15 +70,17 @@
 	    }
 	}
     ],
-    "publicationISSN" : "0002-9122",                                                                                                                                       
-    "publicationName" :"Some Great Journal",                                                                                                                               
-    "manuscriptNumber" : "ABC123",
     "identifier" : "doi:10.5061/dryad.20",
     "userId" : "0000-0003-0597-4085",
-    "invoiceId" : "invoice-abc123",
-    "skipDataciteUpdate" : false,
+    "publicationISSN" : "0002-9122",
+    "publicationName" :"Some Great Journal",
+    "manuscriptNumber" : "ABC123",
     "skipEmails" : false,
-    "loosenValidation" : false,
     "preserveCurationStatus": false,
-	"holdForPeerReview": false
+	"holdForPeerReview": false,
+	"triggerSubmitInvitation": false,
+    
+    "invoiceId" : "invoice-abc123",
+    "skipDataciteUpdate" : false,    
+    "loosenValidation" : false    
 }
