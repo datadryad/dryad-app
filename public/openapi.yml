@@ -1239,7 +1239,7 @@ components:
 
     admin_values:
       userId:
-        type: integer
+        type: string
         description: The ORCID ID of the user who will submit the dataset
       publicationISSN:
         type: string
