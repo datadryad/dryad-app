@@ -2,8 +2,8 @@ module StashEngine
   class PublicationUpdaterController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :setup_paging, only: [:index]
-    before_action :setup_filter, only: [:index]
+    before_action :setup_paging, only: %i[index log]
+    before_action :setup_filter, only: :index
     before_action :check_status, only: %i[update destroy]
 
     CONCAT_FOR_SEARCH = <<~SQL.freeze
@@ -84,11 +84,6 @@ module StashEngine
       ord = helpers.sortable_table_order(whitelist:
          %w[stash_engine_proposed_changes.updated_at stash_engine_proposed_changes.title publication_name publication_issn publication_doi
             stash_engine_proposed_changes.publication_date authors])
-
-      if request.format.to_s == 'text/csv' # we want all the results to put in csv
-        @page = 1
-        @page_size = 1_000_000
-      end
 
       @proposed_changes = proposed_changes.order(ord).page(@page).per(@page_size)
     end
