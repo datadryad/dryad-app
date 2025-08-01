@@ -253,17 +253,10 @@ module StashApi
         end
 
         it 'does not trigger email sending when owner has no email' do
-          @user.update(email: nil)
+          hash = @meta.hash
+          hash[:authors].first[:email] = nil
 
-          # The below code does not work on rails 8
-          # expect {
-          #   post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-          # }.to raise_error(
-          #   ActionController::BadRequest,
-          #   'Dataset owner does not have an email address in order to send the Submission email.'
-          # )
-
-          response_code = post '/api/v2/datasets.json', params: @meta.json, headers: default_authenticated_headers
+          response_code = post '/api/v2/datasets.json', params: hash.to_json, headers: default_authenticated_headers
           expect(response_code).to eq(400)
         end
 
