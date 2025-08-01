@@ -3,13 +3,7 @@
 <%= form.text_field(:title, required: true, value: @journal.title, class: 'c-input__text', style: 'width:100%') %>
 </div>
 <p class="o-admin-form-inline">
-  <span>
-    <%= form.check_box :flag, { checked: @journal.flag.present? }, 1, nil %> <%= form.label :flag, "Flag", class: 'c-input__label' %>
-  </span>
-  <span class="o-admin-form-pair" style="flex: 1">
-    <%= form.label :note, 'Flag note:' %>
-    <%= form.text_field :note, value: @journal.flag&.note, class: 'c-input__text', style: 'flex: 1', disabled: @journal.flag.nil? %>
-  </span>
+  <%= render 'stash_engine/flags/admin_form', record: @journal %>
 </p>
 <div class="c-input">
 <%= form.label :issn, "Place each Journal ISSN on a new line:"%>

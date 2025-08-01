@@ -88,7 +88,6 @@ export default function Publication({current, resource, setResource}) {
       || (!!preprint_server && !!preprint)) {
       setShowTitle(true);
     }
-    console.log(resource.journal);
     setSponsored(!!resource.journal?.payment_configuration?.payment_plan && (manuscript_number || primary_article) ? resource.journal.title : false);
     if (resource.title) {
       if (!resource.identifier.process_date?.processing) {

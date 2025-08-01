@@ -5,13 +5,13 @@
 #  id                      :integer          not null, primary key
 #  allow_review_workflow   :boolean          default(TRUE)
 #  api_contacts            :text(65535)
-#  covers_ldf              :boolean          default(FALSE)
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
 #  journal_code            :string(191)
 #  manuscript_number_regex :string(191)
 #  notify_contacts         :text(65535)
-#  payment_plan_type       :string
+#  old_covers_ldf          :boolean          default(FALSE)
+#  old_payment_plan_type   :string
 #  peer_review_custom_text :text(65535)
 #  preprint_server         :boolean          default(FALSE)
 #  review_contacts         :text(65535)

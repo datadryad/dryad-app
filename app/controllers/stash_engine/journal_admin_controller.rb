@@ -47,6 +47,7 @@ module StashEngine
         @error_message = errs[0]
         render 'stash_engine/user_admin/update_error' and return
       end
+      @journal.reload
       respond_to(&:js)
     end
 
@@ -85,9 +86,8 @@ module StashEngine
     end
 
     def update_hash
-      pp edit_params
       valid = %i[title preprint_server default_to_ppr allow_review_workflow manuscript_number_regex peer_review_custom_text
-                 payment_configuration_attributes]
+                 flag_attributes payment_configuration_attributes]
       update = edit_params.slice(*valid).to_h
       update[:sponsor_id] = edit_params[:sponsor_id].presence
       %i[api_contacts notify_contacts review_contacts].each do |contacts|
@@ -95,12 +95,6 @@ module StashEngine
       end
       update[:issns_attributes] = update_issns
       update[:alternate_titles_attributes] = update_alts
-      if edit_params.key?(:flag)
-        update[:flag_attributes] = { note: edit_params[:note] }
-        update[:flag_attributes][:id] = @journal.flag.id if @journal&.flag.present?
-      elsif @journal&.flag.present?
-        @journal.flag.delete
-      end
       update
     end
 
@@ -124,6 +118,7 @@ module StashEngine
       params.permit(:id, :title, :issn, :alt_title, :notify_contacts, :review_contacts, :api_contacts,
                     :preprint_server, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
                     :default_to_ppr, :allow_review_workflow, :flag, :note,
+                    flag_attributes: %i[id note _destroy],
                     payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit])
     end
   end

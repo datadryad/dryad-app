@@ -5,13 +5,13 @@
 #  id                 :string(191)      not null, primary key
 #  authentication     :json
 #  campus_contacts    :json
-#  covers_dpc         :boolean          default(TRUE)
-#  covers_ldf         :boolean          default(FALSE)
 #  enabled            :boolean          default(TRUE)
 #  long_name          :string(191)
 #  low_income_country :boolean          default(FALSE)
+#  old_covers_dpc     :boolean          default(TRUE)
+#  old_covers_ldf     :boolean          default(FALSE)
+#  old_payment_plan   :integer
 #  partner_display    :boolean          default(TRUE)
-#  payment_plan       :integer
 #  short_name         :string(191)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
@@ -43,17 +43,15 @@ module StashEngine
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_one :payment_configuration, as: :partner, dependent: :destroy
 
-    accepts_nested_attributes_for :flag
-    enum :payment_plan, { tiered: 0, '2025': 1 }
-
-    delegate :payment_plan, :covers_dpc, :covers_ldf, to: :payment_configuration, allow_nil: true
+    accepts_nested_attributes_for :flag, allow_destroy: true
+    accepts_nested_attributes_for :payment_configuration
 
     # return all enabled tenants sorted by name
     scope :enabled, -> { where(enabled: true).order(:short_name) }
     scope :partner_list, -> { enabled.where(partner_display: true) }
-    scope :connect_list, -> { partner_list.where(covers_dpc: true) }
-    scope :tiered, -> { enabled.where(payment_plan: :tiered) }
-    scope :fees_2025, -> { enabled.where(payment_plan: '2025') }
+    scope :connect_list, -> { partner_list.joins(:payment_configuration).where(payment_configurations: { covers_dpc: true }) }
+    scope :tiered, -> { enabled.joins(:payment_configuration).where(payment_configurations: { payment_plan: :tiered }) }
+    scope :fees_2025, -> { enabled.joins(:payment_configuration).where(payment_configurations: { payment_plan: '2025' }) }
     scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 
     def authentication

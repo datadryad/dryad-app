@@ -2,15 +2,15 @@
 #
 # Table name: stash_engine_funders
 #
-#  id           :bigint           not null, primary key
-#  covers_dpc   :boolean          default(TRUE)
-#  covers_ldf   :string(191)
-#  enabled      :boolean          default(TRUE)
-#  name         :string(191)
-#  payment_plan :integer
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  ror_id       :string(191)
+#  id               :bigint           not null, primary key
+#  enabled          :boolean          default(TRUE)
+#  name             :string(191)
+#  old_covers_dpc   :boolean          default(TRUE)
+#  old_covers_ldf   :string(191)
+#  old_payment_plan :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  ror_id           :string(191)
 #
 # Indexes
 #
@@ -24,8 +24,6 @@ module StashEngine
     has_many :users, through: :roles
     has_one :payment_configuration, as: :partner, dependent: :destroy
 
-    enum :payment_plan, { tiered: 0, '2025': 1 }
-
-    scope :exemptions, -> { where(enabled: true, covers_dpc: true) }
+    scope :exemptions, -> { joins(:payment_configuration).where(enabled: true, payment_configurations: { covers_dpc: true }) }
   end
 end

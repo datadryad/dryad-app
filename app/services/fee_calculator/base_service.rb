@@ -42,7 +42,7 @@ module FeeCalculator
       @resource = resource
       @payer = resource ? resource.identifier.payer : nil
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025? : false
-      @covers_ldf = resource ? resource.identifier.payer&.covers_ldf : false
+      @covers_ldf = resource ? resource.identifier.payer&.payment_configuration&.covers_ldf : false
     end
 
     def call

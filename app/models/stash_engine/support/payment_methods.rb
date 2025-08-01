@@ -27,7 +27,7 @@ module StashEngine
 
         return current_payer.payment_configuration&.payment_plan.to_s == '2025' if current_payer.is_a? StashEngine::Journal
 
-        current_payer.payment_plan.to_s == '2025'
+        current_payer.payment_configuration&.payment_plan.to_s == '2025'
       end
 
       def sponsored
@@ -62,7 +62,7 @@ module StashEngine
 
       def institution_will_pay?
         tenant = latest_resource&.tenant
-        return false unless tenant&.covers_dpc
+        return false unless tenant&.payment_configuration&.covers_dpc
 
         if tenant&.authentication&.strategy == 'author_match'
           # get all unique ror_id associations for all authors
