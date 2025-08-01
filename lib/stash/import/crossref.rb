@@ -11,7 +11,7 @@ module Stash
 
       include Amatch
 
-      CROSSREF_FIELD_LIST = %w[abstract author container-title DOI funder published-online
+      CROSSREF_FIELD_LIST = %w[abstract author container-title DOI funder institution published-online
                                published-print publisher score title type URL subject].freeze
 
       def initialize(resource:, crossref_json:)
