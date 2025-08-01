@@ -31,7 +31,6 @@ FactoryBot.define do
   factory :journal, class: StashEngine::Journal do
     transient do
       issn { nil }
-      payment_plan { nil }
     end
 
     title { Faker::Company.unique.industry }
@@ -50,12 +49,6 @@ FactoryBot.define do
       end
       journal.reload
     end
-
-    after(:create) do |journal, e|
-      create(:payment_configuration, partner: journal, payment_plan: e.payment_plan) if e.payment_plan.present?
-      journal.reload
-    end
-
   end
 
 end

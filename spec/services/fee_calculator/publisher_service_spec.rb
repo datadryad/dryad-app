@@ -125,7 +125,8 @@ module FeeCalculator
       let(:prev_files_size) { nil }
       let(:new_files_size) { 100 }
       let(:covers_ldf) { false }
-      let!(:journal) { create(:journal, payment_plan: '2025', covers_ldf: covers_ldf) }
+      let!(:journal) { create(:journal) }
+      let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_ldf: covers_ldf) }
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
       subject { described_class.new(options, resource: resource).call }
 
@@ -352,7 +353,7 @@ module FeeCalculator
       end
 
       context 'when journal is a payer but not on 2025 fee model' do
-        let!(:journal) { create(:journal, payment_plan: 'DEFERRED', covers_ldf: covers_ldf) }
+        let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'DEFERRED', covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first], total_file_size: new_files_size) }
 
         it 'raises an error' do
@@ -366,15 +367,16 @@ module FeeCalculator
           create(:contributor, contributor_name: 'National Cancer Institute',
                                contributor_type: 'funder', resource_id: resource.id)
         end
+        let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: true) }
 
         context 'and is on 2025 fee model' do
-          let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: '2025', covers_dpc: true, enabled: true) }
+          let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025', covers_dpc: true) }
 
           it { is_expected.to eq(no_charges_response) }
         end
 
         context 'not on 2025 fee model' do
-          let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: 'tiered', covers_dpc: true, enabled: true) }
+          let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: 'tiered', covers_dpc: true) }
 
           it 'raises an error' do
             expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)
@@ -382,7 +384,8 @@ module FeeCalculator
         end
 
         context 'on 2025 fee model but is not enabled' do
-          let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: '2025', covers_dpc: true, enabled: false) }
+          let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: false) }
+          let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025', covers_dpc: true) }
 
           it 'raises an error' do
             expect { subject }.to raise_error(ActionController::BadRequest, MISSING_PAYER_MESSAGE)
@@ -390,8 +393,6 @@ module FeeCalculator
         end
 
         context 'not on a payer' do
-          let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: nil, covers_dpc: false) }
-
           it 'raises an error' do
             expect { subject }.to raise_error(ActionController::BadRequest, MISSING_PAYER_MESSAGE)
           end

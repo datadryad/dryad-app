@@ -73,15 +73,8 @@ FactoryBot.define do
       end
     end
     campus_contacts { id == 'dryad' ? ['devs@datadryad.org'].to_json : [].to_json }
-    payment_plan { nil }
     enabled { true }
     partner_display do
-      case id
-      when 'email_auth', 'match_tenant', 'ucop'
-        true
-      else false end
-    end
-    covers_dpc do
       case id
       when 'email_auth', 'match_tenant', 'ucop'
         true
@@ -97,6 +90,10 @@ FactoryBot.define do
         tenant.logo.data = logo_ucop
         tenant.logo.save
         tenant.reload
+      end
+
+      if tenant.id.in?(%w[email_auth match_tenant ucop])
+        create(:payment_configuration, partner: tenant, covers_dpc: true)
       end
     end
   end
