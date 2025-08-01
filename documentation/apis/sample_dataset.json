@@ -18,9 +18,9 @@
   }
     ],
     "relatedWorks" : [ {
-  "relationship" : "article",
-  "identifierType" : "DOI",
-  "identifier" : "10.1111/j.1558-5646.2007.00022.x"
+    "relationship" : "article",
+    "identifierType" : "DOI",
+    "identifier" : "10.1111/j.1558-5646.2007.00022.x"
     } ],
     "funders": [ 
   {
@@ -35,40 +35,40 @@
     "methods": "My cat will help you to discover why you can't get the data to work.",
     "usageNotes": "Use carefully and parse results underwater.",
     "keywords": [
-    "Cat",
-    "Computer",
-    "Noodlecast",
-    "Intercropping"
+      "Cat",
+      "Computer",
+      "Noodlecast",
+      "Intercropping"
     ],
     "fieldOfScience": "Animal and dairy science",
     "locations": [ 
-  {
-      "place": "Grogan's Mill, USA",
-      "point": {
-    "latitude": "30.130379",
-    "longitude": "-95.402929"
+      {
+        "place": "Grogan's Mill, USA",
+        "point": {
+          "latitude": "30.130379",
+          "longitude": "-95.402929"
+        },
+          "box": {
+          "swLongitude": "-95.527852",
+          "swLatitude": "30.049326",
+          "neLongitude": "-95.32743",
+          "neLatitude": "30.164696"
+        }
       },
-      "box": {
-    "swLongitude": "-95.527852",
-    "swLatitude": "30.049326",
-    "neLongitude": "-95.32743",
-    "neLatitude": "30.164696"
+      {
+        "point": {
+          "latitude": "37.0",
+          "longitude": "-122.0"
+        }
+      },
+      {
+        "box": {
+          "swLongitude": "-122.0",
+          "swLatitude": "37.0",
+          "neLongitude": "-121.0",
+          "neLatitude": "38.0"
+        }
       }
-  },
-  {
-      "point": {
-    "latitude": "37.0",
-    "longitude": "-122.0"
-      }
-  },
-  {
-      "box": {
-    "swLongitude": "-122.0",
-    "swLatitude": "37.0",
-    "neLongitude": "-121.0",
-    "neLatitude": "38.0"
-      }
-  }
     ],
     "identifier" : "doi:10.5061/dryad.20",
     "userId" : "0000-0003-0597-4085",
@@ -77,9 +77,9 @@
     "manuscriptNumber" : "ABC123",
     "skipEmails" : false,
     "preserveCurationStatus": false,
-  "holdForPeerReview": false,
-  "triggerSubmitInvitation": false,
-    
+    "holdForPeerReview": false,
+    "triggerSubmitInvitation": false,
+        
     "invoiceId" : "invoice-abc123",
     "skipDataciteUpdate" : false,    
     "loosenValidation" : false    
