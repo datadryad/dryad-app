@@ -377,3 +377,24 @@
   row-gap: .5ch;
   flex-wrap: wrap;
 }
+
+#status-label {
+  display: inline-block;
+  border-radius: 4px;  
+  padding: 0 .35rem;
+  font-size: .9rem;
+  line-height: 1.1rem;
+
+  &.accepted {
+    background-color: $lightest-green;
+    border: 2px solid darken($lightest-green, 10);
+  }
+  &.rejected {
+    background-color: $lightest-red;
+    border: 2px solid darken($lightest-red, 10);
+  }
+  &.submitted {
+    background-color: $lightest-blue;
+    border: 2px solid darken($lightest-blue, 10);
+  }
+}

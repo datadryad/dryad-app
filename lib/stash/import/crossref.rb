@@ -11,9 +11,6 @@ module Stash
 
       include Amatch
 
-      CROSSREF_FIELD_LIST = %w[abstract author container-title DOI funder published-online
-                               published-print publisher score title type URL subject].freeze
-
       def initialize(resource:, crossref_json:)
         @resource = resource
         crossref_json = JSON.parse(crossref_json) if crossref_json.is_a?(String)
@@ -36,8 +33,7 @@ module Stash
           return nil if resource.blank? || resource.title&.strip.blank?
 
           issn, title_query, author_query = title_author_query_params(resource)
-          resp = Serrano.works(issn: issn, select: CROSSREF_FIELD_LIST, query: title_query,
-                               query_author: author_query, limit: 20, sort: 'score', order: 'desc')
+          resp = Serrano.works(issn: issn, query: title_query, query_author: author_query, limit: 20, sort: 'score', order: 'desc')
           resp = resp.first if resp.is_a?(Array)
           return nil unless valid_serrano_works_response(resp)
 
@@ -74,11 +70,11 @@ module Stash
       # populate just a few fields for pub_updater, this isn't as drastic as below and is only for pub updater.
       # to ONLY populate the relationship, use update_type: 'relationship'
       # article types accepted are 'primary_article', 'article', 'preprint'
-      def populate_pub_update!
+      def populate_pub_update!(work_type = 'primary_article')
         return nil unless @sm.present? && @resource.present?
 
-        populate_publication_name
-        populate_publication_issn
+        populate_publication_name(pub_type: work_type)
+        populate_publication_issn(pub_type: work_type)
         @resource.reload
       end
 
@@ -90,8 +86,8 @@ module Stash
         populate_authors
         populate_article_type(article_type: work_type)
         populate_funders
-        populate_publication_issn
-        populate_publication_name
+        populate_publication_issn(pub_type: work_type)
+        populate_publication_name(pub_type: work_type)
         populate_title
         populate_subjects
         @resource.save
@@ -364,14 +360,14 @@ module Stash
         @resource.publication_date = date_parts_to_date(publication_date)
       end
 
-      def populate_publication_name
+      def populate_publication_name(pub_type: 'primary_article')
         return unless publisher.present?
         # We do not want to overwrite correct journal names with nonstandardized names
         # only update the journal name if the dataset is not already set with this journal ISSN
         return if @sm['ISSN'].present? && @sm['ISSN'].first.present? && @resource.journal.present? &&
           @resource.journal.id == StashEngine::Journal.find_by_issn(@sm['ISSN'].first)&.id
 
-        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id, pub_type: pub_type)
         datum.publication_name = publisher
         journal = StashEngine::Journal.find_by_title(publisher)
         # If the publication name matches an existing journal, populate/update the ISSN
@@ -380,7 +376,7 @@ module Stash
         datum.save
       end
 
-      def populate_publication_issn
+      def populate_publication_issn(pub_type: 'primary_article')
         return unless @sm['ISSN'].present? && @sm['ISSN'].first.present?
 
         # Do not change the ISSN if one for this journal is already set
@@ -389,7 +385,7 @@ module Stash
 
         # First look up the ISSN from the journal name (populate_publication_name).
         # If we do not know the ISSN, save it for quarterly checking and addition to our db
-        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id)
+        datum = StashEngine::ResourcePublication.find_or_initialize_by(resource_id: @resource.id, pub_type: pub_type)
         datum.publication_issn = @sm['ISSN'].first
         datum.save
       end
@@ -408,7 +404,9 @@ module Stash
       end
 
       def publisher
-        pub = @sm['container-title'].present? ? @sm['container-title'] : @sm['publisher']
+        pub = @sm['container-title'].presence
+        pub ||= @sm.dig('institution', 0, 'name')
+        pub ||= @sm['publisher']
         pub.is_a?(Array) ? pub.first : pub
       end
 

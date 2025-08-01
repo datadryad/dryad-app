@@ -42,6 +42,14 @@ Rack::Attack.blocklist('malicious_clients') do |req|
   end
 end
 
+# Block repeated helpdesk form submissions
+# After ten submissions block the IP for 2 weeks
+Rack::Attack.blocklist('helpdesk_form_limit') do |req|
+  Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 10, findtime: 1.day, bantime: 2.weeks) do
+    req.path.start_with?('/helpdesk') && req.post?
+  end
+end
+
 # Set a long block period for any client that access (honey)pot pages
 Rack::Attack.blocklist('allow2ban_honeypot') do |req|
   Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 2, findtime: 1.day, bantime: 1.month) do

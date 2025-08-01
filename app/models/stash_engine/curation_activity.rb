@@ -25,6 +25,9 @@ module StashEngine
     self.table_name = 'stash_engine_curation_activities'
     acts_as_paranoid
 
+    attr_accessor :skip_emails
+    after_initialize :set_skip_emails_defaults
+
     # Associations
     # ------------------------------------------
     belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
@@ -103,7 +106,7 @@ module StashEngine
 
     # Email the author and/or journal about status changes
     after_create :email_status_change_notices,
-                 if: proc { |_ca| curation_status_changed? && !resource.skip_emails }
+                 if: proc { |_ca| curation_status_changed? && !resource.skip_emails && !skip_emails }
 
     # Email invitations to register ORCIDs to authors when published
     after_create :email_orcid_invitations,
@@ -425,6 +428,10 @@ module StashEngine
       return created_at if existing_date.blank?
 
       [created_at, existing_date].max
+    end
+
+    def set_skip_emails_defaults
+      self.skip_emails = false if skip_emails.nil?
     end
   end
 end

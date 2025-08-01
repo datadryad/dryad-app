@@ -11,7 +11,7 @@
 #  old_dryad_email  :string(191)
 #  orcid            :string(191)
 #  tenant_auth_date :datetime
-#  validation_tries :integer          default(0)
+#  validated        :boolean          default(FALSE)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  affiliation_id   :integer
@@ -54,6 +54,10 @@ module StashEngine
     scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
 
     validates :email, format: { with: EMAIL_REGEX, message: '%{value} is not a valid email address' }, allow_blank: true
+
+    def self.system_user
+      find(0)
+    end
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
@@ -132,7 +136,7 @@ module StashEngine
 
     def journals_as_admin
       admin_org_journals = journal_organizations.map(&:journals_sponsored_deep).flatten
-      (journals + admin_org_journals).uniq
+      journals | admin_org_journals
     end
 
     # Merges the other user into this user.  Updates so that this user owns other user's old stuff and has their critical info.

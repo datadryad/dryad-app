@@ -5,11 +5,10 @@ import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/ut
 import DragonDropList, {DragonListItem, orderedItems} from '../DragonDropList';
 import FunderForm from './FunderForm';
 
-function Funders({current, resource, setResource}) {
+function Funders({resource, setResource}) {
   const contributors = resource.contributors.filter((c) => c.contributor_type === 'funder');
   const [funders, setFunders] = useState(contributors);
   const [disabled, setDisabled] = useState(contributors[0]?.name_identifier_id === '0');
-  const [groupings, setGroupings] = useState([]);
 
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -97,22 +96,13 @@ function Funders({current, resource, setResource}) {
     if (funders.length < 1) addNewFunder();
   }, [funders]);
 
-  useEffect(() => {
-    async function getList() {
-      axios.get('/stash_datacite/contributors/groupings').then((data) => {
-        setGroupings(data.data);
-      });
-    }
-    if (current && !groupings.length) getList();
-  }, [current, groupings]);
-
   return (
     <div style={{marginBottom: '20px'}}>
       {!disabled && (
         <DragonDropList model="contributor" typeName="funder" items={funders} path="/stash_datacite/contributors/reorder" setItems={setFunders}>
           {orderedItems({items: funders, typeName: 'funder'}).map((contrib) => (
             <DragonListItem key={contrib.id} item={contrib} typeName="funder">
-              <FunderForm resourceId={resource.id} contributor={contrib} groupings={groupings} disabled={disabled} updateFunder={updateFunder} />
+              <FunderForm resourceId={resource.id} contributor={contrib} disabled={disabled} updateFunder={updateFunder} />
               <button
                 type="button"
                 className="remove-record"

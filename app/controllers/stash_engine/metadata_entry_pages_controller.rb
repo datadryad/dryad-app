@@ -1,6 +1,5 @@
 module StashEngine
   class MetadataEntryPagesController < ApplicationController
-    include StashEngine::MetadataEntryPagesHelper
     before_action :require_login, except: %i[edit_by_doi]
     before_action :resource_exist, except: %i[metadata_callback]
     before_action :require_modify_permission, only: %i[find_or_create reject_agreement accept_agreement]
@@ -84,7 +83,7 @@ module StashEngine
     def new_version
       # save a URL to go back to if possible, for each individual identifier since may have many windows open
       session["return_url_#{@identifier.id}"] = params[:return_url] if params[:return_url] && @identifier
-      duplicate_resource
+      @new_res = DuplicateResourceService.new(@resource, current_user).call
 
       # redirect to find or create path
       redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @new_res.id)
@@ -94,7 +93,7 @@ module StashEngine
       session["return_url_#{@identifier.id}"] = params[:return_url] if params[:return_url] && @identifier
       prev_resource = @identifier.latest_resource # reference for undoing versioning and files from the duplication, if needed
       prev_files = prev_resource.generic_files
-      duplicate_resource
+      @new_res = DuplicateResourceService.new(@resource, current_user).call
 
       # now fix the files based on last resource rather than the duplicated one,
       # since we're not copying old files to S3 from Zenodo which could be error-prone and take some time

@@ -11,7 +11,7 @@
 #  old_dryad_email  :string(191)
 #  orcid            :string(191)
 #  tenant_auth_date :datetime
-#  validation_tries :integer          default(0)
+#  validated        :boolean          default(FALSE)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  affiliation_id   :integer
@@ -94,8 +94,8 @@ module StashEngine
     def min_curator? = false
 
     def journals_as_admin
-      admin_org_journals = journal_organizations.map(&:journals_sponsored).flatten
-      (journals + admin_org_journals).uniq
+      admin_org_journals = journal_organizations.map(&:journals_sponsored_deep).flatten
+      journals | admin_org_journals
     end
 
     def self.split_name(name)

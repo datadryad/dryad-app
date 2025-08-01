@@ -24,10 +24,17 @@ module StashDatacite
 
     # PATCH/PUT /authors/1
     def update
+      @author.update(author_params)
+      aff = @author.affiliations.pluck(:long_name).sort
+
+      check_for_orcid if @author.author_orcid.blank?
+      process_affiliations
+
+      # IF affiliations changed
+      # trigger new version creation manually
+      @author.paper_trail.save_with_version if @author.affiliations.pluck(:long_name).sort != aff
+
       respond_to do |format|
-        @author.update(author_params)
-        check_for_orcid if @author.author_orcid.blank?
-        process_affiliations
         format.js { render template: 'stash_datacite/shared/update.js.erb' }
         format.json { render json: @author.as_json(include: :affiliations) }
       end
@@ -171,7 +178,6 @@ module StashDatacite
       return unless @author.present?
 
       # find a matching pre-existing affiliation
-      affil = nil
       if ror_val.present?
         # - find by ror_id if avaialable
         affil = StashDatacite::Affiliation.where(ror_id: ror_val).first
@@ -189,7 +195,9 @@ module StashDatacite
                   StashDatacite::Affiliation.create(long_name: name.to_s, ror_id: nil)
                 end
       end
-      return if @author.affiliations.pluck(:ror_id).include?(affil.ror_id)
+
+      return if affil.ror_id && @author.affiliations.pluck(:ror_id).include?(affil.ror_id)
+      return if affil.ror_id.nil? && @author.affiliations.where(ror_id: nil).pluck(:long_name).include?(affil.long_name)
 
       @author.affiliation = affil
     end

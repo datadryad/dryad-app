@@ -202,10 +202,24 @@ namespace :identifiers do
 
             # Important! Retain the metadata for this dataset, so curators can determine what happened to it
           end
+
+          # create a new version to mark all files as deleted
+          new_res = DuplicateResourceService.new(i.latest_resource, StashEngine::User.system_user).call
+          new_res.generic_files.update(file_deleted_at: Time.current, file_state: 'deleted')
+          new_res.current_state = 'submitted'
+
+          # Record the file deletion
+          StashEngine::CurationActivity.create(
+            resource_id: new_res.id,
+            user_id: 0,
+            status: 'withdrawn',
+            note: 'remove_abandoned_datasets CRON - mark files as deleted',
+            skip_emails: true
+          )
         end
       end
     end
-    exit
+    Kernel.exit
   end
 
   # example: RAILS_ENV=production bundle exec rake identifiers:remove_old_versions -- --dry_run true
