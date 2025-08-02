@@ -135,6 +135,9 @@
           <% status = r.manuscript.accepted? && 'accepted' || r.manuscript.rejected? && 'rejected' || 'submitted' %>
           <span id="status-label" class="<%= status%>"><%= status%></span>
         <% end %>
+        <% if @identifier.publication_article_doi.present? %>
+          <span id="doi-label" class="accepted">published</span>
+        <% end %>
         <br/><%= r.related_identifiers.empty? ? '' : "#{r.related_identifiers.size} related work#{r.related_identifiers.size > 1 ? 's' : ''}" %></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
