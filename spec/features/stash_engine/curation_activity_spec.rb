@@ -19,6 +19,19 @@ RSpec.feature 'CurationActivity', type: :feature do
       visit("#{stash_url_helpers.admin_dashboard_path}?curation_status=curation")
     end
 
+    it 'shows accurate publication status', js: true do
+      manuscript = create(:manuscript, identifier: @resource.identifier, status: 'accepted')
+      create(:resource_publication, resource: @resource, manuscript_number: manuscript.manuscript_number)
+      expect(page).to have_css('a[title="Activity log"]')
+      find('a[title="Activity log"]').click
+      expect(page).to have_text(manuscript.manuscript_number)
+      expect(page).to have_text('accepted')
+      create(:related_identifier, resource: @resource, work_type: 'primary_article')
+      visit current_path
+      expect(page).to have_text('1 related work')
+      expect(page).to have_text('published')
+    end
+
     it 'renders salesforce links in notes field', js: true do
       @curation_activity = create(:curation_activity, note: 'Not a valid SF link', resource: @resource)
       @curation_activity = create(:curation_activity, note: 'SF #0001 does not exist', resource: @resource)
