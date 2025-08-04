@@ -16,7 +16,7 @@
   </div>
 </td>
 <td><%= j.issn_array.join(", ") %></td>
-<td><%= j.payment_configuration.payment_plan&.capitalize %></td>
+<td><%= j.payment_configuration&.payment_plan&.capitalize %></td>
 <td><%= j.notify_contacts&.join(', ') %></td>
 <td><%= j.review_contacts&.join(', ') %></td>
 <td>
