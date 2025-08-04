@@ -38,13 +38,21 @@
 
 <%= fields_for :payment_configuration_attributes do |pf| %>
   <%= pf.hidden_field :id, value: @payment_configuration.id %>
+  <h2>Membership</h2>
+  <fieldset class="c-fieldset">
+    <legend>Payment plan type:</legend>
+    <% StashEngine::Tenant::PAYMENT_PLANS.map {|p| [p, p.capitalize]}.each do |plan| %>
+      <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @payment_configuration.payment_plan %>
+      <label for="<%= "payment_configuration_attributes_payment_plan_#{plan.first.downcase}" %>"><%= plan[1] %></label>
+      <br />
+    <% end %>
+  </fieldset>
   <h2>DPC</h2>
   <p>This setting controls whether <%= @tenant.short_name.presence || 'the institution'%> covers the cost of Dryad for its users. Partners must be <b>active</b>, <b>displayed</b>, and <b>cover the DPC</b> for users to be invited to connect to them.</p>
   <p>
     <%= pf.check_box :covers_dpc, {checked: @payment_configuration.covers_dpc}, 1, 0 %>
     <%= pf.label :covers_dpc, "Partner covers the DPC", class: 'c-input__label' %>
   </p>
-
   <p>This setting controls whether <%= @tenant.short_name.presence || 'the institution'%> covers Large Data Fees for its users.</p>
   <p>
     <%= pf.check_box :covers_ldf, {checked: @payment_configuration.covers_ldf}, 1, 0 %>
@@ -52,7 +60,7 @@
   </p>
   <p>
     <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
-    <%= pf.number_field :ldf_limit, value: @payment_configuration.ldf_limit, class: 'c-input__text', style: 'width:100%; font-family: Monaco, monospace; font-size: .8em;', disabled: !@payment_configuration.covers_ldf %>
+    <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: @payment_configuration.ldf_limit , prompt: 'No limit'}, class: 'c-input__select', disabled: !@payment_configuration.covers_ldf %>
   </p>
 <% end %>
 

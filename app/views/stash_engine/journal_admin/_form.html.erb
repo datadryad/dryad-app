@@ -35,7 +35,7 @@
   </p>
   <p>
     <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
-    <%= pf.number_field :ldf_limit, value: @payment_configuration.ldf_limit, class: 'c-input__text', style: 'width:100%; font-family: Monaco, monospace; font-size: .8em;', disabled: !@payment_configuration.covers_ldf %>
+    <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: @payment_configuration.ldf_limit , prompt: 'No limit'}, class: 'c-input__select', disabled: !@payment_configuration.covers_ldf %>
   </p>
 <% end %>
 

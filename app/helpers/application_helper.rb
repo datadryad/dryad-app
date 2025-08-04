@@ -36,4 +36,8 @@ module ApplicationHelper
 
     Kramdown::Document.new(content, { input: 'GFM', header_offset: 1 }).to_html
   end
+
+  def ldf_pricing_tiers_options
+    FeeCalculator::BaseService::ESTIMATED_FILES_SIZE.map { |tier| ["#{filesize(tier[:range].max)} ($#{tier[:price]})", tier[:tier]] }
+  end
 end

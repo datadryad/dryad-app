@@ -27,6 +27,8 @@ require 'ostruct'
 module StashEngine
   class Tenant < ApplicationRecord
     self.table_name = 'stash_engine_tenants'
+    PAYMENT_PLANS = %w[tiered 2025].freeze
+
     validates :id, presence: true, uniqueness: true
     validates :short_name, presence: true
     validates :long_name, presence: true
