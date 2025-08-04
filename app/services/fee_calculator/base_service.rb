@@ -43,6 +43,7 @@ module FeeCalculator
       @payer = resource ? resource.identifier.payer : nil
       @payment_plan_is_2025 = resource ? resource.identifier.payer_2025? : false
       @covers_ldf = resource ? resource.identifier.payer&.payment_configuration&.covers_ldf : false
+      @ldf_limit = resource ? resource.identifier.payer&.payment_configuration&.ldf_limit : nil
     end
 
     def call
@@ -53,8 +54,12 @@ module FeeCalculator
         add_zero_fee(:service_tier)
         add_zero_fee(:dpc_tier)
         if @covers_ldf
-          verify_max_storage_size
-          add_zero_fee(:storage_size)
+          if @ldf_limit.nil?
+            verify_max_storage_size
+            add_zero_fee(:storage_size)
+          else
+            handle_ldf_limit
+          end
         else
           add_storage_fee_difference
           add_invoice_fee
@@ -74,6 +79,15 @@ module FeeCalculator
 
     def dpc_fee_tiers
       ESTIMATED_DATASETS
+    end
+
+    def handle_ldf_limit
+      @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee_overage]
+      tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
+      paid_for = [tier[:range].max, resource.identifier.previous_invoiced_file_size.to_i].max
+
+      add_storage_fee_difference(paid_for)
+      add_invoice_fee
     end
 
     private
@@ -186,7 +200,7 @@ module FeeCalculator
     end
 
     def add_storage_fee_label
-      @sum_options[:storage_fee_label] = storage_fee_label
+      @sum_options[:storage_fee_label] ||= storage_fee_label
     end
 
     def storage_fee_label
