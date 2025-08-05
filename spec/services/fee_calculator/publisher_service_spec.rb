@@ -6,6 +6,7 @@ module FeeCalculator
 
     let(:options) { {} }
     let(:resource) { nil }
+    let(:ldf_limit) { nil }
     let(:no_charges_response) { { service_fee: 0, dpc_fee: 0, storage_fee: 0, total: 0, storage_fee_label: 'Large data fee' } }
 
     subject { described_class.new(options, resource: resource).call.except(:storage_fee_label) }
@@ -126,7 +127,7 @@ module FeeCalculator
       let(:new_files_size) { 100 }
       let(:covers_ldf) { false }
       let!(:journal) { create(:journal) }
-      let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_ldf: covers_ldf) }
+      let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_ldf: covers_ldf, ldf_limit: ldf_limit) }
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
       subject { described_class.new(options, resource: resource).call }
 
@@ -148,6 +149,7 @@ module FeeCalculator
             end
 
             it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it only covers limited LDF'
           end
 
           context 'when covers_ldf false' do
@@ -187,6 +189,7 @@ module FeeCalculator
             end
 
             it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it only covers limited LDF'
           end
 
           context 'when covers_ldf false' do
@@ -246,6 +249,7 @@ module FeeCalculator
             end
 
             it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it only covers limited LDF'
           end
 
           context 'when covers_ldf false' do
@@ -313,6 +317,7 @@ module FeeCalculator
             end
 
             it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it only covers limited LDF'
           end
 
           context 'when covers_ldf false' do

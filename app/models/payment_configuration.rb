@@ -12,6 +12,8 @@
 #  updated_at   :datetime         not null
 #  partner_id   :string(191)
 #
+
+# NOTE: ldf_limit stores the tier number and not an actual limit size
 class PaymentConfiguration < ApplicationRecord
   has_paper_trail
 
