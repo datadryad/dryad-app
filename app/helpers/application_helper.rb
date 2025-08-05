@@ -38,6 +38,6 @@ module ApplicationHelper
   end
 
   def ldf_pricing_tiers_options
-    FeeCalculator::BaseService::ESTIMATED_FILES_SIZE.map { |tier| ["#{filesize(tier[:range].max)} ($#{tier[:price]})", tier[:tier]] }
+    [['No limit', '']] + FeeCalculator::BaseService::ESTIMATED_FILES_SIZE.map { |tier| ["#{filesize(tier[:range].max)} ($#{tier[:price]})", tier[:tier]] }
   end
 end
