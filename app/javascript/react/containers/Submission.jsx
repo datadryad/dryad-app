@@ -8,7 +8,8 @@ import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
 import ExitButton from '../components/ExitButton';
 import Payments from '../components/Payments';
-import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Publication';
+import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Connect';
+import TitleImport, {TitlePreview, titleFail} from '../components/MetadataEntry/Title';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
 import Compliance, {CompPreview, complianceCheck} from '../components/MetadataEntry/Compliance';
 import Description, {DescPreview, abstractCheck} from '../components/MetadataEntry/Description';
@@ -19,7 +20,7 @@ import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
 import Agreements from '../components/MetadataEntry/Agreements';
 import SubmissionHelp, {
-  PublicationHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, CompHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
+  PublicationHelp, TitleHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, CompHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
 /* eslint-disable jsx-a11y/no-autofocus */
 
@@ -38,30 +39,34 @@ function Submission({
   const previous = resource.previous_curated_resource;
   const observers = [];
 
-  const steps = () => [
-    {
-      name: 'Title',
-      index: 0,
+  const steps = () => {
+    const stepArray = [{
+      name: 'Connect',
       pass: publicationPass(resource),
       fail: (review || publicationPass(resource)) && publicationFail(resource, review),
-      component: <Publication current={step.name === 'Title'} resource={resource} setResource={setResource} />,
+      component: <Publication current={step.name === 'Connect'} resource={resource} setResource={setResource} />,
       help: <PublicationHelp />,
       preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
+    }, {
+      name: 'Title',
+      pass: resource.title,
+      fail: (review || step.index > 0) && titleFail(resource),
+      component: <TitleImport current={step.name === 'Title'} resource={resource} setResource={setResource} />,
+      help: <TitleHelp />,
+      preview: <TitlePreview resource={resource} previous={previous} />,
     },
     {
       name: 'Authors',
-      index: 1,
       pass: resource.authors.length > 0 && !authorCheck(resource),
-      fail: (review || step.index > 0) && authorCheck(resource),
+      fail: (review || step.index > 1) && authorCheck(resource),
       component: <Authors current={step.name === 'Authors'} resource={resource} setResource={setResource} user={user} />,
       help: <AuthHelp />,
       preview: <AuthPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Description',
-      index: 2,
       pass: !abstractCheck(resource),
-      fail: (review || step.index > 1) && abstractCheck(resource),
+      fail: (review || step.index > 2) && abstractCheck(resource),
       component: <Description
         current={step.name === 'Description'}
         resource={resource}
@@ -74,36 +79,32 @@ function Submission({
     },
     {
       name: 'Subjects',
-      index: 3,
       pass: keywordPass(resource.subjects),
-      fail: (review || step.index > 2) && keywordFail(resource),
+      fail: (review || step.index > 3) && keywordFail(resource),
       component: <Subjects current={step.name === 'Subjects'} resource={resource} setResource={setResource} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Support',
-      index: 4,
       pass: !fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      fail: (review || step.index > 3) && fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
+      fail: (review || step.index > 4) && fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support current={step.name === 'Support'} resource={resource} setResource={setResource} />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
       preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Compliance',
-      index: 5,
       pass: !complianceCheck(resource),
-      fail: (review || step.index > 4) && complianceCheck(resource),
+      fail: (review || step.index > 5) && complianceCheck(resource),
       component: <Compliance resource={resource} setResource={setResource} />,
       help: <CompHelp />,
       preview: <CompPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Files',
-      index: 6,
       pass: resource.generic_files?.length > 0,
-      fail: (review || step.index > 5) && filesCheck(resource, user.superuser, config_maximums),
+      fail: (review || step.index > 6) && filesCheck(resource, user.superuser, config_maximums),
       component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
         <UploadFiles
           {...{
@@ -119,25 +120,22 @@ function Submission({
     },
     {
       name: 'README',
-      index: 7,
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
-      fail: (review || step.index > 6) && readmeCheck(resource),
+      fail: (review || step.index > 7) && readmeCheck(resource),
       component: <ReadMeWizard resource={resource} setResource={setResource} current={step.name === 'README'} />,
       help: <ReadMeHelp />,
       preview: <ReadMePreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Related works',
-      index: 8,
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
-      fail: worksCheck(resource, (review || step.index > 7)),
+      fail: worksCheck(resource, (review || step.index > 8)),
       component: <RelatedWorks current={step.name === 'Related works'} resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps().find((l) => l.name === 'Title'))} />,
       preview: <WorksPreview resource={resource} previous={previous} curator={user.curator} />,
     },
     {
       name: 'Agreements',
-      index: 9,
       pass: resource.accepted_agreement,
       fail: ((review && !resource.accepted_agreement) && <p className="error-text" id="agree_err">Terms must be accepted</p>) || false,
       component: <Agreements
@@ -164,8 +162,12 @@ function Submission({
         setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
         preview
       />,
-    },
-  ];
+    }];
+    return stepArray.map((s, i) => {
+      s.index = i;
+      return s;
+    });
+  };
 
   if (resource.resource_type.resource_type === 'collection') {
     steps().splice(5, 3);

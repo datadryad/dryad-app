@@ -11,41 +11,36 @@ module StashDatacite
     def update
       @resource = StashEngine::Resource.find(params[:resource_id])
       @se_id = @resource.identifier
+      @metaimport = ['true', true].include?(params[:do_import])
       save_publications
+      save_doi
+      if params[:import_type] == 'manuscript' && @metaimport
+        update_manuscript_metadata
+      elsif params[:primary_article_doi].present?
+        update_doi_metadata
+      end
+      @se_id.update(import_info: params[:import_type]) if @metaimport
+      @resource.reload
+      import_data = {
+        title: @resource.title,
+        authors: @resource.authors.as_json(include: [:affiliations]),
+        descriptions: @resource.descriptions,
+        subjects: @resource.subjects,
+        contributors: @resource.contributors
+      }
       respond_to do |format|
         format.json do
-          if ['true', true].include?(params[:do_import])
-            @se_id.update(import_info: params[:import_type])
-            @error = 'Please fill in the form completely' if params[:msid]&.strip.blank? && params[:primary_article_doi]&.strip.blank?
-            update_manuscript_metadata if params[:import_type] == 'manuscript'
-            update_doi_metadata if params[:primary_article_doi].present? && params[:import_type] != 'manuscript'
-            if !@doi&.related_identifier.blank? && params[:import_type] == 'published'
-              manage_pubmed_datum(identifier: @se_id, doi: @doi.related_identifier)
-            end
-            @resource.reload
-            import_data = {
-              title: @resource.title,
-              authors: @resource.authors.as_json(include: [:affiliations]),
-              descriptions: @resource.descriptions,
-              subjects: @resource.subjects,
-              contributors: @resource.contributors,
-              resource_preprint: @resource.resource_preprint
-            }
-            render json: {
-              error: @error,
-              journal: @resource.journal,
-              resource_publication: @resource.resource_publication,
-              related_identifiers: @resource.related_identifiers,
-              import_data: @error ? false : import_data
-            }
-          else
-            render json: { error: @error, journal: @resource.journal, import_data: false, resource_publication: @resource.resource_publication,
-                           related_identifiers: @resource.related_identifiers }
-          end
+          render json: {
+            error: @error,
+            journal: @resource.journal,
+            resource_preprint: @resource.resource_preprint,
+            resource_publication: @resource.resource_publication,
+            related_identifiers: @resource.related_identifiers,
+            import_data: @metaimport && !@error ? import_data : false
+          }
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     # GET /publications/autocomplete?term={query_term}
     def autocomplete
@@ -96,6 +91,8 @@ module StashDatacite
       render json: match
     end
 
+    private
+
     def save_publications
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
@@ -119,13 +116,10 @@ module StashDatacite
         publication.update(publication_name: @pub_name, publication_issn: @pub_issn, manuscript_number: @msid)
       end
       @resource.reload
+      return unless @resource.identifier.allow_review? && @resource.identifier.date_last_curated.blank? && @resource.journal&.default_to_ppr?
 
-      if @resource.identifier.allow_review? && @resource.identifier.date_last_curated.blank? && @resource.journal&.default_to_ppr?
-        # if the newly-set journal wants PPR by default, and it is allowed, set the PPR value for this resource
-        @resource.update(hold_for_peer_review: true)
-      end
-
-      save_doi
+      # if the newly-set journal wants PPR by default, and it is allowed, set the PPR value for this resource
+      @resource.update(hold_for_peer_review: true)
     end
     # rubocop:enable Metrics/AbcSize
 
@@ -134,39 +128,43 @@ module StashDatacite
       return if form_doi.blank?
 
       work_type = params[:import_type] == 'preprint' ? 'preprint' : 'primary_article'
+      existing_primary = @resource.related_identifiers.where(work_type: work_type).first
       bare_form_doi = Stash::Import::Crossref.bare_doi(doi_string: form_doi)
-      related_dois = @resource.related_identifiers
+      standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
+      return if existing_primary&.related_identifier == standard_doi
 
-      related_dois.each do |rd|
+      existing = nil
+      @resource.related_identifiers.each do |rd|
+        next unless rd.related_identifier.present?
+
         bare_related_doi = Stash::Import::Crossref.bare_doi(doi_string: rd.related_identifier)
-        next unless bare_form_doi.include?(bare_related_doi) || bare_related_doi.include?(bare_form_doi) # user is entering a DOI that we already have
-
-        standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
-        # user is expanding on a DOI that we already have; update it in the DB (and change the work_type if needed)
-        rd.update(related_identifier: standard_doi, related_identifier_type: 'doi', work_type: work_type)
-        rd.update(verified: rd.live_url_valid?, hidden: false) # do this separately since we need the doi in standard format in object to check
-        return nil
+        # user is entering a DOI that we already have
+        existing = rd if bare_form_doi.include?(bare_related_doi) || bare_related_doi.include?(bare_form_doi)
       end
 
-      # none of the existing related_dois overlap with the form_doi; add the form_doi as a completely new relation
-      standard_doi = RelatedIdentifier.standardize_doi(bare_form_doi)
-      existing_primary = @resource.related_identifiers.where(work_type: work_type).first
-      hsh = { related_identifier: standard_doi,
-              related_identifier_type: 'doi',
-              relation_type: 'iscitedby',
-              work_type: work_type,
-              hidden: false }
+      if existing.present?
+        # user is expanding on a DOI that we already have; update it in the DB (and change the work_type if needed)
+        existing.update(related_identifier: standard_doi, related_identifier_type: 'doi', work_type: work_type, hidden: false)
+        existing.update(verified: existing.live_url_valid?) # do this separately since we need the doi in standard format in object to check
+      else
+        # none of the existing related_dois overlap with the form_doi; add the form_doi as a completely new relation
+        hsh = { related_identifier: standard_doi,
+                related_identifier_type: 'doi',
+                relation_type: 'iscitedby',
+                work_type: work_type,
+                hidden: false }
 
-      ri = if existing_primary.present?
-             existing_primary.update(hsh)
-             existing_primary
-           else
-             RelatedIdentifier.create(hsh.merge(resource_id: @resource.id))
-           end
-
-      ri.update(verified: ri.live_url_valid?) # do this separately since we need the doi in standard format in object to check
+        ri = if existing_primary.present?
+               existing_primary.update(hsh)
+               existing_primary
+             else
+               RelatedIdentifier.create(hsh.merge(resource_id: @resource.id))
+             end
+        ri.update(verified: ri.live_url_valid?) # do this separately since we need the doi in standard format in object to check
+      end
       @resource.reload
     end
+    # rubocop:enable Metrics/MethodLength
 
     # parse out the "relevant" part of the manuscript ID, ignoring the parts that the journal changes for different versions of the same item
     def parse_msid(issn:, msid:)
@@ -221,14 +219,15 @@ module StashDatacite
         @error = 'Please enter a DOI to import metadata'
         return
       end
-      cr = Stash::Import::Crossref.query_by_doi(resource: @resource, doi: params[:primary_article_doi])
+      bare_doi = Stash::Import::Crossref.bare_doi(doi_string: params[:primary_article_doi])
+      cr = Stash::Import::Crossref.query_by_doi(resource: @resource, doi: bare_doi)
       unless cr.present?
         @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
         return
       end
 
       work_type = params[:import_type] == 'preprint' ? 'preprint' : 'primary_article'
-      @resource = @resource.previous_curated_resource.present? ? cr.populate_pub_update!(work_type) : cr.populate_resource!(work_type)
+      @resource = @metaimport ? cr.populate_resource!(work_type) : cr.populate_pub_update!(work_type)
     rescue Serrano::NotFound, Serrano::BadGateway, Serrano::Error, Serrano::GatewayTimeout, Serrano::InternalServerError, Serrano::ServiceUnavailable
       @error = "We couldn't find metadata to import for this DOI. Please fill in your title manually."
     end
@@ -269,8 +268,6 @@ module StashDatacite
       StashDatacite::RelatedIdentifier.where(resource_id: @resource.id, relation_type: relation_type,
                                              related_identifier_type: related_identifier_type).first
     end
-
-    private
 
     # Re-order a journal list to prioritize exact matches at the beginning of the string, then
     # exact matches within the string, otherwise leaving the order unchanged
