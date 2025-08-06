@@ -18,3 +18,10 @@
     <%= raw(display_desc(other.description)) %>
   </div>
 <% end %>
+
+<% unless changelog.try(:description).blank? %>
+  <h2 class="expand-button"><button id="usage" aria-expanded="false" aria-controls="usage-sec">Change log</button></h2>
+  <div id="usage-sec" hidden class="t-landing__text-wall">
+    <%= display_desc(markdown_render(changelog.description)).html_safe %>
+  </div>
+<% end %>

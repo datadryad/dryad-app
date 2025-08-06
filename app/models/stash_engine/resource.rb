@@ -420,7 +420,7 @@ module StashEngine
       technical_info = descriptions.type_technical_info&.first&.description
       return nil if !technical_info || technical_info.empty?
 
-      disclaimer = descriptions.where(description_type: 'usage_notes')&.first&.description
+      disclaimer = descriptions.where(description_type: 'hsi_statement')&.first&.description
       technical_info = "#{technical_info}\n\n## Human subjects data\n\n#{disclaimer}" if disclaimer.present?
       technical_info
     end
@@ -821,8 +821,10 @@ module StashEngine
       affiliation = submitter.affiliation
       affiliation = StashDatacite::Affiliation.from_ror_id(ror_id: submitter.tenant.ror_ids&.first) if affiliation.blank? &&
         submitter.tenant.present? && !%w[dryad localhost].include?(submitter.tenant.id)
-      StashEngine::Author.create(resource_id: id, author_orcid: orcid, affiliation: affiliation,
-                                 author_first_name: f_name, author_last_name: l_name, author_email: email, corresp: true)
+      StashEngine::Author.create(
+        resource_id: id, author_orcid: orcid, affiliation: affiliation, author_first_name: f_name,
+        author_last_name: l_name, author_email: email, corresp: true
+      )
       # disabling because we no longer wnat this with UC Press
       # author.affiliation_by_name(submitter.tenant.short_name) if submitter.try(:tenant)
     end
@@ -963,7 +965,7 @@ module StashEngine
       changed_fields(previous_curated_resource)
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize
     def changed_fields(other_resource)
       return [] unless other_resource
 
@@ -981,22 +983,7 @@ module StashEngine
       that_facility = other_resource.contributors.where(contributor_type: 'sponsor').first&.contributor_name
       changed << 'facility' if this_facility != that_facility
 
-      this_abstract = descriptions.type_abstract&.first&.description
-      that_abstract = other_resource.descriptions.type_abstract&.first&.description
-      changed << 'abstract' if this_abstract != that_abstract
-
-      this_methods = descriptions.type_methods&.first&.description
-      that_methods = other_resource.descriptions.type_methods&.first&.description
-      changed << 'methods' if this_methods != that_methods
-
-      this_technical_info = descriptions.type_technical_info&.first&.description
-      that_technical_info = other_resource.descriptions.type_technical_info&.first&.description
-      changed << 'technical_info' if this_technical_info != that_technical_info
-
-      this_other_desc = descriptions.type_other&.first&.description
-      that_other_desc = other_resource.descriptions.type_other&.first&.description
-      changed << 'usage_notes' if this_other_desc != that_other_desc
-
+      changed.concat(changed_descriptions(other_resource.descriptions))
       changed.concat(changed_subjects(other_resource.subjects))
       changed.concat(changed_funders(other_resource))
       changed.concat(changed_related(other_resource.related_identifiers))
@@ -1008,7 +995,7 @@ module StashEngine
       changed
     end
 
-    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize
 
     # special granular attribute checks
 
@@ -1025,6 +1012,17 @@ module StashEngine
       unless edits.empty?
         changed << 'authors'
         changed << edits
+      end
+      changed
+    end
+
+    def changed_descriptions(other_descriptions)
+      changed = []
+      desc_types = %w[abstract methods technical_info other hsi_statement changelog]
+      desc_types.each do |type|
+        this = descriptions.where(description_type: type)&.first&.description
+        that = other_descriptions.where(description_type: type)&.first&.description
+        changed << type if this != that
       end
       changed
     end
@@ -1188,8 +1186,9 @@ module StashEngine
       completions = StashDatacite::Resource::Completions.new(self)
       if prior_version.blank? && completions.duplicate_submission
         dup_id = completions.duplicate_submission.identifier&.identifier
-        curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
-                                                                    note: "System noticed possible duplicate dataset #{dup_id}")
+        curation_activities << StashEngine::CurationActivity.create(
+          user_id: 0, status: target_status, note: "System noticed possible duplicate dataset #{dup_id}"
+        )
       end
 
       # If it's the first version, or the prior version was in the submitter's control, we're done
@@ -1203,8 +1202,9 @@ module StashEngine
       # If the last user to edit it was the curator return it to curation status
       return unless last_curation_activity.user_id == user_id
 
-      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
-                                                                  note: 'System set back to curation')
+      curation_activities << StashEngine::CurationActivity.create(
+        user_id: 0, status: 'curation', note: 'System set back to curation'
+      )
     end
 
     # rubocop:disable Metrics/AbcSize

@@ -129,7 +129,7 @@ describe('UploadFiles', () => {
     await waitFor(() => software_data);
 
     expect(screen.getByText('No files have been selected.')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Describe your file changes')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Describe your file changes for our data curators. These comments are not published.')).not.toBeInTheDocument();
   });
 
   it('uploads a data file and shows the size', async () => {
@@ -355,7 +355,7 @@ describe('UploadFiles', () => {
     info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
 
-    expect(screen.queryByLabelText('Describe your file changes')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Describe your file changes for our data curators. These comments are not published.')).not.toBeInTheDocument();
   });
 
   it('shows and changes the file note when files are edited', async () => {
@@ -374,7 +374,7 @@ describe('UploadFiles', () => {
     info.previous = {generic_files: []};
     render(<UploadFiles {...info} />);
 
-    const notebox = screen.getByLabelText('Describe your file changes');
+    const notebox = screen.getByLabelText('Describe your file changes for our data curators. These comments are not published.');
 
     userEvent.type(notebox, note);
     userEvent.tab();

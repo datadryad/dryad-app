@@ -18,7 +18,7 @@
 
 <%= render partial: "stash_datacite/descriptions/show",
      locals: { abstract: review.abstract, methods: '',
-   other: '', highlight_fields: [] } %>
+   other: '', changelog: '', highlight_fields: [] } %>
 
 <% if @resource.display_readme? %>
   <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review, highlight_fields: [] } %>
@@ -26,7 +26,7 @@
 
 <%= render partial: "stash_datacite/descriptions/show",
    locals: { abstract: '', methods: review.methods,
- other: review.other, highlight_fields: [] } %>
+ other: review.other, changelog: review.changelog, highlight_fields: [] } %>
 
 <%# takes local of identifier, no_link == true means don't link metrics %>
 <% no_link = false unless defined?(no_link) %>

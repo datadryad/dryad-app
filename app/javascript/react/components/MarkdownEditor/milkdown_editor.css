@@ -23,7 +23,8 @@
   background-color: white;
 }
 
-#readme_step_editor .md_editor_textarea {
+#readme_step_editor .md_editor_textarea,
+#changelog-editor .md_editor_textarea {
   height: 350px;
   max-height: 65vh;
 }

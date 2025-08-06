@@ -46,6 +46,10 @@ module StashDatacite
         @other ||= @resource.descriptions.where(description_type: :other).first
       end
 
+      def changelog
+        @changelog ||= @resource.descriptions.where(description_type: :changelog).first
+      end
+
       def subjects
         @subjects = @resource.subjects.order(subject_scheme: :desc, subject: :asc)
       end
