@@ -49,7 +49,7 @@ function Submission({
       preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
     }, {
       name: 'Title',
-      pass: resource.title,
+      pass: !titleFail(resource),
       fail: (review || step.index > 0) && titleFail(resource),
       component: <TitleImport current={step.name === 'Title'} resource={resource} setResource={setResource} />,
       help: <TitleHelp />,
