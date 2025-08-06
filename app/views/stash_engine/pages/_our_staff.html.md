@@ -107,7 +107,7 @@
 <div class="bio">
   <img src="/images/jwalter.png" alt="Headshot of Jeremy Walter">
   <h5>Jeremy Walter</h5><br/>
-  <p><em>Data Curator</em><br/>
+  <p><em>Senior Data Curator I</em><br/>
   Jeremy transitioned from a management role in English as a Second Language
   education in Thailand to technical writing and training coordination roles on
   various biology-driven projects in the United States. He recently repatriated
