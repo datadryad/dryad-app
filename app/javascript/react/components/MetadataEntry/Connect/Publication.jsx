@@ -71,6 +71,7 @@ export default function Publication({resource, setResource}) {
     if (primary_article) selected.push('published');
     if (preprint) selected.push('preprint');
     if (selected.length) setAssoc(true);
+    else if (resource.identifier.import_info === 'other') setAssoc(false);
     setConnections(selected);
   }, []);
 
