@@ -36,7 +36,6 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       start_new_dataset
     end
 
-    # I don't know why but the stub request does not work a second time.
     it 'works for successful dataset request to crossref', js: true do
       stub_request(:get, 'https://api.crossref.org/works/10.1098%2Frsif.2017.0030')
         .to_return(status: 200,
