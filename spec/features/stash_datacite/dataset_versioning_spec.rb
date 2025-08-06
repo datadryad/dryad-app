@@ -90,7 +90,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
 
         expect(page).to have_text(@resource.identifier.identifier)
-
+        within(:css, '#activity_log_table tbody:last-child') do
+          find('button[aria-label="Curation activity"]').click
+        end
         # it has the user comment when they clicked to submit and end in-progress edit
         expect(page).to have_text(@resource.edit_histories.last.user_comment)
 

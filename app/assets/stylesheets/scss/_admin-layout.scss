@@ -398,3 +398,40 @@
     border: 2px solid darken($lightest-blue, 10);
   }
 }
+
+.changes-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.desc-changes {
+  background-color: rgba(255,255,255,.8);
+  border: thin solid #888;
+  margin-top: .5ch;
+  padding: 1px 10px;
+  max-height: 500px;
+  overflow-y: auto;
+
+  ins, del {
+    padding: 5px 0 3px;
+  }
+  ins {
+    text-decoration: none;
+    background-color: $lightest-orange;
+    & > * {
+      width: fit-content;
+      text-decoration: none;
+      background-color: $lightest-orange;
+    }
+  }
+  del {
+    background-color: $lightest-red;
+    text-decoration: line-through;
+    & > * {
+      width: fit-content;
+      background-color: $lightest-red;
+      text-decoration: line-through;
+    }
+  }  
+}
