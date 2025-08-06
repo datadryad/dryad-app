@@ -1,7 +1,7 @@
 <% if c.object_changes.empty? %>
   <dl><div>
     <dt>Subject list:</dt>
-    <dd><%= c.additional_info['subjects_list'].map { |s| s['subject'] }.join(', ') %></dd>
+    <dd><%= c.additional_info&.dig('subjects_list')&.map { |s| s['subject'] }&.join(', ') %></dd>
   </div></dl>
 <% else %>
   <% c.object_changes.each do |k, v| %>

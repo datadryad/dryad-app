@@ -23,7 +23,7 @@ Deleted <%= desc_types[c.object_changes['description_type'].dig(0)&.to_sym] %>
   Updated <%= desc_types[c.object['description_type'].to_sym] %>
   <% if original.present? || latest.present? %>
     <button class="o-button__plain-text7 desc-changes-button" aria-controls="desc_changes<%= c.id%>" aria-expanded="false">
-      <i class="fas fa-eye" aria-hidden="true"></i> View changes
+      <i class="fas fa-eye" aria-hidden="true" style="margin-right: .35ch"></i>View changes
     </button>
   <% end %>
 </div>

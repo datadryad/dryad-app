@@ -82,8 +82,8 @@
   <script type="text/javascript">
     const log_buttons = document.querySelectorAll('.log-button')
     log_buttons.forEach(button => button.addEventListener('click', () => {
-      button.setAttribute('aria-expanded', true)
-      document.getElementById(button.getAttribute('aria-controls')).removeAttribute('hidden')
+      button.setAttribute('aria-expanded', !(button.getAttribute('aria-expanded') === 'true'))
+      document.getElementById(button.getAttribute('aria-controls')).toggleAttribute('hidden')
       load_data()
     }))
     const close_buttons = document.querySelectorAll('.log-close')
