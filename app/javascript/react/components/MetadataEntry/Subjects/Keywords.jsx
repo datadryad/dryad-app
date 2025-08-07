@@ -13,7 +13,7 @@ function Keywords({resource, setResource}) {
   const saveKeyword = (strKeyword) => {
     // the controller for this is a bit weird since it may accept one keyword or multiple separated by commas and it returns
     // the full list of keywords again after adding one or more
-    if(strKeyword === '') return;
+    if (strKeyword === '') return;
 
     showSavingMsg();
     axios.post(

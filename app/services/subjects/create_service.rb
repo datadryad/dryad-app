@@ -13,11 +13,16 @@ module Subjects
     def call
       return if keywords.blank?
 
+      resource.subjects << new_subjects
+      resource.reload
+    end
+
+    def new_subjects
       existing = resource.subjects
       existing = existing.send(scope) if scope
       existing = existing.map { |a| a.subject.downcase }
 
-      resource.subjects << keywords.map do |kw|
+      keywords.map do |kw|
         next if kw.blank?
         next if existing.include?(kw.downcase) || existing.include?(kw.force_encoding('UTF-8').encode('UTF-8').downcase)
 
@@ -27,7 +32,6 @@ module Subjects
         new = new.send(scope) if scope
         new.find_or_create_by(subject: kw)
       end.compact
-      resource.reload
     end
 
     private

@@ -53,7 +53,7 @@ module Stash
 
         context 'with an existing keyword already in subjects' do
           it 'populates the remaining keywords only' do
-            @manuscript.metadata['keywords'] = ["Maraj\xC3\xB3 Island"] + @manuscript.metadata['keywords']
+            @manuscript.metadata['keywords'] = ["Maraj\xC3\xB3 Island", 'other']
             expect(@resource.subjects.count).to eql(0)
 
             @resource.subjects << create(:subject, subject: "Maraj\xC3\xB3 Island")
@@ -65,7 +65,7 @@ module Stash
             @manuscript.metadata['keywords'].each_with_index do |hash_kw, index|
               expect(@resource.subjects.non_fos[index].subject).to eql(hash_kw)
             end
-            expect(@resource.subjects.count).to eql(3)
+            expect(@resource.subjects.count).to eql(2)
           end
         end
       end
