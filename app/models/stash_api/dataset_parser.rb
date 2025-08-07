@@ -70,7 +70,6 @@ module StashApi
     def resource_uniq?
       return true if @id
 
-      # pp @hash[:title], @user.orcid, @hash[:manuscriptNumber]
       query = StashEngine::Resource.joins(:users).where(
         stash_engine_resources: { title: @hash[:title] },
         stash_engine_users: { orcid: @user.orcid }
@@ -81,7 +80,7 @@ module StashApi
           stash_engine_resource_publications: { manuscript_number: @hash[:manuscriptNumber] }
         )
       end
-      # pp !query.exists?
+
       !query.exists?
     end
 
