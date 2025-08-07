@@ -1,10 +1,10 @@
 import React, {useState, useEffect, useId} from 'react';
 import {useSelect} from 'downshift';
 import {range} from 'lodash';
-import {editorViewCtx} from '@milkdown/core';
-import {callCommand} from '@milkdown/utils';
+import {editorViewCtx} from '@milkdown/kit/core';
+import {callCommand} from '@milkdown/kit/utils';
 // eslint-disable-next-line import/no-unresolved
-import {TextSelection} from '@milkdown/prose/state';
+import {TextSelection} from '@milkdown/kit/prose/state';
 import {commands} from './milkdownCommands';
 import {commands as mdCommands} from './codeKeymap';
 
