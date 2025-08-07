@@ -26,3 +26,37 @@ RSpec.shared_examples('it raises out of range error') do
     expect { subject }.to raise_error(ActionController::BadRequest, OUT_OF_RANGE_MESSAGE)
   end
 end
+
+RSpec.shared_examples('it only covers limited LDF') do
+  let(:new_files_size) { 100_000_000_000 }
+  let(:no_charges_response) { { storage_fee: 0, storage_fee_label: 'Large data fee overage' } }
+
+  context 'with nil limit' do
+    let(:ldf_limit) { nil }
+    let(:no_charges_response) { { storage_fee: 0, storage_fee_label: 'Large data fee' } }
+
+    it { is_expected.to include(no_charges_response) }
+  end
+
+  context 'when limit tier is set' do
+    let(:covers_ldf) { true }
+
+    context 'with limit over the new file size' do
+      let(:ldf_limit) { 3 }
+
+      it { is_expected.to include(no_charges_response) }
+    end
+
+    context 'with limit equal to the new file size' do
+      let(:ldf_limit) { 2 }
+
+      it { is_expected.to include(no_charges_response) }
+    end
+
+    context 'with limit over the new file size' do
+      let(:ldf_limit) { 1 }
+
+      it { is_expected.to include({ storage_fee: 205, storage_fee_label: 'Large data fee overage' }) }
+    end
+  end
+end
