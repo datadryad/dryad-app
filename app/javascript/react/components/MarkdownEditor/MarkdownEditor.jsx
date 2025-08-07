@@ -106,7 +106,7 @@ function MilkdownCore({
 }
 
 const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', 'spacer',
-  'table', 'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
+  'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'table', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
   id, attr, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
@@ -260,8 +260,6 @@ function MilkdownEditor({
     </>
   );
 }
-
-// <p className="screen-reader-only" role="status" aria-live="polite" id="menu-status">{status}</p>
 
 function MarkdownEditor(props) {
   return (
