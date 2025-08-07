@@ -426,9 +426,7 @@ module StashApi
 
       case @json.first['path']
       when '/versionStatus'
-        ensure_in_progress { yield }
-        pre_submission_updates
-        StashEngine.repository.submit(resource_id: @resource.id)
+        update_version_status(@json.first['value'])
         ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
         render json: ds.metadata, status: 202
       when '/curationStatus'
@@ -441,6 +439,17 @@ module StashApi
         return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
       end
       yield
+    end
+
+    def update_version_status(new_status)
+      ensure_in_progress { yield }
+      pre_submission_updates
+      if new_status == 'submitted'
+        @resource.curation_activities << StashEngine::CurationActivity.create(
+          status: 'processing', note: 'Repository processing data', user_id: @user&.id || 0
+        )
+      end
+      StashEngine.repository.submit(resource_id: @resource.id)
     end
 
     def update_curation_status(new_status)
