@@ -42,6 +42,15 @@ module Stash
           end
         end
 
+        it 'does not save blank subjects' do
+          @manuscript.metadata['keywords'] = ['', ' '] + @manuscript.metadata['keywords']
+          @dm.populate_keywords
+          @resource.reload
+          @manuscript.metadata['keywords'][2..].each_with_index do |hash_kw, index|
+            expect(@resource.subjects.non_fos[index].subject).to eql(hash_kw)
+          end
+        end
+
         context 'with an existing keyword already in subjects' do
           it 'populates the remaining keywords only' do
             @manuscript.metadata['keywords'] = ["Maraj\xC3\xB3 Island"] + @manuscript.metadata['keywords']
