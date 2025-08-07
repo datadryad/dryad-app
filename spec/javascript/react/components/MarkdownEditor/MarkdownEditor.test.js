@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  render, screen, waitFor, within,
-} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import {render, screen, waitFor} from '@testing-library/react';
 import MarkdownEditor from '../../../../../app/javascript/react/components/MarkdownEditor';
 
 describe('MarkdownEditor', () => {
@@ -29,7 +26,7 @@ describe('MarkdownEditor', () => {
   });
 
   it('renders desired buttons', async () => {
-    info.buttons = ['strong', 'emphasis', 'strike_through']
+    info.buttons = ['strong', 'emphasis', 'strike_through'];
     render(<MarkdownEditor {...info} />);
     await waitFor(() => {
       expect(screen.getByText('This is some text')).toBeInTheDocument();
@@ -38,5 +35,4 @@ describe('MarkdownEditor', () => {
     expect(screen.getByLabelText('Italic')).toBeInTheDocument();
     expect(screen.getByLabelText('Strikethrough text')).toBeInTheDocument();
   });
-  
 });
