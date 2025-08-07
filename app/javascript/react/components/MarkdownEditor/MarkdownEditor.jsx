@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {
   Editor, rootCtx, schemaCtx, serializerCtx, editorViewCtx, remarkCtx, remarkStringifyOptionsCtx, rootDOMCtx,
-} from '@milkdown/core';
+} from '@milkdown/kit/core';
 import {
   Milkdown, MilkdownProvider, useEditor, useInstance,
 } from '@milkdown/react';
-import {history} from '@milkdown/plugin-history';
-import {listener as listen, listenerCtx} from '@milkdown/plugin-listener';
-import {trailing} from '@milkdown/plugin-trailing';
-import {commonmark} from '@milkdown/preset-commonmark';
-import {gfm} from '@milkdown/preset-gfm';
-import {replaceAll} from '@milkdown/utils';
-import {ParserState} from '@milkdown/transformer';
+import {history} from '@milkdown/kit/plugin/history';
+import {listener as listen, listenerCtx} from '@milkdown/kit/plugin/listener';
+import {trailing} from '@milkdown/kit/plugin/trailing';
+import {commonmark} from '@milkdown/kit/preset/commonmark';
+import {gfm} from '@milkdown/kit/preset/gfm';
+import {replaceAll} from '@milkdown/kit/utils';
+import {ParserState} from '@milkdown/kit/transformer';
 import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';
@@ -80,17 +80,21 @@ function MilkdownCore({
       });
       const slistener = ctx.get(selectionCtx);
       slistener.selection((ctxx, selection, doc) => {
-        setActive([]);
-        const list = [];
-        const schema = ctxx.get(schemaCtx);
-        const {from, to} = selection;
-        const {path, parent} = doc.resolve(from);
-        path.forEach((i) => i.type && list.push(i.type.name));
-        Object.keys(schema.marks).forEach((m) => {
-          if (doc.rangeHasMark(from === to ? from - 1 : from, to, schema.marks[m])) list.push(schema.marks[m].name);
-        });
-        setActive(list);
-        setLevel(parent.attrs?.level || 0);
+        try {
+          setActive([]);
+          const list = [];
+          const schema = ctxx.get(schemaCtx) || {};
+          const {from, to} = selection;
+          const {path, parent} = doc.resolve(from);
+          path.forEach((i) => i.type && list.push(i.type.name));
+          Object.keys(schema.marks).forEach((m) => {
+            if (doc.rangeHasMark(from === to ? from - 1 : from, to, schema.marks[m])) list.push(schema.marks[m].name);
+          });
+          setActive(list);
+          setLevel(parent.attrs?.level || 0);
+        } catch (e) {
+          // no schema for jest tests
+        }
       });
     })
     .use([bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
@@ -102,7 +106,7 @@ function MilkdownCore({
 }
 
 const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', 'spacer',
-  'table', 'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
+  'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'table', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
   id, attr, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
@@ -256,8 +260,6 @@ function MilkdownEditor({
     </>
   );
 }
-
-// <p className="screen-reader-only" role="status" aria-live="polite" id="menu-status">{status}</p>
 
 function MarkdownEditor(props) {
   return (

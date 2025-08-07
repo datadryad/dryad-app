@@ -1,7 +1,7 @@
-import {createSlice} from '@milkdown/ctx';
+import {createSlice} from '@milkdown/kit/ctx';
 // eslint-disable-next-line import/no-unresolved
-import {Plugin, PluginKey} from '@milkdown/prose/state';
-import {InitReady, prosePluginsCtx} from '@milkdown/core';
+import {Plugin, PluginKey} from '@milkdown/kit/prose/state';
+import {InitReady, SchemaReady, prosePluginsCtx} from '@milkdown/kit/core';
 import {debounce} from 'lodash';
 
 export class SelectionManager {
@@ -28,6 +28,7 @@ export const selectionListener = (ctx) => {
 
   return async () => {
     await ctx.wait(InitReady);
+    await ctx.wait(SchemaReady);
     const listener = ctx.get(selectionCtx);
     const {listeners} = listener;
 

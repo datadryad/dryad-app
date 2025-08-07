@@ -1,0 +1,36 @@
+import React from 'react';
+
+export const labels = {
+  undo: 'Undo',
+  redo: 'Redo',
+  strong: 'Bold',
+  emphasis: 'Italic',
+  link: 'Add link',
+  inlineCode: 'Monospace',
+  strike_through: 'Strikethrough text',
+  bullet_list: 'Create list',
+  ordered_list: 'Create numbered list',
+  indent: 'Indent list',
+  outdent: 'Remove indent',
+  blockquote: 'Make quote',
+  code_block: 'Insert code block',
+  table: 'Insert table',
+  heading: 'Set heading',
+};
+
+export const icons = {
+  undo: <i className="fas fa-undo" aria-hidden="true" />,
+  redo: <i className="fas fa-rotate-right" aria-hidden="true" />,
+  strong: <i className="fas fa-bold" aria-hidden="true" />,
+  emphasis: <i className="fas fa-italic" aria-hidden="true" />,
+  link: <i className="fas fa-link" aria-hidden="true" />,
+  inlineCode: <i className="fas fa-terminal" aria-hidden="true" />,
+  strike_through: <i className="fas fa-strikethrough" aria-hidden="true" />,
+  bullet_list: <i className="fas fa-list" aria-hidden="true" />,
+  ordered_list: <i className="fas fa-list-ol" aria-hidden="true" />,
+  indent: <i className="fas fa-indent" aria-hidden="true" />,
+  outdent: <i className="fas fa-outdent" aria-hidden="true" />,
+  blockquote: <i className="fas fa-quote-left" aria-hidden="true" />,
+  code_block: <i className="fas fa-code" aria-hidden="true" />,
+  table: <i className="fas fa-table" aria-hidden="true" />,
+};

@@ -1,0 +1,56 @@
+{
+  "extends": "airbnb",
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": true,
+      "node": true
+    }
+  },
+  "rules": {
+    "camelcase": "off",
+    "indent": ["error", 2],
+    "jsx-a11y/label-has-associated-control": [2, {"assert": "either"}],
+    "max-len": [
+      2,
+      {
+        "code": 150,
+        "tabWidth": 2,
+        "ignoreUrls": true
+      }
+    ],
+    "no-console": "off",
+    "no-param-reassign": [2,{"props": false}],
+    "no-restricted-exports": [2, {"restrictDefaultExports": {"defaultFrom": false}}],
+    "object-curly-spacing": [2, "never"],
+    "react/destructuring-assignment": [0],
+    "react/forbid-prop-types": [
+      2,
+      {
+        "forbid": [],
+        "checkContextTypes": false,
+        "checkChildContextTypes": false
+      }
+    ],
+    "react/jsx-filename-extension": [1, {"extensions": [".js", ".jsx"]}],
+    "react/jsx-indent": "off",
+    "react/jsx-one-expression-per-line": [0, {"allow": "single-child"}],
+    "react/jsx-props-no-spreading": [0],
+    "react/prop-types": [0],
+    "react/require-default-props": [
+      1,
+      {
+        "forbidDefaultForRequired": true,
+        "ignoreFunctionalComponents": true
+      }
+    ],
+    "react/state-in-constructor": [0]
+  },
+  "env": {
+    "browser": true,
+    "jest": true
+  }
+}
