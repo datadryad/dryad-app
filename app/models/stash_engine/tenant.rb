@@ -27,7 +27,7 @@ require 'ostruct'
 module StashEngine
   class Tenant < ApplicationRecord
     self.table_name = 'stash_engine_tenants'
-    PAYMENT_PLANS = %w[tiered 2025].freeze
+    PAYMENT_PLANS = %w[SUBSCRIPTION TIERED 2025].freeze
 
     validates :id, presence: true, uniqueness: true
     validates :short_name, presence: true
@@ -52,7 +52,7 @@ module StashEngine
     scope :enabled, -> { where(enabled: true).order(:short_name) }
     scope :partner_list, -> { enabled.where(partner_display: true) }
     scope :connect_list, -> { partner_list.joins(:payment_configuration).where(payment_configurations: { covers_dpc: true }) }
-    scope :tiered, -> { enabled.joins(:payment_configuration).where(payment_configurations: { payment_plan: :tiered }) }
+    scope :tiered, -> { enabled.joins(:payment_configuration).where(payment_configurations: { payment_plan: 'TIERED' }) }
     scope :fees_2025, -> { enabled.joins(:payment_configuration).where(payment_configurations: { payment_plan: '2025' }) }
     scope :sponsored, -> { enabled.distinct.joins(:sponsored) }
 

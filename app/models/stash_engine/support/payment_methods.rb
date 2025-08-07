@@ -45,7 +45,7 @@ module StashEngine
           self.payment_id = nil
         elsif institution_will_pay?
           self.payment_id = latest_resource&.tenant&.id
-          self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'tiered'}"
+          self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'TIERED'}"
         elsif journal&.will_pay?
           self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn

@@ -6,9 +6,9 @@ class PopulatePaymentConfigurationsTable < ActiveRecord::Migration[8.0]
       next if tenant.payment_configuration
 
       record = tenant.build_payment_configuration(
-        payment_plan: tenant.read_attribute(:payment_plan),
-        covers_dpc: tenant.read_attribute(:covers_dpc),
-        covers_ldf: tenant.read_attribute(:covers_ldf)
+        payment_plan: parse_payment_plan(tenant),
+        covers_dpc: tenant.covers_dpc,
+        covers_ldf: tenant.covers_ldf
       )
       record.save!
     end
@@ -29,16 +29,24 @@ class PopulatePaymentConfigurationsTable < ActiveRecord::Migration[8.0]
       next if funder.payment_configuration
 
       record = funder.build_payment_configuration(
-        payment_plan: funder.read_attribute(:payment_plan),
-        covers_dpc: funder.read_attribute(:covers_dpc),
-        covers_ldf: funder.read_attribute(:covers_ldf)
+        payment_plan: parse_payment_plan(funder),
+        covers_dpc: funder.covers_dpc,
+        covers_ldf: funder.covers_ldf
       )
       record.save!
     end
   end
 
   def down
-    PaymentConfiguration.delete_all
-    # raise ActiveRecord::IrreversibleMigration
+    # PaymentConfiguration.delete_all
+    raise ActiveRecord::IrreversibleMigration
+  end
+
+  def parse_payment_plan(record)
+    return 'TIERED' if record.payment_plan == 0
+    return '2025' if record.payment_plan == 1
+    return 'SUBSCRIPTION' if record.payment_plan.nil? && record.covers_dpc
+
+    record.payment_plan
   end
 end

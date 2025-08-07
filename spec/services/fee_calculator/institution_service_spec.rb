@@ -450,7 +450,7 @@ module FeeCalculator
       end
 
       context 'when tenant is a payer but not on 2025 fee model' do
-        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'tiered', covers_dpc: true, covers_ldf: covers_ldf) }
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true, covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it 'raises an error' do
@@ -459,7 +459,7 @@ module FeeCalculator
       end
 
       context 'when tenant is not a payer' do
-        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'tiered', covers_dpc: false, covers_ldf: covers_ldf) }
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: false, covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it 'raises an error' do

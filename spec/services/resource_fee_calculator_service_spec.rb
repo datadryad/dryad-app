@@ -50,7 +50,7 @@ describe ResourceFeeCalculatorService do
                            contributor_type: 'funder', resource_id: resource.id)
     end
     let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: true) }
-    let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: 'tiered', covers_dpc: true) }
+    let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: 'TIERED', covers_dpc: true) }
 
     it 'returns an error' do
       response = ResourceFeeCalculatorService.new(resource).calculate({})

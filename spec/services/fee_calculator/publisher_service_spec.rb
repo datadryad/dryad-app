@@ -381,7 +381,7 @@ module FeeCalculator
         end
 
         context 'not on 2025 fee model' do
-          let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: 'tiered', covers_dpc: true) }
+          let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: 'TIERED', covers_dpc: true) }
 
           it 'raises an error' do
             expect { subject }.to raise_error(ActionController::BadRequest, OLD_PAYMENT_SYSTEM_MESSAGE)

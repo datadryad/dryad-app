@@ -131,7 +131,7 @@ module StashEngine
     def edit_params
       params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled, :partner_display, :ror_orgs, :sponsor_id,
                     flag_attributes: %i[id note _destroy],
-                    payment_configuration_attributes: %i[id covers_dpc covers_ldf ldf_limit],
+                    payment_configuration_attributes: %i[id payment_plan covers_dpc covers_ldf ldf_limit],
                     authentication: %i[strategy ranges entity_id entity_domain email_domain])
     end
 

@@ -19,7 +19,7 @@ class PaymentConfiguration < ApplicationRecord
 
   belongs_to :partner, polymorphic: true, optional: true
 
-  enum :payment_plan, { tiered: 1, '2025': 2, SUBSCRIPTION: 3, PREPAID: 4, DEFERRED: 5, TIERED: 6 }
+  enum :payment_plan, { SUBSCRIPTION: 1, PREPAID: 2, DEFERRED: 3, TIERED: 4, '2025': 5 }
   before_save :reset_limit
 
   private

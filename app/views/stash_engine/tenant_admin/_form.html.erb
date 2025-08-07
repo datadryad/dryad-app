@@ -41,8 +41,8 @@
   <h2>Membership</h2>
   <fieldset class="c-fieldset">
     <legend>Payment plan type:</legend>
-    <% StashEngine::Tenant::PAYMENT_PLANS.map {|p| [p, p.capitalize]}.each do |plan| %>
-      <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @payment_configuration.payment_plan %>
+    <% ([ ['', 'None'] ] + (StashEngine::Tenant::PAYMENT_PLANS.map {|p| [p, p.capitalize]})).each do |plan| %>
+      <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @payment_configuration.payment_plan.to_s %>
       <label for="<%= "payment_configuration_attributes_payment_plan_#{plan.first.downcase}" %>"><%= plan[1] %></label>
       <br />
     <% end %>

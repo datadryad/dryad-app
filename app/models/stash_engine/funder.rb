@@ -19,6 +19,8 @@
 module StashEngine
   class Funder < ApplicationRecord
     self.table_name = 'stash_engine_funders'
+    PAYMENT_PLANS = %w[SUBSCRIPTION TIERED 2025].freeze
+
     belongs_to :ror_org, class_name: 'StashEngine::RorOrg', primary_key: 'ror_id', foreign_key: 'ror_id', optional: true
     has_many :roles, class_name: 'StashEngine::Role', as: :role_object, dependent: :destroy
     has_many :users, through: :roles
