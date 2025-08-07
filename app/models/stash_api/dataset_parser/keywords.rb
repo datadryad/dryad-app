@@ -16,24 +16,13 @@ module StashApi
 
         clear
 
-        @hash['keywords'].each do |kw|
-          next if kw.blank?
-
-          @resource.subjects << find_or_create_subject(keyword: kw)
-        end
+        Subjects::CreateService.new(@resource, @hash['keywords']).call
       end
 
       private
 
       def clear
         @resource.subjects.delete(@resource.subjects.non_fos)
-      end
-
-      def find_or_create_subject(keyword:)
-        subs = StashDatacite::Subject.where(subject: keyword)
-        return subs.first unless subs.blank?
-
-        StashDatacite::Subject.create(subject: keyword)
       end
     end
   end
