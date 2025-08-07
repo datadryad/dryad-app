@@ -8,7 +8,7 @@ module StashApi
       class HsiStatement < MetadataItem
 
         def value
-          items = @resource.descriptions.where(description_type: 'usage_notes').map(&:description)
+          items = @resource.descriptions.where(description_type: 'hsi_statement').map(&:description)
           return items.first unless items.blank?
 
           nil

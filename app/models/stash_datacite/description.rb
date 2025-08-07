@@ -31,9 +31,6 @@ module StashDatacite
 
     # enum :description_type, DescriptionTypesEnum
 
-    # usage_notes is our special sauce for 'other' which is the real value it would take in datacite.xml.  I suspect
-    # we also want to prefix the value with "Usage notes:" in the XML so we can differentiate it.
-
     # scopes for description_type
     scope :type_abstract, -> { where(description_type: 'abstract') }
     scope :type_methods, -> { where(description_type: 'methods') }
