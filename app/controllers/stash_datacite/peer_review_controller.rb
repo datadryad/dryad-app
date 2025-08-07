@@ -23,20 +23,21 @@ module StashDatacite
         begin
           @resource = StashEngine::Resource.find(peer_review_params[:id])
           @errors = StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors
-          @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
-          @resource.reload
+          @not_paid = @resource.identifier.payment_needed?
 
-          if @errors
-            @new_res = DuplicateResourceService.new(@resource, current_user).call
-            @new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
-            redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(
-              resource_id: @new_res.id
-            ),
-                        alert: 'Unable to submit dataset for curation. Please correct submission errors.'
+          if @errors || @not_paid
+            new_res = DuplicateResourceService.new(@resource, current_user).call
+            new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
+
+            flash[:alert] = 'Unable to submit dataset for curation. Please correct submission errors' if @errors
+            flash[:notice] = 'Please pay the remaining DPC to submit for curation and publication' if @not_paid
+            redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: new_res.id)
           else
+            @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
             @resource.curation_activities << StashEngine::CurationActivity.create(
               user_id: current_user.id, status: 'submitted', note: 'Release from PPR'
             )
+            @resource.reload
             redirect_to dashboard_path, notice: 'Dataset released from private for peer review and submitted for curation'
           end
         rescue ActiveRecord::RecordInvalid
