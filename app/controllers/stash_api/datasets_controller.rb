@@ -426,7 +426,7 @@ module StashApi
 
       case @json.first['path']
       when '/versionStatus'
-        update_version_status
+        update_version_status(@json.first['value'])
         ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
         render json: ds.metadata, status: 202
       when '/curationStatus'
@@ -441,12 +441,14 @@ module StashApi
       yield
     end
 
-    def update_version_status
+    def update_version_status(new_status)
       ensure_in_progress { yield }
       pre_submission_updates
-      @resource.curation_activities << StashEngine::CurationActivity.create(
-        status: 'processing', note: 'Repository processing data', user_id: @user&.id || 0
-      )
+      if new_status == 'submitted'
+        @resource.curation_activities << StashEngine::CurationActivity.create(
+          status: 'processing', note: 'Repository processing data', user_id: @user&.id || 0
+        )
+      end
       StashEngine.repository.submit(resource_id: @resource.id)
     end
 
