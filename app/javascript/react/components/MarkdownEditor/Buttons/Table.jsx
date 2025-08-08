@@ -5,6 +5,7 @@ import {callCommand} from '@milkdown/kit/utils';
 import {commands} from '../milkdownCommands';
 import {commands as mdCommands} from '../codeKeymap';
 import {icons, labels} from './Details';
+import TableMenu from './TableMenu';
 
 export default function Table({
   active, editor, mdEditor, activeEditor, editorId,
@@ -86,48 +87,51 @@ export default function Table({
   }, tableNums);
 
   return (
-    <div className="tableSelect" role="menuitem" onBlur={leaveMenu}>
-      <button
-        type="button"
-        className={active ? 'active' : undefined}
-        aria-label={labels.table}
-        title={labels.table}
-        aria-expanded="false"
-        aria-controls={`${editorId}tableMenu`}
-        onClick={openMenu}
-      >{icons.table}
-      </button>
-      <div
-        className="tableMenu"
-        id={`${editorId}tableMenu`}
-        hidden
-        style={{width: `${2.1 + (1.3 * cols.length)}rem`, height: `${3 + (1.3 * rows.length)}rem`}}
-      >
-        <div className="tableEntry">
-          {rows.map((r) => (
-            <div key={`row${r}`} data-row={r}>
-              {cols.map((c) => (
-                <span key={`col${c}`} data-col={c} tabIndex={-1} onClick={submit} onMouseEnter={select} onMouseLeave={deselect} aria-hidden="true" />
-              ))}
-            </div>
-          ))}
+    <>
+      <div className="tableSelect" role="menuitem" onBlur={leaveMenu}>
+        <button
+          type="button"
+          className={active ? 'active' : undefined}
+          aria-label={labels.table}
+          title={labels.table}
+          aria-expanded="false"
+          aria-controls={`${editorId}tableMenu`}
+          onClick={openMenu}
+        >{icons.table}
+        </button>
+        <div
+          className="tableMenu"
+          id={`${editorId}tableMenu`}
+          hidden
+          style={{width: `${2.1 + (1.3 * cols.length)}rem`, height: `${3 + (1.3 * rows.length)}rem`}}
+        >
+          <div className="tableEntry">
+            {rows.map((r) => (
+              <div key={`row${r}`} data-row={r}>
+                {cols.map((c) => (
+                  <span key={`col${c}`} data-col={c} tabIndex={-1} onClick={submit} onMouseEnter={select} onMouseLeave={deselect} aria-hidden />
+                ))}
+              </div>
+            ))}
+          </div>
+          <form onSubmit={submit}>
+            <p className="tableMenuButtons">
+              <input type="text" aria-label="Number of rows" value={tableNums[1]} onChange={(e) => setNums(([c]) => [c, Number(e.target.value)])} />
+              x
+              <input
+                type="text"
+                aria-label="Number of columns"
+                value={tableNums[0]}
+                onChange={(e) => setNums(([, r]) => [Number(e.target.value), r])}
+              />
+              <button type="submit" className="o-button__plain-textlink" aria-label={`Insert a ${tableNums[1]} x ${tableNums[0]} table`}>
+                <i className="fas fa-square-plus" />
+              </button>
+            </p>
+          </form>
         </div>
-        <form onSubmit={submit}>
-          <p className="tableMenuButtons">
-            <input type="text" aria-label="Number of rows" value={tableNums[1]} onChange={(e) => setNums(([c]) => [c, Number(e.target.value)])} />
-            x
-            <input
-              type="text"
-              aria-label="Number of columns"
-              value={tableNums[0]}
-              onChange={(e) => setNums(([, r]) => [Number(e.target.value), r])}
-            />
-            <button type="submit" className="o-button__plain-textlink" aria-label={`Insert a ${tableNums[1]} x ${tableNums[0]} table`}>
-              <i className="fas fa-square-plus" />
-            </button>
-          </p>
-        </form>
       </div>
-    </div>
+      <TableMenu {...{active, editor, editorId}} />
+    </>
   );
 }

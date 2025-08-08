@@ -46,7 +46,7 @@ export default function Heading({
         tabIndex="0"
       >
         <span>{selectedItem ? ((selectedItem === 1 && 'Title') || `Heading ${selectedItem}`) : 'Heading'}</span>
-        <i className={`fa ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`} />
+        <i className={`fas ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`} />
       </div>
       <ul hidden={!isOpen} {...getMenuProps()} className="headingMenu">
         {isOpen
