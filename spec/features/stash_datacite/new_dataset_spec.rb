@@ -38,6 +38,31 @@ RSpec.feature 'NewDataset', type: :feature do
 
   end
 
+  context :from_manuscript_url, js: true do
+    before(:each) do
+      journal = create(:journal, journal_code: 'JTEST')
+      create(:manuscript, manuscript_number: 'MAN-001', journal: journal)
+    end
+
+    it 'creates a submission and imports manuscript info' do
+      visit '/submit?journalID=JTEST&manu=MAN-001'
+      expect(page).to have_content('Dataset submission')
+      expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"')
+      expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"')
+      expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
+    end
+
+    it 'redirects instead of creating a duplicate' do
+      visit '/submit?journalID=JTEST&manu=MAN-001'
+      expect(page).to have_content('Dataset submission')
+      resource_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
+
+      visit '/submit?journalID=JTEST&manu=MAN-001'
+      expect(page).to have_content('Dataset submission')
+      expect(page.current_path.match(%r{submission/(\d+)})[1].to_i).to equal(resource_id)
+    end
+  end
+
   context :form_submission, js: true do
 
     before(:each) do
