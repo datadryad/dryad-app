@@ -380,9 +380,12 @@ module StashApi
         }.with_indifferent_access
 
         dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
-        test_identifier = dp.parse
-        resource = test_identifier.resources.first
-        expect(resource.submitter.first_name).to eq('Wanda')
+        expect do
+          test_identifier = dp.parse
+          resource = test_identifier.resources.first
+          expect(resource.submitter.first_name).to eq('Wanda')
+          expect(resource.submitter.tenant_id).to eq('dryad')
+        end.to change(StashEngine::User, :count).by(1)
       end
 
       it 'defaults ownership to the submitter when the userId is invalid' do
