@@ -132,7 +132,7 @@ function PublicationForm({
               <>
                 <p style={{fontSize: '.98rem', marginTop: 0}}>
                 Are you currently submitting your manuscript?
-                Enter <code>NA</code> as the Manuscript number. This can be updated once a number is assigned by the journal.
+                Enter <code>NA</code> if you do not have a Manuscript number. This can be updated once a number is assigned by the journal.
                 </p>
                 <div className="input-line">
                   {journalInput('ms')}

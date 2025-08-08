@@ -90,6 +90,7 @@ function ImportForm({
           type="button"
           name="commit"
           className="o-button__plain-text5"
+          style={{whiteSpace: 'nowrap'}}
           hidden={hide}
           disabled={disable}
           aria-controls="overwrite-dialog"
