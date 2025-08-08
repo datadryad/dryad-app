@@ -6,7 +6,7 @@ import React from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
-import Title from '../../../../../../app/javascript/react/components/MetadataEntry/Publication/Title';
+import Title from '../../../../../../app/javascript/react/components/MetadataEntry/Title/Title';
 
 jest.mock('axios');
 

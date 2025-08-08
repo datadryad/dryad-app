@@ -5,7 +5,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import {faker} from '@faker-js/faker';
 import axios from 'axios';
-import Publication from '../../../../../../app/javascript/react/components/MetadataEntry/Publication';
+import Publication from '../../../../../../app/javascript/react/components/MetadataEntry/Connect';
 
 jest.mock('axios');
 
@@ -36,12 +36,15 @@ describe('Publication', () => {
     };
   });
 
-  it('renders the preliminary information section', async () => {
+  it('renders the connect section', async () => {
     axios.get.mockResolvedValue(journals);
     render(<Publication {...info} />);
 
     await waitFor(() => journals);
-    expect(screen.getByRole('group', {name: 'Is your data used in a research article?'})).toBeInTheDocument();
+    expect(screen.getByRole(
+      'group',
+      {name: 'Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?'},
+    )).toBeInTheDocument();
   });
 
   it('changes radio button and sends json request', async () => {
@@ -50,7 +53,10 @@ describe('Publication', () => {
 
     render(<Publication {...info} />);
 
-    const radios = screen.getByRole('group', {name: 'Is your data used in a research article?'});
+    const radios = screen.getByRole(
+      'group',
+      {name: 'Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?'},
+    );
     expect(radios).toBeInTheDocument();
     expect(within(radios).getByLabelText('Yes')).not.toHaveAttribute('checked');
     expect(within(radios).getByLabelText('No')).not.toHaveAttribute('checked');
@@ -61,48 +67,23 @@ describe('Publication', () => {
     expect(within(radios).getByLabelText('No').checked).toBe(true);
   });
 
-  it('changes radio button again and sends json request', async () => {
-    const first = {status: 200, data: {import_info: 'other'}};
-    axios.patch.mockResolvedValueOnce(first);
-    const data = {status: 200, data: {import_info: 'manuscript'}};
-    axios.patch.mockResolvedValueOnce(data);
-
+  it('changes radio button again and displays checkboxes', async () => {
     render(<Publication {...info} />);
 
-    const radios = screen.getByRole('group', {name: 'Is your data used in a research article?'});
+    const radios = screen.getByRole(
+      'group',
+      {name: 'Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?'},
+    );
     expect(radios).toBeInTheDocument();
     expect(within(radios).getByLabelText('Yes')).not.toHaveAttribute('checked');
     expect(within(radios).getByLabelText('No')).not.toHaveAttribute('checked');
 
-    userEvent.click(within(radios).getByLabelText('No'));
-    await waitFor(() => first);
     userEvent.click(within(radios).getByLabelText('Yes'));
 
-    const nextRadios = screen.getByRole('group', {name: 'From what source would you like to import information?'});
+    const nextRadios = screen.getByRole('group', {name: 'Which would you like to connect?'});
     expect(nextRadios).toBeInTheDocument();
     expect(within(nextRadios).getByLabelText('Submitted manuscript')).not.toHaveAttribute('checked');
     expect(within(nextRadios).getByLabelText('Preprint')).not.toHaveAttribute('checked');
     expect(within(nextRadios).getByLabelText('Published article')).not.toHaveAttribute('checked');
-
-    userEvent.click(within(nextRadios).getByLabelText('Submitted manuscript'));
-
-    await waitFor(() => data); // waits for the axios promise to fulfill
-    expect(within(nextRadios).getByLabelText('Submitted manuscript').checked).toBe(true);
-  });
-
-  it('changes radio button and sends failed json request', async () => {
-    const data = {status: 400};
-    axios.patch.mockResolvedValueOnce(data);
-
-    render(<Publication {...info} />);
-
-    const radios = screen.getByRole('group', {name: 'Is your data used in a research article?'});
-    expect(radios).toBeInTheDocument();
-    expect(within(radios).getByLabelText('Yes')).not.toHaveAttribute('checked');
-    expect(within(radios).getByLabelText('No')).not.toHaveAttribute('checked');
-
-    userEvent.click(within(radios).getByLabelText('No'));
-
-    await waitFor(() => data); // waits for the axios promise to fulfill
   });
 });

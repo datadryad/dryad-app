@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import Journal from '../../../../../../app/javascript/react/components/MetadataEntry/Publication/Journal';
+import Journal from '../../../../../../app/javascript/react/components/MetadataEntry/Connect/Journal';
 
 describe('Journal', () => {
   let formRef; let title; let setTitle; let issn; let setIssn; let setAPIJournal;
