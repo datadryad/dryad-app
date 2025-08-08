@@ -44,6 +44,8 @@ function ImportForm({
       authenticity_token,
       import_type: importType,
       resource_id: resource.id,
+      publication_name: importType === 'preprint' ? resource.resource_preprint?.publication_name : resource.resource_publication?.publication_name,
+      publication_issn: importType === 'preprint' ? resource.resource_preprint?.publication_issn : resource.resource_publication?.publication_issn,
       do_import: true,
       primary_article_doi,
       msid: importType !== 'preprint' ? resource.resource_publication?.manuscript_number || null : null,
