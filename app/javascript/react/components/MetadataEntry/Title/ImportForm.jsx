@@ -9,6 +9,7 @@ function ImportForm({
   const [apiJournal, setAPIJournal] = useState(false);
   const [hide, setHide] = useState(false);
   const [disable, setDisable] = useState(false);
+  const [overwrite, setOverwrite] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const apiError = 'To import metadata, this journal requires that you start your Dryad submission from within their manuscript system.';
@@ -29,6 +30,10 @@ function ImportForm({
       setDisable(false);
     }
   }, [importType, resource.resource_publication, primary_article_doi]);
+
+  useEffect(() => {
+    setOverwrite(resource.title || resource.authors.length > 1 || resource.subjects.length);
+  }, [resource]);
 
   useEffect(() => {
     setDOI(resource.related_identifiers.find((r) => r.work_type === (importType === 'preprint' ? 'preprint' : 'primary_article'))?.related_identifier
@@ -80,7 +85,7 @@ function ImportForm({
 
   return (
     <>
-      <div style={{display: 'flex', alignItems: 'baseline', gap: '1ch'}}>
+      <div style={{display: 'flex', alignItems: 'baseline', gap: '1.5ch'}}>
         <p>
           {importType === 'preprint' ? resource.resource_preprint?.publication_name : resource.resource_publication?.publication_name}{' '}
           {importType === 'published' ? 'article' : importType}{' '}
@@ -96,7 +101,7 @@ function ImportForm({
           aria-controls="overwrite-dialog"
           onClick={() => {
             if (!loading) {
-              if (resource.title) {
+              if (overwrite) {
                 document.getElementById(`overwrite-dialog${importType}`).showModal();
               } else {
                 submit();
@@ -106,7 +111,7 @@ function ImportForm({
         >
           {loading ? <i className="fas fa-circle-notch fa-spin" role="img" aria-label="Loading..." />
             : <i className="fas fa-file-import" aria-hidden="true" />}{' '}
-          {resource.title ? 'Overwrite' : 'Import'} metadata
+          {overwrite ? 'Overwrite' : 'Import'} metadata
         </button>
       </div>
       <dialog
