@@ -249,6 +249,7 @@ module StashEngine
       manu = StashEngine::Manuscript.where(journal: j, manuscript_number: params[:manu]).first
       return unless manu
 
+      resource.identifier.update(import_info: 'manuscript')
       dryad_import = Stash::Import::DryadManuscript.new(resource: resource, manuscript: manu)
       dryad_import.populate
     end
