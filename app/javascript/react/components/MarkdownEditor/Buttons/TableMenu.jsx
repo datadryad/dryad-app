@@ -193,7 +193,7 @@ export default function TableMenu({active, editor, editorId}) {
             </li>
             <li>
               <button type="button" onClick={() => callEditorCommand(moveColCommand, {from: col, to: col - 1})} disabled={col === 0 || null}>
-                <span className="icon-line"><i className="fas fa-arrow-left" />{colIcon}</span>Move column left
+                <span className="icon-line"><i className="fas fa-turn-down fa-flip-horizontal" />{colIcon}</span>Move column left
               </button>
             </li>
             <li>
@@ -202,7 +202,7 @@ export default function TableMenu({active, editor, editorId}) {
                 onClick={() => callEditorCommand(moveColCommand, {from: col, to: col + 1})}
                 disabled={col === colCount - 1 || null}
               >
-                <span className="icon-line">{colIcon}<i className="fas fa-arrow-right" /></span>Move column right
+                <span className="icon-line">{colIcon}<i className="fas fa-turn-down" /></span>Move column right
               </button>
             </li>
             <li>

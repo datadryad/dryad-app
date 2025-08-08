@@ -252,20 +252,10 @@
   line-height: 0;
 }
 
-@media screen and (max-width: 1120px) {
-  .markdown_editor .md_editor-buttons .linkSelect,
-  .markdown_editor .md_editor-buttons .tableSelect {
-    position: static;
+@media screen and (max-width: 980px) {
+  .markdown_editor .md_editor-buttons .linkMenu {
+    left: -150px;
   }
-  .markdown_editor .md_editor-buttons .linkMenu,
-  .markdown_editor .md_editor-buttons .tableMenu {
-    min-width: 328px;
-    max-width: 100%;
-    top: 2.5rem;
-  }
-}
-
-@media screen and (max-width: 530px) {
   .markdown_editor .md_editor-buttons .tableMenu {
     left: auto; right: 0;
     min-width: 0;
@@ -331,17 +321,18 @@
 
 .markdown_editor .md_editor-buttons .tableOptMenu {
   background-color: transparent;
-  width: 140px;
+  width: 135px;
   max-height: none;
   overflow: visible;
+  font-size: .98rem;
 }
 
 .markdown_editor .md_editor-buttons .tableOptMenu ul {
   list-style-type: none;
   margin: 0; padding: 0;
   position: absolute;
-  width: 190px;
-  left: 142px; right: 0; top: 0;
+  width: 170px;
+  left: 137px; right: 0; top: 0;
   z-index: 11;
   box-shadow: 0px 2px 3px 1px #ccc;
 }
@@ -359,7 +350,7 @@
   display: flex;
   width: 100%;
   align-items: center;
-  gap: .35ch;
+  gap: .5ch;
 }
 
 .markdown_editor .md_editor-buttons .tableOptMenu .icon-stack {
@@ -370,9 +361,8 @@
 }
 
 .markdown_editor .md_editor-buttons .tableOptMenu i[class*='plus'],
-.markdown_editor .md_editor-buttons .tableOptMenu i[class*='turn'],
-.markdown_editor .md_editor-buttons .tableOptMenu i[class*='arrow'] {
-  font-size: .55rem;
+.markdown_editor .md_editor-buttons .tableOptMenu i[class*='turn'] {
+  font-size: .6rem;
 }
 
 .markdown_editor .md_editor-buttons .tableOptMenu .icon-stack *:first-child {
@@ -389,15 +379,31 @@
 .markdown_editor .md_editor-buttons .tableOptMenu i.one {
   overflow: clip;
   clip-path: rect(auto auto auto auto round 28%);
-  width: 10px;
-}
-
-.markdown_editor .md_editor-buttons .tableOptMenu button > *:first-child {
-  margin-right: .35ch;
+  font-size: 1.1rem;
+  width: .61rem;
 }
 
 .markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron'] {
   margin-left: auto;
+}
+
+@media screen and (min-width: 500px) and (max-width: 875px) {
+  .markdown_editor .md_editor-buttons .tableOptMenu {
+    left: auto; right: -3px;
+  }
+  .markdown_editor .md_editor-buttons .tableOptMenu li button {
+    flex-direction: row-reverse;
+  }
+  .markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron'] {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron']:before {
+    content: '\f053';
+  }
+  .markdown_editor .md_editor-buttons .tableOptMenu ul {
+    left: auto; right: 137px;
+  }
 }
 
 .markdown_editor .md_editor-buttons .linkMenu {
