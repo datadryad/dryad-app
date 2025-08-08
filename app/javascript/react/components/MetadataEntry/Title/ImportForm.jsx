@@ -32,7 +32,7 @@ function ImportForm({
   }, [importType, resource.resource_publication, primary_article_doi]);
 
   useEffect(() => {
-    setOverwrite(resource.title || resource.authors.length > 1 || resource.subjects.length);
+    setOverwrite(resource.title || resource.authors?.length > 1 || resource.subjects?.length);
   }, [resource]);
 
   useEffect(() => {
