@@ -15,9 +15,12 @@ import {ParserState} from '@milkdown/kit/transformer';
 import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';
-import {selectionListener, selectionCtx} from './selectionListener';
-import htmlSchema from './htmlSchema';
-import heading from './heading';
+import {
+  selectionListener, selectionCtx, supPlugin, heading,
+} from './plugins';
+import {
+  html, supSchema, supAttr, supRule,
+} from './schemas';
 import {
   bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
 } from './milkdownCommands';
@@ -99,7 +102,7 @@ function MilkdownCore({
     })
     .use([bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
     .use([listen, commonmark, gfm, history, trailing, selectionListener])
-    .use([htmlSchema]));
+    .use([html, supPlugin, supSchema, supAttr, supRule]));
   return (
     <Milkdown />
   );
