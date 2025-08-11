@@ -48,12 +48,7 @@ module Stash
       def populate_keywords
         return if @metadata['keywords'].blank?
 
-        existing = @resource.subjects.map { |a| a.subject.downcase }
-        @resource.subjects << @metadata['keywords'].map do |kw|
-          next if existing.include?(kw.downcase) || existing.include?(kw.force_encoding('UTF-8').encode('UTF-8').downcase)
-
-          StashDatacite::Subject.find_or_create_by(subject: kw)
-        end.compact
+        Subjects::CreateService.new(@resource, @metadata['keywords']).call
       end
     end
   end
