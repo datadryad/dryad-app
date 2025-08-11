@@ -4,16 +4,11 @@ import stringSimilarity from 'string-similarity';
 import Autocomplete from '../Autocomplete';
 
 export default function Journal({
-  current, formRef, title, setTitle, issn, setIssn, setAPIJournal, controlOptions,
+  formRef, title, setTitle, issn, setIssn, controlOptions,
 }) {
   const [prevTitle, setPrevTitle] = useState(`${title || ''}`);
   const [prevISSN, setPrevISSN] = useState(issn);
   const [autoBlurred, setAutoBlurred] = useState(false);
-  const [api_journals, setAPIJournals] = useState([]);
-
-  useEffect(() => {
-    setAPIJournal(api_journals.includes(issn));
-  }, [issn, api_journals]);
 
   useEffect(() => {
     if (autoBlurred) {
@@ -29,15 +24,6 @@ export default function Journal({
       setAutoBlurred(false);
     }
   }, [autoBlurred]);
-
-  useEffect(() => {
-    async function getList() {
-      axios.get('/stash_datacite/publications/api_list').then((data) => {
-        setAPIJournals(data.data.api_journals);
-      });
-    }
-    if (current && !api_journals.length) getList();
-  }, [current, api_journals]);
 
   const supplyLookupList = (qt) => axios.get(
     `/stash_datacite/publications/autocomplete${controlOptions?.labelText === 'Preprint server' ? '?preprint' : ''}`,
