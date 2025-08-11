@@ -16,10 +16,10 @@ import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';
 import {
-  selectionListener, selectionCtx, supPlugin, heading,
+  selectionListener, selectionCtx, supPlugin, subPlugin, heading,
 } from './plugins';
 import {
-  html, supSchema, supAttr, supRule,
+  html, supSchema, supAttr, supRule, subSchema, subAttr, subRule,
 } from './schemas';
 import {
   bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
@@ -102,7 +102,7 @@ function MilkdownCore({
     })
     .use([bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
     .use([listen, commonmark, gfm, history, trailing, selectionListener])
-    .use([html, supPlugin, supSchema, supAttr, supRule]));
+    .use([html, supPlugin, supSchema, supAttr, supRule, subPlugin, subSchema, subAttr, subRule]));
   return (
     <Milkdown />
   );
