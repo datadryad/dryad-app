@@ -39,6 +39,9 @@ RSpec.feature 'CurationActivity', type: :feature do
       within(:css, 'tbody tr', wait: 10) do
         find('a[title="Activity log"]').click
       end
+      within(:css, '#activity_log_table tbody:last-child') do
+        find('button[aria-label="Curation activity"]').click
+      end
       expect(page).to have_text('This is the dataset activity page.')
       expect(page).to have_text('Not a valid SF link')
       # 'SF #0001' is not a valid case number, so the text is not changed
@@ -101,6 +104,9 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'adds a note to the curation activity log', js: true do
+        within(:css, '#activity_log_table tbody:last-child') do
+          find('button[aria-label="Curation activity"]').click
+        end
         click_button 'Add note'
         fill_in('stash_engine_curation_activity[note]', with: 'This is a test of the note functionality')
         click_button('Submit')
@@ -111,6 +117,9 @@ RSpec.feature 'CurationActivity', type: :feature do
         create(:curation_activity_no_callbacks, status: 'action_required', user_id: @user.id, resource_id: @resource.id)
         visit stash_url_helpers.admin_dashboard_path
         find('a[title="Activity log"]').click
+        within(:css, '#activity_log_table tbody:last-child') do
+          find('button[aria-label="Curation activity"]').click
+        end
         click_button 'Edit notification date'
         fill_in('notification_date', with: Date.today + 2.months)
         fill_in('[curation_activity][note]', with: 'Some Note')
