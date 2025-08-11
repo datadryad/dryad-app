@@ -11,6 +11,7 @@
     ],
     "moduleNameMapper": {
       "\\.css$": "identity-obj-proxy",
+      "^@milkdown/kit/prose$": "<rootDir>/node_modules/@milkdown/prose/lib/index.js",
       "^@milkdown/kit/(.*)$": "<rootDir>/node_modules/@milkdown/kit/lib/$1.js",
       "^@milkdown/prose/(.*)$": "<rootDir>/node_modules/@milkdown/prose/lib/$1.js",
       "^@milkdown/(.*)$": "<rootDir>/node_modules/@milkdown/$1"

@@ -203,11 +203,6 @@
   color: #f2f2f2;
 }
 
-.markdown_editor .md_editor-buttons .tableOptButton {
-  border: thin solid #d0d0d0;
-  border-top: none; border-bottom: none;
-}
-
 .markdown_editor .md_editor-buttons .headingMenu,
 .markdown_editor .md_editor-buttons .tableMenu,
 .markdown_editor .md_editor-buttons .tableOptMenu,
@@ -387,7 +382,7 @@
   margin-left: auto;
 }
 
-@media screen and (min-width: 500px) and (max-width: 875px) {
+@media screen and (min-width: 500px) and (max-width: 1080px) {
   .markdown_editor .md_editor-buttons .tableOptMenu {
     left: auto; right: -3px;
   }
@@ -607,6 +602,16 @@
 
 .md_b {
   font-weight: 700;
+}
+
+.md_sub {
+  vertical-align: sub;
+  font-size: 90%;
+}
+
+.md_sup {
+  vertical-align: super;
+  font-size: 90%;
 }
 
 .md_strike {
