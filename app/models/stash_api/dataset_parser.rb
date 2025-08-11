@@ -124,9 +124,8 @@ module StashApi
                 'The userId orcid is not known to Dryad. Please supply a matching orcid in the dataset author list.'
         end
 
-        owning_user = StashEngine::User.create(
-          orcid: @hash['userId'], first_name: found_author['firstName'], last_name: found_author['lastName'], email: found_author['email']
-        )
+        owning_user = StashEngine::User.create(orcid: @hash['userId'], first_name: found_author['firstName'], last_name: found_author['lastName'],
+                                               email: found_author['email'], tenant_id: 'dryad')
       end
       owning_user.id
     end
