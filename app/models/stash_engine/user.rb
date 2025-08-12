@@ -134,6 +134,8 @@ module StashEngine
       roles.any? { |r| %w[superuser curator].include?(r.role) }
     end
 
+    def proxy_user? = false
+
     def journals_as_admin
       admin_org_journals = journal_organizations.map(&:journals_sponsored_deep).flatten
       journals | admin_org_journals
