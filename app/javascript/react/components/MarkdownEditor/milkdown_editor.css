@@ -5,6 +5,8 @@
   border-radius: 5px;
   overflow: hidden;
   margin: 1em auto;
+  position: relative;
+  container-type: inline-size;
 }
 
 .markdown_editor:has(.milkdown[aria-invalid]) {
@@ -285,13 +287,37 @@
   line-height: 0;
 }
 
-@media screen and (max-width: 980px) {
+.markdown_editor .md_editor-buttons .listMenu {
+  width: 150px;
+  background-color: rgb(233, 236, 239);
+}
+
+@container (width < 605px) and (width > 344px) {
   .markdown_editor .md_editor-buttons .linkMenu {
-    left: -150px;
-  }
-  .markdown_editor .md_editor-buttons .tableMenu {
     left: auto; right: 0;
-    min-width: 0;
+  }
+}
+
+@container (width < 650px) and (width > 563px) {
+  .markdown_editor .md_editor-buttons .listMenu {
+    left: auto; right: 0;
+  }
+}
+
+@container (width < 766px) and (width > 556px){
+  .markdown_editor .md_editor-buttons .tableMenu > div{
+    margin-left: 170px;
+  }
+}
+@container (width < 556px) {
+  .markdown_editor .md_editor-buttons .tableMenu {
+    justify-content: flex-end;
+  }
+}
+@container (width < 455px) {
+  .markdown_editor .md_editor-buttons .tableMenu {
+    justify-content: flex-start;
+    top: 5.1rem;
   }
 }
 
@@ -420,7 +446,7 @@
   margin-left: auto;
 }
 
-@media screen and (min-width: 500px) and (max-width: 1080px) {
+@container (width < 760px) and (width > 505px) {
   .markdown_editor .md_editor-buttons .tableOptMenu {
     left: auto; right: -3px;
   }
