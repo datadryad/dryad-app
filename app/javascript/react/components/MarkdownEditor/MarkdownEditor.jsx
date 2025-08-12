@@ -112,7 +112,7 @@ function MilkdownCore({
 
 const defaultButtons = ['heading', 'strong', 'emphasis', 'superscript', 'subscript', 'inlineCode',
   'spacer', 'link', 'blockquote', 'code_block', 'table', 'spacer',
-  'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
+  'list_menu', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
   id, attr, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
@@ -128,8 +128,6 @@ function MilkdownEditor({
   const [defaultVal, setDefaultVal] = useState(null);
   const [initialCode, setInitialCode] = useState(null);
   const [mdEditor, setMDEditor] = useState(null);
-
-  const activeList = () => active.some((a) => a && a.includes('list'));
 
   const saveMarkdown = (markdown) => {
     onChange(markdown);
@@ -200,24 +198,22 @@ function MilkdownEditor({
   return (
     <>
       {!loading && (
-        <div className="md_editor-buttons">
-          <div className="md_editor-toolbar" role="menubar">
-            {buttons.map((button, i) => (
-              <Button
-                active={active.includes(button) || (editType === 'markdown' && button.includes('list') && activeList())}
-                disabled={button.includes('dent') && !activeList()}
-                headingLevel={headingLevel}
-                editorId={id}
-                key={button + buttons.slice(0, i).filter((b) => b === button).length}
-                type={button}
-                editor={editor}
-                mdEditor={mdEditor}
-                activeEditor={editType}
-              />
-            ))}
-          </div>
+        <div className="md_editor-buttons" role="menubar">
+          {buttons.map((button, i) => (
+            <Button
+              activeDOM={active?.length ? active : []}
+              headingLevel={headingLevel}
+              editorId={id}
+              key={button + buttons.slice(0, i).filter((b) => b === button).length}
+              type={button}
+              editor={editor}
+              mdEditor={mdEditor}
+              activeEditor={editType}
+            />
+          ))}
           <div className="md_editor-toggle" role="group" aria-label="Editor type">
             <button
+              role="menuitem"
               type="button"
               onClick={() => setEditType('markdown')}
               aria-current={editType === 'markdown'}
@@ -226,6 +222,7 @@ function MilkdownEditor({
               Markdown
             </button>
             <button
+              role="menuitem"
               type="button"
               onClick={() => setEditType('visual')}
               aria-current={editType === 'visual'}
