@@ -1,10 +1,9 @@
 import {$command, $useKeymap} from '@milkdown/kit/utils';
 import {commandsCtx} from '@milkdown/kit/core';
-// eslint-disable-next-line import/no-unresolved
 import {wrapInList} from '@milkdown/kit/prose/schema-list';
 import {redoCommand, undoCommand} from '@milkdown/kit/plugin/history';
+import {toggleMark} from '@milkdown/kit/prose/commands';
 import {
-  // toggleMark,
   toggleEmphasisCommand,
   toggleStrongCommand,
   toggleInlineCodeCommand,
@@ -22,9 +21,12 @@ import {
   insertTableCommand,
   toggleStrikethroughCommand,
 } from '@milkdown/kit/preset/gfm';
+import {supSchema, subSchema} from './schemas';
 
 export const bulletWrapCommand = $command('BulletListWrap', (ctx) => () => wrapInList(bulletListSchema.type(ctx)));
 export const orderWrapCommand = $command('OrderedListWrap', (ctx) => () => wrapInList(orderedListSchema.type(ctx)));
+export const toggleSupCommand = $command('ToggleSup', (ctx) => () => toggleMark(supSchema.type(ctx)));
+export const toggleSubCommand = $command('ToggleSub', (ctx) => () => toggleMark(subSchema.type(ctx)));
 
 export const bulletWrapKeymap = $useKeymap('bulletWrapKeymap', {
   BulletListWrap: {
@@ -46,11 +48,33 @@ export const orderWrapKeymap = $useKeymap('orderWrapKeymap', {
   },
 });
 
+export const supKeymap = $useKeymap('supKeymap', {
+  ToggleSup: {
+    shortcuts: 'Mod-Alt-Shift-=',
+    command: (ctx) => {
+      const c = ctx.get(commandsCtx);
+      return () => c.call(toggleSupCommand.key);
+    },
+  },
+});
+
+export const subKeymap = $useKeymap('subKeymap', {
+  ToggleSub: {
+    shortcuts: 'Mod-Alt-=',
+    command: (ctx) => {
+      const c = ctx.get(commandsCtx);
+      return () => c.call(toggleSubCommand.key);
+    },
+  },
+});
+
 export const commands = {
   undo: undoCommand,
   redo: redoCommand,
   strong: toggleStrongCommand,
   emphasis: toggleEmphasisCommand,
+  superscript: toggleSupCommand,
+  subscript: toggleSubCommand,
   inlineCode: toggleInlineCodeCommand,
   strike_through: toggleStrikethroughCommand,
   bullet_list: bulletWrapCommand,

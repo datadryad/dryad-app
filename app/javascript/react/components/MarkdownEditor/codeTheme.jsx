@@ -10,6 +10,8 @@ const linkRef = Tag.define();
 const link = Tag.define();
 const linkMark = Tag.define();
 const quoteMark = Tag.define();
+const supMark = Tag.define();
+const subMark = Tag.define();
 
 export const markdownTags = {
   props: [
@@ -22,6 +24,8 @@ export const markdownTags = {
       Link: link,
       LinkMark: linkMark,
       QuoteMark: quoteMark,
+      Superscript: supMark,
+      Subscript: subMark,
     }),
   ],
 };
@@ -36,8 +40,10 @@ export const dryadHighlightStyle = HighlightStyle.define([
   {tag: t.heading4, class: 'md_h4'},
   {tag: t.heading5, class: 'md_h5'},
   {tag: t.heading6, class: 'md_h6'},
-  {tag: t.emphasis, class: 'md_em'},
   {tag: t.strong, class: 'md_b'},
+  {tag: t.emphasis, class: 'md_em'},
+  {tag: supMark, class: 'md_sup'},
+  {tag: subMark, class: 'md_sub'},
   {tag: t.strikethrough, class: 'md_strike'},
   {tag: codeMark, class: 'md_cmark'},
   {tag: code, class: 'md_mono'},

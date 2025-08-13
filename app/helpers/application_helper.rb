@@ -1,5 +1,5 @@
 require 'kramdown'
-require 'kramdown-parser-gfm'
+require 'kramdown/parser/sub_sup'
 
 module ApplicationHelper
   # reverses name and puts last, first middle, etc
@@ -14,6 +14,8 @@ module ApplicationHelper
 
   def display_desc(description)
     fragment = Nokogiri::HTML5.fragment(description)
+    dels = fragment.css('del')
+    dels.add_class('from_md')
     tables = fragment.css('table')
     tables.wrap('<div class="table-wrapper" role="region" tabindex="0" aria-label="Table"></div>')
     fragment.to_html
@@ -34,6 +36,7 @@ module ApplicationHelper
 
     content = CGI.escapeElement(content, esc_elements)
 
-    Kramdown::Document.new(content, { input: 'GFM', header_offset: 1 }).to_html
+    Kramdown::Document.new(content, { input: 'SubSup', header_offset: 1 }).to_html
   end
+
 end
