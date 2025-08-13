@@ -1,2 +1,2 @@
 document.getElementById('change_log_<%= @resource.id %>').innerHTML = '';
-document.getElementById('change_log_<%= @resource.id %>').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/change_log/change_log') %>"));
+document.getElementById('change_log_<%= @resource.id %>').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/change_log') %>"));

@@ -210,7 +210,7 @@ function Submission({
   useEffect(() => {
     if (!review) {
       const url = location.search.slice(1);
-      if (url) {
+      if (url && url !== 'start') {
         const n = steps().find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
         if (n.name !== step.name) setStep(n);
       }
@@ -269,7 +269,8 @@ function Submission({
     if (!review) {
       const url = window.location.search.slice(1);
       if (url) {
-        setStep(steps().find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
+        if (url === 'start') setStep({name: 'Create a submission'});
+        else setStep(steps().find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
       } else if (steps().find((c) => c.fail || c.pass)) {
         setStep(steps().find((c) => !c.pass));
       }

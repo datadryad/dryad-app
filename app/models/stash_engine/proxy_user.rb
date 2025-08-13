@@ -92,6 +92,7 @@ module StashEngine
     def min_admin? = false
     def min_app_admin? = false
     def min_curator? = false
+    def proxy_user? = true
 
     def journals_as_admin
       admin_org_journals = journal_organizations.map(&:journals_sponsored_deep).flatten

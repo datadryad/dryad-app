@@ -48,11 +48,8 @@ module Stash
       def populate_keywords
         return if @metadata['keywords'].blank?
 
-        @resource.subjects << @metadata['keywords'].map do |kw|
-          StashDatacite::Subject.find_or_create_by(subject: kw)
-        end
+        Subjects::CreateService.new(@resource, @metadata['keywords']).call
       end
-
     end
   end
 end
