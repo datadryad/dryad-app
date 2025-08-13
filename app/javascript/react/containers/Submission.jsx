@@ -4,6 +4,7 @@ import React, {
 import axios from 'axios';
 import {BrowserRouter, useLocation} from 'react-router-dom';
 import {upCase} from '../../lib/utils';
+import aarCheck from '../components/aarCheck';
 import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
 import ExitButton from '../components/ExitButton';
@@ -165,6 +166,7 @@ function Submission({
     }];
     return stepArray.map((s, i) => {
       s.index = i;
+      s.fail = s.fail || aarCheck(previous, s.name, previewRef.current);
       return s;
     });
   };

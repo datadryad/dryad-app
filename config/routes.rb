@@ -307,6 +307,7 @@ Rails.application.routes.draw do
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity'
     get 'ds_admin/:id/change_log', to: 'admin_datasets#change_log', as: 'change_log'
     get 'ds_admin/:id/file_log', to: 'admin_datasets#file_log', as: 'file_log'
+    get 'ds_admin/:id/require_action', to: 'admin_datasets#require_action', as: 'require_action'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     post 'ds_admin/:id/notification_date', to: 'admin_datasets#notification_date', as: 'notification_date'    
@@ -314,6 +315,7 @@ Rails.application.routes.draw do
     post 'ds_admin/:id/flag', to: 'admin_datasets#flag', as: 'ds_admin_flag'
     post 'ds_admin/:id/edit_submitter', to: 'admin_datasets#edit_submitter', as: 'ds_admin_edit_submitter'
     post 'ds_admin/:id/pub_dates', to: 'admin_datasets#pub_dates', as: 'ds_admin_pub_dates'
+    post 'ds_admin/:id/make_report', to: 'admin_datasets#make_report', as: 'make_report'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
     
 
