@@ -1,3 +1,6 @@
+require 'kramdown'
+require 'kramdown/parser/sub_sup'
+
 module StashDatacite
   class DescriptionsController < ApplicationController
     include ::ApplicationHelper
@@ -32,12 +35,14 @@ module StashDatacite
     # PATCH/PUT /descriptions/1
     def update
       items = description_params
-      unless @description&.description_type == 'technicalinfo' || items[:description].nil?
+      unless %w[technicalinfo changelog].include?(@description&.description_type) || items[:description].nil?
+        desc = Kramdown::Document.new(items[:description], { input: 'SubSup', header_offset: 2 }).to_html
         items[:description] =
-          Loofah.fragment(items[:description]).scrub!(:strip).to_s
+          Loofah.fragment(desc).scrub!(:strip).to_s
       end
+
       respond_to do |format|
-        if @description.update(items)
+        if items[:description] == @description.description || @description.update(items)
           format.json { render json: @description.slice(:id, :resource_id, :description, :description_type) }
           format.js { render template: 'stash_datacite/shared/update.js.erb' }
         else

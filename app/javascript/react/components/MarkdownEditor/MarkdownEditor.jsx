@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Editor, rootCtx, schemaCtx, serializerCtx, editorViewCtx, remarkCtx, remarkStringifyOptionsCtx, rootDOMCtx,
+  Editor, rootCtx, schemaCtx, serializerCtx, editorViewCtx, remarkCtx, remarkStringifyOptionsCtx, rootDOMCtx, defaultValueCtx,
 } from '@milkdown/kit/core';
 import {
   Milkdown, MilkdownProvider, useEditor, useInstance,
@@ -15,11 +15,15 @@ import {ParserState} from '@milkdown/kit/transformer';
 import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';
-import {selectionListener, selectionCtx} from './selectionListener';
-import htmlSchema from './htmlSchema';
-import heading from './heading';
+import {
+  selectionListener, selectionCtx, supPlugin, subPlugin, heading,
+} from './plugins';
+import {
+  html, supSchema, supAttr, supRule, subSchema, subAttr, subRule,
+} from './schemas';
 import {
   bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
+  toggleSupCommand, toggleSubCommand, supKeymap, subKeymap,
 } from './milkdownCommands';
 
 const allowSpans = [
@@ -47,7 +51,7 @@ const joinListItems = (left, right, parent) => {
 /* eslint-enable consistent-return */
 
 function MilkdownCore({
-  onChange, attr, setActive, setLevel,
+  onChange, attr, setActive, setLevel, htmlInput,
 }) {
   useEditor((root) => Editor
     .make()
@@ -74,6 +78,7 @@ function MilkdownCore({
           {character: '_', after: '[\\s]'},
         ],
       });
+      ctx.set(defaultValueCtx, htmlInput ? ({type: 'html', dom: htmlInput}) : '');
       const listener = ctx.get(listenerCtx);
       listener.markdownUpdated((_ctx, markdown, prevMarkdown) => {
         if (markdown !== prevMarkdown) onChange(markdown);
@@ -99,17 +104,19 @@ function MilkdownCore({
     })
     .use([bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
     .use([listen, commonmark, gfm, history, trailing, selectionListener])
-    .use([htmlSchema]));
+    .use([html, supPlugin, supSchema, supAttr, supRule, subPlugin, subSchema, subAttr, subRule])
+    .use([toggleSupCommand, supKeymap, toggleSubCommand, subKeymap]));
   return (
     <Milkdown />
   );
 }
 
-const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', 'spacer', 'blockquote', 'code_block', 'table',
-  'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
+const defaultButtons = ['heading', 'strong', 'emphasis', 'superscript', 'subscript', 'inlineCode',
+  'spacer', 'link', 'blockquote', 'code_block', 'table', 'spacer',
+  'list_menu', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
-  id, attr, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
+  id, attr, initialValue, htmlInput, replaceValue, onChange, onReplace, buttons = defaultButtons,
 }) {
   const [loading, editor] = useInstance();
 
@@ -122,8 +129,6 @@ function MilkdownEditor({
   const [defaultVal, setDefaultVal] = useState(null);
   const [initialCode, setInitialCode] = useState(null);
   const [mdEditor, setMDEditor] = useState(null);
-
-  const activeList = () => active.some((a) => a && a.includes('list'));
 
   const saveMarkdown = (markdown) => {
     onChange(markdown);
@@ -194,24 +199,22 @@ function MilkdownEditor({
   return (
     <>
       {!loading && (
-        <div className="md_editor-buttons">
-          <div className="md_editor-toolbar" role="menubar">
-            {buttons.map((button, i) => (
-              <Button
-                active={active.includes(button) || (editType === 'markdown' && button.includes('list') && activeList())}
-                disabled={button.includes('dent') && !activeList()}
-                headingLevel={headingLevel}
-                editorId={id}
-                key={button + buttons.slice(0, i).filter((b) => b === button).length}
-                type={button}
-                editor={editor}
-                mdEditor={mdEditor}
-                activeEditor={editType}
-              />
-            ))}
-          </div>
+        <div className="md_editor-buttons" role="menubar">
+          {buttons.map((button, i) => (
+            <Button
+              activeDOM={active?.length ? active : []}
+              headingLevel={headingLevel}
+              editorId={id}
+              key={button + buttons.slice(0, i).filter((b) => b === button).length}
+              type={button}
+              editor={editor}
+              mdEditor={mdEditor}
+              activeEditor={editType}
+            />
+          ))}
           <div className="md_editor-toggle" role="group" aria-label="Editor type">
             <button
+              role="menuitem"
               type="button"
               onClick={() => setEditType('markdown')}
               aria-current={editType === 'markdown'}
@@ -220,6 +223,7 @@ function MilkdownEditor({
               Markdown
             </button>
             <button
+              role="menuitem"
               type="button"
               onClick={() => setEditType('visual')}
               aria-current={editType === 'visual'}
@@ -246,7 +250,7 @@ function MilkdownEditor({
             />
           </div>
         )}
-        <MilkdownCore onChange={setSaveVal} setActive={setActive} setLevel={setHeadingLevel} attr={attr} />
+        <MilkdownCore onChange={setSaveVal} htmlInput={htmlInput} setActive={setActive} setLevel={setHeadingLevel} attr={attr} />
         <CodeEditor
           attr={attr}
           content={initialCode}

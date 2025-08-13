@@ -825,15 +825,15 @@ dialog#submission-step[open] {
     text-decoration: none;
   }
 
-  del, .del {
+  del:not(.from_md), .del {
     display: none;
   }
 
   &.track-changes {
-    ins, .ins, del {
+    ins, .ins, del:not(.from_md) {
       padding: 5px 0 3px;
     }
-    del, .del {
+    del:not(.from_md), .del {
       display: inline;
       background-color: $lightest-red;
       text-decoration: line-through;

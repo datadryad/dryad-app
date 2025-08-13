@@ -35,4 +35,16 @@ describe('MarkdownEditor', () => {
     expect(screen.getByLabelText('Italic')).toBeInTheDocument();
     expect(screen.getByLabelText('Strikethrough text')).toBeInTheDocument();
   });
+
+  it('renders html input', async () => {
+    const div = document.createElement('div');
+    div.innerHTML = '<h2>This is an HTML header</h2><p>This is an HTML paragraph</p>';
+    info.initialValue = null;
+    info.htmlInput = div;
+    render(<MarkdownEditor {...info} />);
+    await waitFor(() => {
+      expect(screen.getByText('This is an HTML header')).toBeInTheDocument();
+    });
+    expect(screen.getByText('This is an HTML paragraph')).toBeInTheDocument();
+  });
 });
