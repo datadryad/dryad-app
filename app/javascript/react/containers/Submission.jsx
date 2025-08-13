@@ -166,10 +166,7 @@ function Submission({
     }];
     return stepArray.map((s, i) => {
       s.index = i;
-<<<<<<< HEAD
       s.fail = s.fail || aarCheck(previous, s.name, previewRef.current);
-=======
->>>>>>> main
       return s;
     });
   };
