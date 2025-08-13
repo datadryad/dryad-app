@@ -90,8 +90,8 @@ function ListMenu({active, editorId, ...props}) {
       <button
         type="button"
         className={active ? 'active' : undefined}
-        title="List options"
-        aria-label="List options"
+        title="List menu"
+        aria-label="List menu"
         aria-haspopup="true"
         aria-expanded="false"
         aria-controls={`${editorId}listMenu`}
