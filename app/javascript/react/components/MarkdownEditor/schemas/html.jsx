@@ -1,7 +1,7 @@
 import {$nodeSchema} from '@milkdown/kit/utils';
 import {htmlAttr} from '@milkdown/kit/preset/commonmark';
 
-const htmlSchema = $nodeSchema('html', (ctx) => ({
+const html = $nodeSchema('html', (ctx) => ({
   group: 'inline',
   inline: true,
   content: 'text*',
@@ -44,4 +44,4 @@ const htmlSchema = $nodeSchema('html', (ctx) => ({
   },
 }));
 
-export default htmlSchema;
+export default html;

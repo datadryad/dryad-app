@@ -15,11 +15,15 @@ import {ParserState} from '@milkdown/kit/transformer';
 import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';
-import {selectionListener, selectionCtx} from './selectionListener';
-import htmlSchema from './htmlSchema';
-import heading from './heading';
+import {
+  selectionListener, selectionCtx, supPlugin, subPlugin, heading,
+} from './plugins';
+import {
+  html, supSchema, supAttr, supRule, subSchema, subAttr, subRule,
+} from './schemas';
 import {
   bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
+  toggleSupCommand, toggleSubCommand, supKeymap, subKeymap,
 } from './milkdownCommands';
 
 const allowSpans = [
@@ -99,13 +103,15 @@ function MilkdownCore({
     })
     .use([bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
     .use([listen, commonmark, gfm, history, trailing, selectionListener])
-    .use([htmlSchema]));
+    .use([html, supPlugin, supSchema, supAttr, supRule, subPlugin, subSchema, subAttr, subRule])
+    .use([toggleSupCommand, supKeymap, toggleSubCommand, subKeymap]));
   return (
     <Milkdown />
   );
 }
 
-const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', 'spacer', 'blockquote', 'code_block', 'table',
+const defaultButtons = ['heading', 'strong', 'emphasis', 'superscript', 'subscript', 'inlineCode',
+  'spacer', 'link', 'blockquote', 'code_block', 'table', 'spacer',
   'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({

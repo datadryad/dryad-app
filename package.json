@@ -11,6 +11,7 @@
     ],
     "moduleNameMapper": {
       "\\.css$": "identity-obj-proxy",
+      "^@milkdown/kit/prose$": "<rootDir>/node_modules/@milkdown/prose/lib/index.js",
       "^@milkdown/kit/(.*)$": "<rootDir>/node_modules/@milkdown/kit/lib/$1.js",
       "^@milkdown/prose/(.*)$": "<rootDir>/node_modules/@milkdown/prose/lib/$1.js",
       "^@milkdown/(.*)$": "<rootDir>/node_modules/@milkdown/$1"
@@ -87,6 +88,10 @@
     "lodash": "^4.17.21",
     "match-sorter": "^6.3.1",
     "mdast-util-to-string": "^4.0.0",
+    "micromark-util-chunked": "^2.0.1",
+    "micromark-util-classify-character": "^2.0.1",
+    "micromark-util-resolve-all": "^2.0.1",
+    "micromark-util-symbol": "^2.0.1",
     "mini-css-extract-plugin": "^2.7.6",
     "moment": "^2.29.4",
     "nanoid": "<4.0.0",
@@ -100,6 +105,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.0.2",
     "react_ujs": "^2.6.1",
+    "remark-sub-super": "^1.0.21",
     "sass": "^1.49.10",
     "shakapacker": "6.6.0",
     "string-similarity": "^4.0.4",
