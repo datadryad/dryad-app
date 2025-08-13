@@ -103,7 +103,7 @@
 
 .markdown_editor .md_editor-buttons .spacer {
   align-self: center;
-  padding: 0 .5ch;
+  padding: 0 2px;
 }
 
 .markdown_editor .md_editor-buttons .spacer:before {
