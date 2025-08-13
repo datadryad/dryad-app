@@ -29,7 +29,6 @@ config/notifier_state.json
 node_modules
 public/packs
 public/packs-test
-public/tinymce
 
 # we are using yarn and get warnings about having two different package locks, so ignore npm's package-lock.json
 package-lock.json
@@ -209,7 +208,6 @@ flycheck_*.el
 
 /public/packs
 /public/packs-test
-/public/tinymce
 /node_modules
 /yarn-error.log
 yarn-debug.log*

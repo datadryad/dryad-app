@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Editor, rootCtx, schemaCtx, serializerCtx, editorViewCtx, remarkCtx, remarkStringifyOptionsCtx, rootDOMCtx,
+  Editor, rootCtx, schemaCtx, serializerCtx, editorViewCtx, remarkCtx, remarkStringifyOptionsCtx, rootDOMCtx, defaultValueCtx,
 } from '@milkdown/kit/core';
 import {
   Milkdown, MilkdownProvider, useEditor, useInstance,
@@ -51,7 +51,7 @@ const joinListItems = (left, right, parent) => {
 /* eslint-enable consistent-return */
 
 function MilkdownCore({
-  onChange, attr, setActive, setLevel,
+  onChange, attr, setActive, setLevel, htmlInput,
 }) {
   useEditor((root) => Editor
     .make()
@@ -78,6 +78,7 @@ function MilkdownCore({
           {character: '_', after: '[\\s]'},
         ],
       });
+      ctx.set(defaultValueCtx, htmlInput ? ({type: 'html', dom: htmlInput}) : '');
       const listener = ctx.get(listenerCtx);
       listener.markdownUpdated((_ctx, markdown, prevMarkdown) => {
         if (markdown !== prevMarkdown) onChange(markdown);
@@ -115,7 +116,7 @@ const defaultButtons = ['heading', 'strong', 'emphasis', 'superscript', 'subscri
   'list_menu', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
-  id, attr, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
+  id, attr, initialValue, htmlInput, replaceValue, onChange, onReplace, buttons = defaultButtons,
 }) {
   const [loading, editor] = useInstance();
 
@@ -249,7 +250,7 @@ function MilkdownEditor({
             />
           </div>
         )}
-        <MilkdownCore onChange={setSaveVal} setActive={setActive} setLevel={setHeadingLevel} attr={attr} />
+        <MilkdownCore onChange={setSaveVal} htmlInput={htmlInput} setActive={setActive} setLevel={setHeadingLevel} attr={attr} />
         <CodeEditor
           attr={attr}
           content={initialCode}

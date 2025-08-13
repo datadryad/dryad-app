@@ -19,15 +19,15 @@
 }
 
 .md_editor_textarea {
-  height: 55vh;
   position: relative;
-  overflow: auto;
   background-color: white;
+  height: 300px;
+  overflow: auto; 
+  resize: vertical;
 }
 
-#readme_step_editor .md_editor_textarea {
-  height: 400px;
-  max-height: 65vh;
+#readme_editor .md_editor_textarea {
+  height: 55vh;
 }
 
 .md_editor_textarea > div:not(.c-alert--error) {
@@ -103,7 +103,7 @@
 
 .markdown_editor .md_editor-buttons .spacer {
   align-self: center;
-  padding: 0 .5ch;
+  padding: 0 2px;
 }
 
 .markdown_editor .md_editor-buttons .spacer:before {
