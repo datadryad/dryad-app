@@ -53,7 +53,7 @@ namespace :publication_updater do
       #                                 (provenance_score is Crossref's score)
       next unless pc.present? && pc.score >= 0.6
       # exclude very big year differences
-      next if resource.identifier.created_at.year - pc.publication_date&.year > 4
+      next if pc.publication_date&.year&.present? && resource.identifier.created_at.year - pc.publication_date.year > 4
       # exclude articles with fewer authors than the dataset
       next if resource.authors.count > JSON.parse(pc.authors).count
 
