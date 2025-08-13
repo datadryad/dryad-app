@@ -1238,45 +1238,46 @@ components:
         - abstract
 
     admin_values:
-      userId:
-        type: string
-        description: The ORCID ID of the user who will submit the dataset
-      publicationISSN:
-        type: string
-        description: An ISSN for the associated journal
-      publicationName:
-        type: string
-        description: The title of the associated journal
-      manuscriptNumber:
-        type: string
-        description: The internal manuscript number assigned to an associated article before publication
-      skipEmails: 
-        type: boolean
-        default: false
-        description: Administrator value. Prevents emails being sent automatically.
-      triggerSubmitInvitation:
-        type: boolean
-        default: false
-        description: Administrator value. Sends an editing invitation email to the first author.
-      preserveCurationStatus:
-        type: boolean
-        default: false
-        description: Administrator value. Prevents automatic curation status changes.
-      holdForPeerReview:
-        type: boolean
-        default: false
-        description: Administrator value. Sets whether the submission will be sent to curation or a peer review hold status. 
-      loosenValidation:
-        type: boolean
-        default: false
-        description: For superusers only.
-      skipDataciteUpdate:
-        type: boolean
-        default: false
-        description: For superusers only.
-      invoiceId:
-        type: string
-        description: For superusers only.
+      properties:
+        userId:
+          type: string
+          description: The Dryad user ID, or ORCID iD, of the user who will submit the dataset. If this is unknown, the userId must be set to `0` to allow for an invitation link.
+        publicationISSN:
+          type: string
+          description: An ISSN for the associated journal
+        publicationName:
+          type: string
+          description: The title of the associated journal
+        manuscriptNumber:
+          type: string
+          description: The internal manuscript number assigned to an associated article before publication
+        skipEmails: 
+          type: boolean
+          default: false
+          description: Administrator value. Prevents emails being sent automatically.
+        triggerSubmitInvitation:
+          type: boolean
+          default: false
+          description: Administrator value. Sends an editing invitation email to the first author.
+        preserveCurationStatus:
+          type: boolean
+          default: false
+          description: Administrator value. Prevents automatic curation status changes.
+        holdForPeerReview:
+          type: boolean
+          default: false
+          description: Administrator value. Sets whether the submission will be sent to curation or a peer review hold status. 
+        loosenValidation:
+          type: boolean
+          default: false
+          description: For superusers only.
+        skipDataciteUpdate:
+          type: boolean
+          default: false
+          description: For superusers only.
+        invoiceId:
+          type: string
+          description: For superusers only.
 
     author:
       properties:
