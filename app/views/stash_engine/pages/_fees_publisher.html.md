@@ -104,9 +104,9 @@ Annual Service Fees for Dryad publisher and society partners are tiered accordin
 </div>
 </div>
 
-For campus-based publishers where both the library and the press are Dryad partners, we levy a single Annual Service Fee paid by the institution based on research expenditure. Each entity is responsible for the Data Publishing Charges for their respective authors.
+FTo promote transparency and equity among our partners Dryad does not offer individual discounts. However, we do offer discounts under some circumstances as follows.
 
-To promote transparency and equity among our partners Dryad does not offer individual discounts. However, to support growth and development, especially of new data-sharing programs, we offer tiered pricing for three-year agreements, as follows. Three-year agreements are exempt from annual inflationary increases.
+To support growth and development, especially of new data-sharing programs, we offer tiered pricing for **three-year agreements**. Three-year agreements are exempt from annual inflationary increases.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
@@ -135,6 +135,15 @@ To promote transparency and equity among our partners Dryad does not offer indiv
   </table>
 </div>
 </div>
+
+For **campus-based publishers** where both the library and the press are Dryad partners, we levy a single Annual Service Fee paid by the institution based on research expenditure. Each entity is responsible for the DPCs for their respective authors.
+
+**Societies** that partner with Dryad directly pay their Annual Service Fees to Dryad&mdash;even if DPCs are paid through their publishing partner. Discounts are available for publishers who take on responsibility for society partner fees based on the number of societies represented in the agreement, as follows:
+
+* 5-10 society partners, 10% discount
+* 11-25 society partners, 15% discount
+* 26+ society partners, 20% discount
+
 
 ## Total fees
 
@@ -190,6 +199,7 @@ The DPC and Annual Service Fee are combined to calculate the total annual fee, w
 <div style="font-size: .98rem;">
 <h3 style="font-size: 1.1rem">Change log</h3>
 <ul>
+  <li>August 14, 2025: New information on society / publisher partnerships and associated Annual Service Fee discounts added</li>
   <li>June 18, 2025: Clarified policy for cases where both an institutional library and a campus-based publisher have partner agreements</li>
   <li>May 15, 2025: Applied the format ‘$100 USD’ to prices that appear in text and included the phrase ‘All fees are listed in USD’ with all relevant tables
 </ul>
