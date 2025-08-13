@@ -65,7 +65,6 @@
     "@milkdown/react": "^7.15.2",
     "@stripe/react-stripe-js": "^3.6.0",
     "@stripe/stripe-js": "^6.1.0",
-    "@tinymce/tinymce-react": "^5.1.1",
     "aws-sdk": "^2.1060.0",
     "axios": "^1.8.2",
     "babel-loader": "8",

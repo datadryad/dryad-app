@@ -60,7 +60,6 @@ module CollectionHelper
   end
 
   def add_required_abstract
-    # fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
     res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
     ab = res.descriptions.find_by(description_type: 'abstract')
     ab.update(description: Faker::Lorem.paragraph)
