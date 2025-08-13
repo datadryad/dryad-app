@@ -105,8 +105,8 @@ function MilkdownCore({
   );
 }
 
-const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', 'spacer',
-  'blockquote', 'code_block', 'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'table', 'spacer', 'undo', 'redo'];
+const defaultButtons = ['heading', 'strong', 'emphasis', 'link', 'inlineCode', 'spacer', 'blockquote', 'code_block', 'table',
+  'bullet_list', 'ordered_list', 'indent', 'outdent', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
   id, attr, initialValue, replaceValue, onChange, onReplace, buttons = defaultButtons,
