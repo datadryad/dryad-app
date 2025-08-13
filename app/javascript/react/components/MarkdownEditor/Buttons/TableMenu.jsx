@@ -109,48 +109,51 @@ export default function TableMenu({active, editor, editorId}) {
         aria-label="Table menu"
         aria-expanded="false"
         aria-controls={`${editorId}tableOptMenu`}
+        aria-haspopup="true"
         onClick={openMenu}
         disabled={!active}
       >
-        <i className="fas fa-table-cells-large" style={{marginRight: '.5ch'}} />
-        <i className="fas fa-chevron-down" />
+        <i className="fas fa-table-cells-large" aria-hidden="true" />
+        <i className="fas fa-chevron-down" aria-hidden="true" />
       </button>
-      <ul className="tableOptMenu" id={`${editorId}tableOptMenu`} hidden>
-        <li onMouseLeave={() => subMenuExit(document.getElementById(`${editorId}rowMenuB`))}>
+      <ul className="tableOptMenu" id={`${editorId}tableOptMenu`} hidden role="menu">
+        <li onMouseLeave={() => subMenuExit(document.getElementById(`${editorId}rowMenuB`))} role="menuitem">
           <button
             type="button"
             className="tableSubMenu"
             id={`${editorId}rowMenuB`}
             aria-controls={`${editorId}rowMenu`}
+            aria-expanded="false"
+            aria-haspopup="true"
             onMouseEnter={subMenuOpen}
-          ><i className="fas fa-table-columns fa-rotate-270" />Rows<i className="fas fa-chevron-right" />
+          ><i className="fas fa-table-columns fa-rotate-270" aria-hidden="true" />Rows<i className="fas fa-chevron-right" aria-hidden="true" />
           </button>
-          <ul hidden id={`${editorId}rowMenu`}>
-            <li>
+          <ul hidden id={`${editorId}rowMenu`} role="menu">
+            <li role="menuitem">
               <button type="button" onClick={() => callEditorCommand(addRowBeforeCommand)}>
                 <span className="icon-stack">
-                  <i className="fas fa-plus" />
+                  <i className="fas fa-plus" aria-hidden="true" />
                   {rowIcon}
                 </span>Insert row above
               </button>
             </li>
-            <li>
+            <li role="menuitem">
               <button type="button" onClick={() => callEditorCommand(addRowAfterCommand)}>
                 <span className="icon-stack">
                   {rowIcon}
-                  <i className="fas fa-plus" />
+                  <i className="fas fa-plus" aria-hidden="true" />
                 </span>Insert row below
               </button>
             </li>
-            <li>
+            <li role="menuitem">
               <button type="button" onClick={() => callEditorCommand(moveRowCommand, {from: row, to: row - 1})} disabled={row === 0 || null}>
                 <span className="icon-stack">
-                  <i className="fas fa-turn-down fa-rotate-270" />
+                  <i className="fas fa-turn-down fa-rotate-270" aria-hidden="true" />
                   {rowIcon}
                 </span>Move row up
               </button>
             </li>
-            <li>
+            <li role="menuitem">
               <button
                 type="button"
                 onClick={() => callEditorCommand(moveRowCommand, {from: row, to: row + 1})}
@@ -158,64 +161,67 @@ export default function TableMenu({active, editor, editorId}) {
               >
                 <span className="icon-stack">
                   {rowIcon}
-                  <i className="fas fa-turn-up fa-rotate-90" />
+                  <i className="fas fa-turn-up fa-rotate-90" aria-hidden="true" />
                 </span>Move row down
               </button>
             </li>
-            <li>
+            <li role="menuitem">
               <button type="button" onClick={() => callEditorCommand(selectRowCommand, {index: row})}>
                 <span className="icon-stack">
-                  <i className="fas fa-table-columns fa-rotate-270 one" />
+                  <i className="fas fa-table-columns fa-rotate-270 one" aria-hidden="true" />
                 </span>Select row cells
               </button>
             </li>
           </ul>
         </li>
-        <li onMouseLeave={() => subMenuExit(document.getElementById(`${editorId}colMenuB`))}>
+        <li onMouseLeave={() => subMenuExit(document.getElementById(`${editorId}colMenuB`))} role="menuitem">
           <button
             type="button"
             className="tableSubMenu"
             id={`${editorId}colMenuB`}
             aria-controls={`${editorId}colMenu`}
+            aria-expanded="false"
+            aria-haspopup="true"
             onMouseEnter={subMenuOpen}
-          ><i className="fas fa-table-columns" />Columns<i className="fas fa-chevron-right" />
+          ><i className="fas fa-table-columns" aria-hidden="true" />Columns<i className="fas fa-chevron-right" aria-hidden="true" />
           </button>
-          <ul hidden id={`${editorId}colMenu`}>
-            <li>
+          <ul hidden id={`${editorId}colMenu`} role="menu">
+            <li role="menuitem">
               <button type="button" onClick={() => callEditorCommand(addColBeforeCommand)}>
-                <span className="icon-line"><i className="fas fa-plus" />{colIcon}</span>Insert column left
+                <span className="icon-line"><i className="fas fa-plus" aria-hidden="true" />{colIcon}</span>Insert column left
               </button>
             </li>
-            <li>
+            <li role="menuitem">
               <button type="button" onClick={() => callEditorCommand(addColAfterCommand)}>
-                <span className="icon-line">{colIcon}<i className="fas fa-plus" /></span>Insert column right
+                <span className="icon-line">{colIcon}<i className="fas fa-plus" aria-hidden="true" /></span>Insert column right
               </button>
             </li>
-            <li>
+            <li role="menuitem">
               <button type="button" onClick={() => callEditorCommand(moveColCommand, {from: col, to: col - 1})} disabled={col === 0 || null}>
-                <span className="icon-line"><i className="fas fa-turn-down fa-flip-horizontal" />{colIcon}</span>Move column left
+                <span className="icon-line"><i className="fas fa-turn-down fa-flip-horizontal" aria-hidden="true" />{colIcon}</span>Move column left
               </button>
             </li>
-            <li>
+            <li role="menuitem">
               <button
                 type="button"
                 onClick={() => callEditorCommand(moveColCommand, {from: col, to: col + 1})}
                 disabled={col === colCount - 1 || null}
               >
-                <span className="icon-line">{colIcon}<i className="fas fa-turn-down" /></span>Move column right
+                <span className="icon-line">{colIcon}<i className="fas fa-turn-down" aria-hidden="true" /></span>Move column right
               </button>
             </li>
-            <li>
+            <li role="menuitem">
               <button
                 type="button"
                 onClick={() => callEditorCommand(selectColCommand, {index: col})}
-              ><i className="fas fa-table-columns one" />Select column cells
+              ><i className="fas fa-table-columns one" aria-hidden="true" />Select column cells
               </button>
             </li>
           </ul>
         </li>
-        <li>
-          <button type="button" onClick={() => callEditorCommand(deleteSelectedCellsCommand)}><i className="fas fa-delete-left" />Delete cells
+        <li role="menuitem">
+          <button type="button" onClick={() => callEditorCommand(deleteSelectedCellsCommand)}>
+            <i className="fas fa-delete-left" aria-hidden="true" />Delete cells
           </button>
         </li>
       </ul>
