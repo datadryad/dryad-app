@@ -11,12 +11,10 @@
     ],
     "moduleNameMapper": {
       "\\.css$": "identity-obj-proxy",
+      "^@milkdown/kit/(.*)$": "<rootDir>/node_modules/@milkdown/kit/lib/$1.js",
       "^@milkdown/prose/(.*)$": "<rootDir>/node_modules/@milkdown/prose/lib/$1.js",
       "^@milkdown/(.*)$": "<rootDir>/node_modules/@milkdown/$1"
     },
-    "testPathIgnorePatterns": [
-      "ReadMe"
-    ],
     "transform": {
       "\\.[jt]sx?$": "babel-jest"
     },
@@ -62,17 +60,8 @@
     "@lezer/common": "^1.0.0",
     "@lezer/highlight": "^1.2.0",
     "@lezer/markdown": "^1.1.0",
-    "@milkdown/core": "^7.3.0",
-    "@milkdown/ctx": "^7.3.0",
-    "@milkdown/plugin-history": "^7.3.0",
-    "@milkdown/plugin-listener": "^7.3.0",
-    "@milkdown/plugin-trailing": "^7.3.0",
-    "@milkdown/preset-commonmark": "^7.3.0",
-    "@milkdown/preset-gfm": "^7.3.0",
-    "@milkdown/prose": "^7.3.0",
-    "@milkdown/react": "^7.3.0",
-    "@milkdown/transformer": "^7.3.0",
-    "@milkdown/utils": "^7.3.0",
+    "@milkdown/kit": "^7.15.2",
+    "@milkdown/react": "^7.15.2",
     "@stripe/react-stripe-js": "^3.6.0",
     "@stripe/stripe-js": "^6.1.0",
     "@tinymce/tinymce-react": "^5.1.1",
@@ -89,6 +78,7 @@
     "downshift": "^6.1.12",
     "draft-js": "^0.11.7",
     "drag-on-drop": "^3.6.1",
+    "eslint-plugin-import": "^2.32.0",
     "evaporate": "^2.1.4",
     "formik": "^2.2.9",
     "html-react-parser": "^1.4.14",
@@ -147,7 +137,7 @@
     "del": "^6.0.0",
     "eslint": "^8.19.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
@@ -166,6 +156,7 @@
     "webpack-dev-server": "^5.2.2"
   },
   "resolutions": {
-    "nanoid": "<4.0.0"
+    "nanoid": "<4.0.0",
+    "prosemirror-model": "1.25.0"
   }
 }

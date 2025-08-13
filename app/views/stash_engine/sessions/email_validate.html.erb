@@ -20,6 +20,7 @@
         <%= f.submit 'Enter a new email address', class: 'o-button__plain-textlink', style: 'text-decoration: underline'%>  
       <% end %>
       <script type="text/javascript">
+        window.history.replaceState(null, null, window.location.href.split('?')[0])
         const code = document.getElementById('email_code')
         code.addEventListener('input', () => {
           if (code.value.length === 6) code.form.submit()

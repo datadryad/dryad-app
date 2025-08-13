@@ -38,5 +38,5 @@ value: {
       "identifier": "http://example.org/cats"
     }
   ],
-  "userId": 1234
+  "userId": "0000-0000-0000-0000"
 }

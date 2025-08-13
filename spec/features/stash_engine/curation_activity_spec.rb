@@ -19,12 +19,28 @@ RSpec.feature 'CurationActivity', type: :feature do
       visit("#{stash_url_helpers.admin_dashboard_path}?curation_status=curation")
     end
 
+    it 'shows accurate publication status', js: true do
+      manuscript = create(:manuscript, identifier: @resource.identifier, status: 'accepted')
+      create(:resource_publication, resource: @resource, manuscript_number: manuscript.manuscript_number)
+      expect(page).to have_css('a[title="Activity log"]')
+      find('a[title="Activity log"]').click
+      expect(page).to have_text(manuscript.manuscript_number)
+      expect(page).to have_text('accepted')
+      create(:related_identifier, resource: @resource, work_type: 'primary_article')
+      visit current_path
+      expect(page).to have_text('1 related work')
+      expect(page).to have_text('published')
+    end
+
     it 'renders salesforce links in notes field', js: true do
       @curation_activity = create(:curation_activity, note: 'Not a valid SF link', resource: @resource)
       @curation_activity = create(:curation_activity, note: 'SF #0001 does not exist', resource: @resource)
       @curation_activity = create(:curation_activity, note: 'SF #0002 should exist', resource: @resource)
       within(:css, 'tbody tr', wait: 10) do
         find('a[title="Activity log"]').click
+      end
+      within(:css, '#activity_log_table tbody:last-child') do
+        find('button[aria-label="Curation activity"]').click
       end
       expect(page).to have_text('This is the dataset activity page.')
       expect(page).to have_text('Not a valid SF link')
@@ -88,6 +104,9 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
 
       it 'adds a note to the curation activity log', js: true do
+        within(:css, '#activity_log_table tbody:last-child') do
+          find('button[aria-label="Curation activity"]').click
+        end
         click_button 'Add note'
         fill_in('stash_engine_curation_activity[note]', with: 'This is a test of the note functionality')
         click_button('Submit')
@@ -98,6 +117,9 @@ RSpec.feature 'CurationActivity', type: :feature do
         create(:curation_activity_no_callbacks, status: 'action_required', user_id: @user.id, resource_id: @resource.id)
         visit stash_url_helpers.admin_dashboard_path
         find('a[title="Activity log"]').click
+        within(:css, '#activity_log_table tbody:last-child') do
+          find('button[aria-label="Curation activity"]').click
+        end
         click_button 'Edit notification date'
         fill_in('notification_date', with: Date.today + 2.months)
         fill_in('[curation_activity][note]', with: 'Some Note')

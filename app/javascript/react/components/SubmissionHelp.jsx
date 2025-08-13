@@ -36,9 +36,15 @@ export default function SubmissionHelp({type}) {
 export function PublicationHelp() {
   return (
     <>
-      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
-      <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some journals.</p>
+      <p>If your submission is linked to an article, preprint, or manuscript, sharing that information connects your data to the work. Metadata information for your submission can be imported from some connections.</p>
+      <p>Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
     </>
+  );
+}
+
+export function TitleHelp() {
+  return (
+    <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many preprints and published articles, or from submitted manuscripts for some <a href="/journals" target="_blank">partner journals<ExitIcon /></a>.</p>
   );
 }
 

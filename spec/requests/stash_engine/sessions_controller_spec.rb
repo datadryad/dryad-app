@@ -57,14 +57,14 @@ module StashEngine
 
           expect(user).to receive(:create_email_token).never
         end
+      end
 
-        context 'when refresh param is set' do
-          subject { get email_validate_path(refresh: true) }
+      context 'when refresh param is set' do
+        subject { get email_validate_path(refresh: true) }
 
-          it 'creates a new token' do
-            expect { subject }.to change { StashEngine::EmailToken.count }.by(1)
-            expect(user.email_token).not_to be_nil
-          end
+        it 'creates a new token' do
+          expect { subject }.to change { StashEngine::EmailToken.count }.by(1)
+          expect(user.email_token).not_to be_nil
         end
       end
     end

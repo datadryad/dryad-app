@@ -138,8 +138,8 @@ module StashEngine
 
     amoeba do
       include_association %i[authors generic_files contributors descriptions geolocations temporal_coverages
-                             related_identifiers resource_type rights flag sizes resources_subjects resource_publications roles]
-      customize(->(_, new_resource) {
+                             related_identifiers resource_type rights flag sizes resource_publications roles]
+      customize(->(old_resource, new_resource) {
         # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
         new_resource.current_resource_state_id = nil
         # do not mark these resources for public view until they've been re-curated and embargoed/published again
@@ -160,6 +160,8 @@ module StashEngine
             ri.work_type = 'article'
           end
         end
+
+        new_resource.subjects = old_resource.subjects
 
         # I think there was something weird about Amoeba that required this approach
         deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
@@ -1131,8 +1133,8 @@ module StashEngine
       digest_type = 'sha-256'
       sums = Stash::Checksums.get_checksums([digest_type], StringIO.new(content))
       digest = sums.get_checksum(digest_type)
-      old_file = data_files.present_files.where(upload_file_name: filename).first&.original_deposit_file
-      return if digest == old_file&.digest
+      old_file = data_files.present_files.where(upload_file_name: filename).first
+      return if digest == old_file&.original_deposit_file&.digest
 
       # remove old file
       old_file.smart_destroy! if old_file&.digest
