@@ -97,7 +97,7 @@ module StashEngine
       if zc.copy_type.include?('software')
         Delayed::Job.where('handler LIKE ?', "%- #{zc.id}%").where(queue: 'zenodo_software')
       elsif zc.copy_type.include?('supp')
-        Delayed::Job.where('handler LIKE ?', "%- #{zc}.id}%").where(queue: 'zenodo_supp')
+        Delayed::Job.where('handler LIKE ?', "%- #{zc.id}%").where(queue: 'zenodo_supp')
       else
         Delayed::Job.where('handler LIKE ?', "%- #{zc.resource_id}%").where(queue: 'zenodo_copy')
       end
