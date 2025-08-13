@@ -9,7 +9,8 @@ import ChecklistNav, {Checklist} from '../components/Checklist';
 import SubmissionForm from '../components/SubmissionForm';
 import ExitButton from '../components/ExitButton';
 import Payments from '../components/Payments';
-import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Publication';
+import Publication, {PubPreview, publicationPass, publicationFail} from '../components/MetadataEntry/Connect';
+import TitleImport, {TitlePreview, titleFail} from '../components/MetadataEntry/Title';
 import Authors, {AuthPreview, authorCheck} from '../components/MetadataEntry/Authors';
 import Compliance, {CompPreview, complianceCheck} from '../components/MetadataEntry/Compliance';
 import Description, {DescPreview, abstractCheck} from '../components/MetadataEntry/Description';
@@ -20,7 +21,7 @@ import UploadFiles, {FilesPreview, filesCheck} from '../components/UploadFiles';
 import ReadMeWizard, {ReadMePreview, readmeCheck} from '../components/ReadMeWizard';
 import Agreements from '../components/MetadataEntry/Agreements';
 import SubmissionHelp, {
-  PublicationHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, CompHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
+  PublicationHelp, TitleHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, CompHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
 /* eslint-disable jsx-a11y/no-autofocus */
 
@@ -41,17 +42,24 @@ function Submission({
 
   const steps = () => {
     const stepArray = [{
-      name: 'Title',
+      name: 'Connect',
       pass: publicationPass(resource),
       fail: (review || publicationPass(resource)) && publicationFail(resource, review),
-      component: <Publication current={step.name === 'Title'} resource={resource} setResource={setResource} />,
+      component: <Publication current={step.name === 'Connect'} resource={resource} setResource={setResource} />,
       help: <PublicationHelp />,
       preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
+    }, {
+      name: 'Title',
+      pass: !titleFail(resource),
+      fail: (review || step.index > 0) && titleFail(resource),
+      component: <TitleImport current={step.name === 'Title'} resource={resource} setResource={setResource} />,
+      help: <TitleHelp />,
+      preview: <TitlePreview resource={resource} previous={previous} />,
     },
     {
       name: 'Authors',
       pass: resource.authors.length > 0 && !authorCheck(resource),
-      fail: (review || step.index > 0) && authorCheck(resource),
+      fail: (review || step.index > 1) && authorCheck(resource),
       component: <Authors current={step.name === 'Authors'} resource={resource} setResource={setResource} user={user} />,
       help: <AuthHelp />,
       preview: <AuthPreview resource={resource} previous={previous} curator={user.curator} />,
@@ -59,7 +67,7 @@ function Submission({
     {
       name: 'Description',
       pass: !abstractCheck(resource),
-      fail: (review || step.index > 1) && abstractCheck(resource),
+      fail: (review || step.index > 2) && abstractCheck(resource),
       component: <Description
         current={step.name === 'Description'}
         resource={resource}
@@ -73,7 +81,7 @@ function Submission({
     {
       name: 'Subjects',
       pass: keywordPass(resource.subjects),
-      fail: (review || step.index > 2) && keywordFail(resource),
+      fail: (review || step.index > 3) && keywordFail(resource),
       component: <Subjects current={step.name === 'Subjects'} resource={resource} setResource={setResource} />,
       help: <SubjHelp />,
       preview: <SubjPreview resource={resource} previous={previous} />,
@@ -81,7 +89,7 @@ function Submission({
     {
       name: 'Support',
       pass: !fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
-      fail: (review || step.index > 3) && fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
+      fail: (review || step.index > 4) && fundingCheck(resource.contributors.filter((f) => f.contributor_type === 'funder')),
       component: <Support current={step.name === 'Support'} resource={resource} setResource={setResource} />,
       help: <SuppHelp type={resource.resource_type.resource_type} />,
       preview: <SuppPreview resource={resource} previous={previous} curator={user.curator} />,
@@ -89,7 +97,7 @@ function Submission({
     {
       name: 'Compliance',
       pass: !complianceCheck(resource),
-      fail: (review || step.index > 4) && complianceCheck(resource),
+      fail: (review || step.index > 5) && complianceCheck(resource),
       component: <Compliance resource={resource} setResource={setResource} />,
       help: <CompHelp />,
       preview: <CompPreview resource={resource} previous={previous} />,
@@ -97,7 +105,7 @@ function Submission({
     {
       name: 'Files',
       pass: resource.generic_files?.length > 0,
-      fail: (review || step.index > 5) && filesCheck(resource, user.superuser, config_maximums),
+      fail: (review || step.index > 6) && filesCheck(resource, user.superuser, config_maximums),
       component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
         <UploadFiles
           {...{
@@ -114,7 +122,7 @@ function Submission({
     {
       name: 'README',
       pass: resource.descriptions.find((d) => d.description_type === 'technicalinfo')?.description,
-      fail: (review || step.index > 6) && readmeCheck(resource),
+      fail: (review || step.index > 7) && readmeCheck(resource),
       component: <ReadMeWizard resource={resource} setResource={setResource} current={step.name === 'README'} />,
       help: <ReadMeHelp />,
       preview: <ReadMePreview resource={resource} previous={previous} curator={user.curator} />,
@@ -122,7 +130,7 @@ function Submission({
     {
       name: 'Related works',
       pass: resource.related_identifiers.some((ri) => !!ri.related_identifier && ri.work_type !== 'primary_article') || resource.accepted_agreement,
-      fail: worksCheck(resource, (review || step.index > 7)),
+      fail: worksCheck(resource, (review || step.index > 8)),
       component: <RelatedWorks current={step.name === 'Related works'} resource={resource} setResource={setResource} />,
       help: <WorksHelp setTitleStep={() => setStep(steps().find((l) => l.name === 'Title'))} />,
       preview: <WorksPreview resource={resource} previous={previous} curator={user.curator} />,
@@ -158,7 +166,10 @@ function Submission({
     }];
     return stepArray.map((s, i) => {
       s.index = i;
+<<<<<<< HEAD
       s.fail = s.fail || aarCheck(previous, s.name, previewRef.current);
+=======
+>>>>>>> main
       return s;
     });
   };
@@ -204,7 +215,7 @@ function Submission({
   useEffect(() => {
     if (!review) {
       const url = location.search.slice(1);
-      if (url) {
+      if (url && url !== 'start') {
         const n = steps().find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase());
         if (n.name !== step.name) setStep(n);
       }
@@ -263,7 +274,8 @@ function Submission({
     if (!review) {
       const url = window.location.search.slice(1);
       if (url) {
-        setStep(steps().find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
+        if (url === 'start') setStep({name: 'Create a submission'});
+        else setStep(steps().find((c) => url === c.name.split(/[^a-z]/i)[0].toLowerCase()));
       } else if (steps().find((c) => c.fail || c.pass)) {
         setStep(steps().find((c) => !c.pass));
       }

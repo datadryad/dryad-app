@@ -16,17 +16,20 @@ module StashApi
     include Mocks::Salesforce
     include Mocks::Datacite
 
+    let!(:user) { create(:user, role: 'superuser') }
+    let!(:system_user) { create(:user, id: 0, first_name: 'Dryad', last_name: 'System') }
+    let!(:doorkeeper_application) do
+      create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                      owner_id: user.id, owner_type: 'StashEngine::User')
+    end
+
     before(:each) do
       create(:tenant_dryad)
       create(:tenant_ucop)
       neuter_curation_callbacks!
       mock_salesforce!
       mock_datacite_gen!
-      @user                   = create(:user, role: 'superuser')
-      @system_user            = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
-      @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
-      setup_access_token(doorkeeper_application: @doorkeeper_application)
+      setup_access_token(doorkeeper_application: doorkeeper_application)
     end
 
     # test creation of a new dataset
@@ -253,17 +256,10 @@ module StashApi
         end
 
         it 'does not trigger email sending when owner has no email' do
-          @user.update(email: nil)
+          hash = @meta.hash
+          hash[:authors].first[:email] = nil
 
-          # The below code does not work on rails 8
-          # expect {
-          #   post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-          # }.to raise_error(
-          #   ActionController::BadRequest,
-          #   'Dataset owner does not have an email address in order to send the Submission email.'
-          # )
-
-          response_code = post '/api/v2/datasets.json', params: @meta.json, headers: default_authenticated_headers
+          response_code = post '/api/v2/datasets.json', params: hash.to_json, headers: default_authenticated_headers
           expect(response_code).to eq(400)
         end
 
@@ -319,7 +315,7 @@ module StashApi
         res   = ident.latest_resource
 
         expect(ident).to be
-        expect(res.submitter.id).to eq(@system_user.id)
+        expect(res.submitter.id).to eq(system_user.id)
       end
 
       it 'creates a new dataset from EM submission metadata' do
@@ -738,9 +734,9 @@ module StashApi
 
         @identifier = create(:identifier)
         Timecop.travel(Time.now.utc.to_date - 1.day)
-        @resources = [create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id)]
+        @resources = [create(:resource, user_id: @user2.id, tenant_id: user.tenant_id, identifier_id: @identifier.id)]
         Timecop.travel(Time.now.utc + 23.hours)
-        @resources.push(create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id))
+        @resources.push(create(:resource, user_id: @user2.id, tenant_id: user.tenant_id, identifier_id: @identifier.id))
         Timecop.return
         @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[0], status: 'curation'),
@@ -783,9 +779,9 @@ module StashApi
       it "doesn't show the private record for superusers when using Authorzation Code Grant (3rd party user proxy)" do
         # this also indirectly tests the optional_api_user which changes based on login method
         # set access_token to proxy for user
-        @doorkeeper_application.access_tokens.first.update(resource_owner_id: @doorkeeper_application.owner_id)
+        doorkeeper_application.access_tokens.first.update(resource_owner_id: doorkeeper_application.owner_id)
         # reset to different grant type where it's not owned by api user
-        @doorkeeper_application.update(owner_id: nil, owner_type: nil)
+        doorkeeper_application.update(owner_id: nil, owner_type: nil)
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
         hsh = response_body_hash
         expect(hsh['versionNumber']).to eq(1) # only shows published one, not later one that isn't
@@ -803,7 +799,7 @@ module StashApi
       end
 
       it 'shows the peer review URL when the dataset is in review status' do
-        @resources << create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id)
+        @resources << create(:resource, user_id: @user2.id, tenant_id: user.tenant_id, identifier_id: @identifier.id)
         @curation_activities << [create(:curation_activity, resource: @resources[2], status: 'in_progress'),
                                  create(:curation_activity, resource: @resources[2], status: 'peer_review')]
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
@@ -969,25 +965,23 @@ module StashApi
                               as: :json
           expect(response_code).to eq(401)
         end
-
         # these would also use the same kinds of authorizations as the other variations on PUT/PATCH.
       end
 
       describe 'PATCH to update curationStatus or publicationISSN' do
+        let!(:access_token) { get_access_token(doorkeeper_application: doorkeeper_application) }
+
         before(:each) do
           allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({ total: 0, storage_fee_label: 'Submission fee' })
 
           # create a dataset in peer-review status
-          @super_user             = create(:user, role: 'superuser')
-          @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                                                    owner_id: @super_user.id, owner_type: 'StashEngine::User')
-          @access_token           = get_access_token(doorkeeper_application: @doorkeeper_application)
+          # @access_token           = get_access_token(doorkeeper_application: doorkeeper_application)
           @identifier             = create(:identifier)
-          @res                    = create(:resource, identifier: @identifier, user: @super_user)
+          @res                    = create(:resource, identifier: @identifier, user: user)
           create(:description, resource: @res, description_type: 'technicalinfo')
           @res.update(data_files: [create(:data_file, file_state: 'copied'),
                                    create(:data_file, file_state: 'copied')])
-          @res.authors.first.update(author_orcid: @super_user.orcid)
+          @res.authors.first.update(author_orcid: user.orcid)
           @res.subjects << [create(:subject), create(:subject), create(:subject)]
           @ca = create(:curation_activity, resource: @res, status: 'peer_review')
           @identifier.reload
@@ -1000,7 +994,7 @@ module StashApi
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
-                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           expect(response_code).to eq(200)
           expect(@res.current_curation_status).to eq('submitted')
@@ -1014,7 +1008,7 @@ module StashApi
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
-                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           expect(response_code).to eq(200)
           expect(@res.current_curation_status).to eq('published')
@@ -1033,7 +1027,7 @@ module StashApi
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
-                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           expect(response_code).to eq(200)
           @identifier.reload
@@ -1049,16 +1043,13 @@ module StashApi
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
-                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           @identifier.reload
           expect(response_code).to eq(200)
           expect(@identifier.publication_issn).to eq(nil)
         end
-
       end
-
     end
-
   end
 end

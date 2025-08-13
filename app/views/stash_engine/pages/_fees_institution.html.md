@@ -136,7 +136,7 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 </div>
 </div>
 
-### Lower- and middle-income countries
+## Lower- and middle-income countries
 
 Annual Service Fees for institutions based in lower- and middle-income countries are as follows.
 
@@ -161,7 +161,7 @@ Annual Service Fees for institutions based in lower- and middle-income countries
 </div>
 </div>
 
-### Consortium offers
+## Consortium offers
 
 Our consortial fee structures reflect the reduction in administrative burden and recruitment benefit that consortia can provide. Annual Service Fees are discounted to reflect that savings and benefit, and scale with the number of participating institutions.
 
@@ -262,4 +262,10 @@ The DPC and Annual Service Fee are combined to calculate the total annual fee, w
 </div>
 </div>
 
-
+<div style="font-size: .98rem;">
+<h3 style="font-size: 1.1rem">Change log</h3>
+<ul>
+  <li>June 24, 2025: Added consortium policy and pricing table</li>
+  <li>June 18, 2025: Clarified policy for cases where both an institutional library and a campus-based publisher have partner agreements</li>
+  <li>May 15, 2025: Applied the format ‘$100 USD’ to prices that appear in text and included the phrase ‘All fees are listed in USD’ with all relevant tables
+</ul>

@@ -106,7 +106,7 @@ module StashApi
       user
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def em_update_selected_fields
       logger.debug('em_update_selected_fields')
 
@@ -137,17 +137,8 @@ module StashApi
       end
 
       # Add keywords if they were not added by the submitter
-      if @resource.subjects.blank? && art_params['keywords'].present?
-        @resource.subjects.clear
-        art_params['keywords'].each do |kw|
-          subs = StashDatacite::Subject.where(subject: kw)
-          sub = if subs.blank?
-                  StashDatacite::Subject.create(subject: kw)
-                else
-                  subs.first
-                end
-          @resource.subjects << sub
-        end
+      if art_params['keywords'].present?
+        Subjects::CreateService.new(@resource, art_params['keywords']).call
         fields_changed << 'Keywords'
       end
 
@@ -258,7 +249,7 @@ module StashApi
       em_params
     end
 
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata:, deposit_request:)
@@ -426,9 +417,7 @@ module StashApi
 
       case @json.first['path']
       when '/versionStatus'
-        ensure_in_progress { yield }
-        pre_submission_updates
-        StashEngine.repository.submit(resource_id: @resource.id)
+        update_version_status(@json.first['value'])
         ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
         render json: ds.metadata, status: 202
       when '/curationStatus'
@@ -441,6 +430,17 @@ module StashApi
         return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
       end
       yield
+    end
+
+    def update_version_status(new_status)
+      ensure_in_progress { yield }
+      pre_submission_updates
+      if new_status == 'submitted'
+        @resource.curation_activities << StashEngine::CurationActivity.create(
+          status: 'processing', note: 'Repository processing data', user_id: @user&.id || 0
+        )
+      end
+      StashEngine.repository.submit(resource_id: @resource.id)
     end
 
     def update_curation_status(new_status)
@@ -547,20 +547,7 @@ module StashApi
     end
 
     def duplicate_resource
-      begin
-        nr = @resource.amoeba_dup
-        nr.current_editor_id = @user.id
-        nr.save!
-      rescue ActiveRecord::RecordNotUnique
-        @resource.identifier.reload
-        nr = @resource.identifier.latest_resource unless @resource.identifier.latest_resource_id == @resource.id
-        nr ||= @resource.amoeba_dup
-        nr.current_editor_id = @user.id
-        nr.save!
-      end
-      nr.curation_activities&.update_all(user_id: @user.id)
-      nr.data_files.each(&:populate_container_files_from_last)
-      @resource = nr
+      @resource = DuplicateResourceService.new(@resource, @user).call
     end
 
     def paged_datasets(datasets:)

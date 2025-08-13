@@ -197,9 +197,11 @@ Rails.application.routes.draw do
     get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
     get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
     get 'sessions/:tenant_id/email', to: 'sessions#email_sso', as: 'email_sso'
+    post 'sessions/email_code', to: 'sessions#validate_sso_email', as: 'validate_sso_email'
     match 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner', via: [:get, :post]
     post 'sessions/sso', to: 'sessions#sso', as: 'sso'
-    post 'sessions/email_code', to: 'sessions#validate_email', as: 'validate_email'
+    get 'sessions/email_validate', to: 'sessions#email_validate', as: 'email_validate'
+    post 'sessions/validate_email', to: 'sessions#validate_email', as: 'validate_email'
     get 'feedback', to: 'sessions#feedback', as: 'feedback'
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
     post 'helpdesk', to: 'pages#helpdesk', as: 'contact_helpdesk'
@@ -303,6 +305,8 @@ Rails.application.routes.draw do
     # activity log
     get 'ds_admin/:id', to: 'admin_datasets#index', as: 'activity_log'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity'
+    get 'ds_admin/:id/change_log', to: 'admin_datasets#change_log', as: 'change_log'
+    get 'ds_admin/:id/file_log', to: 'admin_datasets#file_log', as: 'file_log'
     get 'ds_admin/:id/require_action', to: 'admin_datasets#require_action', as: 'require_action'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
@@ -340,6 +344,7 @@ Rails.application.routes.draw do
 
     # Publication updater page - Allows admins to accept/reject metadata changes from external sources like Crrossref
     get 'publication_updater', to: 'publication_updater#index'
+    get 'publication_updater/log', to: 'publication_updater#log'
     put 'publication_updater/:id', to: 'publication_updater#update'
     delete 'publication_updater/:id', to: 'publication_updater#destroy'
 
@@ -399,7 +404,7 @@ Rails.application.routes.draw do
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
-    get 'contributors/groupings', to: 'contributors#groupings'
+    post 'contributors/grouping', to: 'contributors#grouping'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
     patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'

@@ -1,4 +1,28 @@
 <% @page_title = "Activity log for #{@identifier.to_s}" %>
+<% content_for(:head) do %>
+<style type="text/css">
+  dl {
+    margin: 0;
+  }
+  dl:not(:first-child) {
+    margin-top: 1ch;
+  }
+  dl div {
+    display: flex;
+    align-items: baseline;
+    gap: 1ch;
+  }
+  dt {
+    font-weight: 600;
+    display: inline;
+    white-space: nowrap;
+  }
+  dd {
+    display: inline;
+    margin: 0;
+  }
+</style>
+<% end %>
 <% r = @identifier&.latest_resource %>
 
 <%= render partial: 'privileged_banner' %>
@@ -79,8 +103,8 @@
           <b>Payment:</b>
           <span id="payment_desc">            
             <% pr = @identifier.resources.by_version_desc.includes(:payment).find {|r| r.payment} %>
-            <% if pr&.payment %>$<%= pr.payment.amount %><% end %>
             <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
+              <% if pr&.payment %>$<%= pr.payment.amount %><% end %>
               <%= pr&.payment&.status.present? ? "bill #{pr&.payment&.status}" : 'Unknown' %>
             <% else %>
               <%= @identifier.payment_type %>
@@ -88,12 +112,23 @@
           </span>
           <%= format_external_references(@identifier.payment_id) %>
           <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
-            <span id="waiver_basis"><%= @identifier.waiver_basis %></span>
+            <% if @identifier.waiver_basis %><span id="waiver_basis"><%= @identifier.waiver_basis %></span><% end %>
             <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
               <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Apply fee discount" title="Apply fee discount"><i class="fas fa-comment-dollar" aria-hidden="true"></i></button>
             <% end %>
           <% end %>
         </span>
+        <% if @identifier.payment_type == 'institution' && @identifier.payment_id != r.submitter.tenant_id %>
+          <span class="child-details error-text">
+            <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Submitter institution no longer authenticated
+          </span>
+        <% elsif @identifier.payer&.class&.name == 'StashEngine::Journal' %>
+          <% if r.journal&.api_journal? && !r.creator.journals_as_admin.include?(r.journal) %>
+            <span class="child-details error-text">
+              <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Not submitted via API for API journal
+            </span>
+          <% end %>
+        <% end %>
       <% end %>
     </div>
     <div class="input-stack">
@@ -119,7 +154,15 @@
           <% end %>
         <% end %>
       </span>
-      <span id="related_works_list" class="child-details"><%= r.resource_publication&.publication_name&.present? ? "#{r.resource_publication&.publication_name}, " : '' %> <%= r.resource_publication&.manuscript_number&.presence || ''%><br/><%= r.related_identifiers.empty? ? '' : "#{r.related_identifiers.size} related work#{r.related_identifiers.size > 1 ? 's' : ''}" %></span>
+      <span id="related_works_list" class="child-details"><%= r.resource_publication&.publication_name&.present? ? "#{r.resource_publication&.publication_name}, " : '' %> <%= r.resource_publication&.manuscript_number&.presence || ''%>
+        <% if r.manuscript %>
+          <% status = r.manuscript.accepted? && 'accepted' || r.manuscript.rejected? && 'rejected' || 'submitted' %>
+          <span id="status-label" class="<%= status%>"><%= status%></span>
+        <% end %>
+        <% if @identifier.publication_article_doi.present? %>
+          <span id="doi-label" class="accepted">published</span>
+        <% end %>
+        <br/><%= r.related_identifiers.empty? ? '' : "#{r.related_identifiers.size} related work#{r.related_identifiers.size > 1 ? 's' : ''}" %></span>
     </div>
     <div class="input-stack" style="flex-shrink: 1">
       <span class="input-line">
@@ -143,8 +186,8 @@
     <% end %>
   <% end %>
 </div>
-<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>" aria-busy="true" aria-live="polite">
-  <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
+<div id="activity-log">
+  <%= render partial: 'activity_log' %>
 </div>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>
