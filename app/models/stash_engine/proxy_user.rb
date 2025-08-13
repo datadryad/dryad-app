@@ -92,10 +92,11 @@ module StashEngine
     def min_admin? = false
     def min_app_admin? = false
     def min_curator? = false
+    def proxy_user? = true
 
     def journals_as_admin
-      admin_org_journals = journal_organizations.map(&:journals_sponsored).flatten
-      (journals + admin_org_journals).uniq
+      admin_org_journals = journal_organizations.map(&:journals_sponsored_deep).flatten
+      journals | admin_org_journals
     end
 
     def self.split_name(name)

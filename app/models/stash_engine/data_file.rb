@@ -286,11 +286,8 @@ module StashEngine
     def file_content
       # get the presigned URL
       s3_url = nil
-      begin
-        s3_url = digest? || storage_version_id.present? ? s3_permanent_presigned_url : s3_staged_presigned_url
-      rescue HTTP::Error, Stash::Download::S3CustomError => e
-        logger.info("Couldn't get presigned for #{inspect}\nwith error #{e}")
-      end
+      s3_url = s3_permanent_presigned_url_inline if digest? || storage_version_id.present?
+      s3_url ||= s3_staged_presigned_url
 
       return nil if s3_url.nil?
 

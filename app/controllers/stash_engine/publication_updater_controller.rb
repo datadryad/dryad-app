@@ -2,8 +2,8 @@ module StashEngine
   class PublicationUpdaterController < ApplicationController
     helper SortableTableHelper
     before_action :require_user_login
-    before_action :setup_paging, only: [:index]
-    before_action :setup_filter, only: [:index]
+    before_action :setup_paging, only: %i[index log]
+    before_action :setup_filter, only: :index
     before_action :check_status, only: %i[update destroy]
 
     CONCAT_FOR_SEARCH = <<~SQL.freeze
@@ -29,12 +29,10 @@ module StashEngine
     def index
       proposed_changes = authorize StashEngine::ProposedChange.unmatched
         .preload(:latest_resource)
+        .joins(latest_resource: [:last_curation_activity])
+        .where("stash_engine_curation_activities.status NOT IN('in_progress', 'processing', 'embargoed')")
         .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         .select('stash_engine_proposed_changes.*')
-
-      setup_counts(proposed_changes)
-
-      params[:match_type] = 'articles' if params[:match_type].blank?
 
       proposed_changes = add_param_filters(proposed_changes)
 
@@ -77,6 +75,19 @@ module StashEngine
       end
     end
 
+    def log
+      proposed_changes = authorize StashEngine::ProposedChange.processed.joins(:identifier).preload(:latest_resource)
+
+      params[:sort] = 'updated_at' if params[:sort].blank?
+      params[:direction] = 'desc' if params[:direction].blank?
+
+      ord = helpers.sortable_table_order(whitelist:
+         %w[stash_engine_proposed_changes.updated_at stash_engine_proposed_changes.title publication_name publication_issn publication_doi
+            stash_engine_proposed_changes.publication_date authors])
+
+      @proposed_changes = proposed_changes.order(ord).page(@page).per(@page_size)
+    end
+
     private
 
     def setup_paging
@@ -90,15 +101,11 @@ module StashEngine
 
     def setup_filter
       @statuses = [OpenStruct.new(value: '', label: '*Select status*')]
-      @statuses << StashEngine::CurationActivity.statuses.keys.map do |s|
+      excluded = StashEngine::CurationActivity.statuses.except(:in_progress, :processing, :embargoed, :withdrawn)
+      @statuses << excluded.keys.map do |s|
         OpenStruct.new(value: s, label: StashEngine::CurationActivity.readable_status(s))
       end
       @statuses.flatten!
-    end
-
-    def setup_counts(proposed_changes)
-      @article_count = proposed_changes.where('stash_engine_proposed_changes.publication_issn is not null').count('*')
-      @preprint_count = proposed_changes.where('stash_engine_proposed_changes.publication_issn is null').count('*')
     end
 
     def check_status
@@ -123,7 +130,7 @@ module StashEngine
 
       if params[:match_type].present?
         proposed_changes = proposed_changes.where(
-          "stash_engine_proposed_changes.publication_issn is #{params[:match_type] == 'preprints' ? 'null' : 'not null'}"
+          "stash_engine_proposed_changes.xref_type #{params[:match_type] == 'preprints' ? '=' : '<>'} 'posted-content'"
         )
       end
 

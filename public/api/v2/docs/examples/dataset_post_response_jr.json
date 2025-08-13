@@ -1,0 +1,66 @@
+value: {
+  "_links": {
+    "self": {
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QV3KZ2K"
+    },
+    "stash:versions": {
+      "href": "/api/v2/datasets/doi%3A10.5072%2FFK2QV3KZ2K/versions"
+    },
+    "stash:version": {
+      "href": "/api/v2/versions/302"
+    },
+    "curies": [
+      {
+        "name": "stash",
+        "href": "https://github.com/datadryad/dryad-app/blob/main/documentation/apis/link_relations.md#{rel}",
+        "templated": "true"
+      }
+    ]
+  },
+  "id": "doi:10.5072/FK2QV3KZ2K",
+  "title": "A Study of Red-Black Trees with Weight",
+  "authors": [
+    {
+      "firstName": "Matilda",
+      "lastName": "Swinton",
+      "email": "matilda.swinton@example.com",
+      "affiliation": "Example Organization"
+    },
+    {
+      "firstName": "Norah",
+      "lastName": "Moraga",
+      "email": "Norah.Moraga@example.com",
+      "affiliation": "University of California, Davis",
+      "affiliationROR": "https://ror.org/05rrcem69"
+    }
+  ],
+  "abstract": "<p>Information theorists agree that \"fuzzy\" models are an interesting new topic in the field of machine learning.</p>\r\n",
+  "funders": [
+    {
+      "organization": "Stichting Sem Presser Archief",
+      "identifierType": "ror",
+      "identifier": "https://ror.org/02f5r3008",
+      "awardNumber": "12345"
+    }
+  ],
+  "keywords": [
+    "Cat",
+    "Host",
+    "Computer",
+    "Log"
+  ],
+  "methods": "<p><br>\r\nMany mathematicians would agree that, had it not been for systems, the emulation of active networks might never have occurred. We view algorithms as following a cycle of four phases: simulation, investigation, observation, and investigation. After years of robust research into Boolean logic, we confirm the evaluation of Smalltalk. to what extent can spreadsheets be evaluated to realize this intent?</p>\r\n",
+  "relatedWorks": [
+    {
+      "relationship": "article",
+      "identifierType": "URL",
+      "identifier": "http://example.org/cats"
+    }
+  ],
+  "versionNumber": 1,
+  "versionStatus": "in_progress",
+  "userId": "0000-0000-0000-0000",
+  "publicationName": "The Journal of Dataset Examples",
+  "publicationISSN": "0000-000X",
+  "manuscriptNumber": "JDE-2025-0001"
+}

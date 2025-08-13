@@ -264,7 +264,7 @@ module Stash
       # contributor names if we have an encompassing contributor that wants to be credited for its underling funders
       def group_funders
         extra_funders = []
-        StashDatacite::ContributorGrouping.where(contributor_type: 'funder').each do |group|
+        StashDatacite::ContributorGrouping.all.each do |group|
           identifier_ids = group.json_contains.map { |i| i['name_identifier_id'] }
           count = @resource.contributors.funder.completed.where(name_identifier_id: identifier_ids).count
           extra_funders.push(group.contributor_name) if count.positive?

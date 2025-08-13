@@ -18,6 +18,13 @@
   </p>
 </div>
 <div class="bio">
+  <img src="/images/dan.jpg" alt="Headshot of Dan Edwards">
+  <h5>Dan Edwards</h5><br/>
+  <p><em>Head of Data Publishing</em><br/>
+  Dan joined Dryad as Head of Data Publishing in July 2025. Dan has a strong background as a senior scholarly communications professional and brings to his new role a wealth of experience in science journal publishing, research integrity, and team leadership — including experience in editorial services for KGL, the International Institute for Strategic Studies, RCVS Knowledge, the Royal College of Obstetricians and Gynaecologists, Cambridge University Press, and more. He specializes in bringing together teams and skilled professionals, and coaching them to success. Dan also volunteers as an STM mentor. In his spare time he enjoys photography, learning new languages, and travel.
+  </p>
+</div>
+<div class="bio">
   <img src="/images/maria.jpg" alt="Headshot of Maria Guerreiro">
   <h5>Maria Guerreiro</h5><br/>
   <p><em>Head of Partnership Development</em><br/>
@@ -100,7 +107,7 @@
 <div class="bio">
   <img src="/images/jwalter.png" alt="Headshot of Jeremy Walter">
   <h5>Jeremy Walter</h5><br/>
-  <p><em>Data Curator</em><br/>
+  <p><em>Senior Data Curator I</em><br/>
   Jeremy transitioned from a management role in English as a Second Language
   education in Thailand to technical writing and training coordination roles on
   various biology-driven projects in the United States. He recently repatriated

@@ -52,12 +52,14 @@ module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
-    has_paper_trail on: %i[create update touch destroy],
-                    meta: { additional_info: proc { |record|
-                      {
-                        subjects_list: record.subjects.map { |a| a.slice(:subject, :scheme_URI) }
-                      }
-                    } }
+    has_paper_trail meta: {
+      resource_id: proc(&:id),
+      additional_info: proc { |record|
+        {
+          subjects_list: record.subjects.map { |a| a.slice(:subject, :scheme_URI) }
+        }
+      }
+    }
 
     # ------------------------------------------------------------
     # Relations
@@ -136,8 +138,8 @@ module StashEngine
 
     amoeba do
       include_association %i[authors generic_files contributors descriptions geolocations temporal_coverages
-                             related_identifiers resource_type rights flag sizes resources_subjects resource_publications roles]
-      customize(->(_, new_resource) {
+                             related_identifiers resource_type rights flag sizes resource_publications roles]
+      customize(->(old_resource, new_resource) {
         # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
         new_resource.current_resource_state_id = nil
         # do not mark these resources for public view until they've been re-curated and embargoed/published again
@@ -158,6 +160,8 @@ module StashEngine
             ri.work_type = 'article'
           end
         end
+
+        new_resource.subjects = old_resource.subjects
 
         # I think there was something weird about Amoeba that required this approach
         deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
@@ -337,17 +341,12 @@ module StashEngine
 
     # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads(my_class: StashEngine::DataFile)
-      subquery = my_class.where(resource_id: id).where("file_state <> 'deleted' AND " \
-                                                       '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
-        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      my_class.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_class.where(resource_id: id).present_files.validated.order(download_filename: :asc)
     end
 
     # gets new files in this version
     def new_data_files
-      subquery = DataFile.where(resource_id: id).where("file_state = 'created'")
-        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      DataFile.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      data_files.newly_created.order(download_filename: :asc)
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
@@ -355,17 +354,17 @@ module StashEngine
       my_model = model.constantize
       subquery = my_model.where(resource_id: id)
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(download_filename: :asc)
     end
 
     # the size of this resource (created + copied files)
     def size(association: 'data_files')
-      public_send(association.intern).where(file_state: %w[copied created]).sum(:upload_file_size)
+      public_send(association.intern).present_files.sum(:upload_file_size)
     end
 
     # just the size of the new files
     def new_size(association: 'data_files')
-      public_send(association.intern).where(file_state: %w[created]).sum(:upload_file_size)
+      public_send(association.intern).newly_created.sum(:upload_file_size)
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
@@ -396,7 +395,7 @@ module StashEngine
     end
 
     def url_in_version?(url:, association: 'data_files')
-      send(association).where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
+      send(association).newly_created.where(url: url).where(status_code: 200).count > 0
     end
 
     def files_unchanged?(association: 'data_files')
@@ -1136,8 +1135,8 @@ module StashEngine
       digest_type = 'sha-256'
       sums = Stash::Checksums.get_checksums([digest_type], StringIO.new(content))
       digest = sums.get_checksum(digest_type)
-      old_file = data_files.present_files.where(upload_file_name: filename).first&.original_deposit_file
-      return if digest == old_file&.digest
+      old_file = data_files.present_files.where(upload_file_name: filename).first
+      return if digest == old_file&.original_deposit_file&.digest
 
       # remove old file
       old_file.smart_destroy! if old_file&.digest

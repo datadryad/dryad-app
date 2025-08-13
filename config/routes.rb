@@ -305,6 +305,8 @@ Rails.application.routes.draw do
     # activity log
     get 'ds_admin/:id', to: 'admin_datasets#index', as: 'activity_log'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity'
+    get 'ds_admin/:id/change_log', to: 'admin_datasets#change_log', as: 'change_log'
+    get 'ds_admin/:id/file_log', to: 'admin_datasets#file_log', as: 'file_log'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     post 'ds_admin/:id/notification_date', to: 'admin_datasets#notification_date', as: 'notification_date'    
@@ -340,6 +342,7 @@ Rails.application.routes.draw do
 
     # Publication updater page - Allows admins to accept/reject metadata changes from external sources like Crrossref
     get 'publication_updater', to: 'publication_updater#index'
+    get 'publication_updater/log', to: 'publication_updater#log'
     put 'publication_updater/:id', to: 'publication_updater#update'
     delete 'publication_updater/:id', to: 'publication_updater#destroy'
 
@@ -399,7 +402,7 @@ Rails.application.routes.draw do
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
-    get 'contributors/groupings', to: 'contributors#groupings'
+    post 'contributors/grouping', to: 'contributors#grouping'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
     patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'

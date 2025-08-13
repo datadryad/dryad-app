@@ -1,20 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
-// see https://formik.org/docs/tutorial for basic tutorial, yup is easy default for validation w/ formik
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import RorAutocomplete from '../RorAutocomplete';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-function FunderForm({
-  resourceId, contributor, updateFunder, groupings,
-}) {
+function FunderForm({resourceId, contributor, updateFunder}) {
   const formRef = useRef();
-
-  // the follow autocomplete items are lifted up state that is normally just part of the form, but doesn't work with Formik
   const [acText, setAcText] = useState(contributor.contributor_name || '');
   const [acID, setAcID] = useState(contributor.name_identifier_id || '');
   const [showSelect, setShowSelect] = useState(null);
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const subSelect = (e) => {
     const select = e.target;
@@ -26,16 +22,12 @@ function FunderForm({
 
   const submitForm = (values) => {
     showSavingMsg();
-
-    // set up values
-    const csrf = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
     const submitVals = {
-      authenticity_token: csrf,
+      authenticity_token,
       contributor: {
         id: values.id,
         contributor_name: acText,
         contributor_type: 'funder',
-        // needs to be set for datacite mapping, even if no id gotten from crossref
         identifier_type: acID.includes('ror.org') ? 'ror' : 'crossref_funder_id',
         name_identifier_id: acID,
         award_number: values.award_number,
@@ -45,34 +37,32 @@ function FunderForm({
       },
     };
 
-    // submit by json
     return axios.patch(
       '/stash_datacite/contributors/update',
       submitVals,
       {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          Accept: 'application/json',
-        },
+        headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
       },
     ).then((data) => {
       if (data.status !== 200) {
         console.log('Response failure not a 200 response from funders save');
       }
-
-      // forces data update in the collection containing me
       updateFunder(data.data);
       showSavedMsg();
     });
   };
 
   useEffect(() => {
-    const group = groupings?.find((g) => g.name_identifier_id === acID);
-    if (group) {
-      setShowSelect(group);
-    } else {
-      setShowSelect(null);
+    async function getGroup() {
+      axios.post('/stash_datacite/contributors/grouping', {
+        authenticity_token,
+        ror_id: acID,
+      }).then((data) => {
+        setShowSelect(data.data);
+        if (data.data?.required) updateFunder({...contributor, group_required: true});
+      });
     }
+    if (acID) getGroup();
   }, [acID]);
 
   return (
@@ -111,16 +101,21 @@ function FunderForm({
               }
             />
             <div id={`${contributor.id}funder-ex`}><i aria-hidden="true" />National Institutes of Health</div>
-            {showSelect && (
-              <>
-                <label htmlFor="subfunder_select" className="c-input__label" style={{marginTop: '1em'}}>{showSelect.group_label}</label>
-                <select id="subfunder_select" className="c-input__select" onChange={subSelect}>
-                  <option value="">- Select one -</option>
-                  {showSelect.json_contains.map((i) => <option key={i.name_identifier_id} value={i.name_identifier_id}>{i.contributor_name}</option>)}
-                </select>
-              </>
-            )}
           </div>
+          {showSelect && (
+            <div className="input-stack">
+              <label htmlFor="subfunder_select" className="input-label">{showSelect.group_label}</label>
+              <select
+                id="subfunder_select"
+                className="c-input__select"
+                onChange={subSelect}
+                aria-errormessage={showSelect.required ? 'funder_group_error' : null}
+              >
+                <option value="">Select {showSelect.group_label}</option>
+                {showSelect.json_contains.map((i) => <option key={i.name_identifier_id} value={i.name_identifier_id}>{i.contributor_name}</option>)}
+              </select>
+            </div>
+          )}
           <div className="input-stack">
             <label className="input-label optional" htmlFor={`contributor_award_number__${contributor.id}`}>Award number
             </label>
