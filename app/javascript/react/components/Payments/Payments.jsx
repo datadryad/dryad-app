@@ -78,7 +78,7 @@ function Payments({
           <p className="input-line" style={{justifyContent: 'center'}} role="group" aria-label="Choose payment">
             <button
               type="button"
-              className="button-toggle"
+              className="submit-toggle"
               aria-current={ppr === false}
               aria-controls="payment-sec"
               aria-disabled={ppr === false || null}
@@ -89,7 +89,7 @@ function Payments({
             </button>
             <button
               type="button"
-              className="button-toggle"
+              className="submit-toggle"
               aria-current={ppr}
               aria-controls="payment-sec"
               aria-disabled={ppr || null}
