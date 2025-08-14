@@ -265,7 +265,7 @@ module Stash
       def group_funders
         extra_funders = []
         @resource.contributors.funder.completed.each do |funder|
-          groups = StashDatacite::ContributorGrouping.where("json_contains->>'name_identifier_id' = ?", funder.name_identifier_id)
+          groups = StashDatacite::ContributorGrouping.where("json_contains(json_contains->'$[*].name_identifier_id', json_array(?))", funder.name_identifier_id)
 
           extra_funders + groups.map(&:contributor_name)
         end
