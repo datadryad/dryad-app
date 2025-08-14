@@ -496,10 +496,10 @@ module StashApi
     def lock_down_admin_only_params
       # all this bogus return false stuff is to prevent double render errors in some circumstances
       @journal = nil
-      if @hash['publicationISSN'].present?
-        @journal = StashEngine::Journal.find_by_issn(@hash['publicationISSN'])
-      elsif @hash['publicationName'].present?
-        @journal = StashEngine::Journal.find_by_title(@hash['publicationName'])
+      if params.dig('dataset', 'publicationISSN').present?
+        @journal = StashEngine::Journal.find_by_issn(params.dig('dataset', 'publicationISSN'))
+      elsif params.dig('dataset', 'publicationName').present?
+        @journal = StashEngine::Journal.find_by_title(params.dig('dataset', 'publicationISSN'))
       end
 
       return if check_restricted_params == false
