@@ -211,9 +211,9 @@ module StashDatacite
       private
 
       def nondescript_title?
-        dict = ['raw', 'data', 'dataset', 'dryad', 'fig', 'figure', 'figures', 'table', 'tables', 'file', 'supp', 'suppl',
-                'supplement', 'supplemental', 'extended', 'supplementary', 'supporting', 'et al',
-                'the', 'of', 'for', 'in', 'from', 'to']
+        dict = ['raw', 'data', 'dataset', 'datasets', 'dryad', 'fig', 'figure', 'figures', 'table', 'tables', 'file', 'supp', 'suppl',
+                'supplement', 'supplemental', 'extended', 'supplementary', 'supporting', 'manuscript', 'et al',
+                'the', 'of', 'for', 'in', 'from', 'to', 'with']
         regex = dict.join('|')
         remainder = @resource.title.gsub(/[^a-z0-9\s]/i, '').gsub(/(#{regex}|s\d|f\d|t\d)\b/i, '').strip
         remainder.split.size < 4
