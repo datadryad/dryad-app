@@ -180,6 +180,7 @@
   text-decoration: none;
   margin: 0 -10px 2px;
   padding: 0;
+  box-sizing: border-box;
 
   @media (max-width: $screen-lg-min - 1) {
     a, button {
@@ -188,16 +189,13 @@
       padding: 10px 30px;
       display: block;
       text-align: left;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
 
       &:hover, &[aria-expanded="true"] {
         background-color: $light-blue;
       }
-    }
-    a {
-      width: calc(100% - 60px);
-    }
-    button {
-      width: 100%;
     }
     button:focus, a:focus-visible {
       outline: 2px solid $lighter-green;
@@ -216,15 +214,13 @@
 
   @include bp(screen2) {
     margin: 0 -30px 2px;
-    a {
-      width: calc(100% - 60px);
-    }
   }
 
   .c-header__nav-submenu {
     list-style: "";
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 
     @include bp(screen3) {
       position: absolute;
@@ -258,7 +254,6 @@
           border-top: none;
           border-left: thin solid $light-gray;
           border-bottom: thin solid $light-gray;
-          width: calc(100% - 60px);
 
           &:hover,
           &:focus {
