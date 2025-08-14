@@ -104,7 +104,7 @@ Annual Service Fees for Dryad publisher and society partners are tiered accordin
 </div>
 </div>
 
-FTo promote transparency and equity among our partners Dryad does not offer individual discounts. However, we do offer discounts under some circumstances as follows.
+To promote transparency and equity among our partners Dryad does not offer individual discounts. However, we do offer discounts under some circumstances as follows.
 
 To support growth and development, especially of new data-sharing programs, we offer tiered pricing for **three-year agreements**. Three-year agreements are exempt from annual inflationary increases.
 
