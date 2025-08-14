@@ -187,12 +187,17 @@
       color: white;
       padding: 10px 30px;
       display: block;
-      width: 100%;
       text-align: left;
 
       &:hover, &[aria-expanded="true"] {
         background-color: $light-blue;
       }
+    }
+    a {
+      width: calc(100% - 60px);
+    }
+    button {
+      width: 100%;
     }
     button:focus, a:focus-visible {
       outline: 2px solid $lighter-green;
@@ -211,6 +216,9 @@
 
   @include bp(screen2) {
     margin: 0 -30px 2px;
+    a {
+      width: calc(100% - 60px);
+    }
   }
 
   .c-header__nav-submenu {
@@ -250,6 +258,7 @@
           border-top: none;
           border-left: thin solid $light-gray;
           border-bottom: thin solid $light-gray;
+          width: calc(100% - 60px);
 
           &:hover,
           &:focus {
