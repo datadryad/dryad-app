@@ -46,10 +46,10 @@ module StashApi
       parse_publication
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
-      @to_parse = %w[Funders Methods UsageNotes Keywords FieldOfScience RelatedWorks Locations TemporalCoverages]
+      to_parse = %w[Funders Methods UsageNotes Keywords FieldOfScience RelatedWorks Locations TemporalCoverages]
       # when ownership is being set to someone else immediately, they should have to explicitly agree
-      @to_parse << 'HsiStatement' unless ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || owning_user_id.zero?
-      @to_parse.each { |item| dynamic_parse(my_class: item) }
+      to_parse.push('HsiStatement') unless ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || owning_user_id.zero?
+      to_parse.each { |item| dynamic_parse(my_class: item) }
       @resource.update(current_editor_id: owning_user_id.nonzero?)
       save_identifier
     end
@@ -220,7 +220,7 @@ module StashApi
     def ensure_license
       return unless @resource.rights.blank?
       # when ownership is being set to someone else immediately, they should have to explicitly agree
-      return if ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || owning_user_id.zero?
+      return if ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || @hash['userId']&.to_s == '0'
 
       @resource.identifier.update(license_id: 'cc0')
       license = StashEngine::License.by_id('cc0')
