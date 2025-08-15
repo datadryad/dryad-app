@@ -5,7 +5,7 @@ module StashApi
   describe ApiMailer do
     include MailerSpecHelper
 
-    let(:metadata) { {} }
+    let(:metadata) { { editLink: '/some/link' } }
 
     before(:each) do
 
@@ -28,8 +28,6 @@ module StashApi
                         author_orcid: @user.orcid,
                         resource_id: @resource.id)
 
-      @author2.create_edit_code(role: 'submitter')
-
       allow(Rails.application.routes.url_helpers).to receive(:root_url).and_return 'https://site.root/'
     end
 
@@ -42,7 +40,7 @@ module StashApi
       it 'sends email' do
         ApiMailer.send_submit_request(@resource, metadata, @author2).deliver_now
         delivery = assert_email("[test] Submit data for \"#{@resource.title}\"")
-        expect(delivery.body.to_s).to include("https://site.root/accept/#{@author2.edit_code.edit_code}")
+        expect(delivery.body.to_s).to include('https://site.root/some/link')
         expect(delivery.to).to eq([@author2.author_email])
       end
     end
