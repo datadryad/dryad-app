@@ -37,7 +37,6 @@ module StashApi
       end
       @resource.update(
         title: remove_html(@hash['title']),
-        current_editor_id: owning_user_id,
         skip_datacite_update: @hash['skipDataciteUpdate'] || false,
         skip_emails: @hash['skipEmails'] || false,
         preserve_curation_status: @hash['preserveCurationStatus'] || false,
@@ -48,6 +47,7 @@ module StashApi
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
       TO_PARSE.each { |item| dynamic_parse(my_class: item) }
+      @resource.update(current_editor_id: owning_user_id.nonzero?)
       save_identifier
     end
     # rubocop:enable
