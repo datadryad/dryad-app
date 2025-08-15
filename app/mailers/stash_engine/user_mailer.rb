@@ -1,5 +1,5 @@
 module StashEngine
-
+  # rubocop:disable Metrics/ClassLength
   # Mails users about submissions
   class UserMailer < ApplicationMailer
 
@@ -185,6 +185,19 @@ module StashEngine
       # update_activities(resource: resource, message: 'Peer review reminder', status: 'peer_review')
     end
 
+    def peer_review_payment_needed(resource)
+      logger.warn('Unable to send peer_review_payment_needed; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      @costs_url = Rails.application.routes.url_helpers.costs_url
+      @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
+    end
+
     def peer_review_pub_linked(resource)
       logger.warn('Unable to send peer_review_pub_linked; nil resource') unless resource.present?
       return unless resource.present?
@@ -282,4 +295,5 @@ module StashEngine
            subject: "#{rails_env}Your Dryad data submission has been withdrawn (#{resource&.identifier})")
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

@@ -66,6 +66,14 @@ button[class*="-toggle"], input[type="button"][class*="-toggle"] {
     border-bottom: thick solid currentColor;
   }
 
+  &.submit-toggle {
+    background-color: $lighter-blue;
+    &[disabled], &[aria-disabled] {
+      background-color: transparent;
+      border-color: $lighter-blue;
+    }
+  }
+
   &.button-toggle {
     background-color: darken($lightest-green, 10);
     &[disabled], &[aria-disabled] {
