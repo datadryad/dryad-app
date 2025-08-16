@@ -15,7 +15,7 @@ module StashDatacite
     def show
       @description = Description.find(params[:id])
       content = @description.description
-      content = markdown_render(content) if params.key?(:markdown)
+      content = markdown_render(content: content) if params.key?(:markdown)
       render html: display_desc(content).html_safe
     end
 
