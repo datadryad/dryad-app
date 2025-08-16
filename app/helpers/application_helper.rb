@@ -15,6 +15,13 @@ module ApplicationHelper
     fragment = Nokogiri::HTML5.fragment(description)
     dels = fragment.css('del')
     dels.add_class('from_md')
+    anchors = fragment.css('a.anchor:empty')
+    anchors.each(&:remove)
+    links = fragment.css('a')
+    links.each do |link|
+      link.set_attribute('target', '_blank')
+      link.add_child('<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i>')
+    end
     tables = fragment.css('table')
     tables.wrap('<div class="table-wrapper" role="region" tabindex="0" aria-label="Table"></div>')
     fragment.to_html
