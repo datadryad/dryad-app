@@ -32,14 +32,17 @@ gem 'terser' # for JS and CSS minify
 
 # ############################################################
 # Misc
+gem 'acts_as_paranoid', '~> 0.10.3'
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
+gem 'aws-sdk-sns'
 gem 'blacklight', '~> 8.8.0'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 5.3'
 gem 'charlock_holmes', '~> 0.7.9'
+gem 'commonmarker', '~> 2.3'
 gem 'concurrent-ruby', '~> 1.3.4'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'
@@ -62,8 +65,6 @@ gem 'jquery-turbolinks', '~> 2.1.0'
 gem 'jquery-ui-rails', '~> 7.0', git: 'https://github.com/jquery-ui-rails/jquery-ui-rails.git', tag: 'v7.0.0'
 gem 'jwt', '~> 2.3.0'
 gem 'kaminari', '~> 1.2.2'
-gem 'kramdown', '~> 2.5'
-gem 'kramdown-parser-gfm', '~> 1.1'
 gem 'leaflet-rails', '~> 1.7.0'
 gem 'loofah', '~> 2.24.0'
 gem 'net-ftp', '~> 0.3.4'
@@ -74,6 +75,7 @@ gem 'omniauth-google-oauth2', '~> 1.1.1'
 gem 'omniauth-orcid', '~> 2.1', '>= 2.1.1'
 gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
 gem 'omniauth-shibboleth', '~> 1.3.0'
+gem 'paper_trail', '~> 16.0'
 gem 'posix-spawn', '~> 0.3.15'
 gem 'pundit', '~> 2.3'
 gem 'rack-attack'
@@ -170,7 +172,3 @@ group :development do
   gem 'annotaterb', '~> 4.13.0'
   gem 'bullet'
 end
-
-gem 'acts_as_paranoid', '~> 0.10.3'
-gem 'aws-sdk-sns'
-gem 'paper_trail', '~> 16.0'

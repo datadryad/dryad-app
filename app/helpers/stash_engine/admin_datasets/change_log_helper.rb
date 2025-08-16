@@ -72,8 +72,8 @@ module StashEngine
         latest = c.object['description'] || ''
 
         if %w[technicalinfo changelog hsi_statement usage_notes].include?(c.object['description_type'])
-          original = markdown_render(original).to_s
-          latest = markdown_render(latest).to_s
+          original = markdown_render(content: original).to_s
+          latest = markdown_render(content: latest).to_s
         end
 
         if c.event == 'update'
@@ -101,7 +101,6 @@ module StashEngine
       end
 
       def author_changes(c, _first)
-        p c.additional_info
         if c.event == 'update'
           str = "<span>Set author information:</span><dl><div><dt>Name:</dt><dd>#{c.object['author_first_name']} #{c.object['author_last_name']}</dd></div>"
           if c.object['author_orcid'].present?
