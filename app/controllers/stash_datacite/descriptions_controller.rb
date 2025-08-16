@@ -1,6 +1,3 @@
-require 'kramdown'
-require 'kramdown/parser/sub_sup'
-
 module StashDatacite
   class DescriptionsController < ApplicationController
     include ::ApplicationHelper
@@ -36,7 +33,7 @@ module StashDatacite
     def update
       items = description_params
       unless %w[technicalinfo changelog].include?(@description&.description_type) || items[:description].nil?
-        desc = Kramdown::Document.new(items[:description], { input: 'SubSup', header_offset: 2 }).to_html
+        desc = helpers.markdown_render(content: items[:description], header_offset: 2)
         items[:description] =
           Loofah.fragment(desc).scrub!(:strip).to_s
       end
