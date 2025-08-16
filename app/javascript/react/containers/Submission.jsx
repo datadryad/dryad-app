@@ -97,7 +97,7 @@ function Submission({
       name: 'Compliance',
       pass: !complianceCheck(resource),
       fail: (review || step.index > 5) && complianceCheck(resource),
-      component: <Compliance resource={resource} setResource={setResource} />,
+      component: <Compliance current={step.name === 'Compliance'} resource={resource} setResource={setResource} />,
       help: <CompHelp />,
       preview: <CompPreview resource={resource} previous={previous} />,
     },
