@@ -1,7 +1,7 @@
 <% if !review.readme_content.blank? %>
   <% content = review.readme_content %>
   <div id="landing_readme">
-    <% readme_html = markdown_render content.sub(/^# /, '# README: ') %>
+    <% readme_html = readme_render content.sub(/^# /, '# README: ') %>
     <% readme_parsed = Nokogiri::HTML5::DocumentFragment.parse(readme_html) %>
     <% h2 = readme_parsed.css('h2')&.first&.content %>
     <% if params[:controller].include?('landing') %>
