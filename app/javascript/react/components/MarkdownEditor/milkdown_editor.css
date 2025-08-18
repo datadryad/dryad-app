@@ -545,6 +545,10 @@
   outline: none;
 }
 
+.milkdown table tr p:first-child:last-child {
+  margin: 0;
+}
+
 .milkdown h1,
 .cm-editor .md_h1,
 .milkdown h2,
