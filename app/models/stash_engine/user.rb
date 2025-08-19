@@ -127,7 +127,7 @@ module StashEngine
     end
 
     def min_app_admin?
-      roles.any? { |r| %w[superuser manager curator admin].include?(r.role) && r.role_object_id.nil? }
+      system_user? || min_curator?
     end
 
     def min_curator?
