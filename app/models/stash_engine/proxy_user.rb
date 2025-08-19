@@ -88,10 +88,12 @@ module StashEngine
 
     def admin? = false
     def curator? = false
+    def manager? = false
     def superuser? = false
     def min_admin? = false
     def min_app_admin? = false
     def min_curator? = false
+    def min_manager? = false
     def proxy_user? = true
 
     def journals_as_admin

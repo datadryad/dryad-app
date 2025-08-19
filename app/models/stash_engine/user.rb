@@ -51,7 +51,7 @@ module StashEngine
 
     scope :all_curators,  -> { joins(:roles).where('stash_engine_roles' => { role: 'curator' }) }
 
-    scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
+    scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser manager curator] }) }
 
     validates :email, format: { with: EMAIL_REGEX, message: '%{value} is not a valid email address' }, allow_blank: true
 
@@ -110,6 +110,10 @@ module StashEngine
       roles.any? { |r| r.role == 'curator' }
     end
 
+    def manager?
+      roles.any? { |r| r.role == 'manager' }
+    end
+
     def superuser?
       roles.any? { |r| r.role == 'superuser' }
     end
@@ -118,20 +122,20 @@ module StashEngine
       roles.any? { |r| r.role_object_id.nil? }
     end
 
-    def system_admin?
-      roles.any? { |r| r.role_object_id.nil? && %w[superuser admin].include?(r.role) }
-    end
-
     def min_admin?
-      roles.any? { |r| %w[superuser curator admin].include?(r.role) }
+      roles.any? { |r| %w[superuser manager curator admin].include?(r.role) }
     end
 
     def min_app_admin?
-      system_user? || min_curator?
+      roles.any? { |r| %w[superuser manager curator admin].include?(r.role) && r.role_object_id.nil? }
     end
 
     def min_curator?
-      roles.any? { |r| %w[superuser curator].include?(r.role) }
+      roles.any? { |r| %w[superuser manager curator].include?(r.role) }
+    end
+
+    def min_manager?
+      roles.any? { |r| %w[superuser manager].include?(r.role) }
     end
 
     def proxy_user? = false
