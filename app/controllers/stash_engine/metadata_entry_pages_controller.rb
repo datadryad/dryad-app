@@ -67,12 +67,12 @@ module StashEngine
       unless current_user && !current_user.proxy_user?
         session[:user_id] = resource.submitter.id
         if current_user.tenant_id.blank?
-          session[:target_page] = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
+          session[:target_page] = "#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)}?start"
           redirect_to stash_url_helpers.choose_sso_path and return
         end
       end
       if @resource&.current_resource_state&.resource_state == 'in_progress'
-        redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)) and return
+        redirect_to("#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)}?start") and return
       end
 
       new_version
