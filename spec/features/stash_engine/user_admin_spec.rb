@@ -16,7 +16,7 @@ RSpec.feature 'UserAdmin', type: :feature do
       mock_stripe!
       mock_datacite_gen!
       neuter_curation_callbacks!
-      @system_admin = create(:user, role: 'admin')
+      @system_admin = create(:user, role: 'manager')
       sign_in(@system_admin, false)
     end
 
@@ -257,7 +257,8 @@ RSpec.feature 'UserAdmin', type: :feature do
         @user2 = create(:user)
       end
 
-      it 'does not allow merging users as a system_user', js: true do
+      it 'does not allow merging users as a curator', js: true do
+        sign_in(create(:user, role: 'curator'), false)
         visit stash_url_helpers.user_admin_path
         expect(page).to have_link(@user.name)
         expect(page).to have_link(@user2.name)
@@ -266,7 +267,7 @@ RSpec.feature 'UserAdmin', type: :feature do
         expect(page).not_to have_button('Merge selected')
       end
 
-      it 'allows merging users as a superuser', js: true do
+      it 'allows merging users as a manager', js: true do
         user_id = @user.id
         user2_id = @user2.id
         # Set some fields nil so we can test that the merge result contains the non-nil fields
@@ -274,8 +275,6 @@ RSpec.feature 'UserAdmin', type: :feature do
         @user2.update(orcid: nil)
         target_email = @user2.email
         target_orcid = @user.orcid
-
-        sign_in(create(:user, role: 'superuser'), false)
 
         visit stash_url_helpers.user_admin_path
         expect(page).to have_link(@user.name)
