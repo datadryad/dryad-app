@@ -261,7 +261,7 @@ module StashEngine
     end
 
     def uploaded_success_url
-      dl_url = s3_staged_presigned_url if !digest? && storage_version_id.blank?
+      dl_url = s3_staged_presigned_url if storage_version_id.blank?
       dl_url ||= public_download_url
       dl_url ||= url
       dl_url

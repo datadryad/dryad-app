@@ -36,15 +36,15 @@ module StashEngine
         keywords = JSON.parse(contact_params.to_json, symbolize_names: true)
         if %i[email subject body sname].any? { |k| keywords[k].blank? }
           @message = '<p>Please fill all required fields</p>'
-          render 'stash_engine/pages/helpdesk/error'
+          render 'stash_engine/pages/helpdesk/error', formats: [:js]
         else
           keywords[:id] = StashEngine::Identifier.find(params[:identifier]) if params[:identifier].present?
           Stash::Salesforce.create_email_case(**keywords)
-          render 'stash_engine/pages/helpdesk/success'
+          render 'stash_engine/pages/helpdesk/success', formats: [:js]
         end
       else
         @message = '<p>Please fill in reCAPTCHA</p>'
-        render 'stash_engine/pages/helpdesk/error'
+        render 'stash_engine/pages/helpdesk/error', formats: [:js]
       end
     end
 

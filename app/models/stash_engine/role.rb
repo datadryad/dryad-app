@@ -43,6 +43,7 @@ module StashEngine
 
     scope :admin, -> { where(role: 'admin') }
     scope :curator, -> { where(role: 'curator') }
+    scope :manager, -> { where(role: 'manager', role_object_id: nil) }
     scope :superuser, -> { where(role: 'superuser', role_object_id: nil) }
 
   end

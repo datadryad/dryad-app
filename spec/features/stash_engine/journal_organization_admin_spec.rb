@@ -8,7 +8,7 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
         @org = create(:journal_organization)
         3.times { @journal = create(:journal, sponsor_id: @org.id) }
       end
-      @system_admin = create(:user, role: 'admin')
+      @system_admin = create(:user, role: 'manager')
       sign_in(@system_admin, false)
     end
 

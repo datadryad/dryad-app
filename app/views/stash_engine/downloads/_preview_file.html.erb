@@ -27,7 +27,7 @@
     </table>
   <% when 'txt' %>
     <% if @file.download_filename.end_with?('.md') %>
-      <div class="preview_markdown"><%= markdown_render @preview %></div>
+      <div class="preview_markdown"><%= markdown_render(content: @preview) %></div>
     <% else %>
       <pre><%= @preview %></pre>
     <% end %>

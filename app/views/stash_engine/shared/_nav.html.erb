@@ -73,10 +73,12 @@
               <% if current_user.min_curator? %>
                 <li><%= link_to 'Publication updater', stash_url_helpers.publication_updater_path %></li>
               <% end %>
+              <% if current_user.min_manager? %>
+                <li><%= link_to 'Submission queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>
+              <% end %>
             <% end %>
             <% if current_user.superuser? %>
               <li><%= link_to 'Status dashboard', stash_url_helpers.status_dashboard_path %>
-              <li><%= link_to 'Submission queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>
               <li><%= link_to 'Zenodo submissions', stash_url_helpers.zenodo_queue_path %>
             <% end %>
           </ul>

@@ -1,6 +1,6 @@
 module StashEngine
   class DashboardController < ApplicationController
-    before_action :require_login, only: %i[show]
+    before_action :require_login, only: %i[show user_datasets]
     before_action :ensure_tenant, only: %i[show]
     protect_from_forgery except: %i[user_datasets primary_article]
 

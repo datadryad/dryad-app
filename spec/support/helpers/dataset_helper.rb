@@ -3,7 +3,7 @@ module DatasetHelper
   def start_new_dataset
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
-    click_button 'Start new submission'
+    click_button 'Create a new dataset'
     expect(page).to have_content('Dataset submission')
   end
 
@@ -11,9 +11,9 @@ module DatasetHelper
     # Make sure you switch to the Selenium driver for the test calling this helper method
     # e.g. `it 'should test this amazing thing', js: true do`
     click_button 'Next'
-    page.find('#checklist-button').click unless page.has_button?('Title')
-    click_button 'Title'
-    expect(page).to have_content('Is your data used in a research article?')
+    page.find('#checklist-button').click unless page.has_button?('Connect')
+    click_button 'Connect'
+    expect(page).to have_content('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?')
   end
 
   def navigate_to_readme
@@ -57,9 +57,10 @@ module DatasetHelper
   def fill_required_metadata
     # make sure we're on the right page
     navigate_to_metadata
-    within_fieldset('Is your data used in a research article?') do
+    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'No').click
     end
+    click_button 'Next'
     fill_in 'title', with: Faker::Lorem.sentence(word_count: 6)
     click_button 'Next'
     fill_in_author
@@ -70,7 +71,6 @@ module DatasetHelper
   end
 
   def add_required_abstract
-    # fill_in_tinymce(field: 'abstract', content: Faker::Lorem.paragraph)
     res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
     ab = res.descriptions.find_by(description_type: 'abstract')
     ab.update(description: Faker::Lorem.paragraph)
@@ -101,29 +101,26 @@ module DatasetHelper
     click_button 'submit_invoice'
   end
 
-  def fill_manuscript_info(name:, issn:, msid:)
+  def fill_manuscript_info(name:, msid:)
     navigate_to_metadata
-    within_fieldset('Is your data used in a research article?') do
+    within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'Yes').click
     end
-    expect(page).to have_content('From what source would you like to import information?')
-    within_fieldset('From what source would you like to import information?') do
+    expect(page).to have_content('Which would you like to connect?')
+    within_fieldset('Which would you like to connect?') do
       find(:label, 'Submitted manuscript').click
     end
-    page.execute_script("$('#publication').val('#{name}')")
-    page.execute_script("$('#publication_issn').val('#{issn}')") # must do to fill hidden field
-    page.execute_script("$('#publication_name').val('#{name}')") # must do to fill hidden field
+    fill_in 'publication_ms', with: name
     fill_in 'msid', with: msid
   end
 
-  def fill_crossref_info(name:, doi:)
+  def fill_crossref_info(doi:)
     navigate_to_metadata
     find(:label, 'Yes').click
-    expect(page).to have_content('From what source would you like to import information?')
-    within_fieldset('From what source would you like to import information?') do
+    expect(page).to have_content('Which would you like to connect?')
+    within_fieldset('Which would you like to connect?') do
       find(:label, 'Published article').click
     end
-    fill_in 'publication', with: name
     fill_in 'primary_article_doi', with: doi
     page.send_keys(:tab)
   end

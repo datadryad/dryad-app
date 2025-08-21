@@ -4,6 +4,7 @@ import HTMLDiffer from '../HTMLDiffer';
 import ReadmeWarning from './ReadmeWarning';
 
 export default function ReadMePreview({resource, previous, curator}) {
+  const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(null);
   const [prevRM, setPrevRM] = useState(null);
   const readmeRef = useRef(null);
@@ -18,10 +19,13 @@ export default function ReadMePreview({resource, previous, curator}) {
       const existing = readmeRef.current.querySelector('#landing_readme');
       if (diff && curator) setCurrent(data.data || '<div></div>');
       else if (readmeRef.current && !existing) readmeRef.current.append(document.createRange().createContextualFragment(data.data));
+      setLoading(false);
     });
     if (diff && curator) {
+      setLoading(true);
       axios.get(`/resources/${previous.id}/display_readme`).then((data) => {
         setPrevRM(data.data || '<div></div>');
+        setLoading(false);
       });
     }
   };
@@ -36,6 +40,7 @@ export default function ReadMePreview({resource, previous, curator}) {
     return (
       <>
         <ReadmeWarning resource={resource} />
+        {loading && <p><i className="fas fa-spin fa-spinner" role="img" aria-label="Loading" /></p>}
         <div ref={readmeRef}>
           {diff && (
             <>

@@ -3,15 +3,17 @@ module StashApi
   # Mails users about submissions
   class ApiMailer < ApplicationMailer
 
-    def send_submit_request(resource, metadata)
+    def send_submit_request(resource, metadata, author)
       @resource = resource
       @journal = StashEngine::Journal.find_by_issn(metadata[:relatedPublicationISSN])
-      @user = @resource.authors.where.not(author_email: [nil, '']).first
-      return unless @user.present? && user_email(@user).present?
+      @user = author
+      return unless @user.present? && user_email(@user).present? && @user.edit_code&.edit_code&.present?
 
       @user_name = user_name(@user)
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
-      @edit_url = "#{Rails.application.routes.url_helpers.root_url.chomp('/')}#{metadata[:editLink]}"
+      @edit_url = "#{Rails.application.routes.url_helpers.root_url.chomp('/')}#{
+        Rails.application.routes.url_helpers.accept_invite_path(edit_code: @user.edit_code.edit_code)
+      }"
 
       mail(to: user_email(@user),
            subject: "#{rails_env}Submit data for \"#{@resource.title}\"",

@@ -4,6 +4,7 @@
   <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
 </div>
 
+<% if policy([:stash_engine, :repo_queue_state]).graceful_start? %>
 <h2>Actions you can take</h2>
 
 <h3>To shut down and hold submissions</h3>
@@ -46,3 +47,4 @@
         })
     }
 </script>
+<% end %>

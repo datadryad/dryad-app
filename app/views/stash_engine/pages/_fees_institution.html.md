@@ -136,7 +136,7 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 </div>
 </div>
 
-### Lower- and middle-income countries
+## Lower- and middle-income countries
 
 Annual Service Fees for institutions based in lower- and middle-income countries are as follows.
 
@@ -161,7 +161,7 @@ Annual Service Fees for institutions based in lower- and middle-income countries
 </div>
 </div>
 
-### Consortium offers
+## Consortium offers
 
 Our consortial fee structures reflect the reduction in administrative burden and recruitment benefit that consortia can provide. Annual Service Fees are discounted to reflect that savings and benefit, and scale with the number of participating institutions.
 
