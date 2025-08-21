@@ -79,12 +79,12 @@ table.columned {
     border-bottom: none;
   }
 
-
-  & > tbody {
-    border: 2px solid darken($lightest-orange, 10);
+  & > tbody {    
+    border: 2px solid darken(#F1F5F8, 10);
   }
+
   & > tbody > tr { 
-    background-color: $lightest-orange;
+    background-color: #F1F5F8; 
     border: none;
 
     &:first-child {
@@ -92,21 +92,17 @@ table.columned {
     }
   }
 
-  & > tbody:nth-child(5n-3) {
-    border: 2px solid darken($lightest-green, 10);;
-    & > tr {background-color: $lightest-green;}
+  & > tbody:nth-child(4n-2) {
+    border: 2px solid darken($lightest-green, 10);
+    & > tr {background-color: darken($lightest-green, 2);}
   }
-  & > tbody:nth-child(5n-2) {
-    border: 2px solid darken($lightest-blue, 10);
-    & > tr {background-color: $lightest-blue;}
-  } 
-  & > tbody:nth-child(5n-1) {
-    border: 2px solid darken(#eee8ff, 10);;
-    & > tr {background-color: #eee8ff}
-  }  
-  & > tbody:nth-child(5n+5) {
-    border: 2px solid darken($lightest-red, 5);
-    & > tr {background-color: lighten($lightest-red, 4);}
+  & > tbody:nth-child(4n-1) {
+    border: 2px solid darken(#FCFAF1, 10);
+    & > tr {background-color: #FCFAF1;}   
+  }
+  & > tbody:nth-child(4n+4) {
+    border: 2px solid darken(#D5E6E7, 8);
+    & > tr {background-color: lighten(#D5E6E7, 2);}
   }
 
   .c-lined-table {
