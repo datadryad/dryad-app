@@ -1,17 +1,15 @@
 <% # locals: user_role, label, select_label, roles, options %>
-<fieldset class="c-fieldset" id="<%= label %>_fieldset" <%= "hidden" unless user_role %> >
-  <legend class="c-fieldset__legend"><%=label.capitalize%> roles:</legend>
+<fieldset class="c-fieldset" <%= "hidden" unless user_role&.id %> >
+  <legend class="c-fieldset__legend"><%= label.capitalize %> role:</legend>
+  <%= fields.hidden_field :id %>
+  <%= fields.hidden_field :role_object_type %>
   <p>
-    <% if label == 'tenant' %>
-      <%= select_label %> <b><%= @user.tenant.short_name %></b>
-    <% else %>
-      <%= label_tag(label, select_label, class: 'c-input__label') %>
-      <%= select_tag(label, options_for_select(options, user_role&.role_object_id), class: 'c-input__select') %>
-    <% end %>
+    <%= fields.label :role_object_id, select_label %>
+    <%= fields.select :role_object_id, options_for_select(options, user_role&.role_object_id), {}, {class: 'c-input__select'} %>
   </p>
   <ul>
     <% roles.each do |role| %>
-      <li><%= radio_button_tag("#{label}_role", role.first, user_role&.role == role.first) %> <label for="<%= "#{label}_role_#{role.first}" %>"><%= role[1].html_safe %></label>
+      <li><%= fields.radio_button :role, role.first, checked: user_role&.role == role.first %> <%= fields.label :role, role[1].html_safe, value: role.first %>
     <% end %>
   </ul>
 </fieldset>
