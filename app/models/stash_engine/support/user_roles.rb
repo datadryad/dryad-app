@@ -9,8 +9,6 @@ module StashEngine
         scope :curators, -> { joins(:roles).where('stash_engine_roles' => { role: 'curator', role_object_id: nil }) }
 
         scope :all_curators,  -> { joins(:roles).where('stash_engine_roles' => { role: 'curator' }) }
-
-        scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser manager curator] }) }
       end
 
       def tenant_limited?

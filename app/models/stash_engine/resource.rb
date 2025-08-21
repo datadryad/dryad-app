@@ -1255,7 +1255,7 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def auto_assign_curator(target_status:)
-      target_curator = curator&.min_curator? ? curator : identifier.most_recent_curator
+      target_curator = curator&.curator? ? curator : identifier.most_recent_curator
       if target_curator.nil?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to a random current curator , but not a superuser
