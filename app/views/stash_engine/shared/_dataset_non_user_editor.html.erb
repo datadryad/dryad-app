@@ -1,5 +1,11 @@
 <% # takes resource as local %>
-<% unless resource&.users&.include?(current_user) %>
+<% if current_user.proxy_user? %>
+  <div class="c-admin-editing-banner">
+    <div class="o-div__editing_msg">
+      You are editing this dataset on behalf of <%= resource.submitter.name %>.
+    </div>
+  </div>
+<% elsif !resource&.users&.include?(current_user) %>
   <% revertible = resource.identifier.resources.count > 1 %>
   <div class="c-admin-editing-banner">
     <div class="o-div__editing_msg">

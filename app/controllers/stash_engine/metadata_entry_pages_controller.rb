@@ -28,10 +28,10 @@ module StashEngine
       redirect_to(stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: params[:resource_id]))
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     # GET /edit/{doi}/{edit_code}
     def edit_by_doi
-      if resource.processing?
+      if @resource.processing?
         redirect_to stash_url_helpers.root_path, alert: 'The target dataset is being processed. Please try again later.' and return
       end
 
@@ -61,15 +61,12 @@ module StashEngine
         end
       end
 
-      # If the user is logged in, they will remain logged in, just with the added benefit
-      # that they have access to edit this dataset. But if they were not logged in,
-      # log them in as the dataset owner, and ensure the tenant_id is set correctly.
-      unless current_user && !current_user.proxy_user?
-        session[:user_id] = resource.submitter.id
-        if current_user.tenant_id.blank?
-          session[:target_page] = "#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)}?start"
-          redirect_to stash_url_helpers.choose_sso_path and return
-        end
+      # If the user is logged in, ensure they are able to edit the dataset
+      if current_user && !current_user.proxy_user?
+        @resource.roles.create(user_id: @author.user.id, role: 'collaborator') unless @resource.permission_to_edit?(current_user)
+      elsif current_user.blank?
+        # If not logged in, log them in as the dataset owner by proxy (only able to edit the dataset, no access to other pages)
+        session[:proxy_user_id] = @resource.submitter.id
       end
       if @resource&.current_resource_state&.resource_state == 'in_progress'
         redirect_to("#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)}?start") and return
@@ -77,7 +74,7 @@ module StashEngine
 
       new_version
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # create a new version of this resource before editing with find or create
     def new_version
