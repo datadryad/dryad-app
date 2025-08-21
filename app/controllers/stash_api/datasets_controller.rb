@@ -499,7 +499,7 @@ module StashApi
       if params.dig('dataset', 'publicationISSN').present?
         @journal = StashEngine::Journal.find_by_issn(params.dig('dataset', 'publicationISSN'))
       elsif params.dig('dataset', 'publicationName').present?
-        @journal = StashEngine::Journal.find_by_title(params.dig('dataset', 'publicationISSN'))
+        @journal = StashEngine::Journal.find_by_title(params.dig('dataset', 'publicationName'))
       end
 
       return if check_restricted_params == false
