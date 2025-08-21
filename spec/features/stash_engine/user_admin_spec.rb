@@ -160,7 +160,7 @@ RSpec.feature 'UserAdmin', type: :feature do
             expect(page.find("#user_role_#{@user.id}")).to have_text('Curator')
           end
           it 'allows the system admin to remove the system role' do
-            find('#stash_engine_user_roles_attributes_2_role').set(false)
+            find('#stash_engine_user_roles_attributes_3_role').set(false)
             find('input[name=commit]').click
             expect(page.find("#user_role_#{@user.id}")).not_to have_text('Admin')
           end
