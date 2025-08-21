@@ -63,8 +63,8 @@ module StashEngine
 
       # If the user is logged in, ensure they are able to edit the dataset
       if current_user && !current_user.proxy_user?
-        @resource.roles.create(user_id: @author.user.id, role: 'collaborator') unless @resource.permission_to_edit?(current_user)
-      elsif current_user.blank?
+        @resource.roles.create(user_id: @author.user.id, role: 'collaborator') unless @resource.permission_to_edit?(user: current_user)
+      elsif !current_user
         # If not logged in, log them in as the dataset owner by proxy (only able to edit the dataset, no access to other pages)
         session[:proxy_user_id] = @resource.submitter.id
       end

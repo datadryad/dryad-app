@@ -9,6 +9,7 @@ module StashEngine
         ]
     end
 
+    # for access to all admin and non-proxy pages
     def require_user_login
       return if current_user.present? && !current_user.proxy_user?
 
@@ -16,8 +17,9 @@ module StashEngine
       redirect_to stash_url_helpers.choose_login_path
     end
 
+    # for access to pages related to dataset editing
     def require_login
-      unless current_user.present? && !current_user.proxy_user?
+      unless current_user.present?
         flash[:alert] = 'You must be logged in.'
         redirect_to stash_url_helpers.choose_login_path and return
       end
