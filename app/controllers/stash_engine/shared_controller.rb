@@ -114,7 +114,11 @@ module StashEngine
     end
 
     def current_user
-      @current_user ||= StashEngine::User.preload(:roles).find_by(id: session[:user_id]) if session[:user_id]
+      @current_user ||= if session[:user_id]
+                          StashEngine::User.preload(:roles).find_by(id: session[:user_id])
+                        elsif session[:proxy_user_id]
+                          StashEngine::ProxyUser.preload(:roles).find_by(id: session[:proxy_user_id])
+                        end
     end
 
     def clear_user
