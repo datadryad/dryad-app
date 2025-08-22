@@ -41,6 +41,7 @@ module StashEngine
       # check if edit_code is present, and if so, store in the session
       valid_edit_code?
 
+      # If the submitter is not a real user (with an ORCID), make the new user log in and become the submitter.
       if ownership_transfer_needed?
         if current_user && !current_user.proxy_user?
           ca = CurationActivity.create(
@@ -61,13 +62,10 @@ module StashEngine
         end
       end
 
-      # If the user is logged in, ensure they are able to edit the dataset
-      if current_user && !current_user.proxy_user?
-        @resource.roles.create(user_id: @author.user.id, role: 'collaborator') unless @resource.permission_to_edit?(user: current_user)
-      elsif !current_user
-        # If not logged in, log them in as the dataset owner by proxy (only able to edit the dataset, no access to other pages)
-        session[:proxy_user_id] = @resource.submitter.id
-      end
+      # If the user is logged in, they will remain logged in, but able to
+      # edit this dataset with the edit_code. If not logged in, log them
+      # in as the dataset owner by proxy (only able to edit the dataset, no access to other pages)
+      session[:proxy_user_id] = @resource.submitter.id unless current_user
       if @resource&.current_resource_state&.resource_state == 'in_progress'
         redirect_to("#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)}?start") and return
       end
