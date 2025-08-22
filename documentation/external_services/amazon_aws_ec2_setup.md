@@ -408,15 +408,15 @@ Download and install following [these](https://anubis.techaro.lol/docs/admin/bot
 cd ~
 sudo dnf -y install ./techaro-botstopper-1.21.3-1.x86_64.rpm
 sudo cp /etc/techaro-botstopper/default.env /etc/techaro-botstopper/datadryad.env
-sudo cp /usr/share/doc/techaro-botstopper/botPolicies.yaml /etc/techaro-botstopper/datadryad.botPolicies.yaml
+sudo cp /usr/share/doc/techaro-botstopper/botPolicies.yaml /home/ec2-user/deploy/current/public/anubis/datadryad.botPolicies.yaml
 cd /etc/techaro-botstopper/
 ```
 
 Change configuration files 
 `sudo vim datadryad.env` and add
 ```
-POLICY_FNAME=/etc/techaro-botstopper/datadryad.botPolicies.yaml
-OVERLAY_FOLDER=/home/ec2-user/deploy/current/app/assets/stylesheets/anubis
+POLICY_FNAME=/home/ec2-user/deploy/current/public/anubis/datadryad.botPolicies.yaml
+OVERLAY_FOLDER=/home/ec2-user/deploy/current/public/anubis
 CHALLENGE_TITLE="Making sure you're not a bot!"
 ERROR_TITLE="Client error"
 ```
@@ -433,6 +433,9 @@ Create systemd service
 sudo systemctl enable --now techaro-botstopper@datadryad.service
 sudo systemctl restart techaro-botstopper@datadryad.service
 ```
+
+NOTE: Any change in the configuration files require a service restart
+```sudo systemctl restart techaro-botstopper@datadryad.service```
 
 Update Apache configuration
 --------------------------------------
