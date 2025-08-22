@@ -267,10 +267,12 @@ Set up SSL certificate for Shibboleth support
 =============================================
 
 The "main" certificates for Dryad are managed within AWS, using Certificate
-Manager. However, Shibboleth requires direct connections between the `shibd`
-service and the Identity Provider, which bypass the load balancer. These
+Manager. However, Shibboleth requires direct connections between the Identity
+provider's `shibd` service and our Apache, which bypass the load balancer. These
 connections require Apache to support SSL on its own. We use certificates from
-Let's Encrypt for these direct connections.
+Let's Encrypt for these direct connections. (Note that there is a third
+certificate used for our `shibd` to communicate with InCommon. See [the
+Shibboleth docs](../shibboleth/README.md) for details.)
 
 In a load-balanced system, only create the certificate on one machine, and copy to the others.
 
