@@ -1,0 +1,87 @@
+## Anubis has the ability to let you import snippets of configuration into the main
+## configuration file. This allows you to break up your config into smaller parts
+## that get logically assembled into one big file.
+##
+## Of note, a bot rule can either have inline bot configuration or import a
+## bot config snippet. You cannot do both in a single bot rule.
+##
+## Import paths can either be prefixed with (data) to import from the common/shared
+## rules in the data folder in the Anubis source tree or will point to absolute/relative
+## paths in your filesystem. If you don't have access to the Anubis source tree, check
+## /usr/share/docs/anubis/data or in the tarball you extracted Anubis from.
+
+bots:
+  - import: (data)/bots/_deny-pathological.yaml
+  - import: (data)/bots/aggressive-brazilian-scrapers.yaml
+  - import: (data)/meta/ai-block-aggressive.yaml
+  - import: (data)/crawlers/_allow-good.yaml
+  - import: (data)/clients/x-firefox-ai.yaml
+  - import: (data)/common/keep-internet-working.yaml
+
+  # Generic catchall rule
+  - name: generic-browser
+    user_agent_regex: >-
+      Mozilla|Opera
+    action: WEIGH
+    weight:
+      adjust: 10
+
+dnsbl: false
+
+# By default, send HTTP 200 back to clients that either get issued a challenge
+# or a denial. This seems weird, but this is load-bearing due to the fact that
+# the most aggressive scraper bots seem to really, really, want an HTTP 200 and
+# will stop sending requests once they get it.
+status_codes:
+  CHALLENGE: 200
+  DENY: 200
+
+# Anubis can store temporary data in one of a few backends. See the storage
+# backends section of the docs for more information:
+#
+# https://anubis.techaro.lol/docs/admin/policies#storage-backends
+store:
+  backend: memory
+  parameters: {}
+
+thresholds:
+  # By default Anubis ships with the following thresholds:
+  - name: minimal-suspicion # This client is likely fine, its soul is lighter than a feather
+    expression: weight <= 0 # a feather weighs zero units
+    action: ALLOW # Allow the traffic through
+  # For clients that had some weight reduced through custom rules, give them a
+  # lightweight challenge.
+  - name: mild-suspicion
+    expression:
+      all:
+        - weight > 0
+        - weight < 10
+    action: CHALLENGE
+    challenge:
+      # https://anubis.techaro.lol/docs/admin/configuration/challenges/metarefresh
+      algorithm: metarefresh
+      difficulty: 1
+      report_as: 1
+  # For clients that are browser-like but have either gained points from custom rules or
+  # report as a standard browser.
+  - name: moderate-suspicion
+    expression:
+      all:
+        - weight >= 10
+        - weight < 20
+    action: CHALLENGE
+    challenge:
+      # https://anubis.techaro.lol/docs/admin/configuration/challenges/proof-of-work
+      algorithm: fast
+      difficulty: 2 # two leading zeros, very fast for most clients
+      report_as: 2
+
+  # For clients that are browser like and have gained many points from custom rules
+  - name: extreme-suspicion
+    expression: weight >= 20
+    action: CHALLENGE
+    challenge:
+      # https://anubis.techaro.lol/docs/admin/configuration/challenges/proof-of-work
+      algorithm: fast
+      difficulty: 4
+      report_as: 4
