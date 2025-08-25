@@ -20,14 +20,30 @@ class AddFileDeletedAtFlag2 < ActiveRecord::Migration[8.0]
           skip_emails: true
         )
       else
-        ids = resource.previous_resources(include_self: true).pluck(:id)
-        StashEngine::GenericFile.where(resource_id: ids).update(file_deleted_at: Time.current)
-        StashEngine::GenericFile.where(resource_id: ids, file_state: 'created').update(file_state: 'deleted')
+        # mark all files as deleted in next resource
+        next_resource = resource.identifier.resources.where('id > ?', resource.id).order(id: :asc).first
+        next if next_resource.nil?
+        next if next_resource.curation_activities.where(note: 'remove_abandoned_datasets CRON - mark files as deleted').present?
+
+        deleted_files = next_resource.generic_files.where(file_state: 'copied')
+        deleted_files.update(file_state: 'deleted', file_deleted_at: next_resource.created_at)
+        # create log entry so we know the files were marked as deleted
+        next_resource.curation_activities.create(
+          status: next_resource.current_curation_status,
+          note: 'remove_abandoned_datasets CRON - mark files as deleted',
+          user_id: 0
+        )
+
+        # delete files marked as deleted in all following resources
+        following_resources = resource.identifier.resources.where('id > ?', next_resource.id)
+        next if following_resources.empty?
+
+        StashEngine::GenericFile.where(resource_id: following_resources.ids, file_state: 'copied', original_filename: deleted_files.pluck(:original_filename)).destroy_all
       end
     end
   end
 
   def down
-    # raise ActiveRecord::IrreversibleMigration
+    raise ActiveRecord::IrreversibleMigration
   end
 end
