@@ -1,11 +1,11 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import {debounce} from 'lodash';
+import MarkdownEditor from '../../MarkdownEditor';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
 function Title({resource, setResource}) {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const submit = (newValue) => {
@@ -30,38 +30,33 @@ function Title({resource, setResource}) {
   const checkSubmit = useCallback(debounce(submit, 900), []);
 
   useEffect(() => {
-    setValue(`${resource.title || ''}`);
+    const p = document.createElement('p');
+    p.innerHTML = resource.title;
+    setValue(p);
   }, [resource.title]);
 
   return (
-    <form style={{margin: '1em auto'}} className="input-stack">
-      <label className="required input-label" htmlFor={`title__${resource.id}`}>
+    <div style={{margin: '1em auto'}}>
+      <label className="required input-label" htmlFor={`title__${resource.id}`} id={`title__${resource.id}_label`}>
         Submission title
       </label>
-      <input
-        name="title"
-        type="text"
-        className="title c-input__text"
-        id={`title__${resource.id}`}
-        value={value}
-        onBlur={(e) => submit(e.target.value)}
-        onChange={(e) => {
-          setValue(e.target.value);
-          checkSubmit(e.target.value);
-        }}
-        required
-        aria-describedby="title-ex"
-        aria-errormessage="title_error"
-      />
+      {value && (
+        <MarkdownEditor
+          micro
+          attr={{
+            'aria-errormessage': 'title_error',
+            'aria-labelledby': `title__${resource.id}_label`,
+            'aria-describedby': 'title-ex',
+          }}
+          buttons={['emphasis', 'superscript', 'subscript']}
+          htmlInput={value}
+          id={`title__${resource.id}`}
+          onChange={checkSubmit}
+        />
+      )}
       <div id="title-ex"><i aria-hidden="true" />The title should be a succinct summary of the data and its purpose or use</div>
-    </form>
+    </div>
   );
 }
-
-// This has some info https://blog.logrocket.com/validating-react-component-props-with-prop-types-ef14b29963fc/
-Title.propTypes = {
-  resource: PropTypes.object.isRequired,
-  setResource: PropTypes.func.isRequired,
-};
 
 export default Title;
