@@ -1,4 +1,4 @@
-<p>An error occurred while submitting dataset &ldquo;<%= @resource.title %>&rdquo;
+<p>An error occurred while submitting dataset &ldquo;<%= @resource.title.html_safe %>&rdquo;
   (<%= link_to(@resource.identifier_uri, @resource.identifier_uri)%>)
   for user <%= link_to(@resource.submitter.name, "mailto:#{@resource.submitter.email }") %>. The error details are below.
 </p>

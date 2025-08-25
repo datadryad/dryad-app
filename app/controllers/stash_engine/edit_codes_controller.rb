@@ -23,7 +23,7 @@ module StashEngine
         end
         @edit_code.author.update(author_orcid: current_user.orcid, author_email: current_user.email)
         @edit_code.update(applied: true)
-        redirect_to stash_url_helpers.dashboard_path, notice: "You may now collaborate on #{@resource.title}"
+        redirect_to stash_url_helpers.dashboard_path, notice: "You may now collaborate on #{@resource.title.html_safe}"
       else
         flash[:alert] = 'You must log in to accept this invitation.'
         session[:target_page] = request.fullpath

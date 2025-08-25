@@ -68,7 +68,7 @@ module StashDatacite
       def title
         return 'Blank title' if @resource.title.blank?
         return 'Nondescriptive title' if nondescript_title?
-        return 'All caps title' if @resource.title == @resource.title.upcase
+        return 'All caps title' if @resource.title.strip_tags == @resource.title.strip_tags.upcase
 
         false
       end
@@ -215,7 +215,7 @@ module StashDatacite
                 'supplement', 'supplemental', 'extended', 'supplementary', 'supporting', 'manuscript', 'et al',
                 'the', 'of', 'for', 'in', 'from', 'to', 'with']
         regex = dict.join('|')
-        remainder = @resource.title.gsub(/[^a-z0-9\s]/i, '').gsub(/(#{regex}|s\d|f\d|t\d)\b/i, '').strip
+        remainder = @resource.title.strip_tags.gsub(/[^a-z0-9\s]/i, '').gsub(/(#{regex}|s\d|f\d|t\d)\b/i, '').strip
         remainder.split.size < 4
       end
 

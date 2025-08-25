@@ -34,7 +34,7 @@ module StashEngine
     end
 
     def csv_report_row(dataset)
-      row = [dataset.title]
+      row = [dataset.title.strip_tags]
       row << dataset.identifier.identifier if @fields.include?('doi')
       row << dataset.subjects.map(&:subject).join(', ') if @fields.include?('keywords')
       row << dataset.author_string if @fields.include?('authors')

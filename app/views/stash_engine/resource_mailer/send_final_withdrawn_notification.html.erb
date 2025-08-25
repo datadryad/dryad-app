@@ -3,7 +3,7 @@
 <p>Your data submission that was withdrawn from the Dryad platform will be permanently deleted in three months:</p>
 
 <p>
-  Title: <%= @resource.title %><br/>
+  Title: <%= @resource.title.html_safe %><br/>
   DOI: <%= @resource.identifier_uri %>
 </p>
 

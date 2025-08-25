@@ -60,8 +60,10 @@ export default function Description({setResource, dcsDescription, mceLabel}) {
             'aria-errormessage': `${dcsDescription?.description_type}_error`,
             'aria-labelledby': `${dcsDescription?.description_type}_label`,
             'aria-describedby': `${dcsDescription?.description_type}-ex`,
+            name: dcsDescription?.description_type,
           }}
           htmlInput={desc}
+          key={desc?.innerHTML}
           onChange={checkSubmit}
         />
       )}

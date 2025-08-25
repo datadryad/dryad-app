@@ -1,6 +1,6 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>As a co-author of the recently published Dryad dataset "<%= @resource.title %>", we encourage you to link your ORCID iD to this publication by following the URL below. Linking your ORCID iD creates a reliable and discoverable connection to all of your research outputs:</p>
+<p>As a co-author of the recently published Dryad dataset "<%= @resource.title.html_safe %>", we encourage you to link your ORCID iD to this publication by following the URL below. Linking your ORCID iD creates a reliable and discoverable connection to all of your research outputs:</p>
 
 <p><a href="<%= @url %>"><%= @url %></a></p>
 

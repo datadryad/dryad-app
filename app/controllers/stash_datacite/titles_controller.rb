@@ -8,11 +8,16 @@ module StashDatacite
     # PATCH/PUT /titles/1
     def update
       respond_to do |format|
-        return if @resource.title == params[:title].squish
+        html_title = Nokogiri::HTML5.fragment(
+          helpers.markdown_render(content: CGI.escapeHTML(params[:title].squish))
+        ).css('p').inner_html
 
-        saved = @resource.update(title: params[:title].squish)
-        readme_update
+        return if @resource.title == html_title
+
+        saved = @resource.update(title: html_title)
+
         if saved
+          readme_update
           format.json do
             render json: @resource.as_json(only: %i[id title], include: :descriptions)
           end
@@ -33,7 +38,9 @@ module StashDatacite
       readme = @resource.descriptions.where(description_type: :technicalinfo).first
       return unless readme.try(:description).present?
 
-      previous = resource.versions.map { |v| v.object_changes.slice('title').values.flatten }.reject(&:blank?).map { |a| a[1] }
+      previous = resource.versions.map { |v| v.object_changes.slice('title').values.flatten }.reject(&:blank?).map do |a|
+        a[1].gsub(%r{</?em>}, '*').gsub(%r{</?sup>}, '^').gsub(%r{</?sub>}, '~')
+      end
       newest = previous.pop
 
       begin

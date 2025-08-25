@@ -5,7 +5,7 @@
 <p>The updated dataset is shown below:</p>
 
 <p>
-  Title: <%= @resource.title %><br/>
+  Title: <%= @resource.title.html_safe %><br/>
   DOI: <%= @resource.identifier_uri %>
 </p>
 

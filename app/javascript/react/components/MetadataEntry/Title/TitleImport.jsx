@@ -37,11 +37,16 @@ export default function TitleImport({current, resource, setResource}) {
   const [importError, setImportError] = useState(null);
   const [caseWarning, setCaseWarning] = useState(false);
   const [dupeWarning, setDupeWarning] = useState(false);
+  const [caseTitle, setCaseTitle] = useState(null);
 
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   useEffect(() => {
     if (resource.title) {
+      const p = document.createElement('p');
+      p.innerHTML = resource.title;
+      const testTitle = p.textContent || p.innerText;
+      setCaseTitle(testTitle);
       if (!resource.identifier.process_date?.processing) {
         axios.get(`/resources/${resource.id}/dupe_check.json`).then((data) => {
           setDupeWarning(data.data?.[0]?.title || false);
@@ -49,7 +54,7 @@ export default function TitleImport({current, resource, setResource}) {
       } else {
         setDupeWarning(false);
       }
-      if (capitals(resource.title)) {
+      if (capitals(testTitle)) {
         setCaseWarning(true);
       } else {
         setCaseWarning(false);
@@ -115,7 +120,7 @@ export default function TitleImport({current, resource, setResource}) {
       {caseWarning && (
         <div className="callout warn">
           <p style={{fontSize: '.98rem'}}>Please correct your dataset title to sentence case, which could look like:</p>
-          <p><span>{sentenceCase(resource.title)}</span>
+          <p><span>{sentenceCase(caseTitle)}</span>
             <span
               className="copy-icon"
               role="button"

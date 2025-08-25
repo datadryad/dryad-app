@@ -3,9 +3,9 @@
 <p>
 <% if journal_name = @journal&.title %>
   <% source = @journal.preprint_server? ? 'preprint' : 'manuscript' %>
-  <%= journal_name %> has informed us of your recent <%= source %> titled "<%= @resource.title %>", and you are invited to deposit data associated with the <%= source %> to Dryad.
+  <%= journal_name %> has informed us of your recent <%= source %> titled "<%= @resource.title.html_safe %>", and you are invited to deposit data associated with the <%= source %> to Dryad.
 <% else %>
-  You are invited to deposit data associated with the manuscript "<%= @resource.title %>" to Dryad.
+  You are invited to deposit data associated with the manuscript "<%= @resource.title.html_safe %>" to Dryad.
 <% end %>
 </p>
 

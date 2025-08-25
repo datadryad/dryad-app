@@ -3,7 +3,7 @@
   <%= hidden_field_tag :field, @field %>
   <% case @field %>
   <% when 'curation_activity' %>
-    <p>Edit curation status of <em><%= @resource.title %></em></p>
+    <p>Edit curation status of <em><%= @resource.title.html_safe %></em></p>
     <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
     <%# Users cannot change the status or publication date once the files are published %>
     <% if policy(@resource).change_status? && filter_status_select(@resource.current_curation_status) %>
@@ -22,7 +22,7 @@
       <%= form.date_field :publication_date, class: 'c-input__text' %>
     </div>
   <% when 'curator' %>
-    <p>Change curator for <em><%= @resource.title %></em></p>
+    <p>Change curator for <em><%= @resource.title.html_safe %></em></p>
     <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
     <%= form.fields_for :curator, @resource do |r| %>
       <div class="c-input">

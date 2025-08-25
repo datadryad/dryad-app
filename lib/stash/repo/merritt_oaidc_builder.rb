@@ -116,7 +116,7 @@ module Stash
 
       def strip_desc_linefeeds(xml)
         resource.descriptions.each do |d|
-          desc_text = ActionController::Base.helpers.strip_tags(d.description.to_s).delete("\r") # gsub(/(\r\n?|\n)/, '')
+          desc_text = d.description.to_s.strip_tags.delete("\r") # gsub(/(\r\n?|\n)/, '')
           xml.send(:'dc:description', desc_text.to_s) unless desc_text.blank?
         end
       end

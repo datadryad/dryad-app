@@ -42,7 +42,7 @@ export default function ReadMeWizard({resource, setResource, current}) {
   return (
     <ReadMe
       dcsDescription={desc}
-      title={resource.title}
+      title={resource.title.replace(/<\/?em>/g, '*').replace(/<\/?sup>/g, '^').replace(/<\/?sub>/g, '~')}
       doi={resource.identifier.identifier}
       setResource={setResource}
       fileList={fileList}

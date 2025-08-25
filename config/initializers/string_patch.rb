@@ -5,4 +5,8 @@ class String
 
     "#{self[0..(len / 2)]}...#{self[(-len / 2)..]}"
   end
+
+  def strip_tags
+    ActionController::Base.helpers.strip_tags(self)
+  end
 end

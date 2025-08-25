@@ -27,7 +27,7 @@
 
 <%= render partial: 'privileged_banner' %>
 <div class="admin-dashboard-header">
-  <h1 class="o-heading__level1"><%= r&.title %></h1>
+  <h1 class="o-heading__level1"><%= r&.title.html_safe %></h1>
   <%= @identifier.identifier %>
 </div>
 <div id="dupe_check" class="callout warn" data-load="<%= stash_url_helpers.dupe_check_resource_path(format: :js, id: r&.id, admin: true) %>" aria-busy="true" role="alert"></div>

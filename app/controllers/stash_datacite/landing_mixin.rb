@@ -28,11 +28,6 @@ module StashDatacite
 
     private
 
-    def plain_citation
-      citation = make_citation(review, resource)
-      ActionController::Base.helpers.strip_tags(citation)
-    end
-
     def make_citation(review, resource)
       citation(
         review.authors,
@@ -46,7 +41,7 @@ module StashDatacite
     def citation(authors, title, resource_type, identifier, publication_year)
       citation = []
       citation << h("#{author_citation_format(authors)} (#{publication_year})")
-      citation << h("#{title} [#{resource_type.try(:resource_type_general_friendly)}]")
+      citation << "#{title} [#{resource_type.try(:resource_type_general_friendly)}]"
       citation << 'Dryad'
       id_str = "https://doi.org/#{identifier}"
       citation << "<a href=\"#{id_str}\">#{h(id_str)}</a>"
