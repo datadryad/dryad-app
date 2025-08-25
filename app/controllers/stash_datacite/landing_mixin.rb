@@ -28,11 +28,6 @@ module StashDatacite
 
     private
 
-    def plain_citation
-      citation = make_citation(review, resource)
-      ActionController::Base.helpers.strip_tags(citation)
-    end
-
     def make_citation(review, resource)
       citation(
         review.authors,

@@ -16,7 +16,7 @@ module StashApi
       }"
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}Submit data for \"#{@resource.title}\"",
+           subject: "#{rails_env}Submit data for \"#{@resource.title.strip_tags}\"",
            bcc: @journal&.api_contacts)
 
       status = @resource.last_curation_activity.status

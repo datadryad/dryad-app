@@ -14,7 +14,7 @@ module StashEngine
       template_name = 'published_in_progress_reminder' if resource.previously_published?
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}REMINDER: Dryad submission \"#{@resource.title}\"",
+           subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
            template_path: 'stash_engine/user_mailer',
            template_name: template_name)
     end
@@ -27,7 +27,7 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}REMINDER: Dryad submission \"#{@resource.title}\"",
+           subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
            template_path: 'stash_engine/user_mailer',
            template_name: 'peer_review_reminder')
     end
@@ -40,7 +40,7 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}REMINDER: Dryad submission \"#{@resource.title}\"",
+           subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
            template_path: 'stash_engine/user_mailer',
            template_name: 'chase_action_required1')
     end
@@ -53,7 +53,7 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}NOTIFICATION: Dryad submission set to withdrawn \"#{@resource.title}\"")
+           subject: "#{rails_env}NOTIFICATION: Dryad submission set to withdrawn \"#{@title}\"")
     end
 
     def send_final_withdrawn_notification(resource)
@@ -64,7 +64,7 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}FINAL NOTIFICATION: Dryad submission will be deleted \"#{@resource.title}\"")
+           subject: "#{rails_env}FINAL NOTIFICATION: Dryad submission will be deleted \"#{@title}\"")
     end
 
     def delete_notification(resource)
@@ -75,7 +75,7 @@ module StashEngine
       return unless @user.present? && user_email(@user).present?
 
       mail(to: user_email(@user),
-           subject: "#{rails_env}DELETE NOTIFICATION: Dryad submission was deleted \"#{@resource.title}\"")
+           subject: "#{rails_env}DELETE NOTIFICATION: Dryad submission was deleted \"#{@title}\"")
     end
 
     private
@@ -93,6 +93,7 @@ module StashEngine
 
     def assign_variables(resource)
       @resource = resource
+      @title = resource.title.strip_tags
       @user = resource.owner_author || resource.submitter
       @user_name = user_name(@user)
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
