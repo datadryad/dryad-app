@@ -6,7 +6,7 @@
   your submission will not enter our curation process for review and publication.
 </p>
 
-<p>Your Dryad dataset titled, "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been assigned two important links:</p>
+<p>Your Dryad dataset titled, "<%= @resource.title.html_safe %>" (<%= @resource.identifier_str %>) has been assigned two important links:</p>
 
 <% shr = @resource.identifier.shares.first.sharing_link %>
 <ul>

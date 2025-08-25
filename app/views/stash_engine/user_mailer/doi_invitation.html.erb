@@ -1,6 +1,6 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Published dataset: <%= @resource.title %></p>
+<p>Published dataset: <%= @resource.title.html_safe %></p>
 
 <p>Now that you've published your data on Dryad, you can increase discoverability and boost citations of your related research by adding your article DOI directly to your dataset landing page. Here's how:</p>
 

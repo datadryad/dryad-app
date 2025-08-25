@@ -4,7 +4,7 @@
       <% if dataset.identifier&.last_submitted_resource&.present? %>
         <%= link_to "#{dataset.title}<i class=\"fas fa-arrow-up-right-from-square exit-icon\" aria-label=\" (opens in new window)\" role=\"img\"></i>".html_safe, stash_url_helpers.show_path(id: dataset.identifier_str), target: '_blank' %>
       <% else %>
-        <%= dataset.title %>
+        <%= dataset.title.html_safe %>
       <% end %>
       <div class="c-lined-table__digits">
         <% if policy(dataset).flag? %>
