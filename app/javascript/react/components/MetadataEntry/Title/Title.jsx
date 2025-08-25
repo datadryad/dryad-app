@@ -47,10 +47,12 @@ function Title({resource, setResource}) {
             'aria-errormessage': 'title_error',
             'aria-labelledby': `title__${resource.id}_label`,
             'aria-describedby': 'title-ex',
+            name: 'title',
           }}
           buttons={['emphasis', 'superscript', 'subscript']}
           htmlInput={value}
           id={`title__${resource.id}`}
+          key={value?.innerHTML}
           onChange={checkSubmit}
         />
       )}

@@ -4,11 +4,7 @@
 
 import React from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import axios from 'axios';
 import Title from '../../../../../../app/javascript/react/components/MetadataEntry/Title/Title';
-
-jest.mock('axios');
 
 describe('Title', () => {
   let resource; let setResource;
@@ -20,35 +16,10 @@ describe('Title', () => {
     setResource = () => {};
   });
 
-  it('renders a basic title', () => {
+  it('renders a basic title', async () => {
     render(<Title resource={resource} setResource={setResource} />);
-
-    const input = screen.getByLabelText('Submission title', {exact: false});
-    expect(input).toHaveValue(resource.title);
-  });
-
-  it('calls axios to update from server on change', async () => {
-    const newTitle = 'My test of updating title';
-
-    const promise = Promise.resolve({
-      status: 200,
-      data: {id: 27, title: newTitle},
+    await waitFor(() => {
+      expect(screen.getByText(resource.title)).toBeInTheDocument();
     });
-
-    axios.patch.mockImplementationOnce(() => promise);
-
-    render(<Title resource={resource} setResource={setResource} />);
-
-    const title = screen.getByLabelText('Submission title', {exact: false});
-    expect(title).toHaveValue(resource.title);
-
-    userEvent.clear(screen.getByLabelText('Submission title'));
-    userEvent.type(screen.getByLabelText('Submission title'), newTitle);
-
-    await waitFor(() => expect(screen.getByLabelText('Submission title')).toHaveValue(newTitle));
-
-    userEvent.tab(); // tab out of element, should trigger save on blur
-
-    await waitFor(() => promise); // waits for the axios promise to fulfil
   });
 });

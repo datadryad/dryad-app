@@ -75,7 +75,7 @@ module StashEngine
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
       @user_name = "#{orcid_invite.first_name} #{orcid_invite.last_name}"
       mail(to: orcid_invite.email,
-           subject: "#{rails_env}Dryad Submission \"#{@title}\"")
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title.strip_tags}\"")
     end
 
     def check_email(email_token)
@@ -105,7 +105,7 @@ module StashEngine
       @resource = edit_code.author.resource
       @role = edit_code.role
       @url = "#{ROOT_URL}#{Rails.application.routes.url_helpers.accept_invite_path(edit_code: edit_code.edit_code)}"
-      mail(to: user_email(edit_code.author), subject: "#{rails_env}Invitation to edit submission \"#{@title}\"")
+      mail(to: user_email(edit_code.author), subject: "#{rails_env}Invitation to edit submission \"#{@resource.title.strip_tags}\"")
     end
 
     def invite_user(user, role)
@@ -115,7 +115,7 @@ module StashEngine
       @user_name = user_name(user)
       @resource = role.role_object
       @role = role.role
-      mail(to: user_email(user), subject: "#{rails_env}Invitation to edit submission \"#{@title}\"")
+      mail(to: user_email(user), subject: "#{rails_env}Invitation to edit submission \"#{@resource.title.strip_tags}\"")
     end
 
     # Called from the StashEngine::Repository
@@ -138,7 +138,7 @@ module StashEngine
 
       @error_text = error_text
       mail(to: @zenodo_error_emails,
-           subject: "#{rails_env}General error \"#{@title}\" (doi:#{@resource.identifier_value})")
+           subject: "#{rails_env}General error \"#{@resource.title.strip_tags}\" (doi:#{@resource.identifier_value})")
     end
 
     def file_validation_error(file)
