@@ -15,7 +15,7 @@ class DuplicateResourceService
       new_res ||= build_new_resource
       new_res.save!
     end
-
+    new_res.update(current_editor_id: user.id.nonzero?)
     new_res.curation_activities.update_all(user_id: user.id)
     new_res.data_files.each(&:populate_container_files_from_last)
     new_res

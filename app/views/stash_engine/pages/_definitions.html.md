@@ -1,8 +1,6 @@
 # Definitions
 
-*Updated: May 20, 2025*
-
-★ These definitions are to be used on all formal ‘terms’ webpages and in membership agreements.
+*Updated: August 22, 2025*
 
 <dl>
   <div>
@@ -98,6 +96,16 @@
   <div>
   <dt>Publish/Publication.</dt>
   <dd>The public distribution of a Dataset on the Dryad Website under a CC0 instrument.</dd>
+  </div>
+
+  <div>
+  <dt>Private for Peer Review.</dt>
+  <dd>A service through which Dryad makes the Dataset private to peer reviewers while they consider a related manuscript.</dd>
+  </div>
+
+  <div>
+  <dt>Private for Peer Review Fee.</dt>
+  <dd>A one-time fee for Datasets to be held in Private for Peer Review status.</dd>
   </div>
 
   <div>

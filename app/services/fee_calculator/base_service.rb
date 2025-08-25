@@ -98,6 +98,16 @@ module FeeCalculator
       @sum_options[:invoice_fee] = INVOICE_FEE
     end
 
+    def add_ppr_fee(ppr_fee)
+      return unless options[:pay_ppr_fee]
+      return if @sum.zero?
+
+      # replace existing sum
+      @sum = ppr_fee
+      @sum_options.delete(:storage_fee)
+      @sum_options[:ppr_fee] = ppr_fee
+    end
+
     def add_dpc_fee
       add_fee_by_tier(dpc_fee_tiers, :dpc_tier)
     end

@@ -13,6 +13,7 @@
 #  payment_intent              :string(191)
 #  payment_status              :string(191)
 #  payment_type                :string(191)
+#  ppr_fee_paid                :boolean          default(FALSE)
 #  status                      :integer
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
