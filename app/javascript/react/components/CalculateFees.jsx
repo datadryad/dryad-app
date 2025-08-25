@@ -34,15 +34,15 @@ export default function CalculateFees({
   if (ppr && fees.ppr_discount) {
     setFees((f) => ({...f, total: 0}));
     return (
-      <p>The <b>{(50).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> peer review period fee has been paid. The remainder of the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> is due at submission for curation and publication.</p>
+      <p>The <b>{(50).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> Private for Peer Review Fee has been paid. The remainder of the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> is due at submission for curation and publication.</p>
     );
   }
 
   if (fees.total && fees.storage_fee) {
     return (
       <>
-        <p>This {formatSizeUnits(resource.total_file_size)} dataset has a <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> of <b>{fees.storage_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>{fees.ppr_discount && <>, requiring payment of <b>{(fees.invoice_fee ? fees.total - fees.invoice_fee : fees.total).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> minus the peer review period fee</>}.</p>
-        {ppr && !fees.ppr_discount && <p>You may choose to pay only <b>{(50).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>, with the remainder due at the end of the peer review period. The peer review period fee is nonrefundable.</p>}
+        <p>This {formatSizeUnits(resource.total_file_size)} dataset has a <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> of <b>{fees.storage_fee.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>{fees.ppr_discount && <>, requiring payment of <b>{(fees.invoice_fee ? fees.total - fees.invoice_fee : fees.total).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> minus the Private for Peer Review Fee</>}.</p>
+        {ppr && !fees.ppr_discount && <p>You may choose to pay only <b>{(50).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b>, with the remainder due at the end of the peer review period. The Private for Peer Review Fee is nonrefundable.</p>}
       </>
     );
   }
