@@ -113,9 +113,16 @@ module StashDatacite
     def resource_submitted_message(resource)
       identifier_uri = resource.identifier_uri
       msg = []
-      msg << "#{resource.title || '(unknown title)'} submitted"
-      msg << (identifier_uri ? "with DOI #{identifier_uri}." : '.')
-      msg << 'There may be a delay for processing before the item is available.'
+      msg << "Your #{resource.resource_type.resource_type}"
+      msg << (identifier_uri ? "with the DOI #{identifier_uri}" : '')
+      msg << 'was submitted'
+      if resource.hold_for_peer_review?
+        msg << 'and will be available from the temporary reviewer sharing link after processing.'
+        msg << 'When your data is ready to publish, release it for curation.'
+      else
+        msg << "for curation. #{resource.resource_type.resource_type.capitalize}s are curated in the order in which they are received."
+        msg << "Revision requests will be sent to #{resource.submitter.email}"
+      end
       msg.join(' ')
     end
 
