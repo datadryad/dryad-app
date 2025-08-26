@@ -495,6 +495,13 @@ module StashApi
     # some parameters would be locked down for only admins or superusers to set
     def lock_down_admin_only_params
       # all this bogus return false stuff is to prevent double render errors in some circumstances
+      @journal = nil
+      if params.dig('dataset', 'publicationISSN').present?
+        @journal = StashEngine::Journal.find_by_issn(params.dig('dataset', 'publicationISSN'))
+      elsif params.dig('dataset', 'publicationName').present?
+        @journal = StashEngine::Journal.find_by_title(params.dig('dataset', 'publicationName'))
+      end
+
       return if check_restricted_params == false
       return if check_may_set_user_id == false
 
@@ -516,7 +523,7 @@ module StashApi
         end
         # admin restrictions
         if %w[skipEmails preserveCurationStatus].include?(attr) && item_value.instance_of?(TrueClass) &&
-          !(@user.min_curator? || @user.journals_as_admin&.intersect?(@resource&.journals || []))
+          !(@user.min_curator? || @user.journals_as_admin.include?(@journal) || @user.journals_as_admin.intersect?(@resource&.journals || []))
           render json: { error: "Unauthorized: only curators, superusers, and journal administrators may set #{attr} to true" }.to_json, status: 401
           return false
         end
@@ -526,14 +533,14 @@ module StashApi
 
     def check_may_set_user_id
       return if params['userId'].nil?
+      # if you're a curator or its your own user
+      return if @user.min_curator? || params['userId'].to_i == @user.id
 
-      unless @user.min_curator? ||
-        params['userId'].to_i == @user.id || # or it is your own user
-        # or you admin the target journal
-        @user.journals_as_admin.map(&:issn_array)&.flatten&.reject(&:blank?)&.include?(params['dataset']['publicationISSN'])
-        render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
-        false
-      end
+      # do you admin the target journal?
+      return if @user.journals_as_admin.include?(@journal)
+
+      render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
+      false
     end
 
     def check_may_set_payment_id
