@@ -1,5 +1,4 @@
 <li id="saved_search<%= saved_search.id %>">
-  <% saved_search.create_code unless saved_search.share_code.present? %>
   <span class="default"><%if saved_search.default %><i class="fa fa-star" aria-hidden="true"></i><span class="screen-reader-only">Default</span><% end %></span>
   <%= link_to saved_search.title, admin_dashboard_path(search: index + 1, clear: true)%>
   <span><%= saved_search.description %></span>

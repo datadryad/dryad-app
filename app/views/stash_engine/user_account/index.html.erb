@@ -56,7 +56,7 @@
         <div id="admin_searches">    
           <h2 id="saved">Saved searches</h2>
           <% if current_user.admin_searches.empty? %>
-            <p>Save searches from the new <%= link_to 'Admin dashboard', admin_dashboard_path %></p>
+            <p>Save searches from the <%= link_to 'Admin dashboard', admin_dashboard_path %></p>
           <% else %>
             <p>Click the search name to view results and to edit search fields and filters.</p>
             <ol class="saved_searches_list" id="admin_searches_list">

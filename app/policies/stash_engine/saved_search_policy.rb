@@ -13,11 +13,11 @@ module StashEngine
       @user.id == @record.user_id
     end
 
-    def update
+    def update?
       edit?
     end
 
-    def destroy
+    def destroy?
       edit?
     end
 
