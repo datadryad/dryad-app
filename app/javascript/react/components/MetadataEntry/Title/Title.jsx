@@ -30,9 +30,11 @@ function Title({resource, setResource}) {
   const checkSubmit = useCallback(debounce(submit, 900), []);
 
   useEffect(() => {
-    const p = document.createElement('p');
-    p.innerHTML = resource.title;
-    setValue(p);
+    if (document.activeElement?.getAttribute('name') !== 'title') {
+      const p = document.createElement('p');
+      p.innerHTML = resource.title;
+      setValue(p);
+    }
   }, [resource.title]);
 
   return (
