@@ -39,7 +39,7 @@ module StashDatacite
       return unless readme.try(:description).present?
 
       previous = resource.versions.map { |v| v.object_changes.slice('title').values.flatten }.reject(&:blank?).map do |a|
-        a[1].gsub(%r{</?em>}, '*').gsub(%r{</?sup>}, '^').gsub(%r{</?sub>}, '~')
+        a[1].gsub(%r{</?(em|i)>}, '*').gsub(%r{</?sup>}, '^').gsub(%r{</?sub>}, '~')
       end
       newest = previous.pop
 

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
 import {sentenceCase} from '../../../../lib/sentence-case';
 import ImportForm from './ImportForm';
@@ -32,6 +32,7 @@ const capitals = (t) => {
 };
 
 export default function TitleImport({current, resource, setResource}) {
+  const dupeRef = useRef(null);
   const [connections, setConnections] = useState([]);
   const [apiJournals, setAPIJournals] = useState([]);
   const [importError, setImportError] = useState(null);
@@ -61,6 +62,10 @@ export default function TitleImport({current, resource, setResource}) {
       }
     }
   }, [resource.title]);
+
+  useEffect(() => {
+    if (dupeRef.current && dupeWarning) dupeRef.current.innerHTML = dupeWarning;
+  }, [dupeWarning, dupeRef.current]);
 
   useEffect(() => {
     async function getList() {
@@ -143,7 +148,7 @@ export default function TitleImport({current, resource, setResource}) {
         <div className="callout warn">
           <p>
             This is the same title or primary publication as your existing submission:
-            <b style={{display: 'block', marginTop: '.5ch'}}>{dupeWarning}</b>
+            <b style={{display: 'block', marginTop: '.5ch'}} ref={dupeRef} />
           </p>
           <div>
             <form action={`/resources/${resource.id}`} method="post" style={{display: 'inline'}}>
