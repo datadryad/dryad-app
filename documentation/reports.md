@@ -198,6 +198,7 @@ For the annual report, we rely on these high-level numbers:
 - authors: `select count(distinct author_first_name, author_last_name) from stash_engine_authors;`
 - institutions: `select count(distinct long_name) from dcs_affiliations;`
 - journals: `select distinct value from stash_engine_internal_data where data_type='publicationISSN';`
+- funders: `select distinct name_identifier_id from dcs_contributors where contributor_type="funder";`
 
 
 Datasets affiliated with an institution
