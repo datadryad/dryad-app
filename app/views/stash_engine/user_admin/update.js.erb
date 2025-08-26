@@ -1,8 +1,10 @@
 document.getElementById("user_flag_<%= @user.id %>").innerHTML = <% if @user.flag.present? %>`<i class="fas fa-flag user" aria-label="Flagged" title="<%= @user.flag.note %>"></i>`<% else %>""<% end %>
 document.getElementById("user_email_<%= @user.id %>").innerHTML = "<%= @user.email %>"
 document.getElementById("user_tenant_id_<%= @user.id %>").innerHTML = "<%= @user.tenant.short_name %>"
-document.getElementById('user_role_<%= @user.id %>').innerHTML = "<%= @user.roles.admin_roles.present? ? @user.roles.admin_roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>";
+if (document.getElementById('user_role_<%= @user.id %>')) {
+  document.getElementById('user_role_<%= @user.id %>').innerHTML = "<%= role_list(@user) %>";
+}
 if (document.getElementById('user_role_details')) {
-  document.getElementById('user_role_details').innerHTML = "<%= @user.journal_organizations.map(&:name).join(", ") %> <%= @user.journals.map(&:title).join(", ") %> <%= @user.funders.map(&:name).join(", ") %>";
+  document.getElementById('user_role_details').innerHTML = "<%= role_details(@user) %>";
 }
 document.getElementById('genericModalDialog').close();
