@@ -18,15 +18,15 @@
           <td><%= resource.editor ? "<a href=\"#{user_admin_profile_path(id: resource.editor.id)}\">#{resource.editor.name}</a>".html_safe : '' %></td>
           <td>
             <div class="input-line">
-              <button class="c-admin-edit-icon log-button" title="Curation activity" aria-label="Curation activity" aria-controls="activity_<%=resource.id %>" aria-expanded="false">
+              <button class="c-admin-edit-icon log-button" title="Curation activity" aria-label="Curation activity" aria-controls="cactivity_<%=resource.id %>" aria-expanded="false">
                 <i class="fas fa-comment" aria-hidden="true"></i>
               </button>
               <% if resource.updated_at > Date.parse('2025-06-24') %>
-                <button class="c-admin-edit-icon log-button" title="Metadata changes" aria-label="File changes" aria-controls="changes_<%= resource.id %>" aria-expanded="false">
+                <button class="c-admin-edit-icon log-button" title="Metadata changes" aria-label="Metadata changes" aria-controls="changes_<%= resource.id %>" aria-expanded="false">
                   <i class="fas fa-user-pen" aria-hidden="true"></i>
                 </button>
                 <% if resource.files_changed? %>
-                  <button class="c-admin-edit-icon log-button" title="File changes" aria-label="Metadata changes" aria-controls="file_changes_<%= resource.id %>" aria-expanded="false">
+                  <button class="c-admin-edit-icon log-button" title="File changes" aria-label="File changes" aria-controls="file_changes_<%= resource.id %>" aria-expanded="false">
                     <i class="fas fa-file-pen" aria-hidden="true"></i>
                   </button>
                 <% end %>
@@ -34,7 +34,7 @@
             </div>
           </td>
         </tr>
-        <tr id="activity_<%=resource.id %>" hidden>
+        <tr id="cactivity_<%=resource.id %>" hidden>
           <td colspan="6">
             <div class="changes-header">
               <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> curation activity</p>
@@ -47,32 +47,36 @@
             </div>
           </td>
         </tr>
-        <tr id="changes_<%= resource.id %>" hidden>
-          <td colspan="6">
-            <div class="changes-header">
-              <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> changes</p>
-              <button class="c-admin-edit-icon log-close" aria-label="Close">
-                <i class="fas fa-lg fa-close" aria-hidden="true"></i>
-              </button>
-            </div>
-            <div id="change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.change_log_path(format: :js, id: resource.id) %>" aria-busy="true" aria-live="polite">
-              <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
-            </div>
-          </td>
-        </tr>
-        <tr id="file_changes_<%= resource.id %>" hidden>
-          <td colspan="6">
-            <div class="changes-header">
-              <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> file changes</p>
-              <button class="c-admin-edit-icon log-close" aria-label="Close">
-                <i class="fas fa-lg fa-close" aria-hidden="true"></i>
-              </button>
-            </div>
-            <div id="file_change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.file_log_path(format: :js, id: resource.id) %>" aria-busy="true" aria-live="polite">
-              <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
-            </div>
-          </td>
-        </tr>
+        <% if resource.updated_at > Date.parse('2025-06-24') %>
+          <tr id="changes_<%= resource.id %>" hidden>
+            <td colspan="6">
+              <div class="changes-header">
+                <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> changes</p>
+                <button class="c-admin-edit-icon log-close" aria-label="Close">
+                  <i class="fas fa-lg fa-close" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div id="change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.change_log_path(format: :js, id: resource.id) %>" aria-busy="true" aria-live="polite">
+                <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
+              </div>
+            </td>
+          </tr>
+          <% if resource.files_changed? %>
+            <tr id="file_changes_<%= resource.id %>" hidden>
+              <td colspan="6">
+                <div class="changes-header">
+                  <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> file changes</p>
+                  <button class="c-admin-edit-icon log-close" aria-label="Close">
+                    <i class="fas fa-lg fa-close" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div id="file_change_log_<%=resource.id %>" data-load="<%= stash_url_helpers.file_log_path(format: :js, id: resource.id) %>" aria-busy="true" aria-live="polite">
+                  <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
       </tbody>
     <% end %>
   </table>
@@ -91,6 +95,23 @@
       const row = button.closest('tr')
       row.setAttribute('hidden', true)
       document.querySelector(`button[aria-controls="${row.id}"]`).setAttribute('aria-expanded', 'false')
+    }))
+    const aa = document.getElementById('all_activity')
+    const ac = document.getElementById('all_changes')
+    const af = document.getElementById('all_file_changes')
+    aa.setAttribute('aria-controls', [...document.querySelectorAll('[id^="cactivity_"]')].map(s => s.id).join(' '));
+    ac.setAttribute('aria-controls', [...document.querySelectorAll('[id^="changes_"]')].map(s => s.id).join(' ')) ;
+    af.setAttribute('aria-controls', [...document.querySelectorAll('[id^="file_changes_"]')].map(s => s.id).join(' '));
+    [aa, ac, af].forEach(button => button.addEventListener('click', () => {
+      if (button.getAttribute('aria-controls')) {
+        const open = button.getAttribute('aria-expanded') === 'true'
+        button.getAttribute('aria-controls').split(' ').forEach(id => {
+          document.getElementById(id).toggleAttribute('hidden', open)
+          document.querySelector(`button[aria-controls="${id}"]`).setAttribute('aria-expanded', !open)
+        })
+        button.setAttribute('aria-expanded', !open)
+        load_data()
+      }
     }))
   </script>
 <% end %>
