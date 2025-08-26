@@ -421,6 +421,7 @@ CHALLENGE_TITLE="Making sure you're not a bot!"
 ERROR_TITLE="Client error"
 ```
 
+In case you are not using the configuration file from the codebase as configured above,
 `sudo vim datadryad.botPolicies.yaml` and comment out config that require a subscription to Thoth to use
 * `countries-with-aggressive-scrapers`
 * `aggressive-asns-without-functional-abuse-contact`
