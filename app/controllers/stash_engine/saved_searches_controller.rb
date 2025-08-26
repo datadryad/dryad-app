@@ -6,6 +6,7 @@ module StashEngine
 
     def create
       @saved_search = authorize StashEngine::SavedSearch.create(create_params)
+      @saved_search.create_code
       @index = current_user.admin_searches.length
       return unless params[:type] == 'StashEngine::AdminSearch'
 

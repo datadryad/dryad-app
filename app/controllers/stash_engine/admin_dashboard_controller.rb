@@ -120,13 +120,14 @@ module StashEngine
       session[:admin_search_filters] = nil if params[:clear]
       session[:admin_search_fields] = nil if params[:clear]
       session[:admin_search_string] = nil if params[:clear]
+      @shared_search = StashEngine::AdminSearch.find_by(share_code: params[:share]) if params[:share]
       @saved_search = current_user.admin_searches[@search - 1] if params[:search]
       @saved_search ||= current_user.admin_searches.find_by(default: true)
 
-      @search_string = params[:q] || session[:admin_search_string] || @saved_search&.search_string
-      @filters = params[:filters] || session[:admin_search_filters] || @saved_search&.filters
+      @search_string = params[:q] || session[:admin_search_string] || @shared_search&.search_string || @saved_search&.search_string
+      @filters = params[:filters] || session[:admin_search_filters] || @shared_search&.filters || @saved_search&.filters
       @filters = JSON.parse(@filters.to_json, symbolize_names: true) unless @filters.blank?
-      @fields = params[:fields] || session[:admin_search_fields] || @saved_search&.fields
+      @fields = params[:fields] || session[:admin_search_fields] || @shared_search&.fields || @saved_search&.fields
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
