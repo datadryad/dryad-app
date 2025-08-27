@@ -22,4 +22,18 @@ describe('Title', () => {
       expect(screen.getByText(resource.title)).toBeInTheDocument();
     });
   });
+
+  it('renders italics, superscript, and subscript', async () => {
+    resource.title = 'A title that contains <em>italics</em> and <sup>superscript</sup> and <sub>subscript</sub>';
+    render(<Title resource={resource} setResource={setResource} />);
+    await waitFor(() => {
+      expect(screen.getByText('italics')).toBeInTheDocument();
+    });
+    const superscript = screen.getAllByText('superscript');
+    const subscript = screen.getAllByText('subscript');
+    const italics = screen.getAllByText('italics');
+    expect(superscript[0].tagName).toBe('SUP');
+    expect(subscript[0].tagName).toBe('SUB');
+    expect(italics[0].tagName).toBe('EM');
+  });
 });
