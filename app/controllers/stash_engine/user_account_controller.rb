@@ -5,6 +5,7 @@ module StashEngine
 
     def index
       @target_page = stash_url_helpers.my_account_path
+      current_user.admin_searches.each { |s| s.create_code unless s.share_code.present? }
     end
 
     def edit

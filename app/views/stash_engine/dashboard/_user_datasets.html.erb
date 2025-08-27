@@ -1,7 +1,7 @@
 <% @datasets.each_with_index do |dataset, i| 
   if dataset.present? && dataset.identifier.present?
 %>
-  <% title = dataset.title.blank? ? '[No title supplied]' : dataset.title %>
+  <% title = dataset.title.blank? ? '[No title supplied]' : dataset.title.html_safe %>
   <% delete_confirm = 'Are you sure you want to remove this dataset'
     if dataset.stash_version&.version > 1
       delete_confirm << ' version?'

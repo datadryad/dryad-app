@@ -3,7 +3,7 @@
 <p>Your data submission has been withdrawn from the Dryad platform:</p>
 
 <p>
-  Title: <%= @resource.title %><br/>
+  Title: <%= @resource.title.html_safe %><br/>
   DOI: <%= @resource.identifier_uri %>
 </p>
 

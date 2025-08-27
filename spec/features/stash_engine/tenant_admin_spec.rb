@@ -7,7 +7,7 @@ RSpec.feature 'TenantAdmin', type: :feature do
       @dryad = create(:tenant_dryad)
       @match = create(:tenant_match)
       @ucop = create(:tenant_ucop)
-      @system_admin = create(:user, role: 'admin')
+      @system_admin = create(:user, role: 'manager')
       sign_in(@system_admin, false)
     end
 

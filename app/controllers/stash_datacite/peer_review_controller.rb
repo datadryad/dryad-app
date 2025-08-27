@@ -38,7 +38,7 @@ module StashDatacite
               user_id: current_user.id, status: 'submitted', note: 'Release from PPR'
             )
             @resource.reload
-            redirect_to dashboard_path, notice: 'Dataset released from private for peer review and submitted for curation'
+            redirect_to dashboard_path, notice: 'Dataset released from Private for Peer Review and submitted for curation'
           end
         rescue ActiveRecord::RecordInvalid
           @error = 'Unable to edit peer review status at this time.'

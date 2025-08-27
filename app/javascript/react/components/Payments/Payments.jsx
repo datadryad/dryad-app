@@ -74,7 +74,7 @@ function Payments({
       {resource.hold_for_peer_review ? (
         <>
           <CalculateFees resource={resource} fees={fees} setFees={setFees} invoice={invoice} ppr />
-          <p>You must complete payment to submit your dataset for peer review.</p>
+          <p>You must complete payment to submit your dataset for Peer Review.</p>
           <p className="input-line" style={{justifyContent: 'center'}} role="group" aria-label="Choose payment">
             <button
               type="button"
@@ -96,7 +96,7 @@ function Payments({
               onClick={() => setPPR(true)}
               style={{flex: 1}}
             >
-              Pay $50.00 peer review fee
+              Pay $50.00 Peer Review Fee
             </button>
           </p>
         </>

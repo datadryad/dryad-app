@@ -13,8 +13,8 @@ PRODUCT_NAME_MAPPER = {
   individual_storage_fee: 'Data Publishing Charge',
   total: 'Total',
   waiver_discount: 'Fee waiver discount',
-  ppr_fee: 'Private peer review fee',
-  ppr_discount: 'Paid fee for Private peer review'
+  ppr_fee: 'Private for Peer Review Fee',
+  ppr_discount: 'Paid Private for Peer Review Fee'
 }.freeze
 
 # New payment system error messages

@@ -4,11 +4,10 @@ module StashEngine
 
     def self.included(c)
       c.helper_method \
-        %i[
-          owner? admin? min_curator? min_app_admin? superuser?
-        ]
+        %i[owner? admin?]
     end
 
+    # for access to all admin and non-proxy pages
     def require_user_login
       return if current_user.present? && !current_user.proxy_user?
 
@@ -16,8 +15,9 @@ module StashEngine
       redirect_to stash_url_helpers.choose_login_path
     end
 
+    # for access to pages related to dataset editing
     def require_login
-      unless current_user.present? && !current_user.proxy_user?
+      unless current_user.present?
         flash[:alert] = 'You must be logged in.'
         redirect_to stash_url_helpers.choose_login_path and return
       end
@@ -86,7 +86,7 @@ module StashEngine
     def require_min_app_admin
       return if current_user && current_user.min_app_admin?
 
-      flash[:alert] = 'You must be a curator to view this information.'
+      flash[:alert] = 'You must be a Dryad administrator to view this information.'
       redirect_to stash_url_helpers.choose_dashboard_path
     end
 
@@ -144,18 +144,6 @@ module StashEngine
 
     def admin?(resource:)
       resource&.admin_for_this_item?(user: current_user)
-    end
-
-    def min_curator?
-      current_user.present? && current_user.min_curator?
-    end
-
-    def min_app_admin?
-      current_user.present? && current_user.min_app_admin?
-    end
-
-    def superuser?
-      current_user.present? && current_user.superuser?
     end
 
     def ajax_blocked

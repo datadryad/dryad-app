@@ -3,7 +3,7 @@
 <p>Your data submission has been automatically deleted from the Dryad platform after being “In progress” for one year with no action:</p>
 
 <p>
-  Title: <%= @resource.title %><br/>
+  Title: <%= @resource.title.html_safe %><br/>
   DOI: <%= @resource.identifier_uri %>
 </p>
 

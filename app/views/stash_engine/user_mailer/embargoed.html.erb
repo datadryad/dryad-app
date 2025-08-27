@@ -1,9 +1,9 @@
 <p>Dear <%= @user_name %>,</p>
 
 <% if @resource.publication_date.blank? %>
-  <p>Your dataset "<%= @resource.title %>" is now embargoed. <% if @resource.identifier.embargoed_until_article_appears? %>The embargo will be released when the associated article is published.<% end %></p>
+  <p>Your dataset "<%= @resource.title.html_safe %>" is now embargoed. <% if @resource.identifier.embargoed_until_article_appears? %>The embargo will be released when the associated article is published.<% end %></p>
 <% else %>
-  <p>Your dataset "<%= @resource.title %>" will be embargoed until <%= @resource.publication_date.strftime('%B %d, %Y') %><% if @resource.identifier.embargoed_until_article_appears? %>, or until the associated article appears, whichever happens first<% end %>.</p>
+  <p>Your dataset "<%= @resource.title.html_safe %>" will be embargoed until <%= @resource.publication_date.strftime('%B %d, %Y') %><% if @resource.identifier.embargoed_until_article_appears? %>, or until the associated article appears, whichever happens first<% end %>.</p>
 <% end %>
 
 <p>Your DOI has been registered and <a href="<%= @resource.identifier_uri %>">the landing page for your dataset</a> is publicly available. However, the data files cannot be viewed or downloaded. <%= 'When your embargo has lifted we will notify you.' if @resource.publication_date.present? %></p>

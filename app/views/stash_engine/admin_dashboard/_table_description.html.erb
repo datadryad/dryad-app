@@ -4,7 +4,7 @@
 <% if policy(dataset).curator_edit? %>
   <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path, method: :post) do %>
     <%= hidden_field_tag :resource_id, dataset.id, id: "resource_id_#{dataset.id}" %>
-    <%= hidden_field_tag :return_url, stash_url_helpers.admin_dashboard_path(search: params[:search], sort: params[:sort], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>
+    <%= hidden_field_tag :return_url, stash_url_helpers.admin_dashboard_path(search: params[:search], share: params[:share], sort: params[:sort], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>
     <button class="c-admin-edit-icon prevent-click" title="Edit dataset" aria-label="Edit dataset"><i class="fa fa-pencil" aria-hidden="true"></i></button>
   <% end %>
 <% end %>

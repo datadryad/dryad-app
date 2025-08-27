@@ -48,8 +48,7 @@ RSpec.feature 'Populate manuscript metadata from outside source', type: :feature
       click_button 'Next'
       expect(page).to have_button('Import metadata')
       click_button('Import metadata')
-      expect(page).to have_field('title',
-                                 with: 'High-skilled labour mobility in Europe before and after the 2004 enlargement')
+      expect(page).to have_content('High-skilled labour mobility in Europe before and after the 2004 enlargement')
     end
 
     it 'does not allow import with no doi filled in' do
