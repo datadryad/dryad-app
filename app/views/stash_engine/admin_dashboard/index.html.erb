@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], sort: params[:sort], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>" aria-busy="true" aria-live="polite"></div>
+<div id="search_results" data-load="<%= stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], share: params[:share], sort: params[:sort], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>" aria-busy="true" aria-live="polite"></div>
 
 <div class="callout alt">
   <p style="text-align: center;">Please send your Admin dashboard feedback to <a href="mailto:community@datadryad.org?subject=Admin dashboard feedback">community@datadryad.org</a>.</p>
