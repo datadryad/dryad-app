@@ -7,13 +7,11 @@ module StashApi
       @resource = resource
       @journal = StashEngine::Journal.find_by_issn(metadata[:relatedPublicationISSN])
       @user = author
-      return unless @user.present? && user_email(@user).present? && @user.edit_code&.edit_code&.present?
+      return unless @user.present? && user_email(@user).present?
 
       @user_name = user_name(@user)
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
-      @edit_url = "#{Rails.application.routes.url_helpers.root_url.chomp('/')}#{
-        Rails.application.routes.url_helpers.accept_invite_path(edit_code: @user.edit_code.edit_code)
-      }"
+      @edit_url = "#{Rails.application.routes.url_helpers.root_url.chomp('/')}#{metadata[:editLink]}"
 
       mail(to: user_email(@user),
            subject: "#{rails_env}Submit data for \"#{@resource.title.strip_tags}\"",

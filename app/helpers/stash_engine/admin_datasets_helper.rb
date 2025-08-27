@@ -24,7 +24,7 @@ module StashEngine
     end
 
     def editor_select
-      curators = StashEngine::User.min_curators
+      curators = StashEngine::User.all_curators
       curators.sort { |a, b| a.last_name.to_s <=> b.last_name.to_s }.map do |c|
         [c.name_last_first, c.id]
       end

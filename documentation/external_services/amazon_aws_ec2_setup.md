@@ -267,10 +267,12 @@ Set up SSL certificate for Shibboleth support
 =============================================
 
 The "main" certificates for Dryad are managed within AWS, using Certificate
-Manager. However, Shibboleth requires direct connections between the `shibd`
-service and the Identity Provider, which bypass the load balancer. These
+Manager. However, Shibboleth requires direct connections between the Identity
+provider's `shibd` service and our Apache, which bypass the load balancer. These
 connections require Apache to support SSL on its own. We use certificates from
-Let's Encrypt for these direct connections.
+Let's Encrypt for these direct connections. (Note that there is a third
+certificate used for our `shibd` to communicate with InCommon. See [the
+Shibboleth docs](../shibboleth/README.md) for details.)
 
 In a load-balanced system, only create the certificate on one machine, and copy to the others.
 
@@ -399,39 +401,48 @@ Test the installation with `go version`.
 
 Download and setup Anubis
 --------------------------------------
-Download and build
+Download and install following [these](https://anubis.techaro.lol/docs/admin/botstopper) steps
+* Get latest version of Anubis by downloading `.rpm` package
+* Upload it on the serve
+* Install the package and configuration files
 ```
+# cd on the folder you downloaded the .rpm package
 cd ~
-git clone https://github.com/TecharoHQ/anubis.git
-cd anubis/
-
-make prebaked-build
-
-make deps
-npm install --save-exact --save-dev esbuild
-./node_modules/.bin/esbuild --version
-make assets
-make build
+sudo dnf -y install ./techaro-botstopper-1.21.3-1.x86_64.rpm
+sudo cp /etc/techaro-botstopper/default.env /etc/techaro-botstopper/datadryad.env
+sudo cp /usr/share/doc/techaro-botstopper/botPolicies.yaml /home/ec2-user/deploy/current/public/anubis/datadryad.botPolicies.yaml
+cd /etc/techaro-botstopper/
 ```
 
 Change configuration files 
+`sudo vim datadryad.env` and add
+```
+POLICY_FNAME=/home/ec2-user/deploy/current/public/anubis/datadryad.botPolicies.yaml
+OVERLAY_FOLDER=/home/ec2-user/deploy/current/public/anubis
+CHALLENGE_TITLE="Making sure you're not a bot!"
+ERROR_TITLE="Client error"
+```
 
-`vim run/anubis@.service` and update with [this](./anubis@.service)
+In case you are not using the configuration file from the codebase as configured above,
+`sudo vim datadryad.botPolicies.yaml` and comment out config that require a subscription to Thoth to use
+* `countries-with-aggressive-scrapers`
+* `aggressive-asns-without-functional-abuse-contact`
 
-`vim run/default.env` and add `POLICY_FNAME=/home/ec2-user/anubis/data/botPolicies.json`
 
 Create systemd service
+`sudo vim  /usr/lib/systemd/system/techaro-botstopper@.service` and add `User=ec2-user`
+
 ```
-cd ~/anubis/
-sudo install -D ./run/anubis@.service /etc/systemd/system
-sudo systemctl enable anubis@default.service
-sudo systemctl start anubis@default.service
-sudo systemctl status anubis@default.service
+sudo systemctl enable --now techaro-botstopper@datadryad.service
+sudo systemctl restart techaro-botstopper@datadryad.service
 ```
+
+NOTE: Any change in the configuration files require a service restart
+```sudo systemctl restart techaro-botstopper@datadryad.service```
 
 Update Apache configuration
 --------------------------------------
-Add anubis cluster ando point apache to it
+Add anubis cluster and point apache to it
 ```
 sudo vim ~/apache/conf.d/datadryad.org.conf
 apache_restart.sh
