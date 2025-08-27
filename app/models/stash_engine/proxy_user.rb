@@ -90,6 +90,7 @@ module StashEngine
     def curator? = false
     def manager? = false
     def superuser? = false
+    def system_user? = false
     def min_admin? = false
     def min_app_admin? = false
     def min_curator? = false
