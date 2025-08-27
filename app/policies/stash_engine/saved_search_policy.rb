@@ -2,23 +2,23 @@ module StashEngine
   class SavedSearchPolicy < ApplicationPolicy
 
     def index?
-      @user.id == @record.user_id
-    end
-
-    def create?
       @user.present?
     end
 
+    def create?
+      index?
+    end
+
     def edit?
-      index?
+      @user.id == @record.user_id
     end
 
-    def update
-      index?
+    def update?
+      edit?
     end
 
-    def destroy
-      index?
+    def destroy?
+      edit?
     end
 
   end
