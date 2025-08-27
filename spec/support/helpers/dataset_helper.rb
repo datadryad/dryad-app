@@ -48,7 +48,6 @@ module DatasetHelper
     fill_required_metadata
     click_button 'Support'
     fill_in_funder
-    add_required_abstract
     add_required_data_files
     add_required_readme
     refresh
@@ -61,19 +60,19 @@ module DatasetHelper
       find(:label, 'No').click
     end
     click_button 'Next'
-    fill_in 'title', with: Faker::Lorem.sentence(word_count: 6)
-    click_button 'Next'
+    find('[name="title"]').base.send_keys(Faker::Lorem.sentence(word_count: 6))
+    click_button 'Authors'
     fill_in_author
+    click_button 'Description'
+    fill_in_abstract
     fill_in_research_domain
     fill_in_keywords
     click_button 'Compliance'
     fill_in_validation
   end
 
-  def add_required_abstract
-    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
-    ab = res.descriptions.find_by(description_type: 'abstract')
-    ab.update(description: Faker::Lorem.paragraph)
+  def fill_in_abstract
+    find('[name="abstract"]').base.send_keys(Faker::Lorem.paragraph)
   end
 
   def add_required_data_files

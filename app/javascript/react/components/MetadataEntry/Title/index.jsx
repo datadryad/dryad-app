@@ -12,14 +12,17 @@ const nondescript = (t) => {
 
 export const titleFail = (resource) => {
   if (resource.title) {
-    if (nondescript(resource.title)) {
+    const p = document.createElement('p');
+    p.innerHTML = resource.title;
+    const title = p.textContent || p.innerText;
+    if (nondescript(title)) {
       return (
         <p className="error-text" id="title_error">
           Your dataset title is not specific to your dataset. Use a descriptive title so your data can be discovered.
         </p>
       );
     }
-    if (resource.title === resource.title.toUpperCase()) {
+    if (title === title.toUpperCase()) {
       return (
         <p className="error-text" id="title_error">
           All-caps titles are not allowed.

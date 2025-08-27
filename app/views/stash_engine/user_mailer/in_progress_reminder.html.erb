@@ -1,7 +1,7 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>
-  The Dryad dataset submission you’ve initiated titled, “<%= @resource.title %>” with the
+  The Dryad dataset submission you’ve initiated titled, “<%= @resource.title.html_safe %>” with the
   DOI “<%= @resource.identifier_value %>”, is currently "In Progress". It has not yet been submitted for evaluation
   by a member of our curation team.
 </p>
