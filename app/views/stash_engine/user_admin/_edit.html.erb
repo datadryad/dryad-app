@@ -5,31 +5,36 @@
     <a href="<%= @user.orcid_link %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a>
   <% end %>
 </div>
-<%= form_with(url: user_update_path(@user.id), method: :post, local: false) do |form| %>
+<%= form_with(url: user_update_path(@user.id), model: @user, method: :post, local: false) do |form| %>
+  <% @form = form %>
   <div class="o-admin-form-inline" style="align-items: flex-start; gap: 2ch;">
     <div class="c-input">
-        <%= label_tag 'email', 'Email address' %>
-        <%= text_field_tag('email', @user.email, class: 'c-input__text') %>
+        <%= form.label :email, 'Email address' %>
+        <%= form.text_field :email, class: 'c-input__text' %>
     </div>
     <div class="c-input" style="max-width: 100%;">
-      <% tenant_options = StashEngine::Tenant.enabled.collect { |t| [ t.short_name, t.id ] } %>
-      <%= label_tag :tenant_id, 'Dryad partner institution' %>
-      <%= select_tag(:tenant_id, options_for_select(tenant_options, @user.tenant_id), class: 'c-input__select', style: 'flex-shrink: 1; flex-grow: 1; min-width: 0; max-width: 100%;') %>  
+      <%= form.label :tenant_id, 'Dryad partner institution' %>
+      <%= form.select :tenant_id, options_for_select(tenant_list.drop(1), @user.tenant_id), {}, {class: 'c-input__select', style: 'flex-shrink: 1; flex-grow: 1; min-width: 0; max-width: 100%;'} %>  
       <p style="margin: .5rem 0; font-size: .98rem;">Choosing 'Dryad' will remove any set partner institution.</p>
     </div>
   </div>
-  <div class="o-admin-form-inline">
-    <p>
-      <%= form.check_box :flag, { checked: @user.flag.present? }, 1, nil %> <%= form.label :flag, "Flag user", class: 'c-input__label' %>
-    </p>
-    <p class="o-admin-form-pair" style="flex: 1">
-      <%= form.label :note, 'Flag note:' %>
-      <%= form.text_field :note, value: @user.flag&.note, class: 'c-input__text', style: 'flex: 1', disabled: @user.flag.nil? %>
-    </p>
-  </div>
+  <%= form.fields_for :flag, @user_flag do |fields| %>
+    <%= fields.hidden_field :id %>
+    <div class="o-admin-form-inline">
+      <p>
+        <%= fields.check_box :_destroy, { checked: @user.flag.id.present? }, 0, 1 %><%= fields.label :_destroy, 'Flag user', class: 'c-input__label', style: 'margin-left: .35ch' %>
+      </p>
+      <p class="o-admin-form-pair" style="flex: 1">
+        <%= fields.label :note, 'Flag note:' %>
+        <%= fields.text_field :note, value: @user.flag&.note, class: 'c-input__text', style: 'flex: 1', disabled: @user.flag.id.blank? %>
+      </p>
+    </div>
+  <% end %>
   <h2>Edit roles</h2>
-    <%= render partial: 'admin_role_form' %>
+  <div class="callout">
+    <p style="font-size: .98rem;">You may add multiple roles for a type of partner, but must add and submit them one at a time. Prefer one publisher role over each of its individual journals, or one consortium role over each of its separate institutions, so the admin is able to make combined reports.</p>
   </div>
+  <%= render partial: 'admin_role_form' %>
   <div class="c-modal__buttons-right">
     <%= submit_tag 'Submit', class: 'o-button__plain-text2' %>
     <%= button_tag 'Cancel', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>

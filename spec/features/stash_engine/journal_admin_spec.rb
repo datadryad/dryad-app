@@ -5,7 +5,7 @@ RSpec.feature 'JournalAdmin', type: :feature do
     before(:each) do
       create(:tenant)
       3.times { @journal = create(:journal) }
-      @system_admin = create(:user, role: 'admin')
+      @system_admin = create(:user, role: 'manager')
       sign_in(@system_admin, false)
     end
 

@@ -81,7 +81,7 @@ Datasets larger than 10GB are billed individually as follows. Institutional part
 
 Partners pay a flat Annual Service Fee to help cover Dryad’s fixed costs for service, infrastructure, and operations. Our fixed expenses include: partner support, training, and outreach; operation, maintenance and development of the Dryad platform; financial and legal administration; and leadership, oversight, and strategy development. As a global virtual organization, Dryad does not operate a physical office. Consult our [annual reports](https://github.com/datadryad/governance/tree/main/annual-reports) for details on Dryad expenses.
 
-The annual fee for institutions is based on annual research expenditure.
+The annual fee for institutions is based on annual research expenditure as defined by relevant higher education research and development surveys and statistics worldwide (e.g. in the US, the [National Center for Science and Engineering Statistics](https://ncses.nsf.gov/surveys/higher-education-research-development/2023#data); in Australia, the [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/industry/technology-and-innovation/research-and-experimental-development-higher-education-organisations-australia/latest-release#:~:text=Expenditure%20on%20R%26D%20performed%20by,5%25%20in%20chain%20volume%20terms.), etc.). That usually encompasses all current and capital funds allocated to activities specifically organized to produce research outcomes, including funding from external sponsors (government agencies, industry, foundations) as well as institutional resources dedicated to research activities.
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
@@ -136,7 +136,7 @@ To promote transparency and equity among our partners Dryad does not offer indiv
 </div>
 </div>
 
-### Lower- and middle-income countries
+## Lower- and middle-income countries
 
 Annual Service Fees for institutions based in lower- and middle-income countries are as follows.
 
@@ -161,7 +161,7 @@ Annual Service Fees for institutions based in lower- and middle-income countries
 </div>
 </div>
 
-### Consortium offers
+## Consortium offers
 
 Our consortial fee structures reflect the reduction in administrative burden and recruitment benefit that consortia can provide. Annual Service Fees are discounted to reflect that savings and benefit, and scale with the number of participating institutions.
 
@@ -265,6 +265,7 @@ The DPC and Annual Service Fee are combined to calculate the total annual fee, w
 <div style="font-size: .98rem;">
 <h3 style="font-size: 1.1rem">Change log</h3>
 <ul>
+  <li>August 28, 2025: Added detailed description of annual research expenditures</li>
   <li>June 24, 2025: Added consortium policy and pricing table</li>
   <li>June 18, 2025: Clarified policy for cases where both an institutional library and a campus-based publisher have partner agreements</li>
   <li>May 15, 2025: Applied the format ‘$100 USD’ to prices that appear in text and included the phrase ‘All fees are listed in USD’ with all relevant tables

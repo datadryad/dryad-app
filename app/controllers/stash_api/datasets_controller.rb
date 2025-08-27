@@ -106,7 +106,7 @@ module StashApi
       user
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def em_update_selected_fields
       logger.debug('em_update_selected_fields')
 
@@ -137,17 +137,8 @@ module StashApi
       end
 
       # Add keywords if they were not added by the submitter
-      if @resource.subjects.blank? && art_params['keywords'].present?
-        @resource.subjects.clear
-        art_params['keywords'].each do |kw|
-          subs = StashDatacite::Subject.where(subject: kw)
-          sub = if subs.blank?
-                  StashDatacite::Subject.create(subject: kw)
-                else
-                  subs.first
-                end
-          @resource.subjects << sub
-        end
+      if art_params['keywords'].present?
+        Subjects::CreateService.new(@resource, art_params['keywords']).call
         fields_changed << 'Keywords'
       end
 
@@ -258,7 +249,7 @@ module StashApi
       em_params
     end
 
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata:, deposit_request:)
@@ -426,9 +417,7 @@ module StashApi
 
       case @json.first['path']
       when '/versionStatus'
-        ensure_in_progress { yield }
-        pre_submission_updates
-        StashEngine.repository.submit(resource_id: @resource.id)
+        update_version_status(@json.first['value'])
         ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
         render json: ds.metadata, status: 202
       when '/curationStatus'
@@ -441,6 +430,17 @@ module StashApi
         return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
       end
       yield
+    end
+
+    def update_version_status(new_status)
+      ensure_in_progress { yield }
+      pre_submission_updates
+      if new_status == 'submitted'
+        @resource.curation_activities << StashEngine::CurationActivity.create(
+          status: 'processing', note: 'Repository processing data', user_id: @user&.id || 0
+        )
+      end
+      StashEngine.repository.submit(resource_id: @resource.id)
     end
 
     def update_curation_status(new_status)
@@ -495,6 +495,13 @@ module StashApi
     # some parameters would be locked down for only admins or superusers to set
     def lock_down_admin_only_params
       # all this bogus return false stuff is to prevent double render errors in some circumstances
+      @journal = nil
+      if params.dig('dataset', 'publicationISSN').present?
+        @journal = StashEngine::Journal.find_by_issn(params.dig('dataset', 'publicationISSN'))
+      elsif params.dig('dataset', 'publicationName').present?
+        @journal = StashEngine::Journal.find_by_title(params.dig('dataset', 'publicationName'))
+      end
+
       return if check_restricted_params == false
       return if check_may_set_user_id == false
 
@@ -516,7 +523,7 @@ module StashApi
         end
         # admin restrictions
         if %w[skipEmails preserveCurationStatus].include?(attr) && item_value.instance_of?(TrueClass) &&
-          !(@user.min_curator? || @user.journals_as_admin&.intersect?(@resource&.journals || []))
+          !(@user.min_curator? || @user.journals_as_admin.include?(@journal) || @user.journals_as_admin.intersect?(@resource&.journals || []))
           render json: { error: "Unauthorized: only curators, superusers, and journal administrators may set #{attr} to true" }.to_json, status: 401
           return false
         end
@@ -526,14 +533,14 @@ module StashApi
 
     def check_may_set_user_id
       return if params['userId'].nil?
+      # if you're a curator or its your own user
+      return if @user.min_curator? || params['userId'].to_i == @user.id
 
-      unless @user.min_curator? ||
-        params['userId'].to_i == @user.id || # or it is your own user
-        # or you admin the target journal
-        @user.journals_as_admin.map(&:issn_array)&.flatten&.reject(&:blank?)&.include?(params['dataset']['publicationISSN'])
-        render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
-        false
-      end
+      # do you admin the target journal?
+      return if @user.journals_as_admin.include?(@journal)
+
+      render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
+      false
     end
 
     def check_may_set_payment_id

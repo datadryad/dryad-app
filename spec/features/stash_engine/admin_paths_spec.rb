@@ -67,11 +67,11 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    it 'is accessible by tenant admins' do
+    it 'is not accessible by tenant admins' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
       visit stash_url_helpers.curation_stats_path
-      expect(page).to have_text('Recent statistics are available in the table below')
+      expect(page).to have_text('Admin dashboard')
     end
 
     it 'is accessible by dryad admins' do
@@ -145,6 +145,12 @@ RSpec.feature 'AdminPaths', type: :feature do
     it 'is accessible by tenant curators' do
       tenant = create(:tenant_ucop)
       sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.publication_updater_path
+      expect(page).to have_text('Publication updater')
+    end
+
+    it 'is accessible by data managers' do
+      sign_in(create(:user, role: 'manager'))
       visit stash_url_helpers.publication_updater_path
       expect(page).to have_text('Publication updater')
     end
@@ -318,8 +324,8 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('Admin dashboard')
     end
 
-    it 'is not accessible by curators' do
-      sign_in(create(:user, role: 'curator'))
+    it 'is not accessible by data managers' do
+      sign_in(create(:user, role: 'manager'))
       visit stash_url_helpers.status_dashboard_path
       # User redirected
       expect(page).to have_text('Admin dashboard')
@@ -356,6 +362,12 @@ RSpec.feature 'AdminPaths', type: :feature do
       expect(page).to have_text('Admin dashboard')
     end
 
+    it 'is accessible by data managers', js: true do
+      sign_in(create(:user, role: 'manager'))
+      visit stash_url_helpers.submission_queue_path
+      expect(page).to have_text('Queue information')
+    end
+
     it 'is accessible by super users', js: true do
       sign_in(create(:user, role: 'superuser'))
       visit stash_url_helpers.submission_queue_path
@@ -381,6 +393,13 @@ RSpec.feature 'AdminPaths', type: :feature do
 
     it 'is not accessible by curators' do
       sign_in(create(:user, role: 'curator'))
+      visit stash_url_helpers.zenodo_queue_path
+      # User redirected
+      expect(page).to have_text('Admin dashboard')
+    end
+
+    it 'is not accessible by data managers' do
+      sign_in(create(:user, role: 'manager'))
       visit stash_url_helpers.zenodo_queue_path
       # User redirected
       expect(page).to have_text('Admin dashboard')

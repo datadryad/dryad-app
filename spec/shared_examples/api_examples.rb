@@ -109,7 +109,7 @@ RSpec.shared_examples('API submission flow') do |can_submit, submit_response|
       expect(json_response[:identifier]).to eq(doi)
       expect(json_response[:id]).to eq(resource_id)
       expect(json_response[:versionStatus]).to eq('processing')
-      expect(json_response[:curationStatus]).to eq('In progress')
+      expect(json_response[:curationStatus]).to eq('Processing')
     else
       expect(json_response[:error]).to eq(submit_response[:error])
     end

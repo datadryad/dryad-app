@@ -42,7 +42,7 @@ module StashEngine
       valid_edit_code?
 
       if ownership_transfer_needed?
-        if current_user
+        if current_user && !current_user.proxy_user?
           ca = CurationActivity.create(
             status: @resource.current_curation_status || 'in_progress', user_id: 0, resource_id: @resource.id,
             note: "Transferring ownership to #{current_user.name} (#{current_user.id}) using an edit code"
@@ -64,15 +64,15 @@ module StashEngine
       # If the user is logged in, they will remain logged in, just with the added benefit
       # that they have access to edit this dataset. But if they were not logged in,
       # log them in as the dataset owner, and ensure the tenant_id is set correctly.
-      unless current_user
+      unless current_user && !current_user.proxy_user?
         session[:user_id] = resource.submitter.id
         if current_user.tenant_id.blank?
-          session[:target_page] = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
+          session[:target_page] = "#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)}?start"
           redirect_to stash_url_helpers.choose_sso_path and return
         end
       end
       if @resource&.current_resource_state&.resource_state == 'in_progress'
-        redirect_to(stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)) and return
+        redirect_to("#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)}?start") and return
       end
 
       new_version
@@ -135,7 +135,7 @@ module StashEngine
     private
 
     def ownership_transfer_needed?
-      (valid_edit_code? && resource.submitter.id == 0) || resource.submitter.blank?
+      valid_edit_code? && (resource.submitter.id == 0 || resource.submitter.blank? || resource.submitter.orcid.blank?)
     end
 
     def resource_exist

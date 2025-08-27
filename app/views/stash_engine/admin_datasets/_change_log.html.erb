@@ -1,0 +1,40 @@
+<% changes = pick_changes(@changes)%>
+<table class="c-lined-table" id="curation_table_<%= @resource.id %>">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Timestamp</th>
+      <th style="width: 65%;">Changes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% changes.map do |c| %>
+      <% 
+        first = @changes.find{ |i| i.item_type == c.item_type && i.item_id == c.item_id }.clone.freeze
+        c.object = c.object.merge(c.object_changes.transform_values { |v| v[1] })
+      %>
+      <tr>
+        <td><%= c.whodunnit.to_i.nonzero? ? "<a href=\"#{user_admin_profile_path(id: c.whodunnit)}\">#{c.user&.name}</a>".html_safe : 'System' %></td>
+        <td><%= formatted_datetime(c.created_at) %></td>
+        <td>
+          <%= send change_logs[c.item_type.to_sym], c, first %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<script type="module">
+  import HtmlDiff from '/htmldiff.min.js'
+  document.querySelectorAll('.desc-changes').forEach(sec => {
+    const original = document.getElementById(`desc_original${sec.dataset.id}`).innerHTML
+    const latest = document.getElementById(`desc_latest${sec.dataset.id}`).innerHTML
+    sec.innerHTML = HtmlDiff.execute(original, latest)
+  })
+  document.querySelectorAll('.desc-changes-button').forEach(button => button.addEventListener('click', () => {
+    document.getElementById(button.getAttribute('aria-controls')).toggleAttribute('hidden')
+    button.setAttribute('aria-expanded', !(button.getAttribute('aria-expanded') === 'true'))
+    button.firstElementChild.classList.toggle('fa-eye')
+    button.firstElementChild.classList.toggle('fa-times')
+  }))
+</script>

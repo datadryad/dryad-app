@@ -9,11 +9,11 @@ module StashEngine
     end
 
     def merge?
-      @user.superuser?
+      @user.min_manager?
     end
 
     def edit?
-      @user.system_admin?
+      @user.min_manager?
     end
 
     def update?

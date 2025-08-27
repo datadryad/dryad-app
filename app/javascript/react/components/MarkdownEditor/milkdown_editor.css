@@ -5,6 +5,8 @@
   border-radius: 5px;
   overflow: hidden;
   margin: 1em auto;
+  position: relative;
+  container-type: inline-size;
 }
 
 .markdown_editor:has(.milkdown[aria-invalid]) {
@@ -17,15 +19,15 @@
 }
 
 .md_editor_textarea {
-  height: 55vh;
   position: relative;
-  overflow: auto;
   background-color: white;
+  height: 300px;
+  overflow: auto; 
+  resize: vertical;
 }
 
-#readme_step_editor .md_editor_textarea {
-  height: 350px;
-  max-height: 65vh;
+#readme_editor .md_editor_textarea {
+  height: 55vh;
 }
 
 .md_editor_textarea > div:not(.c-alert--error) {
@@ -57,16 +59,19 @@
   border-bottom: thin solid #d0d0d0;
   background-color: rgb(233, 236, 239);
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
-  grid-row-gap: 3px;
-  position: relative;
+  row-gap: 3px;
 }
 
-.markdown_editor .md_editor-buttons .md_editor-toolbar {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+.markdown_editor .md_editor-buttons div[role="group"]:not(:last-of-type) {
+  border-right: thin solid #d0d0d0;
+  margin-right: .25ch;
+  padding-right: .25ch;
+}
+
+.markdown_editor .md_editor-buttons .md_editor-toggle {
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .markdown_editor .md_editor-buttons .md_editor-toggle button {
@@ -98,7 +103,7 @@
 
 .markdown_editor .md_editor-buttons .spacer {
   align-self: center;
-  padding: 0 1rem;
+  padding: 0 2px;
 }
 
 .markdown_editor .md_editor-buttons .spacer:before {
@@ -111,12 +116,19 @@
 
 .markdown_editor .md_editor-buttons .headingSelect,
 .markdown_editor .md_editor-buttons .tableSelect,
-.markdown_editor .md_editor-buttons .linkSelect {
+.markdown_editor .md_editor-buttons .linkSelect,
+.markdown_editor .md_editor-buttons .listSelect {
   display: inline-block;
   height: 2.5rem;
   vertical-align: top;
   position: relative;
 }
+
+.markdown_editor .md_editor-buttons .tableSelect > button i:first-child,
+.markdown_editor .md_editor-buttons .listSelect > button i:first-child {
+  margin-right: .5ch;
+}
+
 
 .markdown_editor .md_editor-buttons .headingButton,
 .markdown_editor .md_editor-buttons button {
@@ -138,7 +150,7 @@
 }
 
 .markdown_editor .md_editor-buttons button {
-  background-color: transparent;
+  background-color: rgb(233, 236, 239);
   border: none;
   min-width: 2.3rem;
 }
@@ -172,38 +184,74 @@
 
 .markdown_editor .md_editor-buttons button[disabled] {
   color: #aaa;
-  background-color: transparent;
+  background-color: rgb(233, 236, 239);
   text-shadow: none;
 }
 
-.markdown_editor .md_editor-toolbar,
-.markdown_editor .md_editor-toolbar > button:first-child,
-.markdown_editor .md_editor-toolbar > *[class*='Select']:first-child,
-.markdown_editor .md_editor-toolbar > *[class*='Select']:first-child > *:first-child {
+.markdown_editor .md_editor-buttons > button:first-child,
+.markdown_editor .md_editor-buttons > *[class*='Select']:first-child,
+.markdown_editor .md_editor-buttons > *[class*='Select']:first-child > *:first-child {
   border-top-left-radius: 5px;
   border-left: none;
   margin-left: 0;
 }
 
-.markdown_editor .md_editor-buttons .headingButton i {
+.markdown_editor .md_editor-buttons i[class*='chevron']{
   font-size: .7rem;
   color: #8d8d8d;
 }
 
+.markdown_editor .md_editor-buttons .tableOptButton {
+  white-space: nowrap;
+}
+
+.markdown_editor .md_editor-buttons .tableOptButton[disabled] i[class*='chevron'] {
+  color: #aaa;
+}
+
+.markdown_editor .md_editor-buttons .headingButton:not(.active):hover i,
+.markdown_editor .md_editor-buttons .headingButton:not(.active):focus i,
+.markdown_editor .md_editor-buttons .headingButton:not(.active):hover i,
+.markdown_editor .md_editor-buttons .headingButton:not(.active):focus i,
+.markdown_editor .md_editor-buttons .linkSelect > button:not(.active):focus i,
+.markdown_editor .md_editor-buttons .linkSelect > button:not(.active):hover i,
+.markdown_editor .md_editor-buttons .tableOptButton:not([disabled]):hover i[class*='chevron'],
+.markdown_editor .md_editor-buttons .tableOptButton:not([disabled]):focus i[class*='chevron'],
+.markdown_editor .md_editor-buttons .tableOptMenu button:hover i[class*='chevron'],
+.markdown_editor .md_editor-buttons .tableOptMenu button:focus i[class*='chevron'] {
+  color: #f2f2f2;
+}
+
 .markdown_editor .md_editor-buttons .headingMenu,
 .markdown_editor .md_editor-buttons .tableMenu,
-.markdown_editor .md_editor-buttons .linkMenu {
-  list-style-type: none;
-  margin: 0; padding: 0;
+.markdown_editor .md_editor-buttons .tableOptMenu,
+.markdown_editor .md_editor-buttons .linkMenu,
+.markdown_editor .md_editor-buttons .listMenu {
   position: absolute;
   top: 100%; left: -3px;
   margin-left: 3px;
-  z-index: 10;  
+  z-index: 10;
+}
+
+.markdown_editor .md_editor-buttons .headingMenu,
+.markdown_editor .md_editor-buttons .tableMenu > div,
+.markdown_editor .md_editor-buttons .tableOptMenu,
+.markdown_editor .md_editor-buttons .linkMenu,
+.markdown_editor .md_editor-buttons .listMenu {
+  margin: 0; padding: 0;
   width: 140px;
   background-color: #fff;
   border: thin solid #d0d0d0;
   border-top: none;
   box-shadow: 0px 2px 3px 1px #ccc;
+  max-height: 55cqh;
+  max-width: 100cqw;
+  overflow: auto;
+}
+
+.markdown_editor .md_editor-buttons .headingMenu,
+.markdown_editor .md_editor-buttons .tableOptMenu {
+  list-style-type: none;
 }
 
 .markdown_editor .md_editor-buttons .headingMenu:focus {
@@ -227,30 +275,49 @@
 }
 
 .markdown_editor .md_editor-buttons .tableMenu {
+  top: 2.5rem;
+  left: 0; right: 0;
+  width: 100cqw;
+  display: flex;
+  justify-content: center;
+}
+
+.markdown_editor .md_editor-buttons .tableMenu > div {
   padding: 1rem 1rem 0;
   line-height: 0;
-  max-width: 850px;
-  max-height: 63vh;
-  overflow: auto;
 }
 
-@media screen and (max-width: 1120px) {
-  .markdown_editor .md_editor-buttons .linkSelect,
-  .markdown_editor .md_editor-buttons .tableSelect {
-    position: static;
-  }
-  .markdown_editor .md_editor-buttons .linkMenu,
-  .markdown_editor .md_editor-buttons .tableMenu {
-    min-width: 328px;
-    max-width: 100%;
-    top: 2.5rem;
-  }
+.markdown_editor .md_editor-buttons .listMenu {
+  width: 150px;
+  background-color: rgb(233, 236, 239);
 }
 
-@media screen and (max-width: 530px) {
-  .markdown_editor .md_editor-buttons .tableMenu {
+@container (width < 605px) and (width > 344px) {
+  .markdown_editor .md_editor-buttons .linkMenu {
     left: auto; right: 0;
-    min-width: 0;
+  }
+}
+
+@container (width < 650px) and (width > 563px) {
+  .markdown_editor .md_editor-buttons .listMenu {
+    left: auto; right: 0;
+  }
+}
+
+@container (width < 766px) and (width > 556px){
+  .markdown_editor .md_editor-buttons .tableMenu > div{
+    margin-left: 170px;
+  }
+}
+@container (width < 556px) {
+  .markdown_editor .md_editor-buttons .tableMenu {
+    justify-content: flex-end;
+  }
+}
+@container (width < 455px) {
+  .markdown_editor .md_editor-buttons .tableMenu {
+    justify-content: flex-start;
+    top: 5.1rem;
   }
 }
 
@@ -309,6 +376,93 @@
 .markdown_editor .md_editor-buttons .tableMenuButtons button:focus  {
   color: #00527A;
   background-color: #fff;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu {
+  background-color: transparent;
+  width: 135px;
+  max-height: none;
+  overflow: visible;
+  font-size: .98rem;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu ul {
+  list-style-type: none;
+  margin: 0; padding: 0;
+  position: absolute;
+  width: 170px;
+  left: 137px; right: 0; top: 0;
+  z-index: 11;
+  box-shadow: 0px 2px 3px 1px #ccc;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu li {
+  margin: 0; padding: 0;
+  background-color: rgb(233, 236, 239);  
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu > li {
+  position: relative;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu li button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: .5ch;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu .icon-stack {
+  width: 2ch;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu i[class*='plus'],
+.markdown_editor .md_editor-buttons .tableOptMenu i[class*='turn'] {
+  font-size: .6rem;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu .icon-stack *:first-child {
+  margin-top: -2px;
+  margin-bottom: -3px;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu .icon-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu i.one {
+  overflow: clip;
+  clip-path: rect(auto auto auto auto round 28%);
+  font-size: 1.1rem;
+  width: .61rem;
+}
+
+.markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron'] {
+  margin-left: auto;
+}
+
+@container (width < 760px) and (width > 505px) {
+  .markdown_editor .md_editor-buttons .tableOptMenu {
+    left: auto; right: -3px;
+  }
+  .markdown_editor .md_editor-buttons .tableOptMenu li button {
+    flex-direction: row-reverse;
+  }
+  .markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron'] {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .markdown_editor .md_editor-buttons .tableOptMenu i[class*='chevron']:before {
+    content: '\f053';
+  }
+  .markdown_editor .md_editor-buttons .tableOptMenu ul {
+    left: auto; right: 137px;
+  }
 }
 
 .markdown_editor .md_editor-buttons .linkMenu {
@@ -389,6 +543,10 @@
 
 .milkdown *, .milkdown *:focus, .ProseMirror-selectednode {
   outline: none;
+}
+
+.milkdown table tr p:first-child:last-child {
+  margin: 0;
 }
 
 .milkdown h1,
@@ -512,6 +670,16 @@
 
 .md_b {
   font-weight: 700;
+}
+
+.md_sub {
+  vertical-align: sub;
+  font-size: 90%;
+}
+
+.md_sup {
+  vertical-align: super;
+  font-size: 90%;
 }
 
 .md_strike {

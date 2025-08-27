@@ -10,16 +10,18 @@
       "app/javascript"
     ],
     "moduleNameMapper": {
-      "\\.css$": "identity-obj-proxy"
+      "\\.css$": "identity-obj-proxy",
+      "^@milkdown/kit/prose$": "<rootDir>/node_modules/@milkdown/prose/lib/index.js",
+      "^@milkdown/kit/(.*)$": "<rootDir>/node_modules/@milkdown/kit/lib/$1.js",
+      "^@milkdown/prose/(.*)$": "<rootDir>/node_modules/@milkdown/prose/lib/$1.js",
+      "^@milkdown/(.*)$": "<rootDir>/node_modules/@milkdown/$1"
     },
-    "testPathIgnorePatterns": [
-      "ReadMe"
-    ],
     "transform": {
       "\\.[jt]sx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/?!(nanoid/.*)"
+      "node_modules/?!(nanoid/.*)",
+      "node_modules/htmldiff-js/.*"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/spec/javascript/setupTests.js"
@@ -59,33 +61,23 @@
     "@lezer/common": "^1.0.0",
     "@lezer/highlight": "^1.2.0",
     "@lezer/markdown": "^1.1.0",
-    "@milkdown/core": "^7.3.0",
-    "@milkdown/ctx": "^7.3.0",
-    "@milkdown/plugin-history": "^7.3.0",
-    "@milkdown/plugin-listener": "^7.3.0",
-    "@milkdown/plugin-trailing": "^7.3.0",
-    "@milkdown/preset-commonmark": "^7.3.0",
-    "@milkdown/preset-gfm": "^7.3.0",
-    "@milkdown/prose": "^7.3.0",
-    "@milkdown/react": "^7.3.0",
-    "@milkdown/transformer": "^7.3.0",
-    "@milkdown/utils": "^7.3.0",
+    "@milkdown/kit": "^7.15.2",
+    "@milkdown/react": "^7.15.2",
     "@stripe/react-stripe-js": "^3.6.0",
     "@stripe/stripe-js": "^6.1.0",
-    "@tinymce/tinymce-react": "^5.1.1",
     "aws-sdk": "^2.1060.0",
     "axios": "^1.8.2",
     "babel-loader": "8",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "brill": "^3.1.0",
     "compression-webpack-plugin": "9",
-    "copy-webpack-plugin": "^11.0.0",
     "copyfiles": "^2.4.1",
     "css-loader": "^6.8.1",
     "css-minimizer-webpack-plugin": "^5.0.1",
     "downshift": "^6.1.12",
     "draft-js": "^0.11.7",
     "drag-on-drop": "^3.6.1",
+    "eslint-plugin-import": "^2.32.0",
     "evaporate": "^2.1.4",
     "formik": "^2.2.9",
     "html-react-parser": "^1.4.14",
@@ -94,6 +86,10 @@
     "lodash": "^4.17.21",
     "match-sorter": "^6.3.1",
     "mdast-util-to-string": "^4.0.0",
+    "micromark-util-chunked": "^2.0.1",
+    "micromark-util-classify-character": "^2.0.1",
+    "micromark-util-resolve-all": "^2.0.1",
+    "micromark-util-symbol": "^2.0.1",
     "mini-css-extract-plugin": "^2.7.6",
     "moment": "^2.29.4",
     "nanoid": "<4.0.0",
@@ -107,6 +103,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.0.2",
     "react_ujs": "^2.6.1",
+    "remark-sub-super": "^1.0.21",
     "sass": "^1.49.10",
     "shakapacker": "6.6.0",
     "string-similarity": "^4.0.4",
@@ -144,7 +141,7 @@
     "del": "^6.0.0",
     "eslint": "^8.19.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
@@ -163,6 +160,7 @@
     "webpack-dev-server": "^5.2.2"
   },
   "resolutions": {
-    "nanoid": "<4.0.0"
+    "nanoid": "<4.0.0",
+    "prosemirror-model": "1.25.0"
   }
 }

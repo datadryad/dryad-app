@@ -1,8 +1,8 @@
 module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
+  # rubocop:disable Metrics/ClassLength
   class DatasetParser
 
-    TO_PARSE = %w[Funders HsiStatement Methods UsageNotes Keywords FieldOfScience RelatedWorks Locations TemporalCoverages].freeze
     INTERNAL_DATA_FIELDS = %w[publicationISSN publicationName manuscriptNumber].freeze
 
     # If  id_string is set, then populate the desired (doi) into the identifier in format like doi:xxxxx/yyyyy for new dataset.
@@ -37,7 +37,6 @@ module StashApi
       end
       @resource.update(
         title: remove_html(@hash['title']),
-        current_editor_id: owning_user_id,
         skip_datacite_update: @hash['skipDataciteUpdate'] || false,
         skip_emails: @hash['skipEmails'] || false,
         preserve_curation_status: @hash['preserveCurationStatus'] || false,
@@ -47,10 +46,13 @@ module StashApi
       parse_publication
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
-      TO_PARSE.each { |item| dynamic_parse(my_class: item) }
+      to_parse = %w[Funders Methods UsageNotes Keywords FieldOfScience RelatedWorks Locations TemporalCoverages]
+      # when ownership is being set to someone else immediately, they should have to explicitly agree
+      to_parse.push('HsiStatement') unless ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || owning_user_id.zero?
+      to_parse.each { |item| dynamic_parse(my_class: item) }
+      @resource.update(current_editor_id: owning_user_id.nonzero?)
       save_identifier
     end
-    # rubocop:enable
 
     def save_identifier
       @resource.identifier.payment_type = @hash['paymentType']
@@ -124,9 +126,8 @@ module StashApi
                 'The userId orcid is not known to Dryad. Please supply a matching orcid in the dataset author list.'
         end
 
-        owning_user = StashEngine::User.create(
-          orcid: @hash['userId'], first_name: found_author['firstName'], last_name: found_author['lastName'], email: found_author['email']
-        )
+        owning_user = StashEngine::User.create(orcid: @hash['userId'], first_name: found_author['firstName'], last_name: found_author['lastName'],
+                                               email: found_author['email'], tenant_id: 'dryad')
       end
       owning_user.id
     end
@@ -218,6 +219,8 @@ module StashApi
 
     def ensure_license
       return unless @resource.rights.blank?
+      # when ownership is being set to someone else immediately, they should have to explicitly agree
+      return if ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || @hash['userId']&.to_s == '0'
 
       @resource.identifier.update(license_id: 'cc0')
       license = StashEngine::License.by_id('cc0')
@@ -257,3 +260,4 @@ module StashApi
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
