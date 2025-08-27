@@ -64,7 +64,7 @@ RSpec.feature 'AdminSearch', type: :feature do
     end
 
     context :search_properties do
-      before (:each) do
+      before(:each) do
         sign_in(@superuser, false)
       end
       it 'does not show saved search', js: true do
@@ -135,7 +135,7 @@ RSpec.feature 'AdminSearch', type: :feature do
     end
 
     context :search_profile do
-      before (:each) do
+      before(:each) do
         sign_in(@superuser, false)
       end
       it 'has a search share code', js: true do
