@@ -4,6 +4,7 @@
       <th>Version</th>
       <th>ID</th>
       <th>Last status</th>
+      <th>Last status update</th>
       <th>Last edited</th>
       <th>Last editor</th>
       <th style="width: 90px">Expand</th>
@@ -14,6 +15,7 @@
           <td><%= resource.stash_version.version %></td>
           <td><%= resource.id %></td>
           <td><%= resource.last_curation_activity.readable_status %></td>
+          <td><%= formatted_datetime(resource.last_curation_activity.created_at) %></td>
           <td><%= formatted_datetime(resource.updated_at) %></td>
           <td><%= resource.editor ? "<a href=\"#{user_admin_profile_path(id: resource.editor.id)}\">#{resource.editor.name}</a>".html_safe : '' %></td>
           <td>
@@ -35,7 +37,7 @@
           </td>
         </tr>
         <tr id="cactivity_<%=resource.id %>" hidden>
-          <td colspan="6">
+          <td colspan="7">
             <div class="changes-header">
               <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> curation activity</p>
               <button class="c-admin-edit-icon log-close" aria-label="Close">
@@ -49,7 +51,7 @@
         </tr>
         <% if resource.updated_at > Date.parse('2025-06-24') %>
           <tr id="changes_<%= resource.id %>" hidden>
-            <td colspan="6">
+            <td colspan="7">
               <div class="changes-header">
                 <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> changes</p>
                 <button class="c-admin-edit-icon log-close" aria-label="Close">
@@ -63,7 +65,7 @@
           </tr>
           <% if resource.files_changed? %>
             <tr id="file_changes_<%= resource.id %>" hidden>
-              <td colspan="6">
+              <td colspan="7">
                 <div class="changes-header">
                   <p style="margin: 1ch 0 .25ch; font-weight: bold" role="heading" aria-level="3">Version <%= resource.stash_version.version %> file changes</p>
                   <button class="c-admin-edit-icon log-close" aria-label="Close">
