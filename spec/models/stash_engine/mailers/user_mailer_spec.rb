@@ -106,6 +106,7 @@ module StashEngine
           allow(@resource).to receive(:title).and_return('A dataset title that contains <em>italics</em> and <sup>stuff</sup>')
           allow(@resource).to receive(:current_curation_status).and_return(status)
           UserMailer.status_change(@resource, status).deliver_now
+          expect(@resource.title.strip_tags).to eq('A dataset title that contains italics and stuff')
           assert_email("[test] Dryad Submission \"#{@resource.title.strip_tags}\"")
         end
       end
