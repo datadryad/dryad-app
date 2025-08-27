@@ -17,6 +17,8 @@ module StashDatacite
       @related_identifier.verified = @related_identifier.live_url_valid?
       respond_to do |format|
         if @related_identifier.save
+          @resource.reload
+          release_resource(@resource) if @resource.identifier&.publication_article_doi
           format.js do
             load_activity
           end
@@ -100,6 +102,8 @@ module StashDatacite
     private
 
     def load_activity
+      render js: 'window.location.reload()' and return if @new_res.present?
+
       @related_work = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id)
       @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :primary_article)
       @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :preprint)
