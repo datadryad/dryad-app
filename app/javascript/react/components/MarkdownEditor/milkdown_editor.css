@@ -9,6 +9,10 @@
   container-type: inline-size;
 }
 
+.micro_editor {
+  margin: .25ch auto .5ch !important;
+}
+
 .markdown_editor:has(.milkdown[aria-invalid]) {
   border-color: rgb(209, 44, 29);
 }
@@ -29,6 +33,9 @@
 #readme_editor .md_editor_textarea {
   height: 55vh;
 }
+.micro_editor .md_editor_textarea {
+  height: calc(1.5rem + 1ch + 6px);
+}
 
 .md_editor_textarea > div:not(.c-alert--error) {
   overflow: auto;
@@ -40,6 +47,9 @@
 @media screen and (max-width: 760px) {
   .md_editor_textarea {
     height: 75vh;
+  }
+  .micro_editor .md_editor_textarea {
+    height: calc(1.5rem + 1ch + 6px);
   }
 }
 
@@ -63,6 +73,11 @@
   row-gap: 3px;
 }
 
+.micro_editor .md_editor-buttons {
+  background-color: #f7f7f7;
+  justify-content: flex-end;
+}
+
 .markdown_editor .md_editor-buttons div[role="group"]:not(:last-of-type) {
   border-right: thin solid #d0d0d0;
   margin-right: .25ch;
@@ -72,6 +87,10 @@
 .markdown_editor .md_editor-buttons .md_editor-toggle {
   margin-left: auto;
   white-space: nowrap;
+}
+
+.micro_editor .md_editor-buttons .md_editor-toggle {
+  display: none;
 }
 
 .markdown_editor .md_editor-buttons .md_editor-toggle button {
@@ -137,6 +156,13 @@
   padding: 10px 8px;
 }
 
+.micro_editor .md_editor-buttons .headingButton,
+.micro_editor .md_editor-buttons button {
+  height: 1.5rem;
+  font-size: .9rem;
+  padding: 5px;
+}
+
 .markdown_editor .md_editor-buttons .headingButton {
   display: flex;
   justify-content: space-between;
@@ -153,6 +179,12 @@
   background-color: rgb(233, 236, 239);
   border: none;
   min-width: 2.3rem;
+}
+
+.micro_editor .md_editor-buttons button {
+  background-color: #f7f7f7;
+  min-width: 1.8rem;
+  color: rgb(78, 80, 80);
 }
 
 .markdown_editor .md_editor-buttons button:hover,
@@ -188,7 +220,7 @@
   text-shadow: none;
 }
 
-.markdown_editor .md_editor-buttons > button:first-child,
+.markdown_editor:not(.micro_editor) .md_editor-buttons > button:first-child,
 .markdown_editor .md_editor-buttons > *[class*='Select']:first-child,
 .markdown_editor .md_editor-buttons > *[class*='Select']:first-child > *:first-child {
   border-top-left-radius: 5px;
@@ -521,6 +553,11 @@
   min-height: 100%;
 }
 
+.micro_editor .milkdown .ProseMirror.editor,
+.micro_editor .cm-editor {
+  padding: 8px;
+}
+
 .ProseMirror.editor *:first-child {
   margin-top: 0;
 }
@@ -528,6 +565,10 @@
 .ProseMirror.editor p {
   white-space: normal;
   white-space-collapse: preserve-spaces;
+}
+
+.micro_editor .ProseMirror.editor p {
+  margin: 0;
 }
 
 .milkdown, .headingMenu li {
@@ -543,6 +584,10 @@
 
 .milkdown *, .milkdown *:focus, .ProseMirror-selectednode {
   outline: none;
+}
+
+.milkdown table tr p:first-child:last-child {
+  margin: 0;
 }
 
 .milkdown h1,

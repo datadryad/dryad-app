@@ -14,7 +14,7 @@
 </div>
 
 <div class="search-results-footer" id="admin-pagination">
-  <%= form_with(url: admin_dashboard_count_path(format: :js, page: @page, page_size: @page_size, sort: @sort, direction: params[:direction], search: params[:search]), method: :post, local: false, id: 'count_form') do %>
+  <%= form_with(url: admin_dashboard_count_path(format: :js, page: @page, page_size: @page_size, sort: @sort, direction: params[:direction], search: params[:search], share: params[:share]), method: :post, local: false, id: 'count_form') do %>
     <input type="hidden" name="sql" value="<%= @sql %>"/>
     <button type="submit" id="count_form_button" hidden/>
   <% end %>

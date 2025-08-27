@@ -26,8 +26,17 @@ end
         <td><%= formatted_datetime(c.created_at) %></td>
         <td>
           <% if c.event == 'update' %>
-            <% if c.object_changes.keys == ['download_filename'] %>
+            <%if c.object_changes.keys == ['download_filename'] %>
               Renamed <del><%= c.object_changes['download_filename'][0] %></del> &rarr; <ins><%= c.object_changes['download_filename'][1] %></ins>
+            <% else %>
+              <%= c.object_changes['file_state']&.dig(1)&.capitalize %>:
+              <% file = @resource.generic_files.where(id: c.object['id']).first %>
+              <% if file&.original_deposit_file %>
+                <a href="<%= file.original_deposit_file.uploaded_success_url %>"><%= c.object['download_filename'] || c.object['upload_file_name'] %></a>
+                (<%= filesize(c.object['upload_file_size']) %>)
+              <% else %>
+                <em><%= c.object['download_filename'] %></em>
+              <% end %>
             <% end %>
           <% else %>
             <%= c.object_changes['file_state']&.dig(1)&.capitalize %>:

@@ -38,4 +38,11 @@ RSpec.feature 'Landing', type: :feature, js: true do
     expect(page).to have_text(/\d* downloads/)
   end
 
+  it 'displays a title with italics, superscript, and subscript' do
+    @resource.update(title: 'This title test has <em>some</em> <sup>special</sup> <sub>elements</sub>')
+    visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
+    expect(page).to have_css('#display_resource h1 em')
+    expect(page).to have_css('#display_resource h1 sup')
+    expect(page).to have_css('#display_resource h1 sub')
+  end
 end

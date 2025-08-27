@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import axios from 'axios';
 import {sentenceCase} from '../../../../lib/sentence-case';
 import ImportForm from './ImportForm';
@@ -32,16 +32,22 @@ const capitals = (t) => {
 };
 
 export default function TitleImport({current, resource, setResource}) {
+  const dupeRef = useRef(null);
   const [connections, setConnections] = useState([]);
   const [apiJournals, setAPIJournals] = useState([]);
   const [importError, setImportError] = useState(null);
   const [caseWarning, setCaseWarning] = useState(false);
   const [dupeWarning, setDupeWarning] = useState(false);
+  const [caseTitle, setCaseTitle] = useState(null);
 
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   useEffect(() => {
     if (resource.title) {
+      const p = document.createElement('p');
+      p.innerHTML = resource.title;
+      const testTitle = p.textContent || p.innerText;
+      setCaseTitle(testTitle);
       if (!resource.identifier.process_date?.processing) {
         axios.get(`/resources/${resource.id}/dupe_check.json`).then((data) => {
           setDupeWarning(data.data?.[0]?.title || false);
@@ -49,13 +55,17 @@ export default function TitleImport({current, resource, setResource}) {
       } else {
         setDupeWarning(false);
       }
-      if (capitals(resource.title)) {
+      if (capitals(testTitle)) {
         setCaseWarning(true);
       } else {
         setCaseWarning(false);
       }
     }
   }, [resource.title]);
+
+  useEffect(() => {
+    if (dupeRef.current && dupeWarning) dupeRef.current.innerHTML = dupeWarning;
+  }, [dupeWarning, dupeRef.current]);
 
   useEffect(() => {
     async function getList() {
@@ -115,7 +125,7 @@ export default function TitleImport({current, resource, setResource}) {
       {caseWarning && (
         <div className="callout warn">
           <p style={{fontSize: '.98rem'}}>Please correct your dataset title to sentence case, which could look like:</p>
-          <p><span>{sentenceCase(resource.title)}</span>
+          <p><span>{sentenceCase(caseTitle)}</span>
             <span
               className="copy-icon"
               role="button"
@@ -138,7 +148,7 @@ export default function TitleImport({current, resource, setResource}) {
         <div className="callout warn">
           <p>
             This is the same title or primary publication as your existing submission:
-            <b style={{display: 'block', marginTop: '.5ch'}}>{dupeWarning}</b>
+            <b style={{display: 'block', marginTop: '.5ch'}} ref={dupeRef} />
           </p>
           <div>
             <form action={`/resources/${resource.id}`} method="post" style={{display: 'inline'}}>

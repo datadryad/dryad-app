@@ -68,6 +68,19 @@ export const subKeymap = $useKeymap('subKeymap', {
   },
 });
 
+export const noNewLines = $command('NoNewLines', () => () => () => true);
+
+export const exitKeymap = $useKeymap('exitKeyMap', {
+  CustomCommand: {
+    shortcuts: ['Enter', 'Shift-Enter', 'Mod-b', 'Mod-e', 'Mod-k', 'Mod-Alt-x', 'Mod-Shift-b', 'Mod-Alt-7', 'Mod-Alt-8', 'Mod-]', 'Mod-['],
+    priority: 100,
+    command: (ctx) => {
+      const c = ctx.get(commandsCtx);
+      return () => c.call(noNewLines.key);
+    },
+  },
+});
+
 export const commands = {
   undo: undoCommand,
   redo: redoCommand,

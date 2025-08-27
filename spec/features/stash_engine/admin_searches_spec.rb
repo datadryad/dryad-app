@@ -25,10 +25,10 @@ RSpec.feature 'AdminSearch', type: :feature do
       identifier = create(:identifier)
       create(:resource, :submitted, user: @user, identifier: identifier)
     end
-    sign_in(@superuser, false)
   end
 
   it 'saves search settings', js: true do
+    sign_in(@superuser, false)
     visit stash_url_helpers.admin_dashboard_path
     expect(page).to have_text('Admin dashboard')
     check 'submitter'
@@ -42,7 +42,7 @@ RSpec.feature 'AdminSearch', type: :feature do
     expect(find('#search_head')).to have_text('Search test')
   end
 
-  context :search_editing do
+  context :saved_search do
     before(:each) do
       # rubocop:disable Layout/LineLength
       @properties = '{"fields":["doi","authors","submitter"],"filters":{"member":"","status":"","curator":"","journal":{"value":"","label":""},"sponsor":"","funder":{"value":"","label":""},"affiliation":{"value":"","label":""},"updated_at":{"start_date":"","end_date":""},"submit_date":{"start_date":"","end_date":""},"publication_date":{"start_date":"","end_date":""},"identifiers":""},"search_string":""}'
@@ -50,7 +50,23 @@ RSpec.feature 'AdminSearch', type: :feature do
       @superuser.admin_searches << StashEngine::AdminSearch.create(title: 'First saved search', properties: @properties)
     end
 
+    it 'shows shared search', js: true do
+      @superuser.admin_searches.first.create_code
+      sign_in(create(:user, role: 'admin'))
+      visit stash_url_helpers.admin_dashboard_path(share: @superuser.admin_searches.first.share_code)
+      expect(page).to have_text('Admin dashboard')
+      expect(page).to have_text('First saved search')
+      expect(find('#search_head')).not_to have_text('First saved search')
+      expect(page).to have_text('Display fields')
+      expect(find('#submitter')).to be_checked
+      expect(find('thead')).to have_text('Submitter')
+      expect(page).to have_button('Save search')
+    end
+
     context :search_properties do
+      before(:each) do
+        sign_in(@superuser, false)
+      end
       it 'does not show saved search', js: true do
         visit stash_url_helpers.admin_dashboard_path
         expect(page).to have_text('Admin dashboard')
@@ -119,6 +135,15 @@ RSpec.feature 'AdminSearch', type: :feature do
     end
 
     context :search_profile do
+      before(:each) do
+        sign_in(@superuser, false)
+      end
+      it 'has a search share code', js: true do
+        visit stash_url_helpers.my_account_path
+        expect(find('#admin_searches_list')).to have_text('First saved search')
+        expect(@superuser.admin_searches.first.share_code).not_to eq(nil)
+        expect(page).to have_link(nil, href: admin_dashboard_path(share: @superuser.admin_searches.first.share_code, clear: true))
+      end
       it 'edits search details', js: true do
         visit stash_url_helpers.my_account_path
         expect(find('#admin_searches_list')).to have_text('First saved search')

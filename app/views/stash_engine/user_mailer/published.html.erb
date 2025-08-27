@@ -1,7 +1,7 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>
-  Your dataset titled "<%= @resource.title %>" has been reviewed by a curator and approved for publication.
+  Your dataset titled "<%= @resource.title.html_safe %>" has been reviewed by a curator and approved for publication.
   It is publicly accessible at this link:
   <a href="<%= @resource.identifier_uri %>"><%= @resource.identifier_uri %></a>.
 </p>

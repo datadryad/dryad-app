@@ -29,7 +29,8 @@ class PaymentsController < ApplicationController
         checkout_session_id: session.id,
         status: :created,
         amount: payment_service.total_amount,
-        has_discount: payment_service.has_discount
+        has_discount: payment_service.has_discount,
+        ppr_fee_paid: payment_service.ppr_fee_paid
       )
     rescue StandardError => e
       render json: {
@@ -47,7 +48,7 @@ class PaymentsController < ApplicationController
     #  - success page refresh
     return if payment.paid?
 
-    identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max)
+    identifier.update(last_invoiced_file_size: [identifier.last_invoiced_file_size.to_i, @resource.total_file_size].max) unless payment.ppr_fee_paid?
 
     payment.update(
       status: :paid,
@@ -91,8 +92,9 @@ class PaymentsController < ApplicationController
   end
 
   def create_params
-    attrs = params.permit(%i[resource_id generate_invoice])
+    attrs = params.permit(%i[resource_id generate_invoice pay_ppr_fee])
     attrs[:generate_invoice] = ActiveModel::Type::Boolean.new.cast(attrs[:generate_invoice]) if attrs.key?(:generate_invoice)
+    attrs[:pay_ppr_fee] = ActiveModel::Type::Boolean.new.cast(attrs[:pay_ppr_fee]) if attrs.key?(:pay_ppr_fee)
     attrs.to_hash.with_indifferent_access
   end
 end

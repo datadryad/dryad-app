@@ -23,7 +23,7 @@ import {
 } from './schemas';
 import {
   bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap,
-  toggleSupCommand, toggleSubCommand, supKeymap, subKeymap,
+  toggleSupCommand, toggleSubCommand, supKeymap, subKeymap, noNewLines, exitKeymap,
 } from './milkdownCommands';
 
 const allowSpans = [
@@ -51,7 +51,7 @@ const joinListItems = (left, right, parent) => {
 /* eslint-enable consistent-return */
 
 function MilkdownCore({
-  onChange, attr, setActive, setLevel, htmlInput,
+  onChange, attr, setActive, setLevel, htmlInput, micro,
 }) {
   useEditor((root) => Editor
     .make()
@@ -102,7 +102,7 @@ function MilkdownCore({
         }
       });
     })
-    .use([bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
+    .use(micro ? [noNewLines, exitKeymap] : [bulletWrapCommand, bulletWrapKeymap, orderWrapCommand, orderWrapKeymap])
     .use([listen, commonmark, gfm, history, trailing, selectionListener])
     .use([html, supPlugin, supSchema, supAttr, supRule, subPlugin, subSchema, subAttr, subRule])
     .use([toggleSupCommand, supKeymap, toggleSubCommand, subKeymap]));
@@ -116,7 +116,7 @@ const defaultButtons = ['heading', 'strong', 'emphasis', 'superscript', 'subscri
   'list_menu', 'spacer', 'undo', 'redo'];
 
 function MilkdownEditor({
-  id, attr, initialValue, htmlInput, replaceValue, onChange, onReplace, buttons = defaultButtons,
+  id, attr, initialValue, htmlInput, replaceValue, onChange, onReplace, micro, buttons = defaultButtons,
 }) {
   const [loading, editor] = useInstance();
 
@@ -250,7 +250,7 @@ function MilkdownEditor({
             />
           </div>
         )}
-        <MilkdownCore onChange={setSaveVal} htmlInput={htmlInput} setActive={setActive} setLevel={setHeadingLevel} attr={attr} />
+        <MilkdownCore onChange={setSaveVal} htmlInput={htmlInput} setActive={setActive} setLevel={setHeadingLevel} attr={attr} micro={micro} />
         <CodeEditor
           attr={attr}
           content={initialCode}
@@ -267,7 +267,7 @@ function MilkdownEditor({
 
 function MarkdownEditor(props) {
   return (
-    <div id={props.id} hidden={props.hidden} className="markdown_editor">
+    <div id={props.id} hidden={props.hidden} className={`markdown_editor${props.micro ? ' micro_editor' : ''}`}>
       <MilkdownProvider>
         <MilkdownEditor {...props} />
       </MilkdownProvider>

@@ -6,21 +6,21 @@ flash.each do |type, message|
     <% if type == "alert" %>
       <div class="js-alert c-alert--error" role="alert">
         <div class="c-alert__text">
-          <%= m %>
+          <%= m.html_safe %>
         </div>
         <button aria-label="close" class="js-alert__close o-button__close c-alert__close flash_button"></button>
       </div>
     <% elsif type == "notice" %>
       <div class="js-alert c-alert--success" role="alert">
         <div class="c-alert__text">
-          <%= m %>
+          <%= m.html_safe %>
         </div>
         <button aria-label="close" class="js-alert__close o-button__close c-alert__close flash_button"></button>
       </div>
     <% elsif type == "info" %>
       <div class="js-alert c-alert--informational" role="alert">
         <div class="c-alert__text">
-          <%= m %>
+          <%= m.html_safe %>
         </div>
         <button aria-label="close" class="js-alert__close o-button__close c-alert__close flash_button"></button>
       </div>

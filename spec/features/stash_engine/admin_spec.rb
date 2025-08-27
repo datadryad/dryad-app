@@ -29,7 +29,7 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_text('1 (Submitted)')
     end
 
-    it 'redirects to the dataset editing page, and the user is logged in, when requesting an edit link', js: true do
+    it 'redirects to the dataset editing page, as the submitter, when the user is not logged in and using an edit link', js: true do
       sign_out
       @identifier.edit_code = Faker::Number.number(digits: 4)
       @identifier.save
@@ -37,6 +37,7 @@ RSpec.feature 'Admin', type: :feature do
       visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
       expect(page).to have_text('Dataset submission preview')
       expect(page).to have_text('User settings')
+      expect(page).to have_text('You are editing this dataset on behalf of')
     end
 
     it 'rejects an attempt to edit the dataset with an invalid edit_code', js: true do

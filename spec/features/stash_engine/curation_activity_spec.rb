@@ -89,12 +89,12 @@ RSpec.feature 'CurationActivity', type: :feature do
       end
     end
 
-    context :superuser do
+    context :manager do
 
       before(:each) do
         mock_salesforce!
-        @superuser = create(:user, role: 'superuser')
-        sign_in(@superuser, false)
+        @manager = create(:user, role: 'manager')
+        sign_in(@manager, false)
         visit stash_url_helpers.admin_dashboard_path
 
         expect(page).to have_css('a[title="Activity log"]')
@@ -129,7 +129,7 @@ RSpec.feature 'CurationActivity', type: :feature do
         expect(page).to have_text('Some Note')
       end
 
-      it 'allows superuser to set a fee waiver', js: true do
+      it 'allows data manager to set a fee waiver', js: true do
         expect(@resource.identifier.payment_type).to be(nil)
         expect(page).to have_text('Payment:')
         click_button('Apply fee discount')

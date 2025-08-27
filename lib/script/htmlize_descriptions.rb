@@ -20,7 +20,7 @@ module Script
     def html?
       return false if @text.blank?
 
-      ActionController::Base.helpers.strip_tags(@text) != CGI.escapeHTML(@text)
+      @text.strip_tags != CGI.escapeHTML(@text)
     end
 
     def text_as_html

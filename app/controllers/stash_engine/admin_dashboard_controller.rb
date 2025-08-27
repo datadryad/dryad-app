@@ -1,6 +1,7 @@
 module StashEngine
   # rubocop:disable Metrics/ClassLength
   class AdminDashboardController < ApplicationController
+    include PublicationMixin
     helper SortableTableHelper
     helper AdminHelper
     helper AdminDashboardHelper
@@ -120,13 +121,18 @@ module StashEngine
       session[:admin_search_filters] = nil if params[:clear]
       session[:admin_search_fields] = nil if params[:clear]
       session[:admin_search_string] = nil if params[:clear]
-      @saved_search = current_user.admin_searches[@search - 1] if params[:search]
+      @shared_search = StashEngine::AdminSearch.find_by(share_code: params[:share]) if params[:share].present?
+      if @shared_search&.user_id == current_user.id
+        @saved_search = @shared_search
+        @shared_search = nil
+      end
+      @saved_search ||= current_user.admin_searches[@search - 1] if params[:search].present?
       @saved_search ||= current_user.admin_searches.find_by(default: true)
 
-      @search_string = params[:q] || session[:admin_search_string] || @saved_search&.search_string
-      @filters = params[:filters] || session[:admin_search_filters] || @saved_search&.filters
+      @search_string = params[:q] || session[:admin_search_string] || @shared_search&.search_string || @saved_search&.search_string
+      @filters = params[:filters] || session[:admin_search_filters] || @shared_search&.filters || @saved_search&.filters
       @filters = JSON.parse(@filters.to_json, symbolize_names: true) unless @filters.blank?
-      @fields = params[:fields] || session[:admin_search_fields] || @saved_search&.fields
+      @fields = params[:fields] || session[:admin_search_fields] || @shared_search&.fields || @saved_search&.fields
 
       session[:admin_search_filters] = params[:filters] if params[:filters].present?
       session[:admin_search_fields] = params[:fields] if params[:fields].present?
@@ -364,18 +370,22 @@ module StashEngine
 
       return state_error unless CurationActivity.allowed_states(@last_state, current_user).include?(@status)
 
-      decipher_curation_activity
-      @note = params.dig(:curation_activity, :note)
-      @resource.publication_date = @pub_date
-      if @status == 'curation'
-        @resource.user_id = current_user.id
-        @curator_name = current_user.name
+      if @status == 'submitted' && @last_state == 'peer_review'
+        release_resource(@resource)
+      else
+        decipher_curation_activity
+        @note = params.dig(:curation_activity, :note)
+        @resource.publication_date = @pub_date
+        if @status == 'curation'
+          @resource.user_id = current_user.id
+          @curator_name = current_user.name
+        end
+        @resource.hold_for_peer_review = true if @status == 'peer_review'
+        @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
+        @resource.save
+        @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
+        @resource.reload
       end
-      @resource.hold_for_peer_review = true if @status == 'peer_review'
-      @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
-      @resource.save
-      @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
-      @resource.reload
     end
 
     def decipher_curation_activity

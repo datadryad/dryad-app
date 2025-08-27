@@ -2,13 +2,13 @@ module StashEngine
   class IdentifierPolicy < ApplicationPolicy
 
     def destroy?
-      @user.superuser? &&
+      @user.min_manager? &&
         @record.resources.count == 1 &&
         @record.resources.first.curation_activities.pluck(:status).uniq == ['in_progress']
     end
 
     def reset_payments?
-      @user.superuser? &&
+      @user.min_manager? &&
         @record.payments.count == 1 &&
         @record.payments.first.pay_with_invoice
     end

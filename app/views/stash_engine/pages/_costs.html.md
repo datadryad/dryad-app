@@ -59,6 +59,13 @@ We are sensitive to the fact that fees for individual researchers are a burden a
 Effective June 2024, Dryad's Data Publishing Charge cannot be paid using vouchers.
 
 
+## Private for Peer Review Fee
+
+During submission, authors have the option to make their data [Private for Peer Review](submission_process#private-for-peer-review). Private datasets are made available via a temporary, anonymous link suitable for double-blind peer review. Authors have the option to pay the full Data Publishing Charge at submission or pay a Private for Peer Review Fee of $50. The Private for Peer Review Fee is nonrefundable, but it is applied toward the balance of the [Data Publishing Charge](#author-fees) once the dataset advances to curation for publication.
+
+When you’re ready to make a dataset public, you can release it for curation. It will then advance through the Dryad screening and publication process.
+
+
 ## Refund policy
 
 We aim to handle refund requests fairly and transparently. The specific cases in which a refund of the Data Publishing Charge (DPC) may be granted include:
