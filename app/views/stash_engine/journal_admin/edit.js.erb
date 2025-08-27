@@ -5,15 +5,25 @@ document.getElementById('cancel_dialog').addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('genericModalDialog').close();
 });
-var chk = document.getElementById('flag')
+var chk = document.getElementById('flag_attributes_flag')
 chk.addEventListener('change', () => {
-  var note = document.getElementById('note')
+  var destroy = document.getElementById('flag_attributes__destroy')
+  destroy.value = !chk.checked
+  var note = document.getElementById('flag_attributes_note')
   note.disabled = !chk.checked
   if (!chk.checked) note.value = ''
 })
+
 var ppr = document.getElementById('allow_review_workflow')
 ppr.addEventListener('change', () => {
   var def = document.getElementById('default_to_ppr')
   def.disabled = ppr.checked
   if (ppr.checked) def.checked = false
+})
+
+var ldf = document.getElementById('payment_configuration_attributes_covers_ldf')
+ldf.addEventListener('change', () => {
+  var limit = document.getElementById('payment_configuration_attributes_ldf_limit')
+  limit.disabled = !ldf.checked
+  if (!ldf.checked) limit.value = ''
 })

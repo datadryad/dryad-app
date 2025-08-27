@@ -58,4 +58,9 @@ module ApplicationHelper
     markdown_render(content: content, header_offset: 1)
   end
 
+  def ldf_pricing_tiers_options
+    [['No limit', '']] + FeeCalculator::BaseService::ESTIMATED_FILES_SIZE.map do |tier|
+      ["#{filesize(tier[:range].max)} ($#{tier[:price]})", tier[:tier]]
+    end
+  end
 end

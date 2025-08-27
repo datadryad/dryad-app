@@ -5,13 +5,13 @@
 #  id                      :integer          not null, primary key
 #  allow_review_workflow   :boolean          default(TRUE)
 #  api_contacts            :text(65535)
-#  covers_ldf              :boolean          default(FALSE)
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
 #  journal_code            :string(191)
 #  manuscript_number_regex :string(191)
 #  notify_contacts         :text(65535)
-#  payment_plan_type       :string
+#  old_covers_ldf          :boolean          default(FALSE)
+#  old_payment_plan_type   :string
 #  peer_review_custom_text :text(65535)
 #  preprint_server         :boolean          default(FALSE)
 #  review_contacts         :text(65535)
@@ -129,28 +129,21 @@ module StashEngine
     end
 
     describe '#will_pay?' do
-      it 'returns true when there is a PREPAID plan' do
-        allow(@journal).to receive('payment_plan_type').and_return('PREPAID')
-        expect(@journal.will_pay?).to be(true)
-      end
-
-      it 'returns true when there is a SUBSCRIPTION plan' do
-        allow(@journal).to receive('payment_plan_type').and_return('SUBSCRIPTION')
-        expect(@journal.will_pay?).to be(true)
-      end
-
-      it 'returns true when there is a 2025 plan' do
-        allow(@journal).to receive('payment_plan_type').and_return('2025')
-        expect(@journal.will_pay?).to be(true)
+      StashEngine::Journal::PAYMENT_PLANS.each do |plan|
+        it "returns true when there is a #{plan} plan" do
+          create(:payment_configuration, partner: @journal, payment_plan: plan)
+          expect(@journal.will_pay?).to be(true)
+        end
       end
 
       it 'returns false when there is a no plan' do
-        allow(@journal).to receive('payment_plan_type').and_return(nil)
+        create(:payment_configuration, partner: @journal, payment_plan: nil)
         expect(@journal.will_pay?).to be(false)
       end
 
       it 'returns false when there is an unrecognized plan' do
-        allow(@journal).to receive('payment_plan_type').and_return('BOGUS-PLAN')
+        pc = create(:payment_configuration, partner: @journal)
+        allow(pc).to receive(:payment_plan).and_return('BOGUS-PLAN')
         expect(@journal.will_pay?).to be(false)
       end
     end

@@ -39,7 +39,7 @@
   </span>
 </td>
 <td>
-  <span style="color: <%= t.covers_dpc ? '#3c763d' : 'rgb(209, 44, 29)'%>">
-    <%= t.covers_dpc ? "True" : "False" %>
+  <span style="color: <%= t.payment_configuration&.covers_dpc ? '#3c763d' : 'rgb(209, 44, 29)'%>">
+    <%= t.payment_configuration&.covers_dpc ? "True" : "False" %>
   </span>
 </td>

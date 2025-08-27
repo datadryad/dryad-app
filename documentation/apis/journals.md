@@ -143,7 +143,7 @@ Ignore any results for which the manuscript number or publication name are gibbe
 Updating journals for payment plans and integrations
 ====================================================
 
-When a journal changes payment plans, simply update the `payment_plan_type`
+When a journal changes payment plans, simply update the `payment_configuration.payment_plan`
 field. If the change needs to be retroactive, use this function in the Rails console,
 and then re-generate any needed shopping cart reports:
 ```ruby

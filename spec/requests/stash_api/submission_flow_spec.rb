@@ -10,7 +10,7 @@ RSpec.describe 'SubmissionFlow', type: :request do
   include Mocks::Salesforce
   include Mocks::Stripe
 
-  let(:journal) { create(:journal, payment_plan_type: 'TIERED') }
+  let(:journal) { create(:journal) }
   let(:user) { create(:user, role: 'admin', tenant_id: journal.id) }
   let(:doorkeeper_application) do
     create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', owner_id: user.id, owner_type: 'StashEngine::User')
@@ -42,22 +42,20 @@ RSpec.describe 'SubmissionFlow', type: :request do
   end
 
   context 'for old system payer journal ' do
-    let(:journal) { create(:journal, payment_plan_type: 'TIERED') }
+    let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED') }
 
     # can submit
     it_should_behave_like 'API submission flow', true, { status: 202 }
   end
 
   context 'for new system payer journal' do
-    let(:journal) { create(:journal, payment_plan_type: '2025', covers_ldf: false) }
+    let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025', covers_ldf: false) }
 
     # can submit
     it_should_behave_like 'API submission flow', true, { status: 202 }
   end
 
   context 'for non payer journal' do
-    let(:journal) { create(:journal) }
-
     # can NOT submit, due to payment required
     it_should_behave_like 'API submission flow', false, { status: 403, error: 'You need to pay a Data Publishing Charge of $150 in order to submit.' }
   end

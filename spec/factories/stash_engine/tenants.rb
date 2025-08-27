@@ -5,13 +5,13 @@
 #  id                 :string(191)      not null, primary key
 #  authentication     :json
 #  campus_contacts    :json
-#  covers_dpc         :boolean          default(TRUE)
-#  covers_ldf         :boolean          default(FALSE)
 #  enabled            :boolean          default(TRUE)
 #  long_name          :string(191)
 #  low_income_country :boolean          default(FALSE)
+#  old_covers_dpc     :boolean          default(TRUE)
+#  old_covers_ldf     :boolean          default(FALSE)
+#  old_payment_plan   :integer
 #  partner_display    :boolean          default(TRUE)
-#  payment_plan       :integer
 #  short_name         :string(191)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
@@ -73,15 +73,8 @@ FactoryBot.define do
       end
     end
     campus_contacts { id == 'dryad' ? ['devs@datadryad.org'].to_json : [].to_json }
-    payment_plan { nil }
     enabled { true }
     partner_display do
-      case id
-      when 'email_auth', 'match_tenant', 'ucop'
-        true
-      else false end
-    end
-    covers_dpc do
       case id
       when 'email_auth', 'match_tenant', 'ucop'
         true
@@ -98,6 +91,8 @@ FactoryBot.define do
         tenant.logo.save
         tenant.reload
       end
+
+      create(:payment_configuration, partner: tenant, covers_dpc: true) if tenant.id.in?(%w[email_auth match_tenant ucop])
     end
   end
 

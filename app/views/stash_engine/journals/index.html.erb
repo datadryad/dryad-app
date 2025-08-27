@@ -25,8 +25,8 @@ Dryad partner, you will be responsible for paying the DPC as well as any overage
       <th>ISSNs</th>
       <th>DPC sponsored</th>
       <% if policy(@journals).detail? %>
-        <th class="c-lined-table__sort" <%= sort_display('payment_plan_type') %>>
-          <%= sortable_column_head sort_field: 'payment_plan_type', title: 'Payment plan' %>
+        <th class="c-lined-table__sort" <%= sort_display('payment_plan') %>>
+          <%= sortable_column_head sort_field: 'payment_plan', title: 'Payment plan' %>
         </th>
         <th class="c-lined-table__sort" <%= sort_display('sponsor_id') %>>
           <%= sortable_column_head sort_field: 'sponsor_id', title: 'Parent org' %>
@@ -49,9 +49,9 @@ Dryad partner, you will be responsible for paying the DPC as well as any overage
   <tr class="c-lined-table__row" id="js-dataset-row-id-<%= journal.id %>">
     <td><%= journal.title %></td>
     <td class="c-lined-table__digits" style="white-space: nowrap;"><%= journal.issn_array.join(', ') %></span></td>
-    <td><% if journal.payment_plan_type.present? %><i class="fa fa-check-circle" aria-hidden="true" title="Sponsored"></i><span class="screen-reader-only">Sponsored</span><% end %></td>
+    <td><% if journal.payment_configuration&.payment_plan.present? %><i class="fa fa-check-circle" aria-hidden="true" title="Sponsored"></i><span class="screen-reader-only">Sponsored</span><% end %></td>
     <% if policy(@journals).detail? %>
-      <td class="c-lined-table__digits"><%= journal.payment_plan_type %></td>
+      <td class="c-lined-table__digits"><%= journal.payment_configuration&.payment_plan %></td>
       <td><%= journal.sponsor&.name %></td>
       <td><%= journal.top_level_org&.name == journal.sponsor&.name ? '' : journal.top_level_org&.name %></td>
     <% end %>
