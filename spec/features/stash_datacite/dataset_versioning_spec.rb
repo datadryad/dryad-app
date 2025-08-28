@@ -90,7 +90,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
 
         expect(page).to have_text(@resource.identifier.identifier)
-        within(:css, '#activity_log_table tbody:last-child') do
+        within(:css, '#activity_log_table > tbody:last-child') do
           find('button[aria-label="Curation activity"]').click
         end
         # it has the user comment when they clicked to submit and end in-progress edit
@@ -99,6 +99,27 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(page).to have_text('Curation')
         expect(page).to have_text('Dryad System')
         expect(page).to have_text('System set back to curation')
+
+        within(:css, '#activity_log_table > tbody:last-child') do
+          find('button[aria-label="Curation activity"]').click
+        end
+
+        within(:css, '#activity_log_table > tbody:last-child') do
+          find('button[aria-label="Metadata changes"]').click
+        end
+
+        expect(page).to have_text('Set author information')
+        expect(page).to have_text('Subject list')
+
+        within(:css, '#activity_log_table > tbody:last-child') do
+          find('button[aria-label="Metadata changes"]').click
+        end
+
+        within(:css, '#activity_log_table > tbody:last-child') do
+          find('button[aria-label="File changes"]').click
+        end
+
+        expect(page).to have_text('Created: README.md')
       end
     end
 
