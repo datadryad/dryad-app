@@ -51,7 +51,7 @@ If you wish to provide additional documentation or README files in other formats
 
 ## Upload files
 
-When you upload data files, ensure that they meet our [file requirements](#heading=h.gkxrj86pin4f), are able to be opened, do not contain sensitive information, and do not have licensing conflicts with [CC0](https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/).
+When you upload data files, ensure that they meet our [file requirements](#preparing-your-data, are able to be opened, do not contain sensitive information, and do not have licensing conflicts with [CC0](https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/).
 
 Files can be uploaded from your local computer or from the cloud or remote servers via a URL. When using a URL, Google Drive links do not work, so please choose another mechanism. If using links from GitHub, link to the individual files rather than the repository as a whole. To confirm that files have uploaded successfully, check that all files have a size greater than 0 B.
 

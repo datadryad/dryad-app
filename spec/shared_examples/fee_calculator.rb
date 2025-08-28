@@ -5,17 +5,17 @@ RSpec.shared_examples('calling FeeCalculatorService') do |type|
   end
 end
 
-RSpec.shared_examples('it has 1TB max limit based on options') do |extra_options = {}|
-  context 'with storage_size over 1TB limit' do
-    let(:options) { extra_options.merge({ storage_size: 1_000_000_000_001 }) }
+RSpec.shared_examples('it has 2 TB max limit based on options') do |extra_options = {}|
+  context 'with storage_size over 2 TB limit' do
+    let(:options) { extra_options.merge({ storage_size: 2_000_000_000_001 }) }
 
     it_behaves_like 'it raises out of range error'
   end
 end
 
-RSpec.shared_examples('it has 1TB max limit') do
-  context 'with storage_size over 1TB limit' do
-    let(:new_files_size) { 1_000_000_000_001 }
+RSpec.shared_examples('it has 2 TB max limit') do
+  context 'with storage_size over 2 TB limit' do
+    let(:new_files_size) { 2_000_000_000_001 }
 
     it_behaves_like 'it raises out of range error'
   end
