@@ -27,7 +27,7 @@ FactoryBot.define do
     metadata do
       { 'ms title' => Faker::Hipster.sentence,
         'abstract' => Faker::Hipster.paragraph,
-        'keywords' => [Faker::Educator.subject, Faker::Educator.subject] }
+        'keywords' => [Faker::Hipster.word, Faker::Hipster.word] }
     end
   end
 

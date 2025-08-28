@@ -98,7 +98,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(find('#search_head')).to have_text('First saved search')
         click_button('Fields and filters')
-        expect(page).to have_text('Display fields')
+        expect(page).not_to have_css('#searh_form[hidden]')
         check 'metrics'
         click_button('Apply')
         click_button('Save search changes')
@@ -116,7 +116,7 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(page).to have_text('Admin dashboard')
         expect(find('#search_head')).to have_text('First saved search')
         click_button('Fields and filters')
-        expect(page).to have_text('Display fields')
+        expect(page).not_to have_css('#searh_form[hidden]')
         check 'metrics'
         click_button('Apply')
         click_button('Save as new search')

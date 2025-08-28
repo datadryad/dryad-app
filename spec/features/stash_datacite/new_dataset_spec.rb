@@ -81,8 +81,8 @@ RSpec.feature 'NewDataset', type: :feature do
       fill_in 'author_email', with: first_author[:email]
 
       # fill second
-      click_on 'Add author'
-      expect(page).to have_css('input[name=author_first_name]', count: 2)
+      click_button 'Add author'
+      expect(page).to have_content('First name', count: 2)
       all(:css, 'input[name=author_first_name]')[1].set(second_author[:first])
       all(:css, 'input[name=author_last_name]')[1].set(second_author[:last])
       all(:css, 'input[name=author_email]')[1].set(second_author[:email])
