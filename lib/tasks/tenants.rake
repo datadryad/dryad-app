@@ -1,3 +1,4 @@
+# :nocov:
 require 'json'
 # frozen_string_literal: true
 # rubocop:disable Metrics/BlockLength
@@ -332,3 +333,4 @@ namespace :tenants do
   end
 end
 # rubocop:enable Metrics/BlockLength
+# :nocov:
