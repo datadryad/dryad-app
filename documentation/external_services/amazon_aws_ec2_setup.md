@@ -17,7 +17,7 @@ mkdir bin
 curl https://beyondgrep.com/ack-v3.7.0 > ~/bin/ack && chmod 0755 ~/bin/ack
 ```
 - git setup
-  - edit the `/.ssh/known_hosts` file to contain the keys from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+  - edit the `~/.ssh/known_hosts` file to contain the keys from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
 - install mysql
   - WARNING! MySQL sometimes changes the method for obtaining the RPM. If so, just find the closest available version
     and copy it to the target machine.
