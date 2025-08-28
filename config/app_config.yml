@@ -83,7 +83,7 @@ test:
     dataZip: abcdefg
   maximums:
     merritt_size: 3.0e+10
-    upload_size: 1.0e+12
+    upload_size: 2.0e+12
     zenodo_size: 5.0e+9
     zip_size: 11.0e+9
     api_zip_size: 200
@@ -220,7 +220,7 @@ defaults: &DEFAULTS
   maximums:
     # 300 GB and 50 GB below but expressed in bytes
     merritt_size: 300_000_000_000
-    upload_size: 1.0e+12
+    upload_size: 2.0e+12
     zenodo_size: 50_000_000_000
     zip_size: 11_000_000_000
     api_zip_size: 200_000_000
