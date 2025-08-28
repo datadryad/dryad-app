@@ -38,7 +38,7 @@ module FeeCalculator
           it { is_expected.to eq({ storage_fee: 1_750, total: 1_750 }) }
         end
 
-        it_behaves_like 'it has 1TB max limit based on options'
+        it_behaves_like 'it has 2 TB max limit based on options'
       end
 
       context 'with ppr fee' do
@@ -64,7 +64,7 @@ module FeeCalculator
           it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
         end
 
-        it_behaves_like 'it has 1TB max limit based on options', { pay_ppr_fee: true }
+        it_behaves_like 'it has 2 TB max limit based on options', { pay_ppr_fee: true }
       end
 
       context 'with invoice fee' do
@@ -90,7 +90,7 @@ module FeeCalculator
           it { is_expected.to eq({ storage_fee: 1_750, invoice_fee: 199, total: 1949 }) }
         end
 
-        it_behaves_like 'it has 1TB max limit based on options', { generate_invoice: true }
+        it_behaves_like 'it has 2 TB max limit based on options', { generate_invoice: true }
       end
     end
 
@@ -123,7 +123,7 @@ module FeeCalculator
             it { is_expected.to eq({ storage_fee: 1_750, total: 1_750 }) }
           end
 
-          it_behaves_like 'it has 1TB max limit'
+          it_behaves_like 'it has 2 TB max limit'
         end
 
         context 'with ppr fee' do
@@ -145,7 +145,7 @@ module FeeCalculator
             it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
           end
 
-          it_behaves_like 'it has 1TB max limit'
+          it_behaves_like 'it has 2 TB max limit'
         end
 
         context 'with invoice fee' do
@@ -167,7 +167,7 @@ module FeeCalculator
             it { is_expected.to eq({ storage_fee: 1_750, invoice_fee: 199, total: 1949 }) }
           end
 
-          it_behaves_like 'it has 1TB max limit'
+          it_behaves_like 'it has 2 TB max limit'
         end
       end
 
@@ -232,7 +232,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
 
@@ -280,7 +280,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
 
@@ -301,7 +301,7 @@ module FeeCalculator
             it { is_expected.to eq({ coupon_id: coupon_id, storage_fee: 150, ppr_discount: -50, total: 100 }) }
           end
 
-          it_behaves_like 'it has 1TB max limit'
+          it_behaves_like 'it has 2 TB max limit'
         end
       end
     end
