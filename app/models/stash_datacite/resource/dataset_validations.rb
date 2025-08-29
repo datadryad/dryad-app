@@ -50,18 +50,15 @@ module StashDatacite
       end
 
       def import
-        return 'Journal name missing' if %w[manuscript published].include?(@resource.identifier.import_info) &&
-          @resource.identifier.publication_name.blank?
-        return 'Preprint server missing' if @resource.identifier.import_info == 'preprint' && @resource.identifier.preprint_server.blank?
-        return 'Manuscript number missing' if @resource.identifier.import_info == 'manuscript' && @resource.identifier.manuscript_number.blank?
-
-        if @resource.identifier.import_info == 'preprint'
-          preprint = @resource.related_identifiers.where(work_type: 'preprint').first
-          return 'DOI missing' if preprint.nil? || preprint.related_identifier.blank? || !preprint.valid_doi_format?
-        elsif @resource.identifier.import_info == 'published'
-          primary_article = @resource.related_identifiers.where(work_type: 'primary_article').first
-          return 'DOI missing' if primary_article.nil? || primary_article.related_identifier.blank? || !primary_article.valid_doi_format?
+        if @resource.identifier.publication_name.blank? &&
+          (@resource.identifier.manuscript_number.present? || @resource.identifier.publication_article_doi.present?)
+          return 'Journal name missing'
         end
+        if @resource.identifier.publication_name.present? &&
+          (@resource.identifier.manuscript_number.blank? && @resource.identifier.publication_article_doi.blank?)
+          return 'Manuscript number or published article DOI missing'
+        end
+
         false
       end
 

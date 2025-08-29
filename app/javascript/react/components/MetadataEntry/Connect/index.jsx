@@ -45,10 +45,5 @@ export const publicationFail = (resource) => {
       <p className="error-text" id="published_doi_error">You have entered an invalid DOI or URL for a published article.</p>
     );
   }
-  if (import_info === 'preprint' && !validPrimary(resource, 'preprint')) {
-    return (
-      <p className="error-text" id="preprint_doi_error">A valid DOI for the preprint is required</p>
-    );
-  }
   return false;
 };

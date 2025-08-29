@@ -26,48 +26,39 @@ module StashDatacite
 
       describe :import do
         it 'gives error for unfilled publication' do
-          @resource.identifier.update(import_info: 'published')
+          create(:resource_publication,
+                 resource_id: @resource.id, publication_name: nil,
+                 manuscript_number: '12xu')
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.import
           expect(error).to eq('Journal name missing')
         end
 
-        it 'gives error for unfilled preprint server' do
-          @resource.identifier.update(import_info: 'preprint')
+        it 'gives error for unfilled publication' do
+          create(:related_identifier,
+                 work_type: 'primary_article', resource_id: @resource.id,
+                 related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.import
-          expect(error).to eq('Preprint server missing')
+          expect(error).to eq('Journal name missing')
         end
 
-        it 'gives error for unfilled manuscript number if manuscript' do
-          @resource.identifier.update(import_info: 'manuscript')
+        it 'gives error for unfilled manuscript number' do
           create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.import
-          expect(error).to eq('Manuscript number missing')
+          expect(error).to eq('Manuscript number or published article DOI missing')
         end
 
-        it 'gives error for unfilled publication doi if publication' do
-          @resource.identifier.update(import_info: 'published')
+        it 'gives error for unfilled publication doi' do
           create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
 
           validations = DatasetValidations.new(resource: @resource)
           error = validations.import
-          expect(error).to eq('DOI missing')
-        end
-
-        it 'gives a formatting error when someone puts in a URL instead of a DOI' do
-          @resource.identifier.update(import_info: 'published')
-          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
-          create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'url', work_type:
-            'primary_article')
-
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.import
-          expect(error).to eq('DOI missing')
+          expect(error).to eq('Manuscript number or published article DOI missing')
         end
 
         it "doesn't give error if manuscript filled" do
