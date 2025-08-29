@@ -24,65 +24,6 @@ module StashDatacite
         end
       end
 
-      describe :import do
-        it 'gives error for unfilled publication' do
-          create(:resource_publication,
-                 resource_id: @resource.id, publication_name: nil,
-                 manuscript_number: '12xu')
-
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.import
-          expect(error).to eq('Journal name missing')
-        end
-
-        it 'gives error for unfilled publication' do
-          create(:related_identifier,
-                 work_type: 'primary_article', resource_id: @resource.id,
-                 related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
-
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.import
-          expect(error).to eq('Journal name missing')
-        end
-
-        it 'gives error for unfilled manuscript number' do
-          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
-
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.import
-          expect(error).to eq('Manuscript number or published article DOI missing')
-        end
-
-        it 'gives error for unfilled publication doi' do
-          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
-
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.import
-          expect(error).to eq('Manuscript number or published article DOI missing')
-        end
-
-        it "doesn't give error if manuscript filled" do
-          create(:resource_publication,
-                 resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal',
-                 manuscript_number: '12xu')
-
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.import
-          expect(error).to be_falsey
-        end
-
-        it "doesn't give error if DOI filled" do
-          create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
-          create(:related_identifier,
-                 work_type: 'primary_article', resource_id: @resource.id,
-                 related_identifier: 'https://doi.org/12346/4387', related_identifier_type: 'doi')
-
-          validations = DatasetValidations.new(resource: @resource)
-          error = validations.import
-          expect(error).to be_falsey
-        end
-      end
-
       describe :title do
         it 'returns error if title not filled' do
           @resource.update(title: '')

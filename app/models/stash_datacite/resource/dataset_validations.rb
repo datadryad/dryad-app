@@ -36,7 +36,7 @@ module StashDatacite
       # files that haven't validated, errors uploading, too many files, too big of size
 
       def errors
-        import.presence || title.presence || authors.presence || abstract.presence ||
+        title.presence || authors.presence || abstract.presence ||
         subjects.presence || funder.presence || type_errors.presence || false
       end
 
@@ -47,19 +47,6 @@ module StashDatacite
           data_required.presence || s3_error_uploads.presence || url_error_validating.presence ||
           over_max.presence || readme_required.presence || false
         end
-      end
-
-      def import
-        if @resource.identifier.publication_name.blank? &&
-          (@resource.identifier.manuscript_number.present? || @resource.identifier.publication_article_doi.present?)
-          return 'Journal name missing'
-        end
-        if @resource.identifier.publication_name.present? &&
-          (@resource.identifier.manuscript_number.blank? && @resource.identifier.publication_article_doi.blank?)
-          return 'Manuscript number or published article DOI missing'
-        end
-
-        false
       end
 
       def title
