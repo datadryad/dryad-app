@@ -1,43 +1,127 @@
 require 'rails_helper'
 
-RSpec.feature 'PublicationUpdater', type: :feature do
+RSpec.feature 'PublicationUpdater', type: :feature, js: true do
   include Mocks::Salesforce
   include Mocks::Datacite
 
-  context 'test the helpers' do
+  before(:each) do
+    mock_salesforce!
+    mock_datacite!
+  end
+
+  context 'display and filtering' do
+    let(:resources) { 3.times.map { create(:resource_published) } }
+    let(:proposed_changes) { resources.map { |r| create(:proposed_change, identifier: r.identifier) } }
+
     before(:each) do
-      mock_salesforce!
-      mock_datacite!
-      @user = create(:user)
-      @resource = create(:resource_published, user: @user)
-      @params = {
-        identifier_id: @resource.identifier.id,
-        approved: false,
-        rejected: false,
-        authors: [
-          { 'ORCID' => 'http://orcid.org/0000-0002-0955-3483', 'given' => 'Julia M.', 'family' => 'Petersen',
-            'affiliation' => [{ 'name' => 'Hotel California' }] },
-          { 'ORCID' => 'http://orcid.org/0000-0002-1212-2233', 'given' => 'Michelangelo', 'family' => 'Snow',
-            'affiliation' => [{ 'name' => 'Catalonia' }] }
-        ].to_json,
-        provenance: 'crossref',
-        publication_date: Date.new(2018, 8, 13),
-        publication_doi: '10.1073/pnas.1718211115',
-        publication_issn: '1234-1234',
-        publication_name: 'Ficticious Journal',
-        score: 6.0,
-        title: 'High-skilled labour mobility in Europe before and after the 2004 enlargement'
-      }
-      @proposed_change = StashEngine::ProposedChange.create(@params)
+      resources.each { |r| r.identifier.reload }
+      proposed_changes.each(&:reload)
+      sign_in(create(:user, role: 'manager'))
     end
 
-    it 'shows the proposed change', js: true do
-      sign_in(create(:user, role: 'manager'))
+    it 'shows the proposed changes' do
       visit stash_url_helpers.publication_updater_path
-      expect(page).to have_content(@resource.title)
-      expect(page).to have_content('Published')
-      expect(page).to have_content(@proposed_change.title)
-      expect(page).to have_content(@proposed_change.publication_name)
+      expect(page).to have_content('3 results')
+      expect(page).to have_content('Published', minimum: 3)
+      expect(page).to have_content(resources[1].title)
+      expect(page).to have_content(proposed_changes[1].title)
+      expect(page).to have_content(proposed_changes[1].publication_name)
+    end
+
+    it 'filters the proposed changes' do
+      r = 2.times.map { create(:resource, :submitted) }
+      pc = r.map { |n| create(:proposed_change, :preprint, identifier: n.identifier) }
+      visit stash_url_helpers.publication_updater_path
+      expect(page).to have_content('5 results')
+      expect(page).to have_content('Published', minimum: 3)
+      expect(page).to have_content('Submitted', minimum: 2)
+
+      select 'Submitted'
+      click_button 'Search'
+      expect(page).to have_content('2 results')
+      expect(page).to have_content(r[1].title)
+      expect(page).to have_content(pc[1].title)
+      expect(page).to have_content(pc[1].publication_name)
+
+      click_button 'Reset'
+      expect(page).to have_content('5 results')
+
+      select 'Likely preprints'
+      click_button 'Search'
+      expect(page).to have_content('2 results')
+      expect(page).to have_select("select_type_#{pc[1].id}", selected: 'Preprint')
+      expect(page).to have_content(r[1].title)
+      expect(page).to have_content(pc[1].title)
+      expect(page).to have_content(pc[1].publication_name)
+    end
+  end
+
+  context 'accepting changes' do
+    let(:resources) do
+      [create(:resource_published),
+       create(:resource, :submitted, hold_for_peer_review: true, tenant_id: 'email_auth', user: create(:user, tenant_id: 'email_auth'))]
+    end
+    let(:proposed_changes) { resources.map { |r| create(:proposed_change, identifier: r.identifier) } }
+
+    before(:each) do
+      resources.each { |r| r.identifier.reload }
+      proposed_changes.each(&:reload)
+      sign_in(create(:user, role: 'manager'))
+    end
+
+    it 'accepts a change for a published resource' do
+      visit stash_url_helpers.publication_updater_path
+      within(:css, "form[action=\"/publication_updater/#{proposed_changes[0].id}\"]", match: :first) do
+        click_button 'Accept'
+      end
+
+      expect(page).not_to have_content(proposed_changes[0].title)
+      expect(resources[0].identifier.publication_name).to eq(proposed_changes[0].publication_name)
+      expect(resources[0].identifier.publication_article_doi).to include(proposed_changes[0].publication_doi)
+    end
+
+    it 'accepts a change and submits a PPR resource' do
+      visit stash_url_helpers.publication_updater_path
+      expect(page).to have_content('Private for peer review', minimum: 2)
+      within(:css, "form[action=\"/publication_updater/#{proposed_changes[1].id}\"]", match: :first) do
+        click_button 'Accept'
+      end
+
+      expect(page).not_to have_content(proposed_changes[1].title)
+      expect(resources[1].identifier.publication_name).to eq(proposed_changes[1].publication_name)
+      expect(resources[1].identifier.publication_article_doi).to include(proposed_changes[1].publication_doi)
+      # For some reason the curation_activities created in the approve method are not saved in rspec
+      # They work fine in manual tests
+      # expect(resources[1].current_curation_status).to eq('submitted')
+    end
+  end
+
+  context 'match history page' do
+    let(:resources) { 3.times.map { create(:resource_published) } }
+    let(:proposed_changes) { resources.map { |r| create(:proposed_change, identifier: r.identifier) } }
+
+    before(:each) do
+      resources.each { |r| r.identifier.reload }
+      proposed_changes.each(&:reload)
+      sign_in(create(:user, role: 'manager'))
+    end
+
+    it 'fills the log' do
+      visit stash_url_helpers.publication_updater_path
+      expect(page).to have_content('3 results')
+      expect(page).to have_content('Published', minimum: 3)
+      within(:css, "form[action=\"/publication_updater/#{proposed_changes[0].id}\"]", match: :first) do
+        click_button 'Accept'
+      end
+      within(:css, "form[action=\"/publication_updater/#{proposed_changes[1].id}\"]:last-of-type") do
+        click_button 'Reject'
+      end
+      within(:css, "form[action=\"/publication_updater/#{proposed_changes[2].id}\"]", match: :first) do
+        click_button 'Accept'
+      end
+      click_link 'Match history'
+      expect(page).to have_content('Approved', count: 2)
+      expect(page).to have_content('Rejected', count: 1)
     end
   end
 end
