@@ -17,7 +17,6 @@ export const publicationPass = (resource) => resource.identifier.import_info
   || resource.related_identifiers.find((ri) => ri.work_type === 'primary_article');
 
 export const publicationFail = (resource) => {
-  const {import_info} = resource.identifier;
   const {publication_name, manuscript_number} = resource.resource_publication;
   const primary_article = resource.related_identifiers.find((ri) => ri.work_type === 'primary_article');
   if (manuscript_number && !publication_name) {
