@@ -76,13 +76,11 @@ RSpec.feature 'NewDataset', type: :feature do
       second_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
 
       # fill first
-      fill_in 'author_first_name', with: first_author[:first]
-      fill_in 'author_last_name', with: first_author[:last]
-      fill_in 'author_email', with: first_author[:email]
+      fill_in_author(first_name: first_author[:first], last_name: first_author[:last], email: first_author[:email])
 
       # fill second
       click_button 'Add author'
-      expect(page).to have_content('First name', count: 2)
+      expect(page).to have_content('Second author name is required. Fill in or delete the entry')
       all(:css, 'input[name=author_first_name]')[1].set(second_author[:first])
       all(:css, 'input[name=author_last_name]')[1].set(second_author[:last])
       all(:css, 'input[name=author_email]')[1].set(second_author[:email])

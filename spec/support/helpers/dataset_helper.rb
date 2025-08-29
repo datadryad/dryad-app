@@ -130,10 +130,10 @@ module DatasetHelper
     Faker::Creature::Animal.unique.clear
   end
 
-  def fill_in_author
-    fill_in 'author_first_name', with: Faker::Name.unique.first_name
-    fill_in 'author_last_name', with: Faker::Name.unique.last_name
-    fill_in 'author_email', with: Faker::Internet.email
+  def fill_in_author(first_name: Faker::Name.unique.first_name, last_name: Faker::Name.unique.last_name, email: Faker::Internet.email)
+    fill_in 'author_first_name', with: first_name
+    fill_in 'author_last_name', with: last_name
+    fill_in 'author_email', with: email
     # just fill in results of name dropdown (react) in hidden field and test this separately
     fill_in 'Institutional affiliation', with: Faker::Educator.university
     page.send_keys(:tab)
@@ -183,14 +183,14 @@ module DatasetHelper
     )
   end
 
-  def build_valid_stub_request(url, mime_type = 'text/plain')
+  def build_valid_stub_request(url, mime_type = 'text/plain', size = 37_221)
     stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'
         }
       )
-      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': mime_type })
+      .to_return(status: 200, headers: { 'Content-Length': size, 'Content-Type': mime_type })
   end
 
   def build_invalid_stub_request(url)
