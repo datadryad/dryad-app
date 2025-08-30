@@ -18,7 +18,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         expect(page).to have_text 'Dataset submission'
         click_button 'README'
         click_button 'Build a README'
-        find('[name="data_description"]').base.send_keys(Faker::Lorem.sentence)
+        find('[name="data_description"]').send_keys(Faker::Lorem.sentence)
         expect(page).to have_text('All progress saved')
         click_button 'readme-next'
         find('[name="files_and_variables"]').send_keys('test')
@@ -52,7 +52,8 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
       it 'changes the title' do
         title = Faker::Hipster.sentence
         click_button 'Title'
-        find('[name="title"]').base.send_keys(title)
+        find('[name="title"]').set('')
+        find('[name="title"]').send_keys(title)
         expect(page).to have_text('All progress saved')
         click_button 'README'
         expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included')

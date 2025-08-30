@@ -60,7 +60,9 @@ module DatasetHelper
       find(:label, 'No').click
     end
     click_button 'Next'
-    find('[name="title"]').base.send_keys(Faker::Lorem.sentence(word_count: 6))
+    find('[name="title"]').send_keys(Faker::Hipster.sentence(word_count: 6))
+    page.send_keys(:tab)
+    expect(page).not_to have_text('Title is required')
     click_button 'Authors'
     fill_in_author
     click_button 'Description'
@@ -72,7 +74,9 @@ module DatasetHelper
   end
 
   def fill_in_abstract
-    find('[name="abstract"]').base.send_keys(Faker::Lorem.paragraph)
+    find('[name="abstract"]').send_keys(Faker::Lorem.paragraph)
+    page.send_keys(:tab)
+    expect(page).to have_text('All progress saved')
   end
 
   def add_required_data_files
