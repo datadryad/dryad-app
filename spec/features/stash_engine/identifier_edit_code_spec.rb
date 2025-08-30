@@ -1,4 +1,4 @@
-RSpec.feature 'Admin', type: :feature do
+RSpec.feature 'Identifier.edit_code', type: :feature do
 
   include DatasetHelper
   include Mocks::CurationActivity
