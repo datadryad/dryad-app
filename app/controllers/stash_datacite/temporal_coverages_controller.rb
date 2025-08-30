@@ -1,3 +1,6 @@
+# :nocov:
+# Temoral coverages are no longer invited or displayed
+
 module StashDatacite
   class TemporalCoveragesController < ApplicationController
     before_action :set_temporal_coverage, only: %i[update destroy]
@@ -46,3 +49,4 @@ module StashDatacite
     end
   end
 end
+# :nocov:

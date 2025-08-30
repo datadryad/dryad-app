@@ -59,6 +59,11 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           click_button 'Edit dataset'
         end
         expect(page).to have_text("You are editing #{@author.name}'s dataset.")
+        click_button 'Title'
+        find('[name="title"]').set('')
+        find('[name="title"]').send_keys(Faker::Hipster.sentence(word_count: 6))
+        page.send_keys(:tab)
+        click_button 'Preview changes'
         update_dataset(curator: true)
         @resource.reload
 
@@ -76,7 +81,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           expect(page).to have_css('button[aria-label="Update status"]')
 
           # Make sure the right text is shown
-          expect(page).to have_link(@resource.title)
+          expect(page).to have_link(@resource.title&.html_safe)
           expect(page).to have_text('Curation')
           @resource.authors.each do |author|
             expect(page).to have_text(author.author_last_name)
@@ -90,7 +95,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
 
         expect(page).to have_text(@resource.identifier.identifier)
-        within(:css, '#activity_log_table tbody:last-child') do
+        within(:css, '#activity_log_table > tbody:last-child') do
           find('button[aria-label="Curation activity"]').click
         end
         # it has the user comment when they clicked to submit and end in-progress edit
@@ -99,6 +104,25 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(page).to have_text('Curation')
         expect(page).to have_text('Dryad System')
         expect(page).to have_text('System set back to curation')
+
+        within(:css, '#activity_log_table > tbody:last-child') do
+          find('button[aria-label="Curation activity"]').click
+        end
+
+        find('button[aria-label="All metadata changes"]').click
+
+        expect(page).to have_text('Submission title')
+        expect(page).to have_text('Set author information')
+        expect(page).to have_text('Set related work')
+        expect(page).to have_text('Subject list')
+
+        find('button[aria-label="All metadata changes"]').click
+
+        within(:css, '#activity_log_table > tbody:last-child') do
+          find('button[aria-label="File changes"]').click
+        end
+
+        expect(page).to have_text('Created: README.md')
       end
     end
 

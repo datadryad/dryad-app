@@ -29,6 +29,9 @@ end
 Capybara.asset_host = 'http://localhost:33000'
 Capybara.enable_aria_label = true
 
+# disable css transitions
+Capybara.disable_animation = true
+
 # Webdrivers.install_dir = '~/.webdrivers'
 # Selenium::WebDriver::Chrome.path = '~/.webdrivers/chromedriver'
 

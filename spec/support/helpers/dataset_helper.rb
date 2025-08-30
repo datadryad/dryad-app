@@ -60,7 +60,9 @@ module DatasetHelper
       find(:label, 'No').click
     end
     click_button 'Next'
-    find('[name="title"]').base.send_keys(Faker::Lorem.sentence(word_count: 6))
+    find('[name="title"]').send_keys(Faker::Hipster.sentence(word_count: 6))
+    page.send_keys(:tab)
+    expect(page).not_to have_text('Title is required')
     click_button 'Authors'
     fill_in_author
     click_button 'Description'
@@ -72,7 +74,9 @@ module DatasetHelper
   end
 
   def fill_in_abstract
-    find('[name="abstract"]').base.send_keys(Faker::Lorem.paragraph)
+    find('[name="abstract"]').send_keys(Faker::Lorem.paragraph)
+    page.send_keys(:tab)
+    expect(page).not_to have_css('#abstract_error')
   end
 
   def add_required_data_files
@@ -130,15 +134,16 @@ module DatasetHelper
     Faker::Creature::Animal.unique.clear
   end
 
-  def fill_in_author
-    fill_in 'author_first_name', with: Faker::Name.unique.first_name
-    fill_in 'author_last_name', with: Faker::Name.unique.last_name
-    fill_in 'author_email', with: Faker::Internet.email
+  def fill_in_author(first_name: Faker::Name.unique.first_name, last_name: Faker::Name.unique.last_name, email: Faker::Internet.email)
+    fill_in 'author_first_name', with: first_name
+    fill_in 'author_last_name', with: last_name
+    fill_in 'author_email', with: email
     # just fill in results of name dropdown (react) in hidden field and test this separately
     fill_in 'Institutional affiliation', with: Faker::Educator.university
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
+    expect(page).not_to have_text('author affiliation is required')
   end
 
   def fill_in_validation

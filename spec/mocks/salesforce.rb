@@ -25,6 +25,10 @@ module Mocks
       result = [{ title: 'SF 0003', path: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view' }.to_ostruct]
       allow(Stash::Salesforce).to receive(:find_cases_by_doi).and_return(result)
     end
+
+    def mock_email_case!
+      allow(Stash::Salesforce).to receive(:create_email_case).and_return({ case_num: Faker::Number })
+    end
   end
 
 end

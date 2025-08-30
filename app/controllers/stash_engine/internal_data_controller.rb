@@ -1,3 +1,8 @@
+# :nocov:
+
+# Internal data is historic and no longer majorly used
+# Publication details have been moved to resource_publication
+
 module StashEngine
   class InternalDataController < ApplicationController
     # I don't believe the following is used except as a test, internal data list is currently in the admin datasets
@@ -55,3 +60,4 @@ module StashEngine
 
   end
 end
+# :nocov:

@@ -1,3 +1,6 @@
+# :nocov:
+# Temporal coverages are no longer invited or displayed
+
 module StashApi
   class DatasetParser
     class TemporalCoverages < StashApi::DatasetParser::BaseParser
@@ -16,3 +19,4 @@ module StashApi
     end
   end
 end
+# :nocov:

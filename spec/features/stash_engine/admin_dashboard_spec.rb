@@ -55,12 +55,16 @@ RSpec.feature 'AdminDashboard', type: :feature do
       expect(page).to have_text('Admin dashboard')
       check 'submitter'
       check 'metrics'
+      check 'affiliations'
+      check 'countries'
+      check 'funders'
+      check 'dpc'
       click_button('Apply')
       # must visit instead of clicking link; adding js: true breaks ability to load CSV
       visit stash_url_helpers.admin_dashboard_results_path(format: :csv)
       csv_line = page.body.split("\n").first
       csv_parts = csv_line.split(',')
-      expect(csv_parts).to include('Submitter', 'Metrics')
+      expect(csv_parts).to include('Submitter', 'Metrics', 'Grant funders')
     end
 
     it 'has 2 search fields', js: true do
