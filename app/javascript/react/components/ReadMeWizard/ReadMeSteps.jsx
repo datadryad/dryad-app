@@ -28,6 +28,7 @@ function StepEditor({
         'aria-errormessage': 'readme_error',
         'aria-labelledby': 'md_editor_label',
         'aria-describedby': 'md_editor_desc',
+        name: secTitles[step - 1].toLowerCase().replace(/[^\w]/g, '_'),
       }}
       hidden={hidden}
       initialValue={initialValue}
@@ -106,7 +107,13 @@ export default function ReadMeSteps({
         ))}
       </div>
       <div className="dataset-nav" style={{marginTop: '2rem', marginBottom: '2rem'}}>
-        <button type="button" className="o-button__plain-text1" onClick={() => setStep((s) => Number(s) + 1)}>
+        <button
+          type="button"
+          className="o-button__plain-text1"
+          onClick={() => setStep((s) => Number(s) + 1)}
+          id="readme-next"
+          aria-labelledby="submission-step-title readme-next"
+        >
           {step === secTitles.length ? (
             <>Complete &amp; generate README</>
           ) : (
@@ -114,11 +121,17 @@ export default function ReadMeSteps({
           )}
         </button>
         {step > 1 ? (
-          <button type="button" className="o-button__plain-text0" onClick={() => setStep((s) => Number(s) - 1)}>
+          <button
+            type="button"
+            className="o-button__plain-text0"
+            onClick={() => setStep((s) => Number(s) - 1)}
+            id="readme-previous"
+            aria-labelledby="submission-step-title readme-previous"
+          >
             <i className="fa fa-caret-left" aria-hidden="true" /> Previous
           </button>
         ) : (
-          <button type="button" className="o-button__plain-text1" onClick={restart}>
+          <button type="button" className="o-button__plain-text1" id="readme-cancel" aria-labelledby="submission-step-title readme-cancel" onClick={restart}>
             <i className="fa fa-times" aria-hidden="true" /> Cancel
           </button>
         )}

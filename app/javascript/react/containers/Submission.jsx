@@ -346,7 +346,7 @@ function Submission({
               <div>
                 <div>
                   <div id="submission-header">
-                    <h2 className="o-heading__level2">{step.name}</h2>
+                    <h2 className="o-heading__level2" id="submission-step-title">{step.name}</h2>
                     <div role="status">
                       <div className="saving_text" hidden>Saving&hellip;</div>
                       <div className="saved_text" hidden>All progress saved</div>
@@ -393,7 +393,7 @@ function Submission({
           <div id="submission-step" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
             <div>
               <div id="submission-header">
-                <h2 className="o-heading__level2" tabIndex="-1">{step.name}</h2>
+                <h2 className="o-heading__level2" tabIndex="-1" id="submission-step-title">{step.name}</h2>
                 <div role="status">
                   <div className="saving_text" hidden>Saving&hellip;</div>
                   <div className="saved_text" hidden>All progress saved</div>
