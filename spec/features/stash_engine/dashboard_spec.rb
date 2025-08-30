@@ -93,8 +93,16 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
       end
     end
 
-    context 'special buttons' do
+    context 'peer review release' do
       before(:each) { sign_in(user) }
+
+      it 'does not release with incomplete submission' do
+        click_button 'Release for curation'
+        expect(page).to have_text('Is this dataset ready for curation and publication?')
+        click_button 'Yes'
+
+        expect(page).to have_text('Unable to submit dataset for curation. Please correct submission errors')
+      end
 
       it 'releases from peer review' do
         # complete submission
@@ -106,13 +114,17 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         expect(page).to have_text('Is this dataset ready for curation and publication?')
         click_button 'Yes'
 
+        expect(page).to have_text('Dataset released from Private for Peer Review and submitted for curation')
         expect(page).not_to have_text('Kept private')
         expect(page).to have_text('Curation')
         expect(page).to have_css('#user_processing li', count: 2)
         expect(find('#user_processing')).to have_link(resources[1].title)
       end
+    end
 
+    context 'link article' do
       it 'links a primary article' do
+        sign_in(user)
         doi = Faker::Pid.doi
         click_button 'Link article'
         expect(page).to have_text('Link primary article')
