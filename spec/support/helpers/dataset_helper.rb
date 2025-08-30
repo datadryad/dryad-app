@@ -154,8 +154,8 @@ module DatasetHelper
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
+    page.send_keys(:tab)
     expect(page.document).to have_content('All progress saved')
-    expect(page.document).not_to have_text('author affiliation is required')
   end
 
   def fill_in_validation

@@ -41,6 +41,7 @@ RSpec.feature 'MultipleEditors', type: :feature, js: true do
         within(:css, '.dd-list-item:not(:first-child)') do
           fill_in_author
         end
+        page.send_keys(:tab)
         click_button 'Invite to edit'
         expect(page).to have_text('You may invite this author as a collaborator on the submission.')
         select 'Collaborate'

@@ -21,6 +21,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         find('[name="data_description"]').send_keys(Faker::Lorem.sentence)
         expect(page).to have_text('All progress saved')
         click_button 'readme-next'
+        expect(page).to have_text(@file.download_filename)
         find('[name="files_and_variables"]').send_keys('test')
         page.send_keys(:tab)
         expect(page).to have_text('All progress saved')
@@ -29,7 +30,6 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button 'readme-next'
         expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included')
         expect(page).to have_text(resource.title)
-        expect(page).to have_text(@file.download_filename)
       end
     end
 
