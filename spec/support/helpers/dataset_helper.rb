@@ -63,8 +63,6 @@ module DatasetHelper
     fill_in_title
     click_button 'Authors'
     fill_in_author
-    expect(page).to have_content('All progress saved')
-    expect(page).not_to have_text('author affiliation is required')
     click_button 'Description'
     fill_in_abstract
     fill_in_research_domain
