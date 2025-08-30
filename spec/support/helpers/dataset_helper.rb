@@ -140,7 +140,11 @@ module DatasetHelper
 
   def fill_in_author(first_name: Faker::Name.unique.first_name, last_name: Faker::Name.unique.last_name, email: Faker::Internet.email)
     fill_in 'author_first_name', with: first_name
+    page.send_keys(:tab)
+    expect(page.document).to have_content('All progress saved')
     fill_in 'author_last_name', with: last_name
+    page.send_keys(:tab)
+    expect(page.document).to have_content('All progress saved')
     fill_in 'author_email', with: email
     page.send_keys(:tab)
     expect(page.document).to have_content('All progress saved')
@@ -152,7 +156,6 @@ module DatasetHelper
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
-    page.send_keys(:tab)
     expect(page.document).to have_content('All progress saved')
   end
 
