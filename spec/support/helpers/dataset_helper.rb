@@ -76,7 +76,7 @@ module DatasetHelper
   def fill_in_abstract
     find('[name="abstract"]').send_keys(Faker::Lorem.paragraph)
     page.send_keys(:tab)
-    expect(page).to have_text('All progress saved')
+    expect(page).not_to have_css('#abstract_error')
   end
 
   def add_required_data_files
@@ -143,6 +143,7 @@ module DatasetHelper
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
+    expect(page).not_to have_text('author affiliation is required')
   end
 
   def fill_in_validation
