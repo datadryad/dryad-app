@@ -38,7 +38,7 @@ module CollectionHelper
 
   def fill_required_fields
     fill_required_metadata
-    add_required_abstract
+    fill_in_abstract
     click_button 'Support'
     check('No funding received')
     refresh
@@ -51,7 +51,7 @@ module CollectionHelper
       find(:label, 'No').click
     end
     click_button 'Next'
-    fill_in 'title', with: Faker::Lorem.sentence(word_count: 6)
+    fill_in_title
     click_button 'Next'
     fill_in_author
     fill_in_research_domain
@@ -60,10 +60,16 @@ module CollectionHelper
     fill_in_collection
   end
 
-  def add_required_abstract
-    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
-    ab = res.descriptions.find_by(description_type: 'abstract')
-    ab.update(description: Faker::Lorem.paragraph)
+  def fill_in_title
+    find('[name="title"]').send_keys(Faker::Hipster.sentence(word_count: 6))
+    page.send_keys(:tab)
+    expect(page).not_to have_text('Title is required')
+  end
+
+  def fill_in_abstract
+    find('[name="abstract"]').send_keys(Faker::Lorem.paragraph)
+    page.send_keys(:tab)
+    expect(page).not_to have_css('#abstract_error')
   end
 
   def submit_form

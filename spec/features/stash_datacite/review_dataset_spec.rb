@@ -40,7 +40,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
       # submits
       submit_form
-      expect(page).to have_content(StashEngine::Resource.last.title)
+      expect(page).to have_content(StashEngine::Resource.last.title.html_safe)
       expect(page).to have_content("Your dataset with the DOI #{StashEngine::Resource.last.identifier_uri} was submitted for curation")
     end
   end

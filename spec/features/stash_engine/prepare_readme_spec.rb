@@ -38,6 +38,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         # rubocop:disable Layout/LineLength
         create(:description, resource: resource, description_type: 'technicalinfo', description: "# #{resource.title}\n\nDataset DOI: [#{resource.identifier_value}](#{resource.identifier_value})\n\n#### File: #{@file.download_filename}")
         # rubocop:enable Layout/LineLength
+        resource.reload
         click_button 'Resume'
         expect(page).to have_text 'Dataset submission'
       end
@@ -56,7 +57,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         find('[name="title"]').send_keys(title)
         expect(page).to have_text('All progress saved')
         click_button 'README'
-        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included')
+        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 10)
         expect(page).to have_text(title)
         expect(page).to have_text(@file.download_filename)
       end
@@ -69,7 +70,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button "Save new name for #{@file.download_filename}"
         expect(page).to have_text('All progress saved')
         click_button 'README'
-        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included')
+        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 10)
         expect(page).to have_text(resource.title)
         expect(page).to have_text(fname)
         expect(page).not_to have_text(@file.download_filename)

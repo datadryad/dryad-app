@@ -61,8 +61,10 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(page).to have_text("You are editing #{@author.name}'s dataset.")
         click_button 'Title'
         find('[name="title"]').set('')
-        find('[name="title"]').send_keys(Faker::Hipster.sentence(word_count: 6))
-        page.send_keys(:tab)
+        fill_in_title
+        click_button 'Preview changes'
+        click_button 'Description'
+        fill_in_abstract
         click_button 'Preview changes'
         update_dataset(curator: true)
         @resource.reload
@@ -115,6 +117,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(page).to have_text('Set author information')
         expect(page).to have_text('Set related work')
         expect(page).to have_text('Subject list')
+        expect(page).to have_text('Updated abstract')
 
         find('button[aria-label="All metadata changes"]').click
 

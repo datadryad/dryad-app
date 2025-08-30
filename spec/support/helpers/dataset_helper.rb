@@ -59,10 +59,8 @@ module DatasetHelper
     within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'No').click
     end
-    click_button 'Next'
-    find('[name="title"]').send_keys(Faker::Hipster.sentence(word_count: 6))
-    page.send_keys(:tab)
-    expect(page).not_to have_text('Title is required')
+    click_button 'Title'
+    fill_in_title
     click_button 'Authors'
     fill_in_author
     click_button 'Description'
@@ -71,6 +69,12 @@ module DatasetHelper
     fill_in_keywords
     click_button 'Compliance'
     fill_in_validation
+  end
+
+  def fill_in_title
+    find('[name="title"]').send_keys(Faker::Hipster.sentence(word_count: 6))
+    page.send_keys(:tab)
+    expect(page).not_to have_text('Title is required')
   end
 
   def fill_in_abstract
@@ -138,11 +142,14 @@ module DatasetHelper
     fill_in 'author_first_name', with: first_name
     fill_in 'author_last_name', with: last_name
     fill_in 'author_email', with: email
+    page.send_keys(:tab)
+    expect(page).to have_content('All progress saved')
     # just fill in results of name dropdown (react) in hidden field and test this separately
     fill_in 'Institutional affiliation', with: Faker::Educator.university
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
+    expect(page).to have_content('All progress saved')
     expect(page).not_to have_text('author affiliation is required')
   end
 
