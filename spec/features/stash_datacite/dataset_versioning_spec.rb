@@ -104,14 +104,20 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           find('button[aria-label="Curation activity"]').click
         end
 
-        find('button[aria-label="All metadata changes"]').click
+        within(:css, '#activity_log_table > tbody:last-child') do
+          find('button[aria-label="Metadata changes"]').click
+        end
 
         expect(page).to have_text('Set author information')
         expect(page).to have_text('Subject list')
 
-        find('button[aria-label="All metadata changes"]').click
+        within(:css, '#activity_log_table > tbody:last-child') do
+          find('button[aria-label="Metadata changes"]').click
+        end
 
-        find('button[aria-label="All file changes"]').click
+        within(:css, '#activity_log_table > tbody:last-child') do
+          find('button[aria-label="File changes"]').click
+        end
 
         expect(page).to have_text('Created: README.md')
       end
