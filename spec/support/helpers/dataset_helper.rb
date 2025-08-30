@@ -63,6 +63,8 @@ module DatasetHelper
     fill_in_title
     click_button 'Authors'
     fill_in_author
+    expect(page).to have_content('All progress saved')
+    expect(page).not_to have_text('author affiliation is required')
     click_button 'Description'
     fill_in_abstract
     fill_in_research_domain
@@ -143,14 +145,17 @@ module DatasetHelper
     fill_in 'author_last_name', with: last_name
     fill_in 'author_email', with: email
     page.send_keys(:tab)
-    expect(page).to have_content('All progress saved')
-    # just fill in results of name dropdown (react) in hidden field and test this separately
+    expect(page.document).to have_content('All progress saved')
+    fill_in_affiliation
+  end
+
+  def fill_in_affiliation
     fill_in 'Institutional affiliation', with: Faker::Educator.university
     page.send_keys(:tab)
     page.has_css?('.use-text-entered')
     all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
-    expect(page).to have_content('All progress saved')
-    expect(page).not_to have_text('author affiliation is required')
+    expect(page.document).to have_content('All progress saved')
+    expect(page.document).not_to have_text('author affiliation is required')
   end
 
   def fill_in_validation
