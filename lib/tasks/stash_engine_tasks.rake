@@ -1010,12 +1010,11 @@ namespace :identifiers do
     exit
   end
 
-
   # example: RAILS_ENV=production bundle exec rake identifiers:dataset_info_report_detailed -- --year_month 2024-05
   desc 'Generate a summary report of all items in Dryad'
   task dataset_info_report_detailed: :environment do
     launch_day = Date.new(2019, 9, 17)
-     
+
     # Get the year-month specified in --year_month argument.
     # If none, default to all months since v2 launch_day
     args = Tasks::ArgsParser.parse(:year_month)
@@ -1043,7 +1042,7 @@ namespace :identifiers do
               'Journal Name']
       StashEngine::Identifier.where(created_at: launch_day..).find_each do |i|
         next if i.resources.blank?
-        
+
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         next unless year_month.blank? || approval_date_str&.start_with?(year_month)
 
@@ -1052,7 +1051,7 @@ namespace :identifiers do
         u = res&.owner_author
         r = StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
         stat = i.counter_stat
-        
+
         csv << [i.identifier, i.publication_article_doi,
                 u&.author_first_name, u&.author_last_name, u&.author_email, u&.author_orcid,
                 u&.affiliation&.long_name, r&.country,
@@ -1064,7 +1063,7 @@ namespace :identifiers do
                 stat&.unique_investigation_count, stat&.unique_request_count, stat&.citation_count,
                 i.payment_type, i.publication_name, i.journal&.sponsor&.name,
                 res&.contributors&.map(&:contributor_name)&.compact,
-                res&.authors&.map(&:author_full_name)&.delete_if {|x| x == u&.author_full_name },
+                res&.authors&.map(&:author_full_name)&.delete_if { |x| x == u&.author_full_name },
                 i.publication_name]
       end
     end
@@ -1072,7 +1071,6 @@ namespace :identifiers do
     exit
   end
 
-  
   # example: RAILS_ENV=production bundle exec rake identifiers:biorxiv_report --
   desc 'Generate a summary report of all bioRxiv and medRxiv items in Dryad'
   task biorxiv_report: :environment do
