@@ -1,16 +1,4 @@
-<% changes = @changes.reject do |change|
-  if change.object_changes['file_state']&.dig(1) == 'copied' || change.event == 'destroy'
-    true
-  elsif change.object_changes['file_state']&.dig(1) == 'created' &&
-    @changes.any? { |v| v.event == 'destroy' && v.item_id == change.item_id }
-    true
-  elsif change.object_changes.keys.include?('storage_version_id')
-    true
-  else
-    false
-  end
-end
-%>
+<% changes = pick_changes(@changes) %>
 <table class="c-lined-table" id="curation_table_<%= @resource.id %>">
   <thead>
     <tr>
@@ -25,29 +13,7 @@ end
         <td><%= c.whodunnit.to_i.nonzero? ? "<a href=\"#{user_admin_profile_path(id: c.whodunnit)}\">#{c.user&.name}</a>".html_safe : 'System' %></td>
         <td><%= formatted_datetime(c.created_at) %></td>
         <td>
-          <% if c.event == 'update' %>
-            <%if c.object_changes.keys == ['download_filename'] %>
-              Renamed <del><%= c.object_changes['download_filename'][0] %></del> &rarr; <ins><%= c.object_changes['download_filename'][1] %></ins>
-            <% else %>
-              <%= c.object_changes['file_state']&.dig(1)&.capitalize %>:
-              <% file = @resource.generic_files.where(id: c.object['id']).first %>
-              <% if file&.original_deposit_file %>
-                <a href="<%= file.original_deposit_file.uploaded_success_url %>"><%= c.object['download_filename'] || c.object['upload_file_name'] %></a>
-                (<%= filesize(c.object['upload_file_size']) %>)
-              <% else %>
-                <em><%= c.object['download_filename'] %></em>
-              <% end %>
-            <% end %>
-          <% else %>
-            <%= c.object_changes['file_state']&.dig(1)&.capitalize %>:
-            <% file = @resource.generic_files.where(id: c.object_changes['id']&.dig(1)).first %>
-            <% if file&.original_deposit_file %>
-              <a href="<%= file.original_deposit_file.uploaded_success_url %>"><%= c.object_changes['download_filename']&.dig(1) || c.object_changes['upload_file_name']&.dig(1) %></a>
-              (<%= filesize(c.object_changes['upload_file_size']&.dig(1)) %>)
-            <% else %>
-              <em><%= c.object_changes['download_filename']&.dig(1) %></em>
-            <% end %>
-          <% end %>
+          <%= display_change(c) %>
         </td>
       </tr>
     <% end %>
