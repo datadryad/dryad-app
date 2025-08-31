@@ -1047,6 +1047,7 @@ namespace :identifiers do
         next unless year_month.blank? || approval_date_str&.start_with?(year_month)
 
         res = i.latest_viewable_resource
+        res = i.resources.last if res.blank?
         first_res = i.first_submitted_resource
         u = res&.owner_author
         r = StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
