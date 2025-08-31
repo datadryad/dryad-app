@@ -1037,7 +1037,10 @@ namespace :identifiers do
               'Curation Status',
               'Date First Submitted', 'Date First Published', 'Date Last Modified',
               'Size',
-              
+              'Views', 'Downloads', 'Citations',
+              'Payer', 'Journal', 'Journal Sponsor',
+              'Grant Funders',
+              'Other Authors',
               'Journal Name']
       StashEngine::Identifier.publicly_viewable.find_each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
@@ -1047,6 +1050,7 @@ namespace :identifiers do
 
         u = res.owner_author
         r=StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
+        stat = i.counter_stat
         
         csv << [i.identifier, i.publication_article_doi,
                 u.author_first_name, u.author_last_name, u.author_email, u.author_orcid,
@@ -1056,7 +1060,10 @@ namespace :identifiers do
                 res&.current_curation_status,
                 first_res&.submitted_date, i.date_first_published, i.resources.last.updated_at,
                 i.storage_size,
-                
+                stat&.unique_investigation_count, stat&.unique_request_count, stat&.citation_count,
+                i.payment_type, i.publication_name, i.journal&.sponsor&.name,
+                res.contributors.map(&:contributor_name).compact,
+                res.authors.map(&:author_full_name).delete_if {|x| x == u.author_full_name },
                 i.publication_name]
       end
     end
