@@ -25,6 +25,7 @@ RSpec.feature 'EditLink', type: :feature do
       create(:data_file, resource: @res)
       create(:description, description_type: 'technicalinfo', resource: @res, description: content)
       @res.reload
+      sign_out
       # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
       visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fsubmission_process"
       expect(page).to have_text('You are editing this dataset on behalf of')
