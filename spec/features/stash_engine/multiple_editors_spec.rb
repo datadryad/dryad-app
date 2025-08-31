@@ -2,6 +2,7 @@ require 'rails_helper'
 RSpec.feature 'MultipleEditors', type: :feature, js: true do
 
   include DatasetHelper
+  include Mocks::Aws
 
   describe 'multiple editor functionality' do
     let(:creator) { create(:user) }
@@ -50,7 +51,7 @@ RSpec.feature 'MultipleEditors', type: :feature, js: true do
         within(:css, '[id^="invite-dialog"]') do
           click_button 'Close', match: :first
         end
-        expect(page).to have_text('Invited collaborator')
+        expect(StashEngine::Author.last&.edit_code&.role).to eq('collaborator')
       end
 
       it 'invites an author as a submitter' do
@@ -68,6 +69,56 @@ RSpec.feature 'MultipleEditors', type: :feature, js: true do
         end
         expect(submitter.resources.length).to eq 1
         expect(submitter.roles.first.role).to eq 'submitter'
+      end
+    end
+
+    context 'accepting invitation' do
+      let(:resource) { create(:resource, user: creator) }
+      let(:authors) do
+        [create(:author,
+                resource: resource, author_first_name: creator.first_name, author_last_name: creator.last_name,
+                author_orcid: creator.orcid, author_email: creator.email)] +
+        2.times.map { create(:author, resource: resource, author_orcid: nil) }
+      end
+
+      before(:each) do
+        mock_aws!
+        authors.last.create_edit_code(role: 'collaborator')
+      end
+
+      it 'redirects to login' do
+        visit accept_invite_path(authors.last.edit_code.edit_code)
+        expect(page).to have_text('You must log in to accept this invitation.')
+      end
+
+      it 'does not accept twice' do
+        authors.last.edit_code.update(applied: true)
+        sign_in(create(:user))
+        visit accept_invite_path(authors.last.edit_code.edit_code)
+        expect(page).to have_text('This invitation has already been accepted.')
+      end
+
+      it 'does not accept for deleted datasets' do
+        resource.destroy
+        sign_in(create(:user))
+        visit accept_invite_path(authors.last.edit_code.edit_code)
+        expect(page).to have_text('The dataset you are looking for no longer exists.')
+      end
+
+      it 'lets a collaborator accept' do
+        sign_in(create(:user))
+        visit accept_invite_path(authors.last.edit_code.edit_code)
+        expect(page).to have_text("You may now collaborate on #{resource.title&.html_safe}")
+        expect(page).to have_css('#user_datasets li', count: 1)
+      end
+
+      it 'lets a submitter accept' do
+        authors.last.edit_code.update(role: 'submitter')
+        sign_in(create(:user))
+        visit accept_invite_path(authors.last.edit_code.edit_code)
+        expect(page).to have_text("You may now collaborate on #{resource.title&.html_safe}")
+        expect(page).to have_css('#user_datasets li', count: 1)
+        expect(resource.submitter.id).not_to eq(creator.id)
       end
     end
 
