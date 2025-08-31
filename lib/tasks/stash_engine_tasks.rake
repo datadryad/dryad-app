@@ -1015,7 +1015,7 @@ namespace :identifiers do
   desc 'Generate a summary report of all items in Dryad'
   task dataset_info_report_detailed: :environment do
     launch_day = Date.new(2019, 9, 17)
-    
+     
     # Get the year-month specified in --year_month argument.
     # If none, default to all months since v2 launch_day
     args = Tasks::ArgsParser.parse(:year_month)
@@ -1042,13 +1042,15 @@ namespace :identifiers do
               'Other Authors',
               'Journal Name']
       StashEngine::Identifier.where(created_at: launch_day..).find_each do |i|
+        next if i.resources.blank?
+        
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
-        res = i.latest_viewable_resource
         next unless year_month.blank? || approval_date_str&.start_with?(year_month)
-        first_res = i.first_submitted_resource
 
+        res = i.latest_viewable_resource
+        first_res = i.first_submitted_resource
         u = res&.owner_author
-        r=StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
+        r = StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
         stat = i.counter_stat
         
         csv << [i.identifier, i.publication_article_doi,
