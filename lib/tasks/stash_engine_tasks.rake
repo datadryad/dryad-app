@@ -1014,13 +1014,12 @@ namespace :identifiers do
   # example: RAILS_ENV=production bundle exec rake identifiers:dataset_info_report_detailed -- --year_month 2024-05
   desc 'Generate a summary report of all items in Dryad'
   task dataset_info_report_detailed: :environment do
-    args = Tasks::ArgsParser.parse(:year_month)
+    launch_day = Date.new(2019, 9, 17)
+    
     # Get the year-month specified in --year_month argument.
-    # If none, default to the previously completed month.
-
+    # If none, default to all months since v2 launch_day
+    args = Tasks::ArgsParser.parse(:year_month)
     if args.year_month.blank?
-      log 'No month specified, assuming last month.'
-      year_month = 1.month.ago.strftime('%Y-%m')
       filename = "dataset_info_report_detailed-#{Date.today.strftime('%Y-%m-%d')}.csv"
     else
       year_month = args.year_month
@@ -1042,19 +1041,19 @@ namespace :identifiers do
               'Grant Funders',
               'Other Authors',
               'Journal Name']
-      StashEngine::Identifier.publicly_viewable.find_each do |i|
+      StashEngine::Identifier.where(created_at: launch_day..).find_each do |i|
         approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
         res = i.latest_viewable_resource
         next unless year_month.blank? || approval_date_str&.start_with?(year_month)
         first_res = i.first_submitted_resource
 
-        u = res.owner_author
+        u = res&.owner_author
         r=StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
         stat = i.counter_stat
         
         csv << [i.identifier, i.publication_article_doi,
-                u.author_first_name, u.author_last_name, u.author_email, u.author_orcid,
-                u.affiliation&.long_name, r&.country,
+                u&.author_first_name, u&.author_last_name, u&.author_email, u&.author_orcid,
+                u&.affiliation&.long_name, r&.country,
                 approval_date_str, res&.title,
                 res&.subjects&.fos&.map(&:subject),
                 res&.current_curation_status,
@@ -1062,8 +1061,8 @@ namespace :identifiers do
                 i.storage_size,
                 stat&.unique_investigation_count, stat&.unique_request_count, stat&.citation_count,
                 i.payment_type, i.publication_name, i.journal&.sponsor&.name,
-                res.contributors.map(&:contributor_name).compact,
-                res.authors.map(&:author_full_name).delete_if {|x| x == u.author_full_name },
+                res&.contributors&.map(&:contributor_name)&.compact,
+                res&.authors&.map(&:author_full_name)&.delete_if {|x| x == u&.author_full_name },
                 i.publication_name]
       end
     end
