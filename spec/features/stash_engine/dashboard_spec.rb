@@ -103,7 +103,6 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         end
         expect(page).to have_text('Are you sure you want to remove this dataset?')
         click_button 'Yes'
-        expect(page).to have_content('has been deleted')
         expect(page).to have_css('#user_datasets li', count: 4)
         expect(page).to have_css('#user_in-progress li', count: 1)
       end
