@@ -11,7 +11,7 @@ namespace :rsolr do
 
       identifier.latest_resource_with_public_metadata&.submit_to_solr
     end
+    p 'Complete'
   end
-  p 'Complete'
 end
 # :nocov:
