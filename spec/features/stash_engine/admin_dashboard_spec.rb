@@ -599,6 +599,17 @@ RSpec.feature 'AdminDashboard', type: :feature do
         assert_selector('tbody tr', count: 2)
         expect(find('#search_results')).to have_text(@journal.title, count: 2)
       end
+
+      it 'filters by sponsor', js: true do
+        2.times.map { create(:journal_organization) }
+        sign_out
+        sign_in(create(:user, role: 'superuser'))
+        expect(page).to have_text('Admin dashboard')
+        assert_selector('tbody tr', count: 7)
+        select(@org.name, from: 'filter-sponsor')
+        click_button('Apply')
+        assert_selector('tbody tr', count: 6)
+      end
     end
 
     context :funder_admin, js: true do

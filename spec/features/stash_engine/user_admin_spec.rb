@@ -63,6 +63,18 @@ RSpec.feature 'UserAdmin', type: :feature do
         expect(page.find("#user_tenant_id_#{@user.id}")).to have_text(dryad.short_name)
       end
 
+      it 'allows adding a flag as a system admin', js: true do
+        within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
+          find('.c-admin-edit-icon').click
+        end
+        within(:css, '#genericModalDialog') do
+          check 'Flag'
+          fill_in 'note', with: 'Test flag note'
+          find('input[name=commit]').click
+        end
+        expect(find("#user_flag_#{@user.id}")).to have_css('i[title="Test flag note"]')
+      end
+
       it 'shows the system roles selection' do
         within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
           find('.c-admin-edit-icon').click

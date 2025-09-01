@@ -3,10 +3,12 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
   include DatasetHelper
   include Mocks::Salesforce
   include Mocks::Datacite
+  include Mocks::Aws
 
   before(:each) do
     mock_salesforce!
     mock_datacite!
+    mock_aws!
     create(:tenant)
   end
 
@@ -90,6 +92,43 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         expect(page).to have_css('#user_datasets li', count: 5)
         expect(page).to have_css('#user_in-progress li', count: 2)
         expect(find('#user_in-progress')).to have_text('[No title supplied]')
+      end
+
+      it 'deletes an in progress dataset' do
+        sign_in(user)
+        start_new_dataset
+        click_link 'My datasets'
+        within(:css, '#user_in-progress li:nth-of-type(2)') do
+          click_button 'Delete'
+        end
+        expect(page).to have_text('Are you sure you want to remove this dataset?')
+        click_button 'Yes'
+        expect(page).to have_content('has been deleted')
+        expect(page).to have_css('#user_datasets li', count: 4)
+        expect(page).to have_css('#user_in-progress li', count: 1)
+      end
+    end
+
+    context 'new version' do
+      before(:each) do
+        sign_in(user)
+        within(:css, '#user_private li') do
+          click_button 'Revise submission'
+        end
+      end
+
+      it 'creates a new version' do
+        expect(page).to have_text('Dataset submission')
+        expect(resources[1].identifier.resources.count).to eq 2
+      end
+
+      it 'reverts the version' do
+        click_link 'My datasets'
+        click_button 'Revert'
+        expect(page).to have_text('Are you sure you want to remove this dataset version?')
+        click_button 'Yes'
+        expect(page).not_to have_button('Revert')
+        expect(resources[1].identifier.resources.count).to eq 1
       end
     end
 
