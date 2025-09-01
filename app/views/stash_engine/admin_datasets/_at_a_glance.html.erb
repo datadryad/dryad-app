@@ -121,15 +121,7 @@
         <% end %>
       <% end %>
     </span>
-    <span id="related_works_list" class="child-details"><%= r.resource_publication&.publication_name&.present? ? "#{r.resource_publication&.publication_name}, " : '' %> <%= r.resource_publication&.manuscript_number&.presence || ''%>
-      <% if r.manuscript %>
-        <% status = r.manuscript.accepted? && 'accepted' || r.manuscript.rejected? && 'rejected' || 'submitted' %>
-        <span id="status-label" class="<%= status%>"><%= status%></span>
-      <% end %>
-      <% if @identifier.publication_article_doi.present? %>
-        <span id="doi-label" class="accepted">published</span>
-      <% end %>
-      <br/><%= r.related_identifiers.empty? ? '' : "#{r.related_identifiers.size} related work#{r.related_identifiers.size > 1 ? 's' : ''}" %></span>
+    <span id="related_works_list" class="child-details"><%= display_publications(r) %></span>
   </div>
   <div class="input-stack" style="flex-shrink: 1">
     <span class="input-line">
