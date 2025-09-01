@@ -383,22 +383,6 @@ Set up Anubis
 Detailed Anubis documentation can be found [here](https://anubis.techaro.lol/).
 Anubis is installed on all servers and used as a bridge between Apache and Puma.
 
-Install requirements:
---------------------------------------
-- Go language - version 1.24.2 or newer
-- `brotli.x86_64` package
-```
-cd ~
-sudo yum install brotli.x86_64
-wget https://dl.google.com/go/go1.24.2.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.24.2.linux-amd64.tar.gz
-rm go1.24.2.linux-amd64.tar.gz
-```
-
-Update `~/.bashrc` and add `export PATH=$PATH:/usr/local/go/bin`.
-
-Test the installation with `go version`.
-
 Download and setup Anubis
 --------------------------------------
 Download and install following [these](https://anubis.techaro.lol/docs/admin/botstopper) steps
@@ -410,7 +394,6 @@ Download and install following [these](https://anubis.techaro.lol/docs/admin/bot
 cd ~
 sudo dnf -y install ./techaro-botstopper-1.21.3-1.x86_64.rpm
 sudo cp /etc/techaro-botstopper/default.env /etc/techaro-botstopper/datadryad.env
-sudo cp /usr/share/doc/techaro-botstopper/botPolicies.yaml /home/ec2-user/deploy/current/public/anubis/datadryad.botPolicies.yaml
 cd /etc/techaro-botstopper/
 ```
 
