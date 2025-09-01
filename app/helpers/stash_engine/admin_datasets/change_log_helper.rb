@@ -4,33 +4,53 @@ module StashEngine
   module AdminDatasets
     module ChangeLogHelper
 
-      def pick_changes(changes)
-        sub_list = changes.find { |c| c.object_changes.empty? }&.additional_info&.dig('subjects_list') || []
-        # rubocop:disable Lint/DuplicateBranch
+      # rubocop:disable Lint/DuplicateBranch, Metrics/MethodLength
+      def pick_changes(all_changes)
+        sub_list = all_changes.find { |c| c.object_changes.empty? }&.additional_info&.dig('subjects_list') || []
+        changes = all_changes.map do |c|
+          obj_changed = c.object_changes.transform_values { |v| v[1] }
+          c.object = c.object&.merge(obj_changed) || obj_changed
+          c.item_id = c.object['id'].presence || c.item_id
+          c
+        end
         changes.reject do |change|
           case change.item_type
           when 'StashEngine::Resource'
-            if change.object_changes.present? && (change.object_changes.keys & %w[title hold_for_peer_review accepted_agreement publication_date tenant_id display_readme]).empty?
+            if change.event == 'create'
               true
-            elsif change.object_changes.empty? && change.additional_info&.dig('subjects_list') == sub_list
+            elsif change.object_changes.present? && (change.object_changes.keys & %w[title hold_for_peer_review accepted_agreement publication_date tenant_id display_readme]).empty?
               true
-            elsif change.object_changes.empty? && @changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.empty? }
+            elsif change.object_changes.empty? && (change.additional_info.nil? || change.additional_info&.dig('subjects_list') == sub_list)
               true
-            elsif @changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.keys == change.object_changes.keys }
+            elsif change.object_changes.empty? && changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.empty? }
+              true
+            elsif changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.keys == change.object_changes.keys }
               true
             else
               false
             end
+          when 'StashDatacite::Contributor', 'StashDatacite::RelatedIdentifier', 'StashEngine::Author'
+            if changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) }
+              true
+            elsif change.event == 'destroy' && changes.any? { |v| v.event == 'create' && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) }
+              true
+            elsif change.event == 'create' && ((!change.object_changes.dig('contributor_type', 1).blank? && !change.object_changes.dig('contributor_name', 1).blank?) || !change.object_changes.dig('related_identifier', 1).blank? || !change.object_changes.dig('author_first_name', 1).blank?)
+              false
+            else
+              change.event == 'create'
+            end
           else
-            if @changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) }
+            if change.event == 'create'
+              true
+            elsif changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) }
               true
             else
               false
             end
           end
-          # rubocop:enable Lint/DuplicateBranch
         end
       end
+      # rubocop:enable Lint/DuplicateBranch, Metrics/MethodLength
 
       def resource_changes(c, _first)
         if c.object_changes.empty?
@@ -101,7 +121,7 @@ module StashEngine
       end
 
       def author_changes(c, _first)
-        if c.event == 'update'
+        if %w[update create].include?(c.event)
           str = "<span>Set author information:</span><dl><div><dt>Name:</dt><dd>#{c.object['author_first_name']} #{c.object['author_last_name']}</dd></div>"
           if c.object['author_orcid'].present?
             str += "<div><dt>ORCID:</dt><dd><a href=\"#{orcid_link(c.object['author_orcid'])}\" target=\"_blank\" rel=\"noreferrer\">#{c.object['author_orcid']}</a></dd></div>"
@@ -140,7 +160,7 @@ module StashEngine
       end
 
       def work_changes(c, _first)
-        if c.event == 'update'
+        if %w[update create].include?(c.event)
           str = "<span>Set related work:</span><dl><div><dt>Work type:</dt><dd>#{c.object['work_type']}</dd></div>"
           if c.object['related_identifier'].present?
             str += "<div><dt>DOI/URL:</dt><dd><a href=\"#{c.object['related_identifier']}\" target=\"_blank\" rel=\"noreferrer\">#{c.object['related_identifier']}</a></dd></div>"
@@ -153,7 +173,7 @@ module StashEngine
       end
 
       def contributor_changes(c, _first)
-        if c.event == 'update'
+        if %w[update create].include?(c.event)
           str = "<span>Set #{c.object['contributor_type']}:</span><dl><div><dt>Name:</dt><dd>#{c.object['contributor_name']}</dd></div>"
           if c.object['name_identifier_id'].present?
             str += "<div><dt>ROR ID:</dt><dd><a href=\"#{c.object['name_identifier_id']}\" target=\"_blank\" rel=\"noreferrer\">#{c.object['name_identifier_id']}</a></dd></div>"

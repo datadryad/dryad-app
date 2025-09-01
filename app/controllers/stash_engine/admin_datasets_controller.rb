@@ -93,8 +93,7 @@ module StashEngine
       types = ['StashEngine::Resource', 'StashEngine::ResourcePublication',
                'StashDatacite::RelatedIdentifier', 'StashEngine::Author',
                'StashDatacite::Contributor', 'StashDatacite::Description']
-      versions = CustomVersion.where(resource_id: params[:id])
-      @changes = versions.where(item_type: types).where.not(event: 'create').order(:created_at).includes(:user)
+      @changes = CustomVersion.where(resource_id: params[:id]).where(item_type: types).order(:created_at).includes(:user)
       respond_to(&:js)
     end
 
