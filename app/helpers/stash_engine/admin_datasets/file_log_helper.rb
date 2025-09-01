@@ -4,7 +4,7 @@ module StashEngine
   module AdminDatasets
     module FileLogHelper
 
-      def pick_changes(changes)
+      def pick_file_changes(changes)
         changes.reject do |change|
           # rubocop:disable Lint/DuplicateBranch
           if change.object_changes['file_state']&.dig(1) == 'copied' || change.event == 'destroy'
