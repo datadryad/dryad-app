@@ -180,6 +180,7 @@ function ReadMe({
             'aria-errormessage': 'readme_error',
             'aria-labelledby': 'md_editor_label',
             'aria-describedby': 'md_editor_desc',
+            name: 'readme_editor',
           }}
           initialValue={initialValue}
           replaceValue={replaceValue}

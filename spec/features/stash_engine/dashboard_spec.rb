@@ -103,6 +103,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         end
         expect(page).to have_text('Are you sure you want to remove this dataset?')
         click_button 'Yes'
+        expect(page).to have_text('The in-progress version was successfully deleted.')
         expect(page).to have_css('#user_datasets li', count: 4)
         expect(page).to have_css('#user_in-progress li', count: 1)
       end
@@ -126,6 +127,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         click_button 'Revert'
         expect(page).to have_text('Are you sure you want to remove this dataset version?')
         click_button 'Yes'
+        expect(page).to have_text('The in-progress version was successfully deleted.')
         expect(page).not_to have_button('Revert')
         expect(resources[1].identifier.resources.count).to eq 1
       end

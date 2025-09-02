@@ -23,7 +23,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     it 'should disable submit button', js: true do
       start_new_dataset
       navigate_to_review
-      submit = find_button('submit_button', disabled: :all)
+      submit = find_button('submit_button')
       expect(submit).not_to be_nil
       expect(submit['aria-disabled'])
     end
@@ -34,13 +34,13 @@ RSpec.feature 'ReviewDataset', type: :feature do
       start_new_dataset
       fill_required_fields
       navigate_to_review
-      submit = find_button('submit_button', disabled: :all)
+      submit = find_button('submit_button')
       expect(submit).not_to be_nil
       expect(submit['aria-disabled']).to be(nil)
 
       # submits
       submit_form
-      expect(page).to have_content(StashEngine::Resource.last.title.html_safe)
+      expect(page).to have_content(CGI.unescapeHTML(StashEngine::Resource.last.title.html_safe))
       expect(page).to have_content("Your dataset with the DOI #{StashEngine::Resource.last.identifier_uri} was submitted for curation")
     end
   end

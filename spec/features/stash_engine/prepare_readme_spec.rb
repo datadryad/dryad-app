@@ -17,6 +17,8 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button 'Resume'
         expect(page).to have_text 'Dataset submission'
         click_button 'README'
+        expect(page).to have_text 'Once you\'ve uploaded or generated a README, you may continue to revise it in our editor.'
+        expect(page).to have_button('Build a README', wait: 10)
         click_button 'Build a README'
         find('[name="data_description"]').send_keys(Faker::Lorem.sentence)
         expect(page).to have_text('All progress saved')
