@@ -7,11 +7,14 @@ module StashEngine
       def pick_file_changes(changes)
         changes.reject do |change|
           # rubocop:disable Lint/DuplicateBranch
+          # don't show copies or destroy events
           if change.object_changes['file_state']&.dig(1) == 'copied' || change.event == 'destroy'
             true
+          # don't show the creation of files that are deleted in the same version
           elsif change.object_changes['file_state']&.dig(1) == 'created' &&
             @changes.any? { |v| v.event == 'destroy' && v.item_id == change.item_id }
             true
+          # don't show system storage and validation
           elsif (change.object_changes.keys - %w[storage_version_id digest digest_type validated_at]).empty?
             true
           else

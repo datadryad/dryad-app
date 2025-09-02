@@ -7,6 +7,7 @@ module StashEngine
       # rubocop:disable Lint/DuplicateBranch, Metrics/MethodLength
       def pick_changes(all_changes)
         sub_list = all_changes.find { |c| c.object_changes.empty? }&.additional_info&.dig('subjects_list') || []
+        # update object to contain changes and fix item_id for some
         changes = all_changes.map do |c|
           obj_changed = c.object_changes.transform_values { |v| v[1] }
           c.object = c.object&.merge(obj_changed) || obj_changed
@@ -16,32 +17,50 @@ module StashEngine
         changes.reject do |change|
           case change.item_type
           when 'StashEngine::Resource'
+            # don't show creation
             if change.event == 'create'
               true
+            # don't show if changes don't contain these fields
             elsif change.object_changes.present? && (change.object_changes.keys & %w[title hold_for_peer_review accepted_agreement publication_date tenant_id display_readme]).empty?
               true
+            # don't show if subjects haven't changed
             elsif change.object_changes.empty? && (change.additional_info.nil? || change.additional_info&.dig('subjects_list') == sub_list)
               true
+            # don't show if there's a later change to subjects by the same user
             elsif change.object_changes.empty? && changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.empty? }
               true
+            # don't show if there's a later change to the same fields by the same user
             elsif changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) && v.object_changes.keys == change.object_changes.keys }
               true
             else
               false
             end
+          # these are special and need to show some creations because of outside editing, etc.
           when 'StashDatacite::Contributor', 'StashDatacite::RelatedIdentifier', 'StashEngine::Author'
+            # don't show if there is a later change to the same object by the same user
             if changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) }
               true
+            # don't show if item is created and destroyed by the same user in the same version
             elsif change.event == 'destroy' && changes.any? { |v| v.event == 'create' && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) }
               true
-            elsif change.event == 'create' && ((!change.object_changes.dig('contributor_type', 1).blank? && !change.object_changes.dig('contributor_name', 1).blank?) || !change.object_changes.dig('related_identifier', 1).blank? || !change.object_changes.dig('author_first_name', 1).blank?)
-              false
+            elsif change.event == 'create'
+              # try not to show if item is created during copying of the resource for a new version
+              if changes.any? { |v| v.item_type == 'StashEngine::Resource' && v.event == 'create' && v.created_at.round(0) == change.created_at.round(0) }
+                true
+              # show only if creation event contains important fields
+              elsif (!change.object_changes.dig('contributor_type', 1).blank? && !change.object_changes.dig('contributor_name', 1).blank?) || !change.object_changes.dig('related_identifier', 1).blank? || !change.object_changes.dig('author_first_name', 1).blank?
+                false
+              else
+                true
+              end
             else
-              change.event == 'create'
+              false
             end
           else
+            # don't show creation
             if change.event == 'create'
               true
+            # don't show if there is a later change to the same object by the same user
             elsif changes.any? { |v| v.id > change.id && v.values_at(:whodunnit, :item_id, :item_type) == change.values_at(:whodunnit, :item_id, :item_type) }
               true
             else

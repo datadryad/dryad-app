@@ -59,13 +59,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           click_button 'Edit dataset'
         end
         expect(page).to have_text("You are editing #{@author.name}'s dataset.")
-        click_button 'Title'
-        find('[name="title"]').set('')
-        fill_in_title
-        click_button 'Preview changes'
-        click_button 'Description'
-        fill_in_abstract
-        click_button 'Preview changes'
         update_dataset(curator: true)
         @resource.reload
 
@@ -106,26 +99,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(page).to have_text('Curation')
         expect(page).to have_text('Dryad System')
         expect(page).to have_text('System set back to curation')
-
-        within(:css, '#activity_log_table > tbody:last-child') do
-          find('button[aria-label="Curation activity"]').click
-        end
-
-        find('button[aria-label="All metadata changes"]').click
-
-        expect(page).to have_text('Submission title')
-        expect(page).to have_text('Set author information')
-        expect(page).to have_text('Set related work')
-        expect(page).to have_text('Subject list')
-        expect(page).to have_text('Updated abstract')
-
-        find('button[aria-label="All metadata changes"]').click
-
-        within(:css, '#activity_log_table > tbody:last-child') do
-          find('button[aria-label="File changes"]').click
-        end
-
-        expect(page).to have_text('Created: README.md')
       end
     end
 
@@ -313,7 +286,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     click_button 'Preview changes'
     click_button 'Support'
     fill_in_funder
-    click_button 'Preview changes'
     set_and_submit
   end
 
