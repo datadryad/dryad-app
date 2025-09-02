@@ -81,9 +81,9 @@ RSpec.feature 'NewDataset', type: :feature do
       # fill second
       click_button 'Add author'
       expect(page).to have_content('Second author name is required. Fill in or delete the entry')
-      all(:css, 'input[name=author_first_name]')[1].set(second_author[:first])
-      all(:css, 'input[name=author_last_name]')[1].set(second_author[:last])
-      all(:css, 'input[name=author_email]')[1].set(second_author[:email])
+      within(:css, '.dd-list-item:not(:first-child)') do
+        fill_in_author(first_name: second_author[:first], last_name: second_author[:last], email: second_author[:email])
+      end
 
       el = all(:css, 'button.handle').first
       el.send_keys(:enter)

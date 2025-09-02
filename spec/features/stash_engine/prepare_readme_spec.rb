@@ -56,9 +56,8 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         title = Faker::Hipster.sentence
         click_button 'Title'
         find('[name="title"]').set('')
-        find('[name="title"]').send_keys(title)
         page.send_keys(:tab)
-        expect(page).to have_text('All progress saved')
+        fill_in_title(title)
         click_button 'README'
         expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 10)
         expect(page).to have_text(title)

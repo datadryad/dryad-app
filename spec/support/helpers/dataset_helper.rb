@@ -74,8 +74,8 @@ module DatasetHelper
     fill_in_validation
   end
 
-  def fill_in_title
-    find('[name="title"]').send_keys(Faker::Hipster.sentence(word_count: 6))
+  def fill_in_title(title = Faker::Hipster.sentence(word_count: 6))
+    find('[name="title"]').send_keys(title)
     page.send_keys(:tab)
     click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"')
