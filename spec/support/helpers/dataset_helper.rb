@@ -110,11 +110,11 @@ module DatasetHelper
   def submit_form
     click_button 'Preview submission' if page.has_button?('Preview submission')
     # page.scroll_to(find('footer'))
+    # page.scroll_to(find('#submission-heading'))
     expect(page).to have_content('submission preview')
     expect(page).to have_content('ready to publish?')
 
     find('[name="submit_button"]').click
-    page.scroll_to(find('#submission-heading'))
     return unless page.has_content?('You must complete payment to submit your dataset')
 
     find('[name="get_invoice"]').click

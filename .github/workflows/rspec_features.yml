@@ -1,4 +1,4 @@
-name: RSpec Feature Tests 1
+name: RSpec Feature Tests
 
 on: pull_request
 

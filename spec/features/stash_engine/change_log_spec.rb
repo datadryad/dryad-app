@@ -118,7 +118,6 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
 
         # shows the metadata log with no contents
         find('button[aria-label="All metadata changes"]').click
-        page.scroll_to(find("#metadata_table_#{@new_id}"))
         within(:css, "#metadata_table_#{@new_id} tbody") do
           expect(page).not_to have_css('tr')
         end
