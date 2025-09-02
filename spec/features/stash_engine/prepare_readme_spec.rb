@@ -59,7 +59,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         page.send_keys(:tab)
         fill_in_title(title)
         click_button 'README'
-        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 10)
+        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 15)
         expect(page).to have_text(title)
         expect(page).to have_text(@file.download_filename)
       end
@@ -72,7 +72,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button "Save new name for #{@file.download_filename}"
         expect(page).to have_text('All progress saved')
         click_button 'README'
-        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 10)
+        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 15)
         expect(page).to have_text(resource.title)
         expect(page).to have_text(fname)
         expect(page).not_to have_text(@file.download_filename)

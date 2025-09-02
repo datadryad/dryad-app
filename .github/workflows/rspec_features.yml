@@ -1,4 +1,4 @@
-name: RSpec Feature Tests
+name: RSpec Feature Tests 1
 
 on: pull_request
 
@@ -59,7 +59,7 @@ jobs:
       run: RAILS_ENV=test bundle exec rails webpacker:compile
 
     - name: 'Run RSpec Feature Tests'
-      run: bin/bundle exec rspec --force-color --fail-fast --format RSpec::Github::Formatter --format progress --tag ~skip spec/features/stash_engine/[a-e]*
+      run: bin/bundle exec rspec --force-color --fail-fast --format RSpec::Github::Formatter --format progress --tag ~skip spec/features/stash_engine/[a-i]*
 
     - name: Archive capybara screenshots
       if: ${{ failure() }}

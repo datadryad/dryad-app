@@ -165,14 +165,14 @@ module DatasetHelper
   end
 
   def fill_in_affiliation
-    fill_in 'Institutional affiliation', with: Faker::Educator.university
-    page.send_keys(:tab)
-    all(:css, '.use-text-entered').each { |i| i.set(true) }
-    sleep 1
-    return unless page.document.has_content?('author affiliation is required')
-
-    StashEngine::Author.last.affiliation = create(:affiliation)
-    refresh
+    while page.has_css?('[aria-invalid="true"]')
+      fill_in 'Institutional affiliation', with: Faker::Educator.university
+      page.send_keys(:tab)
+      expect(page).to have_css('.use-text-entered')
+      find('.use-text-entered').set(true)
+      page.send_keys(:tab)
+      sleep 1
+    end
   end
 
   def fill_in_validation
@@ -187,8 +187,8 @@ module DatasetHelper
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
     fill_in 'Granting organization', with: name
     fill_in 'award_number', with: value
-    page.has_css?('.use-text-entered')
-    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
+    expect(page).to have_css('.use-text-entered')
+    find('.use-text-entered').set(true)
     click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
   end
