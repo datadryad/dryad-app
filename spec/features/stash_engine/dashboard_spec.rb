@@ -43,7 +43,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         expect(find('#user_private li')).to have_link(resources[1].title)
         expect(find('#user_private li')).to have_text('Private for peer review')
 
-        expect(page).to have_text('Curation')
+        expect(page).to have_text('Submitted to Dryad')
         expect(page).to have_css('#user_processing li', count: 1)
         expect(find('#user_processing li')).to have_link(resources[2].title)
         expect(find('#user_processing li')).to have_text('Submitted')
@@ -65,7 +65,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
       it 'correctly places datasets in curation' do
         sign_in(user)
         expect(page).to have_css('#user_datasets li', count: 4)
-        expect(page).to have_text('Curation')
+        expect(page).to have_text('Submitted to Dryad')
         expect(page).to have_text('Curation')
         expect(page).to have_css('#user_processing li', count: 1)
         expect(find('#user_processing li')).to have_link(resources[2].title)
@@ -76,7 +76,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         create(:resource, identifier: resources[2].identifier, user: user, current_editor_id: curator.id)
         sign_in(user)
         expect(page).to have_css('#user_datasets li', count: 4)
-        expect(page).to have_text('Curation')
+        expect(page).to have_text('Submitted to Dryad')
         expect(page).to have_css('#user_processing li', count: 1)
         expect(find('#user_processing li')).to have_text('In progress')
         expect(find('#user_processing li')).to have_text("#{curator.name} is editing")
@@ -156,7 +156,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
 
         expect(page).to have_text('Dataset released from Private for Peer Review and submitted for curation')
         expect(page).not_to have_text('Kept private')
-        expect(page).to have_text('Curation')
+        expect(page).to have_text('Submitted to Dryad')
         expect(page).to have_css('#user_processing li', count: 2)
         expect(find('#user_processing')).to have_link(resources[1].title)
       end
