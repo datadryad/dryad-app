@@ -35,12 +35,12 @@ module StashDatacite
 
     def find_files
       files = {}
-      files[:generic_files] = @resource.generic_files.includes(:frictionless_report).validated_table.as_json(
-        methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
+      files[:generic_files] = @resource.generic_files.validated_table.as_json(
+        methods: %i[type uploaded frictionless_report]
       )
       if @resource.previous_curated_resource.present?
-        files[:previous_files] = @resource.previous_curated_resource.generic_files.includes(:frictionless_report).validated_table.as_json(
-          methods: :type, include: { frictionless_report: { only: %i[report status] } }
+        files[:previous_files] = @resource.previous_curated_resource.generic_files.validated_table.as_json(
+          methods: %i[type frictionless_report]
         )
       end
 

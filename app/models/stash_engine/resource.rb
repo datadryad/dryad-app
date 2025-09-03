@@ -151,6 +151,7 @@ module StashEngine
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
           file.file_state = 'copied' if file.file_state == 'created'
+          file.skip_total_recalculation = true if file.is_a?(StashEngine::DataFile)
         end
 
         new_resource.related_identifiers.each_with_index do |ri, i|
@@ -163,9 +164,9 @@ module StashEngine
 
         new_resource.subjects = old_resource.subjects
 
-        # I think there was something weird about Amoeba that required this approach
+        # Remove deleted records before save
         deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-        deleted_files.each(&:destroy)
+        deleted_files.each(&:delete)
       })
     end
 
