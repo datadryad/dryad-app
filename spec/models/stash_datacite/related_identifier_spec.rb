@@ -226,7 +226,7 @@ module StashDatacite
 
     describe '#work_type_friendly' do
       before(:each) do
-        @related_identifier = create(:related_identifier, resource_id: @resource.id)
+        @related_identifier = create(:related_identifier, resource_id: @resource.id, work_type: 'undefined')
       end
 
       it 'handles undefined mapping' do
@@ -241,7 +241,7 @@ module StashDatacite
 
     describe '#work_type_friendly_plural' do
       before(:each) do
-        @related_identifier = create(:related_identifier, resource_id: @resource.id)
+        @related_identifier = create(:related_identifier, resource_id: @resource.id, work_type: 'undefined')
       end
 
       it 'handles undefined mapping' do

@@ -3,14 +3,11 @@
 module DatabaseHelper
 
   def create_basic_dataset!
-    @user = create(:user, role: 'superuser')
-    @identifier = create(:identifier)
-    data_file = create(:data_file)
-    @resource = create(:resource, :submitted, identifier: @identifier, user_id: @user.id, tenant_id: @user.tenant_id,
-                                              authors: [create(:author)],
-                                              stash_version: create(:version, version: 1, merritt_version: 1),
-                                              data_files: [data_file],
-                                              total_file_size: data_file.upload_file_size)
+    resource = create(:resource, :submitted, authors: 3.times.map { create(:author) })
+    3.times.map { create(:data_file, resource: resource) }
+    create(:description, resource: resource, description_type: 'technicalinfo')
+    create(:description, resource: resource, description_type: 'usage_notes', description: nil)
+    resource
   end
 
   # this essentially creates a new resource (version) to start working on for a user

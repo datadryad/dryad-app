@@ -3,14 +3,12 @@ RSpec.feature 'NewCollection', type: :feature do
 
   include CollectionHelper
   include Mocks::RSolr
-  include Mocks::CrossrefFunder
   include Mocks::Salesforce
   include Mocks::Datacite
 
   before(:each) do
     mock_salesforce!
     mock_solr!
-    mock_funders!
     mock_good_doi_resolution(doi: %r{.*/doi\.org/.*})
     @user = create(:user, role: 'curator')
     sign_in(@user)
