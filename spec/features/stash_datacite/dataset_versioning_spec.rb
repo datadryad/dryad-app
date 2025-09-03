@@ -76,7 +76,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           expect(page).to have_css('button[aria-label="Update status"]')
 
           # Make sure the right text is shown
-          expect(page).to have_link(@resource.title)
+          expect(page).to have_link(@resource.title&.html_safe)
           expect(page).to have_text('Curation')
           @resource.authors.each do |author|
             expect(page).to have_text(author.author_last_name)
@@ -90,7 +90,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
 
         expect(page).to have_text(@resource.identifier.identifier)
-        within(:css, '#activity_log_table tbody:last-child') do
+        within(:css, '#activity_log_table > tbody:last-child') do
           find('button[aria-label="Curation activity"]').click
         end
         # it has the user comment when they clicked to submit and end in-progress edit
@@ -286,7 +286,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     click_button 'Preview changes'
     click_button 'Support'
     fill_in_funder
-    click_button 'Preview changes'
     set_and_submit
   end
 

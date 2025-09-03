@@ -1,3 +1,6 @@
+# :nocov:
+# Geolocation data is no longer invited or displayed
+
 module StashDatacite
   class GeolocationPointsController < ApplicationController
     before_action :set_geolocation_point, only: %i[edit update delete]
@@ -115,3 +118,5 @@ module StashDatacite
     end
   end
 end
+
+# :nocov:

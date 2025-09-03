@@ -34,7 +34,7 @@
       <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
     </div>
   </div>
-  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors, highlight_fields: [] } %>
+  <%= render partial: "stash_datacite/contributors/show", locals: { contributors: review.contributors } %>
 </div>
 
 <% related = @resource&.resource_type&.resource_type == 'collection' ? @resource.related_identifiers.where.not(relation_type: 'haspart') : @resource.related_identifiers %>

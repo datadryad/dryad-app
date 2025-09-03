@@ -1,3 +1,8 @@
+# :nocov:
+
+# Internal data is historic and no longer majorly used
+# Publication details have been moved to resource_publication
+
 module StashEngine
   class InternalDatumPolicy < ApplicationPolicy
 
@@ -27,3 +32,4 @@ module StashEngine
 
   end
 end
+# :nocov:

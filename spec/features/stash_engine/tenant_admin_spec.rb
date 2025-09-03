@@ -11,6 +11,36 @@ RSpec.feature 'TenantAdmin', type: :feature do
       sign_in(@system_admin, false)
     end
 
+    it 'adds a new tenant', js: true do
+      visit stash_url_helpers.tenant_admin_path
+      click_button 'Add new'
+      expect(page).to have_content('Enter a new institutional partner')
+      within(:css, '#genericModalDialog') do
+        fill_in 'id', with: 'test'
+        fill_in 'long_name', with: 'Test institution'
+        fill_in 'short_name', with: 'Test institution'
+        choose 'Author affiliation match'
+        find('input[name=commit]').click
+      end
+      expect(page).to have_content 'Test institution'
+      expect(StashEngine::Tenant.all.length).to eql(5)
+    end
+
+    it 'shows an error', js: true do
+      visit stash_url_helpers.tenant_admin_path
+      click_button 'Add new'
+      expect(page).to have_content('Enter a new institutional partner')
+      within(:css, '#genericModalDialog') do
+        fill_in 'id', with: 'test'
+        fill_in 'long_name', with: 'Test institution'
+        fill_in 'short_name', with: 'Test institution'
+        choose 'Author affiliation match'
+        fill_in 'campus_contacts', with: 'xxxxxxx'
+        find('input[name=commit]').click
+      end
+      expect(page).to have_content 'xxxxxxx is not a valid email address'
+    end
+
     it 'allows filtering by consortium', js: true do
       expect do
         create(:tenant, id: 'consortium', short_name: 'Consortium')
@@ -99,6 +129,22 @@ RSpec.feature 'TenantAdmin', type: :feature do
       expect(page.find("##{@match.id}_row")).to have_text('Disabled')
       changed = StashEngine::Tenant.find(@match.id)
       expect(changed.enabled).to be false
+    end
+
+    it 'allows adding a flag as a system admin', js: true do
+      visit stash_url_helpers.tenant_admin_path
+      expect(page).to have_content(@match.short_name)
+      within(:css, "form[action=\"#{tenant_edit_path(id: @match.id)}\"]") do
+        find('.c-admin-edit-icon').click
+      end
+      within(:css, '#genericModalDialog') do
+        check 'Flag'
+        fill_in 'note', with: 'Test flag note'
+        find('input[name=commit]').click
+      end
+      expect(page.find("##{@match.id}_row")).to have_css('i[title="Test flag note"]')
+      changed = StashEngine::Tenant.find(@match.id)
+      expect(changed.flag.note).to eq('Test flag note')
     end
 
   end

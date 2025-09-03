@@ -20,12 +20,12 @@
     <% if publication.pub_type == 'primary_article' %>
       <%= f.hidden_field(:manuscript_number) %>
       <div class="input-stack">
-        <label class="c-input__label" for="<%= publication.pub_type %>_man"></label>
+        <% jid = StashEngine::Journal.find_by_issn(publication.publication_issn)&.id %>
         <%= render partial: 'stash_engine/shared/search_select', locals: {
             id: "#{publication.pub_type}_man",
             label: 'Manuscript number:',
             field_name: '',
-            options_path: "/stash_datacite/publications/automsid?jid=#{StashEngine::Journal.find_by_issn(publication.publication_issn)&.id}&term=",
+            options_path: "/stash_datacite/publications/automsid?#{jid ? "jid=#{jid}&" : ''}term=",
             options_label: 'id',
             options_value: 'id',
             selected: {value: publication.manuscript_number, label: publication.manuscript_number},

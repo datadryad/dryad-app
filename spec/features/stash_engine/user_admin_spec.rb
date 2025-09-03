@@ -63,6 +63,18 @@ RSpec.feature 'UserAdmin', type: :feature do
         expect(page.find("#user_tenant_id_#{@user.id}")).to have_text(dryad.short_name)
       end
 
+      it 'allows adding a flag as a system admin', js: true do
+        within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
+          find('.c-admin-edit-icon').click
+        end
+        within(:css, '#genericModalDialog') do
+          check 'Flag'
+          fill_in 'note', with: 'Test flag note'
+          find('input[name=commit]').click
+        end
+        expect(find("#user_flag_#{@user.id}")).to have_css('i[title="Test flag note"]')
+      end
+
       it 'shows the system roles selection' do
         within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
           find('.c-admin-edit-icon').click
@@ -109,7 +121,8 @@ RSpec.feature 'UserAdmin', type: :feature do
         it 'allows the system admin to add the journal role form and set role' do
           find_button('Add a journal role').click
           expect(page).to have_text('Journal role')
-          fill_in 'searchselect-stash_engine_user_roles_attributes__6__role_object_id___input', with: @journal.title
+          find('#searchselect-stash_engine_user_roles_attributes__6__role_object_id___input').send_keys(@journal.title[0..4])
+          expect(page).not_to have_css('li.fa-circle-notch')
           find("li[data-value='#{@journal.id}']").click
           find('#stash_engine_user_roles_attributes_6_role_admin').set(true)
           find('input[name=commit]').click

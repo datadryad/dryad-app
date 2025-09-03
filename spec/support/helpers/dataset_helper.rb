@@ -48,9 +48,10 @@ module DatasetHelper
     fill_required_metadata
     click_button 'Support'
     fill_in_funder
+    click_button 'Files'
     add_required_data_files
+    click_button 'README'
     add_required_readme
-    refresh
   end
 
   def fill_required_metadata
@@ -59,45 +60,65 @@ module DatasetHelper
     within_fieldset('Is your dataset associated with a preprint, an article, or a manuscript submitted to a journal?') do
       find(:label, 'No').click
     end
-    click_button 'Next'
-    find('[name="title"]').base.send_keys(Faker::Lorem.sentence(word_count: 6))
+    click_button 'Title'
+    fill_in_title
     click_button 'Authors'
-    fill_in_author
+    fill_in_affiliation
+    expect(find_button('Authors')).to match_selector('[aria-describedby="step-complete"')
     click_button 'Description'
     fill_in_abstract
     fill_in_research_domain
     fill_in_keywords
+    expect(find_button('Subjects')).to match_selector('[aria-describedby="step-complete"')
     click_button 'Compliance'
     fill_in_validation
   end
 
+  def fill_in_title(title = Faker::Hipster.sentence(word_count: 6))
+    find('[name="title"]').send_keys(title)
+    page.send_keys(:tab)
+    click_button 'Preview changes' if page.has_button?('Preview changes')
+    expect(find_button('Title')).to match_selector('[aria-describedby="step-complete"')
+  end
+
   def fill_in_abstract
-    find('[name="abstract"]').base.send_keys(Faker::Lorem.paragraph)
+    find('[name="abstract"]').send_keys(Faker::Lorem.paragraph)
+    page.send_keys(:tab)
+    click_button 'Preview changes' if page.has_button?('Preview changes')
+    expect(find_button('Description')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def add_required_data_files
-    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
-    # file must be copied; since it will not appear in AWS dataset_validations
-    create(:data_file, resource: res, file_state: 'copied')
+    click_button 'Enter URLs'
+    url = 'https://github.com/datadryad/dryad-app/raw/refs/heads/main/spec/fixtures/stash_engine/valid.csv'
+    validate_url_manifest(url)
+    build_valid_stub_request(url, 'text/csv', 501)
+    expect(page).to have_content('valid.csv')
   end
 
   def add_required_readme
-    res = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
-    ab = res.descriptions.find_by(description_type: 'technicalinfo')
-    ab.update(description: Faker::Lorem.paragraph)
+    click_button 'Build a README'
+    click_button 'readme-next'
+    click_button 'readme-next'
+    click_button 'readme-next'
+    click_button 'readme-next'
+    find('[name="readme_editor"]').send_keys("\nThis is some README content.")
+    click_button 'Preview changes' if page.has_button?('Preview changes')
+    expect(find_button('README')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def submit_form
     click_button 'Preview submission' if page.has_button?('Preview submission')
     # page.scroll_to(find('footer'))
+    # page.scroll_to(find('#submission-heading'))
     expect(page).to have_content('submission preview')
     expect(page).to have_content('ready to publish?')
 
-    click_button 'submit_button'
-    return unless page.has_content?('You must complete payment to submit')
+    find('[name="submit_button"]').click
+    return unless page.has_content?('You must complete payment to submit your dataset')
 
-    click_button 'get_invoice'
-    click_button 'submit_invoice'
+    find('[name="get_invoice"]').click
+    find('[name="submit_invoice"]').click
   end
 
   def fill_manuscript_info(name:, msid:)
@@ -130,15 +151,28 @@ module DatasetHelper
     Faker::Creature::Animal.unique.clear
   end
 
-  def fill_in_author
-    fill_in 'author_first_name', with: Faker::Name.unique.first_name
-    fill_in 'author_last_name', with: Faker::Name.unique.last_name
-    fill_in 'author_email', with: Faker::Internet.email
-    # just fill in results of name dropdown (react) in hidden field and test this separately
-    fill_in 'Institutional affiliation', with: Faker::Educator.university
+  def fill_in_author(first_name: Faker::Name.unique.first_name, last_name: Faker::Name.unique.last_name, email: Faker::Internet.email)
+    fill_in 'author_first_name', with: first_name
     page.send_keys(:tab)
-    page.has_css?('.use-text-entered')
-    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
+    expect(page.document).to have_content('All progress saved')
+    fill_in 'author_last_name', with: last_name
+    page.send_keys(:tab)
+    expect(page.document).to have_content('All progress saved')
+    fill_in 'author_email', with: email
+    page.send_keys(:tab)
+    expect(page.document).to have_content('All progress saved')
+    fill_in_affiliation
+  end
+
+  def fill_in_affiliation
+    while page.has_css?('[aria-invalid="true"]')
+      fill_in 'Institutional affiliation', with: Faker::Educator.university
+      page.send_keys(:tab)
+      expect(page).to have_css('.use-text-entered')
+      find('.use-text-entered').set(true)
+      page.send_keys(:tab)
+      sleep 1
+    end
   end
 
   def fill_in_validation
@@ -146,13 +180,16 @@ module DatasetHelper
     within_fieldset('hsi_fieldset') do
       find(:label, 'No').click
     end
+    click_button 'Preview changes' if page.has_button?('Preview changes')
+    expect(find_button('Compliance')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
     fill_in 'Granting organization', with: name
     fill_in 'award_number', with: value
-    page.has_css?('.use-text-entered')
-    all(:css, '.use-text-entered').each { |i| i.click unless i.checked? }
+    find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
+    click_button 'Preview changes' if page.has_button?('Preview changes')
+    expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
   end
 
   def fill_in_research_domain
@@ -183,14 +220,14 @@ module DatasetHelper
     )
   end
 
-  def build_valid_stub_request(url, mime_type = 'text/plain')
+  def build_valid_stub_request(url, mime_type = 'text/plain', size = 37_221)
     stub_request(:head, url)
       .with(
         headers: {
           'Accept' => '*/*'
         }
       )
-      .to_return(status: 200, headers: { 'Content-Length': 37_221, 'Content-Type': mime_type })
+      .to_return(status: 200, headers: { 'Content-Length': size, 'Content-Type': mime_type })
   end
 
   def build_invalid_stub_request(url)

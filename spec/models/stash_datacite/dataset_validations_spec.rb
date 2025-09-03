@@ -62,7 +62,7 @@ module StashDatacite
         it 'gives a formatting error when someone puts in a URL instead of a DOI' do
           @resource.identifier.update(import_info: 'published')
           create(:resource_publication, resource_id: @resource.id, publication_name: 'Barrel of Monkeys: the Primate Journal')
-          create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'url', work_type:
+          create(:related_identifier, resource_id: @resource.id, related_identifier_type: 'url', related_identifier: 'http://example.com', work_type:
             'primary_article')
 
           validations = DatasetValidations.new(resource: @resource)

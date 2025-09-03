@@ -23,7 +23,7 @@
   <% end %>
   <li>
     <div>
-      <p class="c-user-dataset-title">
+      <p class="c-user-dataset-title" id="d<%=dataset.identifier.id%>_title">
         <% if dataset.submitted? # merritt state %>
           <%= link_to title, stash_url_helpers.show_path(dataset.identifier.identifier_str) %>
         <% else %>
@@ -38,25 +38,28 @@
             <span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span>
           <% end %>
         <% end %>
+        <% if dataset.resource_type.resource_type == 'collection' %>
+          <span class="callout">Collection</span>
+        <% end %>
       </p>
     </div>
       <div>
       <div class="c-user-datasets-status">
-        <span class="dataset-status <%case dataset.sort_order%><%when 0%>error-status<%when 3%>info-status<%when 4%>success-status<%else%>warning-status<%end%>"><%= dataset.last_curation_activity&.readable_status %></span>
+        <span class="dataset-status <%case dataset.sort_order%><%when 0%>error-status<%when 3%>info-status<%when 4%>success-status<%when 5%>disabled-status<%else%>warning-status<%end%>"><%= dataset.last_curation_activity&.readable_status %></span>
         <div class="c-user-datasets-actions">
           <% if dataset.last_curation_activity&.status == 'in_progress' %>
             <% if dataset.current_editor_id.nil? || dataset.current_editor_id == current_user&.id %>
-              <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
-                <i class="fas fa-pencil" aria-hidden="true"></i><%= dataset.current_editor_id.nil? ? "Edit" : "Resume" %><span class="screen-reader-only"> <%= dataset.identifier.identifier %></span>
+              <%= button_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: dataset.id), name: 'resume', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_resume", 'aria-labelledby': "d#{dataset.identifier.id}_resume d#{dataset.identifier.id}_title", method: :post do %>
+                <i class="fas fa-pencil" aria-hidden="true"></i><%= dataset.current_editor_id.nil? ? "Edit" : "Resume" %></span>
               <% end %>
               <% if dataset.current_editor_id == current_user&.id %>
-                <%= button_to stash_url_helpers.logout_resource_path(dataset), name: 'exit', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', method: :post do %>
-                  <i class="fas fa-floppy-disk" aria-hidden="true"></i>Save & exit<span class="screen-reader-only"> <%= dataset.identifier.identifier %></span>
+                <%= button_to stash_url_helpers.logout_resource_path(dataset), name: 'exit', form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_exit", 'aria-labelledby': "d#{dataset.identifier.id}_exit d#{dataset.identifier.id}_title", method: :post do %>
+                  <i class="fas fa-floppy-disk" aria-hidden="true"></i>Save & exit</span>
                 <% end %>
               <% end %>
               <% if policy(dataset).delete? %>
-                <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7 prevent-click', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset' do %>
-                  <i class="fas fa-trash-can" aria-hidden="true"></i><%= dataset.stash_version&.version > 1 ? 'Revert' : 'Delete' %><span class="screen-reader-only"> <%= dataset.identifier.identifier %></span>
+                <%= button_to stash_url_helpers.resource_path(dataset), method: :delete, data: { confirm: delete_confirm }, name: 'delete', form_class: 'o-button__inline-form', class: 'o-button__plain-text7 prevent-click', title: dataset&.stash_version.version > 1 ? 'Revert to previous version' : 'Delete dataset', id: "d#{dataset.identifier.id}_delete", 'aria-labelledby': "d#{dataset.identifier.id}_delete d#{dataset.identifier.id}_title" do %>
+                  <i class="fas fa-trash-can" aria-hidden="true"></i><%= dataset.stash_version&.version > 1 ? 'Revert' : 'Delete' %>
                 <% end %>
               <% end %>
             <% elsif dataset.current_editor_id.present? %>
@@ -64,20 +67,20 @@
             <% end %>
           <% end %>
           <% if dataset.sort_order == 2 %>
-            <%= button_to stash_url_helpers.peer_review_release_path(id: dataset.id), method: :patch, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7' do %>
-              <i class="fa fa-paper-plane" aria-hidden="true"></i>Release<span class="screen-reader-only"> <%= dataset.identifier.identifier %></span> for curation
+            <%= button_to stash_url_helpers.peer_review_release_path(id: dataset.id), method: :patch, name: 'release', data: { confirm: 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_release", 'aria-labelledby': "d#{dataset.identifier.id}_release d#{dataset.identifier.id}_title" do %>
+              <i class="fa fa-paper-plane" aria-hidden="true"></i>Release for curation
             <% end %>
           <% end %>
           <% if policy(dataset).revise? %>
           <% if ['submitted', 'action_required'].include?(dataset.last_curation_activity&.status) || dataset.sort_order == 2 || dataset.sort_order >= 4 %>
-            <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: dataset.id), method: :post, class: 'o-button__inline-form') do %>
-              <button class="o-button__plain-text7 prevent-click" name="update"><i class="fas fa-pencil" aria-hidden="true"></i>Revise submission<span class="screen-reader-only"> <%= dataset.identifier.identifier %></span></button>
+            <%= form_with(url: stash_url_helpers.metadata_entry_pages_new_version_path(resource_id: dataset.id), method: :post, class: 'o-button__inline-form', id: "d#{dataset.identifier.id}_revise", 'aria-labelledby': "d#{dataset.identifier.id}_revise d#{dataset.identifier.id}_title") do %>
+              <button class="o-button__plain-text7 prevent-click" name="update"><i class="fas fa-pencil" aria-hidden="true"></i>Revise submission</button>
             <% end %>
           <% end %>
           <% end %>
           <% if dataset.sort_order == 4 && dataset.identifier.publication_article_doi.nil? %>
             <%= form_with(url: primary_article_path(resource_id: dataset.id), method: :get, local: false, class: 'o-button__inline-form', id: "#{dataset.id}_pub_form") do %>
-              <button class="o-button__plain-text7"><i class="fas fa-newspaper" aria-hidden="true"></i>Link article<span class="screen-reader-only"> to <%= dataset.identifier.identifier %></span></button>
+              <button class="o-button__plain-text7" id="d<%=dataset.identifier.id%>_link" aria-labelledby="d<%=dataset.identifier.id%>_title d<%=dataset.identifier.id%>_link"><i class="fas fa-newspaper" aria-hidden="true"></i>Link article</button>
             <% end %>
           <% end %>
           <% #form_with(url: contact_helpdesk_form_path(id: dataset.identifier.id), method: :get, local: false, class: 'o-button__inline-form', style: 'margin-left: auto', id: "#{dataset.id}_contact_form") do %>

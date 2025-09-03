@@ -35,6 +35,20 @@ module StashEngine
       flags + [['Flagged user', 'user'], ['Flagged institution', 'tenant'], ['Flagged journal', 'journal']]
     end
 
+    def display_publications(resource)
+      str = resource.resource_publication&.publication_name&.present? ? "#{resource.resource_publication&.publication_name}, " : ''
+      str += resource.resource_publication&.manuscript_number&.presence || ''
+      if resource.manuscript.present?
+        status = (resource.manuscript.accepted? && 'accepted') || (resource.manuscript.rejected? && 'rejected') || 'submitted'
+        str += "<span id=\"status-label\" class=\"#{status}%>\">#{status}</span>"
+      end
+      str += '<span id="doi-label" class="accepted">published</span>' if resource.identifier.publication_article_doi.present?
+      unless resource.related_identifiers.empty?
+        str += "<br/>#{resource.related_identifiers.size} related work#{resource.related_identifiers.size > 1 ? 's' : ''}"
+      end
+      str.html_safe
+    end
+
     def format_external_references(instring)
       return '' unless instring.present?
 
