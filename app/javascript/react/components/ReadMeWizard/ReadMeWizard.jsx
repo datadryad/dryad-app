@@ -42,7 +42,7 @@ export default function ReadMeWizard({resource, setResource, current}) {
   return (
     <ReadMe
       dcsDescription={desc}
-      title={resource.title.replace(/<\/?(em|i)>/g, '*').replace(/<\/?sup>/g, '^').replace(/<\/?sub>/g, '~')}
+      title={resource.title?.replace(/<\/?(em|i)>/g, '*')?.replace(/<\/?sup>/g, '^')?.replace(/<\/?sub>/g, '~')}
       doi={resource.identifier.identifier}
       setResource={setResource}
       fileList={fileList}
@@ -180,6 +180,7 @@ function ReadMe({
             'aria-errormessage': 'readme_error',
             'aria-labelledby': 'md_editor_label',
             'aria-describedby': 'md_editor_desc',
+            name: 'readme_editor',
           }}
           initialValue={initialValue}
           replaceValue={replaceValue}

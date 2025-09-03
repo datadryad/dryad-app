@@ -1,4 +1,3 @@
-
 set :rails_env, 'stage'
 set :special_login, ' TEST_LOGIN=true '
 

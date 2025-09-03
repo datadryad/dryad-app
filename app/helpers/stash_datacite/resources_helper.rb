@@ -1,45 +1,37 @@
 module StashDatacite
   module ResourcesHelper
-    def citation(authors, title, resource_type, identifier, publication_year)
-      [
-        "#{author_citation_format(authors)} (#{publication_year})",
-        escape_title(title),
-        'Dryad',
-        escape_resource_type(resource_type),
-        doi_link(identifier)
-      ].reject(&:blank?).join(', ').html_safe
+
+    def author_display(authors, affs)
+      # rubocop:disable Layout/LineLength
+      authors.map do |author|
+        next unless author.author_full_name
+
+        if author.author_orcid.present?
+          str = "<a class=\"o-metadata__author\" href=\"/search?q=#{URI.encode_www_form_component(author.author_orcid)}\">#{author.author_full_name}</a>"
+        end
+        str ||= "<span class=\"o-metadata__author\">#{author.author_full_name}</span>"
+        af = author.affiliations.map do |a|
+          next unless a.smart_name.present? && ![',', '.'].include?(a.smart_name)
+
+          "<a class=\"o-metadata__link\" aria-label=\"Affiliation #{affs.index { |x| x[0] == a.id } + 1}\" href=\"#aff#{a.id}\">#{affs.index { |x| x[0] == a.id } + 1}</a>"
+        end.join
+        str += af unless af.blank?
+        if author.corresp && author.author_email.present?
+          str += "<a href=\"mailto:#{author.author_email}\" class=\"o-metadata__link\" aria-label=\"Email #{author.author_standard_name}\" target=\"_blank\" title=\"#{author.author_email}\"><i class=\"fas fa-envelope\" aria-hidden=\"true\"></i></a>"
+        end
+        if author.author_orcid.present?
+          str += "<a href=\"#{author_orcid_link(author)}\" class=\"o-metadata__link\" target=\"_blank\" aria-label=\"#{author.author_standard_name} ORCID profile (opens in new window)\" title=\"ORCID: #{author.author_orcid}\"><i class=\"fab fa-orcid\" aria-hidden=\"true\"></i></a>"
+        end
+        str
+      end.reject(&:blank?).join('; ')
+      # rubocop:enable Layout/LineLength
     end
 
-    def doi_link(identifier)
-      return 'https://doi.org/placeholderDOI' unless identifeir
-
-      target_url = "https://doi.org/#{identifier}"
-      doi_link = link_to(target_url, target_url, target: '_blank')
-      "#{doi_link} (opens in a new window)"
-    end
-
-    def author_citation_format(authors)
-      return '' if authors.blank?
-
-      str_author = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact
-      return '' if str_author.blank?
-      return "#{str_author.first} et al." if str_author.length > 4
-
-      str_author.join('; ')
-    end
-
-    private
-
-    def escape_title(title)
-      html_escape(title)
-    end
-
-    def escape_version(version)
-      (version == 'v1' ? nil : html_escape(version))
-    end
-
-    def escape_resource_type(resource_type)
-      html_escape(resource_type.try(:resource_type_general_friendly))
+    def affs_list(authors)
+      authors.map(&:affiliations).flatten.uniq.each_with_object([]) do |a, arr|
+        arr << [a.id, a.smart_name, a.ror_id] if a.smart_name.present? && a.smart_name != ',' && a.smart_name != '.'
+        arr
+      end
     end
 
   end

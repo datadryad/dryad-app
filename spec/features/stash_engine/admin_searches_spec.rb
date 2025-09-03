@@ -174,6 +174,12 @@ RSpec.feature 'AdminSearch', type: :feature do
         expect(find('#admin_searches_list li:first-child')).to have_text('Default')
         expect(find('#admin_searches_list li:last-child')).not_to have_text('Default')
       end
+      it 'removes saved search', js: true do
+        visit stash_url_helpers.my_account_path
+        expect(find('#admin_searches_list')).to have_text('First saved search')
+        click_button 'Delete saved search: First saved search'
+        expect(page).not_to have_css('#admin_searches_list li')
+      end
     end
   end
 end

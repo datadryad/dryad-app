@@ -1,3 +1,6 @@
+# :nocov:
+# Geolocation data is no longer invited or displayed
+
 module StashApi
   class DatasetParser
     class Locations < StashApi::DatasetParser::BaseParser
@@ -120,3 +123,4 @@ module StashApi
     end
   end
 end
+# :nocov:

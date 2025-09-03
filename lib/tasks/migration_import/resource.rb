@@ -1,3 +1,4 @@
+# :nocov:
 require 'stash/doi/datacite_gen'
 
 # rubocop:disable Metrics/ClassLength
