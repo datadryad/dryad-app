@@ -34,6 +34,8 @@ require 'stash/import/crossref'
 
 module StashEngine
   class ProposedChange < ApplicationRecord
+    include PublicationMixin
+
     self.table_name = 'stash_engine_proposed_changes'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :latest_resource, class_name: 'StashEngine::Resource', through: :identifier
@@ -87,7 +89,7 @@ module StashEngine
 
       if article_type == 'primary_article'
         identifier.record_payment if latest_resource.submitted? && identifier.publication_date.blank?
-        release_updated_resource(latest_resource) if latest_resource.current_curation_status == 'peer_review'
+        release_resource(latest_resource) if latest_resource.current_curation_status == 'peer_review'
       end
 
       update(approved: true, user_id: current_user.id)
@@ -103,17 +105,8 @@ module StashEngine
 
     private
 
-    def release_updated_resource(resource)
-      resource.curation_activities << StashEngine::CurationActivity.new(
-        user_id: 0, # system user
-        status: 'submitted',
-        note: "#{provenance.capitalize} #{CROSSREF_PUBLISHED_MESSAGE}"
-      )
-      StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
-    end
-
     def add_metadata_updated_curation_note(provenance, resource, type)
-      resource.curation_activities << StashEngine::CurationActivity.new(
+      resource.curation_activities << StashEngine::CurationActivity.create(
         user_id: 0, # system user
         status: resource.current_curation_status,
         note: "#{provenance.capitalize} #{CROSSREF_UPDATE_MESSAGE} #{type} article"
