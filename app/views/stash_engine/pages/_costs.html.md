@@ -7,7 +7,7 @@ Our Data Publishing Charge (DPC) is based on the variable costs of curating, pub
 
 ## Author fees
 
-Authors affiliated with a [Dryad partner](/about#our-members) will have their DPCs sponsored. (If your institution or journal is not yet a Dryad partner, please invite them to [learn more](/join_us)). 
+Authors affiliated with a [Dryad partner](/about#our-partners) will have their DPCs sponsored. (If your institution or journal is not yet a Dryad partner, please invite them to [learn more](/join_us)). 
 
 Authors not affiliated with a Dryad partner organization are asked to pay a DPC by credit card at the time of submission. Invoices may be requested for an additional administration fee of $199 USD.
 
