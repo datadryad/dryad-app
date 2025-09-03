@@ -4,10 +4,11 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
   describe :prepare_readme do
     let(:user) { create(:user) }
     let(:resource) { create(:resource, user: user) }
+    let(:file) { create(:data_file, resource: resource) }
 
     before(:each) do
+      file.reload
       resource.identifier.reload
-      @file = create(:data_file, resource: resource)
       allow_any_instance_of(StashEngine::DataFile).to receive(:uploaded).and_return(true)
       sign_in(user)
     end
@@ -23,7 +24,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         find('[name="data_description"]').send_keys(Faker::Lorem.sentence)
         expect(page).to have_text('All progress saved')
         click_button 'readme-next'
-        expect(page).to have_text(@file.download_filename)
+        expect(page).to have_text(file.download_filename)
         find('[name="files_and_variables"]').send_keys('test')
         page.send_keys(:tab)
         expect(page).to have_text('All progress saved')
@@ -38,7 +39,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
     context 'reflect edits in README' do
       before(:each) do
         # rubocop:disable Layout/LineLength
-        create(:description, resource: resource, description_type: 'technicalinfo', description: "# #{resource.title}\n\nDataset DOI: [#{resource.identifier_value}](#{resource.identifier_value})\n\n#### File: #{@file.download_filename}")
+        create(:description, resource: resource, description_type: 'technicalinfo', description: "# #{resource.title}\n\nDataset DOI: [#{resource.identifier_value}](#{resource.identifier_value})\n\n#### File: #{file.download_filename}")
         # rubocop:enable Layout/LineLength
         resource.reload
         click_button 'Resume'
@@ -49,11 +50,11 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button 'README'
         expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included')
         expect(page).to have_text(resource.title)
-        expect(page).to have_text(@file.download_filename)
+        expect(page).to have_text(file.download_filename)
       end
 
       it 'changes the title' do
-        title = Faker::Hipster.sentence
+        title = Faker::Company.catch_phrase
         click_button 'Title'
         find('[name="title"]').set('')
         page.send_keys(:tab)
@@ -61,21 +62,21 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button 'README'
         expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 15)
         expect(page).to have_text(title)
-        expect(page).to have_text(@file.download_filename)
+        expect(page).to have_text(file.download_filename)
       end
 
       it 'changes the file name' do
         fname = Faker::Hipster.word
         click_button 'Files'
-        click_button "Rename file #{@file.download_filename}"
-        fill_in "Rename file #{@file.download_filename}", with: fname
-        click_button "Save new name for #{@file.download_filename}"
+        click_button "Rename file #{file.download_filename}"
+        fill_in "Rename file #{file.download_filename}", with: fname
+        click_button "Save new name for #{file.download_filename}"
         expect(page).to have_text('All progress saved')
         click_button 'README'
         expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 15)
         expect(page).to have_text(resource.title)
         expect(page).to have_text(fname)
-        expect(page).not_to have_text(@file.download_filename)
+        expect(page).not_to have_text(file.download_filename)
       end
     end
   end
