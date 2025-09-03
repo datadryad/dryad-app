@@ -30,7 +30,7 @@
   <% end %>
 
   <% if @resource.display_readme? %>
-    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: StashDatacite::Resource::Review.new(@resource), highlight_fields: [] } %>
+    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: StashDatacite::Resource::Review.new(@resource) } %>
   <% end %>
   </div>
 </div>

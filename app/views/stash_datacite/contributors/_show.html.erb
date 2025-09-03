@@ -1,32 +1,17 @@
 <% unless contributors.nil? || contributors.length < 1 || (contributors.length == 1 && contributors[0].contributor_name_friendly == 'N/A') %>
-  <% if params[:controller].include?('landing') %>
   <div id="show_funding">
   	<h2>Funding</h2>
-	<% else %>
-		<h3 class="o-heading__level2">Funding</h3>
-	<% end %>
-  <ul class="o-list">
-    <% contributors.each_with_index do |contributor, i| %>
-      <% highlights = highlight_fields.detect {|h| h[:index] == i} %>
-      <% @desc_string = ", <span #{'class="highlight"' if highlights&.key?(:desc)}>#{contributor.award_description}</span>".html_safe %>
-      <% @award_string = ": <span #{'class="highlight"' if highlights&.key?(:award)}>#{contributor.award_number}</span>".html_safe %>
-      <% if current_user&.min_app_admin? %>
-  	  <li>
-  	    <span <%= 'class="highlight"' if highlights&.key?(:name) %>><%= contributor.contributor_name_friendly%><%unless contributor.name_identifier_id.present? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched funder" title="Unmatched funder"></i><%end%></span><% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
-  	  </li>
-      <% else %>
-  	  <li>
-  	    <%if contributor.name_identifier_id.present? && contributor.identifier_type == 'ror'%>
-          <a href="/search?q=<%= URI.encode_www_form_component(contributor.name_identifier_id) %>"><%= contributor.contributor_name_friendly%></a>
-        <% else %><%= contributor.contributor_name_friendly%><% end %>
-          <% if contributor.award_number.present? %><%= @award_string %><% end %><% if contributor.award_description.present? %><%= @desc_string %><% end %>
-  	  </li>
+    <ul class="o-list">
+      <% contributors.each_with_index do |contributor, i| %>
+    	  <li>
+          <%if contributor.name_identifier_id.present? && contributor.identifier_type == 'ror' %>
+            <a href="/search?q=<%= URI.encode_www_form_component(contributor.name_identifier_id) %>"><%= contributor.contributor_name_friendly%></a>
+          <% else %>
+    	      <span><%= contributor.contributor_name_friendly%><%if current_user&.min_app_admin? && contributor.name_identifier_id.blank? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched funder" title="Unmatched funder"></i><%end%></span>
+          <% end %>
+          <% if contributor.award_number.present? %>: <span>#{contributor.award_number}</span><% end %><% if contributor.award_description.present? %>, <span>#{contributor.award_description}</span><% end %>
+        </li>
       <% end %>
-    <% end %>
-  </ul>
-  <% if params[:controller].include?('landing') %></div><% end %>
-<% end %>
-<% deleted = highlight_fields.detect {|h| h.key?(:deleted) } %>
-<% if deleted %>
-  <div class="highlight"><%= deleted[:deleted] %> funders deleted</div>
+    </ul>
+  </div>
 <% end %>
