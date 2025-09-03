@@ -38,6 +38,9 @@
             <span class="prev-published"><i class="fa fa-check" aria-hidden="true"></i> Previous version published</span>
           <% end %>
         <% end %>
+        <% if dataset.resource_type.resource_type == 'collection' %>
+          <span class="callout">Collection</span>
+        <% end %>
       </p>
     </div>
       <div>

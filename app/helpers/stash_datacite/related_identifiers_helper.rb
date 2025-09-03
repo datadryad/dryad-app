@@ -36,5 +36,15 @@ module StashDatacite
       end
     end
 
+    def author_citation_format(authors)
+      return '' if authors.blank?
+
+      str_author = authors.map { |c| c.author_full_name unless c.author_full_name =~ /^[ ,]+$/ }.compact
+      return '' if str_author.blank?
+      return "#{str_author.first(3).join('; ')} et al." if str_author.length > 4
+
+      str_author.join('; ')
+    end
+
   end
 end

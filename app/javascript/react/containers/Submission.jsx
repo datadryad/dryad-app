@@ -45,7 +45,7 @@ function Submission({
       pass: publicationPass(resource),
       fail: (review || publicationPass(resource)) && publicationFail(resource, review),
       component: <Publication current={step.name === 'Connect'} resource={resource} setResource={setResource} />,
-      help: <PublicationHelp />,
+      help: <PublicationHelp type={resource.resource_type.resource_type} />,
       preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
     }, {
       name: 'Title',
@@ -163,15 +163,12 @@ function Submission({
         preview
       />,
     }];
+    if (resource.resource_type.resource_type === 'collection') stepArray.splice(6, 3);
     return stepArray.map((s, i) => {
       s.index = i;
       return s;
     });
   };
-
-  if (resource.resource_type.resource_type === 'collection') {
-    steps().splice(5, 3);
-  }
 
   const recheckPayer = () => {
     axios.get(`/resources/${resource.id}/payer_check`)

@@ -294,14 +294,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       )
       expect(page).to have_content('file_10.ods', count: 2)
     end
-
-    xit 'sanitizes file name' do
-      attach_file(
-        'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/crazy*chars?are(crazy)", make_visible: { opacity: 1 }
-      )
-      expect(page).to have_content('crazy_chars_are(crazy)')
-    end
   end
 
   describe 'S3 file uploading mixed with already selected manifest files' do

@@ -77,9 +77,11 @@ export default function Publication({resource, setResource}) {
 
   return (
     <>
-      <div className="callout alt">
-        <p><i className="fas fa-circle-info" /> If your data is connected to a journal, the Data Publishing Charge may be sponsored</p>
-      </div>
+      {subType === 'dataset' && (
+        <div className="callout alt">
+          <p><i className="fas fa-circle-info" /> If your data is connected to a journal, the Data Publishing Charge may be sponsored</p>
+        </div>
+      )}
       <fieldset onChange={setImport}>
         <legend>
           Is your {subType} associated with a preprint, an article, or a manuscript submitted to a journal?
