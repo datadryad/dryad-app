@@ -34,7 +34,7 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
       3.times { @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
       @resource.descriptions.type_abstract.first.update(description: Faker::Lorem.paragraph)
       @resource.contributors.first.update(contributor_name: Faker::Company.name)
-      @resource.descriptions.type_technical_info.first.update(description: Faker::Lorem.paragraph)
+      Timecop.travel(10.seconds) { @resource.descriptions.type_technical_info.first.update(description: Faker::Lorem.paragraph) }
       refresh
       click_button 'Related works'
       fill_in 'DOI or other URL', with: Faker::Pid.doi
