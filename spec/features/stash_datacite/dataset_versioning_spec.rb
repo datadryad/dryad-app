@@ -293,8 +293,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     click_button 'Authors'
     all('[id^=instit_affil_]').last.set(Faker::Company.name)
     page.send_keys(:tab)
-    page.has_css?('.use-text-entered')
-    all(:css, '.use-text-entered').each { |i| i.set(true) }
+    find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
     page.send_keys(:tab)
     click_button 'Preview changes'
     click_button 'Subjects'
