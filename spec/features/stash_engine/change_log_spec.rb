@@ -4,7 +4,6 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
   include Mocks::Aws
   include Mocks::Repository
   include Mocks::CurationActivity
-  include Mocks::SubmissionJob
   include Mocks::Datacite
   include Mocks::RSolr
   include Mocks::Salesforce
@@ -23,22 +22,27 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
       mock_repository!
       mock_datacite!
       mock_file_content!
-      mock_submission_job!
       neuter_curation_callbacks!
       sign_in(user)
       start_new_dataset
       res_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
-      fill_required_fields
+      @resource = StashEngine::Resource.find(res_id)
+      @resource.update(title: Faker::Hipster.sentence(word_count: 6))
+      @resource.authors.first.affiliations = [create(:affiliation)]
+      @resource.authors.first.update(author_email: Faker::Internet.email)
+      @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word, subject_scheme: 'fos')
+      3.times { @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
+      @resource.descriptions.type_abstract.first.update(description: Faker::Lorem.paragraph)
+      @resource.contributors.first.update(contributor_name: Faker::Company.name)
+      @resource.descriptions.type_technical_info.first.update(description: Faker::Lorem.paragraph)
+      refresh
       click_button 'Related works'
       fill_in 'DOI or other URL', with: Faker::Pid.doi
       navigate_to_review
-      @resource = StashEngine::Resource.find(res_id)
     end
 
     context :change_log do
       before(:each) do
-        submit_form
-        expect(page).to have_content('My datasets')
         sign_out
         sign_in(curator)
         visit activity_log_path(id: @resource.identifier_id)
@@ -47,25 +51,25 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
       it 'shows the metadata log with correct contents' do
         find('button[aria-label="Metadata changes"]').click
         within(:css, "#metadata_table_#{@resource.id} tbody") do
-          expect(page).to have_text('Submission title:')
-          expect(page).to have_text(CGI.unescapeHTML(@resource.title.html_safe))
-          expect(page).to have_text('Set author information:')
-          expect(page).to have_text(@resource.authors.first.author_orcid)
-          expect(page).to have_text('Subject list:')
-          expect(page).to have_text('Updated abstract')
-          expect(page).to have_text('Set funder:')
-          expect(page).to have_text(@resource.funders.first.contributor_name)
-          expect(page).to have_text('Updated README')
-          expect(page).to have_text('Set related work:')
-          expect(page).to have_text('https://doi.org/')
-          expect(page).to have_text('Accepted Dryad terms and conditions')
+          expect(find('tr:first-child')).to have_text('Submission title:')
+          expect(find('tr:first-child')).to have_text(CGI.unescapeHTML(@resource.title.html_safe))
+          expect(find('tr:nth-child(2)')).to have_text('Set author information:')
+          expect(find('tr:nth-child(2)')).to have_text(@resource.authors.first.author_orcid)
+          expect(find('tr:nth-child(3)')).to have_text('Subject list:')
+          expect(find('tr:nth-child(4)')).to have_text('Updated abstract')
+          expect(find('tr:nth-child(5)')).to have_text('Set funder:')
+          expect(find('tr:nth-child(5)')).to have_text(@resource.funders.first.contributor_name)
+          expect(find('tr:nth-child(6)')).to have_text('Updated README')
+          expect(find('tr:nth-child(7)')).to have_text('Set related work:')
+          expect(find('tr:nth-child(7)')).to have_text('https://doi.org/')
+          expect(find('tr:nth-child(8)')).to have_text('Accepted Dryad terms and conditions')
         end
         # expand descriptions
         within(:css, "#metadata_table_#{@resource.id} tbody") do
           all('.desc-changes-button').first.click
-          expect(all('.desc-changes').first).to have_text(@resource.descriptions.find_by(description_type: 'abstract').description.strip_tags.squish)
+          expect(all('.desc-changes').first).to have_text(@resource.descriptions.find_by(description_type: 'abstract').description)
           all('.desc-changes-button').last.click
-          expect(all('.desc-changes').last).to have_text(CGI.unescapeHTML(@resource.title))
+          expect(all('.desc-changes').last).to have_text(@resource.descriptions.find_by(description_type: 'technicalinfo').description)
         end
       end
     end
@@ -73,6 +77,7 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
     context :file_change_log do
       it 'shows the correct file log including renamed files' do
         click_button 'Files'
+        add_required_data_files
         click_button 'Rename file valid.csv'
         fill_in 'Rename file valid.csv', with: 'super-valid'
         click_button 'Save new name for valid.csv'
@@ -93,6 +98,9 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
 
     context :new_version do
       before(:each) do
+        click_button 'Files'
+        add_required_data_files
+        click_button 'Preview changes'
         submit_form
         expect(page).to have_content('My datasets')
         sign_out
