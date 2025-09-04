@@ -216,7 +216,6 @@ module StashEngine
           @new_resource.reload
         end
 
-
         it 'does not copy frictionless report' do
           copied_file = @new_resource.reload.generic_files.last.reload
 
