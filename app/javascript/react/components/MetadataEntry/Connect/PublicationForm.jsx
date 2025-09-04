@@ -57,7 +57,9 @@ function PublicationForm({
   };
 
   useEffect(() => {
-    if (jTitle !== resource.resource_publication?.publication_name) setSponsored(false);
+    if (jTitle !== undefined) {
+      if (jTitle !== resource.resource_publication?.publication_name) setSponsored(false);
+    }
   }, [jTitle]);
 
   useEffect(() => {

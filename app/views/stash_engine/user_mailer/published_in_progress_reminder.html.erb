@@ -1,7 +1,7 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>
-  Your Dryad dataset titled, “<%= @resource.title %>” with the
+  Your Dryad dataset titled, “<%= @resource.title.html_safe %>” with the
   DOI “<%= @resource.identifier_value %>”, is currently "In Progress".
   Although a previous version was submitted and/or published, the most recent version of your submission is
   'In Progress' (an active working version of the dataset has been created but not submitted)

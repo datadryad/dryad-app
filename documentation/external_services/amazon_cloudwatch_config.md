@@ -119,10 +119,12 @@ Start and enable the service
 
 Change ownership to files. The service will run as `cwagent` user.
 ```
+cd /opt/aws/amazon-cloudwatch-agent/
 sudo chown cwagent:cwagent -R etc
 sudo chown cwagent:cwagent -R logs
 sudo chown cwagent:cwagent -R var
 
+sudo systemctl enable amazon-cloudwatch-agent
 sudo systemctl restart amazon-cloudwatch-agent
 ```
 

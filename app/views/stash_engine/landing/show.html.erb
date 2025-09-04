@@ -1,4 +1,4 @@
-<% @page_title = "Data: #{@resource.clean_title}" %>
+<% @page_title = "Data: #{@resource.clean_title.html_safe}" %>
 <!-- Track View for COUNTER and new DataCite metrics widget -->
 <% content_for(:head) do %>
 <link rel="linkset" type="application/linkset" href="<%= linkset_url(id: @resource.identifier_str) %>">

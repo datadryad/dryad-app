@@ -750,12 +750,19 @@ module StashApi
         @resources[1].stash_version.update(version: 2)
       end
 
-      it 'shows a public record for a created indentifier/resource' do
+      it 'shows a public record for a created identifier/resource' do
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", as: :json # not logged in
         hsh = response_body_hash
         expect(hsh['versionNumber']).to eq(1)
         expect(hsh['title']).to eq(@resources[0].title)
         expect(hsh['editLink']).to eq(nil)
+      end
+
+      it 'strips tags from dataset titles' do
+        @resources[0].update(title: 'A dataset title that contains <em>italics</em> and <sup>stuff</sup>')
+        get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", as: :json # not logged in
+        hsh = response_body_hash
+        expect(hsh['title']).to eq('A dataset title that contains italics and stuff')
       end
 
       it 'shows the dataset with the correct json type, even if not set explicitly in accept headers' do

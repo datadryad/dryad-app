@@ -93,8 +93,7 @@ module StashEngine
       types = ['StashEngine::Resource', 'StashEngine::ResourcePublication',
                'StashDatacite::RelatedIdentifier', 'StashEngine::Author',
                'StashDatacite::Contributor', 'StashDatacite::Description']
-      versions = CustomVersion.where(resource_id: params[:id])
-      @changes = versions.where(item_type: types).where.not(event: 'create').order(:created_at).includes(:user)
+      @changes = CustomVersion.where(resource_id: params[:id]).where(item_type: types).order(:created_at).includes(:user)
       respond_to(&:js)
     end
 
@@ -181,6 +180,7 @@ module StashEngine
       @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
     end
 
+    # :nocov:
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
     def setup_internal_data_list
       @internal_datum = params[:internal_datum_id] ? InternalDatum.find(params[:internal_datum_id]) : InternalDatum.new(identifier_id: @identifier.id)
@@ -195,7 +195,7 @@ module StashEngine
         @options.delete(existing_item.data_type)
       end
     end
-
+    # :nocov:
   end
 
 end

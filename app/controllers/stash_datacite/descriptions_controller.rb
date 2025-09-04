@@ -23,7 +23,7 @@ module StashDatacite
     # PATCH/PUT /descriptions/1
     def update
       items = description_params
-      unless %w[technicalinfo changelog].include?(@description&.description_type) || items[:description].nil?
+      unless %w[technicalinfo usage_notes].include?(@description&.description_type) || items[:description].nil?
         desc = helpers.markdown_render(content: items[:description], header_offset: 2)
         items[:description] =
           Loofah.fragment(desc).scrub!(:strip).to_s

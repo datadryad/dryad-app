@@ -1,8 +1,8 @@
 <% @page_title = "Pre-publication dataset sharing" %>
 <div id="page-columns">
   <div id="page-content">
-  <h1 class="c-datasets-heading__heading o-heading__level1"><%= @resource.title %></h1>
-  <p>This dataset is currently private for peer review. You have been invited to download this dataset.</p>
+  <h1 class="c-datasets-heading__heading o-heading__level1"><%= @resource.title.html_safe %></h1>
+  <p>This dataset is currently Private for Peer Review. You have been invited to download this dataset.</p>
 
   <%= render partial: 'stash_engine/landing/files', locals: {dataset_identifier: @resource.identifier, share: {resource: @resource, code: params[:id]}} %>
 
@@ -30,7 +30,7 @@
   <% end %>
 
   <% if @resource.display_readme? %>
-    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: StashDatacite::Resource::Review.new(@resource), highlight_fields: [] } %>
+    <%= render partial: "stash_datacite/descriptions/readme", locals: { review: StashDatacite::Resource::Review.new(@resource) } %>
   <% end %>
   </div>
 </div>

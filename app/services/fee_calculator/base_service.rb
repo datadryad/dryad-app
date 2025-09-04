@@ -28,8 +28,8 @@ module FeeCalculator
       { tier: 2, range:    50_000_000_001..  100_000_000_000, price:   464 },
       { tier: 3, range:   100_000_000_001..  250_000_000_000, price: 1_123 },
       { tier: 4, range:   250_000_000_001..  500_000_000_000, price: 2_153 },
-      { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 }
-      # { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
+      { tier: 5, range:   500_000_000_001..1_000_000_000_000, price: 4_347 },
+      { tier: 6, range: 1_000_000_000_001..2_000_000_000_000, price: 8_809 }
     ].freeze
 
     INVOICE_FEE = 199
@@ -110,6 +110,16 @@ module FeeCalculator
 
       @sum += INVOICE_FEE
       @sum_options[:invoice_fee] = INVOICE_FEE
+    end
+
+    def add_ppr_fee(ppr_fee)
+      return unless options[:pay_ppr_fee]
+      return if @sum.zero?
+
+      # replace existing sum
+      @sum = ppr_fee
+      @sum_options.delete(:storage_fee)
+      @sum_options[:ppr_fee] = ppr_fee
     end
 
     def add_dpc_fee

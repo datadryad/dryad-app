@@ -148,7 +148,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
             it_behaves_like 'it only covers limited LDF'
           end
 
@@ -169,7 +169,7 @@ module FeeCalculator
               it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464, storage_fee_label: 'Large data fee' }) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
 
@@ -188,7 +188,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
             it_behaves_like 'it only covers limited LDF'
           end
 
@@ -212,7 +212,7 @@ module FeeCalculator
               }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
       end
@@ -248,7 +248,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
             it_behaves_like 'it only covers limited LDF'
           end
 
@@ -277,7 +277,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
 
@@ -316,7 +316,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
             it_behaves_like 'it only covers limited LDF'
           end
 
@@ -352,7 +352,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
       end

@@ -64,7 +64,7 @@ module StashDatacite
     # GET /publications/automsid?term={query_term}
     def automsid
       partial_term = params[:term]
-      render json: nil and return if partial_term.blank?
+      render json: nil and return if partial_term.blank? || !params.key?(:jid)
 
       # clean the partial_term of unwanted characters so it doesn't cause errors
       partial_term.gsub!(/~!@%&"/, '')

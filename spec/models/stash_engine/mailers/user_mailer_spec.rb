@@ -99,6 +99,18 @@ module StashEngine
         end
       end
 
+      context 'title with HTML elements' do
+        let(:status) { 'submitted' }
+
+        it 'does not include HTML elements in the email subject' do
+          allow(@resource).to receive(:title).and_return('A dataset title that contains <em>italics</em> and <sup>stuff</sup>')
+          allow(@resource).to receive(:current_curation_status).and_return(status)
+          UserMailer.status_change(@resource, status).deliver_now
+          expect(@resource.title.strip_tags).to eq('A dataset title that contains italics and stuff')
+          assert_email("[test] Dryad Submission \"#{@resource.title.strip_tags}\"")
+        end
+      end
+
       context 'when journal has peer_review_custom_text' do
         let(:status) { 'peer_review' }
         let(:journal) { create(:journal, peer_review_custom_text: 'This is a custom peer review message') }

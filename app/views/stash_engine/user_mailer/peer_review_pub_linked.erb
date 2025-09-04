@@ -2,7 +2,7 @@
 
 <p>A published or accepted article has been linked to your Dryad data submission:</p>
 
-<p>Title: <%= @resource.title %><br/>
+<p>Title: <%= @resource.title.html_safe %><br/>
 DOI: <%= @resource.identifier_uri %></p>
 
 <p>As your manuscript is no longer under peer review, the data should be made public. Therefore your submission will be automatically released for curation and publication.</p>

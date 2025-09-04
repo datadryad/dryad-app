@@ -1,6 +1,6 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>You have been invited to collaborate on the Dryad data submission <em><%= @resource.title %></em>. This submission can now be found on your Dryad <a href="https://datadryad.org/dashboard">My datasets page</a>.</p>
+<p>You have been invited to collaborate on the Dryad data submission <em><%= @resource.title.html_safe %></em>. This submission can now be found on your Dryad <a href="https://datadryad.org/dashboard">My datasets page</a>.</p>
 
 <% if @role == 'submitter' %>
   <p>You have been nominated to be the point of contact with Dryad for this submission, and will have final approval to submit it when you and your collaborators have completed it.</p>
