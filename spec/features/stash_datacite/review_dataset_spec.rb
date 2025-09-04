@@ -99,7 +99,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
 
     it 'waives the fee when funder will pay' do
       create(:funder, name: 'Happy Clown School')
-      fill_required_metadata
       click_button 'Support'
       fill_in_funder(name: 'Happy Clown School')
 
@@ -108,7 +107,6 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it "doesn't waive the fee when funder won't pay" do
-      fill_required_metadata
       click_button 'Support'
       fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
 

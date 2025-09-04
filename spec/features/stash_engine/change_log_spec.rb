@@ -24,17 +24,23 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
       mock_file_content!
       neuter_curation_callbacks!
       sign_in(user)
-      start_new_dataset
-      res_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
-      @resource = StashEngine::Resource.find(res_id)
-      @resource.update(title: Faker::Hipster.sentence(word_count: 6))
-      @resource.authors.first.affiliations = [create(:affiliation)]
-      @resource.authors.first.update(author_email: Faker::Internet.email)
-      @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word, subject_scheme: 'fos')
-      3.times { @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
-      @resource.descriptions.type_abstract.first.update(description: Faker::Lorem.paragraph)
-      @resource.contributors.first.update(contributor_name: Faker::Company.name)
-      @resource.descriptions.type_technical_info.first.update(description: Faker::Lorem.paragraph)
+      Timecop.travel(Time.now - 1.minute) do
+        start_new_dataset
+        res_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
+        @resource = StashEngine::Resource.find(res_id)
+        @resource.update(title: Faker::Hipster.sentence(word_count: 6))
+        Timecop.travel(Time.now + 5.seconds) do 
+          @resource.authors.first.affiliations = [create(:affiliation)]
+          @resource.authors.first.update(author_email: Faker::Internet.email)
+        end
+        Timecop.travel(Time.now + 10.seconds) do
+          @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word, subject_scheme: 'fos')
+          3.times { @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
+        end
+        Timecop.travel(Time.now + 15.seconds) { @resource.descriptions.type_abstract.first.update(description: Faker::Lorem.paragraph) }
+        Timecop.travel(Time.now + 20.seconds) { @resource.contributors.first.update(contributor_name: Faker::Company.name) }
+        Timecop.travel(Time.now + 25.seconds) { @resource.descriptions.type_technical_info.first.update(description: Faker::Lorem.paragraph) }
+      end
       refresh
       click_button 'Related works'
       fill_in 'DOI or other URL', with: Faker::Pid.doi
@@ -53,9 +59,9 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
         within(:css, "#metadata_table_#{@resource.id} tbody") do
           expect(find('tr:first-child')).to have_text('Submission title:')
           expect(find('tr:first-child')).to have_text(CGI.unescapeHTML(@resource.title.html_safe))
-          expect(find('tr:nth-child(2)')).to have_text('Set author information:')
-          expect(find('tr:nth-child(2)')).to have_text(@resource.authors.first.author_orcid)
-          expect(find('tr:nth-child(3)')).to have_text('Subject list:')
+          expect(find('tr:nth-child(2)')).to have_text('Subject list:')
+          expect(find('tr:nth-child(3)')).to have_text('Set author information:')
+          expect(find('tr:nth-child(3)')).to have_text(@resource.authors.first.author_orcid)
           expect(find('tr:nth-child(4)')).to have_text('Updated abstract')
           expect(find('tr:nth-child(5)')).to have_text('Set funder:')
           expect(find('tr:nth-child(5)')).to have_text(@resource.funders.first.contributor_name)
@@ -84,8 +90,6 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
         expect(page).to have_text('All progress saved')
         expect(page).to have_text('super-valid.csv')
         click_button 'Preview changes'
-        submit_form
-        expect(page).to have_content('My datasets')
         sign_out
         sign_in(curator)
         visit activity_log_path(id: @resource.identifier_id)
@@ -101,6 +105,8 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
         click_button 'Files'
         add_required_data_files
         click_button 'Preview changes'
+        click_button 'Compliance'
+        fill_in_validation
         submit_form
         expect(page).to have_content('My datasets')
         sign_out

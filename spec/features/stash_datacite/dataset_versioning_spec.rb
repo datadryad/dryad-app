@@ -36,7 +36,6 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       @identifier = create(:identifier)
       @resource = create(:resource, :submitted, identifier: @identifier, user: @author,
                                                 tenant_id: @author.tenant_id, accepted_agreement: true)
-      create(:description, resource: @resource, description_type: 'abstract')
       create(:description, resource: @resource, description_type: 'technicalinfo')
       create(:description, resource: @resource, description_type: 'usage_notes', description: nil)
       create(:data_file, resource: @resource)
