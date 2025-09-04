@@ -3,7 +3,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
 
   describe :prepare_readme do
     let(:user) { create(:user) }
-    let(:resource) { create(:resource, user: user) }
+    let(:resource) { create(:resource, user: user, title: 'A test original dataset title') }
     let(:file) { create(:data_file, resource: resource) }
 
     before(:each) do
@@ -54,7 +54,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
       end
 
       it 'changes the title' do
-        title = Faker::Company.catch_phrase
+        title = 'A test updated title for a dataset'
         click_button 'Title'
         find('[name="title"]').set('')
         page.send_keys(:tab)
