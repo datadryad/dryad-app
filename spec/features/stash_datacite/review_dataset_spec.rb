@@ -66,7 +66,11 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it 'waives the fee when the journal will pay' do
-      journal = create(:journal, title: 'Test Paying Journal', payment_plan_type: 'SUBSCRIPTION')
+      tenant = create(:tenant_email)
+      create(:payment_configuration, partner: tenant, payment_plan: nil, covers_dpc: false)
+      journal = create(:journal, title: 'Test Paying Journal')
+      create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
+
       click_button 'Connect'
       choose 'Yes'
       check 'Submitted manuscript'
@@ -82,7 +86,7 @@ RSpec.feature 'ReviewDataset', type: :feature do
     end
 
     it "doesn't waive the fee when the journal won't pay" do
-      journal = create(:journal, title: 'Test NonPaying Journal', payment_plan_type: nil)
+      journal = create(:journal, title: 'Test NonPaying Journal')
       click_button 'Connect'
       choose 'Yes'
       check 'Submitted manuscript'

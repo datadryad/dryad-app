@@ -57,8 +57,9 @@ export default function Publication({resource, setResource}) {
   useEffect(() => {
     const {manuscript_number} = resource.resource_publication;
     const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
-    if (!resource.tenant?.covers_dpc) {
-      setSponsored(!!resource.journal?.payment_plan_type && !!(manuscript_number || primary_article) ? resource.journal.title : false);
+    if (!resource.tenant?.payment_configuration?.covers_dpc) {
+      const journal_pp = resource.journal?.payment_configuration?.payment_plan;
+      setSponsored(!!journal_pp && (manuscript_number || primary_article) ? resource.journal.title : false);
     }
   }, [resource.journal, resource.resource_publication, resource.related_identifiers]);
 

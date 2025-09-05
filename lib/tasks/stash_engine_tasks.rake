@@ -686,7 +686,8 @@ namespace :identifiers do
       csv << %w[SponsorName JournalName Count]
       curr_sponsor = nil
       sponsor_summary = []
-      StashEngine::Journal.where(payment_plan_type: 'DEFERRED').order(:sponsor_id, :title).each do |j|
+      StashEngine::Journal.joins(:payment_configuration).where(payment_configuration: { payment_plan: 'DEFERRED' }).order(:sponsor_id,
+                                                                                                                          :title).each do |j|
         if j.sponsor&.name != curr_sponsor
           Reports::Payments::Base.new.write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period,
                                                             table: sponsor_summary, payment_plan: 'deferred')
@@ -779,7 +780,7 @@ namespace :identifiers do
       StashEngine::JournalOrganization.all.each do |org|
         journals = org.journals_sponsored_deep
         journals.each do |j|
-          next unless j.payment_plan_type == 'TIERED' && j.top_level_org == org
+          next unless j.payment_configuration&.payment_plan == 'TIERED' && j.top_level_org == org
 
           journal_item_count = 0
           sc_report.each do |item|
@@ -814,7 +815,7 @@ namespace :identifiers do
     StashEngine::JournalOrganization.all.each do |org|
       journals = org.journals_sponsored_deep
       journals.each do |j|
-        next unless j.payment_plan_type == 'TIERED' && j.top_level_org == org
+        next unless j.payment_configuration&.payment_plan == 'TIERED' && j.top_level_org == org
 
         journal_item_count = 0
         base_report.each do |item|
@@ -1434,7 +1435,7 @@ namespace :journals do
     StashEngine::Journal.find_each do |j|
       # Only check the journal in Salesforce if Dryad has a business relationship
       # with the journal (payment plan or integration)
-      next unless j.payment_plan_type.present? || j.manuscript_number_regex.present?
+      next unless j.payment_configuration&.payment_plan.present? || j.manuscript_number_regex.present?
 
       sf_id = Stash::Salesforce.find_account_by_name(j.title)
       unless sf_id.present?

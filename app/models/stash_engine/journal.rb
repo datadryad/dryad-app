@@ -5,13 +5,13 @@
 #  id                      :integer          not null, primary key
 #  allow_review_workflow   :boolean          default(TRUE)
 #  api_contacts            :text(65535)
-#  covers_ldf              :boolean          default(FALSE)
 #  default_to_ppr          :boolean          default(FALSE)
 #  description             :text(65535)
 #  journal_code            :string(191)
 #  manuscript_number_regex :string(191)
 #  notify_contacts         :text(65535)
-#  payment_plan_type       :string
+#  old_covers_ldf          :boolean          default(FALSE)
+#  old_payment_plan_type   :string
 #  peer_review_custom_text :text(65535)
 #  preprint_server         :boolean          default(FALSE)
 #  review_contacts         :text(65535)
@@ -29,6 +29,8 @@
 module StashEngine
   class Journal < ApplicationRecord
     self.table_name = 'stash_engine_journals'
+    PAYMENT_PLANS = %w[SUBSCRIPTION PREPAID DEFERRED TIERED 2025].freeze
+
     validates :title, presence: true
     validate :email_array
 
@@ -39,16 +41,17 @@ module StashEngine
     has_many :manuscripts, -> { order(created_at: :desc) }, class_name: 'StashEngine::Manuscript'
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
+    has_one :payment_configuration, as: :partner, dependent: :destroy
 
     validates_associated :issns
-    accepts_nested_attributes_for :issns, :alternate_titles, :flag
+    accepts_nested_attributes_for :flag, allow_destroy: true
+    accepts_nested_attributes_for(*%i[issns alternate_titles payment_configuration])
 
     scope :servers, -> { where(preprint_server: true) }
-
-    def payment_plans = %w[SUBSCRIPTION PREPAID DEFERRED TIERED 2025]
+    scope :sponsoring, -> { joins(:payment_configuration).where(payment_configuration: { payment_plan: PAYMENT_PLANS }) }
 
     def will_pay?
-      payment_plans.include?(payment_plan_type)
+      PAYMENT_PLANS.include?(payment_configuration&.payment_plan)
     end
 
     def api_journal?
@@ -169,5 +172,12 @@ module StashEngine
       pub.update(publication_name: new_title, publication_issn: new_issn)
     end
 
+    def as_json(_options = {})
+      super(
+        include: {
+          payment_configuration: { only: %i[payment_plan covers_dpc covers_ldf ldf_limit] }
+        }
+      )
+    end
   end
 end
