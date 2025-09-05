@@ -12,7 +12,7 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.select('stash_engine_journals.*, payment_configurations.payment_plan')
+        @journals = @journals.select('stash_engine_journals.*, payment_configurations')
           .left_outer_joins(:issns, :alternate_titles, :payment_configuration)
           .distinct
           .where(

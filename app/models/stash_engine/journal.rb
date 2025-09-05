@@ -172,5 +172,12 @@ module StashEngine
       pub.update(publication_name: new_title, publication_issn: new_issn)
     end
 
+    def as_json(options = {})
+      super(
+        include: {
+          payment_configuration: { only: %i[payment_plan covers_dpc covers_ldf ldf_limit] }
+        }
+      )
+    end
   end
 end
