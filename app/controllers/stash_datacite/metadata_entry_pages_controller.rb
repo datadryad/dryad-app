@@ -2,6 +2,7 @@ module StashDatacite
   class MetadataEntryPagesController < ApplicationController
     before_action :find_resource
 
+    # rubocop:disable Metrics/MethodLength
     def find_or_create
       @metadata_entry = Resource::MetadataEntry.new(@resource, session[:resource_type] || 'dataset', @resource.submitter&.tenant_id)
       @metadata_entry.resource_type
@@ -25,8 +26,7 @@ module StashDatacite
               ]
             },
             tenant: { include: %i[payment_configuration] },
-            journal: { include: %i[payment_configuration] }
-          }
+            journal: { include: %i[payment_configuration] } }
         ]
       )
       @submission[:users] = @resource.users.select('stash_engine_users.*', 'stash_engine_roles.role')
@@ -43,6 +43,7 @@ module StashDatacite
       end
       respond_to(&:js)
     end
+    # rubocop:enable Metrics/MethodLength
 
     def find_files
       files = {}
