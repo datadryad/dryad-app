@@ -36,7 +36,7 @@ module StashDatacite
       # files that haven't validated, errors uploading, too many files, too big of size
 
       def errors
-        import.presence || title.presence || authors.presence || abstract.presence ||
+        title.presence || authors.presence || abstract.presence ||
         subjects.presence || funder.presence || type_errors.presence || false
       end
 
@@ -47,22 +47,6 @@ module StashDatacite
           data_required.presence || s3_error_uploads.presence || url_error_validating.presence ||
           over_max.presence || readme_required.presence || false
         end
-      end
-
-      def import
-        return 'Journal name missing' if %w[manuscript published].include?(@resource.identifier.import_info) &&
-          @resource.identifier.publication_name.blank?
-        return 'Preprint server missing' if @resource.identifier.import_info == 'preprint' && @resource.identifier.preprint_server.blank?
-        return 'Manuscript number missing' if @resource.identifier.import_info == 'manuscript' && @resource.identifier.manuscript_number.blank?
-
-        if @resource.identifier.import_info == 'preprint'
-          preprint = @resource.related_identifiers.where(work_type: 'preprint').first
-          return 'DOI missing' if preprint.nil? || preprint.related_identifier.blank? || !preprint.valid_doi_format?
-        elsif @resource.identifier.import_info == 'published'
-          primary_article = @resource.related_identifiers.where(work_type: 'primary_article').first
-          return 'DOI missing' if primary_article.nil? || primary_article.related_identifier.blank? || !primary_article.valid_doi_format?
-        end
-        false
       end
 
       def title
