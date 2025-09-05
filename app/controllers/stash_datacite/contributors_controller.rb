@@ -135,7 +135,6 @@ module StashDatacite
     end
 
     def check_reorder_valid
-      puts params.inspect
       params.require(:contributor).permit!
       @contributors = Contributor.where(id: params[:contributor].keys)
 
