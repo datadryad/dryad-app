@@ -13,7 +13,9 @@ module Tasks
         opts.on('-o', "--#{key}=value", String) { |value| options[key] = value }
       end
 
-      args = opts.order!(ARGV) {}
+      do_not_parse = '--force-color --format RSpec::Github::Formatter --format progress --tag ~skip'
+      args = ARGV - do_not_parse.split
+      args = opts.order!(args) {}
       opts.parse!(args)
 
       options
