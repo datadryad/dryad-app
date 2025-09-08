@@ -82,6 +82,7 @@ module StashEngine
     def update
       curation_activity_change if @field == 'curation_activity'
       curator_change if @field == 'curator'
+      @resource.reload
       respond_to(&:js)
     end
 
@@ -383,8 +384,7 @@ module StashEngine
         @resource.hold_for_peer_review = true if @status == 'peer_review'
         @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
         @resource.save
-        @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
-        @resource.reload
+        @curation_activity = CurationService.new(resource: @resource, user_id: current_user.id, status: @status, note: @note).process
       end
     end
 
@@ -448,8 +448,7 @@ module StashEngine
         @curator_name = StashEngine::User.find(curator_id)&.name
       end
       @note = "Changing curator to #{@curator_name.presence || 'unassigned'}. " + params.dig(:curation_activity, :note)
-      @resource.curation_activities << CurationActivity.create(user_id: current_user.id, status: @status, note: @note)
-      @resource.reload
+      CurationService.new(resource: @resource, user_id: current_user.id, status: @status, note: @note).process
     end
 
   end

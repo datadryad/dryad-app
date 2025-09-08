@@ -46,7 +46,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
     context :by_curator do
       it "is submitted, has 'curation' status, and correct admin page info", js: true do
-        create(:curation_activity, user: @curator, resource_id: @resource.id, status: 'curation')
+        CurationService.new(user: @curator, resource_id: @resource.id, status: 'curation').process
         @resource.reload
 
         sign_in(@curator)
@@ -151,8 +151,8 @@ RSpec.feature 'DatasetVersioning', type: :feature do
     context :after_ppr_and_curation do
       it 'does not go to ppr when prior version was curated', js: true do
         @resource.update(hold_for_peer_review: true, current_editor_id: @curator.id)
-        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'curation')
-        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'action_required')
+        CurationService.new(user_id: @curator.id, resource_id: @resource.id, status: 'curation').process
+        CurationService.new(user_id: @curator.id, resource_id: @resource.id, status: 'action_required').process
         @resource.reload
         Timecop.travel(Time.now.utc + 1.minute)
         sign_in(@author)
@@ -173,12 +173,12 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         # needed to set the user to system user.  Not migrated as part of tests for some reason
         StashEngine::User.create(id: 0, first_name: 'Dryad', last_name: 'System') unless StashEngine::User.where(id: 0).first
         @resource.update(current_editor_id: @curator.id)
-        create(:curation_activity, user: @curator, resource_id: @resource.id, status: 'curation')
+        CurationService.new(user: @curator, resource_id: @resource.id, status: 'curation').process
         @resource.reload
       end
 
       it 'has an assigned curator when prior version was :action_required', js: true do
-        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'action_required')
+        CurationService.new(user_id: @curator.id, resource_id: @resource.id, status: 'action_required').process
         @resource.reload
 
         sign_in(@author)
@@ -194,7 +194,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       end
 
       it 'has an assigned curator when prior version was :withdrawn', js: true do
-        create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'withdrawn')
+        CurationService.new(user_id: @curator.id, resource_id: @resource.id, status: 'withdrawn').process
         @resource.reload
 
         sign_in(@author)
@@ -231,7 +231,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         it 'has a backup curator when the previous curator is no longer available', js: true do
           curator2 = create(:user, role: 'curator')
-          create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
+          create(:curation_activity, :published, user_id: @curator.id, resource_id: @resource.id)
           @resource.reload
 
           # demote the original curator
@@ -254,7 +254,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           create(:role, user: @curator, role: 'curator', role_object: @resource.tenant)
           create(:user, role: 'curator') # backup curator
           @resource.update(current_editor_id: @curator.id)
-          create(:curation_activity, user_id: @curator.id, resource_id: @resource.id, status: 'published')
+          CurationService.new(user_id: @curator.id, resource_id: @resource.id, status: 'published').process
           @resource.reload
 
           sign_in(@author)

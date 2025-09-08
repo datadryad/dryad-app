@@ -106,11 +106,12 @@ module StashEngine
     private
 
     def add_metadata_updated_curation_note(provenance, resource, type)
-      resource.curation_activities << StashEngine::CurationActivity.create(
+      CurationService.new(
+        resource: resource,
         user_id: 0, # system user
         status: resource.current_curation_status,
         note: "#{provenance.capitalize} #{CROSSREF_UPDATE_MESSAGE} #{type} article"
-      )
+      ).process
     end
   end
 end

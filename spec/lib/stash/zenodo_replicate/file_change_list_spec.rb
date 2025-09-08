@@ -26,8 +26,8 @@ module Stash
         # the published status makes this the first published version
         @resources.first.curation_activities <<
           [
-            create(:curation_activity_no_callbacks, status: 'curation'),
-            create(:curation_activity_no_callbacks, status: 'published')
+            create(:curation_activity, status: 'curation'),
+            create(:curation_activity, status: 'published')
           ]
         @zenodo_copy = create(:zenodo_copy, resource: @resources.first, identifier: @resources.first.identifier)
         stub_new_access_token
@@ -64,7 +64,7 @@ module Stash
 
         it "doesn't find previously published when withdrawn after publish" do
           # get rid of published curation activity
-          @resources.first.curation_activities << create(:curation_activity_no_callbacks, status: 'withdrawn')
+          @resources.first.curation_activities << create(:curation_activity, status: 'withdrawn')
 
           second_res = create(:resource, identifier_id: @resources.first.identifier_id) # both under same identifier
           @resources << second_res

@@ -44,10 +44,10 @@ module StashEngine
       # If the submitter is not a real user (with an ORCID), make the new user log in and become the submitter.
       if ownership_transfer_needed?
         if current_user && !current_user.proxy_user?
-          ca = CurationActivity.create(
+          ca = CurationService.new(
             status: @resource.current_curation_status || 'in_progress', user_id: 0, resource_id: @resource.id,
             note: "Transferring ownership to #{current_user.name} (#{current_user.id}) using an edit code"
-          )
+          ).process
           @resource.curation_activities << ca
           @resource.submitter = current_user.id
           @resource.update(current_editor_id: current_user.id)

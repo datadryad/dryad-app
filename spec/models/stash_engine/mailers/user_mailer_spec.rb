@@ -8,9 +8,9 @@ module StashEngine
     let(:journal_issn) { create(:journal_issn, journal: journal) }
 
     before(:each) do
-
+      # disable this as it will update the curation activity and send a second identicatal email
+      allow_any_instance_of(UserMailer).to receive(:update_activities).and_return(true)
       # TODO: this is completely ridiculous for number of mocks and we should be using factorybot instead and only disbling some callbacks
-
       @delivery_method = ActionMailer::Base.delivery_method
       ActionMailer::Base.delivery_method = :test
 

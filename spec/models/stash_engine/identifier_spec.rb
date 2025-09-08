@@ -50,7 +50,7 @@ module StashEngine
       mock_datacite!
       mock_salesforce!
       mock_stripe!
-      neuter_curation_callbacks!
+      neuter_emails!
       create(:tenant_ucop)
       @user = create(:user, tenant_id: 'dryad')
       Timecop.travel(Time.now.utc - 3.minutes)
@@ -68,8 +68,6 @@ module StashEngine
           download_filename: "created#{i}.bin",
           upload_file_size: i * 3
         )
-
-        allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
       end
       @res1.current_state = 'submitted'
       create(:version, resource_id: @res1.id, version: 1)
@@ -220,18 +218,14 @@ module StashEngine
       end
 
       describe 'curation activity setup' do
-        before(:each) do
-          allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-          allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
-          allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
-        end
+        before(:each) { neuter_curation_callbacks! }
 
         describe '#approval_date' do
           it 'selects the correct approval_date' do
             target_date = DateTime.new(2010, 2, 3).utc
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: target_date)
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: '2020-01-01')
+            CurationService.new(resource: @res1, status: 'curation', user: @user, created_at: '2000-01-01').process
+            CurationService.new(resource: @res1, status: 'published', user: @user, created_at: target_date).process
+            CurationService.new(resource: @res1, status: 'published', user: @user, created_at: '2020-01-01').process
             expect(@identifier.approval_date).to eq(target_date)
           end
 
@@ -244,9 +238,9 @@ module StashEngine
         describe '#curation_completed_date' do
           it 'selects the correct curation_completed_date' do
             target_date = DateTime.new(2010, 2, 3).utc
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
-            @res1.curation_activities << CurationActivity.create(status: 'action_required', user: @user, created_at: target_date)
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user, created_at: '2020-01-01')
+            CurationService.new(status: 'curation', user: @user, created_at: '2000-01-01', resource: @res1).process
+            CurationService.new(status: 'action_required', user: @user, created_at: target_date, resource: @res1).process
+            CurationService.new(status: 'published', user: @user, created_at: '2020-01-01', resource: @res1).process
             expect(@identifier.curation_completed_date).to eq(target_date)
           end
 
@@ -259,18 +253,18 @@ module StashEngine
         describe '#date_last_curated' do
           it 'selects the correct date_last_curated' do
             target_date = DateTime.new(2010, 2, 3).utc
-            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: target_date)
-            @res2.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2020-01-01')
-            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            CurationService.new(resource: @res1, status: 'submitted', user: @user, created_at: '2000-01-01').process
+            CurationService.new(resource: @res1, status: 'curation', user: @user, created_at: target_date).process
+            CurationService.new(resource: @res2, status: 'submitted', user: @user, created_at: '2020-01-01').process
+            CurationService.new(resource: @res3, status: 'submitted', user: @user, created_at: '2030-01-01').process
             expect(@identifier.date_last_curated).to eq(target_date)
           end
 
           it 'gives no date_last_curated for uncurated items' do
-            @res1.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2000-01-01')
-            @res1.curation_activities << CurationActivity.create(status: 'peer_review', user: @user, created_at: '2010-01-01')
-            @res2.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2020-01-01')
-            @res3.curation_activities << CurationActivity.create(status: 'submitted', user: @user, created_at: '2030-01-01')
+            CurationService.new(resource: @res1, status: 'submitted', user: @user, created_at: '2000-01-01').process
+            CurationService.new(resource: @res1, status: 'peer_review', user: @user, created_at: '2010-01-01').process
+            CurationService.new(resource: @res2, status: 'submitted', user: @user, created_at: '2020-01-01').process
+            CurationService.new(resource: @res3, status: 'submitted', user: @user, created_at: '2030-01-01').process
             expect(@identifier.date_last_curated).to eq(nil)
           end
         end
@@ -278,37 +272,37 @@ module StashEngine
         describe '#latest_resource_with_public_metadata' do
 
           it 'finds the last published resource' do
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            CurationService.new(resource: @res1, status: 'curation', user: @user).process
+            CurationService.new(resource: @res1, status: 'published', user: @user).process
+            CurationService.new(resource: @res2, status: 'curation', user: @user).process
+            CurationService.new(resource: @res2, status: 'published', user: @user).process
+            CurationService.new(resource: @res3, status: 'curation', user: @user).process
             expect(@identifier.reload.latest_resource_with_public_metadata).to eql(@res2)
           end
 
           it 'finds embargoed published resource' do
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
-            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            CurationService.new(resource: @res1, status: 'curation', user: @user).process
+            CurationService.new(resource: @res1, status: 'published', user: @user).process
+            CurationService.new(resource: @res1, status: 'curation', user: @user).process
+            CurationService.new(resource: @res2, status: 'embargoed', user: @user).process
+            CurationService.new(resource: @res3, status: 'curation', user: @user).process
             expect(@identifier.reload.latest_resource_with_public_metadata).to eql(@res2)
           end
 
           it 'finds no published resource' do
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            CurationService.new(resource: @res1, status: 'curation', user: @user).process
+            CurationService.new(resource: @res2, status: 'curation', user: @user).process
+            CurationService.new(resource: @res3, status: 'curation', user: @user).process
             expect(@identifier.reload.latest_resource_with_public_metadata).to eql(nil)
           end
 
           it 'disallows any access if latest state is withdrawn' do
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res3.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
+            CurationService.new(resource: @res1, status: 'curation', user: @user).process
+            CurationService.new(resource: @res1, status: 'published', user: @user).process
+            CurationService.new(resource: @res2, status: 'curation', user: @user).process
+            CurationService.new(resource: @res2, status: 'published', user: @user).process
+            CurationService.new(resource: @res3, status: 'curation', user: @user).process
+            CurationService.new(resource: @res3, status: 'withdrawn', user: @user).process
             expect(@identifier.reload.latest_resource_with_public_metadata).to eql(nil)
           end
 
@@ -376,43 +370,42 @@ module StashEngine
         describe '#latest_resource_with_public_download' do
 
           it 'finds the last download resource' do
-            @res1.data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res2.data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
-            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res3.data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
-            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            create(:data_file, resource: @res1, download_filename: 'fun.cat', upload_file_size: 666)
+            create(:curation_activity, :curation, resource: @res1, user: @user)
+            create(:curation_activity, :published, resource: @res1, user: @user)
+            create(:data_file, resource: @res2, file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
+            create(:curation_activity, :curation, resource: @res2, user: @user)
+            create(:curation_activity, :published, resource: @res2, user: @user)
+            create(:data_file, resource: @res3, file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
+            create(:curation_activity, :curation, resource: @res3, user: @user)
             expect(@identifier.latest_resource_with_public_download).to eql(@res1)
           end
 
           it 'finds published resource' do
-            @res1.data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res2.data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
-            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
-            @res3.data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
-            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            create(:data_file, resource: @res1, download_filename: 'fun.cat', upload_file_size: 666)
+            create(:curation_activity, :curation, resource: @res1, user: @user)
+            create(:curation_activity, :published, resource: @res1, user: @user)
+            create(:data_file, resource: @res2, file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
+            create(:curation_activity, :curation, resource: @res2, user: @user)
+            create(:curation_activity, :embargoed, resource: @res2, user: @user)
+            create(:data_file, resource: @res3, file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
+            create(:curation_activity, :curation, resource: @res3, user: @user)
             expect(@identifier.latest_resource_with_public_download).to eql(@res1)
           end
 
           it 'finds no published resource' do
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            create(:curation_activity, :curation, resource: @res1, user: @user)
+            create(:curation_activity, :curation, resource: @res2, user: @user)
+            create(:curation_activity, :curation, resource: @res3, user: @user)
             expect(@identifier.latest_resource_with_public_metadata).to eql(nil)
           end
 
           it 'disallows any access if latest state is withdrawn' do
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res3.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
+            create(:curation_activity, :curation, resource: @res1, user: @user)
+            create(:curation_activity, :published, resource: @res1, user: @user)
+            create(:curation_activity, :curation, resource: @res2, user: @user)
+            create(:curation_activity, :published, resource: @res2, user: @user)
+            create(:curation_activity, :withdrawn, resource: @res3, user: @user)
             expect(@identifier.reload.latest_resource_with_public_metadata).to eql(nil)
           end
 
@@ -692,12 +685,7 @@ module StashEngine
     # because it overrides the ActiveRecord one
     describe '#pub_state' do
 
-      before(:each) do
-        # a way to neuter all the callback activity
-        allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
-      end
+      before(:each) { neuter_curation_callbacks! }
 
       it "retrieves a pub state, even when one isn't set" do
         expect(@identifier.pub_state).to eq(@identifier.calculated_pub_state)
@@ -715,20 +703,15 @@ module StashEngine
         end
 
         it 'detects embargoed_until_article' do
-          @res3.curation_activities << CurationActivity.create(status: 'embargoed', user: @user,
-                                                               note: 'Adding 1-year blackout period due to journal settings.')
+          CurationService.new(resource: @res3, status: 'embargoed', user: @user,
+                              note: 'Adding 1-year blackout period due to journal settings.').process
           expect(@identifier.reload.embargoed_until_article_appears?).to be(true)
         end
       end
     end
 
     describe '#fill_resource_view_flags' do
-      before(:each) do
-        # a way to neuter all the callback activity
-        allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
-      end
+      before(:each) { neuter_curation_callbacks! }
 
       it 'sets nothing when no published states' do
         @identifier.fill_resource_view_flags
@@ -838,12 +821,7 @@ module StashEngine
 
     # Disabling the 'borked' tests because they were breaking, and I think we should remove this functionality anyway.
     describe '#borked_file_history' do
-      before(:each) do
-        # a way to neuter all the callback activity
-        allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
-        allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
-      end
+      before(:each) { neuter_curation_callbacks! }
 
       xit "detects we've disassociated version history with negative resource_ids" do
         resources = @identifier.resources
@@ -902,42 +880,42 @@ module StashEngine
         @resources.insert(1, create(:resource, user_id: @user.id, tenant_id: @user.tenant_id, identifier_id: @identifiers[0].id))
         @resources.insert(4, create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id))
 
-        @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[0], status: 'published')]]
+        @curation_activities = [[create(:curation_activity, :in_progress, resource: @resources[0]),
+                                 create(:curation_activity, :curation, resource: @resources[0]),
+                                 create(:curation_activity, :published, resource: @resources[0])]]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[1], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[1], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[1], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[1]),
+                                 create(:curation_activity, :curation, resource: @resources[1]),
+                                 create(:curation_activity, :embargoed, resource: @resources[1])]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[2], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[2], status: 'curation')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[2]),
+                                 create(:curation_activity, :curation, resource: @resources[2])]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[3], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[3], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[3], status: 'action_required')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[3]),
+                                 create(:curation_activity, :curation, resource: @resources[3]),
+                                 create(:curation_activity, :action_required, resource: @resources[3])]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[4], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[4], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[4], status: 'published')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[4]),
+                                 create(:curation_activity, :curation, resource: @resources[4]),
+                                 create(:curation_activity, :published, resource: @resources[4])]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[5], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[5], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[5], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[5]),
+                                 create(:curation_activity, :curation, resource: @resources[5]),
+                                 create(:curation_activity, :embargoed, resource: @resources[5])]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[6], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[6], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[6], status: 'withdrawn')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[6]),
+                                 create(:curation_activity, :curation, resource: @resources[6]),
+                                 create(:curation_activity, :withdrawn, resource: @resources[6])]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[7], status: 'in_progress')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[7])]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[8], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[8], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[8], status: 'published')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[8]),
+                                 create(:curation_activity, :curation, resource: @resources[8]),
+                                 create(:curation_activity, :published, resource: @resources[8])]
 
-        @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[9], status: 'in_progress'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[9], status: 'curation'),
-                                 create(:curation_activity_no_callbacks, resource: @resources[9], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[9]),
+                                 create(:curation_activity, :curation, resource: @resources[9]),
+                                 create(:curation_activity, :embargoed, resource: @resources[9])]
 
         # this does DISTINCT and joins to resources and latest curation statuses
         # 5 identifers have been published
@@ -996,9 +974,9 @@ module StashEngine
         # Add a resource and make it 'published'
         [@identifier, @identifier2, @identifier3].each do |identifier|
           resource = create(:resource, user: user, tenant_id: user.tenant_id, identifier_id: identifier.id, skip_datacite_update: true)
-          create(:curation_activity_no_callbacks, resource: resource, status: 'in_progress')
-          create(:curation_activity_no_callbacks, resource: resource, status: 'curation')
-          create(:curation_activity_no_callbacks, resource: resource, status: 'published')
+          create(:curation_activity, :in_progress, resource: resource)
+          create(:curation_activity, :curation, resource: resource)
+          create(:curation_activity, :published, resource: resource)
         end
       end
 

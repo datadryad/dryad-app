@@ -35,9 +35,9 @@ module StashDatacite
         redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: new_res.id)
       else
         @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
-        @resource.curation_activities << StashEngine::CurationActivity.create(
-          user_id: current_user.id, status: 'submitted', note: 'Release from PPR'
-        )
+        CurationService.new(
+          resource: @resource, user_id: current_user.id, status: 'submitted', note: 'Release from PPR'
+        ).process
         @resource.reload
         redirect_to dashboard_path, notice: 'Dataset released from Private for Peer Review and submitted for curation'
       end

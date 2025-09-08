@@ -111,10 +111,10 @@ module StashEngine
       delete_calculation_date = notification_date - 1.month
       delete_calculation_date = notification_date - 6.months if @resource.current_curation_status == 'peer_review'
 
-      @curation_activity = CurationActivity.create(
-        note: "Changed notification start date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe,
-        resource_id: @resource.id, user_id: current_user.id, status: @resource.last_curation_activity&.status
-      )
+      @curation_activity = CurationService.new(
+        resource: @resource, user_id: current_user.id, status: @resource.last_curation_activity&.status,
+        note: "Changed notification start date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe
+      ).process
 
       @resource.process_date.update(delete_calculation_date: delete_calculation_date)
       @identifier.process_date.update(delete_calculation_date: delete_calculation_date)

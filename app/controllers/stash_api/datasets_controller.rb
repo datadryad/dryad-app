@@ -144,10 +144,9 @@ module StashApi
 
       # Update curation note about what was changed
       if fields_changed.present?
-        @resource.curation_activities <<
-          StashEngine::CurationActivity.create(user_id: @user.id,
-                                               status: @resource.current_curation_status,
-                                               note: "updating metadata based on API notification from Editorial Manager: #{fields_changed}")
+        CurationService.new(user_id: @user.id, resource: @resource,
+                            status: @resource.current_curation_status,
+                            note: "updating metadata based on API notification from Editorial Manager: #{fields_changed}").process
       end
 
       # If final_disposition is available, update the status of this dataset
@@ -155,14 +154,12 @@ module StashApi
       if disposition.present? && (@resource.current_curation_status == 'peer_review')
         if disposition.downcase == 'accept'
           # article is accepted -> transition peer_review to curation
-          @resource.curation_activities <<
-            StashEngine::CurationActivity.create(user_id: @user.id, status: 'submitted',
-                                                 note: 'updating status based on API notification from Editorial Manager')
+          CurationService.new(user_id: @user.id, resource: @resource, status: 'submitted',
+                              note: 'updating status based on API notification from Editorial Manager').process
         else
           # any other article disposition -> transition peer_review to withdrawn
-          @resource.curation_activities <<
-            StashEngine::CurationActivity.create(user_id: @user.id, status: 'withdrawn',
-                                                 note: 'updating status based on API notification from Editorial Manager')
+          CurationService.new(user_id: @user.id, resource: @resource, status: 'withdrawn',
+                              note: 'updating status based on API notification from Editorial Manager').process
         end
       end
 
@@ -436,9 +433,8 @@ module StashApi
       ensure_in_progress { yield }
       pre_submission_updates
       if new_status == 'submitted'
-        @resource.curation_activities << StashEngine::CurationActivity.create(
-          status: 'processing', note: 'Repository processing data', user_id: @user&.id || 0
-        )
+        CurationService.new(resource: @resource, status: 'processing',
+                            note: 'Repository processing data', user_id: @user&.id || 0).process
       end
       StashEngine.repository.submit(resource_id: @resource.id)
     end
@@ -458,10 +454,10 @@ module StashApi
         new_status = @resource.current_curation_status
       end
 
-      StashEngine::CurationActivity.create(resource_id: @resource.id,
-                                           user_id: @user.id,
-                                           status: new_status,
-                                           note: note)
+      CurationService.new(resource: @resource,
+                          user_id: @user.id,
+                          status: new_status,
+                          note: note).process
     end
 
     def update_publication_issn(new_issn)

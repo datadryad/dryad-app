@@ -104,7 +104,7 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
         submit_form
         expect(page).to have_content('My datasets')
         sign_out
-        create(:curation_activity, status: 'submitted', resource: @resource)
+        create(:curation_activity, status: 'processing', resource: @resource)
         @resource.current_state = 'submitted'
         @resource.reload
         sign_in(curator)

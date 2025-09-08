@@ -66,7 +66,7 @@ RSpec.feature 'EditLink', type: :feature do
       @identifier.save
       @identifier.resources.first.current_resource_state.update(resource_state: 'in_progress')
       visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
-      expect(page).to have_text('Dataset submission preview')
+      expect(page).to have_text('Dataset submission')
       expect(page).to have_text('User settings')
       expect(page).to have_text('You are editing this dataset on behalf of')
     end
@@ -117,8 +117,7 @@ RSpec.feature 'EditLink', type: :feature do
       new_ident = create(:identifier)
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
-      system_user = create(:user, id: 0)
-      expect { create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
+      expect { create(:resource, :submitted, user_id: 0, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page.current_path).to eq('/sessions/choose_login')
     end
