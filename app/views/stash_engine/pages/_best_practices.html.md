@@ -107,7 +107,7 @@ If you wish to create a README using your preferred markdown editor, we provide 
 
 ### Details *not* to include: 
 
-* Author names, or any other potentially identifying information, if the data is being submitted to a journal with a double-blind review process in place
+* Author names, or any other potentially identifying information, if the data is being submitted to a journal with a double-anonymous review process in place
 
 
 Ready to get started? [Log in](/sessions/choose_login) and go to the "My datasets" to begin your data submission now!
