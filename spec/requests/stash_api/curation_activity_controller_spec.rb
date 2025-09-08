@@ -59,7 +59,7 @@ module StashApi
 
       context 'with missing activity' do
         it 'returns 404' do
-          get "/api/v2/datasets/#{dataset_id}/curation_activity/#{12345321}", headers: default_authenticated_headers
+          get "/api/v2/datasets/#{dataset_id}/curation_activity/12345321", headers: default_authenticated_headers
           expect(response).to have_http_status(:not_found)
         end
       end
@@ -96,7 +96,8 @@ module StashApi
         }
 
         expect do
-          put "/api/v2/datasets/#{dataset_id}/curation_activity/#{submit_ca.id}", params: curation_activity_attrs.to_json, headers: default_authenticated_headers
+          put "/api/v2/datasets/#{dataset_id}/curation_activity/#{submit_ca.id}", params: curation_activity_attrs.to_json,
+                                                                                  headers: default_authenticated_headers
         end.to change(StashEngine::CurationActivity, :count).by(1)
 
         expect(response).to have_http_status(:ok)
@@ -120,7 +121,7 @@ module StashApi
 
       context 'with missing activity' do
         it 'returns 404' do
-          delete "/api/v2/datasets/#{dataset_id}/curation_activity/#{12345321}", headers: default_authenticated_headers
+          delete "/api/v2/datasets/#{dataset_id}/curation_activity/12345321", headers: default_authenticated_headers
           expect(response).to have_http_status(:not_found)
         end
       end

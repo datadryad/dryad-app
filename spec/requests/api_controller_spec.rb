@@ -36,6 +36,7 @@ module StashApi
       end
     end
 
+    # rubocop:disable Lint/InterpolationCheck
     describe '#reports_index' do
       before do
         allow(Dir).to receive(:entries).and_return(%w[. .. report1.csv report2.csv])
@@ -58,6 +59,7 @@ module StashApi
         )
       end
     end
+    # rubocop:enable Lint/InterpolationCheck
 
     describe '#reports' do
       before do
