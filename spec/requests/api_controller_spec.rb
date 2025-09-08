@@ -36,6 +36,87 @@ module StashApi
       end
     end
 
+    describe '#reports_index' do
+      before do
+        allow(Dir).to receive(:entries).and_return(%w[. .. report1.csv report2.csv])
+      end
+
+      it 'lists all the reports from REPORTS_DIR' do
+        get '/api/v2/reports'
+        hsh = response_body_hash
+
+        expect(hsh['_links']['self']['href']).to eql('/api/v2/')
+        expect(hsh['_links']['reports'].map { |a| a['href'] }).to match_array(%w[/api/v2/reports/report1 /api/v2/reports/report2])
+        expect(hsh['_links']['curies']).to eq(
+          [
+            {
+              'name' => 'stash',
+              'href' => 'https://github.com/datadryad/dryad-app/blob/main/documentation/apis/link_relations.md#{rel}',
+              'templated' => 'true'
+            }
+          ]
+        )
+      end
+    end
+
+    describe '#reports' do
+      before do
+        allow(Dir).to receive(:entries).and_return(%w[. .. report1.csv])
+      end
+
+      context 'when the report exists' do
+        context 'when file does not exist' do
+          before do
+            allow(::File).to receive(:exist?).and_return(false)
+          end
+
+          it 'returns error' do
+            stub_const('StashApi::ApiController::REPORTS_DIR', Rails.root.join('tmp', 'reports'))
+            get '/api/v2/reports/report1'
+
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response_body_hash[:error]).to eq('Unable to render report file for report1.csv')
+          end
+        end
+
+        context 'when file exist' do
+          let(:file_path) { Rails.root.join('tmp', 'reports', 'report1.csv') }
+
+          before do
+            stub_const('StashApi::ApiController::REPORTS_DIR', Rails.root.join('tmp', 'reports'))
+            FileUtils.mkdir_p(::File.dirname(file_path))
+            ::File.write(file_path, 'some,csv,data')
+          end
+
+          after do
+            ::File.delete(file_path) if ::File.exist?(file_path)
+          end
+
+          it 'returns error if file does not exist' do
+            get '/api/v2/reports/report1'
+
+            d = Time.now.utc.to_date
+            expected_filename = "report1_#{d.strftime('%Y%m%d')}.csv"
+
+            expect(response.header['Content-Disposition']).to include("filename=\"#{expected_filename}\"")
+            expect(response.content_type).to eq('text/plain')
+            expect(response.body).to eq('some,csv,data')
+          end
+        end
+      end
+
+      context 'when the report is not found' do
+        it 'returns 404 and error message' do
+          get '/api/v2/reports/inexistent_report_name'
+
+          expect(response.status).to eq(404)
+
+          hsh = response_body_hash
+          expect(hsh[:error]).to eq('Could not find requested report inexistent_report_name')
+        end
+      end
+    end
+
     describe '#versioning' do
       before { post '/api/v2/test', headers: request_headers }
 

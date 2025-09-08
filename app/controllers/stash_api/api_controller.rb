@@ -46,7 +46,7 @@ module StashApi
           send_file f, filename: result_filename, type: 'text/plain'
           return
         else
-          render json: { error: "Unable to render report file for #{target_report}" }, status: :internal_server_error
+          render json: { error: "Unable to render report file for #{target_report}" }, status: :unprocessable_entity and return
         end
       end
 
