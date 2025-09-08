@@ -630,7 +630,7 @@ namespace :identifiers do
 
     log "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
-      csv << %w[DOI CreatedDate CurationStartDate ApprovalDate
+      csv << %w[DOI ArticleDOI CreatedDate CurationStartDate ApprovalDate
                 Size PaymentType PaymentID WaiverBasis InstitutionName
                 JournalName JournalISSN SponsorName CurrentStatus]
 
@@ -647,7 +647,7 @@ namespace :identifiers do
           break r.curation_start_date if r.curation_start_date.present?
         end
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
-        csv << [i.identifier, created_date_str, curation_start_date_str, approval_date_str,
+        csv << [i.identifier, i.publication_article_doi, created_date_str, curation_start_date_str, approval_date_str,
                 i.storage_size, i.payment_type, i.payment_id, i.waiver_basis, i.submitter_affiliation&.long_name,
                 i.publication_name, i.publication_issn, i.journal&.sponsor&.name, i&.resources&.last&.current_curation_status]
       end
