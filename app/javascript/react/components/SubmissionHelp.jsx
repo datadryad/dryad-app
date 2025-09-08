@@ -12,7 +12,7 @@ export default function SubmissionHelp({type}) {
           <p>{type === 'dataset' && 'Upload your data, complete metadata fields, and prepare a README file. '}Complete the checklist and carefully review the {type} before you {type === 'dataset' && 'pay and '}submit.</p>
         </li>
         <li>
-          <h3><i className="fas fa-eye-slash" aria-hidden="true" />Private for peer review option</h3>
+          <h3><i className="fas fa-eye-slash" aria-hidden="true" />Private for Peer Review option</h3>
           <p>If your {type} is associated with a manuscript under review, you can choose to keep the {type} private and use a temporary sharing link for peer review. The {type} can proceed to curation once the manuscript has been accepted.</p>
         </li>
         <li>
@@ -33,11 +33,13 @@ export default function SubmissionHelp({type}) {
   );
 }
 
-export function PublicationHelp() {
+export function PublicationHelp({type}) {
   return (
     <>
       <p>If your submission is linked to an article, preprint, or manuscript, sharing that information connects your data to the work. Metadata information for your submission can be imported from some connections.</p>
-      <p>Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      {type === 'dataset' && (
+        <p>Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      )}
     </>
   );
 }
@@ -86,7 +88,9 @@ export function SuppHelp({type}) {
   return (
     <>
       <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can help connect your data with other systems and works.</p>
-      <p>Your funder may cover the Dryad <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      {type === 'dataset' && (
+        <p>Your funder may cover the Dryad <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      )}
     </>
   );
 }

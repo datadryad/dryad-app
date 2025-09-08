@@ -1,9 +1,12 @@
 module StashEngine
   class SavedSearchesController < ApplicationController
-    def index?; end
+    before_action :require_user_login
+
+    def index; end
 
     def create
-      @saved_search = StashEngine::SavedSearch.create(create_params)
+      @saved_search = authorize StashEngine::SavedSearch.create(create_params)
+      @saved_search.create_code
       @index = current_user.admin_searches.length
       return unless params[:type] == 'StashEngine::AdminSearch'
 
@@ -11,7 +14,7 @@ module StashEngine
     end
 
     def edit
-      @saved_search = StashEngine::SavedSearch.find_by(id: params[:id])
+      @saved_search = authorize StashEngine::SavedSearch.find_by(id: params[:id])
       @index = current_user.admin_searches.map(&:id).index(@saved_search.id)
       return unless @saved_search&.type == 'StashEngine::AdminSearch'
 
@@ -19,7 +22,7 @@ module StashEngine
     end
 
     def update
-      @saved_search = StashEngine::SavedSearch.find_by(id: params[:id])
+      @saved_search = authorize StashEngine::SavedSearch.find_by(id: params[:id])
       return unless @saved_search&.type == 'StashEngine::AdminSearch'
 
       @saved_search.update(update_params)
@@ -27,7 +30,7 @@ module StashEngine
     end
 
     def destroy
-      existing = StashEngine::SavedSearch.find_by(id: params[:id])
+      existing = authorize StashEngine::SavedSearch.find_by(id: params[:id])
       return unless existing&.type == 'StashEngine::AdminSearch'
 
       existing.destroy!

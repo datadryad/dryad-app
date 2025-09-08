@@ -45,7 +45,7 @@ function Submission({
       pass: publicationPass(resource),
       fail: (review || publicationPass(resource)) && publicationFail(resource, review),
       component: <Publication current={step.name === 'Connect'} resource={resource} setResource={setResource} />,
-      help: <PublicationHelp />,
+      help: <PublicationHelp type={resource.resource_type.resource_type} />,
       preview: <PubPreview resource={resource} previous={previous} curator={user.curator} />,
     }, {
       name: 'Title',
@@ -163,15 +163,12 @@ function Submission({
         preview
       />,
     }];
+    if (resource.resource_type.resource_type === 'collection') stepArray.splice(6, 3);
     return stepArray.map((s, i) => {
       s.index = i;
       return s;
     });
   };
-
-  if (resource.resource_type.resource_type === 'collection') {
-    steps().splice(5, 3);
-  }
 
   const recheckPayer = () => {
     axios.get(`/resources/${resource.id}/payer_check`)
@@ -346,7 +343,7 @@ function Submission({
               <div>
                 <div>
                   <div id="submission-header">
-                    <h2 className="o-heading__level2">{step.name}</h2>
+                    <h2 className="o-heading__level2" id="submission-step-title">{step.name}</h2>
                     <div role="status">
                       <div className="saving_text" hidden>Saving&hellip;</div>
                       <div className="saved_text" hidden>All progress saved</div>
@@ -393,7 +390,7 @@ function Submission({
           <div id="submission-step" role="region" aria-label={step.name} aria-live="polite" aria-describedby="submission-help-text">
             <div>
               <div id="submission-header">
-                <h2 className="o-heading__level2" tabIndex="-1">{step.name}</h2>
+                <h2 className="o-heading__level2" tabIndex="-1" id="submission-step-title">{step.name}</h2>
                 <div role="status">
                   <div className="saving_text" hidden>Saving&hellip;</div>
                   <div className="saved_text" hidden>All progress saved</div>

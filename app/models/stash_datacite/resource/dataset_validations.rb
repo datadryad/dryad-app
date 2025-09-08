@@ -36,7 +36,7 @@ module StashDatacite
       # files that haven't validated, errors uploading, too many files, too big of size
 
       def errors
-        import.presence || title.presence || authors.presence || abstract.presence ||
+        title.presence || authors.presence || abstract.presence ||
         subjects.presence || funder.presence || type_errors.presence || false
       end
 
@@ -49,26 +49,10 @@ module StashDatacite
         end
       end
 
-      def import
-        return 'Journal name missing' if %w[manuscript published].include?(@resource.identifier.import_info) &&
-          @resource.identifier.publication_name.blank?
-        return 'Preprint server missing' if @resource.identifier.import_info == 'preprint' && @resource.identifier.preprint_server.blank?
-        return 'Manuscript number missing' if @resource.identifier.import_info == 'manuscript' && @resource.identifier.manuscript_number.blank?
-
-        if @resource.identifier.import_info == 'preprint'
-          preprint = @resource.related_identifiers.where(work_type: 'preprint').first
-          return 'DOI missing' if preprint.nil? || preprint.related_identifier.blank? || !preprint.valid_doi_format?
-        elsif @resource.identifier.import_info == 'published'
-          primary_article = @resource.related_identifiers.where(work_type: 'primary_article').first
-          return 'DOI missing' if primary_article.nil? || primary_article.related_identifier.blank? || !primary_article.valid_doi_format?
-        end
-        false
-      end
-
       def title
         return 'Blank title' if @resource.title.blank?
         return 'Nondescriptive title' if nondescript_title?
-        return 'All caps title' if @resource.title == @resource.title.upcase
+        return 'All caps title' if @resource.title.strip_tags == @resource.title.strip_tags.upcase
 
         false
       end
@@ -215,7 +199,7 @@ module StashDatacite
                 'supplement', 'supplemental', 'extended', 'supplementary', 'supporting', 'manuscript', 'et al',
                 'the', 'of', 'for', 'in', 'from', 'to', 'with']
         regex = dict.join('|')
-        remainder = @resource.title.gsub(/[^a-z0-9\s]/i, '').gsub(/(#{regex}|s\d|f\d|t\d)\b/i, '').strip
+        remainder = @resource.title.strip_tags.gsub(/[^a-z0-9\s]/i, '').gsub(/(#{regex}|s\d|f\d|t\d)\b/i, '').strip
         remainder.split.size < 4
       end
 

@@ -7,6 +7,7 @@ module FeeCalculator
     let(:options) { {} }
     let(:resource) { nil }
     let(:no_charges_response) { { service_fee: 0, dpc_fee: 0, storage_fee: 0, total: 0, storage_fee_label: 'Large data fee' } }
+    let(:ldf_limit) { nil }
 
     subject { described_class.new(options, resource: resource).call.except(:storage_fee_label) }
 
@@ -214,7 +215,10 @@ module FeeCalculator
       let(:prev_files_size) { nil }
       let(:new_files_size) { 100 }
       let(:covers_ldf) { false }
-      let!(:tenant) { create(:tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf) }
+      let!(:tenant) { create(:tenant) }
+      let!(:payment_conf) do
+        create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true, covers_ldf: covers_ldf, ldf_limit: ldf_limit)
+      end
       let(:identifier) { create(:identifier, last_invoiced_file_size: prev_files_size) }
 
       subject { described_class.new(options, resource: resource).call }
@@ -236,7 +240,8 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
+            it_behaves_like 'it only covers limited LDF'
           end
 
           context 'when covers_ldf false' do
@@ -256,7 +261,7 @@ module FeeCalculator
               it { is_expected.to eq({ service_fee: 0, dpc_fee: 0, storage_fee: 464, total: 464, storage_fee_label: 'Large data fee' }) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
 
@@ -275,7 +280,8 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
+            it_behaves_like 'it only covers limited LDF'
           end
 
           context 'when covers_ldf false' do
@@ -298,7 +304,7 @@ module FeeCalculator
               }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
       end
@@ -334,7 +340,8 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
+            it_behaves_like 'it only covers limited LDF'
           end
 
           context 'when covers_ldf false' do
@@ -362,7 +369,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
 
@@ -401,7 +408,8 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
+            it_behaves_like 'it only covers limited LDF'
           end
 
           context 'when covers_ldf false' do
@@ -436,13 +444,13 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
       end
 
       context 'when tenant is a payer but not on 2025 fee model' do
-        let!(:tenant) { create(:tenant, payment_plan: 'tiered', covers_dpc: true, covers_ldf: covers_ldf) }
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: true, covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it 'raises an error' do
@@ -451,7 +459,7 @@ module FeeCalculator
       end
 
       context 'when tenant is not a payer' do
-        let!(:tenant) { create(:tenant, payment_plan: 'tiered', covers_dpc: false, covers_ldf: covers_ldf) }
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: 'TIERED', covers_dpc: false, covers_ldf: covers_ldf) }
         let(:resource) { create(:resource, identifier: identifier, tenant: tenant, total_file_size: new_files_size) }
 
         it 'raises an error' do

@@ -50,13 +50,8 @@ module StashEngine
     has_paper_trail
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
-    has_one :frictionless_report, dependent: :destroy
-    has_one :sensitive_data_report, dependent: :destroy
-    amoeba do
-      include_association :frictionless_report
-      include_association :sensitive_data_report
-      propagate
-    end
+    has_one :frictionless_report_record, class_name: 'StashEngine::FrictionlessReport', dependent: :destroy
+    has_one :sensitive_data_report_record, class_name: 'StashEngine::SensitiveDataReport', dependent: :destroy
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :without_deleted_files, -> { where(file_deleted_at: nil) }
@@ -86,6 +81,18 @@ module StashEngine
     }
     enum(:file_state, %w[created copied deleted].to_h { |i| [i.to_sym, i] })
     enum(:digest_type, %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] })
+
+    def frictionless_report
+      return frictionless_report_record if file_state == 'created'
+
+      original_deposit_file&.frictionless_report_record
+    end
+
+    def sensitive_data_report
+      return sensitive_data_report_record if file_state == 'created'
+
+      original_deposit_file&.sensitive_data_report_record
+    end
 
     # display the correct error message based on the url status code
     def error_message
@@ -261,14 +268,14 @@ module StashEngine
     end
 
     def uploaded_success_url
-      dl_url = s3_staged_presigned_url if storage_version_id.blank?
+      dl_url = s3_staged_presigned_url if file_state == 'created' && storage_version_id.blank?
       dl_url ||= public_download_url
       dl_url ||= url
       dl_url
     end
 
     def uploaded
-      return Stash::Aws::S3.new.exists?(s3_key: s3_staged_path) if !digest? && storage_version_id.blank? && s3_staged_path
+      return Stash::Aws::S3.new.exists?(s3_key: s3_staged_path) if file_state == 'created' && url.blank? && s3_staged_path
 
       uploaded_success_url.present?
     end

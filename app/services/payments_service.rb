@@ -1,13 +1,14 @@
 class PaymentsService
   include StashEngine::ApplicationHelper
 
-  attr_reader :user, :resource, :options, :has_discount
+  attr_reader :user, :resource, :options, :has_discount, :ppr_fee_paid
 
   def initialize(user, resource, options)
     @user = user
     @resource = resource
     @options = options
     @has_discount = false
+    @ppr_fee_paid = false
     @fees = ResourceFeeCalculatorService.new(resource).calculate(options)
     process_options
   end
@@ -61,7 +62,7 @@ class PaymentsService
   def process_options
     @storage_fee_label = @fees.delete(:storage_fee_label)
     @coupon_id = @fees.delete(:coupon_id)
-
+    @ppr_fee_paid = true if @fees.key?(:ppr_fee)
     @has_discount = true if @coupon_id.present?
     @fees.delete_if { |_, value| value.negative? }
   end

@@ -23,7 +23,7 @@ Data may be submitted and published at any time. However, if your data are assoc
 
 * If you received an invitation from a journal to submit data to Dryad, then that journal has integrated its submission process with Dryad. Please follow the instructions from the journal.
 * Dryad usually does not grant short- or long-term embargoes of data, but we will consider requests in specific instances (i.e., graduate students publishing thesis data that they intend to use for other parts of their thesis/dissertation; media blackouts around a study). If you wish to embargo data beyond the publication date of the associated article, we require confirmation from the publishing journal. Please submit an embargo request to <a class="emailr" href="mailto:dev@null?subject=Embargo+request&body=My+Dryad+dataset+DOI:%0D%0AEmbargo+reason:" aria-label="Email Dryad help desk">gro.dayrdatad@pleh</a> at the time of submission.
-* Regardless of journal, you may choose to make your data temporarily [private for peer review](/process#private-for-peer-review).
+* Regardless of journal, you may choose to make your data temporarily [Private for Peer Review](/process#private-for-peer-review).
 
 
 ## Login
@@ -51,7 +51,7 @@ If you wish to provide additional documentation or README files in other formats
 
 ## Upload files
 
-When you upload data files, ensure that they meet our [file requirements](#heading=h.gkxrj86pin4f), are able to be opened, do not contain sensitive information, and do not have licensing conflicts with [CC0](https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/).
+When you upload data files, ensure that they meet our [file requirements](#preparing-your-data, are able to be opened, do not contain sensitive information, and do not have licensing conflicts with [CC0](https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/).
 
 Files can be uploaded from your local computer or from the cloud or remote servers via a URL. When using a URL, Google Drive links do not work, so please choose another mechanism. If using links from GitHub, link to the individual files rather than the repository as a whole. To confirm that files have uploaded successfully, check that all files have a size greater than 0 B.
 
@@ -88,12 +88,12 @@ Check the required acknowledgments to agree to payment of the [Data Publishing C
 If you are affiliated with a partner institution or your related publication is associated with a sponsoring journal title, a statement below will appear to confirm who is sponsoring the Data Publishing Charge. If your submission should be sponsored, but you do not see a statement indicating as much, please [contact support](/contact). 
 
 
-### Private for peer review
+### Private for Peer Review
 
-On the final page of the submission process, we offer the option to make the dataset private during your related manuscript’s peer review process. After selecting this option, you will be presented with a private URL that allows for a double-blind download of the dataset. This link can be used by the journal office or reviewers to access the data files during the review period. This temporary sharing URL is not a permanent identifier like a DOI and should be substituted with the dataset DOI at the point of final manuscript submission or the page proofs stage. The DOI reserved for your dataset will not change at any point after the dataset has been created.
+On the final page of the submission process, we offer the option to make the dataset private during your related manuscript’s peer review process. After selecting this option, you will be presented with a private URL that allows for a double-anonymous download of the dataset. This link can be used by the journal office or reviewers to access the data files during the review period. This temporary sharing URL is not a permanent identifier like a DOI and should be substituted with the dataset DOI at the point of final manuscript submission or the page proofs stage. The DOI reserved for your dataset will not change at any point after the dataset has been created.
 
-When your manuscript has been accepted, you can take your dataset out of private for peer review, so that the Dryad team can begin the curation and publication processes. To do this, log in to Dryad and navigate to "My datasets". Find the submission under the "Kept private" heading. On the right, click the "Release for curation" button, and confirm.
+When your manuscript has been accepted, you can take your dataset out of Private for Peer Review, so that the Dryad team can begin the curation and publication processes. To do this, log in to Dryad and navigate to "My datasets". Find the submission under the "Kept private" heading. On the right, click the "Release for curation" button, and confirm.
 
-Note that if your manuscript is submitted to, and accepted by, an integrated title that sends us status updates on your manuscript, the private for peer review period will automatically end.
+Note that if your manuscript is submitted to, and accepted by, an integrated title that sends us status updates on your manuscript, the Private for Peer Review period will automatically end.
 
 If you have questions or require assistance, [contact support](/contact).

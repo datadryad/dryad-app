@@ -1,2 +1,2 @@
-document.getElementById("resource_flag").innerHTML = <% if @resource&.flag&.present? %> `<i class="fas fa-flag <%= @resource.flag.flag %>" aria-label="Flagged"></i> <%= @resource.flag.flag.upcase_first %>`<% else %>'Not flagged'<% end %> 
+document.getElementById("resource_flag").innerHTML = <% if @resource&.flag&.present? %> `<i class="fas fa-flag <%= @resource.flag.flag %>" aria-label="Flagged"></i> <%= @resource.flag.flag.humanize %>`<% else %>'Not flagged'<% end %> 
 document.getElementById('genericModalDialog').close();

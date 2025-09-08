@@ -151,6 +151,7 @@ module StashEngine
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
           file.file_state = 'copied' if file.file_state == 'created'
+          file.skip_total_recalculation = true if file.is_a?(StashEngine::DataFile)
         end
 
         new_resource.related_identifiers.each_with_index do |ri, i|
@@ -163,9 +164,9 @@ module StashEngine
 
         new_resource.subjects = old_resource.subjects
 
-        # I think there was something weird about Amoeba that required this approach
+        # Remove deleted records before save
         deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-        deleted_files.each(&:destroy)
+        deleted_files.each(&:delete)
       })
     end
 
@@ -1255,7 +1256,7 @@ module StashEngine
     # rubocop:enable Metrics/AbcSize
 
     def auto_assign_curator(target_status:)
-      target_curator = curator&.min_curator? ? curator : identifier.most_recent_curator
+      target_curator = curator&.curator? ? curator : identifier.most_recent_curator
       if target_curator.nil?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to a random current curator , but not a superuser

@@ -17,7 +17,6 @@ export const publicationPass = (resource) => resource.identifier.import_info
   || resource.related_identifiers.find((ri) => ri.work_type === 'primary_article');
 
 export const publicationFail = (resource) => {
-  const {import_info} = resource.identifier;
   const {publication_name, manuscript_number} = resource.resource_publication;
   const primary_article = resource.related_identifiers.find((ri) => ri.work_type === 'primary_article');
   if (manuscript_number && !publication_name) {
@@ -43,11 +42,6 @@ export const publicationFail = (resource) => {
   if (primary_article && !urlCheck(primary_article.related_identifier)) {
     return (
       <p className="error-text" id="published_doi_error">You have entered an invalid DOI or URL for a published article.</p>
-    );
-  }
-  if (import_info === 'preprint' && !validPrimary(resource, 'preprint')) {
-    return (
-      <p className="error-text" id="preprint_doi_error">A valid DOI for the preprint is required</p>
     );
   }
   return false;

@@ -614,24 +614,13 @@ module Stash
       describe '#from_proposed_change' do
         before(:each) do
           allow_any_instance_of(StashEngine::Resource).to receive(:submit_to_solr).and_return(true)
-          @params = {
-            identifier_id: @resource.identifier.id,
-            approved: false,
-            authors: AUTHOR.to_json,
-            provenance: 'crossref',
-            publication_date: Crossref.new(resource: nil, crossref_json: {}).send(:date_parts_to_date, PAST_PUBLICATION_DATE),
-            publication_doi: DOI,
-            publication_name: PUBLISHER,
-            score: 1.0,
-            title: TITLE
-          }
-          @proposed_change = StashEngine::ProposedChange.new(@params)
+          @proposed_change = create(:proposed_change, identifier: @resource.identifier)
         end
 
         it 'properly extracts the data from the ProposedChange' do
           cr = Crossref.from_proposed_change(proposed_change: @proposed_change)
           resource = cr.populate_resource!
-          expect(resource.resource_publication.publication_name).to eql(@params[:publication_name])
+          expect(resource.resource_publication.publication_name).to eql(@proposed_change.publication_name)
         end
       end
 

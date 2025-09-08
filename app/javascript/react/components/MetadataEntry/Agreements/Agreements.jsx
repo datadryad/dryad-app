@@ -146,7 +146,7 @@ export default function Agreements({
               <p>
                 This submission is associated with a manuscript from an{' '}
                 <a href="/journals" target="_blank">integrated journal<ExitIcon /></a>.
-                It will remain private for peer review until formal acceptance of the associated manuscript.
+                It will remain Private for Peer Review until formal acceptance of the associated manuscript.
               </p>
             </>
           )}
@@ -174,7 +174,7 @@ export default function Agreements({
             <>
               <h3>{subType === 'collection' ? 'Is your collection' : 'Are your files'} ready to publish?</h3>
               <p>
-                The private for peer review option is not available for this submission{reason}.
+                The Private for Peer Review option is not available for this submission{reason}.
                 The submission will proceed to our curation process for evaluation and publication.
               </p>
             </>
@@ -212,8 +212,8 @@ export default function Agreements({
             : (
               /* eslint-disable max-len */
               <>
-                <CalculateFees resource={resource} fees={fees} setFees={setFees} />
-                {fees.total ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for later payment, an additional administration fee will be charged.</p> : null}
+                <CalculateFees current={current} resource={resource} fees={fees} setFees={setFees} ppr={ppr} />
+                {fees.total ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.</p> : null}
               </>
               /* eslint-enable max-len */
             )}

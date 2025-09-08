@@ -87,6 +87,21 @@
     of the Software Carpentry Foundation. In 2020, Jason was recognized as a US National Academy of Sciences Kavli Frontiers
     of Science Fellow. Jason is also a teacher at the Yeshiva University High School for Girls.</p>
 </div>
+<div class="bio">
+  <img src="/images/jgibson.png" alt="Headshot of Jennifer Gibson">
+  <h5>Jennifer Gibson (ex-officio)</h5><br/>
+  <p>
+  Jen joined Dryad as Executive Director in October 2021. Since 2005, she has
+  worked with scientists, funders, publishers, libraries, developers and others
+  to explore fresh paths toward accelerating discovery through open research
+  communication and open-technology innovation. Prior to Dryad, Jennifer was
+  Head of Open Research Communication for eLife, a non-profit and research
+  funder-backed initiative to transform science publishing. She is a former Chair of the
+  Board of Directors for OASPA (2020-2022) and a former member of the board for
+  FORCE11 (2018-2020). Learn more about Jen at
+  <a href="https://www.linkedin.com/in/jmclenna/" target="_blank" rel="noreferrer">LinkedIn<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.
+  </p>
+</div>
 </div>
 
 #### Board information

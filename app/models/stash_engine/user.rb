@@ -46,7 +46,7 @@ module StashEngine
             dependent: :destroy
     has_many :access_tokens, through: :api_application, class_name: 'Doorkeeper::AccessToken'
 
-    accepts_nested_attributes_for :roles, :flag
+    accepts_nested_attributes_for :roles, :flag, allow_destroy: true
 
     validates :email, format: { with: EMAIL_REGEX, message: '%{value} is not a valid email address' }, allow_blank: true
 

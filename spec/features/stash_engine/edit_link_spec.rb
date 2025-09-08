@@ -1,4 +1,4 @@
-RSpec.feature 'Admin', type: :feature do
+RSpec.feature 'EditLink', type: :feature do
 
   include DatasetHelper
   include Mocks::CurationActivity
@@ -7,9 +7,40 @@ RSpec.feature 'Admin', type: :feature do
   include Mocks::Salesforce
   include Mocks::Stripe
   include Mocks::DataFile
+  include Mocks::Aws
 
-  context :tenant_admin do
+  context :return_url do
+    before(:each) do
+      mock_solr!
+      mock_salesforce!
+      mock_file_content!
+      mock_aws!
+      allow_any_instance_of(StashEngine::DataFile).to receive(:uploaded).and_return(true)
+    end
 
+    it 'opens a page with an edit link and redirects when complete', js: true do
+      content = Faker::Lorem.paragraph
+      @identifier = create(:identifier, edit_code: Faker::Number.number(digits: 5), import_info: 'other')
+      @res = create(:resource, tenant_id: 'email_auth', identifier: @identifier, user: create(:user, tenant_id: 'email_auth'))
+      create(:data_file, resource: @res)
+      create(:description, description_type: 'technicalinfo', resource: @res, description: content)
+      @res.reload
+      sign_out
+      # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
+      visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fsubmission_process"
+      expect(page).to have_text('You are editing this dataset on behalf of')
+      navigate_to_metadata
+      click_button 'Subjects'
+      fill_in_keywords
+      click_button 'Compliance'
+      fill_in_validation
+      navigate_to_review
+      submit_form
+      expect(page.current_path).to eq('/submission_process')
+    end
+  end
+
+  context :edit_codes do
     before(:each) do
       mock_salesforce!
       mock_solr!
@@ -29,7 +60,7 @@ RSpec.feature 'Admin', type: :feature do
       expect(page).to have_text('1 (Submitted)')
     end
 
-    it 'redirects to the dataset editing page, and the user is logged in, when requesting an edit link', js: true do
+    it 'redirects to the dataset editing page, as the submitter, when the user is not logged in and using an edit link', js: true do
       sign_out
       @identifier.edit_code = Faker::Number.number(digits: 4)
       @identifier.save
@@ -37,6 +68,7 @@ RSpec.feature 'Admin', type: :feature do
       visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}"
       expect(page).to have_text('Dataset submission preview')
       expect(page).to have_text('User settings')
+      expect(page).to have_text('You are editing this dataset on behalf of')
     end
 
     it 'rejects an attempt to edit the dataset with an invalid edit_code', js: true do

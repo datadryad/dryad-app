@@ -104,7 +104,7 @@ module Datacite
           d.description = se_resource.complete_readme if d.description_type == 'technicalinfo'
 
           dcs_resource.descriptions << Description.new(
-            value: ActionController::Base.helpers.strip_tags(d.description),
+            value: d.description.strip_tags,
             type: d.description_type_mapping_obj
           )
         end

@@ -44,7 +44,7 @@ RSpec.feature 'UserAdmin', type: :feature do
           find('.c-admin-edit-icon').click
         end
         within(:css, '#genericModalDialog') do
-          find('#email').set('new-email@example.org')
+          fill_in 'Email address', with: 'new-email@example.org'
           find('input[name=commit]').click
         end
         expect(page.find("#user_email_#{@user.id}")).to have_text('new-email@example.org')
@@ -56,20 +56,30 @@ RSpec.feature 'UserAdmin', type: :feature do
           find('.c-admin-edit-icon').click
         end
         within(:css, '#genericModalDialog') do
-          find('#tenant_id').click
+          find('#stash_engine_user_tenant_id').click
           find("option[value='dryad']").select_option
           find('input[name=commit]').click
         end
         expect(page.find("#user_tenant_id_#{@user.id}")).to have_text(dryad.short_name)
       end
 
+      it 'allows adding a flag as a system admin', js: true do
+        within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
+          find('.c-admin-edit-icon').click
+        end
+        within(:css, '#genericModalDialog') do
+          check 'Flag'
+          fill_in 'note', with: 'Test flag note'
+          find('input[name=commit]').click
+        end
+        expect(find("#user_flag_#{@user.id}")).to have_css('i[title="Test flag note"]')
+      end
+
       it 'shows the system roles selection' do
         within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
           find('.c-admin-edit-icon').click
         end
-        expect(page).to have_content('Dryad system roles')
-        # it 'does not show the tenant form for the default tenant' do
-        expect(page).not_to have_content('Add a tenant role')
+        expect(page).to have_content('Dryad system roles:')
       end
 
       describe 'Adding and setting roles' do
@@ -85,41 +95,45 @@ RSpec.feature 'UserAdmin', type: :feature do
         end
 
         it 'allows the system admin to set the system role' do
-          find('#role_admin').set(true)
+          find('#stash_engine_user_roles_attributes_3_role').set(true)
           find('input[name=commit]').click
           expect(page.find("#user_role_#{@user.id}")).to have_text('Admin')
         end
 
         it 'allows the system admin to add the tenant role form and set role' do
-          find_button('Add a tenant role').click
-          expect(page).to have_text('Tenant roles')
-          find('#tenant_role_admin').set(true)
+          find_button('Add an institution role').click
+          expect(page).to have_text('Institution role')
+          find('#stash_engine_user_roles_attributes_4_role_object_id option:last-child').select_option
+          find('#stash_engine_user_roles_attributes_4_role_admin').set(true)
           find('input[name=commit]').click
-          expect(page.find("#user_role_#{@user.id}")).to have_text('Tenant admin')
+          expect(page.find("#user_role_#{@user.id}")).to have_text('Institution admin')
         end
 
         it 'allows the system admin to add the publisher role form and set role' do
           find_button('Add a publisher role').click
-          expect(page).to have_text('Publisher roles')
-          find('#publisher_role_admin').set(true)
+          expect(page).to have_text('Publisher role')
+          find('#stash_engine_user_roles_attributes_5_role_object_id option:last-child').select_option
+          find('#stash_engine_user_roles_attributes_5_role_admin').set(true)
           find('input[name=commit]').click
           expect(page.find("#user_role_#{@user.id}")).to have_text('Publisher admin')
         end
 
         it 'allows the system admin to add the journal role form and set role' do
           find_button('Add a journal role').click
-          expect(page).to have_text('Journal roles')
-          fill_in 'searchselect-journal__input', with: @journal.title
+          expect(page).to have_text('Journal role')
+          find('#searchselect-stash_engine_user_roles_attributes__6__role_object_id___input').send_keys(@journal.title[0..4])
+          expect(page).not_to have_css('li.fa-circle-notch')
           find("li[data-value='#{@journal.id}']").click
-          find('#journal_role_admin').set(true)
+          find('#stash_engine_user_roles_attributes_6_role_admin').set(true)
           find('input[name=commit]').click
           expect(page.find("#user_role_#{@user.id}")).to have_text('Journal admin')
         end
 
         it 'allows the system admin to add the funder role form and set role' do
           find_button('Add a funder role').click
-          expect(page).to have_text('Funder roles')
-          find('#funder_role_admin').set(true)
+          expect(page).to have_text('Funder role')
+          find('#stash_engine_user_roles_attributes_7_role_object_id option:last-child').select_option
+          find('#stash_engine_user_roles_attributes_7_role_admin').set(true)
           find('input[name=commit]').click
           expect(page.find("#user_role_#{@user.id}")).to have_text('Funder admin')
         end
@@ -154,14 +168,14 @@ RSpec.feature 'UserAdmin', type: :feature do
             end
           end
           it 'allows the system admin to change the system role' do
-            find('#role_curator').set(true)
+            find('#stash_engine_user_roles_attributes_2_role').set(true)
             find('input[name=commit]').click
             expect(page.find("#user_role_#{@user.id}")).to have_text('Curator')
           end
           it 'allows the system admin to remove the system role' do
-            find('#role_').set(true)
+            find('#stash_engine_user_roles_attributes_3_role').set(false)
             find('input[name=commit]').click
-            expect(page.find("#user_role_#{@user.id}")).not_to have_text('Funder admin')
+            expect(page.find("#user_role_#{@user.id}")).not_to have_text('Admin')
           end
         end
 
@@ -173,18 +187,18 @@ RSpec.feature 'UserAdmin', type: :feature do
             within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
               find('.c-admin-edit-icon').click
             end
-            expect(page).to have_text('Tenant roles')
-            expect(find_field('tenant_role_admin')).to be_checked
+            expect(page).to have_text('Institution role')
+            expect(find_field('stash_engine_user_roles_attributes_4_role_admin')).to be_checked
           end
           it 'allows the system admin to change the tenant role' do
-            find('#tenant_role_curator').set(true)
+            find('#stash_engine_user_roles_attributes_4_role_curator').set(true)
             find('input[name=commit]').click
-            expect(page.find("#user_role_#{@user.id}")).to have_text('Tenant curator')
+            expect(page.find("#user_role_#{@user.id}")).to have_text('Institution curator')
           end
           it 'allows the system admin to remove the tenant role' do
-            find('#tenant_role_').set(true)
+            find('#stash_engine_user_roles_attributes_4_role_').set(true)
             find('input[name=commit]').click
-            expect(page.find("#user_role_#{@user.id}")).not_to have_text('Tenant admin')
+            expect(page.find("#user_role_#{@user.id}")).not_to have_text('Institution admin')
           end
         end
 
@@ -195,16 +209,16 @@ RSpec.feature 'UserAdmin', type: :feature do
             within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
               find('.c-admin-edit-icon').click
             end
-            expect(page).to have_text('Publisher roles')
-            expect(find_field('publisher_role_admin')).to be_checked
+            expect(page).to have_text('Publisher role')
+            expect(find_field('stash_engine_user_roles_attributes_5_role_admin')).to be_checked
           end
           it 'allows the system admin to change the publisher role' do
-            find('#publisher_role_curator').set(true)
+            find('#stash_engine_user_roles_attributes_5_role_curator').set(true)
             find('input[name=commit]').click
             expect(page.find("#user_role_#{@user.id}")).to have_text('Publisher curator')
           end
           it 'allows the system admin to remove the publisher role' do
-            find('#publisher_role_').set(true)
+            find('#stash_engine_user_roles_attributes_5_role_').set(true)
             find('input[name=commit]').click
             expect(page.find("#user_role_#{@user.id}")).not_to have_text('Publisher admin')
           end
@@ -217,16 +231,16 @@ RSpec.feature 'UserAdmin', type: :feature do
             within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
               find('.c-admin-edit-icon').click
             end
-            expect(page).to have_text('Journal roles')
-            expect(find_field('journal_role_admin')).to be_checked
+            expect(page).to have_text('Journal role')
+            expect(find_field('stash_engine_user_roles_attributes_6_role_admin')).to be_checked
           end
           it 'allows the system admin to change the journal role' do
-            find('#journal_role_curator').set(true)
+            find('#stash_engine_user_roles_attributes_6_role_curator').set(true)
             find('input[name=commit]').click
             expect(page.find("#user_role_#{@user.id}")).to have_text('Journal curator')
           end
           it 'allows the system admin to remove the journal role' do
-            find('#journal_role_').set(true)
+            find('#stash_engine_user_roles_attributes_6_role_').set(true)
             find('input[name=commit]').click
             expect(page.find("#user_role_#{@user.id}")).not_to have_text('Journal admin')
           end
@@ -239,11 +253,11 @@ RSpec.feature 'UserAdmin', type: :feature do
             within(:css, "form[action=\"#{stash_url_helpers.user_edit_path(id: @user.id)}\"]") do
               find('.c-admin-edit-icon').click
             end
-            expect(page).to have_text('Funder roles')
-            expect(find_field('funder_role_admin')).to be_checked
+            expect(page).to have_text('Funder role')
+            expect(find_field('stash_engine_user_roles_attributes_7_role_admin')).to be_checked
           end
           it 'allows the system admin to remove the funder role' do
-            find('#funder_role_').set(true)
+            find('#stash_engine_user_roles_attributes_7_role_').set(true)
             find('input[name=commit]').click
             expect(page.find("#user_role_#{@user.id}")).not_to have_text('Funder admin')
           end

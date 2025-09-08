@@ -19,7 +19,9 @@ periodic re-validation such as yearly to ensure our user data doesn’t go stale
  
 Current Validation Methods (most to least preferred)
 1. **InCommon/Shibboleth** – as described above.
-2. **IP Address validation** – In this scenario an institution can give us IP
+2. **Email validation** - Authors must receive an email at an address under the proper
+   domain name, and copy the validation code to Dryad.
+3. **IP Address validation** – In this scenario an institution can give us IP
   address ranges. Rather than validating with an institutional login for the
   first time, we then validate the IP address falls in the correct range. If
   they’re not in the correct IP address range they get a message telling them that
@@ -27,7 +29,7 @@ Current Validation Methods (most to least preferred)
   successful, it shows they’ve validated and logged in successfully from that
   campus. The downside of this method is keeping the IP address ranges up to date
   if they change and it’s a little broader validation. 
-3. **One of the authors belongs to us**  --  In this method, anyone can claim to
+4. **One of the authors belongs to us**  --  In this method, anyone can claim to
   be a member of a campus community without validation. However, in order to get
   a free deposit, the chosen affiliation of at least one author needs to match the
   chosen user-account affiliation. If an author affiliation doesn’t match the
@@ -122,8 +124,11 @@ Configuration
 
 
 Certificate generation for InCommon
-- The shibboleth certificate should *not* be the same as the web server's SSL certificate
-- If you already have the same entityID on another server, don't make a new certificate, just copy the keys
+- The certificate used by InCommon is for direct communication between the Dryad `shibd` process and the InCommon servers. It 
+  should *not* be the same as the Apache web server's SSL certificate
+- It is ok for this certificate to be self-signed and long-lived
+- If you already have the same entityID on another server, don't make a new certificate, just
+  copy the keys
 
 ```
 cd /etc/shibboleth

@@ -31,19 +31,19 @@ module StashDatacite
       end
 
       def abstract
-        @abstract ||= @resource.descriptions.where(description_type: :abstract).first
+        @abstract ||= @resource.descriptions.type_abstract.first&.description
       end
 
       def methods
-        @methods ||= @resource.descriptions.where(description_type: :methods).first
+        @methods ||= @resource.descriptions.type_methods.first&.description
       end
 
       def technical_info
-        @technical_info ||= @resource.descriptions.where(description_type: :technicalinfo).first
+        @technical_info ||= @resource.descriptions.type_technical_info.first&.description
       end
 
       def other
-        @other ||= @resource.descriptions.where(description_type: :other).first
+        @other ||= @resource.descriptions.type_other.first&.description
       end
 
       def subjects

@@ -37,7 +37,7 @@
           </div>
           <% if policy(u).edit? %>
             <div class="c-lined-table__with-actions">
-              <span id="user_flag_<%=u.id%>">
+              <span id="user_flag_<%= u.id %>">
                 <% if u.flag.present? %>
                   <i class="fas fa-flag user" aria-label="Flagged" title="<%= u.flag.note %>"></i>
                 <% end %>
@@ -57,7 +57,7 @@
         <%= StashEngine::Tenant.find(u.tenant_id)&.short_name if StashEngine::Tenant.exists?(u.tenant_id) %>
       </td>
       <td id="user_role_<%= u.id %>">
-        <%= u.roles&.admin_roles.present? ? u.roles.admin_roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %>
+        <%= role_list(u) %>
       </td>
       <td class="c-lined-table__digits"><%= formatted_datetime(u.last_login) %></td>
     </tr>

@@ -18,7 +18,7 @@ jest.mock('axios');
 describe('ReadMeWizard', () => {
   let info; let response;
   const setResource = () => {};
-  const file = fs.readFileSync(path.join(__dirname, '../../../../data/README.md'), 'utf8');
+  const file = fs.readFileSync(path.join(__dirname, '../../../../fixtures/README.md'), 'utf8');
   beforeEach(() => {
     info = {
       resource: {

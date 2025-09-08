@@ -12,7 +12,7 @@
   </div>
   <div class="o-admin-form-pair">
     <label for="role_filter">Role:</label>
-    <%= select_tag :role_filter, options_for_select([['', ''],['Superuser', 'superuser'],['Curator', 'curator'],['Admin', 'admin']], params[:role_filter]), class: 'c-input__select' %>
+    <%= select_tag :role_filter, options_for_select([['', ''],['Superuser', 'superuser'],['Data manager', 'manager'],['Curator', 'curator'],['Admin', 'admin']], params[:role_filter]), class: 'c-input__select' %>
   </div>
   <div class="o-admin-form-pair">
     <label for="tenant_filter">Institution:</label>

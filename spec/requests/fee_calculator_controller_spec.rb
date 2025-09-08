@@ -157,7 +157,8 @@ RSpec.describe 'FeeCalculatorController', type: :request do
     describe '#institutional fee' do
       let(:options) { {} }
       let(:type) { 'institution' }
-      let!(:tenant) { create(:tenant, payment_plan: '2025', covers_dpc: true) }
+      let!(:tenant) { create(:tenant) }
+      let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: '2025', covers_dpc: true) }
       let(:identifier) { create(:identifier) }
       let(:resource) { create(:resource, identifier: identifier, tenant: tenant) }
 
@@ -201,7 +202,8 @@ RSpec.describe 'FeeCalculatorController', type: :request do
     describe '#publisher fee from journal' do
       let(:options) { {} }
       let(:type) { 'publisher' }
-      let!(:journal) { create(:journal, payment_plan_type: '2025') }
+      let!(:journal) { create(:journal) }
+      let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: '2025') }
       let(:identifier) { create(:identifier) }
       let(:resource) { create(:resource, identifier: identifier, journal_issns: [journal.issns.first]) }
 
@@ -249,7 +251,8 @@ RSpec.describe 'FeeCalculatorController', type: :request do
         create(:contributor, contributor_name: 'National Cancer Institute',
                              contributor_type: 'funder', resource_id: resource.id)
       end
-      let!(:funder) { create(:funder, name: contributor.contributor_name, payment_plan: '2025', covers_dpc: true, enabled: true) }
+      let!(:funder) { create(:funder, name: contributor.contributor_name, enabled: true) }
+      let!(:payment_conf) { create(:payment_configuration, partner: funder, payment_plan: '2025', covers_dpc: true) }
 
       before do
         get resource_fee_calculator_url(resource), params: options

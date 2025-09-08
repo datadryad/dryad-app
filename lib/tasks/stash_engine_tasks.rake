@@ -205,6 +205,7 @@ namespace :identifiers do
 
           # create a new version to mark all files as deleted
           new_res = DuplicateResourceService.new(i.latest_resource, StashEngine::User.system_user).call
+          new_res.update skip_emails: true
           new_res.generic_files.update(file_deleted_at: Time.current, file_state: 'deleted')
           new_res.current_state = 'submitted'
 
@@ -685,7 +686,8 @@ namespace :identifiers do
       csv << %w[SponsorName JournalName Count]
       curr_sponsor = nil
       sponsor_summary = []
-      StashEngine::Journal.where(payment_plan_type: 'DEFERRED').order(:sponsor_id, :title).each do |j|
+      StashEngine::Journal.joins(:payment_configuration).where(payment_configuration: { payment_plan: 'DEFERRED' }).order(:sponsor_id,
+                                                                                                                          :title).each do |j|
         if j.sponsor&.name != curr_sponsor
           Reports::Payments::Base.new.write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period,
                                                             table: sponsor_summary, payment_plan: 'deferred')
@@ -778,7 +780,7 @@ namespace :identifiers do
       StashEngine::JournalOrganization.all.each do |org|
         journals = org.journals_sponsored_deep
         journals.each do |j|
-          next unless j.payment_plan_type == 'TIERED' && j.top_level_org == org
+          next unless j.payment_configuration&.payment_plan == 'TIERED' && j.top_level_org == org
 
           journal_item_count = 0
           sc_report.each do |item|
@@ -813,7 +815,7 @@ namespace :identifiers do
     StashEngine::JournalOrganization.all.each do |org|
       journals = org.journals_sponsored_deep
       journals.each do |j|
-        next unless j.payment_plan_type == 'TIERED' && j.top_level_org == org
+        next unless j.payment_configuration&.payment_plan == 'TIERED' && j.top_level_org == org
 
         journal_item_count = 0
         base_report.each do |item|
@@ -1003,6 +1005,68 @@ namespace :identifiers do
 
         csv << [i.identifier, i.publication_article_doi, approval_date_str, res&.title,
                 i.storage_size, i.submitter_affiliation&.long_name, i.publication_name]
+      end
+    end
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
+  # example: RAILS_ENV=production bundle exec rake identifiers:dataset_info_report_detailed -- --year_month 2024-05
+  desc 'Generate a summary report of all items in Dryad'
+  task dataset_info_report_detailed: :environment do
+    launch_day = Date.new(2019, 9, 17)
+
+    # Get the year-month specified in --year_month argument.
+    # If none, default to all months since v2 launch_day
+    args = Tasks::ArgsParser.parse(:year_month)
+    if args.year_month.blank?
+      filename = "dataset_info_report_detailed-#{Date.today.strftime('%Y-%m-%d')}.csv"
+    else
+      year_month = args.year_month
+      filename = "dataset_info_report_detailed-#{year_month}.csv"
+    end
+
+    log "Writing detailed dataset info report to file #{filename}"
+    CSV.open(filename, 'w') do |csv|
+      csv << ['Dataset DOI', 'Article DOI',
+              'Submitter First', 'Submitter Last', 'Submitter Email', 'Submitter ORCID',
+              'Submitter Affiliation', 'Submitter Country',
+              'Approval Date', 'Title',
+              'OECD Field',
+              'Curation Status',
+              'Date First Submitted', 'Date First Published', 'Date Last Modified',
+              'Size',
+              'Views', 'Downloads', 'Citations',
+              'Payer', 'Journal', 'Journal Sponsor',
+              'Grant Funders',
+              'Other Authors',
+              'Journal Name']
+      StashEngine::Identifier.where(created_at: launch_day..).find_each do |i|
+        next if i.resources.blank?
+
+        approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+        next unless year_month.blank? || approval_date_str&.start_with?(year_month)
+
+        res = i.latest_viewable_resource
+        res = i.resources.last if res.blank?
+        first_res = i.first_submitted_resource
+        u = res&.owner_author
+        r = StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
+        stat = i.counter_stat
+
+        csv << [i.identifier, i.publication_article_doi,
+                u&.author_first_name, u&.author_last_name, u&.author_email, u&.author_orcid,
+                u&.affiliation&.long_name, r&.country,
+                approval_date_str, res&.title,
+                res&.subjects&.fos&.map(&:subject),
+                res&.current_curation_status,
+                first_res&.submitted_date, i.date_first_published, i.resources.last.updated_at,
+                i.storage_size,
+                stat&.unique_investigation_count, stat&.unique_request_count, stat&.citation_count,
+                i.payment_type, i.publication_name, i.journal&.sponsor&.name,
+                res&.contributors&.map(&:contributor_name)&.compact,
+                res&.authors&.map(&:author_full_name)&.delete_if { |x| x == u&.author_full_name },
+                i.publication_name]
       end
     end
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
@@ -1371,7 +1435,7 @@ namespace :journals do
     StashEngine::Journal.find_each do |j|
       # Only check the journal in Salesforce if Dryad has a business relationship
       # with the journal (payment plan or integration)
-      next unless j.payment_plan_type.present? || j.manuscript_number_regex.present?
+      next unless j.payment_configuration&.payment_plan.present? || j.manuscript_number_regex.present?
 
       sf_id = Stash::Salesforce.find_account_by_name(j.title)
       unless sf_id.present?

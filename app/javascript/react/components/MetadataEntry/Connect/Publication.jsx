@@ -57,8 +57,9 @@ export default function Publication({resource, setResource}) {
   useEffect(() => {
     const {manuscript_number} = resource.resource_publication;
     const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
-    if (resource.tenant_id !== 'dryad') {
-      setSponsored(!!resource.journal?.payment_plan_type && (manuscript_number || primary_article) ? resource.journal.title : false);
+    if (!resource.tenant?.payment_configuration?.covers_dpc) {
+      const journal_pp = resource.journal?.payment_configuration?.payment_plan;
+      setSponsored(!!journal_pp && (manuscript_number || primary_article) ? resource.journal.title : false);
     }
   }, [resource.journal, resource.resource_publication, resource.related_identifiers]);
 
@@ -77,9 +78,11 @@ export default function Publication({resource, setResource}) {
 
   return (
     <>
-      <div className="callout alt">
-        <p><i className="fas fa-circle-info" /> If your data is connected to a journal, the Data Publishing Charge may be sponsored</p>
-      </div>
+      {subType === 'dataset' && (
+        <div className="callout alt">
+          <p><i className="fas fa-circle-info" /> If your data is connected to a journal, the Data Publishing Charge may be sponsored</p>
+        </div>
+      )}
       <fieldset onChange={setImport}>
         <legend>
           Is your {subType} associated with a preprint, an article, or a manuscript submitted to a journal?
