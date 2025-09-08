@@ -711,7 +711,7 @@ namespace :identifiers do
     exit
   end
 
-  # example: RAILS_ENV=production bundle exec rake identifiers:journal_2025_reports -- --sc_report /path/to/file
+  # example: RAILS_ENV=production bundle exec rake identifiers:journal_2025_fee_reports -- --sc_report /path/to/file
   desc 'Generate reports of items that should be billed for tiered journals'
   task journal_2025_fee_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report)
