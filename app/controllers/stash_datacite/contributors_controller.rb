@@ -18,6 +18,7 @@ module StashDatacite
       @contributor = find_or_initialize
       respond_to do |format|
         if @contributor.save
+          update_datacite
           format.json { render json: @contributor }
           format.js do
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
@@ -33,6 +34,7 @@ module StashDatacite
         contributor_params[:award_description] = contributor_params[:award_description].squish if contributor_params[:award_description].present?
         contributor_params[:award_title] = contributor_params[:award_title].squish if contributor_params[:award_title].present?
         if @contributor.update(contributor_params)
+          update_datacite
           format.json { render json: @contributor }
           format.js do
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
@@ -93,6 +95,12 @@ module StashDatacite
       @resource ||= (params[:contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)
     rescue ActiveRecord::RecordNotFound
       nil
+    end
+
+    def update_datacite
+      return unless @resource.current_curation_status == 'published'
+
+      DataciteService.new(@resource).submit
     end
 
     # Use callbacks to share common setup or constraints between actions.

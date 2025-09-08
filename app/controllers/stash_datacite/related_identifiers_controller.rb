@@ -17,7 +17,7 @@ module StashDatacite
       @related_identifier.verified = @related_identifier.live_url_valid?
       respond_to do |format|
         if @related_identifier.save
-          @resource.reload
+          DataciteService.new(resource).submit if @resource.current_curation_status == 'published'
           release_resource(@resource) if @resource.identifier&.publication_article_doi
           format.js do
             load_activity
@@ -43,7 +43,7 @@ module StashDatacite
       respond_to do |format|
         if @related_identifier.update(calc_related_identifier_params)
           @related_identifier.update(verified: @related_identifier.live_url_valid?) unless @related_identifier.verified?
-          @resource.reload
+          DataciteService.new(resource).submit if @resource.current_curation_status == 'published'
           release_resource(@resource) if @resource.identifier&.publication_article_doi
           format.js do
             load_activity
