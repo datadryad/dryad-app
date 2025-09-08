@@ -202,8 +202,8 @@ module StashEngine
         end
       end
 
-      context 'when user is an superuser' do
-        let(:user) { create(:user, role: 'superuser') }
+      context 'when user is a data manager' do
+        let(:user) { create(:user, role: 'manager') }
 
         CurationActivity::CURATOR_ALLOWED_STATES.each_key do |status|
           it "allows withdrawn for #{status} status" do
