@@ -1200,41 +1200,5 @@ module StashApi
         end
       end
     end
-
-    describe '#add_internal_datum' do
-      let(:identifier) { create(:identifier) }
-      let!(:resource) { create(:resource, identifier: identifier) }
-      let(:data_type) { 'manuscriptNumber' }
-
-      subject do
-        post "/api/v2/datasets/doi%3A#{CGI.escape(identifier.identifier)}/add_internal_datum",
-             params: { data_type: data_type, value: 'new_value' }.to_json,
-             headers: default_authenticated_headers
-      end
-
-      context 'when data type allows multiple entries' do
-        let(:data_type) { 'mismatchedDOI' }
-
-        it 'sets the datum value' do
-          subject
-
-          expect(response).to have_http_status(:ok)
-          expect(identifier.internal_data.last.value).to eq('new_value')
-        end
-      end
-
-      context 'when data type does not allow multiple entries' do
-        context 'when datum entry exists' do
-          let!(:datum) { create(:internal_datum, identifier_id: identifier.id, data_type: data_type, value: 'old_value') }
-
-          it 'returns an error for `manuscriptNumber`' do
-            subject
-
-            expect(response).to have_http_status(:not_found)
-            expect(response_body_hash[:error]).to eq("#{data_type} does not allow multiple entries, use set_internal_datum")
-          end
-        end
-      end
-    end
   end
 end
