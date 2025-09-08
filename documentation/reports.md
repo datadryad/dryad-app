@@ -105,6 +105,14 @@ RAILS_ENV=production bundle exec rake identifiers:tiered_tenant_reports -- --sc_
 
 Copy the resultant files into their respective places in `~/journal-payments/`
 
+
+### 2025 reports
+
+```
+RAILS_ENV=production bundle exec rake identifiers:journal_2025_reports -- --sc_report /path/to/file
+RAILS_ENV=production bundle exec rake identifiers:tenant_2025_fee_reports -- --sc_report /path/to/file
+```
+
 Dataset info report
 ===================
 
