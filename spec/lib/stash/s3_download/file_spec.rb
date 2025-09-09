@@ -29,7 +29,7 @@ module Stash
         # these are two-step to download: first get presign url (formerly from merritt)and then download it
 
         it 'expects download to return success: false in hash if 500 from S3' do
-          stub_request(:get, @data_file.s3_permanent_presigned_url).to_return(status: 500, body: '', headers: {})
+          stub_request(:get, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/+.}).to_return(status: 500, body: '', headers: {})
 
           dl_status = @file_dl_obj.download_file(db_file: @data_file)
           expect(dl_status[:success]).to eq(false)

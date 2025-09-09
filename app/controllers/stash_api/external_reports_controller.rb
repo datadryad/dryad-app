@@ -43,7 +43,7 @@ module StashApi
     end
 
     def statuses
-      raise NotImplementedError, 'Subclasses must implement report_object'
+      raise NotImplementedError, 'Subclasses must implement statuses'
     end
   end
 end
