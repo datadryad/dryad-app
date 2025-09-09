@@ -88,7 +88,7 @@ function ReadMe({
   const assembleValue = () => {
     let v = `# ${
       wizardContent.title || 'Dryad dataset'
-    }\n\nDataset DOI: [${wizardContent.doi}](${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
+    }\n\nDataset DOI: [${wizardContent.doi}](https://doi.org/${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
     if (wizardContent.step1) v += wizardContent.step1;
     if (wizardContent.step2) v += `### ${secTitles[1]}\n\n${wizardContent.step2}`;
     [3, 4].forEach((s) => {

@@ -38,8 +38,6 @@ module StashEngine
 
     def update
       @tenant = authorize StashEngine::Tenant.find(params[:id])
-      pp update_hash
-
       @tenant.update(update_hash)
       errs = @tenant.errors.full_messages
       if errs.any?
