@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {editorViewCtx} from '@milkdown/kit/core';
-import {callCommand} from '@milkdown/kit/utils';
-import {TextSelection} from '@milkdown/kit/prose/state';
+import {editorViewCtx} from '@milkdown/core';
+import {callCommand} from '@milkdown/utils';
+import {TextSelection} from '@milkdown/prose/state';
 import {commands} from './milkdownCommands';
 import {commands as mdCommands} from './codeKeymap';
 import {
