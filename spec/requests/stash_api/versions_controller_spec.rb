@@ -310,7 +310,6 @@ module StashApi
           response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(302)
           expect(response.headers['Location']).to include('http://example.com/fun')
-          # expect(response.body).to include('redirected')
         end
 
         it "disallows download if it's not submitted to Merritt" do
@@ -324,7 +323,7 @@ module StashApi
             get '/api/v2/versions/1234564321/download', headers: default_authenticated_headers.merge('Accept' => '*/*')
 
             expect(response).to have_http_status(:not_found)
-            expect(response.body).to eq({ error: 'not-found' })
+            expect(response_body_hash).to eq({ 'error'=> 'not-found' })
           end
         end
       end
