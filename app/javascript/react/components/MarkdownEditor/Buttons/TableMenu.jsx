@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {editorViewCtx} from '@milkdown/kit/core';
-import {callCommand} from '@milkdown/kit/utils';
+import {editorViewCtx} from '@milkdown/core';
+import {callCommand} from '@milkdown/utils';
 import {
   selectRowCommand,
   selectColCommand,
@@ -11,7 +11,7 @@ import {
   addRowBeforeCommand,
   addRowAfterCommand,
   deleteSelectedCellsCommand,
-} from '@milkdown/kit/preset/gfm';
+} from '@milkdown/preset-gfm';
 
 const nodeIndex = (parent, child) => {
   /* eslint-disable-next-line no-plusplus */

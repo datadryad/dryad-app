@@ -1,4 +1,4 @@
-import {$remark} from '@milkdown/kit/utils';
+import {$remark} from '@milkdown/utils';
 import {visit} from 'unist-util-visit';
 import {subscript} from './micromark-extensions';
 
