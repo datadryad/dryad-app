@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {editorViewCtx} from '@milkdown/core';
 import {callCommand} from '@milkdown/utils';
 import {
-  selectRowCommand,
-  selectColCommand,
+  // selectRowCommand,
+  // selectColCommand,
   moveRowCommand,
   moveColCommand,
   addColBeforeCommand,
@@ -165,13 +165,13 @@ export default function TableMenu({active, editor, editorId}) {
                 </span>Move row down
               </button>
             </li>
-            <li role="menuitem">
+            {/* <li role="menuitem">
               <button type="button" onClick={() => callEditorCommand(selectRowCommand, {index: row})}>
                 <span className="icon-stack">
                   <i className="fas fa-table-columns fa-rotate-270 one" aria-hidden="true" />
                 </span>Select row cells
               </button>
-            </li>
+            </li> */}
           </ul>
         </li>
         <li onMouseLeave={() => subMenuExit(document.getElementById(`${editorId}colMenuB`))} role="menuitem">
@@ -210,13 +210,13 @@ export default function TableMenu({active, editor, editorId}) {
                 <span className="icon-line">{colIcon}<i className="fas fa-turn-down" aria-hidden="true" /></span>Move column right
               </button>
             </li>
-            <li role="menuitem">
+            {/* <li role="menuitem">
               <button
                 type="button"
                 onClick={() => callEditorCommand(selectColCommand, {index: col})}
               ><i className="fas fa-table-columns one" aria-hidden="true" />Select column cells
               </button>
-            </li>
+            </li> */}
           </ul>
         </li>
         <li role="menuitem">
