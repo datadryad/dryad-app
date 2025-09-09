@@ -145,15 +145,7 @@ class CurationService
   def submit_to_datacite
     return unless @activity.should_update_doi?
 
-    idg = Stash::Doi::DataciteGen.new(resource: @resource)
-    idg.update_identifier_metadata!
-    # Send out orcid invitations now that the citation has been registered
-    email_orcid_invitations if @activity.published?
-  rescue Stash::Doi::DataciteGenError => e
-    Rails.logger.error "Stash::Doi::DataciteGen - Unable to submit metadata changes for : '#{@resource&.identifier}'"
-    Rails.logger.error e.message
-    StashEngine::UserMailer.error_report(@resource, e).deliver_now
-    raise e
+    DataciteService.new(resource).submit
   end
 
   def submit_to_stripe
