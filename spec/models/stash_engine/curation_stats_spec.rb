@@ -449,6 +449,14 @@ module StashEngine
         stats.recalculate
         expect(stats.datasets_to_aar).to eq(0)
 
+        # YES -- curation to embargoed
+        create(:curation_activity, :curation, resource: @res[0], user: @curator, created_at: @day - 1.day)
+        create(:curation_activity, :curation, resource: @res[1], user: @curator, created_at: @day - 1.day)
+        create(:curation_activity, :embargoed, resource: @res[0], user: @curator, created_at: @day)
+        create(:curation_activity, status: 'to_be_published', resource: @res[1], user: @curator, created_at: @day)
+        stats.recalculate
+        expect(stats.datasets_to_embargoed).to eq(2)
+
         # YES -- curation to aar
         create(:curation_activity, :curation, resource: @res[2], user: @curator, created_at: @day)
         create(:curation_activity, resource: @res[2], status: 'action_required', user: @curator, created_at: @day)
@@ -472,7 +480,7 @@ module StashEngine
         # NO -- was published by system
         create(:curation_activity, :curation, resource: @res[5], user: @curator, created_at: @day - 2.days)
         create(:curation_activity, :embargoed, resource: @res[5], user: @curator, created_at: @day - 2.days)
-        create(:curation_activity, :embargoed, resource: @res[5], user: @curator, created_at: @day - 1.day)
+        create(:curation_activity, status: :embargoed, resource: @res[5], user: @curator, created_at: @day - 1.day)
         create(:curation_activity, :published, resource: @res[5], user: @system_user, created_at: @day)
         stats.recalculate
         expect(stats.datasets_to_aar).to eq(2)

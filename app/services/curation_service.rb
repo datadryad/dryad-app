@@ -106,7 +106,7 @@ class CurationService
         update_dates[@status.to_sym] = @activity.created_at
       when 'curation'
         update_dates[:curation_start] = @activity.created_at
-      when 'embargoed', 'published'
+      when 'embargoed', 'published', 'to_be_published'
         update_dates[:approved] = @activity.created_at
       end
     end

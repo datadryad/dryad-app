@@ -401,7 +401,7 @@ module StashEngine
     end
 
     def publish
-      @status = 'embargoed' if @pub_date.present? && @pub_date > Time.now.utc.to_date.to_s
+      @status = 'to_be_published' if @pub_date.present? && @pub_date > Time.now.utc.to_date.to_s
       return if @pub_date.present?
 
       @pub_date = Time.now.utc.to_date.to_s
