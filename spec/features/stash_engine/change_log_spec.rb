@@ -30,11 +30,13 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
       @resource.update(title: Faker::Hipster.sentence(word_count: 6))
       @resource.authors.first.affiliations = [create(:affiliation)]
       @resource.authors.first.update(author_email: Faker::Internet.email)
-      @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word, subject_scheme: 'fos')
-      Timecop.travel(10.seconds) { 3.times { @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) } }
       @resource.descriptions.type_abstract.first.update(description: Faker::Lorem.paragraph)
       @resource.contributors.first.update(contributor_name: Faker::Company.name)
-      Timecop.travel(10.seconds) { @resource.descriptions.type_technical_info.first.update(description: Faker::Lorem.paragraph) }
+      Timecop.travel(10.seconds) do
+        @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word, subject_scheme: 'fos')
+        3.times { @resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
+      end
+      Timecop.travel(15.seconds) { @resource.descriptions.type_technical_info.first.update(description: Faker::Lorem.paragraph) }
       refresh
       click_button 'Related works'
       fill_in 'DOI or other URL', with: Faker::Pid.doi
