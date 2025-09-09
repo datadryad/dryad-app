@@ -1,5 +1,4 @@
 module StashEngine
-  # rubocop:disable Metrics/ClassLength
   # Mails users about submissions
   class UserMailer < ApplicationMailer
 
@@ -88,7 +87,8 @@ module StashEngine
     end
 
     def check_tenant_email(email_token)
-      return unless email_token.user&.email&.end_with?(email_token.tenant&.authentication&.email_domain)
+      return if email_token.tenant&.authentication&.email_domain.blank?
+      return unless email_token.user&.email&.end_with?(email_token.tenant.authentication.email_domain)
 
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
       @user_name = user_name(email_token.user)
@@ -130,7 +130,7 @@ module StashEngine
     end
 
     def general_error(resource, error_text)
-      logger.warn("Unable to report update error #{error}; nil resource") unless resource.present?
+      logger.warn("Unable to report update error #{error_text}; nil resource") unless resource.present?
       @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
       return unless resource.present? && @zenodo_error_emails.present?
 
@@ -142,7 +142,7 @@ module StashEngine
     end
 
     def file_validation_error(file)
-      logger.warn("Unable to report update error #{error}; nil file") unless file.present?
+      logger.warn('Unable to validate file checksum; nil file') unless file.present?
       @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
       return unless file.present? && @zenodo_error_emails.present?
 
@@ -274,26 +274,5 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env}Action required: Dryad data submission (#{resource&.identifier})")
     end
-
-    def chase_action_required2(resource)
-      return unless resource.present?
-
-      assign_variables(resource)
-      return unless @user.present? && user_email(@user).present?
-
-      mail(to: user_email(@user),
-           subject: "#{rails_env}Reminder: Action required for Dryad data submission (#{resource&.identifier})")
-    end
-
-    def chase_action_required3(resource)
-      return unless resource.present?
-
-      assign_variables(resource)
-      return unless @user.present? && user_email(@user).present?
-
-      mail(to: user_email(@user),
-           subject: "#{rails_env}Your Dryad data submission has been withdrawn (#{resource&.identifier})")
-    end
   end
-  # rubocop:enable Metrics/ClassLength
 end
