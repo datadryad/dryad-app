@@ -847,7 +847,7 @@ module StashEngine
     # this is a query for the publication updating on a cron, but putting here so we can test the query more easily
     def self.need_publishing
       # submitted to merritt, curation embargoed, past publication date
-      all.submitted.with_visibility(states: %w[embargoed]).where('stash_engine_resources.publication_date < ?', Time.now)
+      all.submitted.with_visibility(states: %w[embargoed to_be_published]).where('stash_engine_resources.publication_date < ?', Time.now)
     end
 
     # returns boolean indicating if a version before the current resource has been made public (metadata view set to true)

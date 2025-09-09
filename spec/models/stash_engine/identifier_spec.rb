@@ -292,7 +292,7 @@ module StashEngine
           it 'finds no published resource' do
             CurationService.new(resource: @res1, status: 'curation', user: @user).process
             CurationService.new(resource: @res2, status: 'curation', user: @user).process
-            CurationService.new(resource: @res3, status: 'curation', user: @user).process
+            CurationService.new(resource: @res3, status: 'to_be_published', user: @user).process
             expect(@identifier.reload.latest_resource_with_public_metadata).to eql(nil)
           end
 

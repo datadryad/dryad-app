@@ -36,7 +36,7 @@ describe CurationService do
     end
 
     it "doesn't submit when a status besides Embargoed or Published is set" do
-      CurationService.new(resource: resource, user: curator, status: 'curation').process
+      CurationService.new(resource: resource, user: curator, status: 'to_be_published').process
       expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
     end
 
@@ -111,7 +111,7 @@ describe CurationService do
     it 'does not call if not published' do
       allow(resource).to receive(:submit_to_solr)
       expect(resource).not_to receive(:submit_to_solr)
-      CurationService.new(resource: resource, user: curator, status: 'action_required').process
+      CurationService.new(resource: resource, user: curator, status: 'to_be_published').process
     end
   end
 
@@ -140,7 +140,7 @@ describe CurationService do
 
       it 'does not charge user if not ready_for_payment' do
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:ready_for_payment?).and_return(false)
-        CurationService.new(user: curator, resource: resource, status: 'submitted').process
+        CurationService.new(user: curator, resource: resource, status: 'to_be_published').process
         expect(@mock_invoicer).not_to have_received(:charge_user_via_invoice)
       end
 

@@ -53,6 +53,7 @@ module StashEngine
       action_required
       withdrawn
       embargoed
+      to_be_published
       published
     ]
     enum :status, enum_vals.index_by(&:to_sym), default: 'in_progress', validate: true
@@ -67,11 +68,12 @@ module StashEngine
       processing: %w[in_progress processing],
       submitted: %w[submitted curation withdrawn peer_review],
       peer_review: %w[peer_review submitted curation withdrawn],
-      curation: (enum_vals - %w[in_progress submitted]),
-      action_required: (enum_vals - %w[in_progress submitted]),
+      curation: (enum_vals - %w[in_progress submitted to_be_published]),
+      action_required: (enum_vals - %w[in_progress submitted to_be_published]),
       withdrawn: %w[withdrawn curation],
       embargoed: %w[embargoed curation withdrawn published],
-      published: (enum_vals - %w[in_progress submitted])
+      to_be_published: %w[embargoed curation withdrawn to_be_published published],
+      published: (enum_vals - %w[in_progress submitted to_be_published])
     }.with_indifferent_access.freeze
 
     # Validations
@@ -198,7 +200,7 @@ module StashEngine
 
       APP_CONFIG&.payments&.service == 'stripe' &&
         (resource.identifier.payment_type.nil? || %w[unknown waiver stripe].include?(resource.identifier.payment_type)) &&
-        %w[published embargoed].include?(status)
+        %w[published to_be_published embargoed].include?(status)
     end
 
     def should_update_doi?
