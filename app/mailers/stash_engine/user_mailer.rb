@@ -105,7 +105,7 @@ module StashEngine
       @resource = edit_code.author.resource
       @role = edit_code.role
       @url = "#{ROOT_URL}#{Rails.application.routes.url_helpers.accept_invite_path(edit_code: edit_code.edit_code)}"
-      mail(to: user_email(edit_code.author), subject: "#{rails_env}Invitation to edit submission \"#{@resource.title.strip_tags}\"")
+      mail(to: user_email(edit_code.author), subject: "#{rails_env}Invitation to edit submission \"#{@resource.title&.strip_tags}\"")
     end
 
     def invite_user(user, role)
@@ -115,7 +115,7 @@ module StashEngine
       @user_name = user_name(user)
       @resource = role.role_object
       @role = role.role
-      mail(to: user_email(user), subject: "#{rails_env}Invitation to edit submission \"#{@resource.title.strip_tags}\"")
+      mail(to: user_email(user), subject: "#{rails_env}Invitation to edit submission \"#{@resource.title&.strip_tags}\"")
     end
 
     # Called from the StashEngine::Repository
