@@ -1427,7 +1427,7 @@ namespace :journals do
     log 'Processing with DRY_RUN' if dry_run
 
     jj = Stash::Salesforce.db_query("SELECT Id, Name FROM Account where Type='Journal'")
-    jj.find_each do |j|
+    jj.find_all do |j|
       found_journal = StashEngine::Journal.find_by_title(j['Name'])
       log "MISSING from Dryad -- #{j['Name']}" unless found_journal.present?
     end
