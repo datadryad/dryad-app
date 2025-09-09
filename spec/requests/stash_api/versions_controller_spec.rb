@@ -323,7 +323,7 @@ module StashApi
             get '/api/v2/versions/1234564321/download', headers: default_authenticated_headers.merge('Accept' => '*/*')
 
             expect(response).to have_http_status(:not_found)
-            expect(response_body_hash).to eq({ 'error'=> 'not-found' })
+            expect(response_body_hash).to eq({ 'error' => 'not-found' })
           end
         end
       end
