@@ -39,7 +39,8 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
     context 'reflect edits in README' do
       before(:each) do
         # rubocop:disable Layout/LineLength
-        create(:description, resource: resource, description_type: 'technicalinfo', description: "# #{resource.title}\n\nDataset DOI: [#{resource.identifier_value}](#{resource.identifier_value})\n\n#### File: #{file.download_filename}")
+        create(:description, resource: resource, description_type: 'technicalinfo', description: "# #{resource.title}\n\nDataset DOI: [#{resource.identifier_value}](#{resource.identifier_uri})\n\n## Description of the data and file structure\n\n### Files and variables\n\n#### File: #{file.download_filename}")
+
         # rubocop:enable Layout/LineLength
         resource.reload
         click_button 'Resume'
@@ -56,8 +57,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
       it 'changes the title' do
         title = 'A test updated title for a dataset'
         click_button 'Title'
-        find('[name="title"]').set('')
-        page.send_keys(:tab)
+        resource.title.length.times { find('[name="title"]').send_keys([:backspace]) }
         fill_in_title(title)
         click_button 'README'
         expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 15)
