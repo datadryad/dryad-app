@@ -40,14 +40,12 @@ module StashApi
         target_report = "#{params['report_name']}.csv"
 
         f = ::File.join(REPORTS_DIR, target_report)
-        if ::File.exist?(f)
-          d = Time.now.utc.to_date
-          result_filename = "#{params['report_name']}_#{d.strftime('%Y%m%d')}.csv"
-          send_file f, filename: result_filename, type: 'text/plain'
-          return
-        else
-          render json: { error: "Unable to render report file for #{target_report}" }, status: :internal_server_error
-        end
+        render json: { error: "Unable to render report file for #{target_report}" }, status: :unprocessable_entity and return unless ::File.exist?(f)
+
+        d = Time.now.utc.to_date
+        result_filename = "#{params['report_name']}_#{d.strftime('%Y%m%d')}.csv"
+        send_file f, filename: result_filename, type: 'text/plain'
+        return
       end
 
       # Else, report not_found

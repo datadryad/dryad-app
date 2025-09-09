@@ -764,7 +764,7 @@ module StashEngine
     # Note: the special download links mean anyone with that link may download and this doesn't apply
     def may_download?(ui_user: nil)
       # doing this to avoid collision with the association called user
-      return false unless current_resource_state&.resource_state == 'submitted' # is available in the repo
+      return false unless current_state == 'submitted' # is available in the repo
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
 

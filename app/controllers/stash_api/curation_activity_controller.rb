@@ -34,7 +34,7 @@ module StashApi
 
     # PUT /curation_activity/{id}
     def update
-      resource = StashEngine::Identifier.find(params[:dataset_id]).latest_resource
+      resource = StashEngine::Identifier.find_with_id(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
       render json: resource&.reload&.last_curation_activity
     end

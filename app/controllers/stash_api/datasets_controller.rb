@@ -345,14 +345,14 @@ module StashApi
       if res&.may_download?(ui_user: @user) && @version_presigned&.valid_resource?
         @version_presigned.download(resource: res)
       else
-        render plain: 'Download for this version of the dataset is unavailable', status: 404
+        render plain: 'Download for this version of the dataset is unavailable', status: :not_found
       end
     end
 
     # post /datasets/<id>/set_internal_datum
     def set_internal_datum
       if StashEngine::InternalDatum.allows_multiple(params[:data_type])
-        render json: { error: "#{params[:data_type]} allows multiple entries, use add_internal_datum" }.to_json, status: 404
+        render json: { error: "#{params[:data_type]} allows multiple entries, use add_internal_datum" }.to_json, status: :not_found
         nil
       else
         @datum = StashEngine::InternalDatum.where(data_type: params[:data_type], identifier_id: @stash_identifier.id).first
@@ -368,7 +368,7 @@ module StashApi
     # post /datasets/<id>/add_internal_datum
     def add_internal_datum
       unless StashEngine::InternalDatum.allows_multiple(params[:data_type])
-        render json: { error: "#{params[:data_type]} does not allow multiple entries, use set_internal_datum" }.to_json, status: 404
+        render json: { error: "#{params[:data_type]} does not allow multiple entries, use set_internal_datum" }.to_json, status: :not_found
         return
       end
       @datum = StashEngine::InternalDatum.create(data_type: params[:data_type], stash_identifier: @stash_identifier, value: params[:value])
@@ -391,10 +391,10 @@ module StashApi
       StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text).first
     end
 
-    def initialize_stash_identifier(id)
-      @stash_identifier = get_stash_identifier(id)
-      render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.blank?
-    end
+    # def initialize_stash_identifier(id)
+    #   @stash_identifier = get_stash_identifier(id)
+    #   render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.blank?
+    # end
 
     private
 
