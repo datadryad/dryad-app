@@ -28,7 +28,7 @@ module StashEngine
 
     # an application 404 page to make it look nicer
     def app_404
-      render status: :not_found
+      render status: 404, template: 'stash_engine/pages/app_404'
     end
 
     def helpdesk
