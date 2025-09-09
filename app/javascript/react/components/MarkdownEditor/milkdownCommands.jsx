@@ -1,8 +1,8 @@
-import {$command, $useKeymap} from '@milkdown/kit/utils';
-import {commandsCtx} from '@milkdown/kit/core';
-import {wrapInList} from '@milkdown/kit/prose/schema-list';
-import {redoCommand, undoCommand} from '@milkdown/kit/plugin/history';
-import {toggleMark} from '@milkdown/kit/prose/commands';
+import {$command, $useKeymap} from '@milkdown/utils';
+import {commandsCtx} from '@milkdown/core';
+import {wrapInList} from '@milkdown/prose/schema-list';
+import {redoCommand, undoCommand} from '@milkdown/plugin-history';
+import {toggleMark} from '@milkdown/prose/commands';
 import {
   toggleEmphasisCommand,
   toggleStrongCommand,
@@ -16,11 +16,11 @@ import {
   orderedListSchema,
   liftListItemCommand,
   sinkListItemCommand,
-} from '@milkdown/kit/preset/commonmark';
+} from '@milkdown/preset-commonmark';
 import {
   insertTableCommand,
   toggleStrikethroughCommand,
-} from '@milkdown/kit/preset/gfm';
+} from '@milkdown/preset-gfm';
 import {supSchema, subSchema} from './schemas';
 
 export const bulletWrapCommand = $command('BulletListWrap', (ctx) => () => wrapInList(bulletListSchema.type(ctx)));

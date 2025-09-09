@@ -1,5 +1,5 @@
-import {$nodeSchema} from '@milkdown/kit/utils';
-import {htmlAttr} from '@milkdown/kit/preset/commonmark';
+import {$nodeSchema} from '@milkdown/utils';
+import {htmlAttr} from '@milkdown/preset-commonmark';
 
 const html = $nodeSchema('html', (ctx) => ({
   group: 'inline',
