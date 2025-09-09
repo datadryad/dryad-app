@@ -39,17 +39,17 @@ module StashEngine
       if @identifier.payment_type == 'stripe'
         # if it's already invoiced, show a warning
         @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
-        render :curation_activity_error and return
+        render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
       elsif params[:waiver_basis] == 'none'
         @error_message = 'No waiver message selected, so waiver was not applied.'
-        render :curation_activity_error and return
+        render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
       elsif params[:waiver_basis] == 'other'
         basis = 'unspecified'
         if params[:other].present?
           basis = params[:other]
         else
           @error_message = 'No waiver message selected, so waiver was not applied.'
-          render :curation_activity_error and return
+          render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
         end
       else
         basis = params[:waiver_basis]
