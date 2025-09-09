@@ -18,7 +18,7 @@ class ApplicationMailer < ActionMailer::Base
 
   def assign_variables(resource)
     @resource = resource
-    @title = resource.title.strip_tags
+    @title = resource.title&.strip_tags
     @user = resource.submitter || resource.owner_author
     @user_name = user_name(@user)
     @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
@@ -42,10 +42,5 @@ class ApplicationMailer < ActionMailer::Base
     return "[#{Rails.env}] " unless Rails.env.include?('production')
 
     ''
-  end
-
-  def address_list(addresses)
-    addresses = [addresses] unless addresses.respond_to?(:join)
-    addresses.flatten.reject(&:blank?).join(',')
   end
 end

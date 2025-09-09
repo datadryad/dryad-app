@@ -632,7 +632,7 @@ namespace :identifiers do
 
     log "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
-      csv << %w[DOI CreatedDate CurationStartDate ApprovalDate
+      csv << %w[DOI ArticleDOI CreatedDate CurationStartDate ApprovalDate
                 Size PaymentType PaymentID WaiverBasis InstitutionName
                 JournalName JournalISSN SponsorName CurrentStatus]
 
@@ -649,7 +649,7 @@ namespace :identifiers do
           break r.curation_start_date if r.curation_start_date.present?
         end
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
-        csv << [i.identifier, created_date_str, curation_start_date_str, approval_date_str,
+        csv << [i.identifier, i.publication_article_doi, created_date_str, curation_start_date_str, approval_date_str,
                 i.storage_size, i.payment_type, i.payment_id, i.waiver_basis, i.submitter_affiliation&.long_name,
                 i.publication_name, i.publication_issn, i.journal&.sponsor&.name, i&.resources&.last&.current_curation_status]
       end
@@ -713,8 +713,8 @@ namespace :identifiers do
     exit
   end
 
-  # example: RAILS_ENV=production bundle exec rake identifiers:journal_2025_reports -- --sc_report /path/to/file
-  desc 'Generate reports of items that should be billed for tiered journals'
+  # example: RAILS_ENV=production bundle exec rake identifiers:journal_2025_fee_reports -- --sc_report /path/to/file
+  desc 'Generate reports of items that should be billed for 2025 journals'
   task journal_2025_fee_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report)
     # Get the input shopping cart report in --base_report and --sc_report arguments.
@@ -730,7 +730,7 @@ namespace :identifiers do
   end
 
   # example: RAILS_ENV=production bundle exec rake identifiers:tenant_2025_fee_reports -- --sc_report /path/to/file
-  desc 'Generate reports of items that should be billed for tiered journals'
+  desc 'Generate reports of items that should be billed for 2025 tenants'
   task tenant_2025_fee_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report)
     # Get the input shopping cart report in --base_report and --sc_report arguments.
@@ -1429,7 +1429,7 @@ namespace :journals do
     log 'Processing with DRY_RUN' if dry_run
 
     jj = Stash::Salesforce.db_query("SELECT Id, Name FROM Account where Type='Journal'")
-    jj.find_each do |j|
+    jj.find_all do |j|
       found_journal = StashEngine::Journal.find_by_title(j['Name'])
       log "MISSING from Dryad -- #{j['Name']}" unless found_journal.present?
     end
