@@ -5,10 +5,6 @@ module Reminders
     # - email is sent monthly starting from first month until 1 year
     # - after 1 year the resource should get deleted
     def send_in_progress_reminders
-      # return if time is less than 1 month since the bulk still in_progress email was sent
-      # This can be deleted after 21 Aug 2025
-      return true if Time.current < '21-08-2025'.to_date
-
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
         .where(stash_engine_curation_activities: { status: 'in_progress' })
         .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..1.months.ago.end_of_day })
@@ -24,6 +20,7 @@ module Reminders
           create_activity(reminder_flag, resource)
         end
       rescue StandardError => e
+        aaa
         p "    Exception! #{e.message}"
       end
       true

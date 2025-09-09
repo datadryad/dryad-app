@@ -1,3 +1,4 @@
+# :nocov:
 require_relative 'reports/ror_author_datasets'
 require_relative 'reports/institution_datasets'
 namespace :reports do
@@ -38,3 +39,4 @@ namespace :reports do
     Tasks::Reports::GREI.generate_monthly_report
   end
 end
+# :nocov:

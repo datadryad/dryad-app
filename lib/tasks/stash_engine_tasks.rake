@@ -712,7 +712,7 @@ namespace :identifiers do
   end
 
   # example: RAILS_ENV=production bundle exec rake identifiers:journal_2025_fee_reports -- --sc_report /path/to/file
-  desc 'Generate reports of items that should be billed for tiered journals'
+  desc 'Generate reports of items that should be billed for 2025 journals'
   task journal_2025_fee_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report)
     # Get the input shopping cart report in --base_report and --sc_report arguments.
@@ -728,7 +728,7 @@ namespace :identifiers do
   end
 
   # example: RAILS_ENV=production bundle exec rake identifiers:tenant_2025_fee_reports -- --sc_report /path/to/file
-  desc 'Generate reports of items that should be billed for tiered journals'
+  desc 'Generate reports of items that should be billed for 2025 tenants'
   task tenant_2025_fee_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report)
     # Get the input shopping cart report in --base_report and --sc_report arguments.
