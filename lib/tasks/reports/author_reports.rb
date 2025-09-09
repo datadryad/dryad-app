@@ -1,3 +1,4 @@
+# :nocov:
 require 'byebug'
 require 'csv'
 
@@ -102,3 +103,4 @@ module Tasks
     end
   end
 end
+# :nocov:

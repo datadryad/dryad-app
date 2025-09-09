@@ -1,0 +1,6 @@
+DOI,CreatedDate,CurationStartDate,ApprovalDate,Size,PaymentType,PaymentID,WaiverBasis,InstitutionName,JournalName,JournalISSN,SponsorName,CurrentStatus
+10.5061/dryad.dfn2z34z3,2020-05-29,2024-08-29,2025-01-06,324202,2025,ncsu,,North Carolina State University,Sage Open,1111-2222,,published
+10.7291/D1MM4X,2020-08-31,2021-10-15,2025-01-21,61042,2025,ucsc,,"University of California, Santa Cruz",Ecology of Freshwater Fish,1111-2222,,published
+10.7291/D1MM4X,2020-08-31,2021-10-15,2025-01-21,61042,journal-TIERED,ucsc,,"University of California, Santa Cruz",Ecology of Freshwater Fish,1111-2222,,published
+10.5061/dryad.wpzgmsbm9,2021-01-28,2021-01-29,2025-01-28,45160,2025,2056-3744,,Monash University,Evolution Letters,1111-3333,Society for the Study of Evolution,published
+10.5061/dryad.wpzgmsbm9,2021-01-28,2021-01-29,2025-01-28,45160,2025,2056-3744,,Monash University,Evolution Letters,1111-4444,Society for the Study of Evolution,published

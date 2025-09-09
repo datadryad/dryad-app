@@ -1,3 +1,4 @@
+# :nocov:
 require 'stash/link_out'
 
 namespace :link_out do
@@ -140,3 +141,4 @@ namespace :link_out do
   end
 
 end
+# :nocov:

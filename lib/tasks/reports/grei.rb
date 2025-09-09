@@ -1,3 +1,4 @@
+# :nocov:
 module Tasks
   module Reports
     # rubocop:disable Metrics/ModuleLength
@@ -161,3 +162,4 @@ module Tasks
     # rubocop:enable Metrics/ModuleLength
   end
 end
+# :nocov:

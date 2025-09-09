@@ -43,9 +43,4 @@ class ApplicationMailer < ActionMailer::Base
 
     ''
   end
-
-  def address_list(addresses)
-    addresses = [addresses] unless addresses.respond_to?(:join)
-    addresses.flatten.reject(&:blank?).join(',')
-  end
 end
