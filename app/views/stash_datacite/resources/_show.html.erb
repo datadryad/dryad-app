@@ -17,15 +17,14 @@
 <% end %>
 
 <%= render partial: "stash_datacite/descriptions/show",
-     locals: { abstract: review.abstract, methods: '', other: '' } %>
+     locals: { abstract: review.abstract, methods: '', other: '', changelog: '' } %>
 
 <% if @resource.display_readme? %>
   <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review } %>
 <% end %>
 
 <%= render partial: "stash_datacite/descriptions/show",
-   locals: { abstract: '', methods: review.methods,
- other: review.other } %>
+   locals: { abstract: '', methods: review.methods, other: review.other, changelog: review.changelog } %>
 
 <%# takes local of identifier, no_link == true means don't link metrics %>
 <% no_link = false unless defined?(no_link) %>
