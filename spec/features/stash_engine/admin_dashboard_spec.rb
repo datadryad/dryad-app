@@ -274,7 +274,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
         context :in_curation do
           before(:each) do
-            create(:curation_activity_no_callbacks, status: 'curation', user_id: @curator.id, resource_id: @resource.id)
+            create(:curation_activity, status: 'curation', user_id: @curator.id, resource_id: @resource.id)
             @resource.update(user_id: @curator.id, accepted_agreement: true)
             @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)
             visit stash_url_helpers.admin_dashboard_path

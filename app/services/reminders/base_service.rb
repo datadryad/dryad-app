@@ -10,12 +10,12 @@ module Reminders
 
     def create_activity(flag, resource, status: nil, note: nil)
       status ||= resource.last_curation_activity.status
-      StashEngine::CurationActivity.create(
-        resource_id: resource.id,
+      CurationService.new(
+        resource: resource,
         user_id: 0,
         status: status,
         note: note || "#{flag} - reminded submitter that this item is still `#{status}`"
-      )
+      ).process
     end
 
     def log(message)

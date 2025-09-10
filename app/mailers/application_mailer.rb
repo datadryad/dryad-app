@@ -30,12 +30,12 @@ class ApplicationMailer < ActionMailer::Base
   def update_activities(resource:, message:, status:, journal: false)
     recipient = journal ? 'journal' : 'author'
     note = "#{message} notification sent to #{recipient}"
-    StashEngine::CurationActivity.create(
+    CurationService.new(
       resource: resource,
       user_id: 0, # system user
       note: note,
       status: status
-    )
+    ).process
   end
 
   def rails_env

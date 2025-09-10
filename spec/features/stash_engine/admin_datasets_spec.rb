@@ -13,7 +13,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       create(:tenant)
       @user = create(:user, tenant_id: 'ucop')
       @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
-      create(:curation_activity_no_callbacks, status: 'curation', user_id: @user.id, resource_id: @resource.id)
+      create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: @resource.id)
       @resource.resource_states.first.update(resource_state: 'submitted')
       sign_in(create(:user, role: 'curator'))
       visit("#{stash_url_helpers.admin_dashboard_path}?curation_status=curation")
@@ -148,7 +148,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       end
 
       it 'changes delete reference date' do
-        create(:curation_activity_no_callbacks, status: 'action_required', user_id: @user.id, resource_id: @resource.id)
+        create(:curation_activity, status: 'action_required', user_id: @user.id, resource_id: @resource.id)
         refresh
         within(:css, '#activity_log_table tbody:last-child') do
           find('button[aria-label="Curation activity"]').click

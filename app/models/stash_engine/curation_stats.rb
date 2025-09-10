@@ -84,7 +84,7 @@ module StashEngine
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
       CurationActivity.where(
-        created_at: date..(date + 1.day), status: %w[action_required embargoed published]
+        created_at: date..(date + 1.day), status: %w[action_required embargoed published to_be_published]
       ).includes(resource: :identifier).find_each do |ca|
         next unless ca&.resource&.identifier
 
@@ -233,7 +233,7 @@ module StashEngine
 
     # The number embargoed that day (status change from 'curation' to 'embargoed' per day)
     def populate_datasets_to_embargoed
-      update(datasets_to_embargoed: datasets_transitioned(from_status: 'curation', to_status: 'embargoed'))
+      update(datasets_to_embargoed: datasets_transitioned(from_status: 'curation', to_status: %w[embargoed to_be_published]))
     end
 
     # The number withdrawn that day (status change from any status to 'withdrawn')
@@ -282,7 +282,7 @@ module StashEngine
         ident = ca.resource.identifier
         next if datasets_found.include?(ident.id)
 
-        datasets_found.add(ident.id) if %w[published embargoed].include?(ident.pub_state)
+        datasets_found.add(ident.id) if %w[published embargoed to_be_published].include?(ident.pub_state)
       end
 
       update(author_versioned: datasets_found.size)
