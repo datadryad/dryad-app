@@ -27,9 +27,9 @@ module StashEngine
         redirect_to stash_url_helpers.choose_sso_path and return
       end
 
-      if %w[email shibboleth].include?(current_user.tenant.authentication&.strategy) &&
-        # exclude UC from reauth because of account problems
-        !current_user.tenant_id&.start_with?('uc') &&
+      if current_user.tenant&.payment_configuration&.covers_dpc? && %w[email shibboleth].include?(current_user.tenant.authentication&.strategy) &&
+        # exclude UCSD from reauth because of account problems
+        current_user.tenant_id != 'ucsd' &&
         (current_user.tenant_auth_date.blank? || current_user.tenant_auth_date.before?(1.month.ago))
         redirect_to stash_url_helpers.choose_sso_path(reverify: true) and return
       end
