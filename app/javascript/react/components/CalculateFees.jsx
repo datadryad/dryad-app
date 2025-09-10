@@ -4,7 +4,7 @@ import {formatSizeUnits} from '../../lib/utils';
 import {ExitIcon} from './ExitButton';
 
 export default function CalculateFees({
-  resource, fees, setFees, ppr = false, invoice = false,
+  current, resource, fees, setFees, ppr = false, invoice = false,
 }) {
   const paid = !!resource.identifier.last_invoiced_file_size;
 
@@ -16,8 +16,8 @@ export default function CalculateFees({
   };
 
   useEffect(() => {
-    calculateFees();
-  }, [ppr]);
+    if (current) calculateFees();
+  }, [ppr, current]);
 
   /* eslint-disable max-len */
   if (paid && fees.storage_fee_label) {

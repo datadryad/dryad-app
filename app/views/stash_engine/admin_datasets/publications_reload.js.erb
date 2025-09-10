@@ -1,2 +1,3 @@
-document.getElementById('related_works_list').innerHTML = '<%= @resource.resource_publication&.publication_name&.present? ? "#{@resource.resource_publication&.publication_name}, " : "" %> <%= @resource.resource_publication&.manuscript_number&.presence || ""%><br/><%= @resource.related_identifiers.empty? ? "" : "#{@resource.related_identifiers.size} related work#{@resource.related_identifiers.size > 1 ? "s" : ""}" %>'
-document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'stash_engine/admin_datasets/publications_popup') %>";
+document.getElementById('related_works_list').innerHTML = '<%= display_publications(@resource) %>'
+document.getElementById('genericModalContent').innerHTML = '';
+document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/publications_popup') %>"));

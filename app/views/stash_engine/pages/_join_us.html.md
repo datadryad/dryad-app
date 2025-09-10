@@ -91,4 +91,4 @@ Consult the links below to estimate fees with our fee calculator and explore our
 
 ## Our partners
 
-Our partner community spans a wide spectrum of stakeholder organizations including academic and research institutions of all sizes as well as publishing organizations and scholarly societies. See [our complete partner list](/about#our-members).
+Our partner community spans a wide spectrum of stakeholder organizations including academic and research institutions of all sizes as well as publishing organizations and scholarly societies. See [our complete partner list](/about#our-partners).

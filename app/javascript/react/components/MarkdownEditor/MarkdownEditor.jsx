@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {
   Editor, rootCtx, schemaCtx, serializerCtx, editorViewCtx, remarkCtx, remarkStringifyOptionsCtx, rootDOMCtx, defaultValueCtx,
-} from '@milkdown/kit/core';
+} from '@milkdown/core';
 import {
   Milkdown, MilkdownProvider, useEditor, useInstance,
 } from '@milkdown/react';
-import {history} from '@milkdown/kit/plugin/history';
-import {listener as listen, listenerCtx} from '@milkdown/kit/plugin/listener';
-import {trailing} from '@milkdown/kit/plugin/trailing';
-import {commonmark} from '@milkdown/kit/preset/commonmark';
-import {gfm} from '@milkdown/kit/preset/gfm';
-import {replaceAll} from '@milkdown/kit/utils';
-import {ParserState} from '@milkdown/kit/transformer';
+import {history} from '@milkdown/plugin-history';
+import {listener as listen, listenerCtx} from '@milkdown/plugin-listener';
+import {trailing} from '@milkdown/plugin-trailing';
+import {commonmark} from '@milkdown/preset-commonmark';
+import {gfm} from '@milkdown/preset-gfm';
+import {replaceAll} from '@milkdown/utils';
+import {ParserState} from '@milkdown/transformer';
 import CodeEditor from './CodeEditor';
 import Button from './Button';
 import dryadConfig from './milkdownConfig';

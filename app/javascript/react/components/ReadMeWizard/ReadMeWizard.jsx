@@ -42,7 +42,7 @@ export default function ReadMeWizard({resource, setResource, current}) {
   return (
     <ReadMe
       dcsDescription={desc}
-      title={resource.title.replace(/<\/?(em|i)>/g, '*').replace(/<\/?sup>/g, '^').replace(/<\/?sub>/g, '~')}
+      title={resource.title?.replace(/<\/?(em|i)>/g, '*')?.replace(/<\/?sup>/g, '^')?.replace(/<\/?sub>/g, '~')}
       doi={resource.identifier.identifier}
       setResource={setResource}
       fileList={fileList}
@@ -88,7 +88,7 @@ function ReadMe({
   const assembleValue = () => {
     let v = `# ${
       wizardContent.title || 'Dryad dataset'
-    }\n\nDataset DOI: [${wizardContent.doi}](${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
+    }\n\nDataset DOI: [${wizardContent.doi}](https://doi.org/${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
     if (wizardContent.step1) v += wizardContent.step1;
     if (wizardContent.step2) v += `### ${secTitles[1]}\n\n${wizardContent.step2}`;
     [3, 4].forEach((s) => {
@@ -180,6 +180,7 @@ function ReadMe({
             'aria-errormessage': 'readme_error',
             'aria-labelledby': 'md_editor_label',
             'aria-describedby': 'md_editor_desc',
+            name: 'readme_editor',
           }}
           initialValue={initialValue}
           replaceValue={replaceValue}

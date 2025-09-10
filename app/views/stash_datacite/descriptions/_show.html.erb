@@ -1,21 +1,21 @@
-<% unless abstract.try(:description).blank? %>
-    <h2 class="o-heading__level2">Abstract</h2>
-    <div class="t-landing__text-wall">
-      <%= raw(display_desc(abstract.description)) %>
-    </div>
-<% end %>
-
-<% unless methods.try(:description).blank? %>
-  <h2 class="expand-button"><button id="methods" aria-expanded="false" aria-controls="methods-sec">Methods</button></h2>
-  <div id="methods-sec" hidden class="t-landing__text-wall">
-    <%= raw(display_desc(methods.description)) %>
+<% unless abstract.blank? %>
+  <h2 class="o-heading__level2">Abstract</h2>
+  <div class="t-landing__text-wall">
+    <%= raw(display_desc(abstract)) %>
   </div>
 <% end %>
 
-<% unless other.try(:description).blank? %>
+<% unless methods.blank? %>
+  <h2 class="expand-button"><button id="methods" aria-expanded="false" aria-controls="methods-sec">Methods</button></h2>
+  <div id="methods-sec" hidden class="t-landing__text-wall">
+    <%= raw(display_desc(methods)) %>
+  </div>
+<% end %>
+
+<% unless other.blank? %>
   <h2 class="expand-button"><button id="usage" aria-expanded="false" aria-controls="usage-sec">Usage notes</button></h2>
   <div id="usage-sec" hidden class="t-landing__text-wall">
-    <%= raw(display_desc(other.description)) %>
+    <%= raw(display_desc(other)) %>
   </div>
 <% end %>
 

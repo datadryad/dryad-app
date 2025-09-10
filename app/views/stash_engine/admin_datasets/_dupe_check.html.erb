@@ -2,7 +2,7 @@
   <p><b>Potential duplicates:</b> The following submissions may be duplicates of this one based on title or primary article match.</p>
   <ul style="margin: 0 0 1rem">
     <% @dupes.each do |dupe| %>
-      <li><%= link_to dupe.title.html_safe, stash_url_helpers.activity_log_path(id: dupe.identifier_id), target: '_blank' %></li>
+      <li><%= link_to dupe.title&.html_safe, stash_url_helpers.activity_log_path(id: dupe.identifier_id), target: '_blank' %></li>
     <% end %>
   </ul>
 <% end %>

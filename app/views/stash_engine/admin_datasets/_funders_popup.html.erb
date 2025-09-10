@@ -1,4 +1,9 @@
 <h1>Edit funders</h1>
+<% unless @resource.contributors.funder.empty? %>
+  <div class="callout">
+    <p style="font-size: .98rem">To switch from a matched to an unmatched funder name, select the blank dropdown option before entering new text.</p>
+  </div>
+<% end %>
 <% @resource.contributors.funder.each do |funder| %>
   <%= form_with(url: contributors_update_path(format: :js), method: :patch, local: false, html: {style: 'margin-bottom: 2rem; background-color: #f2f2f2; padding: 6px;'}) do |form| -%>
     <div class="input-line" style="max-width: 100%; flex-wrap: wrap;"">
@@ -6,6 +11,7 @@
         <%= f.hidden_field :id %>
         <%= f.hidden_field :resource_id %>
         <%= f.hidden_field :name_identifier_id %>
+        <%= f.hidden_field :contributor_name %>
         <div class="input-stack" style="flex: 3;">
           <%= render partial: 'stash_engine/shared/search_select', locals: {
             id: "funder#{funder.id}",
@@ -84,11 +90,12 @@
 <script type="text/javascript">
   var selects = document.getElementsByClassName('c-input__select')
   Array.from(selects).forEach(select => select.addEventListener('blur', () => {
+    const unmatched = select.form.querySelector('input[role="combobox"')
     const id = select.form.elements['[value]'];
     const name = select.form.elements['[label]'];
     const realid = select.form.elements['[contributor][name_identifier_id]'];
     const realname = select.form.elements['[contributor][contributor_name]'];
     realid.value = id.value;
-    realname.value = name.value;
+    realname.value = id.value && name.value || unmatched.value;
   }))
 </script>

@@ -33,11 +33,13 @@ export default function SubmissionHelp({type}) {
   );
 }
 
-export function PublicationHelp() {
+export function PublicationHelp({type}) {
   return (
     <>
       <p>If your submission is linked to an article, preprint, or manuscript, sharing that information connects your data to the work. Metadata information for your submission can be imported from some connections.</p>
-      <p>Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      {type === 'dataset' && (
+        <p>Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      )}
     </>
   );
 }
@@ -86,7 +88,9 @@ export function SuppHelp({type}) {
   return (
     <>
       <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can help connect your data with other systems and works.</p>
-      <p>Your funder may cover the Dryad <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      {type === 'dataset' && (
+        <p>Your funder may cover the Dryad <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      )}
     </>
   );
 }

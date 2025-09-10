@@ -1,5 +1,5 @@
-import {markRule} from '@milkdown/kit/prose';
-import {$inputRule, $markAttr, $markSchema} from '@milkdown/kit/utils';
+import {markRule} from '@milkdown/prose';
+import {$inputRule, $markAttr, $markSchema} from '@milkdown/utils';
 
 export const supAttr = $markAttr('superscript');
 

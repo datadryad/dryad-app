@@ -3,7 +3,8 @@ Set up Amazon AWS CloudWatch Agent
 
 AWS CloudWatch Agent is installed on all servers and is used for:
 - Serving metrics related to disk usage.
-- Stream log files to Cloudwatch
+- Stream log files to Cloudwatch.
+- Attach SSMInstanceProfile (or a role with the required policies) to your EC2 instance.
 
 To install the agent, follow the steps below:
 -----------------------------
@@ -119,10 +120,12 @@ Start and enable the service
 
 Change ownership to files. The service will run as `cwagent` user.
 ```
+cd /opt/aws/amazon-cloudwatch-agent/
 sudo chown cwagent:cwagent -R etc
 sudo chown cwagent:cwagent -R logs
 sudo chown cwagent:cwagent -R var
 
+sudo systemctl enable amazon-cloudwatch-agent
 sudo systemctl restart amazon-cloudwatch-agent
 ```
 

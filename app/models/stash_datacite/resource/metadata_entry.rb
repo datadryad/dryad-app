@@ -9,6 +9,7 @@ module StashDatacite
         @resource.update(tenant_id: tenant_id)
         @resource.fill_blank_author!
         ensure_author_orcid
+        ensure_license if @type == 'collection'
       end
 
       def resource_type
@@ -102,6 +103,12 @@ module StashDatacite
       end
 
       private
+
+      def ensure_license
+        return if @resource.identifier.license_id.present?
+
+        @resource.identifier.update(license_id: 'cc0')
+      end
 
       # ensures that one author has the orcid of the owner of this dataset
       def ensure_author_orcid

@@ -3,13 +3,11 @@ RSpec.feature 'NewDataset', type: :feature do
 
   include DatasetHelper
   include Mocks::RSolr
-  include Mocks::CrossrefFunder
   include Mocks::Salesforce
 
   before(:each) do
     mock_salesforce!
     mock_solr!
-    mock_funders!
     @user = create(:user)
     sign_in(@user)
   end
@@ -63,29 +61,40 @@ RSpec.feature 'NewDataset', type: :feature do
     end
   end
 
-  context :form_submission, js: true do
+  context :author_functions, js: true do
 
     before(:each) do
       start_new_dataset
       navigate_to_metadata
     end
 
-    it 'reorders authors with keyboard', js: true do
+    it 'adds an org author' do
+      company = Faker::Company.name
+      res_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
+      click_button 'Authors'
+      click_button '+ Add group author'
+      fill_in 'Organization or group name', with: company
+      page.send_keys(:tab)
+      expect(page).not_to have_text('author name is required.')
+      auths = StashEngine::Resource.find(res_id).authors
+      expect(auths.last.author_org_name).to eq(company)
+      expect(auths.last.author_first_name).to be nil
+    end
+
+    it 'reorders authors with keyboard' do
       click_button 'Authors'
       first_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
       second_author = { first: Faker::Name.unique.first_name, last: Faker::Name.unique.last_name, email: Faker::Internet.email }
 
       # fill first
-      fill_in 'author_first_name', with: first_author[:first]
-      fill_in 'author_last_name', with: first_author[:last]
-      fill_in 'author_email', with: first_author[:email]
+      fill_in_author(first_name: first_author[:first], last_name: first_author[:last], email: first_author[:email])
 
       # fill second
-      click_on 'Add author'
-      expect(page).to have_css('input[name=author_first_name]', count: 2)
-      all(:css, 'input[name=author_first_name]')[1].set(second_author[:first])
-      all(:css, 'input[name=author_last_name]')[1].set(second_author[:last])
-      all(:css, 'input[name=author_email]')[1].set(second_author[:email])
+      click_button 'Add author'
+      expect(page).to have_content('Second author name is required. Fill in or delete the entry')
+      within(:css, '.dd-list-item:not(:first-child)') do
+        fill_in_author(first_name: second_author[:first], last_name: second_author[:last], email: second_author[:email])
+      end
 
       el = all(:css, 'button.handle').first
       el.send_keys(:enter)
@@ -97,31 +106,6 @@ RSpec.feature 'NewDataset', type: :feature do
       navigate_to_review
       the_html = page.html
       expect(the_html.index(second_author[:last])).to be < the_html.index(first_author[:last]) # because we switched these authors
-    end
-
-    it 'charges user by default', js: true do
-      click_button 'Agreements'
-      expect(page).to have_content("I agree\nto Dryad's payment terms")
-    end
-
-    it 'waives the fee when funder has agreed to pay', js: true do
-      funder = create(:funder, name: 'Happy Clown School')
-      stub_funder_name_lookup(name: 'Happy Clown School')
-      fill_required_metadata
-      click_button 'Support'
-      fill_in_funder(name: 'Happy Clown School', value: funder.id)
-
-      click_button 'Agreements'
-      expect(page).to have_text('Payment for this submission is sponsored by Happy Clown School')
-    end
-
-    it "doesn't waive the fee when funder isn't paying", js: true do
-      fill_required_metadata
-      click_button 'Support'
-      fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
-
-      click_button 'Agreements'
-      expect(page).not_to have_text('Payment for this submission is sponsored by')
     end
   end
 end

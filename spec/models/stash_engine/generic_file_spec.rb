@@ -68,6 +68,7 @@ require 'cgi'
 
 module StashEngine
   describe GenericFile do
+    include Mocks::Salesforce
 
     # this is just to be sure that Single Table Inheritance is set up correctly
     describe 'works for subclasses' do
@@ -201,20 +202,28 @@ module StashEngine
       end
 
       describe 'amoeba duplication' do
+        let!(:resource) { create(:resource, created_at: 2.minutes.ago) }
+        let!(:created_file) { create(:data_file, resource: resource, file_state: 'created', download_filename: 'foo.bar') }
+
         before(:each) do
-          create(:frictionless_report, generic_file: @upload)
-          create(:sensitive_data_report, generic_file: @upload)
-          @resource2 = @resource.amoeba_dup
-          @resource2.save
-          @upload2 = GenericFile.last
+          mock_salesforce!
+          resource.current_state = 'submitted'
+
+          create(:frictionless_report, generic_file: created_file)
+          create(:sensitive_data_report, generic_file: created_file)
+          @new_resource = resource.amoeba_dup
+          @new_resource.save!
+          @new_resource.reload
         end
 
-        it 'copies frictionless report' do
-          expect(@upload2.frictionless_report.id).not_to eq(@upload.frictionless_report.id)
-          expect(@upload2.frictionless_report.report).to eq(@upload.frictionless_report.report)
+        it 'does not copy frictionless report' do
+          copied_file = @new_resource.reload.generic_files.last.reload
 
-          expect(@upload2.sensitive_data_report.id).not_to eq(@upload.sensitive_data_report.id)
-          expect(@upload2.sensitive_data_report.report).to eq(@upload.sensitive_data_report.report)
+          expect(created_file.file_state).to eq('created')
+          expect(copied_file.file_state).to eq('copied')
+
+          expect(copied_file.frictionless_report.id).to eq(created_file.frictionless_report.id)
+          expect(copied_file.sensitive_data_report.id).to eq(created_file.sensitive_data_report.id)
         end
       end
     end

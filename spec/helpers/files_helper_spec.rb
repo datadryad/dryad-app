@@ -7,7 +7,7 @@ RSpec.describe FilesHelper, type: :helper do
     let(:shortened_name) { 'Test Document.pdf' }
 
     before do
-      allow(file.upload_file_name).to receive(:ellipsisize).with(200).and_return(shortened_name)
+      allow(file.download_filename).to receive(:ellipsisize).with(200).and_return(shortened_name)
       allow(helper).to receive(:download_stream_path).with(params).and_return('/download/123')
     end
 

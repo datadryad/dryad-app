@@ -15,8 +15,8 @@
 <p>In all of our convenings we are committed to abiding by our <a href="/code_of_conduct">Code of conduct</a>.</p>
 
 ## Get to know Dryad
-<h3 class="expand-button"><button id="our-members" aria-expanded="false" aria-controls="our-members-sec">Our partners</button></h3>
-<div class="about-page" id="our-members-sec" hidden>
+<h3 class="expand-button"><button id="our-partners" aria-expanded="false" aria-controls="our-partners-sec">Our partners</button></h3>
+<div class="about-page" id="our-partners-sec" hidden>
 <p>Dryad partners are part of a global non-profit community working together to promote data curation, publication, and preservation across all scientific disciplines. Partners sponsor the cost of Dryad services for affiliated researchers at a reduced rate, and receive access to our administrative dashboard, as well as support, training, and outreach. Partnership is open to all organizations, including institutions, publishers, academic societies, and others. <a href="/join_us">Learn more about partnering with Dryad.</a>.</p>
 <p>We’re enormously proud of our current partnerships, which include the following organizations:</p>
 <h4>Academic and research institutions</h4>
@@ -69,7 +69,7 @@
 
 ## Collaborations
 
-Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](#our-members) and [how to join us](/join_us).
+Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](#our-partners) and [how to join us](/join_us).
 
 Dryad advocates for community-adopted standards for metadata and persistent identifiers in concert with DataCite, ORCID, ROR, and Funder Registry. 
 

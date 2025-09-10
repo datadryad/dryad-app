@@ -40,9 +40,10 @@
 require 'byebug'
 module StashEngine
   class DataFile < GenericFile
+    attr_accessor :skip_total_recalculation
     has_many :container_files, class_name: 'StashEngine::ContainerFile', dependent: :delete_all
 
-    after_commit :recalculate_total
+    after_commit :recalculate_total, unless: :skip_total_recalculation
 
     def recalculate_total
       StashEngine::Resource.find_by(id: resource.id)&.update(total_file_size: resource.data_files.present_files.sum(:upload_file_size))
