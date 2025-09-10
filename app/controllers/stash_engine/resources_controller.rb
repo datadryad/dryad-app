@@ -171,7 +171,7 @@ module StashEngine
         funder_will_pay: @resource.identifier.funder_will_pay?,
         user_must_pay: @resource.identifier.user_must_pay?,
         paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
-        aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.partner_list&.first,
+        aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.connect_list&.first,
         allow_review: @resource.identifier.allow_review?,
         automatic_ppr: @resource.identifier.automatic_ppr?,
         man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
