@@ -1,4 +1,4 @@
-import {editorViewOptionsCtx} from '@milkdown/kit/core';
+import {editorViewOptionsCtx} from '@milkdown/core';
 import 'prosemirror-view/style/prosemirror.css';
 import 'prosemirror-tables/style/tables.css';
 import './milkdown_editor.css';

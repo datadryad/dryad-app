@@ -1,12 +1,12 @@
-<h1 class="o-heading__level1"><%= review.title_str.html_safe %></h1>
+<h1 class="o-heading__level1"><%= resource.title&.html_safe %></h1>
 <div class="t-landing__metadata o-metadata">
-  <%= render partial: "stash_datacite/authors/show", locals: { authors: review.authors, highlight_fields: [] } %>
-  <%= render partial: "stash_datacite/publishers/publication_info", locals: {resource: resource, highlight: false } %>
+  <%= render partial: "stash_datacite/authors/show", locals: { authors: @resource.authors } %>
+  <%= render partial: "stash_datacite/publishers/publication_info", locals: { resource: @resource } %>
 </div>
 
 <% if @user_type == 'privileged' && current_user.id == @resource&.dataset_in_progress_editor_id %>
   <div class="callout warn">
-    <p><i class="fas fa-triangle-exclamation"></i> Changes are in progress! To see your in progress changes here, <%= link_to 'complete and submit your edits', metadata_entry_pages_find_or_create_path(resource_id: @resource.identifier.in_progress_resource.id), class: 'js-nav-out'%></p>
+    <p><i class="fas fa-triangle-exclamation"></i> Changes are in progress! To see your in progress changes here, <%= link_to 'complete and submit your edits', metadata_entry_pages_find_or_create_path(resource_id: @id.in_progress_resource.id), class: 'js-nav-out'%></p>
   </div>
 <% end %>
 
@@ -17,16 +17,14 @@
 <% end %>
 
 <%= render partial: "stash_datacite/descriptions/show",
-     locals: { abstract: review.abstract, methods: '',
-   other: '', changelog: '', highlight_fields: [] } %>
+     locals: { abstract: review.abstract, methods: '', other: '', changelog: '' } %>
 
 <% if @resource.display_readme? %>
-  <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review, highlight_fields: [] } %>
+  <%= render partial: "stash_datacite/descriptions/readme", locals: { review: review } %>
 <% end %>
 
 <%= render partial: "stash_datacite/descriptions/show",
-   locals: { abstract: '', methods: review.methods,
- other: review.other, changelog: review.changelog, highlight_fields: [] } %>
+   locals: { abstract: '', methods: review.methods, other: review.other, changelog: review.changelog } %>
 
 <%# takes local of identifier, no_link == true means don't link metrics %>
 <% no_link = false unless defined?(no_link) %>

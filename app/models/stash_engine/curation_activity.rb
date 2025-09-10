@@ -184,7 +184,7 @@ module StashEngine
 
     def self.allowed_states(current_state, current_user)
       statuses = CURATOR_ALLOWED_STATES[current_state].dup
-      statuses << 'withdrawn' if current_user.superuser? # superusers can withdraw a datasets from any status
+      statuses << 'withdrawn' if current_user.min_manager? # data managers can withdraw a datasets from any status
       statuses.uniq
     end
 

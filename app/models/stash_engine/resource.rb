@@ -151,6 +151,7 @@ module StashEngine
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
           file.file_state = 'copied' if file.file_state == 'created'
+          file.skip_total_recalculation = true if file.is_a?(StashEngine::DataFile)
         end
 
         new_resource.related_identifiers.each_with_index do |ri, i|
@@ -163,9 +164,9 @@ module StashEngine
 
         new_resource.subjects = old_resource.subjects
 
-        # I think there was something weird about Amoeba that required this approach
+        # Remove deleted records before save
         deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-        deleted_files.each(&:destroy)
+        deleted_files.each(&:delete)
       })
     end
 
@@ -763,7 +764,7 @@ module StashEngine
     # Note: the special download links mean anyone with that link may download and this doesn't apply
     def may_download?(ui_user: nil)
       # doing this to avoid collision with the association called user
-      return false unless current_resource_state&.resource_state == 'submitted' # is available in the repo
+      return false unless current_state == 'submitted' # is available in the repo
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
 

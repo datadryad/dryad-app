@@ -9,68 +9,113 @@ RSpec.feature 'ReviewDataset', type: :feature do
   include Mocks::DataFile
   include Mocks::Aws
 
-  before(:each) do
-    mock_solr!
-    mock_repository!
-    mock_salesforce!
-    mock_file_content!
-    mock_aws!
-    @user = create(:user)
-    sign_in(@user)
-  end
+  let(:user) { create(:user) }
+  before(:each) { sign_in(user) }
 
   context :requirements_not_met do
     it 'should disable submit button', js: true do
       start_new_dataset
       navigate_to_review
-      submit = find_button('submit_button', disabled: :all)
+      submit = find_button('submit_button')
       expect(submit).not_to be_nil
       expect(submit['aria-disabled'])
     end
-
   end
 
-  # tests below are very slow
-
   context :requirements_met, js: true do
-    xit 'submit button should be enabled', js: true do
+    before(:each) do
+      mock_solr!
+      mock_repository!
+      mock_salesforce!
+      mock_file_content!
+      mock_aws!
+    end
+
+    it 'submit button should be enabled', js: true do
       start_new_dataset
       fill_required_fields
       navigate_to_review
-      submit = find_button('submit_button', disabled: :all)
+      submit = find_button('submit_button')
       expect(submit).not_to be_nil
-      expect(submit['aria-disabled']).to be false
+      expect(submit['aria-disabled']).to be(nil)
 
       # submits
       submit_form
-      expect(page).to have_content(StashEngine::Resource.last.title)
-      expect(page).to have_content('submitted with DOI')
+      expect(page).to have_content(CGI.unescapeHTML(StashEngine::Resource.last.title.html_safe))
+      expect(page).to have_content("Your dataset with the DOI #{StashEngine::Resource.last.identifier_uri} was submitted for curation")
     end
   end
 
-  context :edit_link do
-    xit 'opens a page with an edit link and redirects when complete', js: true do
-      @identifier = create(:identifier)
-      @identifier.edit_code = Faker::Number.number(digits: 5)
-      @identifier.save
-      @res = create(:resource, identifier: @identifier)
-      create(:data_file, file_state: 'copied', resource: @res, download_filename: 'README.md', upload_file_name: 'README.md')
-      create(:data_file, file_state: 'copied', resource: @res)
-      create(:description, description_type: 'technicalinfo', resource: @res)
-      # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
-      visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fstash%2Fsubmission_process"
+  context :payment, js: true do
+    before(:each) do
+      start_new_dataset
       navigate_to_metadata
-      click_button 'Authors'
-      all('[id^=instit_affil_]').last.set('test institution')
+    end
+
+    it 'charges user by default' do
+      click_button 'Agreements'
+      expect(page).to have_content("I agree\nto Dryad's payment terms")
+    end
+
+    it 'waives the fee when the institution will pay' do
+      create(:tenant_email)
+      user.update(tenant_id: 'email_auth')
+      refresh
+      click_button 'Agreements'
+      expect(page).to have_text('Payment for this submission is sponsored by Email Test Organization')
+    end
+
+    it 'waives the fee when the journal will pay' do
+      tenant = create(:tenant_email)
+      create(:payment_configuration, partner: tenant, payment_plan: nil, covers_dpc: false)
+      journal = create(:journal, title: 'Test Paying Journal')
+      create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
+
+      click_button 'Connect'
+      choose 'Yes'
+      check 'Submitted manuscript'
+      find_field('Journal name').send_keys(journal.title[0..4])
+      expect(page).to have_text(journal.title)
+      find_field('Journal name').send_keys(journal.title[5..])
+      fill_in 'Manuscript number', with: 'NA'
       page.send_keys(:tab)
-      page.has_css?('.use-text-entered')
-      all(:css, '.use-text-entered').each { |i| i.set(true) }
-      click_button 'Subjects'
-      fill_in_keywords
-      navigate_to_review
-      submit_form
-      expect(page.current_path).to eq('/submission_process')
+
+      expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+      click_button 'Agreements'
+      expect(page).to have_text("Payment for this submission is sponsored by #{journal.title}")
+    end
+
+    it "doesn't waive the fee when the journal won't pay" do
+      journal = create(:journal, title: 'Test NonPaying Journal')
+      click_button 'Connect'
+      choose 'Yes'
+      check 'Submitted manuscript'
+      find_field('Journal name').send_keys(journal.title[0..4])
+      expect(page).to have_text(journal.title)
+      find_field('Journal name').send_keys(journal.title[5..])
+      fill_in 'Manuscript number', with: 'NA'
+      page.send_keys(:tab)
+
+      expect(page).not_to have_text("Payment for this submission is sponsored by #{journal.title}")
+      click_button 'Agreements'
+      expect(page).not_to have_text("Payment for this submission is sponsored by #{journal.title}")
+    end
+
+    it 'waives the fee when funder will pay' do
+      create(:funder, name: 'Happy Clown School')
+      click_button 'Support'
+      fill_in_funder(name: 'Happy Clown School')
+
+      click_button 'Agreements'
+      expect(page).to have_text('Payment for this submission is sponsored by Happy Clown School')
+    end
+
+    it "doesn't waive the fee when funder won't pay" do
+      click_button 'Support'
+      fill_in_funder(name: 'Wiring Harness Solutions', value: '12XU')
+
+      click_button 'Agreements'
+      expect(page).not_to have_text('Payment for this submission is sponsored by')
     end
   end
-
 end

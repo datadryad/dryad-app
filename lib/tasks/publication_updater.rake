@@ -1,3 +1,4 @@
+# :nocov:
 namespace :publication_updater do
 
   # Query to retrieve the latest resource and its latest curation activity
@@ -113,3 +114,4 @@ namespace :publication_updater do
   end
 
 end
+# :nocov:

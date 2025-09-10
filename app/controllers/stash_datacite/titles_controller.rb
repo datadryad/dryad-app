@@ -53,6 +53,7 @@ module StashDatacite
         readme.update(description:
           readme.description.gsub(/^\# #{"(#{previous.reverse.map { |t| Regexp.escape(t) }.join('|')}).*$"}/, "# #{newest}"))
       end
+      true
     end
   end
 end

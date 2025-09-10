@@ -1,3 +1,4 @@
+# :nocov:
 namespace :checksums do
   desc 'Download and validate files against their digests'
   task validate_files: :environment do
@@ -74,3 +75,4 @@ namespace :checksums do
     end
   end
 end
+# :nocov:

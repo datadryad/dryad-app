@@ -50,7 +50,6 @@ namespace :dryad_migration do
                issn: pr['issn'],
                website: pr['website'],
                description: pr['description'],
-               payment_plan_type: pr['paymentPlanType'],
                payment_contact: pr['paymentContact'],
                manuscript_number_regex: pr['manuscriptNumberRegex'],
                sponsor_name: pr['sponsorName'],
@@ -58,6 +57,8 @@ namespace :dryad_migration do
                notify_contacts: pr['notifyContacts'],
                review_contacts: pr['reviewContacts'],
                allow_review_workflow: pr['allowReviewWorkflow'])
+      payment = j.payment_configuration || j.build_payment_configuration
+      payment.update(payment_plan: pr['paymentPlanType'].to_s)
       j.save!
     end
   end
