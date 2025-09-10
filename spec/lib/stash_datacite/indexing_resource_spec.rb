@@ -41,6 +41,7 @@ end
 module Stash
   module Indexer
     describe IndexingResource do
+      include Mocks::CurationActivity
       include Mocks::Salesforce
       include Mocks::Datacite
       include Mocks::RSolr
@@ -49,6 +50,7 @@ module Stash
       before(:each) do
         mock_salesforce!
         mock_datacite_gen!
+        neuter_curation_callbacks!
         mock_solr!
         Timecop.travel(Time.utc(2018, 11, 14))
         @user = create(:user)
@@ -101,7 +103,7 @@ module Stash
                        create(:data_file, resource_id: @resource.id), create(:data_file, resource_id: @resource.id)]
         Timecop.travel(Time.utc(2019, 1, 1))
         @resource.update(publication_date: Time.now.utc)
-        create(:curation_activity, :published, resource: @resource)
+        CurationService.new(status: 'published', resource: @resource, user: create(:user, role: 'curator')).process
         Timecop.return
         @resource.reload
         @ir = IndexingResource.new(resource: @resource)

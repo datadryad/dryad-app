@@ -89,10 +89,7 @@ module StashEngine
       # review, so remove the hold_for_peer_review setting
       resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
 
-      StashEngine::CurationActivity.create(resource: resource,
-                                           status: target_status,
-                                           user_id: 0, # system user
-                                           note: target_note)
+      CurationService.new(resource: resource, status: target_status, user_id: 0, note: target_note).process
     end
 
     def self.check_parsing_errors(parser)

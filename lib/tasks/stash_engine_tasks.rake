@@ -52,12 +52,13 @@ namespace :identifiers do
     StashEngine::Resource.includes(identifier: :internal_data).find_each do |resource|
 
       # Create an initial 'in_progress' curation activity for each identifier
-      StashEngine::CurationActivity.create(
+      CurationService.new(
         resource_id: resource.id,
+        status: 'in_progress',
         user_id: resource.submitter.id,
         created_at: resource.created_at,
         updated_at: resource.created_at
-      )
+      ).process
 
       # Using the latest resource and its state, add another activity if the
       # resource's resource_state is 'submitted'
@@ -68,13 +69,13 @@ namespace :identifiers do
       #
       next unless resource.current_state == 'submitted'
 
-      StashEngine::CurationActivity.create(
+      CurationService.new(
         resource_id: resource.id,
         user_id: resource.submitter.id,
         status: resource.identifier.internal_data.empty? ? 'submitted' : 'peer_review',
         created_at: resource.updated_at,
         updated_at: resource.updated_at
-      )
+      ).process
     end
   end
 
@@ -96,12 +97,12 @@ namespace :identifiers do
     ActiveRecord::Base.connection.execute(query).each do |r|
 
       log "Embargoing: Identifier: #{r[1]}, Resource: #{r[0]}"
-      StashEngine::CurationActivity.create(
+      CurationService.new(
         resource_id: r[0],
         user_id: 0,
         status: 'embargoed',
         note: 'Embargo Datasets CRON - publication date has not yet been reached, changing status to `embargo`'
-      )
+      ).process
     rescue StandardError => e
       log "    Exception! #{e.message}"
       next
@@ -118,11 +119,12 @@ namespace :identifiers do
       # only release if it's the latest version of the resource
       next unless res.id == res.identifier.last_submitted_resource.id
 
-      res.curation_activities << StashEngine::CurationActivity.create(
+      CurationService.new(
+        resource: res,
         user_id: 0,
         status: 'published',
         note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
-      )
+      ).process
     rescue StandardError => e
       # NOTE: we get errors with test data updating DOI and some of the other callbacks on publishing
       log "    Exception! #{e.message}"
@@ -172,12 +174,12 @@ namespace :identifiers do
         else
           log ' -- deleting data files'
           # Record the file deletion
-          StashEngine::CurationActivity.create(
+          CurationService.new(
             resource_id: i.latest_resource.id,
             user_id: 0,
             status: 'withdrawn',
             note: removed_files_note
-          )
+          ).process
 
           # Perform the actual removal
           i.resources.each do |r|
@@ -210,13 +212,13 @@ namespace :identifiers do
           new_res.current_state = 'submitted'
 
           # Record the file deletion
-          StashEngine::CurationActivity.create(
+          CurationService.new(
             resource_id: new_res.id,
             user_id: 0,
             status: 'withdrawn',
             note: 'remove_abandoned_datasets CRON - mark files as deleted',
-            skip_emails: true
-          )
+            options: { skip_emails: true }
+          ).process
         end
       end
     end
@@ -297,12 +299,12 @@ namespace :identifiers do
 
       log "Inviting DOI link. Identifier: #{i.id}, Resource: #{i.latest_resource&.id} updated #{i.latest_resource&.updated_at}"
       StashEngine::UserMailer.doi_invitation(i.latest_resource).deliver_now
-      StashEngine::CurationActivity.create(
+      CurationService.new(
         resource_id: i.latest_resource&.id,
         user_id: 0,
         status: i.latest_resource&.last_curation_activity&.status,
         note: "#{reminder_flag} - invited submitter to link an article DOI"
-      )
+      ).process
     rescue StandardError => e
       log "    Exception! #{e.message}"
 

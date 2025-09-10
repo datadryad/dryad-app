@@ -22,172 +22,76 @@ require 'byebug'
 
 module StashEngine
   RSpec.describe CurationActivity do
+    let(:identifier) { create(:identifier) }
+    let(:user) { create(:user) }
+    let(:resource) { create(:resource, identifier: identifier) }
+    let(:curation_activity) { create(:curation_activity, resource: resource) }
 
-    include Mocks::RSolr
-    include Mocks::Salesforce
-    include Mocks::Stripe
-
-    before(:each) do
-      allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
-      mock_salesforce!
-      mock_solr!
-      mock_stripe!
-    end
-
-    describe :factories do
-      it 'creates a FactoryBot factory that works' do
-        @identifier = create(:identifier)
-        expect(@identifier).to be_valid
-      end
-    end
-
-    describe :basic_curation_activity do
-
-      before(:each) do
-        @user = create(:user)
-        @identifier = create(:identifier)
-        @resource = create(:resource, identifier_id: @identifier.id)
-        @curation_activity = create(:curation_activity, resource: @resource)
-        @mock_datacitegen = double('datacitegen')
-        allow(@mock_datacitegen).to receive(:update_identifier_metadata!).and_raise('submitted DOI')
-        allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
-      end
-
+    context :basic_curation_activity do
       it 'shows the appropriate dataset identifier' do
-        expect(@curation_activity.resource.identifier.to_s).to eq(@identifier.to_s)
+        expect(curation_activity.resource.identifier.to_s).to eq(identifier.to_s)
+      end
+
+      it 'defaults status to :in_progress' do
+        expect(curation_activity.status).to eql('in_progress')
+      end
+
+      it 'requires a resource' do
+        activity = CurationActivity.new(resource: nil)
+        expect(activity.valid?).to eql(false)
       end
     end
 
-    describe :submit_to_datacite do
-      before(:each) do
-        Timecop.travel(Time.now.utc - 1.minute)
-        @user = create(:user)
-        @identifier = create(:identifier)
-        @resource = create(:resource, identifier_id: @identifier.id)
-        @resource_state = create(:resource_state, :submitted, resource_id: @resource.id)
-        @resource.update(current_resource_state_id: @resource_state.id)
-        @version = create(:version, resource_id: @resource.id)
-
-        @mock_datacitegen = spy('datacitegen')
-        allow(@mock_datacitegen).to receive(:update_identifier_metadata!) # .and_return('called make metadata')
-        allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
-
-        @curation_activity1 = create(:curation_activity, resource: @resource)
-        Timecop.return
-      end
-
-      it 'does submit when Published is set' do
-        create(:curation_activity, resource_id: @resource.id, status: 'published')
-        expect(@mock_datacitegen).to have_received(:update_identifier_metadata!)
-      end
-
-      it "doesn't submit when a status besides Embargoed or Published is set" do
-        CurationActivity.create(resource_id: @resource.id, status: 'curation')
-        expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
-      end
-
-      it "doesn't submit when status isn't changed" do
-        @curation_activity2 = create(:curation_activity, resource: @resource, status: 'published')
-        expect(@mock_datacitegen).to have_received(:update_identifier_metadata!).once
-        CurationActivity.create(resource_id: @resource.id, status: 'published')
-        expect(@mock_datacitegen).to have_received(:update_identifier_metadata!).once # should not be called for the second 'published'
-
-      end
-
-      it "doesn't submit if never sent to Merritt" do
-        @resource_state.update(resource_state: 'in_progress')
-        CurationActivity.create(resource_id: @resource.id, status: 'published')
-        expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
-      end
-
-      it "doesn't submit if no version number" do
-        @version.update!(version: nil, merritt_version: nil)
-        CurationActivity.create(resource_id: @resource.id, status: 'published')
-        expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
-      end
-
-      it "doesn't submit non-production (test) identifiers after first version" do
-        @resource2 = create(:resource, identifier_id: @identifier.id)
-        @resource_state2 = create(:resource_state, resource_id: @resource2.id)
-        @version2 = create(:version, resource_id: @resource2.id, version: 2, merritt_version: 2)
-        CurationActivity.create(resource: @resource2, status: 'published')
-        expect(@mock_datacitegen).to_not have_received(:update_identifier_metadata!)
+    context :latest do
+      it 'returns the most recent activity' do
+        ca = create(:curation_activity, resource: resource, status: 'peer_review', note: 'this is a test')
+        expect(CurationActivity.latest(resource: resource)).to eql(ca)
       end
     end
 
-    describe 'Datacite and EzId failures are properly handled' do
-      before(:each) do
-        @user = create(:user, first_name: 'Test', last_name: 'User', email: 'test.user@example.org')
-        @identifier = create(:identifier)
-        @resource = create(:resource, identifier_id: @identifier.id, user: @user)
-
-        allow_any_instance_of(CurationActivity).to receive(:should_update_doi?).and_return(true)
-
-        logger = double(ActiveSupport::Logger)
-        allow(logger).to receive(:error).with(any_args).and_return(true)
-        allow(Rails).to receive(:logger).and_return(logger)
-
-        allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
+    context :readable_status do
+      it 'class method allows conversion of status to humanized status' do
+        expect(CurationActivity.readable_status('submitted')).to eql('Submitted')
       end
 
-      it 'catches errors and emails the admins' do
-        dc_error = Stash::Doi::DataciteGenError.new('Testing errors')
-        allow(Stash::Doi::DataciteGen).to receive(:new).with(any_args).and_raise(dc_error)
+      it 'returns a readable version of :peer_review' do
+        curation_activity.peer_review!
+        expect(curation_activity.readable_status).to eql('Private for peer review')
+      end
 
-        message = instance_double(ActionMailer::MessageDelivery)
-        expect(StashEngine::UserMailer).to receive(:error_report).with(any_args).and_return(message)
-        expect(message).to receive(:deliver_now)
-        expect { create(:curation_activity, resource_id: @resource.id, status: 'embargoed') }.to raise_error(Stash::Doi::DataciteGenError)
+      it 'returns a readable version of :action_required' do
+        curation_activity.action_required!
+        expect(curation_activity.readable_status).to eql('Action required')
+      end
+
+      it 'returns a default readable version of the remaining statuses' do
+        CurationActivity.statuses.each_key do |s|
+          unless %w[peer_review action_required unchanged].include?(s)
+            curation_activity.send("#{s}!")
+            expect(curation_activity.readable_status).to eql(s.humanize)
+          end
+        end
       end
     end
 
-    describe '#curation_status_changed?' do
-
-      before(:each) do
-        @user = create(:user)
-        @identifier = create(:identifier)
-        @resource = create(:resource, identifier_id: @identifier.id)
-      end
-
+    context :curation_status_changed? do
+      let(:curation_activity) { resource.curation_activities.first }
       it 'considers things changed if there is only one curation status for this resource' do
-        StashEngine::CurationActivity.destroy_all
-        @curation_activity = create(:curation_activity, resource: @resource)
-        expect(@curation_activity.curation_status_changed?).to be true
+        expect(curation_activity.curation_status_changed?).to be true
       end
 
       it 'considers changed to be true if the last two curation statuses are unequal' do
-        @curation_activity1 = create(:curation_activity, status: 'in_progress', resource: @resource)
-        @curation_activity2 = create(:curation_activity, status: 'embargoed', resource: @resource)
-        expect(@curation_activity2.curation_status_changed?).to be true
+        ca = create(:curation_activity, status: 'embargoed', resource: resource)
+        expect(ca.curation_status_changed?).to be true
       end
 
       it 'considers changed to be false if the last two curation statuses are equal' do
-        @curation_activity1 = create(:curation_activity, status: :embargoed, resource: @resource)
-        @curation_activity2 = create(:curation_activity, status: :embargoed, resource: @resource,
-                                                         note: 'We need more about cats')
-        expect(@curation_activity2.curation_status_changed?).to be false
+        ca = create(:curation_activity, resource: resource, note: 'We need more about cats')
+        expect(ca.curation_status_changed?).to be false
       end
     end
 
-    describe '#copy_to_zenodo' do
-      before(:each) do
-        # this this back to the original method
-        allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_call_original
-        @user = create(:user)
-        @identifier = create(:identifier)
-        @resource = create(:resource, identifier_id: @identifier.id)
-        @curation_activity = create(:curation_activity, resource: @resource)
-      end
-
-      it 'calls two zenodo methods to copy software and supplemental' do
-        # expect(@resource).to receive(:send_to_zenodo).and_return('test1')
-        expect(@resource).to receive(:send_software_to_zenodo).with(publish: true).and_return('test2')
-        expect(@resource).to receive(:send_supp_to_zenodo).with(publish: true).and_return('test3')
-        @curation_activity.copy_to_zenodo
-      end
-    end
-
-    describe 'self.allowed_states(current_state)' do
+    context 'self.allowed_states(current_state)' do
       context 'when user is an admin' do
         let(:user) { create(:user, role: 'admin') }
 

@@ -119,9 +119,9 @@ module Datacite
 
         it 'sets the correct dates' do
           Timecop.travel(Time.now.utc - 1.minute)
-          @res2 = create(:resource, identifier: @resource.identifier, meta_view: true, file_view: true, publication_date: Time.utc(2018, 2, 1))
+          @res2 = create(:resource_published, identifier: @resource.identifier, publication_date: Time.utc(2018, 2, 1))
           Timecop.return
-          @res3 = create(:resource, identifier: @resource.identifier, meta_view: true, file_view: true, publication_date: Time.utc(2018, 3, 1))
+          @res3 = create(:resource_published, identifier: @resource.identifier, publication_date: Time.utc(2018, 3, 1))
 
           @xml_factory = DataciteXMLFactory.new(
             se_resource_id: @res3.id,
@@ -138,7 +138,7 @@ module Datacite
           expect(doc.xpath("//dates/date[@dateType = 'Created']").first.child.text).to start_with('2018-01-01')
           expect(doc.xpath("//dates/date[@dateType = 'Submitted']").first.child.text).to start_with('2018-01-01')
           expect(doc.xpath("//dates/date[@dateType = 'Issued']").first.child.text).to start_with('2018-01-01')
-          expect(doc.xpath("//dates/date[@dateType = 'Available']").first.child.text).to start_with('2018-02-01')
+          expect(doc.xpath("//dates/date[@dateType = 'Available']").first.child.text).to start_with('2018-01-01')
           expect(doc.xpath("//dates/date[@dateType = 'Updated']").first.child.text).to start_with('2018-03-01')
         end
 

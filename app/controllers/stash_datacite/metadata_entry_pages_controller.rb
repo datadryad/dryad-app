@@ -39,7 +39,7 @@ module StashDatacite
       # current_user so the history makes more sense.
       last_activity = @resource.curation_activities.last
       if last_activity&.user_id == 0
-        @resource.curation_activities << StashEngine::CurationActivity.create(status: last_activity.status, user_id: current_user.id, note: 'Editing')
+        CurationService.new(resource: @resource, status: last_activity.status, user_id: current_user.id, note: 'Editing').process
       end
       respond_to(&:js)
     end

@@ -9,7 +9,7 @@ module StashEngine
 
     def status_select(statuses = [])
       statuses = StashEngine::CurationActivity.statuses.keys if statuses.empty?
-      statuses.sort { |a, b| a <=> b }.map do |status|
+      statuses.map do |status|
         [StashEngine::CurationActivity.readable_status(status), status]
       end
     end
