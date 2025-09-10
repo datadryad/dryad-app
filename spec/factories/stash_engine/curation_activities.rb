@@ -49,25 +49,25 @@ FactoryBot.define do
 
     trait :withdrawn do
       status { 'withdrawn' }
+      after(:create) do |act|
+        act.resource.update(meta_view: false, file_view: false)
+        act.resource.identifier.update(pub_state: 'withdrawn')
+      end
     end
 
     trait :embargoed do
       status { 'embargoed' }
+      after(:create) do |act|
+        act.resource.update(meta_view: true, file_view: false)
+        act.resource.identifier.update(pub_state: 'embargoed')
+      end
     end
 
     trait :published do
       status { 'published' }
-    end
-
-    factory(:curation_activity_no_callbacks) do
-      before(:create) do |ca|
-        # redefine these  methods so I can set this crap in peace without all the horror
-        # https://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
-        ca.define_singleton_method(:submit_to_datacite) {} # empty to remove callback
-        ca.define_singleton_method(:update_solr) {} # empty to remove callback
-        ca.define_singleton_method(:process_payment) {} # empty to remove callback
-        ca.define_singleton_method(:email_status_change_notices) {} # empty to remove callback
-        ca.define_singleton_method(:email_orcid_invitations) {} # empty to remove callback
+      after(:create) do |act|
+        act.resource.update(meta_view: true, file_view: act.resource.files_changed?)
+        act.resource.identifier.update(pub_state: 'published')
       end
     end
   end

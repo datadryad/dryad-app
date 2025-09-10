@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.feature 'PublicationUpdater', type: :feature, js: true do
   include Mocks::Salesforce
   include Mocks::Datacite
+  include Mocks::CurationActivity
 
   before(:each) do
     mock_salesforce!
@@ -59,11 +60,14 @@ RSpec.feature 'PublicationUpdater', type: :feature, js: true do
   context 'accepting changes' do
     let(:resources) do
       [create(:resource_published),
-       create(:resource, :submitted, hold_for_peer_review: true, tenant_id: 'email_auth', user: create(:user, tenant_id: 'email_auth'))]
+       create(:resource, :submitted, hold_for_peer_review: true)]
     end
     let(:proposed_changes) { resources.map { |r| create(:proposed_change, identifier: r.identifier) } }
 
     before(:each) do
+      neuter_curation_callbacks!
+      allow_any_instance_of(StashEngine::UserMailer).to receive(:peer_review_pub_linked).and_return(true)
+      allow_any_instance_of(StashEngine::UserMailer).to receive(:peer_review_payment_needed).and_return(true)
       resources.each { |r| r.identifier.reload }
       proposed_changes.each(&:reload)
       sign_in(create(:user, role: 'manager'))
@@ -81,18 +85,34 @@ RSpec.feature 'PublicationUpdater', type: :feature, js: true do
     end
 
     it 'accepts a change and submits a PPR resource' do
+      allow_any_instance_of(StashEngine::Identifier).to receive(:payment_needed?).and_return(false)
       visit stash_url_helpers.publication_updater_path
       expect(page).to have_content('Private for peer review', minimum: 2)
       within(:css, "form[action=\"/publication_updater/#{proposed_changes[1].id}\"]", match: :first) do
         click_button 'Accept'
       end
 
-      expect(page).not_to have_content(proposed_changes[1].title)
+      expect(page).not_to have_content(proposed_changes[1].title, wait: 15)
       expect(resources[1].identifier.publication_name).to eq(proposed_changes[1].publication_name)
       expect(resources[1].identifier.publication_article_doi).to include(proposed_changes[1].publication_doi)
-      # For some reason the curation_activities created in the approve method are not saved in rspec
-      # They work fine in manual tests
-      # expect(resources[1].current_curation_status).to eq('submitted')
+      expect(resources[1].current_curation_status).to eq('submitted')
+    end
+
+    it 'accepts a change and sends a PPR resource for payment' do
+      visit stash_url_helpers.publication_updater_path
+      expect(page).to have_content('Private for peer review', minimum: 2)
+      within(:css, "form[action=\"/publication_updater/#{proposed_changes[1].id}\"]", match: :first) do
+        click_button 'Accept'
+      end
+
+      expect(page).not_to have_content(proposed_changes[1].title, wait: 15)
+
+      expect(resources[1].identifier.publication_name).to eq(proposed_changes[1].publication_name)
+      expect(resources[1].identifier.publication_article_doi).to include(proposed_changes[1].publication_doi)
+      resources[1].identifier.reload
+      new_res = resources[1].identifier.latest_resource
+      expect(new_res.current_curation_status).to eq('in_progress')
+      expect(new_res.hold_for_peer_review).to eq(false)
     end
   end
 

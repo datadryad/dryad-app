@@ -1,11 +1,13 @@
 require 'rails_helper'
 RSpec.feature 'Dashboard', type: :feature, js: true do
   include DatasetHelper
+  include Mocks::CurationActivity
   include Mocks::Salesforce
   include Mocks::Datacite
   include Mocks::Aws
 
   before(:each) do
+    neuter_curation_callbacks!
     mock_salesforce!
     mock_datacite!
     mock_aws!

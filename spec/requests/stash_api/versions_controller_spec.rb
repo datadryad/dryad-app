@@ -17,6 +17,8 @@ module StashApi
     before(:each) do
       mock_salesforce!
       neuter_curation_callbacks!
+      mock_solr!
+      neuter_curation_callbacks!
       @user = create(:user, role: 'superuser')
       @user1 = create(:user)
       host! 'my.example.org'
@@ -32,14 +34,10 @@ module StashApi
 
       @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress', user_id: @user1.id),
                                create(:curation_activity, resource: @resources[0], status: 'curation', user_id: @user1.id),
-                               create(:curation_activity, resource: @resources[0], status: 'published', user_id: @user1.id)]]
+                               CurationService.new(user: @user, resource: @resources[0], status: 'published', user_id: @user1.id).process]]
 
       @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress', user_id: @user1.id),
                                create(:curation_activity, resource: @resources[1], status: 'curation', user_id: @user1.id)]
-
-      # we get some crazy failures and it refused to update the resource because of ridiculous curation failures if user zero doesn't exist
-      # Took me hours to figure out and really annoying.
-      @sys_user = create(:user, id: 0, first_name: 'system user')
 
       # be sure versions are set correctly, because creating them manually like this doesn't ensure it
       @resources[0].stash_version.update(version: 1)
@@ -198,7 +196,7 @@ module StashApi
       end
 
       it 'shows what fields changed for v2 when both have been published' do
-        create(:curation_activity, resource: @resources[1], status: 'published', user_id: @user1.id)
+        CurationService.new(user: @user, resource: @resources[1], status: 'published', user_id: @user1.id).process
         response_code = get "/api/v2/versions/#{@resources[1].id}", headers: default_json_headers
         expect(response_code).to eq(200)
         h = response_body_hash

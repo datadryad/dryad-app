@@ -82,11 +82,10 @@ module StashApi
         ca_status = resource.current_curation_status
       end
 
-      StashEngine::CurationActivity.create(resource_id: resource.id,
-                                           user_id: ca_user,
-                                           status: ca_status,
-                                           note: ca_note,
-                                           created_at: params[:curation_activity][:created_at] || Time.now.utc)
+      CurationService.new(
+        resource: resource, user_id: ca_user, status: ca_status, note: ca_note,
+        created_at: params[:curation_activity][:created_at]
+      ).process
     end
 
     def record_published_date(resource)

@@ -20,9 +20,9 @@ module StashEngine
       # only add to latest resource and after latest curation activity, no matter if this page is stale or whatever
       authorize %i[stash_engine curation_activity]
       @resource = Identifier.find_by_id(params[:id]).latest_resource
-      @curation_activity = CurationActivity.create(resource_id: @resource.id, user_id: current_user.id,
-                                                   status: @resource.last_curation_activity&.status,
-                                                   note: params[:stash_engine_curation_activity][:note])
+      @curation_activity = CurationService.new(resource_id: @resource.id, user_id: current_user.id,
+                                               status: @resource.last_curation_activity&.status,
+                                               note: params[:stash_engine_curation_activity][:note]).process
       @resource.reload
     end
 
@@ -33,7 +33,7 @@ module StashEngine
 
       status = resource.last_curation_activity&.status
       activity = CurationActivity.where(resource_id: resource.id, user_id: current_user.id)&.first
-      activity = CurationActivity.create(resource_id: resource.id, status: status, user_id: current_user.id) if activity.blank?
+      activity = CurationService.new(resource_id: resource.id, status: status, user_id: current_user.id).process if activity.blank?
 
       render json: activity
     end

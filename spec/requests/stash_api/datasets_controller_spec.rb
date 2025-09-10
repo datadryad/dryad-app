@@ -29,6 +29,7 @@ module StashApi
       neuter_curation_callbacks!
       mock_salesforce!
       mock_datacite_gen!
+      mock_solr!
       setup_access_token(doorkeeper_application: doorkeeper_application)
     end
 
@@ -448,48 +449,48 @@ module StashApi
         @resources.insert(3, create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id))
 
         # identifiers[0]
-        @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[0], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[0], status: 'published')]]
+        @curation_activities = [[create(:curation_activity, :in_progress, resource: @resources[0]),
+                                 create(:curation_activity, :curation, resource: @resources[0]),
+                                 create(:curation_activity, :published, resource: @resources[0])]]
 
-        @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[1], status: 'curation')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[1]),
+                                 create(:curation_activity, :curation, resource: @resources[1])]
 
         # identifiers[1]
-        @curation_activities << [create(:curation_activity, resource: @resources[2], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[2], status: 'curation')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[2]),
+                                 create(:curation_activity, :curation, resource: @resources[2])]
 
         # identifiers[2]
-        @curation_activities << [create(:curation_activity, resource: @resources[3], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[3], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[3], status: 'action_required')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[3]),
+                                 create(:curation_activity, :curation, resource: @resources[3]),
+                                 create(:curation_activity, :action_required, resource: @resources[3])]
 
-        @curation_activities << [create(:curation_activity, resource: @resources[4], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[4], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[4], status: 'published')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[4]),
+                                 create(:curation_activity, :curation, resource: @resources[4]),
+                                 create(:curation_activity, :published, resource: @resources[4])]
 
         # identifiers[3]
-        @curation_activities << [create(:curation_activity, resource: @resources[5], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[5], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[5], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[5]),
+                                 create(:curation_activity, :curation, resource: @resources[5]),
+                                 create(:curation_activity, :embargoed, resource: @resources[5])]
 
         # identifiers[4]
-        @curation_activities << [create(:curation_activity, resource: @resources[6], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[6], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[6], status: 'withdrawn')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[6]),
+                                 create(:curation_activity, :curation, resource: @resources[6]),
+                                 create(:curation_activity, :withdrawn, resource: @resources[6])]
 
         # identifiers[5]
-        @curation_activities << [create(:curation_activity, resource: @resources[7], status: 'in_progress')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[7])]
 
         # identifiers[6]
-        @curation_activities << [create(:curation_activity, resource: @resources[8], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[8], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[8], status: 'published')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[8]),
+                                 create(:curation_activity, :curation, resource: @resources[8]),
+                                 create(:curation_activity, :published, resource: @resources[8])]
 
         # identifiers[7]
-        @curation_activities << [create(:curation_activity, resource: @resources[9], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[9], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[9], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[9]),
+                                 create(:curation_activity, :curation, resource: @resources[9]),
+                                 create(:curation_activity, :embargoed, resource: @resources[9])]
 
         # 5 public datasets
         #
@@ -636,8 +637,8 @@ module StashApi
     describe '#search' do
       before(:each) do
         @ident = create(:identifier)
-        @res = create(:resource, identifier: @ident, tenant_id: 'dryad')
-        create(:curation_activity_no_callbacks, resource: @res, created_at: '2020-01-04', status: 'published')
+        @res   = create(:resource, identifier: @ident, tenant_id: 'dryad')
+        create(:curation_activity, :published, resource: @res, created_at: '2020-01-04')
         mock_solr!(include_identifier: @ident)
       end
 
@@ -747,12 +748,12 @@ module StashApi
         Timecop.travel(Time.now.utc + 23.hours)
         @resources.push(create(:resource, user_id: @user2.id, tenant_id: user.tenant_id, identifier_id: @identifier.id))
         Timecop.return
-        @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[0], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[0], status: 'published')]]
+        @curation_activities = [[create(:curation_activity, :in_progress, resource: @resources[0]),
+                                 create(:curation_activity, :curation, resource: @resources[0]),
+                                 create(:curation_activity, :published, resource: @resources[0])]]
 
-        @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[1], status: 'curation')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[1]),
+                                 create(:curation_activity, :curation, resource: @resources[1])]
 
         # set versions correctly seems not correctly working unless created another way.
         @resources[0].stash_version.update(version: 1)
@@ -816,8 +817,8 @@ module StashApi
 
       it 'shows the peer review URL when the dataset is in review status' do
         @resources << create(:resource, user_id: @user2.id, tenant_id: user.tenant_id, identifier_id: @identifier.id)
-        @curation_activities << [create(:curation_activity, resource: @resources[2], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[2], status: 'peer_review')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[2]),
+                                 create(:curation_activity, :peer_review, resource: @resources[2])]
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
         hsh = response_body_hash
         expect(hsh['sharingLink']).to match(/http/)
@@ -909,8 +910,10 @@ module StashApi
 
           context 'when there is a fee to pay' do
             before do
-              allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({ total: 123,
-                                                                                                      storage_fee_label: 'Submission fee' })
+              allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return(
+                { total: 123,
+                  storage_fee_label: 'Submission fee' }
+              )
             end
 
             it 'allows submission if done by owner of the dataset (resource)' do
@@ -1017,7 +1020,7 @@ module StashApi
         end
 
         it 'does not allow curationStatus to be updated if the item is already published' do
-          @ca = create(:curation_activity, resource: @res, status: 'published')
+          @ca = create(:curation_activity, :published, resource: @res)
           expect(@res.current_curation_status).to eq('published')
 
           @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'submitted' }].to_json

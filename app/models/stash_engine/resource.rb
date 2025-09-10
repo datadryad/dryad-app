@@ -536,7 +536,7 @@ module StashEngine
 
     # Create the initial CurationActivity
     def init_curation_status
-      curation_activities << StashEngine::CurationActivity.new(user_id: current_editor_id || user_id)
+      CurationService.new(resource_id: id, user_id: current_editor_id || user_id, status: 'in_progress').process
     end
 
     private :init_curation_status
@@ -847,7 +847,7 @@ module StashEngine
     # this is a query for the publication updating on a cron, but putting here so we can test the query more easily
     def self.need_publishing
       # submitted to merritt, curation embargoed, past publication date
-      all.submitted.with_visibility(states: %w[embargoed]).where('stash_engine_resources.publication_date < ?', Time.now)
+      all.submitted.with_visibility(states: %w[embargoed to_be_published]).where('stash_engine_resources.publication_date < ?', Time.now)
     end
 
     # returns boolean indicating if a version before the current resource has been made public (metadata view set to true)
@@ -1191,8 +1191,8 @@ module StashEngine
       completions = StashDatacite::Resource::Completions.new(self)
       if prior_version.blank? && completions.duplicate_submission
         dup_id = completions.duplicate_submission.identifier&.identifier
-        curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
-                                                                    note: "System noticed possible duplicate dataset #{dup_id}")
+        CurationService.new(user_id: 0, status: target_status, resource_id: id,
+                            note: "System noticed possible duplicate dataset #{dup_id}").process
       end
 
       # If it's the first version, or the prior version was in the submitter's control, we're done
@@ -1206,8 +1206,8 @@ module StashEngine
       # If the last user to edit it was the curator return it to curation status
       return unless last_curation_activity.user_id == user_id
 
-      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
-                                                                  note: 'System set back to curation')
+      CurationService.new(resource_id: id, user_id: 0, status: 'curation',
+                          note: 'System set back to curation').process
     end
 
     # rubocop:disable Metrics/AbcSize
@@ -1222,7 +1222,7 @@ module StashEngine
         changes = changes.delete_if { |c| c.is_a?(Array) }
         if (changes - %w[related_identifiers subjects funders]).empty?
           # create submitted status
-          curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
+          CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
           # immediately create published status
           update(publication_date: previous_resource.publication_date)
           target_status = previous_resource.last_curation_activity.status
@@ -1249,7 +1249,7 @@ module StashEngine
 
       # Generate the status
       # This will usually have the side effect of sending out notification emails to the author/journal
-      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
+      CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
       target_status
     end
 
@@ -1268,10 +1268,10 @@ module StashEngine
       reload
       update(user_id: target_curator.id)
 
-      curation_activities << StashEngine::CurationActivity.create(
-        user_id: target_curator.id, status: target_status,
+      CurationService.new(
+        user_id: target_curator.id, status: target_status, resource_id: id,
         note: "System auto-assigned curator #{target_curator&.name}"
-      )
+      ).process
     end
   end
 end

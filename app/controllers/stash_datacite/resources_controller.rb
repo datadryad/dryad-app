@@ -52,9 +52,9 @@ module StashDatacite
 
       StashEngine.repository.submit(resource_id: @resource_id)
 
-      @resource.curation_activities << StashEngine::CurationActivity.create(
-        status: 'processing', note: 'Repository processing data', user_id: current_user&.id || 0
-      )
+      CurationService.new(
+        resource: @resource, status: 'processing', note: 'Repository processing data', user_id: current_user&.id || 0
+      ).process
 
       @resource.reload
 
@@ -98,8 +98,8 @@ module StashDatacite
       return if params[:user_comment].blank?
 
       last = resource.curation_activities.last
-      StashEngine::CurationActivity.create(status: last.status, user_id: current_user.id, note: params[:user_comment],
-                                           resource_id: last.resource_id)
+      CurationService.new(status: last.status, user_id: current_user.id, note: params[:user_comment],
+                          resource_id: last.resource_id).process
     end
 
     def check_required_fields(resource)

@@ -6,6 +6,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
   include MerrittHelper
   include DatasetHelper
   include DatabaseHelper
+  include Mocks::CurationActivity
   include Mocks::Datacite
   include Mocks::Repository
   include Mocks::RSolr
@@ -19,6 +20,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
     let(:curator) { create(:user, role: 'curator') }
 
     before(:each) do
+      neuter_curation_callbacks!
       mock_repository!
       mock_solr!
       mock_datacite!
@@ -27,7 +29,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
       mock_counter!
 
       create(:curation_activity, :curation, user: curator, resource: resource)
-      create(:curation_activity, :published, resource: resource, user: curator).id
+      create(:curation_activity, :published, resource: resource, user: curator)
       @token = create(:download_token, resource: resource, available: Time.new + 5.minutes.to_i)
       create(:counter_stat, identifier_id: resource.identifier_id)
     end

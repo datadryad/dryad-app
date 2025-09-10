@@ -2,8 +2,15 @@ require 'rake'
 
 module StashEngine
   describe 'DatasetEmailNotifications' do
+    include Mocks::Salesforce
+
     before do
-      allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_salesforce_metadata).and_return(true)
+      mock_salesforce!
+      Timecop.travel(1.minute)
+    end
+
+    after do
+      Timecop.return
     end
 
     let!(:user1) { create(:user, email: 'admin@email.test', id: 0) }
@@ -14,8 +21,6 @@ module StashEngine
 
     describe 'in_progress resource notifications' do
       before do
-        sleep 1
-        create(:curation_activity, status: 'in_progress', resource_id: resource.id)
         resource.current_resource_state.update(resource_state: 'in_progress')
       end
 
@@ -55,8 +60,7 @@ module StashEngine
 
     describe 'processing resource notifications' do
       before do
-        sleep 1
-        create(:curation_activity, status: 'processing', resource_id: resource.id)
+        CurationService.new(user: user, status: 'processing', resource: resource).process
         resource.current_resource_state.update(resource_state: 'processing')
       end
 
@@ -70,8 +74,7 @@ module StashEngine
 
     xdescribe 'action_required resource notifications' do
       before do
-        sleep 1
-        create(:curation_activity, status: 'action_required', resource_id: resource.id)
+        CurationService.new(user: curator, status: 'action_required', resource: resource).process
         resource.current_resource_state.update(resource_state: 'processing')
       end
 
@@ -109,8 +112,7 @@ module StashEngine
 
     describe 'peer_review resource notifications' do
       before do
-        sleep 1
-        create(:curation_activity, status: 'peer_review', resource_id: resource.id)
+        CurationService.new(user: curator, status: 'peer_review', resource: resource).process
         resource.current_resource_state.update(resource_state: 'processing')
       end
 
@@ -148,9 +150,8 @@ module StashEngine
 
     describe 'auto withdrawn resource notifications' do
       before do
-        sleep 1
-        create(:curation_activity, status: 'withdrawn', resource_id: resource.id, user_id: 0,
-                                   note: 'withdrawn_email_notice - notification that this item was set to `withdrawn`')
+        CurationService.new(status: 'withdrawn', resource_id: resource.id, user_id: 0,
+                            note: 'withdrawn_email_notice - notification that this item was set to `withdrawn`').process
         resource.current_resource_state.update(resource_state: 'processing')
       end
 
@@ -169,7 +170,6 @@ module StashEngine
 
     describe 'withdrawn by curator resource notifications' do
       before do
-        sleep 1
         create(:curation_activity, status: 'withdrawn', resource_id: resource.id, user_id: curator.id,
                                    note: 'withdrawn by curator')
         resource.current_resource_state.update(resource_state: 'processing')
@@ -190,9 +190,8 @@ module StashEngine
 
     describe 'withdrawn by journal resource notifications' do
       before do
-        sleep 1
-        create(:curation_activity, status: 'withdrawn', resource_id: resource.id, user_id: 0,
-                                   note: 'withdrawn by journal')
+        CurationService.new(status: 'withdrawn', resource_id: resource.id, user_id: 0,
+                            note: 'withdrawn by journal').process
         resource.current_resource_state.update(resource_state: 'processing')
       end
 
