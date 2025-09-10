@@ -299,12 +299,12 @@ namespace :identifiers do
 
       log "Inviting DOI link. Identifier: #{i.id}, Resource: #{i.latest_resource&.id} updated #{i.latest_resource&.updated_at}"
       StashEngine::UserMailer.doi_invitation(i.latest_resource).deliver_now
-      StashEngine::CurationActivity.create(
+      CurationService.new(
         resource_id: i.latest_resource&.id,
         user_id: 0,
         status: i.latest_resource&.last_curation_activity&.status,
         note: "#{reminder_flag} - invited submitter to link an article DOI"
-      )
+      ).process
     rescue StandardError => e
       log "    Exception! #{e.message}"
 
