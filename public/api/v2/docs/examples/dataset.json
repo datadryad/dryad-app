@@ -77,5 +77,10 @@ value: {
   "changedFields": [
     "none"
   ],
+  "metrics": {
+    "views": 5,
+    "downloads": 3,
+    "citations": 1
+  },
   "license": "https://spdx.org/licenses/CC0-1.0.html"
 }

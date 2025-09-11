@@ -63,6 +63,11 @@ value: {
         "publicationDate": "2020-01-01",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK2HM58Q3S",
+        "metrics": {
+          "views": 5,
+          "downloads": 3,
+          "citations": 1
+        },
         "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
@@ -194,6 +199,11 @@ value: {
         "publicationDate": "2020-02-01",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK2474DX0J",
+        "metrics": {
+          "views": 2,
+          "downloads": 0,
+          "citations": 1
+        },
         "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
@@ -245,6 +255,11 @@ value: {
         "publicationDate": "2020-01-07",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK28W3G720",
+        "metrics": {
+          "views": 0,
+          "downloads": 0,
+          "citations": 0
+        },
         "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
@@ -290,6 +305,11 @@ value: {
         "publicationDate": "2020-01-07",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK2MK6CD6D",
+        "metrics": {
+          "views": 2,
+          "downloads": 0,
+          "citations": 0
+        },
         "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
@@ -359,6 +379,11 @@ value: {
         "publicationDate": "2020-04-17",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK24T6N929",
+        "metrics": {
+          "views": 1,
+          "downloads": 1,
+          "citations": 0
+        },
         "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
@@ -410,6 +435,11 @@ value: {
         "publicationDate": "2020-04-19",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK2QJ7G49H",
+        "metrics": {
+          "views": 5,
+          "downloads": 1,
+          "citations": 1
+        },
         "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
@@ -455,6 +485,11 @@ value: {
         "publicationDate": "2020-05-01",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK2J966H3B",
+        "metrics": {
+          "views": 25,
+          "downloads": 5,
+          "citations": 1
+        },
         "license": "https://spdx.org/licenses/CC0-1.0.html"
       },
       {
@@ -500,6 +535,11 @@ value: {
         "publicationDate": "2020-05-10",
         "visibility": "public",
         "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK2T151W7S",
+        "metrics": {
+          "views": 0,
+          "downloads": 0,
+          "citations": 0
+        },
         "license": "https://spdx.org/licenses/CC0-1.0.html"
       }
     ]

@@ -39,6 +39,7 @@ module StashApi
       descriptive_hsh = descriptive_metadata_hash
       metadata = descriptive_hsh.merge(lv.metadata)
       add_license!(metadata)
+      add_metrics!(metadata)
       add_edit_link!(metadata, lv)
 
       # gives the links to nearby objects
@@ -104,6 +105,14 @@ module StashApi
 
     def add_license!(hsh)
       hsh[:license] = StashEngine::License.by_id(@se_identifier.license_id)[:uri] if @se_identifier.license_id
+    end
+
+    def add_metrics!(hsh)
+      hsh[:metrics] = {
+        views: @se_identifier.counter_stat.views,
+        downloads: @se_identifier.counter_stat.unique_request_count,
+        citations: @se_identifier.counter_stat.citation_count
+      }
     end
 
     def add_edit_link!(hsh, version)
