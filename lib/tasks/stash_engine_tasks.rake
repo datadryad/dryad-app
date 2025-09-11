@@ -214,7 +214,7 @@ namespace :identifiers do
           new_res.last_curation_activity.update(
             user_id: 0,
             status: 'withdrawn',
-            note: 'remove_abandoned_datasets CRON - mark files as deleted',
+            note: 'remove_abandoned_datasets CRON - mark files as deleted'
           )
         end
       end
