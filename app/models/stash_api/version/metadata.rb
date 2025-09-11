@@ -38,13 +38,15 @@ module StashApi
         }
         vals[:changedFields] = changed_fields if @item_view
         if @post
-          vals.merge({
-                       userId: @resource&.submitter&.id,
-                       skipDataciteUpdate: @resource.skip_datacite_update || nil,
-                       skipEmails: @resource.skip_emails || nil,
-                       preserveCurationStatus: @resource.preserve_curation_status || nil,
-                       loosenValidation: @resource.loosen_validation || nil
-                     })
+          vals = vals.merge(
+            {
+              userId: @resource&.submitter&.id,
+              skipDataciteUpdate: @resource.skip_datacite_update || nil,
+              skipEmails: @resource.skip_emails || nil,
+              preserveCurationStatus: @resource.preserve_curation_status || nil,
+              loosenValidation: @resource.loosen_validation || nil
+            }
+          )
         end
         vals
       end
