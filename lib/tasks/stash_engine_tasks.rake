@@ -209,16 +209,13 @@ namespace :identifiers do
           new_res = DuplicateResourceService.new(i.latest_resource, StashEngine::User.system_user).call
           new_res.update skip_emails: true
           new_res.generic_files.update(file_deleted_at: Time.current, file_state: 'deleted')
-          new_res.current_state = 'submitted'
 
-          # Record the file deletion
-          CurationService.new(
-            resource_id: new_res.id,
+          # Update existing in_progress activity to withdrawn so it does not get counted in curation stats
+          new_res.last_curation_activity.update(
             user_id: 0,
             status: 'withdrawn',
             note: 'remove_abandoned_datasets CRON - mark files as deleted',
-            options: { skip_emails: true }
-          ).process
+          )
         end
       end
     end
