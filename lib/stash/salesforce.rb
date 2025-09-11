@@ -115,7 +115,7 @@ module Stash
     def self.create_case(identifier:, owner:)
       return unless identifier && owner && sf_client
 
-      case_user = identifier.latest_resource&.owner_author || identifier.latest_resource&.submitter
+      case_user = identifier.latest_resource&.submitter || identifier.latest_resource&.owner_author
 
       case_id = sf_client.create(
         'Case',

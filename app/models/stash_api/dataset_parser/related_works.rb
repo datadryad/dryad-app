@@ -25,7 +25,7 @@ module StashApi
               !LowerIdentifierTypes.include?(rw['identifierType']&.downcase)
 
           @resource.related_identifiers << StashDatacite::RelatedIdentifier.create(
-            related_identifier: rw['identifier'],
+            related_identifier: StashDatacite::RelatedIdentifier.standardize_format(rw['identifier']),
             related_identifier_type: rw['identifierType']&.downcase,
             work_type: rw['relationship']&.downcase,
             relation_type: StashDatacite::RelatedIdentifier::WORK_TYPES_TO_RELATION_TYPE[rw['relationship']&.downcase]
