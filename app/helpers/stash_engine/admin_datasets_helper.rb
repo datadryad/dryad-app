@@ -15,7 +15,7 @@ module StashEngine
     end
 
     def filter_status_select(current_status)
-      statuses = StashEngine::CurationActivity.allowed_states(current_status, current_user)
+      statuses = StashEngine::CurationActivity.allowed_states(current_status, current_user).sort
 
       statuses.delete(current_status) # because we don't show the current state as an option, it is implied by leaving state blank
 
