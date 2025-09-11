@@ -33,7 +33,7 @@ RSpec.shared_examples('deletes resource files form S3') do
     task.execute
 
     new_version = identifier.reload.latest_resource
-    expect(new_version.current_state).to eq('submitted')
+    expect(new_version.current_state).to eq('in_progress')
 
     files = new_version.generic_files
     expect(files.count).to eq(3)
