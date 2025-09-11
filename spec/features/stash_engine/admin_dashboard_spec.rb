@@ -55,12 +55,16 @@ RSpec.feature 'AdminDashboard', type: :feature do
       expect(page).to have_text('Admin dashboard')
       check 'submitter'
       check 'metrics'
+      check 'affiliations'
+      check 'countries'
+      check 'funders'
+      check 'dpc'
       click_button('Apply')
       # must visit instead of clicking link; adding js: true breaks ability to load CSV
       visit stash_url_helpers.admin_dashboard_results_path(format: :csv)
       csv_line = page.body.split("\n").first
       csv_parts = csv_line.split(',')
-      expect(csv_parts).to include('Submitter', 'Metrics')
+      expect(csv_parts).to include('Submitter', 'Metrics', 'Grant funders')
     end
 
     it 'has 2 search fields', js: true do
@@ -270,7 +274,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
         context :in_curation do
           before(:each) do
-            create(:curation_activity_no_callbacks, status: 'curation', user_id: @curator.id, resource_id: @resource.id)
+            create(:curation_activity, status: 'curation', user_id: @curator.id, resource_id: @resource.id)
             @resource.update(user_id: @curator.id, accepted_agreement: true)
             @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)
             visit stash_url_helpers.admin_dashboard_path
@@ -594,6 +598,17 @@ RSpec.feature 'AdminDashboard', type: :feature do
         click_button('Apply')
         assert_selector('tbody tr', count: 2)
         expect(find('#search_results')).to have_text(@journal.title, count: 2)
+      end
+
+      it 'filters by sponsor', js: true do
+        2.times.map { create(:journal_organization) }
+        sign_out
+        sign_in(create(:user, role: 'superuser'))
+        expect(page).to have_text('Admin dashboard')
+        assert_selector('tbody tr', count: 7)
+        select(@org.name, from: 'filter-sponsor')
+        click_button('Apply')
+        assert_selector('tbody tr', count: 6)
       end
     end
 

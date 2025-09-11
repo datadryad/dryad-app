@@ -39,17 +39,17 @@ module StashEngine
       if @identifier.payment_type == 'stripe'
         # if it's already invoiced, show a warning
         @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
-        render :curation_activity_error and return
+        render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
       elsif params[:waiver_basis] == 'none'
         @error_message = 'No waiver message selected, so waiver was not applied.'
-        render :curation_activity_error and return
+        render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
       elsif params[:waiver_basis] == 'other'
         basis = 'unspecified'
         if params[:other].present?
           basis = params[:other]
         else
           @error_message = 'No waiver message selected, so waiver was not applied.'
-          render :curation_activity_error and return
+          render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
         end
       else
         basis = params[:waiver_basis]
@@ -111,10 +111,10 @@ module StashEngine
       delete_calculation_date = notification_date - 1.month
       delete_calculation_date = notification_date - 6.months if @resource.current_curation_status == 'peer_review'
 
-      @curation_activity = CurationActivity.create(
-        note: "Changed notification start date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe,
-        resource_id: @resource.id, user_id: current_user.id, status: @resource.last_curation_activity&.status
-      )
+      @curation_activity = CurationService.new(
+        resource: @resource, user_id: current_user.id, status: @resource.last_curation_activity&.status,
+        note: "Changed notification start date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe
+      ).process
 
       @resource.process_date.update(delete_calculation_date: delete_calculation_date)
       @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
@@ -180,6 +180,7 @@ module StashEngine
       @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
     end
 
+    # :nocov:
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
     def setup_internal_data_list
       @internal_datum = params[:internal_datum_id] ? InternalDatum.find(params[:internal_datum_id]) : InternalDatum.new(identifier_id: @identifier.id)
@@ -194,7 +195,7 @@ module StashEngine
         @options.delete(existing_item.data_type)
       end
     end
-
+    # :nocov:
   end
 
 end

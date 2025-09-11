@@ -81,8 +81,6 @@ Rails.application.routes.draw do
     # supporting both POST and PUT for updating the file to ensure as many clients as possible can use this end point
     match '/datasets/:id/files/:filename', to: 'files#update', as: 'dataset_file', constraints: { id: %r{[^\s/]+?}, filename: %r{[^\s/]+?} }, format: false, via: %i[post put]
 
-    resources :users, path: '/users', only: %i[index show]
-
     get '/queue_length', to: 'submission_queue#length'
   end
 
@@ -168,7 +166,8 @@ Rails.application.routes.draw do
     get 'downloads/:file_id/linkset', to: 'downloads#linkset', as: 'file_linkset'
     get 'data_file/preview_check/:file_id', to: 'downloads#preview_check', as: 'preview_check'
     get 'data_file/preview/:file_id', to: 'downloads#preview_file', as: 'preview_file'
-    get 'share/:id', to: 'downloads#share', as: 'share'
+    get 'share/:id', to: 'downloads#share'
+    get 'share/LINK_NOT_FOR_PUBLICATION/:id', to: 'downloads#share', as: 'share'
     get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
 
     get 'edit/:doi/:edit_code', to: 'metadata_entry_pages#edit_by_doi', as: 'edit', constraints: { doi: /\S+/ }

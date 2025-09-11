@@ -5,8 +5,9 @@ module Reminders
     # - email is sent after a certain number of days after the resource is in_progress state
     def send_in_progress_reminders_by_day(days_number)
       log "Mailing users whose datasets have been in_progress since #{days_number.days.ago}"
-      StashEngine::Resource.joins(:current_resource_state)
+      StashEngine::Resource.joins(:current_resource_state, :last_curation_activity)
         .where("stash_engine_resource_states.resource_state = 'in_progress'")
+        .where(stash_engine_curation_activities: { status: 'in_progress' })
         .where('stash_engine_resources.updated_at BETWEEN ? AND ?', (days_number + 1).days.ago.beginning_of_day, days_number.days.ago)
         .each do |resource|
 

@@ -17,8 +17,7 @@ module StashDatacite
       @related_identifier.verified = @related_identifier.live_url_valid?
       respond_to do |format|
         if @related_identifier.save
-          @resource.reload
-          release_resource(@resource) if @resource.identifier&.publication_article_doi
+          update_resource
           format.js do
             load_activity
           end
@@ -43,8 +42,7 @@ module StashDatacite
       respond_to do |format|
         if @related_identifier.update(calc_related_identifier_params)
           @related_identifier.update(verified: @related_identifier.live_url_valid?) unless @related_identifier.verified?
-          @resource.reload
-          release_resource(@resource) if @resource.identifier&.publication_article_doi
+          update_resource
           format.js do
             load_activity
           end
@@ -108,6 +106,15 @@ module StashDatacite
       @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :primary_article)
       @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id, pub_type: :preprint)
       render template: 'stash_engine/admin_datasets/publications_reload', formats: [:js]
+    end
+
+    def update_resource
+      release_resource(@resource) if @resource.identifier&.publication_article_doi
+
+      return unless @resource.current_curation_status == 'published'
+
+      @resource.submit_to_solr
+      DataciteService.new(@resource).submit
     end
 
     # these params are now being calculated based indirect information

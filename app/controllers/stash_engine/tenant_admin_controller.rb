@@ -13,12 +13,13 @@ module StashEngine
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @tenants = @tenants.where('LOWER(short_name) LIKE LOWER(?) OR LOWER(long_name) LIKE LOWER(?) OR LOWER(stash_engine_tenants.id) LIKE LOWER(?)',
-                                  "%#{q}%", "%#{q}%", "%#{q}%")
+        @tenants = @tenants
+          .where('LOWER(short_name) LIKE LOWER(?) OR LOWER(long_name) LIKE LOWER(?) OR LOWER(stash_engine_tenants.id) LIKE LOWER(?)',
+                 "%#{q}%", "%#{q}%", "%#{q}%")
       end
 
       ord = helpers.sortable_table_order(whitelist: %w[id short_name long_name authentication covers_dpc partner_display enabled])
-      @tenants = @tenants.order(ord)
+      @tenants = @tenants.left_outer_joins(:payment_configuration).order(ord)
 
       if params[:consortium].present?
         rors = StashEngine::Tenant.find(params[:consortium]).ror_ids
@@ -31,6 +32,7 @@ module StashEngine
 
     def edit
       @tenant = authorize StashEngine::Tenant.find(params[:id])
+      @payment_configuration = @tenant.payment_configuration || @tenant.build_payment_configuration
       respond_to(&:js)
     end
 
@@ -48,6 +50,7 @@ module StashEngine
 
     def new
       @tenant = authorize StashEngine::Tenant.new
+      @payment_configuration = @tenant.build_payment_configuration
       respond_to(&:js)
     end
 
@@ -89,18 +92,11 @@ module StashEngine
       @consortia.flatten!
     end
 
-    # rubocop:disable Metrics/AbcSize
     def update_hash
-      valid = %i[covers_dpc covers_ldf partner_display enabled short_name long_name]
+      valid = %i[partner_display enabled short_name long_name flag_attributes payment_configuration_attributes]
       update = edit_params.slice(*valid)
       update[:sponsor_id] = edit_params[:sponsor_id].presence
       update[:campus_contacts] = edit_params[:campus_contacts].split("\n").map(&:strip).to_json
-      if edit_params.key?(:flag)
-        update[:flag_attributes] = { note: edit_params[:note] }
-        update[:flag_attributes][:id] = @tenant.flag.id if @tenant&.flag.present?
-      elsif @tenant&.flag.present?
-        @tenant.flag.delete
-      end
       auth = {
         strategy: edit_params[:authentication][:strategy],
         ranges: edit_params[:authentication][:ranges].present? ? edit_params[:authentication][:ranges].split("\n").map(&:strip) : nil,
@@ -111,7 +107,6 @@ module StashEngine
       update[:authentication] = auth.compact.to_json
       update
     end
-    # rubocop:enable Metrics/AbcSize
 
     def update_associations
       if edit_params.key?(:logo) && edit_params[:logo] != @tenant.logo&.data
@@ -132,8 +127,9 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled, :covers_ldf,
-                    :covers_dpc, :partner_display, :ror_orgs, :sponsor_id, :flag, :note,
+      params.permit(:id, :short_name, :long_name, :logo, :campus_contacts, :enabled, :partner_display, :ror_orgs, :sponsor_id,
+                    flag_attributes: %i[id note _destroy],
+                    payment_configuration_attributes: %i[id payment_plan covers_dpc covers_ldf ldf_limit],
                     authentication: %i[strategy ranges entity_id entity_domain email_domain])
     end
 

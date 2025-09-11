@@ -82,7 +82,7 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @resource.blank?
 
       redirect_to(app_404_path) if @resource.identifier.pub_state == 'withdrawn'
-      redirect_to_public if @resource.files_published?
+      redirect_to_public if @resource.identifier.has_accepted_manuscript? || @resource.identifier.publication_article_doi.present?
     end
 
     # uses presigned
@@ -239,7 +239,7 @@ module StashEngine
     def redirect_to_public
       redirect_to(
         landing_show_path(id: @resource.identifier_str),
-        notice: 'This dataset is now published, please use the download button on the right side.'
+        notice: "This dataset is published. Please use #{@resource.identifier_uri}."
       )
     end
 

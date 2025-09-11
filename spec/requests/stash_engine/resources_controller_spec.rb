@@ -5,7 +5,7 @@ module StashEngine
       let(:user) { create(:user) }
       let!(:resource) { create(:resource) }
       let!(:readme) do
-        create(:description, resource: resource, description_type: 'technicalinfo', description: File.read('spec/data/README_filelist.md'))
+        create(:description, resource: resource, description_type: 'technicalinfo', description: File.read('spec/fixtures/README_filelist.md'))
       end
 
       before do

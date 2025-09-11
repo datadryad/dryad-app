@@ -1,3 +1,4 @@
+# :nocov:
 require 'csv'
 
 module Tasks
@@ -70,3 +71,4 @@ module Tasks
     end
   end
 end
+# :nocov:

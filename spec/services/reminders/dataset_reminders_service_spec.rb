@@ -8,8 +8,6 @@ module Reminders
       # So we do not have to handle dates of 29, 30, 31 that we travel to and do not exist, like on February
       fake_time = Time.new(today.year, today.month, 20, 12, 0, 0) # 12:00 noon on 20th
       Timecop.freeze(fake_time)
-
-      allow_any_instance_of(StashEngine::CurationActivity).to receive(:update_salesforce_metadata).and_return(true)
     end
 
     after do
@@ -113,13 +111,13 @@ module Reminders
       before do
         Timecop.travel(3.months.ago) do
           mock_salesforce!
-          create(:curation_activity_no_callbacks, resource: resource, status: 'processing')
-          create(:curation_activity_no_callbacks, resource: resource, status: 'submitted')
-          create(:curation_activity_no_callbacks, resource: resource, status: 'submitted', note: 'Status change email sent to author')
-          create(:curation_activity_no_callbacks, resource: resource, status: 'curation')
-          create(:curation_activity_no_callbacks, resource: resource, status: 'in_progress')
+          create(:curation_activity, resource: resource, status: 'processing')
+          create(:curation_activity, resource: resource, status: 'submitted')
+          create(:curation_activity, resource: resource, status: 'submitted', note: 'Status change email sent to author')
+          create(:curation_activity, resource: resource, status: 'curation')
+          create(:curation_activity, resource: resource, status: 'in_progress')
         end
-        create(:curation_activity_no_callbacks, resource: resource, status: 'action_required')
+        create(:curation_activity, resource: resource, status: 'action_required')
         allow(StashEngine::UserMailer).to receive_message_chain(:chase_action_required1, :deliver_now).and_return(true)
       end
 

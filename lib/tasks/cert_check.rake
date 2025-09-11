@@ -1,3 +1,4 @@
+# :nocov:
 namespace :certbot do
   desc 'Check SSL certificate expiration and send email if near expiration'
   task check_and_notify: :environment do
@@ -43,3 +44,4 @@ namespace :certbot do
     end
   end
 end
+# :nocov:

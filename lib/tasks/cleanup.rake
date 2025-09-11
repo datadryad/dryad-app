@@ -32,5 +32,16 @@ namespace :cleanup do
     puts "Deleting Version with IDs: #{versions.ids}"
     versions.destroy_all
   end
+
+  task delete_copied_frictionless_reports: :environment do
+    puts ''
+    puts "Delete copied frictionless reports #{Time.current}:"
+    reports = StashEngine::FrictionlessReport.joins(:generic_file).where(stash_engine_generic_files: { file_state: %w[copied deleted] })
+
+    puts "Deleting #{reports.count} frictionless reports"
+    reports.destroy_all
+
+    puts 'Done'
+  end
 end
 # :nocov:

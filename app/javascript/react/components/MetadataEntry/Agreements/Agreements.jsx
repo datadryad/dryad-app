@@ -212,7 +212,7 @@ export default function Agreements({
             : (
               /* eslint-disable max-len */
               <>
-                <CalculateFees resource={resource} fees={fees} setFees={setFees} ppr={ppr} />
+                <CalculateFees current={current} resource={resource} fees={fees} setFees={setFees} ppr={ppr} />
                 {fees.total ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.</p> : null}
               </>
               /* eslint-enable max-len */

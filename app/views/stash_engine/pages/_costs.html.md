@@ -7,7 +7,7 @@ Our Data Publishing Charge (DPC) is based on the variable costs of curating, pub
 
 ## Author fees
 
-Authors affiliated with a [Dryad partner](/about#our-members) will have their DPCs sponsored. (If your institution or journal is not yet a Dryad partner, please invite them to [learn more](/join_us)). 
+Authors affiliated with a [Dryad partner](/about#our-partners) will have their DPCs sponsored. (If your institution or journal is not yet a Dryad partner, please invite them to [learn more](/join_us)). 
 
 Authors not affiliated with a Dryad partner organization are asked to pay a DPC by credit card at the time of submission. Invoices may be requested for an additional administration fee of $199 USD.
 
@@ -61,7 +61,7 @@ Effective June 2024, Dryad's Data Publishing Charge cannot be paid using voucher
 
 ## Private for Peer Review Fee
 
-During submission, authors have the option to make their data [Private for Peer Review](submission_process#private-for-peer-review). Private datasets are made available via a temporary, anonymous link suitable for double-blind peer review. Authors have the option to pay the full Data Publishing Charge at submission or pay a Private for Peer Review Fee of $50. The Private for Peer Review Fee is nonrefundable, but it is applied toward the balance of the [Data Publishing Charge](#author-fees) once the dataset advances to curation for publication.
+During submission, authors have the option to make their data [Private for Peer Review](submission_process#private-for-peer-review). Private datasets are made available via a temporary, anonymous link suitable for double-anonymous peer review. Authors have the option to pay the full Data Publishing Charge at submission or pay a Private for Peer Review Fee of $50. The Private for Peer Review Fee is nonrefundable, but it is applied toward the balance of the [Data Publishing Charge](#author-fees) once the dataset advances to curation for publication.
 
 When you’re ready to make a dataset public, you can release it for curation. It will then advance through the Dryad screening and publication process.
 

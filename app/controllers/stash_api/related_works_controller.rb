@@ -14,22 +14,21 @@ module StashApi
     def update
       # update dataset
       @resource = @stash_identifier.latest_resource
-      related = StashDatacite::RelatedIdentifier.upsert_simple_relation(doi: @other_doi,
-                                                                        resource_id: @resource.id,
-                                                                        work_type: params[:work_type],
-                                                                        added_by: 'api_simple',
-                                                                        verified: true)
+      related = StashDatacite::RelatedIdentifier.upsert_simple_relation(
+        doi: @other_doi, resource_id: @resource.id,
+        work_type: params[:work_type], added_by: 'api_simple', verified: true
+      )
 
       # Notify submitter and curators if not notified of an update to this dataset in the last 24 hours
       send_email
 
       # add curation activity for update
       last_curation = @resource.curation_activities.last
-      StashEngine::CurationActivity.create(resource_id: @resource.id,
-                                           user_id: @user.id,
-                                           status: last_curation.status,
-                                           note: "Related #{params[:work_type]} added with #{@other_doi}} from the API",
-                                           created_at: Time.now)
+      CurationService.new(resource: @resource,
+                          user_id: @user.id,
+                          status: last_curation.status,
+                          note: "Related #{params[:work_type]} added with #{@other_doi}} from the API",
+                          created_at: Time.now).process
 
       render json: {
         relationship: related.work_type,

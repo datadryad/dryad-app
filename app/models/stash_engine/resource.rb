@@ -151,6 +151,7 @@ module StashEngine
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
           file.file_state = 'copied' if file.file_state == 'created'
+          file.skip_total_recalculation = true if file.is_a?(StashEngine::DataFile)
         end
 
         new_resource.related_identifiers.each_with_index do |ri, i|
@@ -163,9 +164,9 @@ module StashEngine
 
         new_resource.subjects = old_resource.subjects
 
-        # I think there was something weird about Amoeba that required this approach
+        # Remove deleted records before save
         deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-        deleted_files.each(&:destroy)
+        deleted_files.each(&:delete)
       })
     end
 
@@ -535,7 +536,7 @@ module StashEngine
 
     # Create the initial CurationActivity
     def init_curation_status
-      curation_activities << StashEngine::CurationActivity.new(user_id: current_editor_id || user_id)
+      CurationService.new(resource_id: id, user_id: current_editor_id || user_id, status: 'in_progress').process
     end
 
     private :init_curation_status
@@ -763,7 +764,7 @@ module StashEngine
     # Note: the special download links mean anyone with that link may download and this doesn't apply
     def may_download?(ui_user: nil)
       # doing this to avoid collision with the association called user
-      return false unless current_resource_state&.resource_state == 'submitted' # is available in the repo
+      return false unless current_state == 'submitted' # is available in the repo
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
 
@@ -846,7 +847,7 @@ module StashEngine
     # this is a query for the publication updating on a cron, but putting here so we can test the query more easily
     def self.need_publishing
       # submitted to merritt, curation embargoed, past publication date
-      all.submitted.with_visibility(states: %w[embargoed]).where('stash_engine_resources.publication_date < ?', Time.now)
+      all.submitted.with_visibility(states: %w[embargoed to_be_published]).where('stash_engine_resources.publication_date < ?', Time.now)
     end
 
     # returns boolean indicating if a version before the current resource has been made public (metadata view set to true)
@@ -1190,8 +1191,8 @@ module StashEngine
       completions = StashDatacite::Resource::Completions.new(self)
       if prior_version.blank? && completions.duplicate_submission
         dup_id = completions.duplicate_submission.identifier&.identifier
-        curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
-                                                                    note: "System noticed possible duplicate dataset #{dup_id}")
+        CurationService.new(user_id: 0, status: target_status, resource_id: id,
+                            note: "System noticed possible duplicate dataset #{dup_id}").process
       end
 
       # If it's the first version, or the prior version was in the submitter's control, we're done
@@ -1205,8 +1206,8 @@ module StashEngine
       # If the last user to edit it was the curator return it to curation status
       return unless last_curation_activity.user_id == user_id
 
-      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
-                                                                  note: 'System set back to curation')
+      CurationService.new(resource_id: id, user_id: 0, status: 'curation',
+                          note: 'System set back to curation').process
     end
 
     # rubocop:disable Metrics/AbcSize
@@ -1221,7 +1222,7 @@ module StashEngine
         changes = changes.delete_if { |c| c.is_a?(Array) }
         if (changes - %w[related_identifiers subjects funders]).empty?
           # create submitted status
-          curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
+          CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
           # immediately create published status
           update(publication_date: previous_resource.publication_date)
           target_status = previous_resource.last_curation_activity.status
@@ -1248,7 +1249,7 @@ module StashEngine
 
       # Generate the status
       # This will usually have the side effect of sending out notification emails to the author/journal
-      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
+      CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
       target_status
     end
 
@@ -1267,10 +1268,10 @@ module StashEngine
       reload
       update(user_id: target_curator.id)
 
-      curation_activities << StashEngine::CurationActivity.create(
-        user_id: target_curator.id, status: target_status,
+      CurationService.new(
+        user_id: target_curator.id, status: target_status, resource_id: id,
         note: "System auto-assigned curator #{target_curator&.name}"
-      )
+      ).process
     end
   end
 end

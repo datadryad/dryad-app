@@ -32,15 +32,15 @@ module StashDatacite
       end
 
       it 'extracts the abstract' do
-        expect(@review.abstract).to eq(@resource.descriptions.where(description_type: :abstract).first)
+        expect(@review.abstract).to eq(@resource.descriptions.where(description_type: :abstract).first&.description)
       end
 
       it 'extracts the methods' do
-        expect(@review.methods).to eq(@resource.descriptions.where(description_type: :methods).first)
+        expect(@review.methods).to eq(@resource.descriptions.where(description_type: :methods).first&.description)
       end
 
       it 'extracts the "other" description' do
-        expect(@review.other).to eq(@resource.descriptions.where(description_type: :other).first)
+        expect(@review.other).to eq(@resource.descriptions.where(description_type: :other).first&.description)
       end
 
       it 'extracts the subjects' do
