@@ -2,7 +2,7 @@
 
 **If you share our vision for the open availability and routine reuse of all research data and the expansion of non-profit, open-source solutions for research communication, commit your support to Dryad today.**
 
-<p style="text-align: center;"><a class="o-link__buttonlink" href="">Invest in Dryad now</a></p>
+<p style="text-align: center;"><a class="o-link__buttonlink" href="https://buy.stripe.com/fZu3cw0uWfUg2lQ4S2gUM02" target="_blank" aria-label=" (opens in new window)">Invest in Dryad now</a></p>
 
 Dryad supporters are organizations and individuals invested in our long-term success. We’ve served the research community reliably since 2008, taking a leading role in serving researchers, championing new standards, and modeling the potential for open data and open research. There’s always more to do to meet the evolving needs of research and broadening interests in open data.
 
@@ -16,7 +16,7 @@ Investing in Dryad is an investment in:
 
 We welcome contributions in any amount, from $100 to $100,000 USD or more.
 
-<p style="text-align: center;"><a class="o-link__buttonlink" href="">Support Dryad now</a></p>
+<p style="text-align: center;"><a class="o-link__buttonlink" href="https://buy.stripe.com/fZu3cw0uWfUg2lQ4S2gUM02" target="_blank" aria-label=" (opens in new window)">Support Dryad now</a></p>
 
 * Checks and bank drafts may be sent by mail to Dryad, 417 Mace Blvd., Ste J110, Davis, CA 95618 USA
 
