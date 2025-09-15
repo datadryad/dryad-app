@@ -137,6 +137,30 @@
         min-width: 100%;
       }
     }
+    &.preview_zip {
+      .file-tree {
+        padding: .5ch;
+
+        li {
+          padding: 6px;
+          margin: 0;
+
+          &.tree-file:nth-child(odd) {
+            background-color: #f6f6f6;
+          }
+
+          .tree-details {
+            display: flex;
+            align-items: baseline;
+            gap: .5ch;
+
+            .tree-size {
+              margin-left: auto;
+            }
+          }
+        }
+      }
+    }
   }
   #preview_file_name {
     display: flex;

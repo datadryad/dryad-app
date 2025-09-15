@@ -218,6 +218,8 @@ module StashEngine
       return 'txt' if download_filename.end_with?('.txt', '.md') ||
         upload_content_type == 'text/plain'
 
+      return 'zip' if download_filename.end_with?(*APP_CONFIG.container_file_extensions)
+
       # Images < 5MB
       return nil if upload_file_size && upload_file_size > 5 * 1024 * 1024
 
@@ -234,6 +236,10 @@ module StashEngine
 
     def previewable?
       case preview_type
+      when 'zip'
+        return true if container_files.present?
+
+        false
       when 'txt', 'csv'
         return true if sniff_file(512)
 
