@@ -83,7 +83,7 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @resource.blank?
 
       redirect_to(app_404_path) if @resource.identifier.pub_state == 'withdrawn'
-      redirect_to_public if @resource.files_published? &&
+      redirect_to_public and return if @resource.files_published? &&
       (@resource.identifier.has_accepted_manuscript? || @resource.identifier.publication_article_doi.present?)
     end
 
