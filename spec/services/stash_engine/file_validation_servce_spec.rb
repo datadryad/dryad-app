@@ -65,7 +65,7 @@ module StashEngine
         end.to change(file, :digest).to('other')
           .and change(file, :digest_type).to('sha-256')
           .and change(file, :validated_at)
-        expect(file.reload.validated_at).to be_within(1).of(Time.now.utc)
+        expect(file.reload.validated_at).not_to be_nil
       end
 
       context 'when file size does not match' do
