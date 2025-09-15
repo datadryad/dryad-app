@@ -8,12 +8,9 @@ module StashDatacite
     # PATCH/PUT /titles/1
     def update
       respond_to do |format|
-        html_title = ActionController::Base.helpers.sanitize(
-          Nokogiri::HTML5.fragment(
-            helpers.markdown_render(content: CGI.escapeHTML(params[:title].squish))
-          ).css('p').inner_html,
-          tags: %w[em sub sup i]
-        )
+        html_title = Nokogiri::HTML5.fragment(
+          helpers.markdown_render(content: CGI.escapeHTML(params[:title].squish))
+        ).css('p').inner_html
 
         return if @resource.title == html_title
 

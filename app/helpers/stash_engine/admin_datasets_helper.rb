@@ -40,7 +40,7 @@ module StashEngine
       str += resource.resource_publication&.manuscript_number&.presence || ''
       if resource.manuscript.present?
         status = (resource.manuscript.accepted? && 'accepted') || (resource.manuscript.rejected? && 'rejected') || 'submitted'
-        str += "<span id=\"status-label\" class=\"#{status}%>\">#{status}</span>"
+        str += "<span id=\"status-label\" class=\"#{status}\">#{status}</span>"
       end
       str += '<span id="doi-label" class="accepted">published</span>' if resource.identifier.publication_article_doi.present?
       unless resource.related_identifiers.empty?
