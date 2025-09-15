@@ -235,6 +235,16 @@ SELECT affil.long_name, count(affil.long_name)
 		limit 10;
 ```
 
+File details:
+```
+RAILS_ENV=production bundle exec rake identifiers:file_info_report -- 
+```
+
+Container file details:
+- Export the contents of the table `stash_engine_container_files`
+- Since MySQL exports as TSV by default, it is kind to conver it to CSV
+
+
 Datasets affiliated with an institution
 =======================================
 

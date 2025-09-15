@@ -5,13 +5,13 @@
 #  id                 :string(191)      not null, primary key
 #  authentication     :json
 #  campus_contacts    :json
+#  covers_dpc         :boolean          default(TRUE)
+#  covers_ldf         :boolean          default(FALSE)
 #  enabled            :boolean          default(TRUE)
 #  long_name          :string(191)
 #  low_income_country :boolean          default(FALSE)
-#  old_covers_dpc     :boolean          default(TRUE)
-#  old_covers_ldf     :boolean          default(FALSE)
-#  old_payment_plan   :integer
 #  partner_display    :boolean          default(TRUE)
+#  payment_plan       :integer
 #  short_name         :string(191)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null

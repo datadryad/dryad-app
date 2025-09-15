@@ -1013,6 +1013,27 @@ namespace :identifiers do
     exit
   end
 
+  # example: RAILS_ENV=production bundle exec rake identifiers:file_info_report --
+  desc 'Generate a summary report of all files in Dryad'
+  task file_info_report: :environment do
+    filename = "file_info_report-#{Date.today.strftime('%Y-%m-%d')}.csv"
+
+    log "Writing detailed file info report to file #{filename}"
+    CSV.open(filename, 'w') do |csv|
+      csv << %w[FileID FileName
+                DataDOI Version
+                Size Format Extension]
+      # for all published data files, including READMEs and new versions of the files...
+      StashEngine::DataFile.newly_created.find_each do |f|
+        next unless f.resource&.identifier&.pub_state == 'published'
+
+        csv << [f.id, f.download_filename,
+                f.resource&.identifier&.identifier, f.resource&.version_number,
+                f.upload_file_size, f.upload_content_type, File.extname(f.download_filename).downcase]
+      end
+    end
+  end
+
   # example: RAILS_ENV=production bundle exec rake identifiers:dataset_info_report_detailed -- --year_month 2024-05
   desc 'Generate a summary report of all items in Dryad'
   task dataset_info_report_detailed: :environment do
