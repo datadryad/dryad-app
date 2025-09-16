@@ -1,131 +1,113 @@
-describe AffiliationsService do
-
-  let!(:aff_with_ror) { create(:affiliation, long_name: 'First affiliation') }
-  let!(:aff_without_ror_1) { create(:affiliation, long_name: 'First affiliation', ror_id: nil) }
-  let!(:aff_without_ror_2) { create(:affiliation, long_name: 'First affiliation', ror_id: nil) }
-  let!(:aff_with_different_name_1) { create(:affiliation, long_name: 'Second affiliation', ror_id: nil) }
-  let!(:aff_with_different_name_2) { create(:affiliation, long_name: 'Second affiliation', ror_id: nil) }
-  let!(:aff_with_different_name_and_ror_1) { create(:affiliation, long_name: 'Third affiliation') }
-  let!(:aff_with_different_name_and_ror_2) { create(:affiliation, long_name: 'Third affiliation') }
-  let(:main_affiliation) { aff_with_ror }
-
-  let!(:author_1) { create(:author, affiliations: [aff_with_ror]) }
-  let!(:author_2) { create(:author, affiliations: [aff_without_ror_1, aff_with_different_name_1]) }
-  let!(:author_3) { create(:author, affiliations: [aff_without_ror_1, aff_with_different_name_1, aff_without_ror_2]) }
-  let!(:author_4) { create(:author, affiliations: [aff_without_ror_1, aff_with_different_name_1, aff_with_different_name_and_ror_1]) }
-
-  subject { described_class.new(main_affiliation) }
+describe AuthorsService do
+  let(:identifier) { create(:identifier) }
+  let(:identifier2) { create(:identifier) }
+  let(:resource) { create(:resource, identifier: identifier) }
+  let(:resource2) { create(:resource, identifier: identifier2) }
+  let!(:author) { create(:author, author_email: 'author@example.com', author_orcid: '', resource: resource2) }
 
   describe '#initialize' do
+    subject { described_class.new(author) }
+
     it 'sets the main affiliation' do
-      expect(subject.affiliation).to eq(aff_with_ror)
+      expect(subject.author).to eq(author)
     end
   end
 
-  describe 'if duplicates exist' do
-    it 'deletes affiliations' do
-      expect do
-        subject.make_uniq
-        expect(StashDatacite::Affiliation.where(long_name: main_affiliation.long_name).count).to eq(1)
-      end.to change { StashDatacite::Affiliation.count }.by(-2)
+  describe '#check_orcid' do
+    subject { described_class.new(author).check_orcid }
+
+    context 'when author is blank' do
+      let(:author) { nil }
+
+      it 'does not raise errors' do
+        expect { subject }.not_to raise_error
+      end
+    end
+
+    context 'when there are multiple authors' do
+      let!(:author1) { create(:author, author_email: 'author@example.com', author_orcid: '') }
+      let!(:author2) { create(:author, author_email: 'author@example.com', author_orcid: '1234-1234-1234-1234') }
+      let!(:author3) { create(:author, author_email: 'author@example.com', author_orcid: '1234-1234-1234-4321') }
+
+      it 'users first author ORCID' do
+        subject
+        expect(author.reload.author_orcid).to eq(author2.author_orcid)
+      end
+    end
+
+    context 'when there are multiple users' do
+      let!(:user1) { create(:user, email: 'author@example.com', orcid: nil) }
+      let!(:user2) { create(:user, email: 'author@example.com', orcid: '1234-1234-1234-1234') }
+      let!(:user3) { create(:user, email: 'author@example.com', orcid: '1234-1234-1234-4321') }
+
+      it 'users first user ORCID' do
+        subject
+        expect(author.reload.author_orcid).to eq(user2.orcid)
+      end
+    end
+
+    context 'when there is an user and an author' do
+      let!(:author1) { create(:author, author_email: 'author@example.com', author_orcid: '1234-1234-1234-4321') }
+      let!(:user1) { create(:user, email: 'author@example.com', orcid: '1234-1234-1234-1234') }
+
+      it 'uses user ORCID' do
+        subject
+        expect(author.reload.author_orcid).to eq(user1.orcid)
+      end
     end
   end
 
-  describe '#make_unique' do
-    subject { described_class.new(main_affiliation).make_uniq }
+  describe '#fix_missing_orchid' do
+    subject { described_class.new.fix_missing_orchid }
 
-    before { subject }
+    context 'when author in conflicts based on authors info' do
+      let!(:author1) { create(:author, author_email: 'author@example.com', author_orcid: '1234-1234-1234-1234', resource: resource) }
+      let!(:author2) { create(:author, author_email: 'author@example.com', author_orcid: '1234-1234-1234-4321', resource: resource) }
 
-    context 'when the main affiliation has a ror' do
-      it 'updates authors' do
-        expect(author_1.reload.affiliations).to match_array([aff_with_ror])
-        expect(author_2.reload.affiliations).to match_array([aff_with_ror, aff_with_different_name_1])
-
-        # does not double the affiliation relation
-        expect(author_3.reload.affiliations).to match_array([aff_with_ror, aff_with_different_name_1])
+      it 'does not update the ORCID' do
+        subject
+        expect(author.reload.author_orcid).to be_nil
       end
     end
 
-    context 'when the all similar affiliation have a ror' do
-      let(:main_affiliation) { aff_with_different_name_and_ror_2 }
+    context 'when author in conflicts' do
+      context 'based on users info' do
+        let!(:user1) { create(:user, email: 'author@example.com', orcid: '1234-1234-1234-1234') }
+        let!(:user2) { create(:user, email: 'author@example.com', orcid: '1234-1234-1234-4321') }
 
-      it 'updates authors' do
-        expect(author_4.reload.affiliations).to match_array([aff_without_ror_1, aff_with_different_name_1, aff_with_different_name_and_ror_2])
-        # does not affect other authors
-        expect(author_2.reload.affiliations).to match_array([aff_without_ror_1, aff_with_different_name_1])
-        expect(author_3.reload.affiliations).to match_array([aff_without_ror_1, aff_with_different_name_1, aff_without_ror_2])
-      end
-    end
-
-    context 'when the main affiliation does not have a ror' do
-      context 'same name affiliation with ror exists' do
-        let(:main_affiliation) { aff_without_ror_2 }
-
-        it 'updates authors with the affiliation that has a ror' do
-          expect(author_1.reload.affiliations).to match_array([aff_with_ror])
-          expect(author_2.reload.affiliations).to match_array([aff_with_ror, aff_with_different_name_1])
-          expect(author_3.reload.affiliations).to match_array([aff_with_ror, aff_with_different_name_1])
+        it 'does not update the ORCID' do
+          subject
+          expect(author.reload.author_orcid).to be_nil
         end
       end
 
-      context 'same name affiliation with ror does not exist' do
-        let(:main_affiliation) { aff_with_different_name_2 }
+      context 'based on user and author info' do
+        let!(:user1) { create(:user, email: 'author@example.com', orcid: '1234-1234-1234-1234') }
+        let!(:author2) { create(:author, author_email: 'author@example.com', author_orcid: '1234-1234-1234-4321', resource: resource) }
 
-        it 'updates authors with given affiliation' do
-          expect(author_1.reload.affiliations).to match_array([aff_with_ror])
-          expect(author_2.reload.affiliations).to match_array([aff_without_ror_1, aff_with_different_name_2])
-          expect(author_3.reload.affiliations).to match_array([aff_without_ror_1, aff_with_different_name_2, aff_without_ror_2])
-          expect(author_4.reload.affiliations).to match_array([aff_without_ror_1, aff_with_different_name_2, aff_with_different_name_and_ror_1])
+        it 'does not update the ORCID' do
+          subject
+          expect(author.reload.author_orcid).to be_nil
         end
       end
     end
-  end
 
-  describe '#affiliations_with_same_name' do
-    subject { described_class.new(main_affiliation).affiliations_with_same_name }
+    context 'when author is not in conflicts' do
+      context 'when ORCID is set on user' do
+        let!(:user1) { create(:user, email: 'author@example.com', orcid: '1234-1234-1234-1234') }
 
-    it 'returns all affiliations with the same name' do
-      expect(subject).to match_array([aff_with_ror, aff_without_ror_1, aff_without_ror_2])
-    end
-
-    it 'does not run the query twice' do
-      expect(StashDatacite::Affiliation).to receive(:where).once
-      subject
-      subject
-    end
-  end
-
-  describe '#base_affiliation' do
-    subject { described_class.new(main_affiliation).send(:base_affiliation) }
-
-    context 'when the main affiliation has a ror' do
-      it 'returns main affiliation' do
-        expect(subject).to eq(aff_with_ror)
-      end
-    end
-
-    context 'when the all similar affiliation have a ror' do
-      let(:main_affiliation) { aff_with_different_name_and_ror_2 }
-
-      it 'returns main affiliation' do
-        expect(subject).to eq(aff_with_different_name_and_ror_2)
-      end
-    end
-
-    context 'when the main affiliation does not have a ror' do
-      context 'same name affiliation with ror exists' do
-        let(:main_affiliation) { aff_without_ror_2 }
-
-        it 'returns affiliation with ror' do
-          expect(subject).to eq(aff_with_ror)
+        it 'updates the ORCID' do
+          subject
+          expect(author.reload.author_orcid).to eq('1234-1234-1234-1234')
         end
       end
 
-      context 'same name affiliation with ror does not exist' do
-        let(:main_affiliation) { aff_with_different_name_1 }
+      context 'when ORCID is set on author' do
+        let!(:author1) { create(:author, author_email: 'author@example.com', author_orcid: '1234-1234-1234-4321', resource: resource) }
 
-        it 'returns the same instance' do
-          expect(subject).to eq(aff_with_different_name_1)
+        it 'updates the ORCID' do
+          subject
+          expect(author.reload.author_orcid).to eq('1234-1234-1234-4321')
         end
       end
     end

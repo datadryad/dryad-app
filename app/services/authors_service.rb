@@ -3,7 +3,7 @@ require 'csv'
 class AuthorsService
   attr_reader :author
 
-  def initialize(author=nil)
+  def initialize(author = nil)
     @author = author
   end
 
@@ -12,10 +12,18 @@ class AuthorsService
     return if author.author_email.blank?
     return if author.author_orcid.present?
 
-    user_with_orcid = StashEngine::User.where('LOWER(email) = LOWER(?), orcid NOT IN ("", NULL)', author.author_email)&.first
-    return unless user_with_orcid
+    orcid = nil
+    # check User model first
+    record = StashEngine::User.where('LOWER(email) = LOWER(?)', author.author_email).where.not(orcid: [nil, '']).first
+    orcid = record.orcid if record
 
-    author.update(author_orcid: user_with_orcid.orcid)
+    if orcid.blank?
+      # check Author model
+      record = StashEngine::Author.where('LOWER(author_email) = LOWER(?)', author.author_email).where.not(author_orcid: [nil, '']).first
+      orcid = record.author_orcid if record
+    end
+
+    author.update(author_orcid: orcid) if orcid
   end
 
   def fix_missing_orchid
@@ -30,10 +38,11 @@ class AuthorsService
       next if conflicts[author.author_email].present?
       next if grouped_orcids[author.author_email].blank?
 
-      if (orcid = grouped_orcids[author.author_email][:user]&.first || grouped_orcids[author.author_email][:author]&.first)
-        pp "updating #{author.author_email} with ORCID #{orcid}"
-        # author.update_column(:author_orcid, orcid) # update_column skips validations/callbacks
-      end
+      orcid = grouped_orcids[author.author_email][:user]&.first || grouped_orcids[author.author_email][:author]&.first
+      next if orcid.blank?
+
+      pp "Updating author #{author.id} - #{author.author_email} with ORCID #{orcid}"
+      author.update_column(:author_orcid, orcid) # update_column skips validations/callbacks
     end
   end
 
