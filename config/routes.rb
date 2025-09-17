@@ -476,6 +476,7 @@ Rails.application.routes.draw do
 
   scope module: 'help', path: 'help' do
     get '/', to: 'help', as: 'help'
+    get '/contact', to: 'contact'
     get ':folder/:page', to: 'topic'
   end
 

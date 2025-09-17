@@ -76,7 +76,7 @@ If any potential inconsistencies are identified, instructions will appear on the
 
 You can choose to proceed to the final page of the submission form without editing any files. During curation, if there are questions about how your data are presented, a curator will contact you with options to improve the organization, readability, and/or reusability of your dataset.
 
-If you have questions, please see our [guide to the tabular data check alerts](/help/guides/data_check_alerts). If you require assistance, [contact support](/contact).
+If you have questions, please see our [guide to the tabular data check alerts](/help/guides/data_check_alerts).
 
 
 ## Review and submit
@@ -85,7 +85,7 @@ On the final page of the submission form, you'll have the opportunity to review 
 
 Check the required acknowledgments to agree to payment of the [Data Publishing Charge](/help/requirements/costs). You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.
 
-If you are affiliated with a partner institution or your related publication is associated with a sponsoring journal title, a statement below will appear to confirm who is sponsoring the Data Publishing Charge. If your submission should be sponsored, but you do not see a statement indicating as much, please [contact support](/contact). 
+If you are affiliated with a partner institution or your related publication is associated with a sponsoring journal title, a statement below will appear to confirm who is sponsoring the Data Publishing Charge. If your submission should be sponsored, but you do not see a statement indicating as much, please [contact support](/help/contact). 
 
 
 ### Private for Peer Review
@@ -95,5 +95,3 @@ On the final page of the submission process, we offer the option to make the dat
 When your manuscript has been accepted, you can take your dataset out of Private for Peer Review, so that the Dryad team can begin the curation and publication processes. To do this, log in to Dryad and navigate to "My datasets". Find the submission under the "Kept private" heading. On the right, click the "Release for curation" button, and confirm.
 
 Note that if your manuscript is submitted to, and accepted by, an integrated title that sends us status updates on your manuscript, the Private for Peer Review period will automatically end.
-
-If you have questions or require assistance, [contact support](/contact).

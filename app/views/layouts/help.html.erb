@@ -19,7 +19,13 @@
           <button id="right-scroll-button" aria-label="Scroll right" hidden></button>
         </div>
       </nav>
-      <div id="page-content" data-pagefind-body><%= yield %></div>
+      <div id="page-content" data-pagefind-body>
+        <%= yield %>
+        <% unless ['/help', '/help/contact'].include?(request.path) %>
+          <hr style="border-top: thin solid #f6f6f6;"/>
+          <p>Unable to find the answer to your question? <a href="/help/contact">Contact the helpdesk</a></p>
+        <% end %>
+      </div>
     </div>
   </main>
   <%= render partial: "shared/footer" %>
