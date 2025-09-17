@@ -206,6 +206,7 @@ Rails.application.routes.draw do
     
     post 'helpdesk', to: 'pages#helpdesk', as: 'contact_helpdesk'
     
+    get 'close_page', to: 'pages#close_page'
     get 'contact', to: 'pages#contact'
     get 'mission', to: 'pages#what_we_do'
     get 'join_us', to: 'pages#join_us'
