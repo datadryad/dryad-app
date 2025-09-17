@@ -16,7 +16,7 @@ export default function CalculateFees({
   };
 
   useEffect(() => {
-    if (current) calculateFees();
+    calculateFees();
   }, [ppr, current]);
 
   /* eslint-disable max-len */
