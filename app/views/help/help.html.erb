@@ -1,0 +1,111 @@
+<h1>Dryad help center</h1>
+
+<%= render partial: 'search_form' %>
+<p id="help_result_count"></p>
+<ul id="help_search_results"></ul>
+<p id="prompt" hidden>Unable to find the answer to your question? <a href="/help/contact">Contact the helpdesk</a></p>
+<template id="result">
+  <li>
+    <a href=""></a>
+    <div class="excerpt"></div>
+  </li>
+</template>
+<template id="subresult">
+  <div class="subresult">
+    <a href=""><i class="fas fa-arrow-turn-up fa-rotate-90"></i></a>
+    <div class="excerpt"></div>
+  </div>
+</template>
+
+<h2>More Dryad documentation</h2>
+<div class="tiles icon-tiles">
+  <a href="/api">
+    <i class="fas fa-network-wired" aria-hidden="true"></i>
+    <span>Dryad API</span>
+  </a>
+  <a href="/about#our-partners">
+    <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
+    <span>Partner list</span>
+  </a>
+  <a href="/journals">
+    <i class="fas fa-book-open" aria-hidden="true"></i>
+    <span>Integrated journals</span>
+  </a>
+</div>
+
+<h2>Popular topics</h2>
+<div class="tiles text-tiles">
+  <div>
+    <a href="/help/requirements/files#preferred-file-formats">Preferred file formats</a>
+    <div class="excerpt">Use CSV, TSV, or ODF formats for tabular data. Excel files (XLS or XLSX) with formatting can reduce accessibility and complicate downstream analysis</div>
+  </div>
+  <div>
+    <a href="/help/requirements/costs#author-fees">Author fees</a>
+    <div class="excerpt">Authors affiliated with a Dryad partner will have their DPCs sponsored. (If your institution or journal is not yet a Dryad partner, please invite</div>
+  </div>
+  <div>
+    <a href="/help/submission_steps/publication#citing-your-dataset">Citing your dataset</a>
+    <div class="excerpt">As soon as you start a data submission, a DOI is reserved for that dataset in the format https://doi.org/10.5061/dryad.XXXX. This, and a full citation</div>
+  </div>
+</div>
+
+<script type="module" async>
+  const pagefind = await import("/pagefind/pagefind.js");
+  pagefind.init();
+
+  const urlFix = (url) => url.replace('.html', '');
+
+  const searchHelp = async (query) => {
+    const count = document.getElementById('help_result_count')
+    const container = document.getElementById('help_search_results')
+    const temp = document.getElementById('result')
+    const subtemp = document.getElementById('subresult')
+    const prompt = document.getElementById('prompt')
+    const search = await pagefind.search(query)
+    const results = await search.results
+    container.innerHTML = '';
+    prompt.setAttribute('hidden', true)
+    if (results.length) {
+      count.innerHTML = `${results.length} result${results.length > 1 ? 's' : ''} for <b>${query}</b>`
+      results.forEach(async (r) => {
+        const data = await r.data()
+        const child = temp.content.cloneNode(true)
+        child.querySelector('a').href = urlFix(data.url)
+        child.querySelector('a').innerHTML = data.meta.title
+        child.querySelector('.excerpt').innerHTML = data.excerpt
+        data.sub_results.forEach((s) => {
+          if (s.url !== data.url) {
+            const sub = subtemp.content.cloneNode(true)
+            sub.querySelector('a').href = urlFix(s.url)
+            sub.querySelector('a').innerHTML += s.title
+            sub.querySelector('.excerpt').innerHTML = s.excerpt
+            child.querySelector('li').appendChild(sub)
+          }
+        })
+        container.appendChild(child)
+      })
+    } else {
+      count.innerHTML = `No results for <b>${query}</b>`
+      prompt.removeAttribute('hidden')
+    }
+  }
+
+  const location = new URL(window.location.href)
+  const term = location.searchParams.get('q')
+  if (term) {
+    document.getElementById('help_search').value = term
+    searchHelp(term)
+  }
+  document.getElementById('help-search-form').addEventListener('submit', (e) => {
+    e.preventDefault()
+    const new_term = document.getElementById('help_search').value
+    location.searchParams.set('q', new_term)
+    window.history.replaceState(null, null, location);
+    searchHelp(new_term)
+  })
+  document.getElementById('help-search-form').addEventListener('reset', () => {
+    document.getElementById('help_search_results').innerHTML = ''
+    document.getElementById('help_result_count').innerHTML = ''
+    document.getElementById('prompt').setAttribute('hidden', true)
+  })
+</script>

@@ -204,30 +204,20 @@ Rails.application.routes.draw do
     post 'sessions/validate_email', to: 'sessions#validate_email', as: 'validate_email'
     get 'feedback', to: 'sessions#feedback', as: 'feedback'
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
+    
     post 'helpdesk', to: 'pages#helpdesk', as: 'contact_helpdesk'
-
-    get 'close_page', to: 'pages#close_page'
-    get 'requirements', to: 'pages#requirements'
-    get 'costs', to: 'pages#costs'
-    get 'reuse', to: 'pages#reuse'
+    
     get 'contact', to: 'pages#contact'
-    get 'best_practices', to: 'pages#best_practices'
     get 'mission', to: 'pages#what_we_do'
-    get 'contact_thanks', to: 'pages#contact_thanks'
     get 'join_us', to: 'pages#join_us'
     get 'support_us', to: 'pages#support_us'
     get 'code_of_conduct', to: 'pages#code_of_conduct'
     get 'ethics', to: 'pages#ethics'
     get 'pb_tombstone', to: 'pages#pb_tombstone'
-    get 'submission_process', to: 'pages#submission_process'
-    get 'data_check_guide', to: 'pages#data_check_guide'
-    get 'process', to: 'pages#process'
     get 'why_use', to: 'pages#why_use'
     get 'dda', to: 'pages#dda' # data deposit agreement
     get 'terms', to: 'pages#terms'
     get 'partner_terms', to: 'pages#terms_partner'
-    get 'editor', to: 'pages#editor'
-    get 'web_crawling', to: 'pages#web_crawling'
     get 'about', to: 'pages#who_we_are'
     get 'api', to: 'pages#api'
     get 'definitions', to: 'pages#definitions'
@@ -485,6 +475,26 @@ Rails.application.routes.draw do
     patch 'peer_review/release', to: 'peer_review#release', as: :peer_review_release
   end
 
+  scope module: 'help', path: 'help' do
+    get '/', to: 'help', as: 'help'
+    get '/contact', to: 'contact'
+    get ':folder/:page', to: 'topic'
+  end
+
+  get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
+  get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
+
+  resources :payments, only: [] do
+    collection do
+      post ':resource_id', to: 'payments#create'
+      get :callback
+
+      delete '/reset_payment/:identifier_id', to: 'payments#reset_payment', as: :reset_payment
+    end
+  end
+
+  get :health_check, to: 'health#check'
+
   ########################## CEDAR Embeddable Editor ###############################
 
   post 'metadata_entry_pages/cedar_popup', to: 'metadata_entry_pages#cedar_popup', as: 'cedar_popup'
@@ -497,7 +507,7 @@ Rails.application.routes.draw do
   get '/cedar-config', to: 'cedar#json_config'
   post '/cedar-save', to: 'cedar#save'
 
-  ########################## Dryad v1 support ######################################
+  ########################## Redirects ######################################
 
   # Routing to redirect old Dryad URLs to their correct locations in this system
   get '/pages/faq', to: redirect('/requirements')
@@ -533,6 +543,18 @@ Rails.application.routes.draw do
     "/#{params[:path]}#{query}"
   }, constraints: { path: /.*/ }
 
+  # Help center redirects
+  get '/requirements', to: redirect('/help/requirements/files')
+  get '/costs', to: redirect('/help/requirements/costs')
+  get '/reuse', to: redirect('/help/guides/reuse')
+  get '/best_practices', to: redirect('/help/guides/best_practices')
+  get '/submission_process', to: redirect('/help/submission_steps/submission')
+  get '/data_check_guide', to: redirect('/help/guides/data_check_alerts')
+  get '/process', to: redirect('/help/submission_steps/publication')
+  get '/HumanSubjectsData.pdf', to: redirect('/help/guides/HumanSubjectsData.pdf')
+  get '/EndangeredSpeciesData.pdf', to: redirect('/help/guides/EndangeredSpeciesData.pdf')
+  get '/QuickstartGuideToDataSharing.pdf', to: redirect('/help/guides/QuickstartGuideToDataSharing.pdf')
+
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
   # Dataset:            https://datadryad.org/resource/doi:10.5061/dryad.kq201
@@ -547,18 +569,4 @@ Rails.application.routes.draw do
   get '/resource/:doi_prefix/:doi_suffix*file',
       constraints: { doi_prefix: /doi:10.\d{4,9}/i, doi_suffix: /[A-Z0-9]+\.[A-Z0-9]+/i },
       to: redirect{ |p, req| "/dataset/#{p[:doi_prefix]}/#{p[:doi_suffix]}" }
-
-  get :health_check, to: 'health#check'
-
-  get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
-  get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
-
-  resources :payments, only: [] do
-    collection do
-      post ':resource_id', to: 'payments#create'
-      get :callback
-
-      delete '/reset_payment/:identifier_id', to: 'payments#reset_payment', as: :reset_payment
-    end
-  end
 end
