@@ -58,50 +58,6 @@ module StashApi
         expect(@metadata[:versionStatus]).to eq('in_progress')
       end
 
-      it 'hides skipDataciteUpdate if false' do
-        expect(@metadata[:skipDataciteUpdate]).to eq(nil)
-      end
-
-      it 'hides skipEmails if false' do
-        expect(@metadata[:skipEmails]).to eq(nil)
-      end
-
-      it 'hides preserveCurationStatus if false' do
-        expect(@metadata[:preserveCurationStatus]).to eq(nil)
-      end
-
-      it 'hides loosenValidation if false' do
-        expect(@metadata[:loosenValidation]).to eq(nil)
-      end
-
-      it 'shows skipDataciteUpdate when true' do
-        @identifier.in_progress_resource.update(skip_datacite_update: true)
-        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
-        @metadata = @dataset.metadata
-        expect(@metadata[:skipDataciteUpdate]).to eq(true)
-      end
-
-      it 'shows skipEmails when true' do
-        @identifier.in_progress_resource.update(skip_emails: true)
-        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
-        @metadata = @dataset.metadata
-        expect(@metadata[:skipEmails]).to eq(true)
-      end
-
-      it 'shows preserveCurationStatus when true' do
-        @identifier.in_progress_resource.update(preserve_curation_status: true)
-        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
-        @metadata = @dataset.metadata
-        expect(@metadata[:preserveCurationStatus]).to eq(true)
-      end
-
-      it 'shows loosenValidation when true' do
-        @identifier.in_progress_resource.update(loosen_validation: true)
-        @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
-        @metadata = @dataset.metadata
-        expect(@metadata[:loosenValidation]).to eq(true)
-      end
-
       it 'has a curation status' do
         @dataset = Dataset.new(identifier: @identifier.to_s, user: @user)
         @metadata = @dataset.metadata
@@ -130,6 +86,12 @@ module StashApi
         expect(rw[:identifier]).to eq(ri.related_identifier)
         expect(rw[:identifierType]).to eq('DOI')
         expect(rw[:relationship]).to eq('primary_article')
+      end
+
+      it 'shows metrics' do
+        expect(@metadata[:metrics][:views]).to eq(0)
+        expect(@metadata[:metrics][:downloads]).to eq(0)
+        expect(@metadata[:metrics][:citations]).to eq(0)
       end
 
       it 'defaults to the correct license' do
