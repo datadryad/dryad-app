@@ -27,7 +27,8 @@ module StashDatacite
       @author.update(author_params)
       aff = @author.affiliations.pluck(:long_name).sort
 
-      check_for_orcid if @author.author_orcid.blank?
+      AuthorsService.new(@author).check_orcid
+      @author.reload
       process_affiliations
 
       # IF affiliations changed
@@ -149,17 +150,6 @@ module StashDatacite
       params.require(:author).permit(:id, :author_first_name, :author_last_name, :author_org_name,
                                      :author_email, :resource_id, :author_orcid, :author_order, :corresp,
                                      affiliations: %i[id ror_id long_name])
-    end
-
-    def check_for_orcid
-      return unless @author.present?
-      return unless @author.author_email.present?
-      return unless @author.author_orcid.blank?
-
-      found = StashEngine::User.where('LOWER(email) = LOWER(?)', @author.author_email)&.first
-      return unless found && found.orcid.present?
-
-      @author.update(author_orcid: found.orcid)
     end
 
     # find correct affiliation based on long_name and ror_id and set it, create one if needed.
