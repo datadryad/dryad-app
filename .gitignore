@@ -16,6 +16,7 @@
 # Temporary files
 public/assets/
 public/uploads/
+public/cache/
 uploads/
 /reports/
 test-reports/
@@ -208,6 +209,7 @@ flycheck_*.el
 
 /public/packs
 /public/packs-test
+/public/cache/
 /node_modules
 /yarn-error.log
 yarn-debug.log*

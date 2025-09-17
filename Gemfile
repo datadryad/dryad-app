@@ -169,6 +169,7 @@ group :development, :dev do
 end
 
 group :development do
+  gem 'actionpack-page_caching'
   gem 'annotaterb', '~> 4.13.0'
   gem 'bullet'
 end

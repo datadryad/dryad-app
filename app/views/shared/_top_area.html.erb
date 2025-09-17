@@ -1,0 +1,16 @@
+<% extra_class = "" %>
+<% if params[:controller].try(:include?, 'pages') && params[:action] == 'home' %>
+  <% extra_class = "t-home__header" %>
+<% end %>
+
+<header class="<%= extra_class %> c-header">
+  <a class="c-skipnav" href="#maincontent">Skip to main content</a>
+  <div class="c-header__logos">
+    <%= link_to(root_path, class: 'c-header__dash-logo-link js-nav-out') do %>
+      <% dash_logo = image_tag('stash_engine/logo_dryad.png', class: 'c-header__dash-logo-svg', alt: 'Dryad')
+         tenant_logo = ((current_tenant.present? && current_tenant.logo&.data&.present?) ? logo_path(class: "c-header__dash-logo-svg") : '') %>
+      <div><%= dash_logo %></div><% unless tenant_logo.blank? %><div><%= tenant_logo %></div><% end %>
+    <% end %>
+  </div>
+  <%= render partial: "shared/nav" %>
+</header>

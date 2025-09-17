@@ -17,6 +17,7 @@
 
 #page-columns {
   flex-direction: column-reverse;
+  min-height: calc(100vh - 240px);
 
   @include bp(screen3) {
     flex-direction: row-reverse;
@@ -58,6 +59,10 @@
     margin: 0;
     padding: 0;
     list-style: "";
+  }
+
+  ul ul {
+    margin-left: 2ch;
   }
 
   #nav-mobile-buttons {
