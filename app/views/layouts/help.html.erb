@@ -13,11 +13,8 @@
   <main id="maincontent" class="help-page">
     <div id="page-columns">
       <nav id="page-nav" aria-label="Help navigation">
+        <button id="nav-mobile-button" class="o-button__plain-text1" aria-label="Expand page menu"><i class="fas fa-angles-up"></i></button>
         <%= render partial: 'help/navigation' %>
-        <div id="nav-mobile-buttons">
-          <button id="left-scroll-button" aria-label="Scroll left" hidden></button>
-          <button id="right-scroll-button" aria-label="Scroll right" hidden></button>
-        </div>
       </nav>
       <div id="page-content" data-pagefind-body>
         <%= yield %>
