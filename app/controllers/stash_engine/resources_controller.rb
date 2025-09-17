@@ -1,7 +1,7 @@
 # rubocop:disable Metrics/ClassLength
 module StashEngine
   class ResourcesController < ApplicationController
-    include StashEngine::LandingHelper
+    include StashEngine::DownloadsHelper
 
     before_action :require_login
     before_action :assign_resource, only: %i[logout display_readme dupe_check]
