@@ -33,6 +33,7 @@ gem 'terser' # for JS and CSS minify
 # ############################################################
 # Misc
 gem 'acts_as_paranoid', '~> 0.10.3'
+gem 'actionpack-page_caching'
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
@@ -169,7 +170,6 @@ group :development, :dev do
 end
 
 group :development do
-  gem 'actionpack-page_caching'
   gem 'annotaterb', '~> 4.13.0'
   gem 'bullet'
 end
