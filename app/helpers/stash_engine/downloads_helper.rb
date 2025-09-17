@@ -71,11 +71,14 @@ module StashEngine
 
     def tree_view(file)
       h = {}
-      paths = file.container_files.map(&:path).map { |path| path.split('/') }
+      files = file.container_files
+      paths = files.limit(50).map(&:path).map { |path| path.split('/') }
       paths.each_with_index { |path, i| merge(path, h, file.container_files[i].size) }
       str = '<ul class="o-list file-tree">'
       h.each { |k, v| str += create_tree(k, v) }
       str += '</ul>'
+      str += "<p style=\"text-align: center\">Package contains #{files.size} files. 50 files shown.</p>" if files.size > 50
+      str
     end
   end
 end
