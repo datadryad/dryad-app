@@ -203,9 +203,8 @@ Rails.application.routes.draw do
     post 'sessions/validate_email', to: 'sessions#validate_email', as: 'validate_email'
     get 'feedback', to: 'sessions#feedback', as: 'feedback'
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
+    
     post 'helpdesk', to: 'pages#helpdesk', as: 'contact_helpdesk'
-
-    get 'close_page', to: 'pages#close_page'
     
     get 'contact', to: 'pages#contact'
     get 'mission', to: 'pages#what_we_do'

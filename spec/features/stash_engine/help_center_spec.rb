@@ -5,7 +5,7 @@ RSpec.feature 'HelpCenter', type: :feature, js: true do
     visit help_path
   end
 
-  it 'loads the search bar and menu' do    
+  it 'loads the search bar and menu' do
     expect(page).to have_text('Dryad help center')
     expect(page).to have_selector('#page-content input#help_search')
     expect(page).to have_text('Submission walkthrough')
