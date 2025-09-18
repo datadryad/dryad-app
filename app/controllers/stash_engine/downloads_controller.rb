@@ -140,7 +140,7 @@ module StashEngine
       if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id) &&
           [StashEngine::SuppFile, StashEngine::SoftwareFile].include?(zen_upload.class)
         if res.zenodo_published?
-          redirect_to zen_upload.public_zenodo_download_url
+          redirect_to zen_upload.public_zenodo_download_url, allow_other_host: true
         else
           zen_presign = zen_upload.zenodo_presigned_url
           if zen_presign.nil?
