@@ -20,12 +20,17 @@
 
   @include bp(screen3) {
     flex-direction: row-reverse;
-    min-height: calc(100vh - 240px);
+
+    &:first-child:last-child {
+      min-height: calc(100vh - 240px);
+    }
   }
 
-  @media (max-width: 968px) { min-height: calc(100vh - 280px); } 
-  @media (max-width: 870px) { min-height: calc(100vh - 306px); } 
-  @media (max-width: 640px) { min-height: calc(100vh - 346px); }
+  &:first-child:last-child {
+    @media (max-width: 968px) { min-height: calc(100vh - 280px); } 
+    @media (max-width: 870px) { min-height: calc(100vh - 306px); } 
+    @media (max-width: 640px) { min-height: calc(100vh - 346px); }
+  }
 }
 
 .c-columns__content, #page-content {
