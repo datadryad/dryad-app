@@ -44,6 +44,13 @@ namespace :deploy do
   after 'deploy:symlink:linked_dirs', "deploy:files:optional_copied_files"
 end
 
+set :puma_service_unit_name, 'puma'
+set :puma_systemctl_user, :system
+
+namespace :puma do
+  after :restart, :index_help_center
+end
+
 namespace :git do
   desc "Add the version file so that we can display the git version in the footer"
   task :version do
@@ -69,13 +76,25 @@ namespace :deploy do
   end
 end
 
-
 namespace :cleanup do
   desc "Remove all of the example config files"
   task :remove_example_configs do
     on roles(:app), wait: 1 do
       execute "rm -f #{release_path}/config/*.yml.sample"
       execute "rm -f #{release_path}/config/initializers/*.rb.example"
+    end
+  end
+end
+
+task :index_help_center do
+  desc  "Index help center"
+  on roles(:app) do
+    sleep 10
+    within release_path do
+      with rails_env: fetch(:rails_env) do
+        execute :rake, "help_cache"
+      end
+      execute :yarn, "index:help --silent"
     end
   end
 end

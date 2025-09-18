@@ -27,7 +27,7 @@ RSpec.feature 'EditLink', type: :feature do
       @res.reload
       sign_out
       # Edit link for the above dataset, including a returnURL that should redirect to a documentation page
-      visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fsubmission_process"
+      visit "/edit/#{@identifier.identifier}/#{@identifier.edit_code}?returnURL=%2Fhelp"
       expect(page).to have_text('You are editing this dataset on behalf of')
       navigate_to_metadata
       click_button 'Subjects'
@@ -36,7 +36,7 @@ RSpec.feature 'EditLink', type: :feature do
       fill_in_validation
       navigate_to_review
       submit_form
-      expect(page.current_path).to eq('/submission_process')
+      expect(page.current_path).to eq('/help')
     end
   end
 
