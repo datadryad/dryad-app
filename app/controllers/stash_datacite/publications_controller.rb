@@ -169,14 +169,7 @@ module StashDatacite
     # parse out the "relevant" part of the manuscript ID, ignoring the parts that the journal changes for different versions of the same item
     def parse_msid(issn:, msid:)
       logger.debug("Parsing msid #{msid} for journal #{issn}")
-      regex = @se_id.journal&.manuscript_number_regex
-      return msid if regex.blank?
-
-      logger.debug("- found regex /#{regex}/")
-      return msid if msid.match(regex).blank?
-
-      logger.debug("- after regex applied: #{msid.match(regex)[1]}")
-      result = msid.match(regex)[1]
+      result = StashEngine::Manuscript.parsed_number(@se_id.journal, msid)
       if result.present?
         result
       else

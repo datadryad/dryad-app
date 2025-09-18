@@ -203,14 +203,8 @@ module StashEngine
 
     # Apply the journal's regex to the manuscript number, removing any irrelevant parts
     def parse_manuscript_number
-      regex = @journal&.manuscript_number_regex
-      return if regex.blank?
-
-      msid = @hash['ms reference number']
-      return if msid.blank? || msid.match(regex).blank?
-
-      result = msid.match(regex)[1]
-      @hash['ms reference number'] = result if result.present?
+      parsed = StashEngine::Manuscript.parsed_number(@journal, @hash['ms reference number'])
+      @hash['ms reference number'] = parsed if parsed.present?
     end
 
   end
