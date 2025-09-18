@@ -4,7 +4,7 @@
 <%= content_tag :html, class: 'no-js', **html_tag_attributes do %>
   <head>
 
-    <%= render 'stash_engine/shared/standard_head' %>
+    <%= render 'shared/standard_head' %>
     <%= stylesheet_link_tag "stash_engine/application", media: "all" %>
     <%= stylesheet_link_tag "application", media: "all" %>
 
@@ -31,7 +31,7 @@
     <% end %>
 
     <!-- had to add the id yes-really to force our body styles rather than the nasty bootstrap crap -->
-    <%= render partial: 'stash_engine/shared/top_area' %>
+    <%= render partial: 'shared/top_area' %>
     <%#= this has both banner and search box from blacklight -- render partial: 'shared/header_navbar' %>
     <!-- id below used to be "maincontent" in our main area -->
     <main id="main-container" class="<%= container_classes %>" role="main" aria-label="<%= t('blacklight.main.aria.main_container') %>">
@@ -45,7 +45,7 @@
         <%= content_for?(:content) ? yield(:content) : yield %>
       </div>
     </main>
-    <%= render partial: "stash_engine/shared/footer" %>
+    <%= render partial: "shared/footer" %>
     <%= render partial: 'shared/modal' %>
     <script type="text/javascript" src="<%= asset_path 'interactions.js'%>"></script>
   </body>
