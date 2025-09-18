@@ -54,9 +54,7 @@ module StashEngine
     # rubocop:disable Metrics/AbcSize
     def create
       if params[:journalID].present? && params[:manu].present?
-        existing = current_user.resources
-          .joins(:resource_publication, :journal)
-          .where(resource_publication: { manuscript_number: params[:manu] }, journal: { journal_code: params[:journalID] }).first
+        existing = check_existing_using_params
         redirect_to "#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: existing.id)}?start" and return if existing
       end
       resource = authorize Resource.new(current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
@@ -234,19 +232,25 @@ module StashEngine
 
     private
 
+    def check_existing_using_params
+      @param_journal = StashEngine::Journal.where(journal_code: params[:journalID].downcase).first
+      @parsed_msid = StashEngine::Manuscript.parsed_number(@param_journal, params[:manu]).presence || params[:manu]
+
+      current_user.resources
+        .joins(:resource_publication, :journal)
+        .where(resource_publication: { manuscript_number: @parsed_msid }, journal: { id: @param_journal.id }).first
+    end
+
     # We have parameters requesting to match to a Manuscript object; prefill journal info and import metadata if possible
     def import_manuscript_using_params(resource)
-      return unless resource && params[:journalID].present? && params[:manu].present?
-
-      j = StashEngine::Journal.where(journal_code: params[:journalID].downcase).first
-      return unless j
+      return unless resource && @param_journal && @parsed_msid
 
       # Save the journal and manuscript information in the dataset
       pub = StashEngine::ResourcePublication.find_or_create_by(resource_id: resource.id)
-      pub.update({ publication_issn: j.single_issn, publication_name: j.title, manuscript_number: params[:manu] })
+      pub.update({ publication_issn: @param_journal.single_issn, publication_name: @param_journal.title, manuscript_number: @parsed_msid })
 
       # If possible, import existing metadata from the Manuscript objects into the dataset
-      manu = StashEngine::Manuscript.where(journal: j, manuscript_number: params[:manu]).first
+      manu = StashEngine::Manuscript.where(journal: @param_journal, manuscript_number: @parsed_msid).first
       return unless manu
 
       resource.identifier.update(import_info: 'manuscript')

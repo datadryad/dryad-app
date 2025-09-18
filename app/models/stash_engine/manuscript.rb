@@ -23,6 +23,17 @@ module StashEngine
     belongs_to :identifier, optional: true
     serialize :metadata, coder: YAML
 
+    def self.parsed_number(journal, msid)
+      regex = journal&.manuscript_number_regex
+      return if regex.blank?
+
+      logger.debug("- found regex /#{regex}/")
+      return if msid.blank? || msid.match(regex).blank?
+
+      logger.debug("- after regex applied: #{msid.match(regex)[1]}")
+      msid.match(regex)[1]
+    end
+
     def accepted?
       accepted_statuses = %w[accepted published]
       accepted_statuses.include?(status)

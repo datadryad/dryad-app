@@ -38,7 +38,7 @@ RSpec.feature 'NewDataset', type: :feature do
 
   context :from_manuscript_url, js: true do
     before(:each) do
-      journal = create(:journal, journal_code: 'JTEST')
+      journal = create(:journal, journal_code: 'JTEST', manuscript_number_regex: '.*?(MAN-\d+).*?')
       create(:manuscript, manuscript_number: 'MAN-001', journal: journal)
     end
 
@@ -56,6 +56,16 @@ RSpec.feature 'NewDataset', type: :feature do
       resource_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
 
       visit '/submit?journalID=JTEST&manu=MAN-001'
+      expect(page).to have_content('Dataset submission')
+      expect(page.current_path.match(%r{submission/(\d+)})[1].to_i).to equal(resource_id)
+    end
+
+    it 'redirects instead of creating a duplicate for a revision' do
+      visit '/submit?journalID=JTEST&manu=MAN-001'
+      expect(page).to have_content('Dataset submission')
+      resource_id = page.current_path.match(%r{submission/(\d+)})[1].to_i
+
+      visit '/submit?journalID=JTEST&manu=MAN-001.R1'
       expect(page).to have_content('Dataset submission')
       expect(page.current_path.match(%r{submission/(\d+)})[1].to_i).to equal(resource_id)
     end
