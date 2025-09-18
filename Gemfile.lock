@@ -15,6 +15,15 @@ GIT
       railties (>= 3.2.16)
 
 GIT
+  remote: https://github.com/seuros/capistrano-puma.git
+  revision: 73aebc9c82cda11b2719ce7fa0822010082f4678
+  specs:
+    capistrano3-puma (6.2.0)
+      capistrano (~> 3.7)
+      capistrano-bundler
+      puma (>= 5.1, < 7.0)
+
+GIT
   remote: https://github.com/smartinez87/exception_notification.git
   revision: 60e158888bbff96f7a9ae00ae97305cdd33726e9
   specs:
@@ -792,6 +801,7 @@ DEPENDENCIES
   capistrano (~> 3.17)
   capistrano-rails (~> 1.7.0)
   capistrano-yarn
+  capistrano3-puma!
   capybara
   capybara-screenshot
   charlock_holmes (~> 0.7.9)
