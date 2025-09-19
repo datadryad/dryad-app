@@ -1,5 +1,6 @@
 module StashDatacite
   class DescriptionsController < ApplicationController
+    include ::ApplicationHelper
     before_action :set_description, only: %i[update destroy]
     before_action :ajax_require_modifiable, only: %i[update destroy]
 
@@ -8,6 +9,14 @@ module StashDatacite
     # GET /descriptions/new
     def new
       @description = Description.new
+    end
+
+    # GET /descriptions/1
+    def show
+      @description = Description.find(params[:id])
+      content = @description.description
+      content = markdown_render(content: content) if params.key?(:markdown)
+      render html: display_desc(content).html_safe
     end
 
     # POST /descriptions
@@ -23,7 +32,7 @@ module StashDatacite
     # PATCH/PUT /descriptions/1
     def update
       items = description_params
-      unless %w[technicalinfo usage_notes].include?(@description&.description_type) || items[:description].nil?
+      unless %w[technicalinfo hsi_statement changelog].include?(@description&.description_type) || items[:description].nil?
         desc = helpers.markdown_render(content: items[:description], header_offset: 2)
         items[:description] =
           Loofah.fragment(desc).scrub!(:strip).to_s
