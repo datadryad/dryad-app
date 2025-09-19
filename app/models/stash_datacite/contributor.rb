@@ -31,13 +31,19 @@ module StashDatacite
     self.table_name = 'dcs_contributors'
     has_paper_trail
 
+    API_INTEGRATIONS = {
+      'NIH' => 'https://ror.org/01cwqze88',
+      'NSF' => 'https://ror.org/021nxhr62'
+    }.freeze
+
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     belongs_to :name_identifier, optional: true
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
+    has_one :grouping, class_name: 'StashDatacite::ContributorGrouping', foreign_key: 'name_identifier_id', primary_key: 'name_identifier_id'
 
     scope :completed, -> {
-                        where("TRIM(IFNULL(contributor_name, '')) > '' AND TRIM('N/A' FROM IFNULL(contributor_name, '')) > ''")
-                      } # only non-null & blank, no N/A funders
+      where("TRIM(IFNULL(contributor_name, '')) > '' AND TRIM('N/A' FROM IFNULL(contributor_name, '')) > ''")
+    } # only non-null & blank, no N/A funders
     # scope :completed, ->  { where("TRIM(IFNULL(award_number, '')) > '' AND TRIM(IFNULL(contributor_name, '')) > ''") } # only non-null & blank
 
     scope :funder, -> { where(contributor_type: 'funder').order(funder_order: :asc, id: :asc) }
@@ -46,7 +52,7 @@ module StashDatacite
 
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
-    ContributorTypesEnum = ContributorTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
+    ContributorTypesEnum      = ContributorTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
     ContributorTypesStrToFull = ContributorTypes.to_h { |i| [i.downcase, i] }
 
     # rubocop:disable Style/MapToHash
@@ -146,11 +152,30 @@ module StashDatacite
       StashEngine::Funder.exemptions.find_by(name: contributor_name)
     end
 
+    def api_integration
+      return if api_integration_key.nil?
+
+      "Integrations::#{api_integration_key}".constantize
+    end
+
+    def api_integration_key
+      API_INTEGRATIONS.each_pair do |key, ror_id|
+        return key if ([ror_id] + related_rors(ror_id)).include?(name_identifier_id)
+      end
+    end
+
     private
 
     def strip_whitespace
       self.contributor_name = contributor_name.strip unless contributor_name.nil?
       self.award_number = award_number.strip unless award_number.nil?
+    end
+
+    def related_rors(ror_id = name_identifier_id)
+      group = StashDatacite::ContributorGrouping.where(name_identifier_id: ror_id).first
+      return [] if group.nil? || group.json_contains.blank?
+
+      group.json_contains.map { |a| a['name_identifier_id'] }
     end
   end
 end
