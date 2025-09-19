@@ -16,4 +16,6 @@ class NSFToContributorAdapter
   def award_title
     @response[:title]
   end
+
+  def ic_admin; end
 end

@@ -17,7 +17,7 @@ class NIHToContributorAdapter
   end
 
   def ic_admin
-    @response[:agency_ic_admin]
+    @response[:agency_ic_admin][:name]
   end
 
   def ic_fundings

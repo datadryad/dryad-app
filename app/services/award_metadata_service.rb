@@ -18,10 +18,23 @@ class AwardMetadataService
   def handle_response(response)
     data = adapter.new(response.first)
 
-    contributor.update(
+    attrs = {
       award_uri: data.award_uri,
       award_title: data.award_title
-    )
+    }.merge(ic_attrs(data))
+    contributor.update attrs
+  end
+
+  def ic_attrs(data)
+    return {} if data.ic_admin.blank? || data.ic_admin.downcase == contributor.contributor_name.downcase
+
+    ror = StashEngine::RorOrg.where(name: data.ic_admin).first
+    return {} if ror.nil?
+
+    {
+      name_identifier_id: ror.ror_id,
+      contributor_name: ror.name
+    }
   end
 
   def adapter
