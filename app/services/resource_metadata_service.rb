@@ -6,10 +6,10 @@ class ResourceMetadataService
   end
 
   def recurate_awards
-    resource.contributors.each do |contributor|
-      next if contributor.award_number.blank? || contributor.api_integration_key.nil?
+    resource.funders.each do |funder|
+      next if funder.award_number.blank? || funder.api_integration_key.nil?
 
-      AwardMetadataService.new(contributor).AwardMetadataService
+      AwardMetadataService.new(funder).populate_from_api
     end
     true
   end

@@ -7,9 +7,11 @@ class AwardMetadataService
   end
 
   def populate_from_api
-    return if contributor.award_number.nil? || api_integration_key.nil?
+    return if contributor.award_number.blank? || api_integration_key.nil?
 
     response = contributor.api_integration.new.search_award(contributor.award_number)
+    return if response.empty?
+
     handle_response(response)
   end
 

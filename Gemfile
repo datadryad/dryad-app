@@ -144,6 +144,7 @@ group :test do
   gem 'simplecov-console', require: false
   gem 'timecop'
   gem 'webmock'
+  gem 'vcr'
 end
 
 group :development, :test, :dev do

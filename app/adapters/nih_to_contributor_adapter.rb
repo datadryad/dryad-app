@@ -1,6 +1,7 @@
 class NIHToContributorAdapter
 
-  def initialize(response)
+  def initialize(response = {})
+    response ||= {}
     @response = response.with_indifferent_access
   end
 
