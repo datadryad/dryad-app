@@ -79,6 +79,15 @@ module StashEngine
         .or(present_files.where(upload_content_type: 'text/xml'))
         .or(present_files.where('upload_file_name LIKE ?', '%.xml'))
     }
+    scope :scannable_files, -> {
+      present_files.where(upload_content_type: 'text/csv')
+        .or(present_files.where('upload_file_name LIKE ?', '%.csv'))
+        .or(present_files.where(upload_content_type: 'text/tab-separated-values'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.tsv'))
+        .or(present_files.where(upload_content_type: 'text/plain'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.txt'))
+        .or(present_files.where('upload_file_name LIKE ?', '%.log'))
+    }
     enum(:file_state, %w[created copied deleted].to_h { |i| [i.to_sym, i] })
     enum(:digest_type, %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] })
 
@@ -236,8 +245,8 @@ module StashEngine
       sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
     end
 
-    def set_checking_status
-      FrictionlessReport.create(generic_file_id: id, status: 'checking')
+    def set_checking_status(class_name = FrictionlessReport)
+      class_name.create(generic_file_id: id, status: 'checking')
     end
 
     # triggers frictionless validation but results are async and may not appear in database until AWS Lambda completes

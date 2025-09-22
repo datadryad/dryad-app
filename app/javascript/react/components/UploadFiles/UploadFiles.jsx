@@ -356,6 +356,10 @@ export default function UploadFiles({
                 return c;
               }));
               displayAriaMsg(`${new_file.original_filename} finished uploading`);
+              axios.post(
+                `/generic_file/trigger_sd_scan/${resource.id}`,
+                {file_ids: [new_file.id]},
+              );
             }).catch((error) => console.log(error));
           },
         };

@@ -137,13 +137,9 @@ Rails.application.routes.draw do
     post 'software_file/upload_complete/:resource_id', to: 'software_files#upload_complete', as: 'software_file_complete'
     post 'supp_file/upload_complete/:resource_id', to: 'supp_files#upload_complete', as: 'supp_file_complete'
 
-    post 'generic_file/trigger_frictionless/:resource_id',
-         to: 'generic_files#trigger_frictionless',
-         as: 'generic_file_trigger_frictionless'
-
-    get 'generic_file/check_frictionless/:resource_id',
-        to: 'generic_files#check_frictionless',
-        as: 'generic_file_check_frictionless'
+    post 'generic_file/trigger_sd_scan/:resource_id', to: 'generic_files#trigger_sd_scan'
+    post 'generic_file/trigger_frictionless/:resource_id',to: 'generic_files#trigger_frictionless'
+    get 'generic_file/check_frictionless/:resource_id', to: 'generic_files#check_frictionless'
 
     get 'software_license_select', to: 'software_files#licenses'
     get 'software_licenses', to: 'software_files#licenses_autocomplete'
