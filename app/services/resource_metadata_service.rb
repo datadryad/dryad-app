@@ -9,7 +9,7 @@ class ResourceMetadataService
     resource.contributors.each do |contributor|
       next if contributor.award_number.blank? || contributor.api_integration_key.nil?
 
-      AwardMetadataService.new(contributor).call
+      AwardMetadataService.new(contributor).AwardMetadataService
     end
     true
   end

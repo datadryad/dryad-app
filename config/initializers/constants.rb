@@ -31,3 +31,11 @@ ROOT_URL = if Rails.application.default_url_options[:port].present?
 else
   "https://#{Rails.application.default_url_options[:host]}".freeze
 end
+
+NIH_ROR = 'https://ror.org/01cwqze88'.freeze
+NSF_ROR = 'https://ror.org/021nxhr62'.freeze
+
+API_INTEGRATIONS = {
+  'NIH' => NIH_ROR,
+  'NSF' => NSF_ROR
+}.freeze

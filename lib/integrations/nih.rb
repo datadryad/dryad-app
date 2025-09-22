@@ -17,7 +17,7 @@ module Integrations
     # - offset: integer, default 0
     # - limit: integer, default DEFAULT_LIMIT, must be <= MAX_LIMIT
     # - sort_field: string (optional)
-    # - sort_order: 'asc' or 'desc' (optional)
+    # - sort_order: string, 'asc' or 'desc' (optional)
     #
     # Returns: parsed JSON (a hash with "results" and metadata) or raises StandardError
     def search(criteria: {}, offset: 0, limit: DEFAULT_LIMIT, sort_field: nil, sort_order: 'asc')
@@ -29,8 +29,8 @@ module Integrations
         criteria: criteria,
         include_fields: DEFAULT_FIELDS
       }
-      payload[:offset]     = offset if offset.nonzero?
-      payload[:limit]      = limit if limit != DEFAULT_LIMIT
+      payload[:offset]     = offset if offset
+      payload[:limit]      = limit if limit
       payload[:sort_field] = sort_field if sort_field
       payload[:sort_order] = sort_order if sort_field
 

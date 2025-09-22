@@ -31,11 +31,6 @@ module StashDatacite
     self.table_name = 'dcs_contributors'
     has_paper_trail
 
-    API_INTEGRATIONS = {
-      'NIH' => 'https://ror.org/01cwqze88',
-      'NSF' => 'https://ror.org/021nxhr62'
-    }.freeze
-
     belongs_to :resource, class_name: StashEngine::Resource.to_s
     belongs_to :name_identifier, optional: true
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'

@@ -6,7 +6,7 @@ class AwardMetadataService
     @api_integration_key = contributor.api_integration_key
   end
 
-  def call
+  def populate_from_api
     return if contributor.award_number.nil? || api_integration_key.nil?
 
     response = contributor.api_integration.new.search_award(contributor.award_number)
@@ -22,7 +22,8 @@ class AwardMetadataService
       award_uri: data.award_uri,
       award_title: data.award_title
     }.merge(ic_attrs(data))
-    contributor.update attrs
+    pp "Updating contributor with ID: #{contributor.id} with #{attrs.inspect}" unless Rails.env.test?
+    contributor.update! attrs
   end
 
   def ic_attrs(data)
