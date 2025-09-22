@@ -26,7 +26,7 @@ class AuthorsService
     author.update(author_orcid: orcid) if orcid
   end
 
-  def fix_missing_orchid
+  def fix_missing_orcid
     conflicts = conflicts_list
     grouped_orcids = combined_orcids.group_by { |email, _| email }.transform_values do |entries|
       entries
@@ -46,8 +46,8 @@ class AuthorsService
     end
   end
 
-  def generate_orchid_conflicts_report
-    CSV.open(File.join(REPORTS_DIR, 'orchid_conflicts.csv'), 'w') do |csv|
+  def generate_orcid_conflicts_report
+    CSV.open(File.join(REPORTS_DIR, 'orcid_conflicts.csv'), 'w') do |csv|
       csv << ['Email', 'Authors ORCID', 'Users ORCID']
       conflicts_list.each_pair do |email, orcids|
         csv << [

@@ -57,8 +57,8 @@ describe AuthorsService do
     end
   end
 
-  describe '#fix_missing_orchid' do
-    subject { described_class.new.fix_missing_orchid }
+  describe '#fix_missing_orcid' do
+    subject { described_class.new.fix_missing_orcid }
 
     context 'when author in conflicts based on authors info' do
       let!(:author1) { create(:author, author_email: 'author@example.com', author_orcid: '1234-1234-1234-1234', resource: resource) }
