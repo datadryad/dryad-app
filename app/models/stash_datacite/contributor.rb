@@ -157,6 +157,7 @@ module StashDatacite
       API_INTEGRATIONS.each_pair do |key, ror_id|
         return key if ([ror_id] + related_rors(ror_id)).include?(name_identifier_id)
       end
+      nil
     end
 
     private

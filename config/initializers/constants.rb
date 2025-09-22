@@ -39,3 +39,11 @@ API_INTEGRATIONS = {
   'NIH' => NIH_ROR,
   'NSF' => NSF_ROR
 }.freeze
+
+NIH_GRANT_REGEX = /
+  [0-9A-Za-z]?         # optional application type
+  [A-Z]{1,2}\d{2,3}    # activity code
+  [A-Z]{2}             # institute code
+  \d{6}                # serial number
+  (?:-\d{2}[A-Z0-9]*)? # optional year + suffix
+/x
