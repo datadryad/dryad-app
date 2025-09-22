@@ -87,7 +87,7 @@ module StashEngine
     # This is a POST request for multiple files and returns an array with triggered status (true/false)
     def trigger_frictionless
       # get scope of ALL tabular files from this resource
-      tabular_files = resource.generic_files.tabular_files
+      tabular_files = resource.data_files.tabular_files
       begin
         files = tabular_files.find(params['file_ids']) # narrow to just the file ids passed in
       rescue ActiveRecord::RecordNotFound => e
@@ -104,6 +104,18 @@ module StashEngine
       end
 
       render json: result
+    end
+
+    def trigger_sd_scan
+      scannable_files = resource.data_files.scannable_files.where(id: params['file_ids'])
+      return if scannable_files.empty?
+
+      scannable_files.each do |file|
+        if file.sensitive_data_report.nil?
+          file.set_checking_status(SensitiveDataReport)
+          file.trigger_sensitive_data_scan
+        end
+      end
     end
 
     # takes a list of file IDs to check for frictionless reports, and returns only information on the completed

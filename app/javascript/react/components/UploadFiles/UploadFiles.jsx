@@ -547,6 +547,10 @@ export default function UploadFiles({
           document.getElementById('submission-help')?.querySelectorAll('button').forEach((b) => {
             b.setAttribute('disabled', 'true');
           });
+          axios.post(
+            `/generic_file/trigger_sd_scan/${resource.id}`,
+            {file_ids: chosenFiles.map((file) => file.id)},
+          )
         } else {
           document.body.style.pointerEvents = 'auto';
           document.getElementById('leave-warning').setAttribute('hidden', true);
