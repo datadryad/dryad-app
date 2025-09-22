@@ -169,10 +169,12 @@ module StashDatacite
       end
 
       context 'when ror is NIH grouping' do
-        let(:ror_id) { "http://dx.doi.org/10.13039/100000049" }
+        let(:ror_id) { 'http://dx.doi.org/10.13039/100000049' }
 
         before do
-          create(:contributor_grouping, name_identifier_id: NIH_ROR, json_contains: JSON.parse(File.read(File.join(Rails.root, 'spec/fixtures/nih_group.json'))))
+          create(:contributor_grouping,
+                 name_identifier_id: NIH_ROR,
+                 json_contains: JSON.parse(File.read(File.join(Rails.root, 'spec/fixtures/nih_group.json'))))
         end
 
         it 'returns "NIH"' do
