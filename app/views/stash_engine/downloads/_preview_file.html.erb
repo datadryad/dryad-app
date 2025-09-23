@@ -6,7 +6,7 @@
     <p id="pdf_loading"><i class="fas fa-spin fa-spinner" aria-label="Loading..." role="img"></i></p>
     <canvas id="pdf_canvas"></canvas>
   <% when 'img' %>
-    <img src="<%= @file.digest? || @file.storage_version_id.present? ? @file.s3_permanent_presigned_url : @file.s3_staged_presigned_url %>"/>
+    <img src="<%= @preview %>"/>
   <% when 'csv' %>
     <% lines = @preview.split("\n") %>
     <table>
@@ -31,6 +31,8 @@
     <% else %>
       <pre><%= @preview %></pre>
     <% end %>
+  <% when 'zip' %>
+    <%= tree_view(@file).html_safe %>
   <% end %>
 <% else %>
   <p>Preview is currently unavailable.</p>
