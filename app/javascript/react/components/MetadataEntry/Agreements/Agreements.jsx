@@ -231,7 +231,9 @@ export default function Agreements({
       )}
       {isSubmitter && (
         <>
-          {(subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay)) && (
+          {(subType !== 'collection'
+            && (!resource.identifier.payment_type || resource.identifier.payment_type === 'unknown')
+            && (dpc.user_must_pay || dpc.institution_will_pay)) && (
             <>
               {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
                 <>

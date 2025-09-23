@@ -6,7 +6,10 @@ module StashDatacite
       def initialize(resource, type, tenant_id)
         @resource = resource
         @type = type
-        @resource.update(tenant_id: tenant_id)
+        if @resource.identifier.last_submitted_resource.blank? ||
+          (@resource.identifier.institution_will_pay? && @resource.identifier.payment_id != tenant_id)
+          @resource.update(tenant_id: tenant_id)
+        end
         @resource.fill_blank_author!
         ensure_author_orcid
         ensure_license if @type == 'collection'

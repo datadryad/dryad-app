@@ -44,8 +44,8 @@ module StashEngine
 
       def record_payment
         # once we have assigned payment to an entity, keep that entity
-        # unless it was a journal that was removed
-        clear_payment_for_changed_journal
+        # unless a journal was removed or an institution added
+        clear_payment_for_changed_sponsor
         return if payment_type.present? && payment_type != 'unknown'
 
         if collection?
@@ -103,10 +103,16 @@ module StashEngine
 
       private
 
-      def clear_payment_for_changed_journal
+      def clear_payment_for_changed_sponsor
         return unless payment_type.present?
-        return unless payment_type.include?('journal') || journal&.will_pay?
-        return if payment_id == journal&.single_issn
+
+        if institution_will_pay?
+          return unless payment_type.include('institution')
+          return if payment_id == latest_resource.tenant_id
+        else
+          return unless payment_type.include?('journal') || journal&.will_pay?
+          return if payment_id == journal&.single_issn
+        end
 
         self.payment_type = nil
         self.payment_id = nil
