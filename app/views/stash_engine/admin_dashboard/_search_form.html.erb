@@ -7,7 +7,7 @@
         <b id="searchlabel" style="margin-right: 1ch">Search</b>
         <span id="searchlabel1">Metadata: </span>
       </span>
-      <%= search_field_tag(:q, @search_string, class: "c-input__text#{@search_string.present? ? ' selected' : ''}", 'aria-labelledby': 'searchlabel searchlabel1', style: 'flex-grow: 2' ) %>
+      <%= search_field_tag(:q, @search_string, class: "c-input__text#{@search_string.present? ? ' selected' : ''}", id: 'search-string', 'aria-labelledby': 'searchlabel searchlabel1', style: 'flex-grow: 2' ) %>
     </div>
     <div class="o-admin-form-pair" style="flex-grow: 2;">
       <span id="searchlabel2">Publication IDs: </span>
