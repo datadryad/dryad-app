@@ -71,17 +71,19 @@
 
 Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](#our-partners) and [how to join us](/join_us).
 
-Dryad advocates for community-adopted standards for metadata and persistent identifiers in concert with DataCite, ORCID, ROR, and Funder Registry. 
+Dryad advocates for community-adopted standards for metadata and persistent identifiers in concert with DataCite, ORCID, and ROR. 
 
 We support the recommendations and implementation guidance of the [Joint FORCE11 & COPE Research Data Publishing Ethics Working Group](https://zenodo.org/record/5391293) and the [Joint Declaration on Data Citation Principles](https://force11.org/info/joint-declaration-of-data-citation-principles-final/). 
 
 We are also pleased to partner with the following organizations and initiatives, for:
 
-* **Journal workflow integration**: [Editorial Manager](https://www.ariessys.com/solutions/editorial-manager/), [eJournalPress](https://www.ejournalpress.com/)
+* **Publishing workflow integration**: [Editorial Manager](https://www.ariessys.com/solutions/editorial-manager/), [eJournalPress](https://www.ejournalpress.com/), [openRxiv](https://openrxiv.org/)
 * **Persistent identifiers for data publications:** [DataCite](https://datacite.org/)
 * **Standardized usage metrics for data:** [Make Data Count](https://makedatacount.org/)
 * **Data submission enhancements**: [Zenodo](https://zenodo.org/) (Concurrent submission of software and supplemental information); [Frictionless Data](https://frictionlessdata.io/) (Tabular data quality validation); [rSpace](https://www.researchspace.com/) (Electronic lab notebook integration) 
 * **Single sign-on integration**: [InCommon](https://incommon.org/)
+* **Identity verification**: [VeriMe](https://verime.coop/)
+* **Dataset visibility**: [NLM Dataset Catalog](https://datasetcatalog.nlm.nih.gov/), [NIAID Data Ecosystem](https://data.niaid.nih.gov/), [NCBI LinkOut](https://www.ncbi.nlm.nih.gov/projects/linkout/)
 * **Presenting research data alongside associated research articles**: [PubMed Central](https://www.ncbi.nlm.nih.gov/pmc/) ([National Library of Medicine](https://www.nlm.nih.gov/)), [Europe PMC](https://europepmc.org/)
 * **Community engagement and standards development**: [Data Curation Network](https://datacurationnetwork.org/), [Research Data Alliance (RDA)](https://www.rd-alliance.org/), [DataCite](https://datacite.org/), [Principles of Open Scholarly Infrastructure](https://openscholarlyinfrastructure.org/)
 * **Data publishing and generalist repository alignment:** [National Institutes of Health Generalist Repository Ecosystem Initiative](https://datascience.nih.gov/news/nih-office-of-data-science-strategy-announces-new-initiative-to-improve-data-access) (GREI)
