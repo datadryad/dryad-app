@@ -11,6 +11,9 @@
         <%= sortable_column_head sort_field: 'author_string', title: 'Authors', remote: true %>
       </th>
     <% end %>
+    <% if @fields.include?('emails') %>
+      <th>Emails</th>
+    <% end %>
     <% if @fields.include?('affiliations') || @fields.include?('countries') %>
       <th><%= @fields.include?('affiliations') ? 'Affiliations' : 'Countries' %></th>
     <% end %>
