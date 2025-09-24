@@ -30,7 +30,7 @@ class AwardMetadataService
   private
 
   def fetch_api_data
-    return if contributor.award_number.blank? || api_integration_key.nil?
+    return [] if contributor.award_number.blank? || api_integration_key.nil?
 
     contributor.api_integration.new.search_award(contributor.award_number)
   end
