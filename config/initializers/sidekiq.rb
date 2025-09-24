@@ -9,8 +9,8 @@ sidekiq_logger.level = Logger::INFO
 sidekiq_logger.formatter = Sidekiq::Logger::Formatters::Pretty.new
 
 Sidekiq.default_job_options = {
-  backtrace: true,
-  retry: true,
+  'backtrace' => true,
+  'retry' => true
 }
 
 if Rails.env.test?

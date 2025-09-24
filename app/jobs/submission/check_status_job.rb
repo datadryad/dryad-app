@@ -11,7 +11,6 @@ module Submission
       return unless queue.state.in?(%w[processing provisional_complete])
 
       if queue.possibly_set_as_completed
-
         handle_success(
           Stash::Repo::SubmissionResult.success(resource_id: resource_id, request_desc: description, message: 'Success')
         )
