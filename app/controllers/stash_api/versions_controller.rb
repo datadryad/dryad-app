@@ -30,10 +30,10 @@ module StashApi
         if res&.may_download?(ui_user: @user) && @version_presigned.valid_resource?
           @version_presigned.download(resource: res)
         else
-          render plain: 'Download for this version of the dataset is unavailable', status: 404
+          render plain: 'Download for this version of the dataset is unavailable', status: :not_found
         end
       else
-        render plain: 'not found', status: 404
+        render plain: 'not found', status: :not_found
       end
     end
 

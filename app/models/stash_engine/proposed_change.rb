@@ -34,19 +34,23 @@ require 'stash/import/crossref'
 
 module StashEngine
   class ProposedChange < ApplicationRecord
+    include PublicationMixin
+
     self.table_name = 'stash_engine_proposed_changes'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     has_one :latest_resource, class_name: 'StashEngine::Resource', through: :identifier
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id', optional: true
 
+    scope :processed, -> { where('approved = true OR rejected = true') }
     scope :unprocessed, -> { where(approved: false, rejected: false) }
     # Unprocessed and the DOI is not already in the resource
-    scope :unmatched, -> {
-                        unprocessed.joins(:latest_resource).joins("
-                          LEFT OUTER JOIN `dcs_related_identifiers` ON `dcs_related_identifiers`.`resource_id` = `stash_engine_resources`.`id` AND
-                          REGEXP_SUBSTR(`dcs_related_identifiers`.`related_identifier`, '(10..+)') = `stash_engine_proposed_changes`.`publication_doi`
-                        ").where('`dcs_related_identifiers`.`id` IS NULL')
-                      }
+    scope :unmatched,
+          -> {
+            unprocessed.joins(:latest_resource).joins("
+              LEFT OUTER JOIN `dcs_related_identifiers` ON `dcs_related_identifiers`.`resource_id` = `stash_engine_resources`.`id` AND
+              REGEXP_SUBSTR(`dcs_related_identifiers`.`related_identifier`, '(10..+)') = `stash_engine_proposed_changes`.`publication_doi`
+            ").where('`dcs_related_identifiers`.`id` IS NULL')
+          }
 
     CROSSREF_PUBLISHED_MESSAGE = 'reported that the related manuscript has been accepted'.freeze
     CROSSREF_UPDATE_MESSAGE = 'provided information about a'.freeze
@@ -60,10 +64,11 @@ module StashEngine
         other.publication_name == publication_name && other.title == title
     end
 
-    def approve!(current_user:, approve_type:)
-      return false if current_user.blank? || !current_user.is_a?(StashEngine::User)
+    def dropdown_to_type
+      { primary: 'primary_article', related: 'article', preprint: 'preprint' }.with_indifferent_access
+    end
 
-      dropdown_to_type = { primary: 'primary_article', related: 'article', preprint: 'preprint' }.with_indifferent_access
+    def approve!(current_user:, approve_type:)
       article_type = dropdown_to_type[approve_type]
       prim_art = latest_resource.related_identifiers.primary_article.first
 
@@ -78,43 +83,42 @@ module StashEngine
         )
       end
 
-      cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
-      add_metadata_updated_curation_note(cr.class.name.downcase.split('::').last, latest_resource, approve_type)
-
-      if article_type == 'primary_article'
-        cr.populate_pub_update!
-        identifier.record_payment if latest_resource.submitted? && identifier.publication_date.blank?
-        release_updated_resource(latest_resource) if latest_resource.current_curation_status == 'peer_review'
+      unless article_type == 'article'
+        cr = Stash::Import::Crossref.from_proposed_change(proposed_change: self)
+        cr.populate_pub_update!(article_type)
       end
 
+      if article_type == 'primary_article'
+        identifier.record_payment if latest_resource.submitted? && identifier.publication_date.blank?
+        release_resource(latest_resource) if latest_resource.current_curation_status == 'peer_review'
+      end
+
+      add_curation_note(latest_resource, approve_type)
+      check_reindex(latest_resource)
+
       update(approved: true, user_id: current_user.id)
-      true
     end
 
     def reject!(current_user:)
-      return false if current_user.blank? || !current_user.is_a?(StashEngine::User)
-
       update(rejected: true, user_id: current_user.id)
-      true
     end
 
     private
 
-    def release_updated_resource(resource)
-      resource.curation_activities << StashEngine::CurationActivity.new(
-        user_id: 0, # system user
-        status: 'submitted',
-        note: "#{provenance.capitalize} #{CROSSREF_PUBLISHED_MESSAGE}"
-      )
-      StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
+    def check_reindex(resource)
+      return unless resource.current_curation_status == 'published'
+
+      resource.submit_to_solr
+      DataciteService.new(resource).submit
     end
 
-    def add_metadata_updated_curation_note(provenance, resource, type)
-      resource.curation_activities << StashEngine::CurationActivity.new(
+    def add_curation_note(resource, type)
+      CurationService.new(
+        resource: resource,
         user_id: 0, # system user
         status: resource.current_curation_status,
-        note: "#{provenance.capitalize} #{CROSSREF_UPDATE_MESSAGE} #{type} article"
-      )
+        note: "Crossref #{CROSSREF_UPDATE_MESSAGE} #{type} article"
+      ).process
     end
   end
 end

@@ -106,7 +106,7 @@ module StashApi
       user
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def em_update_selected_fields
       logger.debug('em_update_selected_fields')
 
@@ -128,33 +128,25 @@ module StashApi
       # Add funding info if it was not added by the submitter
       if @resource.contributors.blank? && art_params['funding_information'].present?
         art_params['funding_information'].each do |f|
-          @resource.contributors << StashDatacite::Contributor.create(contributor_name: f['funder'], contributor_type: 'funder',
-                                                                      award_number: f['award_number'], award_description: f['award_description'])
+          @resource.contributors << StashDatacite::Contributor.create(
+            contributor_name: f['funder'], contributor_type: 'funder',
+            award_number: f['award_number'], award_description: f['award_description'], award_title: f['award_title']
+          )
         end
         fields_changed << 'Funders'
       end
 
       # Add keywords if they were not added by the submitter
-      if @resource.subjects.blank? && art_params['keywords'].present?
-        @resource.subjects.clear
-        art_params['keywords'].each do |kw|
-          subs = StashDatacite::Subject.where(subject: kw)
-          sub = if subs.blank?
-                  StashDatacite::Subject.create(subject: kw)
-                else
-                  subs.first
-                end
-          @resource.subjects << sub
-        end
+      if art_params['keywords'].present?
+        Subjects::CreateService.new(@resource, art_params['keywords']).call
         fields_changed << 'Keywords'
       end
 
       # Update curation note about what was changed
       if fields_changed.present?
-        @resource.curation_activities <<
-          StashEngine::CurationActivity.create(user_id: @user.id,
-                                               status: @resource.current_curation_status,
-                                               note: "updating metadata based on API notification from Editorial Manager: #{fields_changed}")
+        CurationService.new(user_id: @user.id, resource: @resource,
+                            status: @resource.current_curation_status,
+                            note: "updating metadata based on API notification from Editorial Manager: #{fields_changed}").process
       end
 
       # If final_disposition is available, update the status of this dataset
@@ -162,14 +154,12 @@ module StashApi
       if disposition.present? && (@resource.current_curation_status == 'peer_review')
         if disposition.downcase == 'accept'
           # article is accepted -> transition peer_review to curation
-          @resource.curation_activities <<
-            StashEngine::CurationActivity.create(user_id: @user.id, status: 'submitted',
-                                                 note: 'updating status based on API notification from Editorial Manager')
+          CurationService.new(user_id: @user.id, resource: @resource, status: 'submitted',
+                              note: 'updating status based on API notification from Editorial Manager').process
         else
           # any other article disposition -> transition peer_review to withdrawn
-          @resource.curation_activities <<
-            StashEngine::CurationActivity.create(user_id: @user.id, status: 'withdrawn',
-                                                 note: 'updating status based on API notification from Editorial Manager')
+          CurationService.new(user_id: @user.id, resource: @resource, status: 'withdrawn',
+                              note: 'updating status based on API notification from Editorial Manager').process
         end
       end
 
@@ -218,7 +208,9 @@ module StashApi
             {
               organization: f['funder'],
               awardNumber: f['award_number'],
-              awardDescription: f['award_description']
+              awardDescription: f['award_description'],
+              awardTitle: f['award_title'],
+              awardURI: f['award_uri']
             }
           end
           em_params['funders'] = em_funders
@@ -254,7 +246,7 @@ module StashApi
       em_params
     end
 
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # Reformat a `metadata` response object, putting it in the format that Editorial Manager prefers
     def em_reformat_response(metadata:, deposit_request:)
@@ -353,14 +345,14 @@ module StashApi
       if res&.may_download?(ui_user: @user) && @version_presigned&.valid_resource?
         @version_presigned.download(resource: res)
       else
-        render plain: 'Download for this version of the dataset is unavailable', status: 404
+        render plain: 'Download for this version of the dataset is unavailable', status: :not_found
       end
     end
 
     # post /datasets/<id>/set_internal_datum
     def set_internal_datum
       if StashEngine::InternalDatum.allows_multiple(params[:data_type])
-        render json: { error: "#{params[:data_type]} allows multiple entries, use add_internal_datum" }.to_json, status: 404
+        render json: { error: "#{params[:data_type]} allows multiple entries, use add_internal_datum" }.to_json, status: :not_found
         nil
       else
         @datum = StashEngine::InternalDatum.where(data_type: params[:data_type], identifier_id: @stash_identifier.id).first
@@ -376,7 +368,7 @@ module StashApi
     # post /datasets/<id>/add_internal_datum
     def add_internal_datum
       unless StashEngine::InternalDatum.allows_multiple(params[:data_type])
-        render json: { error: "#{params[:data_type]} does not allow multiple entries, use set_internal_datum" }.to_json, status: 404
+        render json: { error: "#{params[:data_type]} does not allow multiple entries, use set_internal_datum" }.to_json, status: :not_found
         return
       end
       @datum = StashEngine::InternalDatum.create(data_type: params[:data_type], stash_identifier: @stash_identifier, value: params[:value])
@@ -399,10 +391,10 @@ module StashApi
       StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text).first
     end
 
-    def initialize_stash_identifier(id)
-      @stash_identifier = get_stash_identifier(id)
-      render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.blank?
-    end
+    # def initialize_stash_identifier(id)
+    #   @stash_identifier = get_stash_identifier(id)
+    #   render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.blank?
+    # end
 
     private
 
@@ -422,9 +414,7 @@ module StashApi
 
       case @json.first['path']
       when '/versionStatus'
-        ensure_in_progress { yield }
-        pre_submission_updates
-        StashEngine.repository.submit(resource_id: @resource.id)
+        update_version_status(@json.first['value'])
         ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user)
         render json: ds.metadata, status: 202
       when '/curationStatus'
@@ -437,6 +427,16 @@ module StashApi
         return_error(messages: "Operation not supported: #{@json.first['path']}", status: 400) { yield }
       end
       yield
+    end
+
+    def update_version_status(new_status)
+      ensure_in_progress { yield }
+      pre_submission_updates
+      if new_status == 'submitted'
+        CurationService.new(resource: @resource, status: 'processing',
+                            note: 'Repository processing data', user_id: @user&.id || 0).process
+      end
+      StashEngine.repository.submit(resource_id: @resource.id)
     end
 
     def update_curation_status(new_status)
@@ -454,10 +454,10 @@ module StashApi
         new_status = @resource.current_curation_status
       end
 
-      StashEngine::CurationActivity.create(resource_id: @resource.id,
-                                           user_id: @user.id,
-                                           status: new_status,
-                                           note: note)
+      CurationService.new(resource: @resource,
+                          user_id: @user.id,
+                          status: new_status,
+                          note: note).process
     end
 
     def update_publication_issn(new_issn)
@@ -491,6 +491,13 @@ module StashApi
     # some parameters would be locked down for only admins or superusers to set
     def lock_down_admin_only_params
       # all this bogus return false stuff is to prevent double render errors in some circumstances
+      @journal = nil
+      if params.dig('dataset', 'publicationISSN').present?
+        @journal = StashEngine::Journal.find_by_issn(params.dig('dataset', 'publicationISSN'))
+      elsif params.dig('dataset', 'publicationName').present?
+        @journal = StashEngine::Journal.find_by_title(params.dig('dataset', 'publicationName'))
+      end
+
       return if check_restricted_params == false
       return if check_may_set_user_id == false
 
@@ -512,7 +519,7 @@ module StashApi
         end
         # admin restrictions
         if %w[skipEmails preserveCurationStatus].include?(attr) && item_value.instance_of?(TrueClass) &&
-          !(@user.min_curator? || @user.journals_as_admin&.intersect?(@resource&.journals || []))
+          !(@user.min_curator? || @user.journals_as_admin.include?(@journal) || @user.journals_as_admin.intersect?(@resource&.journals || []))
           render json: { error: "Unauthorized: only curators, superusers, and journal administrators may set #{attr} to true" }.to_json, status: 401
           return false
         end
@@ -522,14 +529,14 @@ module StashApi
 
     def check_may_set_user_id
       return if params['userId'].nil?
+      # if you're a curator or its your own user
+      return if @user.min_curator? || params['userId'].to_i == @user.id
 
-      unless @user.min_curator? ||
-        params['userId'].to_i == @user.id || # or it is your own user
-        # or you admin the target journal
-        @user.journals_as_admin.map(&:issn_array)&.flatten&.reject(&:blank?)&.include?(params['dataset']['publicationISSN'])
-        render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
-        false
-      end
+      # do you admin the target journal?
+      return if @user.journals_as_admin.include?(@journal)
+
+      render json: { error: 'Unauthorized: only superusers and journal administrators may set a specific user' }.to_json, status: 401
+      false
     end
 
     def check_may_set_payment_id
@@ -543,20 +550,7 @@ module StashApi
     end
 
     def duplicate_resource
-      begin
-        nr = @resource.amoeba_dup
-        nr.current_editor_id = @user.id
-        nr.save!
-      rescue ActiveRecord::RecordNotUnique
-        @resource.identifier.reload
-        nr = @resource.identifier.latest_resource unless @resource.identifier.latest_resource_id == @resource.id
-        nr ||= @resource.amoeba_dup
-        nr.current_editor_id = @user.id
-        nr.save!
-      end
-      nr.curation_activities&.update_all(user_id: @user.id)
-      nr.data_files.each(&:populate_container_files_from_last)
-      @resource = nr
+      @resource = DuplicateResourceService.new(@resource, @user).call
     end
 
     def paged_datasets(datasets:)

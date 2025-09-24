@@ -2,6 +2,7 @@
   <span class="default"><%if saved_search.default %><i class="fa fa-star" aria-hidden="true"></i><span class="screen-reader-only">Default</span><% end %></span>
   <%= link_to saved_search.title, admin_dashboard_path(search: index + 1, clear: true)%>
   <span><%= saved_search.description %></span>
+  <a href="<%= admin_dashboard_path(share: saved_search.share_code, clear: true) %>" class="c-admin-edit-icon copy-share-code" title="Copy link to share search" aria-label="Copy link to share search"><i class="fa fa-share" aria-hidden="true"></i></a>
   <%= form_with(url: saved_search_edit_path(saved_search.id), method: :get, local: false) do %>
     <button class="c-admin-edit-icon" title="Edit search description" aria-label="Edit search description: <%= saved_search.title %>" aria-haspopup="menu" aria-expanded="false"><i class="fa fa-pencil" aria-hidden="true"></i></button>
   <% end %>

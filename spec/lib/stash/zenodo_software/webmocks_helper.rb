@@ -32,6 +32,13 @@ module Stash
                      headers: { 'Content-Type' => 'application/json' })
       end
 
+      def stub_delete_existing_ds(deposition_id:)
+        simple_body(deposition_id: deposition_id)
+        stub_request(:delete, "https://sandbox.zenodo.org/api/deposit/depositions/#{deposition_id}?access_token=ThisIsAFakeToken")
+          .with(headers: { 'Content-Type' => 'application/json' })
+          .to_return(status: 204)
+      end
+
       # returns the deposition_id and bucket link
       def stub_new_dataset
         deposition_id = rand.to_s[2..8].to_i

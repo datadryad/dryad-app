@@ -1,11 +1,17 @@
 <h1>Edit funders</h1>
+<% unless @resource.contributors.funder.empty? %>
+  <div class="callout">
+    <p style="font-size: .98rem">To switch from a matched to an unmatched funder name, select the blank dropdown option before entering new text.</p>
+  </div>
+<% end %>
 <% @resource.contributors.funder.each do |funder| %>
-  <%= form_with(url: contributors_update_path(format: :js), method: :patch, local: false) do |form| -%>
-    <div class="input-line" style="max-width: 100%; flex-wrap: wrap; margin-bottom: 2rem;">
+  <%= form_with(url: contributors_update_path(format: :js), method: :patch, local: false, html: {style: 'margin-bottom: 2rem; background-color: #f2f2f2; padding: 6px;'}) do |form| -%>
+    <div class="input-line" style="max-width: 100%; flex-wrap: wrap;"">
       <%= form.fields_for :contributor, funder do |f| %>
         <%= f.hidden_field :id %>
         <%= f.hidden_field :resource_id %>
         <%= f.hidden_field :name_identifier_id %>
+        <%= f.hidden_field :contributor_name %>
         <div class="input-stack" style="flex: 3;">
           <%= render partial: 'stash_engine/shared/search_select', locals: {
             id: "funder#{funder.id}",
@@ -22,9 +28,15 @@
           <%= f.label :award_number, 'Award ID', for: "award_number#{funder.id}" %>
           <%= f.text_field :award_number, class: 'c-input__text', id: "award_number#{funder.id}" %>
         </div>
+      </div>
+      <div class="input-line" style="max-width: 100%; flex-wrap: wrap; margin-top: 1ch">
         <div class="input-stack" style="flex: 1; min-width: 115px;">
           <%= f.label :award_description, 'Program/division', for: "desc#{funder.id}" %>
           <%= f.text_field :award_description, class: 'c-input__text', id: "desc#{funder.id}" %>
+        </div>
+        <div class="input-stack" style="flex: 1; min-width: 115px;">
+          <%= f.label :award_title, 'Award Title', for: "title#{funder.id}" %>
+          <%= f.text_field :award_title, class: 'c-input__text', id: "title#{funder.id}" %>
         </div>
         <%= submit_tag 'Save', class: 'o-button__plain-text2', style: 'align-self: flex-end' %>
       <% end %>
@@ -57,10 +69,16 @@
         <%= f.label :award_number, 'Award ID' %>
         <%= f.text_field :award_number, class: 'c-input__text' %>
       </div>
+    </div>
+    <div class="input-line" style="max-width: 100%; flex-wrap: wrap; margin-top: 1ch">
       <div class="input-stack" style="flex: 1; min-width: 115px;">
         <%= f.label :award_description, 'Program/division' %>
         <%= f.text_field :award_description, class: 'c-input__text' %>
       </div>
+      <div class="input-stack" style="flex: 1; min-width: 115px;">
+        <%= f.label :award_title, 'Award Title' %>
+        <%= f.text_field :award_title, class: 'c-input__text' %>
+      </div>      
       <%= submit_tag 'Save', class: 'o-button__plain-text2', style: 'align-self: flex-end' %>
     </div>
   <% end %>
@@ -72,11 +90,12 @@
 <script type="text/javascript">
   var selects = document.getElementsByClassName('c-input__select')
   Array.from(selects).forEach(select => select.addEventListener('blur', () => {
+    const unmatched = select.form.querySelector('input[role="combobox"')
     const id = select.form.elements['[value]'];
     const name = select.form.elements['[label]'];
     const realid = select.form.elements['[contributor][name_identifier_id]'];
     const realname = select.form.elements['[contributor][contributor_name]'];
     realid.value = id.value;
-    realname.value = name.value;
+    realname.value = id.value && name.value || unmatched.value;
   }))
 </script>

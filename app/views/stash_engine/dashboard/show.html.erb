@@ -6,11 +6,15 @@
 <% end %>
 <div class="c-datasets-heading">
   <h1 class="c-datasets-heading__heading o-heading__level1">My datasets</h1>
-  <%= button_to stash_url_helpers.new_resource_path, class: 'c-datasets-heading__button prevent-click', form_class: 'o-button__inline-form', method: :get do %>
-    <i class="fas fa-plus" aria-hidden="true"></i>Start new submission
+  <%= button_to new_resource_path, class: 'c-datasets-heading__button prevent-click', form_class: 'o-button__inline-form', method: :get do %>
+    <i class="fas fa-plus" aria-hidden="true"></i>Create a new dataset
   <% end %>
 </div>
-<div id="user_datasets" data-load="<%= stash_url_helpers.dashboard_user_datasets_path(format: :js) %>" aria-live="polite" aria-busy="true">
+<% if current_user.resources&.present? %>
+<div id="user_datasets" data-load="<%= dashboard_user_datasets_path(format: :js) %>" aria-live="polite" aria-busy="true">
   <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
 </div>
+<% else %>
+  <p style="text-align: center;">Click the button above to create a new dataset</p>
+<% end %>
 <p style="text-align:right; font-size: .9em;"><a href="/feedback?m=4&l=dashboard" class="o-link__buttonlink"><i class="fa fa-commenting-o" aria-hidden="true" style="margin-right: .5ch"></i>Help direct the future of Dryad</a></p>

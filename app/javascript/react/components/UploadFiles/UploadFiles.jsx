@@ -98,6 +98,7 @@ export default function UploadFiles({
     filesAlreadySelected: 'Files of the same name are already in the table. New files were not added.',
     tooManyFiles: `You may not upload more than ${maxFiles} individual files of this type.`,
     filesTooBig: `You may not submit more than ${formatSizeUnits(maxSize)} of files.`,
+    zeroSize: 'Zenodo does not accept files without content (0 B files)',
     // eslint-disable-next-line max-len
     rarTypeFiles: 'RAR files were not added. RAR is a proprietary compression format that cannot be opened universally. Please use an open-access format, such as TAR.GZ, 7Z, or ZIP.',
   };
@@ -263,11 +264,16 @@ export default function UploadFiles({
       && sanitize(filename).toLowerCase() !== 'readme.md');
   };
 
-  const discardUnwantedFiles = (files) => {
-    if (files.some((f) => f.type === 'application/vnd.rar' || f.name.endsWith('.rar'))) {
+  const discardUnwantedFiles = (files, uploadType) => {
+    const rarfile = (f) => f.type === 'application/vnd.rar' || f.name.endsWith('.rar');
+    const zerofile = (f) => uploadType !== 'data' && !f.size;
+    if (files.some((f) => rarfile(f))) {
       setWarning((w) => [...w, Messages.rarTypeFiles]);
     }
-    return files.filter((f) => !(f.type === 'application/vnd.rar' || f.name.endsWith('.rar')));
+    if (files.some((f) => zerofile(f))) {
+      setWarning((w) => [...w, Messages.zeroSize]);
+    }
+    return files.filter((f) => !rarfile(f) && !zerofile(f));
   };
 
   const discardFiles = (files, uploadType) => {
@@ -281,7 +287,7 @@ export default function UploadFiles({
       setWarningRepeatedFile(countRepeated);
       if (filenames.includes('README.md')) setWarning((w) => [...w, Messages.fileReadme]);
     }
-    newFiles = discardUnwantedFiles(newFiles);
+    newFiles = discardUnwantedFiles(newFiles, uploadType);
     return newFiles;
   };
 
@@ -460,10 +466,12 @@ export default function UploadFiles({
     if (file.status !== 'Pending') {
       axios.patch(`/${file.uploadType}_files/${id}/rename`, {resource_id: resource.id, newfilename})
         .then((data) => {
-          if (data.data.error) {
-            setWarning([data.data.error]);
+          const {error, file: renamed, descriptions} = data.data;
+          if (error) {
+            setWarning([error]);
           } else {
-            const transformed = transformData([data.data]);
+            if (descriptions) setResource((r) => ({...r, descriptions}));
+            const transformed = transformData([renamed]);
             setChosenFiles((cf) => cf.map((f) => (f.id === id ? transformed[0] : f)));
           }
         });
@@ -605,11 +613,11 @@ export default function UploadFiles({
         <UploadSelect current={current} resource={resource} setResource={setResource} changed={addFilesHandler} clickedModal={showModalHandler} />
       </div>
       {failedUrls.length > 0 && <FailedUrlList failedUrls={failedUrls} clicked={removeFailedUrlHandler} />}
+      <div role="alert">
+        {warning.map((w) => <div className="callout warn" key={w}><p>{w}</p></div>)}
+      </div>
       {chosenFiles.length > 0 ? (
         <>
-          <div role="alert">
-            {warning.map((w) => <div className="callout warn" key={w}><p>{w}</p></div>)}
-          </div>
           <FileList
             config={config_payments}
             chosenFiles={chosenFiles}

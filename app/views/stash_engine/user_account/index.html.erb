@@ -5,7 +5,7 @@
     <div style="display: flex; align-items: center; justify-content: space-between; row-gap: 2ch">
       <h1>My account</h1>
       <% if current_user.orcid %>
-        <p><a href="<%= current_user.orcid_link %>" target="_blank"><i class="fab fa-orcid" role="img" aria-label="ORCID profile (opens in new tab): " style="margin-right: 3px;"></i><%= current_user.orcid %></a></p>
+        <p><a href="<%= current_user.orcid_link %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" role="img" aria-label="ORCID profile (opens in new tab): " style="margin-right: 3px;"></i><%= current_user.orcid %></a></p>
       <% end %>
     </div>
     <div id="user_profile">
@@ -56,7 +56,7 @@
         <div id="admin_searches">    
           <h2 id="saved">Saved searches</h2>
           <% if current_user.admin_searches.empty? %>
-            <p>Save searches from the new <%= link_to 'Admin dashboard', admin_dashboard_path %></p>
+            <p>Save searches from the <%= link_to 'Admin dashboard', admin_dashboard_path %></p>
           <% else %>
             <p>Click the search name to view results and to edit search fields and filters.</p>
             <ol class="saved_searches_list" id="admin_searches_list">
@@ -89,4 +89,18 @@
   document.getElementById('edit_submit').addEventListener('click', () => {
     document.getElementById('user_edit_form').setAttribute('hidden', true);
   });
+  document.querySelectorAll('.copy-share-code').forEach(url => url.addEventListener('click', (e) => {
+    e.preventDefault()
+    window.navigator.clipboard.writeText(url.href).then(async () => {
+      url.setAttribute('aria-label', 'Copied')
+      url.setAttribute('title', 'Copied')
+      url.firstElementChild.classList.toggle('fa-share')
+      url.firstElementChild.classList.toggle('fa-check')
+      await new Promise(res => setTimeout(res, 3000));
+      url.setAttribute('title', 'Copy link to share search')
+      url.setAttribute('aria-label', 'Copy link to share search')
+      url.firstElementChild.classList.toggle('fa-share')
+      url.firstElementChild.classList.toggle('fa-check')
+    });
+  }));
 </script>

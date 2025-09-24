@@ -1,3 +1,6 @@
+# :nocov:
+# Geolocation data is no longer invited or displayed
+
 module StashDatacite
   class GeolocationBoxesController < ApplicationController
     before_action :set_geolocation_box, only: %i[show edit update delete]
@@ -100,3 +103,4 @@ module StashDatacite
     end
   end
 end
+# :nocov:

@@ -16,17 +16,21 @@ module StashApi
     include Mocks::Salesforce
     include Mocks::Datacite
 
+    let!(:user) { create(:user, role: 'superuser') }
+    let!(:system_user) { create(:user, id: 0, first_name: 'Dryad', last_name: 'System') }
+    let!(:doorkeeper_application) do
+      create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                      owner_id: user.id, owner_type: 'StashEngine::User')
+    end
+
     before(:each) do
       create(:tenant_dryad)
       create(:tenant_ucop)
       neuter_curation_callbacks!
       mock_salesforce!
       mock_datacite_gen!
-      @user                   = create(:user, role: 'superuser')
-      @system_user            = create(:user, id: 0, first_name: 'Dryad', last_name: 'System')
-      @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                                                owner_id: @user.id, owner_type: 'StashEngine::User')
-      setup_access_token(doorkeeper_application: @doorkeeper_application)
+      mock_solr!
+      setup_access_token(doorkeeper_application: doorkeeper_application)
     end
 
     # test creation of a new dataset
@@ -39,30 +43,34 @@ module StashApi
       it 'creates a new dataset from minimal metadata (title, author info, abstract)' do
         # the following works for post with headers
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         expect(/doi:10./).to match(output[:identifier])
         hsh = @meta.hash
         expect(hsh[:title]).to eq(output[:title])
         expect(hsh[:abstract]).to eq(output[:abstract])
-        in_author  = hsh[:authors].first
+        in_author = hsh[:authors].first
         out_author = output[:authors].first
         expect(out_author[:email]).to eq(in_author[:email])
         expect(out_author[:affiliation]).to eq(in_author[:affiliation])
+
+        identifier = StashEngine::Identifier.find_by(identifier: output[:identifier].gsub('doi:', ''))
+        expect(identifier).not_to be_nil
+        expect(identifier.pub_state).to eq('unpublished')
       end
 
       it 'creates a new dataset from minimal metadata and ordered authors (title, author info, abstract)' do
         @meta.make_minimal_ordered_authors
         # the following works for post with headers
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         expect(/doi:10./).to match(output[:identifier])
         hsh = @meta.hash
         expect(hsh[:title]).to eq(output[:title])
         expect(hsh[:abstract]).to eq(output[:abstract])
         # should be swapped because we put reverse order
-        in_author  = hsh[:authors].first
+        in_author = hsh[:authors].first
         out_author = output[:authors].last
         expect(out_author[:email]).to eq(in_author[:email])
         expect(out_author[:affiliation]).to eq(in_author[:affiliation])
@@ -70,13 +78,13 @@ module StashApi
 
       it 'creates a new dataset from minimal metadata with funder' do
         # the following works for post with headers
-        funder        = @meta.add_funder
+        funder = @meta.add_funder
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         expect(/doi:10./).to match(output[:identifier])
-        hsh      = @meta.hash
-        funder   = funder.first
+        hsh = @meta.hash
+        funder = funder.first
         ret_fund = hsh[:funders].first
         expect(ret_fund[:organization]).to eq(funder[:organization])
         expect(ret_fund[:awardNumber]).to eq(funder[:awardNumber])
@@ -87,7 +95,7 @@ module StashApi
       it 'creates a new dataset with specified keywords' do
         @meta.add_keywords(number: 3)
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         expect(output[:keywords]).to be
         expect(output[:keywords].size).to eq(3)
@@ -101,7 +109,7 @@ module StashApi
         StashDatacite::Subject.create(subject: fos, subject_scheme: 'fos') # the fos field must exist in the database to be recognized
         @meta.add_field(field_name: 'fieldOfScience', value: fos)
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         expect(output[:fieldOfScience]).to eq(fos)
       end
@@ -112,7 +120,7 @@ module StashApi
                                              email: Faker::Internet.email)
         @meta.add_field(field_name: 'userId', value: test_user.id)
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         expect(output[:userId]).to eq(test_user.id)
       end
@@ -120,7 +128,7 @@ module StashApi
       it 'creates a new dataset with a userId explicitly set by journal admin' do
         # journal_user is the journal administrator, test_user is the user that will own the dataset
         journal_user = create(:user, tenant_id: 'ucop')
-        journal      = create(:journal, issn: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}")
+        journal = create(:journal, issn: "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}")
         create(:role, role_object: journal, user: journal_user)
         doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                  owner_id: journal_user.id, owner_type: 'StashEngine::User')
@@ -131,19 +139,19 @@ module StashApi
         @meta.add_field(field_name: 'userId', value: test_user.id)
         @meta.add_field(field_name: 'publicationISSN', value: journal.single_issn)
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         expect(output[:userId]).to eq(test_user.id)
       end
 
       it 'creates a new dataset with a secondary ISSN representing the journal' do
-        issn_target    = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+        issn_target = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
         issn_secondary = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
-        journal        = create(:journal, issn: [issn_target, issn_secondary])
+        journal = create(:journal, issn: [issn_target, issn_secondary])
 
         @meta.add_field(field_name: 'publicationISSN', value: issn_secondary)
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
 
         ident = StashEngine::Identifier.find(output[:id])
@@ -154,7 +162,7 @@ module StashApi
       it 'creates a new basic dataset with related software' do
         @meta.add_related_work(work_type: 'software')
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
 
         # check it against the database
@@ -167,7 +175,7 @@ module StashApi
       it 'creates a new basic dataset with a placename' do
         @meta.add_place
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
 
         # check it against the database
@@ -181,17 +189,17 @@ module StashApi
 
       it 'creates new curation activities and sets the publication date' do
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         @stash_id = StashEngine::Identifier.find(output[:id])
         @resource = @stash_id.resources.last
         expect(@resource.curation_activities.size).to eq(2) # one for default creation, one for the API
 
         @curation_activity = Fixtures::StashApi::CurationMetadata.new
-        dataset_id         = CGI.escape(output[:identifier])
-        response_code      = post "/api/v2/datasets/#{dataset_id}/curation_activity",
-                                  params: @curation_activity.json,
-                                  headers: default_authenticated_headers
+        dataset_id = CGI.escape(output[:identifier])
+        response_code = post "/api/v2/datasets/#{dataset_id}/curation_activity",
+                             params: @curation_activity.json,
+                             headers: default_authenticated_headers
         expect(response_code).to eq(200)
 
         @resource.reload
@@ -201,7 +209,7 @@ module StashApi
 
       it 'does not update the publication date if one is already set' do
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         @stash_id = StashEngine::Identifier.find(output[:id])
         @resource = @stash_id.resources.last
@@ -212,10 +220,10 @@ module StashApi
         @resource.update!(publication_date: publish_date)
 
         @curation_activity = Fixtures::StashApi::CurationMetadata.new
-        dataset_id         = CGI.escape(output[:identifier])
-        response_code      = post "/api/v2/datasets/#{dataset_id}/curation_activity",
-                                  params: @curation_activity.json,
-                                  headers: default_authenticated_headers
+        dataset_id = CGI.escape(output[:identifier])
+        response_code = post "/api/v2/datasets/#{dataset_id}/curation_activity",
+                             params: @curation_activity.json,
+                             headers: default_authenticated_headers
         expect(response_code).to eq(200)
 
         @resource.reload
@@ -249,17 +257,10 @@ module StashApi
         end
 
         it 'does not trigger email sending when owner has no email' do
-          @user.update(email: nil)
+          hash = @meta.hash
+          hash[:authors].first[:email] = nil
 
-          # The below code does not work on rails 8
-          # expect {
-          #   post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-          # }.to raise_error(
-          #   ActionController::BadRequest,
-          #   'Dataset owner does not have an email address in order to send the Submission email.'
-          # )
-
-          response_code = post '/api/v2/datasets.json', params: @meta.json, headers: default_authenticated_headers
+          response_code = post '/api/v2/datasets.json', params: hash.to_json, headers: default_authenticated_headers
           expect(response_code).to eq(400)
         end
 
@@ -290,11 +291,11 @@ module StashApi
 
       it 'creates a new dataset from EM deposit metadata' do
         response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
-        hsh   = @meta.hash
+        hsh = @meta.hash
         ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
-        res   = ident.latest_resource
+        res = ident.latest_resource
 
         expect(ident).to be
         expect(ident.publication_name).to eq(hsh[:journal_full_title])
@@ -308,24 +309,24 @@ module StashApi
 
       it 'assigns dataset to system user when ORCID is blank' do
         @meta.hash['authors'].first['orcid'] = ''
-        response_code                        = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
-        output                               = response_body_hash
+        response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
+        output = response_body_hash
         expect(response_code).to eq(201)
         ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
-        res   = ident.latest_resource
+        res = ident.latest_resource
 
         expect(ident).to be
-        expect(res.submitter.id).to eq(@system_user.id)
+        expect(res.submitter.id).to eq(system_user.id)
       end
 
       it 'creates a new dataset from EM submission metadata' do
         @meta.make_submission_metadata
         response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
-        hsh   = @meta.hash
+        hsh = @meta.hash
         ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
-        res   = ident.latest_resource
+        res = ident.latest_resource
 
         expect(ident).to be
         expect(ident.publication_name).to eq(hsh[:journal_full_title])
@@ -338,10 +339,10 @@ module StashApi
 
       it 'allows update of deposit metadata with new submission metadata' do
         response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
-        res   = ident.latest_resource
+        res = ident.latest_resource
 
         @meta.make_submission_metadata
         response_code = post "/api/v2/em_submission_metadata/doi%3A#{ERB::Util.url_encode(ident.identifier)}",
@@ -358,10 +359,10 @@ module StashApi
 
       it 'allows update of deposit metadata using the raw identifier, without <<doi:>>' do
         response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
-        res   = ident.latest_resource
+        res = ident.latest_resource
 
         @meta.make_submission_metadata
         response_code = post "/api/v2/em_submission_metadata/#{ERB::Util.url_encode(ident.identifier)}",
@@ -379,12 +380,12 @@ module StashApi
       it 'does not update core fields after the user has submitted edits, but does update selected fields' do
         @meta.make_submission_metadata
         response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
         ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
-        res   = ident.latest_resource
+        res = ident.latest_resource
         res.resource_states.first.update(resource_state: 'submitted')
-        saved_title      = res.title
+        saved_title = res.title
         res.contributors = []
         res.subjects.clear
         @meta.make_submission_metadata # creates a new fake metadata deposit
@@ -403,11 +404,11 @@ module StashApi
       it 'updates the status of a peer_review item if the final_disposition is present in the submission metadata' do
         @meta.make_submission_metadata
         response_code = post '/api/v2/em_submission_metadata', params: @meta.json, headers: default_authenticated_headers
-        output        = response_body_hash
+        output = response_body_hash
         expect(response_code).to eq(201)
 
         ident = StashEngine::Identifier.where(identifier: output[:deposit_id]).first
-        res   = ident.latest_resource
+        res = ident.latest_resource
         res.resource_states.first.update(resource_state: 'submitted')
         create(:curation_activity, resource: res, status: 'peer_review')
 
@@ -448,48 +449,48 @@ module StashApi
         @resources.insert(3, create(:resource, user_id: @user2.id, tenant_id: @user2.tenant_id, identifier_id: @identifiers[2].id))
 
         # identifiers[0]
-        @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[0], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[0], status: 'published')]]
+        @curation_activities = [[create(:curation_activity, :in_progress, resource: @resources[0]),
+                                 create(:curation_activity, :curation, resource: @resources[0]),
+                                 create(:curation_activity, :published, resource: @resources[0])]]
 
-        @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[1], status: 'curation')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[1]),
+                                 create(:curation_activity, :curation, resource: @resources[1])]
 
         # identifiers[1]
-        @curation_activities << [create(:curation_activity, resource: @resources[2], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[2], status: 'curation')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[2]),
+                                 create(:curation_activity, :curation, resource: @resources[2])]
 
         # identifiers[2]
-        @curation_activities << [create(:curation_activity, resource: @resources[3], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[3], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[3], status: 'action_required')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[3]),
+                                 create(:curation_activity, :curation, resource: @resources[3]),
+                                 create(:curation_activity, :action_required, resource: @resources[3])]
 
-        @curation_activities << [create(:curation_activity, resource: @resources[4], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[4], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[4], status: 'published')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[4]),
+                                 create(:curation_activity, :curation, resource: @resources[4]),
+                                 create(:curation_activity, :published, resource: @resources[4])]
 
         # identifiers[3]
-        @curation_activities << [create(:curation_activity, resource: @resources[5], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[5], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[5], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[5]),
+                                 create(:curation_activity, :curation, resource: @resources[5]),
+                                 create(:curation_activity, :embargoed, resource: @resources[5])]
 
         # identifiers[4]
-        @curation_activities << [create(:curation_activity, resource: @resources[6], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[6], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[6], status: 'withdrawn')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[6]),
+                                 create(:curation_activity, :curation, resource: @resources[6]),
+                                 create(:curation_activity, :withdrawn, resource: @resources[6])]
 
         # identifiers[5]
-        @curation_activities << [create(:curation_activity, resource: @resources[7], status: 'in_progress')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[7])]
 
         # identifiers[6]
-        @curation_activities << [create(:curation_activity, resource: @resources[8], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[8], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[8], status: 'published')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[8]),
+                                 create(:curation_activity, :curation, resource: @resources[8]),
+                                 create(:curation_activity, :published, resource: @resources[8])]
 
         # identifiers[7]
-        @curation_activities << [create(:curation_activity, resource: @resources[9], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[9], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[9], status: 'embargoed')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[9]),
+                                 create(:curation_activity, :curation, resource: @resources[9]),
+                                 create(:curation_activity, :embargoed, resource: @resources[9])]
 
         # 5 public datasets
         #
@@ -532,7 +533,7 @@ module StashApi
 
         it 'gets a list for journal admins: public items and private items associated with the journal' do
           # set up user4 as a journal admin, and identifiers[1] as belonging to that journal
-          user4   = create(:user, tenant_id: 'ucop')
+          user4 = create(:user, tenant_id: 'ucop')
           journal = create(:journal)
           create(:role, role_object: journal, user: user4)
           create(:resource_publication, publication_issn: journal.single_issn, resource: create(:resource, identifier: @identifiers[1]))
@@ -620,6 +621,15 @@ module StashApi
           expect(output['_embedded']['stash:datasets'].first['identifier']).to eq(@identifiers[5].to_s)
         end
 
+        it 'reduces scope to a manuscriptNumber' do
+          create(:internal_datum, identifier_id: @identifiers[5].id, data_type: 'manuscriptNumber', value: 'manuscript123')
+          create(:resource_publication, manuscript_number: 'manuscript123', resource: create(:resource, identifier: @identifiers[5]))
+          get '/api/v2/datasets', params: { 'manuscriptNumber' => 'manuscript123' }, headers: default_authenticated_headers
+          output = response_body_hash
+          expect(output[:count]).to eq(1)
+          expect(output['_embedded']['stash:datasets'].first['identifier']).to eq(@identifiers[5].to_s)
+        end
+
       end
     end
 
@@ -628,7 +638,7 @@ module StashApi
       before(:each) do
         @ident = create(:identifier)
         @res   = create(:resource, identifier: @ident, tenant_id: 'dryad')
-        create(:curation_activity_no_callbacks, resource: @res, created_at: '2020-01-04', status: 'published')
+        create(:curation_activity, :published, resource: @res, created_at: '2020-01-04')
         mock_solr!(include_identifier: @ident)
       end
 
@@ -734,28 +744,35 @@ module StashApi
 
         @identifier = create(:identifier)
         Timecop.travel(Time.now.utc.to_date - 1.day)
-        @resources = [create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id)]
+        @resources = [create(:resource, user_id: @user2.id, tenant_id: user.tenant_id, identifier_id: @identifier.id)]
         Timecop.travel(Time.now.utc + 23.hours)
-        @resources.push(create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id))
+        @resources.push(create(:resource, user_id: @user2.id, tenant_id: user.tenant_id, identifier_id: @identifier.id))
         Timecop.return
-        @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[0], status: 'curation'),
-                                 create(:curation_activity, resource: @resources[0], status: 'published')]]
+        @curation_activities = [[create(:curation_activity, :in_progress, resource: @resources[0]),
+                                 create(:curation_activity, :curation, resource: @resources[0]),
+                                 create(:curation_activity, :published, resource: @resources[0])]]
 
-        @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[1], status: 'curation')]
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[1]),
+                                 create(:curation_activity, :curation, resource: @resources[1])]
 
         # set versions correctly seems not correctly working unless created another way.
         @resources[0].stash_version.update(version: 1)
         @resources[1].stash_version.update(version: 2)
       end
 
-      it 'shows a public record for a created indentifier/resource' do
+      it 'shows a public record for a created identifier/resource' do
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", as: :json # not logged in
         hsh = response_body_hash
         expect(hsh['versionNumber']).to eq(1)
         expect(hsh['title']).to eq(@resources[0].title)
         expect(hsh['editLink']).to eq(nil)
+      end
+
+      it 'strips tags from dataset titles' do
+        @resources[0].update(title: 'A dataset title that contains <em>italics</em> and <sup>stuff</sup>')
+        get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", as: :json # not logged in
+        hsh = response_body_hash
+        expect(hsh['title']).to eq('A dataset title that contains italics and stuff')
       end
 
       it 'shows the dataset with the correct json type, even if not set explicitly in accept headers' do
@@ -779,9 +796,9 @@ module StashApi
       it "doesn't show the private record for superusers when using Authorzation Code Grant (3rd party user proxy)" do
         # this also indirectly tests the optional_api_user which changes based on login method
         # set access_token to proxy for user
-        @doorkeeper_application.access_tokens.first.update(resource_owner_id: @doorkeeper_application.owner_id)
+        doorkeeper_application.access_tokens.first.update(resource_owner_id: doorkeeper_application.owner_id)
         # reset to different grant type where it's not owned by api user
-        @doorkeeper_application.update(owner_id: nil, owner_type: nil)
+        doorkeeper_application.update(owner_id: nil, owner_type: nil)
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
         hsh = response_body_hash
         expect(hsh['versionNumber']).to eq(1) # only shows published one, not later one that isn't
@@ -791,7 +808,7 @@ module StashApi
       it 'shows the private record for the owner' do
         @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                    owner_id: @user2.id, owner_type: 'StashEngine::User')
-        access_token             = get_access_token(doorkeeper_application: @doorkeeper_application2)
+        access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_json_headers.merge('Authorization' => "Bearer #{access_token}")
         hsh = response_body_hash
         expect(hsh['versionNumber']).to eq(2)
@@ -799,9 +816,9 @@ module StashApi
       end
 
       it 'shows the peer review URL when the dataset is in review status' do
-        @resources << create(:resource, user_id: @user2.id, tenant_id: @user.tenant_id, identifier_id: @identifier.id)
-        @curation_activities << [create(:curation_activity, resource: @resources[2], status: 'in_progress'),
-                                 create(:curation_activity, resource: @resources[2], status: 'peer_review')]
+        @resources << create(:resource, user_id: @user2.id, tenant_id: user.tenant_id, identifier_id: @identifier.id)
+        @curation_activities << [create(:curation_activity, :in_progress, resource: @resources[2]),
+                                 create(:curation_activity, :peer_review, resource: @resources[2])]
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", headers: default_authenticated_headers
         hsh = response_body_hash
         expect(hsh['sharingLink']).to match(/http/)
@@ -818,10 +835,10 @@ module StashApi
         @meta = Fixtures::StashApi::Metadata.new
         @meta.make_minimal
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
-        @ds_info      = response_body_hash
+        @ds_info = response_body_hash
         expect(response_code).to eq(201)
         my_id = StashEngine::Identifier.find(@ds_info['id'])
-        @res  = my_id.in_progress_resource
+        @res = my_id.in_progress_resource
         @res.update(title: 'Sufficiently complex title for test dataset')
         @res.update(data_files: [create(:data_file, file_state: 'copied'),
                                  create(:data_file, file_state: 'copied')])
@@ -840,16 +857,16 @@ module StashApi
         end
 
         it "doesn't submit dataset when the PATCH is not allowed for user (not owner or no permission)" do
-          @tenant_ids              = StashEngine::Tenant.enabled.map(&:id)
-          @user2                   = create(:user, tenant_id: @tenant_ids.first)
+          @tenant_ids = StashEngine::Tenant.enabled.map(&:id)
+          @user2 = create(:user, tenant_id: @tenant_ids.first)
           @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                      owner_id: @user2.id, owner_type: 'StashEngine::User')
-          access_token             = get_access_token(doorkeeper_application: @doorkeeper_application2)
-          response_code            = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
-                                           params: @patch_body,
-                                           headers: default_json_headers.merge(
-                                             'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
-                                           )
+          access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
+          response_code = patch "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
+                                params: @patch_body,
+                                headers: default_json_headers.merge(
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
+                                )
           expect(response_code).to eq(401)
           expect(response_body_hash['error']).to eq('unauthorized')
         end
@@ -863,11 +880,11 @@ module StashApi
 
         context 'when submission is allowed (done by owner of the dataset)' do
           before do
-            @tenant_ids              = StashEngine::Tenant.enabled.map(&:id)
-            user2                    = create(:user, tenant_id: @tenant_ids.first, orcid: @ds_info['authors'].first['orcid'])
+            @tenant_ids = StashEngine::Tenant.enabled.map(&:id)
+            user2 = create(:user, tenant_id: @tenant_ids.first, orcid: @ds_info['authors'].first['orcid'])
             @doorkeeper_application2 = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
                                                                        owner_id: user2.id, owner_type: 'StashEngine::User')
-            @access_token            = get_access_token(doorkeeper_application: @doorkeeper_application2)
+            @access_token = get_access_token(doorkeeper_application: @doorkeeper_application2)
 
             # HACK: in update to make this regular user the owner/editor of this item
             create(:description, resource: @res, description_type: 'technicalinfo')
@@ -893,8 +910,10 @@ module StashApi
 
           context 'when there is a fee to pay' do
             before do
-              allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({ total: 123,
-                                                                                                      storage_fee_label: 'Submission fee' })
+              allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return(
+                { total: 123,
+                  storage_fee_label: 'Submission fee' }
+              )
             end
 
             it 'allows submission if done by owner of the dataset (resource)' do
@@ -913,14 +932,14 @@ module StashApi
       describe 'PUT to replace metadata for dataset' do
 
         it 'allows replacing of the metadata for a record' do
-          keys_to_extract                                 = %w[title authors abstract]
-          modified_metadata                               = @ds_info.select { |key, _| keys_to_extract.include?(key) }
-          modified_metadata['title']                      = 'Crows wave goodbye'
+          keys_to_extract = %w[title authors abstract]
+          modified_metadata = @ds_info.select { |key, _| keys_to_extract.include?(key) }
+          modified_metadata['title'] = 'Crows wave goodbye'
           modified_metadata['authors'].first['firstName'] = 'Helen'
-          modified_metadata['abstract']                   = 'The implications of ambimorphic archetypes have been far-reaching and pervasive.'
-          response_code                                   = put "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
-                                                                params: modified_metadata.to_json,
-                                                                headers: default_authenticated_headers
+          modified_metadata['abstract'] = 'The implications of ambimorphic archetypes have been far-reaching and pervasive.'
+          response_code = put "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
+                              params: modified_metadata.to_json,
+                              headers: default_authenticated_headers
           expect(response_code).to eq(200)
           expect(@ds_info['identifier']).to eq(response_body_hash['identifier'])
           expect(response_body_hash['title']).to eq(modified_metadata['title'])
@@ -929,12 +948,12 @@ module StashApi
         end
 
         it "doesn't allow non-auth users to update" do
-          keys_to_extract            = %w[title authors abstract]
-          modified_metadata          = @ds_info.select { |key, _| keys_to_extract.include?(key) }
+          keys_to_extract = %w[title authors abstract]
+          modified_metadata = @ds_info.select { |key, _| keys_to_extract.include?(key) }
           modified_metadata['title'] = 'Froozlotter'
-          response_code              = put "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
-                                           params: modified_metadata.to_json,
-                                           as: :json
+          response_code = put "/api/v2/datasets/#{CGI.escape(@ds_info['identifier'])}",
+                              params: modified_metadata.to_json,
+                              as: :json
           expect(response_code).to eq(401)
         end
 
@@ -946,7 +965,7 @@ module StashApi
         it 'inserts a new dataset with the DOI I love' do
           @meta2 = Fixtures::StashApi::Metadata.new
           @meta2.make_minimal
-          desired_doi   = 'doi:10.3072/sasquatch.3711'
+          desired_doi = 'doi:10.3072/sasquatch.3711'
           response_code = put "/api/v2/datasets/#{CGI.escape(desired_doi)}",
                               params: @meta2.json,
                               headers: default_authenticated_headers
@@ -959,31 +978,29 @@ module StashApi
         it 'requires a logged in user for upserting new' do
           @meta2 = Fixtures::StashApi::Metadata.new
           @meta2.make_minimal
-          desired_doi   = 'doi:10.3072/sasquatch.3711'
+          desired_doi = 'doi:10.3072/sasquatch.3711'
           response_code = put "/api/v2/datasets/#{CGI.escape(desired_doi)}",
                               params: @meta2.json,
                               as: :json
           expect(response_code).to eq(401)
         end
-
         # these would also use the same kinds of authorizations as the other variations on PUT/PATCH.
       end
 
       describe 'PATCH to update curationStatus or publicationISSN' do
+        let!(:access_token) { get_access_token(doorkeeper_application: doorkeeper_application) }
+
         before(:each) do
           allow_any_instance_of(ResourceFeeCalculatorService).to receive(:calculate).and_return({ total: 0, storage_fee_label: 'Submission fee' })
 
           # create a dataset in peer-review status
-          @super_user             = create(:user, role: 'superuser')
-          @doorkeeper_application = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-                                                                    owner_id: @super_user.id, owner_type: 'StashEngine::User')
-          @access_token           = get_access_token(doorkeeper_application: @doorkeeper_application)
-          @identifier             = create(:identifier)
-          @res                    = create(:resource, identifier: @identifier, user: @super_user)
+          # @access_token           = get_access_token(doorkeeper_application: doorkeeper_application)
+          @identifier = create(:identifier)
+          @res = create(:resource, identifier: @identifier, user: user)
           create(:description, resource: @res, description_type: 'technicalinfo')
           @res.update(data_files: [create(:data_file, file_state: 'copied'),
                                    create(:data_file, file_state: 'copied')])
-          @res.authors.first.update(author_orcid: @super_user.orcid)
+          @res.authors.first.update(author_orcid: user.orcid)
           @res.subjects << [create(:subject), create(:subject), create(:subject)]
           @ca = create(:curation_activity, resource: @res, status: 'peer_review')
           @identifier.reload
@@ -992,25 +1009,25 @@ module StashApi
         it 'allows curationStatus to be updated' do
           expect(@res.current_curation_status).to eq('peer_review')
 
-          @patch_body   = [{ op: 'replace', path: '/curationStatus', value: 'submitted' }].to_json
+          @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'submitted' }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
-                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           expect(response_code).to eq(200)
           expect(@res.current_curation_status).to eq('submitted')
         end
 
         it 'does not allow curationStatus to be updated if the item is already published' do
-          @ca = create(:curation_activity, resource: @res, status: 'published')
+          @ca = create(:curation_activity, :published, resource: @res)
           expect(@res.current_curation_status).to eq('published')
 
-          @patch_body   = [{ op: 'replace', path: '/curationStatus', value: 'submitted' }].to_json
+          @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'submitted' }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
-                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           expect(response_code).to eq(200)
           expect(@res.current_curation_status).to eq('published')
@@ -1022,14 +1039,14 @@ module StashApi
           # use multiple ISSNs to test that the patch process sets the journal's primary ISSN (issn_target)
           # even when it is presented with an alternate (issn_test)
           issn_target = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
-          issn_test   = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
-          journal     = create(:journal, issn: [issn_target, issn_test])
+          issn_test = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
+          journal = create(:journal, issn: [issn_target, issn_test])
 
-          @patch_body   = [{ op: 'replace', path: '/publicationISSN', value: issn_test }].to_json
+          @patch_body = [{ op: 'replace', path: '/publicationISSN', value: issn_test }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
-                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           expect(response_code).to eq(200)
           @identifier.reload
@@ -1041,20 +1058,150 @@ module StashApi
           new_issn = "#{Faker::Number.number(digits: 4)}-#{Faker::Number.number(digits: 4)}"
           create(:resource_publication, publication_issn: new_issn, resource: @res)
           expect(@identifier.publication_issn).to eq(new_issn)
-          @patch_body   = [{ op: 'replace', path: '/publicationISSN', value: '' }].to_json
+          @patch_body = [{ op: 'replace', path: '/publicationISSN', value: '' }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
-                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{@access_token}"
+                                  'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           @identifier.reload
           expect(response_code).to eq(200)
           expect(@identifier.publication_issn).to eq(nil)
         end
-
       end
-
     end
 
+    describe '#download' do
+      let(:identifier) { create(:identifier) }
+      let!(:resource) { create(:resource, identifier: identifier, file_view: file_view, total_file_size: 10) }
+      let(:file_view) { true }
+
+      subject do
+        get "/api/v2/datasets/doi%3A#{CGI.escape(identifier.identifier)}/download", headers: default_authenticated_headers
+      end
+
+      context 'when resource can be downloaded' do
+        before do
+          allow_any_instance_of(Aws::Sigv4::Signer).to receive(:presign_url).and_return('download/file_urel.zip')
+
+          resource.current_state = 'submitted'
+          subject
+        end
+
+        context 'when resource is under max api_zip_size' do
+          it 'downloads the resource' do
+            expect(response).to have_http_status(302)
+            expect(response).to redirect_to('download/file_urel.zip')
+          end
+        end
+
+        context 'when resource is over max api_zip_size' do
+          let!(:resource) do
+            create(:resource, identifier: identifier, file_view: file_view, total_file_size: APP_CONFIG[:maximums][:api_zip_size] + 1)
+          end
+
+          it 'returns an error' do
+            expect(response).to have_http_status(405)
+            expect(response.body).to eq('The dataset is too large for zip file generation. Please download each file individually.')
+          end
+        end
+      end
+
+      context 'when resource can not be downloaded' do
+        let!(:file_view) { false }
+
+        it 'returns 404 and a message' do
+          subject
+
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).to eq('Download for this version of the dataset is unavailable')
+        end
+      end
+    end
+
+    describe '#set_internal_datum' do
+      let(:identifier) { create(:identifier) }
+      let!(:resource) { create(:resource, identifier: identifier) }
+      let(:data_type) { 'manuscriptNumber' }
+
+      subject do
+        post "/api/v2/datasets/doi%3A#{CGI.escape(identifier.identifier)}/set_internal_datum",
+             params: { data_type: @data_type || data_type, value: 'new_value' }.to_json,
+             headers: default_authenticated_headers
+      end
+
+      context 'when data type allows multiple entries' do
+        %w[mismatchedDOI duplicateItem formerManuscriptNumber].each do |data_type|
+          it "returns an error for `#{data_type}`" do
+            @data_type = data_type
+            subject
+
+            expect(response).to have_http_status(:not_found)
+            expect(response_body_hash[:error]).to eq("#{data_type} allows multiple entries, use add_internal_datum")
+          end
+        end
+      end
+
+      context 'when data type does not allow multiple entries' do
+        context 'when datum entry exists' do
+          let!(:datum) { create(:internal_datum, identifier_id: identifier.id, data_type: data_type, value: 'old_value') }
+
+          it 'sets the datum value' do
+            subject
+
+            expect(response).to have_http_status(:ok)
+            expect(datum.reload.value).to eq('new_value')
+          end
+        end
+
+        context 'when datum entry does not exist' do
+          it 'sets the datum value' do
+            subject
+
+            expect(response).to have_http_status(:ok)
+            info = identifier.internal_data.where(data_type: data_type)
+            expect(info.count).to eq(1)
+            expect(info.first).to be_a(StashEngine::InternalDatum)
+            expect(info.first.value).to eq('new_value')
+          end
+        end
+      end
+    end
+
+    describe '#add_internal_datum' do
+      let(:identifier) { create(:identifier) }
+      let!(:resource) { create(:resource, identifier: identifier) }
+      let(:data_type) { 'manuscriptNumber' }
+
+      subject do
+        post "/api/v2/datasets/doi%3A#{CGI.escape(identifier.identifier)}/add_internal_datum",
+             params: { data_type: data_type, value: 'new_value' }.to_json,
+             headers: default_authenticated_headers
+      end
+
+      context 'when data type allows multiple entries' do
+        let(:data_type) { 'mismatchedDOI' }
+
+        it 'sets the datum value' do
+          subject
+
+          expect(response).to have_http_status(:ok)
+          expect(identifier.internal_data.last.value).to eq('new_value')
+        end
+      end
+
+      context 'when data type does not allow multiple entries' do
+        context 'when datum entry exists' do
+          let!(:datum) { create(:internal_datum, identifier_id: identifier.id, data_type: data_type, value: 'old_value') }
+
+          it 'returns an error for `manuscriptNumber`' do
+            subject
+
+            expect(response).to have_http_status(:not_found)
+            expect(response_body_hash[:error]).to eq("#{data_type} does not allow multiple entries, use set_internal_datum")
+          end
+        end
+      end
+    end
   end
 end

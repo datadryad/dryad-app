@@ -83,7 +83,7 @@ test:
     dataZip: abcdefg
   maximums:
     merritt_size: 3.0e+10
-    upload_size: 1.0e+12
+    upload_size: 2.0e+12
     zenodo_size: 5.0e+9
     zip_size: 11.0e+9
     api_zip_size: 200
@@ -220,7 +220,7 @@ defaults: &DEFAULTS
   maximums:
     # 300 GB and 50 GB below but expressed in bytes
     merritt_size: 300_000_000_000
-    upload_size: 1.0e+12
+    upload_size: 2.0e+12
     zenodo_size: 50_000_000_000
     zip_size: 11_000_000_000
     api_zip_size: 200_000_000
@@ -262,14 +262,23 @@ defaults: &DEFAULTS
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
-  cedar_editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js?1-0-14"
+  cedar_editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js?1-5-0"
   cedar_templates:
-    # only the Neuroscience template will be loaded; the selectable editor is disabled
-    - ["9ce4b66a-1597-47cb-b465-24d9d33fbb88", "Files", "File Description"]
-    - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
-    - ["b7f291ea-d548-43dc-8685-dc74e73892a5", "EEB",  "Ecology and Evolutionary Biology"]
-    - ["ea716306-5263-4f7a-9155-b7958f566933", "NCBI-MIAIRR", "MiAIRR V1.1.0"]
-    - ["dc3fa214-88f4-49dd-b56b-f4552b2d3474", "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
+    # - ["9ce4b66a-1597-47cb-b465-24d9d33fbb88", "Files", "File Description"]
+    # - ["ea716306-5263-4f7a-9155-b7958f566933", "NCBI-MIAIRR", "MiAIRR V1.1.0"]
+    # - ["dc3fa214-88f4-49dd-b56b-f4552b2d3474", "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
+    # - ["b7f291ea-d548-43dc-8685-dc74e73892a5", "EEB",  "Ecology and Evolutionary Biology"]
+    - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data"]
+    - ["17653460-3b7c-4644-9351-db38360dc130", "ATACseq Dataset"]
+    - ["745f82ce-2d70-480b-af69-b8945e5292cd", "Auto-fluorescence Dataset"]
+    - ["f5050476-05cf-44ab-9d85-dd7d8d755d9e", "Histology Dataset"]
+    - ["f24ed227-d41e-49c0-aa70-f5720a701ae7", "LC-MS Dataset"]
+    - ["ff903a6b-f92e-414d-818a-d5137a03e9db", "PhenoCycler Dataset"]
+    - ["58b33dfd-96da-41f2-a274-9b1895da7298", "RNAseq (with probes) Dataset"]
+    - ["85725781-0412-40f3-8ba5-6acef6cf4120", "RNAseq Dataset"]
+    - ["f79a1ffc-eb37-42cc-9bb5-8111757fe58b", "Sample Block"]
+    - ["15240463-21c8-44f2-b9d1-d1b36ab2dcf7", "Sample Section"]
+    - ["e51ba4cd-5b78-48f8-b240-f70e21de2f12", "Sample Suspension"]
   cache:
     app_url: 'redis://localhost:6380/0'
     rack_attack_url: 'redis://localhost:6381/0'
@@ -422,8 +431,6 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-  cedar_templates:
-    - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data", "Human Cognitive Neuroscience Data"]
   cache:
     app_url: 'redis://localhost:6380/0'
     rack_attack_url: 'redis://localhost:6381/0'

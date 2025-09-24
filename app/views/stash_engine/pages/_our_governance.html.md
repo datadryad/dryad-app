@@ -11,7 +11,7 @@
 </div>
 <div class="bio">
   <img src="/images/carlson.jpg" alt="Headshot of Jake Carlson">
-  <h5>Jake Carlson <a href="https://orcid.org/0000-0003-2733-0969" target="_blank" aria-label="ORCID profile (opens in new window)"><i class="fab fa-orcid" aria-hidden="true"></i></a> (2023-2026)</h5><p> is the Associate University Librarian for Research, Collections and Outreach at the University at Buffalo (UB) Libraries. His responsibilities include increasing the capabilities of the UB Libraries to respond to researchers’ needs with managing, sharing and preserving their research data. Dryad will be a critical resource in the Libraries’ research data services program. Previously, he has been the Director of Deep Blue Repository and Research Data Services at the University of Michigan and a Data Services Specialist at Purdue University. Carlson has authored or co-authored more than 30 articles on research data services in libraries. His work has been supported by funding from the National Science Foundation (NSF), the Alfred P. Sloan Foundation, and the Institute for Museum and Library Services (IMLS).</p>
+  <h5>Jake Carlson <a href="https://orcid.org/0000-0003-2733-0969" target="_blank" rel="noreferrer" aria-label="ORCID profile (opens in new window)"><i class="fab fa-orcid" aria-hidden="true"></i></a> (2023-2026)</h5><p> is the Associate University Librarian for Research, Collections and Outreach at the University at Buffalo (UB) Libraries. His responsibilities include increasing the capabilities of the UB Libraries to respond to researchers’ needs with managing, sharing and preserving their research data. Dryad will be a critical resource in the Libraries’ research data services program. Previously, he has been the Director of Deep Blue Repository and Research Data Services at the University of Michigan and a Data Services Specialist at Purdue University. Carlson has authored or co-authored more than 30 articles on research data services in libraries. His work has been supported by funding from the National Science Foundation (NSF), the Alfred P. Sloan Foundation, and the Institute for Museum and Library Services (IMLS).</p>
 </div>
 <div class="bio">
   <img src="/images/darksmith.jpg" alt="Headshot of Bekah Darksmith">
@@ -86,6 +86,21 @@
     Jason is also a member of and has chaired science advisory boards in the US, UK, and Australia, and is a former chair
     of the Software Carpentry Foundation. In 2020, Jason was recognized as a US National Academy of Sciences Kavli Frontiers
     of Science Fellow. Jason is also a teacher at the Yeshiva University High School for Girls.</p>
+</div>
+<div class="bio">
+  <img src="/images/jgibson.png" alt="Headshot of Jennifer Gibson">
+  <h5>Jennifer Gibson (ex-officio)</h5><br/>
+  <p>
+  Jen joined Dryad as Executive Director in October 2021. Since 2005, she has
+  worked with scientists, funders, publishers, libraries, developers and others
+  to explore fresh paths toward accelerating discovery through open research
+  communication and open-technology innovation. Prior to Dryad, Jennifer was
+  Head of Open Research Communication for eLife, a non-profit and research
+  funder-backed initiative to transform science publishing. She is a former Chair of the
+  Board of Directors for OASPA (2020-2022) and a former member of the board for
+  FORCE11 (2018-2020). Learn more about Jen at
+  <a href="https://www.linkedin.com/in/jmclenna/" target="_blank" rel="noreferrer">LinkedIn<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.
+  </p>
 </div>
 </div>
 

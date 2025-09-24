@@ -7,12 +7,14 @@ module StashEngine
     def index
       setup_sponsors
 
-      @journals = authorize StashEngine::Journal.includes(%i[issns sponsor flag])
+      @journals = authorize StashEngine::Journal.left_outer_joins(%i[issns sponsor flag payment_configuration])
 
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.left_outer_joins(:issns, :alternate_titles).distinct
+        @journals = @journals.select('stash_engine_journals.*, payment_configurations.payment_plan')
+          .left_outer_joins(:issns, :alternate_titles, :payment_configuration)
+          .distinct
           .where(
             'LOWER(stash_engine_journals.title) LIKE LOWER(?)
             OR LOWER(stash_engine_journal_titles.title) LIKE LOWER(?)
@@ -21,7 +23,7 @@ module StashEngine
           )
       end
 
-      ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan_type default_to_ppr])
+      ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan default_to_ppr])
       @journals = @journals.order(ord)
 
       @journals = @journals.where('sponsor_id= ?', params[:sponsor]) if params[:sponsor].present?
@@ -32,6 +34,7 @@ module StashEngine
 
     def edit
       @journal = authorize StashEngine::Journal.find(params[:id])
+      @payment_configuration = @journal.payment_configuration || @journal.build_payment_configuration
       respond_to(&:js)
     end
 
@@ -44,11 +47,13 @@ module StashEngine
         @error_message = errs[0]
         render 'stash_engine/user_admin/update_error' and return
       end
+      @journal.reload
       respond_to(&:js)
     end
 
     def new
       @journal = authorize StashEngine::Journal.new
+      @payment_configuration = @journal.build_payment_configuration
       respond_to(&:js)
     end
 
@@ -81,20 +86,15 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[title preprint_server default_to_ppr allow_review_workflow covers_ldf]
+      valid = %i[title preprint_server default_to_ppr allow_review_workflow manuscript_number_regex peer_review_custom_text
+                 flag_attributes payment_configuration_attributes]
       update = edit_params.slice(*valid).to_h
       update[:sponsor_id] = edit_params[:sponsor_id].presence
-      update[:payment_plan_type] = edit_params[:payment_plan_type].presence
-      update[:notify_contacts] = edit_params[:notify_contacts].split("\n").map(&:strip).to_json
-      update[:review_contacts] = edit_params[:review_contacts].split("\n").map(&:strip).to_json
+      %i[api_contacts notify_contacts review_contacts].each do |contacts|
+        update[contacts] = edit_params[contacts].to_s.split("\n").map(&:strip).to_json
+      end
       update[:issns_attributes] = update_issns
       update[:alternate_titles_attributes] = update_alts
-      if edit_params.key?(:flag)
-        update[:flag_attributes] = { note: edit_params[:note] }
-        update[:flag_attributes][:id] = @journal.flag.id if @journal&.flag.present?
-      elsif @journal&.flag.present?
-        @journal.flag.delete
-      end
       update
     end
 
@@ -115,8 +115,11 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :title, :issn, :alt_title, :payment_plan_type, :notify_contacts, :review_contacts, :preprint_server,
-                    :covers_ldf, :default_to_ppr, :allow_review_workflow, :sponsor_id, :flag, :note)
+      params.permit(:id, :title, :issn, :alt_title, :notify_contacts, :review_contacts, :api_contacts,
+                    :preprint_server, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
+                    :default_to_ppr, :allow_review_workflow, :flag, :note,
+                    flag_attributes: %i[id note _destroy],
+                    payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit])
     end
   end
 end

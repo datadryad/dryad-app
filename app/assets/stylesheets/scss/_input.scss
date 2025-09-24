@@ -1,5 +1,9 @@
 // ##### Input Component ##### //
 
+*::placeholder {
+  color: $medium-gray;
+}
+
 input {
 	accent-color: $medium-green;
 
@@ -136,7 +140,6 @@ label.optional:after {
 
 .c-input__textarea {
 	@extend %c-input__element;
-	min-height: 100px;
 	width: 300px;
 	max-width: 100%;
 	padding: 3px 5px;

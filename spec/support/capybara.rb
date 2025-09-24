@@ -3,7 +3,6 @@
 require_relative 'solr'
 require_relative 'helpers/page_load_helper'
 require_relative 'helpers/capybara_helper'
-require_relative 'helpers/tinymce_helper'
 require_relative 'helpers/routes_helper'
 require_relative 'helpers/session_helper'
 require_relative 'helpers/webmock_helper'
@@ -29,6 +28,9 @@ end
 # also, comment out --headless option.  Also change default_driver from :rack_test to :selenium_chrome
 Capybara.asset_host = 'http://localhost:33000'
 Capybara.enable_aria_label = true
+
+# disable css transitions
+Capybara.disable_animation = true
 
 # Webdrivers.install_dir = '~/.webdrivers'
 # Selenium::WebDriver::Chrome.path = '~/.webdrivers/chromedriver'
@@ -78,7 +80,6 @@ RSpec.configure do |config|
   config.include(CapybaraHelper, type: :feature)
 
   config.before(:all, type: :feature) do
-    config.include(TinymceHelper, type: :feature)
     config.include(RoutesHelper, type: :feature)
     config.include(SessionsHelper, type: :feature)
     config.include(WebmockHelper, type: :feature)

@@ -2,7 +2,6 @@ module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
   class DatasetParser
 
-    TO_PARSE = %w[Funders HsiStatement Methods UsageNotes Keywords FieldOfScience RelatedWorks Locations TemporalCoverages].freeze
     INTERNAL_DATA_FIELDS = %w[publicationISSN publicationName manuscriptNumber].freeze
 
     # If  id_string is set, then populate the desired (doi) into the identifier in format like doi:xxxxx/yyyyy for new dataset.
@@ -25,19 +24,15 @@ module StashApi
       if @resource.user_edit_permission?(user: @user)
         owning_user_id = establish_owning_user_id
         owning_user = StashEngine::User.find(owning_user_id)
-        validate_submit_invitation(owning_user)
+        validate_submit_invitation
         user_note = "Created by API user, assigned ownership to #{owning_user&.name} (#{owning_user_id})"
-        @resource.curation_activities << StashEngine::CurationActivity.create(
-          status: @resource.current_curation_status || 'in_progress',
-          user_id: @user.id,
-          resource_id: @resource.id,
-          note: user_note
-        )
+        CurationService.new(
+          resource: @resource, status: @resource.current_curation_status || 'in_progress', user_id: @user.id, note: user_note
+        ).process
         @resource.submitter = owning_user_id
       end
       @resource.update(
         title: remove_html(@hash['title']),
-        current_editor_id: owning_user_id,
         skip_datacite_update: @hash['skipDataciteUpdate'] || false,
         skip_emails: @hash['skipEmails'] || false,
         preserve_curation_status: @hash['preserveCurationStatus'] || false,
@@ -47,10 +42,13 @@ module StashApi
       parse_publication
       @hash[:authors]&.each { |author| add_author(json_author: author) }
       StashDatacite::Description.create(description: @hash[:abstract], description_type: 'abstract', resource_id: @resource.id)
-      TO_PARSE.each { |item| dynamic_parse(my_class: item) }
+      to_parse = %w[Funders Methods UsageNotes Keywords FieldOfScience RelatedWorks Locations TemporalCoverages]
+      # when ownership is being set to someone else immediately, they should have to explicitly agree
+      to_parse.push('HsiStatement') unless ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || owning_user_id.zero?
+      to_parse.each { |item| dynamic_parse(my_class: item) }
+      @resource.update(current_editor_id: owning_user_id.nonzero?)
       save_identifier
     end
-    # rubocop:enable
 
     def save_identifier
       @resource.identifier.payment_type = @hash['paymentType']
@@ -61,9 +59,10 @@ module StashApi
     end
 
     def send_submit_invitation_email(metadata)
-      return if @hash['triggerSubmitInvitation'] != true || @resource.submitter.email.blank?
+      author = notification_author(@resource)
+      return if !ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || author.blank?
 
-      StashApi::ApiMailer.send_submit_request(@resource, metadata).deliver_now
+      StashApi::ApiMailer.send_submit_request(@resource, metadata, author).deliver_now
     end
 
     def resource_uniq?
@@ -123,10 +122,8 @@ module StashApi
                 'The userId orcid is not known to Dryad. Please supply a matching orcid in the dataset author list.'
         end
 
-        owning_user = StashEngine::User.create(orcid: @hash['userId'],
-                                               first_name: found_author['firstName'],
-                                               last_name: found_author['lastName'],
-                                               email: found_author['email'])
+        owning_user = StashEngine::User.create(orcid: @hash['userId'], first_name: found_author['firstName'], last_name: found_author['lastName'],
+                                               email: found_author['email'], tenant_id: 'dryad')
       end
       owning_user.id
     end
@@ -145,7 +142,9 @@ module StashApi
         @hash['publicationName'] = journal.title
       end
 
-      publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @resource.id)
+      publication = StashEngine::ResourcePublication.find_or_create_by(
+        resource_id: @resource.id, pub_type: journal&.preprint_server? ? 'preprint' : 'primary_article'
+      )
       publication.publication_name = @hash['publicationName'] if @hash['publicationName']
       publication.publication_issn = @hash['publicationISSN'] if @hash['publicationISSN']
       publication.manuscript_number = @hash['manuscriptNumber'] if @hash['manuscriptNumber']
@@ -211,25 +210,17 @@ module StashApi
     # certain things need setting up on initialization based on tenant
     def add_default_values
       ensure_license
-      ensure_publisher
       ensure_resource_type
     end
 
     def ensure_license
       return unless @resource.rights.blank?
+      # when ownership is being set to someone else immediately, they should have to explicitly agree
+      return if ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || @hash['userId']&.to_s == '0'
 
       @resource.identifier.update(license_id: 'cc0')
       license = StashEngine::License.by_id('cc0')
       @resource.rights.create(rights: license[:name], rights_uri: license[:uri])
-    end
-
-    def ensure_publisher
-      return unless @resource.publisher.blank?
-
-      publisher = StashDatacite::Publisher.where(resource_id: @resource.id).first
-      return if publisher
-
-      StashDatacite::Publisher.create(publisher: 'Dryad', resource_id: @resource.id) if @resource.tenant
     end
 
     def ensure_resource_type
@@ -251,10 +242,17 @@ module StashApi
       email_string
     end
 
-    def validate_submit_invitation(owning_user)
-      return if @hash['triggerSubmitInvitation'] != true || owning_user.email.present?
+    def validate_submit_invitation
+      email_address = @hash[:authors]&.map { |author| parse_email(author[:email]) }
+      email_address = email_address.reject(&:blank?).first if email_address.present?
 
-      raise StashApi::Error::BadRequestError, 'Dataset owner does not have an email address in order to send the Submission email.'
+      return if !ActiveModel::Type::Boolean.new.cast(@hash['triggerSubmitInvitation']) || email_address.present?
+
+      raise StashApi::Error::BadRequestError, 'None of the authors have an email address in order to send the Submission email.'
+    end
+
+    def notification_author(resource)
+      resource.authors.where.not(author_email: [nil, '']).first
     end
   end
 end

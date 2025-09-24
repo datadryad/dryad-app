@@ -2,7 +2,7 @@
 <p>Congratulations! This dataset has been approved for publication in Dryad:</p>
 
 <p>
-Title: <%= @resource.title %><br/>
+Title: <%= @resource.title.html_safe %><br/>
 Data DOI: <%= @resource.identifier_value %><br/>
 Journal: <%= @resource.identifier.publication_name %>
 <% if @resource.identifier.manuscript_number.present? %>

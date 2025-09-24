@@ -1,0 +1,140 @@
+<% r = @identifier&.latest_resource %>
+<div id="activity-at-a-glance">
+  <div class="input-stack">
+    <% if policy(r).flag? %>
+      <span class="input-line">
+        <span id="resource_flag">
+          <% if r&.flag&.present? %>        
+            <i class="fas fa-flag <%= r.flag.flag %>" aria-label="Flagged"></i>
+            <%= r.flag.flag.humanize %>
+          <% else %>
+            Not flagged
+          <% end %>
+        </span>
+        <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'flag'), method: :get, local: false) do %>
+          <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit Flag" title="Edit Flag"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+        <% end %>
+      </span>
+    <% end %>
+    <span><b>Publication state:</b> <span id="dataset_pub_state_<%= @identifier.id %>"><%= @identifier.pub_state.upcase_first %></span></span>
+    <div class="input-line">
+      <b>Curation state:</b>
+      <div id="dataset_status_<%= @identifier.id %>">
+        <div class="c-lined-table__with-actions">
+          <div class="c-lined-table__data" id="curation_activity_<%= @identifier.id %>">
+            <%= StashEngine::CurationActivity.readable_status(r.last_curation_activity.status) %>
+          </div>
+          <% if policy(r).curate? %>
+            <div class="c-lined-table__actions">
+            <%= form_with(url: admin_dash_edit_path(id: @identifier.id, field: 'curation_activity'), method: :get, local: false) do %>
+              <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" aria-haspopup="dialog" id="curation_activity_button_<%= @identifier.id %>">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <span class="input-line">
+      <span><b>Notification date:</b> <span id="notification_date_<%= @identifier.id %>"><%= formatted_date(r.process_date.notification_date) %></span></span>
+      <% if r.process_date.notification_date && policy([:stash_engine, :admin_datasets]).notification_date? %>
+        <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'notification_date'), method: :get, local: false) do %>
+          <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit notification date" title="Edit notification date"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+        <% end %>
+    <% end %>
+    </span>
+  </div>
+  <div class="input-stack">
+    <span class="input-line">
+      <span><b>Submitter:</b> <span id="submitter_name"><%= r.submitter.name %></span></span>
+      <% if policy([:stash_engine, :admin_datasets]).edit_submitter? %>
+        <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'submitter'), method: :get, local: false) do %>
+          <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit submitter" title="Edit submitter"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+        <% end %>
+      <% end %>
+    </span>
+    <span class="input-line">
+      <b>Current editor:</b>
+      <span id="editor_name<%= r.id%>" class="input-line">
+        <%= r.editor&.name || "<em>None</em>".html_safe %>
+        <% if r.editor.present? && policy(r).curate? %>
+          <%= form_with(url: logout_resource_path(id: r&.id), method: :post, local: false) do %>
+            <button class="o-button__plain-text7" aria-label="Logout current editor" title="Logout current editor"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+          <% end %>
+        <% end %>
+      </span>
+    </span>
+    <% if policy(r).curate? %>
+      <span class="input-line" style="column-gap: .5ch">
+        <b>Payment:</b>
+        <span id="payment_desc">            
+          <% pr = @identifier.resources.by_version_desc.includes(:payment).find {|r| r.payment} %>
+          <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
+            <% if pr&.payment %>$<%= pr.payment.amount %><% end %>
+            <%= pr&.payment&.status.present? ? "bill #{pr&.payment&.status}" : 'Unknown' %>
+          <% else %>
+            <%= @identifier.payment_type %>
+          <% end %>
+        </span>
+        <%= link_to_account(@identifier.payment_type, @identifier.payment_id) %>
+        <%= form_with(url: payment_log_path(id: @identifier&.id), method: :get, local: false) do %>
+          <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="View payment history" title="View payment history"><i class="fas fa-clock-rotate-left" aria-hidden="true"></i></button>
+        <% end %>
+        <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
+          <% if @identifier.waiver_basis %><span id="waiver_basis"><%= @identifier.waiver_basis %></span><% end %>
+          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
+            <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Apply fee discount" title="Apply fee discount"><i class="fas fa-comment-dollar" aria-hidden="true"></i></button>
+          <% end %>
+        <% end %>
+      </span>
+      <% if @identifier.payment_type == 'institution' && @identifier.payment_id != r.submitter.tenant_id %>
+        <span class="child-details error-text">
+          <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Submitter institution does not match payment
+        </span>
+      <% elsif @identifier.payer&.class&.name == 'StashEngine::Journal' %>
+        <% if r.journal&.api_journal? && !r.creator.journals_as_admin.include?(r.journal) %>
+          <span class="child-details error-text">
+            <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Not submitted via API for API journal
+          </span>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="input-stack">
+    <span class="input-line">
+      <b role="heading" aria-level="2">Publication dates</b>
+      <% if policy(r).curate? %>
+        <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'pub_dates'), method: :get, local: false) do %>
+            <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit pub dates" title="Edit pub dates"><i class="fas fa-pencil" aria-hidden="true"></i></button>
+          <% end %>
+      <% end %>
+    </span>
+    <div class="input-stack child-details">
+      <span><b>First:</b> <span id="dataset_first_published_<%= @identifier.id %>"><%= formatted_date(@identifier.date_first_published) %></span></span>
+      <span><b>Latest:</b> <span id="dataset_published_<%= @identifier.id %>"><%= formatted_date(@identifier.date_last_published) %></span></span>
+    </div>
+  </div>
+  <div class="input-stack" style="flex-shrink: 1">
+    <span class="input-line">
+      <b role="heading" aria-level="2">Related works</b>
+      <% if policy(r).curate? %>
+        <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'publications'), method: :get, local: false) do %>
+          <button class="o-button__plain-text7" aria-label="Edit related works" title="Edit related works" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+        <% end %>
+      <% end %>
+    </span>
+    <span id="related_works_list" class="child-details"><%= display_publications(r) %></span>
+  </div>
+  <div class="input-stack" style="flex-shrink: 1">
+    <span class="input-line">
+      <b role="heading" aria-level="2">Funders</b>
+      <% if policy(r).curate? %>
+        <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'funders'), method: :get, local: false) do %>
+          <button class="o-button__plain-text7" aria-label="Edit funders" title="Edit funders" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+        <% end %>
+      <% end %>
+    </span>
+    <span id="funders_list" class="child-details"><%= r.contributors.funder&.map(&:contributor_name)&.join('; ').truncate(100) %></span>
+  </div>
+</div>

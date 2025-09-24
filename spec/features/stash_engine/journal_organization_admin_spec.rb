@@ -8,7 +8,7 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
         @org = create(:journal_organization)
         3.times { @journal = create(:journal, sponsor_id: @org.id) }
       end
-      @system_admin = create(:user, role: 'admin')
+      @system_admin = create(:user, role: 'manager')
       sign_in(@system_admin, false)
     end
 
@@ -16,6 +16,31 @@ RSpec.feature 'JournalOrganizationAdmin', type: :feature do
       visit stash_url_helpers.publisher_admin_path
       expect(page).to have_content(@org.name)
       expect(page).to have_content(@journal.title)
+    end
+
+    it 'adds a new org', js: true do
+      visit stash_url_helpers.publisher_admin_path
+      click_button 'Add new'
+      expect(page).to have_content('Enter a new publisher')
+      within(:css, '#genericModalDialog') do
+        fill_in 'name', with: 'Test publisher entry'
+        find('input[name=commit]').click
+      end
+      expect(page).not_to have_content('Enter a new publisher')
+      expect(page).to have_content 'Test publisher entry'
+      expect(StashEngine::JournalOrganization.all.length).to eql(4)
+    end
+
+    it 'shows an error', js: true do
+      visit stash_url_helpers.publisher_admin_path
+      click_button 'Add new'
+      expect(page).to have_content('Enter a new publisher')
+      within(:css, '#genericModalDialog') do
+        fill_in 'name', with: 'Test publisher entry'
+        fill_in 'contact', with: 'xxxxxxx'
+        find('input[name=commit]').click
+      end
+      expect(page).to have_content 'xxxxxxx is not a valid email address'
     end
 
     it 'allows filtering by parent org', js: true do

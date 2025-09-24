@@ -1,6 +1,6 @@
 <p>Dear <%= @user_name %>,</p>
 
-<p>Thank you for your submission to Dryad titled, "<%= @resource.title %>".</p>
+<p>Thank you for your submission to Dryad titled, "<%= @resource.title.html_safe %>".</p>
 
 <p>
   Each dataset submitted to Dryad undergoes our process of curation and approval before being made publicly available.

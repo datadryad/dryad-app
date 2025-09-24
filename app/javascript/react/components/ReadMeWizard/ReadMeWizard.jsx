@@ -10,6 +10,7 @@ import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import ReadmeWarning from './ReadmeWarning';
 
 export default function ReadMeWizard({resource, setResource, current}) {
+  const [loading, setLoading] = useState(true);
   const [desc, setDesc] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [readmeFile, setReadmeFile] = useState(null);
@@ -19,6 +20,7 @@ export default function ReadMeWizard({resource, setResource, current}) {
       const {file_list, readme_file} = data.data;
       setFileList(file_list);
       setReadmeFile(readme_file);
+      setLoading(false);
     });
   };
 
@@ -29,24 +31,24 @@ export default function ReadMeWizard({resource, setResource, current}) {
     }
   }, [current]);
 
-  if (desc?.id) {
+  if (loading) {
     return (
-      <ReadMe
-        dcsDescription={desc}
-        title={resource.title}
-        doi={resource.identifier.identifier}
-        setResource={setResource}
-        fileList={fileList}
-        readmeFile={readmeFile}
-        warning={<ReadmeWarning resource={resource} />}
-      />
+      <p style={{display: 'flex', alignItems: 'center', gap: '.5ch'}}>
+        <i className="fas fa-spin fa-spinner" aria-hidden="true" />
+        Loading README generator
+      </p>
     );
   }
   return (
-    <p style={{display: 'flex', alignItems: 'center', gap: '.5ch'}}>
-      <i className="fas fa-spin fa-spinner" aria-hidden="true" />
-      Loading README generator
-    </p>
+    <ReadMe
+      dcsDescription={desc}
+      title={resource.title?.replace(/<\/?(em|i)>/g, '*')?.replace(/<\/?sup>/g, '^')?.replace(/<\/?sub>/g, '~')}
+      doi={resource.identifier.identifier}
+      setResource={setResource}
+      fileList={fileList}
+      readmeFile={readmeFile}
+      warning={<ReadmeWarning resource={resource} />}
+    />
   );
 }
 
@@ -86,7 +88,7 @@ function ReadMe({
   const assembleValue = () => {
     let v = `# ${
       wizardContent.title || 'Dryad dataset'
-    }\n\nDataset DOI: [${wizardContent.doi}](${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
+    }\n\nDataset DOI: [${wizardContent.doi}](https://doi.org/${wizardContent.doi})\n\n## Description of the data and file structure\n\n`;
     if (wizardContent.step1) v += wizardContent.step1;
     if (wizardContent.step2) v += `### ${secTitles[1]}\n\n${wizardContent.step2}`;
     [3, 4].forEach((s) => {
@@ -137,7 +139,7 @@ function ReadMe({
     } else {
       setWizardContent({title, doi, step: 0});
     }
-  }, []);
+  }, [dcsDescription.description, readmeFile]);
 
   if (initialValue || replaceValue) {
     return (
@@ -178,6 +180,7 @@ function ReadMe({
             'aria-errormessage': 'readme_error',
             'aria-labelledby': 'md_editor_label',
             'aria-describedby': 'md_editor_desc',
+            name: 'readme_editor',
           }}
           initialValue={initialValue}
           replaceValue={replaceValue}

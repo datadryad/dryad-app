@@ -103,9 +103,6 @@ module StashEngine
         .order('stash_engine_identifiers.identifier')
     end
 
-    # has_many :counter_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
-    # before_create :build_associations
-
     # used to build counter stat if needed, trickery to be sure one always exists to begin with
     # https://stackoverflow.com/questions/3808782/rails-best-practice-how-to-create-dependent-has-one-relations
     def counter_stat
@@ -210,7 +207,7 @@ module StashEngine
         next unless r.current_editor_id
 
         user = StashEngine::User.find_by(id: r.current_editor_id)
-        return user if user&.min_curator?
+        return user if user&.curator?
       end
       nil
     end
@@ -360,13 +357,6 @@ module StashEngine
     def submitter_affiliation
       latest_resource&.owner_author&.affiliation
     end
-
-    # TODO: Cleanup - delete if nothing breaks
-    # def large_files?
-    #   return false if latest_resource.nil? || latest_resource.total_file_size.nil?
-    #
-    #   latest_resource.total_file_size > APP_CONFIG.payments['large_file_size']
-    # end
 
     # overrides reading the pub state so it can set it for caching if it's not set yet
     def pub_state
@@ -587,11 +577,6 @@ module StashEngine
         ActionView::Base.full_sanitizer.sanitize(description.description)
       end.join(' ')
     end
-
-    # it's ok to defer adding this unless someone asks for the counter_stat
-    # def build_associations
-    #   counter_stat || true
-    # end
   end
   # rubocop:enable Metrics/ClassLength
 end

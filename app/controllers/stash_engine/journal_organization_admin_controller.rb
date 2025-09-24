@@ -52,7 +52,7 @@ module StashEngine
         @error_message = errs[0]
         render 'stash_engine/user_admin/update_error' and return
       end
-      redirect_to action: 'index', q: @org.name
+      render js: "window.location.search = '?q=#{@org.name}'"
     end
 
     private

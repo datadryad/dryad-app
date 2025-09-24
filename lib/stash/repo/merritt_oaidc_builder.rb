@@ -62,8 +62,8 @@ module Stash
       end
 
       def add_pub_year(xml)
-        pub_year = resource.publication_years.first
-        xml.send(:'dc:date', pub_year.publication_year) if pub_year
+        pub_year = resource.publication_date&.year
+        xml.send(:'dc:date', pub_year) if pub_year
       end
 
       def add_publisher(xml)
@@ -116,7 +116,7 @@ module Stash
 
       def strip_desc_linefeeds(xml)
         resource.descriptions.each do |d|
-          desc_text = ActionController::Base.helpers.strip_tags(d.description.to_s).delete("\r") # gsub(/(\r\n?|\n)/, '')
+          desc_text = d.description.to_s.strip_tags.delete("\r") # gsub(/(\r\n?|\n)/, '')
           xml.send(:'dc:description', desc_text.to_s) unless desc_text.blank?
         end
       end

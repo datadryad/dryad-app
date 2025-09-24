@@ -1,14 +1,14 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>
-  The Dryad dataset submission you’ve initiated titled, “<%= @resource.title %>” with the
+  The Dryad dataset submission you’ve initiated titled, “<%= @resource.title.html_safe %>” with the
   DOI “<%= @resource.identifier_value %>”, is currently "In Progress". It has not yet been submitted for evaluation
   by a member of our curation team.
 </p>
 
 <p>
   If you intend to publish your dataset but are not ready to make it publicly available, select the
-  “Keep my dataset private for peer review” option on the final page of the Dryad submission form.
+  “Keep my dataset Private for Peer Review” option on the final page of the Dryad submission form.
 </p>
 
 <p>If your dataset is left “In Progress” for one year without action, it will be deleted.</p>

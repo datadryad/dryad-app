@@ -51,7 +51,12 @@ module StashEngine
 
     # POST /resources
     # POST /resources.json
+    # rubocop:disable Metrics/AbcSize
     def create
+      if params[:journalID].present? && params[:manu].present?
+        existing = check_existing_using_params
+        redirect_to "#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: existing.id)}?start" and return if existing
+      end
       resource = authorize Resource.new(current_editor_id: current_user.id, tenant_id: current_user.tenant_id)
       my_id = Stash::Doi::DataciteGen.mint_id(resource: resource)
       id_type, id_text = my_id.split(':', 2)
@@ -60,13 +65,14 @@ module StashEngine
       resource.creator = current_user.id
       resource.submitter = current_user.id
       resource.fill_blank_author!
-      import_manuscript_using_params(resource) if params['journalID']
+      import_manuscript_using_params(resource)
       session[:resource_type] = current_user.min_app_admin? && params.key?(:collection) ? 'collection' : 'dataset'
-      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)
+      redirect_to "#{stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: resource.id)}?start"
     rescue StandardError => e
       logger.error("Unable to create new resource: #{e.full_message}")
       redirect_to stash_url_helpers.dashboard_path, alert: 'Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.'
     end
+    # rubocop:enable Metrics/AbcSize
 
     # PATCH/PUT /resources/1
     # PATCH/PUT /resources/1.json
@@ -116,7 +122,7 @@ module StashEngine
       end
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
     def prepare_readme
       @file_list = @resource.data_files.present_files.reject { |f| f.download_filename == 'README.md' }.map do |f|
         h = { name: f.download_filename }
@@ -128,7 +134,7 @@ module StashEngine
         end
         h
       end
-      if @resource.descriptions.type_technical_info.try(:description) && !@resource.descriptions.type_technical_info.try(:description).empty?
+      if @resource.descriptions.type_technical_info.first&.description&.present?
         @file_content = nil
       else
         readme_file = @resource&.data_files&.present_files&.where(download_filename: 'README.md')&.first
@@ -163,7 +169,7 @@ module StashEngine
         funder_will_pay: @resource.identifier.funder_will_pay?,
         user_must_pay: @resource.identifier.user_must_pay?,
         paying_funder: @resource.identifier.funder_payment_info&.contributor_name,
-        aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.partner_list&.first,
+        aff_tenant: StashEngine::Tenant.find_by_ror_id(@resource.identifier&.submitter_affiliation&.ror_id)&.connect_list&.first,
         allow_review: @resource.identifier.allow_review?,
         automatic_ppr: @resource.identifier.automatic_ppr?,
         man_decision_made: @resource.identifier.has_accepted_manuscript? || @resource.identifier.has_rejected_manuscript?
@@ -185,12 +191,12 @@ module StashEngine
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
         manuscript = @resource.resource_publication&.manuscript_number
         dupes = other_submissions.where('LOWER(title) = LOWER(?)', @resource.title)&.select(:id, :title, :identifier_id).to_a
-        if primary_article.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp?(primary_article) }
+        if primary_article.present?
           dupes.concat(other_submissions.joins(:related_identifiers)
               .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
               &.select(:id, :title, :identifier_id).to_a)
         end
-        if manuscript.present? && ['NA', 'N/A', 'TBD', 'unknown'].none? { |s| s.casecmp?(manuscript) }
+        if manuscript&.match(/\d/)
           dupes.concat(
             other_submissions.joins(:resource_publication).where(resource_publication: { manuscript_number: manuscript })
             &.select(:id, :title, :identifier_id).to_a
@@ -203,7 +209,7 @@ module StashEngine
         format.json { render json: @dupes }
       end
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
     # patch request
     # Saves the setting of the import type (manuscript, published, other).  While this is set on the identifier, put it
@@ -226,21 +232,28 @@ module StashEngine
 
     private
 
+    def check_existing_using_params
+      @param_journal = StashEngine::Journal.where(journal_code: params[:journalID].downcase).first
+      @parsed_msid = StashEngine::Manuscript.parsed_number(@param_journal, params[:manu]).presence || params[:manu]
+
+      current_user.resources
+        .joins(:resource_publication, :journal)
+        .where(resource_publication: { manuscript_number: @parsed_msid }, journal: { id: @param_journal.id }).first
+    end
+
     # We have parameters requesting to match to a Manuscript object; prefill journal info and import metadata if possible
     def import_manuscript_using_params(resource)
-      return unless resource && params['journalID'] && params['manu']
-
-      j = StashEngine::Journal.where(journal_code: params['journalID'].downcase).first
-      return unless j
+      return unless resource && @param_journal && @parsed_msid
 
       # Save the journal and manuscript information in the dataset
       pub = StashEngine::ResourcePublication.find_or_create_by(resource_id: resource.id)
-      pub.update({ publication_issn: j.single_issn, publication_name: j.title, manuscript_number: params['manu'] })
+      pub.update({ publication_issn: @param_journal.single_issn, publication_name: @param_journal.title, manuscript_number: @parsed_msid })
 
       # If possible, import existing metadata from the Manuscript objects into the dataset
-      manu = StashEngine::Manuscript.where(journal: j, manuscript_number: params['manu']).first
+      manu = StashEngine::Manuscript.where(journal: @param_journal, manuscript_number: @parsed_msid).first
       return unless manu
 
+      resource.identifier.update(import_info: 'manuscript')
       dryad_import = Stash::Import::DryadManuscript.new(resource: resource, manuscript: manu)
       dryad_import.populate
     end

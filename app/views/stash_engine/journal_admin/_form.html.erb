@@ -3,13 +3,7 @@
 <%= form.text_field(:title, required: true, value: @journal.title, class: 'c-input__text', style: 'width:100%') %>
 </div>
 <p class="o-admin-form-inline">
-  <span>
-    <%= form.check_box :flag, { checked: @journal.flag.present? }, 1, nil %> <%= form.label :flag, "Flag", class: 'c-input__label' %>
-  </span>
-  <span class="o-admin-form-pair" style="flex: 1">
-    <%= form.label :note, 'Flag note:' %>
-    <%= form.text_field :note, value: @journal.flag&.note, class: 'c-input__text', style: 'flex: 1', disabled: @journal.flag.nil? %>
-  </span>
+  <%= render 'stash_engine/flags/admin_form', record: @journal %>
 </p>
 <div class="c-input">
 <%= form.label :issn, "Place each Journal ISSN on a new line:"%>
@@ -20,32 +14,57 @@
 <%= form.text_area(:alt_title, value: @journal.alternate_titles.map(&:title).join("\n"), class: 'c-input__textarea', style: 'width:100%;') %>
 </div>
 <p><%= form.check_box :preprint_server, {checked: @journal.preprint_server}, 1, 0 %> <%= form.label :preprint_server, "When checked, the journal is included on lists of preprint servers" %></p>
-<%
-plan_radios = [ ['', 'None'] ]
-@journal.payment_plans.each {|p| plan_radios.push([p, p.capitalize])}
-%>
-<h2>Membership</h2>
-<fieldset class="c-fieldset">
-  <legend>Payment plan type:</legend>
-  <% plan_radios.each do |plan| %>
-      <%= radio_button_tag('payment_plan_type', plan.first, @journal.payment_plan_type == plan.first || '' == plan.first) %> <label for="<%= "payment_plan_type_#{plan.first}" %>"><%= plan[1] %></label></br>
-  <% end %>
-</fieldset>
-<p><%= form.check_box :covers_ldf, {checked: @journal.covers_ldf}, 1, 0 %> <%= form.label :covers_ldf, "When checked, journal covers Large Data Fees" %></p>
+<%= fields_for :payment_configuration_attributes do |pf| %>
+  <%= pf.hidden_field :id, value: @payment_configuration.id %>
+  <%
+    plan_radios = [ ['', 'None'] ] + StashEngine::Journal::PAYMENT_PLANS.map {|p| [p, p.capitalize]}
+  %>
+  <h2>Membership</h2>
+  <fieldset class="c-fieldset">
+    <legend>Payment plan type:</legend>
+    <% plan_radios.each do |plan| %>
+      <%= pf.radio_button :payment_plan, plan.first, checked: plan.first == @payment_configuration.payment_plan %>
+      <label for="<%= "payment_configuration_attributes_payment_plan_#{plan.first.downcase}" %>"><%= plan[1] %></label>
+      <br />
+    <% end %>
+  </fieldset>
+
+  <p>
+    <%= pf.check_box :covers_ldf, {checked: @payment_configuration.covers_ldf}, 1, 0 %>
+    <%= pf.label :covers_ldf, "When checked, journal covers Large Data Fees" %>
+  </p>
+  <p>
+    <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
+    <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: @payment_configuration.ldf_limit }, class: 'c-input__select', disabled: !@payment_configuration.covers_ldf %>
+  </p>
+<% end %>
+
+<%= form.label :manuscript_number_regex, "Manuscript number RegEx"%>
+<%= form.text_field(:manuscript_number_regex, value: @journal.manuscript_number_regex, class: 'c-input__text', style: 'width:100%; font-family: Monaco, monospace; font-size: .8em;') %>
+</div>
 <h3>Peer review</h3>
 <p><%= form.check_box :default_to_ppr, {checked: @journal.default_to_ppr, disabled: !@journal.allow_review_workflow}, 1, 0 %> <%= form.label :default_to_ppr, "When checked, submissions enter PPR by default" %></p>
 <p><%= form.check_box :allow_review_workflow, {checked: !@journal.allow_review_workflow}, 0, 1 %> <%= form.label :allow_review_workflow, "When checked, PPR is not allowed for submissions" %></p>
-<h3>Publication contacts</h3>
-<p>These addresses will emailed when related submissions are published</p>
+<%= form.label :peer_review_custom_text, "Custom HTML included in peer review emails sent to users"%>
+<%= form.text_area(:peer_review_custom_text, value: @journal.peer_review_custom_text, class: 'c-input__textarea', style: 'width:100%', rows: 4) %>
+</div>
+<h3>API submission contacts</h3>
+<p>These addresses will be BCCed on invitations from API submissions</p>
 <div class="c-input">
-<%= form.label :notify_contacts, "Place each email address on a new line:"%>
-<%= form.text_area(:notify_contacts, value: @journal.notify_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
+<%= form.label :api_contacts, "Place each email address on a new line:"%>
+<%= form.text_area(:api_contacts, value: @journal.api_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
 </div>
 <h3>Review contacts</h3>
-<p>These addresses will emailed when related submissions enter PPR</p>
+<p>These addresses will be emailed when related submissions enter PPR</p>
 <div class="c-input">
 <%= form.label :review_contacts, "Place each email address on a new line:"%>
 <%= form.text_area(:review_contacts, value: @journal.review_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
+</div>
+<h3>Publication contacts</h3>
+<p>These addresses will be emailed when related submissions are published</p>
+<div class="c-input">
+<%= form.label :notify_contacts, "Place each email address on a new line:"%>
+<%= form.text_area(:notify_contacts, value: @journal.notify_contacts&.join("\n"), class: 'c-input__textarea', style: 'width:100%') %>
 </div>
 <h3>Parent org</h3>
 <div class="c-input">

@@ -12,7 +12,7 @@
     <% end %>    
     <p style="margin-top: 0"><span id="label_tenant_id">Partner institutions</span> cover the fees for their researchers to use Dryad.<br/>
     <div class="c-institution__container">
-      <%= form_with(url: sso_path, method: :post) do %>
+      <%= form_with(url: sso_path(reverify: params.key?(:reverify)), method: :post) do %>
         <% if @target_page %><input type="hidden" name="target_page" value="<%= @target_page %>"><% end %>
         <div style="text-align: left;">
           <%= render partial: 'stash_engine/shared/search_select', locals: {
@@ -34,7 +34,7 @@
 
     <h2>If your institution is not a Dryad partner:</h2>
     <%= link_to stash_url_helpers.no_partner_path, class: 't-login__buttonlink', method: :post do %>
-      Continue to My datasets
+      Continue to email verification
     <% end %>
   </div>
   <%= render partial: 'login_info' %>

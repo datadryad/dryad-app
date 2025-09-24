@@ -69,7 +69,7 @@ module FeeCalculator
             it { is_expected.to eq(charge_response(520, 180)) }
           end
 
-          it_behaves_like 'it has 1TB max limit'
+          it_behaves_like 'it has 2 TB max limit'
         end
 
         context 'on second submit' do
@@ -121,7 +121,7 @@ module FeeCalculator
               it { is_expected.to eq(no_discount_response(520 - 180)) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
 
           context 'when discount was previously applied' do
@@ -141,7 +141,7 @@ module FeeCalculator
               it { is_expected.to eq(no_discount_response(808 - 520)) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
       end
@@ -168,7 +168,7 @@ module FeeCalculator
             it { is_expected.to eq(charge_response(520, 180, invoice_fee: true)) }
           end
 
-          it_behaves_like 'it has 1TB max limit'
+          it_behaves_like 'it has 2 TB max limit'
         end
 
         context 'on second submit' do
@@ -212,7 +212,7 @@ module FeeCalculator
               it { is_expected.to eq(no_discount_response(520 - 180, invoice_fee: true)) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
 
           context 'when discount was previously applied' do
@@ -232,7 +232,7 @@ module FeeCalculator
               it { is_expected.to eq(no_discount_response(808 - 520, invoice_fee: true)) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
       end

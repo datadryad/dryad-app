@@ -52,7 +52,14 @@ module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
-    has_paper_trail
+    has_paper_trail meta: {
+      resource_id: proc(&:id),
+      additional_info: proc { |record|
+        {
+          subjects_list: record.subjects.map { |a| a.slice(:subject, :scheme_URI) }
+        }
+      }
+    }
 
     # ------------------------------------------------------------
     # Relations
@@ -88,13 +95,10 @@ module StashEngine
     has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
     # download tokens are for validating zip assembly requests by the zipping lambda
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
-    has_many :publication_years, class_name: 'StashDatacite::PublicationYear', dependent: :destroy
-    has_one :publisher, class_name: 'StashDatacite::Publisher', dependent: :destroy
     has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy
     has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy
     has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy
     has_many :funders, -> { where(contributor_type: 'funder') }, class_name: 'StashDatacite::Contributor'
-    has_many :datacite_dates, class_name: 'StashDatacite::DataciteDate', dependent: :destroy
     has_many :geolocations, class_name: 'StashDatacite::Geolocation', dependent: :destroy
     has_many :temporal_coverages, class_name: 'StashDatacite::TemporalCoverage', dependent: :destroy
     has_many :related_identifiers, class_name: 'StashDatacite::RelatedIdentifier', dependent: :destroy
@@ -133,9 +137,9 @@ module StashEngine
     end
 
     amoeba do
-      include_association %i[authors generic_files contributors datacite_dates descriptions geolocations temporal_coverages publication_years
-                             publisher related_identifiers resource_type rights flag sizes resources_subjects resource_publications roles]
-      customize(->(_, new_resource) {
+      include_association %i[authors generic_files contributors descriptions geolocations temporal_coverages
+                             related_identifiers resource_type rights flag sizes resource_publications roles]
+      customize(->(old_resource, new_resource) {
         # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
         new_resource.current_resource_state_id = nil
         # do not mark these resources for public view until they've been re-curated and embargoed/published again
@@ -147,6 +151,7 @@ module StashEngine
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
 
           file.file_state = 'copied' if file.file_state == 'created'
+          file.skip_total_recalculation = true if file.is_a?(StashEngine::DataFile)
         end
 
         new_resource.related_identifiers.each_with_index do |ri, i|
@@ -157,9 +162,11 @@ module StashEngine
           end
         end
 
-        # I think there was something weird about Amoeba that required this approach
+        new_resource.subjects = old_resource.subjects
+
+        # Remove deleted records before save
         deleted_files = new_resource.generic_files.select { |ar_record| ar_record.file_state == 'deleted' }
-        deleted_files.each(&:destroy)
+        deleted_files.each(&:delete)
       })
     end
 
@@ -221,22 +228,22 @@ module StashEngine
     # default_scope { includes(:curation_activities) }
 
     scope :in_progress, -> do
-      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress error] })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state: %i[in_progress error] })
     end
     scope :in_progress_only, -> do
-      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[in_progress] })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state: %i[in_progress] })
     end
     scope :submitted, -> do
-      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted processing] })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state: %i[submitted processing] })
     end
     scope :submitted_only, -> do
-      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  %i[submitted] })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state: %i[submitted] })
     end
     scope :processing, -> do
-      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:processing] })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state: [:processing] })
     end
     scope :error, -> do
-      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state:  [:error] })
+      joins(:current_resource_state).where(stash_engine_resource_states: { resource_state: [:error] })
     end
     scope :by_version_desc, -> { joins(:stash_version).order('stash_engine_versions.version DESC') }
     scope :by_version, -> { joins(:stash_version).order('stash_engine_versions.version ASC') }
@@ -335,17 +342,12 @@ module StashEngine
 
     # gets the latest files that are not deleted in db, current files for this version
     def current_file_uploads(my_class: StashEngine::DataFile)
-      subquery = my_class.where(resource_id: id).where("file_state <> 'deleted' AND " \
-                                                       '(url IS NULL OR (url IS NOT NULL AND status_code = 200))')
-        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      my_class.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_class.where(resource_id: id).present_files.validated.order(download_filename: :asc)
     end
 
     # gets new files in this version
     def new_data_files
-      subquery = DataFile.where(resource_id: id).where("file_state = 'created'")
-        .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      DataFile.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      data_files.newly_created.order(download_filename: :asc)
     end
 
     # the states of the latest files of the same name in the resource (version), included deleted
@@ -353,17 +355,17 @@ module StashEngine
       my_model = model.constantize
       subquery = my_model.where(resource_id: id)
         .select('max(id) last_id, upload_file_name').group(:upload_file_name)
-      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(upload_file_name: :asc)
+      my_model.joins("INNER JOIN (#{subquery.to_sql}) sub on id = sub.last_id").order(download_filename: :asc)
     end
 
     # the size of this resource (created + copied files)
     def size(association: 'data_files')
-      public_send(association.intern).where(file_state: %w[copied created]).sum(:upload_file_size)
+      public_send(association.intern).present_files.sum(:upload_file_size)
     end
 
     # just the size of the new files
     def new_size(association: 'data_files')
-      public_send(association.intern).where(file_state: %w[created]).sum(:upload_file_size)
+      public_send(association.intern).newly_created.sum(:upload_file_size)
     end
 
     # returns the upload type either :files, :manifest, :unknown (unknown if no files are started for this version yet)
@@ -394,7 +396,7 @@ module StashEngine
     end
 
     def url_in_version?(url:, association: 'data_files')
-      send(association).where(url: url).where(file_state: 'created').where(status_code: 200).count > 0
+      send(association).newly_created.where(url: url).where(status_code: 200).count > 0
     end
 
     def files_unchanged?(association: 'data_files')
@@ -517,6 +519,7 @@ module StashEngine
     def init_state
       self.current_resource_state_id = ResourceState.create(resource_id: id, resource_state: 'in_progress', user_id: current_editor_id).id
     end
+
     private :init_state
 
     # ------------------------------------------------------------
@@ -533,8 +536,9 @@ module StashEngine
 
     # Create the initial CurationActivity
     def init_curation_status
-      curation_activities << StashEngine::CurationActivity.new(user_id: current_editor_id || user_id)
+      CurationService.new(resource_id: id, user_id: current_editor_id || user_id, status: 'in_progress').process
     end
+
     private :init_curation_status
 
     # ------------------------------------------------------------
@@ -549,6 +553,18 @@ module StashEngine
     # (for peer_review datasets, the date at which it came out of peer_review)
     def curation_start_date
       process_date.curation_start
+    end
+
+    def datacite_dates
+      available = identifier.datacite_available_date
+      update = identifier.date_last_published
+      {
+        CREATED: identifier.process_date.processing,
+        SUBMITTED: identifier.process_date.submitted,
+        ISSUED: identifier.datacite_issued_date,
+        AVAILABLE: available,
+        UPDATED: update == available ? nil : update
+      }
     end
 
     # ------------------------------------------------------------
@@ -591,6 +607,7 @@ module StashEngine
       end
       save!
     end
+
     private :ensure_identifier_and_version
 
     # ------------------------------------------------------------
@@ -629,6 +646,7 @@ module StashEngine
         zip_filename: nil
       )
     end
+
     private :init_version
 
     def increment_version!
@@ -637,6 +655,7 @@ module StashEngine
       version_record.merritt_version = next_merritt_version
       version_record.save!
     end
+
     private :increment_version!
 
     def previous_resources(include_self: false)
@@ -743,8 +762,9 @@ module StashEngine
     # 2. Curation state of files_public? means anyone may download
     # 3. if not public then users with edit/admin privileges over the item can still download
     # Note: the special download links mean anyone with that link may download and this doesn't apply
-    def may_download?(ui_user: nil) # doing this to avoid collision with the association called user
-      return false unless current_resource_state&.resource_state == 'submitted' # is available in the repo
+    def may_download?(ui_user: nil)
+      # doing this to avoid collision with the association called user
+      return false unless current_state == 'submitted' # is available in the repo
       return true if files_published? # published and this one available for download
       return false if ui_user.blank? # the rest of the cases require users
 
@@ -827,7 +847,7 @@ module StashEngine
     # this is a query for the publication updating on a cron, but putting here so we can test the query more easily
     def self.need_publishing
       # submitted to merritt, curation embargoed, past publication date
-      all.submitted.with_visibility(states: %w[embargoed]).where('stash_engine_resources.publication_date < ?', Time.now)
+      all.submitted.with_visibility(states: %w[embargoed to_be_published]).where('stash_engine_resources.publication_date < ?', Time.now)
     end
 
     # returns boolean indicating if a version before the current resource has been made public (metadata view set to true)
@@ -990,6 +1010,7 @@ module StashEngine
 
       changed
     end
+
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     # special granular attribute checks
@@ -1029,10 +1050,10 @@ module StashEngine
       changed = []
       edits = []
       this_funders = contributors.where(contributor_type: 'funder').map do |f|
-        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description, title: f.award_title }
       end
       that_funders = other_resource.contributors.where(contributor_type: 'funder').map do |f|
-        { name: f.contributor_name, award: f.award_number, desc: f.award_description }
+        { name: f.contributor_name, award: f.award_number, desc: f.award_description, title: f.award_title }
       end
       edits << { deleted: that_funders.length - this_funders.length } if that_funders.length > this_funders.length
       this_funders.each_with_index do |f, i|
@@ -1062,6 +1083,7 @@ module StashEngine
       end
       changed
     end
+
     # -----------------------------------------------------------
 
     def update_salesforce_metadata
@@ -1084,7 +1106,8 @@ module StashEngine
       dups.each do |dup_word|
         dup_subjs = subjects.non_fos.where(subject: dup_word).order(:subject_scheme)
         last_id = dup_subjs.last.id
-        dup_subjs.each do |subj| # orders things with schemes at end
+        dup_subjs.each do |subj|
+          # orders things with schemes at end
           # this removes the join to the subject but doesn't destroy the in the subjects table
           StashDatacite::ResourcesSubjects.where(resource_id: id, subject_id: subj.id).destroy_all unless subj.id == last_id
         end
@@ -1114,7 +1137,7 @@ module StashEngine
       sums = Stash::Checksums.get_checksums([digest_type], StringIO.new(content))
       digest = sums.get_checksum(digest_type)
       old_file = data_files.present_files.where(upload_file_name: filename).first
-      return if digest == old_file&.digest
+      return if digest == old_file&.original_deposit_file&.digest
 
       # remove old file
       old_file.smart_destroy! if old_file&.digest
@@ -1142,9 +1165,9 @@ module StashEngine
         )
 
       update(total_file_size: StashEngine::DataFile
-          .where(resource_id: id)
-          .where(file_state: %w[created copied])
-          .sum(:upload_file_size))
+        .where(resource_id: id)
+        .where(file_state: %w[created copied])
+        .sum(:upload_file_size))
 
       db_file
     end
@@ -1168,8 +1191,8 @@ module StashEngine
       completions = StashDatacite::Resource::Completions.new(self)
       if prior_version.blank? && completions.duplicate_submission
         dup_id = completions.duplicate_submission.identifier&.identifier
-        curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: target_status,
-                                                                    note: "System noticed possible duplicate dataset #{dup_id}")
+        CurationService.new(user_id: 0, status: target_status, resource_id: id,
+                            note: "System noticed possible duplicate dataset #{dup_id}").process
       end
 
       # If it's the first version, or the prior version was in the submitter's control, we're done
@@ -1183,8 +1206,8 @@ module StashEngine
       # If the last user to edit it was the curator return it to curation status
       return unless last_curation_activity.user_id == user_id
 
-      curation_activities << StashEngine::CurationActivity.create(user_id: 0, status: 'curation',
-                                                                  note: 'System set back to curation')
+      CurationService.new(resource_id: id, user_id: 0, status: 'curation',
+                          note: 'System set back to curation').process
     end
 
     # rubocop:disable Metrics/AbcSize
@@ -1199,14 +1222,14 @@ module StashEngine
         changes = changes.delete_if { |c| c.is_a?(Array) }
         if (changes - %w[related_identifiers subjects funders]).empty?
           # create submitted status
-          curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
+          CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
           # immediately create published status
           update(publication_date: previous_resource.publication_date)
           target_status = previous_resource.last_curation_activity.status
           curation_note = "Auto-published with minimal changes to #{changes.join(', ')}"
         end
 
-      # Determine which submission status to use, :submitted or :peer_review status
+        # Determine which submission status to use, :submitted or :peer_review status
       elsif (hold_for_peer_review? && identifier.allow_review?) || identifier.automatic_ppr?
         publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
         if publication_accepted
@@ -1226,13 +1249,14 @@ module StashEngine
 
       # Generate the status
       # This will usually have the side effect of sending out notification emails to the author/journal
-      curation_activities << StashEngine::CurationActivity.create(user_id: attribution, status: target_status, note: curation_note)
+      CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
       target_status
     end
+
     # rubocop:enable Metrics/AbcSize
 
     def auto_assign_curator(target_status:)
-      target_curator = curator&.min_curator? ? curator : identifier.most_recent_curator
+      target_curator = curator&.curator? ? curator : identifier.most_recent_curator
       if target_curator.nil?
         # if the previous curator does not exist, or is no longer a curator,
         # set it to a random current curator , but not a superuser
@@ -1244,10 +1268,10 @@ module StashEngine
       reload
       update(user_id: target_curator.id)
 
-      curation_activities << StashEngine::CurationActivity.create(
-        user_id: target_curator.id, status: target_status,
+      CurationService.new(
+        user_id: target_curator.id, status: target_status, resource_id: id,
         note: "System auto-assigned curator #{target_curator&.name}"
-      )
+      ).process
     end
   end
 end

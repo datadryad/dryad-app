@@ -1,5 +1,5 @@
 module StashEngine
-  class AdminSearchPolicy < ApplicationPolicy
+  class AdminSearchPolicy < SavedSearchPolicy
 
     def new_search?
       @user.min_admin?

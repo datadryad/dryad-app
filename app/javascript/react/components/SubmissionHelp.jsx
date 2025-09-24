@@ -12,7 +12,7 @@ export default function SubmissionHelp({type}) {
           <p>{type === 'dataset' && 'Upload your data, complete metadata fields, and prepare a README file. '}Complete the checklist and carefully review the {type} before you {type === 'dataset' && 'pay and '}submit.</p>
         </li>
         <li>
-          <h3><i className="fas fa-eye-slash" aria-hidden="true" />Private for peer review option</h3>
+          <h3><i className="fas fa-eye-slash" aria-hidden="true" />Private for Peer Review option</h3>
           <p>If your {type} is associated with a manuscript under review, you can choose to keep the {type} private and use a temporary sharing link for peer review. The {type} can proceed to curation once the manuscript has been accepted.</p>
         </li>
         <li>
@@ -33,12 +33,20 @@ export default function SubmissionHelp({type}) {
   );
 }
 
-export function PublicationHelp() {
+export function PublicationHelp({type}) {
   return (
     <>
-      <p>If your submission is linked to an article or manuscript, sharing that information connects your data to the work. Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
-      <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many published articles, or from submitted manuscripts for some journals.</p>
+      <p>If your submission is linked to an article, preprint, or manuscript, sharing that information connects your data to the work. Metadata information for your submission can be imported from some connections.</p>
+      {type === 'dataset' && (
+        <p>Some <a href="/journals" target="_blank">partner journals<ExitIcon /></a> will also cover the <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      )}
     </>
+  );
+}
+
+export function TitleHelp() {
+  return (
+    <p>A descriptive title is required for your submission. The title, author list, abstract, subjects, and funders can be imported from many preprints and published articles, or from submitted manuscripts for some <a href="/journals" target="_blank">partner journals<ExitIcon /></a>.</p>
   );
 }
 
@@ -80,7 +88,9 @@ export function SuppHelp({type}) {
   return (
     <>
       <p>Adding the institutions that supported this {type === 'collection' ? 'work' : 'data'} can help connect your data with other systems and works.</p>
-      <p>Your funder may cover the Dryad <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      {type === 'dataset' && (
+        <p>Your funder may cover the Dryad <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
+      )}
     </>
   );
 }
@@ -129,7 +139,7 @@ export function FilesHelp({date, maxFiles}) {
   return (
     <>
       <p>Files may be uploaded from your computer, or by entering a publicly accessible, individual URL for each file (for files hosted on e.g., Dropbox, OneDrive, AWS, or your lab server).</p>
-      <p>{!date || date > new Date('2025-03-12') ? `A maximum of ${maxFiles} files can be uploaded for each publication. ` : ''}Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
+      <p>{!date || new Date(date) > new Date('2025-03-12') ? `A maximum of ${maxFiles} files can be uploaded for each publication. ` : ''}Upload packaged/compressed files (.zip, .tar.gz) to retain a directory structure or reduce the size and number of your files.</p>
       <p>Dryad data is released under a <a href="https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/" target="_blank" rel="noreferrer">CC0 license waiver<ExitIcon /></a>. For your convenience, material with other license requirements can also be uploaded here, for publication at <a href="https://zenodo.org" target="_blank" rel="noreferrer">Zenodo<ExitIcon /></a>.</p>
       <div className="callout warn">
         <p><i className="fas fa-triangle-exclamation" /> If submitting your data to a journal with double-anonymous review, be sure to remove author names and any other identifying information from your data files and README. Reviewers will have access to all files during the journal&apos;s peer review process.</p>

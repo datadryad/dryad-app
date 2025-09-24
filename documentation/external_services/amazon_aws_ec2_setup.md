@@ -17,7 +17,7 @@ mkdir bin
 curl https://beyondgrep.com/ack-v3.7.0 > ~/bin/ack && chmod 0755 ~/bin/ack
 ```
 - git setup
-  - edit the `/.ssh/known_hosts` file to contain the keys from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+  - edit the `~/.ssh/known_hosts` file to contain the keys from https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
 - install mysql
   - WARNING! MySQL sometimes changes the method for obtaining the RPM. If so, just find the closest available version
     and copy it to the target machine.
@@ -267,10 +267,12 @@ Set up SSL certificate for Shibboleth support
 =============================================
 
 The "main" certificates for Dryad are managed within AWS, using Certificate
-Manager. However, Shibboleth requires direct connections between the `shibd`
-service and the Identity Provider, which bypass the load balancer. These
+Manager. However, Shibboleth requires direct connections between the Identity
+provider's `shibd` service and our Apache, which bypass the load balancer. These
 connections require Apache to support SSL on its own. We use certificates from
-Let's Encrypt for these direct connections.
+Let's Encrypt for these direct connections. (Note that there is a third
+certificate used for our `shibd` to communicate with InCommon. See [the
+Shibboleth docs](../shibboleth/README.md) for details.)
 
 In a load-balanced system, only create the certificate on one machine, and copy to the others.
 
@@ -381,57 +383,49 @@ Set up Anubis
 Detailed Anubis documentation can be found [here](https://anubis.techaro.lol/).
 Anubis is installed on all servers and used as a bridge between Apache and Puma.
 
-Install requirements:
---------------------------------------
-- Go language - version 1.24.2 or newer
-- `brotli.x86_64` package
-```
-cd ~
-sudo yum install brotli.x86_64
-wget https://dl.google.com/go/go1.24.2.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.24.2.linux-amd64.tar.gz
-rm go1.24.2.linux-amd64.tar.gz
-```
-
-Update `~/.bashrc` and add `export PATH=$PATH:/usr/local/go/bin`.
-
-Test the installation with `go version`.
-
 Download and setup Anubis
 --------------------------------------
-Download and build
+Download and install following [these](https://anubis.techaro.lol/docs/admin/botstopper) steps
+* Get latest version of Anubis by downloading `.rpm` package
+* Upload it on the serve
+* Install the package and configuration files
 ```
+# cd on the folder you downloaded the .rpm package
 cd ~
-git clone https://github.com/TecharoHQ/anubis.git
-cd anubis/
-
-make prebaked-build
-
-make deps
-npm install --save-exact --save-dev esbuild
-./node_modules/.bin/esbuild --version
-make assets
-make build
+sudo dnf -y install ./techaro-botstopper-1.21.3-1.x86_64.rpm
+sudo cp /etc/techaro-botstopper/default.env /etc/techaro-botstopper/datadryad.env
+cd /etc/techaro-botstopper/
 ```
 
 Change configuration files 
+`sudo vim datadryad.env` and add
+```
+POLICY_FNAME=/home/ec2-user/deploy/current/public/anubis/datadryad.botPolicies.yaml
+OVERLAY_FOLDER=/home/ec2-user/deploy/current/public/anubis
+CHALLENGE_TITLE="Making sure you're not a bot!"
+ERROR_TITLE="Client error"
+```
 
-`vim run/anubis@.service` and update with [this](./anubis@.service)
+In case you are not using the configuration file from the codebase as configured above,
+`sudo vim datadryad.botPolicies.yaml` and comment out config that require a subscription to Thoth to use
+* `countries-with-aggressive-scrapers`
+* `aggressive-asns-without-functional-abuse-contact`
 
-`vim run/default.env` and add `POLICY_FNAME=/home/ec2-user/anubis/data/botPolicies.json`
 
 Create systemd service
+`sudo vim  /usr/lib/systemd/system/techaro-botstopper@.service` and add `User=ec2-user`
+
 ```
-cd ~/anubis/
-sudo install -D ./run/anubis@.service /etc/systemd/system
-sudo systemctl enable anubis@default.service
-sudo systemctl start anubis@default.service
-sudo systemctl status anubis@default.service
+sudo systemctl enable --now techaro-botstopper@datadryad.service
+sudo systemctl restart techaro-botstopper@datadryad.service
 ```
+
+NOTE: Any change in the configuration files require a service restart
+```sudo systemctl restart techaro-botstopper@datadryad.service```
 
 Update Apache configuration
 --------------------------------------
-Add anubis cluster ando point apache to it
+Add anubis cluster and point apache to it
 ```
 sudo vim ~/apache/conf.d/datadryad.org.conf
 apache_restart.sh
@@ -467,10 +461,10 @@ In the console, select the disk, modify, and give it the new size.
 # See the size of the disk and partitions
 sudo lsblk
 
-# Grow a partition to use the new space
+# Grow a partition to use the new space (not required if there is no partition)
 sudo growpart /dev/nvme0n1 1
 
-# Verify that it grew
+# Verify that it grew (not required if there is no partition)
 sudo lsblk
 
 # See where the partition is mounted

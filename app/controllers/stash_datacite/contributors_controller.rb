@@ -18,6 +18,7 @@ module StashDatacite
       @contributor = find_or_initialize
       respond_to do |format|
         if @contributor.save
+          check_reindex
           format.json { render json: @contributor }
           format.js do
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
@@ -31,7 +32,9 @@ module StashDatacite
       respond_to do |format|
         contributor_params[:contributor_name] = contributor_params[:contributor_name].squish if contributor_params[:contributor_name].present?
         contributor_params[:award_description] = contributor_params[:award_description].squish if contributor_params[:award_description].present?
+        contributor_params[:award_title] = contributor_params[:award_title].squish if contributor_params[:award_title].present?
         if @contributor.update(contributor_params)
+          check_reindex
           format.json { render json: @contributor }
           format.js do
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
@@ -80,10 +83,10 @@ module StashDatacite
       end
     end
 
-    # GET /contributors/groupings
-    def groupings
-      groupings = StashDatacite::ContributorGrouping.all
-      render json: groupings
+    # POST /contributors/grouping?ror_id={ror_id}
+    def grouping
+      grouping = StashDatacite::ContributorGrouping.where(name_identifier_id: params[:ror_id]).first
+      render json: grouping
     end
 
     private
@@ -92,6 +95,13 @@ module StashDatacite
       @resource ||= (params[:contributor] ? StashEngine::Resource.find(contributor_params[:resource_id]) : @contributor.resource)
     rescue ActiveRecord::RecordNotFound
       nil
+    end
+
+    def check_reindex
+      return unless @resource.current_curation_status == 'published'
+
+      @resource.submit_to_solr
+      DataciteService.new(@resource).submit
     end
 
     # Use callbacks to share common setup or constraints between actions.
@@ -104,8 +114,10 @@ module StashDatacite
 
     # Only allow a trusted parameter "white list" through.
     def contributor_params
-      params.require(:contributor).permit(:id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id,
-                                          :affiliation_id, :award_number, :award_description, :funder_order, :resource_id)
+      params.require(:contributor).permit(
+        :id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id, :affiliation_id, :funder_order, :resource_id,
+        :award_number, :award_uri, :award_title, :award_description
+      )
     end
 
     def find_or_initialize
@@ -118,9 +130,10 @@ module StashDatacite
                                         "#{contrib_name}*")&.last
       end
       if contributor.present?
-        if contributor.award_number.blank? || contributor.award_description.blank?
+        if contributor.award_number.blank? || contributor.award_description.blank? || contributor.award_title.blank?
           contributor.award_number = contributor_params[:award_number]
           contributor.award_description = contributor_params[:award_description].squish if contributor_params[:award_description].present?
+          contributor.award_title = contributor_params[:award_title].squish if contributor_params[:award_title].present?
         else
           contributor.funder_order = contributor_params[:funder_order]
         end
@@ -131,7 +144,6 @@ module StashDatacite
     end
 
     def check_reorder_valid
-      puts params.inspect
       params.require(:contributor).permit!
       @contributors = Contributor.where(id: params[:contributor].keys)
 

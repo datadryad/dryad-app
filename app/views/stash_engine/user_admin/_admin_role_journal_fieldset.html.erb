@@ -1,0 +1,22 @@
+<% # locals: user_role, roles %>
+<fieldset class="c-fieldset" <%= "hidden" unless user_role.id %> >
+  <legend class="c-fieldset__legend">Journal role:</legend>
+  <%= fields.hidden_field :id %>
+  <%= fields.hidden_field :role_object_type %>
+  <div>
+    <%= render partial: 'stash_engine/shared/search_select', locals: {
+      id: "#{fields.object_name}[role_object_id]".gsub(/\[|\]/, '_'),
+      label: 'For journal',
+      field_name: "#{fields.object_name}[role_object_id]",
+      options_path: '/stash_datacite/publications/autocomplete?term=',
+      options_label: 'title',
+      options_value: 'id',
+      selected: { value: user_role&.role_object_id, label: user_role&.journal&.title }
+    } %>
+  </div>
+  <ul>
+    <% journal_roles.each do |role| %>
+      <li><%= fields.radio_button :role, role.first, checked: user_role&.role == role.first %> <%= fields.label :role, role[1].html_safe, value: role.first %>
+    <% end %>
+  </ul>
+</fieldset>

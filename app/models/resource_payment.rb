@@ -13,6 +13,7 @@
 #  payment_intent              :string(191)
 #  payment_status              :string(191)
 #  payment_type                :string(191)
+#  ppr_fee_paid                :boolean          default(FALSE)
 #  status                      :integer
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
@@ -38,6 +39,7 @@ class ResourcePayment < ApplicationRecord
   enum :status, { created: 1, paid: 2, failed: 3 }
 
   scope :with_discount, -> { where(has_discount: true) }
+  scope :ppr_paid, -> { where(ppr_fee_paid: true) }
 
   def void_invoice
     rails 'Payment is not an invoice' unless pay_with_invoice

@@ -11,7 +11,7 @@
 #  old_dryad_email  :string(191)
 #  orcid            :string(191)
 #  tenant_auth_date :datetime
-#  validation_tries :integer          default(0)
+#  validated        :boolean          default(FALSE)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  affiliation_id   :integer
@@ -27,6 +27,7 @@
 #
 module StashEngine
   class User < ApplicationRecord
+    include StashEngine::Support::UserRoles
     self.table_name = 'stash_engine_users'
     has_many :roles, dependent: :destroy
     has_many :resources, through: :roles, source: :role_object, source_type: 'StashEngine::Resource'
@@ -45,15 +46,13 @@ module StashEngine
             dependent: :destroy
     has_many :access_tokens, through: :api_application, class_name: 'Doorkeeper::AccessToken'
 
-    accepts_nested_attributes_for :roles, :flag
-
-    scope :curators, -> { joins(:roles).where('stash_engine_roles' => { role: 'curator', role_object_id: nil }) }
-
-    scope :all_curators,  -> { joins(:roles).where('stash_engine_roles' => { role: 'curator' }) }
-
-    scope :min_curators, -> { joins(:roles).where('stash_engine_roles' => { role: %w[superuser curator] }) }
+    accepts_nested_attributes_for :roles, :flag, allow_destroy: true
 
     validates :email, format: { with: EMAIL_REGEX, message: '%{value} is not a valid email address' }, allow_blank: true
+
+    def self.system_user
+      find(0)
+    end
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
       users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
@@ -94,45 +93,11 @@ module StashEngine
       [last_name, first_name].join(', ')
     end
 
-    def tenant_limited?
-      roles.any? { |r| r.role_object_type == 'StashEngine::Tenant' }
-    end
-
-    def admin?
-      roles.any? { |r| r.role == 'admin' }
-    end
-
-    def curator?
-      roles.any? { |r| r.role == 'curator' }
-    end
-
-    def superuser?
-      roles.any? { |r| r.role == 'superuser' }
-    end
-
-    def system_user?
-      roles.any? { |r| r.role_object_id.nil? }
-    end
-
-    def system_admin?
-      roles.any? { |r| r.role_object_id.nil? && %w[superuser admin].include?(r.role) }
-    end
-
-    def min_admin?
-      roles.any? { |r| %w[superuser curator admin].include?(r.role) }
-    end
-
-    def min_app_admin?
-      system_user? || min_curator?
-    end
-
-    def min_curator?
-      roles.any? { |r| %w[superuser curator].include?(r.role) }
-    end
+    def proxy_user? = false
 
     def journals_as_admin
       admin_org_journals = journal_organizations.map(&:journals_sponsored_deep).flatten
-      (journals + admin_org_journals).uniq
+      journals | admin_org_journals
     end
 
     # Merges the other user into this user.  Updates so that this user owns other user's old stuff and has their critical info.

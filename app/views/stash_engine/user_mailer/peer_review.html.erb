@@ -2,31 +2,32 @@
 
 <p>
   Thank you for your dataset submission to Dryad. Please note, you have selected to keep your submission in
-  "Private for peer review" status. While in this status,
+  "Private for Peer Review" status. While in this status,
   your submission will not enter our curation process for review and publication.
 </p>
 
-<p>Your Dryad dataset titled, "<%= @resource.title %>" (<%= @resource.identifier_str %>) has been assigned two important links:</p>
+<p>Your Dryad dataset titled, "<%= @resource.title.html_safe %>" (<%= @resource.identifier_str %>) has been assigned two important links:</p>
 
 <% shr = @resource.identifier.shares.first.sharing_link %>
-<p>
-  <ul>
-    <li>
-      A unique, permanent digital object identifier: <%= @resource.identifier_uri %><br />
-      <br />
+<ul>
+  <li>
+    A unique, permanent digital object identifier: <%= @resource.identifier_uri %>
+    <p>
       After your dataset has been approved for publication by a member of our curation team, this link will become
       active and your dataset will be made public. This DOI link is permanent and should be included in the
-      Data Availability Statement of your published articles.<br/>
-    </li>
-    <li>
-      Reviewer URL: <a href="<%= shr %>"><%= shr %></a>.<br /><br />
+      Data Availability Statement of your published articles.
+    </p>
+  </li>
+  <li>
+    Reviewer sharing link: <a href="<%= shr %>"><%= shr %></a>.
+    <p>
       This temporary link can be shared with the journal office or collaborators during the peer-review process to
       allow access only to the data files included with your submission. This link will only work while your dataset
       is in the Private for Peer Review status and should not be used in the
       Data Availability Statement in any related manuscript.
-    </li>
-  </ul>
-</p>
+    </p>
+  </li>
+</ul>
 
 <p>
   When your related manuscript has been accepted, or when you are ready to initiate the curation process

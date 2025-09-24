@@ -2,7 +2,8 @@
   ['Primary', 'primary'],
   ['Related article', 'related'],
 ]
-options.insert(params[:match_type] == 'preprints' ? 0 : 2, ['Preprint', 'preprint'])
+likely_pre = proposed_change.xref_type == 'posted-content'
+options.insert(likely_pre ? 0 : 2, ['Preprint', 'preprint'])
 %>
 
 <td>

@@ -1,12 +1,12 @@
 module StashEngine
   describe User, type: :model do
     include Mocks::Salesforce
+    include Mocks::CurationActivity
 
     before(:each) do
       mock_salesforce!
+      neuter_emails!
       # Mock all the mailers fired by callbacks because these tests don't load everything we need
-      allow_any_instance_of(CurationActivity).to receive(:email_status_change_notices).and_return(true)
-      allow_any_instance_of(CurationActivity).to receive(:email_orcid_invitations).and_return(true)
       @user = create(:user)
     end
 
@@ -117,23 +117,33 @@ module StashEngine
       it 'returns correct role information more generous roles contain lesser roles)' do
         user = create(:user, role: 'superuser')
         expect(user.superuser?).to be_truthy
+        expect(user.min_manager?).to be_truthy
         expect(user.min_curator?).to be_truthy
         expect(user.min_app_admin?).to be_truthy
 
         user2 = create(:user, role: 'curator')
         expect(user2.superuser?).to be_falsey
+        expect(user2.min_manager?).to be_falsey
         expect(user2.min_curator?).to be_truthy
         expect(user2.min_app_admin?).to be_truthy
 
         user3 = create(:user)
         expect(user3.superuser?).to be_falsey
+        expect(user3.min_manager?).to be_falsey
         expect(user3.min_curator?).to be_falsey
         expect(user3.min_app_admin?).to be_falsey
 
         user4 = create(:user, role: 'admin')
         expect(user4.superuser?).to be_falsey
+        expect(user4.min_manager?).to be_falsey
         expect(user4.min_curator?).to be_falsey
         expect(user4.min_app_admin?).to be_truthy
+
+        user5 = create(:user, role: 'manager')
+        expect(user5.superuser?).to be_falsey
+        expect(user5.min_manager?).to be_truthy
+        expect(user5.min_curator?).to be_truthy
+        expect(user5.min_app_admin?).to be_truthy
       end
     end
 

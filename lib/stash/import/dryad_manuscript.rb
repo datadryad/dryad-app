@@ -21,7 +21,7 @@ module Stash
       def populate_title
         return if @metadata['ms title'].blank?
 
-        @resource.update(title: @metadata['ms title'])
+        @resource.update(title: ActionController::Base.helpers.sanitize(@metadata['ms title'], tags: %w[em sub sup i]))
       end
 
       def populate_authors
@@ -48,11 +48,8 @@ module Stash
       def populate_keywords
         return if @metadata['keywords'].blank?
 
-        @resource.subjects << @metadata['keywords'].map do |kw|
-          StashDatacite::Subject.find_or_create_by(subject: kw)
-        end
+        Subjects::CreateService.new(@resource, @metadata['keywords']).call
       end
-
     end
   end
 end

@@ -14,7 +14,7 @@ module StashEngine
     end
 
     def edit_submitter?
-      @user.superuser?
+      @user.min_manager?
     end
 
     def create_salesforce_case?
@@ -22,11 +22,11 @@ module StashEngine
     end
 
     def waiver_add?
-      @user.superuser?
+      @user.min_manager?
     end
 
     def notification_date?
-      @user.superuser?
+      @user.min_manager?
     end
   end
 end

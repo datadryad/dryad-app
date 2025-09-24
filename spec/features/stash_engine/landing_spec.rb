@@ -6,6 +6,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
   include MerrittHelper
   include DatasetHelper
   include DatabaseHelper
+  include Mocks::CurationActivity
   include Mocks::Datacite
   include Mocks::Repository
   include Mocks::RSolr
@@ -13,67 +14,68 @@ RSpec.feature 'Landing', type: :feature, js: true do
   include Mocks::Stripe
   include Mocks::Counter
 
-  before(:each) do
-    # kind of crazy to mock all this, but creating identifiers and the curation activity of published triggers all sorts of stuff
-    mock_repository!
-    mock_solr!
-    mock_datacite!
-    mock_salesforce!
-    mock_stripe!
-    mock_counter!
+  context 'published dataset' do
+    let(:resource) { create_basic_dataset! }
+    let(:identifier) { resource.identifier }
+    let(:curator) { create(:user, role: 'curator') }
 
-    # below will create @identifier, @resource, @user and the basic required things for an initial version of a dataset
-    create_basic_dataset!
-    @resource.identifier.update(pub_state: 'published')
-    @resource.current_resource_state.update(resource_state: 'submitted')
-    @resource.reload
-    @token = create(:download_token, resource_id: @resource.id, available: Time.new + 5.minutes.to_i)
-    create(:counter_stat, identifier_id: @resource.identifier.id)
-  end
+    before(:each) do
+      neuter_curation_callbacks!
+      mock_repository!
+      mock_solr!
+      mock_datacite!
+      mock_salesforce!
+      mock_stripe!
+      mock_counter!
 
-  it 'shows the share icons, metrics when published' do
-    res = @identifier.resources.first
-    res.update(meta_view: true, file_view: true, publication_date: Time.new)
-    visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
-    expect(page).to have_text('Share:')
-    expect(page).to have_text(/\d* downloads/)
-  end
+      create(:curation_activity, :curation, user: curator, resource: resource)
+      create(:curation_activity, :published, resource: resource, user: curator)
+      @token = create(:download_token, resource: resource, available: Time.new + 5.minutes.to_i)
+      create(:counter_stat, identifier_id: resource.identifier_id)
+    end
 
-  # we don't do a popup for this anymore, just assemble our own zip package in JS
-  xit 'shows popup for download in progress' do
-    res = @identifier.resources.first
-    res.update(meta_view: true, file_view: true, publication_date: Time.new)
-    create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
-    visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
-    click_on 'Download full dataset'
-    stub_request(:head, %r{https://a-merritt-test-bucket.s3.us-west-2.amazonaws.com/ark+.})
-      .to_return(status: 200, body: '', headers: {})
-    expect(page).to have_text('Download in progress')
-  end
+    it 'displays a title with italics, superscript, and subscript' do
+      resource.update(title: 'This title test has <em>some</em> <sup>special</sup> <sub>elements</sub>')
+      visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+      expect(page).to have_css('#display_resource h1 em')
+      expect(page).to have_css('#display_resource h1 sup')
+      expect(page).to have_css('#display_resource h1 sub')
+    end
 
-  # packages are now assembled on the client with javascript, remaining 2 tests not needed
-  xit "shows popup telling people of problems if download assembly times out but status doesn't" do
-    res = @identifier.resources.first
-    res.update(meta_view: true, file_view: true, publication_date: Time.new)
-    create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
-    stub_404_status # the status of the token (not found)
-    stub_408_assemble # the status for assembly
-    visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
-    click_on 'Download full dataset'
-    expect(page).to have_text('There was a problem assembling your download request')
-    click_on 'cancel_dialog'
-    expect(page).not_to have_text('There was a problem assembling your download request')
-  end
+    it 'displays the author list and expands affiliations' do
+      visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+      resource.authors.each do |author|
+        expect(page).to have_text(author.author_full_name)
+      end
+      expect(page).to have_button('Author affiliations')
+      click_button 'Author affiliations'
+      expect(page).to have_content(resource.authors.first.affiliations.first.smart_name)
+    end
 
-  xit 'shows popup telling people of problems if token status times out' do
-    res = @identifier.resources.first
-    res.update(meta_view: true, file_view: true, publication_date: Time.new)
-    create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: res.id)
-    stub_408_status # the status for assembly
-    visit stash_url_helpers.landing_show_path(id: @identifier.to_s)
-    click_on 'Download full dataset'
-    expect(page).to have_text('There was a problem assembling your download request')
-    click_on 'cancel_dialog'
-    expect(page).not_to have_text('There was a problem assembling your download request')
+    it 'displays and expands the included sections' do
+      visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+      expect(page).to have_text('Abstract')
+      expect(page).to have_text(resource.descriptions.type_abstract.first.description)
+      expect(page).to have_button('README')
+      click_button 'README'
+      expect(page).to have_text(resource.descriptions.type_technical_info.first.description)
+    end
+
+    it 'displays subjects, contributors, and related works' do
+      ri = create(:related_identifier, resource: resource)
+      sponsor = create(:contributor, resource: resource, contributor_type: 'sponsor')
+      funder = create(:contributor, resource: resource)
+      visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+      expect(page).to have_content("Research facility: #{sponsor.contributor_name}")
+      expect(page).to have_content(resource.subjects.order(subject_scheme: :desc, subject: :asc).map(&:subject).join(' '))
+      expect(page).to have_content("#{funder.contributor_name}: #{funder.award_number}")
+      expect(page).to have_content(ri.related_identifier)
+    end
+
+    it 'shows the share icons, metrics when published' do
+      visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+      expect(page).to have_text('Share:')
+      expect(page).to have_text(/\d* downloads/)
+    end
   end
 end

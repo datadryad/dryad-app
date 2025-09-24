@@ -1,4 +1,4 @@
-<% if @field == 'curator' %>
+<% if defined?(@curator_name) %>
   if (document.getElementById('dataset_curator_<%= @identifier.id %>')) {
     document.getElementById('dataset_curator_<%= @identifier.id %>').innerHTML = "<%= escape_javascript(render partial: 'table_curator', locals: { dataset: @resource, curator_name: @curator_name }) %>"
   }

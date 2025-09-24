@@ -1,11 +1,5 @@
 document.getElementById('genericModalDialog').close();
 
-if($("#curation_table th[aria-sort='ascending']").length > 0){
-  $('#curation_table tr:last').after("<%= escape_javascript(
-    render partial: 'stash_engine/admin_datasets/activity_log_row', locals: { curation_activity: @curation_activity })
-  %>");
-}else{
-  $('#curation_table thead').after("<%= escape_javascript(
-    render partial: 'stash_engine/admin_datasets/activity_log_row', locals: { curation_activity: @curation_activity })
-  %>");
-}
+$('#curation_table_<%= @resource.id %> tr:last').after("<%= escape_javascript(
+  render partial: 'stash_engine/admin_datasets/curation_activity_row', locals: { curation_activity: @resource.curation_activities.last })
+%>");
