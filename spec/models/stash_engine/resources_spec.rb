@@ -1,8 +1,10 @@
 module StashEngine
 
   describe Resource, type: :model do
+    include Mocks::CurationActivity
     include Mocks::Salesforce
     include Mocks::Aws
+    include Mocks::RSolr
 
     attr_reader :user
     attr_reader :skip_emails
@@ -10,6 +12,8 @@ module StashEngine
 
     before(:each) do
       mock_salesforce!
+      mock_solr!
+      neuter_emails!
       tomorrow = Time.now.utc.to_date + 1
       @future_date = tomorrow + 366.days
       @user = create(:user,
@@ -17,15 +21,8 @@ module StashEngine
                      last_name: 'Muckenhaupt',
                      email: 'lmuckenhaupt@datadryad.org',
                      tenant_id: 'ucop')
-      allow_any_instance_of(CurationActivity).to receive(:update_solr).and_return(true)
-      allow_any_instance_of(CurationActivity).to receive(:process_payment).and_return(true)
-      allow_any_instance_of(CurationActivity).to receive(:submit_to_datacite).and_return(true)
 
       # Mock all the mailers fired by callbacks because these tests don't load everything we need
-      allow_any_instance_of(CurationActivity).to receive(:email_status_change_notices).and_return(true)
-      allow_any_instance_of(CurationActivity).to receive(:email_orcid_invitations).and_return(true)
-
-      allow_any_instance_of(StashEngine::CurationActivity).to receive(:copy_to_zenodo).and_return(true)
     end
 
     context 'cleanup_blank_models!' do
@@ -1427,37 +1424,37 @@ module StashEngine
 
         it 'returns the correct dates for a regular submission' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'submitted')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'curation')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-04', status: 'published')
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-01', status: 'in_progress').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-02', status: 'submitted').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-03', status: 'curation').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-04', status: 'published').process
           expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
           expect(res.curation_start_date.to_date).to eql(Date.parse('2020-01-03'))
         end
 
         it 'returns the correct dates when an item went straight from peer_review to curation' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'peer_review')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'curation')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-04', status: 'published')
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-01', status: 'in_progress').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-02', status: 'peer_review').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-03', status: 'curation').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-04', status: 'published').process
           expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
           expect(res.curation_start_date.to_date).to eql(Date.parse('2020-01-03'))
         end
 
         it 'returns nil if there is no submitted_date' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
+          create(:curation_activity, resource: res, created_at: '2020-01-01', status: 'in_progress')
           expect(res.submitted_date).to be_nil
           expect(res.curation_start_date).to be_nil
         end
 
         it 'returns no curation date without curation' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-01', status: 'in_progress')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-02', status: 'submitted')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-03', status: 'submitted')
-          create(:curation_activity_no_callbacks, resource: res, created_at: '2020-01-04', status: 'published')
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-01', status: 'in_progress').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-02', status: 'submitted').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-03', status: 'submitted').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-04', status: 'published').process
           expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
           expect(res.curation_start_date).to be_nil
         end
@@ -1482,42 +1479,42 @@ module StashEngine
           Timecop.return
           @resources.push(create(:resource, user_id: @user3.id, tenant_id: @user3.tenant_id, identifier_id: @identifier.id))
 
-          @curation_activities = [[create(:curation_activity_no_callbacks, resource: @resources[0], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[0], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[0], status: 'published')]]
+          @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
+                                   create(:curation_activity, resource: @resources[0], status: 'curation'),
+                                   create(:curation_activity, resource: @resources[0], status: 'published')]]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[1], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[1], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[1], status: 'embargoed')]
+          @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress'),
+                                   create(:curation_activity, resource: @resources[1], status: 'curation'),
+                                   create(:curation_activity, resource: @resources[1], status: 'embargoed')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[2], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[2], status: 'curation')]
+          @curation_activities << [create(:curation_activity, resource: @resources[2], status: 'in_progress'),
+                                   create(:curation_activity, resource: @resources[2], status: 'curation')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[3], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[3], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[3], status: 'action_required')]
+          @curation_activities << [create(:curation_activity, resource: @resources[3], status: 'in_progress'),
+                                   create(:curation_activity, resource: @resources[3], status: 'curation'),
+                                   create(:curation_activity, resource: @resources[3], status: 'action_required')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[4], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[4], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[4], status: 'published')]
+          @curation_activities << [create(:curation_activity, resource: @resources[4], status: 'in_progress'),
+                                   create(:curation_activity, resource: @resources[4], status: 'curation'),
+                                   create(:curation_activity, resource: @resources[4], status: 'published')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[5], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[5], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[5], status: 'embargoed')]
+          @curation_activities << [create(:curation_activity, resource: @resources[5], status: 'in_progress'),
+                                   create(:curation_activity, resource: @resources[5], status: 'curation'),
+                                   create(:curation_activity, resource: @resources[5], status: 'embargoed')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[6], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[6], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[6], status: 'withdrawn')]
+          @curation_activities << [create(:curation_activity, resource: @resources[6], status: 'in_progress'),
+                                   create(:curation_activity, resource: @resources[6], status: 'curation'),
+                                   create(:curation_activity, resource: @resources[6], status: 'withdrawn')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[7], status: 'in_progress')]
+          @curation_activities << [create(:curation_activity, resource: @resources[7], status: 'in_progress')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[8], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[8], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[8], status: 'published')]
+          @curation_activities << [create(:curation_activity, resource: @resources[8], status: 'in_progress'),
+                                   create(:curation_activity, resource: @resources[8], status: 'curation'),
+                                   create(:curation_activity, resource: @resources[8], status: 'published')]
 
-          @curation_activities << [create(:curation_activity_no_callbacks, resource: @resources[9], status: 'in_progress'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[9], status: 'curation'),
-                                   create(:curation_activity_no_callbacks, resource: @resources[9], status: 'embargoed')]
+          @curation_activities << [create(:curation_activity, resource: @resources[9], status: 'in_progress'),
+                                   create(:curation_activity, resource: @resources[9], status: 'curation'),
+                                   create(:curation_activity, resource: @resources[9], status: 'embargoed')]
 
           # 6 publicly viewable
           # admin for UCOP (user2) can see 6 public + 2 extras for other private ucop datasets

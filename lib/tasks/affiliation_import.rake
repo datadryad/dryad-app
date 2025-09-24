@@ -499,9 +499,9 @@ namespace :affiliation_import do
     return if resource.blank? || resource.curation_activities.blank?
     return if resource.id == @last_resource&.id
 
-    resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
-                                                                         note: 'Author affiliations updated by affiliation_import:process_ror_csv',
-                                                                         status: resource.curation_activities.last.status)
+    CurationService.new(resource: resource, user_id: 0,
+                        note: 'Author affiliations updated by affiliation_import:process_ror_csv',
+                        status: resource.curation_activities.last.status).process
     @last_resource = resource
   end
 
@@ -509,10 +509,9 @@ namespace :affiliation_import do
     return if resource.blank? || resource.curation_activities.blank?
     return if resource.id == @last_resource&.id
 
-    resource.curation_activities << StashEngine::CurationActivity.create(user_id: 0,
-                                                                         note: 'Duplicate authors combined by ' \
-                                                                               'affiliation_import:merge_duplicate_authors',
-                                                                         status: resource.curation_activities.last.status)
+    CurationService(resource: resource, user_id: 0,
+                    note: 'Duplicate authors combined by affiliation_import:merge_duplicate_authors',
+                    status: resource.curation_activities.last.status).process
     @last_resource = resource
   end
 

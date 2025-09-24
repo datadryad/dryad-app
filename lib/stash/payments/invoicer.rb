@@ -67,9 +67,9 @@ module Stash
         create_invoice_overages(over, customer_id, invoice.id)
         invoice.send_invoice
         resource.identifier.update(last_invoiced_file_size: ds_size) if @has_overage_line_item
-        resource.curation_activities << StashEngine::CurationActivity.create(
-          note: "New overage invoice sent with ID: #{invoice.id}", status: resource.current_curation_status, user_id: 0
-        )
+        CurationService.new(
+          resource: resource, note: "New overage invoice sent with ID: #{invoice.id}", status: resource.current_curation_status, user_id: 0
+        ).process
       end
 
       def external_service_online?

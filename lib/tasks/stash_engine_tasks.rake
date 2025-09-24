@@ -4,7 +4,6 @@ require 'stash/nih'
 require 'stash/salesforce'
 require 'stash/google/journal_g_mail'
 require_relative 'identifier_rake_functions'
-require_relative '../stash/action_required_reminder'
 
 # rubocop:disable Metrics/BlockLength
 namespace :identifiers do
@@ -53,12 +52,13 @@ namespace :identifiers do
     StashEngine::Resource.includes(identifier: :internal_data).find_each do |resource|
 
       # Create an initial 'in_progress' curation activity for each identifier
-      StashEngine::CurationActivity.create(
+      CurationService.new(
         resource_id: resource.id,
+        status: 'in_progress',
         user_id: resource.submitter.id,
         created_at: resource.created_at,
         updated_at: resource.created_at
-      )
+      ).process
 
       # Using the latest resource and its state, add another activity if the
       # resource's resource_state is 'submitted'
@@ -69,13 +69,13 @@ namespace :identifiers do
       #
       next unless resource.current_state == 'submitted'
 
-      StashEngine::CurationActivity.create(
+      CurationService.new(
         resource_id: resource.id,
         user_id: resource.submitter.id,
         status: resource.identifier.internal_data.empty? ? 'submitted' : 'peer_review',
         created_at: resource.updated_at,
         updated_at: resource.updated_at
-      )
+      ).process
     end
   end
 
@@ -97,12 +97,12 @@ namespace :identifiers do
     ActiveRecord::Base.connection.execute(query).each do |r|
 
       log "Embargoing: Identifier: #{r[1]}, Resource: #{r[0]}"
-      StashEngine::CurationActivity.create(
+      CurationService.new(
         resource_id: r[0],
         user_id: 0,
         status: 'embargoed',
         note: 'Embargo Datasets CRON - publication date has not yet been reached, changing status to `embargo`'
-      )
+      ).process
     rescue StandardError => e
       log "    Exception! #{e.message}"
       next
@@ -119,11 +119,12 @@ namespace :identifiers do
       # only release if it's the latest version of the resource
       next unless res.id == res.identifier.last_submitted_resource.id
 
-      res.curation_activities << StashEngine::CurationActivity.create(
+      CurationService.new(
+        resource: res,
         user_id: 0,
         status: 'published',
         note: 'Publish Datasets CRON - reached the publication date, changing status to `published`'
-      )
+      ).process
     rescue StandardError => e
       # NOTE: we get errors with test data updating DOI and some of the other callbacks on publishing
       log "    Exception! #{e.message}"
@@ -173,12 +174,12 @@ namespace :identifiers do
         else
           log ' -- deleting data files'
           # Record the file deletion
-          StashEngine::CurationActivity.create(
+          CurationService.new(
             resource_id: i.latest_resource.id,
             user_id: 0,
             status: 'withdrawn',
             note: removed_files_note
-          )
+          ).process
 
           # Perform the actual removal
           i.resources.each do |r|
@@ -203,10 +204,22 @@ namespace :identifiers do
 
             # Important! Retain the metadata for this dataset, so curators can determine what happened to it
           end
+
+          # create a new version to mark all files as deleted
+          new_res = DuplicateResourceService.new(i.latest_resource, StashEngine::User.system_user).call
+          new_res.update skip_emails: true
+          new_res.generic_files.update(file_deleted_at: Time.current, file_state: 'deleted')
+
+          # Update existing in_progress activity to withdrawn so it does not get counted in curation stats
+          new_res.last_curation_activity.update(
+            user_id: 0,
+            status: 'withdrawn',
+            note: 'remove_abandoned_datasets CRON - mark files as deleted'
+          )
         end
       end
     end
-    exit
+    Kernel.exit
   end
 
   # example: RAILS_ENV=production bundle exec rake identifiers:remove_old_versions -- --dry_run true
@@ -271,59 +284,6 @@ namespace :identifiers do
     exit
   end
 
-  # This task is deprecated, since we no longer want to automatically expire the review date,
-  # we send reminders instead (below)
-  desc 'Set datasets to `submitted` when their peer review period has expired'
-  task expire_peer_review: :environment do
-    now = Date.today
-    log "Setting resources whose peer_review_end_date <= '#{now}' to 'submitted' curation status"
-    StashEngine::Resource.where(hold_for_peer_review: true)
-      .where('stash_engine_resources.peer_review_end_date <= ?', now).find_each do |r|
-      if r.current_curation_status == 'peer_review'
-        log "Expiring peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id}"
-        r.update(hold_for_peer_review: false, peer_review_end_date: nil)
-        StashEngine::CurationActivity.create(
-          resource_id: r.id,
-          user_id: 0,
-          status: 'submitted',
-          note: 'Expire Peer Review CRON - reached the peer review expiration date, changing status to `submitted`'
-        )
-      else
-        log "Removing peer review for: Identifier: #{r.identifier_id}, Resource: #{r.id} due to non-peer_review curation status"
-        r.update(hold_for_peer_review: false, peer_review_end_date: nil)
-      end
-    rescue StandardError => e
-      log "    Exception! #{e.message}"
-
-    end
-  end
-
-  desc 'Email the submitter when a dataset has been in `peer_review` past the deadline, and the last reminder was too long ago'
-  task peer_review_reminder: :environment do
-    log 'Mailing users whose datasets have been in peer_review for a while...'
-    StashEngine::Resource.where(hold_for_peer_review: true)
-      .where('stash_engine_resources.peer_review_end_date <= ? OR stash_engine_resources.peer_review_end_date IS NULL', Date.today)
-      .find_each do |r|
-
-      reminder_flag = 'peer_review_reminder CRON'
-      last_reminder = r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
-      if r.current_curation_status == 'peer_review' &&
-         r.identifier.latest_resource_id == r.id &&
-         (last_reminder.blank? || last_reminder.created_at <= 1.month.ago)
-        log "Reminding submitter about peer_review dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
-        StashEngine::UserMailer.peer_review_reminder(r).deliver_now
-        StashEngine::CurationActivity.create(
-          resource_id: r.id,
-          user_id: 0,
-          status: r.last_curation_activity.status,
-          note: "#{reminder_flag} - reminded submitter that this item is still in `peer_review`"
-        )
-      end
-    rescue StandardError => e
-      log "    Exception! #{e.message}"
-    end
-  end
-
   desc 'Email the submitter 1 time 6 months from publication, when a primary article is not linked'
   task doi_linking_invitation: :environment do
     log 'Mailing users whose datasets have no primary article and were published 6 months ago...'
@@ -336,73 +296,33 @@ namespace :identifiers do
 
       log "Inviting DOI link. Identifier: #{i.id}, Resource: #{i.latest_resource&.id} updated #{i.latest_resource&.updated_at}"
       StashEngine::UserMailer.doi_invitation(i.latest_resource).deliver_now
-      StashEngine::CurationActivity.create(
+      CurationService.new(
         resource_id: i.latest_resource&.id,
         user_id: 0,
         status: i.latest_resource&.last_curation_activity&.status,
         note: "#{reminder_flag} - invited submitter to link an article DOI"
-      )
+      ).process
     rescue StandardError => e
       log "    Exception! #{e.message}"
 
     end
   end
 
+  # example: RAILS_ENV=production bundle exec rake identifiers:in_progress_reminder_1_day
+  desc 'Email the submitter when a dataset has been `in_progress` for 1 day'
+  task in_progress_reminder_1_day: :environment do
+    Reminders::DatasetRemindersService.new.send_in_progress_reminders_by_day(1)
+  end
+
+  # example: RAILS_ENV=production bundle exec rake identifiers:in_progress_reminder_3_days
   desc 'Email the submitter when a dataset has been `in_progress` for 3 days'
-  task in_progess_reminder: :environment do
-    log "Mailing users whose datasets have been in_progress since #{3.days.ago}"
-    StashEngine::Resource.joins(:current_resource_state)
-      .where("stash_engine_resource_states.resource_state = 'in_progress'")
-      .where('stash_engine_resources.updated_at <= ?', 3.days.ago)
-      .each do |r|
-
-      reminder_flag = 'in_progress_reminder CRON'
-      if r.curation_activities.where('note LIKE ?', "%#{reminder_flag}%").empty?
-        if Rails.env.production?
-          log "Mailing submitter about in_progress dataset. Identifier: #{r.identifier_id}, Resource: #{r.id} updated #{r.updated_at}"
-        end
-        StashEngine::UserMailer.in_progress_reminder(r).deliver_now
-        StashEngine::CurationActivity.create(
-          resource_id: r.id,
-          user_id: 0,
-          status: r.last_curation_activity.status,
-          note: "#{reminder_flag} - reminded submitter that this item is still `in_progress`"
-        )
-      end
-    rescue StandardError => e
-      log "    Exception! #{e.message}"
-
-    end
+  task in_progress_reminder_3_days: :environment do
+    Reminders::DatasetRemindersService.new.send_in_progress_reminders_by_day(3)
   end
 
   desc "Email the submitter when a dataset is in 'action_required' 1 time at 2 weeks"
   task action_required_reminder: :environment do
-    # require 'stash_engine/tasks/stash_engine_tasks/action_required_reminder'
-    items = Stash::ActionRequiredReminder.find_action_required_items
-    # each item looks like
-    # {:set_at=>Wed, 16 Aug 2023 21:09:13.000000000 UTC +00:00,
-    #   :reminder_1=>nil,
-    #   :reminder_2=>nil,
-    #   :identifier=> activeRecord object for identifier}
-
-    items.each do |item|
-      resource = item[:identifier]&.latest_resource
-      next if resource.nil?
-
-      # Only send for resources where the ID ends in 00, so we can stagger the load on the curators
-      next if (resource.id % 100) > 0
-
-      # send out reminder at two weeks
-      next if item[:set_at] > 2.weeks.ago || item[:reminder_1].present?
-
-      StashEngine::UserMailer.chase_action_required1(resource).deliver_now
-      StashEngine::CurationActivity.create(
-        resource_id: resource.id,
-        user_id: 0,
-        status: resource.last_curation_activity.status,
-        note: 'CRON: mailed action required reminder 1'
-      )
-    end
+    Reminders::DatasetRemindersService.new.action_required_reminder
   end
 
   desc 'Update NIH funder entry'
@@ -709,7 +629,7 @@ namespace :identifiers do
 
     log "Writing Shopping Cart Report for #{year_month} to file..."
     CSV.open("shopping_cart_report_#{year_month}.csv", 'w') do |csv|
-      csv << %w[DOI CreatedDate CurationStartDate ApprovalDate
+      csv << %w[DOI ArticleDOI CreatedDate CurationStartDate ApprovalDate
                 Size PaymentType PaymentID WaiverBasis InstitutionName
                 JournalName JournalISSN SponsorName CurrentStatus]
 
@@ -726,7 +646,7 @@ namespace :identifiers do
           break r.curation_start_date if r.curation_start_date.present?
         end
         curation_start_date_str = curation_start_date&.strftime('%Y-%m-%d')
-        csv << [i.identifier, created_date_str, curation_start_date_str, approval_date_str,
+        csv << [i.identifier, i.publication_article_doi, created_date_str, curation_start_date_str, approval_date_str,
                 i.storage_size, i.payment_type, i.payment_id, i.waiver_basis, i.submitter_affiliation&.long_name,
                 i.publication_name, i.publication_issn, i.journal&.sponsor&.name, i&.resources&.last&.current_curation_status]
       end
@@ -765,7 +685,8 @@ namespace :identifiers do
       csv << %w[SponsorName JournalName Count]
       curr_sponsor = nil
       sponsor_summary = []
-      StashEngine::Journal.where(payment_plan_type: 'DEFERRED').order(:sponsor_id, :title).each do |j|
+      StashEngine::Journal.joins(:payment_configuration).where(payment_configuration: { payment_plan: 'DEFERRED' }).order(:sponsor_id,
+                                                                                                                          :title).each do |j|
         if j.sponsor&.name != curr_sponsor
           Reports::Payments::Base.new.write_sponsor_summary(name: curr_sponsor, file_prefix: prefix, report_period: time_period,
                                                             table: sponsor_summary, payment_plan: 'deferred')
@@ -789,8 +710,8 @@ namespace :identifiers do
     exit
   end
 
-  # example: RAILS_ENV=production bundle exec rake identifiers:journal_2025_reports -- --sc_report /path/to/file
-  desc 'Generate reports of items that should be billed for tiered journals'
+  # example: RAILS_ENV=production bundle exec rake identifiers:journal_2025_fee_reports -- --sc_report /path/to/file
+  desc 'Generate reports of items that should be billed for 2025 journals'
   task journal_2025_fee_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report)
     # Get the input shopping cart report in --base_report and --sc_report arguments.
@@ -806,7 +727,7 @@ namespace :identifiers do
   end
 
   # example: RAILS_ENV=production bundle exec rake identifiers:tenant_2025_fee_reports -- --sc_report /path/to/file
-  desc 'Generate reports of items that should be billed for tiered journals'
+  desc 'Generate reports of items that should be billed for 2025 tenants'
   task tenant_2025_fee_reports: :environment do
     args = Tasks::ArgsParser.parse(:sc_report)
     # Get the input shopping cart report in --base_report and --sc_report arguments.
@@ -858,7 +779,7 @@ namespace :identifiers do
       StashEngine::JournalOrganization.all.each do |org|
         journals = org.journals_sponsored_deep
         journals.each do |j|
-          next unless j.payment_plan_type == 'TIERED' && j.top_level_org == org
+          next unless j.payment_configuration&.payment_plan == 'TIERED' && j.top_level_org == org
 
           journal_item_count = 0
           sc_report.each do |item|
@@ -893,7 +814,7 @@ namespace :identifiers do
     StashEngine::JournalOrganization.all.each do |org|
       journals = org.journals_sponsored_deep
       journals.each do |j|
-        next unless j.payment_plan_type == 'TIERED' && j.top_level_org == org
+        next unless j.payment_configuration&.payment_plan == 'TIERED' && j.top_level_org == org
 
         journal_item_count = 0
         base_report.each do |item|
@@ -1085,6 +1006,121 @@ namespace :identifiers do
                 i.storage_size, i.submitter_affiliation&.long_name, i.publication_name]
       end
     end
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
+  # example: RAILS_ENV=production bundle exec rake identifiers:dataset_info_report_detailed -- --year_month 2024-05
+  desc 'Generate a summary report of all items in Dryad'
+  task dataset_info_report_detailed: :environment do
+    launch_day = Date.new(2019, 9, 17)
+
+    # Get the year-month specified in --year_month argument.
+    # If none, default to all months since v2 launch_day
+    args = Tasks::ArgsParser.parse(:year_month)
+    if args.year_month.blank?
+      filename = "dataset_info_report_detailed-#{Date.today.strftime('%Y-%m-%d')}.csv"
+    else
+      year_month = args.year_month
+      filename = "dataset_info_report_detailed-#{year_month}.csv"
+    end
+
+    log "Writing detailed dataset info report to file #{filename}"
+    CSV.open(filename, 'w') do |csv|
+      csv << ['Dataset DOI', 'Article DOI',
+              'Submitter First', 'Submitter Last', 'Submitter Email', 'Submitter ORCID',
+              'Submitter Affiliation', 'Submitter Country',
+              'Approval Date', 'Title',
+              'OECD Field',
+              'Curation Status',
+              'Date First Submitted', 'Date First Published', 'Date Last Modified',
+              'Size',
+              'Views', 'Downloads', 'Citations',
+              'Payer', 'Journal', 'Journal Sponsor',
+              'Grant Funders',
+              'Other Authors',
+              'Journal Name']
+      StashEngine::Identifier.where(created_at: launch_day..).find_each do |i|
+        next if i.resources.blank?
+
+        approval_date_str = i.approval_date&.strftime('%Y-%m-%d')
+        next unless year_month.blank? || approval_date_str&.start_with?(year_month)
+
+        res = i.latest_viewable_resource
+        res = i.resources.last if res.blank?
+        first_res = i.first_submitted_resource
+        u = res&.owner_author
+        r = StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
+        stat = i.counter_stat
+
+        csv << [i.identifier, i.publication_article_doi,
+                u&.author_first_name, u&.author_last_name, u&.author_email, u&.author_orcid,
+                u&.affiliation&.long_name, r&.country,
+                approval_date_str, res&.title,
+                res&.subjects&.fos&.map(&:subject),
+                res&.current_curation_status,
+                first_res&.submitted_date, i.date_first_published, i.resources.last.updated_at,
+                i.storage_size,
+                stat&.unique_investigation_count, stat&.unique_request_count, stat&.citation_count,
+                i.payment_type, i.publication_name, i.journal&.sponsor&.name,
+                res&.contributors&.map(&:contributor_name)&.compact,
+                res&.authors&.map(&:author_full_name)&.delete_if { |x| x == u&.author_full_name },
+                i.publication_name]
+      end
+    end
+    # Exit cleanly (don't let rake assume that an extra argument is another task to process)
+    exit
+  end
+
+  # example: RAILS_ENV=production bundle exec rake identifiers:biorxiv_report --
+  desc 'Generate a summary report of all bioRxiv and medRxiv items in Dryad'
+  task biorxiv_report: :environment do
+    filename = "biorxiv_report-#{Date.today.strftime('%Y-%m-%d')}.csv"
+    log "Writing biorxiv report to file #{filename}"
+    CSV.open(filename, 'w') do |csv|
+      csv << ['Dataset DOI', 'Status', 'Preprint Server', 'Preprint Link',
+              'Journal Name', 'Article DOI', 'Title',
+              'Size', 'Institution Name',
+              'Submitter First', 'Submitter Last', 'Submitter Email']
+      ii = Set[]
+
+      # find matches by preprint server or journal
+      biorxiv = StashEngine::JournalIssn.find('2692-8205').journal
+      medrxiv = StashEngine::JournalIssn.find('3067-2007').journal
+      c = 0
+      StashEngine::Identifier.find_each do |i|
+        c += 1
+        puts ". Identifier #{c}" if c % 1000 == 0
+        ps = i.preprint_server
+        next unless ps == 'bioRxiv' || ps == 'medRxiv' || i.journal == biorxiv || i.journal == medrxiv
+
+        ii.add(i)
+      end
+
+      # find by related identifiers
+      c = 0
+      StashDatacite::RelatedIdentifier.find_each do |ri|
+        c += 1
+        puts ". RelatedIdentifier #{c}" if c % 1000 == 0
+        next unless ri.related_identifier.include?('10.1101')
+
+        ii.add(ri.resource.identifier)
+      end
+
+      # process results
+      ii.each do |i|
+        r = i.latest_resource
+        preprint_link = nil
+        r.related_identifiers.each do |ri|
+          preprint_link = ri.related_identifier if ri.related_identifier.include?('10.1101')
+        end
+        csv << [i.identifier, r.current_curation_status, i.preprint_server, preprint_link,
+                i.publication_name, i.publication_article_doi, r&.title,
+                i.storage_size, i.submitter_affiliation&.long_name,
+                r.submitter.first_name, r.submitter.last_name, r.submitter.email]
+      end
+    end
+
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
     exit
   end
@@ -1390,7 +1426,7 @@ namespace :journals do
     log 'Processing with DRY_RUN' if dry_run
 
     jj = Stash::Salesforce.db_query("SELECT Id, Name FROM Account where Type='Journal'")
-    jj.find_each do |j|
+    jj.find_all do |j|
       found_journal = StashEngine::Journal.find_by_title(j['Name'])
       log "MISSING from Dryad -- #{j['Name']}" unless found_journal.present?
     end
@@ -1398,7 +1434,7 @@ namespace :journals do
     StashEngine::Journal.find_each do |j|
       # Only check the journal in Salesforce if Dryad has a business relationship
       # with the journal (payment plan or integration)
-      next unless j.payment_plan_type.present? || j.manuscript_number_regex.present?
+      next unless j.payment_configuration&.payment_plan.present? || j.manuscript_number_regex.present?
 
       sf_id = Stash::Salesforce.find_account_by_name(j.title)
       unless sf_id.present?

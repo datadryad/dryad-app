@@ -39,28 +39,19 @@ module StashEngine
 
     def edit
       @user = authorize User.find(params[:id])
+      @user_flag = @user.flag || @user.build_flag
       setup_roles
       respond_to(&:js)
     end
 
     def update
       @user = authorize User.find(params[:id])
-      valid = %i[email tenant_id]
-      @user.roles.tenant_roles.delete_all if edit_params[:tenant_id] != @user.tenant_id
-      setup_roles
-      update = edit_params.slice(*valid).to_h
-      if edit_params[:flag].present?
-        update[:flag_attributes] = { note: edit_params[:note] }
-        update[:flag_attributes][:id] = @user.flag.id if @user.flag.present?
-      end
-      @user.update(update)
-      @user.flag.delete if @user.flag.present? && !edit_params.key?(:flag)
+      @user.update(edit_params)
       errs = @user.errors.full_messages
       if errs.any?
         @error_message = errs[0]
         render :update_error and return
       end
-      set_roles
       respond_to(&:js)
     end
 
@@ -124,37 +115,11 @@ module StashEngine
     end
 
     def setup_roles
-      @system_role = @user.roles.system_roles&.first
-      @tenant_role = @user.roles.tenant_roles&.first
-      @journal_role = @user.roles.journal_roles&.first
-      @publisher_role = @user.roles.journal_org_roles&.first
-      @funder_role = @user.roles.funder_roles&.first
-    end
-
-    # sets the user roles
-    def set_roles
-      # set system role
-      save_role(role_params[:role], @system_role)
-      # set tenant role
-      save_role(role_params[:tenant_role], @tenant_role, @user.tenant)
-      # set publisher role
-      save_role(role_params[:publisher_role], @publisher_role, StashEngine::JournalOrganization.find_by(id: role_params[:publisher]))
-      # set journal role
-      save_role(role_params[:journal_role], @journal_role, StashEngine::Journal.find_by(id: role_params.dig(:journal, :value)))
-      # set funder role
-      save_role(role_params[:funder_role], @funder_role, StashEngine::Funder.find_by(id: role_params[:funder]))
-      # reload roles
-      @user.reload
-    end
-
-    def save_role(role, existing, object = nil)
-      if role.blank?
-        existing.delete if existing
-      elsif existing
-        existing.update(role: role, role_object: object)
-      else
-        StashEngine::Role.create(user: @user, role: role, role_object: object)
-      end
+      @system_roles = @user.roles.system_roles
+      @tenant_roles = @user.roles.tenant_roles
+      @journal_roles = @user.roles.journal_roles
+      @publisher_roles = @user.roles.journal_org_roles
+      @funder_roles = @user.roles.funder_roles
     end
 
     def setup_facets
@@ -182,11 +147,17 @@ module StashEngine
     end
 
     def edit_params
-      params.permit(:id, :field, :email, :tenant_id, :flag, :note)
-    end
-
-    def role_params
-      params.permit(:role, :tenant_role, :publisher, :publisher_role, :funder, :funder_role, :journal_role, journal: %i[value label])
+      flag_attributes = %i[id note _destroy]
+      roles_attributes = [:id, :role_object_id, :role_object_type, :role, :_destroy, { role_object_id: %i[label value] }]
+      paras = params.require(:stash_engine_user).permit(
+        :id, :email, :tenant_id, flag_attributes: flag_attributes, roles_attributes: [roles_attributes]
+      )
+      paras[:roles_attributes] = paras[:roles_attributes].each do |k, v|
+        v[:_destroy] = !v[:role] || v[:role].blank? ? 1 : 0
+        v[:role_object_id] = v.dig(:role_object_id, :value) if v[:role_object_id].is_a?(ActionController::Parameters)
+        { k => v }
+      end
+      paras
     end
 
     def profile_params

@@ -44,6 +44,8 @@
 FactoryBot.define do
 
   factory :resource, class: StashEngine::Resource do
+    before(:create) { create(:user, id: 0, first_name: 'System') unless StashEngine::User.exists?(0) }
+
     transient { user { nil } }
     identifier
 
@@ -82,7 +84,7 @@ FactoryBot.define do
 
     trait :submitted do
       after(:create) do |resource|
-        create(:curation_activity, status: 'processing', user: resource.submitter, resource: resource)
+        CurationService.new(status: 'processing', user: resource.submitter, resource: resource).process
         resource.current_state = 'submitted'
         resource.save
         resource.reload
@@ -102,6 +104,8 @@ FactoryBot.define do
       create(:curation_activity,
              :embargoed, resource: resource,
                          user: create(:user, role: 'admin', role_object: resource.submitter.tenant, tenant_id: resource.submitter.tenant_id)).id
+      resource.update(meta_view: true, file_view: false)
+      resource.identifier.update(pub_state: 'embargoed')
     end
 
   end
@@ -117,6 +121,8 @@ FactoryBot.define do
       create(:curation_activity,
              :published, resource: resource,
                          user: create(:user, role: 'admin', role_object: resource.submitter.tenant, tenant_id: resource.submitter.tenant_id)).id
+      resource.update(meta_view: true, file_view: true)
+      resource.identifier.update(pub_state: 'published')
     end
 
   end

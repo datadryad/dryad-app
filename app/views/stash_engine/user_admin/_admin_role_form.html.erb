@@ -1,76 +1,51 @@
 <% # local: user %>
-<%
-system_roles = [
-  ['superuser', 'Superuser <span>Can access and edit all pages and administrative menus.</span>'],
-  ['curator', 'Curator <span>Can view, edit, and curate all submissions. Auto curation assignment.</span>'],
-  ['admin', 'Admin <span>Can view all submissions and curation pages. Can manage accounts.</span>'],
-  ['', 'User <span>Default user role. Can submit, view, and edit their submissions.</span>']
-]
-tenant_roles = [
-  ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated institution.</span>'],
-  ['admin', 'Admin <span>Can view all institution submissions and curation pages, and create datasets.</span>'],
-  ['', 'Remove tenant role']
-]
-publisher_roles = [
-  ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated publisher.'],
-  ['admin', 'Admin <span>Can view all publisher submissions and curation pages, and create datasets.</span>'],
-  ['', 'Remove publisher role']
-]
-journal_roles = [
-  ['curator', 'Curator <span>Can view, edit, and curate datasets with the associated journal.</span>'],
-  ['admin', 'Admin <span>Can view all journal submissions and curation pages, and create datasets.</span>'],
-  ['', 'Remove journal role']
-]
-funder_roles = [
-  ['admin', 'Admin <span>Can view all funder submissions and curation pages, and create datasets.</span>'],
-  ['', 'Remove funder role']
-]
-%>
 <div id="role_form_flex">
   <fieldset class="c-fieldset">
     <legend class="c-fieldset__legend">Dryad system roles:</legend>
     <ul>
       <% system_roles.each do |role| %>
-        <li><%= radio_button_tag('role', role.first, @system_role ? @system_role.role == role.first : '' == role.first) %> <label for="<%= "role_#{role.first}" %>"><%= role[1].html_safe %></label>
+        <%= @form.fields_for :roles, StashEngine::Role.new do |fields| %>
+          <% existing = @system_roles.where(role: role.first).first %>
+          <%= fields.hidden_field :id, value: existing&.id %>
+          <li><%= fields.check_box :role, { checked: existing.present? }, role.first, '' %> <%= fields.label :role, role.last.html_safe %>
+        <% end %>  
       <% end %>
     </ul>
   </fieldset>
-  <% if @user.tenant_id.present? %>
-    <% unless @user.tenant_id == APP_CONFIG.default_tenant %>
-      <% unless @tenant_role %>
-        <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a tenant role (for <%= @user.tenant.short_name %>)</button>
-      <% end %>
-      <%= render partial: 'admin_role_fieldset', locals: { user_role: @tenant_role, label: 'tenant', select_label: 'For user partner institution:', roles: tenant_roles } %>
-    <% end %>
+  <%# Tenant (Institution) %>
+  <%= @form.fields_for :roles, @tenant_roles do |fields| %>
+    <%= render partial: 'admin_role_fieldset', locals: { user_role: fields.object, fields: fields, label: 'institution', select_label: 'For a partner institution:', roles: tenant_roles, options: tenant_list } %>
   <% end %>
-  <% unless @publisher_role %>
-    <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a publisher role</button>
+  <%# Add new button %>
+  <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add an institution role</button>
+  <%= @form.fields_for :roles, StashEngine::Role.new(role_object_type: 'StashEngine::Tenant') do |fields| %>
+    <%= render partial: 'admin_role_fieldset', locals: { user_role: fields.object, fields: fields, label: 'institution', select_label: 'For partner institution:', roles: tenant_roles, options: tenant_list } %>
   <% end %>
-  <%= render partial: 'admin_role_fieldset', locals: { user_role: @publisher_role, label: 'publisher', select_label: 'For organization or society:', roles: publisher_roles, options: StashEngine::JournalOrganization.order(:name).collect { |j| [ j.name, j.id ] } } %>
-  <% unless @journal_role %>
-    <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a journal role</button>
+  <%# Publisher %>
+  <%= @form.fields_for :roles, @publisher_roles do |fields| %>
+    <%= render partial: 'admin_role_fieldset', locals: { user_role: fields.object, fields: fields, label: 'publisher', select_label: 'For organization or society:', roles: publisher_roles, options: publisher_list } %>
   <% end %>
-  <fieldset class="c-fieldset" id="journal_fieldset" <%= "hidden" unless @journal_role %> >
-    <legend class="c-fieldset__legend">Journal roles:</legend>
-    <div>
-      <%= render partial: 'stash_engine/shared/search_select', locals: {
-        id: 'journal',
-        label: 'For journal',
-        field_name: 'journal',
-        options_path: '/stash_datacite/publications/autocomplete?term=',
-        options_label: 'title',
-        options_value: 'id',
-        selected: {value: @journal_role&.role_object_id, label: @user&.journals&.map(&:title)}
-      } %>
-    </div>
-    <ul>
-      <% journal_roles.each do |role| %>
-        <li><%= radio_button_tag("journal_role", role.first, @journal_role&.role == role.first) %> <label for="<%= "journal_role_#{role.first}" %>"><%= role[1].html_safe %></label>
-      <% end %>
-    </ul>
-  </fieldset>
-  <% unless @funder_role %>
-    <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a funder role</button>
+  <%# Add new button %>
+  <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a publisher role</button>
+  <%= @form.fields_for :roles, StashEngine::Role.new(role_object_type: 'StashEngine::JournalOrganization') do |fields| %>
+    <%= render partial: 'admin_role_fieldset', locals: { user_role: fields.object, fields: fields, label: 'publisher', select_label: 'For organization or society:', roles: publisher_roles, options: publisher_list } %>
   <% end %>
-  <%= render partial: 'admin_role_fieldset', locals: { user_role: @funder_role, label: 'funder', select_label: 'For funder:', roles: funder_roles, options: StashEngine::Funder.exemptions.collect { |f| [ f.name, f.id ] } } %>
+  <%# Journal %>
+  <%= @form.fields_for :roles, @journal_roles do |fields| %>
+    <%= render partial: 'admin_role_journal_fieldset', locals: { fields: fields, user_role: fields.object, roles: journal_roles } %>
+  <% end %>
+  <%# Add new button %>
+  <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a journal role</button>
+  <%= @form.fields_for :roles, StashEngine::Role.new(role_object_type: 'StashEngine::Journal') do |fields| %>
+    <%= render partial: 'admin_role_journal_fieldset', locals: { fields: fields, user_role: fields.object, roles: journal_roles } %>
+  <% end %>
+  <%# Funder %>
+  <%= @form.fields_for :roles, @funder_roles do |fields| %>
+    <%= render partial: 'admin_role_fieldset', locals: { fields: fields, user_role: fields.object, label: 'funder', select_label: 'For funder:', roles: funder_roles, options: funder_list } %>
+  <% end %>
+  <%# Add new button %>
+  <button type="button" class="o-button__plain-text7 button-expand" aria-expanded="false"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add a funder role</button>
+  <%= @form.fields_for :roles, StashEngine::Role.new(role_object_type: 'StashEngine::Funder') do |fields| %>
+    <%= render partial: 'admin_role_fieldset', locals: { fields: fields, user_role: fields.object, label: 'funder', select_label: 'For funder:', roles: funder_roles, options: funder_list } %>
+  <% end %>
 </div>

@@ -11,11 +11,7 @@ module StashDatacite
 
     # POST /subjects
     def create
-      params[:subject]
-        .split(/\s*[,()]\s*/)
-        .map { |s| strip_subject(s) }
-        .delete_if(&:blank?)
-        .each { |s| ensure_subject(s) }
+      Subjects::CreateService.new(resource, params[:subject], scope: :non_fos).call
       @subjects = resource.subjects.non_fos
       respond_to do |format|
         format.js
@@ -53,21 +49,6 @@ module StashDatacite
 
     private
 
-    def ensure_subject(subject_str)
-      subject = find_or_create_subject(subject_str)
-      subjects = @resource.subjects
-      return if subjects.exists?(subject.id)
-
-      subjects << subject
-    end
-
-    def find_or_create_subject(subject)
-      existing = Subject.where('subject LIKE ?', subject).non_fos.first
-      return existing if existing
-
-      Subject.create(subject: subject)
-    end
-
     def set_subject
       return if params[:id] == 'new'
 
@@ -77,10 +58,6 @@ module StashDatacite
 
     def resource
       @resource ||= StashEngine::Resource.find(params[:resource_id])
-    end
-
-    def strip_subject(text)
-      text.gsub(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/, '')
     end
   end
 end

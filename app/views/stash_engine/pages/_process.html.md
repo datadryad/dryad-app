@@ -6,7 +6,7 @@ Dryad has a team of curators who check every submission to ensure the accessibil
 
 If Dryad curators identify questions, problems, or areas for improvement, they will contact you directly via the email address associated with your submission. You may [contact the curation team](/contact) for questions or consultations.
 
-If your data submission is [private for peer review](/submission_process#private-for-peer-review), it will not be processed by our curators until you have released the submission for curation, or the associated manuscript is accepted by an integrated journal and the data submission is automatically released.
+If your data submission is [Private for Peer Review](/submission_process#private-for-peer-review), it will not be processed by our curators until you have released the submission for curation, or the associated manuscript is accepted by an integrated journal and the data submission is automatically released.
 
 Upon curator approval, the Dryad DOI is officially registered and, if applicable, the [Data Publishing Charge (DPC)](/costs) and any overage fees are invoiced. For assistance with invoices (e.g., re-addressing an invoice), please respond directly to the email with the invoice to connect with our billing team.
 

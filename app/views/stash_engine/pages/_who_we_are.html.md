@@ -15,14 +15,43 @@
 <p>In all of our convenings we are committed to abiding by our <a href="/code_of_conduct">Code of conduct</a>.</p>
 
 ## Get to know Dryad
-<h3 class="expand-button"><button id="our-members" aria-expanded="false" aria-controls="our-members-sec">Our partners</button></h3>
-<div class="about-page" id="our-members-sec" hidden>
-<p>Dryad’s partners are part of a non-profit, shared community working together to promote
-data publishing, curation, and preservation. The community benefits from Dryad’s services designed specifically for the Member community. Our community is open to a full spectrum of stakeholder organizations including universities, research institutions and academic libraries. <a href="/join_us">Learn about joining us as a partner organization</a>.</p>
+<h3 class="expand-button"><button id="our-partners" aria-expanded="false" aria-controls="our-partners-sec">Our partners</button></h3>
+<div class="about-page" id="our-partners-sec" hidden>
+<p>Dryad partners are part of a global non-profit community working together to promote data curation, publication, and preservation across all scientific disciplines. Partners sponsor the cost of Dryad services for affiliated researchers at a reduced rate, and receive access to our administrative dashboard, as well as support, training, and outreach. Partnership is open to all organizations, including institutions, publishers, academic societies, and others. <a href="/join_us">Learn more about partnering with Dryad.</a>.</p>
+<p>We’re enormously proud of our current partnerships, which include the following organizations:</p>
 <h4>Academic and research institutions</h4>
   <%= render "members_institutional" %>
 <h4>Publishing organizations</h4>
   <%= render "members_publishers" %>
+<p>We wish to express our enduring gratitude to our founding partners:</p>
+<ul class="member-list">
+  <li>American Association for the Advancement of Science (AAAS)</li>
+  <li>American Genetic Association (AGA)</li>
+  <li>American Society of Naturalists</li>
+  <li>Association for Tropical Biology and Conservation (ATBC)</li>
+  <li>Biological Journal of the Lennean Society</li>
+  <li>BioMed Central</li>
+  <li>British Ecological Society</li>
+  <li>BMJ Open</li>
+  <li>Ecology Letters, Centre National de la Recherche Scientifique</li>
+  <li>Ecological Society of America</li>
+  <li>European Society for Evolutionary Biology (ESEB)</li>
+  <li>Evolutionary Applications</li>
+  <li>Genetics Society</li>
+  <li>Journal of Paleontology and Paleobiology, The Paleontological Society</li>
+  <li>Molecular Biology and Evolution, Society for Molecular Biology and Evolution</li>
+  <li>Molecular Ecology</li>
+  <li>Molecular Ecology Resources</li>
+  <li>Nordic Society Oikos</li>
+  <li>Oxford University Press (OUP)</li>
+  <li>Pensoft Publishers</li>
+  <li>PLOS (Public Library of Science)</li>
+  <li>Society for the Study of Evolution</li>
+  <li>The Royal Society</li>
+  <li>Society of Systematic Biologists</li>
+  <li>US Fish and Wildlife Service</li>
+  <li>John Wiley &amp; Sons, Inc</li>
+</ul>
 </div>
 <h3 class="expand-button"><button id="our-board" aria-expanded="false" aria-controls="our-board-sec">Our board</button></h3>
 <div class="about-page" id="our-board-sec" hidden>
@@ -40,7 +69,7 @@ data publishing, curation, and preservation. The community benefits from Dryad�
 
 ## Collaborations
 
-Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](#our_members) and [how to join us](/join_us).
+Academic and research institutions, research funders, scholarly societies and publishers invest in Dryad for the curation, open sharing and reuse of research data in all fields. See our [partner list](#our-partners) and [how to join us](/join_us).
 
 Dryad advocates for community-adopted standards for metadata and persistent identifiers in concert with DataCite, ORCID, ROR, and Funder Registry. 
 

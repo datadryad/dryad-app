@@ -67,9 +67,59 @@ table.columned {
   }
 }
 
+#activity_log_table {
+  width: 100%;
+  font-size: .99rem;
+  border-bottom: thin solid #888;
+
+  & thead > tr > th, & > tbody > tr > td {
+    border: thin solid #888;
+    border: thin solid #888;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  & > tbody {    
+    border: 2px solid darken(#F1F5F8, 10);
+  }
+
+  & > tbody > tr { 
+    background-color: #F1F5F8; 
+    border: none;
+
+    &:first-child {
+      border-bottom: thin solid #888;
+    }
+  }
+
+  & > tbody:nth-child(4n-2) {
+    border: 2px solid darken($lightest-green, 10);
+    & > tr {background-color: darken($lightest-green, 2);}
+  }
+  & > tbody:nth-child(4n-1) {
+    border: 2px solid darken(#FCFAF1, 10);
+    & > tr {background-color: #FCFAF1;}   
+  }
+  & > tbody:nth-child(4n+4) {
+    border: 2px solid darken(#D5E6E7, 8);
+    & > tr {background-color: lighten(#D5E6E7, 2);}
+  }
+
+  .c-lined-table {
+    width: calc(100% + 1.1rem);
+    margin: 0 -.55rem;
+    tr {
+      background-color: rgba(255, 255, 255, .6);
+    }
+    tbody tr:nth-child(odd) {
+      background-color: rgba(240, 240, 240, .6);
+    }
+  }
+}
+
 .c-lined-table {
   width: 100%;
-  font-size: .9em;
+  font-size: .99rem;
 
   td, th {
     border: thin solid #888;

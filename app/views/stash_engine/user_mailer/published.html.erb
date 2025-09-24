@@ -1,8 +1,8 @@
 <p>Dear <%= @user_name %>,</p>
 
 <p>
-  Your dataset titled "<%= @resource.title %>" has been reviewed by a curator and approved for publication.
-  It is publicly accessible via this link:
+  Your dataset titled "<%= @resource.title.html_safe %>" has been reviewed by a curator and approved for publication.
+  It is publicly accessible at this link:
   <a href="<%= @resource.identifier_uri %>"><%= @resource.identifier_uri %></a>.
 </p>
 
@@ -24,12 +24,13 @@
 <% end %>
 
 <p>
-  You can update your dataset, at any time, by clicking "Revise submission" on your "My datasets" page.
-  Any edits to your data will create a new version, but the DOI will not change.
-  Only the most recent version of your dataset will be available via the "Download full dataset" button.
-  Previous versions can be accessed via the "Data files" section. Updated versions of your dataset will be
-  re-evaluated to ensure Dryad's standards for publication are maintained.
+  You can update your dataset at any time by clicking "Revise submission" on your "My datasets" page. Any edits to your data will create a new version, but the DOI will not change. Only the most recent version of your dataset will be available via the "Download full dataset" button.
+  Previous versions can be accessed via the "Data files" section. Updated versions of your dataset will be re-evaluated to ensure Dryad's standards for publication are maintained.
 </p>
+
+<p>We encourage you to share your dataset and any associated publications on social media. Be sure to tag us on <a href="https://www.linkedin.com/company/datadryad/">LinkedIn</a>, <a href="https://bsky.app/profile/datadryad.bsky.social">Bluesky</a>, and <a href="https://mstdn.science/@datadryad">Mastodon</a> so we can help amplify your work.</p>
+
+<p>In the meantime, we hope you’ll stay in touch with us. <a href="https://blog.datadryad.org/about/subscribe/">Sign up</a> for our email newsletter to have quarterly updates and new data highlights delivered to your inbox.</p>
 
 <p>Thank you for choosing Dryad to host your data.</p>
 

@@ -7,6 +7,8 @@ const marks = {
   emphasis: '\\*',
   inlineCode: '`',
   strike_through: '~~',
+  subscript: '~',
+  superscript: '\\^',
   // nodes
   blockquote: '> ',
   bullet_list: '* ',
@@ -20,6 +22,8 @@ const classes = {
   emphasis: 'md_em',
   inlineCode: 'md_mono',
   strike_through: 'md_strike',
+  subscript: 'md_sub',
+  superscript: 'md_sup',
 };
 
 const closest = (el, selector) => {
@@ -390,6 +394,8 @@ const headingCommands = headingLevels.reduce((o, l) => ({
 export const commands = {
   strong: (v) => toggleMark(marks.strong, classes.strong, v),
   emphasis: (v) => toggleMark(marks.emphasis, classes.emphasis, v),
+  superscript: (v) => toggleMark(marks.superscript, classes.superscript, v),
+  subscript: (v) => toggleMark(marks.subscript, classes.subscript, v),
   inlineCode: (v) => toggleMark(marks.inlineCode, classes.inlineCode, v),
   strike_through: (v) => toggleMark(marks.strike_through, classes.strike_through, v),
   link: (v) => insertLink(v),
@@ -415,6 +421,14 @@ export const codeKeymap = [
   {
     key: 'Mod-i',
     run: commands.emphasis,
+  },
+  {
+    key: 'Mod-Alt-Shift-=',
+    run: commands.superscript,
+  },
+  {
+    key: 'Mod-Alt-=',
+    run: commands.subscript,
   },
   {
     key: 'Mod-e',

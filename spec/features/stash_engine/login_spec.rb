@@ -24,16 +24,6 @@ RSpec.feature 'Session', type: :feature do
       expect(page).to have_text('My datasets')
     end
 
-    xit 'User fails ORCID authentication', js: true do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:orcid, uid: nil, credentials: {}, info: {}, extra: {})
-      visit root_path
-      click_link 'Login'
-      click_link 'Login or create your ORCID iD'
-      User should have been redirected to the homepage
-      expect(page).to have_text('Login')
-    end
-
     it 'existing user signs in successfully', js: true do
       sign_in
       expect(page).to have_text('My datasets')
@@ -106,7 +96,7 @@ RSpec.feature 'Session', type: :feature do
       # enter and erase email
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
-      click_button 'Remove and enter a new email'
+      click_button 'Enter a new email address'
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
       expect(page).to have_text('Enter confirmation code')
@@ -144,7 +134,7 @@ RSpec.feature 'Session', type: :feature do
       # enter and erase email
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
-      click_button 'Remove and enter a new email'
+      click_button 'Enter a new email address'
       fill_in 'email', with: 'test@example.org'
       click_button 'Save email'
       expect(page).to have_text('Enter confirmation code')

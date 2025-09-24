@@ -90,12 +90,12 @@ This is primarily used for related primary articles. Look at unmatched primary a
 
 ```ruby
 # primary articles with no matched journal, a relevant subset of all unmatched publications
-StashEngine::Resource.latest_per_dataset.joins('join dcs_related_identifiers r on r.resource_id = stash_engine_resources.id and r.work_type = 6 and r.related_identifier is not null').joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'r.related_identifier', 'stash_engine_resource_publications.publication_name', 'stash_engine_resource_publications.publication_issn')
+StashEngine::Resource.latest_per_dataset.joins('join dcs_related_identifiers r on r.resource_id = stash_engine_resources.id and r.work_type = 6 and r.related_identifier is not null').joins(:resource_publication, :identifier).left_outer_joins(:journal).where(journal: {id: nil}).where.not(identifier: {pub_state: 'withdrawn'}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.id', 'stash_engine_identifiers.identifier', 'r.related_identifier', 'stash_engine_resource_publications.publication_name', 'stash_engine_resource_publications.publication_issn')
 ```
 
-You can sort by the entered publication to group them in order of title and see which are used more than once: `.sort_by {|s| [s[3] ? 1 : 0, s[3]]}`. This returns an array of arrays of the following format:
+You can sort by the entered publication (regardless of case and starting with 'the') to group them in order of title and see which are used more than once: `.sort_by {|s| [s[4]&.downcase&.gsub(/^the /, '') ? 1 : 0, s[4]&.downcase&.gsub(/^the /, '')]}`. This returns an array of arrays of the following format:
 
-`[<resource ID>, <dryad DOI>, <primary article DOI>, <unmatched publication_name (or nil)>, <unmatched publication_issn (or nil)>]`
+`[<resource ID>, <identifier ID>, <dryad DOI>, <primary article DOI>, <unmatched publication_name (or nil)>, <unmatched publication_issn (or nil)>]`
 
 Visit a primary article DOI. Determine if it is from a journal already in our system, and add the journal information to the resource_publications table. You can also easily do this from the activity log UI for each dataset.
 
@@ -114,7 +114,7 @@ If the journal name is present and is a reasonable variation for the journal, co
 StashEngine::JournalTitle.create(title: 'Some new title', journal_id: <the journal id>, show_in_autocomplete: false)
 ```
 
-**NOTE: ONLY add journals that have more than 1 deposit in Dryad.**
+**NOTE: ONLY add journals that have more than 1 published deposit in Dryad.**
 
 If there is no corresponding journal, you can create an entry for a new journal in the system. You must also create entries for each of the journal's ISSNs:
 ```ruby
@@ -128,22 +128,22 @@ If all primary articles are processed, you can do a similar process for results 
 
 ```ruby
 # manuscripts with no matched journal, a relevant subset of all unmatched publications
-StashEngine::Resource.latest_per_dataset.joins(:resource_publication).left_outer_joins(:journal).where(journal: {id: nil}).where.not(resource_publication: {manuscript_number: [nil, ''], publication_name: [nil, '']}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.identifier', 'resource_publication.manuscript_number', 'resource_publication.publication_name', 'resource_publication.publication_issn')
+StashEngine::Resource.latest_per_dataset.joins(:resource_publication, :identifier).left_outer_joins(:journal).where(journal: {id: nil}).where("resource_publication.manuscript_number REGEXP '[0-9]'").where.not(resource_publication: {publication_name: [nil, '']}).where.not(identifier: {pub_state: 'withdrawn'}).distinct.pluck('stash_engine_resources.id', 'stash_engine_identifiers.id', 'stash_engine_identifiers.identifier', 'resource_publication.manuscript_number', 'resource_publication.publication_name', 'resource_publication.publication_issn')
 ```
 
-You can sort by the entered publication to group them in order of title and see which are used more than once: `.sort_by {|s| [s[3] ? 1 : 0, s[3]]}`. This returns an array of arrays of the following format:
+You can sort by the entered publication to group them in order of title and see which are used more than once: `.sort_by {|s| [s[4]&.downcase&.gsub(/^the /, '') ? 1 : 0, s[4]&.downcase&.gsub(/^the /, '')]}`. Or, group them by manuscript number, which can be in standard formats for our partner journals: `.sort_by {|s| [s[3]&.downcase ? 1 : 0, s[3]&.downcase]}`. This returns an array of arrays of the following format:
 
-`[<resource ID>, <dryad DOI>, <manuscript number>, <unmatched publication_name>, <unmatched publication_issn (or nil)>]`
+`[<resource ID>, <identifier ID>, <dryad DOI>, <manuscript number>, <unmatched publication_name>, <unmatched publication_issn (or nil)>]`
 
 Ignore any results for which the manuscript number or publication name are gibberish, or otherwise wrong. If they seem real and relevant, you can check and add journals as above.
 
-**NOTE: ONLY add journals that have more than 1 deposit in Dryad.**
+**NOTE: ONLY add journals that have more than 1 published deposit in Dryad.**
 
 
 Updating journals for payment plans and integrations
 ====================================================
 
-When a journal changes payment plans, simply update the `payment_plan_type`
+When a journal changes payment plans, simply update the `payment_configuration.payment_plan`
 field. If the change needs to be retroactive, use this function in the Rails console,
 and then re-generate any needed shopping cart reports:
 ```ruby

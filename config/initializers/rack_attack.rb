@@ -12,6 +12,7 @@ Rack::Attack.cache.store = Redis.new(url: APP_CONFIG[:cache][:rack_attack_url]) 
 # IPs to allow outright
 Rack::Attack.safelist_ip('127.0.0.1')
 Rack::Attack.safelist_ip('::1')
+Rack::Attack.safelist_ip('217.123.8.63') # Markus Englund, research on data fabrication
 Rack::Attack.safelist_ip('130.14.25.148') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.25') # NCBI LinkOut integrity checker
 Rack::Attack.safelist_ip('130.14.254.26') # NCBI LinkOut integrity checker
@@ -41,6 +42,14 @@ Rack::Attack.blocklist('malicious_clients') do |req|
       (req.ip.start_with?('207.241') && start_w_wo_stash?(req.path, '/downloads')) ||
       (req.ip.start_with?('43.1') && req.path.start_with?('/search')) ||
       /\S+\.php/.match?(req.path)
+  end
+end
+
+# Block repeated helpdesk form submissions
+# After ten submissions block the IP for 2 weeks
+Rack::Attack.blocklist('helpdesk_form_limit') do |req|
+  Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 10, findtime: 1.day, bantime: 2.weeks) do
+    req.path.start_with?('/helpdesk') && req.post?
   end
 end
 

@@ -25,9 +25,17 @@ module StashEngine
         current_payer = payer
         return true if current_payer.nil?
 
-        return current_payer.payment_plan_type.to_s == '2025' if current_payer.is_a? StashEngine::Journal
+        return current_payer.payment_configuration&.payment_plan.to_s == '2025' if current_payer.is_a? StashEngine::Journal
 
-        current_payer.payment_plan.to_s == '2025'
+        current_payer.payment_configuration&.payment_plan.to_s == '2025'
+      end
+
+      def payment_needed?
+        return false unless user_must_pay?
+        return false if old_payment_system
+        return false unless last_invoiced_file_size.blank? || last_invoiced_file_size.zero?
+
+        true
       end
 
       def sponsored
@@ -45,9 +53,9 @@ module StashEngine
           self.payment_id = nil
         elsif institution_will_pay?
           self.payment_id = latest_resource&.tenant&.id
-          self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_plan == 'tiered'}"
+          self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'TIERED'}"
         elsif journal&.will_pay?
-          self.payment_type = "journal-#{journal.payment_plan_type}"
+          self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
         elsif funder_will_pay?
           contrib = funder_payment_info
@@ -62,7 +70,7 @@ module StashEngine
 
       def institution_will_pay?
         tenant = latest_resource&.tenant
-        return false unless tenant&.covers_dpc
+        return false unless tenant&.payment_configuration&.covers_dpc
 
         if tenant&.authentication&.strategy == 'author_match'
           # get all unique ror_id associations for all authors

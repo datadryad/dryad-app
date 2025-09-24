@@ -52,9 +52,9 @@ module StashDatacite
 
       Submission::ResourcesService.new(@resource_id).trigger_submission
 
-      @resource.curation_activities << StashEngine::CurationActivity.create(
-        status: 'processing', note: 'Repository processing data', user_id: current_user&.id || 0
-      )
+      CurationService.new(
+        resource: @resource, status: 'processing', note: 'Repository processing data', user_id: current_user&.id || 0
+      ).process
 
       @resource.reload
 
@@ -92,17 +92,14 @@ module StashDatacite
         resource.update(display_readme: true)
       end
 
-      # TODO: put this somewhere more reliable
-      StashDatacite::DataciteDate.set_date_available(resource_id: resource.id)
-
       StashEngine::EditHistory.create(resource_id: resource.id, user_comment: params[:user_comment])
 
       # this is here because they want it in curation notes, in addition to the edit history table
       return if params[:user_comment].blank?
 
       last = resource.curation_activities.last
-      StashEngine::CurationActivity.create(status: last.status, user_id: current_user.id, note: params[:user_comment],
-                                           resource_id: last.resource_id)
+      CurationService.new(status: last.status, user_id: current_user.id, note: params[:user_comment],
+                          resource_id: last.resource_id).process
     end
 
     def check_required_fields(resource)
@@ -116,9 +113,16 @@ module StashDatacite
     def resource_submitted_message(resource)
       identifier_uri = resource.identifier_uri
       msg = []
-      msg << "#{resource.title || '(unknown title)'} submitted"
-      msg << (identifier_uri ? "with DOI #{identifier_uri}." : '.')
-      msg << 'There may be a delay for processing before the item is available.'
+      msg << "Your #{resource.resource_type.resource_type}"
+      msg << (identifier_uri ? "with the DOI #{identifier_uri}" : '')
+      msg << 'was submitted'
+      if resource.hold_for_peer_review?
+        msg << 'and will be available from the temporary reviewer sharing link after processing.'
+        msg << 'When your data is ready to publish, release it for curation.'
+      else
+        msg << "for curation. #{resource.resource_type.resource_type.capitalize}s are curated in the order in which they are received."
+        msg << "Revision requests will be sent to #{resource.submitter.email}"
+      end
       msg.join(' ')
     end
 
@@ -155,7 +159,7 @@ module StashDatacite
       @resource.identifier.update_search_words!
 
       error_items = Resource::DatasetValidations.new(resource: @resource, user: current_user).errors
-      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id) and return if error_items
+      redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id), alert: error_items and return if error_items
 
       redirect_to stash_url_helpers.dashboard_path, alert: 'Dataset is already being submitted' if processing?(@resource)
     end

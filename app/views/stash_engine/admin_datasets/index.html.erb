@@ -1,150 +1,63 @@
 <% @page_title = "Activity log for #{@identifier.to_s}" %>
+<% content_for(:head) do %>
+<style type="text/css">
+  dl {
+    margin: 0;
+  }
+  dl:not(:first-child) {
+    margin-top: 1ch;
+  }
+  dl div {
+    display: flex;
+    align-items: baseline;
+    gap: 1ch;
+  }
+  dt {
+    font-weight: 600;
+    display: inline;
+    white-space: nowrap;
+  }
+  dd {
+    display: inline;
+    margin: 0;
+  }
+</style>
+<% end %>
 <% r = @identifier&.latest_resource %>
 
 <%= render partial: 'privileged_banner' %>
 <div class="admin-dashboard-header">
-  <h1 class="o-heading__level1"><%= r&.title %></h1>
+  <h1 class="o-heading__level1"><%= r&.title&.html_safe %></h1>
   <%= @identifier.identifier %>
 </div>
 <div id="dupe_check" class="callout warn" data-load="<%= stash_url_helpers.dupe_check_resource_path(format: :js, id: r&.id, admin: true) %>" aria-busy="true" role="alert"></div>
 <div class="callout alt">
-  <div id="activity-at-a-glance">
-    <div class="input-stack">
-      <% if policy(r).flag? %>
-        <span class="input-line">
-          <span id="resource_flag">
-            <% if r&.flag&.present? %>        
-              <i class="fas fa-flag <%= r.flag.flag %>" aria-label="Flagged"></i>
-              <%= r.flag.flag.humanize %>
-            <% else %>
-              Not flagged
-            <% end %>
-          </span>
-          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'flag'), method: :get, local: false) do %>
-            <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit Flag" title="Edit Flag"><i class="fas fa-pencil" aria-hidden="true"></i></button>
-          <% end %>
-        </span>
-      <% end %>
-      <span><b>Publication state:</b> <span id="dataset_pub_state_<%= @identifier.id %>"><%= @identifier.pub_state.upcase_first %></span></span>
-      <div class="input-line">
-        <b>Curation state:</b>
-        <div id="dataset_status_<%= @identifier.id %>">
-          <div class="c-lined-table__with-actions">
-            <div class="c-lined-table__data" id="curation_activity_<%= @identifier.id %>">
-              <%= StashEngine::CurationActivity.readable_status(r.last_curation_activity.status) %>
-            </div>
-            <% if policy(r).curate? %>
-              <div class="c-lined-table__actions">
-              <%= form_with(url: admin_dash_edit_path(id: @identifier.id, field: 'curation_activity'), method: :get, local: false) do %>
-                <button class="c-admin-edit-icon" title="Update status" aria-label="Update status" aria-haspopup="dialog" id="curation_activity_button_<%= @identifier.id %>">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                </button>
-              <% end %>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <span class="input-line">
-        <span><b>Notification date:</b> <span id="notification_date_<%= @identifier.id %>"><%= formatted_date(r.process_date.notification_date) %></span></span>
-        <% if r.process_date.notification_date && policy([:stash_engine, :admin_datasets]).notification_date? %>
-          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'notification_date'), method: :get, local: false) do %>
-            <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit notification date" title="Edit notification date"><i class="fas fa-pencil" aria-hidden="true"></i></button>
-          <% end %>
-      <% end %>
-      </span>
-    </div>
-    <div class="input-stack">
-      <span class="input-line">
-        <span><b>Submitter:</b> <span id="submitter_name"><%= r.submitter.name %></span></span>
-        <% if policy([:stash_engine, :admin_datasets]).edit_submitter? %>
-          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'submitter'), method: :get, local: false) do %>
-            <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit submitter" title="Edit submitter"><i class="fas fa-pencil" aria-hidden="true"></i></button>
-          <% end %>
-        <% end %>
-      </span>
-      <span class="input-line">
-        <b>Current editor:</b>
-        <span id="editor_name<%= r.id%>" class="input-line">
-          <%= r.editor&.name || "<em>None</em>".html_safe %>
-          <% if r.editor.present? && policy(r).curate? %>
-            <%= form_with(url: logout_resource_path(id: r&.id), method: :post, local: false) do %>
-              <button class="o-button__plain-text7" aria-label="Logout current editor" title="Logout current editor"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
-            <% end %>
-          <% end %>
-        </span>
-      </span>
-      <% if policy(r).curate? %>
-        <span class="input-line" style="column-gap: .5ch">
-          <b>Payment:</b>
-          <span id="payment_desc">            
-            <% pr = @identifier.resources.by_version_desc.includes(:payment).find {|r| r.payment} %>
-            <% if pr&.payment %>$<%= pr.payment.amount %><% end %>
-            <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
-              <%= pr&.payment&.status.present? ? "bill #{pr&.payment&.status}" : 'Unknown' %>
-            <% else %>
-              <%= @identifier.payment_type %>
-            <% end %>
-          </span>
-          <%= format_external_references(@identifier.payment_id) %>
-          <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
-            <span id="waiver_basis"><%= @identifier.waiver_basis %></span>
-            <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
-              <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Apply fee discount" title="Apply fee discount"><i class="fas fa-comment-dollar" aria-hidden="true"></i></button>
-            <% end %>
-          <% end %>
-        </span>
-      <% end %>
-    </div>
-    <div class="input-stack">
-      <span class="input-line">
-        <b role="heading" aria-level="2">Publication dates</b>
-        <% if policy(r).curate? %>
-          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'pub_dates'), method: :get, local: false) do %>
-              <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit pub dates" title="Edit pub dates"><i class="fas fa-pencil" aria-hidden="true"></i></button>
-            <% end %>
-        <% end %>
-      </span>
-      <div class="input-stack child-details">
-        <span><b>First:</b> <span id="dataset_first_published_<%= @identifier.id %>"><%= formatted_date(@identifier.date_first_published) %></span></span>
-        <span><b>Latest:</b> <span id="dataset_published_<%= @identifier.id %>"><%= formatted_date(@identifier.date_last_published) %></span></span>
-      </div>
-    </div>
-    <div class="input-stack" style="flex-shrink: 1">
-      <span class="input-line">
-        <b role="heading" aria-level="2">Related works</b>
-        <% if policy(r).curate? %>
-          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'publications'), method: :get, local: false) do %>
-            <button class="o-button__plain-text7" aria-label="Edit related works" title="Edit related works" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-          <% end %>
-        <% end %>
-      </span>
-      <span id="related_works_list" class="child-details"><%= r.resource_publication&.publication_name&.present? ? "#{r.resource_publication&.publication_name}, " : '' %> <%= r.resource_publication&.manuscript_number&.presence || ''%><br/><%= r.related_identifiers.empty? ? '' : "#{r.related_identifiers.size} related work#{r.related_identifiers.size > 1 ? 's' : ''}" %></span>
-    </div>
-    <div class="input-stack" style="flex-shrink: 1">
-      <span class="input-line">
-        <b role="heading" aria-level="2">Funders</b>
-        <% if policy(r).curate? %>
-          <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'funders'), method: :get, local: false) do %>
-            <button class="o-button__plain-text7" aria-label="Edit funders" title="Edit funders" aria-haspopup="dialog"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-          <% end %>
-        <% end %>
-      </span>
-      <span id="funders_list" class="child-details"><%= r.contributors.funder&.map(&:contributor_name)&.join('; ').truncate(100) %></span>
-    </div>
-  </div>
+  <%= render partial: 'at_a_glance' %>
 </div>
 
 <div class="activity-log-header">
   <h2>Activity log</h2>
-  <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
-    <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
-      <button class="o-button__plain-text2" aria-haspopup="dialog">Add note</button>
+  <div class="input-line" style="align-items: baseline;">
+    <% if policy([:stash_engine, :admin_datasets]).note_popup? %>
+      <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'note'), method: :get, local: false) do %>
+        <button class="o-button__plain-text2" aria-haspopup="dialog">Add note</button>
+      <% end %>
     <% end %>
-  <% end %>
+    <div class="input-line" style="font-size: .99rem; padding: 0 0.5rem;">
+      <button class="c-admin-edit-icon" id="all_activity" title="All curation activity" aria-label="All curation activity" aria-expanded="false">
+        <i class="fas fa-comment" aria-hidden="true"></i>
+      </button>
+      <button class="c-admin-edit-icon" id="all_changes" title="All metadata changes" aria-label="All metadata changes" aria-expanded="false">
+        <i class="fas fa-user-pen" aria-hidden="true"></i>
+      </button>
+      <button class="c-admin-edit-icon" id="all_file_changes" title="All file changes" aria-label="All file changes" aria-expanded="false">
+        <i class="fas fa-file-pen" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
 </div>
-<div id="activity_log" data-load="<%= stash_url_helpers.activity_path(format: :js, id: params[:id], direction: params[:direction], page_size: params[:page_size], page: params[:page]) %>" aria-busy="true" aria-live="polite">
-  <p><i class="fas fa-spin fa-spinner" aria-hidden="true"></i></p>
+<div id="activity-log">
+  <%= render partial: 'activity_log' %>
 </div>
 
 <% if policy([:stash_engine, :admin_datasets]).create_salesforce_case? && Stash::Salesforce.sf_user %>

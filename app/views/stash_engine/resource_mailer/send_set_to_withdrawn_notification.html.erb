@@ -5,7 +5,7 @@
   deleted after one year with further inactivity:</p>
 
 <p>
-  Title: <%= @resource.title %><br/>
+  Title: <%= @resource.title.html_safe %><br/>
   DOI: <%= @resource.identifier_uri %>
 </p>
 

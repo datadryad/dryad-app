@@ -5,19 +5,22 @@
     <h1>Enter confirmation code</h1>
     <% if (current_user.email&.end_with?(@tenant.authentication&.email_domain)) %>
       <p>To confirm your affiliation with <%= @tenant.long_name %>, please enter the 6 character code you received by email at <b><%= current_user.email %></b>.
-      <%= form_with(url: validate_email_path, method: :post, local: false) do |f| %>
+      <%= form_with(url: validate_sso_email_path, method: :post, local: false) do |f| %>
         <div style="text-align: center">
           <%= f.text_field :token, class: 'c-input__token', id: 'email_code', maxlength: 6, required: true %>
         </div>
       <% end %>
       <p>If you do not see the email, please check your spam filter.</p>
-      <p>The code sent will expire after 15 minutes. <a href="<%= email_sso_path(tenant_id: @tenant.id) %>">Send another code</a></p>
+      <p>The code sent will expire after 15 minutes. <a href="<%= email_sso_path(tenant_id: @tenant.id, refresh: true) %>">Send another code</a></p>
       Is the email address incorrect?
       <%= form_with(url: edit_account_path, method: :post, class: 'o-button__inline-form', local: false) do |f| %>
+        <%= f.hidden_field :first_name, value: current_user.first_name %>
+        <%= f.hidden_field :last_name, value: current_user.last_name %>
         <%= f.hidden_field :email, value: '' %>
-        <%= f.submit 'Remove and enter a new email', class: 'o-button__plain-textlink'%>  
+        <%= f.submit 'Enter a new email address', class: 'o-button__plain-textlink', style: 'text-decoration: underline'%>  
       <% end %>
       <script type="text/javascript">
+        window.history.replaceState(null, null, window.location.href.split('?')[0])
         const code = document.getElementById('email_code')
         code.addEventListener('input', () => {
           if (code.value.length === 6) code.form.submit()
@@ -27,6 +30,8 @@
       <p>You must receive a code at a valid <%= @tenant.long_name %> email address.</p>
       <p>Please enter a valid email address from <b><%= @tenant.authentication&.email_domain %></b></p>
       <%= form_with(url: edit_account_path, method: :post, id: 'user_edit_form', class: 'input-line', local: false) do |f| %>
+        <%= f.hidden_field :first_name, value: current_user.first_name %>
+        <%= f.hidden_field :last_name, value: current_user.last_name %>
         <div class="c-input">
           <%= f.label :email, "Email", class: 'c-input__label' %>
           <%= f.text_field :email, class: 'c-input__text', required: true %>

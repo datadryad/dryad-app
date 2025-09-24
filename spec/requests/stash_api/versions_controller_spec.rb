@@ -16,6 +16,8 @@ module StashApi
     before(:each) do
       mock_salesforce!
       neuter_curation_callbacks!
+      mock_solr!
+      neuter_curation_callbacks!
       @user = create(:user, role: 'superuser')
       @user1 = create(:user)
       host! 'my.example.org'
@@ -31,14 +33,10 @@ module StashApi
 
       @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress', user_id: @user1.id),
                                create(:curation_activity, resource: @resources[0], status: 'curation', user_id: @user1.id),
-                               create(:curation_activity, resource: @resources[0], status: 'published', user_id: @user1.id)]]
+                               CurationService.new(user: @user, resource: @resources[0], status: 'published', user_id: @user1.id).process]]
 
       @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress', user_id: @user1.id),
                                create(:curation_activity, resource: @resources[1], status: 'curation', user_id: @user1.id)]
-
-      # we get some crazy failures and it refused to update the resource because of ridiculous curation failures if user zero doesn't exist
-      # Took me hours to figure out and really annoying.
-      @sys_user = create(:user, id: 0, first_name: 'system user')
 
       # be sure versions are set correctly, because creating them manually like this doesn't ensure it
       @resources[0].stash_version.update(version: 1)
@@ -197,7 +195,7 @@ module StashApi
       end
 
       it 'shows what fields changed for v2 when both have been published' do
-        create(:curation_activity, resource: @resources[1], status: 'published', user_id: @user1.id)
+        CurationService.new(user: @user, resource: @resources[1], status: 'published', user_id: @user1.id).process
         response_code = get "/api/v2/versions/#{@resources[1].id}", headers: default_json_headers
         expect(response_code).to eq(200)
         h = response_body_hash
@@ -309,7 +307,6 @@ module StashApi
           response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(302)
           expect(response.headers['Location']).to include('http://example.com/fun')
-          # expect(response.body).to include('redirected')
         end
 
         it "disallows download if it's not submitted to Merritt" do
@@ -317,10 +314,18 @@ module StashApi
           response_code = get "/api/v2/versions/#{@resources[1].id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
           expect(response_code).to eq(404)
         end
+
+        context 'when no resource is available' do
+          it 'returns not found' do
+            get '/api/v2/versions/1234564321/download', headers: default_authenticated_headers.merge('Accept' => '*/*')
+
+            expect(response).to have_http_status(:not_found)
+            expect(response_body_hash).to eq({ 'error' => 'not-found' })
+          end
+        end
       end
 
       describe 'response codes' do
-
         xit 'handles 202 from Merritt presigned library' do
           allow_any_instance_of(Stash::Download::VersionPresigned).to receive(:download)
             .and_return({ status: 202, url: 'http://example.com/fun' }.with_indifferent_access)
@@ -360,7 +365,47 @@ module StashApi
           expect(response_code).to eq(404)
           expect(response.body).to include('Not found')
         end
+      end
+    end
 
+    describe '#zip_assembly' do
+      let(:identifier) { create(:identifier) }
+      let(:resource) { create(:resource, identifier: identifier) }
+      let!(:file) { create(:data_file, resource: resource, file_state: 'created', upload_file_size: 1024, download_filename: 'my_file.txt') }
+
+      context 'when resource download_token exists' do
+        context 'and is in availability date' do
+          let!(:download_token) { create(:download_token, resource_id: resource.id, token: 'versionToken', available: 2.days.from_now) }
+
+          before do
+            allow_any_instance_of(StashEngine::DataFile).to receive(:s3_permanent_presigned_url).and_return('http://example.com/my_file.txt')
+          end
+
+          it 'returns proper information' do
+            get "/api/v2/versions/#{resource.id}/zip_assembly/versionToken"
+            expect(response).to have_http_status(:ok)
+
+            expect(response_body_hash).to eq([{ 'size' => 1024, 'filename' => 'my_file.txt', 'url' => 'http://example.com/my_file.txt' }])
+          end
+        end
+
+        context 'and is outside availability date' do
+          let!(:download_token) { create(:download_token, resource_id: resource.id, token: 'versionToken', available: 2.days.ago) }
+
+          it 'returns unauthorized' do
+            get "/api/v2/versions/#{resource.id}/zip_assembly/versionToken"
+
+            expect(response).to have_http_status(:unauthorized)
+          end
+        end
+      end
+
+      context 'when resource download_token does not exist' do
+        it 'returns unauthorized' do
+          get "/api/v2/versions/#{resource.id}/zip_assembly/versionToken"
+
+          expect(response).to have_http_status(:unauthorized)
+        end
       end
     end
   end

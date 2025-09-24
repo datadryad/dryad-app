@@ -98,6 +98,10 @@ module Stash
                                                    'three attempts. Are Zenodo systems up and stable?'
       end
 
+      def delete
+        ZC.standard_request(:delete, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
+      end
+
       def dataset_info
         ZC.standard_request(:get, "#{ZC.base_url}/api/deposit/depositions/#{deposition_id}", zc_id: @zc_id)
       end

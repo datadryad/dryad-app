@@ -36,9 +36,14 @@
 <div class="user-admin-header">
   <h1 class="o-heading__level1"><%= "#{@user.first_name} #{@user.last_name}".strip %></h1>
   <% if @user.orcid.present? %>
-    <p><a href="<%= @user.orcid_link %>" target="_blank"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a></p>
+    <p><a href="<%= @user.orcid_link %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a></p>
   <% end %>
   <% if policy([:stash_engine, :user]).edit? %>
+    <span id="user_flag_<%= @user.id %>">
+      <% if @user.flag.present? %>
+        <i class="fas fa-flag user" aria-label="Flagged" title="<%= @user.flag.note %>"></i>
+      <% end %>
+    </span>  
     <%= form_with(url: user_edit_path(id: @user.id), method: :get, local: false) do %>
       <p><button class="c-admin-edit-icon" aria-haspopup="dialog" id="edit_button_<%= @user.id %>">
         Edit user <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -69,8 +74,9 @@
     <b role="heading" aria-level="2">Roles</b>
     <div class="callout">
       <ul class="o-list">
-        <li id="user_role_<%= @user.id %>"><%= @user.roles.admin_roles.present? ? @user.roles.admin_roles.map{|r| "#{r.role_object_type&.delete_prefix("StashEngine::")&.sub('JournalOrganization', 'Publisher')} #{r.role}".strip.capitalize }.join(", ") : "User" %></li>
-        <li id="user_role_details"><%= @user.journal_organizations.map(&:name).join(", ") %> <%= @user.journals.map(&:title).join(", ") %> <%= @user.funders.map(&:name).join(", ") %></li>
+        <li id="user_role_details">
+          <%= role_details(@user) %>
+        </li>
       </ul>
     </div>
   </div>

@@ -1,21 +1,21 @@
 <% url = CGI.escape(show_url("doi:#{identifier.identifier}")) %>
-<% citation = CGI.escape(ActionController::Base.helpers.strip_tags(citation(resource.authors, resource.title, resource.resource_type, review.identifier.identifier, (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year)))) %>
+<% citation = CGI.escape(citation(resource.authors, resource.title, resource.resource_type, identifier.identifier, (resource.publication_date.present? ? resource.publication_date.year : resource.updated_at.year)).to_s.strip_tags) %>
 <% title = CGI.escape("Dryad dataset: " + resource.title) %>
-<% abstract = CGI.escape("Abstract: " + ActionController::Base.helpers.strip_tags((review&.abstract&.description).to_s))%>
+<% abstract = CGI.escape("Abstract: " + (review&.abstract&.description).to_s.strip_tags) %>
 <div id="share_buttons">
   <h2>Share:</h2>
   <!-- LinkedIn -->
-  <a href="https://www.linkedin.com/sharing/share-offsite/?url=<%=url%>" title="Share on LinkedIn" data-share="linkedin" target="_blank"><i class="fab fa-linkedin" aria-label="Share on LinkedIn (opens in new window)" role="img"></i></a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url=<%=url%>" title="Share on LinkedIn" data-share="linkedin" target="_blank" rel="noreferrer"><i class="fab fa-linkedin" aria-label="Share on LinkedIn (opens in new window)" role="img"></i></a>
   <!-- BlueSky -->
-  <a href="https://bsky.app/intent/compose?text=<%=title%>%0A<%=url%>" title="Share on Bluesky" data-share="bluesky" target="_blank"><i class="fab fa-square-bluesky" aria-label="Share on Bluesky (opens in new window)" role="img"></i></a>
+  <a href="https://bsky.app/intent/compose?text=<%=title%>%0A<%=url%>" title="Share on Bluesky" data-share="bluesky" target="_blank" rel="noreferrer"><i class="fab fa-square-bluesky" aria-label="Share on Bluesky (opens in new window)" role="img"></i></a>
   <!-- Reddit -->
-  <a href="https://www.reddit.com/submit?url=<%=url%>&title=<%=title%>" title="Share on Reddit" data-share="reddit" target="_blank"><i class="fab fa-reddit-square" aria-label="Share on Reddit (opens in new window)" role="img"></i></a>
+  <a href="https://www.reddit.com/submit?url=<%=url%>&title=<%=title%>" title="Share on Reddit" data-share="reddit" target="_blank" rel="noreferrer"><i class="fab fa-reddit-square" aria-label="Share on Reddit (opens in new window)" role="img"></i></a>
   <!-- Mastodon -->
-  <a href="https://mastodonshare.com/?url=<%=url%>&text=<%=title%>" title="Share on Mastodon" data-share="mastodon" target="_blank"><i class="fab fa-mastodon" aria-label="Share on Mastodon (opens in new window)" role="img"></i></a>
+  <a href="https://mastodonshare.com/?url=<%=url%>&text=<%=title%>" title="Share on Mastodon" data-share="mastodon" target="_blank" rel="noreferrer"><i class="fab fa-mastodon" aria-label="Share on Mastodon (opens in new window)" role="img"></i></a>
   <!-- Facebook -->
-  <a href="https://www.facebook.com/sharer/sharer.php?u=<%=url%>" title="Share on Facebook" data-share="facebook" target="_blank"><i class="fab fa-facebook-square" aria-label="Share on Facebook (opens in new window)" role="img"></i></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=<%=url%>" title="Share on Facebook" data-share="facebook" target="_blank" rel="noreferrer"><i class="fab fa-facebook-square" aria-label="Share on Facebook (opens in new window)" role="img"></i></a>
   <!-- Email -->
-  <a href="mailto:?subject=<%=title%>&body=Citation%3A+<%=citation%>%0A%0A<%=abstract%>" title="Share with email" data-share="email" target="_blank"><i class="fa fa-envelope-square" aria-label="Share with email (opens in new window)" role="img"></i></a>
+  <a href="mailto:?subject=<%=title%>&body=Citation%3A+<%=citation%>%0A%0A<%=abstract%>" title="Share with email" data-share="email" target="_blank" rel="noreferrer"><i class="fa fa-envelope-square" aria-label="Share with email (opens in new window)" role="img"></i></a>
   <!-- Copy -->
   <button id="share-panel__copy-url" title="Copy link to this page"><i class="fa fa-share-square" aria-label="Copy link to this page" role="img"></i></button>
 </div>

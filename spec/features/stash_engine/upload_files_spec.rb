@@ -232,14 +232,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
       expect(page).to have_content('https://path_to/short_url.txt')
     end
-
-    # Solve the problem of disappearing spinner right after the axios request
-    xit 'shows a spinner while validating urls' do
-      click_button('data_manifest')
-      validate_url_manifest(@valid_url_manifest)
-
-      expect(page).to have_content('img.spinner')
-    end
   end
 
   describe 'S3 file uploading' do
@@ -300,14 +292,6 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
       )
       expect(page).to have_content('file_10.ods', count: 2)
     end
-
-    xit 'sanitizes file name' do
-      attach_file(
-        'data',
-        "#{Rails.root}/spec/fixtures/stash_engine/crazy*chars?are(crazy)", make_visible: { opacity: 1 }
-      )
-      expect(page).to have_content('crazy_chars_are(crazy)')
-    end
   end
 
   describe 'S3 file uploading mixed with already selected manifest files' do
@@ -335,11 +319,14 @@ RSpec.feature 'UploadFiles', type: :feature, js: true do
 
     it 'does not allow to select new FILES from file system with the same name of manifest FILES' do
       first(:button, 'Remove file').click
+      expect(page).to have_content('file_10.ods removed')
 
       build_valid_stub_request('http://example.org/file_10.ods')
       click_button('data_manifest')
       fill_in('location_urls', with: 'http://example.org/file_10.ods')
       click_on('validate_files')
+
+      expect(page).to have_content(/^\bfile_10.ods\b/, count: 1)
 
       attach_file(
         'data',

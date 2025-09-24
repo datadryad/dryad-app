@@ -1,0 +1,21 @@
+<% changes = pick_file_changes(@changes) %>
+<table class="c-lined-table" id="files_table_<%= @resource.id %>">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Timestamp</th>
+      <th style="width: 65%;">File changes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% changes.map do |c| %>
+      <tr>
+        <td><%= c.whodunnit.to_i.nonzero? ? "<a href=\"#{user_admin_profile_path(id: c.whodunnit)}\">#{c.user&.name}</a>".html_safe : 'System' %></td>
+        <td><%= formatted_datetime(c.created_at) %></td>
+        <td>
+          <%= display_change(c) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

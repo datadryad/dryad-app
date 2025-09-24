@@ -2,6 +2,7 @@ require 'stash/download/file_presigned'
 require 'http'
 
 module StashEngine
+  # rubocop:disable Metrics/ClassLength
   class DownloadsController < ApplicationController
     include ActionView::Helpers::DateHelper
     include StashEngine::LandingHelper
@@ -82,7 +83,8 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @resource.blank?
 
       redirect_to(app_404_path) if @resource.identifier.pub_state == 'withdrawn'
-      redirect_to_public if @resource.files_published?
+      redirect_to_public and return if @resource.files_published? &&
+      (@resource.identifier.has_accepted_manuscript? || @resource.identifier.publication_article_doi.present?)
     end
 
     # uses presigned
@@ -90,6 +92,12 @@ module StashEngine
       check_for_sharing
       data_file = DataFile.where(id: params[:file_id]).present_files.first
       if data_file&.resource&.may_download?(ui_user: current_user) || @sharing_link
+        response.set_header(
+          'Link',
+          "<#{file_linkset_url(id: data_file.id)}>; rel=\"linkset\"; type=\"application/linkset\",
+          <#{file_linkset_url(id: data_file.id)}.json>; rel=\"linkset\"; type=\"application/linkset+json\",
+          <#{show_url(id: data_file.resource.identifier_str)}> ; rel=\"collection\" ; type=\"text/html\""
+        )
         @file_presigned.download(file: data_file)
       else
         render status: 403, plain: 'You may not download this file.'
@@ -106,6 +114,20 @@ module StashEngine
       end
     end
 
+    def linkset
+      @file = DataFile.where(id: params[:file_id]).present_files.first
+      respond_to do |format|
+        format.html do
+          response.set_header('Content-Type', 'application/linkset')
+          render body: lset_linkset
+        end
+        format.json do
+          response.set_header('Content-Type', 'application/linkset+json')
+          render json: json_linkset
+        end
+      end
+    end
+
     # Downloads a zenodo file, by Resource Access Tokens presigned, maybe will need to do both RATs and public download.
     # Also may need to enable passing secret token for sharing access and right now we only supply Zenodo downloads for
     # private access, not to the general public which should go to Zenodo to examine the full info and downloads.
@@ -118,7 +140,7 @@ module StashEngine
       if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id) &&
           [StashEngine::SuppFile, StashEngine::SoftwareFile].include?(zen_upload.class)
         if res.zenodo_published?
-          redirect_to zen_upload.public_zenodo_download_url
+          redirect_to zen_upload.public_zenodo_download_url, allow_other_host: true
         else
           zen_presign = zen_upload.zenodo_presigned_url
           if zen_presign.nil?
@@ -149,6 +171,26 @@ module StashEngine
     end
 
     private
+
+    def lset_linkset
+      "<#{show_url(id: @file.resource.identifier_str)}>; rel=\"collection\" type=\"text/html\" anchor=\"#{download_stream_url(file_id: @file.id)}\",
+      <https://schema.org/DataDownload>; rel=\"type\" anchor=\"#{download_stream_url(file_id: @file.id)}\""
+    end
+
+    def json_linkset
+      {
+        linkset: [
+          anchor: download_stream_url(file_id: @file.id),
+          type: [{ href: 'https://schema.org/DataDownload' }],
+          collection: [
+            {
+              href: show_url(id: @file.resource.identifier_str),
+              type: 'text/html'
+            }
+          ]
+        ]
+      }
+    end
 
     def non_ajax_response_for_download
       @status_hash = @version_presigned.download
@@ -199,7 +241,7 @@ module StashEngine
     def redirect_to_public
       redirect_to(
         landing_show_path(id: @resource.identifier_str),
-        notice: 'This dataset is now published, please use the download button on the right side.'
+        notice: "This dataset is published. Please use #{@resource.identifier_uri}."
       )
     end
 
@@ -216,6 +258,6 @@ module StashEngine
       logger.warn(msg)
       ExceptionNotifier.notify_exception(Stash::Download::S3CustomError.new(msg))
     end
-
+    # rubocop:enable Metrics/ClassLength
   end
 end

@@ -10,9 +10,12 @@ PRODUCT_NAME_MAPPER = {
   dpc_fee: 'Datasets count fee',
   invoice_fee: 'Invoice fee',
   storage_fee: 'Large data fee',
+  storage_fee_overage: 'Large data fee overage',
   individual_storage_fee: 'Data Publishing Charge',
   total: 'Total',
   waiver_discount: 'Fee waiver discount',
+  ppr_fee: 'Private for Peer Review Fee',
+  ppr_discount: 'Paid Private for Peer Review Fee'
 }.freeze
 
 # New payment system error messages

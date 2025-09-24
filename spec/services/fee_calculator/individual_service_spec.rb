@@ -38,7 +38,33 @@ module FeeCalculator
           it { is_expected.to eq({ storage_fee: 1_750, total: 1_750 }) }
         end
 
-        it_behaves_like 'it has 1TB max limit based on options'
+        it_behaves_like 'it has 2 TB max limit based on options'
+      end
+
+      context 'with ppr fee' do
+        it 'has proper storage fee label' do
+          expect(described_class.new(options, resource: resource).call[:storage_fee_label]).to eq('Data Publishing Charge')
+        end
+
+        context 'without any configuration' do
+          let(:options) { { pay_ppr_fee: true } }
+
+          it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
+        end
+
+        context 'with storage_size at max limit' do
+          let(:options) { { pay_ppr_fee: true, storage_size: 100_000_000_000 } }
+
+          it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
+        end
+
+        context 'with storage_size as min limit' do
+          let(:options) { { pay_ppr_fee: true, storage_size: 100_000_000_001 } }
+
+          it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
+        end
+
+        it_behaves_like 'it has 2 TB max limit based on options', { pay_ppr_fee: true }
       end
 
       context 'with invoice fee' do
@@ -64,7 +90,7 @@ module FeeCalculator
           it { is_expected.to eq({ storage_fee: 1_750, invoice_fee: 199, total: 1949 }) }
         end
 
-        it_behaves_like 'it has 1TB max limit based on options', { generate_invoice: true }
+        it_behaves_like 'it has 2 TB max limit based on options', { generate_invoice: true }
       end
     end
 
@@ -97,7 +123,29 @@ module FeeCalculator
             it { is_expected.to eq({ storage_fee: 1_750, total: 1_750 }) }
           end
 
-          it_behaves_like 'it has 1TB max limit'
+          it_behaves_like 'it has 2 TB max limit'
+        end
+
+        context 'with ppr fee' do
+          let(:options) { { pay_ppr_fee: true } }
+
+          context 'without any configuration' do
+            it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
+          end
+
+          context 'with storage_size at max limit' do
+            let(:new_files_size) { 100_000_000_000 }
+
+            it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
+          end
+
+          context 'with storage_size as min limit' do
+            let(:new_files_size) { 100_000_000_001 }
+
+            it { is_expected.to eq({ ppr_fee: 50, total: 50 }) }
+          end
+
+          it_behaves_like 'it has 2 TB max limit'
         end
 
         context 'with invoice fee' do
@@ -119,7 +167,7 @@ module FeeCalculator
             it { is_expected.to eq({ storage_fee: 1_750, invoice_fee: 199, total: 1949 }) }
           end
 
-          it_behaves_like 'it has 1TB max limit'
+          it_behaves_like 'it has 2 TB max limit'
         end
       end
 
@@ -184,7 +232,7 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
         end
 
@@ -232,8 +280,28 @@ module FeeCalculator
               it { is_expected.to eq(no_charges_response) }
             end
 
-            it_behaves_like 'it has 1TB max limit'
+            it_behaves_like 'it has 2 TB max limit'
           end
+        end
+
+        context 'with ppr fee paid' do
+          let(:prev_files_size) { nil }
+          let(:coupon_id) { 'PPR_DISCOUNT_2025' }
+          let(:first_resource) { create(:resource, total_file_size: new_files_size, identifier: identifier, created_at: 2.minutes.ago) }
+          let!(:payment) { create(:resource_payment, resource: first_resource, ppr_fee_paid: true, amount: 50) }
+          let(:resource) { create(:resource, total_file_size: new_files_size, identifier: identifier) }
+
+          context 'when ppr continues' do
+            let(:options) { { pay_ppr_fee: true } }
+
+            it { is_expected.to eq({ coupon_id: coupon_id, ppr_fee: 50, ppr_discount: -50, total: 0 }) }
+          end
+
+          context 'when ppr is over' do
+            it { is_expected.to eq({ coupon_id: coupon_id, storage_fee: 150, ppr_discount: -50, total: 100 }) }
+          end
+
+          it_behaves_like 'it has 2 TB max limit'
         end
       end
     end

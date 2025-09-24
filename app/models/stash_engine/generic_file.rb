@@ -50,13 +50,8 @@ module StashEngine
     has_paper_trail
 
     belongs_to :resource, class_name: 'StashEngine::Resource'
-    has_one :frictionless_report, dependent: :destroy
-    has_one :sensitive_data_report, dependent: :destroy
-    amoeba do
-      include_association :frictionless_report
-      include_association :sensitive_data_report
-      propagate
-    end
+    has_one :frictionless_report_record, class_name: 'StashEngine::FrictionlessReport', dependent: :destroy
+    has_one :sensitive_data_report_record, class_name: 'StashEngine::SensitiveDataReport', dependent: :destroy
 
     scope :deleted_from_version, -> { where(file_state: :deleted) }
     scope :without_deleted_files, -> { where(file_deleted_at: nil) }
@@ -67,11 +62,8 @@ module StashEngine
     scope :with_filename, -> { where('download_filename IS NOT NULL') }
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
-    scope :validated_table, -> {
-                              present_files
-                                .where.not(download_filename: ['README.md', 'DisciplineSpecificMetadata.json'], type: StashEngine::DataFile)
-                                .validated.order(created_at: :desc)
-                            }
+    scope :uploaded, -> { where.not(download_filename: ['README.md', 'DisciplineSpecificMetadata.json'], type: StashEngine::DataFile) }
+    scope :validated_table, -> { present_files.uploaded.validated.order(download_filename: :asc) }
     scope :tabular_files, -> {
       present_files.where(upload_content_type: 'text/csv')
         .or(present_files.where('upload_file_name LIKE ?', '%.csv'))
@@ -89,6 +81,18 @@ module StashEngine
     }
     enum(:file_state, %w[created copied deleted].to_h { |i| [i.to_sym, i] })
     enum(:digest_type, %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] })
+
+    def frictionless_report
+      return frictionless_report_record if file_state == 'created'
+
+      original_deposit_file&.frictionless_report_record
+    end
+
+    def sensitive_data_report
+      return sensitive_data_report_record if file_state == 'created'
+
+      original_deposit_file&.sensitive_data_report_record
+    end
 
     # display the correct error message based on the url status code
     def error_message
@@ -120,6 +124,22 @@ module StashEngine
 
     def digest?
       !digest.blank? && !digest_type.nil?
+    end
+
+    # The first "created" file of the same name before this one if this one isn't created.
+    # In an ideal world, this would have an exact correspondence to where the item is stored in S3, but we don't live in that world.
+    def original_deposit_file
+      return nil if file_state == 'deleted' # no current file to have a path for
+
+      return self if file_state == 'created' # if this is the first created file, it's the original deposit file
+
+      resources = resource.identifier.resources.joins(:current_resource_state)
+        .where(current_resource_state: { resource_state: 'submitted' })
+        .where('stash_engine_resources.id < ?', resource.id)
+
+      # this gets the last time this file was in a previous version in the "created" state ie. the last creation
+      self.class.where(resource_id: resources.pluck(:id), upload_file_name: upload_file_name,
+                       file_state: 'created').order(id: :desc).first
     end
 
     # returns the latest version number in which this filename was created
@@ -166,8 +186,10 @@ module StashEngine
 
       # now add delete actions for all files with same previous filenames, could be more than 1 possibly with different cases
       prev_files.each do |prev_file|
-        self.class.create(download_filename: prev_file[:download_filename], upload_content_type: prev_file[:upload_content_type],
-                          resource_id: resource_id, file_state: 'deleted')
+        self.class.create(
+          download_filename: prev_file[:download_filename], upload_file_name: prev_file[:upload_file_name],
+          upload_content_type: prev_file[:upload_content_type], resource_id: resource_id, file_state: 'deleted'
+        )
       end
 
       resource.reload
@@ -246,14 +268,14 @@ module StashEngine
     end
 
     def uploaded_success_url
-      dl_url = s3_staged_presigned_url if !digest? && storage_version_id.blank?
+      dl_url = s3_staged_presigned_url if file_state == 'created' && storage_version_id.blank?
       dl_url ||= public_download_url
       dl_url ||= url
       dl_url
     end
 
     def uploaded
-      return Stash::Aws::S3.new.exists?(s3_key: s3_staged_path) if !digest? && storage_version_id.blank? && s3_staged_path
+      return Stash::Aws::S3.new.exists?(s3_key: s3_staged_path) if file_state == 'created' && url.blank? && s3_staged_path
 
       uploaded_success_url.present?
     end

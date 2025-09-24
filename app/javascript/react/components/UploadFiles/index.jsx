@@ -6,6 +6,7 @@ export {default as FilesPreview} from './FilesPreview';
 
 export const filesCheck = (resource, superuser, maximums) => {
   const {generic_files: files, identifier: {publication_date, new_upload_size_limit}} = resource;
+  const pub_date = new Date(publication_date);
   const {
     files: maxFiles, zenodo_size: maxZenodo, merritt_size: oldSize, upload_size: maxSize,
   } = maximums;
@@ -19,7 +20,7 @@ export const filesCheck = (resource, superuser, maximums) => {
         <p className="error-text" id="data_error">Data files submitted to Dryad are required</p>
       );
     }
-    if (!publication_date || publication_date > new Date('2025-03-12')) {
+    if (!publication_date || pub_date > new Date('2025-03-12')) {
       if (data.length > maxFiles) {
         return (
           <p className="error-text" id="data_error">
@@ -28,26 +29,26 @@ export const filesCheck = (resource, superuser, maximums) => {
           </p>
         );
       }
-      if (software.length > maxFiles) {
-        return (
-          <p className="error-text" id="software_error">
-          A maximum of {maxFiles} software files can be uploaded per dataset.
-          To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
-          </p>
-        );
-      }
-      if (supp.length > maxFiles) {
-        return (
-          <p className="error-text" id="supp_error">
-          A maximum of {maxFiles} supplemental files can be uploaded per dataset.
-          To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
-          </p>
-        );
-      }
     } else if (files.length > 1000) {
       return (
         <p className="error-text" id="data_error">
         A maximum of 1000 files can be uploaded per dataset.
+        To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
+        </p>
+      );
+    }
+    if (software.length > maxFiles) {
+      return (
+        <p className="error-text" id="software_error">
+        A maximum of {maxFiles} software files can be uploaded per dataset.
+        To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
+        </p>
+      );
+    }
+    if (supp.length > maxFiles) {
+      return (
+        <p className="error-text" id="supp_error">
+        A maximum of {maxFiles} supplemental files can be uploaded per dataset.
         To reduce the number, package (.zip, .tar.gz) related files locally, remove the individual files from this dataset, and upload the packages.
         </p>
       );

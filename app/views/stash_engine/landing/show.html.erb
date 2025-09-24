@@ -1,6 +1,8 @@
-<% @page_title = "Data -- #{@resource.clean_title}" %>
+<% @page_title = "Data: #{@resource.clean_title.html_safe}" %>
 <!-- Track View for COUNTER and new DataCite metrics widget -->
-
+<% content_for(:head) do %>
+<link rel="linkset" type="application/linkset" href="<%= linkset_url(id: @resource.identifier_str) %>">
+<link rel="linkset" type="application/linkset+json" href="<%= linkset_url(id: @resource.identifier_str) %>.json">
 <script data-autotrack="false" src="https://cdn.jsdelivr.net/npm/@datacite/datacite-tracker"></script>
 <script>
 	const { trackMetric } = DataCiteTracker.Tracker({
@@ -27,6 +29,7 @@
 		});
 	});
 </script>
+<% end %>
 <% if @user_type == 'privileged' %>
   <%= render(partial: 'privileged_banner') %>
   <% if @resource&.identifier&.pub_state != 'published'%>
@@ -53,14 +56,3 @@
 <% unless @invitations.blank? %>
   <%= render partial: 'orcid_invite', locals: {identifier_id: id.id} %>
 <% end %>
-
-<script type="text/javascript">
-  document.querySelectorAll('.t-landing__text-wall a').forEach((link) => {
-    const span = document.createElement('i')
-    span.classList.add('fas', 'fa-arrow-up-right-from-square', 'exit-icon')
-    span.setAttribute('aria-label', ' (opens in new window)')
-    span.setAttribute('role', 'img')
-    link.appendChild(span)
-    link.setAttribute('target', '_blank')
-  });
-</script>

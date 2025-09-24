@@ -4,6 +4,7 @@ module StashApi
   RSpec.describe DatasetParser do
     include Mocks::Datacite
     include Mocks::Salesforce
+    let!(:skip_parse) { false }
 
     before(:each) do
       mock_datacite!
@@ -61,11 +62,10 @@ module StashApi
       }.with_indifferent_access
 
       dp = DatasetParser.new(hash: @basic_metadata, id: nil, user: @user)
-      @stash_identifier = dp.parse
+      @stash_identifier = dp.parse unless skip_parse
     end
 
     describe :parses_basics do
-
       it 'creates a stash_engine_identifier' do
         expect(@stash_identifier.identifier).to match(%r{10.5072/dryad\..{8}})
       end
@@ -243,10 +243,11 @@ module StashApi
         expect(@stash_identifier.payment_type).to eq('stripe')
       end
 
-      context 'validates owner email' do
+      context 'validates authors email' do
+        let(:skip_parse) { true }
+
         context 'with triggerSubmitInvitation set to true' do
           it 'raises error if email is missing' do
-            @user.update(email: nil)
             test_metadata = {
               'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
               'authors' => [{
@@ -263,17 +264,21 @@ module StashApi
 
             expect { dp.parse }.to raise_error(
               StashApi::Error::BadRequestError,
-              'Dataset owner does not have an email address in order to send the Submission email.'
+              'None of the authors have an email address in order to send the Submission email.'
             )
           end
 
-          it 'returns error if owner email is missing' do
+          it 'does not raise error if author email is present' do
             test_metadata = {
               'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
               'authors' => [{
                 'firstName' => 'Wanda',
                 'lastName' => 'Jackson',
                 'email' => ''
+              }, {
+                'firstName' => 'Wanda2',
+                'lastName' => 'Jackson2',
+                'email' => 'some@email.com'
               }],
               'abstract' => 'Cyberneticists agree that concurrent models are fun.',
               'userId' => 'BOGUS-junk',
@@ -284,14 +289,29 @@ module StashApi
 
             expect { dp.parse }.not_to raise_error(
               StashApi::Error::BadRequestError,
-              'Dataset owner does not have an email address in order to send the Submission email.'
+              'None of the authors have an email address in order to send the Submission email.'
+            )
+          end
+
+          it 'does not fail if there are no authors' do
+            test_metadata = {
+              'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
+              'abstract' => 'Cyberneticists agree that concurrent models are fun.',
+              'userId' => 'BOGUS-junk',
+              'triggerSubmitInvitation' => 'true'
+            }.with_indifferent_access
+
+            dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
+
+            expect { dp.parse }.to raise_error(
+              StashApi::Error::BadRequestError,
+              'None of the authors have an email address in order to send the Submission email.'
             )
           end
         end
 
         context 'with triggerSubmitInvitation set to false' do
           it 'does not raise error if email is missing' do
-            @user.update(email: nil)
             test_metadata = {
               'title' => 'Visualizing Congestion Control Using Self-Learning Epistemologies',
               'authors' => [{
@@ -308,7 +328,7 @@ module StashApi
 
             expect { dp.parse }.not_to raise_error(
               StashApi::Error::BadRequestError,
-              'Dataset owner does not have an email address in order to send the Submission email.'
+              'None of the authors have an email address in order to send the Submission email.'
             )
           end
         end
@@ -360,9 +380,12 @@ module StashApi
         }.with_indifferent_access
 
         dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
-        test_identifier = dp.parse
-        resource = test_identifier.resources.first
-        expect(resource.submitter.first_name).to eq('Wanda')
+        expect do
+          test_identifier = dp.parse
+          resource = test_identifier.resources.first
+          expect(resource.submitter.first_name).to eq('Wanda')
+          expect(resource.submitter.tenant_id).to eq('dryad')
+        end.to change(StashEngine::User, :count).by(1)
       end
 
       it 'defaults ownership to the submitter when the userId is invalid' do

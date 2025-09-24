@@ -18,7 +18,8 @@ class ApplicationMailer < ActionMailer::Base
 
   def assign_variables(resource)
     @resource = resource
-    @user = resource.owner_author || resource.submitter
+    @title = resource.title&.strip_tags
+    @user = resource.submitter || resource.owner_author
     @user_name = user_name(@user)
     @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
     @bcc_emails = APP_CONFIG['submission_bc_emails'] || [@helpdesk_email]
@@ -29,22 +30,17 @@ class ApplicationMailer < ActionMailer::Base
   def update_activities(resource:, message:, status:, journal: false)
     recipient = journal ? 'journal' : 'author'
     note = "#{message} notification sent to #{recipient}"
-    StashEngine::CurationActivity.create(
+    CurationService.new(
       resource: resource,
       user_id: 0, # system user
       note: note,
       status: status
-    )
+    ).process
   end
 
   def rails_env
     return "[#{Rails.env}] " unless Rails.env.include?('production')
 
     ''
-  end
-
-  def address_list(addresses)
-    addresses = [addresses] unless addresses.respond_to?(:join)
-    addresses.flatten.reject(&:blank?).join(',')
   end
 end

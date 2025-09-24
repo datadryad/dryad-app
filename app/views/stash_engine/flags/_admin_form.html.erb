@@ -1,0 +1,12 @@
+<%= fields_for :flag_attributes do |flagform| %>
+  <%= flagform.hidden_field :id, value: record.flag&.id %>
+  <%= flagform.hidden_field :_destroy, value: record.flag&.id.nil?  %>
+  <span>
+    <%= flagform.check_box :flag, { checked: record.flag.present? }, 1, nil %>
+    <%= flagform.label :flag, "Flag", class: 'c-input__label' %>
+  </span>
+  <span class="o-admin-form-pair" style="flex: 1">
+    <%= flagform.label :note, 'Flag note:' %>
+    <%= flagform.text_field :note, value: record.flag&.note, class: 'c-input__text', style: 'flex: 1', disabled: record.flag.nil? %>
+  </span>
+<% end %>

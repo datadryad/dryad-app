@@ -2,11 +2,11 @@ module StashEngine
   class RepoQueueStatePolicy < ApplicationPolicy
 
     def index?
-      @user.superuser?
+      @user.min_manager?
     end
 
     def refresh_table?
-      @user.superuser?
+      @user.min_manager?
     end
 
     def graceful_start?

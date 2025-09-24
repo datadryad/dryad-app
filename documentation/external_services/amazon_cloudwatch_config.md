@@ -3,7 +3,8 @@ Set up Amazon AWS CloudWatch Agent
 
 AWS CloudWatch Agent is installed on all servers and is used for:
 - Serving metrics related to disk usage.
-- Stream log files to Cloudwatch
+- Stream log files to Cloudwatch.
+- Attach SSMInstanceProfile (or a role with the required policies) to your EC2 instance.
 
 To install the agent, follow the steps below:
 -----------------------------
@@ -84,13 +85,6 @@ sudo vim etc/amazon-cloudwatch-agent.d/logs_config.json
             "log_group_name": "production-others",
             "log_stream_name": "{ip_address}_{instance_id}",
             "retention_in_days": 30
-          },
-          {
-            "file_path": "/home/ec2-user/deploy/current/log/check_puma.log",
-            "log_group_class": "STANDARD",
-            "log_group_name": "production-puma",
-            "log_stream_name": "{ip_address}_{instance_id}",
-            "retention_in_days": 90
           }
         ]
       }
@@ -118,7 +112,7 @@ and create the `crons/`folder and run the following command
 cd ~/deploy/current/log/
 mkdir crons
 cd crons
-ln -s ../!(production.log*|api_requests.log|crons|check_puma.log) ./
+ln -s ../!(production.log*|api_requests.log|crons) ./
 ```
   
 Start and enable the service
@@ -126,10 +120,12 @@ Start and enable the service
 
 Change ownership to files. The service will run as `cwagent` user.
 ```
+cd /opt/aws/amazon-cloudwatch-agent/
 sudo chown cwagent:cwagent -R etc
 sudo chown cwagent:cwagent -R logs
 sudo chown cwagent:cwagent -R var
 
+sudo systemctl enable amazon-cloudwatch-agent
 sudo systemctl restart amazon-cloudwatch-agent
 ```
 

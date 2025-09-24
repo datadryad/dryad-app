@@ -9,7 +9,7 @@ module StashEngine
     end
 
     def edit?
-      @user.system_admin?
+      @user.min_manager?
     end
 
     def update?
@@ -17,7 +17,7 @@ module StashEngine
     end
 
     def create?
-      @user.superuser?
+      @user.min_manager?
     end
 
     def new?

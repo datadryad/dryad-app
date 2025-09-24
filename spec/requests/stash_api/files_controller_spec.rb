@@ -13,6 +13,7 @@ module StashApi
     include Mocks::Salesforce
     include Mocks::Stripe
     include Mocks::UrlUpload
+    include Mocks::Datacite
 
     # set up some versions with different curation statuses (visibility)
     before(:each) do
@@ -22,8 +23,10 @@ module StashApi
       setup_access_token(doorkeeper_application: @doorkeeper_application)
 
       neuter_curation_callbacks!
+      mock_solr!
       mock_aws!
       mock_salesforce!
+      mock_datacite!
 
       Timecop.travel(Time.now.utc - 1.hour)
       @user1 = create(:user)
@@ -34,7 +37,7 @@ module StashApi
 
       @curation_activities = [[create(:curation_activity, resource: @resources[0], status: 'in_progress'),
                                create(:curation_activity, resource: @resources[0], status: 'curation'),
-                               create(:curation_activity, resource: @resources[0], status: 'published')]]
+                               CurationService.new(user: @user, resource: @resources[0], status: 'published').process]]
 
       @curation_activities << [create(:curation_activity, resource: @resources[1], status: 'in_progress')]
 

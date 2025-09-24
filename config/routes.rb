@@ -89,8 +89,6 @@ Rails.application.routes.draw do
     # supporting both POST and PUT for updating the file to ensure as many clients as possible can use this end point
     match '/datasets/:id/files/:filename', to: 'files#update', as: 'dataset_file', constraints: { id: %r{[^\s/]+?}, filename: %r{[^\s/]+?} }, format: false, via: %i[post put]
 
-    resources :users, path: '/users', only: %i[index show]
-
     get '/queue_length', to: 'submission_queue#length'
   end
 
@@ -173,9 +171,11 @@ Rails.application.routes.draw do
     get 'downloads/file_stream/:file_id', to: 'downloads#file_stream', as: 'download_stream'
     get 'downloads/zenodo_file/:file_id', to: 'downloads#zenodo_file', as: 'download_zenodo'
     get 'downloads/pre_submit/:file_id', to: 'downloads#presubmit_file_stream', as: 'download_presubmit'
+    get 'downloads/:file_id/linkset', to: 'downloads#linkset', as: 'file_linkset'
     get 'data_file/preview_check/:file_id', to: 'downloads#preview_check', as: 'preview_check'
     get 'data_file/preview/:file_id', to: 'downloads#preview_file', as: 'preview_file'
-    get 'share/:id', to: 'downloads#share', as: 'share'
+    get 'share/:id', to: 'downloads#share'
+    get 'share/LINK_NOT_FOR_PUBLICATION/:id', to: 'downloads#share', as: 'share'
     get 'downloads/assembly_status/:id', to: 'downloads#assembly_status', as: 'download_assembly_status'
 
     get 'edit/:doi/:edit_code', to: 'metadata_entry_pages#edit_by_doi', as: 'edit', constraints: { doi: /\S+/ }
@@ -204,9 +204,11 @@ Rails.application.routes.draw do
     get 'sessions/choose_login', to: 'sessions#choose_login', as: 'choose_login'
     get 'sessions/choose_sso', to: 'sessions#choose_sso', as: 'choose_sso'
     get 'sessions/:tenant_id/email', to: 'sessions#email_sso', as: 'email_sso'
+    post 'sessions/email_code', to: 'sessions#validate_sso_email', as: 'validate_sso_email'
     match 'sessions/no_partner', to: 'sessions#no_partner', as: 'no_partner', via: [:get, :post]
     post 'sessions/sso', to: 'sessions#sso', as: 'sso'
-    post 'sessions/email_code', to: 'sessions#validate_email', as: 'validate_email'
+    get 'sessions/email_validate', to: 'sessions#email_validate', as: 'email_validate'
+    post 'sessions/validate_email', to: 'sessions#validate_email', as: 'validate_email'
     get 'feedback', to: 'sessions#feedback', as: 'feedback'
     post 'feedback_signup', to: 'sessions#feedback_signup', as: 'feedback_signup'
     post 'helpdesk', to: 'pages#helpdesk', as: 'contact_helpdesk'
@@ -247,6 +249,7 @@ Rails.application.routes.draw do
 
     # redirect the urls with an encoded forward slash in the identifier to a URL that DataCite expects for matching their tracker
     # All our identifiers seem to have either /dryad or /FK2 or /[A-Z]\d in them, replaces the first occurrence of %2F with /
+    get 'dataset/*id/linkset', to: 'landing#linkset', as: 'linkset', constraints: { id: /\S+/ }
     get 'dataset/*id', to: redirect{ |params| "/dataset/#{params[:id].sub('%2F', '/') }"}, status: 302,
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
@@ -309,6 +312,9 @@ Rails.application.routes.draw do
     # activity log
     get 'ds_admin/:id', to: 'admin_datasets#index', as: 'activity_log'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity'
+    get 'ds_admin/:id/change_log', to: 'admin_datasets#change_log', as: 'change_log'
+    get 'ds_admin/:id/file_log', to: 'admin_datasets#file_log', as: 'file_log'
+    get 'ds_admin/:id/payment_log', to: 'admin_datasets#payment_log', as: 'payment_log'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
     post 'ds_admin/:id/notification_date', to: 'admin_datasets#notification_date', as: 'notification_date'    
@@ -344,6 +350,7 @@ Rails.application.routes.draw do
 
     # Publication updater page - Allows admins to accept/reject metadata changes from external sources like Crrossref
     get 'publication_updater', to: 'publication_updater#index'
+    get 'publication_updater/log', to: 'publication_updater#log'
     put 'publication_updater/:id', to: 'publication_updater#update'
     delete 'publication_updater/:id', to: 'publication_updater#destroy'
 
@@ -403,7 +410,7 @@ Rails.application.routes.draw do
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
-    get 'contributors/groupings', to: 'contributors#groupings'
+    post 'contributors/grouping', to: 'contributors#grouping'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
     patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'

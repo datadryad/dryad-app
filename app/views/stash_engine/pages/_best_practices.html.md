@@ -107,7 +107,7 @@ If you wish to create a README using your preferred markdown editor, we provide 
 
 ### Details *not* to include: 
 
-* Author names, or any other potentially identifying information, if the data is being submitted to a journal with a double-blind review process in place
+* Author names, or any other potentially identifying information, if the data is being submitted to a journal with a double-anonymous review process in place
 
 
 Ready to get started? [Log in](/sessions/choose_login) and go to the "My datasets" to begin your data submission now!
@@ -127,9 +127,9 @@ Ready to get started? [Log in](/sessions/choose_login) and go to the "My dataset
 ### Additional resources
 
 * Institutional data librarians are an outstanding resource. Check with your university library's data management services team.
-* <a href="https://data.research.cornell.edu/content/readme" target="_blank">Cornell University Research Data Management Service Group's Guide to writing "readme" style metadata<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
-* <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/" target="_blank">Why Dryad uses Creative Commons Zero<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
-* <a href="https://dataoneorg.github.io/Education/bestpractices/" target="_blank">DataONE Primer on Data Management Best Practices<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
-* <a href="https://blogs.lse.ac.uk/impactofsocialsciences/2015/02/09/data-versioning-open-science/" target="_blank">Introduction to Open Science: Why data versioning and data care practices are key for science and social science<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
-* <a href="https://www.force11.org/group/fairgroup/fairprinciples" target="_blank">Making data Findable, Accessible, Interoperable, and Reusable (FAIR)<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
-* <a href="https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989" target="_blank">Data organization in spreadsheets<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
+* <a href="https://data.research.cornell.edu/content/readme" target="_blank" rel="noreferrer">Cornell University Research Data Management Service Group's Guide to writing "readme" style metadata<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
+* <a href="https://blog.datadryad.org/2011/10/05/why-does-dryad-use-cc0/" target="_blank" rel="noreferrer">Why Dryad uses Creative Commons Zero<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
+* <a href="https://dataoneorg.github.io/Education/bestpractices/" target="_blank" rel="noreferrer">DataONE Primer on Data Management Best Practices<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
+* <a href="https://blogs.lse.ac.uk/impactofsocialsciences/2015/02/09/data-versioning-open-science/" target="_blank" rel="noreferrer">Introduction to Open Science: Why data versioning and data care practices are key for science and social science<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
+* <a href="https://www.force11.org/group/fairgroup/fairprinciples" target="_blank" rel="noreferrer">Making data Findable, Accessible, Interoperable, and Reusable (FAIR)<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
+* <a href="https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989" target="_blank" rel="noreferrer">Data organization in spreadsheets<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>

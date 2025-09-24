@@ -176,16 +176,22 @@ module Stash
         end
 
         # Transfer the contents of a single JSON record to the database
-        # rubocop:disable Metrics/AbcSize
+        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         def process_ror_record(record)
           return nil unless record.present? && record.is_a?(Hash) && record['id'].present?
 
           acronyms = []
           aliases = []
+          children = []
           record.fetch('names', []).each do |n|
             acronyms.push(n['value']) if n['types'].include?('acronym')
             aliases.push(n['value']) if n['types'].include?('alias')
             aliases.push(n['value']) if n['types'].include?('label') && !n['types'].include?('ror_display')
+          end
+          record.fetch('relationships', []).each do |rel|
+            next unless rel['type'] == 'child'
+
+            children.push({ contributor_name: rel['label'], identifier_type: 'ror', name_identifier_id: rel['id'] })
           end
           ror_display = record.fetch('names', []).find { |n| n['types'].include?('ror_display') } || {}
           website_link = record.fetch('links', []).find { |l| l['type'] == 'website' } || {}
@@ -199,12 +205,21 @@ module Stash
           ror_org.aliases = aliases
           ror_org.isni_ids = isni_ids.fetch('all', [])
           ror_org.save
+
+          unless children.empty?
+            grouping = StashDatacite::ContributorGrouping.find_or_create_by(name_identifier_id: record['id'])
+            grouping.contributor_name = ror_org.name
+            grouping.identifier_type = 'ror'
+            grouping.group_label = grouping.group_label.presence || 'Child institutions'
+            grouping.json_contains = children
+            grouping.save
+          end
           true
         rescue StandardError => e
           puts('Error processing record', e)
           false
         end
-        # rubocop:enable Metrics/AbcSize
+        # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
         def safe_string(value:)
           return value if value.blank? || value.length < 190

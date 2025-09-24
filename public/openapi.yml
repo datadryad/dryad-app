@@ -35,7 +35,7 @@ info:
 
     ## Submission
 
-    The Submission API is used by institutions that partner closely with Dryad, and use systems to create dataset submissions directly. Please contact us if you are [interested in partnering with Dryad](/contact#get-involved), and setting up an API account for submission.
+    The Submission API is used by organizations that partner closely with Dryad, and use systems to create dataset submissions directly. Please contact us if you are [interested in partnering with Dryad](/contact#get-involved), and setting up an API account for submission.
 
     The <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/submission.md" target="blank">API submission examples document<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> gives concrete examples of submission through the Dryad API.
 
@@ -162,22 +162,12 @@ paths:
             schema:
               allOf:
                 - $ref: '#/components/schemas/dc_metadata'
-                - properties:
-                    userId:
-                      type: integer
-                    skipDataciteUpdate:
-                      type: boolean
-                    skipEmails: 
-                      type: boolean
-                    preserveCurationStatus:
-                      type: boolean
-                    triggerSubmitInvitation:
-                      type: boolean
-                    loosenValidation:
-                      type: boolean
+                - $ref: '#/components/schemas/admin_values'
             examples:
               Post:
                 $ref: api/v2/docs/examples/dataset_post_request.json
+              Include journal information:
+                $ref: api/v2/docs/examples/dataset_post_request_jr.json
               Set no funding:
                 $ref: api/v2/docs/examples/dataset_post_request_nf.json
               Include HSI statement:
@@ -192,6 +182,8 @@ paths:
               examples:
                 Success:
                   $ref: api/v2/docs/examples/dataset_post_response.json
+                With journal:
+                  $ref: api/v2/docs/examples/dataset_post_response_jr.json
                 Without funding:
                   $ref: api/v2/docs/examples/dataset_post_response_nf.json
                 With HSI statement:
@@ -245,7 +237,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/dc_metadata'
+              allOf:
+                - $ref: '#/components/schemas/dc_metadata'
+                - properties:
+                    identifier:
+                      type: string
+                      description: The Dryad dataset DOI
+                - $ref: '#/components/schemas/admin_values'
             examples:
               success:
                 $ref: api/v2/docs/examples/dataset_post_request.json
@@ -298,8 +296,12 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          description: 'Your dataset cannot be updated now'
-          $ref: '#/components/content/Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                error: 'Your dataset cannot be updated now'
         '400':
           $ref: '#/components/responses/BadRequest'
 
@@ -427,8 +429,12 @@ paths:
                 type: string
                 format: binary
         '404':
-          description: 'not found'
-          $ref: '#/components/content/Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                error: 'not found'
         '401':
           $ref: '#/components/responses/Unauthorized'
 
@@ -481,8 +487,12 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          description: This file must be part of an an in-progress version.
-          $ref: '#/components/content/Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                error: This file must be part of an an in-progress version.
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -603,8 +613,7 @@ paths:
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
-          description: unauthorized
-          $ref: '#/components/content/Error'
+          $ref: '#/components/responses/unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
     put:
@@ -626,8 +635,7 @@ paths:
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
-          description: unauthorized
-          $ref: '#/components/content/Error'
+          $ref: '#/components/responses/unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -651,8 +659,7 @@ paths:
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
-          description: unauthorized
-          $ref: '#/components/content/Error'
+          $ref: '#/components/responses/unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -675,8 +682,7 @@ paths:
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
-          description: unauthorized
-          $ref: '#/components/content/Error'
+          $ref: '#/components/responses/unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -707,8 +713,7 @@ paths:
         '406':
           $ref: '#/components/responses/Unacceptable'
         '401':
-          description: unauthorized
-          $ref: '#/components/content/Error'
+          $ref: '#/components/responses/unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -751,11 +756,19 @@ paths:
         '406':
           $ref: '#/components/responses/Unacceptable'
         '500':
-          description: Unable to render report file.
-          $ref: '#/components/content/Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                error: Unable to render report file.
         '404':
-          description: Could not find requested report {name}.
-          $ref: '#/components/content/Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                error: Could not find requested report {name}.
 
   # --- search ---
   /search:
@@ -842,11 +855,12 @@ paths:
                 success:
                   $ref: api/v2/docs/examples/datasets.json
         '400':
-          description:
-            Dryad encountered an error parsing the query options for the search.
-            The most likely cause of this problem is an improperly-formatted timestamp
-            for the `modifiedSince` parameter.
-          $ref: '#/components/content/Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                error: Dryad encountered an error parsing the query options for the search. The most likely cause of this problem is an improperly-formatted timestamp for the `modifiedSince` parameter.
 
 # ------------------
 # --- components ---
@@ -856,34 +870,52 @@ components:
   responses:
 
     Unacceptable:
-      description: "406 - unacceptable: please set your `Content-Type` or `Accept` headers for application/json. `Accept` header is optional if you are using `Content-Type: application/json`."
-      $ref: '#/components/content/Error'
-
-    BadRequest:
-      description: "400 - Bad Request"
-      $ref: '#/components/content/Error'
-
-    NotFound:
-      description: 'Not Found'
-      $ref: '#/components/content/Error'
-
-    Unauthorized:
-      description: 'Unauthorized, must have current bearer token.'
-      $ref: '#/components/content/Error'
-
-    UnprocessableEntity:
-      description: "422 - Unprocessable Content: the server understood the content type of the request,
-        and the syntax of the request content was correct, but it was unable to process the contained instructions.
-        \n\n
-        Example: _A dataset with same information already exists._"
-      $ref: '#/components/content/Error'
-
-  content:
-    Error:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          example: 
+            error: "406 - unacceptable: please set your `Content-Type` or `Accept` headers for application/json. `Accept` header is optional if you are using `Content-Type: application/json`."
+
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example: 
+            error: "400 - Bad Request"
+
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example: 
+            error: 'Not Found'
+
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example: 
+            error: Unauthorized, must have current bearer token.
+
+    unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example: 
+            error: unauthorized
+
+    UnprocessableEntity:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example: 
+            error: "422 - Unprocessable Content: the server understood the content type of the request, and the syntax of the request content was correct, but it was unable to process the contained instructions.\n\nExample: _A dataset with same information already exists._"
 
   schemas:
     # --- root ---
@@ -944,6 +976,19 @@ components:
               type: string
         - $ref: '#/components/schemas/version'
         - $ref: '#/components/schemas/dataset_links'
+        - properties:
+            metrics: 
+              type: object
+              properties:
+                views:
+                  type: integer
+                downloads:
+                  type: integer
+                citations:
+                  type: integer
+            license:
+              type: string
+              description: 'The license of the dataset'
 
     dataset_links:
       properties:
@@ -1204,6 +1249,48 @@ components:
         - title
         - authors
         - abstract
+
+    admin_values:
+      properties:
+        userId:
+          type: string
+          description: The Dryad user ID, or ORCID iD, of the user who will submit the dataset. If this is unknown, the userId must be set to `0` to allow for an invitation link.
+        publicationISSN:
+          type: string
+          description: An ISSN for the associated journal
+        publicationName:
+          type: string
+          description: The title of the associated journal
+        manuscriptNumber:
+          type: string
+          description: The internal manuscript number assigned to an associated article before publication
+        skipEmails: 
+          type: boolean
+          default: false
+          description: Administrator value. Prevents emails being sent automatically.
+        triggerSubmitInvitation:
+          type: boolean
+          default: false
+          description: Administrator value. Sends an editing invitation email to the first author.
+        preserveCurationStatus:
+          type: boolean
+          default: false
+          description: Administrator value. Prevents automatic curation status changes.
+        holdForPeerReview:
+          type: boolean
+          default: false
+          description: Administrator value. Sets whether the submission will be sent to curation or a peer review hold status. 
+        loosenValidation:
+          type: boolean
+          default: false
+          description: For superusers only.
+        skipDataciteUpdate:
+          type: boolean
+          default: false
+          description: For superusers only.
+        invoiceId:
+          type: string
+          description: For superusers only.
 
     author:
       properties:
