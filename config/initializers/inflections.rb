@@ -22,4 +22,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "NIH"
   inflect.acronym "XML"
   inflect.acronym "GREI"
+  inflect.acronym "NSF"
 end
