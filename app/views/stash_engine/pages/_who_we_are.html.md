@@ -17,7 +17,7 @@
 ## Get to know Dryad
 <h3 class="expand-button"><button id="our-partners" aria-expanded="false" aria-controls="our-partners-sec">Our partners</button></h3>
 <div class="about-page" id="our-partners-sec" hidden>
-<p>Dryad partners are part of a global non-profit community working together to promote data curation, publication, and preservation across all scientific disciplines. Partners sponsor the cost of Dryad services for affiliated researchers at a reduced rate, and receive access to our administrative dashboard, as well as support, training, and outreach. Partnership is open to all organizations, including institutions, publishers, academic societies, and others. <a href="/join_us">Learn more about partnering with Dryad.</a>.</p>
+<p>Dryad partners are part of a global non-profit community working together to promote data curation, publication, and preservation across all scientific disciplines. Partners sponsor the cost of Dryad services for affiliated researchers at a reduced rate, and receive access to our administrative dashboard, as well as support, training, and outreach. Partnership is open to all organizations, including institutions, publishers, academic societies, and others. <a href="/join_us">Learn more about partnering with Dryad</a>.</p>
 <p>We’re enormously proud of our current partnerships, which include the following organizations:</p>
 <h4>Academic and research institutions</h4>
   <%= render "members_institutional" %>
