@@ -103,6 +103,14 @@ module StashEngine
       respond_to(&:js)
     end
 
+    def payment_log
+      @identifier = Identifier.find(params[:id])
+      payments = @identifier.payments.where.not(status: 'created', pay_with_invoice: false)
+      sponsors = @identifier.versions.where("json_contains_path(`object_changes`, 'all', '$.payment_id')")
+      @logs = (payments + sponsors).sort_by { |log| log.has_attribute?(:updated_at) ? log.updated_at : log.created_at }
+      respond_to(&:js)
+    end
+
     def notification_date
       authorize %i[stash_engine admin_datasets]
       notification_date = params[:notification_date].to_datetime

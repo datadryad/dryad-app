@@ -161,6 +161,13 @@ module StashEngine
       end
     end
 
+    def display_authorization_failure
+      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user IDs are #{resource.users&.map(&:id)&.join(', ')} but " \
+                        "current user is #{current_user.id || 'nil'}")
+      flash[:alert] = 'This submission is being edited by another user.'
+      redirect_back(fallback_location: choose_dashboard_path)
+    end
+
   end
 end
 # rubocop:enable Metrics/ModuleLength, Metrics/AbcSize
