@@ -1,0 +1,66 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=123456&retmode=xml
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - eutils.ncbi.nlm.nih.gov
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 24 Sep 2025 07:44:13 GMT
+      Server:
+      - Finatra
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Content-Security-Policy:
+      - upgrade-insecure-requests
+      Referrer-Policy:
+      - origin-when-cross-origin
+      Ncbi-Sid:
+      - 29FA6A93B482905B_B5A1SID
+      Ncbi-Phid:
+      - 1D32160038F8F17500005B3E9B64F9F1.1.1.m_4
+      Content-Type:
+      - text/xml; charset=UTF-8
+      Cache-Control:
+      - private
+      X-Ratelimit-Limit:
+      - '3'
+      X-Ratelimit-Remaining:
+      - '2'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Expose-Headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      Set-Cookie:
+      - ncbi_sid=29FA6A93B482905B_B5A1SID; domain=.nih.gov; path=/; expires=Thu, 24
+        Sep 2026 07:44:13 GMT
+      X-Ua-Compatible:
+      - IE=Edge
+      X-Xss-Protection:
+      - 1; mode=block
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        <?xml version="1.0" ?>
+        <!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2025//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_250101.dtd">
+        <PubmedArticleSet>
+        <PubmedArticle><MedlineCitation Status="MEDLINE" Owner="NLM" IndexingMethod="Manual"><PMID Version="1">123456</PMID><DateCompleted><Year>1975</Year><Month>06</Month><Day>25</Day></DateCompleted><DateRevised><Year>2016</Year><Month>09</Month><Day>20</Day></DateRevised><Article PubModel="Print"><Journal><ISSN IssnType="Print">0030-0632</ISSN><JournalIssue CitedMedium="Print"><Volume>78</Volume><Issue>4</Issue><PubDate><Year>1975</Year><Month>Apr</Month></PubDate></JournalIssue><Title>Boletin de la Oficina Sanitaria Panamericana. Pan American Sanitary Bureau</Title><ISOAbbreviation>Bol Oficina Sanit Panam</ISOAbbreviation></Journal><ArticleTitle>[The laboratory in programs for enteric infection control].</ArticleTitle><Pagination><StartPage>318</StartPage><EndPage>322</EndPage><MedlinePgn>318-22</MedlinePgn></Pagination><AuthorList CompleteYN="Y"><Author ValidYN="Y"><LastName>Grados</LastName><ForeName>O B</ForeName><Initials>OB</Initials></Author></AuthorList><Language>spa</Language><PublicationTypeList><PublicationType UI="D016428">Journal Article</PublicationType></PublicationTypeList><VernacularTitle>El laboratorio en los programas de control de las infecciones ent&#xe9;ricas.</VernacularTitle></Article><MedlineJournalInfo><Country>United States</Country><MedlineTA>Bol Oficina Sanit Panam</MedlineTA><NlmUniqueID>0414762</NlmUniqueID><ISSNLinking>0030-0632</ISSNLinking></MedlineJournalInfo><CitationSubset>IM</CitationSubset><MeshHeadingList><MeshHeading><DescriptorName UI="D001424" MajorTopicYN="N">Bacterial Infections</DescriptorName><QualifierName UI="Q000517" MajorTopicYN="Y">prevention &amp; control</QualifierName></MeshHeading><MeshHeading><DescriptorName UI="D001431" MajorTopicYN="N">Bacteriological Techniques</DescriptorName></MeshHeading><MeshHeading><DescriptorName UI="D003140" MajorTopicYN="Y">Communicable Disease Control</DescriptorName><QualifierName UI="Q000379" MajorTopicYN="N">methods</QualifierName></MeshHeading><MeshHeading><DescriptorName UI="D004751" MajorTopicYN="N">Enteritis</DescriptorName><QualifierName UI="Q000517" MajorTopicYN="Y">prevention &amp; control</QualifierName></MeshHeading><MeshHeading><DescriptorName UI="D006285" MajorTopicYN="N">Health Planning</DescriptorName></MeshHeading><MeshHeading><DescriptorName UI="D007753" MajorTopicYN="Y">Laboratories</DescriptorName></MeshHeading><MeshHeading><DescriptorName UI="D010568" MajorTopicYN="N" Type="Geographic">Peru</DescriptorName></MeshHeading></MeshHeadingList></MedlineCitation><PubmedData><History><PubMedPubDate PubStatus="pubmed"><Year>1975</Year><Month>4</Month><Day>1</Day></PubMedPubDate><PubMedPubDate PubStatus="medline"><Year>1975</Year><Month>4</Month><Day>1</Day><Hour>0</Hour><Minute>1</Minute></PubMedPubDate><PubMedPubDate PubStatus="entrez"><Year>1975</Year><Month>4</Month><Day>1</Day><Hour>0</Hour><Minute>0</Minute></PubMedPubDate></History><PublicationStatus>ppublish</PublicationStatus><ArticleIdList><ArticleId IdType="pubmed">123456</ArticleId></ArticleIdList></PubmedData></PubmedArticle></PubmedArticleSet>
+  recorded_at: Wed, 24 Sep 2025 07:44:13 GMT
+recorded_with: VCR 6.3.1
