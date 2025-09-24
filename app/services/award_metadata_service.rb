@@ -7,15 +7,33 @@ class AwardMetadataService
   end
 
   def populate_from_api
-    return if contributor.award_number.blank? || api_integration_key.nil?
-
-    response = contributor.api_integration.new.search_award(contributor.award_number)
+    response = fetch_api_data
     return if response.empty?
 
     handle_response(response)
   end
 
+  def award_details
+    response = fetch_api_data
+    return if response.empty?
+
+    data = adapter.new(response.first)
+    ic_data = ic_attrs(data) || { name_identifier_id: nil, contributor_name: nil }
+
+    {
+      award_number: data.award_number,
+      award_uri: data.award_uri,
+      award_title: data.award_title
+    }.merge(ic_data)
+  end
+
   private
+
+  def fetch_api_data
+    return if contributor.award_number.blank? || api_integration_key.nil?
+
+    contributor.api_integration.new.search_award(contributor.award_number)
+  end
 
   def handle_response(response)
     data = adapter.new(response.first)

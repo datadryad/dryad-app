@@ -18,4 +18,5 @@ class NSFToContributorAdapter
   end
 
   def ic_admin; end
+  def ic_fundings; end
 end
