@@ -52,28 +52,7 @@ namespace :recurate do
       .having("COUNT(dcs_contributors.id) = 0 OR SUM(CASE WHEN dcs_contributors.award_number IS NOT NULL AND dcs_contributors.award_number <> '' THEN 1 ELSE 0 END) = 0")
       .each do |resource|
 
-      # check for pubmed_id
-      pubmed_records = resource.identifier.internal_data.where(data_type: 'pubmedID')
-      if pubmed_records.any?
-        pubmed_records .each do |pubmed|
-          Contributors::CreateService.new(resource).create_funder_from_pubmed(pubmed.value, NIH_ROR)
-        end
-        next
-      end
-
-      # check for primary_article
-      articles = resource.related_identifiers.primary_article.where(related_identifier_type: 'doi')
-      next unless articles.any?
-
-      articles.each do |article|
-        doi = Stash::Import::Crossref.bare_doi(doi_string: article.related_identifier)
-        pmid = Integrations::PubMed.new.pmid_by_primary_article(doi)
-        next if pmid.blank?
-
-        # add PubMed ID to the database
-        resource.identifier.internal_data.where(data_type: 'pubmedID').find_or_create_by(value: pmid)
-        Contributors::CreateService.new(resource).create_funder_from_pubmed(pmid, NIH_ROR)
-      end
+      Contributors::CreateService.new(resource).create_funder_from_pubmed(NIH_ROR)
     end
   end
   # rubocop:enable Layout/LineLength
