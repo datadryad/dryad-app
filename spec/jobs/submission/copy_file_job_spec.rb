@@ -13,6 +13,7 @@ RSpec.describe Submission::CopyFileJob, type: :job do
     allow(files_service).to receive(:copy_file)
     allow(Submission::CheckStatusJob).to receive(:perform_in)
     allow(StashEngine::UserMailer).to receive_message_chain(:error_report, :deliver_now)
+    allow(Sidekiq).to receive(:redis).and_yield(double('Redis', decr: 2))
   end
 
   describe 'sidekiq options' do
@@ -28,9 +29,13 @@ RSpec.describe Submission::CopyFileJob, type: :job do
     subject(:perform_job) { described_class.new.perform(data_file.id) }
 
     context 'when file is copied successfully' do
+      before do
+        allow(Sidekiq).to receive(:redis).and_yield(double('Redis', decr: 0))
+      end
+
       it 'calls FilesService#copy_file and enqueues CheckStatusJob' do
         expect(files_service).to receive(:copy_file)
-        expect(Submission::CheckStatusJob).to receive(:perform_in).with(5.seconds, resource.id)
+        expect(Submission::CheckStatusJob).to receive(:perform_async).with(resource.id)
         perform_job
       end
     end

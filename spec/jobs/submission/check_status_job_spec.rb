@@ -10,6 +10,7 @@ RSpec.describe Submission::CheckStatusJob, type: :job do
 
   before do
     allow(Rails.logger).to receive(:info)
+    allow_any_instance_of(described_class).to receive(:remove_redis_key).and_return(1)
   end
 
   describe 'sidekiq options' do
