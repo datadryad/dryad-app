@@ -58,6 +58,10 @@ RSpec.describe Submission::ResourcesService do
       let!(:file2) { create(:data_file, resource: resource, file_state: 'created') }
       let!(:file3) { create(:data_file, resource: resource, file_state: 'copied') }
 
+      before do
+        allow(Sidekiq).to receive(:redis).and_yield(double('Redis', set: true))
+      end
+
       it 'enqueues CopyFileJob job for each new file' do
         expect { subject }.to change { Submission::CopyFileJob.jobs.size }.by(2)
       end
