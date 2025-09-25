@@ -31,7 +31,20 @@ module Submission
       raise result.error
     end
 
+    def set_submission_status
+      remaining = Sidekiq.redis { |r| r.decr(submission_redis_key) }
+      CheckStatusJob.perform_async(resource.id) if remaining.to_i == 0
+    end
+
+    def remove_redis_key
+      Sidekiq.redis { |r| r.del(submission_redis_key) }
+    end
+
     private
+
+    def submission_redis_key
+      SUBMISSION_REDIS_KEY.gsub('%{resource.id}', resource.id.to_s)
+    end
 
     def update_submission_log(result)
       StashEngine::SubmissionLog.create(

@@ -20,6 +20,9 @@ module Submission
       # only copy newly created files
       new_files = resource.data_files.newly_created
       if new_files.any?
+        redis_key = SUBMISSION_REDIS_KEY.gsub('%{resource.id}', resource_id.to_s)
+        Sidekiq.redis { |r| r.set(redis_key, new_files.count) }
+
         new_files.each do |file|
           Submission::CopyFileJob.perform_async(file.id)
         end

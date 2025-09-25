@@ -9,8 +9,9 @@ module Submission
 
       begin
         Timeout.timeout(1.day) do
+          pp "Uploading file #{file.id}"
           Submission::FilesService.new(file).copy_file
-          Submission::CheckStatusJob.perform_in(5.seconds, file.resource_id)
+          set_submission_status
         end
       rescue Timeout::Error
         queue = file.resource.repo_queue_states.last

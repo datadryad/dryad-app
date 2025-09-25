@@ -887,8 +887,8 @@ DEPENDENCIES
   serrano (~> 1.0)
   shakapacker (~> 6.0)
   shoulda (~> 4.0.0)
-  sidekiq (~> 8.0, >= 8.0.7)
-  sidekiq-unique-jobs (~> 8.0, >= 8.0.11)
+  sidekiq (~> 8.0.7)
+  sidekiq-unique-jobs (~> 8.0.11)
   simplecov
   simplecov-console
   spring

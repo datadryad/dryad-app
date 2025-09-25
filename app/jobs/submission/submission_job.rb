@@ -6,6 +6,7 @@ module Submission
     attr_reader :resource_id, :service
 
     def perform(resource_id)
+      pp "Submitting resource #{resource_id}"
       @resource_id = resource_id
       @resource = StashEngine::Resource.find(resource_id)
       @service = Submission::ResourcesService.new(resource_id)
