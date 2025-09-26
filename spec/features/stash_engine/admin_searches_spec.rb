@@ -1,7 +1,6 @@
 RSpec.feature 'AdminSearch', type: :feature do
   include DatasetHelper
   include Mocks::Aws
-  include Mocks::Repository
   include Mocks::CurationActivity
   include Mocks::Datacite
   include Mocks::RSolr
@@ -14,7 +13,6 @@ RSpec.feature 'AdminSearch', type: :feature do
     mock_solr!
     mock_salesforce!
     mock_stripe!
-    mock_repository!
     mock_datacite!
     mock_file_content!
     neuter_curation_callbacks!
