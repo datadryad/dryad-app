@@ -328,6 +328,9 @@ development:
     api_zip_size: 200_000_000
     files: 100
     frictionless: 50_000_000
+  cache:
+    app_url: 'redis://localhost:6380/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 stage:
   <<: *DEFAULTS

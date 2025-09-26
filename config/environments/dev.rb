@@ -111,10 +111,7 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.raise_delivery_errors = true
-  config.cache_store = :redis_cache_store, {
-    url: ac['cache']['app_url'],
-    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_PEER }
-  }
+  config.cache_store = :redis_cache_store, { url: ac['cache']['app_url'], ssl: true }
 
   Rails.application.default_url_options = { host: 'v3-dev.datadryad.org' }
 end

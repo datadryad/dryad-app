@@ -19,7 +19,7 @@ if Rails.env.test?
   end
 else
   Sidekiq.configure_server do |config|
-    config.redis = { url: APP_CONFIG[:cache][:app_url] }
+    config.redis = { url: APP_CONFIG[:cache][:app_url], ssl: !Rails.env.development? }
     config.logger = sidekiq_logger
 
     config.client_middleware do |chain|
@@ -34,7 +34,7 @@ else
   end
 
   Sidekiq.configure_client do |config|
-    config.redis = { url: APP_CONFIG[:cache][:app_url] }
+    config.redis = { url: APP_CONFIG[:cache][:app_url], ssl: !Rails.env.development? }
     config.logger = sidekiq_logger
 
     config.client_middleware do |chain|
