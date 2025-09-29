@@ -15,7 +15,7 @@ module StashEngine
     end
 
     def filter_status_select(current_status)
-      statuses = StashEngine::CurationActivity.allowed_states(current_status, current_user)
+      statuses = StashEngine::CurationActivity.allowed_states(current_status, current_user).sort
 
       statuses.delete(current_status) # because we don't show the current state as an option, it is implied by leaving state blank
 
@@ -40,7 +40,7 @@ module StashEngine
       str += resource.resource_publication&.manuscript_number&.presence || ''
       if resource.manuscript.present?
         status = (resource.manuscript.accepted? && 'accepted') || (resource.manuscript.rejected? && 'rejected') || 'submitted'
-        str += "<span id=\"status-label\" class=\"#{status}%>\">#{status}</span>"
+        str += "<span id=\"status-label\" class=\"#{status}\">#{status}</span>"
       end
       str += '<span id="doi-label" class="accepted">published</span>' if resource.identifier.publication_article_doi.present?
       unless resource.related_identifiers.empty?
@@ -66,6 +66,17 @@ module StashEngine
       return instring unless sf_link.present?
 
       render inline: matchdata[1] + link_to("SF #{matchdata[2]}", sf_link, target: :_blank) + matchdata[3]
+    end
+
+    def link_to_account(type, id)
+      href = if type&.start_with?('institution')
+               tenant_admin_path(q: id)
+             elsif type&.start_with?('journal')
+               journal_admin_path(q: id)
+             end
+      return format_external_references(id) if href.nil?
+
+      link_to id, href, target: '_blank'
     end
 
     def salesforce_links(doi)

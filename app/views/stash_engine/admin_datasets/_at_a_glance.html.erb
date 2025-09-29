@@ -77,7 +77,10 @@
             <%= @identifier.payment_type %>
           <% end %>
         </span>
-        <%= format_external_references(@identifier.payment_id) %>
+        <%= link_to_account(@identifier.payment_type, @identifier.payment_id) %>
+        <%= form_with(url: payment_log_path(id: @identifier&.id), method: :get, local: false) do %>
+          <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="View payment history" title="View payment history"><i class="fas fa-clock-rotate-left" aria-hidden="true"></i></button>
+        <% end %>
         <% if policy([:stash_engine, :admin_datasets]).waiver_add? %>
           <% if @identifier.waiver_basis %><span id="waiver_basis"><%= @identifier.waiver_basis %></span><% end %>
           <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'waiver'), method: :get, local: false) do %>
@@ -87,7 +90,7 @@
       </span>
       <% if @identifier.payment_type == 'institution' && @identifier.payment_id != r.submitter.tenant_id %>
         <span class="child-details error-text">
-          <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Submitter institution no longer authenticated
+          <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Submitter institution does not match payment
         </span>
       <% elsif @identifier.payer&.class&.name == 'StashEngine::Journal' %>
         <% if r.journal&.api_journal? && !r.creator.journals_as_admin.include?(r.journal) %>

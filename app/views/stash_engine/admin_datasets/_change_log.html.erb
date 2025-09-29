@@ -25,12 +25,12 @@
 
 <script type="module">
   import HtmlDiff from '/htmldiff.min.js'
-  document.querySelectorAll('.desc-changes').forEach(sec => {
+  document.querySelectorAll('#metadata_table_<%= @resource.id %> .desc-changes').forEach(sec => {
     const original = document.getElementById(`desc_original${sec.dataset.id}`).innerHTML
     const latest = document.getElementById(`desc_latest${sec.dataset.id}`).innerHTML
     sec.innerHTML = HtmlDiff.execute(original, latest)
   })
-  document.querySelectorAll('.desc-changes-button').forEach(button => button.addEventListener('click', () => {
+  document.querySelectorAll('#metadata_table_<%= @resource.id %> .desc-changes-button').forEach(button => button.addEventListener('click', () => {
     document.getElementById(button.getAttribute('aria-controls')).toggleAttribute('hidden')
     button.setAttribute('aria-expanded', !(button.getAttribute('aria-expanded') === 'true'))
     button.firstElementChild.classList.toggle('fa-eye')

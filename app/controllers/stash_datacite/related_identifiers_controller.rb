@@ -113,6 +113,7 @@ module StashDatacite
 
       return unless @resource.current_curation_status == 'published'
 
+      @resource.submit_to_solr
       DataciteService.new(@resource).submit
     end
 

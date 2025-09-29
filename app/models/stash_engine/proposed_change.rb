@@ -94,7 +94,7 @@ module StashEngine
       end
 
       add_curation_note(latest_resource, approve_type)
-      DataciteService.new(latest_resource).submit if latest_resource.current_curation_status == 'published'
+      check_reindex(latest_resource)
 
       update(approved: true, user_id: current_user.id)
     end
@@ -104,6 +104,13 @@ module StashEngine
     end
 
     private
+
+    def check_reindex(resource)
+      return unless resource.current_curation_status == 'published'
+
+      resource.submit_to_solr
+      DataciteService.new(resource).submit
+    end
 
     def add_curation_note(resource, type)
       CurationService.new(

@@ -21,7 +21,7 @@ module Stash
       def populate_title
         return if @metadata['ms title'].blank?
 
-        @resource.update(title: @metadata['ms title'])
+        @resource.update(title: ActionController::Base.helpers.sanitize(@metadata['ms title'], tags: %w[em sub sup i]))
       end
 
       def populate_authors

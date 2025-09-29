@@ -976,6 +976,19 @@ components:
               type: string
         - $ref: '#/components/schemas/version'
         - $ref: '#/components/schemas/dataset_links'
+        - properties:
+            metrics: 
+              type: object
+              properties:
+                views:
+                  type: integer
+                downloads:
+                  type: integer
+                citations:
+                  type: integer
+            license:
+              type: string
+              description: 'The license of the dataset'
 
     dataset_links:
       properties:

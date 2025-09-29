@@ -2,6 +2,7 @@ require 'stash/download/file_presigned'
 require 'http'
 
 module StashEngine
+  # rubocop:disable Metrics/ClassLength
   class DownloadsController < ApplicationController
     include ActionView::Helpers::DateHelper
     include StashEngine::LandingHelper
@@ -82,7 +83,8 @@ module StashEngine
       raise ActionController::RoutingError, 'Not Found' if @resource.blank?
 
       redirect_to(app_404_path) if @resource.identifier.pub_state == 'withdrawn'
-      redirect_to_public if @resource.identifier.has_accepted_manuscript? || @resource.identifier.publication_article_doi.present?
+      redirect_to_public and return if @resource.files_published? &&
+      (@resource.identifier.has_accepted_manuscript? || @resource.identifier.publication_article_doi.present?)
     end
 
     # uses presigned
@@ -138,7 +140,7 @@ module StashEngine
       if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id) &&
           [StashEngine::SuppFile, StashEngine::SoftwareFile].include?(zen_upload.class)
         if res.zenodo_published?
-          redirect_to zen_upload.public_zenodo_download_url
+          redirect_to zen_upload.public_zenodo_download_url, allow_other_host: true
         else
           zen_presign = zen_upload.zenodo_presigned_url
           if zen_presign.nil?
@@ -256,6 +258,6 @@ module StashEngine
       logger.warn(msg)
       ExceptionNotifier.notify_exception(Stash::Download::S3CustomError.new(msg))
     end
-
+    # rubocop:enable Metrics/ClassLength
   end
 end

@@ -43,7 +43,7 @@
                 <%= filesize(fu.upload_file_size) %>
                 <% if dl_resource == res %>
                   <% if fu.file_deleted_at.nil? %>
-                    <% if fu.upload_file_size < APP_CONFIG.maximums.zip_size %>
+                    <% if fu&.upload_file_size < APP_CONFIG.maximums.zip_size %>
                       <input class="select-file-download" data-size="<%= fu.upload_file_size %>" type="checkbox" name="<%= fu.download_filename%>" <%if res.total_file_size < APP_CONFIG.maximums.zip_size %>checked hidden <% end %>aria-label="Select <%= fu.download_filename%> for download" form="download-select-form">
                     <% else %>
                       <span class="select-file-download" title="Too big for zip download" aria-label="Too big for zip download"></span>

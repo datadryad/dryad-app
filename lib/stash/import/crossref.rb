@@ -393,7 +393,7 @@ module Stash
       def populate_title
         return unless @sm['title'].present? && @sm['title'].any?
 
-        @resource.title = @sm['title'].first
+        @resource.title = ActionController::Base.helpers.sanitize(@sm['title'].first, tags: %w[em sub sup i])
       end
 
       def publication_date
