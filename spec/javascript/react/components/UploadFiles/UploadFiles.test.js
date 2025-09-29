@@ -161,10 +161,12 @@ describe('UploadFiles', () => {
     axios.post.mockResolvedValueOnce(software_data);
 
     const postA = {status: 200, data: {new_file: datafile}};
+    const postSD = {status: 200}
     const postB = {status: 200, data: [{file_id: datafile.id, triggered: true}]};
     const get = {status: 200, data: [loaded]};
 
     axios.post.mockResolvedValueOnce(postA);
+    axios.post.mockResolvedValueOnce(postSD);
     axios.post.mockResolvedValueOnce(postB);
     axios.get.mockResolvedValueOnce(get);
 
