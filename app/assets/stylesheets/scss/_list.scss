@@ -24,7 +24,16 @@ ul.c-text_styles {
     line-height: 1.5;
     list-style: "";
 	}
+}
 
+.zebra-list {
+	li {
+		margin: 0;
+		padding: 4px;
+		&:nth-child(odd) {
+		  background-color: #f6f6f6;
+		}
+	}
 }
 
 .saved_searches_list {

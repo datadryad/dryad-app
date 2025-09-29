@@ -68,6 +68,17 @@ module StashEngine
       render inline: matchdata[1] + link_to("SF #{matchdata[2]}", sf_link, target: :_blank) + matchdata[3]
     end
 
+    def link_to_account(type, id)
+      href = if type&.start_with?('institution')
+               tenant_admin_path(q: id)
+             elsif type&.start_with?('journal')
+               journal_admin_path(q: id)
+             end
+      return format_external_references(id) if href.nil?
+
+      link_to id, href, target: '_blank'
+    end
+
     def salesforce_links(doi)
       Stash::Salesforce.find_cases_by_doi(doi)
     end
