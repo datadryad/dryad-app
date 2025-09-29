@@ -26,9 +26,5 @@ module StashEngine
     validates_presence_of :status
 
     enum(:status, %w[issues noissues checking error].to_h { |i| [i.to_sym, i] })
-
-    def report
-      JSON.parse(super) if super.present?
-    end
   end
 end

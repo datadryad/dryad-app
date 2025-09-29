@@ -110,8 +110,8 @@ module StashEngine
 
     describe '#trigger_frictionless' do
       before(:each) do
-        @file = create(:generic_file, resource_id: @resource.id, download_filename: 'valid.csv', url: 'http://example.com/valid.csv')
-        @url = Rails.application.routes.url_helpers.generic_file_trigger_frictionless_path(
+        @file = create(:data_file, resource_id: @resource.id, download_filename: 'valid.csv', url: 'http://example.com/valid.csv')
+        @url = Rails.application.routes.url_helpers.trigger_frictionless_path(
           resource_id: @resource.id
         )
       end
@@ -131,8 +131,7 @@ module StashEngine
       end
 
       it "doesn't trigger frictionless since the file isn't for the resource" do
-        @resource2 = create(:resource)
-        @file2 = create(:generic_file, download_filename: 'bad.csv', url: 'http://example.com/bad.csv')
+        @file2 = create(:data_file, download_filename: 'bad.csv', url: 'http://example.com/bad.csv', resource: create(:resource))
 
         allow_any_instance_of(@file.class).to receive(:trigger_frictionless) do |instance|
           (instance.id == @file.id ? { triggered: true, msg: '' } : { triggered: false, msg: 'bad trigger' })
@@ -145,11 +144,40 @@ module StashEngine
 
     end
 
+    describe '#trigger_sd_scan' do
+      before(:each) do
+        @file = create(:data_file, resource: @resource, download_filename: 'valid.csv', url: 'http://example.com/valid.csv')
+        @url = Rails.application.routes.url_helpers.trigger_sd_scan_path(
+          resource_id: @resource.id
+        )
+      end
+
+      it 'calls trigger_sd_scan in the controller to send off a (mocked) sensitive date scan' do
+        allow_any_instance_of(@file.class).to receive(:trigger_sensitive_data_scan) do |instance|
+          (instance.id == @file.id ? { triggered: true, msg: '' } : { triggered: false, msg: 'bad trigger' })
+        end
+        response_code = post @url, params: { file_ids: [@file.id] }
+        JSON.parse(response.body)
+
+        expect(response_code).to eql(200)
+        expect(@file.sensitive_data_report.status).to eq('checking')
+      end
+
+      it "doesn't trigger_sd_scan since the file isn't for the resource" do
+        @file2 = create(:data_file, download_filename: 'bad.csv', url: 'http://example.com/bad.csv', resource: create(:resource))
+        post @url, params: { file_ids: [@file2.id] }
+        body = JSON.parse(response.body)
+
+        expect(body).to eql('Nothing to trigger')
+      end
+
+    end
+
     describe '#check_frictionless' do
 
       before(:each) do
-        @file = create(:generic_file, resource_id: @resource.id, download_filename: 'valid.csv', url: 'http://example.com/valid.csv')
-        @url = Rails.application.routes.url_helpers.generic_file_check_frictionless_path(resource_id: @resource.id)
+        @file = create(:data_file, resource_id: @resource.id, download_filename: 'valid.csv', url: 'http://example.com/valid.csv')
+        @url = Rails.application.routes.url_helpers.check_frictionless_path(resource_id: @resource.id)
       end
 
       it 'calls check_frictionless in the controller for no completed reports' do

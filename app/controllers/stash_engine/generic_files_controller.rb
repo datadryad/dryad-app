@@ -147,7 +147,7 @@ module StashEngine
     end
 
     def sd_report
-      @report = @file.sensitive_data_report&.report&.dig('report')
+      @report = JSON.parse(@file.sensitive_data_report&.report)&.dig('report')
       respond_to(&:js)
     end
 

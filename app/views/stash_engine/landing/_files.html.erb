@@ -33,7 +33,7 @@
             <li>
               <span>
                 <%= download_file_name_link(fu, params) %>
-                <% if current_user.min_admin? %>
+                <% if current_user&.min_admin? %>
                   <%= render partial: 'file_admin_checks', locals: { file: fu } %>
                 <% end %>
                 <div style="min-width: 80px; text-align: center;">
