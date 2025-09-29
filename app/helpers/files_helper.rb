@@ -8,4 +8,13 @@ module FilesHelper
       "<i class='fas fa-download' role='img' aria-label='Download'></i>#{file_name}".html_safe
     end
   end
+
+  def sd_scan_types
+    {
+      ssns: 'Social security numbers',
+      addresses: 'Mailing addresses',
+      emails: 'Email addresses',
+      urls: 'URLs'
+    }
+  end
 end

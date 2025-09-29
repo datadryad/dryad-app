@@ -29,6 +29,9 @@
 		});
 	});
 </script>
+<% if current_user.min_admin? %>
+	<%= javascript_pack_tag 'server_rendering' %>
+<% end %>
 <% end %>
 <% if @user_type == 'privileged' %>
   <%= render(partial: 'privileged_banner') %>

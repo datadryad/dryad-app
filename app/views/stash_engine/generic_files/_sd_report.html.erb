@@ -1,0 +1,6 @@
+<h1>Sensitive data alerts</h1>
+<% @report['issues'].group_by { |issue| issue['pattern'] }.each do |type, matches| %>
+  <p class="c-alert--error-lite">
+    <%= sd_scan_types[type.to_sym] %> found in lines <%= matches.map { |m| m['line_number'] }.join(', ') %>
+  </p>
+<% end %>

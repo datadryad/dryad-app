@@ -117,6 +117,8 @@ Rails.application.routes.draw do
       member do
         patch 'destroy_manifest' # destroy file from manifest method
         patch 'rename'
+        get 'frictionless_report'
+        get 'sd_report'
       end
     end
 
