@@ -39,7 +39,7 @@
   <% end %>
 <% end %>
 <div class="c-columns">
-	<main class="t-landing__main c-columns__content">
+	<article class="t-landing__main c-columns__content">
 		<div id="display_resource">
       <% if @resource&.resource_type&.resource_type == 'collection' %>
 	      <%= render(partial: metadata_render_path('resources', 'show_collection')) %>
@@ -47,7 +47,7 @@
   	    <%= render(partial: metadata_render_path('resources', 'show')) %>
   	  <% end %>
 		</div>
-	</main>
+	</article>
 	<aside class="c-columns__sidebar">
 	  <%= render :partial => 'sidebar' %>
 	</aside>
