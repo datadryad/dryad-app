@@ -27,7 +27,6 @@ require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
 require 'capistrano/data_migrate'
 require 'capistrano/yarn'
-require 'capistrano/sidekiq'
 
 install_plugin Capistrano::Sidekiq
 install_plugin Capistrano::Sidekiq::Systemd
