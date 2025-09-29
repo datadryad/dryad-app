@@ -205,6 +205,7 @@ module StashApi
       end
 
       a.save(validate: false) # we can validate on submission, keeps from saving otherwise
+      AuthorsService.new(a).check_orcid if a.valid?
     end
 
     # certain things need setting up on initialization based on tenant
