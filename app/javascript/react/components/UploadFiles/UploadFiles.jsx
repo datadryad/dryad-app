@@ -73,7 +73,7 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name, current,
+  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name, current, pubDates,
 }) {
   const [initialLoad, setInitialLoad] = useState(false);
   const [chosenFiles, setChosenFiles] = useState([]);
@@ -660,7 +660,7 @@ export default function UploadFiles({
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
-      {pubChanges && <ChangeLog resource={resource} setResource={setResource} />}
+      {pubChanges && <ChangeLog {...{resource, setResource, pubDates}} />}
       {changes && !pubChanges && <TrackChanges resource={resource} /> }
       <ModalUrl
         ref={modalRef}

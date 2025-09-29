@@ -45,7 +45,7 @@ function Editor({initial, log, setLog}) {
   );
 }
 
-export default function ChangeLog({resource, setResource}) {
+export default function ChangeLog({resource, pubDates, setResource}) {
   const [desc, setDesc] = useState('');
   const [log, setLog] = useState(resource.descriptions.find((d) => d.description_type === 'changelog'));
 
@@ -72,23 +72,14 @@ export default function ChangeLog({resource, setResource}) {
   }, [log]);
 
   useEffect(() => {
-    async function getPubDates() {
-      axios.get(`/resources/${resource.id}/file_pub_dates`).then((data) => {
-        const dates = data.data;
-        let logStr = `${log?.description || ''}`;
-        dates.forEach((d) => {
-          const date = new Intl.DateTimeFormat('en-US', {
-            month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
-          }).format(new Date(d));
-          if (!logStr.includes(date)) {
-            if (logStr) logStr += '\n\n';
-            logStr += `**After ${date}:**&nbsp;`;
-          }
-        });
-        setDesc(logStr);
-      });
-    }
-    getPubDates();
+    let logStr = `${log?.description || ''}`;
+    pubDates.forEach((date) => {
+      if (!logStr.includes(date)) {
+        if (logStr) logStr += '\n\n';
+        logStr += `**Changes after ${date}:**&nbsp;`;
+      }
+    });
+    setDesc(logStr);
     const existing = resource.descriptions.find((d) => d.description_type === 'changelog');
     if (existing) setLog(existing);
     else create(null);
