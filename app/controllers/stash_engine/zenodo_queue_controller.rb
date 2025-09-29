@@ -38,7 +38,7 @@ module StashEngine
       authorize %i[stash_engine zenodo_copy]
       @zenodo_copy = ZenodoCopy.find(params[:id])
 
-      @delayed_jobs = running_jobs(@zenodo_copy)
+      @jobs = running_jobs(@zenodo_copy)
     end
 
     def identifier_details

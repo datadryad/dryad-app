@@ -27,20 +27,18 @@ Note: This process may not work if a particular Zenodo item is "stuck" in a way
 that breaks the replication process. To fix a stuck item, use the above process.
 
 1. Go to the *Datasets > Zenodo Submissions* option in the UI as a superuser.
-2. ssh into the server and restart the delayed job daemon `sudo systemctl start delayed_job` just to
+2. ssh into the server and restart the Sidekiq process `sudo systemctl restart sidekiq` just to
    be sure old stuff is cleared out and it's running well.
-3. Go to the `delayed_jobs` table in the database and look for items that show `SIGTERM` or `Execution expired`
-   I believe in the `last error` column but it may be another column. Remove these records from the table.
-4. Go back to the UI and click the *Reset stalled to error state* button. This will make items correctly
+3. Go back to the UI and click the *Reset stalled to error state* button. This will make items correctly
    show error states, even if they stalled or had another problem.
-5. Sort the table by ID descending. Scroll down to about the time you saw the errors you want to correct starting.
-6. Click the *Resend* buttons for items you care about (such as software or supplemental items, I'd ignore large data replications). Some items
+4. Sort the table by ID descending. Scroll down to about the time you saw the errors you want to correct starting.
+5. Click the *Resend* buttons for items you care about (such as software or supplemental items, I'd ignore large data replications). Some items
    will need prerequisites to be submitted first (will show in the table after clicking).
-7. Go up the list until you get to the top.
-8. You can refresh the page to see current statuses. If you want to see a chain of items for an identifier then
+6. Go up the list until you get to the top.
+7. You can refresh the page to see current statuses. If you want to see a chain of items for an identifier then
    click on the *identifier id* and it will open a window with just submissions for that dataset. If you
    want to look at error and submission details then click on the zenodo_copies.id in the first column to troubleshoot.
-9. Rinse and repeat steps 4-8 until all that you can fix is fixed. If you run into bad problems with useless
+8. Rinse and repeat steps 4-8 until all that you can fix is fixed. If you run into bad problems with useless
    crap clogging the queue then start at step 2 again.
 
 You may have to read over error messages and see where things are failing in Zenodo and intervene with other
@@ -94,11 +92,9 @@ user interface files from github.
 It's not processing? Why?
 ==========================
 
-- start or restart the service `sudo systemctl restart delayed_job` on the 01 server.
-- There may be long (or stalled) jobs running on all workers. The `delayed_job` table shows what is trying 
-  to run in delayed job. If some of them have a `last_error` status like `execution expired` or `SIGTERM` then
-  you can delete these lines out of the `delayed_job` table, restart the service and jobs stuck
-  behind them should run.
+- Start or restart the Sidekiq service `sudo systemctl restart sidekiq` on the 01 server.
+- There may be long (or stalled) jobs running on all workers. The Sidekiq UI table shows what is trying 
+  to run in background.
 - You can click the "reset stalled to error state" in the UI and it will put things no longer in the queue
   and with wrong statuses to "error" state and then you can resubmit the ones you want from the interface.
 
@@ -106,16 +102,16 @@ How to handle maintenance
 =========================
 
 - (On server 01) "pause" or "drain" the jobs a bit ahead with `touch ~/deploy/releases/defer_jobs.txt`.
-  The delayed job process will not submit new things to zenodo while it's there
+  The Sidekiq process will not submit new things to zenodo while it's there
 - After deploy, do `rm ~/deploy/releases/defer_jobs.txt`
-- If you deployed new code you should restart delayed job. `sudo systemctl restart delayed_job`
+- If you deployed new code you should restart the Sidekiq process. `sudo systemctl restart sidekiq`
 
 
 How to clear out a big log jam of recently failed items
 =======================================================
 
 This sometimes happens because Zenodo is returning lots of 504 errors or has been down. At other times
-there may be a lot of huge submissions that came in and are monopolizing all 3 workers and they are spending
+there may be a lot of huge submissions that came in and are monopolizing all workers and they are spending
 forever and timing out and nothing else can get through.
 
 - Go to the *Admin > Zenodo Submissions* option in the UI and sort by ID descending. This should show you the
@@ -124,9 +120,7 @@ forever and timing out and nothing else can get through.
   This will be a longer term thing to address, so go to the `stash_engine_zenodo_copies` table and set
   the retries column for the huge item(s) to `100` which will prevent it from coming back and being
   retried daily to try getting it in. Otherwise it'll just recreate the log jam tomorrow when it retries items.
-- Restart the delayed_job daemon `sudo systemctl restart delayed_job` on the 01 server.
-- Remove the expired/Sigtermed items from the `delayed_jobs` table as explained in the "it's not processing"
-  second point.
+- Restart the Sidekiq daemon `sudo systemctl restart sidekiq` on the 01 server.
 
 Resending the stuff that failed (lets play the resubmisison game)
 =================================================================
