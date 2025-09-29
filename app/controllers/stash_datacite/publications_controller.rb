@@ -64,7 +64,7 @@ module StashDatacite
     # GET /publications/automsid?term={query_term}
     def automsid
       partial_term = params[:term]
-      render json: nil and return if partial_term.blank?
+      render json: nil and return if partial_term.blank? || !params.key?(:jid)
 
       # clean the partial_term of unwanted characters so it doesn't cause errors
       partial_term.gsub!(/~!@%&"/, '')
@@ -96,7 +96,6 @@ module StashDatacite
     def save_publications
       @pub_name = params[:publication_name]
       @pub_issn = params[:publication_issn]
-      @msid = params[:msid].present? ? parse_msid(issn: params[:publication_issn], msid: params[:msid]) : nil
       if params[:primary_article_doi].blank?
         @resource.related_identifiers.where(work_type: params[:import_type] == 'preprint' ? 'preprint' : 'primary_article').destroy_all
       end
@@ -104,6 +103,7 @@ module StashDatacite
         exact_matches = StashEngine::Journal.find_by_title(@pub_name)
         @pub_issn = exact_matches.single_issn if exact_matches.present?
       end
+      @msid = params[:msid].present? ? parse_msid(issn: @pub_issn, msid: params[:msid]) : nil
       begin
         publication = StashEngine::ResourcePublication
           .find_or_create_by(resource_id: @resource.id, pub_type: params[:import_type] == 'preprint' ? :preprint : :primary_article)
@@ -168,20 +168,8 @@ module StashDatacite
 
     # parse out the "relevant" part of the manuscript ID, ignoring the parts that the journal changes for different versions of the same item
     def parse_msid(issn:, msid:)
-      logger.debug("Parsing msid #{msid} for journal #{issn}")
-      regex = @se_id.journal&.manuscript_number_regex
-      return msid if regex.blank?
-
-      logger.debug("- found regex /#{regex}/")
-      return msid if msid.match(regex).blank?
-
-      logger.debug("- after regex applied: #{msid.match(regex)[1]}")
-      result = msid.match(regex)[1]
-      if result.present?
-        result
-      else
-        msid
-      end
+      journal = StashEngine::Journal.find_by_issn(issn)
+      StashEngine::Manuscript.parsed_number(journal, msid).presence || msid
     end
 
     def update_manuscript_metadata

@@ -39,17 +39,17 @@ module StashEngine
       if @identifier.payment_type == 'stripe'
         # if it's already invoiced, show a warning
         @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
-        render :curation_activity_error and return
+        render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
       elsif params[:waiver_basis] == 'none'
         @error_message = 'No waiver message selected, so waiver was not applied.'
-        render :curation_activity_error and return
+        render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
       elsif params[:waiver_basis] == 'other'
         basis = 'unspecified'
         if params[:other].present?
           basis = params[:other]
         else
           @error_message = 'No waiver message selected, so waiver was not applied.'
-          render :curation_activity_error and return
+          render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
         end
       else
         basis = params[:waiver_basis]
@@ -93,14 +93,21 @@ module StashEngine
       types = ['StashEngine::Resource', 'StashEngine::ResourcePublication',
                'StashDatacite::RelatedIdentifier', 'StashEngine::Author',
                'StashDatacite::Contributor', 'StashDatacite::Description']
-      versions = CustomVersion.where(resource_id: params[:id])
-      @changes = versions.where(item_type: types).where.not(event: 'create').order(:created_at).includes(:user)
+      @changes = CustomVersion.where(resource_id: params[:id]).where(item_type: types).order(:created_at).includes(:user)
       respond_to(&:js)
     end
 
     def file_log
       @resource = Resource.find(params[:id])
       @changes = CustomVersion.where(resource_id: params[:id], item_type: 'StashEngine::GenericFile').order(:created_at).includes(:user)
+      respond_to(&:js)
+    end
+
+    def payment_log
+      @identifier = Identifier.find(params[:id])
+      payments = @identifier.payments.where.not(status: 'created', pay_with_invoice: false)
+      sponsors = @identifier.versions.where("json_contains_path(`object_changes`, 'all', '$.payment_id')")
+      @logs = (payments + sponsors).sort_by { |log| log.has_attribute?(:updated_at) ? log.updated_at : log.created_at }
       respond_to(&:js)
     end
 
@@ -112,10 +119,10 @@ module StashEngine
       delete_calculation_date = notification_date - 1.month
       delete_calculation_date = notification_date - 6.months if @resource.current_curation_status == 'peer_review'
 
-      @curation_activity = CurationActivity.create(
-        note: "Changed notification start date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe,
-        resource_id: @resource.id, user_id: current_user.id, status: @resource.last_curation_activity&.status
-      )
+      @curation_activity = CurationService.new(
+        resource: @resource, user_id: current_user.id, status: @resource.last_curation_activity&.status,
+        note: "Changed notification start date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe
+      ).process
 
       @resource.process_date.update(delete_calculation_date: delete_calculation_date)
       @identifier.process_date.update(delete_calculation_date: delete_calculation_date)
@@ -181,6 +188,7 @@ module StashEngine
       @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
     end
 
+    # :nocov:
     # this sets up the select list for internal data and will not offer options for items that are only allowed once and one is present
     def setup_internal_data_list
       @internal_datum = params[:internal_datum_id] ? InternalDatum.find(params[:internal_datum_id]) : InternalDatum.new(identifier_id: @identifier.id)
@@ -195,7 +203,7 @@ module StashEngine
         @options.delete(existing_item.data_type)
       end
     end
-
+    # :nocov:
   end
 
 end

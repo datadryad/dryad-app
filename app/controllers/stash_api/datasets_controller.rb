@@ -144,10 +144,9 @@ module StashApi
 
       # Update curation note about what was changed
       if fields_changed.present?
-        @resource.curation_activities <<
-          StashEngine::CurationActivity.create(user_id: @user.id,
-                                               status: @resource.current_curation_status,
-                                               note: "updating metadata based on API notification from Editorial Manager: #{fields_changed}")
+        CurationService.new(user_id: @user.id, resource: @resource,
+                            status: @resource.current_curation_status,
+                            note: "updating metadata based on API notification from Editorial Manager: #{fields_changed}").process
       end
 
       # If final_disposition is available, update the status of this dataset
@@ -155,14 +154,12 @@ module StashApi
       if disposition.present? && (@resource.current_curation_status == 'peer_review')
         if disposition.downcase == 'accept'
           # article is accepted -> transition peer_review to curation
-          @resource.curation_activities <<
-            StashEngine::CurationActivity.create(user_id: @user.id, status: 'submitted',
-                                                 note: 'updating status based on API notification from Editorial Manager')
+          CurationService.new(user_id: @user.id, resource: @resource, status: 'submitted',
+                              note: 'updating status based on API notification from Editorial Manager').process
         else
           # any other article disposition -> transition peer_review to withdrawn
-          @resource.curation_activities <<
-            StashEngine::CurationActivity.create(user_id: @user.id, status: 'withdrawn',
-                                                 note: 'updating status based on API notification from Editorial Manager')
+          CurationService.new(user_id: @user.id, resource: @resource, status: 'withdrawn',
+                              note: 'updating status based on API notification from Editorial Manager').process
         end
       end
 
@@ -348,14 +345,14 @@ module StashApi
       if res&.may_download?(ui_user: @user) && @version_presigned&.valid_resource?
         @version_presigned.download(resource: res)
       else
-        render plain: 'Download for this version of the dataset is unavailable', status: 404
+        render plain: 'Download for this version of the dataset is unavailable', status: :not_found
       end
     end
 
     # post /datasets/<id>/set_internal_datum
     def set_internal_datum
       if StashEngine::InternalDatum.allows_multiple(params[:data_type])
-        render json: { error: "#{params[:data_type]} allows multiple entries, use add_internal_datum" }.to_json, status: 404
+        render json: { error: "#{params[:data_type]} allows multiple entries, use add_internal_datum" }.to_json, status: :not_found
         nil
       else
         @datum = StashEngine::InternalDatum.where(data_type: params[:data_type], identifier_id: @stash_identifier.id).first
@@ -371,7 +368,7 @@ module StashApi
     # post /datasets/<id>/add_internal_datum
     def add_internal_datum
       unless StashEngine::InternalDatum.allows_multiple(params[:data_type])
-        render json: { error: "#{params[:data_type]} does not allow multiple entries, use set_internal_datum" }.to_json, status: 404
+        render json: { error: "#{params[:data_type]} does not allow multiple entries, use set_internal_datum" }.to_json, status: :not_found
         return
       end
       @datum = StashEngine::InternalDatum.create(data_type: params[:data_type], stash_identifier: @stash_identifier, value: params[:value])
@@ -394,10 +391,10 @@ module StashApi
       StashEngine::Identifier.where(identifier_type: id_type.upcase).where(identifier: id_text).first
     end
 
-    def initialize_stash_identifier(id)
-      @stash_identifier = get_stash_identifier(id)
-      render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.blank?
-    end
+    # def initialize_stash_identifier(id)
+    #   @stash_identifier = get_stash_identifier(id)
+    #   render json: { error: "cannot find dataset with identifier #{id}" }.to_json, status: 404 if @stash_identifier.blank?
+    # end
 
     private
 
@@ -436,9 +433,8 @@ module StashApi
       ensure_in_progress { yield }
       pre_submission_updates
       if new_status == 'submitted'
-        @resource.curation_activities << StashEngine::CurationActivity.create(
-          status: 'processing', note: 'Repository processing data', user_id: @user&.id || 0
-        )
+        CurationService.new(resource: @resource, status: 'processing',
+                            note: 'Repository processing data', user_id: @user&.id || 0).process
       end
       StashEngine.repository.submit(resource_id: @resource.id)
     end
@@ -458,10 +454,10 @@ module StashApi
         new_status = @resource.current_curation_status
       end
 
-      StashEngine::CurationActivity.create(resource_id: @resource.id,
-                                           user_id: @user.id,
-                                           status: new_status,
-                                           note: note)
+      CurationService.new(resource: @resource,
+                          user_id: @user.id,
+                          status: new_status,
+                          note: note).process
     end
 
     def update_publication_issn(new_issn)

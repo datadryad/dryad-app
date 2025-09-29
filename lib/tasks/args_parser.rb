@@ -1,5 +1,4 @@
 require 'optparse'
-# rubocop:disable Lint/EmptyBlock
 module Tasks
   module ArgsParser
 
@@ -7,17 +6,17 @@ module Tasks
       options = OpenStruct.new
       return options if attributes.blank?
 
-      opts = OptionParser.new
-      opts.banner = 'Usage: rake add [options]'
-      attributes.each do |key|
-        opts.on('-o', "--#{key}=value", String) { |value| options[key] = value }
-      end
+      args = ARGV.drop_while { |a| a != '--' }[1..] || []
+      args.each_slice(2) do |key, value|
+        next unless key&.start_with?('--')
 
-      args = opts.order!(ARGV) {}
-      opts.parse!(args)
+        my_key = key.sub(/^--/, '').to_sym
+        next unless my_key.in?(attributes)
+
+        options[my_key] = value
+      end
 
       options
     end
   end
 end
-# rubocop:enable Lint/EmptyBlock

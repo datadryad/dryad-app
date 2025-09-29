@@ -32,13 +32,6 @@ module StashEngine
       redirect_back(fallback_location: choose_dashboard_path)
     end
 
-    def display_authorization_failure
-      Rails.logger.warn("Resource #{resource ? resource.id : 'nil'}: user IDs are #{resource.users&.map(&:id)&.join(', ')} but " \
-                        "current user is #{current_user.id || 'nil'}")
-      flash[:alert] = 'This submission is being edited by another user.'
-      redirect_back(fallback_location: choose_dashboard_path)
-    end
-
     def redirect_url_for(original_url, host, port)
       uri = URI(original_url)
       uri.host = host

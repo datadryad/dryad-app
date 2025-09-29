@@ -34,7 +34,7 @@ module StashApi
 
     # PUT /curation_activity/{id}
     def update
-      resource = StashEngine::Identifier.find(params[:dataset_id]).latest_resource
+      resource = StashEngine::Identifier.find_with_id(params[:dataset_id]).latest_resource
       create_curation_activity(resource)
       render json: resource&.reload&.last_curation_activity
     end
@@ -82,11 +82,10 @@ module StashApi
         ca_status = resource.current_curation_status
       end
 
-      StashEngine::CurationActivity.create(resource_id: resource.id,
-                                           user_id: ca_user,
-                                           status: ca_status,
-                                           note: ca_note,
-                                           created_at: params[:curation_activity][:created_at] || Time.now.utc)
+      CurationService.new(
+        resource: resource, user_id: ca_user, status: ca_status, note: ca_note,
+        created_at: params[:curation_activity][:created_at]
+      ).process
     end
 
     def record_published_date(resource)

@@ -1,6 +1,5 @@
 module StashApi
   # takes a dataset hash, parses it out and saves it to the appropriate places in the database
-  # rubocop:disable Metrics/ClassLength
   class DatasetParser
 
     INTERNAL_DATA_FIELDS = %w[publicationISSN publicationName manuscriptNumber].freeze
@@ -27,12 +26,9 @@ module StashApi
         owning_user = StashEngine::User.find(owning_user_id)
         validate_submit_invitation
         user_note = "Created by API user, assigned ownership to #{owning_user&.name} (#{owning_user_id})"
-        @resource.curation_activities << StashEngine::CurationActivity.create(
-          status: @resource.current_curation_status || 'in_progress',
-          user_id: @user.id,
-          resource_id: @resource.id,
-          note: user_note
-        )
+        CurationService.new(
+          resource: @resource, status: @resource.current_curation_status || 'in_progress', user_id: @user.id, note: user_note
+        ).process
         @resource.submitter = owning_user_id
       end
       @resource.update(
@@ -209,6 +205,7 @@ module StashApi
       end
 
       a.save(validate: false) # we can validate on submission, keeps from saving otherwise
+      AuthorsService.new(a).check_orcid if a.valid?
     end
 
     # certain things need setting up on initialization based on tenant
@@ -260,4 +257,3 @@ module StashApi
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

@@ -1,28 +1,7 @@
 <% unless authors.nil? %>
-  <% affs = authors.map(&:affiliations).flatten.uniq.each_with_object([]) do |a, arr| 
-		if a.smart_name.present? && a.smart_name != ',' && a.smart_name != '.'
-			arr << [a.id, a.smart_name, a.ror_id]
-		end
-		arr
-	end %>
+  <% affs = affs_list(authors) %>
 	<p class="o-metadata__author-list">
-  <%= authors.map { |author| 
-  	if author.author_full_name
-	    str = "<a class='o-metadata__author' href='/search?q=#{URI.encode_www_form_component(author.author_orcid)}'>#{author.author_full_name}</a>" if author.author_orcid.present?
-	    str ||= "<span class='o-metadata__author'>#{author.author_full_name}</span>"
-    	af = author.affiliations.map { |a|
-		     if a.smart_name.present? && a.smart_name != ',' && a.smart_name != '.'
-		       "<a class='o-metadata__link' aria-label='Affiliation #{affs.index { |x| x[0] == a.id } + 1}' href='#aff#{a.id}'>#{affs.index { |x| x[0] == a.id } + 1}</a>"
-		     else
-		       nil
-		     end
-	     }.join('')
-	    str += af unless af.blank?
-	    str += "<a href='mailto:#{author.author_email}' class='o-metadata__link' aria-label='Email #{author.author_standard_name}' target='_blank' title='#{author.author_email}'><i class='fa fa-envelope' aria-hidden='true'></i></a>" if author.corresp && author.author_email.present?
-	    str += "<a href='#{author_orcid_link(author)}' class='o-metadata__link' target='_blank' aria-label='#{author.author_standard_name} ORCID profile (opens in new window)' title='ORCID: #{author.author_orcid}'><i class='fab fa-orcid' aria-hidden='true'></i></a>" if author.author_orcid.present?
-	    str
-	  end
-  }.reject(&:blank?).join("; ").html_safe %>
+  <%= author_display(authors, affs).html_safe %>
 	</p>
 <% end %>
 <% if affs.present? %>

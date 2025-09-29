@@ -18,6 +18,7 @@ module StashDatacite
       @contributor = find_or_initialize
       respond_to do |format|
         if @contributor.save
+          check_reindex
           format.json { render json: @contributor }
           format.js do
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
@@ -33,6 +34,7 @@ module StashDatacite
         contributor_params[:award_description] = contributor_params[:award_description].squish if contributor_params[:award_description].present?
         contributor_params[:award_title] = contributor_params[:award_title].squish if contributor_params[:award_title].present?
         if @contributor.update(contributor_params)
+          check_reindex
           format.json { render json: @contributor }
           format.js do
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
@@ -95,6 +97,13 @@ module StashDatacite
       nil
     end
 
+    def check_reindex
+      return unless @resource.current_curation_status == 'published'
+
+      @resource.submit_to_solr
+      DataciteService.new(@resource).submit
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_contributor
       return if params[:id] == 'new'
@@ -135,7 +144,6 @@ module StashDatacite
     end
 
     def check_reorder_valid
-      puts params.inspect
       params.require(:contributor).permit!
       @contributors = Contributor.where(id: params[:contributor].keys)
 

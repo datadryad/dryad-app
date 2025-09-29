@@ -65,8 +65,9 @@ module StashEngine
       puts "Fetching S3 digest for file #{file.id}"
       s3 = Stash::Aws::S3.new(s3_bucket_name: bucket_name)
       info = s3.head_object(s3_key: file.s3_permanent_path)
+
       if info&.metadata
-        digest_info = fetch_digest(info.metadata)
+        pp digest_info = fetch_digest(info.metadata)
         file.update!(digest_info) if digest_info
       else
         puts "   No digest metadata on S3 for file #{file.id} on bucket #{bucket_name}"

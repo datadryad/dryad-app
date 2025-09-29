@@ -1,3 +1,4 @@
+# :nocov:
 require 'stash/doi/datacite_gen'
 
 # rubocop:disable Metrics/ClassLength
@@ -117,7 +118,7 @@ module Tasks
                     else
                       'in_progress'
                     end
-        @ar_resource.curation_activities << StashEngine::CurationActivity.create(status: out_state, user_id: ar_user_id)
+        CurationService.new(resource: @ar_resource, status: out_state, user_id: ar_user_id).process
       end
 
       def add_edit_histories

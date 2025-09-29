@@ -7,17 +7,18 @@ module PublicationMixin
     return unless resource.current_curation_status == 'peer_review'
 
     if resource.identifier.payment_needed?
-      new_res = DuplicateResourceService.new(resource, StashEngine::User.system_user).call
-      new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
-      new_res.curation_activities.last.update(note: 'Full DPC payment required')
-      StashEngine::UserMailer.peer_review_payment_needed(new_res).deliver_now
+      @new_res = DuplicateResourceService.new(resource, StashEngine::User.system_user).call
+      @new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
+      @new_res.curation_activities.last.update(note: 'Full DPC payment required')
+      StashEngine::UserMailer.peer_review_payment_needed(@new_res).deliver_now
     else
       resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
-      resource.curation_activities << StashEngine::CurationActivity.new(
+      CurationService.new(
+        resource: resource,
         user_id: 0, # system user
         status: 'submitted',
         note: 'Release from peer review through publication information'
-      )
+      ).process
       StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
     end
   end

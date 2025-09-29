@@ -1,3 +1,4 @@
+# :nocov:
 module StashApi
   class InternalDataController < ApiApplicationController
     before_action :require_json_headers
@@ -46,3 +47,4 @@ module StashApi
     end
   end
 end
+# :nocov:

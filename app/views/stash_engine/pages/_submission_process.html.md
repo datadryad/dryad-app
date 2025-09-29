@@ -51,7 +51,7 @@ If you wish to provide additional documentation or README files in other formats
 
 ## Upload files
 
-When you upload data files, ensure that they meet our [file requirements](#heading=h.gkxrj86pin4f), are able to be opened, do not contain sensitive information, and do not have licensing conflicts with [CC0](https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/).
+When you upload data files, ensure that they meet our [file requirements](#preparing-your-data, are able to be opened, do not contain sensitive information, and do not have licensing conflicts with [CC0](https://blog.datadryad.org/2023/05/30/good-data-practices-removing-barriers-to-data-reuse-with-cc0-licensing/).
 
 Files can be uploaded from your local computer or from the cloud or remote servers via a URL. When using a URL, Google Drive links do not work, so please choose another mechanism. If using links from GitHub, link to the individual files rather than the repository as a whole. To confirm that files have uploaded successfully, check that all files have a size greater than 0 B.
 
@@ -90,7 +90,7 @@ If you are affiliated with a partner institution or your related publication is 
 
 ### Private for Peer Review
 
-On the final page of the submission process, we offer the option to make the dataset private during your related manuscript’s peer review process. After selecting this option, you will be presented with a private URL that allows for a double-blind download of the dataset. This link can be used by the journal office or reviewers to access the data files during the review period. This temporary sharing URL is not a permanent identifier like a DOI and should be substituted with the dataset DOI at the point of final manuscript submission or the page proofs stage. The DOI reserved for your dataset will not change at any point after the dataset has been created.
+On the final page of the submission process, we offer the option to make the dataset private during your related manuscript’s peer review process. After selecting this option, you will be presented with a private URL that allows for a double-anonymous download of the dataset. This link can be used by the journal office or reviewers to access the data files during the review period. This temporary sharing URL is not a permanent identifier like a DOI and should be substituted with the dataset DOI at the point of final manuscript submission or the page proofs stage. The DOI reserved for your dataset will not change at any point after the dataset has been created.
 
 When your manuscript has been accepted, you can take your dataset out of Private for Peer Review, so that the Dryad team can begin the curation and publication processes. To do this, log in to Dryad and navigate to "My datasets". Find the submission under the "Kept private" heading. On the right, click the "Release for curation" button, and confirm.
 
