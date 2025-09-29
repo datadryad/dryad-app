@@ -16,6 +16,7 @@ gem 'sprockets', '~> 4.0'
 gem 'bcrypt_pbkdf', '~> 1.0'
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.7.0'
+gem 'capistrano-sidekiq', '~> 3.2.0'
 gem 'capistrano-yarn'
 gem 'ed25519', '>= 1.2', '< 2.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right

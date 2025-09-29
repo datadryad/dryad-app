@@ -21,6 +21,7 @@ set :log_level, :debug
 set :optional_shared_files, %w{
   config/master.key
 }
+set :sidekiq_systemctl_user, :system
 
 # Default value for linked_dirs is []
 append :linked_dirs,
@@ -79,3 +80,4 @@ namespace :cleanup do
     end
   end
 end
+
