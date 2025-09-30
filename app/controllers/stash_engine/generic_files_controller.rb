@@ -42,10 +42,13 @@ module StashEngine
           result = create_upload(url)
           url_errors.push(result) if result[:status_code] != 200
         end
-        format.html do
+        valid_files = @resource.generic_files.valid_url_table.as_json(
+          methods: %i[type uploaded frictionless_report]
+        )
+        format.any(:json, :html) do
           render json: {
             # map(&:attributes): one way for translating ActiveRecord field type to json
-            valid_urls: @resource.generic_files.validated_table.map(&:attributes),
+            valid_urls: valid_files.to_a,
             invalid_urls: url_errors
           }
         end
@@ -145,7 +148,7 @@ module StashEngine
         translator: url_translator, resource: resource, association: @resource_assoc
       )
       if attributes[:status_code] == 200
-        @file_model.create(attributes)
+        FileUploadService.new(resource: @resource, file_model: @file_model, file_params: attributes).save
       else
         { url: attributes[:url], status_code: attributes[:status_code] }
       end

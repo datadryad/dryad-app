@@ -133,7 +133,7 @@ module StashApi
         description: request.env['HTTP_CONTENT_DESCRIPTION'],
         original_filename: @original_filename || @sanitized_name
       }
-      FileUploadService.new(resource: @resource, file_params: file_params).save
+      StashEngine::FileUploadService.new(resource: @resource, file_params: file_params).save
     end
 
     def file_content_type

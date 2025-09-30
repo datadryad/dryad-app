@@ -26,11 +26,11 @@ module StashEngine
 
     def self.token
       tok = all.first
-      return tok.token if tok.expires_at > (Time.new + 30.minutes)
+      return tok.token if tok.present? && tok.expires_at > (Time.new + 30.minutes)
 
-      tok.new_token
-      tok.reload
-      tok.token
+      tok&.new_token
+      tok&.reload
+      tok&.token
     end
 
     # check that our test url works for a logged in user
@@ -62,7 +62,7 @@ module StashEngine
         update(token: json['access_token'], expires_at: (Time.new + json['expires_in'].seconds))
       rescue StashEngine::ApiTokenStatusError
         logger.warn('Unable to get API key, probably local testing')
-        return
+        return false
       rescue HTTP::Error, HTTP::TimeoutError => e
         logger.warn("Http error getting API key: #{e.full_message}")
         sleep 3

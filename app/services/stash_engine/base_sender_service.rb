@@ -11,6 +11,8 @@ module StashEngine
     end
 
     def trigger_call(function_name)
+      return { triggered: false, msg: 'No API token' } if StashEngine::ApiToken.token.nil?
+
       response = @client.invoke(
         {
           function_name: function_name,
