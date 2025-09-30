@@ -12,9 +12,9 @@ module StashEngine
       end
 
       def payer
+        return funder_payment_info&.payer_funder if funder_will_pay?
         return latest_resource&.tenant if institution_will_pay?
         return journal if journal&.will_pay?
-        return funder_payment_info&.payer_funder if funder_will_pay?
 
         nil
       end
