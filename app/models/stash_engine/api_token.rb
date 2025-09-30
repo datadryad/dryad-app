@@ -60,7 +60,10 @@ module StashEngine
 
         json = resp.parse
         update(token: json['access_token'], expires_at: (Time.new + json['expires_in'].seconds))
-      rescue HTTP::Error, HTTP::TimeoutError, StashEngine::ApiTokenStatusError => e
+      rescue StashEngine::ApiTokenStatusError
+        logger.warn('Unable to get API key, probably local testing')
+        return
+      rescue HTTP::Error, HTTP::TimeoutError => e
         logger.warn("Http error getting API key: #{e.full_message}")
         sleep 3
         retry if (attempts += 1) < 10

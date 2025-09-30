@@ -66,63 +66,20 @@ module StashEngine
           # It can maintain previous deletions for the file (both same and different case), but delete non-deletions
           @resource.send(@resource_assoc).where('lower(download_filename) = ?', params[:name]&.downcase)
             .where.not(file_state: 'deleted').destroy_all
-          db_file =
-            @file_model.create(
-              download_filename: params[:name],
-              upload_file_name: params[:uuid],
-              upload_content_type: params[:type],
-              upload_file_size: params[:size],
-              resource_id: @resource.id,
-              upload_updated_at: Time.new,
-              file_state: 'created',
-              original_filename: params[:original]
-            )
-          render json: { new_file: db_file.as_json(methods: %i[type uploaded]) }
+          file_params = {
+            download_filename: params[:name],
+            upload_file_name: params[:uuid],
+            upload_content_type: params[:type],
+            upload_file_size: params[:size],
+            original_filename: params[:original]
+          }
+          db_file = FileUploadService.new(resource: @resource, file_model: @file_model, file_params: file_params).save
+          render json: { new_file: db_file.as_json(methods: %i[type uploaded frictionless_report]) }
         end
       end
     end
 
-    # this runs validation on all the files passed in as params['file_ids'], by calling lambda(s)
-    # Not sure the reason for passing an array of ids since it's only one at a time, but maybe because of data
-    # structures in the React code which seems a bit opaque
-    # This is a POST request for multiple files and returns an array with triggered status (true/false)
-    def trigger_frictionless
-      # get scope of ALL tabular files from this resource
-      tabular_files = resource.data_files.tabular_files
-      begin
-        files = tabular_files.find(params['file_ids']) # narrow to just the file ids passed in
-      rescue ActiveRecord::RecordNotFound => e
-        puts "Record not found: #{e.inspect}" # only for rubocop
-        render json: { status: "Couldn't find tabular file for this resource" }, status: :not_found
-        return
-      end
-
-      files.each(&:set_checking_status) # set to checking status
-      result = files.map do |f|
-        result = f.trigger_frictionless
-        f.frictionless_report.update(status: 'error', report: result[:msg]) if result[:triggered] == false
-        { file_id: f.id, triggered: result[:triggered] }
-      end
-
-      render json: result
-    end
-
-    def trigger_sd_scan
-      scannable_files = resource.data_files.scannable_files.where(id: params['file_ids'])
-      render json: 'Nothing to trigger'.to_json and return if scannable_files.empty?
-
-      scannable_files.each do |file|
-        if file.sensitive_data_report.blank?
-          file.set_checking_status(SensitiveDataReport)
-          file.trigger_sensitive_data_scan
-        end
-      end
-
-      render json: 'SSD triggered'.to_json
-    end
-
-    # takes a list of file IDs to check for frictionless reports, and returns only information on the completed
-    # ones with non "checking" status
+    # takes a list of file IDs to check for frictionless reports, and returns only information on the completed ones with non "checking" status
     # GET request
     def check_frictionless
       # get scope of ALL tabular files for the resource
