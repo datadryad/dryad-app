@@ -27,7 +27,7 @@ document.getElementById('cancel_dialog').addEventListener('click', (e) => {
     document.getElementById('genericModalDialog').removeAttribute('style');
     document.getElementById('genericModalDialog').classList.remove('extra-wide');
   })
-<% end %> 
+<% end %>
 <% if @field == 'waiver' %>
   <% if @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>
     document.getElementById('popup_submit').setAttribute('hidden', 'hidden');
@@ -47,7 +47,7 @@ document.getElementById('cancel_dialog').addEventListener('click', (e) => {
         t.removeAttribute('aria-disabled')
         t.setAttribute('aria-current', false)
       })
-      document.getElementById('notification_date').value = tog.dataset.value
+      document.getElementById('identifier_notification_date').value = tog.dataset.value
       tog.setAttribute('aria-disabled', true)
       tog.setAttribute('aria-current', true)
     })

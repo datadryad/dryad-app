@@ -5,21 +5,19 @@
 <% end %>
 <h2>Related works</h2>
 <% @resource.related_identifiers.each do |related_identifier| %>
-  <%= form_with(url: related_identifiers_update_path(format: :js), method: :patch, local: false) do |form| -%>
+  <%= form_with(url: related_identifiers_update_path(format: :js), method: :patch, local: false, model: related_identifier, scope: :stash_datacite_related_identifier ) do |f| -%>
     <div class="input-line" style="width: 835px; max-width: 100%; margin-bottom: 1rem;">
-      <%= form.fields_for :stash_datacite_related_identifier, related_identifier do |f| %>
-        <%= f.hidden_field :id %>
-        <%= f.hidden_field :resource_id %>
-        <div class="input-stack" style="flex: 1">
-          <%= f.label :work_type, 'Work type', class: 'c-input__label', for: "work_type#{related_identifier.id}" %>
-          <%= f.select(:work_type, options_for_select(StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a + [["Primary article", 'primary_article']], related_identifier.work_type), {}, { disabled: ( params[:sub_method] == 'put' ), class: 'c-input__select', id: "work_type#{related_identifier.id}", required: true} ) %>
-        </div>
-        <div class="input-stack" style="flex: 2">
-          <%= f.label :related_identifier, 'DOI or other URL', class: 'c-input__label', for: "related_identifier#{related_identifier.id}" %>
-          <%= f.text_field :related_identifier, class: 'c-input__text', id: "related_identifier#{related_identifier.id}", required: true %>
-        </div>
-        <%= submit_tag 'Save', class: 'o-button__plain-text2', style: 'align-self: flex-end' %>
-      <% end %>
+      <%= f.hidden_field :id %>
+      <%= f.hidden_field :resource_id %>
+      <div class="input-stack" style="flex: 1">
+        <%= f.label :work_type, 'Work type', class: 'c-input__label', for: "work_type#{related_identifier.id}" %>
+        <%= f.select(:work_type, options_for_select(StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a + [["Primary article", 'primary_article']], related_identifier.work_type), {}, { disabled: ( params[:sub_method] == 'put' ), class: 'c-input__select', id: "work_type#{related_identifier.id}", required: true} ) %>
+      </div>
+      <div class="input-stack" style="flex: 2">
+        <%= f.label :related_identifier, 'DOI or other URL', class: 'c-input__label', for: "related_identifier#{related_identifier.id}" %>
+        <%= f.text_field :related_identifier, class: 'c-input__text', id: "related_identifier#{related_identifier.id}", required: true %>
+      </div>
+      <%= submit_tag 'Save', class: 'o-button__plain-text2', style: 'align-self: flex-end' %>
       <button class="o-button__plain-text7" style="align-self: flex-end; padding: 6px 0;" aria-label="Delete related work" type="submit" form="related_identifier_delete_form<%=related_identifier.id%>"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
     </div>
   <% end %>
@@ -27,21 +25,19 @@
   <% end %>
 <% end %>
 <h2>+Add related work</h2>
-<%= form_with(url: related_identifiers_create_path(format: :js), method: :post, local: false) do |form| %>
-  <%= form.fields_for @related_work do |f| %>
-    <%= f.hidden_field :resource_id, value: @resource.id %>
-    <div class="input-line" style="width:800px; max-width: 100%">
-      <div class="input-stack" style="flex: 1">
-        <%= f.label :work_type, 'Work type', class: 'c-input__label' %>
-        <%= f.select(:work_type, options_for_select(StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a + [["Primary article", 'primary_article']]), {}, { disabled: ( params[:sub_method] == 'put' ), class: 'c-input__select', required: true} ) %>
-      </div>
-      <div class="input-stack" style="flex: 2">
-        <%= f.label :related_identifier, 'DOI or other URL', class: 'c-input__label' %>
-        <%= f.text_field :related_identifier, class: 'c-input__text', required: true %>
-      </div>
-      <%= submit_tag 'Save', class: 'o-button__plain-text2', style: 'align-self: flex-end' %>
+<%= form_with(url: related_identifiers_create_path(format: :js), method: :post, local: false, model: @related_work) do |f| %>
+  <%= f.hidden_field :resource_id, value: @resource.id %>
+  <div class="input-line" style="width:800px; max-width: 100%">
+    <div class="input-stack" style="flex: 1">
+      <%= f.label :work_type, 'Work type', class: 'c-input__label' %>
+      <%= f.select(:work_type, options_for_select(StashDatacite::RelatedIdentifier::WORK_TYPE_CHOICES.invert.to_a + [["Primary article", 'primary_article']]), {}, { disabled: ( params[:sub_method] == 'put' ), class: 'c-input__select', required: true} ) %>
     </div>
-  <% end %>
+    <div class="input-stack" style="flex: 2">
+      <%= f.label :related_identifier, 'DOI or other URL', class: 'c-input__label' %>
+      <%= f.text_field :related_identifier, class: 'c-input__text', required: true %>
+    </div>
+    <%= submit_tag 'Save', class: 'o-button__plain-text2', style: 'align-self: flex-end' %>
+  </div>
   <br/>
 <% end %>
 <div class="c-modal__buttons-right">
