@@ -109,3 +109,12 @@ MFA Notes:
 - In the Salesforce user settings, MFA is controlled by the user's Profile
   - To force a user to MFA, edit the Profile to add permission `Multi-Factor Authentication for User Interface Logins`
   - To exclude a user from MFA, add permission `Waive Multi-Factor Authentication for Exempt User`
+
+
+Email ticket creation
+======================
+
+When a Salesforce ticket must be handed off to the platform development team,
+the Salesforce case can be forwarded to a special email address to facilitate
+ticket creation. See the protected [instructions for email ticket
+creation](https://docs.google.com/document/d/1umqBLtWc_q0JxHVC7YbyIw_JtJ7zDT8uryBLnuB_oCU/edit?usp=sharing).
