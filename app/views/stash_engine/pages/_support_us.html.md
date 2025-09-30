@@ -18,7 +18,7 @@ We welcome contributions in any amount, from $100 to $100,000 USD or more.
 
 <p style="text-align: center;"><a class="o-link__buttonlink" href="https://buy.stripe.com/fZu3cw0uWfUg2lQ4S2gUM02">Support Dryad now</a></p>
 
-* Checks and bank drafts may be sent by mail to Dryad, 417 Mace Blvd., Ste J110, Davis, CA 95618 USA
+Checks and bank drafts may be sent by mail to Dryad, 417 Mace Blvd., Ste J110, Davis, CA 95618 USA
 
 You can also pledge to Dryad as essential open science infrastructure recognized by [SCOSS](https://scoss.org/what-is-scoss/scossfamily/) (Global Sustainability Coalition for Open Science Services). 
 
