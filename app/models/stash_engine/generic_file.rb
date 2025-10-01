@@ -63,21 +63,18 @@ module StashEngine
     scope :errors, -> { where('url IS NOT NULL AND status_code <> 200') }
     scope :validated, -> { where('(url IS NOT NULL AND status_code = 200) OR url IS NULL') }
     scope :uploaded, -> { where.not(download_filename: ['README.md', 'DisciplineSpecificMetadata.json'], type: StashEngine::DataFile) }
+    scope :valid_url_table, -> { present_files.uploaded.url_submission.validated.order(download_filename: :asc) }
     scope :validated_table, -> { present_files.uploaded.validated.order(download_filename: :asc) }
+
     scope :tabular_files, -> {
-      present_files.where(upload_content_type: 'text/csv')
-        .or(present_files.where('upload_file_name LIKE ?', '%.csv'))
-        .or(present_files.where(upload_content_type: 'text/tab-separated-values'))
-        .or(present_files.where('upload_file_name LIKE ?', '%.tsv'))
-        .or(present_files.where(upload_content_type: 'application/vnd.ms-excel'))
-        .or(present_files.where('upload_file_name LIKE ?', '%.xls'))
-        .or(present_files.where(upload_content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
-        .or(present_files.where('upload_file_name LIKE ?', '%.xlsx'))
-        .or(present_files.where(upload_content_type: 'application/json'))
-        .or(present_files.where('upload_file_name LIKE ?', '%.json'))
-        .or(present_files.where(upload_content_type: 'application/xml'))
-        .or(present_files.where(upload_content_type: 'text/xml'))
-        .or(present_files.where('upload_file_name LIKE ?', '%.xml'))
+      present_files.where(upload_content_type:
+        ['text/csv', 'text/tab-separated-values', 'application/vnd.ms-excel', 'application/json', 'application/xml', 'text/xml',
+         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])
+        .or(present_files.where("upload_file_name RLIKE '.*\\.(csv|tsv|xls|xlsx|json|xml)$'"))
+    }
+    scope :scannable_files, -> {
+      present_files.where(upload_content_type: ['text/csv', 'text/tab-separated-values', 'text/plain'])
+        .or(present_files.where("upload_file_name RLIKE '.*\\.(csv|tsv|txt|log)$'"))
     }
     enum(:file_state, %w[created copied deleted].to_h { |i| [i.to_sym, i] })
     enum(:digest_type, %w[md5 sha-1 sha-256 sha-384 sha-512].to_h { |i| [i.to_sym, i] })
@@ -236,20 +233,9 @@ module StashEngine
       sanitized.gsub(/,|;|'|"|\u007F/, '').strip.gsub(/\s+/, '_')
     end
 
-    def set_checking_status
-      FrictionlessReport.create(generic_file_id: id, status: 'checking')
-    end
-
-    # triggers frictionless validation but results are async and may not appear in database until AWS Lambda completes
-    # and calls back with results
-    def trigger_frictionless
-      StashEngine::FrictionlessLambdaSenderService.new(self).call
-    end
-
-    # triggers PII sensitive data scan validation
-    # results are async and may not appear in database until AWS Lambda completes and calls back with results
-    def trigger_sensitive_data_scan
-      StashEngine::SensitiveDataLambdaSenderService.new(self).call
+    def set_checking_status(class_name = FrictionlessReport)
+      class_name.create(generic_file_id: id, status: 'checking')
+      reload
     end
 
     def trigger_excel_to_csv
