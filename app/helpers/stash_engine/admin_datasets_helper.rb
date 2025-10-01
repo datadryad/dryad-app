@@ -90,7 +90,7 @@ module StashEngine
         uri = URI.parse("https://api.github.com/repos/datadryad/dryad-product-roadmap/issues/#{issue}")
         response = Net::HTTP.get_response(uri)
         json = JSON.parse(response.body)
-        return unless json['title'].present?
+        next unless json['title'].present?
 
         {
           url: json['html_url'],
