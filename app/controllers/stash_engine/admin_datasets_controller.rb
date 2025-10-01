@@ -145,7 +145,8 @@ module StashEngine
 
     def create_issue
       authorize %i[stash_engine admin_datasets]
-      @identifier.update(issues: @identifier.issues << params[:issue])
+      issues = [@identifier.issues, [params[:issue]]].compact.reduce([], :|)
+      @identifier.update(issues: issues)
       @identifier.reload
       respond_to(&:js)
     end

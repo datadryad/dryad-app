@@ -1,7 +1,10 @@
 <h1>Add github issue</h1>
 <%= form_with(url: ds_admin_issue_path(@identifier.id), method: :post, local: false) do |form| -%>
   <div class="c-input">
-    <%= form.label :issue, "Enter the issue number (like <code>1234</code>)".html_safe, class: 'c-input__label' %>
+    <span style="display: inline-flex; gap: 1ch">
+      <%= form.label :issue, 'Enter the issue number', class: 'c-input__label' %>
+      <span> (For example, <code>1234</code>)</span>
+    </span>
     <%= form.text_field :issue, class: "c-input__text" %>
   </div>
   <div class="c-modal__buttons-right">

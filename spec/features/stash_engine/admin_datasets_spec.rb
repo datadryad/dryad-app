@@ -128,8 +128,8 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
     end
 
     context :manager do
-
       before(:each) do
+        mock_github!
         mock_salesforce!
         @manager = create(:user, role: 'manager')
         sign_in(@manager, false)
@@ -253,6 +253,14 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).to have_text('Payment history')
         expect(page).to have_text('Added waiver')
       end
+
+      it 'adds a github issue' do
+        expect(page).to have_text('Github issues')
+        click_link 'Add github issue'
+        fill_in 'Enter the issue number', with: '1235'
+        click_button 'Submit'
+        expect(page).to have_link('Another test github issue', href: 'https://github.com/datadryad/dryad-product-roadmap/issues/1235')
+      end
     end
 
     context :admin do
@@ -317,7 +325,6 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
     end
 
     context :tenant_curator do
-
       before(:each) do
         mock_salesforce!
         @tenant_curator = create(:user)

@@ -98,7 +98,7 @@ module StashEngine
           assignee: json.dig('assignee', 'login'),
           status: json['closed_at'].present? ? 'Closed' : 'Open'
         }
-      end
+      end&.reject(&:blank?)
     end
   end
 end
