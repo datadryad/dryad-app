@@ -5,7 +5,7 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     protect_from_forgery except: :activity_log
-    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates]
+    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates create_issue]
 
     def popup
       case @field
@@ -140,6 +140,13 @@ module StashEngine
         @error_message = 'No Dryad user found with this ORCID'
         render 'stash_engine/user_admin/update_error' and return
       end
+      respond_to(&:js)
+    end
+
+    def create_issue
+      authorize %i[stash_engine admin_datasets]
+      @identifier.update(issues: @identifier.issues << params[:issue])
+      @identifier.reload
       respond_to(&:js)
     end
 

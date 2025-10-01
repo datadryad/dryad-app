@@ -1,3 +1,5 @@
+require 'net/http'
+require 'json'
 require 'stash/salesforce'
 
 module StashEngine
@@ -81,6 +83,22 @@ module StashEngine
 
     def salesforce_links(doi)
       Stash::Salesforce.find_cases_by_doi(doi)
+    end
+
+    def display_issues(issues)
+      issues&.map do |issue|
+        uri = URI.parse("https://api.github.com/repos/datadryad/dryad-product-roadmap/issues/#{issue}")
+        response = Net::HTTP.get_response(uri)
+        json = JSON.parse(response.body)
+        return unless json['title'].present?
+
+        {
+          url: json['html_url'],
+          title: json['title'],
+          assignee: json.dig('assignee', 'login'),
+          status: json['closed_at'].present? ? 'Closed' : 'Open'
+        }
+      end
     end
   end
 end

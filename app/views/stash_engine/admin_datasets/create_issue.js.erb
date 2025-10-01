@@ -1,0 +1,2 @@
+document.getElementById('github-issue-list').innerHTML = "<%= escape_javascript(render partial: 'github_issues', locals: { issues: display_issues(@identifier.issues) }) %>";
+document.getElementById('genericModalDialog').close();

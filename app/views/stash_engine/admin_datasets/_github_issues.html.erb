@@ -1,0 +1,7 @@
+<% issues.each do |issue| %>
+  <tr class="c-lined-table__row">
+    <td><%= link_to issue[:title], issue[:url], target: '_blank' %></td>
+    <td><%= issue[:assignee].presence || '' %></td>
+    <td><%= issue[:status] %></td>
+  </tr>
+<% end %>
