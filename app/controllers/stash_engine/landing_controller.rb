@@ -7,6 +7,7 @@ module StashEngine
     include StashDatacite::LandingMixin
 
     before_action :require_identifier_and_resource, only: %i[show linkset]
+    before_action :allow_iframe_requests, only: %i[show]
     protect_from_forgery(except: [:update])
 
     # ############################################################
