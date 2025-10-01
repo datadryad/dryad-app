@@ -112,6 +112,14 @@ RSpec.feature 'Landing', type: :feature, js: true do
         expect(page).to have_button('Tabular data check alerts')
         expect(page).to have_button('Sensitive data alerts')
 
+        click_button 'Tabular data check alerts'
+        expect(page).to have_css('h1', text: 'Tabular data check')
+        click_button 'Close dialog'
+
+        click_button 'Sensitive data alerts'
+        expect(page).to have_css('h1', text: 'Sensitive data alerts')
+        click_button 'Close dialog'
+
         click_link 'Public view'
         expect(page).not_to have_text('This is the administrator view of this dataset')
         expect(page).not_to have_button('Tabular data check alerts')

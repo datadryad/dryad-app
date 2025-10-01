@@ -63,12 +63,12 @@ module StashEngine
       end
 
       it 'returns json when request with format html' do
-        @url = Rails.application.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id, format: :html)
+        @url = Rails.application.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         generic_validate_urls_expects(@url)
       end
 
       it 'returns json with bad urls when request with html format' do
-        @url = Rails.application.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id, format: :html)
+        @url = Rails.application.routes.url_helpers.data_file_validate_urls_path(resource_id: @resource.id)
         generic_bad_urls_expects(@url)
       end
 
