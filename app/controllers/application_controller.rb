@@ -14,4 +14,10 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception, prepend: true
 
+  private
+
+  def allow_iframe_requests
+    response.headers.delete('X-Frame-Options') # remove default
+    response.headers['X-Frame-Options'] = 'ALLOWALL' # or 'SAMEORIGIN'
+  end
 end
