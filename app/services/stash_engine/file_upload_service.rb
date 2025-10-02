@@ -11,7 +11,8 @@ module StashEngine
     end
 
     def save
-      @file.save
+      return @file unless @file.save
+
       trigger_checks
       @file
     end
