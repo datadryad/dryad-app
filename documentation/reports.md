@@ -46,6 +46,29 @@ git commit -a -m "add reports for 2024-01"
 git push origin main
 ```
 
+Dataset origin report
+---------------------
+
+Run the origin report and copy the results into the `journal-payments` repository:
+```
+# on v3-prod server
+cd ~/deploy/current
+RAILS_ENV=production bundle exec rake identifiers:dataset_origin_report -- --year_month 2024-05
+cp dataset_origin* ~/journal-payments/dataset_origins/
+```
+
+Update detailed report
+----------------------
+
+```
+# on v3-prod server
+cd ~/deploy/current
+RAILS_ENV=production bundle exec rake identifiers:dataset_info_report_detailed --
+```
+
+Copy the detailed report to a google spreadsheet.
+
+
 End-of-quarter reporting
 ------------------------
 
