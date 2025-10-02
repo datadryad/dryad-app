@@ -147,7 +147,7 @@ module StashEngine
       authorize %i[stash_engine admin_datasets]
       issues = @identifier.issues || []
       issues << params[:issue]
-      @identifier.update(issues: issues.reject(&:blank?))
+      @identifier.update(issues: issues.reject(&:blank?).uniq)
       @identifier.reload
       respond_to(&:js)
     end
