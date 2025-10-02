@@ -109,14 +109,17 @@ Rails.application.routes.draw do
       resources :internal_data, shallow: true, as: 'identifier_internal_data'
     end
     match 'identifier_internal_data/:identifier_id', to: 'internal_data#create', as: 'internal_data_create', via: %i[get post put]
+    
     resources :internal_data, shallow: true, as: 'stash_engine_internal_data'
     resources :resource_publications, shallow: true, as: 'resource_publication'
-
     resources :tenants, only: %i[index show]
+
     resources :data_files, :software_files, :supp_files do
       member do
         patch 'destroy_manifest' # destroy file from manifest method
         patch 'rename'
+        get 'frictionless_report'
+        get 'sd_report'
       end
     end
 
@@ -133,17 +136,11 @@ Rails.application.routes.draw do
     # TODO: this is to be the replacement for the 3 above
     get 'generic_file/presign_upload/:resource_id', to: 'generic_files#presign_upload', as: 'generic_file_presign_url'
 
+    get 'generic_file/check_frictionless/:resource_id', to: 'generic_files#check_frictionless', as: 'check_frictionless' 
+
     post 'data_file/upload_complete/:resource_id', to: 'data_files#upload_complete', as: 'data_file_complete'
     post 'software_file/upload_complete/:resource_id', to: 'software_files#upload_complete', as: 'software_file_complete'
-    post 'supp_file/upload_complete/:resource_id', to: 'supp_files#upload_complete', as: 'supp_file_complete'
-
-    post 'generic_file/trigger_frictionless/:resource_id',
-         to: 'generic_files#trigger_frictionless',
-         as: 'generic_file_trigger_frictionless'
-
-    get 'generic_file/check_frictionless/:resource_id',
-        to: 'generic_files#check_frictionless',
-        as: 'generic_file_check_frictionless'
+    post 'supp_file/upload_complete/:resource_id', to: 'supp_files#upload_complete', as: 'supp_file_complete'    
 
     get 'software_license_select', to: 'software_files#licenses'
     get 'software_licenses', to: 'software_files#licenses_autocomplete'

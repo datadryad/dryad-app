@@ -89,7 +89,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       create(:role, user: @admin, role: 'admin', role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
+      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, created_at: 1.minute.ago)
     end
 
     context :tenant_admin do
@@ -204,7 +204,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         fill_in 'Publication name', with: 'Test journal'
         fill_in 'Manuscript number', with: 'TEST_MAN_1234'
         find('#pub_save').click
-        click_button 'Close dialog'
+        click_button 'Close dialog', match: :first
         expect(page).to have_text('TEST_MAN_1234')
         click_button('Edit related works')
         select 'Primary article'
@@ -213,7 +213,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
           find('input[name="commit"]').click
         end
         expect(page).to have_css('form[action="/stash_datacite/related_identifiers/update.js"]')
-        click_button 'Close dialog'
+        click_button 'Close dialog', match: :first
         expect(page).to have_text('TEST_MAN_1234')
         expect(page).to have_css('#doi-label')
         expect(page).to have_text('published')
@@ -227,7 +227,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
           fill_in 'Funder:', with: new_funder
           find('input[name="commit"]').click
         end
-        click_button 'Close dialog'
+        click_button 'Close dialog', match: :first
         expect(page).not_to have_text('+Add funder')
         expect(page).to have_text(new_funder)
       end
