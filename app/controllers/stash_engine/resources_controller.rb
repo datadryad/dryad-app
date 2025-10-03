@@ -213,7 +213,7 @@ module StashEngine
 
     def file_pub_dates
       dates = @resource.identifier.resources.files_published.pluck(:publication_date)
-      render json: dates, status: :ok
+      render json: dates.reject(&:blank?), status: :ok
     end
 
     # patch request

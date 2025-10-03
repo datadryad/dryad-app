@@ -104,7 +104,8 @@ export const filesCheck = (resource, pubDates, superuser, maximums) => {
     const changelog = resource.descriptions.find((d) => d.description_type === 'changelog');
     if (changelog) {
       const end = new RegExp(`${pubDates.slice(-1)[0]}:\\*\\*\\s*$`);
-      if (!changelog.description || !pubDates.some((d) => changelog.description.includes(d)) || end.test(changelog.description)) {
+      if (!changelog.description
+        || (pubDates.length && !pubDates.some((d) => changelog.description.includes(d))) || end.test(changelog.description)) {
         return (
           <p className="error-text" id="log_error">A log describing changes to published files is required</p>
         );
