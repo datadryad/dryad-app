@@ -51,9 +51,24 @@
 
 <script type="module" async>
   const pagefind = await import("/pagefind/pagefind.js");
+  await pagefind.options({
+    ranking: {
+      termFrequency: 0.0,
+      termSimilarity: 20.0,
+    }
+  })
   pagefind.init();
 
   const urlFix = (url) => url.replace('.html', '');
+
+  const weightedResults = async (results) => results.reduce(async (array, r) => {
+    const list = await array
+    const data = await r.data()
+    if (data.weighted_locations.some(l => l.balanced_score >= 1)) {
+      list.push(data)
+    }
+    return list
+  }, Promise.resolve([]))
 
   const searchHelp = async (query) => {
     const count = document.getElementById('help_result_count')
@@ -63,18 +78,18 @@
     const prompt = document.getElementById('prompt')
     const search = await pagefind.search(query)
     const results = await search.results
+    const weighted = await weightedResults(results)
     container.innerHTML = '';
-    prompt.setAttribute('hidden', true)
-    if (results.length) {
-      count.innerHTML = `${results.length} result${results.length > 1 ? 's' : ''} for <b>${query}</b>`
-      results.forEach(async (r) => {
-        const data = await r.data()
+    prompt.setAttribute('hidden', true)    
+    if (weighted.length) {
+      count.innerHTML = `${weighted.length} result${weighted.length > 1 ? 's' : ''} for <b>${query}</b>`
+      weighted.forEach((data) => {
         const child = temp.content.cloneNode(true)
         child.querySelector('a').href = urlFix(data.url)
         child.querySelector('a').innerHTML = data.meta.title
         child.querySelector('.excerpt').innerHTML = data.excerpt
         data.sub_results.forEach((s) => {
-          if (s.url !== data.url) {
+          if (s.weighted_locations.some(l => l.balanced_score >= 1)) {
             const sub = subtemp.content.cloneNode(true)
             sub.querySelector('a').href = urlFix(s.url)
             sub.querySelector('a').innerHTML += s.title
