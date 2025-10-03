@@ -106,6 +106,8 @@ The annual fee for institutions is based on annual research expenditure as defin
 
 For campus-based publishers where both the library and the press are Dryad partners, we levy a single Annual Service Fee paid by the institution based on research expenditure. Each entity is responsible for the Data Publishing Charges for their respective authors.
 
+Institutes or departments within a larger host institution can partner with Dryad directly if there is not already an overarching agreement in place. Annual Service Fees will be calculated based on the research expenditure for that institute or department only.
+
 To promote transparency and equity among our partners Dryad does not offer individual discounts. However, to support growth and development, especially of new data-sharing programs, we offer tiered pricing for three-year agreements, as follows. Three-year agreements are exempt from annual inflationary increases.
 
 <div style="text-align: center;">
