@@ -85,7 +85,7 @@ module StashApi
     private
 
     def remove_html(in_string)
-      ActionView::Base.full_sanitizer.sanitize(in_string)
+      ActionController::Base.helpers.sanitize(in_string, tags: %w[em i sub sup])
     end
 
     def establish_owning_user_id

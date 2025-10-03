@@ -44,7 +44,7 @@ gem 'blacklight', '~> 8.8.0'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 5.3'
 gem 'charlock_holmes', '~> 0.7.9'
-gem 'commonmarker', '~> 2.3'
+gem 'commonmarker', '~> 2.4'
 gem 'concurrent-ruby', '~> 1.3.4'
 gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'

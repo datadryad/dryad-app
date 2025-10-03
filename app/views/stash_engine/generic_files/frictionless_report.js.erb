@@ -1,0 +1,3 @@
+document.getElementById('genericModalContent').innerHTML = "<h1>Tabular data check</h1><p>File: <%= @file.download_filename %><%= escape_javascript(react_component('components/UploadFiles/ModalValidationReport/FrictionlessReport', { tdc_report: @report })) %>"
+ReactRailsUJS.mountComponents()
+document.getElementById('genericModalDialog').showModal();

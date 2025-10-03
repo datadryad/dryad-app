@@ -120,5 +120,18 @@ module StashEngine
       expect(response.body).to include(download_stream_url(file_id: res.data_files.present_files.first.id))
     end
 
+    it 'allows loading in iFrames only for show method' do
+      # make first look embargoed and second isn't yet
+      @resource.update(meta_view: true, publication_date: Time.new + 1.day)
+      @identifier.update(pub_state: 'embargoed')
+      create(:curation_activity, status: 'embargoed', resource: @resource)
+      @identifier.reload
+
+      get "/dataset/#{@identifier}"
+      expect(response.header['X-Frame-Options']).to eq('ALLOWALL')
+
+      get "/dataset/#{@identifier}/linkset"
+      expect(response.header['X-Frame-Options']).to eq('SAMEORIGIN')
+    end
   end
 end
