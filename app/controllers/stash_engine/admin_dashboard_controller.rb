@@ -232,6 +232,10 @@ module StashEngine
           'LOWER(dcs_related_identifiers.related_identifier) like ? or LOWER(stash_engine_resource_publications.manuscript_number) like LOWER(?)',
           "%#{@filters[:identifiers]}%", "%#{@filters[:identifiers]}%"
         ) unless @filters[:identifiers].blank?
+      @datasets = @datasets.joins(:funders).where(
+        'dcs_contributors.award_number like (?)',
+        "%#{@filters[:awards]}%"
+      ) unless @filters[:awards].blank?
 
       user_filters
       date_filters

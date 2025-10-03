@@ -37,6 +37,9 @@
   <% if @fields.include?('authors') %>
     <td><%= dataset.author_string %></td>
   <% end %>
+  <% if @fields.include?('emails') %>
+    <td><%= dataset.authors.limit(6).map(&:author_email).reject(&:blank?)&.join(', ') %></td>
+  <% end %>
   <% if @fields.include?('affiliations') || @fields.include?('countries') %>
     <td><% affs = dataset.authors.map(&:affiliations).flatten.uniq.each_with_object([]) { |a, arr| 
         if a.ror_id 

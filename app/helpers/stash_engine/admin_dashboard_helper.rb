@@ -8,6 +8,7 @@ module StashEngine
       head << 'DOI' if @fields.include?('doi')
       head << 'Keywords' if @fields.include?('keywords')
       head << 'Authors' if @fields.include?('authors')
+      head << 'Emails' if @fields.include?('emails')
       if @fields.include?('affiliations') || @fields.include?('countries')
         head << (@fields.include?('affiliations') ? 'Affiliations' : 'Countries')
       end
@@ -38,6 +39,7 @@ module StashEngine
       row << dataset.identifier.identifier if @fields.include?('doi')
       row << dataset.subjects.map(&:subject).join(', ') if @fields.include?('keywords')
       row << dataset.author_string if @fields.include?('authors')
+      row << dataset.authors.limit(6).map(&:author_email).reject(&:blank?)&.join(', ') if @fields.include?('emails')
       if @fields.include?('affiliations') || @fields.include?('countries')
         uniq_affs = dataset.authors.map(&:affiliations).flatten.uniq
         ror_affs = uniq_affs.each_with_object([]) do |a, arr|
