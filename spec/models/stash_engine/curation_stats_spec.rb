@@ -3,6 +3,7 @@
 # Table name: stash_engine_curation_stats
 #
 #  id                          :bigint           not null, primary key
+#  aar_size                    :integer
 #  author_revised              :integer
 #  author_versioned            :integer
 #  datasets_curated            :integer
@@ -16,6 +17,7 @@
 #  new_datasets                :integer
 #  new_datasets_to_peer_review :integer
 #  new_datasets_to_submitted   :integer
+#  ppr_size                    :integer
 #  ppr_to_curation             :integer
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
@@ -568,5 +570,12 @@ module StashEngine
       end
     end
 
+    describe :populate_aar_size do
+      include_examples 'in status size for a date', :action_required, :aar_size
+    end
+
+    describe :populate_ppr_size do
+      include_examples 'in status size for a date', :peer_review, :ppr_size
+    end
   end
 end
