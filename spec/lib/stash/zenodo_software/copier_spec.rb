@@ -35,7 +35,7 @@ module Stash
         describe 'software prerequisites for submission' do
           it 'begins replication for an item that is enqueued correctly' do
             # it gets past initial checks and starts doing http requests
-            expect { @zsc.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
+            expect { @zsc.add_to_zenodo }.to raise_error(VCR::Errors::UnhandledHTTPRequestError)
           end
 
           it "it doesn't begin replication if not a software item enqueued correctly" do
@@ -157,14 +157,14 @@ module Stash
         end
 
         it 'increments the retries counter' do
-          expect { @zsc.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
+          expect { @zsc.add_to_zenodo }.to raise_error(VCR::Errors::UnhandledHTTPRequestError)
           zc = @resource.zenodo_copies.software.first
           zc.reload
           expect(zc.retries).to eq(1) # this has been incremented from 0 to 1 when it started attempting adding to zenodo
         end
 
         it 'changes state to replicating' do
-          expect { @zsc.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
+          expect { @zsc.add_to_zenodo }.to raise_error(VCR::Errors::UnhandledHTTPRequestError)
           zc = @resource.zenodo_copies.software.first
           zc.reload
           expect(zc.state).to eq('replicating') # this has been incremented from 0 to 1 when it started attempting adding to zenodo
