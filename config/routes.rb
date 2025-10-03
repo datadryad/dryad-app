@@ -311,6 +311,7 @@ Rails.application.routes.draw do
     post 'ds_admin/:id/flag', to: 'admin_datasets#flag', as: 'ds_admin_flag'
     post 'ds_admin/:id/edit_submitter', to: 'admin_datasets#edit_submitter', as: 'ds_admin_edit_submitter'
     post 'ds_admin/:id/pub_dates', to: 'admin_datasets#pub_dates', as: 'ds_admin_pub_dates'
+    post 'ds_admin/:id/issue', to: 'admin_datasets#create_issue', as: 'ds_admin_issue'
     delete 'ds_admin/:id', to: 'admin_datasets#destroy', as: 'ds_admin_destroy'
     
 

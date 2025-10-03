@@ -2,12 +2,14 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
   include Mocks::Stripe
   include Mocks::RSolr
   include Mocks::Salesforce
+  include Mocks::Github
   include Mocks::Datacite
 
   context :curating_dataset do
 
     before(:each) do
       mock_salesforce!
+      mock_github!
       mock_stripe!
       mock_datacite_gen!
       create(:tenant)
@@ -15,6 +17,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
       create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: @resource.id)
       @resource.resource_states.first.update(resource_state: 'submitted')
+      @resource.identifier.update(issues: [1234])
       sign_in(create(:user, role: 'curator'))
       visit("#{stash_url_helpers.admin_dashboard_path}?curation_status=curation")
     end
@@ -54,6 +57,13 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       expect(page).to have_text('This is the dataset activity page.')
       expect(page).to have_text('Salesforce cases')
       expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
+    end
+
+    it 'renders github section' do
+      find('a[title="Activity log"]').click
+      expect(page).to have_text('This is the dataset activity page.')
+      expect(page).to have_text('Github issues')
+      expect(page).to have_link('Test github issue', href: 'https://github.com/datadryad/dryad-product-roadmap/issues/1234')
     end
 
     it 'allows proper at a glance editing' do
@@ -118,8 +128,8 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
     end
 
     context :manager do
-
       before(:each) do
+        mock_github!
         mock_salesforce!
         @manager = create(:user, role: 'manager')
         sign_in(@manager, false)
@@ -243,6 +253,14 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).to have_text('Payment history')
         expect(page).to have_text('Added waiver')
       end
+
+      it 'adds a github issue' do
+        expect(page).to have_text('Github issues')
+        click_link 'Add github issue'
+        fill_in 'Enter the issue number', with: '1235'
+        click_button 'Submit'
+        expect(page).to have_link('Another test github issue', href: 'https://github.com/datadryad/dryad-product-roadmap/issues/1235')
+      end
     end
 
     context :admin do
@@ -307,7 +325,6 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
     end
 
     context :tenant_curator do
-
       before(:each) do
         mock_salesforce!
         @tenant_curator = create(:user)
