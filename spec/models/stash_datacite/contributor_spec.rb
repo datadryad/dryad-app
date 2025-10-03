@@ -155,5 +155,51 @@ module StashDatacite
         end
       end
     end
+
+    describe 'api_integration_key and api_integration' do
+      let(:contributor) { create(:contributor, award_number: 'R01HD113192', name_identifier_id: ror_id) }
+
+      context 'when ror is NIH' do
+        let(:ror_id) { NIH_ROR }
+
+        it 'returns "NIH"' do
+          expect(contributor.api_integration_key).to eq('NIH')
+          expect(contributor.api_integration).to eq(Integrations::NIH)
+        end
+      end
+
+      context 'when ror is NIH grouping' do
+        let(:ror_id) { 'http://dx.doi.org/10.13039/100000049' }
+
+        before do
+          create(:contributor_grouping,
+                 name_identifier_id: NIH_ROR,
+                 json_contains: JSON.parse(File.read(File.join(Rails.root, 'spec/fixtures/nih_group.json'))))
+        end
+
+        it 'returns "NIH"' do
+          expect(contributor.api_integration_key).to eq('NIH')
+          expect(contributor.api_integration).to eq(Integrations::NIH)
+        end
+      end
+
+      context 'when ror is NSF' do
+        let(:ror_id) { NSF_ROR }
+
+        it 'returns "NIH"' do
+          expect(contributor.api_integration_key).to eq('NSF')
+          expect(contributor.api_integration).to eq(Integrations::NSF)
+        end
+      end
+
+      context 'when ror is none of the above' do
+        let(:ror_id) { 'some_id' }
+
+        it 'returns "NIH"' do
+          expect(contributor.api_integration_key).to be_nil
+          expect(contributor.api_integration).to be_nil
+        end
+      end
+    end
   end
 end
