@@ -3,13 +3,12 @@
 module StashDatacite
   module Resource
     class MetadataEntry
-      def initialize(resource, type, tenant_id)
+      def initialize(resource, type, tenant)
         @resource = resource
         @type = type
-        if @resource.identifier.last_submitted_resource.blank? ||
-          (@resource.identifier.institution_will_pay? && @resource.identifier.payment_id != tenant_id)
-          @resource.update(tenant_id: tenant_id)
-        end
+        submitted = @resource.identifier.last_submitted_resource
+        paying = tenant&.payment_configuration&.covers_dpc
+        @resource.update(tenant_id: tenant.id) if submitted.blank? || (paying && !submitted.tenant&.payment_configuration&.covers_dpc)
         @resource.fill_blank_author!
         ensure_author_orcid
         ensure_license if @type == 'collection'
