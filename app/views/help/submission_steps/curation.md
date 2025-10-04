@@ -1,3 +1,4 @@
+<% @page_title = 'Dataset curation' %>
 <h1>Dataset curation</h1>
 
 Dryad has a team of curators who check every submission to ensure the accessibility and reusability of files and metadata. Once your dataset is submitted, Dryad curators perform basic checks. Assuring that your dataset meets all of our [requirements for metadata](help/requirements/metadata) and [data files](help/requirements/files) will ensure that the curation process is as efficient and timely as possible.

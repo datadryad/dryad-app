@@ -1,3 +1,4 @@
+<% @page_title = 'Metadata requirements' %>
 <h1>Metadata requirements</h1>
 
 Good metadata helps make a dataset more discoverable and reusable. The metadata should describe the data themselves, rather than the study hypotheses, results, motivations, or conclusions. A thorough description of the data file, the context in which the data were collected, the measurements that were made, and the quality of the data are all important. 

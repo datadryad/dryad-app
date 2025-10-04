@@ -1,3 +1,4 @@
+<% @page_title = 'Submission walkthrough' %>
 <h1>Submission walkthrough</h1>
 
 Before you begin a submission, please ensure your submission meets [our requirements](/help/requirements/files) and follows [good data practices](/best_practices). After your submission is complete, your dataset will be curated and published. 
