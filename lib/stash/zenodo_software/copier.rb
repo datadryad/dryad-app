@@ -33,7 +33,7 @@ module Stash
     class Copier
       ZC = Stash::ZenodoReplicate::ZenodoConnection
 
-      # This is just a convenience method for manually testing without going through delayed_job, but may be useful
+      # This is just a convenience method for manually testing without going through Sidekiq, but may be useful
       # as a utility manually submit sometime in the future.
       # It adds all entries for submitting in the zenodo_copies table as needed, and resets if needed to test again.
       def self.test_submit(resource_id:, publication: false, type: 'software')

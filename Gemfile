@@ -16,6 +16,7 @@ gem 'sprockets', '~> 4.0'
 gem 'bcrypt_pbkdf', '~> 1.0'
 gem 'capistrano', '~> 3.17'
 gem 'capistrano-rails', '~> 1.7.0'
+gem 'capistrano-sidekiq', '~> 3.2.0'
 gem 'capistrano-yarn'
 gem 'ed25519', '>= 1.2', '< 2.0'
 gem 'rdoc', '~> 6.1.1' # for some reason needs to be installed for capistrano to work right
@@ -48,7 +49,6 @@ gem 'daemons', '~> 1.4.1'
 gem 'database_cleaner', '~> 2.0.1'
 gem 'datacite-mapping', git: 'https://github.com/CDLUC3/datacite-mapping.git'
 gem 'data_migrate'
-gem 'delayed_job_active_record', '~> 4.1.7'
 gem 'doorkeeper', '~> 5.5'
 gem 'down' # I'm not sure where this is used, but maybe in the frictionless data that Cassiano worked on to dl files
 gem 'exception_notification', git: 'https://github.com/smartinez87/exception_notification.git'
@@ -90,6 +90,8 @@ gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure
 gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'serrano', '~> 1.0' # this is a gem from datacite(?) and not sure it's actively used
+gem 'sidekiq', '~> 8.0.7'
+gem 'sidekiq-unique-jobs', '~> 8.0.11'
 gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 gem 'yaml', '~> 0.4.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
@@ -142,6 +144,7 @@ group :test do
   # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites (http://github.com/colszowka/simplecov)
   gem 'simplecov', require: false
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
+  gem 'mock_redis', '~> 0.50.0'
   gem 'simplecov-console', require: false
   gem 'timecop'
   gem 'webmock'

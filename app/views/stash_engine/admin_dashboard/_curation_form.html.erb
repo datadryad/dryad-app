@@ -1,5 +1,5 @@
 <h1><%= @desc %></h1>
-<%= form_with(url: admin_dash_update_path(@identifier.id), method: :post, local: false) do |form| -%>
+<%= form_with(url: admin_dash_update_path(@identifier.id), method: :post, local: false, model: @resource) do |form| -%>
   <%= hidden_field_tag :field, @field %>
   <% case @field %>
   <% when 'curation_activity' %>
@@ -24,7 +24,7 @@
   <% when 'curator' %>
     <p>Change curator for <em><%= @resource.title.html_safe %></em></p>
     <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
-    <%= form.fields_for :curator, @resource do |r| %>
+    <%= form.fields_for :curator, @resource.curator do |r| %>
       <div class="c-input">
         <%= r.label :id, 'Curator', class: 'c-input__label' %>
         <%= r.select :id, options_for_select([['(unassign)', '0']] + editor_select, @resource.user_id), {include_blank: true}, {class: 'c-input__select'} %>

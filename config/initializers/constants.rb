@@ -31,3 +31,5 @@ ROOT_URL = if Rails.application.default_url_options[:port].present?
 else
   "https://#{Rails.application.default_url_options[:host]}".freeze
 end
+
+SUBMISSION_REDIS_KEY = 'resource:%{resource.id}:remaining_files'.freeze

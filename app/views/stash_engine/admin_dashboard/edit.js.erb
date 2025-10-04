@@ -5,6 +5,6 @@ document.getElementById('cancel_dialog').removeEventListener('click', cancelClic
 document.getElementById('cancel_dialog').addEventListener('click', cancelClick);
 <% if @field == 'curation_activity' %>
   initDatePicker();
-  document.getElementById('_curation_activity_status').removeEventListener('change', statusChange)
-  document.getElementById('_curation_activity_status').addEventListener('change', statusChange)
+  document.getElementById('stash_engine_resource_curation_activity_status').removeEventListener('change', statusChange)
+  document.getElementById('stash_engine_resource_curation_activity_status').addEventListener('change', statusChange)
 <% end %>

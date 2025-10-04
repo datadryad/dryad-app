@@ -4,7 +4,7 @@
 
 # Cache config
 # ------------------
-Rack::Attack.cache.store = Redis.new(url: APP_CONFIG[:cache][:rack_attack_url]) unless Rails.env.test?
+Rack::Attack.cache.store = Redis.new(url: APP_CONFIG[:cache][:rack_attack_url], ssl: !Rails.env.development?) unless Rails.env.test?
 
 # Exemptions
 # ------------------

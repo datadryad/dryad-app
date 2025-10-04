@@ -8,14 +8,13 @@ RSpec.configure(&:infer_spec_type_from_file_location!)
 module StashEngine
   RSpec.describe ZenodoCopyJob do
 
-    before(:each) do
+    before do
       @resource = create(:resource)
       @new_zen = double('newZenodo')
       allow(Stash::ZenodoReplicate::Copier).to receive(:new).and_return(@new_zen)
     end
 
     describe '#perform' do
-
       it 'calls to add to zenodo if in correct states' do
         create(:zenodo_copy, state: 'enqueued', identifier_id: @resource.identifier_id, resource_id: @resource.id)
         expect(@new_zen).to receive(:add_to_zenodo)
@@ -66,20 +65,16 @@ module StashEngine
     end
 
     describe 'self.enqueue_deferred' do
-      include ActiveJob::TestHelper
+      after { Sidekiq::Worker.clear_all }
 
       it 're-enqueues the deferred items' do
         create(:zenodo_copy, state: 'deferred', identifier_id: @resource.identifier_id, resource_id: @resource.id)
         ZenodoCopyJob.enqueue_deferred
         @resource.reload
         expect(@resource.zenodo_copies.data.first.state).to eq('enqueued')
-        expect(enqueued_jobs).to match([a_hash_including(job: StashEngine::ZenodoCopyJob, args: [@resource.id], queue: 'zenodo_copy')])
-      end
-
-      after(:each) do
-        clear_enqueued_jobs
+        expect(StashEngine::ZenodoCopyJob.jobs.size).to eq(1)
+        expect(StashEngine::ZenodoCopyJob.jobs.first['args']).to eq([@resource.id])
       end
     end
-
   end
 end

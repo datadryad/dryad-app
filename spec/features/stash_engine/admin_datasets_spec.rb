@@ -157,8 +157,8 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
           find('button[aria-label="Curation activity"]').click
         end
         click_button 'Edit notification date'
-        fill_in('notification_date', with: Date.today + 2.months)
-        fill_in('[curation_activity][note]', with: 'Some Note')
+        fill_in('identifier_notification_date', with: Date.today + 2.months)
+        fill_in('identifier[curation_activity][note]', with: 'Some Note')
         click_button('Submit')
 
         expect(page).to have_text("Changed notification start date to #{(Date.today + 1.month).strftime('%b %d, %Y')}.")
@@ -238,7 +238,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).to have_text('Please provide a reason')
         find("#select_div option[value='no_funds']").select_option
         click_button('Submit')
-
+        sleep 1
         click_button('View payment history')
         expect(page).to have_text('Payment history')
         expect(page).to have_text('Added waiver')

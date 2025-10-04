@@ -1,5 +1,5 @@
 <h1>Notification date</h1>
-<%= form_with(url: notification_date_path(@identifier.id), method: :post, local: false) do |form| -%>  
+<%= form_with(url: notification_date_path(@identifier.id), method: :post, local: false, model: @identifier, scope: :identifier) do |form| -%>
   <p>The next monthly reminder email will be sent on <b><%= formatted_date(@resource.process_date.notification_date) %></b></p>
   <p>The <%= @resource.current_curation_status == 'in_progress' ? 'latest version' : 'dataset' %> will be <%= @resource.current_curation_status == 'in_progress' ? 'deleted' : 'withdrawn' %> on <b><%= formatted_date(@resource.process_date.delete_date) %></b></p>
   <p>
