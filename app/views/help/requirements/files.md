@@ -1,3 +1,4 @@
+<% @page_title = 'File requirements' %>
 <h1>File requirements</h1>
 
 ## Accepted data

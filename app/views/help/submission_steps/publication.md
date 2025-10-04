@@ -1,3 +1,4 @@
+<% @page_title = 'Published datasets' %>
 <h1>Published datasets</h1>
 
 ## Dataset publication

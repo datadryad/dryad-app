@@ -1,3 +1,4 @@
+<% @page_title = 'Good data practices' %>
 <h1>Good data practices</h1>
 
 *Best practices for creating reusable data publications*
