@@ -25,7 +25,7 @@ module StashDatacite
           upload_date: stash_wrapper.version_date
         ).build
 
-        @metadata_entry = MetadataEntry.new(resource, 'dataset', @user.tenant_id)
+        @metadata_entry = MetadataEntry.new(resource, 'dataset', @user.tenant)
       end
 
       describe '#title' do

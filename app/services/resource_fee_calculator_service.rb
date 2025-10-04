@@ -17,12 +17,16 @@ class ResourceFeeCalculatorService
     ident = resource.identifier
     return 'waiver' if ident.waiver?
 
-    if ident.institution_will_pay?
+    # rubocop:disable Lint/DuplicateBranch
+    if ident.funder_will_pay?
+      'publisher'
+    elsif ident.institution_will_pay?
       'institution'
-    elsif ident.journal&.will_pay? || ident.funder_will_pay?
+    elsif ident.journal&.will_pay?
       'publisher'
     else
       'individual'
     end
+    # rubocop:enable Lint/DuplicateBranch
   end
 end

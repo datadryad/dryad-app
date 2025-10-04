@@ -88,11 +88,7 @@
           <% end %>
         <% end %>
       </span>
-      <% if @identifier.payment_type == 'institution' && @identifier.payment_id != r.submitter.tenant_id %>
-        <span class="child-details error-text">
-          <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Submitter institution does not match payment
-        </span>
-      <% elsif @identifier.payer&.class&.name == 'StashEngine::Journal' %>
+      <% if @identifier.payer&.class&.name == 'StashEngine::Journal' %>
         <% if r.journal&.api_journal? && !r.creator.journals_as_admin.include?(r.journal) %>
           <span class="child-details error-text">
             <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Not submitted via API for API journal

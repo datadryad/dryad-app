@@ -4,7 +4,7 @@ module StashDatacite
 
     # rubocop:disable Metrics/MethodLength
     def find_or_create
-      @metadata_entry = Resource::MetadataEntry.new(@resource, session[:resource_type] || 'dataset', @resource.submitter&.tenant_id)
+      @metadata_entry = Resource::MetadataEntry.new(@resource, session[:resource_type] || 'dataset', @resource.submitter&.tenant)
       @metadata_entry.resource_type
       @metadata_entry.resource_publications
       @metadata_entry.descriptions
