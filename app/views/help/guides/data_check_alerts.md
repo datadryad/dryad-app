@@ -1,8 +1,8 @@
-# Tabular data check alerts
+<h1>Tabular data check alerts</h1>
 
 Dryad's mission is to enable the open availability and routine reuse of all research data. Inconsistently formatted data is inaccessible for reuse, particularly for machine reading and processing. Inconsistencies also create barriers to the ability to access data with screen readers and other assistive devices.
 
-When you upload files to Dryad, our [tabular data checker](/submission_process#tabular-data-check) will analyze many of your data files, generating reports for any inconsistencies found. Correcting inconsistencies increases the accessibility of the data.
+When you upload files to Dryad, our [tabular data checker](/help/submission_steps/submission#tabular-data-check) will analyze many of your data files, generating reports for any inconsistencies found. Correcting inconsistencies increases the accessibility of the data.
 
 <img src="/images/tabular_data_check.png" alt="Screenshot showing an example upload table, with tabular data check alert report links." />
 

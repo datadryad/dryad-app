@@ -19,7 +19,7 @@
       </li>
     <% end %>
     <li class="c-header__nav-item show-mobile">
-      <% lnk = current_user ? stash_url_helpers.dashboard_path : stash_url_helpers.choose_login_path %>
+      <% lnk = current_user ? dashboard_path : choose_login_path %>
       <% txt = current_user ? 'Submit a new dataset' : 'Login and then submit a new dataset' %>
       <%= button_to 'Submit', lnk, method: :get, class: "c-header__menu-button", title: txt %>
     </li>
@@ -33,60 +33,48 @@
     <li class="c-header__nav-item">
       <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="about-menu">About</button>
       <ul class="c-header__nav-submenu" id="about-menu" hidden>
-        <li><%= link_to 'Who we are', stash_url_helpers.about_path %></li>
-        <li><%= link_to 'What we do', "#{stash_url_helpers.mission_path}" %></li>
+        <li><%= link_to 'Who we are', about_path %></li>
+        <li><%= link_to 'What we do', mission_path %></li>
       </ul>
     </li>
 
     <li class="c-header__nav-item">
-      <%= link_to 'Partner with us', "#{stash_url_helpers.join_us_path}" %>
+      <%= link_to 'Partner with us', join_us_path %>
     </li>
     <li class="c-header__nav-item">
-      <%= link_to 'Support us', "#{stash_url_helpers.support_us_path}" %>
+      <%= link_to 'Support us', support_us_path %>
     </li>
 
-    <li class="c-header__nav-item">
-      <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="help-menu">Help</button>
-      <ul class="c-header__nav-submenu" id="help-menu" hidden>
-        <li><%= link_to 'Submission requirements', "#{stash_url_helpers.requirements_path}" %>
-        <li><%= link_to 'Submission costs', "#{stash_url_helpers.costs_path}" %>
-        <li><%= link_to 'Submission walkthrough', "#{stash_url_helpers.submission_process_path}" %>
-        <li><%= link_to 'Good data practices', "#{stash_url_helpers.best_practices_path}" %>
-        <li><%= link_to 'Publication process', "#{stash_url_helpers.process_path}" %>
-        <li><%= link_to 'Reuse Dryad data', "#{stash_url_helpers.reuse_path}" %>
-        <li><%= link_to 'Dryad API', "#{stash_url_helpers.api_path}" %>
-        <li><%= link_to 'Contact support', stash_url_helpers.contact_path %>
-      </ul>
-    </li>
+    <li class="c-header__nav-item"><%= link_to 'Get help', help_path %></li>
 
     <% if current_user %>
       <li class="c-header__nav-item">
         <% if current_user.min_admin? %>
           <button class="c-header_nav-button" aria-haspopup="menu" aria-expanded="false" aria-controls="manage-menu">Datasets</button>
           <ul class="c-header__nav-submenu" id="manage-menu" hidden>
-            <li><%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out'%>
-            <li><%= link_to 'Admin dashboard', stash_url_helpers.admin_dashboard_path %>
+            <li><%= link_to 'My datasets', dashboard_path, class: 'js-nav-out'%>
+            <li><%= link_to 'Admin dashboard', admin_dashboard_path %>
             <% if current_user.system_user? %>
-              <li><%= link_to 'Curation stats', stash_url_helpers.curation_stats_path %>
-              <li><%= link_to 'Journals', stash_url_helpers.journals_path %>
-              <li><%= link_to 'Dataset funders', stash_url_helpers.ds_admin_funders_path %>
+              <li><%= link_to 'Curation stats', curation_stats_path %>
+              <li><%= link_to 'Journals', journals_path %>
+              <li><%= link_to 'Dataset funders', ds_admin_funders_path %>
               <% if current_user.min_curator? %>
-                <li><%= link_to 'Publication updater', stash_url_helpers.publication_updater_path %></li>
+                <li><%= link_to 'Publication updater', publication_updater_path %></li>
               <% end %>
               <% if current_user.min_manager? %>
-                <li><%= link_to 'Submission queue', stash_url_helpers.url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>
+                <li><%= link_to 'Submission queue', url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>
               <% end %>
             <% end %>
             <% if current_user.superuser? %>
-              <li><%= link_to 'Status dashboard', stash_url_helpers.status_dashboard_path %>
-              <li><%= link_to 'Zenodo submissions', stash_url_helpers.zenodo_queue_path %>
+              <li><%= link_to 'Status dashboard', status_dashboard_path %>
+              <li><%= link_to 'Zenodo submissions', zenodo_queue_path %>
             <% end %>
           </ul>
         <% else %>
-        <%= link_to 'My datasets', stash_url_helpers.dashboard_path, class: 'js-nav-out border-left' %>
+        <%= link_to 'My datasets', dashboard_path, class: 'js-nav-out border-left' %>
         <% end %>
       </li>
     <% end %>
-    <li class="c-header__nav-item"><%= render partial: 'stash_engine/shared/log_in_out' %></li>
+    <li class="c-header__nav-item"><%= render partial: 'shared/log_in_out' %></li>
   </ul>
 </nav>
