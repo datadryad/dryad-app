@@ -5,7 +5,7 @@ module StashEngine
   # rubocop:disable Metrics/ClassLength
   class DownloadsController < ApplicationController
     include ActionView::Helpers::DateHelper
-    include StashEngine::LandingHelper
+    include StashEngine::DownloadsHelper
 
     before_action :check_user_agent, :check_ip, :setup_streaming
 
@@ -140,7 +140,7 @@ module StashEngine
       if res && (res&.may_download?(ui_user: current_user) || share&.identifier_id == res&.identifier&.id) &&
           [StashEngine::SuppFile, StashEngine::SoftwareFile].include?(zen_upload.class)
         if res.zenodo_published?
-          redirect_to zen_upload.public_zenodo_download_url
+          redirect_to zen_upload.public_zenodo_download_url, allow_other_host: true
         else
           zen_presign = zen_upload.zenodo_presigned_url
           if zen_presign.nil?
@@ -164,7 +164,9 @@ module StashEngine
 
       if %w[csv txt].include?(@file.preview_type)
         @preview = @file.text_preview
-        @sep = SniffColSeparator.find(@file.sniff_file) if @file_type == 'csv'
+        @sep = SniffColSeparator.find(@file.sniff_file) if @file.preview_type == 'csv'
+      elsif @file.preview_type == 'img'
+        @preview = @file.digest? || @file.storage_version_id.present? ? @file.s3_permanent_presigned_url : @file.s3_staged_presigned_url
       else
         @preview = @file.preview_type.present?
       end

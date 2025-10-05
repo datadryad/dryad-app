@@ -10,12 +10,12 @@ module StashApi
         @post = post
       end
 
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def value
         # setting some false values to nil because they get compacted.  Don't really want to advertise these options for
         # use by others besides ourselves because we don't want others to use them.
         vals = {
-          title: @resource.title.strip_tags,
+          title: @resource.title,
           authors: Authors.new(resource: @resource).value,
           abstract: Abstract.new(resource: @resource).value,
           funders: Funders.new(resource: @resource).value,
@@ -34,17 +34,23 @@ module StashApi
           publicationDate: @resource.publication_date&.strftime('%Y-%m-%d'),
           lastModificationDate: @resource.updated_at&.utc&.strftime('%Y-%m-%d'),
           visibility: visibility,
-          sharingLink: sharing_link,
-          skipDataciteUpdate: @resource.skip_datacite_update || nil,
-          skipEmails: @resource.skip_emails || nil,
-          preserveCurationStatus: @resource.preserve_curation_status || nil,
-          loosenValidation: @resource.loosen_validation || nil
+          sharingLink: sharing_link
         }
         vals[:changedFields] = changed_fields if @item_view
-        vals[:userId] = @resource&.submitter&.id if @post
+        if @post
+          vals = vals.merge(
+            {
+              userId: @resource&.submitter&.id,
+              skipDataciteUpdate: @resource.skip_datacite_update || nil,
+              skipEmails: @resource.skip_emails || nil,
+              preserveCurationStatus: @resource.preserve_curation_status || nil,
+              loosenValidation: @resource.loosen_validation || nil
+            }
+          )
+        end
         vals
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def version_changes
         return 'none' if @resource.stash_version.version == 1

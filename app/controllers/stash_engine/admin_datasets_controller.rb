@@ -5,7 +5,7 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     protect_from_forgery except: :activity_log
-    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates]
+    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates create_issue]
 
     def popup
       case @field
@@ -103,6 +103,14 @@ module StashEngine
       respond_to(&:js)
     end
 
+    def payment_log
+      @identifier = Identifier.find(params[:id])
+      payments = @identifier.payments.where.not(status: 'created', pay_with_invoice: false)
+      sponsors = @identifier.versions.where("json_contains_path(`object_changes`, 'all', '$.payment_id')")
+      @logs = (payments + sponsors).sort_by { |log| log.has_attribute?(:updated_at) ? log.updated_at : log.created_at }
+      respond_to(&:js)
+    end
+
     def notification_date
       authorize %i[stash_engine admin_datasets]
       notification_date = params[:notification_date].to_datetime
@@ -132,6 +140,15 @@ module StashEngine
         @error_message = 'No Dryad user found with this ORCID'
         render 'stash_engine/user_admin/update_error' and return
       end
+      respond_to(&:js)
+    end
+
+    def create_issue
+      authorize %i[stash_engine admin_datasets]
+      issues = @identifier.issues || []
+      issues << params[:issue]
+      @identifier.update(issues: issues.reject(&:blank?).uniq)
+      @identifier.reload
       respond_to(&:js)
     end
 

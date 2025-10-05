@@ -2,12 +2,14 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
   include Mocks::Stripe
   include Mocks::RSolr
   include Mocks::Salesforce
+  include Mocks::Github
   include Mocks::Datacite
 
   context :curating_dataset do
 
     before(:each) do
       mock_salesforce!
+      mock_github!
       mock_stripe!
       mock_datacite_gen!
       create(:tenant)
@@ -15,6 +17,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
       create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: @resource.id)
       @resource.resource_states.first.update(resource_state: 'submitted')
+      @resource.identifier.update(issues: [1234])
       sign_in(create(:user, role: 'curator'))
       visit("#{stash_url_helpers.admin_dashboard_path}?curation_status=curation")
     end
@@ -56,6 +59,13 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       expect(page).to have_link('SF 0003', href: 'https://dryad.lightning.force.com/lightning/r/Case/abc1/view')
     end
 
+    it 'renders github section' do
+      find('a[title="Activity log"]').click
+      expect(page).to have_text('This is the dataset activity page.')
+      expect(page).to have_text('Github issues')
+      expect(page).to have_link('Test github issue', href: 'https://github.com/datadryad/dryad-product-roadmap/issues/1234')
+    end
+
     it 'allows proper at a glance editing' do
       find('a[title="Activity log"]').click
       expect(page).to have_text('This is the dataset activity page.')
@@ -65,6 +75,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       expect(page).to have_button('Edit pub dates')
       expect(page).to have_button('Edit related works')
       expect(page).to have_button('Edit funders')
+      expect(page).to have_button('View payment history')
       expect(page).not_to have_button('Edit submitter')
       expect(page).not_to have_button('Apply fee discount')
     end
@@ -88,7 +99,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       create(:role, user: @admin, role: 'admin', role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
+      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, created_at: 1.minute.ago)
     end
 
     context :tenant_admin do
@@ -112,12 +123,13 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).not_to have_button('Edit funders')
         expect(page).not_to have_button('Edit submitter')
         expect(page).not_to have_button('Apply fee discount')
+        expect(page).not_to have_button('View payment history')
       end
     end
 
     context :manager do
-
       before(:each) do
+        mock_github!
         mock_salesforce!
         @manager = create(:user, role: 'manager')
         sign_in(@manager, false)
@@ -134,6 +146,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).to have_button('Edit related works')
         expect(page).to have_button('Edit funders')
         expect(page).to have_button('Edit submitter')
+        expect(page).to have_button('View payment history')
         expect(page).to have_button('Apply fee discount')
       end
 
@@ -201,7 +214,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         fill_in 'Publication name', with: 'Test journal'
         fill_in 'Manuscript number', with: 'TEST_MAN_1234'
         find('#pub_save').click
-        click_button 'Close dialog'
+        click_button 'Close dialog', match: :first
         expect(page).to have_text('TEST_MAN_1234')
         click_button('Edit related works')
         select 'Primary article'
@@ -210,7 +223,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
           find('input[name="commit"]').click
         end
         expect(page).to have_css('form[action="/stash_datacite/related_identifiers/update.js"]')
-        click_button 'Close dialog'
+        click_button 'Close dialog', match: :first
         expect(page).to have_text('TEST_MAN_1234')
         expect(page).to have_css('#doi-label')
         expect(page).to have_text('published')
@@ -224,19 +237,29 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
           fill_in 'Funder:', with: new_funder
           find('input[name="commit"]').click
         end
-        click_button 'Close dialog'
+        click_button 'Close dialog', match: :first
         expect(page).not_to have_text('+Add funder')
         expect(page).to have_text(new_funder)
       end
 
-      it 'sets a fee waiver' do
-        expect(@resource.identifier.payment_type).to be(nil)
+      it 'sets a fee waiver and shows a log' do
         expect(page).to have_text('Payment:')
         click_button('Apply fee discount')
         expect(page).to have_text('Please provide a reason')
         find("#select_div option[value='no_funds']").select_option
         click_button('Submit')
-        expect(@resource.identifier.payment_type).to be(nil)
+
+        click_button('View payment history')
+        expect(page).to have_text('Payment history')
+        expect(page).to have_text('Added waiver')
+      end
+
+      it 'adds a github issue' do
+        expect(page).to have_text('Github issues')
+        click_link 'Add github issue'
+        fill_in 'Enter the issue number', with: '1235'
+        click_button 'Submit'
+        expect(page).to have_link('Another test github issue', href: 'https://github.com/datadryad/dryad-product-roadmap/issues/1235')
       end
     end
 
@@ -261,6 +284,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).not_to have_button('Edit related works')
         expect(page).not_to have_button('Edit funders')
         expect(page).not_to have_button('Edit submitter')
+        expect(page).not_to have_button('View payment history')
         expect(page).not_to have_button('Apply fee discount')
       end
     end
@@ -295,12 +319,12 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).not_to have_button('Edit related works')
         expect(page).not_to have_button('Edit funders')
         expect(page).not_to have_button('Edit submitter')
+        expect(page).not_to have_button('View payment history')
         expect(page).not_to have_button('Apply fee discount')
       end
     end
 
     context :tenant_curator do
-
       before(:each) do
         mock_salesforce!
         @tenant_curator = create(:user)
@@ -321,6 +345,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         expect(page).to have_button('Edit pub dates')
         expect(page).to have_button('Edit related works')
         expect(page).to have_button('Edit funders')
+        expect(page).to have_button('View payment history')
         expect(page).not_to have_button('Edit Flag')
         expect(page).not_to have_button('Edit submitter')
         expect(page).not_to have_button('Apply fee discount')

@@ -3,6 +3,7 @@ import time
 from frictionless import Detector, validate
 from urllib.request import urlopen
 import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as DefusedET
 import requests
 import sys
 
@@ -15,7 +16,7 @@ def lambda_handler(event, context):
   if ftype.endswith('/xml') or xml_doublecheck:
     try:
       xmlfile = urlopen(event["download_url"])
-      report = ET.parse(xmlfile)
+      report = DefusedET.parse(xmlfile)
     except ET.ParseError as err:
       # invalid XML
       report=json.dumps({'report': f'XML file is invalid: {err}'})

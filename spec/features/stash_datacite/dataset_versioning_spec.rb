@@ -37,7 +37,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       @resource = create(:resource, :submitted, identifier: @identifier, user: @author,
                                                 tenant_id: @author.tenant_id, accepted_agreement: true)
       create(:description, resource: @resource, description_type: 'technicalinfo')
-      create(:description, resource: @resource, description_type: 'usage_notes', description: nil)
+      create(:description, resource: @resource, description_type: 'hsi_statement', description: nil)
       create(:data_file, resource: @resource)
       @resource.reload
       @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)

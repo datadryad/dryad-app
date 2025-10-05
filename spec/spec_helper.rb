@@ -45,8 +45,20 @@ end
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
 
+  # debugging log options
+  # ---------------------
+
   # ActiveRecord::Base.logger = Logger.new($stdout)
   # config.full_backtrace = true
+
+  # *** js debugging ***
+
+  # config.after(:each, type: :feature, js: true) do |spec|
+  #   js_logs = page.driver.browser.logs.get(:browser).map(&:message)
+  #   puts js_logs.join("\n\n") if js_logs.present?
+  # end
+
+  # ----------------------
 
   config.bisect_runner = :shell
 

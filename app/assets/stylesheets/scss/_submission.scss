@@ -587,8 +587,15 @@ dialog#submission-step[open] {
     margin-top: 0;
   }
 
-  *[aria-invalid="true"]:not(.milkdown) {
+  *[aria-invalid="true"]:not(.milkdown):not(fieldset) {
     border: thin solid $red !important;
+  }
+
+  fieldset[aria-invalid="true"] {
+    label{ color: $red; }
+    input[type="checkbox"], input[type="radio"] {
+      border: thin solid $red;
+    }
   }
 
   label:has(input[type="checkbox"][aria-invalid="true"]) {

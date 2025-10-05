@@ -5,13 +5,13 @@ module StashApi
 
       def parse
         clear
-        @resource.descriptions << StashDatacite::Description.create(description: @hash['hsiStatement'].presence, description_type: 'usage_notes')
+        @resource.descriptions << StashDatacite::Description.create(description: @hash['hsiStatement'].presence, description_type: 'hsi_statement')
       end
 
       private
 
       def clear
-        @resource.descriptions.where(description_type: 'usage_notes').destroy_all
+        @resource.descriptions.where(description_type: 'hsi_statement').destroy_all
       end
 
     end

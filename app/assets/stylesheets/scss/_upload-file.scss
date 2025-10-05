@@ -136,12 +136,9 @@ img.c-upload__spinner {
 	object-fit: contain;
 }
 
-.c-upload__changes-form {
-	display: flex;
-	flex-direction: column;
-	textarea {
-		width: 100%;
-		max-width: 100%;
-		margin-top: $spacing-base;
-	}
+#file-note-area {
+	width: 100%;
+	max-width: 100%;
+	min-height: auto;
+	margin-top: $spacing-base;
 }

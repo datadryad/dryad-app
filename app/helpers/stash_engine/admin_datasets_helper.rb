@@ -1,3 +1,5 @@
+require 'net/http'
+require 'json'
 require 'stash/salesforce'
 
 module StashEngine
@@ -31,7 +33,7 @@ module StashEngine
     end
 
     def flag_select
-      flags = StashEngine::Flag.flags.map { |k, _v| [k.upcase_first, k] }
+      flags = StashEngine::Flag.flags.map { |k, _v| [k.humanize, k] }
       flags + [['Flagged user', 'user'], ['Flagged institution', 'tenant'], ['Flagged journal', 'journal']]
     end
 
@@ -68,8 +70,35 @@ module StashEngine
       render inline: matchdata[1] + link_to("SF #{matchdata[2]}", sf_link, target: :_blank) + matchdata[3]
     end
 
+    def link_to_account(type, id)
+      href = if type&.start_with?('institution')
+               tenant_admin_path(q: id)
+             elsif type&.start_with?('journal')
+               journal_admin_path(q: id)
+             end
+      return format_external_references(id) if href.nil?
+
+      link_to id, href, target: '_blank'
+    end
+
     def salesforce_links(doi)
       Stash::Salesforce.find_cases_by_doi(doi)
+    end
+
+    def display_issues(issues)
+      issues&.map do |issue|
+        uri = URI.parse("https://api.github.com/repos/datadryad/dryad-product-roadmap/issues/#{issue}")
+        response = Net::HTTP.get_response(uri)
+        json = JSON.parse(response.body)
+        next unless json['title'].present?
+
+        {
+          url: json['html_url'],
+          title: json['title'],
+          assignee: json.dig('assignee', 'login'),
+          status: json['closed_at'].present? ? 'Closed' : 'Open'
+        }
+      end&.reject(&:blank?)
     end
   end
 end
