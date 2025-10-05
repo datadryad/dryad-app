@@ -4,9 +4,10 @@ import axios from 'axios';
 export default function TrackChanges({resource}) {
   const [note, setNote] = useState({});
   const [value, setValue] = useState('');
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const postNote = (e) => {
-    axios.post(`/file_note/${note.id}`, {note: e.currentTarget.value});
+    axios.post(`/file_note/${note.id}`, {authenticity_token, note: e.currentTarget.value});
   };
 
   useEffect(() => {
@@ -21,8 +22,10 @@ export default function TrackChanges({resource}) {
 
   if (note) {
     return (
-      <form className="c-upload__changes-form">
-        <label className="input-label" htmlFor="file-note-area">Describe your file changes</label>
+      <div className="input-stack" style={{margin: '1em 0'}}>
+        <label className="input-label" htmlFor="file-note-area">
+          Describe your file changes for our data curators. These comments are not published.
+        </label>
         <textarea
           className="c-input__textarea"
           id="file-note-area"
@@ -31,7 +34,7 @@ export default function TrackChanges({resource}) {
           onBlur={postNote}
           onChange={(e) => setValue(e.currentTarget.value)}
         />
-      </form>
+      </div>
     );
   }
   return null;

@@ -14,6 +14,7 @@ import ModalValidationReport from './ModalValidationReport/ModalValidationReport
 import UploadData from './UploadSelect/UploadData';
 import UploadSelect from './UploadSelect/UploadSelect';
 import TrackChanges from './TrackChanges';
+import ChangeLog from './ChangeLog';
 
 const RailsActiveRecordToUploadType = {
   'StashEngine::DataFile': 'data',
@@ -63,8 +64,9 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name, current,
+  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name, current, pubDates,
 }) {
+  const [initialLoad, setInitialLoad] = useState(false);
   const [chosenFiles, setChosenFiles] = useState([]);
   const [validating, setValidating] = useState([]);
   const [failedUrls, setFailedUrls] = useState([]);
@@ -75,6 +77,8 @@ export default function UploadFiles({
   const [warning, setWarning] = useState([]);
   const [pollingCount, setPollingCount] = useState(0);
   const [zenodo, setZenodo] = useState(false);
+  const [changes, setChanges] = useState(false);
+  const [pubChanges, setPubChanges] = useState(false);
 
   const uploadRef = useRef(null);
   const modalRef = useRef(null);
@@ -111,6 +115,14 @@ export default function UploadFiles({
   }));
 
   useEffect(() => {
+    if (resource.identifier.pub_state === 'published') {
+      if (changes || resource.descriptions.find((d) => d.description_type === 'changelog')) {
+        setPubChanges(true);
+      }
+    }
+  }, [changes]);
+
+  useEffect(() => {
     if (chosenFiles.some((f) => f.uploadType !== 'data')) setZenodo(true);
     chosenFiles.forEach((f) => {
       if (f.status === 'Uploaded' && f.tabularCheckStatus === TabularCheckStatus.checking) setValidating((v) => [...v, f]);
@@ -121,6 +133,16 @@ export default function UploadFiles({
       type: UploadTypetoRailsActiveRecord[f.uploadType],
     }));
     setResource((r) => ({...r, total_file_size: generic_files.reduce((s, f) => s + f.upload_file_size, 0), generic_files}));
+    if (previous) {
+      if (chosenFiles.some((f) => f.uploadType === 'data' && f.status !== 'Pending' && f.file_state === 'created')) {
+        setChanges(true);
+      }
+      if (initialLoad && previous.generic_files.some((p) => !chosenFiles.some((f) => f.upload_file_name === p.upload_file_name
+        && f.storage_version_id === p.storage_version_id))
+      ) {
+        setChanges(true);
+      }
+    }
   }, [chosenFiles]);
 
   useEffect(() => {
@@ -128,6 +150,7 @@ export default function UploadFiles({
     const transformed = transformData(files);
     const withTabularCheckStatus = setTabularCheckStatus(transformed);
     setChosenFiles(withTabularCheckStatus);
+    setInitialLoad(true);
     addCsrfToken();
     interval.current = null; // may be set interval later
     return () => {
@@ -591,9 +614,8 @@ export default function UploadFiles({
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
-      {previous && chosenFiles.some((f) => f.status !== 'Pending' && f.file_state !== 'copied') && (
-        <TrackChanges resource={resource} />
-      )}
+      {pubChanges && <ChangeLog {...{resource, setResource, pubDates}} />}
+      {changes && !pubChanges && <TrackChanges resource={resource} /> }
       <ModalUrl
         ref={modalRef}
         key={manFileType}
