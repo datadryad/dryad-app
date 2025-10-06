@@ -52,7 +52,7 @@ module StashDatacite
       )
       if @resource.previous_curated_resource.present?
         files[:previous_files] = @resource.previous_curated_resource.generic_files.validated_table.as_json(
-          methods: %i[type frictionless_report]
+          methods: %i[type]
         )
       end
 

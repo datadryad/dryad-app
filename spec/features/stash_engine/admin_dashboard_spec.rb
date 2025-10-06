@@ -322,7 +322,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
           it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
             create(:description, resource: @resource, description_type: 'technicalinfo')
-            create(:description, resource: @resource, description_type: 'usage_notes', description: nil)
+            create(:description, resource: @resource, description_type: 'hsi_statement', description: nil)
             create(:data_file, resource: @resource)
             @resource.reload
             @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)

@@ -35,6 +35,7 @@ function Submission({
   const [open, setOpen] = useState(window.innerWidth > 600);
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
   const [payment, setPayment] = useState(false);
+  const [pubDates, setPubDates] = useState([]);
   const [fees, setFees] = useState({});
   const previous = resource.previous_curated_resource;
   const observers = [];
@@ -97,18 +98,18 @@ function Submission({
       name: 'Compliance',
       pass: !complianceCheck(resource),
       fail: (review || step.index > 5) && complianceCheck(resource),
-      component: <Compliance resource={resource} setResource={setResource} />,
+      component: <Compliance current={step.name === 'Compliance'} resource={resource} setResource={setResource} />,
       help: <CompHelp />,
       preview: <CompPreview resource={resource} previous={previous} />,
     },
     {
       name: 'Files',
       pass: resource.generic_files?.length > 0,
-      fail: (review || step.index > 6) && filesCheck(resource, user.superuser, config_maximums),
+      fail: (review || step.index > 6) && filesCheck(resource, pubDates, user.superuser, config_maximums),
       component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
         <UploadFiles
           {...{
-            resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments,
+            resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments, pubDates,
           }}
           current={step.name === 'Files'}
         />
@@ -263,6 +264,15 @@ function Submission({
         setResource((r) => ({...r, generic_files, previous_curated_resource: previous}));
       });
     }
+    async function getPubDates() {
+      axios.get(`/resources/${resource.id}/file_pub_dates`).then((data) => {
+        const dates = data.data;
+        const formatted = dates.map((d) => new Intl.DateTimeFormat('en-US', {
+          month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
+        }).format(new Date(d)));
+        setPubDates(formatted);
+      });
+    }
     if (!review) {
       const url = window.location.search.slice(1);
       if (url) {
@@ -278,6 +288,7 @@ function Submission({
       }
     }
     getFileData();
+    if (resource.identifier.pub_state === 'published') getPubDates();
   }, []);
 
   if (review) {

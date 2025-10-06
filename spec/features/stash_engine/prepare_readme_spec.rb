@@ -4,7 +4,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
   describe :prepare_readme do
     let(:user) { create(:user) }
     let(:resource) { create(:resource, user: user, title: 'A test original dataset title') }
-    let(:file) { create(:data_file, resource: resource) }
+    let(:file) { create(:data_file, download_filename: 'image_file.png', resource: resource) }
 
     before(:each) do
       file.reload
@@ -31,7 +31,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button 'readme-next'
         click_button 'readme-next'
         click_button 'readme-next'
-        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included')
+        expect(page).to have_content('a README file must be included')
         expect(page).to have_text(resource.title)
       end
     end
@@ -49,7 +49,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
 
       it 'displays the README content' do
         click_button 'README'
-        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included')
+        expect(page).to have_content('a README file must be included')
         expect(page).to have_text(resource.title)
         expect(page).to have_text(file.download_filename)
       end
@@ -60,7 +60,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         resource.title.length.times { find('[name="title"]').send_keys([:backspace]) }
         fill_in_title(title)
         click_button 'README'
-        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 15)
+        expect(page).to have_content('a README file must be included')
         expect(page).to have_text(title)
         expect(page).to have_text(file.download_filename)
       end
@@ -73,7 +73,7 @@ RSpec.feature 'PrepareReadme', type: :feature, js: true do
         click_button "Save new name for #{file.download_filename}"
         expect(page).to have_text('All progress saved')
         click_button 'README'
-        expect(page).to have_content('To help others interpret and reuse your dataset, a README file must be included', wait: 15)
+        expect(page).to have_content('a README file must be included')
         expect(page).to have_text(resource.title)
         expect(page).to have_text(fname)
         expect(page).not_to have_text(file.download_filename)

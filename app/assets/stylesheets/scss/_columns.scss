@@ -20,6 +20,16 @@
 
   @include bp(screen3) {
     flex-direction: row-reverse;
+
+    &:first-child:last-child {
+      min-height: calc(100vh - 240px);
+    }
+  }
+
+  &:first-child:last-child {
+    @media (max-width: 968px) { min-height: calc(100vh - 280px); } 
+    @media (max-width: 870px) { min-height: calc(100vh - 306px); } 
+    @media (max-width: 640px) { min-height: calc(100vh - 346px); }
   }
 }
 
@@ -30,7 +40,7 @@
 
   @include bp(screen3) {
     flex: 0 1 80ch;
-    padding-right: 4ch;
+    padding-right: 4ch;     
   }
   @media (min-width: $screen-lg-min + 200) {
     flex: 0 1 90ch;
@@ -53,6 +63,8 @@
 
 #page-nav {
   margin: $spacing-sm -10px 0;
+  background-color: $lightest-blue;
+  position: relative;
 
   ul {
     margin: 0;
@@ -60,39 +72,8 @@
     list-style: "";
   }
 
-  #nav-mobile-buttons {
-    button {
-      position: absolute;
-      top: 2px;
-      bottom: 2px;
-      width: $spacing-lg;
-      border: thick solid $dark-blue;
-      border-radius: $spacing-base;
-      background-color: white;
-      color: $dark-blue;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      &::before {
-        font-family: 'Font Awesome 6 Free';
-        font-weight: 900;
-        font-size: 1.25rem;
-      }
-    }
-    #left-scroll-button {
-      left: 2px;
-      &::before {
-        content: "\f0d9";
-        content: "\f0d9" / '';
-      }
-    }
-    #right-scroll-button {
-      right: 2px;
-      &::before {
-        content: "\f0da";
-        content: "\f0da" / '';
-      }
-    }
+  ul ul {
+    margin-left: 2ch;
   }
 
   a {    
@@ -102,6 +83,17 @@
     &:hover, &:focus, &:active {
       text-decoration: underline;
     }
+  }
+
+  a:link, a:visited {
+    color: $link-body-color;
+  }
+  a:active {
+    color: $link-body-active-color;
+  }
+
+  #nav-mobile-button {
+    display: none;
   }
 
   @include bp(screen1) {
@@ -115,11 +107,6 @@
   @include bp(screen3) {
     margin: 0;
     flex: 0 1 35ch;
-    background-color: $lightest-blue;
-
-    #nav-mobile-buttons {
-      display: none;
-    }
 
     & > ul {
       position: sticky;
@@ -133,54 +120,68 @@
       margin: $spacing-base 0;
       padding: 0;
     }
-
-    a:link, a:visited {
-      color: $link-body-color;
-    }
-    a:active {
-      color: $link-body-active-color;
-    }
   }
   
   @media (max-width: $screen-lg-min - 1) {
-    padding: 0 $spacing-sm;
-    background-color: $dark-blue;
+    margin-top: auto;
     position: sticky;
     z-index: +1;
     bottom: 0;
-    height: 2.65rem;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    columns: 3;
+    padding: 1ch 2ch;
+    margin-bottom: -1.8em;
+    box-shadow: 0px -3px 2px $lightest-blue;
+    box-sizing: border-box;
 
-    li {
-      margin: 0;
-      padding: 0;
-    }
-
-    ul, li {
-      display: flex;
-    }
-
-    & > ul {
-      max-width: 100%;
-      white-space: nowrap;
-      overflow-x: auto;
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    a {
-      display: block;
-      padding: $spacing-base;
-      color: white;
-      max-width: 20ch;
+    &.minimized {
+      height: 110px;
       overflow: hidden;
-      text-overflow: ellipsis;
+
+      &:before{
+        content: '';
+        display: block;
+        height: 62px;
+        position: absolute;
+        top: 38px;
+        width: 100%;
+        background-color: black;
+        background: linear-gradient(transparent, $lightest-blue);
+      }
+
+      #nav-mobile-button {
+        display: inline-block;
+        position: absolute;
+        top: 2px; right: 2px;
+      }
+    }
+
+    &.expanded {
+      height: auto;
+
+      #nav-mobile-button {
+        display: inline-block;
+        position: absolute;
+        top: 2px; right: 2px;
+      }
+    }    
+
+    ul > ul {
+      display: inline-block;
+    }
+
+    & > ul > li:first-child {
+      margin-top: 0;
     }
   }
-  @media (max-width: $screen-lg-min - 1) {
-    a {
-      max-width: 10ch;
+
+  @media (max-width: $screen-md-min - 1) {
+    columns: 2;    
+  }
+
+  @media (max-width: $screen-sm-min - 1) {
+    columns: 1;
+    ul > ul {
+      display: block;
     }
   }
 }

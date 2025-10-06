@@ -91,6 +91,9 @@ describe('UploadFiles', () => {
       original_filename: 'data.csv',
       compressed_try: 0,
       type: 'StashEngine::DataFile',
+      frictionless_report: {
+        status: 'checking',
+      },
     };
     setfile = {
       id: datafile.id + 1,
@@ -103,6 +106,9 @@ describe('UploadFiles', () => {
       original_filename: 'set.csv',
       compressed_try: 0,
       type: 'StashEngine::DataFile',
+      frictionless_report: {
+        status: 'checking',
+      },
     };
     loaded = setLoaded(datafile);
 
@@ -129,7 +135,7 @@ describe('UploadFiles', () => {
     await waitFor(() => software_data);
 
     expect(screen.getByText('No files have been selected.')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Describe your file changes')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Describe your file changes for our data curators. These comments are not published.')).not.toBeInTheDocument();
   });
 
   it('uploads a data file and shows the size', async () => {
@@ -161,11 +167,9 @@ describe('UploadFiles', () => {
     axios.post.mockResolvedValueOnce(software_data);
 
     const postA = {status: 200, data: {new_file: datafile}};
-    const postB = {status: 200, data: [{file_id: datafile.id, triggered: true}]};
     const get = {status: 200, data: [loaded]};
 
     axios.post.mockResolvedValueOnce(postA);
-    axios.post.mockResolvedValueOnce(postB);
     axios.get.mockResolvedValueOnce(get);
 
     info.config_maximums.frictionless = 200000;
@@ -174,7 +178,6 @@ describe('UploadFiles', () => {
     const [input] = screen.getAllByLabelText('Choose files');
     userEvent.upload(input, files[0]);
     await waitFor(() => postA);
-    await waitFor(() => postB);
 
     await waitFor(() => {
       expect(screen.getByText('Validating...')).toBeInTheDocument();
@@ -355,7 +358,7 @@ describe('UploadFiles', () => {
     info.resource.generic_files = [loaded];
     render(<UploadFiles {...info} />);
 
-    expect(screen.queryByLabelText('Describe your file changes')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Describe your file changes for our data curators. These comments are not published.')).not.toBeInTheDocument();
   });
 
   it('shows and changes the file note when files are edited', async () => {
@@ -374,7 +377,7 @@ describe('UploadFiles', () => {
     info.previous = {generic_files: []};
     render(<UploadFiles {...info} />);
 
-    const notebox = screen.getByLabelText('Describe your file changes');
+    const notebox = screen.getByLabelText('Describe your file changes for our data curators. These comments are not published.');
 
     userEvent.type(notebox, note);
     userEvent.tab();

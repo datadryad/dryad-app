@@ -15,6 +15,7 @@ gem 'sprockets', '~> 4.0'
 # Deployment
 gem 'bcrypt_pbkdf', '~> 1.0'
 gem 'capistrano', '~> 3.17'
+gem 'capistrano3-puma', github: 'seuros/capistrano-puma'
 gem 'capistrano-rails', '~> 1.7.0'
 gem 'capistrano-sidekiq', '~> 3.2.0'
 gem 'capistrano-yarn'
@@ -33,6 +34,7 @@ gem 'terser' # for JS and CSS minify
 
 # ############################################################
 # Misc
+gem 'actionpack-page_caching'
 gem 'acts_as_paranoid', '~> 0.10.3'
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.3.0'

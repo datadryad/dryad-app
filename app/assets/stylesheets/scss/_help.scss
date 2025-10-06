@@ -1,5 +1,136 @@
 // ##### Help Theme ##### //
 
-.t-help {
-	// empty
+.error-example {
+  font-size: .94rem;
+  padding: 15px;
+  border: solid 2px #c14315;
+  border-radius: 3px;
+}
+
+.help-page {
+	#page-nav {
+		a[aria-current] {
+			&:before {
+				display: inline-block;
+				vertical-align: 1px;
+				margin-left: -2.15ch;
+				margin-right: .35ch;
+				font-family: 'Font Awesome 6 Free';
+				font-size: .7rem;
+	    	font-weight: 900;
+	    	content: '\f005';
+	    	content: '\f005' / '';
+			}
+		}
+	}
+	.excerpt {
+		font-size: .98rem;
+		margin-top: .5ch;
+		margin-bottom: 2ch;
+
+		&:after {
+			display: inline;
+			content: '\2026';
+		}
+	}
+
+	#contact_form .callout {
+		background-color: transparent;
+		padding: 0;
+	}
+}
+
+#help-search-form {
+	display: flex;
+	align-items: center;
+	[type="text"] {
+		width: 100%;
+		height: 36px;
+		margin-right: -35px;
+	}
+	[type="submit"] {
+		@extend %o-button__plain-text;
+		background-color: $light-blue;
+		color: white;
+		height: 34px;
+		width: 36px;
+	}
+	[type="reset"] {
+		font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-left: .35ch;
+	}
+}
+
+#prompt {
+	font-size: .98rem;
+	text-align: right;
+}
+
+#help_result_count {
+	margin-top: 2rem;
+	margin-bottom: 0;
+	font-size: .98rem;
+}
+
+#help_search_results {
+	list-style-type: '';
+	margin: 0;
+	padding: 0;
+
+	&:not(:empty) {
+		border-bottom: thin solid $light-gray;
+		margin-bottom: 5ch;
+	}
+
+	li {
+		padding-top: 2ch;
+		margin-bottom: 3ch;
+		border-top: thin solid $light-gray;
+	}
+
+	a {
+		font-weight: bold;
+	}
+
+	.subresult {
+		margin-left: 2ch;
+		a {
+			margin-left: -1.5ch;
+			i {
+				margin-right: .5ch;
+				color: black;
+			}
+		}
+	}
+}
+
+.tiles {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	row-gap: 2ch;
+	column-gap: 3ch;
+}
+.text-tiles {
+	a {
+		font-size: 1.15rem;
+	}
+}
+.icon-tiles {
+	a {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1ch;
+		border: thick solid $lightest-blue;
+		padding: 2ch 1ch;
+		color: black;
+		text-decoration: none;
+		&:hover {
+			border-color: $medium-blue;
+		}
+		i {
+			font-size: 2.5rem;
+		}
+	}
 }

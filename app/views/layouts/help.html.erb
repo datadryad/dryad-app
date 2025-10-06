@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%= render 'shared/standard_head' %>
+  <%= render 'shared/stash_head' %>
+  <%= content_for :head %>
+  <link data-pagefind-meta="url[href]" rel="canonical" href="<%= request.original_url %>"/>
+  <script type="text/javascript" src="<%= asset_path 'dataload.js'%>" defer></script>
+</head>
+<body class='<%= "#{controller_name}_#{action_name}" %>'>
+  <%= render partial: "shared/sandbox_message" %>
+  <%= render 'shared/top_area' %>
+  <main id="maincontent" class="help-page">
+    <div id="page-columns">
+      <nav id="page-nav" aria-label="Help navigation">
+        <button id="nav-mobile-button" class="o-button__plain-text1" aria-label="Expand page menu"><i class="fas fa-angles-up"></i></button>
+        <%= render partial: 'help/navigation' %>
+      </nav>
+      <div id="page-content" data-pagefind-body>
+        <%= yield %>
+        <% unless ['/help', '/help/contact'].include?(request.path) %>
+          <hr style="border-top: thin solid #f6f6f6;"/>
+          <p>Unable to find the answer to your question? <a href="/help/contact">Contact the helpdesk</a></p>
+        <% end %>
+      </div>
+    </div>
+  </main>
+  <%= render partial: "shared/footer" %>
+  <script type="text/javascript" src="<%= asset_path 'interactions.js'%>"></script>
+  <%= content_for :doc_end %>
+</body>
+</html>
