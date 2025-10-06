@@ -44,11 +44,12 @@ function FunderForm({resourceId, contributor, updateFunder}) {
         headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
       },
     ).then((data) => {
-      if (data.status !== 200) {
-        console.log('Response failure not a 200 response from funders save');
-      }
       updateFunder(data.data);
       showSavedMsg();
+    }).catch((err) => {
+      Object.entries(err.response.data).forEach((e) => {
+        formRef.current.setFieldError(e[0], e[1][0]);
+      });
     });
   };
 
@@ -125,6 +126,8 @@ function FunderForm({resourceId, contributor, updateFunder}) {
               type="text"
               className="js-award_number c-input__text"
               aria-describedby={`${contributor.id}award-ex`}
+              aria-invalid={!!formik.errors.award_number || null}
+              aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
             />
             <div id={`${contributor.id}award-ex`}><i aria-hidden="true" />CA 123456-01A1</div>
@@ -138,6 +141,8 @@ function FunderForm({resourceId, contributor, updateFunder}) {
               type="text"
               className="js-award_description c-input__text"
               aria-describedby={`${contributor.id}desc-ex`}
+              aria-invalid={!!formik.errors.award_description || null}
+              aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
             />
           </div>
@@ -150,10 +155,17 @@ function FunderForm({resourceId, contributor, updateFunder}) {
               type="text"
               className="js-award_description c-input__text"
               aria-describedby={`${contributor.id}title-ex`}
+              aria-invalid={!!formik.errors.award_title || null}
+              aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
             />
             <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the grant awarded</div>
           </div>
+          {(!!formik.errors.award_number || !!formik.errors.award_description || !!formik.errors.award_title) && (
+            <div id={`contributor_errors__${contributor.id}`} className="error-text">
+              {Object.entries(formik.errors).map((arr) => <p key={arr[0]}>{arr[1]}</p>)}
+            </div>
+          )}
         </Form>
       )}
     </Formik>
