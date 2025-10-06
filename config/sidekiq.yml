@@ -1,0 +1,16 @@
+---
+:concurrency: 5
+stage:
+  :concurrency: 10
+production:
+  :concurrency: 10
+:queues:
+  - zenodo_software
+  - zenodo_supp
+  - zenodo_copy
+  - submission
+  - submission_file
+  - submission_check
+  - critical
+  - default
+  - low

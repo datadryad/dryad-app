@@ -313,8 +313,8 @@ dev: &DEV
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
   cache:
-    app_url: 'redis://localhost:6380/0'
-    rack_attack_url: 'redis://localhost:6381/0'
+    app_url: 'redis://master.dev-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'
+    rack_attack_url: 'redis://master.rack-attack-cache.zkdynt.usw2.cache.amazonaws.com:6381/0'
 
 development:
   <<: *DEV
@@ -328,6 +328,9 @@ development:
     api_zip_size: 200_000_000
     files: 100
     frictionless: 50_000_000
+  cache:
+    app_url: 'redis://localhost:6380/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 stage:
   <<: *DEFAULTS

@@ -2,13 +2,13 @@
 lock '~> 3.14'
 
 # set vars from ENV
-set :deploy_to,        ENV['DEPLOY_TO']       || '/home/ec2-user/deploy'
-set :rails_env,        ENV['RAILS_ENV']       || 'production'
-set :repo_url,         ENV['REPO_URL']        || 'https://github.com/datadryad/dryad-app.git'
-set :branch,           ENV['BRANCH']          || 'main'
+set :deploy_to, ENV['DEPLOY_TO'] || '/home/ec2-user/deploy'
+set :rails_env, ENV['RAILS_ENV'] || 'production'
+set :repo_url, ENV['REPO_URL'] || 'https://github.com/datadryad/dryad-app.git'
+set :branch, ENV['BRANCH'] || 'main'
 
-set :application,      'dryad'
-set :default_env,      { path: "$PATH" }
+set :application, 'dryad'
+set :default_env, { path: "$PATH" }
 
 # Gets the current Git tag and revision
 set :version_number, `git describe --tags`
@@ -21,27 +21,27 @@ set :log_level, :debug
 set :optional_shared_files, %w{
   config/master.key
 }
+set :sidekiq_systemctl_user, :system
 
 # Default value for linked_dirs is []
 append :linked_dirs,
-       "log",
-       "tmp/pids",
-       "tmp/cache",
-       "tmp/sockets",
-       "vendor/bundle",
-       "public/system",
-       "uploads",
-       "reports"
-
-
+  "log",
+  "tmp/pids",
+  "tmp/cache",
+  "tmp/sockets",
+  "vendor/bundle",
+  "public/system",
+  "uploads",
+  "reports"
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
 namespace :deploy do
-  after :deploy, "git:version"
-  after :deploy, "cleanup:remove_example_configs"
-  after 'deploy:symlink:linked_dirs', "deploy:files:optional_copied_files"
+  after :deploy, 'git:version'
+  after :deploy, 'cleanup:remove_example_configs'
+  after 'deploy:symlink:linked_dirs', 'deploy:files:optional_copied_files'
+  after 'deploy:published', 'sidekiq:restart'
 end
 
 namespace :git do
@@ -69,6 +69,15 @@ namespace :deploy do
   end
 end
 
+namespace :sidekiq do
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      if test("systemctl list-unit-files | grep sidekiq.service")
+        execute :sudo, :systemctl, :restart, "sidekiq"
+      end
+    end
+  end
+end
 
 namespace :cleanup do
   desc "Remove all of the example config files"
@@ -79,3 +88,4 @@ namespace :cleanup do
     end
   end
 end
+

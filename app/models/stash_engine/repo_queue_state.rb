@@ -104,9 +104,11 @@ module StashEngine
       # this is a guard against setting something completed that isn't and that will make this method fail
       return false unless resource.present? && available_in_storage?
 
-      StashEngine.repository.harvested(resource: resource)
+      resource_submission_service = Submission::ResourcesService.new(resource.id)
+
+      resource_submission_service.finalize
       if StashEngine::RepoQueueState.where(resource_id: resource_id, state: 'completed').count < 1
-        StashEngine.repository.class.update_repo_queue_state(resource_id: resource_id, state: 'completed')
+        resource.update_repo_queue_state(state: 'completed')
       end
 
       id = resource.identifier
@@ -115,7 +117,7 @@ module StashEngine
         total_dataset_size += data_file.upload_file_size unless data_file.file_state == 'deleted'
       end
       id.update(storage_size: total_dataset_size)
-      ::StashEngine.repository.cleanup_files(resource)
+      resource_submission_service.cleanup_files
       true
     end
 

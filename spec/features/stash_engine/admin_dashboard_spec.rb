@@ -1,7 +1,6 @@
 RSpec.feature 'AdminDashboard', type: :feature do
   include DatasetHelper
   include Mocks::Aws
-  include Mocks::Repository
   include Mocks::CurationActivity
   include Mocks::Datacite
   include Mocks::RSolr
@@ -14,7 +13,6 @@ RSpec.feature 'AdminDashboard', type: :feature do
     mock_solr!
     mock_salesforce!
     mock_stripe!
-    mock_repository!
     mock_datacite!
     mock_file_content!
     neuter_curation_callbacks!
@@ -250,7 +248,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
         it 'allows assigning a curator to a dataset' do
           click_button 'Update curator'
-          select(@curator.name_last_first, from: '_curator_id')
+          select(@curator.name_last_first, from: 'stash_engine_resource_curator_id')
           click_button('Submit')
           expect(find('#search_results')).to have_text(@curator.name, count: 1)
         end
@@ -260,11 +258,11 @@ RSpec.feature 'AdminDashboard', type: :feature do
           visit stash_url_helpers.admin_dashboard_path
           expect(page).to have_text('Admin dashboard')
           click_button 'Update curator'
-          select(@curator.name_last_first, from: '_curator_id')
+          select(@curator.name_last_first, from: 'stash_engine_resource_curator_id')
           click_button('Submit')
           expect(find('#search_results')).to have_text(@curator.name, count: 1)
           click_button 'Update curator'
-          select('unassign', from: '_curator_id')
+          select('unassign', from: 'stash_engine_resource_curator_id')
           click_button('Submit')
           expect(find('#search_results')).not_to have_text(@curator.name)
           @resource.reload
@@ -296,7 +294,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
             expect(find('#search_results')).to have_text('Curation')
             expect(find('#search_results')).to have_text(@curator.name, count: 1)
             click_button 'Update curator'
-            select('unassign', from: '_curator_id')
+            select('unassign', from: 'stash_engine_resource_curator_id')
             click_button('Submit')
             expect(find('#search_results')).not_to have_text(@curator.name)
             expect(find('#search_results')).to have_text('Submitted')
@@ -309,8 +307,8 @@ RSpec.feature 'AdminDashboard', type: :feature do
             within(:css, 'tbody tr') do
               click_button 'Update status'
             end
-            find("#_curation_activity_status option[value='action_required']").select_option
-            fill_in(id: '_curation_activity_note', with: 'My cat says hi')
+            find("#stash_engine_resource_curation_activity_status option[value='action_required']").select_option
+            fill_in(id: 'stash_engine_resource_curation_activity_note', with: 'My cat says hi')
             click_button('Submit')
             expect(find('tbody tr')).to have_text('Action required')
             within(:css, 'tbody tr') do

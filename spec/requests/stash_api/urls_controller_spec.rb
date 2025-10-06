@@ -25,7 +25,6 @@ module StashApi
     include Mocks::RSolr
     include Mocks::Salesforce
     include Mocks::Stripe
-    include Mocks::Repository
     include Mocks::UrlUpload
 
     # set up some versions with different curation statuses (visibility)
