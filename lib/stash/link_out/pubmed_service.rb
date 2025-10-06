@@ -42,7 +42,6 @@ module Stash
       def generate_files!
         p "  created #{generate_provider_file!}"
         p "  created #{generate_links_file!}"
-        p '  pushing files to PubMed FTP server'
       end
 
       def validate_files!
@@ -53,6 +52,7 @@ module Stash
       end
 
       def publish_files!
+        p '  pushing files to PubMed FTP server'
         Net::SFTP.start(@ftp.ftp_host, @ftp.ftp_username, password: @ftp.ftp_password) do |sftp|
           sftp.upload!("#{TMP_DIR}/#{@provider_file}", "#{@ftp.ftp_dir}/#{@provider_file}")
         rescue Net::SFTP::StatusException => e

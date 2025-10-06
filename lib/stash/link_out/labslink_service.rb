@@ -37,6 +37,7 @@ module Stash
       end
 
       def publish_files!
+        p '  pushing files to PubMed FTP server'
         ftp = Net::FTP.new(@ftp.ftp_host)
         ftp.login(@ftp.ftp_username, @ftp.ftp_password)
         ftp.chdir(@ftp.ftp_dir)
