@@ -15,3 +15,13 @@ Steps for setting up ElastiCache instances
 > Select the newly created parameter group to each instance on creation.
 >
 > Adding after the instance is created requires node reboot, and this will clear node content.
+
+### Local installation with Docker
+You can use [Docker Desktop](https://docs.docker.com/desktop/setup/install/mac-install/)
+
+Run the following commands in the terminal to create the two instances:
+
+```aiignore
+docker run -d --name dryad-valkey -p 6380:6379 valkey/valkey:latest
+docker run -d --name rack-attack-valkey -p 6381:6379 valkey/valkey:latest
+```
