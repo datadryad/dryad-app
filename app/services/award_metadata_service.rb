@@ -25,7 +25,7 @@ class AwardMetadataService
       award_title: data.award_title
     }.merge(ic_attrs(data))
     pp "Updating contributor with ID: #{contributor.id} with #{attrs.inspect}" unless Rails.env.test?
-    contributor.update! attrs
+    contributor.update attrs
   end
 
   def ic_attrs(data)
