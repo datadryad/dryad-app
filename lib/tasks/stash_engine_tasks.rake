@@ -1128,7 +1128,7 @@ namespace :identifiers do
       found_identifiers = Set[]
       # for each day in the month
       (origin_date..end_date).each do |date|
-        puts("  gathering #{date}") 
+        puts("  gathering #{date}")
         # "new to queue" -- for each dataset that received the target status on the given day
         StashEngine::CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted])
           .includes(resource: :identifier).find_each do |ca|
@@ -1161,14 +1161,14 @@ namespace :identifiers do
       end
 
       # produce the stats
-      puts("  writing results")
+      puts('  writing results')
       found_identifiers.each do |i|
         res = i.latest_viewable_resource
         res = i.resources.last if res.blank?
         first_res = i.first_submitted_resource
         u = res&.owner_author
         r = StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
-        
+
         csv << [i.identifier, i.publication_article_doi,
                 u&.affiliation&.long_name, r&.country,
                 res&.current_curation_status,
