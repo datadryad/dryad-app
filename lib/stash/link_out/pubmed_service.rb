@@ -43,7 +43,6 @@ module Stash
         p "  created #{generate_provider_file!}"
         p "  created #{generate_links_file!}"
         p '  pushing files to PubMed FTP server'
-        publish_files!
       end
 
       def validate_files!
@@ -76,7 +75,8 @@ module Stash
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
         doc = Nokogiri::XML(ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            template: 'link_out/pubmed_provider.xml.erb',
+            template: 'link_out/pubmed_provider',
+            format: :xml,
             locals: {
               id: @ftp.ftp_provider_id,
               abbreviation: @ftp.ftp_username,
@@ -98,7 +98,8 @@ module Stash
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
         doc = Nokogiri::XML(ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            template: 'link_out/pubmed_links.xml.erb',
+            template: 'link_out/pubmed_links',
+            format: :xml,
             locals: {
               provider_id: @ftp.ftp_provider_id,
               database: 'PubMed',
