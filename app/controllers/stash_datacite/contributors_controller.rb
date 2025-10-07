@@ -39,6 +39,8 @@ module StashDatacite
           format.js do
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
           end
+        else
+          format.any(:js, :json) { render json: @contributor.errors.messages, status: 406 }
         end
       end
     end
