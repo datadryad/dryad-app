@@ -40,7 +40,7 @@
 
   <div>
   <dt>Data Publishing Charge (DPC).</dt>
-  <dd>The fee to publish data, which may be billed to the unsponsored author (for individual datasets) or to the Sponsor (datasets published each year) as set forth in the Fee Schedule based on tiers..</dd>
+  <dd>The fee to publish data, which may be billed to the unsponsored author (for individual datasets) or to the Sponsor (datasets published each year) as set forth in the Fee Schedule based on tiers.</dd>
   </div>
 
   <div>
