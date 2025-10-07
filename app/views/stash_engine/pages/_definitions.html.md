@@ -1,11 +1,11 @@
 # Definitions
 
-*Updated: August 22, 2025*
+*Updated: October 7, 2025*
 
 <dl>
   <div>
   <dt>Accept/Acceptance.</dt>
-  <dd>A conclusion by Dryad Curation personnel that a Dataset is suitable for Publication.</dd>
+  <dd>A conclusion by Dryad Curation personnel that a Dataset is suitable for Dataset Publication.</dd>
   </div>
 
   <div>
@@ -15,7 +15,7 @@
 
   <div>
   <dt>Annual Service Fee.</dt>
-  <dd>The annual fee for service paid by Dryad partners.</dd>
+  <dd>The annual fee for service paid by Dryad partners as set forth in the Fee Schedule based on tiers.</dd>
   </div>
 
   <div>
@@ -34,8 +34,13 @@
   </div>
 
   <div>
+  <dt>Data Publication Volume.</dt>
+  <dd>The volume of Datasets available to a partner based on their applicable Data Publishing Charge tier.</dd>
+  </div>
+
+  <div>
   <dt>Data Publishing Charge (DPC).</dt>
-  <dd>The fee to publish data, which may be billed to the unsponsored author (for individual datasets) or to the Sponsor (datasets published each year).</dd>
+  <dd>The fee to publish data, which may be billed to the unsponsored author (for individual datasets) or to the Sponsor (datasets published each year) as set forth in the Fee Schedule based on tiers..</dd>
   </div>
 
   <div>
@@ -65,7 +70,7 @@
 
   <div>
   <dt>Fees.</dt>
-  <dd>Collectively, Annual Service Fees and Data Publishing Charges.</dd>
+  <dd>Collectively, the applicable Annual Service Fees, Data Publishing Charges, and any Large Data Fees, all as detailed in the Fee Schedule.</dd>
   </div>
   
   <div>
@@ -75,7 +80,7 @@
   
   <div>
   <dt>Large Data Fee.</dt>
-  <dd>The fee charged for larger datasets, as set out in the Fee Schedule. Large Data Fees may be incurred at the point of initial Submission or following a Versioning of the Dataset.</dd>
+  <dd>The fee charged for larger Datasets, as set out in the Fee Schedule based on tiers by size. Large Data Fees may be incurred at the point of initial Dataset Submission or following a Versioning of the Dataset.</dd>
   </div>
 
   <div>
@@ -90,7 +95,7 @@
 
   <div>
   <dt>Partnership Agreement.</dt>
-  <dd>An agreement between an entity and Dryad that governs the access to and use of the Dryad Infrastructure and Services by the Partner’s affiliated researchers.</dd>
+  <dd>An agreement between an entity and Dryad, including the Partner Terms, that governs the access to and use of the Dryad Infrastructure and Services by the Partner’s affiliated researchers.</dd>
   </div>
 
   <div>
@@ -106,6 +111,16 @@
   <div>
   <dt>Private for Peer Review Fee.</dt>
   <dd>A one-time fee for Datasets to be held in Private for Peer Review status.</dd>
+  </div>
+
+  <div>
+  <dt>Processing/In Process.</dt>
+  <dd>The curation and assessment process performed by Dryad before Dataset Publication.</dd>
+  </div>
+
+  <div>
+  <dt>Processing Fee.</dt>
+  <dd>The applicable fee for post-termination Dataset Processing as further described in the Partner Agreement.</dd>
   </div>
 
   <div>
@@ -125,7 +140,7 @@
 
   <div>
   <dt>Sponsored author.</dt>
-  <dd>An author whose data publication charges are covered by a Dryad Partner. </dd>
+  <dd>An author whose Data Publishing Charges are covered by a Dryad Partner. </dd>
   </div>
 
   <div>
@@ -135,7 +150,7 @@
 
   <div>
   <dt>Submit/Submission.</dt>
-  <dd>The deposition of a Dataset on the Dryad Website/a Dataset so deposited.</dd>
+  <dd>The depositing of a Dataset on the Dryad Website/a Dataset so deposited.</dd>
   </div>
 
   <div>
@@ -150,7 +165,7 @@
 
   <div>
   <dt>Unsponsored author.</dt>
-  <dd>An author whose data publication charges are not covered by a Dryad Partner. </dd>
+  <dd>An author whose Data Publishing Charges are not covered by a Dryad Partner. </dd>
   </div>
 
   <div>
@@ -165,7 +180,7 @@
 
   <div>
   <dt>Waiver.</dt>
-  <dd>A waiver of fees (partial or complete) to Publish a Dataset to the Dryad Website that may be granted to a Submitter.</dd>
+  <dd>A waiver of fees to Publish a Dataset to the Dryad Website that may be granted to a Submitter.</dd>
   </div>
 
   <div>
