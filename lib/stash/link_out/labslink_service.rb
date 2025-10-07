@@ -37,6 +37,7 @@ module Stash
       end
 
       def publish_files!
+        p '  pushing files to PubMed FTP server'
         ftp = Net::FTP.new(@ftp.ftp_host)
         ftp.login(@ftp.ftp_username, @ftp.ftp_password)
         ftp.chdir(@ftp.ftp_dir)
@@ -53,7 +54,8 @@ module Stash
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
         doc = Nokogiri::XML(ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            template: 'link_out/labslink_provider.xml.erb',
+            template: 'link_out/labslink_provider',
+            format: :xml,
             locals: {
               id: @ftp.ftp_provider_id,
               name: 'Dryad Data Platform',
@@ -72,7 +74,8 @@ module Stash
         # Note that the view referenced below lives in the Dryad repo in the dryad/app/views dir
         doc = Nokogiri::XML(ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            template: 'link_out/labslink_links.xml.erb',
+            template: 'link_out/labslink_links',
+            format: :xml,
             locals: {
               provider_id: @ftp.ftp_provider_id,
               database: 'MED',
