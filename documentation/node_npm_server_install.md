@@ -46,6 +46,6 @@ ln -s ~/local/node-v14.16.1-linux-x64/bin/yarnpkg yarnpkg
 6. Initialize the UI components
 ```shell
 cd ~/dryad-app
-npm install
+yarn install
 bin/webpack
 ```
