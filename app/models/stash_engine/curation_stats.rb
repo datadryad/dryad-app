@@ -198,10 +198,12 @@ module StashEngine
     def populate_ppr_to_curation
       p2c_count = 0
       # for each dataset that received curation status on the given day
+      found = Set.new
       CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
         .includes(resource: [identifier: :curation_activities]).find_each do |ca|
 
         next unless ca&.resource&.identifier
+        next if found.include?(ca.resource.identifier_id)
 
         # find the most recent PPR or curation status
         # if it's PPR, count it as a ppr_to_curation transition
@@ -211,6 +213,7 @@ module StashEngine
 
           if sibling_ca.peer_review?
             p2c_count += 1
+            found.add(ca.resource.identifier_id)
             break
           elsif sibling_ca.curation?
             break
