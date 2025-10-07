@@ -32,6 +32,8 @@ else
   "https://#{Rails.application.default_url_options[:host]}".freeze
 end
 
+SUBMISSION_REDIS_KEY = 'resource:%{resource.id}:remaining_files'.freeze
+
 HELP_PAGES_REQUIREMENTS =
   [
     { path: '/help/requirements/files', name: 'File requirements' },

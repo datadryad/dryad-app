@@ -119,10 +119,9 @@ Rails.application.configure do
     :password => Rails.application.credentials[Rails.env.to_sym][:aws_ses_password]
   }
 
-
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
+  config.cache_store = :redis_cache_store, { url: ac['cache']['app_url'], ssl: true }
 
   Rails.application.default_url_options = { host: 'sandbox.datadryad.org' }
-
 end

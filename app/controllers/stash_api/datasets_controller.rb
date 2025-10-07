@@ -436,7 +436,7 @@ module StashApi
         CurationService.new(resource: @resource, status: 'processing',
                             note: 'Repository processing data', user_id: @user&.id || 0).process
       end
-      StashEngine.repository.submit(resource_id: @resource.id)
+      Submission::ResourcesService.new(@resource.id).trigger_submission
     end
 
     def update_curation_status(new_status)

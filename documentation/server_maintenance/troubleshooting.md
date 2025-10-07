@@ -158,14 +158,12 @@ See also: [Slides on Submission Processes](https://docs.google.com/presentation/
 Errors in the queue_state or resource_state or stuck states
 -----------------------------------------------------------
 
-Check that the Merritt submission status daemon is running.
-
-Be sure we can get results for queries from Merritt.
+Check that the Sidekiq daemon is running.
 
 The daemon can be restarted on the server like:
 ```
-sudo cdlsysctl restart merritt_status_updater
-# it can be run manually like `RAILS_ENV=<environment> bundle exec rails merritt_status:update' if needed
+sudo systemctl restart sidekiq
+# it can be run manually like `RAILS_ENV=<environment> bundle exec sidekiq' if needed
 ```
 
 If the user needs to change a data problem that caused a submission error (rare)

@@ -17,7 +17,7 @@ Permanent buckets
 ==================
 
 Each server's "primary" permanent bucket is named in the
-APP_CONFIG[:s3][:merritt_bucket]. This is the bucket that the status_updater
+APP_CONFIG[:s3][:merritt_bucket]. This is the bucket that the submission
 process moves files into. Replication to additional buckets is managed by AWS
 configurations.
 
