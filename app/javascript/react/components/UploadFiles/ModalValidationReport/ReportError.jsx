@@ -26,9 +26,10 @@ function ReportError(props) {
           href={`/data_check_guide#${reportError.name.toLowerCase().replace(' ', '-')}`}
           title={`Help with ${reportError.name} alerts`}
           rel="noreferrer"
+          style={{fontSize: '1rem'}}
         >
-          <i className="fa fa-question-circle" aria-hidden="true" />
-          <em style={{fontSize: '.98em'}}>What does this mean?</em><ExitIcon />
+          <i className="fa fa-question-circle" aria-hidden="true" style={{marginRight: '.25ch'}} />
+          <em style={{marginRight: '.25ch'}}>What does this mean?</em><ExitIcon />
         </a>
       </div>
 

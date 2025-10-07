@@ -85,7 +85,7 @@ module StashApi
     private
 
     def remove_html(in_string)
-      ActionView::Base.full_sanitizer.sanitize(in_string)
+      ActionController::Base.helpers.sanitize(in_string, tags: %w[em i sub sup])
     end
 
     def establish_owning_user_id
@@ -205,6 +205,7 @@ module StashApi
       end
 
       a.save(validate: false) # we can validate on submission, keeps from saving otherwise
+      AuthorsService.new(a).check_orcid if a.valid?
     end
 
     # certain things need setting up on initialization based on tenant

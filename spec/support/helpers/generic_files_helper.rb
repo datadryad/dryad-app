@@ -40,7 +40,7 @@ module GenericFilesHelper
     expect(response_code).to eql(200)
     body = JSON.parse(response.body)
     new_file = StashEngine::GenericFile.first
-    with_dl = new_file.as_json(methods: %i[type uploaded])
+    with_dl = new_file.as_json(methods: %i[type uploaded frictionless_report])
     expect(body['new_file'].to_json).to eql(with_dl.to_json)
   end
 

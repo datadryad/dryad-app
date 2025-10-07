@@ -4,7 +4,7 @@ export {default} from './Compliance';
 
 export const complianceCheck = (resource) => {
   const {license_id} = resource.identifier;
-  const disclaimer = resource.descriptions.find((d) => d.description_type === 'usage_notes');
+  const disclaimer = resource.descriptions.find((d) => d.description_type === 'hsi_statement');
   if (!license_id) {
     return (
       <p className="error-text" id="license_error">Completion of the compliance questionnaire is required</p>
@@ -12,7 +12,7 @@ export const complianceCheck = (resource) => {
   }
   if (!disclaimer) {
     return (
-      <p className="error-text" id="hsi_error">Completion of the compliance questionnaire is required</p>
+      <p className="error-text" id="hsi_choice_error">Completion of the compliance questionnaire is required</p>
     );
   }
   if (disclaimer.description !== null) {
@@ -25,7 +25,7 @@ export const complianceCheck = (resource) => {
 
 export function CompPreview({resource}) {
   const {license_id} = resource.identifier;
-  const disclaimer = resource.descriptions.find((d) => d.description_type === 'usage_notes');
+  const disclaimer = resource.descriptions.find((d) => d.description_type === 'hsi_statement');
   return (
     <>
       {license_id === 'cc0' && (

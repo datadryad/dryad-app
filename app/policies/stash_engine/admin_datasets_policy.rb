@@ -17,6 +17,10 @@ module StashEngine
       @user.min_manager?
     end
 
+    def create_issue?
+      @user.min_app_admin?
+    end
+
     def create_salesforce_case?
       @user.min_app_admin?
     end

@@ -1,0 +1,22 @@
+<% if issues.present? %> 
+  <table class="c-lined-table">
+    <thead>
+      <tr>
+        <th>Issue</th>
+        <th>Assigned</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% issues.each do |issue| %>
+      <tr class="c-lined-table__row">
+        <td><%= link_to issue[:title], issue[:url], target: '_blank' %></td>
+        <td><%= issue[:assignee].presence || '' %></td>
+        <td><%= issue[:status] %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div style="background-color: #f2f2f2; padding: .5ch"><em>None</em></div>
+<% end %>
