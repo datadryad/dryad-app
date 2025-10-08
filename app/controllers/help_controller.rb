@@ -3,6 +3,10 @@ class HelpController < ApplicationController
   include StashEngine::SharedSecurityController
   caches_page :topic
 
+  rescue_from 'ActionView::MissingTemplate' do
+    redirect_to help_path
+  end
+
   def topic
     respond_to do |format|
       format.html do

@@ -1,3 +1,4 @@
+<% @page_title = 'Submission costs' %>
 <h1>Submission costs</h1>
 
 As a community-driven non-profit organization, Dryad is committed to enabling the open availability and routine reuse of all research data. We strive to make high-quality data publishing affordable as well as easy. All our fees are set on a cost-recovery basis and designed to keep Dryad's systems running strong, while putting our services within reach for as many researchers as possible. 

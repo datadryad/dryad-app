@@ -4,7 +4,7 @@ module StashDatacite
 
     # rubocop:disable Metrics/MethodLength
     def find_or_create
-      @metadata_entry = Resource::MetadataEntry.new(@resource, session[:resource_type] || 'dataset', @resource.submitter&.tenant_id)
+      @metadata_entry = Resource::MetadataEntry.new(@resource, session[:resource_type] || 'dataset', @resource.submitter&.tenant)
       @metadata_entry.resource_type
       @metadata_entry.resource_publications
       @metadata_entry.descriptions
@@ -52,7 +52,7 @@ module StashDatacite
       )
       if @resource.previous_curated_resource.present?
         files[:previous_files] = @resource.previous_curated_resource.generic_files.validated_table.as_json(
-          methods: %i[type frictionless_report]
+          methods: %i[type]
         )
       end
 

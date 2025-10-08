@@ -16,9 +16,6 @@ import UploadSelect from './UploadSelect/UploadSelect';
 import TrackChanges from './TrackChanges';
 import ChangeLog from './ChangeLog';
 
-/**
- * Constants
- */
 const RailsActiveRecordToUploadType = {
   'StashEngine::DataFile': 'data',
   'StashEngine::SoftwareFile': 'software',
@@ -33,12 +30,6 @@ const AllowedUploadFileTypes = {
   data: 'data',
   software: 'sfw',
   supp: 'supp',
-};
-const ValidTabular = {
-  extensions: ['csv', 'tsv', 'xls', 'xlsx', 'json', 'xml'],
-  mime_types: ['text/csv', 'text/tab-separated-values', 'application/vnd.ms-excel', 'text/xml',
-    'application/xml', 'application/json', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  ],
 };
 
 export const displayAriaMsg = (msg) => {
@@ -73,7 +64,7 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name, current,
+  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name, current, pubDates,
 }) {
   const [initialLoad, setInitialLoad] = useState(false);
   const [chosenFiles, setChosenFiles] = useState([]);
@@ -107,18 +98,9 @@ export default function UploadFiles({
     rarTypeFiles: 'RAR files were not added. RAR is a proprietary compression format that cannot be opened universally. Please use an open-access format, such as TAR.GZ, 7Z, or ZIP.',
   };
 
-  const isValidTabular = (file) => (ValidTabular.extensions.includes(file.sanitized_name.split('.').pop())
-            || ValidTabular.mime_types.includes(file.upload_content_type))
-            && (file.upload_file_size <= config_maximums.frictionless);
-
-  const labelNonTabular = (files) => files.map((file) => {
-    file.tabularCheckStatus = isValidTabular(file) ? null : TabularCheckStatus.na;
-    return file;
-  });
-
   // set status based on contents of frictionless report
-  const setTabularCheckStatus = (file) => {
-    if (!isValidTabular(file)) {
+  const tabularCheckStatus = (file) => {
+    if (!file.frictionless_report) {
       return TabularCheckStatus.na;
     } if (file.frictionless_report) {
       return TabularCheckStatus[file.frictionless_report.status];
@@ -126,23 +108,11 @@ export default function UploadFiles({
     return TabularCheckStatus.error;
   };
 
-  // updates only based on the state of the actual report and not this.state.validating
-  const simpleTabularCheckStatus = (files) => files.map((file) => ({
-    ...file,
-    tabularCheckStatus: setTabularCheckStatus(file),
-  }));
-
   // updates to checking (if during validation phase) or n/a or a status based on frictionless report from database
-  const updateTabularCheckStatus = (files) => {
-    if (validating.length) {
-      return files.reduce((arr, file) => {
-        const cf = chosenFiles.find((c) => c.id === file.id);
-        if (!cf.tabularCheckStatus) arr.push({...file, tabularCheckStatus: TabularCheckStatus.checking});
-        return arr;
-      }, []);
-    }
-    return simpleTabularCheckStatus(files);
-  };
+  const setTabularCheckStatus = (files) => files.map((file) => ({
+    ...file,
+    tabularCheckStatus: tabularCheckStatus(file),
+  }));
 
   useEffect(() => {
     if (resource.identifier.pub_state === 'published') {
@@ -155,7 +125,7 @@ export default function UploadFiles({
   useEffect(() => {
     if (chosenFiles.some((f) => f.uploadType !== 'data')) setZenodo(true);
     chosenFiles.forEach((f) => {
-      if (f.status === 'Uploaded' && f.tabularCheckStatus === null) setValidating((v) => [...v, f]);
+      if (f.status === 'Uploaded' && f.tabularCheckStatus === TabularCheckStatus.checking) setValidating((v) => [...v, f]);
     });
     const generic_files = chosenFiles.map((f) => ({
       ...f,
@@ -178,7 +148,7 @@ export default function UploadFiles({
   useEffect(() => {
     const files = resource.generic_files;
     const transformed = transformData(files);
-    const withTabularCheckStatus = updateTabularCheckStatus(transformed);
+    const withTabularCheckStatus = setTabularCheckStatus(transformed);
     setChosenFiles(withTabularCheckStatus);
     setInitialLoad(true);
     addCsrfToken();
@@ -208,7 +178,7 @@ export default function UploadFiles({
       interval.current = null;
       setPollingCount(0);
       // Set any unchecked files as error after 10 minutes
-      const files = simpleTabularCheckStatus(filteredFiles);
+      const files = setTabularCheckStatus(filteredFiles);
       updateAlreadyChosenById(files);
       return true;
     }
@@ -234,7 +204,7 @@ export default function UploadFiles({
         {params: {file_ids: toCheck.map((file) => file.id)}},
       ).then((response) => {
         const transformed = transformData(response.data);
-        const files = simpleTabularCheckStatus(transformed);
+        const files = setTabularCheckStatus(transformed);
         updateAlreadyChosenById(files);
       }).catch((error) => console.log(error));
     }
@@ -246,21 +216,9 @@ export default function UploadFiles({
   };
 
   useEffect(() => {
-    if (validating.length) {
-      // sets file object to have tabularCheckStatus: TabularCheckStatus['checking']} || n/a or status based on report
-      const files = updateTabularCheckStatus(validating);
-      // I think these are files that are being uploaded now????  IDK what it means.
-      updateAlreadyChosenById(files);
-      // post to the method to trigger frictionless validation in AWS Lambda
-      axios.post(
-        `/generic_file/trigger_frictionless/${resource.id}`,
-        {file_ids: files.map((file) => file.id)},
-      ).then(() => {
-        if (!interval.current) {
-          // start polling for report updates if not polling already
-          interval.current = setInterval(tick, pollingDelay);
-        }
-      }).catch((error) => console.log(error));
+    if (validating.length && !interval.current) {
+      // start polling for report updates if not polling already
+      interval.current = setInterval(tick, pollingDelay);
     }
   }, [validating]);
 
@@ -328,11 +286,6 @@ export default function UploadFiles({
     return newUrls.join('\n');
   };
 
-  const updateFileList = (files) => {
-    const labeled = labelNonTabular(files);
-    setChosenFiles((c) => [...c, ...labeled]);
-  };
-
   const uploadFileToS3 = (evaporate, fileList) => {
     fileList.map((file) => {
       if (file.status === 'Pending') {
@@ -375,6 +328,8 @@ export default function UploadFiles({
                   c.file_state = new_file.file_state;
                   c.upload_file_name = new_file.upload_file_name;
                   c.download_filename = new_file.download_filename;
+                  c.frictionless_report = new_file.frictionless_report;
+                  c.tabularCheckStatus = tabularCheckStatus(new_file);
                 }
                 return c;
               }));
@@ -422,7 +377,7 @@ export default function UploadFiles({
         file.sizeKb = formatSizeUnits(file.size);
         return file;
       });
-      updateFileList(newFiles);
+      setChosenFiles((c) => [...c, ...newFiles]);
       const {key, bucket, region} = config_s3.table;
       // AWS transfers allow up to 10,000 parts per multipart upload, with a minimum of 5MB per part.
       let partSize = 5 * 1024 * 1024;
@@ -461,10 +416,9 @@ export default function UploadFiles({
     if (chosenFiles.length) {
       successfulUrls = discardAlreadyChosenById(successfulUrls);
     }
-    const newManifestFiles = transformData(successfulUrls);
-    updateFileList(newManifestFiles);
-    const tabularFiles = newManifestFiles.filter((file) => isValidTabular(file));
-    setValidating((v) => [...v, ...tabularFiles]);
+    const newManifestFiles = setTabularCheckStatus(transformData(successfulUrls));
+    setChosenFiles((c) => [...c, ...newManifestFiles]);
+    setValidating((v) => [...v, ...newManifestFiles.filter((f) => f.tabularCheckStatus === TabularCheckStatus.checking)]);
   };
 
   const removeFileHandler = (id) => {
@@ -660,7 +614,7 @@ export default function UploadFiles({
           ) : <div className="callout"><p>No files have been selected.</p></div> }
         </div>
       )}
-      {pubChanges && <ChangeLog resource={resource} setResource={setResource} />}
+      {pubChanges && <ChangeLog {...{resource, setResource, pubDates}} />}
       {changes && !pubChanges && <TrackChanges resource={resource} /> }
       <ModalUrl
         ref={modalRef}

@@ -1,3 +1,4 @@
+<% @page_title = 'How to reuse Dryad data' %>
 <h1>How to reuse Dryad data</h1>
 
 Dryad hosts a vast collection of [curated](/mission#our-curation-and-publication-process) datasets across a wide range of scientific disciplines. We enable researchers to share, access, and reuse high-quality data. This guide helps researchers make the most of data on Dryad.

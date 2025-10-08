@@ -1,3 +1,4 @@
+<% @page_title = 'Tabular data check alerts' %>
 <h1>Tabular data check alerts</h1>
 
 Dryad's mission is to enable the open availability and routine reuse of all research data. Inconsistently formatted data is inaccessible for reuse, particularly for machine reading and processing. Inconsistencies also create barriers to the ability to access data with screen readers and other assistive devices.

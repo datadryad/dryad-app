@@ -4,7 +4,7 @@ import {formatSizeUnits} from '../../../lib/utils';
 export {default} from './UploadFiles';
 export {default as FilesPreview} from './FilesPreview';
 
-export const filesCheck = (resource, superuser, maximums) => {
+export const filesCheck = (resource, pubDates, superuser, maximums) => {
   const {generic_files: files, identifier: {publication_date, new_upload_size_limit}} = resource;
   const pub_date = new Date(publication_date);
   const {
@@ -102,10 +102,14 @@ export const filesCheck = (resource, superuser, maximums) => {
       );
     }
     const changelog = resource.descriptions.find((d) => d.description_type === 'changelog');
-    if (changelog && !changelog.description) {
-      return (
-        <p className="error-text" id="log_error">A log describing changes to published files is required</p>
-      );
+    if (changelog) {
+      const end = new RegExp(`${pubDates.slice(-1)[0]}:\\*\\*\\s*$`);
+      if (!changelog.description
+        || (pubDates.length && !pubDates.some((d) => changelog.description.includes(d))) || end.test(changelog.description)) {
+        return (
+          <p className="error-text" id="log_error">A log describing changes to published files is required</p>
+        );
+      }
     }
     return false;
   }

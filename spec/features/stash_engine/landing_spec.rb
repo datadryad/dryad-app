@@ -77,5 +77,54 @@ RSpec.feature 'Landing', type: :feature, js: true do
       expect(page).to have_text('Share:')
       expect(page).to have_text(/\d* downloads/)
     end
+
+    it 'does not show an unpublished resource' do
+      create(:data_file, resource: create(:resource, :submitted, identifier: identifier))
+      visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+      expect(all('details.c-file-group').count).to eq(1)
+    end
+
+    describe 'privileged user' do
+      before(:each) { sign_in(curator) }
+
+      it 'shows the privileged user banner' do
+        visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+        expect(page).to have_text('This is the administrator view of this dataset')
+        expect(page).to have_link('Activity log')
+        expect(page).to have_link('Public view')
+      end
+
+      it 'shows an unpublished resource and hides from public' do
+        create(:data_file, resource: create(:resource, :submitted, identifier: identifier))
+        visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+        expect(all('details.c-file-group').count).to eq(2)
+
+        click_link 'Public view'
+        expect(all('details.c-file-group').count).to eq(1)
+      end
+
+      it 'shows file alerts and hides from public' do
+        file = create(:data_file, resource: resource, download_filename: 'test.csv', upload_file_name: '131232142.csv',
+                                  upload_content_type: 'text/csv')
+        create(:frictionless_report, generic_file: file, status: 'issues')
+        create(:sensitive_data_report, generic_file: file, status: 'issues')
+        visit stash_url_helpers.landing_show_path(id: identifier.to_s)
+        expect(page).to have_button('Tabular data check alerts')
+        expect(page).to have_button('Sensitive data alerts')
+
+        click_button 'Tabular data check alerts'
+        expect(page).to have_css('h1', text: 'Tabular data check')
+        click_button 'Close dialog'
+
+        click_button 'Sensitive data alerts'
+        expect(page).to have_css('h1', text: 'Sensitive data alerts')
+        click_button 'Close dialog'
+
+        click_link 'Public view'
+        expect(page).not_to have_text('This is the administrator view of this dataset')
+        expect(page).not_to have_button('Tabular data check alerts')
+        expect(page).not_to have_button('Sensitive data alerts')
+      end
+    end
   end
 end

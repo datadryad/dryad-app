@@ -8,6 +8,7 @@
 #  identifier              :text(65535)
 #  identifier_type         :text(65535)
 #  import_info             :integer
+#  issues                  :json
 #  last_invoiced_file_size :bigint
 #  old_payment_system      :boolean          default(FALSE)
 #  payment_type            :string(191)
