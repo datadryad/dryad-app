@@ -27,7 +27,7 @@ module Integrations
 
       payload              = {
         criteria: criteria,
-        # include_fields: DEFAULT_FIELDS
+        include_fields: DEFAULT_FIELDS
       }
       payload[:offset]     = offset if offset
       payload[:limit]      = limit if limit
