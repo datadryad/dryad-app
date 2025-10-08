@@ -50,7 +50,7 @@ WARNING:
 5. Agree to the download and wait for it to complete.
 6. Run `dnf needs-restarting -r`
 7. If you do not see the message, `Reboot is required to fully utilize these updates.`, run `sudo update-motd`
-8. Otherwise, the instance must be rebooted. For non-SOLR instances, **Make sure the instance is first deregistered from the load balancer target groups**. You can also do a deployment and a puma restart while the instance is not registered (see below).
+8. Otherwise, the instance must be rebooted. For non-SOLR instances, **Make sure the instance is first deregistered from the load balancer target groups**. You can also do a deployment while the instance is not registered (see below).
 9. For SOLR instances, after rebooting, make sure SOLR is running again with 
 ```
 cd solr-9.7.0/
@@ -102,17 +102,6 @@ git tag -d <tag-name>
 git push --delete origin <tag-name>
 ```
 
-Deploying
----------
-
-On the deregistered instance, run the following:
-
-```
-deploy_dryad.sh <tag-name or branch>
-puma_restart.sh
-```
-
-
 De/Re-Registering Servers from the ALB
 ---------------------------------------
 
@@ -121,4 +110,13 @@ go into the <a href="https://us-west-2.console.aws.amazon.com/ec2/home?region=us
 Target Groups</a>, select the group you want to work with, and update the status
 of the individual servers.
 
+
+Deploying
+---------
+
+On the deregistered instance, run the following:
+
+```
+deploy_dryad.sh <tag-name or branch>
+```
 
