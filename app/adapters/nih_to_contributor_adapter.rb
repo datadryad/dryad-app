@@ -17,11 +17,26 @@ class NIHToContributorAdapter
     @response[:project_title]
   end
 
-  def ic_admin
-    @response[:agency_ic_admin][:name]
+  def ic_admin_name
+    ror['contributor_name']
+  end
+
+  def ic_admin_identifier
+    ror['name_identifier_id']
   end
 
   def ic_fundings
     @response[:agency_ic_fundings]
+  end
+
+  def ror
+    contributors_hash[@response[:agency_ic_admin][:name]]
+  end
+
+  def contributors_hash
+    related_contributors = StashDatacite::ContributorGrouping.find_by(name_identifier_id: NIH_ROR)&.json_contains
+    related_contributors.to_h do |contributor|
+      [contributor['contributor_name'], contributor]
+    end
   end
 end

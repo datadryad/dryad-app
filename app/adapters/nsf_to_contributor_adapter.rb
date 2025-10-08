@@ -17,5 +17,6 @@ class NSFToContributorAdapter
     @response[:title]
   end
 
-  def ic_admin; end
+  def ic_admin_name; end
+  def ic_admin_identifier; end
 end

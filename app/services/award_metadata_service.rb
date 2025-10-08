@@ -29,14 +29,11 @@ class AwardMetadataService
   end
 
   def ic_attrs(data)
-    return {} if data.ic_admin.blank? || data.ic_admin.downcase == contributor.contributor_name&.downcase
-
-    ror = StashEngine::RorOrg.where(name: data.ic_admin).first
-    return {} if ror.nil?
+    return {} if data.ic_admin_identifier.blank? || data.ic_admin_name.blank? || data.ic_admin_name.downcase == contributor.contributor_name&.downcase
 
     {
-      name_identifier_id: ror.ror_id,
-      contributor_name: ror.name
+      name_identifier_id: data.ic_admin_identifier,
+      contributor_name: data.ic_admin_name
     }
   end
 
