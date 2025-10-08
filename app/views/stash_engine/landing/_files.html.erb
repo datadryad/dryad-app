@@ -33,11 +33,16 @@
             <li>
               <span>
                 <%= download_file_name_link(fu, params) %>
-                <% unless fu.preview_type.nil? %>
-                  <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, format: :js) %>" aria-live="polite" aria-busy="true">
-                    <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
-                  </div>
+                <% if @user_type == 'privileged' && current_user.min_admin? %>
+                  <%= render partial: 'file_admin_checks', locals: { file: fu } %>
                 <% end %>
+                <div style="min-width: 80px; text-align: center;">
+                  <% unless fu.preview_type.nil? %>
+                    <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, format: :js) %>" aria-live="polite" aria-busy="true">
+                      <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
+                    </div>
+                  <% end %>
+                </div>
               </span>
               <div>
                 <%= filesize(fu.upload_file_size) %>

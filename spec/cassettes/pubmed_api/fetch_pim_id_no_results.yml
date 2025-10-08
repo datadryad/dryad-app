@@ -1,0 +1,65 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?ids=not_found&tool=my_tool
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - pmc.ncbi.nlm.nih.gov
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Wed, 24 Sep 2025 08:55:24 GMT
+      Server:
+      - istio-envoy
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept,Accept-Encoding
+      Allow:
+      - GET, HEAD, OPTIONS
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      - nosniff
+      Referrer-Policy:
+      - same-origin
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      X-Envoy-Upstream-Service-Time:
+      - '3'
+      Set-Cookie:
+      - ncbi_sid=BA74C38E8D3A8AA3_7050SID; Domain=.nih.gov; expires=Thu, 24 Sep 2026
+        08:55:24 GMT; Max-Age=31536000; Path=/
+      X-Ua-Compatible:
+      - IE=Edge
+      X-Xss-Protection:
+      - 1; mode=block
+      Via:
+      - 1.1 google
+      Alt-Svc:
+      - clear
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        <?xml version="1.0" encoding="utf-8"?>
+        <pmcids http_status="400" http_status_reason="Bad Request" response-date="2025-09-24 04:55:24" status="error"><request ids="not_found"><warnings><warning>query param `email` is missing.</warning></warnings><echo>ids=not_found&amp;tool=my_tool</echo></request><errors><error code="parse_error">query param `ids` value is not matching known patterns, check your ids. If you provided an `idtype` query param check if it is valid and corresponds to the `ids` values, otherwise help API with passing `idtype` query param explicitly with one of the valid values: pmcid, pmid, mid, doi. </error></errors></pmcids>
+  recorded_at: Wed, 24 Sep 2025 08:55:24 GMT
+recorded_with: VCR 6.3.1

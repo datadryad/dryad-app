@@ -1,0 +1,12 @@
+<% if current_user %>
+  <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu"><i class="fa fa-user"><span class="screen-reader-only">User settings</i></button>
+  <ul class="c-header__nav-submenu" id="manage-menu" hidden>
+    <li><%= link_to 'My account', my_account_path %></li>
+    <% if current_user.system_user? %>
+      <li><%= link_to 'Manage accounts', user_admin_path %></li>
+    <% end %>
+    <li><%= link_to 'Logout', sessions_destroy_path, id: 'log-in-out', class: 'js-nav-out', method: :post %></li>
+  </ul>
+<% else %>
+  <%= link_to 'Login', choose_login_path, id: 'log-in-out', class: 'js-nav-out' %>
+<% end %>

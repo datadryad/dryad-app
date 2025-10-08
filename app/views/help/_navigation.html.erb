@@ -1,0 +1,21 @@
+<ul>
+  <li><a href="/help" style="font-size: 1.15rem; font-weight: bold;">Dryad help center</a>
+    <ul style="margin-left: 0;">
+      <% unless request.path == '/help' %>
+        <li><%= render partial: 'search_form' %></li>
+      <% end %>
+      <li>
+        <span>Submission steps</span>
+        <%= create_menu(submission_steps).html_safe %>
+      </li>  
+      <li>
+        <span>Requirements</span>
+        <%= create_menu(requirements).html_safe %>
+      </li>
+      <li>
+        <span>Guides</span>
+        <%= create_menu(guides).html_safe %>
+      </li>
+    </ul>
+  </li>
+</ul>

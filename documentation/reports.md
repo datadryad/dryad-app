@@ -46,6 +46,29 @@ git commit -a -m "add reports for 2024-01"
 git push origin main
 ```
 
+Dataset origin report
+---------------------
+
+Run the origin report and copy the results into the `journal-payments` repository:
+```
+# on v3-prod server
+cd ~/deploy/current
+RAILS_ENV=production bundle exec rake identifiers:dataset_origin_report -- --year_month 2024-05
+cp dataset_origin* ~/journal-payments/dataset_origins/
+```
+
+Update detailed report
+----------------------
+
+```
+# on v3-prod server
+cd ~/deploy/current
+RAILS_ENV=production bundle exec rake identifiers:dataset_info_report_detailed --
+```
+
+Copy the detailed report to a google spreadsheet.
+
+
 End-of-quarter reporting
 ------------------------
 
@@ -207,6 +230,42 @@ For the annual report, we rely on these high-level numbers:
 - institutions: `select count(distinct long_name) from dcs_affiliations;`
 - journals: `select distinct value from stash_engine_internal_data where data_type='publicationISSN';`
 - funders: `select distinct name_identifier_id from dcs_contributors where contributor_type="funder";`
+- top journals: `select publication_name, count(publication_name) from stash_engine_resource_publications where resource_id in (select latest_resource_id from stash_engine_identifiers where pub_state = 'published' and publication_date > '2024-07-01' and publication_date < '2025-07-01') group by publication_name order by count(publication_name) desc limit 11;`
+
+Top institutions:
+```
+SELECT affil.long_name, count(affil.long_name)
+	    FROM dcs_affiliations affil
+	    JOIN dcs_affiliations_authors affil_auth
+	    ON affil.id = affil_auth.`affiliation_id`
+	    JOIN stash_engine_authors auth
+	    ON affil_auth.`author_id` = auth.`id`
+	    JOIN stash_engine_resources res
+	    ON auth.`resource_id` = res.id
+	    JOIN stash_engine_identifiers se_id
+	    ON se_id.latest_resource_id = res.id
+	    JOIN stash_engine_roles sero
+		ON res.id = sero.role_object_id
+	    JOIN stash_engine_users seu
+		ON seu.id = sero.user_id
+	    WHERE se_id.pub_state IN ('published', 'embargoed')
+		AND se_id.publication_date > '2024-07-01' and se_id.publication_date < '2025-07-01'
+		AND sero.role_object_type='StashEngine::Resource'
+		AND sero.role='submitter'
+		AND seu.orcid=auth.author_orcid
+		group by affil.long_name 
+		order by count(affil.long_name) desc
+		limit 10;
+```
+
+File details:
+```
+RAILS_ENV=production bundle exec rake identifiers:file_info_report -- 
+```
+
+Container file details:
+- Export the contents of the table `stash_engine_container_files`
+- Since MySQL exports as TSV by default, it is kind to conver it to CSV
 
 
 Datasets affiliated with an institution
