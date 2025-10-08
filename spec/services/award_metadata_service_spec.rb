@@ -47,13 +47,41 @@ describe AwardMetadataService do
       end
 
       context 'when there is a valid award number' do
-        it 'updates record info' do
-          VCR.use_cassette('nih_api/award_one_result_found') do
-            expect(subject).not_to be_nil
-            contrib.reload
+        context 'when there is no contributor grouping data' do
+          it 'updates record info' do
+            VCR.use_cassette('nih_api/award_one_result_found') do
+              expect(subject).not_to be_nil
+              contrib.reload
 
-            expect(contrib.award_title).to eq('Microbial-induced maternal factors that influence fetal immune development')
-            expect(contrib.award_uri).to eq('https://reporter.nih.gov/project-details/11169041')
+              expect(contrib.award_title).to eq('Microbial-induced maternal factors that influence fetal immune development')
+              expect(contrib.award_uri).to eq('https://reporter.nih.gov/project-details/11169041')
+              expect(contrib.name_identifier_id).to eq(NIH_ROR)
+            end
+          end
+        end
+
+        context 'with contributor grouping data' do
+          let!(:nih_grouping) do
+            create(:contributor_grouping,
+                   name_identifier_id: NIH_ROR,
+                   identifier_type: 'ror',
+                   json_contains: [
+                     {
+                       'identifier_type' => 'ror', 'contributor_name' => 'NIH Office of the Director',
+                       'contributor_type' => 'funder', 'name_identifier_id' => 'https://ror.org/00fj8a872'
+                     }
+                   ])
+          end
+
+          it 'updates record ror data' do
+            VCR.use_cassette('nih_api/award_one_result_found') do
+              expect(subject).not_to be_nil
+              contrib.reload
+              expect(contrib.award_title).to eq('Microbial-induced maternal factors that influence fetal immune development')
+              expect(contrib.award_uri).to eq('https://reporter.nih.gov/project-details/11169041')
+              expect(contrib.name_identifier_id).to eq('https://ror.org/00fj8a872')
+              expect(contrib.contributor_name).to eq('NIH Office of the Director')
+            end
           end
         end
       end
