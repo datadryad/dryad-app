@@ -18,11 +18,11 @@ class NIHToContributorAdapter
   end
 
   def ic_admin_name
-    ror['contributor_name']
+    ror.try('contributor_name')
   end
 
   def ic_admin_identifier
-    ror['name_identifier_id']
+    ror.try('name_identifier_id')
   end
 
   def ic_fundings
@@ -30,6 +30,8 @@ class NIHToContributorAdapter
   end
 
   def ror
+    return {} if @response[:agency_ic_admin][:name].blank?
+
     contributors_hash[@response[:agency_ic_admin][:name]]
   end
 
