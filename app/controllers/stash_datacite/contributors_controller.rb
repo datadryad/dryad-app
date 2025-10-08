@@ -91,6 +91,13 @@ module StashDatacite
       render json: grouping
     end
 
+    def award_details
+      contrib = StashDatacite::Contributor.new(award_number: params[:award_number], name_identifier_id: params[:name_identifier_id])
+      award_info = AwardMetadataService.new(contrib).award_details || {}
+
+      render json: { success: award_info.present? }.merge!(award_info)
+    end
+
     private
 
     def resource

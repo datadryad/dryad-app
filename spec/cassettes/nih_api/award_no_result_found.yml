@@ -1,0 +1,58 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.reporter.nih.gov/v2/projects/search
+    body:
+      encoding: UTF-8
+      string: '{"criteria":{"project_nums":["R01HD113192"]},"include_fields":["ProjectTitle","ProjectNum","AgencyIcFundings","AgencyIcAdmin","ProjectDetailUrl","CoreProjectNum","DateAdded"],"offset":0,"limit":50,"sort_field":"DateAdded","sort_order":"desc"}'
+    headers:
+      Content-Type:
+      - application/vnd.api+json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 22 Sep 2025 12:47:32 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '250'
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - AWSALB=C9w8miL7zpoR0WRzXQsh2a1EdIszWkxqvYB4u4DAEKTAesK/5g9sLWTPbhTejiFB4zASP1zK+efCRgPyp5HVSwSRG3l5PPo6saKMaU1vNs/fmQl1xjIuqm0/L+Qsui+ZNsrEmic6b+Hrokr51tlzyVfz7v6Q4kEbd0hiCr/7QOSYKh0fujIM5y9KhgaPFi7ETpkpjeYReJn85Tegl4bmbhmxSQAiVtunLKlHDv9gndZErvvkltf7jScFg29rfR5RE0OiFXOxv8OEEgZZ3A==;
+        Expires=Mon, 29 Sep 2025 12:47:32 GMT; Path=/
+      - AWSALBCORS=C9w8miL7zpoR0WRzXQsh2a1EdIszWkxqvYB4u4DAEKTAesK/5g9sLWTPbhTejiFB4zASP1zK+efCRgPyp5HVSwSRG3l5PPo6saKMaU1vNs/fmQl1xjIuqm0/L+Qsui+ZNsrEmic6b+Hrokr51tlzyVfz7v6Q4kEbd0hiCr/7QOSYKh0fujIM5y9KhgaPFi7ETpkpjeYReJn85Tegl4bmbhmxSQAiVtunLKlHDv9gndZErvvkltf7jScFg29rfR5RE0OiFXOxv8OEEgZZ3A==;
+        Expires=Mon, 29 Sep 2025 12:47:32 GMT; Path=/; SameSite=None; Secure
+      Server:
+      - ''
+      Api-Supported-Versions:
+      - '2.0'
+      X-Rate-Limit-Limit:
+      - 1m
+      X-Rate-Limit-Remaining:
+      - '199'
+      X-Rate-Limit-Reset:
+      - '2025-09-22T12:48:32.7566212Z'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+    body:
+      encoding: UTF-8
+      string: '{"meta":{"search_id":"82XQxHIkX0i7b4T0jBjPNg","total":0,"offset":0,"limit":50,"sort_field":"DateAdded","sort_order":"desc","sorted_by_relevance":true,"properties":{"URL":"https:/reporter.nih.gov/search/82XQxHIkX0i7b4T0jBjPNg/projects"}},"results":[]}'
+  recorded_at: Mon, 22 Sep 2025 12:47:32 GMT
+recorded_with: VCR 6.3.1

@@ -32,6 +32,22 @@ else
   "https://#{Rails.application.default_url_options[:host]}".freeze
 end
 
+NIH_ROR = 'https://ror.org/01cwqze88'.freeze
+NSF_ROR = 'https://ror.org/021nxhr62'.freeze
+
+API_INTEGRATIONS = {
+  'NIH' => NIH_ROR,
+  'NSF' => NSF_ROR
+}.freeze
+
+NIH_GRANT_REGEX = /
+  [0-9A-Za-z]?         # optional application type
+  [A-Z]{1,2}\d{2,3}    # activity code
+  [A-Z]{2}             # institute code
+  \d{6}                # serial number
+  (?:-\d{2}[A-Z0-9]*)? # optional year + suffix
+/x
+
 HELP_PAGES_REQUIREMENTS =
   [
     { path: '/help/requirements/files', name: 'File requirements' },
