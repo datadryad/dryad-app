@@ -3,16 +3,23 @@
   <%= render partial: 'filters' %>
   <div class="admin-dashboard-buttons" style="border: 0; padding: 0; column-gap: 3ch; row-gap: 2ch">
     <div class="o-admin-form-pair" style="flex-grow: 2;">
-      <label for="search-string">Search metadata: </label>
-      <%= search_field_tag(:q, @search_string, class: "c-input__text#{@search_string.present? ? ' selected' : ''}", id: 'search-string', style: 'flex-grow: 2' ) %>
+      <span>
+        <b id="searchlabel" style="margin-right: 1ch">Search</b>
+        <span id="searchlabel1">Metadata: </span>
+      </span>
+      <%= search_field_tag(:q, @search_string, class: "c-input__text#{@search_string.present? ? ' selected' : ''}", id: 'search-string', 'aria-labelledby': 'searchlabel searchlabel1', style: 'flex-grow: 2' ) %>
     </div>
     <div class="o-admin-form-pair" style="flex-grow: 2;">
-      <label for="related-search"><span class="screen-reader-only">Search </span>Publication IDs: </label>
-      <%= search_field_tag('filters[identifiers]', @filters[:identifiers], class: "c-input__text#{@filters[:identifiers].present? ? ' selected' : ''}", id: 'related-search', style: 'flex-grow: 2' ) %>
+      <span id="searchlabel2">Publication IDs: </span>
+      <%= search_field_tag('filters[identifiers]', @filters[:identifiers], class: "c-input__text#{@filters[:identifiers].present? ? ' selected' : ''}", 'aria-labelledby': 'searchlabel searchlabel2', style: 'flex-grow: 2' ) %>
+    </div>
+    <div class="o-admin-form-pair" style="flex-grow: 2;">
+      <span id="searchlabel3">Award IDs: </span>
+      <%= search_field_tag('filters[awards]', @filters[:awards], class: "c-input__text#{@filters[:awards].present? ? ' selected' : ''}", 'aria-labelledby': 'searchlabel searchlabel3', style: 'flex-grow: 2' ) %>
     </div>
     <div class="admin-dashboard-results" style="margin-left: auto">
       <button type="button" class="o-button__plain-text7" id="clear_filters" title="Clear search and filters"><i class="fa fa-times" aria-hidden="true"></i>Clear</button>
       <button type="submit" class="o-button__submit" id="apply_changes">Apply</button>
     </div>
-  </div>
+  </div>  
 <% end %>

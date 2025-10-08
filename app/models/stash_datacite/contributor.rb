@@ -36,6 +36,10 @@ module StashDatacite
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
     has_one :grouping, class_name: 'StashDatacite::ContributorGrouping', foreign_key: 'name_identifier_id', primary_key: 'name_identifier_id'
 
+    validates_length_of :award_number, maximum: 191, allow_blank: true, message: 'Award number is too long. Value was not saved'
+    validates_length_of :award_title, maximum: 191, allow_blank: true, message: 'Award title is too long. Value was not saved'
+    validates_length_of :award_description, maximum: 191, allow_blank: true, message: 'Program/division is too long. Value was not saved'
+
     scope :completed, -> {
       where("TRIM(IFNULL(contributor_name, '')) > '' AND TRIM('N/A' FROM IFNULL(contributor_name, '')) > ''")
     } # only non-null & blank, no N/A funders

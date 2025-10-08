@@ -35,8 +35,7 @@ OR
   See [the code for initializing and displaying it](https://github.com/datadryad/dryad-app/blob/f61b26e21f5d62fef7293de2a5a756fa5ab1fbc8/app/javascript/components/FileUpload/ModalValidationReport/ModalValidationReport.js).
   - Imports on line 6 & 7 would be set for the generic frictionless component
     starting with `@frictionlessdata/frictionless-components` instead of ours for a new implementation.
-    Also install this component into your `package.json` for dependency management
-    with npm or yarn before using.
+    Also install this component into your `package.json` for dependency management with yarn before using.
   - Our example initializes the component (lines 12-13) and renders it inside the
     `<div>` with ID `validation_report` (lines 43-44).
   - We are using a slightly customized component in order to address accessibility and
