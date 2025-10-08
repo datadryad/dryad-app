@@ -5,7 +5,7 @@ import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/ut
 import DragonDropList, {DragonListItem, orderedItems} from '../DragonDropList';
 import FunderForm from './FunderForm';
 
-function Funders({resource, setResource}) {
+function Funders({current, resource, setResource}) {
   const contributors = resource.contributors.filter((c) => c.contributor_type === 'funder');
   const [funders, setFunders] = useState(contributors);
   const [disabled, setDisabled] = useState(contributors[0]?.name_identifier_id === '0');
@@ -102,7 +102,7 @@ function Funders({resource, setResource}) {
         <DragonDropList model="contributor" typeName="funder" items={funders} path="/stash_datacite/contributors/reorder" setItems={setFunders}>
           {orderedItems({items: funders, typeName: 'funder'}).map((contrib) => (
             <DragonListItem key={contrib.id} item={contrib} typeName="funder">
-              <FunderForm resourceId={resource.id} contributor={contrib} disabled={disabled} updateFunder={updateFunder} />
+              <FunderForm current={current} resourceId={resource.id} contributor={contrib} disabled={disabled} updateFunder={updateFunder} />
               <button
                 type="button"
                 className="remove-record"

@@ -97,6 +97,17 @@
   <% end %>
 <% end %>
 
+<% if policy([:stash_engine, :admin_datasets]).create_issue?%>
+  <div class="activity-log-header">
+    <h2 id="issues-label">Github issues</h2>
+    <a href="https://github.com/datadryad/dryad-product-roadmap/issues/new?template=curator-fix.md&body=<%=CGI.escape("**DOI:** #{@identifier.identifier}\n**ID:** #{@identifier.id}\n**Resource:** #{r.id}\n\n")%>" class="o-button__plain-text2" style="color: black" target="githubIssue" id="issue_popup">Add github issue</a> 
+  </div>  
+  <div class="table-wrapper c-lined-table-wrapper" id="issues" role="region" tabindex="0" style="margin-top: 0" aria-labelledby="issues-label">
+    <% issues = display_issues(@identifier.issues) %>
+    <%= render partial: 'github_issues', locals: { issues: issues } %>
+  </div>
+<% end %>
+
 <% if @identifier.internal_data.present? %>
 <p><button class="o-button__plain-text7" onclick="document.getElementById('internal_data').toggleAttribute('hidden')"><i class="fa fa-eye" aria-hidden="true" style="margin-right: .5ch;"></i>View historical Internal data</button></p>
 <% end %>
@@ -135,5 +146,16 @@
     button.removeEventListener('click', preventClicks);
     button.addEventListener('click', preventClicks);
   });
+  const issue = document.getElementById('issue_popup')
+  if (issue) issue.addEventListener('click', (e) => {
+    window.open(issue.href, 'githubIssue');
+    document.getElementById('genericModalContent').innerHTML = '';
+    document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'issue_popup') %>"));
+    document.getElementById('genericModalDialog').showModal();
+    document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('genericModalDialog').close();
+    });
+  })
 </script>
 <% end %>

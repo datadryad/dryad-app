@@ -1,6 +1,7 @@
-# Good data practices
+<% @page_title = 'Good data practices' %>
+<h1>Good data practices</h1>
 
-<h2>Best practices for creating reusable data publications</h2>
+*Best practices for creating reusable data publications*
 
 So, you want to share your research data in Dryad, but are unsure where to start or what you 'should' share? Don't worry, it's not always clear how to craft a dataset with reusability in mind.
 
@@ -10,7 +11,7 @@ No time to dig into the details? Check out our <a href="https://datadryad.org/do
 
 ## Gather all relevant data needed for reanalysis
 
-* **Consider all of the information necessary for one to reuse your dataset and replicate the analyses in your publication**. Gather and organize everything—this may include experimental method details, raw data files, organized data tables, scripts, data visualizations, and statistical output. There are often several levels of data processing involved in a project, and it is important to provide adequate detail. That said, don't hesitate to edit out superfluous or ambiguous content that would confuse others.
+* **Consider all of the information necessary for one to reuse your dataset and replicate the analyses in your publication**. Gather and organize everything&mdash;this may include experimental method details, raw data files, organized data tables, scripts, data visualizations, and statistical output. There are often several levels of data processing involved in a project, and it is important to provide adequate detail. That said, don't hesitate to edit out superfluous or ambiguous content that would confuse others.
 Additionally, if applicable, please do not include any data visualizations that will appear in the published article, e.g., data figures and/or other supplementary material already present within the manuscript.
 * **Unprocessed and processed data:** Providing both unprocessed and processed data can be valuable for re-analysis, assuming the data are of a reasonable size. Including unprocessed raw digital data from a recording instrument or database ensures that no details are lost, and any issues in the processing pipeline can be discovered and rectified. Processed data are cleaned, formatted, organized and ready for reuse by others.
 * **Code:** Programming scripts communicate to others all of the steps in processing and analysis. Including them ensures that your results are reproducible by others. Informative comments throughout your code will help future users understand its logic.
@@ -28,7 +29,7 @@ Additionally, if applicable, please do not include any data visualizations that 
 
 ## Make sure your data are accessible
 
-* To maximize accessibility, reusability and preservability, share data in non-proprietary [open formats](https://en.wikipedia.org/wiki/Open_format) when possible (see [preferred formats](/requirements#preferred-file-formats)). This ensures your data will be accessible by most people.
+* To maximize accessibility, reusability and preservability, share data in non-proprietary [open formats](https://en.wikipedia.org/wiki/Open_format) when possible (see [preferred formats](/help/requirements/files#preferred-file-formats)). This ensures your data will be accessible by most people.
 * Review files for errors. Common errors include missing data, misnamed files, mislabeled variables, incorrectly formatted values, and corrupted file archives. It may be helpful to run data validation tools before sharing. For example, if you are working with tabular datasets, a tool like [Frictionless validation](https://framework.frictionlessdata.io/) can identify missing data and data type formatting problems.
 * File compression may be necessary to reduce large file sizes or directories of files. Files can be bundled together in compressed file archives (`.zip, .7z, .tar.gz`). If you have a large directory of files, and there is a logical way to split it into subdirectories and compress those, we encourage you to do so. We recommend not exceeding 10GB each.
 

@@ -33,3 +33,29 @@ else
 end
 
 SUBMISSION_REDIS_KEY = 'resource:%{resource.id}:remaining_files'.freeze
+
+HELP_PAGES_REQUIREMENTS =
+  [
+    { path: '/help/requirements/files', name: 'File requirements' },
+    { path: '/help/requirements/metadata', name: 'Metadata requirements' },
+    { path: '/help/requirements/costs', name: 'Costs' }
+  ]
+
+HELP_PAGES_GUIDES =
+  [
+    { path: '/help/guides/QuickstartGuideToDataSharing.pdf', name: 'Data sharing (quick start)' },
+    { path: '/help/guides/best_practices', name: 'Good data practices' },
+    { path: '/help/guides/reuse', name: 'How to reuse Dryad data' },
+    { path: '/help/guides/EndangeredSpeciesData.pdf', name: 'Guidance for species data' },
+    { path: '/help/guides/HumanSubjectsData.pdf', name: 'Sharing human subjects data' },
+    { path: '/help/guides/data_check_alerts', name: 'Tabular data check alerts' }
+  ]
+
+HELP_PAGES_STEPS =
+  [
+    { path: '/help/submission_steps/submission', name: 'Submission walkthrough' },
+    { path: '/help/submission_steps/curation', name: 'Dataset curation' },
+    { path: '/help/submission_steps/publication', name: 'Published datasets' }
+  ]
+
+HELP_PAGES = HELP_PAGES_REQUIREMENTS + HELP_PAGES_GUIDES + HELP_PAGES_STEPS

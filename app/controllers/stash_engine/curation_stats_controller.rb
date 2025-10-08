@@ -26,8 +26,10 @@ module StashEngine
 
     def csv_enumerator
       Enumerator.new do |rows|
-        rows << ['Date', 'Queue size', 'Unclaimed', 'Created', 'New to queue', 'New to PPR', 'PPR to Queue',
-                 'Curation to AAR', 'Curation to published', 'Withdrawn', 'Author revised', 'Author versioned'].to_csv(row_sep: "\r\n")
+        rows << [
+          'Date', 'Queue size', 'Unclaimed', 'Created', 'New to queue', 'New to PPR', 'PPR to Queue', 'PPR size',
+          'Curation to AAR', 'AAR size', 'Curation to published', 'Withdrawn', 'Author revised', 'Author versioned'
+        ].to_csv(row_sep: "\r\n")
         CurationStats.order(:date).find_each do |stat|
           row = [
             stat.date,
@@ -37,7 +39,9 @@ module StashEngine
             stat.new_datasets_to_submitted,
             stat.new_datasets_to_peer_review,
             stat.ppr_to_curation,
+            stat.ppr_size,
             stat.datasets_to_aar,
+            stat.aar_size,
             stat.datasets_to_published,
             stat.datasets_to_withdrawn,
             stat.author_revised,

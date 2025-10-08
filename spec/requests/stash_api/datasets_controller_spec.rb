@@ -75,6 +75,15 @@ module StashApi
         expect(out_author[:affiliation]).to eq(in_author[:affiliation])
       end
 
+      it 'strips disallowed tags from dataset titles' do
+        @meta.add_title('A dataset title that contains <em>italics</em> and <sup>stuff</sup> but not <b>bold</b>')
+        response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
+        output        = response_body_hash
+        expect(response_code).to eq(201)
+        expect(/doi:10./).to match(output[:identifier])
+        expect(output[:title]).to eq('A dataset title that contains <em>italics</em> and <sup>stuff</sup> but not bold')
+      end
+
       it 'creates a new dataset from minimal metadata with funder' do
         # the following works for post with headers
         funder = @meta.add_funder
@@ -767,11 +776,11 @@ module StashApi
         expect(hsh['editLink']).to eq(nil)
       end
 
-      it 'strips tags from dataset titles' do
+      it 'shows tags in dataset titles' do
         @resources[0].update(title: 'A dataset title that contains <em>italics</em> and <sup>stuff</sup>')
         get "/api/v2/datasets/#{CGI.escape(@identifier.to_s)}", as: :json # not logged in
         hsh = response_body_hash
-        expect(hsh['title']).to eq('A dataset title that contains italics and stuff')
+        expect(hsh['title']).to eq(@resources[0].title)
       end
 
       it 'shows the dataset with the correct json type, even if not set explicitly in accept headers' do

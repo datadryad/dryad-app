@@ -65,11 +65,12 @@ RSpec.feature 'AdminDashboard', type: :feature do
       expect(csv_parts).to include('Submitter', 'Metrics', 'Grant funders')
     end
 
-    it 'has 2 search fields', js: true do
+    it 'has 3 search fields', js: true do
       visit stash_url_helpers.admin_dashboard_path
       expect(page).to have_text('Admin dashboard')
       expect(page).to have_field('search-string')
-      expect(page).to have_field('related-search')
+      expect(page).to have_field('filters_identifiers')
+      expect(page).to have_field('filters_awards')
     end
 
     context :date_and_state_filters do
@@ -322,7 +323,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
           it 'allows curation editing of users dataset and returning to admin list in same state afterward' do
             create(:description, resource: @resource, description_type: 'technicalinfo')
-            create(:description, resource: @resource, description_type: 'usage_notes', description: nil)
+            create(:description, resource: @resource, description_type: 'hsi_statement', description: nil)
             create(:data_file, resource: @resource)
             @resource.reload
             @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)
