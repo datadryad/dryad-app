@@ -1125,20 +1125,24 @@ namespace :identifiers do
               'Grant Funders',
               'Journal Name']
 
+      found_identifiers = Set[]
       # for each day in the month
       (origin_date..end_date).each do |date|
+        puts("  gathering #{date}")
         # "new to queue" -- for each dataset that received the target status on the given day
         StashEngine::CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted])
           .includes(resource: :identifier).find_each do |ca|
 
           next unless ca&.resource&.identifier
 
-          found_dataset = ca.resource.identifier
-          should_keep = false
+          found_ident = ca.resource.identifier
 
           # "new to queue"
           # keep if the dataset was first submitted on this date
-          should_keep = (found_dataset.first_submitted_resource&.process_date&.submitted&.to_date == date)
+          if found_ident.first_submitted_resource&.process_date&.submitted&.to_date == date
+            found_identifiers.add(found_ident)
+            next
+          end
 
           # "ppr to queue"
           # find the most recent PPR or curation status
@@ -1147,34 +1151,35 @@ namespace :identifiers do
             .where('resource_id < ?', ca.resource_id)
             .order(id: :asc).reverse.each do |sibling_ca|
             if sibling_ca.peer_review?
-              should_keep = true
+              found_identifiers.add(found_ident)
               break
             elsif sibling_ca.curation?
               break
             end
           end
-
-          next unless should_keep
-
-          # produce the stats
-          i = found_dataset
-          res = i.latest_viewable_resource
-          res = i.resources.last if res.blank?
-          first_res = i.first_submitted_resource
-          u = res&.owner_author
-          r = StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
-
-          csv << [i.identifier, i.publication_article_doi,
-                  u&.affiliation&.long_name, r&.country,
-                  res&.current_curation_status,
-                  first_res&.submitted_date, i.date_first_published, i.resources.last.updated_at,
-                  i.storage_size,
-                  i.payment_type, i.publication_name, i.journal&.sponsor&.name,
-                  res&.contributors&.map(&:contributor_name)&.compact,
-                  i.publication_name]
         end
       end
+
+      # produce the stats
+      puts('  writing results')
+      found_identifiers.each do |i|
+        res = i.latest_viewable_resource
+        res = i.resources.last if res.blank?
+        first_res = i.first_submitted_resource
+        u = res&.owner_author
+        r = StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
+
+        csv << [i.identifier, i.publication_article_doi,
+                u&.affiliation&.long_name, r&.country,
+                res&.current_curation_status,
+                first_res&.submitted_date, i.date_first_published, i.resources.last.updated_at,
+                i.storage_size,
+                i.payment_type, i.publication_name, i.journal&.sponsor&.name,
+                res&.contributors&.map(&:contributor_name)&.compact,
+                i.publication_name]
+      end
     end
+
     # Exit cleanly (don't let rake assume that an extra argument is another task to process)
     exit
   end
