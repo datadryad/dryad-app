@@ -34,10 +34,11 @@ module Stash
         token.token
       end
 
+      # rubocop:disable Metrics/AbcSize
       def download(resource:)
         @resource ||= resource
-        # APP_CONFIG.maximums.zip_size
         if @resource&.total_file_size&. < APP_CONFIG[:maximums][:api_zip_size]
+          @resource.identifier.update_columns(downloaded_at: Time.now.utc)
           credentials = ::Aws::Credentials.new(APP_CONFIG[:s3][:key], APP_CONFIG[:s3][:secret])
           signer = ::Aws::Sigv4::Signer.new(service: 'lambda', region: APP_CONFIG[:s3][:region], credentials_provider: credentials)
 
@@ -60,7 +61,7 @@ module Stash
           cc.render status: 405, plain: 'The dataset is too large for zip file generation. Please download each file individually.'
         end
       end
-
+      # rubocop:enable Metrics/AbcSize
     end
   end
 end

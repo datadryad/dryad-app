@@ -45,11 +45,9 @@ module StashEngine
       check_for_sharing
       return render json: ['unauthorized'], status: :unauthorized unless @resource&.may_download?(ui_user: current_user) || @sharing_link
 
+      @resource.identifier.update_columns(downloaded_at: Time.now.utc)
       respond_to do |format|
         format.json do
-          # input is resource_id and output is json with keys size, filename and url for each entry
-          @resource = Resource.find(params[:resource_id])
-
           info = @resource.data_files.present_files.map do |f|
             {
               size: f.upload_file_size,
