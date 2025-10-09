@@ -122,6 +122,8 @@ test:
     account: my.account
     password: "my.password"
     sandbox: true
+  ror_solr_url: 'http://127.0.0.1:8983/solr/rors'
+
 <% else %>
 
 defaults: &DEFAULTS
@@ -279,6 +281,7 @@ defaults: &DEFAULTS
     - ["f79a1ffc-eb37-42cc-9bb5-8111757fe58b", "Sample Block"]
     - ["15240463-21c8-44f2-b9d1-d1b36ab2dcf7", "Sample Section"]
     - ["e51ba4cd-5b78-48f8-b240-f70e21de2f12", "Sample Suspension"]
+  ror_solr_url: 'http://localhost:8983/solr/rors'
 
 dev: &DEV
   <<: *DEFAULTS

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="stash_engine_ror_orgs" version="1.6">
+  <!-- Unique document ID -->
+  <uniqueKey>id</uniqueKey>
+  <field name="uuid" type="string" stored="true" indexed="true" required="true" />
+
+  <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+  <field name="_version_" type="plong" stored="true" indexed="true" />
+  <field name="timestamp" type="pdate" stored="true" indexed="true" default="NOW" />
+
+  <!-- Organization fields -->
+  <field name="ror_id" type="string" indexed="true" stored="true" multiValued="false"/>
+  <field name="name" type="text_en" indexed="true" stored="true" multiValued="false"/>
+  <field name="home_page" type="string" indexed="true" stored="true" multiValued="false"/>
+  <field name="country" type="string" indexed="true" stored="true" multiValued="false"/>
+
+  <!-- JSON arrays as multivalued text fields -->
+  <field name="acronyms" type="text_en" indexed="true" stored="true" multiValued="true"/>
+  <field name="aliases" type="text_en" indexed="true" stored="true" multiValued="true"/>
+  <field name="isni_ids" type="string" indexed="true" stored="true" multiValued="true"/>
+
+  <!-- Timestamps -->
+  <field name="created_at" type="pdate" indexed="true" stored="true" multiValued="false"/>
+  <field name="updated_at" type="pdate" indexed="true" stored="true" multiValued="false"/>
+
+  <!-- Catch-all text field for general full-text search -->
+  <field name="text" type="text_en" indexed="true" stored="false" multiValued="true"/>
+
+  <!-- Copy key fields into the catch-all -->
+  <copyField source="name" dest="text"/>
+  <copyField source="aliases" dest="text"/>
+  <copyField source="acronyms" dest="text"/>
+
+  <!-- Field types -->
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+  <fieldType name="pdate" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
+  <fieldType name="plong" class="solr.LongPointField" />
+
+  <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_en.txt"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_en.txt"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+
+  <!-- for suggestions -->
+  <fieldType class="solr.TextField" name="textSuggest" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
+    </analyzer>
+  </fieldType>
+</schema>
