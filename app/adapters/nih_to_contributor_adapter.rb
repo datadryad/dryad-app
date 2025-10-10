@@ -1,8 +1,9 @@
 class NIHToContributorAdapter
 
-  def initialize(response = {})
+  def initialize(response = {}, contributor_id: nil)
     response ||= {}
     @response = response.with_indifferent_access
+    @contributor_id = contributor_id
   end
 
   def award_number
@@ -33,13 +34,32 @@ class NIHToContributorAdapter
     return @ror if @ror
     return @ror = {} if @response[:agency_ic_admin][:name].blank?
 
-    @ror = contributors_hash[@response[:agency_ic_admin][:name]] || {}
+    contributor_name = @response[:agency_ic_admin][:name].downcase
+
+    # first we check name mapping
+    ror_id = NIH_ROR_NAMES_MAPPING[contributor_name]
+    # if there is a match
+    if ror_id.present?
+      # check database NIH children list for an uptodate name
+      children = contributors_hash_by(key: 'name_identifier_id')
+      return @ror = children[ror_id] if children[ror_id]
+    end
+
+    # if no match, check the database NIH children list by contributor name
+    children = contributors_hash_by(key: 'contributor_name')
+    @ror = children[contributor_name]
+    return @ror if @ror.present?
+
+    # alert devs of missing rr info in NIH children list
+    StashEngine::NotificationsMailer.nih_child_missing(@contributor_id, @response).deliver_now
+    # do not update ROR information
+    @ror = {}
   end
 
-  def contributors_hash
+  def contributors_hash_by(key:)
     related_contributors = StashDatacite::ContributorGrouping.find_by(name_identifier_id: NIH_ROR)&.json_contains
     related_contributors.to_h do |contributor|
-      [contributor['contributor_name'], contributor]
+      [contributor[key], contributor]
     end
   end
 end

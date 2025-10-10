@@ -1,8 +1,9 @@
 class NSFToContributorAdapter
 
-  def initialize(response = {})
+  def initialize(response = {}, contributor_id: nil)
     response ||= {}
     @response = response.with_indifferent_access
+    @contributor_id = contributor_id
   end
 
   def award_number

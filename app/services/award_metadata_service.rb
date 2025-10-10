@@ -18,7 +18,7 @@ class AwardMetadataService
   private
 
   def handle_response(response)
-    data = adapter.new(response.first)
+    data = adapter.new(response.first, contributor_id: contributor.id)
 
     attrs = {
       award_uri: data.award_uri,
