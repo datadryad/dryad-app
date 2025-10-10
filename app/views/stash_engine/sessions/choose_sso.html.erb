@@ -7,7 +7,7 @@
       <h2 id="label_tenant_lookup">Verify your affiliation with <%= current_user.tenant.short_name %></h2>
       <p>Choose another partner institution if your affiliation has ended.</p>
     <% else %>
-      <p><%= image_tag('stash_engine/icon_orcid.svg', class: 't-login__orcid-small', alt: 'ORCID logo') %> <strong>ORCID login successful</strong></p>
+      <p><i class="fab fa-orcid" aria-hidden="true" style="font-size: 1.8rem"></i> <strong>ORCID login successful</strong></p>
       <h2 id="label_tenant_lookup">Is your institution a Dryad partner?</h2>
     <% end %>    
     <p style="margin-top: 0"><span id="label_tenant_id">Partner institutions</span> cover the fees for their researchers to use Dryad.<br/>

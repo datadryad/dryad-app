@@ -5,6 +5,10 @@
         <li><%= render partial: 'search_form' %></li>
       <% end %>
       <li>
+        <span>My account</span>
+        <%= create_menu(account).html_safe %>
+      </li>
+      <li>
         <span>Submission steps</span>
         <%= create_menu(submission_steps).html_safe %>
       </li>  

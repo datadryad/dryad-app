@@ -1,5 +1,9 @@
 module HelpHelper
 
+  def account
+    HELP_PAGES_ACCOUNT
+  end
+
   def requirements
     HELP_PAGES_REQUIREMENTS
   end

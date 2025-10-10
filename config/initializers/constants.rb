@@ -32,6 +32,10 @@ else
   "https://#{Rails.application.default_url_options[:host]}".freeze
 end
 
+HELP_PAGES_ACCOUNT = [
+  { path: '/help/account/login', name: 'Creating a Dryad account'},
+  { path: '/help/account/management', name: 'Managing my account'}
+]
 NIH_ROR = 'https://ror.org/01cwqze88'.freeze
 NSF_ROR = 'https://ror.org/021nxhr62'.freeze
 
@@ -112,4 +116,4 @@ HELP_PAGES_STEPS =
     { path: '/help/submission_steps/publication', name: 'Published datasets' }
   ]
 
-HELP_PAGES = HELP_PAGES_REQUIREMENTS + HELP_PAGES_GUIDES + HELP_PAGES_STEPS
+HELP_PAGES = HELP_PAGES_REQUIREMENTS + HELP_PAGES_GUIDES + HELP_PAGES_STEPS + HELP_PAGES_ACCOUNT
