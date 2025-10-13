@@ -3,6 +3,7 @@
 # Table name: stash_engine_curation_stats
 #
 #  id                          :bigint           not null, primary key
+#  aar_size                    :integer
 #  author_revised              :integer
 #  author_versioned            :integer
 #  datasets_curated            :integer
@@ -16,6 +17,7 @@
 #  new_datasets                :integer
 #  new_datasets_to_peer_review :integer
 #  new_datasets_to_submitted   :integer
+#  ppr_size                    :integer
 #  ppr_to_curation             :integer
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
@@ -45,7 +47,9 @@ module StashEngine
         datasets_to_embargoed.present? &&
         datasets_to_withdrawn.present? &&
         author_revised.present? &&
-        author_versioned.present?
+        author_versioned.present? &&
+        aar_size.present? &&
+        ppr_size.present?
     end
 
     def recalculate
@@ -63,6 +67,8 @@ module StashEngine
       populate_datasets_to_withdrawn
       populate_author_revised
       populate_author_versioned
+      populate_aar_size
+      populate_ppr_size
     end
 
     def status_on_date(identifier)
@@ -99,7 +105,7 @@ module StashEngine
     # including any held over from before (either have status 'curation' or 'submitted')
     def populate_datasets_to_be_curated
       datasets_found = 0
-      unclaimed      = 0
+      unclaimed = 0
 
       # for each dataset that was in the target status on the given day
       launch_day = Date.new(2019, 9, 17)
@@ -115,7 +121,7 @@ module StashEngine
         next if status == 'curation'
 
         # count as unclaimed if
-        #  there there is no activity for setting the curator
+        #  there is no activity for setting the curator
         #  OR
         #  the last activity for setting the curator is to unsigned
         last_activity = ident.curation_activities.where(created_at: launch_day..(date + 1.day))
@@ -198,10 +204,12 @@ module StashEngine
     def populate_ppr_to_curation
       p2c_count = 0
       # for each dataset that received curation status on the given day
+      found = Set.new
       CurationActivity.where(created_at: date..(date + 1.day), status: 'submitted')
         .includes(resource: [identifier: :curation_activities]).find_each do |ca|
 
         next unless ca&.resource&.identifier
+        next if found.include?(ca.resource.identifier_id)
 
         # find the most recent PPR or curation status
         # if it's PPR, count it as a ppr_to_curation transition
@@ -211,6 +219,7 @@ module StashEngine
 
           if sibling_ca.peer_review?
             p2c_count += 1
+            found.add(ca.resource.identifier_id)
             break
           elsif sibling_ca.curation?
             break
@@ -259,7 +268,7 @@ module StashEngine
         this_ver_aar = CurationActivity.where(resource_id: ca.resource_id, id: 0..ca.id - 1, status: 'action_required').present?
 
         prev_resource = ident.resources.where(id: 0..ca.resource_id - 1).last
-        prev_ver_aar  = prev_resource&.current_curation_status == 'action_required'
+        prev_ver_aar = prev_resource&.current_curation_status == 'action_required'
 
         datasets_found.add(ca.resource.identifier_id) if this_ver_aar || prev_ver_aar
       end
@@ -286,6 +295,21 @@ module StashEngine
       end
 
       update(author_versioned: datasets_found.size)
+    end
+
+    # The number of datasets that were in STATUS on the date
+    def in_status_on_date(status:)
+      StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity)
+        .where(stash_engine_curation_activities: { status: status, created_at: ..(date + 1.day) })
+        .count
+    end
+
+    def populate_aar_size
+      update(aar_size: in_status_on_date(status: 'action_required'))
+    end
+
+    def populate_ppr_size
+      update(ppr_size: in_status_on_date(status: 'peer_review'))
     end
 
   end

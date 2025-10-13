@@ -33,8 +33,12 @@ end
     <span class="help" id="authors-desc">The first 6 listed authors of the dataset.</span>
   </div>
   <div>
+    <%= check('emails').html_safe %>
+    <span class="help" id="emails-desc">Email addresses, if provided, for the first 6 listed authors of the dataset.</span>
+  </div>
+  <div>
     <%= check('affiliations').html_safe %>
-    <span class="help" id="affiliations-desc">Up to 6 author affiliations matched with a <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR ID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.</span>
+    <span class="help" id="affiliations-desc">Up to 6 unique author affiliations matched with a <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR ID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.</span>
   </div>
   <div>
     <%= check('countries', true).html_safe %>

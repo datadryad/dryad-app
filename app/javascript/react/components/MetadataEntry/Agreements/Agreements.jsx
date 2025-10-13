@@ -184,7 +184,12 @@ export default function Agreements({
       {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
       {subType !== 'collection' && (
         <>
-          {dpc.institution_will_pay && (
+          {dpc.funder_will_pay && (
+            <div className="callout">
+              <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
+            </div>
+          )}
+          {!dpc.funder_will_pay && dpc.institution_will_pay && (
             <>
               <div className="callout">
                 <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
@@ -192,14 +197,9 @@ export default function Agreements({
               {previous && resource.tenant_id !== previous.tenant_id && <p className="del ins">Partner institution changed</p>}
             </>
           )}
-          {!dpc.institution_will_pay && dpc.journal_will_pay && (
+          {!dpc.funder_will_pay && !dpc.institution_will_pay && dpc.journal_will_pay && (
             <div className="callout">
               <p>Payment for this submission is sponsored by <b>{resource.resource_publication.publication_name}</b></p>
-            </div>
-          )}
-          {!dpc.institution_will_pay && !dpc.journal_will_pay && dpc.funder_will_pay && (
-            <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
             </div>
           )}
           {resource.identifier.old_payment_system
@@ -231,7 +231,9 @@ export default function Agreements({
       )}
       {isSubmitter && (
         <>
-          {(subType !== 'collection' && (!dpc.payment_type || dpc.payment_type === 'unknown') && (dpc.user_must_pay || dpc.institution_will_pay)) && (
+          {(subType !== 'collection'
+            && (!resource.identifier.payment_type || resource.identifier.payment_type === 'unknown')
+            && (dpc.user_must_pay || (!dpc.funder_will_pay && dpc.institution_will_pay))) && (
             <>
               {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
                 <>

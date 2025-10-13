@@ -149,6 +149,7 @@ group :test do
   gem 'mock_redis', '~> 0.50.0'
   gem 'simplecov-console', require: false
   gem 'timecop'
+  gem 'vcr'
   gem 'webmock'
 end
 

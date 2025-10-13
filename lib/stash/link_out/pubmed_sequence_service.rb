@@ -55,6 +55,7 @@ module Stash
       end
 
       def publish_files!
+        p '  pushing files to PubMed FTP server'
         Net::SFTP.start(@ftp.ftp_host, @ftp.ftp_username, password: @ftp.ftp_password) do |sftp|
           Dir["#{TMP_DIR}/#{@links_file.gsub('[nbr]', '*')}"].entries.each do |file|
             sftp.upload!(file.to_s, "#{@ftp.ftp_dir}/#{File.basename(file)}")
@@ -119,7 +120,8 @@ module Stash
       def generate_fragment(idx, db, hash)
         Nokogiri::XML.fragment(ActionView::Base.with_empty_template_cache.new(ActionView::LookupContext.new('app/views'), {}, nil)
           .render(
-            template: 'link_out/sequence_links.xml.erb',
+            template: 'link_out/sequence_links',
+            format: :xml,
             locals: {
               counter: idx,
               provider_id: @ftp.ftp_provider_id,

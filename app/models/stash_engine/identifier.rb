@@ -4,6 +4,7 @@
 #
 #  id                      :integer          not null, primary key
 #  deleted_at              :datetime
+#  downloaded_at           :datetime
 #  edit_code               :string(191)
 #  identifier              :text(65535)
 #  identifier_type         :text(65535)

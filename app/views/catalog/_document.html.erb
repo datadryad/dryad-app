@@ -8,7 +8,7 @@
       <span class="document-counter">
         <%= t('blacklight.search.documents.counter', :counter => counter) if counter %>
       </span>
-      <%= link_to_document document, counter: counter %>
+      <%= link_to_document document, document['dc_title_s']&.html_safe, counter: counter %>
     </h3>
   <% end %>
 

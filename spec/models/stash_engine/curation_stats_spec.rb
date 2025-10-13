@@ -3,6 +3,7 @@
 # Table name: stash_engine_curation_stats
 #
 #  id                          :bigint           not null, primary key
+#  aar_size                    :integer
 #  author_revised              :integer
 #  author_versioned            :integer
 #  datasets_curated            :integer
@@ -16,6 +17,7 @@
 #  new_datasets                :integer
 #  new_datasets_to_peer_review :integer
 #  new_datasets_to_submitted   :integer
+#  ppr_size                    :integer
 #  ppr_to_curation             :integer
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
@@ -415,6 +417,17 @@ module StashEngine
         stats = CurationStats.create(date: @day)
         expect(stats.ppr_to_curation).to eq(1)
       end
+
+      it 'counts each identifier once' do
+        # YES -- move to submitted after a PPR status
+        CurationService.new(status: 'peer_review', resource: @res[0], user: @curator, created_at: @day).process
+        res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
+        res_new.resource_states.first.update(resource_state: 'submitted')
+        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
+        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day, note: 'another item').process
+        stats = CurationStats.create(date: @day)
+        expect(stats.ppr_to_curation).to eq(1)
+      end
     end
 
     # Test the fields of format `datasets_to_XXXXX`
@@ -568,5 +581,12 @@ module StashEngine
       end
     end
 
+    describe :populate_aar_size do
+      include_examples 'in status size for a date', :action_required, :aar_size
+    end
+
+    describe :populate_ppr_size do
+      include_examples 'in status size for a date', :peer_review, :ppr_size
+    end
   end
 end

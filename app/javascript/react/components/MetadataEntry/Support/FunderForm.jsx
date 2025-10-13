@@ -5,12 +5,21 @@ import PropTypes from 'prop-types';
 import RorAutocomplete from '../RorAutocomplete';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
-function FunderForm({resourceId, contributor, updateFunder}) {
+function FunderForm({
+  current, resourceId, contributor, updateFunder,
+}) {
   const formRef = useRef();
   const [acText, setAcText] = useState(contributor.contributor_name || '');
   const [acID, setAcID] = useState(contributor.name_identifier_id || '');
   const [showSelect, setShowSelect] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
+
+  const setValues = () => ({
+    award_description: (contributor.award_description || ''),
+    award_title: (contributor.award_title || ''),
+    award_number: (contributor.award_number || ''),
+    id: (contributor.id || ''),
+  });
 
   const subSelect = (e) => {
     const select = e.target;
@@ -44,13 +53,19 @@ function FunderForm({resourceId, contributor, updateFunder}) {
         headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
       },
     ).then((data) => {
-      if (data.status !== 200) {
-        console.log('Response failure not a 200 response from funders save');
-      }
       updateFunder(data.data);
       showSavedMsg();
+    }).catch((err) => {
+      [...document.querySelectorAll('.saving_text')].forEach((el) => el.setAttribute('hidden', true));
+      Object.entries(err.response.data).forEach((e) => {
+        formRef.current.setFieldError(e[0], e[1][0]);
+      });
     });
   };
+
+  useEffect(() => {
+    formRef.current?.resetForm({values: setValues()});
+  }, [current]);
 
   useEffect(() => {
     async function getGroup() {
@@ -67,14 +82,7 @@ function FunderForm({resourceId, contributor, updateFunder}) {
 
   return (
     <Formik
-      initialValues={
-        {
-          award_description: (contributor.award_description || ''),
-          award_title: (contributor.award_title || ''),
-          award_number: (contributor.award_number || ''),
-          id: (contributor.id || ''),
-        }
-      }
+      initialValues={setValues()}
       innerRef={formRef}
       onSubmit={(values, {setSubmitting}) => {
         submitForm(values).then(() => { setSubmitting(false); });
@@ -125,6 +133,8 @@ function FunderForm({resourceId, contributor, updateFunder}) {
               type="text"
               className="js-award_number c-input__text"
               aria-describedby={`${contributor.id}award-ex`}
+              aria-invalid={!!formik.errors.award_number || null}
+              aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
             />
             <div id={`${contributor.id}award-ex`}><i aria-hidden="true" />CA 123456-01A1</div>
@@ -138,6 +148,8 @@ function FunderForm({resourceId, contributor, updateFunder}) {
               type="text"
               className="js-award_description c-input__text"
               aria-describedby={`${contributor.id}desc-ex`}
+              aria-invalid={!!formik.errors.award_description || null}
+              aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
             />
           </div>
@@ -150,10 +162,17 @@ function FunderForm({resourceId, contributor, updateFunder}) {
               type="text"
               className="js-award_description c-input__text"
               aria-describedby={`${contributor.id}title-ex`}
+              aria-invalid={!!formik.errors.award_title || null}
+              aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
             />
             <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the grant awarded</div>
           </div>
+          {(!!formik.errors.award_number || !!formik.errors.award_description || !!formik.errors.award_title) && (
+            <div id={`contributor_errors__${contributor.id}`} style={{color: '#d12c1d'}}>
+              {Object.entries(formik.errors).map((arr) => <p key={arr[0]}>{arr[1]}</p>)}
+            </div>
+          )}
         </Form>
       )}
     </Formik>
