@@ -12,9 +12,9 @@ module StashEngine
       end
 
       def payer
+        return funder_payment_info&.payer_funder if funder_will_pay?
         return latest_resource&.tenant if institution_will_pay?
         return journal if journal&.will_pay?
-        return funder_payment_info&.payer_funder if funder_will_pay?
 
         nil
       end
@@ -44,23 +44,23 @@ module StashEngine
 
       def record_payment
         # once we have assigned payment to an entity, keep that entity
-        # unless it was a journal that was removed
-        clear_payment_for_changed_journal
+        # unless a journal was removed or an institution added
+        clear_payment_for_changed_sponsor
         return if payment_type.present? && payment_type != 'unknown'
 
         if collection?
           self.payment_type = 'no_data'
           self.payment_id = nil
+        elsif funder_will_pay?
+          contrib = funder_payment_info
+          self.payment_type = 'funder'
+          self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
         elsif institution_will_pay?
           self.payment_id = latest_resource&.tenant&.id
           self.payment_type = "institution#{'-TIERED' if latest_resource&.tenant&.payment_configuration&.payment_plan == 'TIERED'}"
         elsif journal&.will_pay?
           self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
-        elsif funder_will_pay?
-          contrib = funder_payment_info
-          self.payment_type = 'funder'
-          self.payment_id = "funder:#{contrib.contributor_name}|award:#{contrib.award_number}"
         else
           self.payment_type = 'unknown'
           self.payment_id = nil
@@ -103,10 +103,20 @@ module StashEngine
 
       private
 
-      def clear_payment_for_changed_journal
+      def clear_payment_for_changed_sponsor
         return unless payment_type.present?
-        return unless payment_type.include?('journal') || journal&.will_pay?
-        return if payment_id == journal&.single_issn
+
+        # remove existing payment for added funder
+        if funder_will_pay?
+          return if payment_type == 'funder' && payment_id.include?(funder_payment_info&.contributor_name)
+        # remove existing payment for added institution
+        elsif institution_will_pay?
+          return if payment_type.include?('institution') && payment_id == latest_resource.tenant_id
+        # remove payment if paying journal has changed or been removed
+        else
+          return unless payment_type.include?('journal') || journal&.will_pay?
+          return if payment_id == journal&.single_issn
+        end
 
         self.payment_type = nil
         self.payment_id = nil

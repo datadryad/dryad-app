@@ -36,6 +36,10 @@ module StashDatacite
     has_and_belongs_to_many :affiliations, class_name: 'StashDatacite::Affiliation'
     has_one :grouping, class_name: 'StashDatacite::ContributorGrouping', foreign_key: 'name_identifier_id', primary_key: 'name_identifier_id'
 
+    validates_length_of :award_number, maximum: 191, allow_blank: true, message: 'Award number is too long. Value was not saved'
+    validates_length_of :award_title, maximum: 191, allow_blank: true, message: 'Award title is too long. Value was not saved'
+    validates_length_of :award_description, maximum: 191, allow_blank: true, message: 'Program/division is too long. Value was not saved'
+
     scope :completed, -> {
       where("TRIM(IFNULL(contributor_name, '')) > '' AND TRIM('N/A' FROM IFNULL(contributor_name, '')) > ''")
     } # only non-null & blank, no N/A funders
@@ -44,6 +48,9 @@ module StashDatacite
     scope :funder, -> { where(contributor_type: 'funder').order(funder_order: :asc, id: :asc) }
     scope :sponsors, -> { where(contributor_type: 'sponsor') }
     scope :rors, -> { where(identifier_type: 'ror') }
+    scope :nih, -> { where(name_identifier_id: ([NIH_ROR] + StashDatacite::Contributor.related_rors(NIH_ROR))) }
+    scope :nsf, -> { where(name_identifier_id: NSF_ROR) }
+    scope :needs_award_details, -> { where.not(award_number: [nil, '']).where(award_title: [nil, '']) }
 
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
@@ -155,9 +162,16 @@ module StashDatacite
 
     def api_integration_key
       API_INTEGRATIONS.each_pair do |key, ror_id|
-        return key if ([ror_id] + related_rors(ror_id)).include?(name_identifier_id)
+        return key if ([ror_id] + StashDatacite::Contributor.related_rors(ror_id)).include?(name_identifier_id)
       end
       nil
+    end
+
+    def self.related_rors(ror_id)
+      group = StashDatacite::ContributorGrouping.where(name_identifier_id: ror_id).first
+      return [] if group.nil? || group.json_contains.blank?
+
+      group.json_contains.map { |a| a['name_identifier_id'] }
     end
 
     private
@@ -165,13 +179,6 @@ module StashDatacite
     def strip_whitespace
       self.contributor_name = contributor_name.strip unless contributor_name.nil?
       self.award_number = award_number.strip unless award_number.nil?
-    end
-
-    def related_rors(ror_id = name_identifier_id)
-      group = StashDatacite::ContributorGrouping.where(name_identifier_id: ror_id).first
-      return [] if group.nil? || group.json_contains.blank?
-
-      group.json_contains.map { |a| a['name_identifier_id'] }
     end
   end
 end

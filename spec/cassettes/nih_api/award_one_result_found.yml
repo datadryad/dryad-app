@@ -56,8 +56,9 @@ http_interactions:
       string: '{"meta":{"search_id":"kMCN6twR1UGI_0Vi8osgmw","total":3,"offset":0,"limit":50,"sort_field":"DateAdded","sort_order":"desc","sorted_by_relevance":true,"properties":{"URL":"https:/reporter.nih.gov/search/kMCN6twR1UGI_0Vi8osgmw/projects"}},
       "results":[
         {
-          "project_num":"5R01HD113192-03","agency_ic_admin":{"code":"HD","abbreviation":"NICHD","name":"Eunice Kennedy Shriver National Institute of Child Health and Human Development"},
-          "agency_ic_fundings":[{"fy":2025,"code":"HD","name":"Eunice Kennedy Shriver National Institute of Child Health and Human Development","abbreviation":"NICHD","total_cost":299925.0,"direct_cost_ic":193500.0,"indirect_cost_ic":106425.0}],
+          "project_num":"5R01HD113192-03",
+          "agency_ic_admin":{"code":"HD","abbreviation":"NI", "name":"NIH Office of the Director"},
+          "agency_ic_fundings":[{"fy":2025,"code":"HD","name":"NIH Office of the Director","abbreviation":"NI","total_cost":299925.0,"direct_cost_ic":193500.0,"indirect_cost_ic":106425.0}],
           "core_project_num":"R01HD113192-RC2",
           "project_title":"Microbial-induced maternal factors that influence fetal immune development",
           "project_detail_url":"https://reporter.nih.gov/project-details/11169041",

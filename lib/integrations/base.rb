@@ -26,8 +26,18 @@ module Integrations
       parse_response(response)
     end
 
-    def parse_response(response)
+    def get_xml(url, payload)
+      uri       = URI(url)
+      uri.query = URI.encode_www_form(payload)
+
+      response = Net::HTTP.get_response(uri)
+      parse_response(response, format: :xml)
+    end
+
+    def parse_response(response, format: :json)
       raise StandardError, "Bad response status: #{response.code} #{response.message}" unless response.is_a?(Net::HTTPSuccess)
+
+      return Nokogiri::XML::Document.parse(response.body) if format == :xml
 
       JSON.parse(response.body)
     end
