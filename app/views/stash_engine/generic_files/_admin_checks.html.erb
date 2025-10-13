@@ -1,11 +1,11 @@
-<% if @file.tabular? %>
+<% if @file.scannable? %>
   <% if @file.sensitive_data_report&.status == 'issues' %>
     <%= form_with(url: "/data_files/#{@file.id}/sd_report.js", method: :get, local: false, class: 'o-button__inline-form') do %>
       <button class="o-button__plain-textlink error-text" aria-label="Sensitive data alerts" title="Sensitive data alerts"><i class="fas fa-person-circle-exclamation" aria-hidden="true"></i></button>
     <% end %>
   <% end %>
 <% end %>
-<% if @file.scannable? %>
+<% if @file.tabular? %>
   <% if @file.frictionless_report&.status == 'issues' %>
     <%= form_with(url: "/data_files/#{@file.id}/frictionless_report.js", method: :get, local: false, class: 'o-button__inline-form') do %>
       <button type="submit" class="o-button__plain-textlink error-text" aria-label="Tabular data check alerts" title="Tabular data check alerts"><i class="fas fa-file-circle-exclamation" aria-hidden="true"></i></button>
