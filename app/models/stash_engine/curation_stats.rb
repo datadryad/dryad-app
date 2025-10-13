@@ -299,8 +299,14 @@ module StashEngine
 
     # The number of datasets that were in STATUS on the date
     def in_status_on_date(status:)
-      StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity)
-        .where(stash_engine_curation_activities: { status: status, created_at: ..(date + 1.day) })
+      latest_per_identifier = StashEngine::CurationActivity.joins(:resource)
+        .select('stash_engine_resources.identifier_id, MAX(stash_engine_curation_activities.id) AS last_ca_id')
+        .where(stash_engine_curation_activities: { created_at: ..date.end_of_day })
+        .group('stash_engine_resources.identifier_id')
+
+      StashEngine::CurationActivity
+        .joins("inner join (#{latest_per_identifier.to_sql}) as latest on stash_engine_curation_activities.id=last_ca_id")
+        .where(status: status, created_at: ..date.end_of_day)
         .count
     end
 
