@@ -145,6 +145,7 @@ group :test do
   # used by some of the engines and for some reason causes errors without it in the main Gemfile, also.
   gem 'simplecov-console', require: false
   gem 'timecop'
+  gem 'vcr'
   gem 'webmock'
 end
 

@@ -32,6 +32,62 @@ else
   "https://#{Rails.application.default_url_options[:host]}".freeze
 end
 
+NIH_ROR = 'https://ror.org/01cwqze88'.freeze
+NSF_ROR = 'https://ror.org/021nxhr62'.freeze
+
+API_INTEGRATIONS = {
+  'NIH' => NIH_ROR,
+  'NSF' => NSF_ROR
+}.freeze
+
+NIH_GRANT_REGEX = /
+  [0-9A-Za-z]?         # optional application type
+  [A-Z]{1,2}\d{2,3}    # activity code
+  [A-Z]{2}             # institute code
+  \d{6}                # serial number
+  (?:-\d{2}[A-Z0-9]*)? # optional year + suffix
+/x
+
+NIH_ROR_NAMES_MAPPING = {
+  'agency for healthcare research and quality' => 'https://ror.org/03jmfdf59',
+  'national cancer institute' => 'https://ror.org/040gcmg81',
+  'national eye institute' => 'https://ror.org/03wkg3b53',
+  'national heart lung and blood institute' => 'https://ror.org/012pb6c26',
+  'national human genome research institute' => 'https://ror.org/00baak391',
+  'national institute on aging' => 'https://ror.org/049v75w11',
+  'national institute on alcohol abuse and alcoholism' => 'https://ror.org/02jzrsm59',
+  'national institute of allergy and infectious diseases' => 'https://ror.org/043z4tv69',
+  'national institute of arthritis and musculoskeletal and skin diseases' => 'https://ror.org/006zn3t30',
+  'national institute of arthritits and musculoskeletal and skin diseases' => 'https://ror.org/006zn3t30',
+  'national institute of biomedical imaging and bioengineering' => 'https://ror.org/00372qc85',
+  'eunice kennedy shriver national institute of child health and human development' => 'https://ror.org/04byxyr05',
+  'national institute on deafness and other communication disorders' => 'https://ror.org/04mhx6838',
+  'national institute of dental and craniofacial research' => 'https://ror.org/004a2wv92',
+  'national institute of diabetes and digestive and kidney diseases' => 'https://ror.org/00adh9b73',
+  'national institute on drug abuse' => 'https://ror.org/00fq5cm18',
+  'national institute of environmental health sciences' => 'https://ror.org/00j4k1h63',
+  'national institute of general medical sciences' => 'https://ror.org/04q48ey07',
+  'national institute of mental health' => 'https://ror.org/04xeg9z08',
+  'national institute on minority health and health disparities' => 'https://ror.org/0493hgw16',
+  'national institute of neurological disorders and stroke' => 'https://ror.org/01s5ya894',
+  'national institute of nursing research' => 'https://ror.org/01y3zfr79',
+  'national library of medicine' => 'https://ror.org/0060t0j89',
+  'nih clinical center' => 'https://ror.org/04vfsmv21',
+  'center for information technology' => 'https://ror.org/03jh5a977',
+  'center for scientific review' => 'https://ror.org/04r5s4b52',
+  'fogarty international center' => 'https://ror.org/02xey9a22',
+  'john e. fogarty international center for advanced study in the health sciences' => 'https://ror.org/02xey9a22',
+  'national center for advancing translational sciences' => 'https://ror.org/04pw6fb54',
+  'national center for complementary and integrative health' => 'https://ror.org/00190t495',
+  'national center for complementary and intergrative health' => 'https://ror.org/00190t495',
+  'national center for emerging and zoonotic infectious diseases' => 'https://ror.org/02ggwpx62',
+  'national institute for occupational safety and health' => 'https://ror.org/0502a2655',
+  'national center for immunization and respiratory diseases' => 'https://ror.org/05je2tx78',
+  'national center for injury prevention and control' => 'https://ror.org/0015x1k58',
+  'nih office of the director' => 'https://ror.org/00fj8a872',
+  'office of research infrastructure programs' => 'https://ror.org/01jdyfj45'
+}.freeze
+
 HELP_PAGES_REQUIREMENTS =
   [
     { path: '/help/requirements/files', name: 'File requirements' },

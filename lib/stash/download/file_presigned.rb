@@ -37,6 +37,7 @@ module Stash
                        "Filename: #{file.download_filename}\n"
           StashEngine::UserMailer.general_error(file&.resource, error_text).deliver_now
         else
+          file&.resource&.identifier&.update_columns(downloaded_at: Time.now.utc)
           cc.redirect_to url, allow_other_host: true
         end
       rescue HTTP::Error => e
