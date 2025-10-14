@@ -21,5 +21,12 @@ module StashEngine
 
       mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 Shibboleth SSL Cert expires in #{expiration_days} days!")
     end
+
+    def nih_child_missing(contributor_id, api_response = {})
+      @response = api_response
+      @contributor_id = contributor_id
+
+      mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 NIH ROR could not be matched!")
+    end
   end
 end

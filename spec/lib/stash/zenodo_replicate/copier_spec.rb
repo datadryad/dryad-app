@@ -25,11 +25,11 @@ module Stash
       describe '#add_to_zenodo' do
         it 'does something for items in a correct queue state (enqueued)' do
           # it gets past initial checks and starts doing http requests
-          expect { @szr.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
+          expect { @szr.add_to_zenodo }.to raise_error(VCR::Errors::UnhandledHTTPRequestError)
         end
 
         it 'increments the retries counter' do
-          expect { @szr.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
+          expect { @szr.add_to_zenodo }.to raise_error(VCR::Errors::UnhandledHTTPRequestError)
           zc = @resource.zenodo_copies.data.first
           zc.reload
           expect(zc.retries).to eq(1) # this has been incremented from 0 to 1 when it started attempting adding to zenodo
@@ -70,7 +70,7 @@ module Stash
                                        deposition_id: @ztc.deposition_id, state: 'error')
           @szr2 = Stash::ZenodoReplicate::Copier.new(copy_id: @ztc2.id)
           # it gets through the checks and raises an error trying to do a HTTP request
-          expect { @szr2.add_to_zenodo }.to raise_error(WebMock::NetConnectNotAllowedError)
+          expect { @szr2.add_to_zenodo }.to raise_error(VCR::Errors::UnhandledHTTPRequestError)
         end
 
         it 'rejects submission of something already replicating' do
