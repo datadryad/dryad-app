@@ -1,0 +1,62 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://www.research.gov/awardapi-service/v1/awards.json?id=1457726&printFields=agency,fundProgramName,id,offset,primaryProgram,title,date
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - www.research.gov
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Mon, 22 Sep 2025 14:11:47 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx/1.27.5
+      Access-Control-Allow-Origin:
+      - "*"
+      Vary:
+      - Access-Control-Request-Headers
+      - Access-Control-Request-Method
+      - Origin
+      Strict-Transport-Security:
+      - max-age=-441540707; includeSubDomains
+      - max-age=31536000; includeSubDomains
+      Set-Cookie:
+      - BIGipServer~R.Gov-Prod~web-research.aws-prod.nsf.gov=1043830794.47873.0000;
+        path=/; Httponly; Secure
+    body:
+      encoding: UTF-8
+      string: '{
+      "response": {
+        "parameters":{"offset":"1"},
+        "award":[
+          {
+            "agency":"NSF",
+            "fundProgramName":"Biodiversity: Discov &Analysis",
+            "id":"1457726",
+            "primaryProgram":["01001516DB NSF RESEARCH & RELATED ACTIVIT","01001617DB NSF RESEARCH & RELATED ACTIVIT"],
+            "date":"03/23/2015",
+            "title":"Collaborative Research: A Comparative Phylogeographic Approach to Predicting Cryptic Diversity"
+          }
+        ]
+      }}'
+  recorded_at: Mon, 22 Sep 2025 14:11:47 GMT
+recorded_with: VCR 6.3.1

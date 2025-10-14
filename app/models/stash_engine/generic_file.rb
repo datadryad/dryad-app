@@ -119,6 +119,17 @@ module StashEngine
       end
     end
 
+    def tabular?
+      ['text/csv', 'text/tab-separated-values', 'application/vnd.ms-excel', 'application/json', 'application/xml', 'text/xml',
+       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'].include?(upload_content_type) ||
+       upload_file_name.end_with?('.csv', '.tsv', '.xls', '.xlsx', '.json', '.xml')
+    end
+
+    def scannable?
+      ['text/csv', 'text/tab-separated-values', 'text/plain'].include?(upload_content_type) ||
+      upload_file_name.end_with?('.csv', '.tsv', '.txt', '.log')
+    end
+
     def digest?
       !digest.blank? && !digest_type.nil?
     end

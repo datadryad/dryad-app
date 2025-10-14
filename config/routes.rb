@@ -127,6 +127,7 @@ Rails.application.routes.draw do
       member do
         patch 'destroy_manifest' # destroy file from manifest method
         patch 'rename'
+        get 'admin_checks'
         get 'frictionless_report'
         get 'sd_report'
       end
@@ -401,6 +402,7 @@ Rails.application.routes.draw do
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
+    get 'contributors/award_details', to: 'contributors#award_details'
     post 'contributors/grouping', to: 'contributors#grouping'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
@@ -559,9 +561,9 @@ Rails.application.routes.draw do
   get '/submission_process', to: redirect('/help/submission_steps/submission')
   get '/data_check_guide', to: redirect('/help/guides/data_check_alerts')
   get '/process', to: redirect('/help/submission_steps/publication')
-  get '/HumanSubjectsData.pdf', to: redirect('/help/guides/HumanSubjectsData.pdf')
-  get '/EndangeredSpeciesData.pdf', to: redirect('/help/guides/EndangeredSpeciesData.pdf')
-  get '/QuickstartGuideToDataSharing.pdf', to: redirect('/help/guides/QuickstartGuideToDataSharing.pdf')
+  get '/docs/HumanSubjectsData.pdf', to: redirect('/help/guides/HumanSubjectsData.pdf')
+  get '/docs/EndangeredSpeciesData.pdf', to: redirect('/help/guides/EndangeredSpeciesData.pdf')
+  get '/docs/QuickstartGuideToDataSharing.pdf', to: redirect('/help/guides/QuickstartGuideToDataSharing.pdf')
 
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
