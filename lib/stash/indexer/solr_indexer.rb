@@ -37,6 +37,18 @@ module Stash
         false
       end
 
+      def destroy_document(id:)
+        result = @solr.delete_by_id(id)
+        @solr.commit
+        return true if result['responseHeader']['status'] == 0
+
+        false
+      rescue StandardError => e
+        Rails.logger.error("Error deleting record with id #{id || 'nil'}: #{e}")
+        Rails.logger.debug(e.full_message) if e.backtrace
+        false
+      end
+
     end
   end
 end
