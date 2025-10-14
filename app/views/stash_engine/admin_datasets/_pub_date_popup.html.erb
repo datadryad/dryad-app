@@ -1,6 +1,6 @@
 <h1>Edit publication dates</h1>
 <p style="max-width: 480px">Edit the publication dates for the public versions. To set the latest publication date to the future, please change the status to embargoed.</p>
-<%= form_with(url: ds_admin_pub_dates_path(@identifier.id), method: :post, local: false) do |form| -%>
+<%= form_with(url: ds_admin_pub_dates_path(@identifier.id), method: :post, local: false, model: @identifier, scope: :identifier) do |form| -%>
   <% @identifier.resources.with_public_metadata.each do |resource| %>
     <%= form.fields_for "resources[]", resource do |f| %>
         <div class="c-input">

@@ -1,0 +1,17 @@
+# A unit file for systemd, to launch the sidekiq for Dryad
+[Unit]
+Description=Sidekiq Background Worker
+After=local-fs.target network.target
+
+[Service]
+User=ec2-user
+WorkingDirectory=/home/ec2-user/deploy/current
+Environment=RAILS_ROOT=/home/ec2-user/deploy/current
+Environment=RAILS_ENV=some_environment
+
+ExecStart=/home/ec2-user/.rbenv/shims/bundle exec sidekiq
+Restart=on-failure
+TimeoutSec=2s
+
+[Install]
+WantedBy=multi-user.target

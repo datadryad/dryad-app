@@ -4,9 +4,9 @@
 
 <h3>Delayed job info</h3>
 
-<% if @delayed_jobs.count.positive? %>
+<% if @jobs.count.positive? %>
   <table class="c-lined-table">
-    <% @delayed_jobs.first.attributes.each_pair do |k, v| %>
+    <% @jobs.first.attributes.each_pair do |k, v| %>
       <tr class="c-lined-table__row">
         <td style="width: 10em; font-weight: bolder"><%= k %></td>
         <td><pre style="margin: 0; padding: 0;"><%= v || ' ' %></pre></td>

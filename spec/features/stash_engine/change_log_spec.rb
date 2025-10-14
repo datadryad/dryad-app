@@ -2,7 +2,6 @@ require 'rails_helper'
 RSpec.feature 'ChangeLog', type: :feature, js: true do
   include DatasetHelper
   include Mocks::Aws
-  include Mocks::Repository
   include Mocks::CurationActivity
   include Mocks::Datacite
   include Mocks::RSolr
@@ -19,7 +18,6 @@ RSpec.feature 'ChangeLog', type: :feature, js: true do
       mock_solr!
       mock_salesforce!
       mock_stripe!
-      mock_repository!
       mock_datacite!
       mock_file_content!
       neuter_curation_callbacks!

@@ -279,6 +279,9 @@ defaults: &DEFAULTS
     - ["f79a1ffc-eb37-42cc-9bb5-8111757fe58b", "Sample Block"]
     - ["15240463-21c8-44f2-b9d1-d1b36ab2dcf7", "Sample Section"]
     - ["e51ba4cd-5b78-48f8-b240-f70e21de2f12", "Sample Suspension"]
+  cache:
+    app_url: 'redis://localhost:6380/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 dev: &DEV
   <<: *DEFAULTS
@@ -309,6 +312,9 @@ dev: &DEV
     dpc_change_date: 2022-12-14
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
+  cache:
+    app_url: 'redis://master.dev-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'
+    rack_attack_url: 'redis://master.rack-attack-cache.zkdynt.usw2.cache.amazonaws.com:6381/0'
 
 development:
   <<: *DEV
@@ -322,6 +328,9 @@ development:
     api_zip_size: 200_000_000
     files: 100
     frictionless: 50_000_000
+  cache:
+    app_url: 'redis://localhost:6380/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 stage:
   <<: *DEFAULTS
@@ -344,6 +353,9 @@ stage:
     merritt_bucket: dryad-assetstore-merritt-stage
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+  cache:
+    app_url: 'redis://master.stage-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'
+    rack_attack_url: 'redis://master.rack-attack-cache.zkdynt.usw2.cache.amazonaws.com:6381/0'
 
 production:
   <<: *DEFAULTS
@@ -422,5 +434,8 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
+  cache:
+    app_url: 'redis://localhost:6380/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 <% end %>

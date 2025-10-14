@@ -50,7 +50,7 @@ module StashDatacite
       ensure_license
       update_submission_resource_info(@resource)
 
-      StashEngine.repository.submit(resource_id: @resource_id)
+      Submission::ResourcesService.new(@resource_id).trigger_submission
 
       CurationService.new(
         resource: @resource, status: 'processing', note: 'Repository processing data', user_id: current_user&.id || 0
