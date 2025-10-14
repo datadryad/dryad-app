@@ -354,8 +354,8 @@ stage:
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   cache:
-    app_url: 'redis://localhost:6380/0'
-    rack_attack_url: 'redis://localhost:6381/0'
+    app_url: 'redis://master.stage-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'
+    rack_attack_url: 'redis://master.rack-attack-cache.zkdynt.usw2.cache.amazonaws.com:6381/0'
 
 production:
   <<: *DEFAULTS
