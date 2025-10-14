@@ -119,6 +119,10 @@ module StashEngine
         end
       end
 
+      other_user.flag&.update(user_id: id)
+      other_user.api_application&.update(owner_id: id)
+      other_user.admin_searches.update_all(user_id: id)
+
       # merge in any special things updated in other user and prefer these details from other_user over self.user
       out_hash = {}
       %i[first_name last_name email tenant_id last_login orcid].each do |i|
