@@ -60,48 +60,25 @@ module StashEngine
     # Search the RorOrgs for the given string. This will search name, acronyms, aliases, etc.
     # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }
     # This method is used for auto-matching scripts, where no human has to confirm the match.
-    def self.find_by_name_for_auto_matching_db(query)
-      max_results = 10
-      return [] unless query.present?
-
-      query = query.downcase
-      # First, find matches at the beginning of the name string, and exact matches in the acronyms/aliases
-      resp = where("LOWER(name) LIKE ? OR JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-                   "#{query}%", query.to_s, query.to_s).limit(max_results)
-      results = resp.map do |r|
-        { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
-      end
-
-      return results if results.any?
-
-      # If we don't have enough results, find matches at the beginning of the acronyms/aliases
-      resp = where("JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-                   "#{query}%", "#{query}%").limit(max_results)
-      resp.map do |r|
-        { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
-      end
-    end
-
     def self.find_by_name_for_auto_matching(query)
       max_results = 10
       return [] unless query.present?
 
-      query = query.downcase
+      query = RSolr.solr_escape(query.downcase).gsub(' ', '\ ')
       # First, find matches at the beginning of the name string, and exact matches in the acronyms/aliases
-      pp search('', fq: ["name:#{query}*", "aliases:#{query}", "acronyms:#{query}"], limit: max_results)
-      # resp = where("LOWER(name) LIKE ? OR JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-      #   "#{query}%", query.to_s, query.to_s).limit(max_results)
-      # results = resp.map do |r|
-      #   { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
-      # end
-
-      return results if results.any?
+      resp = search('', fq: ["name:#{query}*", "aliases:#{query}", "acronyms:#{query}"], limit: max_results)
+      results = resp.dig('response', 'docs') || []
+      if results.any?
+        return results.map do |r|
+          { id: r['ror_id'], name: r['name'], country: r['country'], acronyms: r['acronyms'], aliases: r['aliases'] }
+        end
+      end
 
       # If we don't have enough results, find matches at the beginning of the acronyms/aliases
-      resp = where("JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-                   "#{query}%", "#{query}%").limit(max_results)
-      resp.map do |r|
-        { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
+      resp = search('', fq: ["aliases:#{query}*", "acronyms:#{query}*"], limit: max_results)
+      results = resp.dig('response', 'docs') || []
+      results.map do |r|
+        { id: r['ror_id'], name: r['name'], country: r['country'], acronyms: r['acronyms'], aliases: r['aliases'] }
       end
     end
 

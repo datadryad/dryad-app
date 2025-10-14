@@ -34,14 +34,15 @@ module Stash
           all.each(&:reindex)
         end
 
-        def search(query, fq: [], operation: 'OR')
+        def search(query, fq: [], operation: 'OR', limit: 100, fl: nil)
           solr = RSolr.connect(url: APP_CONFIG.ror_solr_url)
-          query = '*:*' if query.blank?
 
-          filters = { q: query }
+          filters = {}
+          filters = { q: query } if query.present?
           filters.merge!({ fq: fq.join(" #{operation} ") }) if fq.present?
+          filters.merge!({ fl: fl }) if fl.present?
 
-          solr.get('select', params: filters)
+          solr.get('select', params: filters, rows: limit, debugQuery: true)
         end
       end
     end
