@@ -15,7 +15,6 @@ module Stash
 
       def index_document(solr_hash:)
         result = @solr.add(solr_hash, add_attributes: ADD_ATTRIBUTES)
-        @solr.commit
         return true if result['responseHeader']['status'] == 0
 
         false

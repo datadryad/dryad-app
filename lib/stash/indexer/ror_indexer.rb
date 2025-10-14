@@ -20,7 +20,7 @@ module Stash
             filters.merge!({ fq: fq.join(" #{operation} ") }) if fq.present?
             filters.merge!({ fl: fl }) if fl.present?
 
-            solr.get('select', params: filters, rows: limit, debugQuery: true)
+            solr.get('select', params: filters, rows: limit)
           end
         end
       end
@@ -38,13 +38,9 @@ module Stash
         }
       end
 
-      def submit_to_solr
+      def reindex
         solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: APP_CONFIG.ror_solr_url)
         solr_indexer.index_document(solr_hash: index_mappings)
-      end
-
-      def reindex
-        submit_to_solr
       end
 
       def remove_from_solr_index
