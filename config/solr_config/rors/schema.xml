@@ -2,8 +2,6 @@
 <schema name="stash_engine_ror_orgs" version="1.6">
   <!-- Unique document ID -->
   <uniqueKey>id</uniqueKey>
-  <field name="uuid" type="string" stored="true" indexed="true" required="true" />
-
   <field name="id" type="string" indexed="true" stored="true" required="true" />
   <field name="_version_" type="plong" stored="true" indexed="true" />
   <field name="timestamp" type="pdate" stored="true" indexed="true" default="NOW" />

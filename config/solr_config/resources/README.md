@@ -26,7 +26,7 @@ bin/solr create -c dryad
 ```
 # get access to our github files like
 git clone git@github.com:datadryad/dryad-app.git
-cp dryad-app/config/solr_9_config/* ~/apps/solr/server/solr/dryad/conf
+cp dryad-app/config/solr_config/resources/* ~/apps/solr/server/solr/dryad/conf
 # remove the cloned repo if you wish like rm -rf dryad-app
 
 # not sure this is needed, but those were permissions the solr script made when creating original schema.xml

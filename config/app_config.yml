@@ -122,7 +122,7 @@ test:
     account: my.account
     password: "my.password"
     sandbox: true
-  ror_solr_url: 'http://127.0.0.1:8983/solr/rors'
+  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://127.0.0.1:8983/solr/rors" %>
 
 <% else %>
 
@@ -281,7 +281,7 @@ defaults: &DEFAULTS
     - ["f79a1ffc-eb37-42cc-9bb5-8111757fe58b", "Sample Block"]
     - ["15240463-21c8-44f2-b9d1-d1b36ab2dcf7", "Sample Section"]
     - ["e51ba4cd-5b78-48f8-b240-f70e21de2f12", "Sample Suspension"]
-  ror_solr_url: 'http://localhost:8983/solr/rors'
+  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8983/solr/rors" %>
 
 dev: &DEV
   <<: *DEFAULTS
@@ -312,6 +312,7 @@ dev: &DEV
     dpc_change_date: 2022-12-14
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
+  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://18.236.111.137:8983/solr/rors" %>
 
 development:
   <<: *DEV
@@ -325,6 +326,7 @@ development:
     api_zip_size: 200_000_000
     files: 100
     frictionless: 50_000_000
+  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8983/solr/rors" %>
 
 stage:
   <<: *DEFAULTS
@@ -347,6 +349,7 @@ stage:
     merritt_bucket: dryad-assetstore-merritt-stage
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://34.215.143.38:8983/solr/rors" %>
 
 production:
   <<: *DEFAULTS
@@ -425,5 +428,5 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
-
+  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://35.91.212.8:8983/solr/rors" %>
 <% end %>
