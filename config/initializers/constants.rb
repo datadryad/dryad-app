@@ -32,6 +32,8 @@ else
   "https://#{Rails.application.default_url_options[:host]}".freeze
 end
 
+SUBMISSION_REDIS_KEY = 'resource:%{resource.id}:remaining_files'.freeze
+
 NIH_ROR = 'https://ror.org/01cwqze88'.freeze
 NSF_ROR = 'https://ror.org/021nxhr62'.freeze
 

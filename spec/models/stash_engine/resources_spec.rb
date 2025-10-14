@@ -68,7 +68,7 @@ module StashEngine
 
         it 'sends the software to zenodo' do
           expect(@identifier).to receive(:has_zenodo_software?).and_call_original
-          expect(StashEngine::ZenodoSoftwareJob).to receive(:perform_later)
+          expect(StashEngine::ZenodoSoftwareJob).to receive(:perform_async)
           @resource.send_software_to_zenodo
           copy_record = @resource.zenodo_copies.software.first
           expect(copy_record.resource_id).to eq(@resource.id)
@@ -86,7 +86,7 @@ module StashEngine
 
       it 'sends the supplemental to zenodo' do
         expect(@identifier).to receive(:has_zenodo_supp?).and_call_original
-        expect(StashEngine::ZenodoSuppJob).to receive(:perform_later)
+        expect(StashEngine::ZenodoSuppJob).to receive(:perform_async)
         @resource.send_supp_to_zenodo
         copy_record = @resource.zenodo_copies.supp.first
         expect(copy_record.resource_id).to eq(@resource.id)
@@ -1608,20 +1608,20 @@ module StashEngine
       end
 
       it 'creates a zenodo_copy record in database' do
-        allow(ZenodoCopyJob).to receive(:perform_later).and_return(nil)
+        allow(ZenodoCopyJob).to receive(:perform_async).and_return(nil)
         @resource.send_to_zenodo
         @resource.reload
         expect(@resource.zenodo_copies.data.first).not_to be_nil
         expect(@resource.zenodo_copies.data.first.state).to eq('enqueued')
       end
 
-      it 'calls perform_later' do
-        expect(ZenodoCopyJob).to receive(:perform_later).with(@resource.id)
+      it 'calls perform_async' do
+        expect(ZenodoCopyJob).to receive(:perform_async).with(@resource.id)
         @resource.send_to_zenodo
       end
 
-      it "doesn't call perform_later if non-finished copy exists and not enqueued" do
-        expect(ZenodoCopyJob).to_not receive(:perform_later).with(@resource.id)
+      it "doesn't call perform_async if non-finished copy exists and not enqueued" do
+        expect(ZenodoCopyJob).to_not receive(:perform_async).with(@resource.id)
         ZenodoCopy.create(state: 'replicating', identifier_id: @resource.identifier.id, resource_id: @resource.id, copy_type: 'data', note: '')
         @resource.send_to_zenodo
       end

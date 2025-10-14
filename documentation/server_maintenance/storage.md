@@ -42,7 +42,7 @@ THEN, on one server, in the Rails console:
 resource_ids =
   StashEngine::RepoQueueState.latest_per_resource.where(state: 'rejected_shutting_down').order(:updated_at).map(&:resource_id)
 resource_ids.each do |res_id|
-  StashEngine.repository.submit(resource_id: res_id)
+   Submission::ResourcesService.new(res_id).trigger_submission
 end
 ```
 
@@ -52,9 +52,9 @@ the RepoQueueState:
 resource_ids =
   StashEngine::RepoQueueState.latest_per_resource.where(state: 'errored').order(:updated_at).map(&:resource_id)
 resource_ids.each do |res_id|
- repo_queue_id = StashEngine::RepoQueueState.where(state: 'processing', resource_id: res_id).last.id
- StashEngine::RepoQueueState.find(repo_queue_id).destroy
- StashEngine.repository.submit(resource_id: res_id)
+  repo_queue_id = StashEngine::RepoQueueState.where(state: 'processing', resource_id: res_id).last.id
+  StashEngine::RepoQueueState.find(repo_queue_id).destroy
+  Submission::ResourcesService.new(res_id).trigger_submission
 end
 ```
 
@@ -101,10 +101,10 @@ Submission process
 1. GUI POSTs to `/stash_datacite/resources/submission`
 2. Routes to `StashDatacite::ResourcesController#submission`
    1. Does some validation and setup
-   2. Hands off to `StashEngine.repository.submit`
+   2. Hands off to `Submission::SubmissionJob`
    3. Kicks off transfer of Zenodo content
    4. Sends the GUI user to the correct URL while they wait for processing to complete
-3. `StashEngine.repository.submit == Stash::Repo::Repository.submit`
+3. `Submission::SubmissionJob` is a background job which
    1. Sets the resource state to `processing`
    2. Creates a SubmissionJob
    3. Adds the resource to the queue `stash_engine_repo_queue_states`
