@@ -1,10 +1,10 @@
 module StashEngine
   class UserAccountController < ApplicationController
-    before_action :require_user_login, only: :index
-    before_action :require_login, except: %i[index edit]
+    before_action :require_user_login, only: :edit
+    before_action :require_login, except: :edit
 
     def index
-      @target_page = stash_url_helpers.my_account_path
+      session[:target_page] = stash_url_helpers.my_account_path
       current_user.admin_searches.each { |s| s.create_code unless s.share_code.present? }
     end
 
