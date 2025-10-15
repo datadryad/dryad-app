@@ -39,8 +39,14 @@
   </p>
 <% end %>
 
+<p class="o-admin-form-inline">
+<%= form.label :journal_code, "Identifying short code for email integration"%>
+<%= form.text_field(:journal_code, value: @journal.journal_code, class: 'c-input__text', style: 'font-family: Monaco, monospace; font-size: .8em;') %>
+</p>
+<p class="o-admin-form-inline">
 <%= form.label :manuscript_number_regex, "Manuscript number RegEx"%>
-<%= form.text_field(:manuscript_number_regex, value: @journal.manuscript_number_regex, class: 'c-input__text', style: 'width:100%; font-family: Monaco, monospace; font-size: .8em;') %>
+<%= form.text_field(:manuscript_number_regex, value: @journal.manuscript_number_regex, class: 'c-input__text', style: 'flex: 2; font-family: Monaco, monospace; font-size: .8em;') %>
+</p>
 </div>
 <h3>Peer review</h3>
 <p><%= form.check_box :default_to_ppr, {checked: @journal.default_to_ppr, disabled: !@journal.allow_review_workflow}, 1, 0 %> <%= form.label :default_to_ppr, "When checked, submissions enter PPR by default" %></p>
