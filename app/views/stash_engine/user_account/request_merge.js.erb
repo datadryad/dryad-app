@@ -1,0 +1,2 @@
+document.getElementById('duplicate_user_error')?.remove()
+document.getElementById('maincontent').querySelector('div div').prepend(document.createRange().createContextualFragment('<div class="callout alt" id="duplicate_user_error"><p><i class="fas fa-check"></i> Your request has been sent and will be processed as soon as possible. <% unless current_user.email.present? %>You will need to use an alternative email address to continue using Dryad in the meantime.<% end %></p></div>'))

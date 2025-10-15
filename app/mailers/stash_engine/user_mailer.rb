@@ -1,5 +1,6 @@
 module StashEngine
   # Mails users about submissions
+  # rubocop:disable Metrics/ClassLength
   class UserMailer < ApplicationMailer
 
     # Called from CurationActivity when the status is submitted, peer_review, published, embargoed or withdrawn
@@ -223,6 +224,14 @@ module StashEngine
       # update_activities(resource: resource, message: 'DOI linking reminder', status: resource.current_curation_status)
     end
 
+    def merge_request(current_user, existing_user)
+      @user = current_user
+      @old = existing_user
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      mail(to: @helpdesk_email, cc: @submission_error_emails, subject: "#{rails_env}user account merge request")
+    end
+
     def dependency_offline(dependency, message)
       return unless dependency.present?
 
@@ -248,7 +257,6 @@ module StashEngine
     def voided_invoices(voided_identifier_list)
       return unless voided_identifier_list.present?
 
-      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
       @identifiers = voided_identifier_list
       mail(to: @submission_error_emails,
            subject: "#{rails_env}Voided invoices need to be updated")
@@ -275,4 +283,5 @@ module StashEngine
            subject: "#{rails_env}Action required: Dryad data submission (#{resource&.identifier})")
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

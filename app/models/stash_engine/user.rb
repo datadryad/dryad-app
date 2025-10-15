@@ -105,7 +105,7 @@ module StashEngine
     # The other_user passed in is generally a newly logged in user that is having any of their new stuff transferred into their existing, old
     # user account. Then they will use that old user account from then on (current user and other things will be switched around on the fly
     # in the controller).
-    def merge_user!(other_user:)
+    def merge_user!(other_user:, overwrite: true)
       # these methods do not invoke callbacks, since not really needed for taking ownership
       CurationActivity.where(user_id: other_user.id).update_all(user_id: id)
       ResourceState.where(user_id: other_user.id).update_all(user_id: id)
@@ -119,10 +119,11 @@ module StashEngine
         end
       end
 
-      # merge in any special things updated in other user and prefer these details from other_user over self.user
+      # merge in any special things updated in other user and prefer details based on overwrite setting
       out_hash = {}
       %i[first_name last_name email tenant_id last_login orcid].each do |i|
-        out_hash[i] = other_user.send(i) unless other_user.send(i).blank?
+        pick_me = overwrite ? other_user : self
+        out_hash[i] = pick_me.send(i) unless pick_me.send(i).blank?
       end
       update(out_hash)
     end

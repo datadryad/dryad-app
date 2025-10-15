@@ -70,7 +70,6 @@
     </div>
   </div>
 </div>
-
 <script type="text/javascript">
   document.getElementById('edit_submit').disabled = true
   const form = document.getElementById('user_edit_form')
@@ -85,9 +84,6 @@
     e.preventDefault();
     document.getElementById('edit-tenant-form').setAttribute('hidden', 'hidden');
     document.getElementById('dryad-member').removeAttribute('hidden');
-  });
-  document.getElementById('edit_submit').addEventListener('click', () => {
-    document.getElementById('user_edit_form').setAttribute('hidden', true);
   });
   document.querySelectorAll('.copy-share-code').forEach(url => url.addEventListener('click', (e) => {
     e.preventDefault()
