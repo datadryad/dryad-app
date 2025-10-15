@@ -119,11 +119,12 @@ module StashEngine
         end
       end
 
-      # merge in any special things updated in other user and prefer details based on overwrite setting
+      # merge in any special things updated in other user and prefer their details if set to overwrite
+      return unless overwrite
+
       out_hash = {}
       %i[first_name last_name email tenant_id last_login orcid].each do |i|
-        pick_me = overwrite ? other_user : self
-        out_hash[i] = pick_me.send(i) unless pick_me.send(i).blank?
+        out_hash[i] = other_user.send(i) unless other_user.send(i).blank?
       end
       update(out_hash)
     end
