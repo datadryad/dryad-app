@@ -105,6 +105,7 @@ module StashEngine
     # The other_user passed in is generally a newly logged in user that is having any of their new stuff transferred into their existing, old
     # user account. Then they will use that old user account from then on (current user and other things will be switched around on the fly
     # in the controller).
+    # rubocop:disable Metrics/AbcSize
     def merge_user!(other_user:)
       # these methods do not invoke callbacks, since not really needed for taking ownership
       CurationActivity.where(user_id: other_user.id).update_all(user_id: id)
@@ -132,6 +133,7 @@ module StashEngine
       end
       update(out_hash)
     end
+    # rubocop:enable Metrics/AbcSize
 
     def self.split_name(name)
       comma_split = name.split(',')
