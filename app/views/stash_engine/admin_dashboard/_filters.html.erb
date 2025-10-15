@@ -31,7 +31,7 @@ end
       <%= check_box_tag 'submitter_limit', name: 'filters[submitter_limit]' %>
       <label for="submitter_limit">Limit results to those with a matching submitter sponsor</span>
     </div>
-    <p class="help">Search for only submitter sponsors matching <%= @role_object.short_name %>, rather than including datasets with affiliations, funders, and research stations with an institution ROR ID included under the partner record.</p>
+    <p class="help">Search for only submitter sponsors matching <%= @tenant_limit.first.short_name %>, rather than including datasets with affiliations, funders, and research stations with an institution ROR ID included under the partner record.</p>
   <% end %>
   <div class="o-admin-form-pair <%= @role_object.blank? || @user_role.role == 'curator' ? 'quarter-width' : 'half-width' %>">
     <%= render partial: 'stash_engine/shared/multi_select', locals: {
