@@ -1,7 +1,7 @@
 import React, {useState, useId} from 'react';
-import {editorViewCtx} from '@milkdown/core';
-import {callCommand} from '@milkdown/utils';
-import {TextSelection} from '@milkdown/prose/state';
+import {editorViewCtx} from '@milkdown/kit/core';
+import {callCommand} from '@milkdown/kit/utils';
+import {TextSelection} from '@milkdown/kit/prose/state';
 import {commands} from '../milkdownCommands';
 import {icons, labels} from './Details';
 

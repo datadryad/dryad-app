@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {range} from 'lodash';
-import {editorViewCtx} from '@milkdown/core';
-import {callCommand} from '@milkdown/utils';
+import {editorViewCtx} from '@milkdown/kit/core';
+import {callCommand} from '@milkdown/kit/utils';
 import {commands} from '../milkdownCommands';
 import {commands as mdCommands} from '../codeKeymap';
 import {icons, labels} from './Details';

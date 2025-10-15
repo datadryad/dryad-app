@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useSelect} from 'downshift';
-import {editorViewCtx} from '@milkdown/core';
-import {callCommand} from '@milkdown/utils';
+import {editorViewCtx} from '@milkdown/kit/core';
+import {callCommand} from '@milkdown/kit/utils';
 import {commands} from '../milkdownCommands';
 import {commands as mdCommands} from '../codeKeymap';
 import {labels} from './Details';
