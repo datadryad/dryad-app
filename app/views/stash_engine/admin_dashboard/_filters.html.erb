@@ -9,8 +9,30 @@ end
 %>
 <div class="admin-dashboard-buttons">
   <b id="edit_filters" role="heading" aria-level="3">Search filters</b>
+  <button type="button" class="o-button__plain-text7" id="edit_filters-help"><i aria-hidden="true" class="fa fa-info-circle"></i> Search filter help</button>
 </div>
 <fieldset id="edit_filters-form" aria-labelledby="edit_filters">
+  <% if @role_object.present? %>
+    <p class="help" style="grid-column: span 2;">
+      By default, the result datasets on your admin dashboard are limited to those datasets
+      <% if @role_object.is_a?(StashEngine::Tenant) %>
+        with affiliations, funders, research stations, or a submitter sponsor with an institution ROR ID included under the <%= @role_object.short_name %> partner record.
+      <% elsif @role_object.is_a?(StashEngine::JournalOrganization) %>
+        listing a <%= @role_object.name %> journal or preprint server as publishing the primary article or preprint
+      <% elsif @role_object.is_a?(StashEngine::Journal) %>
+        listing <%= @role_object.title %> as publishing the primary article or preprint
+      <% elsif @role_object.is_a?(StashEngine::Funder) %>
+        funded by <%= @role_object.name %>
+      <% end %>
+    </p>
+  <% end %>
+  <% if @tenant_limit.length == 1 %>
+    <div class="o-admin-form-pair half-width">
+      <%= check_box_tag 'submitter_limit', name: 'filters[submitter_limit]' %>
+      <label for="submitter_limit">Limit results to those with a matching submitter sponsor</span>
+    </div>
+    <p class="help">Search for only submitter sponsors matching <%= @role_object.short_name %>, rather than including datasets with affiliations, funders, and research stations with an institution ROR ID included under the partner record.</p>
+  <% end %>
   <div class="o-admin-form-pair <%= @role_object.blank? || @user_role.role == 'curator' ? 'quarter-width' : 'half-width' %>">
     <%= render partial: 'stash_engine/shared/multi_select', locals: {
       id: 'status',
@@ -20,13 +42,16 @@ end
       selected: @filters.dig(:status)
     } %>
   </div>
+  <p class="help">Filter result datasets by current curation status. Multiple statuses can be selected.</p>
   <% if @role_object.blank? || @user_role.role == 'curator' %>
     <div class="o-admin-form-pair quarter-width">
       <%= selecter('flag', [['', '']] + flag_select).html_safe %>
     </div>
+    <p class="help">Filter by the type of curation flag set.</p>
     <div class="o-admin-form-pair half-width">
       <%= selecter('curator', [['', ''], ['Unassigned', 'unassigned']] + editor_select).html_safe %>
     </div>
+    <p class="help">Filter by the assigned curator.</p>
     <div class="o-admin-form-pair half-width">
       <%= render partial: 'stash_engine/shared/multi_select', locals: {
         id: 'editor',
@@ -36,6 +61,7 @@ end
         selected: @filters.dig(:editor)
       } %>
     </div>
+    <p class="help">Filter by curators currently editing a dataset. Multiple curators can be selected.</p>
   <% end %>
   <div class="o-admin-form-pair half-width">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
@@ -48,14 +74,16 @@ end
       selected: @filters.dig(:affiliation)
     } %>
   </div>
+  <p class="help">Filter result datasets for organizations matched with a <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR ID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> set as an affiliation by at least one author.</p>
   <% if @tenant_limit.length > 1 %>
     <div class="o-admin-form-pair half-width">
       <%= selecter('member', [['', '']] + @tenant_limit.map { |t| [t.short_name, t.id] }).html_safe %>
       <span class="limiter">
         <%= check_box_tag 'submitter_limit', name: 'filters[submitter_limit]' %>
-        <label for="submitter_limit">Exclude coauthors</span>
+        <label for="submitter_limit">Limit to submitter</span>
       </span>
     </div>
+    <p class="help">Filter result datasets by Dryad institutional partners. Searches affiliations, funders, research stations, and submitter sponsor for partner institution ROR IDs. Limiting to submitter sets the search to submitter sponsors only.</p>
   <% end %>
   <% if @journal_limit.present? %>
     <% if @journal_limit.length > 1 %>
@@ -77,6 +105,7 @@ end
       } %>
     </div>
   <% end %>
+  <p class="help">Filter result datasets by the journal or preprint server publishing the primary article or preprint associated with the dataset</p>
   <% unless @journal_limit.present? && @sponsor_limit.length < 2 %>
     <div class="o-admin-form-pair half-width">
       <% if @sponsor_limit.length > 1 %>
@@ -85,6 +114,7 @@ end
         <%= selecter('sponsor', [['', '']] + sponsor_select).html_safe %>
       <% end %>
     </div>
+    <p class="help">Filter result datasets by the journal or preprint server publishing the primary article or preprint associated with the dataset and published or managed by one of Dryad&apos;s publishing partners</p>
   <% end %>
   <div class="o-admin-form-pair half-width">
     <%= render partial: 'stash_engine/shared/search_select', locals: {
@@ -97,10 +127,15 @@ end
       selected: @filters.dig(:funder)
     } %>
   </div>
+  <p class="help">Filter result datasets by funding organizations matched with a <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR ID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.
   <div class="date-flex">
     <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Submitted' } %>
+    <p class="help">Filter results by the date the latest revision of the dataset was submitted</p>
     <%= render partial: 'filter_date', locals: { id: 'first_sub_date', label: 'First submitted' } %>
+    <p class="help">Filter results by the date the dataset was first submitted</p>
     <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Published' } %>
+    <p class="help">Filter results by the date the latest revision of the dataset was published</p>
     <%= render partial: 'filter_date', locals: { id: 'first_pub_date', label: 'First published' } %>
+    <p class="help">Filter results by the date the dataset was first published</p>
   </div>
 </fieldset>
