@@ -18,10 +18,3 @@
     <%= f.submit 'Save changes', id: 'edit_submit', class: 'o-button__plain-text2', disabled: true %>
   </p>
 <% end %>
-<script type="text/javascript">
-  document.getElementById('edit_submit').disabled = true
-  const profile_form = document.getElementById('user_edit_form')
-  profile_form.addEventListener('change', () => {
-    document.getElementById('edit_submit').disabled = !profile_form.checkValidity()
-  });
-</script>

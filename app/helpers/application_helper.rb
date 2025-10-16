@@ -1,6 +1,17 @@
 require 'commonmarker'
 
 module ApplicationHelper
+
+  def dupe_user_alert
+    return false unless current_user&.email&.present?
+
+    @email = current_user.email
+    @existing_user = StashEngine::User.where(email: @email).where.not(id: current_user.id).first
+    return true if @existing_user
+
+    false
+  end
+
   # reverses name and puts last, first middle, etc
   def name_reverser(name)
     return '[Name not set]' if name.blank?

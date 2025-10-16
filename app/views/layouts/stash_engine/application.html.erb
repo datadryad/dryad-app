@@ -10,6 +10,9 @@
   <%= render partial: "shared/sandbox_message" %>
   <%= render 'shared/top_area' %>
   <%= render partial: "stash_engine/shared/flash_messages" %>
+  <% if dupe_user_alert %>
+    <%= render partial: "stash_engine/user_account/duplicate_email" %>
+  <% end %>
   <% if current_page?(api_path) %>
     <div id="maincontent">
     <%= yield %>

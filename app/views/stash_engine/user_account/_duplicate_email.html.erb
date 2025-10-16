@@ -1,0 +1,22 @@
+<div class="callout err" id="duplicate_user_error" style="padding-bottom: 1px; margin-bottom: 1rem;">
+  <p>The email address <b><%= @email %></b> belongs to another account</p>
+  <div style="background-color: #fff; padding: 2px 8px; margin-top: -2px;margin-bottom: 10px;">
+    <p class="input-line" style="justify-content: center;">
+      <span><%= @existing_user.name %></span>
+      <% sub_count = @existing_user.resources.map(&:identifier).uniq.size %>
+      <% unless sub_count.zero? %>
+        <span><%= sub_count %> dataset<%= sub_count == 1 ? '' : 's' %></span>
+      <% end %>
+      <% if @existing_user.orcid.present? %>
+        <a href="<%= @existing_user.orcid_link %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" role="img" aria-label="ORCID profile (opens in new tab): " style="margin-right: 3px;"></i><%= @existing_user.orcid %></a>
+      <% end %>
+    </p>
+    <p><b style="font-size: 1.2rem;"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Does this account also belong to you?</b></p>
+    <% if @existing_user.orcid.present? %>
+       <p>In order to use this email address, and to have revision access to any data submissions associated with the other account, you must <a href="/help/account/login#multiple-orcids-and-dryad-accounts" target="_blank">remove any duplicate ORCIDs and merge your Dryad accounts<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.</p>
+    <% else %>
+      <p><%= form_with(url: merge_accounts_path(merge: @existing_user.id), method: :post, local: false, class: 'o-button__inline-form') do %><button class="o-button__plain-text7">Request these accounts be merged</button><% end %> to use this email address and have revision access to the other account's data submissions.</p>
+    <% end %>
+    <p>Use a different email address <% unless request.path.start_with?('/account') %>in <a href="/account">your account</a><% end %> to no longer see this message.</p>
+  </div>
+</div>
