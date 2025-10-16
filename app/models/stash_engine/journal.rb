@@ -32,6 +32,7 @@ module StashEngine
     PAYMENT_PLANS = %w[SUBSCRIPTION PREPAID DEFERRED TIERED 2025].freeze
 
     validates :title, presence: true
+    validates :journal_code, uniqueness: { allow_blank: true, case_sensitive: false }
     validate :email_array
 
     has_many :issns, -> { order(created_at: :asc) }, class_name: 'StashEngine::JournalIssn', inverse_of: :journal, dependent: :destroy

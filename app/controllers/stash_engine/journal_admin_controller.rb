@@ -86,7 +86,7 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[title preprint_server default_to_ppr allow_review_workflow manuscript_number_regex peer_review_custom_text
+      valid = %i[title preprint_server default_to_ppr allow_review_workflow manuscript_number_regex peer_review_custom_text journal_code
                  flag_attributes payment_configuration_attributes]
       update = edit_params.slice(*valid).to_h
       update[:sponsor_id] = edit_params[:sponsor_id].presence
@@ -116,7 +116,7 @@ module StashEngine
 
     def edit_params
       params.permit(:id, :title, :issn, :alt_title, :notify_contacts, :review_contacts, :api_contacts,
-                    :preprint_server, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
+                    :preprint_server, :journal_code, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
                     :default_to_ppr, :allow_review_workflow, :flag, :note,
                     flag_attributes: %i[id note _destroy],
                     payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit])
