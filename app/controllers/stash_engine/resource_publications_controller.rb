@@ -12,6 +12,7 @@ module StashEngine
       publication = authorize StashEngine::ResourcePublication.find(params[:id])
       publication.update(up_params)
       @resource = StashEngine::Resource.find(publication.resource_id)
+      check_resource_payment(@resource)
       release_resource(@resource) if @resource.identifier&.has_accepted_manuscript?
       respond_to do |format|
         format.js do

@@ -1,0 +1,12 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>In regards to your dataset submission:</p>
+
+<p>Title: <%= @resource.title %><br/>
+DOI: <%= @resource.identifier_uri %></p>
+
+<p>Your associated manuscript has been rejected, and the dataset is no longer eligible for DPC sponsorship by the journal. Payment or other sponsorship of the <a href="<%= @costs_url %>">Data Publishing Charge</a> is required for the curation and publication of your data.</p>
+
+<p><a href="<%= @submission_url %>">Edit your submission</a>. If you are resubmitting your manuscript to the same or another sponsoring journal, on the 'Connect' page, please enter your journal and manuscript number information. Otherwise, click "Pay & Submit for publication" to pay the DPC and submit your dataset for curation and publication.</p>
+
+<p>Please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a> if you have any questions.</p>

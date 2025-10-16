@@ -3,7 +3,7 @@ import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import PublicationForm from './PublicationForm';
 
-export default function Publication({resource, setResource}) {
+export default function Publication({current, resource, setResource}) {
   const subType = resource.resource_type.resource_type;
   const [assoc, setAssoc] = useState(null);
   const [connections, setConnections] = useState([]);
@@ -45,11 +45,13 @@ export default function Publication({resource, setResource}) {
 
   const form = (type, hidden) => (
     <PublicationForm
+      current={current}
       resource={resource}
       setResource={setResource}
       setSponsored={setSponsored}
       importType={type}
       hidden={hidden}
+      connections={connections}
       key={type}
     />
   );
@@ -64,16 +66,17 @@ export default function Publication({resource, setResource}) {
   }, [resource.journal, resource.resource_publication, resource.related_identifiers]);
 
   useEffect(() => {
-    const selected = [];
+    const selected = new Set([]);
     const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
     const preprint = resource.resource_preprint?.publication_name
       && resource.related_identifiers.find((r) => r.work_type === 'preprint')?.related_identifier;
-    if (resource.resource_publication.manuscript_number) selected.push('manuscript');
-    if (primary_article) selected.push('published');
-    if (preprint) selected.push('preprint');
-    if (selected.length) setAssoc(true);
+    if (resource.resource_publication.manuscript_number) selected.add('manuscript');
+    if (primary_article) selected.add('published');
+    if (!primary_article && resource.resource_publication?.publication_name) selected.add('manuscript');
+    if (preprint) selected.add('preprint');
+    if (selected.size) setAssoc(true);
     else if (resource.identifier.import_info === 'other') setAssoc(false);
-    setConnections(selected);
+    setConnections([...selected]);
   }, []);
 
   return (

@@ -5,7 +5,7 @@ import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import Journal from './Journal';
 
 function PublicationForm({
-  resource, setResource, setSponsored, hidden, importType,
+  current, resource, setResource, setSponsored, hidden, connections, importType,
 }) {
   const formRef = useRef();
   const [msn, setMSN] = useState('');
@@ -14,7 +14,7 @@ function PublicationForm({
   const [jTitle, setJTitle] = useState('');
   const [issn, setISSN] = useState('');
 
-  const connections = {
+  const mapping = {
     manuscript: 'Submitted manuscript',
     published: 'Published article',
     preprint: 'Preprint',
@@ -26,9 +26,9 @@ function PublicationForm({
     const submitVals = {
       authenticity_token,
       import_type: importType,
-      publication_name: jTitle,
+      publication_name: values.pub_title || null,
       resource_id: resource.id,
-      publication_issn: issn,
+      publication_issn: values.pub_issn || null,
       do_import: false,
       primary_article_doi: values.primary_article_doi || null,
       msid: values.msid || null,
@@ -63,17 +63,23 @@ function PublicationForm({
   }, [jTitle]);
 
   useEffect(() => {
-    if (hidden && primary) {
+    const unsetJournal = () => {
       setJTitle('');
       setISSN('');
+      formRef.current.values.pub_title = '';
+      formRef.current.values.pub_issn = '';
+    };
+    if (current && hidden) {
       if (importType === 'manuscript') {
         formRef.current.values.msid = '';
+        if (!connections.includes('published')) unsetJournal();
       } else {
         formRef.current.values.primary_article_doi = '';
+        if (!connections.includes('manuscript')) unsetJournal();
       }
-      submitForm(formRef.current.values);
+      if (JSON.stringify(formRef.current.initialValues) !== JSON.stringify(formRef.current.values)) submitForm(formRef.current.values);
     }
-  }, [hidden]);
+  }, [current, hidden]);
 
   useEffect(() => {
     const [, pref] = resource?.journal?.manuscript_number_regex?.match(/\(([a-z]+[-_]*)/i) || [];
@@ -95,9 +101,15 @@ function PublicationForm({
       <Journal
         formRef={formRef}
         title={jTitle}
-        setTitle={setJTitle}
+        setTitle={(v) => {
+          formRef.current.values.pub_title = v;
+          setJTitle(v);
+        }}
         issn={issn}
-        setIssn={setISSN}
+        setIssn={(v) => {
+          formRef.current.values.pub_issn = v;
+          setISSN(v);
+        }}
         controlOptions={
           {
             labelText: importType === 'preprint' ? 'Preprint server' : 'Journal name',
@@ -117,6 +129,8 @@ function PublicationForm({
       <Formik
         initialValues={
           {
+            pub_title: jTitle || '',
+            pub_issn: issn || '',
             primary_article_doi: primary?.related_identifier || '',
             msid: msn || '',
           }
@@ -161,7 +175,7 @@ function PublicationForm({
               <div className="input-line">
                 <div className="input-stack" style={{flex: 2}}>
                   <label className="input-label required" htmlFor="primary_article_doi">
-                    {connections[importType]} DOI
+                    {mapping[importType]} DOI
                   </label>
                   <Field
                     className="c-input__text"

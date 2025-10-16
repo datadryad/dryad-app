@@ -26,11 +26,7 @@ describe('Publication', () => {
           import_type: 'other',
         },
         resource_type: {resource_type: 'dataset'},
-        resource_publication: {
-          publication_name: faker.company.companyName(),
-          publication_issn: `${faker.datatype.number({min: 1000, max: 9999})}-${faker.datatype.number({min: 1000, max: 9999})}`,
-          manuscript_number: '',
-        },
+        resource_publication: {},
         related_identifiers: [],
       },
     };

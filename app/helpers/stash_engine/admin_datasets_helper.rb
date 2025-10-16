@@ -37,6 +37,26 @@ module StashEngine
       flags + [['Flagged user', 'user'], ['Flagged institution', 'tenant'], ['Flagged journal', 'journal']]
     end
 
+    def display_payment(identifier)
+      pr = identifier.resources.by_version_desc.includes(:payment).find(&:payment)
+      if identifier.user_must_pay? && (identifier.payment_type.blank? || identifier.payment_type == 'unknown')
+        str = ''
+        str += "$#{pr.payment.amount}" if pr&.payment
+        str += pr&.payment&.status.present? ? "bill #{pr&.payment&.status}" : 'Unknown'
+      else
+        str = identifier.payment_type
+      end
+      str
+    end
+
+    def display_payment_err(resource)
+      return unless resource.submitted? && resource.identifier.payment_type == 'unknown'
+
+      "<span class=\"child-details error-text\" id=\"payment_desc_err\">
+          <i class=\"fas fa-triangle-exclamation\" aria-hidden=\"true\"></i> Action required: payment or sponsorship needed
+        </span>".html_safe
+    end
+
     def display_publications(resource)
       str = resource.resource_publication&.publication_name&.present? ? "#{resource.resource_publication&.publication_name}, " : ''
       str += resource.resource_publication&.manuscript_number&.presence || ''

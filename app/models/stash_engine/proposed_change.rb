@@ -89,8 +89,8 @@ module StashEngine
       end
 
       if article_type == 'primary_article'
-        identifier.record_payment if latest_resource.submitted? && identifier.publication_date.blank?
-        release_resource(latest_resource) if latest_resource.current_curation_status == 'peer_review'
+        check_resource_payment(latest_resource)
+        release_resource(latest_resource)
       end
 
       add_curation_note(latest_resource, approve_type)
