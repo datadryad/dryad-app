@@ -75,6 +75,7 @@ module StashEngine
     def self.update_existing_dataset_status(manuscript)
       return unless manuscript.identifier
 
+      resource = manuscript.identifier.latest_resource
       target_status = nil
       target_note = "setting manuscript status based on notification from journal #{manuscript.journal&.title} " \
                     "-- manuscript #{manuscript.manuscript_number}, status #{manuscript.status}"
@@ -82,9 +83,10 @@ module StashEngine
         target_status = 'submitted'
       elsif manuscript.rejected?
         target_status = 'withdrawn'
+        resource.resource_publication.update(publication_name: nil, publication_issn: nil)
+        check_resource_payment(resource)
+        StashEngine::UserMailer.peer_review_payment_needed(@new_res).deliver_now if resource.identifier.payment_type == 'unknown'
       end
-
-      resource = manuscript.identifier.latest_resource
 
       # if the status is being updated based on notification from a journal, DON'T go backwards in workflow,
       # that is, don't change a status other than submitted or peer_review
@@ -99,7 +101,6 @@ module StashEngine
       # once we receive a notification from the journal, we know that the manuscript is no longer in
       # review, so remove the hold_for_peer_review setting
       resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
-
       CurationService.new(resource: resource, status: target_status, user_id: 0, note: target_note).process
     end
 

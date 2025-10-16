@@ -1,5 +1,6 @@
 module StashEngine
   # Mails users about submissions
+  # rubocop:disable Metrics/ClassLength
   class UserMailer < ApplicationMailer
 
     # Called from CurationActivity when the status is submitted, peer_review, published, embargoed or withdrawn
@@ -209,6 +210,19 @@ module StashEngine
            subject: "#{rails_env}Dryad Submission \"#{@title}\"")
     end
 
+    def payment_needed(resource)
+      logger.warn('Unable to send peer_review_payment_needed; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      @costs_url = Rails.application.routes.url_helpers.costs_url
+      @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
+    end
+
     def doi_invitation(resource)
       logger.warn('Unable to send doi_invitation; nil resource') unless resource.present?
       return unless resource.present?
@@ -275,4 +289,5 @@ module StashEngine
            subject: "#{rails_env}Action required: Dryad data submission (#{resource&.identifier})")
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
