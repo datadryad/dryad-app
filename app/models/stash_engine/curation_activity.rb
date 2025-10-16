@@ -2,15 +2,16 @@
 #
 # Table name: stash_engine_curation_activities
 #
-#  id          :integer          not null, primary key
-#  deleted_at  :datetime
-#  keywords    :string(191)
-#  note        :text(65535)
-#  status      :string(191)      default("in_progress")
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  resource_id :integer
-#  user_id     :integer
+#  id            :integer          not null, primary key
+#  deleted_at    :datetime
+#  keywords      :string(191)
+#  note          :text(65535)
+#  status        :string(191)      default("in_progress")
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  identifier_id :integer
+#  resource_id   :integer
+#  user_id       :integer
 #
 # Indexes
 #
@@ -28,7 +29,8 @@ module StashEngine
     # Associations
     # ------------------------------------------
     belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
-    has_one :identifier, class_name: 'StashEngine::Identifier', through: :resource
+    belongs_to :resource_with_deleted, -> { with_deleted}, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
+    belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id'
 
     # Explanation of statuses

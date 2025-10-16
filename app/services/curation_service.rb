@@ -11,7 +11,7 @@ class CurationService
     @options = options
     @activity = StashEngine::CurationActivity.new(
       resource: @resource, status: @status, user: @user, note: @note,
-      created_at: created_at || Time.now.utc
+      identifier_id: @resource.identifier_id, created_at: created_at || Time.now.utc
     )
   end
 

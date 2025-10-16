@@ -2,15 +2,16 @@
 #
 # Table name: stash_engine_curation_activities
 #
-#  id          :integer          not null, primary key
-#  deleted_at  :datetime
-#  keywords    :string(191)
-#  note        :text(65535)
-#  status      :string(191)      default("in_progress")
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  resource_id :integer
-#  user_id     :integer
+#  id            :integer          not null, primary key
+#  deleted_at    :datetime
+#  keywords      :string(191)
+#  note          :text(65535)
+#  status        :string(191)      default("in_progress")
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  identifier_id :integer
+#  resource_id   :integer
+#  user_id       :integer
 #
 # Indexes
 #
@@ -26,6 +27,7 @@ FactoryBot.define do
     status { 'in_progress' }
     note { Faker::Lorem.sentence }
     deleted_at { nil }
+    identifier_id { resource.identifier_id }
 
     trait :in_progress do
       status { 'in_progress' }

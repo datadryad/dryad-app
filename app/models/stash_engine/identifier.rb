@@ -67,7 +67,7 @@ module StashEngine
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
     belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense', optional: true
-    has_many :curation_activities, class_name: 'StashEngine::CurationActivity', through: :resources
+    has_many :curation_activities, class_name: 'StashEngine::CurationActivity', foreign_key: 'identifier_id'
     has_many :payments, class_name: 'ResourcePayment', through: :resources
 
     after_create :create_process_date, unless: :process_date
