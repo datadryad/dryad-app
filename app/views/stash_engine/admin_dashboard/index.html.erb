@@ -51,7 +51,7 @@
   }
   const fieldsHelp = (e) => {
     e.preventDefault()
-    document.getElementById('edit_fields-form').classList.toggle('show-help')
+    e.target.parentElement.nextElementSibling.classList.toggle('show-help')
   }
   const formSubmit = () => {
     const params = new URL(window.location.href).searchParams

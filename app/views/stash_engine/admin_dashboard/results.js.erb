@@ -10,6 +10,8 @@ document.getElementById('save_buttons').innerHTML = "<%= escape_javascript(rende
 $('#search_form').html = "<%= escape_javascript(render(partial: 'search_form')) %>";
 document.getElementById('edit_fields-help').removeEventListener('click', fieldsHelp)
 document.getElementById('edit_fields-help').addEventListener('click', fieldsHelp)
+document.getElementById('edit_filters-help').removeEventListener('click', fieldsHelp)
+document.getElementById('edit_filters-help').addEventListener('click', fieldsHelp)
 document.querySelector('#search_form form').removeEventListener('submit', formSubmit)
 document.querySelector('#search_form form').addEventListener('submit', formSubmit)
 var form = document.querySelector('#search_form form')
