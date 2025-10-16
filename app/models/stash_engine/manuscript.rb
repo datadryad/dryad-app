@@ -18,6 +18,8 @@
 #
 module StashEngine
   class Manuscript < ApplicationRecord
+    include PublicationMixin
+
     self.table_name = 'stash_engine_manuscripts'
     belongs_to :journal
     belongs_to :identifier, optional: true
