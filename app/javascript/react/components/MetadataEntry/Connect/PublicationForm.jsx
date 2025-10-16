@@ -77,7 +77,7 @@ function PublicationForm({
         formRef.current.values.primary_article_doi = '';
         if (!connections.includes('manuscript')) unsetJournal();
       }
-      submitForm(formRef.current.values);
+      if (JSON.stringify(formRef.current.initialValues) !== JSON.stringify(formRef.current.values)) submitForm(formRef.current.values);
     }
   }, [current, hidden]);
 
