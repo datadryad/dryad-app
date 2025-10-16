@@ -90,8 +90,11 @@ Now edit the config/database.yml file to fill in the user and password you set a
 ### Solr
 Solr requires a Java runtime. Try *java -version* and if it says that "java can be found in the following packages" rather than giving you a version you probably need to install java with a command like *sudo apt-get install default-jre* .
 
-[See the SOLR cofiguration README for detailed SOLR install information](../config/solr_config/README.md)
+Solr has configured two different cores:
+* **dryad** - used for the main search interface ([install instructions](../config/solr_config/resources/README.md))
+* **rors** - used for indexing and searching ROR records ([install instructions](../config/solr_config/rors/README.md))
 
+To install Solr locally, you can use docker, follow the instructions in a Docker container see [docker installation instructions](./docker_solr.md).
 
 <br>Make sure Solr is working by going to  [http://localhost:8983](http://localhost:8983). You should see a Solr admin page.
 

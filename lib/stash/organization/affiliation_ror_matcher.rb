@@ -25,7 +25,7 @@ module Stash
         @updates_count += to_fix.count
         return unless perform_updates
 
-        aff_service.make_unique
+        aff_service.make_uniq
       end
 
       def update_affiliation_name(rep, ror)

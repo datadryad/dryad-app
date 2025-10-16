@@ -17,6 +17,7 @@ module StashEngine
   class RorOrg < ApplicationRecord
     self.table_name = 'stash_engine_ror_orgs'
     validates :ror_id, uniqueness: { case_sensitive: true }
+    include Stash::Indexer::RorIndexer
 
     ROR_MAX_RESULTS = 30
 
@@ -63,21 +64,21 @@ module StashEngine
       max_results = 10
       return [] unless query.present?
 
-      query = query.downcase
+      query = RSolr.solr_escape(query.downcase).gsub(' ', '\ ')
       # First, find matches at the beginning of the name string, and exact matches in the acronyms/aliases
-      resp = where("LOWER(name) LIKE ? OR JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-                   "#{query}%", query.to_s, query.to_s).limit(max_results)
-      results = resp.map do |r|
-        { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
+      resp = search('', fq: ["name:#{query}*", "aliases:#{query}", "acronyms:#{query}"], limit: max_results)
+      results = resp.dig('response', 'docs') || []
+      if results.any?
+        return results.map do |r|
+          { id: r['ror_id'], name: r['name'], country: r['country'], acronyms: r['acronyms'], aliases: r['aliases'] }
+        end
       end
 
-      return results if results.any?
-
       # If we don't have enough results, find matches at the beginning of the acronyms/aliases
-      resp = where("JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-                   "#{query}%", "#{query}%").limit(max_results)
-      resp.map do |r|
-        { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases }
+      resp = search('', fq: ["aliases:#{query}*", "acronyms:#{query}*"], limit: max_results)
+      results = resp.dig('response', 'docs') || []
+      results.map do |r|
+        { id: r['ror_id'], name: r['name'], country: r['country'], acronyms: r['acronyms'], aliases: r['aliases'] }
       end
     end
 
