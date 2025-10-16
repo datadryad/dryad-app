@@ -103,7 +103,10 @@ module StashEngine
       session[:admin_search_role] = params[:user_role] if params[:user_role].present?
       @user_role = current_user.roles.admin_roles.find_by(id: session[:admin_search_role]) || current_user.roles.admin_roles.first
       @role_object = @user_role.role_object
-      @tenant_limit = @role_object.is_a?(StashEngine::Tenant) ? policy_scope(StashEngine::Tenant) : StashEngine::Tenant.enabled
+      if @role_object.is_a?(StashEngine::Tenant)
+        tenant_limit = StashEngine::Tenant.enabled.joins(:tenant_ror_orgs).where(tenant_ror_orgs: { ror_id: @role_object.ror_ids }).distinct
+      end
+      @tenant_limit = tenant_limit || StashEngine::Tenant.enabled
       if @role_object.is_a?(StashEngine::JournalOrganization)
         sponsor_limit = [@role_object]
         sponsor_limit += @role_object.orgs_included if @role_object.orgs_included
