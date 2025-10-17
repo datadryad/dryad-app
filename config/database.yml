@@ -14,7 +14,7 @@ default: &default
   pool: 40
   timeout: 10000
   adapter: mysql2
-  database: dryad
+  database: dryad_prod
   host: <%= Rails.application.credentials[Rails.env.to_sym][:database_host] %>
   username: <%= Rails.application.credentials[Rails.env.to_sym][:database_username] %>
   password: <%= Rails.application.credentials[Rails.env.to_sym][:database_password] %>

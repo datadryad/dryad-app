@@ -7,6 +7,7 @@
 #  curation_end            :datetime
 #  curation_start          :datetime
 #  delete_calculation_date :datetime
+#  deleted_at              :datetime
 #  last_status_date        :datetime
 #  peer_review             :datetime
 #  processable_type        :string(191)
@@ -21,11 +22,13 @@
 #
 #  index_process_dates_on_processable_id_and_type               (processable_id,processable_type) UNIQUE
 #  index_stash_engine_process_dates_on_delete_calculation_date  (delete_calculation_date)
+#  index_stash_engine_process_dates_on_deleted_at               (deleted_at)
 #  index_stash_engine_process_dates_on_last_status_date         (last_status_date)
 #
 module StashEngine
   class ProcessDate < ApplicationRecord
     self.table_name = 'stash_engine_process_dates'
+    acts_as_paranoid
     has_paper_trail
 
     belongs_to :processable, polymorphic: true, optional: false
