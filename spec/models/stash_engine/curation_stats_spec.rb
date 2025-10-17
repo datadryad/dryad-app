@@ -95,14 +95,14 @@ module StashEngine
     end
 
     describe 'with deleted records' do
-      it 'does not fail if the resource was deleted' do
+      it 'counts deleted resource records' do
         CurationService.new(status: 'peer_review', resource: @res[0], user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
         res_new.resource_states.first.update(resource_state: 'submitted')
         CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
         res_new.delete
         stats = CurationStats.create(date: @day)
-        expect(stats.ppr_to_curation).to eq(0)
+        expect(stats.ppr_to_curation).to eq(1)
       end
 
       it 'does not fail if the resource was deleted' do
@@ -112,7 +112,7 @@ module StashEngine
         CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
         res_new.identifier.delete
         stats = CurationStats.create(date: @day)
-        expect(stats.ppr_to_curation).to eq(0)
+        expect(stats.ppr_to_curation).to eq(1)
       end
     end
 

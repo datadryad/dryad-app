@@ -30,9 +30,12 @@ module StashEngine
     # Associations
     # ------------------------------------------
     belongs_to :resource, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
-    belongs_to :resource_with_deleted, -> { with_deleted}, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
     belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
     belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id'
+
+    # same as above, but includes deleted records
+    belongs_to :resource_with_deleted, -> { with_deleted }, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
+    belongs_to :identifier_with_deleted, -> { with_deleted }, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
 
     # Explanation of statuses
     #  :in_progress <-- When the resource's current resource_state != 'submitted'
@@ -101,14 +104,14 @@ module StashEngine
       return '' unless status.present?
 
       case status
-      when 'error'
-        'Upload error'
-      when 'peer_review'
-        'Private for peer review'
-      when 'action_required'
-        'Action required'
-      else
-        status.humanize
+        when 'error'
+          'Upload error'
+        when 'peer_review'
+          'Private for peer review'
+        when 'action_required'
+          'Action required'
+        else
+          status.humanize
       end
     end
 
