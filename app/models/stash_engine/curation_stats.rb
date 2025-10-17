@@ -85,14 +85,26 @@ module StashEngine
       curr_status
     end
 
-    def status_on_date(identifier_id)
-      latest_per_identifier = StashEngine::CurationActivity.with_deleted.select('identifier_id, MAX(id) AS last_ca_id')
-        .where(created_at: LAUNCH_DATE..date.end_of_day, identifier_id: identifier_id)
-        .group('identifier_id')
-      ca_id = latest_per_identifier[0]&.last_ca_id
-      return if ca_id.nil?
+    def last_identifier_ca_id_per_day(identifier_ids)
+      query = StashEngine::CurationActivity.with_deleted.select('identifier_id, MAX(id) AS last_ca_id')
+        .where(created_at: LAUNCH_DATE..date.end_of_day)
+      query = query.where(identifier_id: identifier_ids) if identifier_ids.present?
+      query.group('identifier_id')
+    end
 
-      StashEngine::CurationActivity.with_deleted.find_by(id: ca_id)&.status
+    def status_on_date(identifier)
+      return nil if identifier.created_at > date + 1.day
+
+      data = last_identifier_ca_id_per_day(identifier.id)
+      mapping = data.map { |a| [a.identifier_id, a.last_ca_id] }.to_h
+
+      StashEngine::CurationActivity.with_deleted.find_by(id: mapping[identifier.id])&.status || 'in_progress'
+    end
+
+    def identifiers_with_status(identifiers, status)
+      StashEngine::CurationActivity
+        .joins("inner join (#{last_identifier_ca_id_per_day(identifiers).to_sql}) as latest on stash_engine_curation_activities.id=last_ca_id")
+        .where(status: status, created_at: LAUNCH_DATE..date.end_of_day)
     end
 
     def identifiers_status_on_date(identifier_id)
@@ -125,32 +137,30 @@ module StashEngine
     # The number of datasets available for curation on that day,
     # including any held over from before (either have status 'curation' or 'submitted')
     def populate_datasets_to_be_curated
-      datasets_found = 0
-      unclaimed = 0
 
       # for each dataset that was in the target status on the given day
-      # identifiers = StashEngine::Identifier.with_deleted.where(created_at: LAUNCH_DATE..(date + 1.day))
-      # identifier_statuses = status_on_date(ident)
-      StashEngine::Identifier.with_deleted.where(created_at: LAUNCH_DATE..(date + 1.day)).find_each do |ident|
-        # check the actual status on that date...if it was 'curation' or 'submitted', count it
-        status = status_on_date(ident)
-        next unless %w[submitted curation].include?(status)
+      identifiers = StashEngine::Identifier.with_deleted.where(created_at: LAUNCH_DATE..(date + 1.day)).select(:id)
+      activities_in_status = identifiers_with_status(identifiers, %w[submitted curation])
+      to_be_curated = activities_in_status.count
 
-        datasets_found += 1
-        next if status == 'curation'
+      # all submitted datasets
+      submitted_activities = identifiers_with_status(identifiers, 'submitted')
 
-        # count as unclaimed if
-        #  there is no activity for setting the curator
-        #  OR
-        #  the last activity for setting the curator is to unsigned
-        last_activity = ident.curation_activities.with_deleted.where(created_at: LAUNCH_DATE..(date + 1.day))
-          .where("note like 'Changing curator to%' OR note like 'System auto-assigned curator%'")
-          .order(id: :asc).last
+      # there is a curator assignment
+      with_assigned_curator_note = CurationActivity.with_deleted.select('identifier_id, MAX(id) AS last_ca_id')
+        .where(created_at: LAUNCH_DATE..(date + 1.day), identifier_id: submitted_activities.select(:identifier_id))
+        .where("note like 'Changing curator to%' OR note like 'System auto-assigned curator%'")
+        .group('identifier_id')
 
-        unclaimed += 1 if last_activity.nil? || last_activity.note.start_with?('Changing curator to unassigned')
-      end
-      update(datasets_to_be_curated: datasets_found)
-      update(datasets_unclaimed: unclaimed)
+      # with unassigned note
+      unassigned = StashEngine::CurationActivity
+        .joins("inner join (#{with_assigned_curator_note.to_sql}) as latest on stash_engine_curation_activities.id=last_ca_id")
+        .where(created_at: LAUNCH_DATE..date.end_of_day)
+        .where("note like 'Changing curator to unassigned%'")
+        .count
+
+      unclaimed = submitted_activities.count - with_assigned_curator_note.size.size + unassigned
+      update(datasets_to_be_curated: to_be_curated, datasets_unclaimed: unclaimed)
     end
 
     def populate_new_datasets
@@ -164,11 +174,11 @@ module StashEngine
       CurationActivity.with_deleted.where(created_at: date..(date + 1.day), status: %w[submitted]).find_each do |ca|
         next if ca.identifier_id.blank?
 
-        first_submission = StashEngine::Resource.with_deleted.find_by(identifier_id: ca.identifier_id).submitted.by_version.first
+        first_submission = StashEngine::Resource.with_deleted.where(identifier_id: ca.identifier_id)&.submitted&.by_version&.first
         next if first_submission.nil?
 
         # skip if the dataset was not first submitted on this date
-        process_date = StashEngine::ProcessDate.with_deleted.where(processable_type: 'StashEngine::Resource', processable_id: first_submission.id)
+        process_date = StashEngine::ProcessDate.with_deleted.find_by(processable_type: 'StashEngine::Resource', processable_id: first_submission.id)
         next unless process_date&.submitted&.to_date == date
 
         datasets_found.add(ca.identifier_id)

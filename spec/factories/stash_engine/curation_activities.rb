@@ -16,6 +16,7 @@
 # Indexes
 #
 #  index_stash_engine_curation_activities_on_deleted_at          (deleted_at)
+#  index_stash_engine_curation_activities_on_identifier_id       (identifier_id)
 #  index_stash_engine_curation_activities_on_resource_id_and_id  (resource_id,id)
 #
 FactoryBot.define do
