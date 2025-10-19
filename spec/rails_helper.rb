@@ -16,6 +16,10 @@ require 'capybara-screenshot/rspec'
 # Clear all of the screenshots from old tests
 Dir[Rails.root.join('tmp/capybara/*')].each { |f| File.delete(f) }
 
+# configure sidekiq behavior
+require 'sidekiq/testing'
+Sidekiq::Testing.fake! # fake is the default mode
+
 # Do not allow rack-attack to limit the rate of requests during testing
 Rack::Attack.enabled = false
 ActiveJob::Base.queue_adapter = :test

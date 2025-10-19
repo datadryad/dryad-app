@@ -19,7 +19,7 @@ module Stash
       # these are methods to help out for this class
       include Stash::ZenodoReplicate::CopierMixin
 
-      # This is just a convenience method for manually testing without going through delayed_job, but is useful
+      # This is just a convenience method for manually testing without going through Sidekiq, but is useful
       # as a utility manually submit and debug errors.
       # It adds all entries for submitting in the zenodo_copies table as needed, and resets if needed to test again.
       # Though the resource you're using should be submitted to the repo already

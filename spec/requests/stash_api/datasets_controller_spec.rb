@@ -12,7 +12,6 @@ module StashApi
     include Mocks::RSolr
     include Mocks::Stripe
     include Mocks::CurationActivity
-    include Mocks::Repository
     include Mocks::Salesforce
     include Mocks::Datacite
 
@@ -840,7 +839,6 @@ module StashApi
         # create a basic dataset to do updates to
         neuter_curation_callbacks!
         mock_aws!
-        # mock_repository!, currently this doesn't work right and submissions got put into threadpool background process anyway
         @meta = Fixtures::StashApi::Metadata.new
         @meta.make_minimal
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers

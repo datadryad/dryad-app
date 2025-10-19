@@ -282,6 +282,9 @@ defaults: &DEFAULTS
     - ["15240463-21c8-44f2-b9d1-d1b36ab2dcf7", "Sample Section"]
     - ["e51ba4cd-5b78-48f8-b240-f70e21de2f12", "Sample Suspension"]
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8983/solr/rors" %>
+  cache:
+    app_url: 'redis://localhost:6380/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 dev: &DEV
   <<: *DEFAULTS
@@ -313,6 +316,9 @@ dev: &DEV
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://18.236.111.137:8983/solr/rors" %>
+  cache:
+    app_url: 'redis://master.dev-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'
+    rack_attack_url: 'redis://master.rack-attack-cache.zkdynt.usw2.cache.amazonaws.com:6381/0'
 
 development:
   <<: *DEV
@@ -327,6 +333,9 @@ development:
     files: 100
     frictionless: 50_000_000
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8983/solr/rors" %>
+  cache:
+    app_url: 'redis://localhost:6380/0'
+    rack_attack_url: 'redis://localhost:6381/0'
 
 stage:
   <<: *DEFAULTS
@@ -350,6 +359,9 @@ stage:
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://34.215.143.38:8983/solr/rors" %>
+  cache:
+    app_url: 'redis://master.stage-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'
+    rack_attack_url: 'redis://master.rack-attack-cache.zkdynt.usw2.cache.amazonaws.com:6381/0'
 
 production:
   <<: *DEFAULTS
@@ -429,4 +441,8 @@ production:
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://35.91.212.8:8983/solr/rors" %>
+  cache:
+    app_url: 'redis://localhost:6380/0'
+    rack_attack_url: 'redis://localhost:6381/0'
+
 <% end %>

@@ -12,7 +12,6 @@ module StashApi
     include Mocks::RSolr
     include Mocks::Salesforce
     include Mocks::Stripe
-    include Mocks::Repository
     include Mocks::UrlUpload
     include Mocks::Datacite
 

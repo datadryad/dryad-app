@@ -1,3 +1,7 @@
+require "sidekiq/web" # require the web UI
+require "sidekiq_unique_jobs/web"
+require_relative '../lib/sidekiq_access_constraint'
+
 Rails.application.routes.draw do
   constraints(:host => /datadryad.com/) do
     match "/(*path)" => redirect {|params, req| "https://datadryad.org/#{params[:path]}"},  via: [:get, :post]
@@ -14,6 +18,10 @@ Rails.application.routes.draw do
   root to: 'stash_engine/pages#home'
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development? || Rails.env.dev?
+
+  constraints SidekiqAccessConstraint.new do
+    mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
+  end
 
   # this is a rack way of showing a 404 for some crazy old/speculative link that Google has stuck in its craw
   get '/search/facet/dc_creator_sm', to: proc { [410, {}, ['']] }
@@ -119,6 +127,7 @@ Rails.application.routes.draw do
       member do
         patch 'destroy_manifest' # destroy file from manifest method
         patch 'rename'
+        get 'admin_checks'
         get 'frictionless_report'
         get 'sd_report'
       end
@@ -393,6 +402,7 @@ Rails.application.routes.draw do
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
+    get 'contributors/award_details', to: 'contributors#award_details'
     post 'contributors/grouping', to: 'contributors#grouping'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'
@@ -551,9 +561,9 @@ Rails.application.routes.draw do
   get '/submission_process', to: redirect('/help/submission_steps/submission')
   get '/data_check_guide', to: redirect('/help/guides/data_check_alerts')
   get '/process', to: redirect('/help/submission_steps/publication')
-  get '/HumanSubjectsData.pdf', to: redirect('/help/guides/HumanSubjectsData.pdf')
-  get '/EndangeredSpeciesData.pdf', to: redirect('/help/guides/EndangeredSpeciesData.pdf')
-  get '/QuickstartGuideToDataSharing.pdf', to: redirect('/help/guides/QuickstartGuideToDataSharing.pdf')
+  get '/docs/HumanSubjectsData.pdf', to: redirect('/help/guides/HumanSubjectsData.pdf')
+  get '/docs/EndangeredSpeciesData.pdf', to: redirect('/help/guides/EndangeredSpeciesData.pdf')
+  get '/docs/QuickstartGuideToDataSharing.pdf', to: redirect('/help/guides/QuickstartGuideToDataSharing.pdf')
 
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad

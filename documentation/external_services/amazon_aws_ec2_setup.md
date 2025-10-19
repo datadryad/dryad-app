@@ -334,25 +334,42 @@ Set up shibboleth service provider
 See instructions in [the shibboleth directory](../shibboleth/README.md).
 
 
+Set up ElastiCache instances
+==================================
+
+This is needed for the following services:
+- Sidekiq
+- RackAttack
+
+See instructions in [here](./amazon_aws_elasticache_setup.md).
+
 Set up other system services
 ======================================
 
 Set up systemd services that need to remain running
-```
-sudo cp ~/dryad-app/documentation/external_services/delayed_job.service /etc/systemd/system/delayed_job.service
-sudo nano /etc/systemd/system/delayed_job.service #edit the file to include the correct rails environment
-sudo cp ~/dryad-app/documentation/external_services/status_updater.service /etc/systemd/system/status_updater.service
-sudo nano /etc/systemd/system/status_updater.service #edit the file to include the correct rails environment
 
+Create, enable and start [sidekiq.service](sidekiq.service)
+
+```aiignore
+# add service file and set the correct rails environment
+sudo nano /etc/systemd/system/sidekiq.service
+
+# enable and start sidekiq service
 sudo systemctl daemon-reload
-sudo systemctl start status_updater
-sudo systemctl enable status_updater
-sudo systemctl start delayed_job
-sudo systemctl enable delayed_job
-# check that they are running
-sudo systemctl status delayed_job
-sudo systemctl status status_updater
+sudo systemctl enable sidekiq
+sudo systemctl start sidekiq
+sudo systemctl status sidekiq
 ```
+
+Making sure that Sidekiq logs are synchronized with CloudWatch
+
+```aiignore
+cd ~/deploy/current/log/
+ln -s sidekiq.log crons/
+```
+
+Sidekiq UI can be accessed [here](http://localhost:3000/sidekiq) by any user with `superadmin` role.
+
 
 Set up crons
 ======================================
