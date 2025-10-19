@@ -113,15 +113,18 @@ module StashEngine
 
     def notification_date
       authorize %i[stash_engine admin_datasets]
-      notification_date = params[:notification_date].to_datetime
+      notification_date = params[:identifier][:notification_date].to_datetime
       return error_response('Date cannot be blank') if notification_date.blank?
 
       delete_calculation_date = notification_date - 1.month
       delete_calculation_date = notification_date - 6.months if @resource.current_curation_status == 'peer_review'
 
+      note = "Changed notification start date to #{formatted_date(delete_calculation_date)}. "
+      note += params[:identifier][:curation_activity][:note].to_s
+
       @curation_activity = CurationService.new(
         resource: @resource, user_id: current_user.id, status: @resource.last_curation_activity&.status,
-        note: "Changed notification start date to #{formatted_date(delete_calculation_date)}. #{params[:curation_activity][:note]}".html_safe
+        note: note.html_safe
       ).process
 
       @resource.process_date.update(delete_calculation_date: delete_calculation_date)
@@ -153,7 +156,7 @@ module StashEngine
     end
 
     def pub_dates
-      params[:resources].each do |r|
+      params[:identifier][:resources].each do |r|
         res = StashEngine::Resource.find(r[0])
         res.update(r[1].to_unsafe_h)
       end
