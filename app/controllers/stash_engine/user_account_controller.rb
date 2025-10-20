@@ -9,6 +9,7 @@ module StashEngine
 
     def edit
       return render(nothing: true, status: :unauthorized) unless current_user
+      return unless params[:email].squish.present?
 
       @email = params[:email].squish
       validated = current_user.email&.downcase == @email.downcase
