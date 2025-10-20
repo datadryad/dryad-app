@@ -126,6 +126,12 @@ module StashEngine
       other_user.api_application&.update(owner_id: id)
       other_user.admin_searches.update_all(user_id: id)
 
+      if orcid.present? && other_user.orcid.present?
+        removed = overwrite ? orcid : other_user.orcid
+        kept = overwrite ? other_user.orcid : orcid
+        StashEngine::Author.where(orcid: removed).update_all(orcid: kept)
+      end
+
       # merge in any special things updated in other user and prefer their details if set to overwrite
       return unless overwrite
 
