@@ -60,6 +60,7 @@ function FunderForm({
       setLoading(false);
     }).catch((err) => {
       [...document.querySelectorAll('.saving_text')].forEach((el) => el.setAttribute('hidden', true));
+      setLoading(false);
       Object.entries(err.response.data).forEach((e) => {
         formRef.current.setFieldError(e[0], e[1][0]);
       });
