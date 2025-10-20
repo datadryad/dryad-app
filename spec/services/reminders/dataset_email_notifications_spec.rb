@@ -170,8 +170,8 @@ module StashEngine
 
     describe 'withdrawn by curator resource notifications' do
       before do
-        create(:curation_activity, status: 'withdrawn', resource_id: resource.id, user_id: curator.id,
-                                   note: 'withdrawn by curator')
+        CurationService.new(status: 'withdrawn', resource_id: resource.id, user_id: curator.id,
+                            note: 'withdrawn by curator').process
         resource.current_resource_state.update(resource_state: 'processing')
       end
 

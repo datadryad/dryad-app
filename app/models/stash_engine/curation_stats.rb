@@ -329,7 +329,6 @@ module StashEngine
     end
 
     def populate_aar_size
-      in_status_on_date(status: 'action_required')
       update(aar_size: in_status_on_date(status: 'action_required'))
     end
 
