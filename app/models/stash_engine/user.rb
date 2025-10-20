@@ -129,7 +129,7 @@ module StashEngine
       if orcid.present? && other_user.orcid.present?
         removed = overwrite ? orcid : other_user.orcid
         kept = overwrite ? other_user.orcid : orcid
-        StashEngine::Author.where(orcid: removed).update_all(orcid: kept)
+        StashEngine::Author.where(author_orcid: removed).update_all(author_orcid: kept)
       end
 
       # merge in any special things updated in other user and prefer their details if set to overwrite
