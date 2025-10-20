@@ -10,18 +10,16 @@ module Stash
       before(:each) do
         mock_salesforce!
         @resource = create(:resource)
-        CurationService.new(resource: @resource, status: 'processing', created_at: 3.months.ago, set_updated_at: true).process
-        CurationService.new(resource: @resource, status: 'submitted', created_at: 3.months.ago, set_updated_at: true).process
-        CurationService.new(resource: @resource, status: 'submitted', note: 'Status change email sent to author', created_at: 3.months.ago, set_updated_at: true).process
-        CurationService.new(resource: @resource, status: 'curation', created_at: 3.months.ago, set_updated_at: true).process
+        create(:curation_activity, resource: @resource, status: 'processing', created_at: 3.months.ago, updated_at: 3.months.ago)
+        create(:curation_activity, resource: @resource, status: 'submitted', created_at: 3.months.ago, updated_at: 3.months.ago)
+        create(:curation_activity, resource: @resource, status: 'submitted', note: 'Status change email sent to author',
+                                   created_at: 3.months.ago, updated_at: 3.months.ago)
+        create(:curation_activity, resource: @resource, status: 'curation', created_at: 3.months.ago, updated_at: 3.months.ago)
       end
 
       it "gets the date for action required when it's latest state" do
         dt = 10.weeks.ago
-        saved_item = CurationService.new(resource: @resource, status: 'action_required', created_at: dt, set_updated_at: true).process
-
-        @resource.reload
-        pp @resource.curation_activities
+        saved_item = create(:curation_activity, resource: @resource, status: 'action_required', created_at: dt, updated_at: dt)
         items = Stash::ActionRequiredReminder.find_action_required_items
 
         expect(items.length).to eq(1)
@@ -29,11 +27,12 @@ module Stash
       end
 
       it "gets the date for action required when it's gone in and out of it before" do
-        CurationService.new(resource: @resource, status: 'action_required', note: 'poop', created_at: 12.weeks.ago, set_updated_at: true).process
-        CurationService.new(resource: @resource, status: 'curation', created_at: 12.weeks.ago, set_updated_at: true).process
+        create(:curation_activity, resource: @resource, status: 'action_required', note: 'poop', created_at: 12.weeks.ago,
+                                   updated_at: 12.weeks.ago)
+        create(:curation_activity, resource: @resource, status: 'curation', created_at: 12.weeks.ago, updated_at: 12.weeks.ago)
 
         dt = 10.weeks.ago
-        saved_item = CurationService.new(resource: @resource, status: 'action_required', created_at: dt, set_updated_at: true).process
+        saved_item = create(:curation_activity, resource: @resource, status: 'action_required', created_at: dt, updated_at: dt)
         items = Stash::ActionRequiredReminder.find_action_required_items
 
         expect(items.length).to eq(1)
@@ -41,9 +40,17 @@ module Stash
       end
 
       it 'gets multiple entries based on many notifications' do
-        saved_start = CurationService.new(resource: @resource, status: 'action_required', created_at: 10.weeks.ago, set_updated_at: true).process
-        saved_remind1 = CurationService.new(resource: @resource, status: 'action_required', note: 'CRON: mailed action required reminder 1', created_at: 8.weeks.ago, set_updated_at: true).process
-        saved_remind2 = CurationService.new(resource: @resource, status: 'action_required', note: 'CRON: mailed action required reminder 2', created_at: 6.weeks.ago, set_updated_at: true).process
+        saved_start = create(:curation_activity, resource: @resource, status: 'action_required', created_at: 10.weeks.ago,
+                                                 updated_at: 10.weeks.ago)
+
+        saved_remind1 = create(:curation_activity, resource: @resource, status: 'action_required',
+                                                   note: 'CRON: mailed action required reminder 1',
+                                                   created_at: 8.weeks.ago, updated_at: 8.weeks.ago)
+
+        saved_remind2 = create(:curation_activity, resource: @resource, status: 'action_required',
+                                                   note: 'CRON: mailed action required reminder 2',
+                                                   created_at: 6.weeks.ago, updated_at: 6.weeks.ago)
+
         items = Stash::ActionRequiredReminder.find_action_required_items
 
         expect(items.length).to eq(1)
@@ -53,11 +60,20 @@ module Stash
       end
 
       it 'ignores withdrawn as action required after 3rd reminder' do
-        CurationService.new(resource: @resource, status: 'action_required', created_at: 10.weeks.ago, set_updated_at: true).process
-        CurationService.new(resource: @resource, status: 'action_required', note: 'CRON: mailed action required reminder 1', created_at: 8.weeks.ago, set_updated_at: true).process
-        CurationService.new(resource: @resource, status: 'action_required', note: 'CRON: mailed action required reminder 2', created_at: 6.weeks.ago, set_updated_at: true).process
-        CurationService.new(resource: @resource, status: 'action_required', note: 'CRON: mailed action required reminder 3', created_at: 4.weeks.ago, set_updated_at: true).process
-        CurationService.new(resource: @resource, status: 'withdrawn', note: 'withdrawing for action required', created_at: 13.days.ago, set_updated_at: true).process
+        create(:curation_activity, resource: @resource, status: 'action_required', created_at: 10.weeks.ago,
+                                   updated_at: 10.weeks.ago)
+
+        create(:curation_activity, resource: @resource, status: 'action_required',
+                                   note: 'CRON: mailed action required reminder 1', created_at: 8.weeks.ago, updated_at: 8.weeks.ago)
+
+        create(:curation_activity, resource: @resource, status: 'action_required',
+                                   note: 'CRON: mailed action required reminder 2', created_at: 6.weeks.ago, updated_at: 6.weeks.ago)
+
+        create(:curation_activity, resource: @resource, status: 'action_required',
+                                   note: 'CRON: mailed action required reminder 3', created_at: 4.weeks.ago, updated_at: 4.weeks.ago)
+        create(:curation_activity, resource: @resource, status: 'withdrawn', note: 'withdrawing for action required',
+                                   created_at: 13.days.ago, updated_at: 13.days.ago)
+
         items = Stash::ActionRequiredReminder.find_action_required_items
 
         expect(items.length).to eq(0)

@@ -2,14 +2,13 @@ class CurationService
 
   # rubocop:disable Metrics/ParameterLists
   attr_reader :resource, :resource_id, :status, :user, :user_id, :note, :options
-  def initialize(status:, resource: nil, resource_id: nil, user: nil, user_id: nil, note: nil, options: nil, created_at: nil, set_updated_at: false)
+  def initialize(status:, resource: nil, resource_id: nil, user: nil, user_id: nil, note: nil, options: nil, created_at: nil)
     # rubocop:enable Metrics/ParameterLists
     @resource = resource || StashEngine::Resource.find_by(id: resource_id)
     @status = status
     @user = user.presence || StashEngine::User.find_by(id: user_id).presence || StashEngine::User.system_user
     @note = note
     @options = options
-    @set_updated_at = set_updated_at
     @activity = StashEngine::CurationActivity.new(
       resource: @resource, status: @status, user: @user, note: @note,
       identifier_id: @resource.identifier_id, created_at: created_at || Time.now.utc
@@ -33,8 +32,7 @@ class CurationService
     end
 
     @resource.identifier.reload
-    @activity.update_column(:updated_at, @activity.created_at) if @set_updated_at
-    @activity.reload
+    @activity
   end
 
   private

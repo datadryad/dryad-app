@@ -212,7 +212,8 @@ module StashEngine
 
         # NO -- system auto-assigns a curator
         CurationService.new(status: :curation, resource: @res[4], user: @curator, created_at: @day).process
-        CurationService.new(status: :curation, resource: @res[4], note: 'System auto-assigned curator Any Name.', user: @curator, created_at: @day).process
+        CurationService.new(status: :curation, resource: @res[4], note: 'System auto-assigned curator Any Name.', user: @curator,
+                            created_at: @day).process
         CurationService.new(status: :curation, resource: @res[4], user: @curator, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_unclaimed).to eq(0)
