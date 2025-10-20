@@ -8,7 +8,6 @@ require 'cgi'
 module StashApi
   RSpec.describe SensitiveDataReportsController, type: :request do
     include Mocks::CurationActivity
-    include Mocks::Repository
     include Mocks::Salesforce
 
     # set up some versions with different curation statuses (visibility)

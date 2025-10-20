@@ -47,7 +47,7 @@ module StashDatacite
       end
 
       def changelog
-        @changelog ||= @resource.descriptions.where(description_type: :changelog).first
+        @changelog ||= @resource.descriptions.where(description_type: :changelog).first&.description
       end
 
       def subjects

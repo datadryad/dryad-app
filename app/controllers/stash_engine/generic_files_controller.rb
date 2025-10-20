@@ -5,7 +5,7 @@ module StashEngine
   class GenericFilesController < ApplicationController
 
     before_action :setup_class_info, :require_login
-    before_action :set_file_info, only: %i[destroy_manifest frictionless_report sd_report rename]
+    before_action :set_file_info, only: %i[destroy_manifest admin_checks frictionless_report sd_report rename]
     before_action :ajax_require_modifiable, only: %i[destroy_manifest rename validate_urls presign_upload upload_complete]
     protect_from_forgery except: %i[frictionless_report sd_report]
 
@@ -99,6 +99,10 @@ module StashEngine
       render json: files.as_json(
         methods: %i[type uploaded], include: { frictionless_report: { only: %i[report status] } }
       )
+    end
+
+    def admin_checks
+      respond_to(&:js)
     end
 
     def frictionless_report

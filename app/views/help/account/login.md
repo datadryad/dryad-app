@@ -16,6 +16,10 @@ ORCIDs are meant to be unique per individual. If you have multiple ORCIDs, log i
 
 If you have multiple Dryad accounts due to having multiple ORCIDs, after having your duplicate ORCIDs removed, please [contact our help desk](/help/contact) to have your Dryad accounts merged.
 
+### Other duplicate accounts
+
+Dryad had an email-based account system prior to 2020. If there are published Dryad datasets that you submitted before 2020, but are missing from your "My datasets" page, you may have one or more of these old logins. Older accounts can be merged into an ORCID-linked account to give you revision access to all of your datasets. If you believe you have accounts that should be merged, please [contact our help desk](/help/contact) with your current ORCID and your missing dataset DOIs.
+
 ## Institutional sponsorship
 
 Dryad has publishing and institutional partners that sponsor the [cost of publishing data](/help/requirements/costs) for authors. Our institutional partners require their sponsored authors to authenticate with their systems or through a valid institutional email address. This can be done during account creation, and institutional partner sponsorship can be changed at any time from the [My account](/account) page.

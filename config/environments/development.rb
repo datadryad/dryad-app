@@ -54,10 +54,13 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  ac = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'app_config.yml'))).result, aliases: true, permitted_classes: [Date])[Rails.env]
+
   # Do not email users
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.perform_deliveries = true
+  config.cache_store = :redis_cache_store, { url: ac['cache']['app_url'] }
 
   Rails.application.default_url_options = { host: 'localhost', port: 3000}
   Rack::Attack.enabled = false

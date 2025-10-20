@@ -40,8 +40,6 @@ module Dash2
     config.active_record.default_timezone = :utc
     config.active_support.to_time_preserves_timezone = :zone
 
-    config.active_job.queue_adapter = :delayed_job
-
     # Do not compare the origin of HTTP requests with the current state of the request.
     # Our Apache config changes HTTPS to HTTP when contacting Passenger, so the origin
     # will not be the same.
@@ -50,9 +48,5 @@ module Dash2
     # ryan used this in some manuscript parsing and gem updates break it.  See
     # https://stackoverflow.com/questions/72970170/upgrading-to-rails-6-1-6-1-causes-psychdisallowedclass-tried-to-load-unspecif
     config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess]
-
-    config.after_initialize do
-      StashEngine.repository
-    end
   end
 end

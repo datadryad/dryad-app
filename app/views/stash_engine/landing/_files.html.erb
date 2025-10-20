@@ -34,7 +34,7 @@
               <span>
                 <%= download_file_name_link(fu, params) %>
                 <% if @user_type == 'privileged' && current_user.min_admin? %>
-                  <%= render partial: 'file_admin_checks', locals: { file: fu } %>
+                  <span class="input-line" id="file_admin_check<%= fu.id %>" style="margin-left: auto" data-load="/data_files/<%= fu.id %>/admin_checks.js" aria-live="polite" aria-busy="true"></span>
                 <% end %>
                 <div style="min-width: 80px; text-align: center;">
                   <% unless fu.preview_type.nil? %>

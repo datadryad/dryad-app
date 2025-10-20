@@ -17,7 +17,7 @@ describe 'dev_ops:retry_zenodo_errors', type: :task do
       ident2 = create(:identifier)
       @zc1 = create(:zenodo_copy, state: 'error', retries: 5, identifier_id: ident.id)
       @zc2 = create(:zenodo_copy, state: 'error', retries: 0, identifier_id: ident2.id)
-      allow(StashEngine::ZenodoCopyJob).to receive(:perform_later).and_return(nil)
+      allow(StashEngine::ZenodoCopyJob).to receive(:perform_async).and_return(nil)
     end
 
     it 'only processes ones with less than 4 retries (zenodo_copy)' do

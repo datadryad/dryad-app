@@ -103,7 +103,10 @@ module StashEngine
       session[:admin_search_role] = params[:user_role] if params[:user_role].present?
       @user_role = current_user.roles.admin_roles.find_by(id: session[:admin_search_role]) || current_user.roles.admin_roles.first
       @role_object = @user_role.role_object
-      @tenant_limit = @role_object.is_a?(StashEngine::Tenant) ? policy_scope(StashEngine::Tenant) : StashEngine::Tenant.enabled
+      if @role_object.is_a?(StashEngine::Tenant)
+        tenant_limit = StashEngine::Tenant.enabled.joins(:tenant_ror_orgs).where(tenant_ror_orgs: { ror_id: @role_object.ror_ids }).distinct
+      end
+      @tenant_limit = tenant_limit || StashEngine::Tenant.enabled
       if @role_object.is_a?(StashEngine::JournalOrganization)
         sponsor_limit = [@role_object]
         sponsor_limit += @role_object.orgs_included if @role_object.orgs_included
@@ -366,12 +369,12 @@ module StashEngine
       @resource = authorize @identifier.latest_resource, :curate?
       @field = params[:field]
       @last_state = @resource.last_curation_activity.status
-      @status = params.dig(:curation_activity, :status).presence || @last_state
+      @status = params.dig(:stash_engine_resource, :curation_activity, :status).presence || @last_state
     end
 
     def curation_activity_change
       return publishing_error if @resource.id != @identifier.last_submitted_resource&.id &&
-        %w[embargoed published].include?(params.dig(:curation_activity, :status))
+        %w[embargoed published].include?(params.dig(:stash_engine_resource, :curation_activity, :status))
 
       return state_error unless CurationActivity.allowed_states(@last_state, current_user).include?(@status)
 
@@ -379,7 +382,7 @@ module StashEngine
         release_resource(@resource)
       else
         decipher_curation_activity
-        @note = params.dig(:curation_activity, :note)
+        @note = params.dig(:stash_engine_resource, :curation_activity, :note)
         @resource.publication_date = @pub_date
         if @status == 'curation'
           @resource.user_id = current_user.id
@@ -393,7 +396,7 @@ module StashEngine
     end
 
     def decipher_curation_activity
-      @pub_date = params[:publication_date]
+      @pub_date = params[:stash_engine_resource][:publication_date]
       case @status
       when 'published'
         publish
@@ -442,7 +445,7 @@ module StashEngine
     end
 
     def curator_change
-      curator_id = params.dig(:curator, :id)
+      curator_id = params.dig(:stash_engine_resource, :curator, :id)
       if curator_id&.to_i == 0
         @resource.update(user_id: nil)
         @status = 'submitted' if @resource.current_curation_status == 'curation'
@@ -451,7 +454,7 @@ module StashEngine
         @resource.update(user_id: curator_id)
         @curator_name = StashEngine::User.find(curator_id)&.name
       end
-      @note = "Changing curator to #{@curator_name.presence || 'unassigned'}. " + params.dig(:curation_activity, :note)
+      @note = "Changing curator to #{@curator_name.presence || 'unassigned'}. " + params.dig(:stash_engine_resource, :curation_activity, :note)
       CurationService.new(resource: @resource, user_id: current_user.id, status: @status, note: @note).process
     end
 

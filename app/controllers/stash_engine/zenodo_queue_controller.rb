@@ -38,7 +38,7 @@ module StashEngine
       authorize %i[stash_engine zenodo_copy]
       @zenodo_copy = ZenodoCopy.find(params[:id])
 
-      @delayed_jobs = running_jobs(@zenodo_copy)
+      @jobs = running_jobs(@zenodo_copy)
     end
 
     def identifier_details
@@ -95,11 +95,11 @@ module StashEngine
     # pass in the zenodo copy
     def running_jobs(zc)
       if zc.copy_type.include?('software')
-        Delayed::Job.where('handler LIKE ?', "%- #{zc.id}%").where(queue: 'zenodo_software')
+        jobs_by_queue_and_args('zenodo_software', [zc.id])
       elsif zc.copy_type.include?('supp')
-        Delayed::Job.where('handler LIKE ?', "%- #{zc.id}%").where(queue: 'zenodo_supp')
+        jobs_by_queue_and_args('zenodo_supp', [zc.id])
       else
-        Delayed::Job.where('handler LIKE ?', "%- #{zc.resource_id}%").where(queue: 'zenodo_copy')
+        jobs_by_queue_and_args('zenodo_copy', [zc.resource_id])
       end
     end
 
@@ -107,11 +107,18 @@ module StashEngine
     def resend_job
       @zenodo_copy.update(state: 'enqueued')
       if @zenodo_copy.copy_type.include?('software')
-        ZenodoSoftwareJob.perform_later(@zenodo_copy.id)
+        ZenodoSoftwareJob.perform_async(@zenodo_copy.id)
       elsif @zenodo_copy.copy_type.include?('supp')
-        ZenodoSuppJob.perform_later(@zenodo_copy.id)
+        ZenodoSuppJob.perform_async(@zenodo_copy.id)
       else
-        ZenodoCopyJob.perform_later(@zenodo_copy.resource_id)
+        ZenodoCopyJob.perform_async(@zenodo_copy.resource_id)
+      end
+    end
+
+    def jobs_by_queue_and_args(queue_name, args)
+      queue = Sidekiq::Queue.new(queue_name)
+      queue.select do |job|
+        job.args == args
       end
     end
   end
