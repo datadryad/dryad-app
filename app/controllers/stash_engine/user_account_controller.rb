@@ -9,13 +9,12 @@ module StashEngine
 
     def edit
       return render(nothing: true, status: :unauthorized) unless current_user
-      return unless params[:email].squish.present?
 
       @email = params[:email].squish
       validated = current_user.email&.downcase == @email.downcase
       @existing_user = StashEngine::User.find_by(email: @email)
       # rubocop:disable Style/GuardClause
-      if !validated && @existing_user.present?
+      if @email.present? && !validated && @existing_user.present?
         if @existing_user.orcid.blank? && @existing_user.resources.empty?
           current_user.merge_user!(other_user: @existing_user, overwrite: false)
           @existing_user.destroy
