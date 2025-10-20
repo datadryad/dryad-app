@@ -32,6 +32,8 @@ else
   "https://#{Rails.application.default_url_options[:host]}".freeze
 end
 
+SUBMISSION_REDIS_KEY = 'resource:%{resource.id}:remaining_files'.freeze
+
 HELP_PAGES_ACCOUNT = [
   { path: '/help/account/login', name: 'Creating a Dryad account'},
   { path: '/help/account/management', name: 'Managing my account'}
