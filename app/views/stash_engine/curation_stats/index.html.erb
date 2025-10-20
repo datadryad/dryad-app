@@ -4,7 +4,7 @@
   <div style="display: flex; gap: 4ch; margin: 0; align-items: center;">
     <div class="callout alt" style="padding: 1ch">Current queue size:
       <b><%= @admin_stats.datasets_available_for_curation %></b></div>
-    <div class="callout" style="padding: 1ch">Unassigned: <b><%= @admin_stats.datasets_submitted_unclaimed_count %></b>
+    <div class="callout" style="padding: 1ch">Current unassigned: <b><%= @admin_stats.datasets_submitted_unclaimed_count %></b>
     </div>
   </div>
 </div>
@@ -19,7 +19,7 @@
         <th title="End of the date range for the activity">Date</th>
         <th title="The number of records created on that day">Created</th>
         <th title="The number of datasets available for curation on that day ('curation' or 'submitted')">Queue size</th>
-        <th title="The number of datasets unclaimed for curation on that day ('submitted' with no curator)">Unclaimed</th>
+        <th title="The number of datasets unclaimed for curation on that day ('submitted' with no curator)">Unassigned</th>
         <th title="The number of new datasets submitted that day (so the first time we see them as 'submitted' in the system)">New to queue</th>
         <th title="The number of new Private for Peer Review submissions that day (so the first time we see them as 'peer_review' in the system)">New to PPR</th>
         <th title="Count of datasets released from PPR (status change to 'submitted', and had previously been in PPR with no intervening 'curation')">PPR to queue</th>
