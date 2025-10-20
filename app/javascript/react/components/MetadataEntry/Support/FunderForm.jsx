@@ -11,6 +11,7 @@ function FunderForm({
   const formRef = useRef();
   const [acText, setAcText] = useState(contributor.contributor_name || '');
   const [acID, setAcID] = useState(contributor.name_identifier_id || '');
+  const [loading, setLoading] = useState(false);
   const [showSelect, setShowSelect] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -31,6 +32,7 @@ function FunderForm({
 
   const submitForm = (values) => {
     showSavingMsg();
+    setLoading(true);
     const submitVals = {
       authenticity_token,
       contributor: {
@@ -55,6 +57,7 @@ function FunderForm({
     ).then((data) => {
       updateFunder(data.data);
       showSavedMsg();
+      setLoading(false);
     }).catch((err) => {
       [...document.querySelectorAll('.saving_text')].forEach((el) => el.setAttribute('hidden', true));
       Object.entries(err.response.data).forEach((e) => {
@@ -165,6 +168,7 @@ function FunderForm({
               aria-invalid={!!formik.errors.award_title || null}
               aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
+              disabled={loading || null}
             />
             <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the grant awarded</div>
           </div>
