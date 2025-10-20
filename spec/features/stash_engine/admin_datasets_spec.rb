@@ -15,7 +15,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       create(:tenant)
       @user = create(:user, tenant_id: 'ucop')
       @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
-      create(:curation_activity, status: 'curation', user_id: @user.id, resource_id: @resource.id)
+      CurationService.new(status: 'curation', resource: @resource, user_id: @user.id).process
       @resource.resource_states.first.update(resource_state: 'submitted')
       @resource.identifier.update(issues: [1234])
       sign_in(create(:user, role: 'curator'))
@@ -36,9 +36,11 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
     end
 
     it 'renders salesforce links in notes field' do
-      @curation_activity = create(:curation_activity, note: 'Not a valid SF link', resource: @resource)
-      @curation_activity = create(:curation_activity, note: 'SF #0001 does not exist', resource: @resource)
-      @curation_activity = create(:curation_activity, note: 'SF #0002 should exist', resource: @resource)
+
+      CurationService.new(status: 'in_progress', resource: @resource, note: 'Not a valid SF link').process
+      CurationService.new(status: 'in_progress', resource: @resource, note: 'SF #0001 does not exist').process
+      CurationService.new(status: 'in_progress', resource: @resource, note: 'SF #0002 should exist').process
+
       find('a[title="Activity log"]').click
       within(:css, '#activity_log_table tbody:last-child') do
         find('button[aria-label="Curation activity"]').click
@@ -161,7 +163,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       end
 
       it 'changes delete reference date' do
-        create(:curation_activity, status: 'action_required', user_id: @user.id, resource_id: @resource.id)
+        CurationService.new(status: 'action_required', user_id: @user.id, resource_id: @resource.id).process
         refresh
         within(:css, '#activity_log_table tbody:last-child') do
           find('button[aria-label="Curation activity"]').click

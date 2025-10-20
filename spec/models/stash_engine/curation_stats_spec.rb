@@ -105,7 +105,7 @@ module StashEngine
         expect(stats.ppr_to_curation).to eq(1)
       end
 
-      it 'does not fail if the resource was deleted' do
+      it 'counts deleted identifier records' do
         CurationService.new(status: 'peer_review', resource: @res[0], user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
         res_new.resource_states.first.update(resource_state: 'submitted')

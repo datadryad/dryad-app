@@ -5,6 +5,7 @@ module StashEngine
     include Mocks::Salesforce
     include Mocks::Aws
     include Mocks::RSolr
+    include Mocks::Datacite
 
     attr_reader :user
     attr_reader :skip_emails
@@ -402,7 +403,7 @@ module StashEngine
 
       it 'returns false if not successfully in Merritt' do
         @merritt_state.update(resource_state: 'in_progress')
-        @resource.curation_activities << CurationActivity.new(status: 'published')
+        CurationService.new(status: 'published', resource: @resource).process
         @resource.reload
         user2 = create(:user, tenant_id: 'ucop', first_name: 'Gopher', last_name: 'Jones', role: 'superuser')
         expect(@resource.may_download?(ui_user: user2)).to be false
@@ -657,6 +658,8 @@ module StashEngine
 
     describe 'self.need_publishing' do
       before(:each) do
+        mock_datacite!
+
         Timecop.travel(Time.now.utc - 3.minutes)
         @identifier = create(:identifier)
         @resources = []
@@ -667,8 +670,8 @@ module StashEngine
           res = create(:resource, publication_date: Time.new - 1.day, identifier_id: @identifier.id)
           res.current_resource_state.update(resource_state: 'submitted')
           @curation_activities << [
-            CurationActivity.create(status: 'submitted', resource_id: res.id, user: @user),
-            CurationActivity.create(status: 'embargoed', resource_id: res.id, user: @user)
+            CurationService.new(status: 'submitted', user: @user, resource: res).process,
+            CurationService.new(status: 'embargoed', user: @user, resource: res).process
           ]
           @resources << res
         end
@@ -1407,7 +1410,7 @@ module StashEngine
         it 'is false even when current curation state is Submitted' do
           identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.999/999')
           resource = create(:resource, user_id: user.id, identifier_id: identifier.id)
-          CurationActivity.create(resource_id: resource.id, status: 'submitted')
+          CurationService.new(status: 'submitted', resource: resource).process
           resource.reload
           expect(resource.curatable?).to eql(false)
         end

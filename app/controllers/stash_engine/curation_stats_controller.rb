@@ -8,8 +8,7 @@ module StashEngine
 
     def index
       params.permit(:format)
-      # @current_stats = authorize CurationStats.where(date: 1.month.ago..Time.now.utc.to_date).order('date DESC')
-      @current_stats = authorize CurationStats.order('date DESC')
+      @current_stats = authorize CurationStats.where(date: 1.month.ago..Time.now.utc.to_date).order('date DESC')
 
       @admin_stats = authorize StashEngine::AdminDatasetsController::Stats.new, policy_class: CurationStatsPolicy
       @admin_stats_3day = authorize StashEngine::AdminDatasetsController::Stats.new(

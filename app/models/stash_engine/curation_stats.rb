@@ -27,6 +27,7 @@
 #  index_stash_engine_curation_stats_on_date  (date) UNIQUE
 #
 
+# rubocop:disable Metrics/ClassLength
 module StashEngine
   class CurationStats < ApplicationRecord
     self.table_name = 'stash_engine_curation_stats'
@@ -73,18 +74,6 @@ module StashEngine
       populate_ppr_size
     end
 
-    def old_status_on_date(identifier)
-      return nil if identifier.created_at > date + 1.day
-
-      curr_status = 'in_progress'
-      identifier.curation_activities.with_deleted.where(created_at: LAUNCH_DATE..(date + 1.day)).each do |ca|
-        return curr_status if ca.created_at > date + 1.day
-
-        curr_status = ca.status
-      end
-      curr_status
-    end
-
     def last_identifier_ca_id_per_day(identifier_ids)
       query = StashEngine::CurationActivity.with_deleted.select('identifier_id, MAX(id) AS last_ca_id')
         .where(created_at: LAUNCH_DATE..date.end_of_day)
@@ -96,7 +85,7 @@ module StashEngine
       return nil if identifier.created_at > date + 1.day
 
       data = last_identifier_ca_id_per_day(identifier.id)
-      mapping = data.map { |a| [a.identifier_id, a.last_ca_id] }.to_h
+      mapping = data.to_h { |a| [a.identifier_id, a.last_ca_id] }
 
       StashEngine::CurationActivity.with_deleted.find_by(id: mapping[identifier.id])&.status || 'in_progress'
     end
@@ -135,7 +124,6 @@ module StashEngine
     # The number of datasets available for curation on that day,
     # including any held over from before (either have status 'curation' or 'submitted')
     def populate_datasets_to_be_curated
-
       # for each dataset that was in the target status on the given day
       identifiers = StashEngine::Identifier.with_deleted.where(created_at: LAUNCH_DATE..(date + 1.day)).select(:id)
       activities_in_status = identifiers_with_status(identifiers, %w[submitted curation])
@@ -351,3 +339,4 @@ module StashEngine
 
   end
 end
+# rubocop:enable Metrics/ClassLength
