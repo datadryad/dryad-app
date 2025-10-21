@@ -42,7 +42,7 @@ describe('FunderForm', () => {
     render(<FunderForm {...info} />);
 
     const labeledElements = screen.getAllByLabelText('Granting organization', {exact: false});
-    expect(labeledElements.length).toBe(4);
+    expect(labeledElements.length).toBe(3);
     expect(labeledElements[0]).toHaveAttribute('value', info.contributor.contributor_name);
 
     expect(screen.getByLabelText('Award number')).toHaveValue(info.contributor.award_number);
