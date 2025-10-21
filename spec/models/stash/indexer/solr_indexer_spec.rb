@@ -65,6 +65,24 @@ module Stash
         end
       end
 
+      describe 'destroy_document' do
+        it 'returns true if a correct response is returned by SOLR' do
+          allow(@my_indexer.solr).to receive(:delete_by_id).and_return('responseHeader' => { 'status' => 0 })
+          allow(@my_indexer.solr).to receive(:commit).and_return(true)
+          expect(@my_indexer.delete_document(doi: '')).to be(true)
+        end
+
+        it 'returns false if there is a bad response' do
+          allow(@my_indexer.solr).to receive(:delete_by_id).and_return('responseHeader' => { 'status' => 666 })
+          allow(@my_indexer.solr).to receive(:commit).and_return(true)
+          expect(@my_indexer.delete_document(doi: '')).to be(false)
+        end
+
+        it 'returns false if there is a standard exception' do
+          allow(@my_indexer.solr).to receive(:delete_by_id).and_raise(Net::HTTPGatewayTimeOut)
+          expect(@my_indexer.delete_document(doi: '')).to be(false)
+        end
+      end
     end
   end
 end

@@ -9,12 +9,15 @@ function FunderForm({
   current, resourceId, contributor, updateFunder,
 }) {
   const formRef = useRef();
-  const [acText, setAcText] = useState(contributor.contributor_name || '');
-  const [acID, setAcID] = useState(contributor.name_identifier_id || '');
+  const [acText, setAcText] = useState('');
+  const [acID, setAcID] = useState('');
+  const [loading, setLoading] = useState(false);
   const [showSelect, setShowSelect] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const setValues = () => ({
+    contributor_name: (contributor.contributor_name || ''),
+    name_identifier_id: (contributor.name_identifier_id || ''),
     award_description: (contributor.award_description || ''),
     award_title: (contributor.award_title || ''),
     award_number: (contributor.award_number || ''),
@@ -31,14 +34,15 @@ function FunderForm({
 
   const submitForm = (values) => {
     showSavingMsg();
+    setLoading(true);
     const submitVals = {
       authenticity_token,
       contributor: {
         id: values.id,
-        contributor_name: acText,
+        contributor_name: values.contributor_name,
         contributor_type: 'funder',
         identifier_type: acID.includes('ror.org') ? 'ror' : 'crossref_funder_id',
-        name_identifier_id: acID,
+        name_identifier_id: values.name_identifier_id,
         award_number: values.award_number,
         award_description: values.award_description,
         award_title: values.award_title,
@@ -55,8 +59,10 @@ function FunderForm({
     ).then((data) => {
       updateFunder(data.data);
       showSavedMsg();
+      setLoading(false);
     }).catch((err) => {
       [...document.querySelectorAll('.saving_text')].forEach((el) => el.setAttribute('hidden', true));
+      setLoading(false);
       Object.entries(err.response.data).forEach((e) => {
         formRef.current.setFieldError(e[0], e[1][0]);
       });
@@ -65,7 +71,9 @@ function FunderForm({
 
   useEffect(() => {
     formRef.current?.resetForm({values: setValues()});
-  }, [current]);
+    setAcText(contributor.contributor_name || '');
+    setAcID(contributor.name_identifier_id || '');
+  }, [current, contributor.award_number]);
 
   useEffect(() => {
     async function getGroup() {
@@ -95,9 +103,15 @@ function FunderForm({
             <RorAutocomplete
               formRef={formRef}
               acText={acText}
-              setAcText={setAcText}
+              setAcText={(v) => {
+                formRef.current.values.contributor_name = v;
+                setAcText(v);
+              }}
               acID={acID}
-              setAcID={setAcID}
+              setAcID={(v) => {
+                formRef.current.values.name_identifier_id = v;
+                setAcID(v);
+              }}
               controlOptions={
                 {
                   htmlId: `contrib_${contributor.id}`,
@@ -165,6 +179,7 @@ function FunderForm({
               aria-invalid={!!formik.errors.award_title || null}
               aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
+              disabled={loading || null}
             />
             <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the grant awarded</div>
           </div>

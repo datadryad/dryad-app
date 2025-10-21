@@ -22,7 +22,7 @@
       <%= form.date_field :publication_date, class: 'c-input__text' %>
     </div>
   <% when 'curator' %>
-    <p>Change curator for <em><%= @resource.title.html_safe %></em></p>
+    <p>Change curator for <em><%= @resource.title&.html_safe %></em></p>
     <%= hidden_field_tag :identifier_id, @resource.identifier_id %>
     <%= form.fields_for :curator, @resource.curator do |r| %>
       <div class="c-input">

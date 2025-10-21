@@ -1,4 +1,4 @@
-# Transitioning CrossRef funders to ROR
+# Transitioning Crossref funders to ROR
 
 ## task to add NIH grouping for ROR
 
@@ -6,7 +6,7 @@
 RAILS_ENV=development bundle exec rails affiliation_import:populate_nih_ror_group
 ```
 
-## task to re-import the latest CrossRef to ROR mapping data
+## task to re-import the latest Crossref to ROR mapping data
 
 Truncate the table to remove all current entries. The table is called `stash_engine_xref_funder_to_rors`.
 You can download the latest ROR exports at https://doi.org/10.5281/zenodo.6347574 .
@@ -31,7 +31,7 @@ Delete table if it exists already dcs_contributors_fundref_backup
 CREATE TABLE dcs_contributors_fundref_backup AS SELECT * FROM dcs_contributors;
 ```
 
-## Query to update CrossRef Funder data to ROR
+## Query to update Crossref Funder data to ROR
 
 You can see what identifier ids wouldn't be converted. There are around ~1100 of these.
 ```sql

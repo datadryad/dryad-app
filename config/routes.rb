@@ -402,7 +402,6 @@ Rails.application.routes.draw do
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
-    get 'contributors/award_details', to: 'contributors#award_details'
     post 'contributors/grouping', to: 'contributors#grouping'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'

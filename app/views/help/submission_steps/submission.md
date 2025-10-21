@@ -27,13 +27,6 @@ Data may be submitted and published at any time. However, if your data are assoc
 * Regardless of journal, you may choose to make your data temporarily [Private for Peer Review](#private-for-peer-review).
 
 
-## Login
-
-Dryad requires an [ORCID iD](https://orcid.org) for login. If you do not have an ORCID, you will have the opportunity to create a free, unique identifier for yourself at the login page. Dryad uses ORCID so that we can authenticate and identify each individual researcher regardless of your route of entry to Dryad (i.e. through the website, through the API, through a journal integration, etc.). When datasets are published, they should appear in your ORCID profile along with articles and other works.
-
-For institutional partners, we require a second form of authentication at login. After you have logged in with your institutional credentials, Dryad ties together your ORCID and institutional affiliation so that you will not have to include this information a second time. Properly verifying your institutional affiliation is essential for recognition of institutional sponsorship of the [Data Publishing Charge](/help/requirements/costs).
-
-
 ## Create your submission
 
 ### Describe your dataset

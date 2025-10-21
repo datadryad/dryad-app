@@ -1248,7 +1248,7 @@ namespace :identifiers do
 
   desc 'populate publicationName'
   task load_publication_names: :environment do
-    log "Searching CrossRef and the Journal API for publication names: #{Time.now.utc}"
+    log "Searching Crossref and the Journal API for publication names: #{Time.now.utc}"
     unique_issns = {}
     StashEngine::Identifier.joins(latest_resource: :resource_publication).where(resource_publication: { publication_name: nil })
       .where.not(resource_publication: { publication_issn: nil }).each do |datum|
