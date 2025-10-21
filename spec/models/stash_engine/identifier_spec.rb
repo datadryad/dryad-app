@@ -232,7 +232,7 @@ module StashEngine
           end
 
           it 'gives no approval_date for unpublished items' do
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
+            CurationService.new(status: 'curation', user: @user, resource: @res1, created_at: '2000-01-01').process
             expect(@identifier.approval_date).to eq(nil)
           end
         end
@@ -247,7 +247,7 @@ module StashEngine
           end
 
           it 'gives no curation_completed_date for items still in curation' do
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user, created_at: '2000-01-01')
+            CurationService.new(status: 'curation', user: @user, resource: @res1, created_at: '2000-01-01').process
             expect(@identifier.curation_completed_date).to eq(nil)
           end
         end
@@ -315,11 +315,11 @@ module StashEngine
           # published resources or not
 
           before(:each) do
-            @res1.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res1.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'curation', user: @user)
-            @res2.curation_activities << CurationActivity.create(status: 'published', user: @user)
-            @res3.curation_activities << CurationActivity.create(status: 'curation', user: @user)
+            CurationService.new(status: 'curation', user: @user, resource: @res1).process
+            CurationService.new(status: 'published', user: @user, resource: @res1).process
+            CurationService.new(status: 'curation', user: @user, resource: @res2).process
+            CurationService.new(status: 'published', user: @user, resource: @res2).process
+            CurationService.new(status: 'curation', user: @user, resource: @res3).process
           end
 
           it 'returns the latest published for nil user' do
@@ -650,19 +650,19 @@ module StashEngine
 
       it 'detects withdrawn state' do
         res = @identifier.resources.last
-        res.curation_activities << CurationActivity.create(status: 'withdrawn', user: @user)
+        CurationService.new(status: 'withdrawn', user: @user, resource: res).process
         expect(@identifier.calculated_pub_state).to eq('withdrawn')
       end
 
       it 'detects last published state' do
         resources = @identifier.resources
-        resources[1].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        CurationService.new(status: 'published', user: @user, resource: resources[1]).process
         expect(@identifier.calculated_pub_state).to eq('published')
       end
 
       it 'detects last embargoed state' do
         resources = @identifier.resources
-        resources[0].curation_activities << CurationActivity.create(status: 'embargoed', user: @user)
+        CurationService.new(status: 'embargoed', user: @user, resource: resources[0]).process
         expect(@identifier.calculated_pub_state).to eq('embargoed')
       end
 
@@ -726,8 +726,8 @@ module StashEngine
 
       it 'sets the file view when published and changed' do
         resources = @identifier.resources
-        resources[1].curation_activities << CurationActivity.create(status: 'published', user: @user)
-        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        CurationService.new(status: 'published', user: @user, resource: resources[1]).process
+        CurationService.new(status: 'published', user: @user, resource: resources[2]).process
         @identifier.fill_resource_view_flags
         @identifier.reload
         expect(@identifier.resources[1].meta_view).to be(true)
@@ -738,8 +738,8 @@ module StashEngine
 
       it 'sets the file when published and changed 2' do
         resources = @identifier.resources
-        resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
-        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        CurationService.new(status: 'published', user: @user, resource: resources[0]).process
+        CurationService.new(status: 'published', user: @user, resource: resources[2]).process
 
         resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
 
@@ -757,8 +757,8 @@ module StashEngine
 
       it "doesn't set the file_view when published, but files are not changed between published versions" do
         resources = @identifier.resources
-        resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
-        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        CurationService.new(status: 'published', user: @user, resource: resources[0]).process
+        CurationService.new(status: 'published', user: @user, resource: resources[2]).process
 
         resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
         resources[1].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
@@ -779,8 +779,8 @@ module StashEngine
 
       it 'sets the file_view when published, but files are deleted' do
         resources = @identifier.resources
-        resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
-        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        CurationService.new(status: 'published', user: @user, resource: resources[0]).process
+        CurationService.new(status: 'published', user: @user, resource: resources[2]).process
 
         resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
         resources[1].data_files << DataFile.create(file_state: 'deleted', download_filename: 'fun.cat', upload_file_size: 666)
@@ -801,8 +801,8 @@ module StashEngine
 
       it 'sets the file_view when published, but files are mistaknely removed by user' do
         resources = @identifier.resources
-        resources[0].curation_activities << CurationActivity.create(status: 'published', user: @user)
-        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        CurationService.new(status: 'published', user: @user, resource: resources[0]).process
+        CurationService.new(status: 'published', user: @user, resource: resources[2]).process
 
         resources[0].data_files << DataFile.create(file_state: 'created', download_filename: 'fun.cat', upload_file_size: 666)
         resources[1].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
@@ -827,7 +827,7 @@ module StashEngine
 
       xit "detects we've disassociated version history with negative resource_ids" do
         resources = @identifier.resources
-        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        CurationService.new(status: 'published', user: @user, resource: resources[2]).process
 
         # this is how we bork things for curators to get the pretty views, I hope this doesn't last long
         resources[0].update(identifier_id: -resources[0].identifier_id)
@@ -840,8 +840,7 @@ module StashEngine
 
       xit "detects we've disassociated version history because nothing was ever changed (created/deleted), just copied from previous versions" do
         resources = @identifier.resources
-
-        resources[2].curation_activities << CurationActivity.create(status: 'published', user: @user)
+        CurationService.new(status: 'published', user: @user, resource: resources[2]).process
 
         resources[2].data_files << DataFile.create(file_state: 'copied', download_filename: 'fun.cat', upload_file_size: 666)
         resources[2].data_files.each { |fu| fu.update(file_state: 'copied') } # make them all copied, so invalid file history
