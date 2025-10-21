@@ -81,7 +81,7 @@ Datasets larger than 10GB are billed individually as follows. Publisher and soci
 
 Partners pay a flat Annual Service Fee to help cover Dryad’s fixed costs for service, infrastructure and operations. Our fixed expenses include: partner support, training, and outreach; operation, maintenance and development of the Dryad platform; financial and legal administration; and leadership, oversight, and strategy development. As a global virtual organization, Dryad does not operate a physical office. Consult our [annual reports](https://github.com/datadryad/governance/tree/main/annual-reports) for details on Dryad expenses.
 
-Annual Service Fees for Dryad publisher and society partners are tiered according to total publishing revenue or expenses. This approach is modeled after CrossRef, and uses the same tiers (as of November 2024).
+Annual Service Fees for Dryad publisher and society partners are tiered according to total publishing revenue or expenses. This approach is modeled after Crossref, and uses the same tiers (as of November 2024).
 
 <div style="text-align: center;">
 <div class="table-wrapper" role="region" tabindex="0" style="margin: 0 auto">
