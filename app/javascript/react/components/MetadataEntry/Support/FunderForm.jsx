@@ -71,9 +71,9 @@ function FunderForm({
 
   useEffect(() => {
     formRef.current?.resetForm({values: setValues()});
-    setAcText(contributor.contributor_name);
-    setAcID(contributor.name_identifier_id);
-  }, [current, contributor]);
+    setAcText(contributor.contributor_name || '');
+    setAcID(contributor.name_identifier_id || '');
+  }, [current, contributor.award_number]);
 
   useEffect(() => {
     async function getGroup() {
