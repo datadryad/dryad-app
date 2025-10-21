@@ -1,6 +1,6 @@
 <%# locals: id, label %>
-<fieldset style="border: 0; padding: 0;" class="o-admin-form-pair">
-  <span><legend><%= label %><span class="screen-reader-only"> date</span></legend> <label for="<%= id %>start"><span class="screen-reader-only"><%= label %> </span>from:</label></span>
+<fieldset style="border: 0; padding: 0;" class="o-admin-form-pair" aria-labelledby="<%= id %>-filter-label <%= id %>-filter-desc">
+  <span><legend id="<%= id %>-filter-label"><%= label %><span class="screen-reader-only"> date</span></legend> <label for="<%= id %>start"><span class="screen-reader-only"><%= label %> </span>from:</label></span>
   <%= date_field_tag("filters[#{id}][start_date]", @filters.dig(id.to_sym, :start_date), class: "c-input__text#{@filters.dig(id.to_sym, :start_date).present? ? ' selected' : ''}", id: "#{id}start") %>
   <label for="<%= id %>end"><span class="screen-reader-only"><%= label %> </span>to:</label>
   <%= date_field_tag("filters[#{id}][end_date]", @filters.dig(id.to_sym, :end_date), class: "c-input__text#{@filters.dig(id.to_sym, :end_date).present? ? ' selected' : ''}", id: "#{id}end") %>
