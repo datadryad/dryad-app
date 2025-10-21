@@ -1,3 +1,6 @@
 document.getElementById('related_works_list').innerHTML = '<%= display_publications(@resource) %>'
+document.getElementById('payment_desc_err')?.remove()
+document.getElementById('payment_desc').innerHTML = "<%= display_payment(@resource.identifier) %>"
+document.getElementById('payment_desc').parentElement.append(document.createRange().createContextualFragment("<%= escape_javascript(display_payment_err(@resource)) %>"));
 document.getElementById('genericModalContent').innerHTML = '';
 document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'stash_engine/admin_datasets/publications_popup') %>"));
