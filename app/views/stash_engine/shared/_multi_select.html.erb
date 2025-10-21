@@ -3,7 +3,7 @@
 <% selected = [selected].flatten %>
 <label for="multiselect-<%= id %>__input" id="multiselect-<%= id %>__label"><%= label %></label>
 <div class="multiselect" id="multiselect-<%= id %>">
-  <input type="button" aria-labelledby="multiselect-<%= id %>__label" class="c-input__select<%=selected.present? ? ' selected' : ''%>" id="multiselect-<%= id %>__input" value="<%= selected.map{|s| options.find{|a| a.last == s}&.first}.reject(&:blank?).join(', ') %>" aria-controls="multiselect-<%= id %>__list" aria-expanded="false">
+  <input type="button" aria-labelledby="multiselect-<%= id %>__label" class="c-input__select<%=selected.present? ? ' selected' : ''%>" id="multiselect-<%= id %>__input" value="<%= selected.map{|s| options.find{|a| a.last == s}&.first}.reject(&:blank?).join(', ') %>" aria-controls="multiselect-<%= id %>__list" aria-expanded="false"<%if local_assigns.key?(:describedby) %> aria-describedby="<%= describedby %>"<% end %>>
   <fieldset id="multiselect-<%= id %>__list" tabindex="-1" aria-labelledby="multiselect-<%= id %>__label" hidden>
     <% options.each do |opt| %>
       <label for="<%=id%>-<%=opt.last%>" tabindex="-1">
