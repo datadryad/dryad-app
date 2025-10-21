@@ -223,6 +223,19 @@
         grid-column: span 2;
         grid-template-columns: subgrid;
       }
+
+      @media (max-width: 650px) { 
+        grid-template-columns: 1fr;
+        row-gap: .75ch;
+        .date-flex {
+          grid-column: span 1;
+          margin-bottom: 0;
+        }
+        .help {
+          margin-top: 0;
+          margin-bottom: 3ch;
+        }
+      }
     }    
   }
 
