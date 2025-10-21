@@ -34,6 +34,7 @@ module StashDatacite
         contributor_params[:award_description] = contributor_params[:award_description].squish if contributor_params[:award_description].present?
         contributor_params[:award_title] = contributor_params[:award_title].squish if contributor_params[:award_title].present?
         if @contributor.update(contributor_params)
+          check_details
           check_reindex
           format.json { render json: @contributor }
           format.js do
@@ -91,13 +92,6 @@ module StashDatacite
       render json: grouping
     end
 
-    def award_details
-      contrib = StashDatacite::Contributor.new(award_number: params[:award_number], name_identifier_id: params[:name_identifier_id])
-      award_info = AwardMetadataService.new(contrib).award_details || {}
-
-      render json: { success: award_info.present? }.merge!(award_info)
-    end
-
     private
 
     def resource
@@ -111,6 +105,14 @@ module StashDatacite
 
       @resource.submit_to_solr
       DataciteService.new(@resource).submit
+    end
+
+    def check_details
+      award_info = AwardMetadataService.new(@contributor).award_details || {}
+      return unless award_info.present?
+
+      @contributor.update(award_info)
+      @contributor.reload
     end
 
     # Use callbacks to share common setup or constraints between actions.

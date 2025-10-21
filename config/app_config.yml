@@ -442,7 +442,7 @@ production:
     sandbox: false
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://35.91.212.8:8983/solr/rors" %>
   cache:
-    app_url: 'redis://localhost:6380/0'
-    rack_attack_url: 'redis://localhost:6381/0'
+    app_url: 'redis://master.production-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'
+    rack_attack_url: 'redis://master.rack-attack-cache.zkdynt.usw2.cache.amazonaws.com:6381/0'
 
 <% end %>

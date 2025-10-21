@@ -77,10 +77,10 @@ reporting.
 DataCite is in a unique position to track citations since most journal and data publications
 go through their platform and supply metadata to them. DataCite supplies a service for tracking
 citations from one work to another using their EventData API which allows querying
-relationships between works. CrossRef also offers a similar
+relationships between works. Crossref also offers a similar
 service, though we were assured by DataCite that their service tracks the same citations
-that would be available through CrossRef. We found DataCite's uptime, stability and API throttling to
-be significantly better than what we experienced with CrossRef.
+that would be available through Crossref. We found DataCite's uptime, stability and API throttling to
+be significantly better than what we experienced with Crossref.
 
 We are using the DataCite EventData API to obtain information about works related to each other through
 DOIs and the metadata registered.

@@ -103,8 +103,10 @@ module Datacite
 
           d.description = se_resource.complete_readme if d.description_type == 'technicalinfo'
 
+          d.description = d.description.strip_tags if d.description_type == 'abstract'
+
           dcs_resource.descriptions << Description.new(
-            value: d.description.strip_tags,
+            value: d.description,
             type: d.description_type_mapping_obj
           )
         end
