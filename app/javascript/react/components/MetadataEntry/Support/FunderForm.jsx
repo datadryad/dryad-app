@@ -10,7 +10,6 @@ function FunderForm({
 }) {
   const formRef = useRef();
   const [acText, setAcText] = useState('');
-  const [acID, setAcID] = useState('');
   const [loading, setLoading] = useState(false);
   const [showSelect, setShowSelect] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
@@ -26,8 +25,9 @@ function FunderForm({
 
   const subSelect = (e) => {
     const select = e.target;
-    setAcID(select.value);
     setAcText(select.selectedOptions[0].text);
+    formRef.current.values.name_identifier_id = select.value;
+    formRef.current.values.contributor_name = select.selectedOptions[0].text;
     formRef.current.handleSubmit();
     setShowSelect(null);
   };
@@ -41,7 +41,7 @@ function FunderForm({
         id: values.id,
         contributor_name: values.contributor_name,
         contributor_type: 'funder',
-        identifier_type: acID.includes('ror.org') ? 'ror' : 'crossref_funder_id',
+        identifier_type: 'ror',
         name_identifier_id: values.name_identifier_id,
         award_number: values.award_number,
         award_description: values.award_description,
@@ -57,6 +57,7 @@ function FunderForm({
         headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'},
       },
     ).then((data) => {
+      if (data.data.name_identifier_id === contributor.name_identifier_id && contributor.group_required) data.data.group_required = true;
       updateFunder(data.data);
       showSavedMsg();
       setLoading(false);
@@ -70,23 +71,24 @@ function FunderForm({
   };
 
   useEffect(() => {
-    formRef.current?.resetForm({values: setValues()});
-    setAcText(contributor.contributor_name || '');
-    setAcID(contributor.name_identifier_id || '');
-  }, [current, contributor.award_number]);
+    if (current) {
+      formRef.current?.resetForm({values: setValues()});
+      setAcText(contributor.contributor_name || '');
+    }
+  }, [current, contributor]);
 
   useEffect(() => {
     async function getGroup() {
       axios.post('/stash_datacite/contributors/grouping', {
         authenticity_token,
-        ror_id: acID,
+        ror_id: contributor.name_identifier_id,
       }).then((data) => {
         setShowSelect(data.data);
         if (data.data?.required) updateFunder({...contributor, group_required: true});
       });
     }
-    if (acID) getGroup();
-  }, [acID]);
+    if (contributor.name_identifier_id) getGroup();
+  }, [contributor.name_identifier_id]);
 
   return (
     <Formik
@@ -104,14 +106,11 @@ function FunderForm({
               formRef={formRef}
               acText={acText}
               setAcText={(v) => {
-                formRef.current.values.contributor_name = v;
+                formik.setFieldValue('contributor_name', v);
                 setAcText(v);
               }}
-              acID={acID}
-              setAcID={(v) => {
-                formRef.current.values.name_identifier_id = v;
-                setAcID(v);
-              }}
+              acID={formik.values.name_identifier_id}
+              setAcID={(v) => formik.setFieldValue('name_identifier_id', v)}
               controlOptions={
                 {
                   htmlId: `contrib_${contributor.id}`,
