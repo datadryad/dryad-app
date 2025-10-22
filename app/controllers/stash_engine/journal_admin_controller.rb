@@ -26,7 +26,7 @@ module StashEngine
       @journals = @journals.where('sponsor_id= ?', params[:sponsor]) if params[:sponsor].present?
 
       ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan default_to_ppr])
-      @journals = @journals.order(ord)      
+      @journals = @journals.order(ord)
 
       # paginate for display
       @journals = @journals.page(@page).per(@page_size)
