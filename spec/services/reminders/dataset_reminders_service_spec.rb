@@ -20,7 +20,7 @@ module Reminders
     let(:resource) { create(:resource, identifier_id: identifier.id, user_id: user.id) }
 
     describe '#send_in_progress_reminders_by_day' do
-      let!(:curation_activity) { create(:curation_activity, :in_progress, resource_id: resource.id) }
+      let!(:curation_activity) { create(:curation_activity, :in_progress, resource: resource) }
 
       before do
         allow(StashEngine::UserMailer).to receive_message_chain(:in_progress_reminder, :deliver_now).and_return(true)

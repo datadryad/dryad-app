@@ -90,8 +90,11 @@ Now edit the config/database.yml file to fill in the user and password you set a
 ### Solr
 Solr requires a Java runtime. Try *java -version* and if it says that "java can be found in the following packages" rather than giving you a version you probably need to install java with a command like *sudo apt-get install default-jre* .
 
-[See the SOLR cofiguration README for detailed SOLR install information](../config/solr_config/README.md)
+Solr has configured two different cores:
+* **dryad** - used for the main search interface ([install instructions](../config/solr_config/resources/README.md))
+* **rors** - used for indexing and searching ROR records ([install instructions](../config/solr_config/rors/README.md))
 
+To install Solr locally, you can use docker, follow the instructions in a Docker container see [docker installation instructions](./docker_solr.md).
 
 <br>Make sure Solr is working by going to  [http://localhost:8983](http://localhost:8983). You should see a Solr admin page.
 
@@ -194,6 +197,9 @@ using `RAILS_ENV=local`, the bucket will be the "dev" bucket.
 In order to upload files, login to S3 and ensure that the bucket's Permissions
 allow uploads from the server you are using. 
 
+## Cache/processing configuration
+
+In order to process a dataset submission, Rails must have access to a Redis/Valkey cache. This can be constructed in AWS, or with a local Docker installation. See [Elasticache setup](external_services/amazon_aws_elasticache_setup.md).
 ## Testing basic functionality
 
 ### Explore the datasets
@@ -211,7 +217,7 @@ After you log in, you will be able to start entering metadata and uploading file
 
 Metadata entry, file uploading and landing page preview should be functional.
 
-Files are submitted to an S3 repository.
+Files are submitted to an S3 bucket.
 
 ## Next steps in configuration
 
@@ -235,9 +241,4 @@ umbrella funders may be added later.
   
 'op '
 
-### Connection to Dryad machines in the UC infrastructure
 
-If you are connecting your Dryad installation to any services in the UC
-computing system, you will need to create proxied connections using a service
-such as sshuttle. Instructions and a useful script can be found in the
-[config/script](../config/script) directory.

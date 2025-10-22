@@ -22,4 +22,11 @@ module PublicationMixin
       StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now
     end
   end
+
+  def check_resource_payment(resource)
+    return unless resource.identifier.publication_date.blank?
+    return unless resource.submitted?
+
+    resource.identifier.record_payment
+  end
 end

@@ -19,23 +19,26 @@ Transfer this file to the target machine.
 Extract SOLR to an appropriate directory like `tar zxf solr-x.y.z.tgz`.
 
 ```
+cd ~/solr-9.7.0/
 # Create a generic core in SOLR (inside base solr directory)
 bin/solr create -c dryad
 ```
 
 ```
 # get access to our github files like
+cd ~
 git clone git@github.com:datadryad/dryad-app.git
-cp dryad-app/config/solr_9_config/* ~/apps/solr/server/solr/dryad/conf
+cd ~/solr-9.7.0/
+cp dryad-app/config/solr_config/resources/* ./server/solr/dryad/conf
 # remove the cloned repo if you wish like rm -rf dryad-app
 
 # not sure this is needed, but those were permissions the solr script made when creating original schema.xml
-chmod 775 schema.xml
+chmod 775 ./server/solr/dryad/conf/schema.xml
 ```
 
 ```
 # stop and restart solr (or just use restart)
-cd ~/apps/solr
+cd ~/solr-9.7.0/
 bin/solr stop
 bin/solr start
 ```
