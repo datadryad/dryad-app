@@ -35,8 +35,8 @@ module Reminders
         .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..1.months.ago.end_of_day })
         .each do |resource|
 
-        # Only send for resources where the ID ends in 00, so we can stagger the load on the curators
-        next if (resource.id % 100) > 0
+        # Only send for resources where the ID ends in 00-01, so we can stagger the load on the curators
+        next if (resource.id % 100) > 1
 
         reminder_flag = 'action_required_deletion_notice'
         last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
