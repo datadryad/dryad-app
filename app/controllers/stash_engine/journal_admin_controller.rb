@@ -7,14 +7,14 @@ module StashEngine
     def index
       setup_sponsors
 
-      @journals = authorize StashEngine::Journal.left_outer_joins(%i[issns sponsor flag payment_configuration])
+      @journals = authorize StashEngine::Journal
+        .left_outer_joins(%i[issns sponsor flag payment_configuration])
+        .select('stash_engine_journals.*, payment_configurations.payment_plan').distinct
 
       if params[:q]
         q = params[:q]
         # search the query in any searchable field
-        @journals = @journals.select('stash_engine_journals.*, payment_configurations.payment_plan')
-          .left_outer_joins(:issns, :alternate_titles, :payment_configuration)
-          .distinct
+        @journals = @journals.left_outer_joins(:alternate_titles)
           .where(
             'LOWER(stash_engine_journals.title) LIKE LOWER(?)
             OR LOWER(stash_engine_journal_titles.title) LIKE LOWER(?)
@@ -23,10 +23,10 @@ module StashEngine
           )
       end
 
+      @journals = @journals.where('sponsor_id= ?', params[:sponsor]) if params[:sponsor].present?
+
       ord = helpers.sortable_table_order(whitelist: %w[title issns payment_plan default_to_ppr])
       @journals = @journals.order(ord)
-
-      @journals = @journals.where('sponsor_id= ?', params[:sponsor]) if params[:sponsor].present?
 
       # paginate for display
       @journals = @journals.page(@page).per(@page_size)
@@ -86,7 +86,7 @@ module StashEngine
     end
 
     def update_hash
-      valid = %i[title preprint_server default_to_ppr allow_review_workflow manuscript_number_regex peer_review_custom_text
+      valid = %i[title preprint_server default_to_ppr allow_review_workflow manuscript_number_regex peer_review_custom_text journal_code
                  flag_attributes payment_configuration_attributes]
       update = edit_params.slice(*valid).to_h
       update[:sponsor_id] = edit_params[:sponsor_id].presence
@@ -116,7 +116,7 @@ module StashEngine
 
     def edit_params
       params.permit(:id, :title, :issn, :alt_title, :notify_contacts, :review_contacts, :api_contacts,
-                    :preprint_server, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
+                    :preprint_server, :journal_code, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
                     :default_to_ppr, :allow_review_workflow, :flag, :note,
                     flag_attributes: %i[id note _destroy],
                     payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit])

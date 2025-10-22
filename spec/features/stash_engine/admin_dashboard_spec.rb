@@ -75,7 +75,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
     context :date_and_state_filters do
       before(:each) do
-        create(:curation_activity, status: 'curation', user: @superuser, resource: @resource)
+        CurationService.new(status: 'curation', user: @superuser, resource: @resource).process
         2.times do
           identifier = create(:identifier)
           create(:resource, publication_date: nil, user: @user, identifier: identifier)
@@ -255,7 +255,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         end
 
         it 'allows un-assigning a curator, keeping status if it is peer_review' do
-          create(:curation_activity, status: 'peer_review', resource_id: @resource.id, user: @resource.submitter)
+          CurationService.new(status: 'peer_review', resource_id: @resource.id, user: @resource.submitter).process
           visit stash_url_helpers.admin_dashboard_path
           expect(page).to have_text('Admin dashboard')
           click_button 'Update curator'
@@ -273,7 +273,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
 
         context :in_curation do
           before(:each) do
-            create(:curation_activity, status: 'curation', user_id: @curator.id, resource_id: @resource.id)
+            CurationService.new(status: 'curation', user_id: @curator.id, resource_id: @resource.id).process
             @resource.update(user_id: @curator.id, accepted_agreement: true)
             @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)
             visit stash_url_helpers.admin_dashboard_path

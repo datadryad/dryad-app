@@ -14,35 +14,28 @@ describe('FunderForm', () => {
   beforeEach(() => {
     resourceId = faker.datatype.number();
     info = {
+      current: true,
       resourceId,
-      origID: faker.datatype.string(10),
-      contributor:
-          {
-            id: faker.datatype.number(),
-            contributor_name: faker.company.companyName(),
-            contributor_type: 'funder',
-            identifier_type: null,
-            name_identifier_id: null,
-            resourceId,
-            award_number: faker.datatype.string(5),
-            award_description: faker.datatype.string(10),
-            funder_order: null,
-          },
-      createPath: faker.system.directoryPath(),
-      updatePath: faker.system.directoryPath(),
-      reorderPath: faker.system.directoryPath(),
-      removeFunction: jest.fn(),
+      contributor: {
+        id: faker.datatype.number(),
+        contributor_name: faker.company.companyName(),
+        contributor_type: 'funder',
+        identifier_type: null,
+        name_identifier_id: null,
+        resourceId,
+        award_number: faker.datatype.string(5),
+        award_description: faker.datatype.string(10),
+        funder_order: null,
+      },
       updateFunder: jest.fn(),
     };
   });
 
   it('renders the basic funders form', () => {
-    const group = {status: 200, data: null};
-    axios.post.mockResolvedValueOnce(group);
     render(<FunderForm {...info} />);
 
     const labeledElements = screen.getAllByLabelText('Granting organization', {exact: false});
-    expect(labeledElements.length).toBe(4);
+    expect(labeledElements.length).toBe(3);
     expect(labeledElements[0]).toHaveAttribute('value', info.contributor.contributor_name);
 
     expect(screen.getByLabelText('Award number')).toHaveValue(info.contributor.award_number);
@@ -65,8 +58,6 @@ describe('FunderForm', () => {
     });
 
     axios.get.mockImplementationOnce(() => options);
-    const group = {status: 200, data: null};
-    axios.post.mockResolvedValue(group);
 
     render(<FunderForm {...info} />);
 
@@ -142,9 +133,6 @@ describe('FunderForm', () => {
     });
 
     axios.patch.mockImplementationOnce(() => promise);
-    const group = {status: 200, data: null};
-    axios.post.mockResolvedValueOnce(group);
-
     render(<FunderForm {...info} />);
 
     userEvent.clear(screen.getByLabelText('Award number'));
@@ -167,8 +155,6 @@ describe('FunderForm', () => {
     });
 
     axios.patch.mockImplementationOnce(() => promise);
-    const group = {status: 200, data: null};
-    axios.post.mockResolvedValueOnce(group);
 
     render(<FunderForm {...info} />);
 

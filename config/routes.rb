@@ -251,6 +251,7 @@ Rails.application.routes.draw do
 
     # user management
     get 'account', to: 'user_account#index', as: 'my_account'
+    post 'account/merge', to: 'user_account#request_merge', as: 'merge_accounts'
     post 'account/edit', to: 'user_account#edit', as: 'edit_account'
     post 'account/api', to: 'user_account#api_application', as: 'get_api'
     post 'account/token', to: 'user_account#api_token', as: 'get_token'
@@ -402,7 +403,6 @@ Rails.application.routes.draw do
 
     get 'contributors/new', to: 'contributors#new'
     get 'contributors/autocomplete', to: 'contributors#autocomplete'
-    get 'contributors/award_details', to: 'contributors#award_details'
     post 'contributors/grouping', to: 'contributors#grouping'
     post 'contributors/create', to: 'contributors#create'
     patch 'contributors/update', to: 'contributors#update'

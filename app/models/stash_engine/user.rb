@@ -105,10 +105,13 @@ module StashEngine
     # The other_user passed in is generally a newly logged in user that is having any of their new stuff transferred into their existing, old
     # user account. Then they will use that old user account from then on (current user and other things will be switched around on the fly
     # in the controller).
-    def merge_user!(other_user:)
+    # rubocop:disable Metrics/AbcSize
+    def merge_user!(other_user:, overwrite: true)
       # these methods do not invoke callbacks, since not really needed for taking ownership
       CurationActivity.where(user_id: other_user.id).update_all(user_id: id)
       ResourceState.where(user_id: other_user.id).update_all(user_id: id)
+      CustomVersion.where(whodunnit: other_user.id).update_all(whodunnit: id)
+      ProposedChange.where(user_id: other_user.id).update_all(user_id: id)
       Resource.where(user_id: other_user.id).update_all(user_id: id)
       Resource.where(current_editor_id: other_user.id).update_all(current_editor_id: id)
       Role.where(user_id: other_user.id).each do |r|
@@ -119,13 +122,26 @@ module StashEngine
         end
       end
 
-      # merge in any special things updated in other user and prefer these details from other_user over self.user
+      other_user.flag&.update(user_id: id)
+      other_user.api_application&.update(owner_id: id)
+      other_user.admin_searches.update_all(user_id: id)
+
+      if orcid.present? && other_user.orcid.present?
+        removed = overwrite ? orcid : other_user.orcid
+        kept = overwrite ? other_user.orcid : orcid
+        StashEngine::Author.where(author_orcid: removed).update_all(author_orcid: kept)
+      end
+
+      # merge in any special things updated in other user and prefer their details if set to overwrite
+      return unless overwrite
+
       out_hash = {}
       %i[first_name last_name email tenant_id last_login orcid].each do |i|
         out_hash[i] = other_user.send(i) unless other_user.send(i).blank?
       end
       update(out_hash)
     end
+    # rubocop:enable Metrics/AbcSize
 
     def self.split_name(name)
       comma_split = name.split(',')

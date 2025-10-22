@@ -5,6 +5,7 @@
     <%= hidden_field_tag 'user1', @user1.id, id: "selected_users" %>
     <%= hidden_field_tag 'user2', @user2.id, id: "selected_users" %>
     <p>Pressing the Merge button will combine these two users into a single user, which owns all of the associated datasets. Once these users are merged, the operation cannot be reversed.</p>
+    <p>The name, email, ORCID, etc. from the second user will be kept, unless these are blank. To keep the other user&apos;s information instead, reorder the table so that user is second, and select the users again.</p>
 
     <div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="merge-label">
     <table class="c-lined-table">

@@ -69,13 +69,7 @@
       <span class="input-line" style="column-gap: .5ch">
         <b>Payment:</b>
         <span id="payment_desc">            
-          <% pr = @identifier.resources.by_version_desc.includes(:payment).find {|r| r.payment} %>
-          <% if @identifier.user_must_pay? && (@identifier.payment_type.blank? || @identifier.payment_type == 'unknown') %>
-            <% if pr&.payment %>$<%= pr.payment.amount %><% end %>
-            <%= pr&.payment&.status.present? ? "bill #{pr&.payment&.status}" : 'Unknown' %>
-          <% else %>
-            <%= @identifier.payment_type %>
-          <% end %>
+          <%= display_payment(@identifier) %>
         </span>
         <%= link_to_account(@identifier.payment_type, @identifier.payment_id) %>
         <%= form_with(url: payment_log_path(id: @identifier&.id), method: :get, local: false) do %>
@@ -88,6 +82,7 @@
           <% end %>
         <% end %>
       </span>
+      <%= display_payment_err(r) %>
       <% if @identifier.payer&.class&.name == 'StashEngine::Journal' %>
         <% if r.journal&.api_journal? && !r.creator.journals_as_admin.include?(r.journal) %>
           <span class="child-details error-text">

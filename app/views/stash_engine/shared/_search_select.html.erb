@@ -3,7 +3,7 @@
 <div class="searchselect" id="searchselect-<%= id %>" tabindex="-1">
   <input type="hidden" name="<%= field_name %>[value]" id="searchselect-<%= id %>__value" value="<%= selected&.dig(:value).presence || '' %>">
   <input type="hidden" name="<%= field_name %>[label]" id="searchselect-<%= id %>__label" value="<%= selected&.dig(:label).presence || '' %>">
-  <%= text_field_tag(nil, selected&.dig(:label).presence || '', id: "searchselect-#{id}__input", class: "c-input__select#{selected&.dig(:value).present? ? ' selected' : ''}", placeholder: 'Find as you type...', 'aria-autocomplete': 'both', 'aria-controls': "searchselect-#{id}__list", 'aria-expanded': 'false', role: 'combobox', autocomplete: 'off', required: local_assigns.key?(:required) && required ) %>
+  <%= text_field_tag(nil, selected&.dig(:label).presence || '', id: "searchselect-#{id}__input", class: "c-input__select#{selected&.dig(:value).present? ? ' selected' : ''}", placeholder: 'Find as you type...', 'aria-autocomplete': 'both', 'aria-controls': "searchselect-#{id}__list", 'aria-expanded': 'false', role: 'combobox', autocomplete: 'off', required: local_assigns.key?(:required) && required, 'aria-describedby': local_assigns.key?(:describedby) && describedby ) %>
   <ul id="searchselect-<%= id %>__list" role="listbox" aria-label="<%= label %>" tabindex="-1" hidden></ul>
   <span id="searchselect-<%= id %>__status" class="screen-reader-only" role="status"></span>
 </div>
