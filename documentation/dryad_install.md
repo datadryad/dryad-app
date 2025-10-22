@@ -228,17 +228,8 @@ API for identifier assignment and submission to repositories.
 
 Dryad uses DataCite for identifier assignment and stores datasets in an Amazon S3 repository.
 
-### Make NIH have sub-funders
-
-Type 
+### Import ROR organizations
 
 ```
-RAILS_ENV=production rails funders:set_nih
+RAILS_ENV=production rails affiliation_import:update_ror_orgs
 ```
-
-which makes the rails database have a special structure for NIH to include sub-funders. Other
-umbrella funders may be added later.
-  
-'op '
-
-
