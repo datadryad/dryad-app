@@ -550,6 +550,8 @@ module StashEngine
 
     # Date on which the user first submitted this resource
     def submitted_date
+      return unless process_date
+
       process_date.submitted || process_date.peer_review
     end
 
