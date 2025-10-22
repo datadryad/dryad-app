@@ -12,8 +12,6 @@ Dryad serves all research domains and welcomes submissions of data in every fiel
 
 Our process is dedicated exclusively to research data. We work in concert with [aligned organizations](/about#collaborations) to facilitate the release and interconnection of related software, supplementary information, research articles, preprints, data management plans, and more.
 
-See [how Dryad compares with other platforms](https://doi.org/10.5281/zenodo.7946938).
-
 ## Latest news
 
 <div id="blog-latest-posts" data-count="3" aria-live="polite" aria-busy="true">

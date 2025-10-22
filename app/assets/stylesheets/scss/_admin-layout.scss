@@ -208,6 +208,35 @@
         display: inline;
       }
     }
+
+    &.show-help {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      .o-admin-form-pair {
+        display: flex;
+        max-width: 100%;
+      }
+
+      .date-flex {
+        display: grid;
+        grid-column: span 2;
+        grid-template-columns: subgrid;
+      }
+
+      @media (max-width: 650px) { 
+        grid-template-columns: 1fr;
+        row-gap: .75ch;
+        .date-flex {
+          grid-column: span 1;
+          margin-bottom: 0;
+        }
+        .help {
+          margin-top: 0;
+          margin-bottom: 3ch;
+        }
+      }
+    }    
   }
 
   input[type='text'].selected,

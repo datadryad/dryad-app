@@ -23,7 +23,7 @@ module Reminders
     let(:resource2) { create(:resource, identifier_id: identifier2.id, user_id: user.id) }
 
     describe '#send_in_progress_reminders' do
-      let!(:curation_activity) { create(:curation_activity, :in_progress, resource_id: resource.id) }
+      let!(:curation_activity) { CurationService.new(status: 'in_progress', resource_id: resource.id).process }
 
       before do
         allow(StashEngine::ResourceMailer).to receive_message_chain(:in_progress_delete_notification, :deliver_now).and_return(true)
@@ -98,7 +98,7 @@ module Reminders
     end
 
     xdescribe '#send_action_required_reminders' do
-      let!(:curation_activity) { create(:curation_activity, status: 'action_required', resource_id: resource.id) }
+      let!(:curation_activity) { CurationService.new(status: 'action_required', resource_id: resource.id).process }
 
       before do
         allow(StashEngine::ResourceMailer).to receive_message_chain(:action_required_delete_notification, :deliver_now).and_return(true)
@@ -162,7 +162,7 @@ module Reminders
         end
 
         it 'sends one email for each resource' do
-          create(:curation_activity, status: 'action_required', resource_id: resource2.id)
+          CurationService.new(status: 'action_required', resource_id: resource2.id).process
           resource.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
           resource2.reload.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
           subject.send(:create_activity, 'action_required_deletion_notice', resource)
@@ -177,7 +177,7 @@ module Reminders
     end
 
     describe '#send_manual_action_required_emails' do
-      let!(:curation_activity) { create(:curation_activity, status: 'action_required', resource_id: resource.id) }
+      let!(:curation_activity) { CurationService.new(status: 'action_required', resource_id: resource.id).process }
 
       before do
         allow(StashEngine::ResourceMailer).to receive_message_chain(:action_required_delete_notification, :deliver_now).and_return(true)
@@ -241,7 +241,7 @@ module Reminders
         end
 
         it 'sends one email for each resource' do
-          create(:curation_activity, status: 'action_required', resource_id: resource2.id)
+          CurationService.new(status: 'action_required', resource_id: resource2.id).process
           resource.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
           resource2.reload.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
           subject.send(:create_activity, 'action_required_deletion_notice', resource)
@@ -254,7 +254,7 @@ module Reminders
         end
 
         it 'sends only the number of emails it is required to' do
-          create(:curation_activity, status: 'action_required', resource_id: resource2.id)
+          CurationService.new(status: 'action_required', resource_id: resource2.id).process
           resource.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
           resource2.reload.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
           subject.send(:create_activity, 'action_required_deletion_notice', resource)
@@ -269,7 +269,7 @@ module Reminders
     end
 
     describe '#send_peer_review_reminders' do
-      let!(:curation_activity) { create(:curation_activity, status: 'peer_review', resource_id: resource.id) }
+      let!(:curation_activity) { CurationService.new(status: 'peer_review', resource_id: resource.id).process }
 
       before do
         allow(StashEngine::ResourceMailer).to receive_message_chain(:action_required_delete_notification, :deliver_now).and_return(true)
@@ -340,7 +340,7 @@ module Reminders
         it 'sends one email for each resource' do
           resource.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
 
-          create(:curation_activity, status: 'peer_review', resource_id: resource2.id)
+          CurationService.new(status: 'peer_review', resource_id: resource2.id).process
           resource2.reload.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
 
           subject.send(:create_activity, 'peer_review_deletion_notice', resource)
@@ -356,7 +356,7 @@ module Reminders
 
     describe '#auto_withdraw' do
       context 'for in peer_review resource' do
-        let!(:curation_activity) { create(:curation_activity, status: 'peer_review', resource_id: resource.id) }
+        let!(:curation_activity) { CurationService.new(status: 'peer_review', resource_id: resource.id).process }
 
         before do
           allow(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification, :deliver_now).and_return(true)
@@ -410,7 +410,7 @@ module Reminders
       end
 
       context 'for in action_required resource' do
-        let!(:curation_activity) { create(:curation_activity, status: 'action_required', resource_id: resource.id) }
+        let!(:curation_activity) { CurationService.new(status: 'action_required', resource_id: resource.id).process }
 
         before do
           allow(StashEngine::ResourceMailer).to receive_message_chain(:send_set_to_withdrawn_notification, :deliver_now).and_return(true)
@@ -462,7 +462,7 @@ module Reminders
           end
 
           it 'sends one email for each resource' do
-            create(:curation_activity, status: 'peer_review', resource_id: resource2.id)
+            CurationService.new(status: 'peer_review', resource_id: resource2.id).process
             Timecop.travel(1.year.from_now)
 
             # for resource
@@ -487,7 +487,7 @@ module Reminders
       end
 
       context 'when withdrawn by curator' do
-        let!(:curation_activity) { create(:curation_activity, status: 'withdrawn', resource_id: resource.id) }
+        let!(:curation_activity) { CurationService.new(status: 'withdrawn', resource_id: resource.id).process }
 
         before do
           resource.last_curation_activity.update!(status: 'withdrawn')
@@ -529,7 +529,7 @@ module Reminders
       end
 
       context 'when withdrawn by journal or automatically' do
-        let!(:curation_activity) { create(:curation_activity, status: 'withdrawn', resource_id: resource.id, user_id: 0) }
+        let!(:curation_activity) { CurationService.new(status: 'withdrawn', resource_id: resource.id, user_id: 0).process }
 
         context 'when status date is sooner then 9 months' do
           it 'does not send notification email' do
@@ -567,8 +567,8 @@ module Reminders
       end
 
       context 'for multiple resources' do
-        let!(:curation_activity) { create(:curation_activity, status: 'withdrawn', resource_id: resource.id, user_id: 0) }
-        let!(:curation_activity2) { create(:curation_activity, status: 'withdrawn', resource_id: resource2.id, user_id: 0) }
+        let!(:curation_activity) { CurationService.new(status: 'withdrawn', resource_id: resource.id, user_id: 0).process }
+        let!(:curation_activity2) { CurationService.new(status: 'withdrawn', resource_id: resource2.id, user_id: 0).process }
 
         it 'sends one email for each resource' do
           Timecop.travel(9.months.from_now)
@@ -589,7 +589,7 @@ module Reminders
     end
 
     describe '#create_activity' do
-      let(:curation_activity) { create(:curation_activity, status: 'in_progress', resource_id: resource.id) }
+      let(:curation_activity) { CurationService.new(status: 'in_progress', resource_id: resource.id).process }
 
       it 'creates a new CurationActivity record' do
         resource.last_curation_activity.update!(created_at: 1.day.ago)

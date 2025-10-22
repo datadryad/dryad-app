@@ -1,5 +1,6 @@
 module StashEngine
   # Mails users about submissions
+  # rubocop:disable Metrics/ClassLength
   class UserMailer < ApplicationMailer
 
     # Called from CurationActivity when the status is submitted, peer_review, published, embargoed or withdrawn
@@ -209,6 +210,19 @@ module StashEngine
            subject: "#{rails_env}Dryad Submission \"#{@title}\"")
     end
 
+    def payment_needed(resource)
+      logger.warn('Unable to send peer_review_payment_needed; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      @costs_url = Rails.application.routes.url_helpers.costs_url
+      @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
+      mail(to: user_email(@user),
+           subject: "#{rails_env}Dryad Submission \"#{@resource.title}\"")
+    end
+
     def doi_invitation(resource)
       logger.warn('Unable to send doi_invitation; nil resource') unless resource.present?
       return unless resource.present?
@@ -221,6 +235,14 @@ module StashEngine
 
       # activity updated by rake task
       # update_activities(resource: resource, message: 'DOI linking reminder', status: resource.current_curation_status)
+    end
+
+    def merge_request(current_user, existing_user)
+      @user = current_user
+      @old = existing_user
+      @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
+      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
+      mail(to: @helpdesk_email, cc: @submission_error_emails, subject: "#{rails_env}user account merge request")
     end
 
     def dependency_offline(dependency, message)
@@ -248,7 +270,6 @@ module StashEngine
     def voided_invoices(voided_identifier_list)
       return unless voided_identifier_list.present?
 
-      @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
       @identifiers = voided_identifier_list
       mail(to: @submission_error_emails,
            subject: "#{rails_env}Voided invoices need to be updated")
@@ -275,4 +296,5 @@ module StashEngine
            subject: "#{rails_env}Action required: Dryad data submission (#{resource&.identifier})")
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

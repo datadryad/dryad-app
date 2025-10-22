@@ -197,6 +197,9 @@ using `RAILS_ENV=local`, the bucket will be the "dev" bucket.
 In order to upload files, login to S3 and ensure that the bucket's Permissions
 allow uploads from the server you are using. 
 
+## Cache/processing configuration
+
+In order to process a dataset submission, Rails must have access to a Redis/Valkey cache. This can be constructed in AWS, or with a local Docker installation. See [Elasticache setup](external_services/amazon_aws_elasticache_setup.md).
 ## Testing basic functionality
 
 ### Explore the datasets
@@ -214,7 +217,7 @@ After you log in, you will be able to start entering metadata and uploading file
 
 Metadata entry, file uploading and landing page preview should be functional.
 
-Files are submitted to an S3 repository.
+Files are submitted to an S3 bucket.
 
 ## Next steps in configuration
 
@@ -225,22 +228,8 @@ API for identifier assignment and submission to repositories.
 
 Dryad uses DataCite for identifier assignment and stores datasets in an Amazon S3 repository.
 
-### Make NIH have sub-funders
-
-Type 
+### Import ROR organizations
 
 ```
-RAILS_ENV=production rails funders:set_nih
+RAILS_ENV=production rails affiliation_import:update_ror_orgs
 ```
-
-which makes the rails database have a special structure for NIH to include sub-funders. Other
-umbrella funders may be added later.
-  
-'op '
-
-### Connection to Dryad machines in the UC infrastructure
-
-If you are connecting your Dryad installation to any services in the UC
-computing system, you will need to create proxied connections using a service
-such as sshuttle. Instructions and a useful script can be found in the
-[config/script](../config/script) directory.

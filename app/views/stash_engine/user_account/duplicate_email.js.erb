@@ -1,0 +1,2 @@
+document.getElementById('duplicate_user_error')?.remove()
+document.getElementById('maincontent').querySelector('div div').prepend(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'duplicate_email') %>"))

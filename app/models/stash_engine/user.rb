@@ -106,7 +106,7 @@ module StashEngine
     # user account. Then they will use that old user account from then on (current user and other things will be switched around on the fly
     # in the controller).
     # rubocop:disable Metrics/AbcSize
-    def merge_user!(other_user:)
+    def merge_user!(other_user:, overwrite: true)
       # these methods do not invoke callbacks, since not really needed for taking ownership
       CurationActivity.where(user_id: other_user.id).update_all(user_id: id)
       ResourceState.where(user_id: other_user.id).update_all(user_id: id)
@@ -126,7 +126,15 @@ module StashEngine
       other_user.api_application&.update(owner_id: id)
       other_user.admin_searches.update_all(user_id: id)
 
-      # merge in any special things updated in other user and prefer these details from other_user over self.user
+      if orcid.present? && other_user.orcid.present?
+        removed = overwrite ? orcid : other_user.orcid
+        kept = overwrite ? other_user.orcid : orcid
+        StashEngine::Author.where(author_orcid: removed).update_all(author_orcid: kept)
+      end
+
+      # merge in any special things updated in other user and prefer their details if set to overwrite
+      return unless overwrite
+
       out_hash = {}
       %i[first_name last_name email tenant_id last_login orcid].each do |i|
         out_hash[i] = other_user.send(i) unless other_user.send(i).blank?
