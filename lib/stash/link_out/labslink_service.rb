@@ -109,7 +109,7 @@ module Stash
         file_name = "#{TMP_DIR}/#{links_file_format.gsub('[nbr]', "-#{file_index}")}"
         @file_names << file_name
 
-        File.open(file_name, "w")
+        File.open(file_name, 'w')
       end
 
       def generate_xml_link(identifier)
