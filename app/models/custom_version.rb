@@ -18,6 +18,7 @@
 #  index_paper_trail_versions_on_created_at             (created_at)
 #  index_paper_trail_versions_on_item_type_and_item_id  (item_type,item_id)
 #  index_paper_trail_versions_on_resource_id            (resource_id)
+#  paper_trail_whodunnit_idx                            (whodunnit)
 #
 class ApplicationVersion < ActiveRecord::Base
   include PaperTrail::VersionConcern
