@@ -48,4 +48,17 @@ class ResourcePayment < ApplicationRecord
     Stripe.api_version = '2025-03-31.basil'
     Stripe::Invoice.void_invoice(invoice_id)
   end
+
+  def paid_with
+    return nil unless paid?
+    return 'invoice' if pay_with_invoice?
+
+    'CC'
+  end
+
+  def payment_id
+    return invoice_id if pay_with_invoice?
+
+    payment_intent
+  end
 end
