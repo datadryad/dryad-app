@@ -42,6 +42,7 @@ module StashEngine
         payer.present?
       end
 
+      # rubocop:disable Metrics/AbcSize
       def record_payment
         # once we have assigned payment to an entity, keep that entity
         # unless a journal was removed or an institution added
@@ -70,6 +71,7 @@ module StashEngine
         end
         save
       end
+      # rubocop:enable Metrics/AbcSize
 
       def institution_will_pay?
         tenant = latest_resource&.tenant
