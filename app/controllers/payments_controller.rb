@@ -74,7 +74,7 @@ class PaymentsController < ApplicationController
 
   def reset_payment
     identifier = StashEngine::Identifier.find(params[:identifier_id])
-    identifier.update(last_invoiced_file_size: nil, payment_type: nil, payment_id: nil)
+    identifier.update(last_invoiced_file_size: nil, payment_type: 'unknown', payment_id: nil)
     payment = identifier.payments.last
     payment.void_invoice
     payment.destroy
