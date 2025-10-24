@@ -64,7 +64,7 @@ module StashEngine
           self.payment_id = publication_issn
         elsif payments.count > 0
           self.payment_type = 'stripe'
-          self.payment_id = payments.paid.last.payment_id
+          self.payment_id = payments.paid.last&.payment_id
         else
           self.payment_type = 'unknown'
           self.payment_id = nil
