@@ -134,6 +134,13 @@ RSpec.describe Submission::ResourcesService do
             subject
             expect(payment.reload.invoice_id).not_to be_nil
           end
+
+          it 'updates identifier payment details' do
+            subject
+            identifier.reload
+            expect(identifier.payment_type).to eq('stripe')
+            expect(identifier.payment_id).not_to be_nil
+          end
         end
 
         context 'when invoice already exists' do

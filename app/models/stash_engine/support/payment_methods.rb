@@ -61,6 +61,9 @@ module StashEngine
         elsif journal&.will_pay?
           self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
+        elsif payments.count > 0
+          self.payment_type = 'stripe'
+          self.payment_id = payments.paid.last.payment_id
         else
           self.payment_type = 'unknown'
           self.payment_id = nil
@@ -117,6 +120,7 @@ module StashEngine
           return unless payment_type.include?('journal') || journal&.will_pay?
           return if payment_id == journal&.single_issn
         end
+        return if payments.paid.count > 0
 
         self.payment_type = nil
         self.payment_id = nil

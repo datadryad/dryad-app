@@ -66,6 +66,7 @@ class PaymentsController < ApplicationController
         payment_status: session[:payment_status],
         payment_email: session[:customer_email] || session[:customer_details][:email]
       )
+      identifier.update(payment_type: 'stripe', payment_id: payment.payment_id)
     rescue StandardError => e
       Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
     end
