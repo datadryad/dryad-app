@@ -107,6 +107,8 @@ module StashEngine
     # in the controller).
     # rubocop:disable Metrics/AbcSize
     def merge_user!(other_user:, overwrite: true)
+      raise ArgumentError, 'Cannot merge System user info' if other_user.id == 0 || id == 0
+
       # these methods do not invoke callbacks, since not really needed for taking ownership
       CurationActivity.where(user_id: other_user.id).update_all(user_id: id)
       ResourceState.where(user_id: other_user.id).update_all(user_id: id)
@@ -166,6 +168,8 @@ module StashEngine
 
     # convenience method for updating and returning user
     def update_user_orcid(orcid:, temp_email:)
+      raise ArgumentError, 'Cannot update System user ORCID' if id == 0
+
       update(last_login: Time.new.utc, orcid: orcid)
       update(email: temp_email) if temp_email && email.nil?
       self
