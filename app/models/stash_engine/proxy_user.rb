@@ -49,31 +49,6 @@ module StashEngine
              foreign_key: :resource_owner_id,
              dependent: :delete_all # or :destroy if you need callbacks
 
-    def self.from_omniauth_orcid(auth_hash:, emails:)
-      users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
-
-      # If multiple user accounts respond to this ORCID/email, there is a legacy account
-      # that didn't have an ORCID, or the user recently added an email to their ORCID profile,
-      # so we will merge the accounts.
-      while users.count > 1
-        target_user = users.first
-        merging_user = users.second
-        target_user.merge_user!(other_user: merging_user)
-        merging_user.destroy
-        users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
-      end
-
-      return users.first.update_user_orcid(orcid: auth_hash[:uid], temp_email: emails.try(:first)) if users.count == 1
-
-      create_user_with_orcid(auth_hash: auth_hash, temp_email: emails.try(:first))
-    end
-
-    def self.find_by_orcid_or_emails(orcid:, emails:)
-      emails = Array.wrap(emails)
-      emails.delete_if(&:blank?)
-      StashEngine::ApiUser.where(['orcid = ? or email IN ( ? )', orcid, emails])
-    end
-
     def name
       "#{first_name} #{last_name}".strip
     end

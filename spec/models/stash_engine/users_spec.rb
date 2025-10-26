@@ -147,44 +147,6 @@ module StashEngine
       end
     end
 
-    describe 'find_by_orcid_or_emails' do
-      before(:each) do
-        create(:user,
-               email: 'lmuckenhaupt@datadryad.org')
-        create(:user,
-               orcid: '12345678')
-        create(:user,
-               email: 'grover@example.org',
-               orcid: '87654321')
-      end
-
-      it 'finds by the orcid only' do
-        users = User.find_by_orcid_or_emails(orcid: '12345678', emails: [])
-        expect(users.count).to eq(1)
-      end
-
-      it 'finds by emails only' do
-        users = User.find_by_orcid_or_emails(orcid: nil, emails: ['lmuckenhaupt@datadryad.org', 'grover@example.org'])
-        expect(users.count).to eq(2)
-      end
-
-      it 'ignores nils and blanks in emails' do
-        users = User.find_by_orcid_or_emails(orcid: nil, emails: nil)
-        expect(users.count).to eq(0)
-
-        users = User.find_by_orcid_or_emails(orcid: nil, emails: [nil, nil])
-        expect(users.count).to eq(0)
-
-        users = User.find_by_orcid_or_emails(orcid: nil, emails: ['', ''])
-        expect(users.count).to eq(0)
-      end
-
-      it 'combines results for orcids and emails' do
-        users = User.find_by_orcid_or_emails(orcid: '12345678', emails: ['lmuckenhaupt@datadryad.org', 'grover@example.org'])
-        expect(users.count).to eq(3)
-      end
-    end
-
     describe 'merge_user!(other_user:)' do
       before(:each) do
         # create users1 and user2 to be merged and user3 to be left alone
