@@ -42,6 +42,7 @@ module StashEngine
         payer.present?
       end
 
+      # rubocop:disable Metrics/AbcSize
       def record_payment
         # once we have assigned payment to an entity, keep that entity
         # unless a journal was removed or an institution added
@@ -61,12 +62,16 @@ module StashEngine
         elsif journal&.will_pay?
           self.payment_type = "journal-#{journal.payment_configuration.payment_plan}"
           self.payment_id = publication_issn
+        elsif payments.count > 0
+          self.payment_type = 'stripe'
+          self.payment_id = payments.paid.last&.payment_id
         else
           self.payment_type = 'unknown'
           self.payment_id = nil
         end
         save
       end
+      # rubocop:enable Metrics/AbcSize
 
       def institution_will_pay?
         tenant = latest_resource&.tenant
@@ -117,6 +122,7 @@ module StashEngine
           return unless payment_type.include?('journal') || journal&.will_pay?
           return if payment_id == journal&.single_issn
         end
+        return if payments.paid.count > 0
 
         self.payment_type = nil
         self.payment_id = nil

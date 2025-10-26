@@ -82,7 +82,10 @@ module Submission
       invoicer = Stash::Payments::StripeInvoicer.new(resource)
       invoicer.handle_customer(payment.invoice_details)
       invoice = invoicer.create_invoice
-      payment.update(pay_with_invoice: true, invoice_id: invoice.id) if invoice
+      return unless invoice
+
+      payment.update(pay_with_invoice: true, invoice_id: invoice.id)
+      resource.identifier.update(payment_type: 'stripe', payment_id: invoice.id)
     end
 
     def create_missing_invoice
