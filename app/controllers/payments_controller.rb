@@ -66,6 +66,7 @@ class PaymentsController < ApplicationController
         payment_status: session[:payment_status],
         payment_email: session[:customer_email] || session[:customer_details][:email]
       )
+      identifier.update(payment_type: 'stripe', payment_id: payment.payment_id)
     rescue StandardError => e
       Rails.logger.warn("Could not fetch payment details for resource #{@resource.id}, error: #{e.message}")
     end
@@ -73,7 +74,7 @@ class PaymentsController < ApplicationController
 
   def reset_payment
     identifier = StashEngine::Identifier.find(params[:identifier_id])
-    identifier.update(last_invoiced_file_size: nil, payment_type: nil, payment_id: nil)
+    identifier.update(last_invoiced_file_size: nil, payment_type: 'unknown', payment_id: nil)
     payment = identifier.payments.last
     payment.void_invoice
     payment.destroy

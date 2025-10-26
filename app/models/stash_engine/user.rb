@@ -55,28 +55,22 @@ module StashEngine
     end
 
     def self.from_omniauth_orcid(auth_hash:, emails:)
-      users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
+      return if auth_hash[:uid].blank?
 
-      # If multiple user accounts respond to this ORCID/email, there is a legacy account
-      # that didn't have an ORCID, or the user recently added an email to their ORCID profile,
-      # so we will merge the accounts.
+      users = StashEngine::User.where(orcid: auth_hash[:uid])
+
+      # If multiple user accounts respond to this ORCID, merge the accounts
       while users.count > 1
         target_user = users.first
         merging_user = users.second
         target_user.merge_user!(other_user: merging_user)
         merging_user.destroy
-        users = find_by_orcid_or_emails(orcid: auth_hash[:uid], emails: emails)
+        users = StashEngine::User.where(orcid: auth_hash[:uid])
       end
 
       return users.first.update_user_orcid(orcid: auth_hash[:uid], temp_email: emails.try(:first)) if users.count == 1
 
       create_user_with_orcid(auth_hash: auth_hash, temp_email: emails.try(:first))
-    end
-
-    def self.find_by_orcid_or_emails(orcid:, emails:)
-      emails = Array.wrap(emails)
-      emails.delete_if(&:blank?)
-      StashEngine::User.where(['orcid = ? or email IN ( ? )', orcid, emails])
     end
 
     def orcid_link
@@ -107,6 +101,8 @@ module StashEngine
     # in the controller).
     # rubocop:disable Metrics/AbcSize
     def merge_user!(other_user:, overwrite: true)
+      raise ArgumentError, 'Cannot merge System user info' if other_user.id == 0 || id == 0
+
       # these methods do not invoke callbacks, since not really needed for taking ownership
       CurationActivity.where(user_id: other_user.id).update_all(user_id: id)
       ResourceState.where(user_id: other_user.id).update_all(user_id: id)
@@ -166,6 +162,8 @@ module StashEngine
 
     # convenience method for updating and returning user
     def update_user_orcid(orcid:, temp_email:)
+      raise ArgumentError, 'Cannot update System user ORCID' if id == 0
+
       update(last_login: Time.new.utc, orcid: orcid)
       update(email: temp_email) if temp_email && email.nil?
       self
