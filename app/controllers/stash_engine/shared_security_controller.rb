@@ -27,17 +27,19 @@ module StashEngine
         redirect_to stash_url_helpers.choose_sso_path and return
       end
 
-      if current_user.tenant&.payment_configuration&.covers_dpc? && %w[email shibboleth].include?(current_user.tenant.authentication&.strategy) &&
-        # exclude UCSD from reauth because of account problems
-        current_user.tenant_id != 'ucsd' &&
-        (current_user.tenant_auth_date.blank? || current_user.tenant_auth_date.before?(1.month.ago))
-        redirect_to stash_url_helpers.choose_sso_path(reverify: true) and return
-      end
+      unless current_user.proxy_user?
+        if current_user.tenant&.payment_configuration&.covers_dpc? && %w[email shibboleth].include?(current_user.tenant.authentication&.strategy) &&
+          # exclude UCSD from reauth because of account problems
+          current_user.tenant_id != 'ucsd' &&
+          (current_user.tenant_auth_date.blank? || current_user.tenant_auth_date.before?(1.month.ago))
+          redirect_to stash_url_helpers.choose_sso_path(reverify: true) and return
+        end
 
-      unless current_user.validated?
-        flash[:alert] = 'Please validate your email address'
-        refresh = !current_user.email_token || current_user.email_token.expired?
-        redirect_to stash_url_helpers.email_validate_path(refresh: refresh) and return
+        unless current_user.validated?
+          flash[:alert] = 'Please validate your email address'
+          refresh = !current_user.email_token || current_user.email_token.expired?
+          redirect_to stash_url_helpers.email_validate_path(refresh: refresh) and return
+        end
       end
 
       target_page = session[:target_page]
