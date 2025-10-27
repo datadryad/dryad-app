@@ -9,7 +9,7 @@ module Reports
 
     def generate(time_period: '2025-05-06'.to_date.beginning_of_day..'2025-08-28'.to_date.end_of_day)
       CSV.open(File.join(REPORTS_DIR, @filename), 'w') do |csv|
-        csv << %w[DOI Status Paid\ Amount Paid\ With Stripe\ link]
+        csv << ['DOI', 'Status', 'Paid Amount', 'Paid With', 'Stripe link']
         StashEngine::Identifier
           .joins(:payments)
           .where(payments: { created_at: time_period })

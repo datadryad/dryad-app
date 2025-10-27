@@ -34,7 +34,7 @@ class ResourcePayment < ApplicationRecord
   acts_as_paranoid
   has_paper_trail
 
-  STRIPE_LINK = 'https://dashboard.stripe.com/acct_1DiPcPKX6qdZziO2'
+  STRIPE_LINK = 'https://dashboard.stripe.com/acct_1DiPcPKX6qdZziO2'.freeze
 
   belongs_to :resource, class_name: 'StashEngine::Resource'
 
