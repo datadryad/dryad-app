@@ -242,7 +242,7 @@ module StashEngine
       @old = existing_user
       @helpdesk_email = APP_CONFIG['helpdesk_email'] || 'help@datadryad.org'
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
-      mail(to: @helpdesk_email, cc: @submission_error_emails, subject: "#{rails_env}user account merge request")
+      mail(to: @helpdesk_email, bcc: @submission_error_emails, subject: "#{rails_env}User account merge request", reply_to: @user.email)
     end
 
     def dependency_offline(dependency, message)
