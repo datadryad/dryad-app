@@ -34,6 +34,8 @@ class ResourcePayment < ApplicationRecord
   acts_as_paranoid
   has_paper_trail
 
+  STRIPE_LINK = 'https://dashboard.stripe.com/acct_1DiPcPKX6qdZziO2'
+
   belongs_to :resource, class_name: 'StashEngine::Resource'
 
   enum :status, { created: 1, paid: 2, failed: 3 }
@@ -60,5 +62,12 @@ class ResourcePayment < ApplicationRecord
     return invoice_id if pay_with_invoice?
 
     payment_intent
+  end
+
+  def payment_link
+    return nil unless paid?
+    return "#{STRIPE_LINK}/invoices/#{payment_id}" if pay_with_invoice?
+
+    "#{STRIPE_LINK}/payments/#{payment_id}"
   end
 end
