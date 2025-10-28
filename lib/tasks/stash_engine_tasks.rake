@@ -1166,7 +1166,7 @@ namespace :identifiers do
         csv << [i.identifier, i.publication_article_doi,
                 u&.affiliation&.long_name, r&.country,
                 res&.current_curation_status,
-                i.process_date.submitted, i.date_first_published, i.resources.last.updated_at,
+                i.process_date.submitted&.to_date, i.date_first_published&.to_date, i.resources.last.updated_at.to_date,
                 i.storage_size,
                 i.payment_type, i.publication_name, i.journal&.sponsor&.name,
                 res&.contributors&.map(&:contributor_name)&.compact,
