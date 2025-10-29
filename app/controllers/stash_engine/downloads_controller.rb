@@ -92,8 +92,8 @@ module StashEngine
       if data_file&.resource&.may_download?(ui_user: current_user) || @sharing_link
         response.set_header(
           'Link',
-          "<#{file_linkset_url(id: data_file.id)}>; rel=\"linkset\"; type=\"application/linkset\",
-          <#{file_linkset_url(id: data_file.id)}.json>; rel=\"linkset\"; type=\"application/linkset+json\",
+          "<#{file_linkset_url(file_id: data_file.id)}>; rel=\"linkset\"; type=\"application/linkset\",
+          <#{file_linkset_url(file_id: data_file.id)}.json>; rel=\"linkset\"; type=\"application/linkset+json\",
           <#{show_url(id: data_file.resource.identifier_str)}> ; rel=\"collection\" ; type=\"text/html\""
         )
         @file_presigned.download(file: data_file)
