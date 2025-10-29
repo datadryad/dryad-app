@@ -123,7 +123,7 @@ test:
     password: "my.password"
     sandbox: true
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://127.0.0.1:8983/solr/rors" %>
-  stripe_payment_url: <%= "https://dashboard.stripe.com/#{Rails.application.credentials[Rails.env.to_sym][:stripe_account_key]}/test" %>
+  stripe_payment_url: https://dashboard.stripe.com/acc_123456/test
 
 <% else %>
 
