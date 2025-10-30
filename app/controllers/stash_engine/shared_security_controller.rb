@@ -11,6 +11,7 @@ module StashEngine
     def require_user_login
       return if current_user.present? && !current_user.proxy_user?
 
+      clear_user
       flash[:alert] = 'You must be logged in.'
       redirect_to stash_url_helpers.choose_login_path
     end
