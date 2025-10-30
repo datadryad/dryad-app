@@ -3,12 +3,12 @@ require 'csv'
 
 module Reports
   module Payments
-    class Tenant2025Fees < Reports::Payments::Base
+    class Tenant2025Fees < Reports::Payments::Base2025Fees
 
       def initialize
         super
 
-        @summary_file_name = '2025_fees_tenant_summary.csv'
+        @summary_file_name = '2025_fees_tenant_summary'
         @payment_plan = '2025'
       end
 
@@ -28,7 +28,7 @@ module Reports
               sc_report.each do |item|
                 if item['PaymentID'] == c.id
                   tenant_item_count += 1
-                  sponsor_summary << [item['DOI'], c.short_name, item['ApprovalDate']]
+                  sponsor_summary << [item['DOI'], c.short_name, item['Size'], item['ApprovalDate']]
                 end
               end
               csv << [tenant.short_name, c.short_name, tenant_item_count, '']

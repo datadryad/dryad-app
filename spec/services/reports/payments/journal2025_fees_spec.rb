@@ -32,7 +32,7 @@ describe Reports::Payments::Journal2025Fees do
     end
 
     context 'generated report file' do
-      let(:report_path) { File.join('spec', 'fixtures', 'reports', '2025_2025_fees_summary.csv.csv') }
+      let(:report_path) { File.join('spec', 'fixtures', 'reports', '2025_2025_fees_summary.csv') }
       let(:report_headers) { %w[SponsorName JournalName Count] }
 
       context 'csv contents' do
@@ -63,7 +63,7 @@ describe Reports::Payments::Journal2025Fees do
 
           described_class.new.call(args).count
 
-          expect(File).to have_received(:open).with('spec/fixtures/reports/2025_2025_fees_summary.csv.csv', 'w', anything).once
+          expect(File).to have_received(:open).with('spec/fixtures/reports/2025_2025_fees_summary.csv', 'w', anything).once
           expect(File).to have_received(:open).with(
             "spec/fixtures/reports/2025_submissions_#{StashEngine::GenericFile.sanitize_file_name(journal_org.name)}_2025.pdf", 'wb'
           ).once

@@ -21,7 +21,7 @@ describe Reports::Payments::Tenant2025Fees do
     end
 
     context 'generated report file' do
-      let(:report_path) { File.join('spec', 'fixtures', 'reports', '2025_2025_fees_tenant_summary.csv.csv') }
+      let(:report_path) { File.join('spec', 'fixtures', 'reports', '2025_2025_fees_tenant_summary.csv') }
       let(:report_headers) { %w[SponsorName InstitutionName Count] }
 
       context 'csv contents' do
