@@ -10,7 +10,7 @@ function FunderForm({
 }) {
   const formRef = useRef();
   const [acText, setAcText] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showSelect, setShowSelect] = useState(null);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
@@ -34,7 +34,6 @@ function FunderForm({
 
   const submitForm = (values) => {
     showSavingMsg();
-    setLoading(true);
     const submitVals = {
       authenticity_token,
       contributor: {
@@ -60,10 +59,8 @@ function FunderForm({
       if (data.data.name_identifier_id === contributor.name_identifier_id && contributor.group_required) data.data.group_required = true;
       updateFunder(data.data);
       showSavedMsg();
-      setLoading(false);
     }).catch((err) => {
       [...document.querySelectorAll('.saving_text')].forEach((el) => el.setAttribute('hidden', true));
-      setLoading(false);
       Object.entries(err.response.data).forEach((e) => {
         formRef.current.setFieldError(e[0], e[1][0]);
       });
@@ -74,6 +71,7 @@ function FunderForm({
     if (current) {
       formRef.current?.resetForm({values: setValues()});
       setAcText(contributor.contributor_name || '');
+      setLoading(false);
     }
   }, [current, contributor]);
 
@@ -101,28 +99,30 @@ function FunderForm({
       {(formik) => (
         <Form className="funder-form">
           <Field name="id" type="hidden" />
-          <div className="input-stack">
-            <RorAutocomplete
-              formRef={formRef}
-              acText={acText}
-              setAcText={(v) => {
-                formik.setFieldValue('contributor_name', v);
-                setAcText(v);
-              }}
-              acID={formik.values.name_identifier_id}
-              setAcID={(v) => formik.setFieldValue('name_identifier_id', v)}
-              controlOptions={
-                {
-                  htmlId: `contrib_${contributor.id}`,
-                  labelText: 'Granting organization',
-                  isRequired: true,
-                  errorId: 'funder_error',
-                  desBy: `${contributor.id}funder-ex`,
+          {!loading && (
+            <div className="input-stack">
+              <RorAutocomplete
+                formRef={formRef}
+                acText={acText}
+                setAcText={(v) => {
+                  formik.setFieldValue('contributor_name', v);
+                  setAcText(v);
+                }}
+                acID={formik.values.name_identifier_id}
+                setAcID={(v) => formik.setFieldValue('name_identifier_id', v)}
+                controlOptions={
+                  {
+                    htmlId: `contrib_${contributor.id}`,
+                    labelText: 'Granting organization',
+                    isRequired: true,
+                    errorId: 'funder_error',
+                    desBy: `${contributor.id}funder-ex`,
+                  }
                 }
-              }
-            />
-            <div id={`${contributor.id}funder-ex`}><i aria-hidden="true" />National Institutes of Health</div>
-          </div>
+              />
+              <div id={`${contributor.id}funder-ex`}><i aria-hidden="true" />National Institutes of Health</div>
+            </div>
+          )}
           {showSelect && (
             <div className="input-stack">
               <label htmlFor="subfunder_select" className="input-label">{showSelect.group_label}</label>
@@ -178,7 +178,6 @@ function FunderForm({
               aria-invalid={!!formik.errors.award_title || null}
               aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
-              disabled={loading || null}
             />
             <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the grant awarded</div>
           </div>
