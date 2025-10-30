@@ -110,6 +110,18 @@ describe AwardMetadataService do
               expect(contrib.contributor_name).to eq('NIH Office of the Director')
             end
           end
+
+          context 'with contributor auto_update set to false' do
+            before { contrib.update(auto_update: false) }
+
+            let(:nih_contrib) { create(:contributor, award_number: 'R01HD113192', name_identifier_id: NIH_ROR, contributor_name: 'Original name') }
+
+            it 'does not update record data' do
+              VCR.use_cassette('nih_api/award_one_result_found') do
+                expect { subject }.not_to(change { contrib.reload })
+              end
+            end
+          end
         end
 
         context 'with contributor name is different but is in mapped names' do
