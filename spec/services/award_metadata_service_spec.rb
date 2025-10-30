@@ -90,14 +90,14 @@ describe AwardMetadataService do
         context 'with contributor grouping data' do
           let!(:nih_grouping) do
             create(:contributor_grouping,
-                   name_identifier_id: NIH_ROR,
-                   identifier_type: 'ror',
-                   json_contains: [
-                     {
-                       'identifier_type' => 'ror', 'contributor_name' => 'NIH Office of the Director',
-                       'contributor_type' => 'funder', 'name_identifier_id' => 'https://ror.org/00fj8a872'
-                     }
-                   ])
+              name_identifier_id: NIH_ROR,
+              identifier_type: 'ror',
+              json_contains: [
+                {
+                  'identifier_type' => 'ror', 'contributor_name' => 'NIH Office of the Director',
+                  'contributor_type' => 'funder', 'name_identifier_id' => 'https://ror.org/00fj8a872'
+                }
+              ])
           end
 
           it 'updates record ror data' do
@@ -110,19 +110,31 @@ describe AwardMetadataService do
               expect(contrib.contributor_name).to eq('NIH Office of the Director')
             end
           end
+
+          context 'with contributor auto_update set to false' do
+            before { contrib.update(auto_update: false) }
+
+            let(:nih_contrib) { create(:contributor, award_number: 'R01HD113192', name_identifier_id: NIH_ROR, contributor_name: 'Original name') }
+
+            it 'does not update record data' do
+              VCR.use_cassette('nih_api/award_one_result_found') do
+                expect { subject }.not_to change { contrib.reload }
+              end
+            end
+          end
         end
 
         context 'with contributor name is different but is in mapped names' do
           let!(:nih_grouping) do
             create(:contributor_grouping,
-                   name_identifier_id: NIH_ROR,
-                   identifier_type: 'ror',
-                   json_contains: [
-                     {
-                       'identifier_type' => 'ror', 'contributor_name' => 'Office of the Director',
-                       'contributor_type' => 'funder', 'name_identifier_id' => 'https://ror.org/00fj8a872'
-                     }
-                   ])
+              name_identifier_id: NIH_ROR,
+              identifier_type: 'ror',
+              json_contains: [
+                {
+                  'identifier_type' => 'ror', 'contributor_name' => 'Office of the Director',
+                  'contributor_type' => 'funder', 'name_identifier_id' => 'https://ror.org/00fj8a872'
+                }
+              ])
           end
 
           it 'updates record ror data using the name from the database' do

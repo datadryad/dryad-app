@@ -108,6 +108,8 @@ module StashDatacite
     end
 
     def check_details
+      return unless @contributor.auto_update?
+
       award_info = AwardMetadataService.new(@contributor).award_details || {}
       return unless award_info.present?
 
