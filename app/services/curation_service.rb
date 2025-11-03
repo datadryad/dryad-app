@@ -2,6 +2,7 @@ class CurationService
 
   # rubocop:disable Metrics/ParameterLists
   attr_reader :resource, :resource_id, :status, :user, :user_id, :note, :options
+
   def initialize(status:, resource: nil, resource_id: nil, user: nil, user_id: nil, note: nil, options: nil, created_at: nil)
     # rubocop:enable Metrics/ParameterLists
     @resource = resource || StashEngine::Resource.find_by(id: resource_id)
@@ -73,12 +74,14 @@ class CurationService
 
     case @status
     when 'published', 'embargoed'
+      CostReportingService.new(@resource).notify_partner_of_large_data_submission
       StashEngine::UserMailer.status_change(@resource, @status).deliver_now
       StashEngine::UserMailer.journal_published_notice(@resource, @status).deliver_now
     when 'peer_review'
       StashEngine::UserMailer.status_change(@resource, @status).deliver_now
       StashEngine::UserMailer.journal_review_notice(@resource, @status).deliver_now
     when 'submitted'
+      CostReportingService.new(@resource).notify_partner_of_large_data_submission
       # Don't send multiple emails for the same resource, or for submission made by curator
       return unless @activity.first_time_in_status?
 

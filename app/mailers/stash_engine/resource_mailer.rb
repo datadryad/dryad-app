@@ -77,5 +77,10 @@ module StashEngine
       mail(to: user_email(@user),
            subject: "#{rails_env}DELETE NOTIFICATION: Dryad submission was deleted \"#{@title}\"")
     end
+
+    def ld_submission(resource)
+      @resource = resource
+      @partner_name = resource.identifier.payer_name
+    end
   end
 end

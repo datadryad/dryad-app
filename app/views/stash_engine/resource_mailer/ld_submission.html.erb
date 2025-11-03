@@ -1,0 +1,11 @@
+<p>Partner name: "<%= @partner_name %>"</p>
+<p>This is a Large Data Publication</p>
+
+<p>The below dataset has been <%= @resource.current_curation_status %></p>
+
+<p>
+  Title: <%= @resource.title.html_safe %><br/>
+  DOI: <%= @resource.identifier_uri %>
+</p>
+
+<p>If you have questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Auto-Withdraw <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>
