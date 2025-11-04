@@ -5,7 +5,7 @@ module StashEngine
     helper SortableTableHelper
     before_action :require_user_login
     protect_from_forgery except: :activity_log
-    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates create_issue]
+    before_action :load, only: %i[popup note_popup waiver_add flag edit_submitter notification_date pub_dates create_issue add_concern]
 
     def popup
       case @field
@@ -173,6 +173,12 @@ module StashEngine
       # redirect to it
       sf_url = Stash::Salesforce.case_view_url(case_id: sf_case_id)
       redirect_to(sf_url, allow_other_host: true)
+    end
+
+    def add_concern
+      authorize %i[stash_engine admin_datasets]
+      @description = StashDatacite::Description.find_or_create_by(resource_id: @resource.id, description_type: 'concern')
+      respond_to(&:js)
     end
 
     def destroy

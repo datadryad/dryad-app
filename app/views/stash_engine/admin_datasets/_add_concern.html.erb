@@ -1,0 +1,13 @@
+<h1>Add notice</h1>
+<%= react_component('components/MetadataEntry/Description/Description', { setResource: escape_javascript(() => {}), dcsDescription: @description, mceLabel: {
+    label: 'Notice/Expression of concern',
+    required: true,
+    describe: 'An expression of concern or a notice of article retraction.'}
+}) %>
+<div class="c-modal__buttons-right">
+  <div role="status">
+    <div class="saving_text" hidden>Saving&hellip;</div>
+    <div class="saved_text" hidden>Saved</div>
+  </div>
+  <%= button_tag 'Close', type: 'button', id: 'cancel_dialog', class: 'o-button__plain-text7' %>
+</div>
