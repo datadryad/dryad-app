@@ -1,11 +1,12 @@
 <h1>Edit publication dates</h1>
-<p style="max-width: 480px">Edit the publication dates for the public versions. To set the latest publication date to the future, please change the status to embargoed.</p>
+<p style="max-width: 480px">Edit the publication dates for the public versions. The date for published versions must be today or earlier. The date for embargoed or future published versions must be tomorrow or later.</p>
 <%= form_with(url: ds_admin_pub_dates_path(@identifier.id), method: :post, local: false, model: @identifier, scope: :identifier) do |form| -%>
   <% @identifier.resources.with_public_metadata.each do |resource| %>
     <%= form.fields_for "resources[]", resource do |f| %>
+        <% status = resource&.last_curation_activity&.status %>
         <div class="c-input">
           <%= f.label :publication_date, "Version #{resource.stash_version.version} Publication date (Resource ID #{resource.id})", class: 'c-input__label' %>
-          <%= f.date_field :publication_date, class: 'c-input__text', max: Date.today %>
+          <%= f.date_field :publication_date, class: 'c-input__text', max: status == 'published' ? Date.today : nil, min: status != 'published' ? Date.tomorrow : nil %>
         </div>
     <% end %>
   <% end %>
