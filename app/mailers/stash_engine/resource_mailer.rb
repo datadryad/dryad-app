@@ -81,6 +81,12 @@ module StashEngine
     def ld_submission(resource)
       @resource = resource
       @partner_name = resource.identifier.payer_name
+
+      mail(
+        to: @resource.tenant&.campus_contacts,
+        bcc: 'partnerships@datadryad.org',
+        subject: "#{rails_env}Large data #{@resource.current_curation_status}: \"#{@title}\""
+      )
     end
   end
 end

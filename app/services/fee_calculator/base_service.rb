@@ -90,6 +90,10 @@ module FeeCalculator
       add_invoice_fee
     end
 
+    def storage_fee_tier
+      get_tier_by_value(storage_fee_tiers, resource.total_file_size)
+    end
+
     private
 
     def verify_new_payment_system
