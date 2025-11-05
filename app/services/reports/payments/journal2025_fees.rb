@@ -3,12 +3,12 @@ require 'csv'
 
 module Reports
   module Payments
-    class Journal2025Fees < Reports::Payments::Base
+    class Journal2025Fees < Reports::Payments::Base2025Fees
 
       def initialize
         super
 
-        @summary_file_name = '2025_fees_summary.csv'
+        @summary_file_name = '2025_fees_summary'
         @payment_plan = '2025'
       end
 
@@ -28,7 +28,7 @@ module Reports
               sc_report.each do |item|
                 if item['JournalISSN'] == j.single_issn
                   journal_item_count += 1
-                  sponsor_summary << [item['DOI'], item['ArticleDOI'], j.title, item['ApprovalDate']]
+                  sponsor_summary << [item['DOI'], j.title, item['Size'], item['ApprovalDate']]
                 end
               end
               csv << [org.name, j.title, journal_item_count, '']
