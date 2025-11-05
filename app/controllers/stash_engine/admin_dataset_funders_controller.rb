@@ -34,7 +34,7 @@ module StashEngine
         # Limit to tenant by either role or selected limit
         tenant_ids = policy_scope(StashEngine::Tenant).map(&:id)
         tenant_limit = params[:tenant].present? && tenant_ids.include?(params[:tenant]) ? [params[:tenant]] : tenant_ids
-        @rep.add_where(arr: ["last_res.tenant_id in (#{tenant_limit.map { |id| "'#{id}'" }.join(', ')})"])
+        @rep.add_where(arr: ["last_res.tenant_id in (#{tenant_limit.map { |_i| '?' }.join(', ')})", tenant_limit])
       else
         return unless params[:tenant].present?
 
@@ -50,7 +50,7 @@ module StashEngine
       if group_record.present?
         children = group_record.json_contains.map { |c| c['name_identifier_id'] }
         children << group_record.name_identifier_id
-        @rep.add_where(arr: ["contrib.name_identifier_id in (#{children.map { |id| "'#{id}'" }.join(', ')})"])
+        @rep.add_where(arr: ["contrib.name_identifier_id in (#{children.map { |_i| '?' }.join(', ')})", children])
         return
       end
 
