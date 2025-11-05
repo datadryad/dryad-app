@@ -35,7 +35,10 @@ module Integrations
     end
 
     def parse_response(response, format: :json)
-      raise StandardError, "Bad response status: #{response.code} #{response.message}" unless response.is_a?(Net::HTTPSuccess)
+      if response.is_a?(Net::HTTPBadRequest)
+        Rails.logger.info("Bad response status: #{response.code} #{response.message}")
+        return
+      end
 
       return Nokogiri::XML::Document.parse(response.body) if format == :xml
 
