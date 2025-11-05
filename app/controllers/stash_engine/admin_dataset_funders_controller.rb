@@ -44,7 +44,7 @@ module StashEngine
 
     # this may add a special aggregate funder like NIH that has many sub-funders or may be no hierarchy
     private def add_funder_limit
-      return unless params.dig(:funder, :label).present?
+      return unless params.dig(:funder, :value).present?
 
       group_record = StashDatacite::ContributorGrouping.where(name_identifier_id: params.dig(:funder, :value)).first
       if group_record.present?
