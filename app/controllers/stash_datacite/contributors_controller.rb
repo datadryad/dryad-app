@@ -80,7 +80,7 @@ module StashDatacite
         render json: nil
       else
         @contributors = StashEngine::RorOrg.distinct.joins(
-          "inner join dcs_contributors on identifier_type = 'ror' and contributor_type = 'funder' and name_identifier_id = ror_id"
+          "inner join dcs_contributors on contributor_type = 'funder' and name_identifier_id = ror_id"
         ).find_by_ror_name(partial_term)
         render json: @contributors
       end
