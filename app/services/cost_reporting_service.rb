@@ -10,8 +10,8 @@ class CostReportingService
     note = "Large Data notification was sent for status: #{status}"
     return if resource.curation_activities.where(note: note).exists?
 
-    CurationService.new(status: status, resource: resource, user: StashEngine::User.system_user, note: note).create
-    ResourceMailer.ld_submission(resource).deliver_later
+    CurationService.new(status: status, resource: resource, user: StashEngine::User.system_user, note: note).process
+    StashEngine::ResourceMailer.ld_submission(resource).deliver_later
   end
 
 end
