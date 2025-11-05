@@ -34,7 +34,7 @@ module StashEngine
         # Limit to tenant by either role or selected limit
         tenant_ids = policy_scope(StashEngine::Tenant).map(&:id)
         tenant_limit = params[:tenant].present? && tenant_ids.include?(params[:tenant]) ? [params[:tenant]] : tenant_ids
-        @rep.add_where(arr: ['last_res.tenant_id in (?)', tenant_limit.join(', ')])
+        @rep.add_where(arr: ["last_res.tenant_id in (#{tenant_limit.map { |_i| '?' }.join(', ')})", tenant_limit])
       else
         return unless params[:tenant].present?
 
@@ -44,17 +44,17 @@ module StashEngine
 
     # this may add a special aggregate funder like NIH that has many sub-funders or may be no hierarchy
     private def add_funder_limit
-      return unless params[:funder_name].present?
+      return unless params.dig(:funder, :value).present?
 
-      group_record = StashDatacite::ContributorGrouping.where(name_identifier_id: params[:funder_id]).first
+      group_record = StashDatacite::ContributorGrouping.where(name_identifier_id: params.dig(:funder, :value)).first
       if group_record.present?
-        names = group_record.json_contains.map { |i| i['contributor_name'] } + [params[:funder_name]]
-        sql = "contrib.contributor_name IN (#{names.map { |_i| '?' }.join(', ')})"
-        @rep.add_where(arr: ([sql] + names).flatten) # should already be flat, but just in case
+        children = group_record.json_contains.map { |c| c['name_identifier_id'] }
+        children << group_record.name_identifier_id
+        @rep.add_where(arr: ["contrib.name_identifier_id in (#{children.map { |_i| '?' }.join(', ')})", children])
         return
       end
 
-      @rep.add_where(arr: ['contrib.contributor_name = ?', params[:funder_name]]) # simple funder
+      @rep.add_where(arr: ['contrib.name_identifier_id = ?', params.dig(:funder, :value)]) # simple funder
     end
 
     private def setup_paging

@@ -13,11 +13,16 @@
       <% end %>
 
       <div class="o-admin-form-pair">
-        <label for="funder_name">Funder:</label>
-        <%= text_field_tag 'funder_name', params[:funder_name], {size: 15, class: 'c-input__text'} %>
-        <%= hidden_field_tag 'funder_id', params[:funder_id] %>
+        <%= render partial: 'stash_engine/shared/search_select', locals: {
+          id: 'funder',
+          label: 'Funder:',
+          field_name: 'funder',
+          options_path: '/stash_datacite/contributors/autocomplete?query=',
+          options_label: 'name',
+          options_value: 'id',
+          selected: params.dig(:funder)
+        } %>
       </div>
-
     </div>
 
     <!-- second column -->
