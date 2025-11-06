@@ -1137,7 +1137,7 @@ namespace :identifiers do
 
       puts("  gathering \"PPR => submitted\" identifiers in period: #{origin_date} to #{end_date}")
       StashEngine::CurationActivity.where(created_at: origin_date..end_date, status: 'submitted')
-        .where.not(identifier_id: first_submitted.select(:id))
+        .where.not(identifier_id: first_submitted.pluck(:id))
         .find_each do |ca|
 
         # "ppr to queue"
