@@ -153,7 +153,18 @@ describe CostReportingService do
       end
     end
 
-    context 'when status changes to published or embargoed' do
+    context 'when status changes to embargoed' do
+      context 'on first publish' do
+        before do
+          create(:curation_activity, :embargoed, resource: resource)
+        end
+
+        include_examples 'does not send ldf notification'
+
+      end
+    end
+
+    context 'when status changes to published' do
       context 'on first publish' do
         before do
           create(:curation_activity, :published, resource: resource)
@@ -190,15 +201,6 @@ describe CostReportingService do
           before do
             create(:curation_activity, :submitted, resource: resource,
                                                    note: 'Sending large data notification for status: submitted')
-          end
-
-          include_examples 'sends ldf notification'
-        end
-
-        context 'and the email for embargoed status was sent' do
-          before do
-            create(:curation_activity, :embargoed, resource: resource,
-                                                   note: 'Sending large data notification for status: embargoed')
           end
 
           include_examples 'sends ldf notification'

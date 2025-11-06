@@ -21,7 +21,7 @@ class CostReportingService
     return false if resource.tenant&.campus_contacts&.blank?
 
     # NO - wrong status
-    return false unless @status.in?(%w[submitted embargoed published])
+    return false unless @status.in?(%w[submitted published])
 
     # NO - not the first status occurrence on resource
     return false if resource.curation_activities.where(status: @status).count > 1
@@ -57,6 +57,6 @@ class CostReportingService
   def allowed_statuses
     return %w[submitted curation action_required embargoed to_be_published published] if @status == 'submitted'
 
-    %w[embargoed published]
+    %w[published]
   end
 end
