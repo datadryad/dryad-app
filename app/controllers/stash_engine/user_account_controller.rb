@@ -4,12 +4,12 @@ module StashEngine
     before_action :require_login, except: %i[edit request_merge]
 
     def index
+      require_user_login if current_user.proxy_user?
+
       current_user.admin_searches.each { |s| s.create_code unless s.share_code.present? }
     end
 
     def edit
-      return render(nothing: true, status: :unauthorized) unless current_user
-
       @email = params[:email].squish
       validated = current_user.email&.downcase == @email.downcase
       @existing_user = StashEngine::User.find_by(email: @email)

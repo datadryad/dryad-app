@@ -11,6 +11,17 @@
     <% end %>        
   </div>
 
+  <% if policy([:stash_engine, :admin_datasets]).add_concern? %>
+    <div>
+      <%= form_with(url: add_concern_path(id: @identifier.id), method: :get, local: false) do -%>
+        <p>
+          <button class="o-button__plain-text7"><i class="fas fa-circle-exclamation" aria-hidden="true"></i> Dataset usage warning</button>
+          &nbsp;Add or edit an expression of concern or a notice of article retraction that will appear on the dataset landing page.
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if policy(@identifier).reset_payments? %>
     <div>
       <%= form_with(url: stash_url_helpers.reset_payment_payments_path(identifier_id: @identifier&.id), method: :delete) do -%>

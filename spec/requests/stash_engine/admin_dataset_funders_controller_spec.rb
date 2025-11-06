@@ -114,7 +114,8 @@ module StashEngine
         end
 
         it 'limits to a single, simple funder (not NIH)' do
-          response_code = get '/ds_admin_funders', params: { funder_name: @resources.first.contributors.first.contributor_name }
+          ff = @resources.first.contributors.first
+          response_code = get '/ds_admin_funders', params: { funder: { label: ff.contributor_name, value: ff.name_identifier_id } }
           expect(response_code).to eq(200)
           expect(body).to include(CGI.escapeHTML(@resources.first.title))
           expect(body).not_to include(CGI.escapeHTML(@resources.second.title))
@@ -130,7 +131,7 @@ module StashEngine
           )
 
           cg = StashDatacite::ContributorGrouping.first
-          response_code = get '/ds_admin_funders', params: { funder_name: cg.contributor_name, funder_id: cg.name_identifier_id }
+          response_code = get '/ds_admin_funders', params: { funder: { label: cg.contributor_name, value: cg.name_identifier_id } }
           expect(response_code).to eq(200)
 
           expect(body).to include(CGI.escapeHTML(@resources[0].title))

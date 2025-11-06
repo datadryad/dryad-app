@@ -36,7 +36,6 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
     end
 
     it 'renders salesforce links in notes field' do
-
       CurationService.new(status: 'in_progress', resource: @resource, note: 'Not a valid SF link').process
       CurationService.new(status: 'in_progress', resource: @resource, note: 'SF #0001 does not exist').process
       CurationService.new(status: 'in_progress', resource: @resource, note: 'SF #0002 should exist').process
@@ -262,6 +261,19 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
         fill_in 'Enter the issue number', with: '1235'
         click_button 'Submit'
         expect(page).to have_link('Another test github issue', href: 'https://github.com/datadryad/dryad-product-roadmap/issues/1235')
+      end
+
+      it 'adds an expression of concern' do
+        concern = Faker::Lorem.paragraph
+        expect(page).to have_text('Dangerous actions')
+        expect(page).to have_button('Dataset usage warning')
+        click_button 'Dataset usage warning'
+        expect(page).to have_text('Notice/Expression of concern')
+        find('[name="concern"]').send_keys(concern)
+        expect(page).to have_text('Saved')
+        click_button 'Close'
+        click_link 'Landing page'
+        expect(page).to have_text(concern)
       end
     end
 

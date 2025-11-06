@@ -8,6 +8,8 @@ module Integrations
     def search_awards(award_ids)
       # should be searching by core_project_nums, but the API returns too many results
       results = search(criteria: { project_nums: award_ids }, sort_field: 'DateAdded', sort_order: 'desc')
+      return [] if results.blank?
+
       results['results']
     end
 

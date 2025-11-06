@@ -5,5 +5,9 @@ module StashEngine
       @user.min_app_admin?
     end
 
+    def charts?
+      @user.min_app_admin?
+    end
+
   end
 end
