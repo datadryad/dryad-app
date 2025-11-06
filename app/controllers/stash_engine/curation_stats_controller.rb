@@ -25,6 +25,8 @@ module StashEngine
     end
 
     def charts
+      authorize StashEngine::CurationStats, policy_class: CurationStatsPolicy
+
       start_date = 1.year.ago.beginning_of_month.beginning_of_day
       end_date = Date.today.end_of_month.end_of_day
       fields = chart_fields
@@ -41,8 +43,11 @@ module StashEngine
       end
       @monthly_data = @monthly_data.sort_by { |a| a[:period] }
 
+      @start_day = params[:start_day].presence || 1.month.ago
+      @end_day = params[:end_day].presence || Date.today
+
       daily_query = CurationStats
-        .where(date: 1.month.ago..Date.today)
+        .where(date: @start_day..@end_day)
         .group("DATE_FORMAT(date, '%Y-%m-%d')")
         .select("DATE_FORMAT(date, '%Y-%m-%d') AS day", *@field_keys.map { |f| "SUM(#{f}) AS #{f}" })
 

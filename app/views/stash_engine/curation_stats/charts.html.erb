@@ -1,4 +1,11 @@
 <div>
+  <form method="get">
+    <label for="start_day">Select period:</label>
+    <input type="date" name="start_day" value="<%= @start_day.to_date %>" />
+    <input type="date" name="end_day" value="<%= @end_day.to_date %>" />
+    <input type="submit" value="Apply" class="o-button__submit"/>
+  </form>
+
   <canvas id="dailyChart"></canvas>
   <br />
   <br />
