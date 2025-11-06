@@ -4,6 +4,13 @@
   <%= render partial: "stash_datacite/publishers/publication_info", locals: { resource: @resource } %>
 </div>
 
+<% notice = @resource.descriptions.find_by(description_type: 'concern') %>
+<% if notice&.description&.present? %>
+  <div class="callout warn" id="landing_concern">
+    <%= raw(display_desc(notice.description)) %>
+  </div>
+<% end %>
+
 <% if @user_type == 'privileged' && current_user.id == @resource&.dataset_in_progress_editor_id %>
   <div class="callout warn">
     <p><i class="fas fa-triangle-exclamation"></i> Changes are in progress! To see your in progress changes here, <%= link_to 'complete and submit your edits', metadata_entry_pages_find_or_create_path(resource_id: @id.in_progress_resource.id), class: 'js-nav-out'%></p>

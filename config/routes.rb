@@ -308,6 +308,7 @@ Rails.application.routes.draw do
     get 'ds_admin/:id/payment_log', to: 'admin_datasets#payment_log', as: 'payment_log'
     get 'ds_admin/:id/create_salesforce_case', to: 'admin_datasets#create_salesforce_case', as: 'create_salesforce_case'
     get 'ds_admin/:id/edit/:field', to: 'admin_datasets#popup', as: 'ds_admin_popup'
+    get 'ds_admin/:id/add_concern', to: 'admin_datasets#add_concern', as: 'add_concern'
     post 'ds_admin/:id/notification_date', to: 'admin_datasets#notification_date', as: 'notification_date'    
     post 'ds_admin/:id/waive', to: 'admin_datasets#waiver_add', as: 'ds_admin_waiver'
     post 'ds_admin/:id/flag', to: 'admin_datasets#flag', as: 'ds_admin_flag'

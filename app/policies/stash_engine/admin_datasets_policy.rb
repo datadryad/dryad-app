@@ -29,6 +29,10 @@ module StashEngine
       @user.min_manager?
     end
 
+    def add_concern?
+      @user.min_manager?
+    end
+
     def notification_date?
       @user.min_manager?
     end

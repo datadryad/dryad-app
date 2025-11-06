@@ -24,7 +24,7 @@ export default function Description({setResource, dcsDescription, mceLabel}) {
       {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
     )
       .then((data) => {
-        if (data.data) {
+        if (data.data && typeof setResource === 'function') {
           setResource((r) => ({
             ...r,
             descriptions: [{...dcsDescription, description: data.data.description}, ...r.descriptions.filter((d) => d.id !== dcsDescription.id)],
