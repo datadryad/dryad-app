@@ -5,7 +5,8 @@
 
 <p>
   Title: <%= @resource.title.html_safe %><br/>
-  DOI: <%= @resource.identifier_uri %>
+  DOI: <%= @resource.identifier_uri %><br/>
+  Files size: <%= filesize(@resource.total_file_size) %>
 </p>
 
 <p>If you have questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Auto-Withdraw <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>

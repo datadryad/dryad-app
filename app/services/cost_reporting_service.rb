@@ -10,8 +10,8 @@ class CostReportingService
   def notify_partner_of_large_data_submission
     return unless should_send_notification?
 
-    CurationService.new(status: @status, resource: resource, user: StashEngine::User.system_user, note: @note).process
-    StashEngine::ResourceMailer.ld_submission(resource).deliver_later
+    CurationService.new(status: @status, resource_id: resource.id, user: StashEngine::User.system_user, note: @note).process
+    StashEngine::ResourceMailer.ld_submission(resource).deliver_now
   end
 
   private
@@ -22,6 +22,9 @@ class CostReportingService
 
     # NO - wrong status
     return false unless @status.in?(%w[submitted published])
+
+    # NO - previous notification was already sent for this resource
+    return false if resource.curation_activities.where(note: @note).exists?
 
     # NO - not the first status occurrence on resource
     return false if resource.curation_activities.where(status: @status).count > 1
@@ -38,11 +41,8 @@ class CostReportingService
     return true if prev_resource.nil?
 
     prev_ldf_tier = ResourceFeeCalculatorService.new(prev_resource).storage_fee_tier
-    # YES - data fee tier changed
-    return true if prev_ldf_tier[:range].max < ldf_tier[:range].max
-
-    # NO - previous notification was already sent for this resource
-    return false if resource.curation_activities.where(note: @note).exists?
+    # NO - data fee tier did not change
+    return false if prev_ldf_tier[:range].max >= ldf_tier[:range].max
 
     true
   end

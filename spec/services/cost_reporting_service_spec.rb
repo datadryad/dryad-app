@@ -1,13 +1,13 @@
 RSpec.shared_examples('does not send ldf notification') do
   it 'does not send emails' do
-    expect(mock_mailer).not_to receive(:deliver_later)
+    expect(mock_mailer).not_to receive(:deliver_now)
     expect { subject }.not_to(change { StashEngine::CurationActivity.count })
   end
 end
 
 RSpec.shared_examples('sends ldf notification') do
   it 'send emails and created activity entry' do
-    expect(mock_mailer).to receive(:deliver_later)
+    expect(mock_mailer).to receive(:deliver_now)
     expect { subject }.to change { StashEngine::CurationActivity.count }.by(1)
   end
 end
@@ -35,7 +35,7 @@ describe CostReportingService do
 
   let(:prev_files_size) { 11_000_000_000 }
   let(:resource_files_size) { 11_000_000_000 }
-  let(:mock_mailer) { double(deliver_later: true) }
+  let(:mock_mailer) { double(deliver_now: true) }
 
   subject { CostReportingService.new(resource).notify_partner_of_large_data_submission }
 
@@ -106,7 +106,7 @@ describe CostReportingService do
       end
 
       context 'on second submission' do
-        context 'when initial submission has proper status' do
+        context 'when initial submission has same status' do
           before do
             create(:curation_activity, :submitted, resource: prev_resource)
             create(:curation_activity, :submitted, resource: resource)
@@ -114,7 +114,7 @@ describe CostReportingService do
 
           context 'and files_size tier does not change' do
             context 'and no email was sent before' do
-              include_examples 'sends ldf notification'
+              include_examples 'does not send ldf notification'
             end
 
             context 'and the email was already sent once' do
@@ -196,15 +196,16 @@ describe CostReportingService do
             include_examples 'does not send ldf notification'
           end
         end
+      end
 
-        context 'and the email for submitted status was sent' do
-          before do
-            create(:curation_activity, :submitted, resource: resource,
-                                                   note: 'Sending large data notification for status: submitted')
-          end
-
-          include_examples 'sends ldf notification'
+      context 'and the email for submitted status was sent' do
+        before do
+          create(:curation_activity, :submitted, resource: resource,
+                                                 note: 'Sending large data notification for status: submitted')
+          create(:curation_activity, :published, resource: resource)
         end
+
+        include_examples 'sends ldf notification'
       end
 
       context 'on second submission' do
@@ -216,7 +217,7 @@ describe CostReportingService do
 
           context 'and files_size tier does not change' do
             context 'and no email was sent before' do
-              include_examples 'sends ldf notification'
+              include_examples 'does not send ldf notification'
             end
 
             context 'and the email was already sent once' do

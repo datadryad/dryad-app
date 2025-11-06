@@ -34,9 +34,9 @@ module Datacite
           version: 1
         )
 
-        mock_mailer = double(deliver_later: true)
+        mock_mailer = double(deliver_now: true)
         allow(StashEngine::ResourceMailer).to receive(:ld_submission).with(@resource).and_return(mock_mailer)
-        allow(mock_mailer).to receive(:deliver_later)
+        allow(mock_mailer).to receive(:deliver_now)
       end
 
       it 'generates DC3' do
