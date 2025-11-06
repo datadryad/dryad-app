@@ -349,6 +349,7 @@ Rails.application.routes.draw do
 
     # Curation stats
     get 'curation_stats', to: 'curation_stats#index'
+    get 'curation_stats/charts', to: 'curation_stats#charts'
 
     # Journals
     get 'journals', to: 'journals#index'
