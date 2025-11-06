@@ -105,7 +105,8 @@ module StashEngine
           technicalinfo: 'README',
           hsi_statement: 'HSI statement',
           usage_notes: 'HSI statement',
-          changelog: 'file change log'
+          changelog: 'file change log',
+          concern: 'dataset usage warning'
         }
         original = first.object['description'] || ''
         latest = c.object['description'] || ''
@@ -117,8 +118,8 @@ module StashEngine
 
         if c.event == 'update'
           str = "<div class=\"changes-header\">
-            Updated #{desc_types[c.object['description_type'].to_sym]}"
-          if original.present? || latest.present?
+            #{latest.present? ? 'Updated' : 'Deleted'} #{desc_types[c.object['description_type'].to_sym]}"
+          if latest.present?
             str += "<button class=\"o-button__plain-text7 desc-changes-button\" aria-controls=\"desc_changes#{c.id}\" aria-expanded=\"false\">
               <i class=\"fas fa-eye\" aria-hidden=\"true\" style=\"margin-right: .35ch\"></i>View changes
             </button>"

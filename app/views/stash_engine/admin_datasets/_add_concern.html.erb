@@ -1,4 +1,7 @@
-<h1>Add notice</h1>
+<h1>Dataset usage warning</h1>
+<% if @resource.publication_date.blank? %>
+<div class="callout warn"><p>The notice below is added to the latest version. Changes will not appear on the public landing page until the version is published.</p></div>
+<% end %>
 <%= react_component('components/MetadataEntry/Description/Description', { setResource: escape_javascript(() => {}), dcsDescription: @description, mceLabel: {
     label: 'Notice/Expression of concern',
     required: true,
