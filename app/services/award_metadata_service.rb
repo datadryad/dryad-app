@@ -9,6 +9,8 @@ class AwardMetadataService
   end
 
   def populate_from_api
+    return unless contributor.auto_update?
+
     response = fetch_api_data
     return if response.blank?
 

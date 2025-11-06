@@ -5,6 +5,7 @@
 # Table name: dcs_contributors
 #
 #  id                 :integer          not null, primary key
+#  auto_update        :boolean          default(TRUE)
 #  award_description  :string(191)
 #  award_number       :text(65535)
 #  award_title        :string(191)
