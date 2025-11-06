@@ -1,0 +1,11 @@
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'add_concern') %>"
+ReactRailsUJS.mountComponents()
+document.getElementById('genericModalDialog').classList.add('extra-wide');
+document.getElementById('genericModalDialog').addEventListener('close', () => {
+  document.getElementById('genericModalDialog').classList.remove('extra-wide');
+});
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('genericModalDialog').close();
+});
+document.getElementById('genericModalDialog').showModal();

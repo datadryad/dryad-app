@@ -31,6 +31,8 @@
 #  index_resource_payments_on_status               (status)
 #
 class ResourcePayment < ApplicationRecord
+  STRIPE_LINK = APP_CONFIG.stripe_payment_url
+
   acts_as_paranoid
   has_paper_trail
 
@@ -60,5 +62,12 @@ class ResourcePayment < ApplicationRecord
     return invoice_id if pay_with_invoice?
 
     payment_intent
+  end
+
+  def payment_link
+    return nil unless paid?
+    return "#{STRIPE_LINK}/invoices/#{payment_id}" if pay_with_invoice?
+
+    "#{STRIPE_LINK}/payments/#{payment_id}"
   end
 end

@@ -56,5 +56,61 @@ namespace :recurate do
     end
   end
   # rubocop:enable Layout/LineLength
+
+  # example usage: RAILS_ENV=development bundle exec rake recurate:sri_lanka_remapping
+  desc 'Re-curate resources that have no award number by matching data from PubMed'
+  task sri_lanka_remapping: :environment do
+    res = []
+    ror_id = 'https://ror.org/010xaa060'
+    StashDatacite::Contributor.funder.rors.where(name_identifier_id: ror_id).each do |contrib|
+      # for already updated awards, skip
+      next if contrib.name_identifier_id != ror_id
+
+      res << Contributors::UpdateByAwardService.new(contrib).call
+    end
+
+    CSV.open(File.join(REPORTS_DIR, "sri_lanka_remapping_#{Date.today}.csv"), 'w') do |csv|
+      csv << ['Status', 'ID', 'Identifier', 'Identifier ID', 'Resource ID', 'Award Number', 'Old Award Number']
+      res.each do |row|
+        csv << [
+          row[:status],
+          row[:contributor_id],
+          row[:identifier],
+          row[:identifier_id],
+          row[:resource_id],
+          row[:award_number],
+          row[:initial_award_number]
+        ]
+      end
+    end
+  end
+
+  # example usage: RAILS_ENV=development bundle exec rake recurate:pakistan_remapping
+  desc 'Re-curate resources that have no award number by matching data from PubMed'
+  task pakistan_remapping: :environment do
+    res = []
+    ror_id = 'https://ror.org/05h1kgg64'
+    StashDatacite::Contributor.funder.rors.where(name_identifier_id: ror_id).each do |contrib|
+      # for already updated awards, skip
+      next if contrib.name_identifier_id != ror_id
+
+      res << Contributors::UpdateByAwardService.new(contrib).call
+    end
+
+    CSV.open(File.join(REPORTS_DIR, "pakistan_remapping_#{Date.today}.csv"), 'w') do |csv|
+      csv << ['Status', 'ID', 'Identifier', 'Identifier ID', 'Resource ID', 'Award Number', 'Old Award Number']
+      res.each do |row|
+        csv << [
+          row[:status],
+          row[:contributor_id],
+          row[:identifier],
+          row[:identifier_id],
+          row[:resource_id],
+          row[:award_number],
+          row[:initial_award_number]
+        ]
+      end
+    end
+  end
 end
 # :nocov:

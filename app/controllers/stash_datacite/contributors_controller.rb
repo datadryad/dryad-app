@@ -80,7 +80,7 @@ module StashDatacite
         render json: nil
       else
         @contributors = StashEngine::RorOrg.distinct.joins(
-          "inner join dcs_contributors on identifier_type = 'ror' and contributor_type = 'funder' and name_identifier_id = ror_id"
+          "inner join dcs_contributors on contributor_type = 'funder' and name_identifier_id = ror_id"
         ).find_by_ror_name(partial_term)
         render json: @contributors
       end
@@ -108,6 +108,8 @@ module StashDatacite
     end
 
     def check_details
+      return unless @contributor.auto_update?
+
       award_info = AwardMetadataService.new(@contributor).award_details || {}
       return unless award_info.present?
 

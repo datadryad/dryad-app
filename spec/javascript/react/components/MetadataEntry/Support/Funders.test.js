@@ -41,7 +41,7 @@ describe('Funders', () => {
     const group = {status: 200, data: null};
     axios.post.mockResolvedValue(group);
 
-    render(<Funders resource={resource} setResource={setResource} />);
+    render(<Funders current resource={resource} setResource={setResource} />);
 
     const labeledElements = screen.getAllByLabelText('Granting organization');
     expect(labeledElements.length).toBe(3);
@@ -61,7 +61,7 @@ describe('Funders', () => {
 
     axios.delete.mockImplementationOnce(() => promise);
 
-    render(<Funders resource={resource} setResource={setResource} />);
+    render(<Funders current resource={resource} setResource={setResource} />);
 
     let removes = screen.getAllByLabelText('Remove funding');
     expect(removes.length).toBe(3);
@@ -89,7 +89,7 @@ describe('Funders', () => {
 
     axios.post.mockImplementationOnce(() => promise);
 
-    render(<Funders resource={resource} setResource={setResource} />);
+    render(<Funders current resource={resource} setResource={setResource} />);
 
     const removes = screen.getAllByLabelText('Remove funding');
     expect(removes.length).toBe(3);
@@ -128,7 +128,7 @@ describe('Funders', () => {
     axios.post.mockImplementationOnce(() => promise);
 
     resource.contributors = [];
-    render(<Funders resource={resource} setResource={setResource} />);
+    render(<Funders current resource={resource} setResource={setResource} />);
 
     await waitFor(() => promise); // waits for the axios promise to fulfil
 
