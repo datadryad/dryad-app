@@ -24,6 +24,34 @@ module StashEngine
       end
     end
 
+    def charts
+      start_date = 1.year.ago.beginning_of_month.beginning_of_day
+      end_date = Date.today.end_of_month.end_of_day
+      fields = chart_fields
+      @field_names = fields.values
+      @field_keys = fields.keys
+
+      monthly_query = CurationStats
+        .where(date: start_date..end_date)
+        .group("DATE_FORMAT(date, '%Y-%m')")
+        .select("DATE_FORMAT(date, '%Y-%m') AS month", *@field_keys.map { |f| "SUM(#{f}) AS #{f}" })
+
+      @monthly_data = monthly_query.map do |row|
+        { period: row.month }.merge(@field_keys.index_with { |f| row.send(f) })
+      end
+      @monthly_data = @monthly_data.sort_by { |a| a[:period] }
+
+      daily_query = CurationStats
+        .where(date: 1.month.ago..Date.today)
+        .group("DATE_FORMAT(date, '%Y-%m-%d')")
+        .select("DATE_FORMAT(date, '%Y-%m-%d') AS day", *@field_keys.map { |f| "SUM(#{f}) AS #{f}" })
+
+      @daily_data = daily_query.map do |row|
+        { period: row.day }.merge(@field_keys.index_with { |f| row.send(f) })
+      end
+      @daily_data = @daily_data.sort_by { |a| a[:period] }
+    end
+
     def csv_enumerator
       Enumerator.new do |rows|
         rows << [
@@ -50,6 +78,26 @@ module StashEngine
           rows << row.to_csv(row_sep: "\r\n")
         end
       end
+    end
+
+    private
+
+    def chart_fields
+      {
+        datasets_to_be_curated: 'Queue size',
+        datasets_unclaimed: 'Unclaimed',
+        new_datasets: 'Created',
+        new_datasets_to_submitted: 'New to queue',
+        new_datasets_to_peer_review: 'New to PPR',
+        ppr_to_curation: 'PPR to Queue',
+        ppr_size: 'PPR size',
+        datasets_to_aar: 'Curation to AAR',
+        aar_size: 'AAR size',
+        datasets_to_published: 'Curation to published',
+        datasets_to_withdrawn: 'Withdrawn',
+        author_revised: 'Author revised',
+        author_versioned: 'Author versioned'
+      }
     end
   end
 end
