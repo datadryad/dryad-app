@@ -149,7 +149,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
       it 'releases from peer review' do
         # complete submission
         create(:description, resource: resources[1], description_type: 'technicalinfo')
-        create(:description, resource: resources[1], description_type: 'usage_notes', description: nil)
+        create(:description, resource: resources[1], description_type: 'hsi_statement', description: nil)
         create(:data_file, resource: resources[1])
         # release submission
         click_button 'Release for curation'

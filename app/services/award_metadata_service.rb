@@ -1,21 +1,25 @@
 class AwardMetadataService
-  attr_reader :contributor, :api_integration_key
+  attr_reader :contributor, :api_integration_key, :api_integration, :award_number
 
-  def initialize(contributor)
+  def initialize(contributor, api_integration_key: nil, api_integration: nil, award_number: nil)
     @contributor = contributor
-    @api_integration_key = contributor.api_integration_key
+    @api_integration_key = api_integration_key || contributor.api_integration_key
+    @api_integration = api_integration || contributor.api_integration
+    @award_number = award_number || contributor.award_number
   end
 
   def populate_from_api
+    return unless contributor.auto_update?
+
     response = fetch_api_data
-    return if response.empty?
+    return if response.blank?
 
     handle_response(response)
   end
 
   def award_details
     response = fetch_api_data
-    return if response.empty?
+    return if response.blank?
 
     data = adapter.new(response.first)
     ic_data = ic_attrs(data) || { name_identifier_id: nil, contributor_name: nil }
@@ -30,9 +34,9 @@ class AwardMetadataService
   private
 
   def fetch_api_data
-    return [] if contributor.award_number.blank? || api_integration_key.nil?
+    return [] if award_number.blank? || api_integration_key.nil?
 
-    contributor.api_integration.new.search_award(contributor.award_number)
+    api_integration.new.search_award(award_number)
   end
 
   def handle_response(response)

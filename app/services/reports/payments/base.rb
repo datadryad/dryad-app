@@ -4,7 +4,7 @@ module Reports
 
       def call(args)
         sc_report_file = args.sc_report
-        log "Producing 2025 fees tenant reports for #{sc_report_file}"
+        Rails.logger.info "Producing 2025 fees tenant reports for #{sc_report_file}"
 
         md = /(.*)shopping_cart_report_(.*).csv/.match(sc_report_file)
         time_period = nil
@@ -16,7 +16,7 @@ module Reports
           summary_filename = "#{md[1]}#{time_period}_#{@summary_file_name}.csv"
         end
 
-        log "Writing summary report to #{summary_filename}"
+        Rails.logger.info "Writing summary report to #{summary_filename}"
         build_csv_file(time_period: time_period, prefix: prefix, filename: summary_filename, sc_report_file: sc_report_file)
       end
 
@@ -26,12 +26,12 @@ module Reports
         return if name.blank? || table.blank?
 
         filename = "#{file_prefix}#{payment_plan}_submissions_#{StashEngine::GenericFile.sanitize_file_name(name)}_#{report_period}.pdf"
-        log "Writing sponsor summary to #{filename}"
+        Rails.logger.info "Writing sponsor summary to #{filename}"
         table_content = ''
         table.each do |row|
-          table_content << "<tr><td>#{row[0]}</td><td>#{row[1]}</td><td>#{row[2]}</td></tr>"
+          table_content << "<tr><td>#{row[0]}</td><td>#{row[1]}</td><td>#{row[2]}</td><td>#{row[3]}</td></tr>"
         end
-        html_content = <<-HTMLEND
+        html_content = <<-HTML
           <head><style>
           tr:nth-child(even) {
               background-color: #f2f2f2;
@@ -51,12 +51,10 @@ module Reports
           Reporting period: #{report_period}<br/>
           Report generated on: #{Date.today}</p>
           <table>
-           <tr><th width="25%">DOI</th>
-               <th width="55%">Journal Name</th>
-               <th width="20%">Approval Date</th></tr>
-           #{table_content}
+            #{pdf_table_header}
+            #{table_content}
           </table>
-        HTMLEND
+        HTML
 
         pdf = Grover.new(html_content).to_pdf
         File.open(filename, 'wb') do |file|
@@ -64,6 +62,18 @@ module Reports
         end
       end
       # rubocop:enable Metrics/MethodLength
+
+      private
+
+      def pdf_table_header
+        <<-HTML
+          <tr>
+            <th width="25%">DOI</th>
+            <th width="55%">Journal Name</th>
+            <th width="20%">Approval Date</th>
+          </tr>
+        HTML
+      end
     end
   end
 end

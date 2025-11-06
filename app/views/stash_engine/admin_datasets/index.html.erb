@@ -22,6 +22,9 @@
     margin: 0;
   }
 </style>
+<% if policy([:stash_engine, :admin_datasets]).add_concern? %>
+  <%= javascript_pack_tag 'server_rendering' %>
+<% end %>
 <% end %>
 <% r = @identifier&.latest_resource %>
 
