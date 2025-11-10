@@ -91,7 +91,7 @@ export function SuppHelp({type}) {
       {type === 'dataset' && (
         <p>Your funder may cover the Dryad <a href="/costs" target="_blank">Data Publishing Charge<ExitIcon /></a>.</p>
       )}
-      <p>Award information from the National Institutes of Health or the National Science Foundation will be automatically checked and updated based on granting organization selection and the entry of a valid award number.</p>
+      <p>Award information from the National Institutes of Health or the National Science Foundation of the United States can be searched and selected with a valid award number.</p>
     </>
   );
 }
