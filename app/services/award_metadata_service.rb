@@ -21,14 +21,14 @@ class AwardMetadataService
     response = fetch_api_data
     return if response.blank?
 
-    data = adapter.new(response.first)
-    ic_data = ic_attrs(data) || { name_identifier_id: nil, contributor_name: nil }
+    parse_response(response.first)
+  end
 
-    {
-      award_number: data.award_number,
-      award_uri: data.award_uri,
-      award_title: data.award_title
-    }.merge(ic_data)
+  def search
+    response = fetch_api_data
+    return [] if response.blank?
+
+    response.map{|item| parse_response(item)}
   end
 
   private
@@ -40,14 +40,18 @@ class AwardMetadataService
   end
 
   def handle_response(response)
-    data = adapter.new(response.first, contributor_id: contributor.id)
+    attrs = parse_response(response)
+    pp "Updating contributor with ID: #{contributor.id} and award ID: #{contributor.award_number} with #{attrs.inspect}" unless Rails.env.test?
+    contributor.update attrs
+  end
 
-    attrs = {
+  def parse_response(response)
+    data = adapter.new(response, contributor_id: contributor.id)
+    {
+      award_number: data.award_number,
       award_uri: data.award_uri,
       award_title: data.award_title
     }.merge(ic_attrs(data))
-    pp "Updating contributor with ID: #{contributor.id} with #{attrs.inspect}" unless Rails.env.test?
-    contributor.update attrs
   end
 
   def ic_attrs(data)
