@@ -14,7 +14,7 @@ class AwardMetadataService
     response = fetch_api_data
     return if response.blank?
 
-    handle_response(response)
+    handle_response(response.first)
   end
 
   def award_details
@@ -28,7 +28,7 @@ class AwardMetadataService
     response = fetch_api_data
     return [] if response.blank?
 
-    response.map{|item| parse_response(item)}
+    response.map { |item| parse_response(item) }
   end
 
   private
