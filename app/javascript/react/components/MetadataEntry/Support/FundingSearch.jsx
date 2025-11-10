@@ -90,7 +90,7 @@ function FundingSearch({
   }, [autoBlurred]);
 
   useEffect(() => {
-    const rorCheck = [NIH, NSF].includes(contributor.name_identifier_id) || (!contributor.name_identifier_id && !contributor.contributor_name);
+    const rorCheck = [NIH, NSF, null, ''].includes(contributor.name_identifier_id) && !contributor.contributor_name;
     setSearch(rorCheck);
   }, []);
 
