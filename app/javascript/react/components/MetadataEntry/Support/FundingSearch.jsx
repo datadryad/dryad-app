@@ -73,7 +73,6 @@ function FundingSearch({
         a.display = (<>{a.award_number}<br /><small>{a.award_title}<br />{a.contributor_name}</small></>);
         return a;
       });
-      list.unshift({name: '', id: ''});
       return list;
     });
 
@@ -81,7 +80,13 @@ function FundingSearch({
   const idFunc = (item) => JSON.stringify(item);
 
   useEffect(() => {
-    if (autoBlurred) setAutoBlurred(false);
+    if (autoBlurred) {
+      setFundingFromSearch(JSON.stringify({
+        contributor_name: contributor.name_identifier_id === NSF ? 'U.S. National Science Foundation' : 'National Institutes of Health',
+        award_number: grantnum,
+      }));
+      setAutoBlurred(false);
+    }
   }, [autoBlurred]);
 
   useEffect(() => {
