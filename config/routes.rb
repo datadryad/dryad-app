@@ -411,6 +411,12 @@ Rails.application.routes.draw do
     patch 'contributors/reorder', to: 'contributors#reorder', as: 'contributors_reorder'
     delete 'contributors/:id/delete', to: 'contributors#delete', as: 'contributors_delete'
 
+    resources :awards do
+      collection do
+        get :autocomplete
+      end
+    end
+
     get 'publications/new', to: 'publications#new'
     get 'publications/autocomplete', to: 'publications#autocomplete'
     get 'publications/automsid', to: 'publications#automsid'
