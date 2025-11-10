@@ -6,7 +6,7 @@ describe AwardMetadataService do
   let(:other_contrib) { create(:contributor, award_number: '12345', name_identifier_id: 'https://ror.org/028rq5v79') }
 
   before do
-    allow(Rails.cache).to receive(:fetch).and_wrap_original do |m, *args, &block|
+    allow(Rails.cache).to receive(:fetch).and_wrap_original do |_m, *_args, &block|
       block.call # always run the block, skip caching
     end
   end
