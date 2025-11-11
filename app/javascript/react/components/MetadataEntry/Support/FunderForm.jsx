@@ -165,6 +165,7 @@ function FunderForm({
               aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
             />
+            <div id={`${contributor.id}desc-ex`}><i aria-hidden="true" />Awarding organization subdivision or program</div>
           </div>
           <div className="input-stack" style={{flexBasis: '100%'}}>
             <label className="input-label optional" htmlFor={`contributor_award_title__${contributor.id}`}>Award title
@@ -179,7 +180,7 @@ function FunderForm({
               aria-errormessage={`contributor_errors__${contributor.id}`}
               onBlur={formik.handleSubmit}
             />
-            <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the grant awarded</div>
+            <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the award (grant, fellowship, etc.)</div>
           </div>
           {(!!formik.errors.award_number || !!formik.errors.award_description || !!formik.errors.award_title) && (
             <div id={`contributor_errors__${contributor.id}`} style={{color: '#d12c1d'}}>
