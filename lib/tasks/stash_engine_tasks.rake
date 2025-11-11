@@ -1111,7 +1111,7 @@ namespace :identifiers do
       exit unless year.present? && month.present?
       filename = "dataset_origin_report-#{year}-#{month}.csv"
       origin_date = Date.new(year, month, 1)
-      end_date = origin_date + 1.month - 1.day
+      end_date = origin_date.end_of_month.end_of_day
     end
 
     log "Writing dataset origin report to file #{filename}"
@@ -1125,37 +1125,32 @@ namespace :identifiers do
               'Grant Funders',
               'Journal Name']
 
+      puts("  gathering identifiers first submitted in period: #{origin_date} to #{end_date}")
+
+      # Identifiers that have their FIRST submitted date in the given period
       found_identifiers = Set[]
-      # for each day in the month
-      (origin_date..end_date).each do |date|
-        puts("  gathering #{date}")
-        # "new to queue" -- for each dataset that received the target status on the given day
-        StashEngine::CurationActivity.where(created_at: date..(date + 1.day), status: %w[submitted])
-          .includes(resource: :identifier).find_each do |ca|
+      first_submitted = StashEngine::Identifier.joins(:process_date)
+        .where(stash_engine_process_dates: { submitted: origin_date..end_date })
+        .distinct
 
-          next unless ca&.resource&.identifier
+      found_identifiers.merge(first_submitted)
 
-          found_ident = ca.resource.identifier
+      puts("  gathering \"PPR => submitted\" identifiers in period: #{origin_date} to #{end_date}")
+      StashEngine::CurationActivity.where(created_at: origin_date..end_date, status: 'submitted')
+        .where.not(identifier_id: first_submitted.pluck(:id))
+        .find_each do |ca|
 
-          # "new to queue"
-          # keep if the dataset was first submitted on this date
-          if found_ident.first_submitted_resource&.process_date&.submitted&.to_date == date
-            found_identifiers.add(found_ident)
-            next
-          end
-
-          # "ppr to queue"
-          # find the most recent PPR or curation status
-          # keep if it that status is PPR
-          ca.resource.identifier.curation_activities
-            .where('resource_id < ?', ca.resource_id)
-            .order(id: :asc).reverse.each do |sibling_ca|
-            if sibling_ca.peer_review?
-              found_identifiers.add(found_ident)
-              break
-            elsif sibling_ca.curation?
-              break
-            end
+        # "ppr to queue"
+        # find the most recent PPR or curation status
+        # keep if it that status is PPR
+        ca.identifier.curation_activities
+          .where('resource_id < ?', ca.resource_id)
+          .order(id: :asc).reverse.each do |sibling_ca|
+          if sibling_ca.peer_review?
+            found_identifiers.add(ca.identifier)
+            break
+          elsif sibling_ca.curation?
+            break
           end
         end
       end
@@ -1165,14 +1160,13 @@ namespace :identifiers do
       found_identifiers.each do |i|
         res = i.latest_viewable_resource
         res = i.resources.last if res.blank?
-        first_res = i.first_submitted_resource
         u = res&.owner_author
         r = StashEngine::RorOrg.find_by_ror_id(u&.affiliation&.ror_id)
 
         csv << [i.identifier, i.publication_article_doi,
                 u&.affiliation&.long_name, r&.country,
                 res&.current_curation_status,
-                first_res&.submitted_date, i.date_first_published, i.resources.last.updated_at,
+                i.process_date.submitted&.to_date, i.date_first_published&.to_date, i.resources.last.updated_at.to_date,
                 i.storage_size,
                 i.payment_type, i.publication_name, i.journal&.sponsor&.name,
                 res&.contributors&.map(&:contributor_name)&.compact,
