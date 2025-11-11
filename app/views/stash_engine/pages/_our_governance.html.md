@@ -14,7 +14,7 @@
   <h5>Jake Carlson <a href="https://orcid.org/0000-0003-2733-0969" target="_blank" rel="noreferrer" aria-label="ORCID profile (opens in new window)"><i class="fab fa-orcid" aria-hidden="true"></i></a> (2023-2026)</h5><p> is the Associate University Librarian for Research, Collections and Outreach at the University at Buffalo (UB) Libraries. His responsibilities include increasing the capabilities of the UB Libraries to respond to researchers’ needs with managing, sharing and preserving their research data. Dryad will be a critical resource in the Libraries’ research data services program. Previously, he has been the Director of Deep Blue Repository and Research Data Services at the University of Michigan and a Data Services Specialist at Purdue University. Carlson has authored or co-authored more than 30 articles on research data services in libraries. His work has been supported by funding from the National Science Foundation (NSF), the Alfred P. Sloan Foundation, and the Institute for Museum and Library Services (IMLS).</p>
 </div>
 <div class="bio">
-  <img src="/images/chiarelli.jpg"  alt="Headshot of Andrea Chiarelli">
+  <img src="/images/chiarelli.png"  alt="Headshot of Andrea Chiarelli">
   <h5>Andrea Chiarelli (2025-2028)</h5><p> is an Associate Director at Research Consulting Limited, a mission-driven consultancy dedicated to improving the effectiveness and impact of research and scholarly communication across the global academic landscape. Andrea serves as a trusted advisor to a diverse portfolio of clients spanning research organizations, non-profits, research funders, infrastructure providers, and academic publishers. His work focuses on helping organizations develop sustainable strategies in the context of the transition to open science. He holds a PhD in Civil Engineering from the University of Nottingham, an MSc in Nuclear and Energy Engineering from the Polytechnic University of Turin, Italy, and an Executive Master of Business Administration (EMBA) from Nottingham Trent University. Andrea is a Fellow of the Chartered Management Institute (CMgr FCMI).</p>
 </div>
 <div class="bio">
@@ -30,7 +30,7 @@
   <h5>Scott Edmunds (2022-2025)</h5><p> is Editor-in-Chief for <a href="https://academic.oup.com/gigascience">GigaScience</a>, a self-proclaimed data nerd, and an Executive Committee member for Open Data Hong Kong. He has co-founded Citizen Science organisations Bauhinia Genome and CitizenScience.Asia and also teaches data management and curation at Hong Kong University. His academic background includes training in Biochemistry at Imperial College and a PhD on the Molecular Pathology of Ocular Melanoma at the Royal London Hospital, where his research mainly focused on Cancer Cell and Molecular Biology. After postdoctoral positions on Cancer Molecular Pathology at the WHO International Agency for Research in Cancer in Lyon and Institute of Cell and Molecular Sciences in London (Queen Mary) he was senior scientific editor for the BMC Genomics and Bioinformatics journals at BioMed Central before moving in 2010 to Shenzhen/Hong Kong to set up the GigaScience journal and GigaDB database for the BGI (the world’s largest genomic organisation). Working with the British Library and DataCite, GigaScience published its first data (the genome of the deadly German outbreak strain of E. coli) in June 2011.</p>  
 </div>
 <div class="bio">
-  <img src="/images/gaitan.png" alt="Headshot of Juan Diego Gaitan-Espitia">
+  <img src="/images/gaitan.jpg" alt="Headshot of Juan Diego Gaitan-Espitia">
   <h5>Juan Diego Gaitan-Espitia (2025-2028)</h5><p> is a marine biologist from Colombia with a PhD in Evolutionary Ecology from the Austral University of Chile. Since 2018, he has been an Assistant Professor at the School of Biological Sciences at The University of Hong Kong. JD is actively involved in research, knowledge exchange, and academic activities, including mentoring early-career researchers and promoting equality, diversity, and inclusion in science and education. He has served on editorial boards for journals such as Proceedings of the Royal Society B, Journal of Thermal Biology, Journal of Evolutionary Biology, and Evolution. JD has contributed to university training programs focused on best practices for open and reproducible scientific research. He has been invited to governmental and international advisory panels to facilitate knowledge exchange and translational research on climate change.</p>  
 </div>
 <div class="bio">
@@ -56,7 +56,7 @@
 </div>
 <div class="bio">
   <img src="/images/mulvany.jpg" alt="Headshot of Ian Mulvany">
-  <h5>Ian Mulvany (2021-2024)</h5><p> is CTO at BMJ where he leads
+  <h5>Ian Mulvany (2021-2026)</h5><p> is CTO at BMJ where he leads
   teams that deliver the technologies and features that underpin new products as
   well as underlying publishing systems. He is responsible for leading on
   technology strategy for the company and understanding the implications of new
