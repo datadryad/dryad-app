@@ -3,8 +3,13 @@ import {createPortal} from 'react-dom';
 import {upCase} from '../../../../lib/utils';
 
 export default function Editor({
-  author, editor, permission, invite,
+  user, author, editor, users, invite,
 }) {
+  const creator = users.find((u) => u.role === 'creator');
+  const submitter = users.find((u) => u.role === 'submitter');
+  const isCreator = user.id === creator.id;
+  const isSubmitter = user.id === submitter.id;
+  const permission = user.curator || isCreator || isSubmitter;
   return (
     <>
       {editor && editor.role && (
@@ -52,27 +57,39 @@ export default function Editor({
                   <p id={`invite-${author.id}-desc`}>
                     You may invite this author as a collaborator on the submission.
                   </p>
-                  <p>
-                    One collaborator must also be the submitter.
-                    The submitter is responsible for approving the submission for curation and publication,{' '}
-                    and will be the point of contact with Dryad for any revisions during curation.
-                  </p>
-                  <p>
-                    {author.author_email} should be invited to{' '}
-                    <select name="role" className="c-input__select" required>
-                      <option value="" aria-label="Select a role" />
-                      <option value="collaborator">Collaborate</option>
-                      <option value="submitter">Collaborate and submit</option>
-                    </select>
-                  </p>
-                  <p>Choosing &quot;Collaborate and submit&quot; will replace the current submitter.</p>
+                  {isCreator || user.curator ? (
+                    <>
+                      <p>
+                        One collaborator must also be the submitter.
+                        The submitter is responsible for approving the submission for curation and publication,{' '}
+                        and will be the point of contact with Dryad for any revisions during curation.
+                      </p>
+                      <p>
+                        {author.author_email} should be invited to{' '}
+                        <select id={`role-selector${author.id}`} name="role" className="c-input__select" required>
+                          <option value="" aria-label="Select a role" />
+                          <option value="collaborator">Collaborate</option>
+                          <option value="submitter">Collaborate and submit</option>
+                        </select>
+                      </p>
+                      <p>Choosing &quot;Collaborate and submit&quot; will replace the current submitter.</p>
+                    </>
+                  ) : (
+                    <>
+                      <input type="hidden" name="role" id={`role-selector${author.id}`} value="collaborator" />
+                      <p>
+                        Collaborators are able to edit all elements of a submission, but are unable to submit for publication or peer review.
+                        You must complete the submission, and you will be the point of contact with Dryad for any revisions during curation.
+                      </p>
+                    </>
+                  )}
                 </div>
                 <div className="c-modal__buttons-right">
                   <button
                     type="submit"
                     className="o-button__plain-text2"
                     onClick={(e) => {
-                      invite(e, author, document.querySelector(`#invite-dialog${author.id} select`).value);
+                      invite(e, author, document.getElementById(`role-selector${author.id}`).value);
                     }}
                   >Invite
                   </button>
