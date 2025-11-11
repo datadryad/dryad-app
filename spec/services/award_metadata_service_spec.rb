@@ -5,6 +5,12 @@ describe AwardMetadataService do
   let(:nsf_contrib_no_award) { create(:contributor, award_number: '', name_identifier_id: NSF_ROR) }
   let(:other_contrib) { create(:contributor, award_number: '12345', name_identifier_id: 'https://ror.org/028rq5v79') }
 
+  before do
+    allow(Rails.cache).to receive(:fetch).and_wrap_original do |_m, *_args, &block|
+      block.call # always run the block, skip caching
+    end
+  end
+
   describe '#initialize' do
     context 'with NIH contributor' do
       it 'sets the proper attributes' do
@@ -208,13 +214,80 @@ describe AwardMetadataService do
       end
 
       context 'when there is a valid award number' do
-        it 'updates record info' do
-          VCR.use_cassette('nsf_api/award_one_result_found') do
-            expect(subject).not_to be_nil
-            contrib.reload
+        context 'with no grouping' do
+          it 'updates record info' do
+            VCR.use_cassette('nsf_api/award_one_result_found') do
+              expect(subject).not_to be_nil
+              contrib.reload
 
-            expect(contrib.award_title).to eq('Collaborative Research: A Comparative Phylogeographic Approach to Predicting Cryptic Diversity')
-            expect(contrib.award_uri).to be_nil
+              expect(contrib.award_title).to eq('Collaborative Research: A Comparative Phylogeographic Approach to Predicting Cryptic Diversity')
+              expect(contrib.award_uri).to be_nil
+            end
+          end
+        end
+
+        context 'with level 1 grouping' do
+          let!(:l1_grouping) do
+            create(:contributor_grouping,
+                   name_identifier_id: NSF_ROR,
+                   identifier_type: 'ror',
+                   json_contains: [
+                     {
+                       'identifier_type' => 'ror', 'contributor_name' => 'Division Of Environmental Biology',
+                       'contributor_type' => 'funder', 'name_identifier_id' => 'https://ror.org/12345678'
+                     }
+                   ])
+          end
+
+          it 'updates record info' do
+            VCR.use_cassette('nsf_api/award_one_result_found') do
+              expect(subject).not_to be_nil
+              contrib.reload
+
+              expect(contrib.award_title).to eq('Collaborative Research: A Comparative Phylogeographic Approach to Predicting Cryptic Diversity')
+              expect(contrib.award_uri).to be_nil
+              expect(contrib.contributor_name).to eq('Division Of Environmental Biology')
+              expect(contrib.name_identifier_id).to eq('https://ror.org/12345678')
+            end
+          end
+        end
+
+        context 'with level 1 grouping' do
+          let!(:l1_grouping) do
+            create(:contributor_grouping,
+                   name_identifier_id: NSF_ROR,
+                   identifier_type: 'ror',
+                   json_contains: [
+                     {
+                       'identifier_type' => 'ror', 'contributor_name' => 'Level 1 Grouping',
+                       'contributor_type' => 'funder', 'name_identifier_id' => 'https://ror.org/12345678'
+                     }
+                   ])
+          end
+
+          let!(:l2_contributor) { create(:contributor, name_identifier_id: 'https://ror.org/12345678', contributor_name: 'Division Of Environmental Biology') }
+          let!(:l2_grouping) do
+            create(:contributor_grouping,
+                   name_identifier_id: 'https://ror.org/12345678',
+                   identifier_type: 'ror',
+                   json_contains: [
+                     {
+                       'identifier_type' => 'ror', 'contributor_name' => 'Division Of Environmental Biology',
+                       'contributor_type' => 'funder', 'name_identifier_id' => 'https://ror.org/987654321'
+                     }
+                   ])
+          end
+
+          it 'updates record info' do
+            VCR.use_cassette('nsf_api/award_one_result_found') do
+              expect(subject).not_to be_nil
+              contrib.reload
+
+              expect(contrib.award_title).to eq('Collaborative Research: A Comparative Phylogeographic Approach to Predicting Cryptic Diversity')
+              expect(contrib.award_uri).to be_nil
+              expect(contrib.contributor_name).to eq('Division Of Environmental Biology')
+              expect(contrib.name_identifier_id).to eq('https://ror.org/987654321')
+            end
           end
         end
       end

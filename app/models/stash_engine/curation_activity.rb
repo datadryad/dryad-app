@@ -74,12 +74,12 @@ module StashEngine
       processing: %w[in_progress processing],
       submitted: %w[submitted curation withdrawn peer_review],
       peer_review: %w[peer_review submitted curation withdrawn],
-      curation: (enum_vals - %w[in_progress submitted to_be_published]),
-      action_required: (enum_vals - %w[in_progress submitted to_be_published]),
+      curation: (enum_vals - %w[in_progress processing submitted to_be_published]),
+      action_required: (enum_vals - %w[in_progress processing submitted to_be_published]),
       withdrawn: %w[withdrawn curation],
       embargoed: %w[embargoed curation withdrawn published],
       to_be_published: %w[embargoed curation withdrawn to_be_published published],
-      published: (enum_vals - %w[in_progress submitted to_be_published])
+      published: (enum_vals - %w[in_progress processing submitted to_be_published])
     }.with_indifferent_access.freeze
 
     # Validations
