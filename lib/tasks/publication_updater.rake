@@ -1,56 +1,24 @@
 # :nocov:
 namespace :publication_updater do
 
-  # Query to retrieve the latest resource and its latest curation activity
-  # where the status is not in_progress, processing, withdrawn, or embargoed
-  # and its most recent curation activity was within the past 1 year
-  query = <<-SQL.freeze
-    SELECT ser.id, ser.identifier_id, seca.status, dri.related_identifier, ser.title, sepc.id
-    FROM stash_engine_identifiers sei
-      INNER JOIN stash_engine_resources ser ON sei.latest_resource_id = ser.id AND ser.deleted_at IS NULL
-      LEFT OUTER JOIN dcs_related_identifiers dri ON ser.id = dri.resource_id
-        AND dri.work_type = 'primary_article' AND dri.related_identifier_type = 'doi'
-      INNER JOIN stash_engine_curation_activities seca ON ser.last_curation_activity_id = seca.id AND seca.deleted_at IS NULL
-      LEFT OUTER JOIN (SELECT sepc2.identifier_id, MAX(sepc2.id) latest_proposed_change_id FROM stash_engine_proposed_changes sepc2 GROUP BY sepc2.identifier_id) j4 ON j4.identifier_id = sei.id
-      LEFT OUTER JOIN stash_engine_proposed_changes sepc ON sepc.id = j4.latest_proposed_change_id AND sepc.approved != 1
-    WHERE seca.status NOT IN ('in_progress', 'processing', 'withdrawn', 'embargoed')
-      AND sei.deleted_at IS NULL
-  SQL
-
   desc 'Scan Crossref for metadata about datasets that were curated within the past year'
   task crossref: :environment do
-    # We only want to harass Crossref with DOIs of datasets that have been curated within the past year
-    from_date = (Time.now - 1.year).strftime('%Y-%m-%d %H:%M:%S')
-
-    results = ActiveRecord::Base.connection.execute("#{query} AND seca.created_at >= '#{from_date}'").map do |rec|
-      OpenStruct.new(resource_id: rec[0], identifier_id: rec[1], status: rec[2], doi: rec[3], title: rec[4], change_id: rec[5])
-    end
+    # Retrive all non-withdrawn datasets that have no primary article already conencted
+    results = StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins("left outer join dcs_related_identifiers pa on pa.resource_id = stash_engine_resources.id and pa.work_type = 6").where("pa.id is null and stash_engine_identifiers.pub_state != 'withdrawn'").where.not(last_curation_activity: {status: 'withdrawn'})
     p "Scanning Crossref API for #{results.length} resources"
 
-    results.each do |result|
-      # Skip the record if we've already captured its info from Crossref at any point
-      next if StashEngine::CurationActivity.where(resource_id: result.resource_id)
-        .where('stash_engine_curation_activities.note LIKE ?', "%#{StashEngine::ProposedChange::CROSSREF_UPDATE_MESSAGE}").any?
-
-      resource = StashEngine::Resource.find(result.resource_id)
-      next if resource.nil? || resource.identifier.blank? || resource.identifier.pub_state == 'withdrawn'
-
+    results.each do |resource|
       begin
         # Hit Crossref for info
-        cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: result.doi) if result.doi.present?
-        cr = Stash::Import::Crossref.query_by_author_title(resource: resource) unless cr.present?
+        cr = Stash::Import::Crossref.query_by_author_title(resource: resource)
       rescue URI::InvalidURIError => e
         # If the URI is invalid, just skip to the next record
-        p "ERROR querying Crossref for publication DOI: '#{result.doi}' for identifier: '#{resource&.identifier}' : #{e.message}"
+        p "ERROR querying Crossref for publication DOI: '#{resource.identifier.identifier}' for identifier: '#{resource&.identifier}' : #{e.message}"
         next
       end
 
       pc = cr.to_proposed_change if cr.present?
-      # Skip the change if we already have proposed changes and the information is not different
-      existing_pc = StashEngine::ProposedChange.find(result.change_id) if result.change_id.present?
-      next if existing_pc == pc
-
-      p "  found changes for: #{result.resource_id} (#{result.status}) - #{result.title}" if pc.present?
+      p "  found changes for: #{resource.identifier.identifier} (#{resource.last_curation_activity.status}) - #{resource.title}" if pc.present?
       pc.save if pc.present?
     end
 
