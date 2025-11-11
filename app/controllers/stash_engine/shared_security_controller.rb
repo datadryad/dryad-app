@@ -13,7 +13,7 @@ module StashEngine
 
       clear_user
       flash[:alert] = 'You must be logged in.'
-      redirect_to stash_url_helpers.choose_login_path
+      redirect_to stash_url_helpers.choose_login_path and return
     end
 
     # for access to pages related to dataset editing
