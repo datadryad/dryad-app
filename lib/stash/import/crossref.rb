@@ -94,11 +94,19 @@ module Stash
         @resource.reload
       end
 
+      # rubocop:disable Metrics/AbcSize
       def to_proposed_change
         return nil unless @sm.present? && @resource.present?
+        # Skip if the identifier already has the change
+        return unless StashEngine::ProposedChange.where(identifier_id: @resource.identifier.id, publication_doi: @sm['DOI']).empty?
+        # Skip if the resource already has the relation
+        return unless @resource.related_identifiers.where("REGEXP_SUBSTR(`related_identifier`, '(10..+)') = ?", @sm['DOI'])
 
-        # Skip if the identifier already has proposed changes
-        return unless StashEngine::ProposedChange.where(identifier_id: @resource.identifier.id).empty?
+        # Skip if the change does not meet basic checks
+        pub_date = date_parts_to_date(publication_date)
+        return nil unless @sm['score'].present? && @sm['score'] >= 0.6
+        return nil if pub_date&.year&.present? && @resource.identifier.created_at.year - pub_date&.year > 3
+        return nil if @resource.authors.count > @sm['author'].count
 
         params = {
           identifier_id: @resource.identifier.id,
@@ -106,7 +114,7 @@ module Stash
           rejected: false,
           authors: @sm['author'].to_json,
           provenance: 'crossref',
-          publication_date: date_parts_to_date(publication_date),
+          publication_date: pub_date,
           publication_doi: @sm['DOI'],
           publication_issn: @sm['ISSN']&.first,
           publication_name: publisher.is_a?(Array) ? publisher&.first : publisher,
@@ -120,6 +128,7 @@ module Stash
         pc = StashEngine::ProposedChange.new(params)
         resource_will_change?(proposed_change: pc) ? pc : nil
       end
+      # rubocop:enable Metrics/AbcSize
 
       private
 
@@ -399,6 +408,7 @@ module Stash
       def publication_date
         return @sm['published-online']['date-parts'] if @sm['published-online'].present? && @sm['published-online']['date-parts'].present?
         return @sm['published-print']['date-parts'] if @sm['published-print'].present? && @sm['published-print']['date-parts'].present?
+        return @sm['published']['date-parts'] if @sm['published'].present? && @sm['published']['date-parts'].present?
 
         nil
       end

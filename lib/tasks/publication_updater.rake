@@ -50,14 +50,6 @@ namespace :publication_updater do
       existing_pc = StashEngine::ProposedChange.find(result.change_id) if result.change_id.present?
       next if existing_pc == pc
 
-      # Tweakable threshold for scoring (score is ours ... 1 == DOI match, < 1 is title+authors matching)
-      #                                 (provenance_score is Crossref's score)
-      next unless pc.present? && pc.score >= 0.6
-      # exclude very big year differences
-      next if pc.publication_date&.year&.present? && resource.identifier.created_at.year - pc.publication_date.year > 4
-      # exclude articles with fewer authors than the dataset
-      next if resource.authors.count > JSON.parse(pc.authors).count
-
       p "  found changes for: #{result.resource_id} (#{result.status}) - #{result.title}" if pc.present?
       pc.save if pc.present?
     end
@@ -101,11 +93,6 @@ namespace :publication_updater do
       end
 
       pc = cr.to_proposed_change if cr.present?
-
-      # Tweakable threshold for scoring (score is ours ... 1 == DOI match, < 1 is title+authors matching)
-      #                                 (provenance_score is Crossref's score)
-      next unless pc.present? && pc.score >= 0.6
-
       p "  found changes for: #{resource.id} (#{resource.title}" if pc.present?
       pc.save if pc.present?
     end
