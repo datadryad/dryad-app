@@ -24,6 +24,9 @@ module StashEngine
       when 'publications'
         authorize @resource, :curate?
         setup_publications
+      when 'funders'
+        authorize @resource, :curate?
+        @funder = StashDatacite::Contributor.new(resource_id: params[:resource_id])
       when 'data'
         authorize %i[stash_engine admin_datasets], :data_popup?
         setup_internal_data_list
