@@ -104,7 +104,7 @@ module Stash
 
         # Skip if the change does not meet basic checks
         pub_date = date_parts_to_date(publication_date)
-        return nil unless @sm['score'].present? && @sm['score'] >= 0.6
+        return nil unless @sm['score'].present? && @sm['score'].to_f >= 0.6
         return nil if pub_date&.year&.present? && @resource.identifier.created_at.year - pub_date&.year > 3
         return nil if @resource.authors.count > @sm['author'].count
 
