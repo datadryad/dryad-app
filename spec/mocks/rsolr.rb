@@ -23,24 +23,46 @@ module Mocks
       end
     end
 
+    def mock_rors_solr!(include_rors: [])
+      @include_rors = include_rors
+
+      # Mock the ROR Solr connection
+      # http://someserver.org:8983/solr/dryad/select?fl=dc_identifier_s&q=data&rows=10&start=0&wt=json
+      stub_request(:get, %r{solr/rors*}).to_return(status: 200, body: ror_results, headers: {})
+    end
+
     def default_results
-      { 'response' =>
-       { 'numFound' => 110,
-         'start' => 10,
-         'docs' =>
-        [{ 'dc_identifier_s' => "doi:#{@include_identifier&.identifier || '10.5061/dryad.abc123'}" },
-         { 'dc_identifier_s' => 'doi:10.5061/dryad.1r7m0' },
-         { 'dc_identifier_s' => 'doi:10.5061/dryad.2b65b' },
-         { 'dc_identifier_s' => 'doi:10.5061/dryad.h7s57' },
-         { 'dc_identifier_s' => 'doi:10.5061/dryad.5j2v6' }] } }.to_json
+      {
+        'response' => {
+          'numFound' => 110,
+          'start' => 10,
+          'docs' => [
+            { 'dc_identifier_s' => "doi:#{@include_identifier&.identifier || '10.5061/dryad.abc123'}" },
+            { 'dc_identifier_s' => 'doi:10.5061/dryad.1r7m0' },
+            { 'dc_identifier_s' => 'doi:10.5061/dryad.2b65b' },
+            { 'dc_identifier_s' => 'doi:10.5061/dryad.h7s57' },
+            { 'dc_identifier_s' => 'doi:10.5061/dryad.5j2v6' }
+          ]
+        }
+      }.to_json
     end
 
     def trivial_results
       { 'response' =>
-       { 'numFound' => 1,
-         'start' => 1,
-         'docs' =>
-         [{ 'dc_identifier_s' => "doi:#{@include_identifier&.identifier || '10.5061/dryad.abc123'}" }] } }.to_json
+        { 'numFound' => 1,
+          'start' => 1,
+          'docs' =>
+            [{ 'dc_identifier_s' => "doi:#{@include_identifier&.identifier || '10.5061/dryad.abc123'}" }] } }.to_json
+    end
+
+    def ror_results
+      {
+        'response' => {
+          'numFound' => 1,
+          'start' => 1,
+          'docs' => @include_rors.map(&:index_mappings)
+        }
+      }.to_json
     end
 
   end

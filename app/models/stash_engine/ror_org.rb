@@ -21,44 +21,40 @@ module StashEngine
 
     ROR_MAX_RESULTS = 30
 
-    # Search the RorOrgs for the given string. This will search name, acronyms, aliases, etc.
-    # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }
-    def self.find_by_ror_name(query)
+    # Search the RorOrg for the given string. This will search name, acronyms, aliases, etc.
+    # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University', ... }
+    def self.find_by_ror_name(query, limit: ROR_MAX_RESULTS)
       return [] unless query.present?
 
       if query.start_with?('https://')
-        resp = where('LOWER(ror_id) LIKE LOWER(?)', "#{query}%").limit(ROR_MAX_RESULTS)
-        return map_resp(resp).flatten.uniq
+        query = RSolr.solr_escape(query.downcase).gsub(' ', '\ ')
+        resp = search('', fq: ["ror_id:#{query}*"], limit: limit)
+        resp.dig('response', 'docs') || []
+        return map_solr_results(resp.dig('response', 'docs'))
       end
 
-      query = query.downcase
+      query = RSolr.solr_escape(query.downcase).gsub(' ', '\ ')
       # First, find matches at the beginning of the name string, and exact matches in the acronyms/aliases
-      resp = where("LOWER(name) LIKE ? OR JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-                   "#{query}%", query.to_s, query.to_s).limit(ROR_MAX_RESULTS)
-      results = map_resp(resp)
+      resp = search('', fq: ["name:#{query}*", "aliases:#{query}", "acronyms:#{query}"], limit: limit)
+      results = map_solr_results(resp.dig('response', 'docs'))
 
       # If we don't have enough results, find matches at the beginning of the acronyms/aliases
-      if results.size < ROR_MAX_RESULTS
-        resp = where("JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-                     "#{query}%", "#{query}%").limit(ROR_MAX_RESULTS - results.size)
-        results.concat(map_resp(resp))
+      if results.count < limit
+        resp = search('', fq: ["aliases:#{query}*", "acronyms:#{query}*"], limit: limit - results.count)
+        results += map_solr_results(resp.dig('response', 'docs'))
       end
 
       # If we don't have enough results, find matches elsewhere in the name string
-      if results.size < ROR_MAX_RESULTS
-        resp = where('LOWER(name) LIKE ?', "%#{query}%").limit(ROR_MAX_RESULTS - results.size)
-        results.concat(map_resp(resp))
+      if results.count < limit
+        resp = search('', fq: ["name:*#{query}*"], limit: limit - results.count)
+        results += map_solr_results(resp.dig('response', 'docs'))
       end
 
       results.flatten.uniq
     end
 
-    def self.map_resp(resp)
-      resp.map { |r| { id: r.ror_id, name: r.name, country: r.country, acronyms: r.acronyms, aliases: r.aliases } }
-    end
-
     # Search the RorOrgs for the given string. This will search name, acronyms, aliases, etc.
-    # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University' }
+    # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University', ... }
     # This method is used for auto-matching scripts, where no human has to confirm the match.
     def self.find_by_name_for_auto_matching(query)
       max_results = 10
@@ -68,17 +64,18 @@ module StashEngine
       # First, find matches at the beginning of the name string, and exact matches in the acronyms/aliases
       resp = search('', fq: ["name:#{query}*", "aliases:#{query}", "acronyms:#{query}"], limit: max_results)
       results = resp.dig('response', 'docs') || []
-      if results.any?
-        return results.map do |r|
-          { id: r['ror_id'], name: r['name'], country: r['country'], acronyms: r['acronyms'], aliases: r['aliases'] }
-        end
-      end
+      return map_solr_results(results) if results.any?
 
       # If we don't have enough results, find matches at the beginning of the acronyms/aliases
       resp = search('', fq: ["aliases:#{query}*", "acronyms:#{query}*"], limit: max_results)
-      results = resp.dig('response', 'docs') || []
+      map_solr_results(resp.dig('response', 'docs'))
+    end
+
+    def self.map_solr_results(results = [])
+      return [] if results.blank?
+
       results.map do |r|
-        { id: r['ror_id'], name: r['name'], country: r['country'], acronyms: r['acronyms'], aliases: r['aliases'] }
+        { id: r['ror_id'], name: r['name'], country: r['country'], acronyms: r['acronyms'] || [], aliases: r['aliases'] || [] }
       end
     end
 
@@ -88,14 +85,16 @@ module StashEngine
       where(name: ror_name)&.first
     end
 
-    # Return the first match for the given axact name in name, alias, or acronym
+    # Return the first match for the given exact name in name, alias, or acronym
     # @return a StashEngine::RorOrg or nil
     def self.find_first_ror_by_phrase(phrase)
-      query = phrase.downcase
-      where(
-        "LOWER(name) = ? OR JSON_SEARCH(LOWER(acronyms), 'all', ?) or JSON_SEARCH(LOWER(aliases), 'all', ?)",
-        query.to_s, query.to_s, query.to_s
-      )&.first
+      query = RSolr.solr_escape(phrase.downcase).gsub(' ', '\ ')
+
+      resp = search('', fq: ["name:#{query}", "aliases:#{query}", "acronyms:#{query}"], limit: 1)
+      results = resp.dig('response', 'docs') || []
+      return nil if results.blank?
+
+      find_by(id: results.first['id'])
     end
 
     # Search for a specific organization.
@@ -108,7 +107,13 @@ module StashEngine
     # @return a StashEngine::RorOrg or nil
     def self.find_by_isni_id(isni_id)
       isni_id = standardize_isni_format(isni_id)
-      where("isni_ids LIKE '%#{isni_id}%'")&.first
+      isni_id = RSolr.solr_escape(isni_id.downcase).gsub(' ', '\ ')
+
+      resp = search('', fq: ["isni_ids:#{isni_id}"], limit: 1)
+      results = resp.dig('response', 'docs') || []
+      return nil if results.blank?
+
+      find_by(id: results.first['id'])
     end
 
     class << self

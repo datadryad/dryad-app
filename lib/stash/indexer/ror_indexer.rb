@@ -19,8 +19,9 @@ module Stash
             filters = { q: query } if query.present?
             filters.merge!({ fq: fq.join(" #{operation} ") }) if fq.present?
             filters.merge!({ fl: fl }) if fl.present?
+            filters.merge!({ rows: limit })
 
-            solr.get('select', params: filters, rows: limit)
+            solr.get('select', params: filters)
           end
         end
       end

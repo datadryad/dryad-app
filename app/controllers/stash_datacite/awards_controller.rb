@@ -3,7 +3,7 @@ module StashDatacite
   class AwardsController < ApplicationController
     respond_to :json
 
-    # GET /awards/autocomplete?query={query_term}
+    # GET /awards/autocomplete?name_identifier_id={name_identifier_id}&award_number={award_number}
     def autocomplete
       if params[:name_identifier_id].blank? || params[:award_number].blank?
         return render json: { success: false, error: 'Must select an organization and award number' }
