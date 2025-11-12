@@ -35,7 +35,7 @@ module StashDatacite
         contributor_params[:award_description] = contributor_params[:award_description].squish if contributor_params[:award_description].present?
         contributor_params[:award_title] = contributor_params[:award_title].squish if contributor_params[:award_title].present?
         if @contributor.update(contributor_params)
-          check_details
+          # check_details
           check_reindex
           format.json { render json: @contributor }
           format.js do
