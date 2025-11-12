@@ -4,6 +4,8 @@ module StashApi
   RSpec.describe DatasetParser do
     include Mocks::Datacite
     include Mocks::Salesforce
+    include Mocks::RSolr
+
     let!(:skip_parse) { false }
 
     before(:each) do
@@ -185,9 +187,9 @@ module StashApi
       end
 
       it 'creates the author with an ISNI id, matching to an existing affiliation in the ROR system' do
-        ror_org = create(:ror_org)
         isni = "1234 #{Faker::Number.number(digits: 4)} #{Faker::Number.number(digits: 4)} #{Faker::Number.number(digits: 4)}"
-        ror_org.update(isni_ids: [isni])
+        ror_org = create(:ror_org, isni_ids: [isni])
+        mock_rors_solr!(include_rors: [ror_org])
 
         @basic_metadata = {
           'authors' => [
@@ -287,10 +289,7 @@ module StashApi
 
             dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
 
-            expect { dp.parse }.not_to raise_error(
-              StashApi::Error::BadRequestError,
-              'None of the authors have an email address in order to send the Submission email.'
-            )
+            expect { dp.parse }.not_to raise_error
           end
 
           it 'does not fail if there are no authors' do
@@ -326,10 +325,7 @@ module StashApi
 
             dp = DatasetParser.new(hash: test_metadata, id: nil, user: @user)
 
-            expect { dp.parse }.not_to raise_error(
-              StashApi::Error::BadRequestError,
-              'None of the authors have an email address in order to send the Submission email.'
-            )
+            expect { dp.parse }.not_to raise_error
           end
         end
       end
