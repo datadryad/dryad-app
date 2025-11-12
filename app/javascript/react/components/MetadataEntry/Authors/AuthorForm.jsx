@@ -10,8 +10,6 @@ export default function AuthorForm({
   const formRef = useRef(0);
   const [affiliations, setAffiliations] = useState(author?.affiliations);
   const editor = author.author_orcid && users.find((u) => u.orcid === author.author_orcid);
-  const creator = users.find((u) => u.role === 'creator');
-  const isCreator = user.id === creator.id;
 
   const submitForm = (values) => {
     const submit = {
@@ -139,7 +137,7 @@ export default function AuthorForm({
                   </div>
                   <OrcidInfo author={author} curator={user.curator} />
                 </div>
-                <Editor author={author} editor={editor} permission={isCreator || user.curator} invite={invite} />
+                <Editor user={user} author={author} editor={editor} users={users} invite={invite} />
               </div>
               {(editor && user.id === editor.id && author.author_email !== editor.email) && (
                 <p style={{marginTop: 0, fontSize: '.98rem'}}>
