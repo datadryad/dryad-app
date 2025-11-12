@@ -115,10 +115,10 @@ module StashEngine
     end
 
     def add_param_filters(proposed_changes)
-      if params[:list_search].present?
+      if params[:search].present?
         proposed_changes = proposed_changes.joins(CONCAT_FOR_SEARCH)
 
-        keys = params[:list_search].split(/\s+/).map(&:strip)
+        keys = params[:search].split(/\s+/).map(&:strip)
         proposed_changes = proposed_changes.where((['search_table.big_text LIKE ?'] * keys.size).join(' AND '), *keys.map { |key| "%#{key}%" })
       end
 

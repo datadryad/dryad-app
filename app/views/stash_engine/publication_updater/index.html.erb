@@ -18,8 +18,8 @@
   <%= form_with url: stash_url_helpers.publication_updater_path, method: :get do |form| %>  
   <div class="o-admin-form-inline">
     <div class="o-admin-form-pair">
-      <label for="list_search">Search:</label>
-      <%= text_field_tag 'list_search', params[:list_search], {class: 'c-input__text'} %>
+      <label for="search">Search:</label>
+      <%= text_field_tag 'search', params[:search], {class: 'c-input__text'} %>
     </div>
     <div class="o-admin-form-pair">
       <label for="status">Curation status:</label>
@@ -97,7 +97,7 @@
 
     $("#reset_button").on("click", function(e) {
       e.preventDefault();
-      $("#list_search").val("");
+      $("#search").val("");
       $("#match_type").val("");
       $("#status").val("");
       e.target.form.submit();

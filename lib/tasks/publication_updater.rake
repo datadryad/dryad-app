@@ -4,7 +4,10 @@ namespace :publication_updater do
   desc 'Scan Crossref for metadata about datasets that were curated within the past year'
   task crossref: :environment do
     # Retrive all non-withdrawn datasets that have no primary article already conencted
-    results = StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins("left outer join dcs_related_identifiers pa on pa.resource_id = stash_engine_resources.id and pa.work_type = 6").where("pa.id is null and stash_engine_identifiers.pub_state != 'withdrawn'").where.not(last_curation_activity: {status: 'withdrawn'})
+    results = StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity)
+      .joins('left outer join dcs_related_identifiers pa on pa.resource_id = stash_engine_resources.id and pa.work_type = 6')
+      .where("pa.id is null and stash_engine_identifiers.pub_state != 'withdrawn'")
+      .where.not(last_curation_activity: { status: 'withdrawn' })
     p "Scanning Crossref API for #{results.length} resources"
 
     results.each do |resource|
@@ -13,7 +16,7 @@ namespace :publication_updater do
         cr = Stash::Import::Crossref.query_by_author_title(resource: resource)
       rescue URI::InvalidURIError => e
         # If the URI is invalid, just skip to the next record
-        p "ERROR querying Crossref for publication DOI: '#{resource.identifier.identifier}' for identifier: '#{resource&.identifier}' : #{e.message}"
+        p "ERROR querying Crossref for identifier: '#{resource.identifier.identifier}': #{e.message}"
         next
       end
 

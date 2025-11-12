@@ -116,6 +116,9 @@
       <% end %>
     </span>
     <span id="related_works_list" class="child-details"><%= display_publications(r) %></span>
+    <% if @identifier.proposed_changes.unmatched.present? %>
+      <a class="c-admin-edit-icon" style="font-size: .98rem; font-weight: bold;" href="<%= publication_updater_path(search: @identifier.identifier) %>" target="pubUpdater" id="pubupdater"><i class="fas fa-plus" aria-hidden="true" style="margin-right: .35ch;"></i>PubUpdater matches</a>
+    <% end %>
   </div>
   <div class="input-stack" style="flex-shrink: 1">
     <span class="input-line">
