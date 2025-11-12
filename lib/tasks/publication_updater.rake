@@ -10,7 +10,7 @@ namespace :publication_updater do
       .where.not(last_curation_activity: { status: 'withdrawn' })
     p "Scanning Crossref API for #{results.length} resources"
 
-    results.each do |resource|
+    results.find_each do |resource|
       begin
         # Hit Crossref for info
         cr = Stash::Import::Crossref.query_by_author_title(resource: resource)
