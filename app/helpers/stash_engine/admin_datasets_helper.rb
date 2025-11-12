@@ -51,6 +51,7 @@ module StashEngine
 
     def display_payment_err(resource)
       return unless resource.submitted? && resource.identifier.payment_type == 'unknown'
+      return if resource.identifier.old_payment_system?
 
       "<span class=\"child-details error-text\" id=\"payment_desc_err\">
           <i class=\"fas fa-triangle-exclamation\" aria-hidden=\"true\"></i> Action required: payment or sponsorship needed
