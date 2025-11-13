@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import RorAutocomplete from '../RorAutocomplete';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
@@ -194,11 +193,3 @@ function FunderForm({
 }
 
 export default FunderForm;
-
-// resourceId, contributor, createPath, updatePath, removeFunction, updateFunder
-
-FunderForm.propTypes = {
-  resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  contributor: PropTypes.object.isRequired,
-  updateFunder: PropTypes.func.isRequired,
-};
