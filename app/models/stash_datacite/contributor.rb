@@ -52,6 +52,7 @@ module StashDatacite
     scope :nih, -> { where(name_identifier_id: StashDatacite::Contributor.related_rors(NIH_ROR)) }
     scope :nsf, -> { where(name_identifier_id: StashDatacite::Contributor.related_rors(NSF_ROR)) }
     scope :needs_award_details, -> { where.not(award_number: [nil, '']).where(award_title: [nil, '']) }
+    scope :updatable, -> { where(auto_update: true) }
 
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
@@ -172,7 +173,7 @@ module StashDatacite
     def self.related_rors(ror_id)
       Rails.cache.fetch("related_ror_ids_for_#{ror_id}", expires_in: 1.day) do
         me = [ror_id]
-        group = StashDatacite::ContributorGrouping.where(name_identifier_id: ror_id).first
+        group = StashDatacite::ContributorGrouping.find_by(name_identifier_id: ror_id)
         return me if group.nil? || group.json_contains.blank?
 
         related = group.json_contains.map do |a|
@@ -185,12 +186,12 @@ module StashDatacite
 
     def self.related_rors_with_name(ror_id)
       Rails.cache.fetch("related_ror_names_for_#{ror_id}", expires_in: 1.day) do
-        ror = StashDatacite::Contributor.where(name_identifier_id: ror_id).includes(:grouping).first
+        ror = StashEngine::RorOrg.find_by(ror_id: ror_id)
         return [] if ror.nil?
 
-        me = [ror.slice(:name_identifier_id, :contributor_name).symbolize_keys]
+        me = [{ name_identifier_id: ror.ror_id, contributor_name: ror.name }]
 
-        group = ror.grouping
+        group = StashDatacite::ContributorGrouping.find_by(name_identifier_id: ror_id)
         return me if group.nil? || group.json_contains.blank?
 
         related = group.json_contains.map do |a|

@@ -94,6 +94,24 @@ NIH_ROR_NAMES_MAPPING = {
   'office of research infrastructure programs' => 'https://ror.org/01jdyfj45'
 }.freeze
 
+NSF_ROR_NAMES_MAPPING = {
+  'division of molecular and cellular biosciences' => 'https://ror.org/002jdaq33',
+  'office of emerging frontiers in research and innovation (efri)' => 'https://ror.org/0388pet74',
+  'division of civil, mechanical, and manufacturing innovation' => 'https://ror.org/028yd4c30',
+  'office of polar programs (opp)' => 'https://ror.org/05nwjp114',
+  'division of information & intelligent systems' => 'https://ror.org/053a2cp42',
+  # 'integrative and collaborative education and research (icer)' => '',
+  'division of engineering education and centers' => 'https://ror.org/050rnw378',
+  'div. of equity for excellence in stem' => 'https://ror.org/03mamvh39',
+  'office of advanced cyberinfrastructure (oac)' => 'https://ror.org/04nh1dc89',
+  'oia-office of integrative activities' => 'https://ror.org/04k9mqs78',
+  'emerging frontiers' => 'https://ror.org/01tnvpc68',
+  # '' => '',
+  # '' => '',
+  # '' => '',
+  # '' => '',
+}.freeze
+
 HELP_PAGES_REQUIREMENTS =
   [
     { path: '/help/requirements/files', name: 'File requirements' },

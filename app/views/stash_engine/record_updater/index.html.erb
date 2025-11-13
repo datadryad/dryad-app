@@ -1,0 +1,91 @@
+<% @page_title = "Funding updater" %>
+<div class="admin-dashboard-header">
+<h1 class="o-heading__level1" id="pubupdate-label">Funding updater</h1>
+<a href="<%= record_updaters_log_path %>">Match history</a>
+</div>
+
+<div>
+  <p>Matches are based on the award number.</p>
+  <h2>Instructions</h2>
+  <ol>
+    <li>Evaluate the relationship between the dataset and the award</li>
+    <li>If the award updates should not be associated with the dataset, click "Reject"</li>
+    <li>Otherwise click "Accept"</li>
+  </ol>
+  <h2>Limit to:</h2>
+  <%= form_with url: record_updaters_path(@data_type), method: :get do |_form| %>
+  <div class="o-admin-form-inline">
+    <div class="o-admin-form-pair">
+      <label for="award_number">Award number:</label>
+      <%= text_field_tag 'award_number', params[:award_number], {class: 'c-input__text'} %>
+    </div>
+    <div class="o-admin-form-pair">
+      <label for="contrib_name">Contributor name:</label>
+      <%= text_field_tag 'contrib_name', params[:contrib_name], {class: 'c-input__text'} %>
+    </div>
+
+    <%= submit_tag('Search', class: 'o-button__submit', name: nil ) %>
+    <%= button_tag "Reset", type: :reset, id: 'reset_button', class: "o-button__remove" %>
+  </div>
+  <% end %>
+
+  <p style="margin-bottom: 0; text-align: right"><%= @proposed_changes.total_count %> results</p>
+  <div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="pubupdate-label" style="margin-top: 0">
+    <table class="c-lined-table c-proposed-change-table">
+      <thead>
+      <tr>
+        <th>
+          Title
+        </th>
+
+        <% @columns.each do |column| %>
+          <th class="c-lined-table__sort c-proposed-change-table__column-large" <%= sort_display(column.to_s) %> >
+            <%= sortable_column_head sort_field: column.to_s, title: column.to_s.humanize %>
+          </th>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody>
+      <% @proposed_changes.each do |proposed_change| %>
+        <%= render partial: 'proposed_change_line',locals: { proposed_change: proposed_change, resource: proposed_change.resource } %>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="c-space-paginator">
+    <%= paginate @proposed_changes, params: { page_size: @page_size } %>
+        <div class="c-paginator-page_size">
+      Page size:
+      <%
+        current_ps = params[:page_size].to_i
+        current_ps = 10 if current_ps == 0
+        [10, 50, 100].each do |ps| %>
+        <% if ps == current_ps %>
+          <span class="page-current"><%= ps %></span>
+        <% else %>
+          <%= link_to(ps, record_updaters_path(@data_type, request.parameters.except(:action, :controller, :data_type).merge(page_size: ps, page: 1)), 'aria-label': "#{ps} results per page") %>
+        <% end %>
+      <% end %>
+    </div>
+
+  </div>
+
+  <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
+    record_updaters_path(@data_type, sortable_table_params.merge(format: :csv)) %>
+  <div id="proposed-change-dialog" class="o-admin-dialog" style="display: none">Processing your request ...</div>
+
+  <script type="text/javascript">
+    $('.c-lined-table').on('click', 'button[name="accept_changes"], button[name="reject_changes"]', function(){
+      $('#genericModalContent').html('<h1>Please wait . . .</h1>');
+      $('#genericModalDialog')[0].showModal();
+    });
+
+    $("#reset_button").on("click", function(e) {
+      e.preventDefault();
+      $("#award_number").val("");
+      $("#contrib_name").val("");
+      e.target.form.submit();
+    });
+  </script>
+</div>

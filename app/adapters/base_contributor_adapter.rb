@@ -17,7 +17,7 @@ class BaseContributorAdapter
   private
 
   def name_mappings
-    {}
+    NSF_ROR_NAMES_MAPPING
   end
 
   def ror
