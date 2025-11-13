@@ -40,15 +40,24 @@ module StashEngine
     end
 
     def update
+      # Accept
       @proposed_change.record.update(JSON.parse(@proposed_change.update_data))
       @proposed_change.user = current_user
       @proposed_change.approved!
       @proposed_change.reload
 
+      resource = @proposed_change.resource
+      return unless resource.current_curation_status == 'published'
+
+      resource.submit_to_solr
+      DataciteService.new(resource).submit
+
+      @proposed_change.reload
       respond_to(&:js)
     end
 
     def destroy
+      # Reject
       respond_to do |format|
         @proposed_change.user = current_user
         @proposed_change.rejected!

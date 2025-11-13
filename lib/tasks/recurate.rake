@@ -5,6 +5,10 @@ namespace :recurate do
   desc 'Re-curate contributors that have NIH as direct funder'
   task nih_contributors: :environment do
     query = StashDatacite::Contributor.updatable.nih
+      .where(award_verified: false).on_latest_resource
+      .joins(resource: :current_resource_state)
+      .where.not(stash_engine_resource_states: { resource_state: :in_progress })
+
     total_count = query.count
     query.each_with_index do |contrib, idx|
       puts "Processed #{idx} of #{total_count}" if idx % 50 == 0
@@ -16,6 +20,10 @@ namespace :recurate do
   desc 'Re-curate contributors that have NIH as direct funder'
   task nsf_contributors: :environment do
     query = StashDatacite::Contributor.updatable.nsf
+      .where(award_verified: false).on_latest_resource
+      .joins(resource: :current_resource_state)
+      .where.not(stash_engine_resource_states: { resource_state: :in_progress })
+
     total_count = query.count
     query.each_with_index do |contrib, idx|
       puts "Processed #{idx} of #{total_count}" if idx % 50 == 0
@@ -26,8 +34,13 @@ namespace :recurate do
   # example usage: RAILS_ENV=development bundle exec rake recurate:populate_missing_awards
   desc 'Re-curate contributors that have an award number, but award title is missing'
   task populate_missing_awards: :environment do
-    total_count = StashDatacite::Contributor.needs_award_details.count
-    StashDatacite::Contributor.needs_award_details.each_with_index do |contrib, idx|
+    query = StashDatacite::Contributor.needs_award_details.updatable
+      .where(award_verified: false).on_latest_resource
+      .joins(resource: :current_resource_state)
+      .where.not(stash_engine_resource_states: { resource_state: :in_progress })
+
+    total_count = query.count
+    query.each_with_index do |contrib, idx|
       puts "Processed #{idx} of #{total_count}" if idx % 50 == 0
       RecordUpdaters::CreateService.new.create_from_award_matching(contrib)
     end

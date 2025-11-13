@@ -105,11 +105,7 @@ NSF_ROR_NAMES_MAPPING = {
   'div. of equity for excellence in stem' => 'https://ror.org/03mamvh39',
   'office of advanced cyberinfrastructure (oac)' => 'https://ror.org/04nh1dc89',
   'oia-office of integrative activities' => 'https://ror.org/04k9mqs78',
-  'emerging frontiers' => 'https://ror.org/01tnvpc68',
-  # '' => '',
-  # '' => '',
-  # '' => '',
-  # '' => '',
+  'emerging frontiers' => 'https://ror.org/01tnvpc68'
 }.freeze
 
 HELP_PAGES_REQUIREMENTS =

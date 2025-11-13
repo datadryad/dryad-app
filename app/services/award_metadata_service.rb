@@ -17,11 +17,11 @@ class AwardMetadataService
     handle_response(response.first)
   end
 
-  def award_details
+  def award_details(full_info: false)
     response = fetch_api_data
     return if response.blank?
 
-    parse_response(response.first, full_info: true)
+    parse_response(response.first, full_info: full_info)
   end
 
   def search

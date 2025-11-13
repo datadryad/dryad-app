@@ -8,6 +8,7 @@
 #  award_number       :text(65535)
 #  award_title        :string(191)
 #  award_uri          :string(191)
+#  award_verified     :boolean          default(FALSE)
 #  contributor_name   :text(65535)
 #  contributor_type   :string           default("funder")
 #  funder_order       :integer
@@ -19,6 +20,7 @@
 #
 # Indexes
 #
+#  index_dcs_contributors_on_award_verified      (award_verified)
 #  index_dcs_contributors_on_contributor_type    (contributor_type)
 #  index_dcs_contributors_on_funder_order        (funder_order)
 #  index_dcs_contributors_on_identifier_type     (identifier_type)
