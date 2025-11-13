@@ -98,9 +98,9 @@ module Stash
       def to_proposed_change
         return nil unless @sm.present? && @resource.present?
         # Skip if the identifier already has the change
-        return unless StashEngine::ProposedChange.where(identifier_id: @resource.identifier.id, publication_doi: @sm['DOI']).empty?
+        return nil if StashEngine::ProposedChange.where(identifier_id: @resource.identifier_id, publication_doi: @sm['DOI']).present?
         # Skip if the resource already has the relation
-        return unless @resource.related_identifiers.where("REGEXP_SUBSTR(`related_identifier`, '(10..+)') = ?", @sm['DOI'])
+        return nil if @resource.related_identifiers.where("REGEXP_SUBSTR(`related_identifier`, '(10..+)') = ?", @sm['DOI']).present?
 
         # Skip if the change does not meet basic checks
         pub_date = date_parts_to_date(publication_date)
@@ -109,7 +109,7 @@ module Stash
         return nil if @resource.authors.count > @sm['author'].count
 
         params = {
-          identifier_id: @resource.identifier.id,
+          identifier_id: @resource.identifier_id,
           approved: false,
           rejected: false,
           authors: @sm['author'].to_json,
