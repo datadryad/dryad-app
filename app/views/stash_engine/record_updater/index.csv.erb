@@ -1,0 +1,7 @@
+Resource title,<%= @columns.map(&:humanize).join(',') %>
+<%
+  @proposed_changes.each do |proposed_change|
+    row = [ proposed_change.resource.title.strip_tags]
+    row += @columns.map{|column| JSON.parse(proposed_change.update_data)[column]}
+-%><%= row.to_csv(row_sep: nil).html_safe %>
+<% end -%>

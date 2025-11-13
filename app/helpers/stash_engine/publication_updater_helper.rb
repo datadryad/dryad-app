@@ -4,16 +4,16 @@ module StashEngine
     def mergeable?(val1, val2)
       return !val1.include?(val2) if val1.is_a?(Array)
 
-      val1&.strip&.downcase != val2&.strip&.downcase
+      val1&.to_s&.strip&.downcase != val2&.to_s&.strip&.downcase
     end
 
     def render_column(old_val:, new_val:)
       return '<td></td>' unless old_val.present? || new_val.present?
-      return "<td>#{new_val.present? ? new_val : 'Not available'}</td>" unless mergeable?(old_val, new_val)
+      return "<td>#{new_val.presence || 'Not available'}</td>" unless mergeable?(old_val, new_val)
 
       <<~HTML
         <td class="c-proposed-change-table__column-mergeable" aria-label="Merged into the above">
-          #{new_val.present? ? new_val : 'Not available'}
+          #{new_val.presence || 'Not available'}
           <i class="fa fa-arrow-up c-proposed-change-table__column-mergeable-icon" role="img" aria-label="Replace above content with below"></i>
         </td>
       HTML

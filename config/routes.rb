@@ -347,6 +347,11 @@ Rails.application.routes.draw do
     put 'publication_updater/:id', to: 'publication_updater#update'
     delete 'publication_updater/:id', to: 'publication_updater#destroy'
 
+    get 'record_updater/:data_type', to: 'record_updater#index', as: 'record_updaters'
+    get 'record_updater/:data_type/log', to: 'record_updater#log', as: 'record_updaters_log'
+    put 'record_updater/:data_type/:id', to: 'record_updater#update', as: 'record_updater'
+    delete 'record_updater/:data_type/:id', to: 'record_updater#destroy'
+
     # Curation stats
     get 'curation_stats', to: 'curation_stats#index'
     get 'curation_stats/charts', to: 'curation_stats#charts'

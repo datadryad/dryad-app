@@ -17,7 +17,7 @@ class BaseContributorAdapter
   private
 
   def name_mappings
-    {}
+    NSF_ROR_NAMES_MAPPING
   end
 
   def ror
@@ -40,8 +40,10 @@ class BaseContributorAdapter
 
     # alert devs of missing info in children list
     StashEngine::NotificationsMailer.nih_child_missing(@contributor_id, @response).deliver_now
-    # do not update ROR information
-    @ror = {}
+
+    # user existing ror information
+    @ror = StashDatacite::Contributor.find(@contributor_id).attributes.slice(:name_identifier_id, :contributor_name)
+    @ror
   end
 
   def contributors_hash_by(key:)

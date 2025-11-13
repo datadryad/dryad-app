@@ -10,6 +10,7 @@
 #  award_number       :text(65535)
 #  award_title        :string(191)
 #  award_uri          :string(191)
+#  award_verified     :boolean          default(FALSE)
 #  contributor_name   :text(65535)
 #  contributor_type   :string           default("funder")
 #  funder_order       :integer
@@ -21,6 +22,7 @@
 #
 # Indexes
 #
+#  index_dcs_contributors_on_award_verified      (award_verified)
 #  index_dcs_contributors_on_contributor_type    (contributor_type)
 #  index_dcs_contributors_on_funder_order        (funder_order)
 #  index_dcs_contributors_on_identifier_type     (identifier_type)
@@ -52,6 +54,8 @@ module StashDatacite
     scope :nih, -> { where(name_identifier_id: StashDatacite::Contributor.related_rors(NIH_ROR)) }
     scope :nsf, -> { where(name_identifier_id: StashDatacite::Contributor.related_rors(NSF_ROR)) }
     scope :needs_award_details, -> { where.not(award_number: [nil, '']).where(award_title: [nil, '']) }
+    scope :updatable, -> { where(auto_update: true) }
+    scope :on_latest_resource, -> { joins(:resource).merge(StashEngine::Resource.latest_per_dataset) }
 
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
@@ -172,7 +176,7 @@ module StashDatacite
     def self.related_rors(ror_id)
       Rails.cache.fetch("related_ror_ids_for_#{ror_id}", expires_in: 1.day) do
         me = [ror_id]
-        group = StashDatacite::ContributorGrouping.where(name_identifier_id: ror_id).first
+        group = StashDatacite::ContributorGrouping.find_by(name_identifier_id: ror_id)
         return me if group.nil? || group.json_contains.blank?
 
         related = group.json_contains.map do |a|
@@ -185,12 +189,12 @@ module StashDatacite
 
     def self.related_rors_with_name(ror_id)
       Rails.cache.fetch("related_ror_names_for_#{ror_id}", expires_in: 1.day) do
-        ror = StashDatacite::Contributor.where(name_identifier_id: ror_id).includes(:grouping).first
+        ror = StashEngine::RorOrg.find_by(ror_id: ror_id)
         return [] if ror.nil?
 
-        me = [ror.slice(:name_identifier_id, :contributor_name).symbolize_keys]
+        me = [{ name_identifier_id: ror.ror_id, contributor_name: ror.name }]
 
-        group = ror.grouping
+        group = StashDatacite::ContributorGrouping.find_by(name_identifier_id: ror_id)
         return me if group.nil? || group.json_contains.blank?
 
         related = group.json_contains.map do |a|

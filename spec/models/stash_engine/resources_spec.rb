@@ -1684,7 +1684,9 @@ module StashEngine
           it 'destroys only the resource' do
             expect { resource.destroy }.to change { StashEngine::Resource.count }.by(-1)
               .and change { StashEngine::Identifier.count }.by(0)
-              .and change { identifier.reload.latest_resource_id }.to(first_resource.id)
+              .and change {
+                     identifier.reload.latest_resource_id
+                   }.to(first_resource.id)
           end
 
           it 'updates identifier latest_resource_id' do

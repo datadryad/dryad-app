@@ -147,6 +147,7 @@ module Stash
           if unzip_file(zip_file: zip_file, destination: FILE_DIR)
             if File.exist?("#{FILE_DIR}/#{file}")
               process_ror_json(json_file_path: "#{FILE_DIR}/#{file}")
+              CacheUtils.clear_ror_related_cache
             else
               puts('Unable to find json in zip!')
               false

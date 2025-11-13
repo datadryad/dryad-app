@@ -1,0 +1,58 @@
+<% @page_title = "Funding updater history" %>
+<div class="admin-dashboard-header">
+<h1 class="o-heading__level1" id="pubupdate-label">Funding updater: Match history</h1>
+<a href="<%= record_updaters_path(@data_type) %>">Funding updater</a>
+</div>
+
+<div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="pubupdate-label">
+  <table class="c-lined-table">
+    <thead>
+      <tr>
+        <th class="c-lined-table__sort c-proposed-change-table__column-large" <%= sort_display('updated_at') %> >
+          <%= sortable_column_head sort_field: 'updated_at', title: 'Timestamp' %>
+        </th>
+        <th>
+          Decision
+        </th>
+        <th>
+          Title
+        </th>
+
+        <% @columns.each do |column| %>
+          <th class="c-lined-table__sort c-proposed-change-table__column-large" <%= sort_display(column.to_s) %> >
+            <%= sortable_column_head sort_field: column.to_s, title: column.to_s.humanize %>
+          </th>
+        <% end %>
+      </tr>
+      <% @proposed_changes.each do |proposed_change| %>
+        <tbody>
+          <tr class="c-lined-table__row">
+            <td rowspan="2"><%= formatted_datetime(proposed_change.updated_at) %></td>
+            <td rowspan="2"><%= proposed_change.status.humanize %></td>
+            <%= render partial: 'current_metadata', locals: { proposed_change: proposed_change, record: proposed_change.record, resource: proposed_change.resource } %>
+          </tr>
+          <tr class="c-lined-table__row" id="proposed_<%= proposed_change.id %>">
+            <%= render partial: 'proposed_history', locals: { proposed_change: proposed_change, record: proposed_change.record, resource: proposed_change.resource } %>
+          </tr>
+        </tbody>
+      <% end %>
+    </thead>
+  </table>
+</div>
+
+<div class="c-space-paginator">
+  <%= paginate @proposed_changes, params: { page_size: @page_size } %>
+      <div class="c-paginator-page_size">
+    Page size:
+    <%
+      current_ps = params[:page_size].to_i
+      current_ps = 10 if current_ps == 0
+      [10, 50, 100].each do |ps| %>
+      <% if ps == current_ps %>
+        <span class="page-current"><%= ps %></span>
+      <% else %>
+        <%= link_to(ps, record_updaters_log_path(request.parameters.except(:data_type, :action, :controller).merge(page_size: ps, page: 1)), 'aria-label': "#{ps} results per page") %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

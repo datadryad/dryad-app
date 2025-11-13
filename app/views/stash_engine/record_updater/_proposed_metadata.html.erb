@@ -1,0 +1,15 @@
+<td>
+  <strong>Action:</strong>
+  <div style="white-space: nowrap;">
+    <% url = "#{record_updater_path(@data_type, proposed_change.id)}" %>
+    <%= form_with model: proposed_change, url: url, method: :PUT, local: false do |f| %>
+      <button name="accept_changes" class="o-button__plain-text2" type="submit">Accept</button>
+    <% end %>
+    <%= form_with model: proposed_change, url: url, method: :DELETE, local: false do |f| %>
+     <button name="reject_changes" class="o-button__remove" type="submit">Reject</button>
+    <% end %>
+  </div>
+</td>
+<% @columns.each do |column| %>
+  <%= render_column(old_val: record.send(column), new_val: JSON.parse(proposed_change.update_data)[column]).html_safe %>
+<% end %>
