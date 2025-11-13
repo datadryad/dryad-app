@@ -62,6 +62,7 @@ module StashEngine
     has_many :shares, class_name: 'StashEngine::Share', dependent: :destroy
     has_many :cached_citations, class_name: 'StashEngine::CounterCitation', dependent: :destroy
     has_many :zenodo_copies, class_name: 'StashEngine::ZenodoCopy', dependent: :destroy
+    has_many :proposed_changes, class_name: 'StashEngine::ProposedChange', dependent: :destroy
     has_one :latest_resource,
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',

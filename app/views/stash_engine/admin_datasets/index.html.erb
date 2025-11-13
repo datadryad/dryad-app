@@ -150,7 +150,7 @@
     button.addEventListener('click', preventClicks);
   });
   const issue = document.getElementById('issue_popup')
-  if (issue) issue.addEventListener('click', (e) => {
+  if (issue) issue.addEventListener('click', () => {
     window.open(issue.href, 'githubIssue');
     document.getElementById('genericModalContent').innerHTML = '';
     document.getElementById('genericModalContent').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'issue_popup') %>"));
@@ -159,6 +159,16 @@
       e.preventDefault();
       document.getElementById('genericModalDialog').close();
     });
+  })
+  const pubupdater = document.getElementById('pubupdater')
+  if (pubupdater) pubupdater.addEventListener('click', (e) => {
+    const pu = window.open(pubupdater.href, 'pubUpdater');
+    const timer = setInterval(() => { 
+      if (pu.closed) {
+        clearInterval(timer);
+        window.location.reload();
+      }
+    }, 600);
   })
 </script>
 <% end %>

@@ -37,9 +37,9 @@ module StashEngine
     include PublicationMixin
 
     self.table_name = 'stash_engine_proposed_changes'
-    belongs_to :identifier, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
+    belongs_to :identifier, class_name: 'StashEngine::Identifier'
     has_one :latest_resource, class_name: 'StashEngine::Resource', through: :identifier
-    belongs_to :user, class_name: 'StashEngine::User', foreign_key: 'user_id', optional: true
+    belongs_to :user, class_name: 'StashEngine::User', optional: true
 
     scope :processed, -> { where('approved = true OR rejected = true') }
     scope :unprocessed, -> { where(approved: false, rejected: false) }
