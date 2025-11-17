@@ -33,7 +33,8 @@ module Stash
           return nil if resource.blank? || resource.title&.strip.blank?
 
           issn, title_query, author_query = title_author_query_params(resource)
-          resp = Serrano.works(issn: issn, query: title_query, query_author: author_query, limit: 20, sort: 'score', order: 'desc')
+          resp = Serrano.works(issn: issn, query: title_query, query_author: author_query, filter: { type: %w[journal-article posted-content] },
+                               limit: 20, sort: 'score', order: 'desc')
           resp = resp.first if resp.is_a?(Array)
           return nil unless valid_serrano_works_response(resp)
 
