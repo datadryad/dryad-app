@@ -204,7 +204,13 @@ module Stash
           ror_org.acronyms = acronyms
           ror_org.aliases = aliases
           ror_org.isni_ids = isni_ids.fetch('all', [])
+          ror_org.status = record['status']
           ror_org.save
+
+          if record['status'] == 'withdrawn'
+            successor = record.fetch('relationships', []).select{|a| a['type'] == 'successor' }.first
+            RorService.new(record['id']).withdrawn(successor) if successor.present?
+          end
 
           unless children.empty?
             grouping = StashDatacite::ContributorGrouping.find_or_create_by(name_identifier_id: record['id'])

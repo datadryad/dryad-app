@@ -9,7 +9,7 @@ module Stash
 
         class << self
           def reindex_all
-            all.each(&:reindex)
+            where(status: [:active, :inactive]).each(&:reindex)
           end
 
           def search(query, fq: [], operation: 'OR', limit: 100, fl: nil)
@@ -39,6 +39,11 @@ module Stash
       end
 
       def reindex
+        if withdrawn?
+          remove_from_solr_index
+          return true
+        end
+
         solr_indexer = Stash::Indexer::SolrIndexer.new(solr_url: APP_CONFIG.ror_solr_url)
         solr_indexer.index_document(solr_hash: index_mappings)
       end
