@@ -9,7 +9,7 @@ module Stash
 
         class << self
           def reindex_all
-            where(status: [:active, :inactive]).each(&:reindex)
+            where(status: %i[active inactive]).each(&:reindex)
           end
 
           def search(query, fq: [], operation: 'OR', limit: 100, fl: nil)

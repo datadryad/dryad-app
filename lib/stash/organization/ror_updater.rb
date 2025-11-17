@@ -176,7 +176,7 @@ module Stash
         end
 
         # Transfer the contents of a single JSON record to the database
-        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         def process_ror_record(record)
           return nil unless record.present? && record.is_a?(Hash) && record['id'].present?
 
@@ -208,7 +208,7 @@ module Stash
           ror_org.save
 
           if record['status'] == 'withdrawn'
-            successor = record.fetch('relationships', []).select{|a| a['type'] == 'successor' }.first
+            successor = record.fetch('relationships', []).select { |a| a['type'] == 'successor' }.first
             RorService.new(record['id']).withdrawn(successor) if successor.present?
           end
 
@@ -225,7 +225,7 @@ module Stash
           puts('Error processing record', e)
           false
         end
-        # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+        # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
         def safe_string(value:)
           return value if value.blank? || value.length < 190
