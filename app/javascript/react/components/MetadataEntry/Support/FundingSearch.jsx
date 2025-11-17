@@ -116,7 +116,9 @@ function FundingSearch({
         </fieldset>
         {[NIH, NSF].includes(contributor.name_identifier_id) && (
           <div className="input-stack">
-            <label className="input-label" id={`label_award_lookup_${contributor.id}`} htmlFor={`award_lookup_${contributor.id}`}>Search grants with your award number</label>
+            <label className="input-label" id={`label_award_lookup_${contributor.id}`} htmlFor={`award_lookup_${contributor.id}`}>
+              Search grants with your award number
+            </label>
             <Autocomplete
               acText={grantnum}
               setAcText={setGrantnum}
