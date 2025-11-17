@@ -116,7 +116,7 @@ function FundingSearch({
         </fieldset>
         {[NIH, NSF].includes(contributor.name_identifier_id) && (
           <div className="input-stack">
-            <span>Search grants with your award number</span>
+            <label className="input-label" id={`label_award_lookup_${contributor.id}`} htmlFor={`award_lookup_${contributor.id}`}>Search grants with your award number</label>
             <Autocomplete
               acText={grantnum}
               setAcText={setGrantnum}
@@ -128,14 +128,13 @@ function FundingSearch({
               idFunc={idFunc}
               controlOptions={
                 {
-                  labelText: 'Award number:',
                   htmlId: `award_lookup_${contributor.id}`,
                   isRequired: true,
                   desBy: `${contributor.id}award-ex`,
                 }
               }
             />
-            <div id={`${contributor.id}award-ex`}><i aria-hidden="true" />CA 123456-01A1</div>
+            <div id={`${contributor.id}award-ex`}><i aria-hidden="true" />{contributor.name_identifier_id === NSF ? '1234567' : 'U54AB123456'}</div>
           </div>
         )}
       </div>
