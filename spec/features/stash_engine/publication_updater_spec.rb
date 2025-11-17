@@ -47,7 +47,7 @@ RSpec.feature 'PublicationUpdater', type: :feature, js: true do
       click_button 'Reset'
       expect(page).to have_content('5 results')
 
-      select 'Likely preprints'
+      select 'Preprints'
       click_button 'Search'
       expect(page).to have_content('2 results')
       expect(page).to have_select("select_type_#{pc[1].id}", selected: 'Preprint')
