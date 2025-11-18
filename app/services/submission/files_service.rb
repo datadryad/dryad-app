@@ -115,7 +115,7 @@ module Submission
 
       update_info = {}
 
-      Rails.logger.info("generating checksum for #{file.id} ==> #{s3_connection.s3_bucket}/#{file_path} copied from url")
+      Rails.logger.info("generating checksum for #{file.id} ==> #{s3_connection.s3_bucket.name}/#{file_path} copied from url")
       digest_type = 'sha-256'
       digest_input = s3_connection.presigned_download_url(s3_key: file_path)
       sums = Stash::Checksums.get_checksums([digest_type], digest_input)
