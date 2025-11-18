@@ -57,7 +57,7 @@
             <% end %>
           <% end %>
           <% if dataset.sort_order == 2 %>
-            <%= button_to stash_url_helpers.peer_review_release_path(id: dataset.id), method: :patch, name: 'release', data: { confirm: dataset.identifier.payment_type?.start_with?('journal') ? 'Please wait until your related manuscript has been accepted to proceed with curation. Has your related manuscript been accepted by the journal?' : 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_release", 'aria-labelledby': "d#{dataset.identifier.id}_release d#{dataset.identifier.id}_title" do %>
+            <%= button_to stash_url_helpers.peer_review_release_path(id: dataset.id), method: :patch, name: 'release', data: { confirm: dataset.identifier.payment_type && dataset.identifier.payment_type.start_with?('journal') ? 'Please wait until your related manuscript has been accepted to proceed with curation. Has your related manuscript been accepted by the journal?' : 'Is this dataset ready for curation and publication?' }, form_class: 'o-button__inline-form', class: 'o-button__plain-text7', id: "d#{dataset.identifier.id}_release", 'aria-labelledby': "d#{dataset.identifier.id}_release d#{dataset.identifier.id}_title" do %>
               <i class="fa fa-paper-plane" aria-hidden="true"></i>Release for curation
             <% end %>
           <% end %>
