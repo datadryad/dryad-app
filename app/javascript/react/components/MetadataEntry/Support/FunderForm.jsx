@@ -88,6 +88,11 @@ function FunderForm({
     if (contributor.name_identifier_id) getGroup();
   }, [contributor.name_identifier_id]);
 
+  const jsonOptions = () => {
+    if (!showSelect || !showSelect.json_contains) return null;
+
+    return showSelect.json_contains.map((i) => <option key={i.name_identifier_id} value={i.name_identifier_id}>{i.contributor_name}</option>);
+  };
   return (
     <Formik
       initialValues={setValues()}
@@ -133,7 +138,7 @@ function FunderForm({
                 aria-errormessage={showSelect.required ? 'funder_group_error' : null}
               >
                 <option value="">Select {showSelect.group_label}</option>
-                {showSelect.json_contains && showSelect.json_contains.map((i) => <option key={i.name_identifier_id} value={i.name_identifier_id}>{i.contributor_name}</option>)}
+                {jsonOptions()}
               </select>
             </div>
           )}
