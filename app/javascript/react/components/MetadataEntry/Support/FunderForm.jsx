@@ -133,7 +133,7 @@ function FunderForm({
                 aria-errormessage={showSelect.required ? 'funder_group_error' : null}
               >
                 <option value="">Select {showSelect.group_label}</option>
-                {showSelect.json_contains.map((i) => <option key={i.name_identifier_id} value={i.name_identifier_id}>{i.contributor_name}</option>)}
+                {showSelect.json_contains && showSelect.json_contains.map((i) => <option key={i.name_identifier_id} value={i.name_identifier_id}>{i.contributor_name}</option>)}
               </select>
             </div>
           )}
