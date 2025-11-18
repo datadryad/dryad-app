@@ -64,6 +64,8 @@ module StashEngine
       if resource.manuscript.present?
         status = (resource.manuscript.accepted? && 'accepted') || (resource.manuscript.rejected? && 'rejected') || 'submitted'
         str += "<span id=\"status-label\" class=\"#{status}\">#{status}</span>"
+      elsif resource.identifier.curation_activities.where(status: 'submitted', note: 'status updated via API call').present?
+        str += '<span id="status-label" class="accepted">accepted</span>'
       end
       str += '<span id="doi-label" class="accepted">published</span>' if resource.identifier.publication_article_doi.present?
       unless resource.related_identifiers.empty?
