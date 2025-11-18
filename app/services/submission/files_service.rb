@@ -53,7 +53,7 @@ module Submission
       end
 
       update = { storage_version_id: resource.id }
-      update.merge!( calculate_digest(s3, staged_key) )
+      update.merge!(calculate_digest(s3, staged_key))
       file.update(update)
     end
 
@@ -106,12 +106,13 @@ module Submission
       end
 
       update = { storage_version_id: resource.id }
-      update.merge!( calculate_digest(permanent_s3, permanent_key) )
+      update.merge!(calculate_digest(permanent_s3, permanent_key))
       file.update(update)
     end
 
     def calculate_digest(s3_connection, file_path)
       return {} if file.digest.present?
+
       update_info = {}
 
       Rails.logger.info("generating checksum for #{file.id} ==> #{s3_connection.s3_bucket}/#{file_path} copied from url")
