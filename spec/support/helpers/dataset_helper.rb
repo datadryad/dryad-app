@@ -185,11 +185,6 @@ module DatasetHelper
   end
 
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
-    if page.has_text?('The granting organization is or is part of:')
-      within_fieldset('The granting organization is or is part of:') do
-        find(:label, 'Other').click
-      end
-    end
     fill_in 'Granting organization', with: name
     fill_in 'award_number', with: value
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
