@@ -110,7 +110,7 @@ function Submission({
       component: resource.generic_files === undefined ? <p><i className="fas fa-spinner fa-spin" /></p> : (
         <UploadFiles
           {...{
-            resource, setResource, previous, s3_dir_name, config_s3, config_maximums, config_payments, pubDates,
+            resource, setResource, previous, s3_dir_name, config_s3, config_maximums, pubDates,
           }}
           current={step.name === 'Files'}
         />

@@ -4,7 +4,7 @@ import File from './File';
 import BadList from './BadList';
 
 const file_list = ({
-  config, chosenFiles, renameFile, clickedRemove, clickedValidationReport, totalSize,
+  chosenFiles, renameFile, clickedRemove, clickedValidationReport, totalSize,
 }) => (
   <>
     <BadList chosenFiles={chosenFiles} />
