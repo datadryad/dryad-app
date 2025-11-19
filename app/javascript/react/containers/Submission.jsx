@@ -37,6 +37,7 @@ function Submission({
   const [payment, setPayment] = useState(false);
   const [pubDates, setPubDates] = useState([]);
   const [fees, setFees] = useState({});
+  const [invoice, setInvoice] = useState(resource.identifier.old_payment_system);
   const previous = resource.previous_curated_resource;
   const observers = [];
 
@@ -143,8 +144,7 @@ function Submission({
         resource={resource}
         setResource={setResource}
         current={step.name === 'Agreements'}
-        subFees={fees}
-        setSubFees={setFees}
+        fees={fees}
         config={config_payments}
         form={change_tenant}
         user={user}
@@ -156,8 +156,7 @@ function Submission({
           resource, setResource, user, previous,
         }}
         config={config_payments}
-        subFees={fees}
-        setSubFees={setFees}
+        fees={fees}
         form={change_tenant}
         user={user}
         setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
@@ -171,6 +170,20 @@ function Submission({
     });
   };
 
+  const calculateFees = () => {
+    axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
+      .then(({data}) => {
+        if (resource.hold_for_peer_review && data.fees.ppr_discount) {
+          data.fees.total = 0;
+        }
+        setFees(data.fees || {});
+      });
+  };
+
+  useEffect(() => {
+    if (resource.identifier['user_must_pay?']) calculateFees();
+  }, [resource.identifier['user_must_pay?'], resource.hold_for_peer_review, resource.generic_files, invoice]);
+
   const recheckPayer = () => {
     axios.get(`/resources/${resource.id}/payer_check`)
       .then(({data}) => {
@@ -178,6 +191,7 @@ function Submission({
           ...res,
           identifier: {
             ...res.identifier,
+            'user_must_pay?': data.user_must_pay,
             new_upload_size_limit: data.new_upload_size_limit,
           },
         }));
@@ -186,7 +200,7 @@ function Submission({
 
   useEffect(() => {
     recheckPayer();
-  }, [resource.authors, resource.journal, resource.contributors]);
+  }, [resource.tenant, resource.authors, resource.journal, resource.contributors]);
 
   const markInvalid = (el) => {
     const et = el.querySelector('.error-text');
@@ -302,7 +316,14 @@ function Submission({
               {step.name !== 'Create a submission' ? ' editor' : ''}
             </h1>
             {payment ? (
-              <button className="o-button__plain-text7" type="button" onClick={() => setPayment(false)}>
+              <button
+                className="o-button__plain-text7"
+                type="button"
+                onClick={() => {
+                  setInvoice(false);
+                  setPayment(false);
+                }}
+              >
                 <i className="fas fa-circle-left" aria-hidden="true" />Back to preview
               </button>
             ) : <ExitButton resource={resource} />}
@@ -330,7 +351,12 @@ function Submission({
         <dialog id="submission-step" open={step.name !== 'Create a submission' || payment || null}>
           {payment && (
             <div className="submission-edit">
-              <Payments config={config_payments} resource={resource} setResource={setResource} setPayment={setPayment} />
+              <Payments
+                config={config_payments}
+                {...{
+                  resource, setResource, fees, invoice, setInvoice, setPayment,
+                }}
+              />
             </div>
           )}
           <div className="submission-edit" hidden={step.name === 'Create a submission' || null}>
