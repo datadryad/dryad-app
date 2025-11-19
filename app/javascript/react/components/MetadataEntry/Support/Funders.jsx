@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/utils';
+import FunderForm from './FunderForm';
 import DragonDropList, {DragonListItem, orderedItems} from '../DragonDropList';
-import FundingSearch from './FundingSearch';
+import {showSavedMsg, showSavingMsg, showModalYNDialog} from '../../../../lib/utils';
 
 function Funders({current, resource, setResource}) {
   const contributors = resource.contributors.filter((c) => c.contributor_type === 'funder');
@@ -101,7 +101,7 @@ function Funders({current, resource, setResource}) {
         <DragonDropList model="contributor" typeName="funder" items={funders} path="/stash_datacite/contributors/reorder" setItems={setFunders}>
           {orderedItems({items: funders, typeName: 'funder'}).map((contrib) => (
             <DragonListItem key={contrib.id} item={contrib} typeName="funder">
-              <FundingSearch current={current} resource={resource} contributor={contrib} disabled={disabled} updateFunder={updateFunder} />
+              <FunderForm current={current} resourceId={resource.id} contributor={contrib} updateFunder={updateFunder} />
               <button
                 type="button"
                 className="remove-record"

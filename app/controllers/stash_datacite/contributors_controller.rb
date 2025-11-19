@@ -19,7 +19,9 @@ module StashDatacite
       respond_to do |format|
         if @contributor.save
           check_reindex
-          format.json { render json: @contributor }
+          format.json do
+            render json: @contributor.as_json(methods: [:api_integration_key])
+          end
           format.js do
             @funder = Contributor.new(resource_id: params[:resource_id])
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
@@ -37,7 +39,9 @@ module StashDatacite
         if @contributor.update(contributor_params)
           # check_details
           check_reindex
-          format.json { render json: @contributor }
+          format.json do
+            render json: @contributor.as_json(methods: [:api_integration_key])
+          end
           format.js do
             @funder = Contributor.new(resource_id: params[:resource_id])
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
