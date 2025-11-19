@@ -14,7 +14,7 @@ module StashDatacite
           :resource_type, :resource_publication, :resource_preprint,
           :related_identifiers, :edit_histories, :contributors, :subjects, :descriptions,
           { authors: { methods: [:orcid_invite_path], include: %i[affiliations edit_code] },
-            identifier: { methods: %i[new_upload_size_limit], include: %i[process_date software_license] },
+            identifier: { methods: %i[new_upload_size_limit user_must_pay?], include: %i[process_date software_license] },
             previous_curated_resource: {
               include: [
                 :subjects, :descriptions, :resource_publication, :related_identifiers, :contributors,

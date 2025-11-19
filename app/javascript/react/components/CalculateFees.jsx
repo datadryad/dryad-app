@@ -1,23 +1,9 @@
-import React, {useEffect} from 'react';
-import axios from 'axios';
+import React from 'react';
 import {formatSizeUnits} from '../../lib/utils';
 import {ExitIcon} from './ExitButton';
 
-export default function CalculateFees({
-  current, resource, fees, setFees, ppr = false, invoice = false,
-}) {
+export default function CalculateFees({resource, fees, ppr = false}) {
   const paid = !!resource.identifier.last_invoiced_file_size;
-
-  const calculateFees = () => {
-    axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
-      .then(({data}) => {
-        setFees(data.fees || {});
-      });
-  };
-
-  useEffect(() => {
-    calculateFees();
-  }, [ppr, current]);
 
   /* eslint-disable max-len */
   if (paid && fees.storage_fee_label) {
@@ -32,7 +18,6 @@ export default function CalculateFees({
   }
 
   if (ppr && fees.ppr_discount) {
-    setFees((f) => ({...f, total: 0}));
     return (
       <p>The <b>{(50).toLocaleString('en-US', {style: 'currency', currency: 'USD'})}</b> Private for Peer Review Fee has been paid. The remainder of the <a href="/costs" target="blank">{fees.storage_fee_label}<ExitIcon /></a> is due at submission for curation and publication.</p>
     );

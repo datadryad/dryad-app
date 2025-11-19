@@ -24,6 +24,9 @@ module StashEngine
       when 'publications'
         authorize @resource, :curate?
         setup_publications
+      when 'funders'
+        authorize @resource, :curate?
+        @funder = StashDatacite::Contributor.new(resource_id: params[:resource_id])
       when 'data'
         authorize %i[stash_engine admin_datasets], :data_popup?
         setup_internal_data_list
@@ -36,8 +39,9 @@ module StashEngine
     end
 
     def waiver_add
-      if @identifier.payment_type == 'stripe'
-        # if it's already invoiced, show a warning
+      if @identifier.payment_type == 'stripe' && !@identifier.payments.last.ppr_fee_paid?
+        # if it's already invoiced, and last payment is not the PPR fee
+        # show a warning
         @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
         render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
       elsif params[:waiver_basis] == 'none'

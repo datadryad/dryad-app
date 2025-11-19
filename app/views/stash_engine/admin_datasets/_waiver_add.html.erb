@@ -1,7 +1,8 @@
 <h1>Add fee discount</h1>
 <%= form_with(url: ds_admin_waiver_path(@identifier.id), method: :post, local: false) do |form| -%>
   <% pr = @identifier.resources.by_version_desc.find {|r| r.payment} %>
-  <% if pr&.payment&.status == 'paid' %>
+  <% payment = pr&.payment %>
+  <% if payment&.status == 'paid' && !payment&.ppr_fee_paid? %>
     <p class="c-alert--notification">The DPC for this dataset has been paid</p>
     <p>The DPC for this dataset has already been paid. Payment will need to be refunded in order to apply a discount.</p>
   <% elsif @identifier.payment_type == 'stripe' && @identifier.payment_id.starts_with?("in_") %>

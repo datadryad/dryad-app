@@ -101,7 +101,7 @@ module StashEngine
           expect(CurationActivity.allowed_states('in_progress', user)).to eq(%w[in_progress])
 
           expect(CurationActivity.allowed_states('curation', user)).to \
-            eq(%w[processing peer_review curation action_required withdrawn embargoed published])
+            eq(%w[peer_review curation action_required withdrawn embargoed published])
 
           expect(CurationActivity.allowed_states('withdrawn', user)).to \
             eq(%w[withdrawn curation])

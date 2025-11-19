@@ -7,8 +7,8 @@ module StashDatacite
         @resource = resource
         @type = type
         submitted = @resource.identifier.last_submitted_resource
-        paying = tenant&.payment_configuration&.covers_dpc
-        @resource.update(tenant_id: tenant.id) if submitted.blank? || (paying && !submitted.tenant&.payment_configuration&.covers_dpc)
+        paying = tenant&.payment_configuration&.covers_dpc?
+        @resource.update(tenant_id: tenant.id) if submitted.blank? || (paying && !submitted.tenant&.payment_configuration&.covers_dpc?)
         @resource.fill_blank_author!
         ensure_author_orcid
         ensure_license if @type == 'collection'

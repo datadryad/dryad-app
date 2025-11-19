@@ -2,14 +2,14 @@
   <h2 style="font-weight: bold; text-align: center; padding-top: 1ch" id="fee-calculator">Fee calculator</h2>
   <%= form.hidden_field 'type', value: 'institution' %>
   <p class="input-line center">
-    <span id="legend3">Are you based in a lower- or middle-income country?</span>
+    <span id="legend3">Is your institution based in a lower- or middle-income country?</span>
     <span role="group" aria-labelledby="legend3" class="radio_choice" id="low_middle">
       <label><input type="radio" name="low_middle_income_country" value="1"/>Yes</label>
       <label><input type="radio" name="low_middle_income_country" value="0" checked/>No</label>
     </span>
   </p>
   <p class="input-line center" id="service_tier0">
-    <%= form.label :service_tier, 'Your annual research expenditure:' %>
+    <%= form.label :service_tier, 'Annual research expenditure:' %>
     <%= form.select :service_tier, options_for_select(FeeCalculator::InstitutionService.new.service_fee_tiers.map {|t| [t[:range].to_s.split('..').map {|n| n.to_i.to_s == n ? (n.to_i > 999999 ? number_to_currency(number_to_human(n), precision: 0) : number_to_currency(n, precision: 0)) : nil}.join('-').gsub(/\-$/, '+').downcase + ' USD', t[:tier]]}), {}, {class: 'c-input__select'} %>
   </p>
   <p class="input-line center" id="service_tier1" hidden>
@@ -20,22 +20,6 @@
     <%= form.label :dpc_tier, 'Estimated number of datasets sent to Dryad each year:' %>
     <%= form.select :dpc_tier, options_for_select(FeeCalculator::InstitutionService.new.dpc_fee_tiers.map {|t| [t[:range].to_s.gsub('..', '-'), t[:tier]]}), {}, {class: 'c-input__select'} %>
   </p>
-  <p class="input-line center" style="margin-top: 2rem;">
-    <span id="legend2">Will you cover large data fees for your authors?</span>
-    <span role="group" aria-labelledby="legend2" class="radio_choice">
-      <label><input type="radio" name="cover_storage_fee" value="1" checked/>Yes</label>
-      <label><input type="radio" name="cover_storage_fee" value="0"/>No</label>
-    </span>
-  </p>
-  <p style="margin-top: 2rem;" class="expand-button" id="legend"><button style="width: auto" aria-controls="ldf-sliders" aria-expanded="false">Estimated size ranges of datasets as percentages of the total sent to Dryad</button></p>
-  <div role="group" aria-labeledby="legend" class="range-grid" id="ldf-sliders" hidden>
-    <% FeeCalculator::InstitutionService.new.storage_fee_tiers.each do |sft| %>
-      <% val = sft[:tier] == 0 ? '100' : 0 %>
-      <label for="sft<%= sft[:tier] %>"><%= sft[:range].to_s.split('..').map {|n| n == '0' ? 0 : filesize(n.to_i) }.join('-') %></label>
-      <%= form.range_field "storage_usage[#{sft[:tier]}]", min: 0, max: 100, value: val, id: "sft#{sft[:tier]}" %>
-      <output for="sft<%= sft[:tier] %>"><%= val %></output>
-    <% end %>
-  </div>
   <div class="input-line spaced" style="justify-content: stretch;">
     <h3 style="font-weight: bold">Annual partner fee estimate:</h3>
     <output id="total_estimate" for="service_tier dpc_tier"></output>
