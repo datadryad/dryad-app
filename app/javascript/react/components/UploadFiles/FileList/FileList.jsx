@@ -4,21 +4,13 @@ import File from './File';
 import BadList from './BadList';
 
 const file_list = ({
-  config, chosenFiles, renameFile, clickedRemove, clickedValidationReport, totalSize,
+  chosenFiles, renameFile, clickedRemove, clickedValidationReport, totalSize,
 }) => (
   <>
     <BadList chosenFiles={chosenFiles} />
     <div className="c-uploadtable-header">
       <h3 className="o-heading__level3" id="filelist_id">Selected files</h3>
-      <p>Total size:{' '}
-        <span
-          className={totalSize > config.large_file_size ? 'overage' : ''}
-          title={totalSize > config.large_file_size
-            ? `Total file size is greater than ${formatSizeUnits(config.large_file_size)}. Overages will be charged.` : null}
-        >
-          {formatSizeUnits(totalSize)}
-        </span>
-      </p>
+      <p>Total size: {formatSizeUnits(totalSize)}</p>
     </div>
     <div className="table-wrapper c-uploadtable-wrapper" role="region" aria-labelledby="filelist_id">
       <table className="c-uploadtable">
