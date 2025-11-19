@@ -186,8 +186,10 @@ module DatasetHelper
 
   def fill_in_funder(name: Faker::Company.name, value: Faker::Alphanumeric.alphanumeric(number: 8, min_alpha: 2, min_numeric: 4))
     fill_in 'Granting organization', with: name
-    fill_in 'award_number', with: value
+    page.send_keys(:tab)
     find('.use-text-entered').set(true) if page.has_css?('.use-text-entered')
+    fill_in 'award_number', with: value
+    page.send_keys(:tab)
     click_button 'Preview changes' if page.has_button?('Preview changes')
     expect(find_button('Support')).to match_selector('[aria-describedby="step-complete"')
   end
