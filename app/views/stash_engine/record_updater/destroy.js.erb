@@ -1,0 +1,4 @@
+$('#genericModalDialog')[0].close();
+$('#current_<%= @proposed_change.id %>').fadeOut(300, function() { $(this).remove(); });
+$('#proposed_<%= @proposed_change.id %>').fadeOut(300, function() { $(this).remove(); });
+$('#separator<%= @proposed_change.id %>').fadeOut(300, function() { $(this).remove(); });

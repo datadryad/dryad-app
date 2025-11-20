@@ -1,4 +1,6 @@
 describe AwardMetadataService do
+  let!(:nih_ror) { create(:ror_org, ror_id: NIH_ROR, name: 'Original name') }
+  let!(:nsf_ror) { create(:ror_org, ror_id: NSF_ROR, name: 'Original name') }
   let(:nih_contrib) { create(:contributor, award_number: 'R01HD113192', name_identifier_id: NIH_ROR, contributor_name: 'Original name') }
   let(:nih_contrib_no_award) { create(:contributor, award_number: '', name_identifier_id: NIH_ROR) }
   let(:nsf_contrib) { create(:contributor, award_number: '1457726', name_identifier_id: NSF_ROR) }
@@ -199,6 +201,20 @@ describe AwardMetadataService do
           end
         end
       end
+
+      context 'with unmapped ROR' do
+        it 'updates other data but not NOR' do
+          VCR.use_cassette('nih_api/award_one_result_found') do
+            expect(subject).not_to be_nil
+            contrib.reload
+
+            expect(contrib.award_title).to eq('Microbial-induced maternal factors that influence fetal immune development')
+            expect(contrib.award_uri).to eq('https://reporter.nih.gov/project-details/11169041')
+            expect(contrib.contributor_name).to eq(nih_contrib.contributor_name)
+            expect(contrib.name_identifier_id).to eq(NIH_ROR)
+          end
+        end
+      end
     end
 
     context 'for NSF API' do
@@ -252,7 +268,9 @@ describe AwardMetadataService do
           end
         end
 
-        context 'with level 1 grouping' do
+        context 'with level 2 grouping' do
+          let!(:l1_ror) { create(:ror_org, ror_id: 'https://ror.org/12345678', name: 'Level 1 Grouping') }
+          let!(:l2_ror) { create(:ror_org, ror_id: 'https://ror.org/987654321', name: 'Division Of Environmental Biology') }
           let!(:l1_grouping) do
             create(:contributor_grouping,
                    name_identifier_id: NSF_ROR,
@@ -287,6 +305,20 @@ describe AwardMetadataService do
               expect(contrib.award_uri).to be_nil
               expect(contrib.contributor_name).to eq('Division Of Environmental Biology')
               expect(contrib.name_identifier_id).to eq('https://ror.org/987654321')
+            end
+          end
+        end
+
+        context 'with unmapped ROR' do
+          it 'updates other data but not NOR' do
+            VCR.use_cassette('nsf_api/award_one_result_found') do
+              expect(subject).not_to be_nil
+              contrib.reload
+
+              expect(contrib.award_title).to eq('Collaborative Research: A Comparative Phylogeographic Approach to Predicting Cryptic Diversity')
+              expect(contrib.award_uri).to be_nil
+              expect(contrib.contributor_name).to eq(nsf_contrib.contributor_name)
+              expect(contrib.name_identifier_id).to eq(NSF_ROR)
             end
           end
         end

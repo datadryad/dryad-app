@@ -17,11 +17,11 @@ class AwardMetadataService
     handle_response(response.first)
   end
 
-  def award_details
+  def award_details(full_info: false)
     response = fetch_api_data
     return if response.blank?
 
-    parse_response(response.first)
+    parse_response(response.first, full_info: full_info)
   end
 
   def search
@@ -45,17 +45,18 @@ class AwardMetadataService
     contributor.update attrs
   end
 
-  def parse_response(response)
+  def parse_response(response, full_info: false)
     data = adapter.new(response, contributor_id: contributor.id)
     {
       award_number: data.award_number,
       award_uri: data.award_uri,
       award_title: data.award_title
-    }.merge(ic_attrs(data))
+    }.merge(ic_attrs(data, full_info: full_info))
   end
 
-  def ic_attrs(data)
-    return {} if data.ic_admin_identifier.blank? || data.ic_admin_name.blank? || data.ic_admin_name.downcase == contributor.contributor_name&.downcase
+  def ic_attrs(data, full_info: false)
+    return {} if data.ic_admin_identifier.blank? || data.ic_admin_name.blank?
+    return {} if !full_info && data.ic_admin_name.downcase == contributor.contributor_name&.downcase
 
     {
       name_identifier_id: data.ic_admin_identifier,
