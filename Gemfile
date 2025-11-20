@@ -91,7 +91,7 @@ gem 'restforce', '~> 8.0.0'
 gem 'rinku', '~> 2.0.6' # we used this one, creates links from text but not sure if we still use it
 gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
-gem 'serrano', '~> 1.0' # this is a gem from datacite(?) and not sure it's actively used
+gem 'serrano', '~> 1.6'
 gem 'sidekiq', '~> 8.0.7'
 gem 'sidekiq-unique-jobs', '~> 8.0.11'
 gem 'stripe', '~> 5.50.0'
@@ -105,7 +105,7 @@ gem 'zaru', '~> 1.0.0' # for sanitizing file names
 # gem 'base64'
 # gem 'bigdecimal'
 # gem 'mutex_m'
-gem 'faraday', '~> 1.10.4'
+gem 'faraday', '~> 2.13'
 
 # ############################################################
 # Development and testing

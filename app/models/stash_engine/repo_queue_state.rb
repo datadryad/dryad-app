@@ -12,6 +12,7 @@
 # Indexes
 #
 #  index_stash_engine_repo_queue_states_on_resource_id  (resource_id)
+#  index_stash_engine_repo_queue_states_on_state        (state)
 #
 
 require 'stash/aws/s3'
@@ -56,16 +57,15 @@ module StashEngine
     # Scopes
     # ------------------------------------------
 
-    SUBQUERY_FOR_LATEST = <<~HEREDOC
-      SELECT resource_id, max(id) as id
-      FROM stash_engine_repo_queue_states
-      GROUP BY resource_id
-    HEREDOC
-      .freeze
-
-    scope :latest_per_resource, -> do
-      joins("INNER JOIN (#{SUBQUERY_FOR_LATEST}) subque ON stash_engine_repo_queue_states.id = subque.id")
-    end
+    scope :latest_per_resource, -> {
+      where(<<~SQL.squish)
+        id IN (
+          SELECT MAX(id)
+          FROM stash_engine_repo_queue_states s2
+          WHERE s2.resource_id = stash_engine_repo_queue_states.resource_id
+        )
+      SQL
+    }
 
     # This will not work correctly as a scope since Rails returns all records if it doesn't match one as a scope.  Wow.
     # Just wow. That is crazy bad design and violates the Principle of Least Surprise.

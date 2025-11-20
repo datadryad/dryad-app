@@ -101,8 +101,8 @@ module StashEngine
 
     def setup_filter
       @statuses = [OpenStruct.new(value: '', label: '*Select status*')]
-      excluded = StashEngine::CurationActivity.statuses.except(:in_progress, :processing, :embargoed, :withdrawn)
-      @statuses << excluded.keys.map do |s|
+      @excluded = StashEngine::CurationActivity.statuses.except(:in_progress, :processing, :embargoed, :withdrawn)
+      @statuses << @excluded.keys.map do |s|
         OpenStruct.new(value: s, label: StashEngine::CurationActivity.readable_status(s))
       end
       @statuses.flatten!
@@ -115,18 +115,21 @@ module StashEngine
     end
 
     def add_param_filters(proposed_changes)
-      if params[:list_search].present?
+      if params[:search].present?
         proposed_changes = proposed_changes.joins(CONCAT_FOR_SEARCH)
 
-        keys = params[:list_search].split(/\s+/).map(&:strip)
+        keys = params[:search].split(/\s+/).map(&:strip)
         proposed_changes = proposed_changes.where((['search_table.big_text LIKE ?'] * keys.size).join(' AND '), *keys.map { |key| "%#{key}%" })
       end
 
-      if params[:status].present?
-        proposed_changes = proposed_changes.joins(
-          'JOIN stash_engine_curation_activities sa ON sa.id = stash_engine_resources.last_curation_activity_id'
-        ).where('sa.status' => params[:status])
-      end
+      proposed_changes = proposed_changes.joins(
+        'JOIN stash_engine_curation_activities sa ON sa.id = stash_engine_resources.last_curation_activity_id'
+      )
+      proposed_changes = if params[:status].present?
+                           proposed_changes.where('sa.status': params[:status])
+                         else
+                           proposed_changes.where("sa.status in (#{@excluded.map { |_x| '?' }.join(',')})", *@excluded)
+                         end
 
       if params[:match_type].present?
         proposed_changes = proposed_changes.where(

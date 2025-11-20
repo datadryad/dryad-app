@@ -1,0 +1,8 @@
+<td>
+  <strong>Dataset:</strong>
+  <%= link_to resource.title.html_safe, show_path(id: resource.identifier.to_s), target: '_blank' %>
+  <p><strong>Status:</strong> <%= StashEngine::CurationActivity.readable_status(resource.current_curation_status) %></p>
+</td>
+<% @columns.each do |column| %>
+  <td><%= record.send(column) %></td>
+<% end %>

@@ -12,6 +12,7 @@
 # Indexes
 #
 #  index_stash_engine_repo_queue_states_on_resource_id  (resource_id)
+#  index_stash_engine_repo_queue_states_on_state        (state)
 #
 module StashEngine
   describe User do
