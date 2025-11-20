@@ -20,6 +20,7 @@ module Mocks
       allow_any_instance_of(StashEngine::UserMailer).to receive(:journal_published_notice).and_return(true)
       allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
       allow_any_instance_of(StashEngine::UserMailer).to receive(:orcid_invitation).and_return(true)
+      allow_any_instance_of(StashEngine::ResourceMailer).to receive(:ld_submission).and_return(true)
     end
 
     def ignore_zenodo!

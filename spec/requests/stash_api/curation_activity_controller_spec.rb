@@ -66,6 +66,10 @@ module StashApi
     end
 
     describe '#create' do
+      before do
+        allow(CostReportingService).to receive_message_chain(:new, :notify_partner_of_large_data_submission).and_return(true)
+      end
+
       it 'created and returns the new activity' do
         curation_activity_attrs = {
           curation_activity: {

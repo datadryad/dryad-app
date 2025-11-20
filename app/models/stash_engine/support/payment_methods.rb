@@ -1,5 +1,5 @@
 require 'active_support/concern'
-
+# rubocop:disable Metrics/ModuleLength
 module StashEngine
   module Support
     module PaymentMethods
@@ -28,6 +28,22 @@ module StashEngine
         return current_payer.payment_configuration&.payment_plan.to_s == '2025' if current_payer.is_a? StashEngine::Journal
 
         current_payer.payment_configuration&.payment_plan.to_s == '2025'
+      end
+
+      def payer_name
+        return 'Individual' if user_must_pay?
+
+        payer_record = payer
+        case payer_record.class.to_s
+        when 'StashEngine::Journal'
+          payer_record.title
+        when 'StashEngine::Tenant'
+          payer_record.long_name || payer_record.short_name
+        when 'StashEngine::Funder'
+          payer_record.name
+        when 'StashDatacite::Contributor'
+          payer_record.contributor_name
+        end
       end
 
       def payment_needed?
@@ -132,3 +148,4 @@ module StashEngine
     end
   end
 end
+# rubocop:enable Metrics/ModuleLength

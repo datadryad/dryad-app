@@ -1,5 +1,4 @@
 describe CurationService do
-
   include Mocks::RSolr
   include Mocks::Salesforce
   include Mocks::Stripe
@@ -278,7 +277,52 @@ describe CurationService do
     it 'does not call email_orcid_invitations to authors who already have an ORCID registered' do
       @author.update(author_orcid: user.orcid)
       expect(StashEngine::UserMailer).not_to receive(:orcid_invitation)
-      CurationService.new(resource: resource, user: curator,  status: 'published').process
+      CurationService.new(resource: resource, user: curator, status: 'published').process
+    end
+  end
+
+  context :notify_partner_of_large_data_submission do
+    let(:identifier) { create(:identifier) }
+    let(:resource) { create(:resource, identifier: identifier) }
+    let(:mock_cost_reporting_service) { instance_double(CostReportingService) }
+
+    before do
+      allow_any_instance_of(StashEngine::UserMailer).to receive(:journal_published_notice).and_return(true)
+      allow_any_instance_of(StashEngine::UserMailer).to receive(:status_change).and_return(true)
+      allow(CostReportingService).to receive(:new).with(resource).and_return(mock_cost_reporting_service)
+    end
+
+    context 'when status changes' do
+      before do
+        allow_any_instance_of(StashEngine::CurationActivity).to receive(:curation_status_changed?).and_return(true)
+      end
+
+      %w[submitted embargoed published].each do |status|
+        it "calls notify_partner_of_large_data_submission on #{status}" do
+          expect(mock_cost_reporting_service).to receive(:notify_partner_of_large_data_submission)
+          CurationService.new(resource: resource, user: curator, status: status).process
+        end
+      end
+
+      (StashEngine::CurationActivity.statuses.keys - %w[submitted embargoed published]).each do |status|
+        it "does not call notify_partner_of_large_data_submission on #{status}" do
+          expect(mock_cost_reporting_service).not_to receive(:notify_partner_of_large_data_submission)
+          CurationService.new(resource: resource, user: curator, status: status).process
+        end
+      end
+    end
+
+    context 'when status does not change' do
+      before do
+        allow_any_instance_of(StashEngine::CurationActivity).to receive(:curation_status_changed?).and_return(false)
+      end
+
+      %w[submitted embargoed published].each do |status|
+        it "does not call notify_partner_of_large_data_submission on #{status}" do
+          expect(mock_cost_reporting_service).not_to receive(:notify_partner_of_large_data_submission)
+          CurationService.new(resource: resource, user: curator, status: status).process
+        end
+      end
     end
   end
 
@@ -286,7 +330,7 @@ describe CurationService do
     before(:each) { neuter_emails! }
 
     it 'sets flags for embargo' do
-      CurationService.new(resource: resource, user: curator,  status: 'embargoed').process
+      CurationService.new(resource: resource, user: curator, status: 'embargoed').process
 
       expect(identifier.pub_state).to eq('embargoed')
       expect(resource.meta_view).to eq(true)

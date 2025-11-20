@@ -8,7 +8,7 @@ module Datacite
       include Mocks::Datacite
       include Mocks::RSolr
 
-      before(:each) do
+      before do
         mock_salesforce!
         mock_datacite_gen!
         mock_solr!
@@ -33,6 +33,10 @@ module Datacite
           total_size_bytes: total_size_bytes,
           version: 1
         )
+
+        mock_mailer = double(deliver_now: true)
+        allow(StashEngine::ResourceMailer).to receive(:ld_submission).with(@resource).and_return(mock_mailer)
+        allow(mock_mailer).to receive(:deliver_now)
       end
 
       it 'generates DC3' do

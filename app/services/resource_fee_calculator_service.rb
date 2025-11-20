@@ -11,6 +11,10 @@ class ResourceFeeCalculatorService
     { error: true, message: e.message, old_payment_system: e.message == OLD_PAYMENT_SYSTEM_MESSAGE }
   end
 
+  def storage_fee_tier
+    FeeCalculatorService.new(type).storage_fee_tier(resource: resource)
+  end
+
   private
 
   def type
