@@ -133,7 +133,7 @@ function FunderForm({
           {org && (
             <>
               {showSelect && (
-                <div className="input-stack">
+                <div className="input-stack" style={{flexBasis: '100%'}}>
                   <label htmlFor="subfunder_select" className="input-label">{showSelect.group_label}</label>
                   <select
                     id="subfunder_select"
