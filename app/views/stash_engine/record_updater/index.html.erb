@@ -3,15 +3,11 @@
 <h1 class="o-heading__level1" id="pubupdate-label">Funding updater</h1>
 <a href="<%= record_updaters_log_path %>">Match history</a>
 </div>
-
 <div>
-  <p>Matches are based on the award number.</p>
+  <p>Suggested matches are retreived from grant database APIs based upon the funder and award number originally entered. Matches may change existing fields, or may only add discovered award titles and/or URIs to the existing data.</p>
   <h2>Instructions</h2>
-  <ol>
-    <li>Evaluate the relationship between the dataset and the award</li>
-    <li>If the award updates should not be associated with the dataset, click "Reject"</li>
-    <li>Otherwise click "Accept"</li>
-  </ol>
+  <p>Clicking "Accept" will overwrite the existing funding information with the listed replacement. If the dataset has been published, it will be re-indexed and the updated funding metadata will be sent to Datacite.</p>
+  <p>Click "Reject" if the new funding information should not replace what exists.</p>
   <h2>Limit to:</h2>
   <%= form_with url: record_updaters_path(@data_type), method: :get do |_form| %>
   <div class="o-admin-form-inline">
@@ -35,12 +31,11 @@
       <thead>
       <tr>
         <th>
-          Title
+          Dataset
         </th>
-
         <% @columns.each do |column| %>
           <th class="c-lined-table__sort c-proposed-change-table__column-large" <%= sort_display(column.to_s) %> >
-            <%= sortable_column_head sort_field: column.to_s, title: column.to_s.humanize %>
+            <%= sortable_column_head sort_field: column.to_s, title: column.to_s.humanize.sub('uri', 'URI') %>
           </th>
         <% end %>
       </tr>

@@ -1,4 +1,4 @@
-Resource title,<%= @columns.map(&:humanize).join(',') %>
+Dataset,<%= @columns.map(&:humanize).join(',') %>
 <%
   @proposed_changes.each do |proposed_change|
     row = [ proposed_change.resource.title.strip_tags]
