@@ -64,7 +64,7 @@ const changeStatusToProgressBar = (chosenFileId) => {
 };
 
 export default function UploadFiles({
-  resource, setResource, previous, config_maximums, config_s3, config_payments, s3_dir_name, current, pubDates,
+  resource, setResource, previous, config_maximums, config_s3, s3_dir_name, current, pubDates,
 }) {
   const [initialLoad, setInitialLoad] = useState(false);
   const [chosenFiles, setChosenFiles] = useState([]);
@@ -596,7 +596,6 @@ export default function UploadFiles({
       {chosenFiles.length > 0 ? (
         <>
           <FileList
-            config={config_payments}
             chosenFiles={chosenFiles}
             renameFile={renameFileHandler}
             clickedRemove={removeFileHandler}

@@ -8,8 +8,15 @@ const nameit = (name, arr) => {
   return `${upper.replace('_', ' ')}${plural}`;
 };
 
+const groupBy = (arr, callback) => arr.reduce((acc = {}, ...args) => {
+  const key = callback(...args);
+  if (!acc[key]) acc[key] = [];
+  acc[key].push(args[0]);
+  return acc;
+}, {});
+
 function WorksList({identifiers, previous, curator}) {
-  const works = Object.groupBy(identifiers, ({work_type}) => work_type);
+  const works = groupBy(identifiers, ({work_type}) => work_type);
   const icons = {
     article: 'far fa-newspaper',
     dataset: 'fas fa-table',

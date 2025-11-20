@@ -60,6 +60,7 @@
               <li><%= link_to 'Dataset funders', ds_admin_funders_path %>
               <% if current_user.min_curator? %>
                 <li><%= link_to 'Publication updater', publication_updater_path %></li>
+                <li><%= link_to 'Funding updater', record_updaters_path('funder') %></li>
               <% end %>
               <% if current_user.min_manager? %>
                 <li><%= link_to 'Submission queue', url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>

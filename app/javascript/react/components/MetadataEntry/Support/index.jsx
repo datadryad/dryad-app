@@ -19,7 +19,7 @@ export const fundingCheck = (funders) => {
   const groupError = funders.findIndex((f) => f.group_required);
   if (groupError >= 0) {
     return (
-      <p className="error-text" id="funder_group_error" data-index={groupError}>
+      <p className="error-text" id="funder_group_error">
         {upCase(ordinalNumber(groupError + 1))} granting organization requires the selection of a child institution
       </p>
     );

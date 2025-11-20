@@ -14,7 +14,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       mock_datacite_gen!
       create(:tenant)
       @user = create(:user, tenant_id: 'ucop')
-      @resource = create(:resource, user: @user, identifier: create(:identifier), skip_datacite_update: true)
+      @resource = create(:resource, user: @user, skip_datacite_update: true)
       CurationService.new(status: 'curation', resource: @resource, user_id: @user.id).process
       @resource.resource_states.first.update(resource_state: 'submitted')
       @resource.identifier.update(issues: [1234])
@@ -33,6 +33,11 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       visit current_path
       expect(page).to have_text('1 related work')
       expect(page).to have_text('published')
+      @resource.resource_publication.update(manuscript_number: nil)
+      create(:curation_activity, :submitted, resource: @resource, note: 'status updated via API call')
+      visit current_path
+      expect(page).not_to have_text(manuscript.manuscript_number)
+      expect(page).to have_text('accepted')
     end
 
     it 'renders salesforce links in notes field' do

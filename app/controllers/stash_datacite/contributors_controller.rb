@@ -19,7 +19,9 @@ module StashDatacite
       respond_to do |format|
         if @contributor.save
           check_reindex
-          format.json { render json: @contributor }
+          format.json do
+            render json: @contributor.as_json(methods: [:api_integration_key])
+          end
           format.js do
             @funder = Contributor.new(resource_id: params[:resource_id])
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
@@ -37,7 +39,9 @@ module StashDatacite
         if @contributor.update(contributor_params)
           # check_details
           check_reindex
-          format.json { render json: @contributor }
+          format.json do
+            render json: @contributor.as_json(methods: [:api_integration_key])
+          end
           format.js do
             @funder = Contributor.new(resource_id: params[:resource_id])
             render template: 'stash_engine/admin_datasets/funders_reload', formats: [:js]
@@ -82,10 +86,9 @@ module StashDatacite
       if partial_term.blank?
         render json: nil
       else
-        @contributors = StashEngine::RorOrg.distinct.joins(
-          "inner join dcs_contributors on contributor_type = 'funder' and name_identifier_id = ror_id"
-        ).find_by_ror_name(partial_term)
-        render json: @contributors
+        contributors = StashEngine::RorOrg.find_by_ror_name(partial_term, limit: 300)
+        funder_ids = StashDatacite::Contributor.funder.where(name_identifier_id: contributors.map { |a| a[:id] }).distinct.pluck(:name_identifier_id)
+        render json: contributors.select { |a| a[:id].in?(funder_ids) }
       end
     end
 

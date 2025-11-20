@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
+import FundingSearch from './FundingSearch';
 import RorAutocomplete from '../RorAutocomplete';
 import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 
@@ -11,6 +12,7 @@ function FunderForm({
   const [acText, setAcText] = useState('');
   const [loading, setLoading] = useState(true);
   const [showSelect, setShowSelect] = useState(null);
+  const [org, setOrg] = useState(!!contributor.contributor_name);
   const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const setValues = () => ({
@@ -70,6 +72,7 @@ function FunderForm({
     if (current) {
       formRef.current?.resetForm({values: setValues()});
       setAcText(contributor.contributor_name || '');
+      if (contributor.contributor_name) setOrg(true);
       setLoading(false);
     }
   }, [current, contributor]);
@@ -87,6 +90,11 @@ function FunderForm({
     if (contributor.name_identifier_id) getGroup();
   }, [contributor.name_identifier_id]);
 
+  const jsonOptions = () => {
+    if (!showSelect || !showSelect.json_contains) return null;
+
+    return showSelect.json_contains.map((i) => <option key={i.name_identifier_id} value={i.name_identifier_id}>{i.contributor_name}</option>);
+  };
   return (
     <Formik
       initialValues={setValues()}
@@ -122,69 +130,77 @@ function FunderForm({
               <div id={`${contributor.id}funder-ex`}><i aria-hidden="true" />National Institutes of Health</div>
             </div>
           )}
-          {showSelect && (
-            <div className="input-stack">
-              <label htmlFor="subfunder_select" className="input-label">{showSelect.group_label}</label>
-              <select
-                id="subfunder_select"
-                className="c-input__select"
-                onChange={subSelect}
-                aria-errormessage={showSelect.required ? 'funder_group_error' : null}
-              >
-                <option value="">Select {showSelect.group_label}</option>
-                {showSelect.json_contains.map((i) => <option key={i.name_identifier_id} value={i.name_identifier_id}>{i.contributor_name}</option>)}
-              </select>
-            </div>
-          )}
-          <div className="input-stack">
-            <label className="input-label optional" htmlFor={`contributor_award_number__${contributor.id}`}>Award number
-            </label>
-            <Field
-              id={`contributor_award_number__${contributor.id}`}
-              name="award_number"
-              type="text"
-              className="js-award_number c-input__text"
-              aria-describedby={`${contributor.id}award-ex`}
-              aria-invalid={!!formik.errors.award_number || null}
-              aria-errormessage={`contributor_errors__${contributor.id}`}
-              onBlur={formik.handleSubmit}
-            />
-            <div id={`${contributor.id}award-ex`}><i aria-hidden="true" />CA 123456-01A1</div>
-          </div>
-          <div className="input-stack">
-            <label className="input-label optional" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
-            </label>
-            <Field
-              id={`contributor_award_description__${contributor.id}`}
-              name="award_description"
-              type="text"
-              className="js-award_description c-input__text"
-              aria-describedby={`${contributor.id}desc-ex`}
-              aria-invalid={!!formik.errors.award_description || null}
-              aria-errormessage={`contributor_errors__${contributor.id}`}
-              onBlur={formik.handleSubmit}
-            />
-            <div id={`${contributor.id}desc-ex`}><i aria-hidden="true" />Awarding organization subdivision or program</div>
-          </div>
-          <div className="input-stack" style={{flexBasis: '100%'}}>
-            <label className="input-label optional" htmlFor={`contributor_award_title__${contributor.id}`}>Award title
-            </label>
-            <Field
-              id={`contributor_award_title__${contributor.id}`}
-              name="award_title"
-              type="text"
-              className="js-award_description c-input__text"
-              aria-describedby={`${contributor.id}title-ex`}
-              aria-invalid={!!formik.errors.award_title || null}
-              aria-errormessage={`contributor_errors__${contributor.id}`}
-              onBlur={formik.handleSubmit}
-            />
-            <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the award (grant, fellowship, etc.)</div>
-          </div>
-          {(!!formik.errors.award_number || !!formik.errors.award_description || !!formik.errors.award_title) && (
-            <div id={`contributor_errors__${contributor.id}`} style={{color: '#d12c1d'}}>
-              {Object.entries(formik.errors).map((arr) => <p key={arr[0]}>{arr[1]}</p>)}
-            </div>
+          {org && (
+            <>
+              {showSelect && (
+                <div className="input-stack" style={{flexBasis: '100%'}}>
+                  <label htmlFor="subfunder_select" className="input-label">{showSelect.group_label}</label>
+                  <select
+                    id="subfunder_select"
+                    className="c-input__select"
+                    onChange={subSelect}
+                    aria-errormessage={showSelect.required ? 'funder_group_error' : null}
+                  >
+                    <option value="">Select {showSelect.group_label}</option>
+                    {jsonOptions()}
+                  </select>
+                </div>
+              )}
+              {['NIH', 'NSF'].includes(contributor.api_integration_key) ? (
+                <FundingSearch contributor={contributor} updateFunder={updateFunder} />
+              ) : (
+                <div className="input-stack">
+                  <label className="input-label optional" htmlFor={`contributor_award_number__${contributor.id}`}>Award number
+                  </label>
+                  <Field
+                    id={`contributor_award_number__${contributor.id}`}
+                    name="award_number"
+                    type="text"
+                    className="js-award_number c-input__text"
+                    aria-describedby={`${contributor.id}award-ex`}
+                    aria-invalid={!!formik.errors.award_number || null}
+                    aria-errormessage={`contributor_errors__${contributor.id}`}
+                    onBlur={formik.handleSubmit}
+                  />
+                  <div id={`${contributor.id}award-ex`}><i aria-hidden="true" />CA 123456-01A1</div>
+                </div>
+              )}
+              <div className="input-stack">
+                <label className="input-label optional" htmlFor={`contributor_award_description__${contributor.id}`}>Program/division
+                </label>
+                <Field
+                  id={`contributor_award_description__${contributor.id}`}
+                  name="award_description"
+                  type="text"
+                  className="js-award_description c-input__text"
+                  aria-describedby={`${contributor.id}desc-ex`}
+                  aria-invalid={!!formik.errors.award_description || null}
+                  aria-errormessage={`contributor_errors__${contributor.id}`}
+                  onBlur={formik.handleSubmit}
+                />
+                <div id={`${contributor.id}desc-ex`}><i aria-hidden="true" />Awarding organization subdivision or program</div>
+              </div>
+              <div className="input-stack" style={{flexBasis: '100%'}}>
+                <label className="input-label optional" htmlFor={`contributor_award_title__${contributor.id}`}>Award title
+                </label>
+                <Field
+                  id={`contributor_award_title__${contributor.id}`}
+                  name="award_title"
+                  type="text"
+                  className="js-award_description c-input__text"
+                  aria-describedby={`${contributor.id}title-ex`}
+                  aria-invalid={!!formik.errors.award_title || null}
+                  aria-errormessage={`contributor_errors__${contributor.id}`}
+                  onBlur={formik.handleSubmit}
+                />
+                <div id={`${contributor.id}title-ex`}><i aria-hidden="true" />Title of the award (grant, fellowship, etc.)</div>
+              </div>
+              {(!!formik.errors.award_number || !!formik.errors.award_description || !!formik.errors.award_title) && (
+                <div id={`contributor_errors__${contributor.id}`} style={{color: '#d12c1d'}}>
+                  {Object.entries(formik.errors).map((arr) => <p key={arr[0]}>{arr[1]}</p>)}
+                </div>
+              )}
+            </>
           )}
         </Form>
       )}
