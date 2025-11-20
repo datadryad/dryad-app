@@ -276,6 +276,8 @@ GEM
       multipart-post (~> 2.0)
     faraday-net_http (3.4.2)
       net-http (~> 0.5)
+    faraday-retry (2.3.2)
+      faraday (~> 2.0)
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
@@ -832,6 +834,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   faraday (~> 2.13)
+  faraday-retry
   filesize (~> 0.2.0)
   font-awesome-sass (~> 6.7.2)
   fuubar
