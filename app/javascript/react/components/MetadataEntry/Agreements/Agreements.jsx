@@ -6,7 +6,7 @@ import Calculations from './Calculations';
 import CalculateFees from '../../CalculateFees';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, config, subFees, setSubFees, current, setAuthorStep, preview = false,
+  resource, setResource, user, form, previous, config, fees, current, setAuthorStep, preview = false,
 }) {
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
@@ -16,7 +16,6 @@ export default function Agreements({
   const isSubmitter = user.id === submitter.id;
   const formRef = useRef(null);
   const [dpc, setDPC] = useState({});
-  const [fees, setFees] = useState(subFees);
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
   const [agree, setAgree] = useState(resource.accepted_agreement);
   const [reason, setReason] = useState('');
@@ -61,12 +60,6 @@ export default function Agreements({
         }
       });
   };
-
-  useEffect(() => {
-    if (Object.keys(fees).length > 0) {
-      setSubFees(fees);
-    }
-  }, [fees]);
 
   useEffect(() => {
     const existing = formRef.current?.querySelector('#dryad-member');
@@ -212,7 +205,7 @@ export default function Agreements({
             : (
               /* eslint-disable max-len */
               <>
-                <CalculateFees current={current} resource={resource} fees={fees} setFees={setFees} ppr={ppr} />
+                <CalculateFees resource={resource} fees={fees} ppr={ppr} />
                 {fees.total ? <p>You will be asked to pay this fee upon submission. If you require an invoice to be sent to another entity for payment, an additional administration fee will be charged.</p> : null}
               </>
               /* eslint-enable max-len */

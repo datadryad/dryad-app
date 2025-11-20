@@ -29,7 +29,7 @@ module Stash
               acronyms: %w[test common],
               aliases: %w[atest alias],
               home_page: nil,
-              isni_ids: nil
+              isni_ids: []
             }
           )
         end
@@ -37,36 +37,36 @@ module Stash
 
       describe '#search' do
         it 'by query string' do
-          filters = { q: 'test' }
-          expect(solr_mock).to receive(:get).with('select', params: filters, rows: 100).and_return(mock_response)
+          filters = { q: 'test', rows: 100 }
+          expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('test')
         end
 
         it 'by query field' do
-          filters = { fq: 'name:some words* OR aliases:test' }
-          expect(solr_mock).to receive(:get).with('select', params: filters, rows: 100).and_return(mock_response)
+          filters = { fq: 'name:some words* OR aliases:test', rows: 100 }
+          expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('', fq: ['name:some words*', 'aliases:test'])
         end
 
         it 'by query field with AND operation' do
-          filters = { fq: 'name:some words* AND aliases:test' }
-          expect(solr_mock).to receive(:get).with('select', params: filters, rows: 100).and_return(mock_response)
+          filters = { fq: 'name:some words* AND aliases:test', rows: 100 }
+          expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('', fq: ['name:some words*', 'aliases:test'], operation: 'AND')
         end
 
         it 'requests specific fields only' do
-          filters = { fq: 'name:some words*', fl: 'id,name' }
-          expect(solr_mock).to receive(:get).with('select', params: filters, rows: 100).and_return(mock_response)
+          filters = { fq: 'name:some words*', fl: 'id,name', rows: 100 }
+          expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('', fq: ['name:some words*'], fl: 'id,name')
         end
 
         it 'limits the results' do
-          filters = { fq: 'name:some words*', fl: 'id,name' }
-          expect(solr_mock).to receive(:get).with('select', params: filters, rows: 10).and_return(mock_response)
+          filters = { fq: 'name:some words*', fl: 'id,name', rows: 10 }
+          expect(solr_mock).to receive(:get).with('select', params: filters).and_return(mock_response)
 
           StashEngine::RorOrg.search('', fq: ['name:some words*'], fl: 'id,name', limit: 10)
         end

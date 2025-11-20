@@ -1132,28 +1132,7 @@ namespace :identifiers do
       first_submitted = StashEngine::Identifier.joins(:process_date)
         .where(stash_engine_process_dates: { submitted: origin_date..end_date })
         .distinct
-
       found_identifiers.merge(first_submitted)
-
-      puts("  gathering \"PPR => submitted\" identifiers in period: #{origin_date} to #{end_date}")
-      StashEngine::CurationActivity.where(created_at: origin_date..end_date, status: 'submitted')
-        .where.not(identifier_id: first_submitted.pluck(:id))
-        .find_each do |ca|
-
-        # "ppr to queue"
-        # find the most recent PPR or curation status
-        # keep if it that status is PPR
-        ca.identifier.curation_activities
-          .where('resource_id < ?', ca.resource_id)
-          .order(id: :asc).reverse.each do |sibling_ca|
-          if sibling_ca.peer_review?
-            found_identifiers.add(ca.identifier)
-            break
-          elsif sibling_ca.curation?
-            break
-          end
-        end
-      end
 
       # produce the stats
       puts('  writing results')

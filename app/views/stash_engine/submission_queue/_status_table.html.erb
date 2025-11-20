@@ -27,8 +27,8 @@
 		<th class="c-lined-table__sort" <%= sort_display('state') %>>
 				<%= sortable_column_head sort_field: 'state', title: 'State' %>
 		</th>
-		<th class="c-lined-table__sort" <%= sort_display('hostname') %>>
-				<%= sortable_column_head sort_field: 'hostname', title: 'Hostname' %>
+		<th>
+				New files size
 		</th>
 		<th class="c-lined-table__sort" <%= sort_display('updated_at') %>>
 				<%= sortable_column_head sort_field: 'updated_at', title: 'Updated at' %>
@@ -42,7 +42,7 @@
       <td><%= qr.resource_id %></td>
       <td><%= StashEngine::Resource.find(qr.resource_id).identifier.to_s %></td>
       <td><%= qr.state %></td>
-      <td><%= qr.hostname %></td>
+      <td><%= filesize(qr.resource.generic_files.created.sum(&:upload_file_size)) %></td>
       <td><%= formatted_datetime(qr.updated_at) %></td>
     </tr>
     <% end %>

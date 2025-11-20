@@ -17,7 +17,8 @@ module StashEngine
 
     def refresh_table
       params[:sort] = 'updated_at' if params[:sort].blank?
-      ord = helpers.sortable_table_order(whitelist: %w[resource_id state hostname updated_at])
+      ord = helpers.sortable_table_order(whitelist: %w[resource_id state updated_at])
+
       @queue_rows = authorize RepoQueueState.latest_per_resource.where.not(state: 'completed').order(ord)
       @queued_count = RepoQueueState.latest_per_resource.where(state: 'enqueued').count
       @processing_count = RepoQueueState.latest_per_resource.where(state: 'processing').count
