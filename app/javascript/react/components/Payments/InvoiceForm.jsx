@@ -114,7 +114,10 @@ export default function InvoiceForm({
                 !values.name || !values.email
                 || errors.email
               }
-            >Send invoice &amp; Submit for {resource.hold_for_peer_review ? 'peer review' : 'publication'}
+            >
+              {resource.identifier.old_payment_system ? '' : 'Send invoice &amp; '}
+              Submit for{' '}
+              {resource.hold_for_peer_review ? 'peer review' : 'publication'}
             </button>
           </p>
           <br />
