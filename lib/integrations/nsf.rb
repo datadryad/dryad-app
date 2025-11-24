@@ -1,7 +1,7 @@
 module Integrations
   class NSF < Integrations::Base
     BASE_URL       = 'https://www.research.gov/awardapi-service/v1/'.freeze
-    DEFAULT_FIELDS = %w[agency fundProgramName id offset primaryProgram title date].freeze
+    DEFAULT_FIELDS = %w[agency fundProgramName id offset primaryProgram title date orgLongName orgLongName2].freeze
 
     def search_awards(award_ids, fields = DEFAULT_FIELDS)
       uri    = "#{BASE_URL}awards.json"

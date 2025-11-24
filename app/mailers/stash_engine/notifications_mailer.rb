@@ -26,7 +26,7 @@ module StashEngine
       @response = api_response
       @contributor_id = contributor_id
 
-      mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 NIH ROR could not be matched!")
+      mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 NIH/NSF ROR could not be matched!")
     end
   end
 end

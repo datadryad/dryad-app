@@ -1,0 +1,6 @@
+<tr class="c-lined-table__row" id="current_<%= proposed_change.id %>">
+  <%= render partial: 'current_metadata', locals: { proposed_change: proposed_change, record: proposed_change.record, resource: proposed_change.resource } %>
+</tr>
+<tr class="c-lined-table__row" id="proposed_<%= proposed_change.id %>">
+  <%= render partial: 'proposed_metadata', locals: { proposed_change: proposed_change, record: proposed_change.record, resource: proposed_change.resource } %>
+</tr>

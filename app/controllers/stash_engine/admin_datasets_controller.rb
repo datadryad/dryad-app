@@ -24,6 +24,9 @@ module StashEngine
       when 'publications'
         authorize @resource, :curate?
         setup_publications
+      when 'funders'
+        authorize @resource, :curate?
+        @funder = StashDatacite::Contributor.new(resource_id: params[:resource_id])
       when 'data'
         authorize %i[stash_engine admin_datasets], :data_popup?
         setup_internal_data_list
@@ -36,8 +39,9 @@ module StashEngine
     end
 
     def waiver_add
-      if @identifier.payment_type == 'stripe'
-        # if it's already invoiced, show a warning
+      if @identifier.payment_type == 'stripe' && !@identifier.payments.last.ppr_fee_paid?
+        # if it's already invoiced, and last payment is not the PPR fee
+        # show a warning
         @error_message = 'Unable to apply a waiver to a dataset that was already invoiced.'
         render template: 'stash_engine/admin_dashboard/curation_activity_error', formats: [:js] and return
       elsif params[:waiver_basis] == 'none'
@@ -77,6 +81,7 @@ module StashEngine
         latest_resource: %i[last_curation_activity editor], resources: %i[stash_version last_curation_activity editor]
       ).find(params[:id])
       @internal_data = InternalDatum.where(identifier_id: @identifier.id)
+      check_crossref
     rescue ActiveRecord::RecordNotFound
       admin_path = stash_url_helpers.url_for(controller: 'stash_engine/admin_datasets', action: 'index', only_path: true)
       redirect_to admin_path, notice: "Identifier ID #{params[:id]} no longer exists."
@@ -204,6 +209,18 @@ module StashEngine
       @related_work = StashDatacite::RelatedIdentifier.new(resource_id: @resource.id)
       @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :primary_article)
       @preprint = StashEngine::ResourcePublication.find_or_create_by(resource_id: @identifier.latest_resource.id, pub_type: :preprint)
+    end
+
+    def check_crossref
+      return if @identifier.publication_article_doi.present?
+      return if @identifier.proposed_changes.unmatched.present?
+
+      # Hit Crossref for info
+      cr = Stash::Import::Crossref.query_by_author_title(resource: @identifier.latest_resource)
+      pc = cr.to_proposed_change if cr.present?
+      pc.save if pc.present?
+    rescue URI::InvalidURIError
+      logger.error("ERROR querying Crossref for identifier: '#{@identifier.identifier}': #{e.message}")
     end
 
     # :nocov:

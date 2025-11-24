@@ -5,7 +5,7 @@
 </div>
 
 <div>
-  <p>Matches are based on the title and author list returned by Crossref. Matches with the type 'posted-content' are likely from preprint servers.</p>
+  <p>Matches are based on a search for the title and author list on Crossref and limited to 'journal-article' and 'posted-content' types. Matches with the type 'posted-content' are generally from preprint servers.</p>
   <h2>Instructions</h2>
   <ol>
     <li>Evaluate the relationship between the dataset and the publication</li>
@@ -18,8 +18,8 @@
   <%= form_with url: stash_url_helpers.publication_updater_path, method: :get do |form| %>  
   <div class="o-admin-form-inline">
     <div class="o-admin-form-pair">
-      <label for="list_search">Search:</label>
-      <%= text_field_tag 'list_search', params[:list_search], {class: 'c-input__text'} %>
+      <label for="search">Search:</label>
+      <%= text_field_tag 'search', params[:search], {class: 'c-input__text'} %>
     </div>
     <div class="o-admin-form-pair">
       <label for="status">Curation status:</label>
@@ -27,7 +27,7 @@
     </div>
     <div class="o-admin-form-pair">
       <label for="match_type">Type:</label>
-      <%= select_tag :match_type, options_for_select([['', ''], ['Likely articles', 'articles'], ['Likely preprints', 'preprints']], params[:match_type]), class: 'c-input__text' %>
+      <%= select_tag :match_type, options_for_select([['', ''], ['Articles', 'articles'], ['Preprints', 'preprints']], params[:match_type]), class: 'c-input__text' %>
     </div>
     <%= submit_tag('Search', class: 'o-button__submit', name: nil ) %>
     <%= button_tag "Reset", type: :reset, id: 'reset_button', class: "o-button__remove" %>
@@ -97,7 +97,7 @@
 
     $("#reset_button").on("click", function(e) {
       e.preventDefault();
-      $("#list_search").val("");
+      $("#search").val("");
       $("#match_type").val("");
       $("#status").val("");
       e.target.form.submit();

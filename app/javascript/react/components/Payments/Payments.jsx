@@ -8,10 +8,8 @@ import {ExitIcon} from '../ExitButton';
 import InvoiceForm from './InvoiceForm';
 
 function Payments({
-  resource, setResource, setPayment, config,
+  resource, setResource, invoice, setInvoice, fees, setPayment, config,
 }) {
-  const [fees, setFees] = useState({});
-  const [invoice, setInvoice] = useState(resource.identifier.old_payment_system);
   const [ppr, setPPR] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
 
@@ -53,7 +51,7 @@ function Payments({
                 <i className="fas fa-circle-left" aria-hidden="true" /> Back to immediate payment
               </button>
             </p>
-            <CalculateFees resource={resource} fees={fees} setFees={setFees} invoice={invoice} />
+            <CalculateFees resource={resource} fees={fees} />
             <p>By submitting the following form, you agree:</p>
             <p>
               I want to generate an invoice, due upon receipt, for payment by another entity.{' '}
@@ -73,7 +71,7 @@ function Payments({
     <div id="payment">
       {resource.hold_for_peer_review ? (
         <>
-          <CalculateFees resource={resource} fees={fees} setFees={setFees} invoice={invoice} ppr />
+          <CalculateFees resource={resource} fees={fees} ppr />
           <p>You must complete payment to submit your dataset for Peer Review.</p>
           <p className="input-line" style={{justifyContent: 'center'}} role="group" aria-label="Choose payment">
             <button
@@ -102,7 +100,7 @@ function Payments({
         </>
       ) : (
         <>
-          <CalculateFees resource={resource} fees={fees} setFees={setFees} invoice={invoice} />
+          <CalculateFees resource={resource} fees={fees} />
           <p>You must complete payment to submit your dataset for curation and publication.</p>
         </>
       )}

@@ -147,7 +147,7 @@ The release of this statement was deeply formative in Dryad’s development and 
   </div>
   <div>
     <dt>2023</dt>
-    <dd><a href="https://blog.datadryad.org/2023/10/20/new-at-dryad-celebrating-a-milestone-in-the-dryad-and-cdl-partnership/">CDL transitions Dryad partnership</a></dd>
+    <dd><a href="https://blog.datadryad.org/2023/10/20/new-at-dryad-celebrating-a-milestone-in-the-dryad-and-cdl-partnership/">Dryad and CDL conclude partnership</a></dd>
   </div>
 </dl>
 

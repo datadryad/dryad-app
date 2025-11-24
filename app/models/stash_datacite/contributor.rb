@@ -10,6 +10,7 @@
 #  award_number       :text(65535)
 #  award_title        :string(191)
 #  award_uri          :string(191)
+#  award_verified     :boolean          default(FALSE)
 #  contributor_name   :text(65535)
 #  contributor_type   :string           default("funder")
 #  funder_order       :integer
@@ -21,6 +22,7 @@
 #
 # Indexes
 #
+#  index_dcs_contributors_on_award_verified      (award_verified)
 #  index_dcs_contributors_on_contributor_type    (contributor_type)
 #  index_dcs_contributors_on_funder_order        (funder_order)
 #  index_dcs_contributors_on_identifier_type     (identifier_type)
@@ -49,13 +51,15 @@ module StashDatacite
     scope :funder, -> { where(contributor_type: 'funder').order(funder_order: :asc, id: :asc) }
     scope :sponsors, -> { where(contributor_type: 'sponsor') }
     scope :rors, -> { where(identifier_type: 'ror') }
-    scope :nih, -> { where(name_identifier_id: ([NIH_ROR] + StashDatacite::Contributor.related_rors(NIH_ROR))) }
-    scope :nsf, -> { where(name_identifier_id: NSF_ROR) }
+    scope :nih, -> { where(name_identifier_id: StashDatacite::Contributor.related_rors(NIH_ROR)) }
+    scope :nsf, -> { where(name_identifier_id: StashDatacite::Contributor.related_rors(NSF_ROR)) }
     scope :needs_award_details, -> { where.not(award_number: [nil, '']).where(award_title: [nil, '']) }
+    scope :updatable, -> { where(auto_update: true) }
+    scope :on_latest_resource, -> { joins(:resource).merge(StashEngine::Resource.latest_per_dataset) }
 
     ContributorTypes = Datacite::Mapping::ContributorType.map(&:value)
 
-    ContributorTypesEnum      = ContributorTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
+    ContributorTypesEnum = ContributorTypes.to_h { |i| [i.downcase.to_sym, i.downcase] }
     ContributorTypesStrToFull = ContributorTypes.to_h { |i| [i.downcase, i] }
 
     # rubocop:disable Style/MapToHash
@@ -163,16 +167,45 @@ module StashDatacite
 
     def api_integration_key
       API_INTEGRATIONS.each_pair do |key, ror_id|
-        return key if ([ror_id] + StashDatacite::Contributor.related_rors(ror_id)).include?(name_identifier_id)
+        return key if StashDatacite::Contributor.related_rors(ror_id).include?(name_identifier_id)
       end
+
       nil
     end
 
     def self.related_rors(ror_id)
-      group = StashDatacite::ContributorGrouping.where(name_identifier_id: ror_id).first
-      return [] if group.nil? || group.json_contains.blank?
+      Rails.cache.fetch("related_ror_ids_for_#{ror_id}", expires_in: 1.day) do
+        me = [ror_id]
+        group = StashDatacite::ContributorGrouping.find_by(name_identifier_id: ror_id)
+        return me if group.nil? || group.json_contains.blank?
 
-      group.json_contains.map { |a| a['name_identifier_id'] }
+        related = group.json_contains.map do |a|
+          [a['name_identifier_id']] + StashDatacite::Contributor.related_rors(a['name_identifier_id'])
+        end.flatten
+
+        (me + related).uniq
+      end
+    end
+
+    def self.related_rors_with_name(ror_id)
+      Rails.cache.fetch("related_ror_names_for_#{ror_id}", expires_in: 1.day) do
+        ror = StashEngine::RorOrg.find_by(ror_id: ror_id)
+        return [] if ror.nil?
+
+        me = [{ name_identifier_id: ror.ror_id, contributor_name: ror.name }]
+
+        group = StashDatacite::ContributorGrouping.find_by(name_identifier_id: ror_id)
+        return me if group.nil? || group.json_contains.blank?
+
+        related = group.json_contains.map do |a|
+          [{
+            name_identifier_id: a['name_identifier_id'],
+            contributor_name: a['contributor_name']
+          }] + StashDatacite::Contributor.related_rors_with_name(a['name_identifier_id'])
+        end.flatten
+
+        (me + related).uniq
+      end
     end
 
     private

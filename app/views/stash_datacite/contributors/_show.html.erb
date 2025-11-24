@@ -9,7 +9,7 @@
           else 
             %><span><%= contributor.contributor_name_friendly%><%if current_user&.min_app_admin? && contributor.name_identifier_id.blank? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched funder" title="Unmatched funder"></i><%end%></span><% 
           end 
-          %><% if contributor.award_number.present? %>: <span><%= contributor.award_number %></span><% end %><% if contributor.award_description.present? %>, <span><%= contributor.award_description %></span><% end %>
+          %><% if contributor.award_number.present? || contributor.award_title.present? %>: <span><%= contributor.award_number.presence || contributor.award_title %></span><% end %><% if contributor.award_description.present? %>, <span><%= contributor.award_description %></span><% end %>
         </li>
       <% end %>
     </ul>

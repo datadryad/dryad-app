@@ -14,21 +14,21 @@ class AwardMetadataService
     response = fetch_api_data
     return if response.blank?
 
-    handle_response(response)
+    handle_response(response.first)
   end
 
-  def award_details
+  def award_details(full_info: false)
     response = fetch_api_data
     return if response.blank?
 
-    data = adapter.new(response.first)
-    ic_data = ic_attrs(data) || { name_identifier_id: nil, contributor_name: nil }
+    parse_response(response.first, full_info: full_info)
+  end
 
-    {
-      award_number: data.award_number,
-      award_uri: data.award_uri,
-      award_title: data.award_title
-    }.merge(ic_data)
+  def search
+    response = fetch_api_data
+    return [] if response.blank?
+
+    response.map { |item| parse_response(item) }
   end
 
   private
@@ -40,18 +40,23 @@ class AwardMetadataService
   end
 
   def handle_response(response)
-    data = adapter.new(response.first, contributor_id: contributor.id)
-
-    attrs = {
-      award_uri: data.award_uri,
-      award_title: data.award_title
-    }.merge(ic_attrs(data))
-    pp "Updating contributor with ID: #{contributor.id} with #{attrs.inspect}" unless Rails.env.test?
+    attrs = parse_response(response)
+    pp "Updating contributor with ID: #{contributor.id} and award ID: #{contributor.award_number} with #{attrs.inspect}" unless Rails.env.test?
     contributor.update attrs
   end
 
-  def ic_attrs(data)
-    return {} if data.ic_admin_identifier.blank? || data.ic_admin_name.blank? || data.ic_admin_name.downcase == contributor.contributor_name&.downcase
+  def parse_response(response, full_info: false)
+    data = adapter.new(response, contributor_id: contributor.id)
+    {
+      award_number: data.award_number,
+      award_uri: data.award_uri,
+      award_title: data.award_title
+    }.merge(ic_attrs(data, full_info: full_info))
+  end
+
+  def ic_attrs(data, full_info: false)
+    return {} if data.ic_admin_identifier.blank? || data.ic_admin_name.blank?
+    return {} if !full_info && data.ic_admin_name.downcase == contributor.contributor_name&.downcase
 
     {
       name_identifier_id: data.ic_admin_identifier,

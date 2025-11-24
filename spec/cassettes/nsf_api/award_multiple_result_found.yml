@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://www.research.gov/awardapi-service/v1/awards.json?id=1457726&printFields=agency,fundProgramName,id,offset,primaryProgram,title,date
+    uri: https://www.research.gov/awardapi-service/v1/awards.json?id=1457726&printFields=agency,fundProgramName,id,offset,primaryProgram,title,date,orgLongName,orgLongName2
     body:
       encoding: US-ASCII
       string: ''

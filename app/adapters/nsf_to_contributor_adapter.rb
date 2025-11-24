@@ -1,10 +1,4 @@
-class NSFToContributorAdapter
-
-  def initialize(response = {}, contributor_id: nil)
-    response ||= {}
-    @response = response.with_indifferent_access
-    @contributor_id = contributor_id
-  end
+class NSFToContributorAdapter < BaseContributorAdapter
 
   def award_number
     @response[:id]
@@ -18,11 +12,14 @@ class NSFToContributorAdapter
     @response[:title]
   end
 
-  def ic_admin_name
-    StashEngine::RorOrg.find_by(ror_id: NSF_ROR)&.name
+  private
+
+  def main_ror_id
+    NSF_ROR
   end
 
-  def ic_admin_identifier
-    NSF_ROR
+  def response_contributor_name
+    name = @response[:orgLongName2] || @response[:orgLongName]
+    name&.downcase
   end
 end
