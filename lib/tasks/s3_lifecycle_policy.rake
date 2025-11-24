@@ -10,10 +10,10 @@ namespace :s3_policies do
     # file should exist
     existing_limit = policy_limit + 2.day
     file = StashEngine::DataFile
-             .deleted
-             .where(file_deleted_at: existing_limit..)
-             .where.not(upload_file_name: 'README.md')
-             .order(file_deleted_at: :asc).first
+      .deleted
+      .where(file_deleted_at: existing_limit..)
+      .where.not(upload_file_name: 'README.md')
+      .order(file_deleted_at: :asc).first
     file = file.original_deposit_file(with_deleted: true)
     path = "v3/#{file.resource_id}/data/#{file.upload_file_name}"
     exists = s3_current.object_versions(s3_key: path).none?
@@ -21,13 +21,12 @@ namespace :s3_policies do
     exists = s3_storage.object_versions(s3_key: path).any?
     puts "#{path} exists in backup storage: #{exists}"
 
-
     # file should de deleted
     deleted_limit = policy_limit - 2.day
     file = StashEngine::DataFile.deleted
-             .where(file_deleted_at: ..deleted_limit)
-             .order(file_deleted_at: :desc)
-             .first
+      .where(file_deleted_at: ..deleted_limit)
+      .order(file_deleted_at: :desc)
+      .first
     file = file.original_deposit_file(with_deleted: true)
     path = "v3/#{file.resource_id}/data/#{file.upload_file_name}"
 
