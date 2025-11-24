@@ -20,7 +20,7 @@ export default function SubmissionForm({
   }, [previewRef.current, resource]);
 
   const submit = (e) => {
-    const mustPay = !payment && resource.resource_type.resource_type !== 'collection' && fees.total;
+    const mustPay = !payment && resource.identifier['user_must_pay?'] && (fees.total || resource.identifier.old_payment_system);
     if (mustPay || !hasChanges || steps().some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator)) {
       e.preventDefault();
     }
