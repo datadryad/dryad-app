@@ -9,7 +9,7 @@ module StashEngine
       # otherwise covered - but send waivers to stripe
       def user_must_pay?
         return false if latest_resource.resource_type&.resource_type == 'collection'
-        
+
         !journal&.will_pay? && !institution_will_pay? && !funder_will_pay?
       end
 
