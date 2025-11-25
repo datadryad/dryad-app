@@ -8,13 +8,13 @@ module StashApi
       @filters = filters
       @error   = nil
 
-      @solr = RSolr.connect(url: Blacklight.connection_config[:url])
+      @solr = RSolr.connect(url: APP_CONFIG.solr_url)
       parse_query
     end
 
-    def search(page: 1, per_page: DEFAULT_PAGE_SIZE)
+    def search(page: 1, per_page: DEFAULT_PAGE_SIZE, fields: 'dc_identifier_s')
       solr_call = @solr.paginate(page, per_page, 'select',
-                                 params: { q: query.to_s, fq: filter_query, fl: 'dc_identifier_s' })
+                                 params: { q: query.to_s, fq: filter_query, fl: fields })
       solr_call['response']
     rescue RSolr::Error::Http
       @error = OpenStruct.new(status: 400, message: 'Unable to parse query request.')
@@ -30,38 +30,73 @@ module StashApi
       @query = query&.gsub(/.*\(.*?\).*/) { |match| match.gsub('(', '\(').gsub(')', '\)') }
     end
 
+    def solr_exact_map
+      {
+        affiliation: 'dryad_author_affiliation_id_sm',
+        subject: 'dc_subject_sm',
+        license: 'dc_rights_s',
+        fileExt: 'dryad_dataset_file_ext_sm',
+        journalISSN: 'dryad_related_publication_issn_s',
+        relatedId: 'dryad_related_publication_id_sm',
+        funder: 'funder_ror_ids_sm',
+        funderName: 'dcs_funder_sm',
+        award: 'funder_awd_ids_sm',
+        facility: 'sponsor_ror_ids_sm',
+        org: 'ror_ids_sm'
+      }
+    end
+
+    def solr_text_map
+      {
+        doi: 'dc_identifier_ti',
+        title: 'dc_title_ti',
+        author: 'dc_creator_tmi',
+        orcid: 'author_orcids_tmi',
+        affiliationName: 'dryad_author_affiliation_name_tmi',
+        abstract: 'dc_description_ti',
+        journal: 'dryad_related_publication_name_ti',
+        funderName: 'dcs_funder_tmi'
+      }
+    end
+
     # Builds an array of the various filter settings requested
     def filter_query
       @fq_array = []
 
-      # if user requests both 'affiliation' and 'tenant', prefer the affiliation,
-      # because it is more specific
-      if filters['affiliation']
-        add_text_filter('dryad_author_affiliation_id_sm', filters['affiliation'])
-      elsif filters['tenant']
-        # multiple affiliations, separated by OR
-        if StashEngine::Tenant.exists?(filters['tenant'])
-          tenant = StashEngine::Tenant.find(filters['tenant'])
-          ror_array = tenant.ror_ids.map do |r|
-            # map the id into the format
-            "dryad_author_affiliation_id_sm:\"#{r}\" "
-          end
-          @fq_array << ror_array.join(' OR ')
-        else
-          add_text_filter('dryad_author_affiliation_id_sm', 'missing_tenant')
-        end
+      filters.each do |k, v|
+        add_exact_filter(solr_exact_map[k.to_sym], v) if solr_exact_map.key?(k.to_sym)
+        add_text_filter(solr_text_map[k.to_sym], v) if solr_text_map.key?(k.to_sym)
       end
 
-      add_date_filter('updated_at_dt', filters['modifiedSince'], 'NOW') if filters['modifiedSince']
-      add_date_filter('updated_at_dt', '*', filters['modifiedBefore']) if filters['modifiedBefore']
-      add_text_filter('dryad_related_publication_issn_s', filters['journalISSN'])
+      if filters['tenant'] && StashEngine::Tenant.exists?(filters['tenant'])
+        tenant = StashEngine::Tenant.find(filters['tenant'])
+        ror_array = tenant.ror_ids.map do |r|
+          # map the id into the format
+          "ror_ids_sm:\"#{r}\" "
+        end
+        @fq_array << ror_array.join(' OR ')
+      end
+
       add_related_work_filter(filters['relatedWorkIdentifier'], filters['relatedWorkRelationship'])
+
+      date_filters
 
       @fq_array
     end
 
-    def add_text_filter(solr_field, value)
+    def date_filters
+      add_date_filter('updated_at_dt', filters['modifiedSince'], 'NOW') if filters['modifiedSince']
+      add_date_filter('updated_at_dt', '*', filters['modifiedBefore']) if filters['modifiedBefore']
+      add_date_filter('dct_issued_dt', filters['publishedSince'], 'NOW') if filters['publishedSince']
+      add_date_filter('dct_issued_dt', '*', filters['publishedBefore']) if filters['publishedBefore']
+    end
+
+    def add_exact_filter(solr_field, value)
       @fq_array << "#{solr_field}:\"#{value}\"" if value
+    end
+
+    def add_text_filter(solr_field, value)
+      @fq_array << "#{solr_field}:(#{value})" if value
     end
 
     def add_date_filter(solr_field, start_value, end_value)
