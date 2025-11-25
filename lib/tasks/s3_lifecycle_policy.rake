@@ -2,9 +2,9 @@
 
 CHECK_COUNT = 30.freeze
 namespace :s3_policies do
-  # RAILS_ENV=production rake s3_policies:deleted_files
+  # RAILS_ENV=production rake s3_policies:deleted_files_check
   desc 'Download and validate files against their digests'
-  task deleted_files: :environment do
+  task deleted_files_check: :environment do
     puts ''
     puts '--------------------------------'
     puts ''
