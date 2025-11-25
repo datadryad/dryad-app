@@ -367,12 +367,10 @@ Rails.application.routes.draw do
 
   # the ones below coming from new routing for blacklight
   #--------------------------------------------------------
-  concern :searchable, Blacklight::Routes::Searchable.new
-  resource :catalog, as: 'catalog', path: '/search', controller: 'catalog' do
-    concerns :searchable
-  end
-
-  # get 'search', to: 'catalog#search', as: 'search'
+  # concern :searchable, Blacklight::Routes::Searchable.new
+  # resource :catalog, as: 'catalog', path: '/searchBL', controller: 'catalog' do
+    # concerns :searchable
+  # end
 
   # this is kind of hacky, but it directs our search results to open links to the landing pages
   resources :solr_documents, only: [:show], path: '/dataset', controller: 'catalog'
@@ -502,6 +500,11 @@ Rails.application.routes.draw do
     get '/', to: 'help', as: 'help'
     get '/contact', to: 'contact'
     get ':folder/:page', to: 'topic'
+  end
+
+  scope module: 'search', path: 'search' do
+    get '/', to: 'search', as: 'new_search'
+    # get '/advanced', to: 'advanced', as: "advanced_search"
   end
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json

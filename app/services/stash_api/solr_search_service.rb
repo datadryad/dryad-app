@@ -12,10 +12,10 @@ module StashApi
       parse_query
     end
 
-    def search(page: 1, per_page: DEFAULT_PAGE_SIZE, fields: 'dc_identifier_s')
-      solr_call = @solr.paginate(page, per_page, 'select',
-                                 params: { q: query.to_s, fq: filter_query, fl: fields })
-      solr_call['response']
+    def search(page: 1, per_page: DEFAULT_PAGE_SIZE, fields: 'dc_identifier_s', facet: false)
+      params = { q: query.to_s, fq: filter_query, fl: fields, facet: facet }
+      params[:sort] = sort_query if filters.key?('sort')
+      @solr.paginate(page, per_page, 'select', params: params)
     rescue RSolr::Error::Http
       @error = OpenStruct.new(status: 400, message: 'Unable to parse query request.')
       []
@@ -30,6 +30,10 @@ module StashApi
       @query = query&.gsub(/.*\(.*?\).*/) { |match| match.gsub('(', '\(').gsub(')', '\)') }
     end
 
+    def sort_query
+      filters['sort'].sub('date', 'dct_issued_dt')
+    end
+
     def solr_exact_map
       {
         affiliation: 'dryad_author_affiliation_id_sm',
@@ -42,7 +46,8 @@ module StashApi
         funderName: 'dcs_funder_sm',
         award: 'funder_awd_ids_sm',
         facility: 'sponsor_ror_ids_sm',
-        org: 'ror_ids_sm'
+        org: 'ror_ids_sm',
+        year: 'solr_year_i'
       }
     end
 
@@ -92,11 +97,19 @@ module StashApi
     end
 
     def add_exact_filter(solr_field, value)
-      @fq_array << "#{solr_field}:\"#{value}\"" if value
+      if value.is_a?(Array)
+        value.each { |v| @fq_array << "#{solr_field}:\"#{v}\"" }
+      elsif value
+        @fq_array << "#{solr_field}:\"#{value}\""
+      end
     end
 
     def add_text_filter(solr_field, value)
-      @fq_array << "#{solr_field}:(#{value})" if value
+      if value.is_a?(Array)
+        value.each { |v| @fq_array << "#{solr_field}:(#{v})" }
+      elsif value
+        @fq_array << "#{solr_field}:(#{value})"
+      end
     end
 
     def add_date_filter(solr_field, start_value, end_value)

@@ -142,7 +142,8 @@ module Stash
 
       describe '#subjects' do
         it 'should match subjects' do
-          expect(@ir.subjects).to eql([@subject1.subject, @subject2.subject])
+          ordered = @resource.subjects.order(subject_scheme: :desc, subject: :asc).map(&:subject)
+          expect(@ir.subjects).to eql(ordered)
         end
       end
 
@@ -177,7 +178,7 @@ module Stash
                                            identifier_type: 'crossref_funder_id',
                                            name_identifier_id: 'http://dx.doi.org/10.13039/100000060',
                                            resource_id: @resource.id)
-          expect(@ir.group_funders).to eq(['National Institutes of Health'])
+          expect(@ir.group_funders.map(&:contributor_name)).to eq(['National Institutes of Health'])
         end
       end
 
@@ -316,7 +317,7 @@ module Stash
       end
 
       describe '#bounding_box_envelope' do
-        it 'gives a set of numbers like SOLR or Blacklight likes' do
+        it 'gives a set of numbers like SOLR likes' do
           the_box = StashDatacite::GeolocationBox.create(sw_latitude: -63.393966,
                                                          ne_latitude: -53.668786,
                                                          sw_longitude: -105.476213,
@@ -344,7 +345,7 @@ module Stash
             dc_type_s: 'Dataset',
             dcs_funder_sm: [@contributor.contributor_name],
             dc_description_s: @resource.descriptions.where(description_type: 'abstract').map(&:description).join("\r"),
-            dc_subject_sm: [@subject1.subject, @subject2.subject],
+            dc_subject_sm: @resource.subjects.order(subject_scheme: :desc, subject: :asc).map(&:subject),
             dct_spatial_sm: [],
             georss_box_s: nil,
             solr_geom: nil,
@@ -364,6 +365,7 @@ module Stash
             author_orcids_sm: @resource.authors.map(&:author_orcid).reject(&:blank?).uniq,
             funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
             funder_ror_ids_sm: @resource.funders.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
+            funding_sm: @resource.funders.map { |f| "#{f.contributor_name}#{f.award_number.present? ? ": #{f.award_number}" : ''}" }.reject(&:blank?).uniq,
             sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
             rw_sim: ['id=doi123,type=primary_article']
           }
