@@ -1,6 +1,6 @@
 # :nocov:
 
-CHECK_COUNT = 30.freeze
+CHECK_COUNT = 30
 namespace :s3_policies do
   # RAILS_ENV=production rake s3_policies:deleted_files_check
   desc 'Download and validate files against their digests'
@@ -38,7 +38,6 @@ namespace :s3_policies do
       output << "original file: #{file.id}"
       v3_path = "v3/#{file.resource_id}/data/#{file.upload_file_name}"
       ark_path = StashEngine::DataFile.mrt_bucket_path(file: file)
-
 
       path = v3_path
       exists = validate_presence(s3_backup, v3_path, log: false)
