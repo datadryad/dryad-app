@@ -1,6 +1,7 @@
 RSpec.shared_examples('does not send ldf notification') do
   it 'does not send emails' do
-    expect(mock_mailer).not_to receive(:deliver_now)
+    expect(StashEngine::ResourceMailer).not_to receive(:ld_publication)
+    expect(StashEngine::ResourceMailer).not_to receive(:ld_submission)
     expect { subject }.not_to(change { StashEngine::CurationActivity.count })
   end
 end
@@ -40,7 +41,6 @@ describe CostReportingService do
   subject { CostReportingService.new(resource).notify_partner_of_large_data_submission }
 
   before(:each) do
-    allow(StashEngine::ResourceMailer).to receive(:ld_submission).and_return(mock_mailer)
     allow(identifier).to receive(:payer).and_return(double(id: 1))
   end
 
@@ -60,12 +60,24 @@ describe CostReportingService do
     end
 
     context 'when status changes to submitted' do
+      before(:each) do
+        expect(StashEngine::ResourceMailer).not_to receive(:ld_publication)
+        allow(StashEngine::ResourceMailer).to receive(:ld_submission).and_return(mock_mailer)
+      end
+
       context 'on first submission' do
         before do
           create(:curation_activity, :submitted, resource: resource)
         end
 
         include_examples 'sends ldf notification'
+
+        context 'when non 2025 plan institution is the payer' do
+          let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED') }
+          let!(:resource) { create(:resource, identifier: identifier, total_file_size: resource_files_size) }
+
+          include_examples 'does not send ldf notification'
+        end
 
         context 'where there is no tenant' do
           let(:tenant) { nil }
@@ -165,12 +177,24 @@ describe CostReportingService do
     end
 
     context 'when status changes to published' do
+      before(:each) do
+        expect(StashEngine::ResourceMailer).not_to receive(:ld_submission)
+        allow(StashEngine::ResourceMailer).to receive(:ld_publication).and_return(mock_mailer)
+      end
+
       context 'on first publish' do
         before do
           create(:curation_activity, :published, resource: resource)
         end
 
         include_examples 'sends ldf notification'
+
+        context 'when non 2025 plan institution is the payer' do
+          let!(:payment_conf) { create(:payment_configuration, partner: journal, payment_plan: 'TIERED') }
+          let!(:resource) { create(:resource, identifier: identifier, total_file_size: resource_files_size) }
+
+          include_examples 'does not send ldf notification'
+        end
 
         context 'another curation activity with same status exists' do
           before do

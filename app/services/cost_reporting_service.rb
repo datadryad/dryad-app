@@ -11,12 +11,19 @@ class CostReportingService
     return unless should_send_notification?
 
     CurationService.new(status: @status, resource_id: resource.id, user: StashEngine::User.system_user, note: @note).process
-    StashEngine::ResourceMailer.ld_submission(resource).deliver_now
+    if @status == 'submitted'
+      StashEngine::ResourceMailer.ld_submission(resource).deliver_now
+    else
+      StashEngine::ResourceMailer.ld_publication(resource).deliver_now
+    end
   end
 
   private
 
   def should_send_notification?
+    # NO - payer is not on 2025 payments plan
+    return false unless resource.identifier.payer_2025?
+
     # NO - no emails to send to
     return false if resource.tenant&.campus_contacts&.blank?
 

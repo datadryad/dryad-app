@@ -1,12 +1,9 @@
-<p>Partner name: "<%= @partner_name %>"</p>
-<p>This is a Large Data Publication</p>
-
-<p>The below dataset has been <%= @resource.current_curation_status %></p>
-
+<p>Dear <%= @partner_name %> representative,</p>
 <p>
-  Title: <%= @resource.title.html_safe %><br/>
-  DOI: <%= @resource.identifier_uri %><br/>
-  Files size: <%= filesize(@resource.total_file_size) %>
+  The dataset titled "<%= @resource.title.html_safe %>",
+  from <%= @user_name %> and with a dataset size of <%= filesize(@resource.total_file_size) %>
+  has been submitted to Dryad.
 </p>
-
-<p>If you have questions, please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=Auto-Withdraw <%= @resource.identifier_str %>"><%= @helpdesk_email %></a>.</p>
+<p>You can access the dataset <%= link_to 'here', activity_log_url(@resource.identifier_id) %>.</p>
+<p>Please remember that you can monitor the volume of data submissions from your entity and your available balance for the year at any point by accessing our Administrative Dashboard.</p>
+<p>If you have any questions, please do not hesitate to contact us. Thank you for choosing Dryad.</p>
