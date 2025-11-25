@@ -12,7 +12,7 @@
 #  contributor_name   :text(65535)
 #  contributor_type   :string           default("funder")
 #  funder_order       :integer
-#  identifier_type    :string
+#  identifier_type    :string           default("ror")
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  name_identifier_id :string(191)
