@@ -20,12 +20,12 @@ docker exec -it --user solr dryad_solr bin/solr create_core -c dryad
 ```
 Copy all configuration files
 ```
-docker cp ~/dryad-app/config/solr_config/resources/protwords.txt dryad_solr_9:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/README.md dryad_solr_9:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/schema.xml dryad_solr_9:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/solrconfig.xml dryad_solr_9:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/stopwords_en.txt dryad_solr_9:/var/solr/data/dryad/conf/
-docker cp ~/dryad-app/config/solr_config/resources/synonyms.txt dryad_solr_9:/var/solr/data/dryad/conf/
+docker cp ~/dryad-app/config/solr_config/resources/protwords.txt dryad_solr:/var/solr/data/dryad/conf/
+docker cp ~/dryad-app/config/solr_config/resources/README.md dryad_solr:/var/solr/data/dryad/conf/
+docker cp ~/dryad-app/config/solr_config/resources/schema.xml dryad_solr:/var/solr/data/dryad/conf/
+docker cp ~/dryad-app/config/solr_config/resources/solrconfig.xml dryad_solr:/var/solr/data/dryad/conf/
+docker cp ~/dryad-app/config/solr_config/resources/stopwords_en.txt dryad_solr:/var/solr/data/dryad/conf/
+docker cp ~/dryad-app/config/solr_config/resources/synonyms.txt dryad_solr:/var/solr/data/dryad/conf/
 ```
 
 Restart container for new config to apply
@@ -46,12 +46,12 @@ docker exec -it --user solr dryad_solr bin/solr create_core -c rors
 ```
 Copy all configuration files
 ```
-docker cp ~/dryad-app/config/solr_config/rors/protwords.txt dryad_solr_9:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/README.md dryad_solr_9:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/schema.xml dryad_solr_9:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/solrconfig.xml dryad_solr_9:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/stopwords_en.txt dryad_solr_9:/var/solr/data/rors/conf/
-docker cp ~/dryad-app/config/solr_config/rors/synonyms.txt dryad_solr_9:/var/solr/data/rors/conf/
+docker cp ~/dryad-app/config/solr_config/rors/protwords.txt dryad_solr:/var/solr/data/rors/conf/
+docker cp ~/dryad-app/config/solr_config/rors/README.md dryad_solr:/var/solr/data/rors/conf/
+docker cp ~/dryad-app/config/solr_config/rors/schema.xml dryad_solr:/var/solr/data/rors/conf/
+docker cp ~/dryad-app/config/solr_config/rors/solrconfig.xml dryad_solr:/var/solr/data/rors/conf/
+docker cp ~/dryad-app/config/solr_config/rors/stopwords_en.txt dryad_solr:/var/solr/data/rors/conf/
+docker cp ~/dryad-app/config/solr_config/rors/synonyms.txt dryad_solr:/var/solr/data/rors/conf/
 ```
 
 Restart container for new config to apply

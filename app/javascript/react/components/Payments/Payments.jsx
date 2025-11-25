@@ -23,7 +23,7 @@ function Payments({
   };
 
   useEffect(() => {
-    if (!clientSecret) fetchClientSecret();
+    if (fees.total && !clientSecret) fetchClientSecret();
   }, [clientSecret]);
 
   useEffect(() => {
