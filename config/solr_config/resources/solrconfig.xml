@@ -150,33 +150,18 @@
         rw_identifier_tmi^15
         rw_type_tmi^15
       </str>
-      <bool name="facet">true</bool>
+      <bool name="facet">false</bool>
       <int name="facet.mincount">1</int>
       <int name="facet.limit">10</int>
-      <str name="facet.field">dct_isPartOf_sm</str>
-      <str name="facet.field">dct_provenance_s</str>
-      <str name="facet.field">dct_spatial_sm</str>
       <str name="facet.field">dc_creator_sm</str>
-      <str name="facet.field">dc_format_s</str>
-      <str name="facet.field">dc_language_s</str>
-      <str name="facet.field">dc_publisher_s</str>
-      <str name="facet.field">dc_rights_s</str>
       <str name="facet.field">dc_subject_sm</str>
-      <str name="facet.field">layer_geom_type_s</str>
-      <str name="facet.field">solr_year_i</str>
-      <!-- briley 06/03/2019 - provide a facet for the publication that cites the dataset -->
-      <str name="facet.field">dryad_related_publication_name_s</str>
       <str name="facet.field">dryad_related_publication_issn_s</str>
-      <!-- sfisher 08/22/2019 - provide a facet for author affiliation(s) -->
-      <str name="facet.field">dryad_author_affiliation_name_sm</str>
-      <str name="facet.field">dryad_dataset_file_ext_sm</str>
-      <str name="facet.field">dcs_funder_sm</str>
-
-      <str name="facet.field">author_orcids_sm</str>
-      <str name="facet.field">funder_awd_ids_sm</str>
+      <str name="facet.field">ror_ids_sm</str>      
       <str name="facet.field">funder_ror_ids_sm</str>
-      <str name="facet.field">sponsor_ror_ids_sm</str>
-
+      <str name="facet.field">dryad_author_affiliation_id_sm</str>
+      <str name="facet.field">author_orcids_sm</str>
+      <str name="facet.field">dryad_dataset_file_ext_sm</str>
+      <str name="facet.field">solr_year_i</str>
       <str name="spellcheck">true</str>
     </lst>
     <arr name="last-components">

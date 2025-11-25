@@ -5,6 +5,11 @@
 
   @include bp(screen3) {
     justify-content: flex-end;
+    column-gap: 4ch;
+  }
+
+  @media (min-width: $screen-lg-min + 200) {
+    column-gap: 5ch;
   }
 }
 
@@ -40,11 +45,9 @@
 
   @include bp(screen3) {
     flex: 0 1 80ch;
-    padding-right: 4ch;     
   }
   @media (min-width: $screen-lg-min + 200) {
     flex: 0 1 90ch;
-    padding-right: 5ch;
   }
 }
 

@@ -263,13 +263,13 @@ module Stash
       def dataset_funders
         # Also do we only want to add items with valid ROR entries?
         contrib_names = @resource.funders.completed.map(&:contributor_name)
-        contrib_names << group_funders.map(&:contributor_name)
+        contrib_names << group_funders.map(&:contributor_name) if group_funders.present?
         contrib_names.flatten.reject(&:blank?).uniq
       end
 
       def dataset_funder_ids
         ids = @resource.funders.completed.rors.map(&:name_identifier_id)
-        ids << group_funders.map(&:name_identifier_id)
+        ids << group_funders.map(&:name_identifier_id) if group_funders.present?
         ids.flatten.reject(&:blank?).uniq
       end
 
