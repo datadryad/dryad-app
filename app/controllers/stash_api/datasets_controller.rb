@@ -19,11 +19,6 @@ module StashApi
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
 
-    # def initialize
-    #   super
-    #   @solr = RSolr.connect(url: Blacklight.connection_config[:url])
-    # end
-
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user, item_view: true)

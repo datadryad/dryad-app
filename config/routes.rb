@@ -365,16 +365,6 @@ Rails.application.routes.draw do
     resource :pots, only: [:show]
   end
 
-  # the ones below coming from new routing for blacklight
-  #--------------------------------------------------------
-  # concern :searchable, Blacklight::Routes::Searchable.new
-  # resource :catalog, as: 'catalog', path: '/searchBL', controller: 'catalog' do
-    # concerns :searchable
-  # end
-
-  # this is kind of hacky, but it directs our search results to open links to the landing pages
-  resources :solr_documents, only: [:show], path: '/dataset', controller: 'catalog'
-
   ############################# Discovery support ######################################
 
   get '/latest', to: 'latest#index', as: 'latest_index'

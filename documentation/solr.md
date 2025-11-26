@@ -6,20 +6,19 @@ Our SOLR setup is quite manual and we manually copy over some configuration file
 We also manually create the core. It is fairly simple to run SOLR since it's a Java application that can
 be extracted and run.
 
-The [README.md](config/solr_config/README.md) details how to set up the blacklight core and schema and
+The [README.md](config/solr_config/README.md) details how to set up the solr core and schema and
 our additions to it, which should always be checked into our repository after we make updates to the
 schema.
 
 Config files
 ------------
 
+- protwords.txt - protected words for SOLR
 - solrconfig.xml - basic SOLR server config
 - schema.xml - fields to store and how they are processed
 - stopwords.txt - basic "meaningless" words that will be ignored
 - stopwords_en.txt - stopwords specific to English
 - synonyms.txt - words that should be indexed/queried together
-- blacklight.yml - basic Blacklight config
-- settings.yml - Blacklight config
 
 
 Adding data to SOLR

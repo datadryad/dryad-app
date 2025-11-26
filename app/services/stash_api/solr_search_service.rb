@@ -21,6 +21,12 @@ module StashApi
       []
     end
 
+    def latest
+      params = { sort: 'dct_issued_dt desc', rows: 5, fl: 'dc_identifier_s dc_title_s dc_creator_sm dc_description_s' }
+      search = @solr.paginate(1, 5, 'select', params: params)
+      search['response']
+    end
+
     private
 
     def parse_query

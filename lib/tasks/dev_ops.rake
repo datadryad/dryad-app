@@ -255,7 +255,7 @@ namespace :dev_ops do
         puts "Removing identifier #{ident}"
         # delete this dataset with no useful files
         puts '  Deleting from SOLR'
-        solr = RSolr.connect url: Blacklight.connection_config[:url]
+        solr = RSolr.connect url: APP_CONFIG.solr_url
         solr.delete_by_query("uuid:\"#{ident}\"")
         solr.commit
 
@@ -298,7 +298,7 @@ namespace :dev_ops do
     end
 
     puts 'Deleting from SOLR'
-    solr = RSolr.connect url: Blacklight.connection_config[:url]
+    solr = RSolr.connect url: APP_CONFIG.solr_url
     solr.delete_by_query("uuid:\"doi:#{identif_str}\"")
     solr.commit
 
