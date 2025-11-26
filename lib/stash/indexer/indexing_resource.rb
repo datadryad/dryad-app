@@ -52,7 +52,7 @@ module Stash
         @resource = resource
       end
 
-      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
       def to_index_document
         georss = calc_bounding_box
@@ -85,10 +85,11 @@ module Stash
           funder_ror_ids_sm: dataset_funder_ids,
           sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
           funding_sm: formatted_funding,
-          rw_sim: formatted_related_works
+          rw_sim: formatted_related_works,
+          dataset_size_l: @resource.total_file_size
         }
       end
-      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
       def formatted_funding
         @resource.funders.completed.map { |f| "#{f.contributor_name}#{f.award_number.present? ? ": #{f.award_number}" : ''}" }.reject(&:blank?).uniq

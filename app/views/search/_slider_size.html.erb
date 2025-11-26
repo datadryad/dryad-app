@@ -1,0 +1,29 @@
+<% sizes = [0, 5000, 50000, 500000, 1000000, 5000000, 10000000, 25000000, 100_000000, 500000000, 1000000000, 10000000000, 50000000000, 100000000000, 500000000000, 1000000000000, 2000000000000, 3000000000000] %>
+<div role="group" aria-labelledby="size-slider-label">
+  <input type="hidden" name="sizeGreater" id="size-least-input" value="<%= params['sizeGreater'] || sizes.first %>">
+  <input type="hidden" name="sizeLesser" id="size-most-input" value="<%= params['sizeLesser'] || sizes.last %>">
+  <div class="slider-values">
+    <label id="size-least-value" for="size-least"><%= filesize(params['sizeGreater']&.to_i ||sizes.first) %></label>
+    <label id="size-most-value" for="size-most"><%= filesize(params['sizeLesser']&.to_i || sizes.last) %></label>
+  </div>
+  <div class="slider">
+    <div class="slider-track" id="size-track"></div>
+    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= params['sizeGreater'].present? ? sizes.bsearch_index { |x| params['sizeGreater'].to_i <= x } : 0 %>" id="size-least"/>
+    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= params['sizeLesser'].present? ? sizes.bsearch_index { |x| params['sizeLesser'].to_i <= x } : sizes.length - 1 %>" id="size-most"/>
+  </div>
+  <script type="text/javascript">
+    var strack = document.getElementById('size-track');
+    var sleast = document.getElementById('size-least');
+    var smost = document.getElementById('size-most');
+    var svalues = <%= sizes.to_json.html_safe %>;
+
+    new DoubleSlider(strack, sleast, smost, svalues)
+
+    const formatSize = () => {
+      document.getElementById('size-least-value').textContent = formatSizeUnits(document.getElementById('size-least-input').value)
+      document.getElementById('size-most-value').textContent = formatSizeUnits(document.getElementById('size-most-input').value)
+    }
+    sleast.addEventListener('input', formatSize)
+    smost.addEventListener('input', formatSize)
+  </script>
+</div>

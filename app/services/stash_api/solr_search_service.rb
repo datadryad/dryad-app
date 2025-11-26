@@ -74,6 +74,8 @@ module StashApi
       @fq_array = []
 
       filters.each do |k, v|
+        next unless v.present?
+
         add_exact_filter(solr_exact_map[k.to_sym], v) if solr_exact_map.key?(k.to_sym)
         add_text_filter(solr_text_map[k.to_sym], v) if solr_text_map.key?(k.to_sym)
       end
@@ -89,16 +91,24 @@ module StashApi
 
       add_related_work_filter(filters['relatedWorkIdentifier'], filters['relatedWorkRelationship'])
 
-      date_filters
+      range_filters
 
       @fq_array
     end
 
-    def date_filters
-      add_date_filter('updated_at_dt', filters['modifiedSince'], 'NOW') if filters['modifiedSince']
-      add_date_filter('updated_at_dt', '*', filters['modifiedBefore']) if filters['modifiedBefore']
-      add_date_filter('dct_issued_dt', filters['publishedSince'], 'NOW') if filters['publishedSince']
-      add_date_filter('dct_issued_dt', '*', filters['publishedBefore']) if filters['publishedBefore']
+    def range_filters
+      if filters['modifiedBefore'] || filters['modifiedSince']
+        add_range_filter('updated_at_dt', filters['modifiedSince'] || '*',
+                         filters['modifiedBefore'] || 'NOW')
+      end
+      if filters['publishedSince'] || filters['publishedBefore']
+        add_range_filter('dct_issued_dt', filters['publishedSince'] || '*',
+                         filters['publishedBefore'] || 'NOW')
+      end
+      return unless filters['sizeGreater'] || filters['sizeLesser']
+
+      add_range_filter('dataset_size_l', filters['sizeGreater'] || '*',
+                       filters['sizeLesser'] || '*')
     end
 
     def add_exact_filter(solr_field, value)
@@ -117,7 +127,7 @@ module StashApi
       end
     end
 
-    def add_date_filter(solr_field, start_value, end_value)
+    def add_range_filter(solr_field, start_value, end_value)
       @fq_array << "#{solr_field}:[#{start_value} TO #{end_value}]"
     end
 

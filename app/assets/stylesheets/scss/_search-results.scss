@@ -111,13 +111,16 @@
 	h3 {
 		font-size: 1.25rem;
 	}
-	h4.expand-button {
+	h4, h4.expand-button {
 		font-size: 1.1rem;
 		button {
 			border-bottom: none;
 			display: inline-flex;
 			justify-content: space-between;
 		}
+    & + [role='group'] {
+      margin-top: .5ch;
+    }
 	}
 	.search-filter {
 		padding: 1ch;
