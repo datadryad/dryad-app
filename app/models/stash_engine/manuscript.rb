@@ -21,6 +21,12 @@ module StashEngine
     include PublicationMixin
 
     self.table_name = 'stash_engine_manuscripts'
+
+    STATUSES_MAPPING = {
+      accepted_statuses: %w[accepted published],
+      rejected_statuses: ['rejected', 'transferred', 'rejected w/o review', 'withdrawn']
+    }.freeze
+
     belongs_to :journal
     belongs_to :identifier, optional: true
     serialize :metadata, coder: YAML
@@ -37,13 +43,22 @@ module StashEngine
     end
 
     def accepted?
-      accepted_statuses = %w[accepted published]
-      accepted_statuses.include?(status)
+      STATUSES_MAPPING[:accepted_statuses].include?(status)
+      Manuscript.where(
+        journal_id: journal_id,
+        identifier_id: identifier_id,
+        manuscript_number: manuscript_number,
+        status: STATUSES_MAPPING[:accepted_statuses]
+      ).exists?
     end
 
     def rejected?
-      rejected_statuses = ['rejected', 'transferred', 'rejected w/o review', 'withdrawn']
-      rejected_statuses.include?(status)
+      Manuscript.where(
+        journal: journal,
+        identifier: identifier,
+        manuscript_number: manuscript_number,
+        status: STATUSES_MAPPING[:rejected_statuses]
+      ).exists?
     end
 
     # Create a new Manuscript from the content of an email message
