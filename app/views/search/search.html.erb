@@ -5,7 +5,7 @@
   <div class="c-columns__content">
     <div id="search_result_info">
       <span>
-        <span role="heading" aria-level="2">Results</span> <b><%= @results['start'] + 1 %> to <%= @results['start'] + [@page_size, @results['numFound'] - @results['start']].min %></b> of <b><%= @results['numFound'] %></b>
+        <span role="heading" aria-level="2">Results</span> <b><% unless @results['numFound'].zero? %><%= @results['start'] + 1 %> to <% end %><%= @results['start'] + [@page_size, @results['numFound'] - @results['start']].min %></b> of <b><%= @results['numFound'] %></b>
       </span>
       <span id="result_sorting">
         Sort by:
@@ -50,7 +50,9 @@
     </div>
   </div>
   <div class="c-columns__sidebar search-filters">
-    <h3>Filter results</h3>
+    <% if @facets['facet_fields'].values.any?(&:present?) %>
+      <h3>Filter results</h3>
+    <% end %>
     <%= display_filters(@facets['facet_fields']) %>
   </div>
 </div>
