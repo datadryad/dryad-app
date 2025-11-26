@@ -29,7 +29,7 @@ gem 'puma', '6.6.0', group: :puma, require: false
 # UI
 gem 'coffee-rails', '~> 5.0'
 gem 'jquery-rails', '~> 4.6'
-gem 'sassc-rails', '~> 2.1.2' # the default for newer rails, no need for yui and already used by bootstrap or something else
+gem 'sassc-rails', '~> 2.1.2' # the default for newer rails
 gem 'terser' # for JS and CSS minify
 
 # ############################################################
@@ -41,9 +41,7 @@ gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-s3', '~> 1.113'
 gem 'aws-sdk-sns'
-gem 'blacklight', '~> 8.8.0'
 gem 'bootsnap', require: false
-gem 'bootstrap', '~> 5.3'
 gem 'charlock_holmes', '~> 0.7.9'
 gem 'commonmarker', '~> 2.4'
 gem 'concurrent-ruby', '~> 1.3.4'

@@ -6,7 +6,6 @@
         @<%= current_tenant&.id %>]</li>
     <% end %>
     <% unless params[:action] == 'home' || params[:controller] == 'search' %>
-      <li class="c-header__nav-item"><%= link_to raw('Explore<span class="hide-mobile">&nbsp;data</span>'), '/search', class: 'js-nav-out' %>
       <li class="c-header__nav-item last-child">
         <form role="search" class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
           <input name="utf8" value="✓" type="hidden">

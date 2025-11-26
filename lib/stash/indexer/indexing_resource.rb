@@ -9,7 +9,7 @@ require 'cgi'
 # came from another class, but it's the only method we need from that class.
 #
 # The Datacite::Mapping patches extra methods into an external gem David wrote to make classes for every enum and they
-# are used to special-sauce output for SOLR and blacklight's schema.
+# are used to special-sauce output for SOLR schema.
 
 # these patch datacite mapping modules for some extra stuff David added
 module Datacite

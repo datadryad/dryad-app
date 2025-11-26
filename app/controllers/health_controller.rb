@@ -36,7 +36,7 @@ class HealthController < ApplicationController
     # Check Solr connectivity
     @health_status[:solr] = {}
     begin
-      solr = RSolr.connect(url: Blacklight.connection_config[:url])
+      solr = RSolr.connect(url: APP_CONFIG.solr_url)
       solr.get('select', params: { fl: 'dc_identifier_s', rows: 1 })
       @health_status[:solr][:status] = 'connected'
     rescue StandardError => e
