@@ -11,18 +11,20 @@ function generateQuickId() {
 }
 
 function formatSizeUnits(bytes) {
-  if (bytes == 1){
-    return '1 byte';
-  }else if (bytes < 1000){
-    return bytes + ' bytes';
+  if(bytes === null) {
+    return `0 B`;
+  }
+  if (bytes < 1000) {
+    return `${bytes} B`;
   }
 
-  var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  for (i = 0; i < units.length; i++) {
-    if(bytes/Math.pow(10, 3*(i+1)) < 1){
-      return (bytes/Math.pow(10, 3*i)).toFixed(2) + " " + units[i];
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  for (let i = 0; i < units.length; i += 1) {
+    if (bytes / 10 ** (3 * (i + 1)) < 1) {
+      return `${parseFloat((bytes / 10 ** (3 * i)).toFixed(2))} ${units[i]}`;
     }
   }
+  return true;
 }
 
 /* .js-unuploaded     --    A file dropped but does not exist on server side and hasn't been uploaded yet

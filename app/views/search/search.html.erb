@@ -53,6 +53,30 @@
     <% if @facets['facet_fields'].values.any?(&:present?) %>
       <h3>Filter results</h3>
     <% end %>
+    <% if params.key?('publishedBefore') || params.key?('publishedSince') %>
+      <div class="search-filter">
+        <form action="<%= new_search_path %>">
+          <% request.parameters.except(:action, :controller, :publishedSince, :publishedBefore).each do |k, v| %>
+            <input type="hidden" name="<%= k %>" value="<%= v %>" />
+          <% end %>
+          <h4 id="date-slider-label">Publication date</h4>
+          <%= render partial: 'slider_date' %>
+          <div style="text-align: right"><button class="o-button__plain-text4" type="submit">Apply</button></div>
+        </form>
+      </div>
+    <% end %>
+    <% if params.key?('sizeGreater') || params.key?('sizeLesser') %>
+      <div class="search-filter">
+        <form action="<%= new_search_path %>">
+          <% request.parameters.except(:action, :controller, :sizeGreater, :sizeLesser).each do |k, v| %>
+            <input type="hidden" name="<%= k %>" value="<%= v %>" />
+          <% end %>
+          <h4 id="size-slider-label">Dataset size</h4>
+          <%= render partial: 'slider_size' %>
+          <div style="text-align: right"><button class="o-button__plain-text4" type="submit">Apply</button></div>
+        </form>
+      </div>
+    <% end %>
     <%= display_filters(@facets['facet_fields']) %>
   </div>
 </div>
