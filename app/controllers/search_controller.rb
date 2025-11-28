@@ -11,6 +11,7 @@ class SearchController < ApplicationController
 
     @facets = search['facet_counts']
     @results = search['response']
+    @profiles = profiles
   end
 
   def advanced
@@ -28,6 +29,15 @@ class SearchController < ApplicationController
     f += ' dryad_author_affiliation_name_sm' if params.key?(:affiliation)
     f += ' dryad_related_publication_name_s' if params.key?(:journalISSN)
     f
+  end
+
+  def profiles
+    d = []
+    d << StashEngine::Author.where(author_orcid: params['orcid']).last if params['orcid'].present?
+    [params['affiliation'], params['org'], params['funder']].flatten.reject(&:blank?).each do |o|
+      d << StashEngine::RorOrg.find_by(ror_id: o)
+    end
+    d.reject(&:blank?)
   end
 
   def page

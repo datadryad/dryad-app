@@ -3,6 +3,16 @@
 </div>
 <div class="c-columns">
   <div class="c-columns__content">
+    <% @profiles.each do |bio| %>
+      <%= render partial: 'search_profile', locals: { bio: bio } %>
+    <% end %>
+    <% if params['award'].present? %>
+      <div class="search-profile" style="grid-template-rows: auto;">
+        <b><%= params['award'] %></b>
+        <span>Award number</span>
+        <a class="o-link__secondary" href="<%= remove_filter(:award, params['award']) %>">Remove from search<i class="fas fa-trash-can" aria-hidden="true"></i></a>
+      </div>
+    <% end %>
     <div id="search_result_info">
       <span>
         <span role="heading" aria-level="2">Results</span> <b><% unless @results['numFound'].zero? %><%= @results['start'] + 1 %> to <% end %><%= @results['start'] + [@page_size, @results['numFound'] - @results['start']].min %></b> of <b><%= @results['numFound'] %></b>
