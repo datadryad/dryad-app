@@ -122,8 +122,8 @@ test:
     account: my.account
     password: "my.password"
     sandbox: true
-  solr_url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:8983/solr/dryad" %>
-  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://127.0.0.1:8983/solr/rors" %>
+  solr_url: <%= ENV['SOLR_URL'] || "http://someserver.org:8983/solr/dryad" %>
+  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://someserver.org:8983/solr/rors" %>
   stripe_payment_url: https://dashboard.stripe.com/acc_123456/test
 
 <% else %>

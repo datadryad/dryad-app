@@ -72,6 +72,7 @@ module SearchHelper
       next unless open?(k) || k == :research_organizations
 
       filters = { k => v }.merge(filters)
+      break
     end
     filters
   end
