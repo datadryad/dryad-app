@@ -3,13 +3,15 @@
   	<h2>Funding</h2>
     <ul class="o-list">
       <% contributors.each_with_index do |contributor, i| %>
+        <% ror_funder = contributor.name_identifier_id.present? && contributor.identifier_type == 'ror' %>
     	  <li>
-          <% if contributor.name_identifier_id.present? && contributor.identifier_type == 'ror' 
-            %><a href="/search?q=<%= URI.encode_www_form_component(contributor.name_identifier_id) %>"><%= contributor.contributor_name_friendly%></a><%
+          <% if ror_funder 
+            %><a href="<%= new_search_path(org: contributor.name_identifier_id) %>"><%= contributor.contributor_name_friendly%></a><%
           else 
             %><span><%= contributor.contributor_name_friendly%><%if current_user&.min_app_admin? && contributor.name_identifier_id.blank? %><i class="fas fa-triangle-exclamation unmatched-icon" role="note" aria-label="Unmatched funder" title="Unmatched funder"></i><%end%></span><% 
           end 
-          %><% if contributor.award_number.present? || contributor.award_title.present? %>: <span><%= contributor.award_number.presence || contributor.award_title %></span><% end %><% if contributor.award_description.present? %>, <span><%= contributor.award_description %></span><% end %>
+          %><% if contributor.award_number.present? || contributor.award_title.present? %>: <span><%if contributor.award_number.present? && ror_funder
+            %><a href="<%= new_search_path(funder: contributor.name_identifier_id, award: contributor.award_number) %>"><%= contributor.award_number%></a><% else %><%= contributor.award_number.presence || contributor.award_title %><% end %></span><% end %><% if contributor.award_description.present? %>, <span><%= contributor.award_description %></span><% end %>
         </li>
       <% end %>
     </ul>

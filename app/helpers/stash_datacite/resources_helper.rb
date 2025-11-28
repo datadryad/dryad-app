@@ -7,7 +7,7 @@ module StashDatacite
         next unless author.author_full_name
 
         if author.author_orcid.present?
-          str = "<a class=\"o-metadata__author\" href=\"/search?q=#{URI.encode_www_form_component(author.author_orcid)}\">#{author.author_full_name}</a>"
+          str = "<a class=\"o-metadata__author\" href=\"#{new_search_path(orcid: author.author_orcid)}\">#{author.author_full_name}</a>"
         end
         str ||= "<span class=\"o-metadata__author\">#{author.author_full_name}</span>"
         af = author.affiliations.map do |a|
