@@ -176,7 +176,7 @@ module StashEngine
     def as_json(_options = {})
       super(
         include: {
-          payment_configuration: { only: %i[payment_plan covers_dpc covers_ldf ldf_limit] }
+          payment_configuration: { only: %i[payment_plan covers_dpc covers_ldf ldf_limit yearly_ldf_fee_limit] }
         }
       )
     end

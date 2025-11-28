@@ -37,6 +37,10 @@
     <%= pf.label :ldf_limit, "Covered Large Data Fee limit (GB)" %>
     <%= pf.select :ldf_limit, ldf_pricing_tiers_options, { selected: @payment_configuration.ldf_limit }, class: 'c-input__select', disabled: !@payment_configuration.covers_ldf %>
   </p>
+  <p>
+    <%= pf.label :yearly_ldf_fee_limit, "Yearly Large Data Fee limit $" %>
+    <%= pf.number_field :yearly_ldf_fee_limit, value: @payment_configuration.yearly_ldf_fee_limit, class: 'c-input__text' %>
+  </p>
 <% end %>
 
 <p class="o-admin-form-inline">
