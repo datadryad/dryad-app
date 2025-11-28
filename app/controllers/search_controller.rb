@@ -3,7 +3,7 @@ class SearchController < ApplicationController
   include StashEngine::SharedSecurityController
 
   def search
-    service = StashApi::SolrSearchService.new(query: params[:q], filters: params)
+    service = StashApi::SolrSearchService.new(query: params[:q], filters: params.except(:q, :action, :controller))
     search = service.search(page: page, per_page: per_page, fields: fields, facet: true)
     if (error = service.error)
       render status: error.status, plain: error.message and return
@@ -16,12 +16,12 @@ class SearchController < ApplicationController
   private
 
   def fields
-    fields = 'dc_identifier_s dc_title_s dc_creator_sm dc_description_s dc_subject_sm dct_issued_dt'
-    fields += ' funding_sm' if params.key?(:funder) || params.key?(:award)
-    fields += ' dryad_dataset_file_ext_sm' if params.key?(:fileExt)
-    fields += ' dryad_author_affiliation_name_sm' if params.key?(:affiliation)
-    fields += ' dryad_related_publication_name_s' if params.key?(:journalISSN)
-    fields
+    f = 'dc_identifier_s dc_title_s dc_creator_sm dc_description_s dc_subject_sm dct_issued_dt'
+    f += ' funding_sm' if params.key?(:funder) || params.key?(:award)
+    f += ' dryad_dataset_file_ext_sm' if params.key?(:fileExt)
+    f += ' dryad_author_affiliation_name_sm' if params.key?(:affiliation)
+    f += ' dryad_related_publication_name_s' if params.key?(:journalISSN)
+    f
   end
 
   def page

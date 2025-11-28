@@ -4,16 +4,15 @@ module StashApi
     attr_accessor :error
 
     def initialize(query:, filters:)
-      @query   = query
+      @query   = parse_query(query)
       @filters = filters
       @error   = nil
 
       @solr = RSolr.connect(url: APP_CONFIG.solr_url)
-      parse_query
     end
 
     def search(page: 1, per_page: DEFAULT_PAGE_SIZE, fields: 'dc_identifier_s', facet: false)
-      params = { q: query.to_s, fq: filter_query, fl: fields, facet: facet }
+      params = { q: @query.to_s, fq: filter_query, fl: fields, facet: facet }
       params[:sort] = sort_query if filters.key?('sort')
       @solr.paginate(page, per_page, 'select', params: params)
     rescue RSolr::Error::Http
@@ -29,11 +28,11 @@ module StashApi
 
     private
 
-    def parse_query
+    def parse_query(q)
       # do some light sanitization
       # passing `system(_any_string_)` or `exec(_any_string_)` will return a 403 from solr
       # escaping these as `system\(_any_string_\)` will perform the query as expected
-      @query = query&.gsub(/.*\(.*?\).*/) { |match| match.gsub('(', '\(').gsub(')', '\)') }
+      q&.gsub(/.*\(.*?\).*/) { |match| match.gsub('(', '\(').gsub(')', '\)') }
     end
 
     def sort_query
@@ -125,10 +124,10 @@ module StashApi
     def add_related_work_filter(id, relationship)
       return if id.blank? && relationship.blank?
 
-      query = id.present? ? "id=#{id}" : '*'
-      query += relationship.present? ? ",type=#{relationship}" : ',*'
+      q = id.present? ? "id=#{id}" : '*'
+      q += relationship.present? ? ",type=#{relationship}" : ',*'
 
-      @fq_array << "rw_sim:#{query}"
+      @fq_array << "rw_sim:#{q}"
     end
   end
 end
