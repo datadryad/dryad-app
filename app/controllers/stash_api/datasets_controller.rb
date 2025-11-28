@@ -290,7 +290,7 @@ module StashApi
     # get /search
     def search
       # datasets in SOLR are always public, so there is no need to limit the query based on the API user
-      service = StashApi::SolrSearchService.new(query: params['q'], filters: params)
+      service = StashApi::SolrSearchService.new(query: params['q'], filters: params.except(:q, :action, :controller))
       search = service.search(page: page, per_page: per_page)
       solr_response = search['response']
 
