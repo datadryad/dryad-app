@@ -235,9 +235,8 @@ module Stash
       def related_publication_ids
         ids = [@resource.resource_publication&.manuscript_number]
         ids << @resource.identifier.internal_data.where(data_type: 'pubmedID')&.map(&:value)&.uniq
-
-        pub_doi = @resource.related_identifiers.where(related_identifier_type: 'doi', work_type: 'primary_article').last
-        ids << pub_doi&.related_identifier
+        pub_dois = @resource.related_identifiers.where(related_identifier_type: 'doi')
+        ids += pub_dois.map(&:related_identifier)
         ids.flatten.reject(&:blank?).uniq
       end
 

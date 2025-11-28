@@ -1,0 +1,111 @@
+<form id="advanced-search" role="search" action="/search" accept-charset="UTF-8" method="get">
+  <h1>Advanced search</h1>
+  <b role="heading" aria-level="2">Text queries</b>
+  <div class="callout">
+    <div class="input-stack">
+      <label for="q">Search terms</label>
+      <input type="text" name="q" id="q" class="c-input__text"/>
+    </div>
+    <div class="input-stack">
+      <label for="subject">Subject keywords</label>
+      <input type="text" name="subject" id="subject" class="c-input__text"/>
+    </div>
+  </div>
+  <b role="heading" aria-level="2">Institutions and organizations</b>
+  <div class="callout">
+    <div class="input-stack">
+      <input type="hidden" name="org">
+      <input type="hidden" name="funder">
+      <input type="hidden" name="affiliation">
+      <%= render partial: 'stash_engine/shared/search_select', locals: {
+        id: 'ror',
+        label: 'Research organization',
+        field_name: 'ror',
+        options_path: '/stash_datacite/affiliations/autocomplete?query=',
+        options_label: 'name',
+        options_value: 'id',
+        selected: {},
+      } %>
+    </div>
+    <div class="radio_choice">
+      <label><input type="radio" name="org_search" value="org" checked/>Search all organizations</label>
+      <label><input type="radio" name="org_search" value="funder" />Limit to research funders</label>
+      <label><input type="radio" name="org_search" value="affiliation" />Limit to author affiliations</label>
+    </div>
+  </div>
+  <div class="input-stack">
+    <label for="award">Search grant award numbers</label>
+    <input type="text" name="award" id="award" class="c-input__text"/>
+  </div>
+  <b role="heading" aria-level="2">Related publications</b>
+  <div class="callout">
+    <div class="input-stack">
+      <input type="hidden" name="journalISSN">
+      <%= render partial: 'stash_engine/shared/search_select', locals: {
+        id: 'journal_search',
+        label: 'Journal',
+        field_name: 'journal_search',
+        options_path: '/stash_datacite/publications/autocomplete?term=',
+        options_label: 'title',
+        options_value: 'issn',
+        selected: {}
+      } %>
+    </div>
+    <div class="input-stack">
+      <label for="relatedId">Search related work identifiers</label>
+      <input type="text" name="relatedId" id="relatedId" class="c-input__text"/>
+    </div>
+  </div>
+  <b role="heading" aria-level="2">Author search</b>
+  <div class="callout">
+    <div class="input-stack">
+      <label for="orcid">Search for author ORCID</label>
+      <input type="text" name="orcid" id="orcid" class="c-input__text"/>
+    </div>
+    <div class="input-stack">
+      <label for="author">Search for author name</label>
+      <input type="text" name="author" id="author" class="c-input__text"/>
+    </div>
+  </div>
+  <b role="heading" aria-level="2">Files and publication</b>
+  <div class="callout">    
+    <div class="input-stack">
+      <span id="date-slider-label">Publication date</span>
+      <%= render partial: 'slider_date' %>
+    </div>
+    <div class="input-stack">
+      <span id="size-slider-label">Dataset size</span>
+      <%= render partial: 'slider_size' %>
+    </div>
+    <div class="input-stack">
+      <div role="group" aria-labelledby="ext-legend" class="c-fieldset">
+        <span id="ext-legend">File extensions</span>
+        <div class="radio_choice">
+          <% @facets['facet_fields']['dryad_dataset_file_ext_sm'].each_slice(2) do |v, _c| %>
+          <label><input type="checkbox" id="fileExt_<%= v %>" name="fileExt[]" value="<%= v %>"><%= v %></label>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c-modal__buttons-right">
+    <button aria-label="Submit search" class="o-button__plain-text2" type="submit" id="advance-submit">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <span>Search</span>
+    </button>
+  </div>
+</form>
+<script type="text/javascript">
+  form = document.getElementById('advanced-search')
+  document.getElementById('advance-submit').addEventListener('click', (e) => {
+    e.preventDefault();
+    var org = form.elements[`${form.elements['org_search'].value}`];
+    org.value = document.getElementById('searchselect-ror__value').value;
+    form.elements['journalISSN'].value = document.getElementById('searchselect-journal_search__value').value;
+    for (let item of form.elements) {
+      item.disabled = !item.value || item.id.startsWith('searchselect');
+    }
+    form.elements['org_search'].forEach(r => r.disabled = true);
+    form.requestSubmit()
+  })
+</script>

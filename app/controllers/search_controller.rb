@@ -13,6 +13,12 @@ class SearchController < ApplicationController
     @results = search['response']
   end
 
+  def advanced
+    service = StashApi::SolrSearchService.new(query: '', filters: {})
+    search = service.search(page: page, per_page: per_page, fields: 'dc_identifier_s', facet: true)
+    @facets = search['facet_counts']
+  end
+
   private
 
   def fields
