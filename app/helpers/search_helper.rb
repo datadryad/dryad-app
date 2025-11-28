@@ -1,12 +1,18 @@
 module SearchHelper
   def filter_to_term
     {
-      institutions: :org,
+      research_organizations: :org,
       journals: :journalISSN,
       publication_years: :year,
       file_extensions: :fileExt,
-      subject_keywords: :subject
+      subject_keywords: :subject,
+      author_affiliations: :affiliation,
+      funding_organizations: :funder
     }
+  end
+
+  def open?(type)
+    params.key?(filter_to_term[type])
   end
 
   def filter_search(type, value)
@@ -24,20 +30,18 @@ module SearchHelper
 
   def filter_display(type, value)
     return StashEngine::Journal.find_by_issn(value)&.title if type == :journals
-    return StashEngine::RorOrg.find_by(ror_id: value)&.name if type == :institutions
+    return StashEngine::RorOrg.find_by(ror_id: value)&.name if %i[research_organizations author_affiliations funding_organizations].include?(type)
 
     value
   end
 
   def list_filters(type, array)
-    is_open = params.key?(filter_to_term[type])
-
     list = '<div class="search-filter"><h4 class="expand-button">'
-    list += "<button id=\"filter_#{type}\" aria-expanded=\"#{is_open}\" aria-controls=\"filter_#{type}_sec\">#{type.to_s.humanize}</button></h4>"
-    list += "<ul id=\"filter_#{type}_sec\" class=\"o-list\" #{'hidden' unless is_open} >"
+    list += "<button id=\"filter_#{type}\" aria-expanded=\"#{open?(type)}\" aria-controls=\"filter_#{type}_sec\">#{type.to_s.humanize}</button></h4>"
+    list += "<ul id=\"filter_#{type}_sec\" class=\"o-list\" #{'hidden' unless open?(type)} >"
 
     array.each_slice(2) do |v, i|
-      selected = is_open && params[filter_to_term[type]].include?(v)
+      selected = open?(type) && params[filter_to_term[type]].include?(v)
       list += "<li>#{selected ? filter_display(type, v) : link_to(filter_display(type, v), filter_search(type, v))}"
       list += if selected
                 "<a href=\"#{remove_filter(type, v)}\" aria-label=\"Remove\"><i class=\"fas fa-trash-can\"></i></a>"
@@ -51,16 +55,30 @@ module SearchHelper
     list.html_safe
   end
 
-  def display_filters(facets)
+  def filter_to_solr
     filters = {
-      institutions: 'ror_ids_sm',
       journals: 'dryad_related_publication_issn_s',
       publication_years: 'solr_year_i',
       file_extensions: 'dryad_dataset_file_ext_sm',
       subject_keywords: 'dc_subject_sm'
     }
+    filters.delete(:publication_years) if params.key?('publishedBefore') || params.key?('publishedSince')
+    ror_filters = {
+      author_affiliations: 'dryad_author_affiliation_id_sm',
+      funding_organizations: 'funder_ror_ids_sm',
+      research_organizations: 'ror_ids_sm'
+    }
+    ror_filters.each do |k, v|
+      next unless open?(k) || k == :research_organizations
+
+      filters = { k => v }.merge(filters)
+    end
+    filters
+  end
+
+  def display_filters(facets)
     list = ''
-    filters.each do |k, v|
+    filter_to_solr.each do |k, v|
       next unless facets[v].present?
 
       list += list_filters(k, facets[v])

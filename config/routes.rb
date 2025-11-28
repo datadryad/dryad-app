@@ -494,7 +494,7 @@ Rails.application.routes.draw do
 
   scope module: 'search', path: 'search' do
     get '/', to: 'search', as: 'new_search'
-    # get '/advanced', to: 'advanced', as: "advanced_search"
+    get '/advanced', to: 'advanced', as: "advanced_search"
   end
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json

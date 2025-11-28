@@ -42,13 +42,11 @@ module StashApi
     def solr_exact_map
       {
         affiliation: 'dryad_author_affiliation_id_sm',
-        subject: 'dc_subject_sm',
         license: 'dc_rights_s',
         fileExt: 'dryad_dataset_file_ext_sm',
         journalISSN: 'dryad_related_publication_issn_s',
         relatedId: 'dryad_related_publication_id_sm',
         funder: 'funder_ror_ids_sm',
-        funderName: 'dcs_funder_sm',
         award: 'funder_awd_ids_sm',
         facility: 'sponsor_ror_ids_sm',
         org: 'ror_ids_sm',
@@ -59,11 +57,10 @@ module StashApi
     def solr_text_map
       {
         doi: 'dc_identifier_ti',
-        title: 'dc_title_ti',
+        subject: 'dc_subject_tmi',
         author: 'dc_creator_tmi',
         orcid: 'author_orcids_tmi',
         affiliationName: 'dryad_author_affiliation_name_tmi',
-        abstract: 'dc_description_ti',
         journal: 'dryad_related_publication_name_ti',
         funderName: 'dcs_funder_tmi'
       }
