@@ -1,6 +1,35 @@
-<tr class="c-lined-table__row" id="current_<%= proposed_change.id %>">
-  <%= render partial: 'current_metadata', locals: { proposed_change: proposed_change, record: proposed_change.record, resource: proposed_change.resource } %>
-</tr>
-<tr class="c-lined-table__row" id="proposed_<%= proposed_change.id %>">
-  <%= render partial: 'proposed_metadata', locals: { proposed_change: proposed_change, record: proposed_change.record, resource: proposed_change.resource } %>
-</tr>
+<tbody id="current_<%= proposed_change.id %>">
+  <% @columns.each do |column| %>
+  <tr class="c-lined-table__row">
+    <th>
+      <%= column.to_s.humanize.sub('uri', 'URI') %>
+    </th>
+    <td><%= proposed_change.record.send(column) %></td>
+    <%= render_row(old_val: proposed_change.record.send(column), new_val: JSON.parse(proposed_change.update_data)[column]).html_safe %></td>
+  </tr>
+  <% end %>
+  <tr class="c-lined-table__row">
+    <th>Dataset</th>
+    <td colspan="2">
+      <div class="record-updater-action">
+        <div>
+          <strong>Title:</strong>
+          <%= link_to proposed_change.resource.title.html_safe, show_path(id: proposed_change.resource.identifier.to_s), target: '_blank' %>
+          <p><strong>Status:</strong> <%= StashEngine::CurationActivity.readable_status(proposed_change.resource.current_curation_status) %></p>
+        </div>
+        <div>
+          <strong>Action:</strong>
+          <div>
+            <% url = "#{record_updater_path(@data_type, proposed_change.id)}" %>
+            <%= form_with model: proposed_change, url: url, method: :DELETE, local: false do |f| %>
+             <button name="reject_changes" class="o-button__remove" type="submit">Reject</button>
+            <% end %>
+            <%= form_with model: proposed_change, url: url, method: :PUT, local: false do |f| %>
+              <button name="accept_changes" class="o-button__plain-text2" type="submit">Accept</button>
+            <% end %>          
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+</tbody>
