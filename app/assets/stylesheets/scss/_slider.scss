@@ -4,6 +4,14 @@
   font-size: .98rem;
 }
 
+@mixin thumb-style {
+  background-color: $dark-gray;
+  cursor: pointer;
+  pointer-events: auto;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
 .slider {
   position: relative;
   width: 100%;
@@ -41,31 +49,29 @@
       appearance: none;
       height: 7px;
     }
-    &::-webkit-slider-thumb,
-    &::-moz-range-thumb {
+    &::-webkit-slider-thumb {      
       -webkit-appearance: none;
+      height: 1.5rem;
+      width: 1.5rem; 
+      @include thumb-style;
+    }
+    &::-moz-range-thumb {
       -moz-appearance: none;
       height: 1.1rem;
       width: 1.1rem;
-      background-color: $dark-gray;
-      cursor: pointer;
       margin-top: -9px;
-      pointer-events: auto;
-      border-radius: 50%;
-      border: 3px solid white;
+      @include thumb-style;
     }
     &::-ms-thumb {
       appearance: none;
       height: 1.1rem;
       width: 1.1rem;
-      background-color: $dark-gray;
-      cursor: pointer;
-      pointer-events: auto;
-      border-radius: 50%;
-      border: 3px solid white;
+      @include thumb-style;
     }
     &:hover::-webkit-slider-thumb,
-    &:active::-webkit-slider-thumb,
+    &:active::-webkit-slider-thumb {
+      background-color: $dark-green;
+    }
     &:hover::-moz-range-thumb,
     &:active::-moz-range-thumb {
       background-color: $dark-green;
