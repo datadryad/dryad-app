@@ -78,7 +78,7 @@ Take the following steps:
 bundle exec rails console -e <env> # be sure you use development, stage or production here for <env>
 
 # once in the console, clear out the existing (perhaps out of date or bad) records
-solr = RSolr.connect url: Blacklight.connection_config[:url]
+solr = RSolr.connect url: APP_CONFIG.solr_url
 solr.delete_by_query("uuid:*")
 exit
 
@@ -328,7 +328,7 @@ Remove from our SOLR search:
 bundle exec rails c -e production # console for production environment
 ```
 ```ruby
-solr = RSolr.connect url: Blacklight.connection_config[:url]
+solr = RSolr.connect url: APP_CONFIG.solr_url
 solr.delete_by_query("uuid:\"doi:<doi>\"")  # replace the <doi> in that string
 solr.commit
 exit

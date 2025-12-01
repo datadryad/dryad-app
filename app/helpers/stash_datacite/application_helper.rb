@@ -26,7 +26,7 @@ module StashDatacite
 
     # create string for facet limit to subject
     def subject_facet(term)
-      "/search?#{CGI.escape('f[dc_subject_sm][]')}=#{CGI.escape(term)}"
+      "/search?subject=#{CGI.escape(term)}"
     end
   end
 end

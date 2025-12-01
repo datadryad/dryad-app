@@ -9,7 +9,6 @@ class SolrInstance
 
   SOLR_VERSION = '5.2.1'.freeze
   CONF_DIR = 'spec/config/solr/conf'.freeze
-  BLACKLIGHT_YML = 'config/blacklight.yml'.freeze # this setting is just used for testing, only
   COLLECTION_NAME = 'dryad'.freeze
 
   def initialize
@@ -91,11 +90,7 @@ class SolrInstance
 
   def config
     @config ||= begin
-      # rubocop:disable Security/YAMLLoad
-      blacklight_config = YAML.load(ERB.new(File.read(File.join(Rails.root, SolrInstance::BLACKLIGHT_YML))).result)['test']
-      # rubocop:enable Security/YAMLLoad
-      # YAML.load(File.read(BLACKLIGHT_YML))['test']
-      solr_uri = URI.parse(blacklight_config['url'])
+      solr_uri = URI.parse(APP_CONFIG.solr_uri)
       {
         port: solr_uri.port,
         collection: solr_uri.path.split('/').last
