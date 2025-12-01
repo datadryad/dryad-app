@@ -8,6 +8,7 @@ class CostReportingService
   end
 
   def notify_partner_of_large_data_submission
+    puts "AAAAAAAAAAAAA try notify"
     return unless should_send_notification?
 
     CurationService.new(status: @status, resource_id: resource.id, user: StashEngine::User.system_user, note: @note).process
@@ -16,11 +17,14 @@ class CostReportingService
     else
       StashEngine::ResourceMailer.ld_publication(resource).deliver_now
     end
+
+    puts "AAAAAAAAAAAAAAAAA notified"
   end
 
   private
 
   def should_send_notification?
+    puts "TESTTEST ---- - start"
     # NO - payer is not on 2025 payments plan
     return false unless resource.identifier.payer_2025?
 
@@ -50,7 +54,7 @@ class CostReportingService
     prev_ldf_tier = ResourceFeeCalculatorService.new(prev_resource).storage_fee_tier
     # NO - data fee tier did not change
     return false if prev_ldf_tier[:range].max >= ldf_tier[:range].max
-
+    puts "TESTTEST ---- - test true"
     true
   end
 
