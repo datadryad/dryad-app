@@ -4,13 +4,19 @@
 	margin-top: $spacing-sm;
 	text-align: right;
 
-	#download-select-label {
-		font-size: .98rem; margin-left: 1ch;
+	.download-info {
+		font-size: .98rem;
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 2ch;
+		flex-wrap: wrap;
 	}
 }
 
 *[class*="o-download__"] {
 	margin-left: 0;
+	align-self: flex-end;
 	display: inline-flex;
 	align-items: center;
 	gap: 1ch;
