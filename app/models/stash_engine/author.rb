@@ -68,6 +68,10 @@ module StashEngine
       affiliations << affil
     end
 
+    def name
+      author_standard_name
+    end
+
     def author_full_name
       return author_org_name unless author_org_name.blank?
 

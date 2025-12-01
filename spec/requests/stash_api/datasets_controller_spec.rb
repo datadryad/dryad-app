@@ -696,7 +696,7 @@ module StashApi
         create(:tenant_ror_org, tenant_id: @res.tenant.id, ror_id: target_ror)
         get "/api/v2/search?tenant=#{@res.tenant.id}", headers: default_authenticated_headers
         output = response_body_hash
-        result = output['_embedded']['stash:datasets'].last
+        result = output['_embedded']['stash:datasets'].first
         expect(result['authors'].first['affiliationROR']).to eq(target_ror)
       end
 
@@ -732,6 +732,7 @@ module StashApi
           20,
           'select',
           params: {
+            facet: false,
             q: 'system \\(fo\\)',
             fq: [],
             fl: 'dc_identifier_s'

@@ -71,7 +71,7 @@ a {
 }
 
 .o-link__secondary {
-  @extend %o-link__primary;
+  @extend %o-link__secondary;
 }
 
 // Links in body copy:
@@ -88,34 +88,6 @@ a {
 
 .c-sidebox a {
   @extend %o-link__secondary;
-}
-
-// Links in Blacklight UI:
-
-.category-block .more_facets_link {
-  @extend %o-link__primary;
-  white-space: nowrap;
-}
-
-.facet-values .more_facets_link {
-  @extend %o-link__secondary;
-}
-
-.home-facet-link {
-  @extend %o-link__primary;
-}
-
-.facet_select {
-  @extend %o-link__secondary;
-}
-
-.index_title a {
-  @extend %o-link__secondary;
-  color: $medium-blue;
-}
-
-.facet-label .selected {
-  color: $dark-green;
 }
 
 // Submitted table:

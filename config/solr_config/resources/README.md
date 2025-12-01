@@ -1,9 +1,6 @@
-# Custom configuration for Solr/Blacklight
+# Custom configuration for Solr
 
-Dryad adds journal information to the standard Blacklight schema so that users can search for a publication DOI, manuscript number, or Pubmed ID. We also add a facet for the publication name.
-
-Currently we have only customized two files, `schema.xml` and `solrconfig.xml` compared to the default blacklight
-configuration which is available from `https://github.com/projectblacklight/blacklight/archive/refs/tags/v8.6.1.tar.gz`.
+Currently we have only customized two files, `schema.xml` and `solrconfig.xml`
 
 However, we're now including all the config files in the `config/solr_config` directory in our repository for ease
 of installing or copying them over to the solr server.

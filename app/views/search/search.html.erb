@@ -1,0 +1,92 @@
+<div class="o-banner__stretch" style="margin-top: -2rem; margin-bottom: 2rem;">
+  <%= render 'shared/search_banner' %>
+</div>
+<div class="c-columns">
+  <div class="c-columns__content">
+    <% @profiles.each do |bio| %>
+      <%= render partial: 'search_profile', locals: { bio: bio } %>
+    <% end %>
+    <% if params['award'].present? %>
+      <div class="search-profile" style="grid-template-rows: auto;">
+        <b><%= params['award'] %></b>
+        <span>Award number</span>
+        <a class="o-link__secondary" href="<%= remove_filter(:award, params['award']) %>">Remove from search<i class="fas fa-trash-can" aria-hidden="true"></i></a>
+      </div>
+    <% end %>
+    <div id="search_result_info">
+      <span>
+        <span role="heading" aria-level="2">Results</span> <b><% unless @results['numFound'].zero? %><%= @results['start'] + 1 %> to <% end %><%= @results['start'] + [@page_size, @results['numFound'] - @results['start']].min %></b> of <b><%= @results['numFound'] %></b>
+      </span>
+      <span id="result_sorting">
+        Sort by:
+        <% if params.key?(:sort) %>
+          <%= link_to('Relevance', new_search_path(request.parameters.except(:action, :controller, :sort))) %>
+        <% else %>
+          <span>Relevance</span>
+        <% end %>
+        <% if params[:sort] == 'date desc' %>
+          <span>Newest</span>
+        <% else %>
+          <%= link_to('Newest', new_search_path(request.parameters.except(:action, :controller).merge(sort: 'date desc'))) %>
+        <% end %>
+        <% if params[:sort] == 'date asc' %>
+          <span>Oldest</span>
+        <% else %>
+          <%= link_to('Oldest', new_search_path(request.parameters.except(:action, :controller).merge(sort: 'date asc')), disabled: true) %>
+        <% end %>
+      </span>
+    </div>
+    <ul id="search_result_list">
+      <% @results['docs'].each do |result|%>
+        <%= render partial: 'search_result', locals: {result: result} %>
+      <% end %>
+    </ul>
+    <div class="c-space-paginator">
+      <% pagination = Kaminari.paginate_array([], total_count: @results['numFound']).page(@page).per(@page_size) %>
+      <%= paginate pagination, params: { page_size: @page_size } %>
+      <div class="c-paginator-page_size">
+        Per page:
+        <%
+          current_ps = params[:page_size].to_i
+          current_ps = 10 if current_ps == 0
+          [10, 50, 100].each do |ps| %>
+          <% if ps == current_ps %>
+            <span class="page-current"><%= ps %></span>
+          <% else %>
+            <%= link_to(ps, new_search_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1)), 'aria-label': "#{ps} results per page") %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="c-columns__sidebar search-filters">
+    <% if @facets['facet_fields'].values.any?(&:present?) %>
+      <h3>Filter results</h3>
+    <% end %>
+    <% if params.key?('publishedBefore') || params.key?('publishedSince') %>
+      <div class="search-filter">
+        <form action="<%= new_search_path %>">
+          <% request.parameters.except(:action, :controller, :publishedSince, :publishedBefore).each do |k, v| %>
+            <input type="hidden" name="<%= k %>" value="<%= v %>" />
+          <% end %>
+          <h4 id="date-slider-label">Publication date</h4>
+          <%= render partial: 'slider_date' %>
+          <div style="text-align: right"><button class="o-button__plain-text4" type="submit">Apply</button></div>
+        </form>
+      </div>
+    <% end %>
+    <% if params.key?('sizeGreater') || params.key?('sizeLesser') %>
+      <div class="search-filter">
+        <form action="<%= new_search_path %>">
+          <% request.parameters.except(:action, :controller, :sizeGreater, :sizeLesser).each do |k, v| %>
+            <input type="hidden" name="<%= k %>" value="<%= v %>" />
+          <% end %>
+          <h4 id="size-slider-label">Dataset size</h4>
+          <%= render partial: 'slider_size' %>
+          <div style="text-align: right"><button class="o-button__plain-text4" type="submit">Apply</button></div>
+        </form>
+      </div>
+    <% end %>
+    <%= display_filters(@facets['facet_fields']) %>
+  </div>
+</div>

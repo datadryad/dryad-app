@@ -47,7 +47,7 @@ puts ''
 
 puts "Copy/paste the Dryad landing URL or type it below (format like doi:xxxxx/xxxxx) and press enter:"
 proposed_doi = gets.strip
-proposed_doi = CGI.unescape(proposed_doi) # in case the landing page URL has escaped slashes in it, since I think blacklight does that sometimes
+proposed_doi = CGI.unescape(proposed_doi)
 
 starting_index = proposed_doi.index('doi:')
 if starting_index.nil?
