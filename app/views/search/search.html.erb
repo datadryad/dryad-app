@@ -57,7 +57,13 @@
       <div class="search-filter">
         <form action="<%= new_search_path %>">
           <% request.parameters.except(:action, :controller, :publishedSince, :publishedBefore).each do |k, v| %>
+            <% if v.is_a?(Array) %>
+              <% v.each do |a| %>
+              <input type="hidden" name="<%= k %>[]" value="<%= a %>" />
+              <% end %>
+            <% else %>
             <input type="hidden" name="<%= k %>" value="<%= v %>" />
+            <% end %>
           <% end %>
           <h4 id="date-slider-label">Publication date</h4>
           <%= render partial: 'slider_date' %>
@@ -69,7 +75,13 @@
       <div class="search-filter">
         <form action="<%= new_search_path %>">
           <% request.parameters.except(:action, :controller, :sizeGreater, :sizeLesser).each do |k, v| %>
+            <% if v.is_a?(Array) %>
+              <% v.each do |a| %>
+              <input type="hidden" name="<%= k %>[]" value="<%= a %>" />
+              <% end %>
+            <% else %>
             <input type="hidden" name="<%= k %>" value="<%= v %>" />
+            <% end %>
           <% end %>
           <h4 id="size-slider-label">Dataset size</h4>
           <%= render partial: 'slider_size' %>
