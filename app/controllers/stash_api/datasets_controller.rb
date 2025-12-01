@@ -19,11 +19,6 @@ module StashApi
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
 
-    # def initialize
-    #   super
-    #   @solr = RSolr.connect(url: Blacklight.connection_config[:url])
-    # end
-
     # get /datasets/<id>
     def show
       ds = Dataset.new(identifier: @stash_identifier.to_s, user: @user, item_view: true)
@@ -295,8 +290,9 @@ module StashApi
     # get /search
     def search
       # datasets in SOLR are always public, so there is no need to limit the query based on the API user
-      service = StashApi::SolrSearchService.new(query: params['q'], filters: params)
-      solr_response = service.search(page: page, per_page: per_page)
+      service = StashApi::SolrSearchService.new(query: params['q'], filters: params.except(:q, :action, :controller))
+      search = service.search(page: page, per_page: per_page)
+      solr_response = search['response']
 
       if (error = service.error)
         render status: error.status, plain: error.message and return

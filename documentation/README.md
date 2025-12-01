@@ -24,7 +24,7 @@ Our demo instance of Dryad is available at [https://sandbox.datadryad.org](https
 
     * The stash_api module is where we've implemented our API.
 
-    * The stash_discovery module is a relatively thin wrapper and customization around Blacklight.
+    * The stash_discovery module is a relatively thin wrapper and customization around SOLR.
 
 ## Documentation
 

@@ -1,4 +1,4 @@
-# Information about Blacklight and SOLR
+# Information about SOLR
 
 ## Overview of config files
 
@@ -19,13 +19,10 @@
 `config/solr_config/solrconfig.xml`
 - Defines query handling.
 
-`config/settings.yml`
-- UI settings for Blacklight
-
 
 ## How to add another facet to the data and search interface
 
-1. Set up the additional item(s) in the SOLR schema for Blacklight
+1. Set up the additional item(s) in the SOLR schema
    - edit `config/solr_config/solrconfig.xml` in our code and add a facet field
       like those already shown. Look at the dynamic naming at the end `s` is for string,
       `m` is multiple, `i` is integer. The `schema.xml` in same directory gives more info.
@@ -38,11 +35,6 @@
    like `/solr/server/solr/dryad/conf`. You'll need to restart SOLR
    afterwards (right now from `~/init.d` script).
 5. Double-check search is still working as expected without error after restarting.
-6. Add constants to the blacklight example and config for your new facet.
-   `dryad-config-example/settings.yml` and `config/settings.yml`. For example
-    ```ruby
-    :DATASET_FILE_EXT: 'dryad_dataset_file_ext_sm'
-    ```
-7. Add indexing to populate the data you desire into each record at
+6. Add indexing to populate the data you desire into each record at
    `stash/stash_datacite/lib/stash_indexer/indexing_resource.rb` and update the tests.
-8. Update all the SOLR records: `RAILS_ENV=<env> bundle exec rails rsolr:reindex`
+7. Update all the SOLR records: `RAILS_ENV=<env> bundle exec rails rsolr:reindex`

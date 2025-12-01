@@ -336,7 +336,6 @@ module StashEngine
 
     describe 'solr fun' do
       before(:each) do
-        blacklight_hash = { solr_url: 'http://test.com/blah/dryad' }
         @identifier = create(:identifier, identifier: 'cat/dog', identifier_type: 'DOI')
         @resource = create(:resource, user_id: user.id, identifier_id: @identifier.id)
 
@@ -347,9 +346,6 @@ module StashEngine
         @my_indexing_resource = instance_double('IndexingResource')
         allow(@my_indexing_resource).to receive(:to_index_document).and_return({})
         allow(Stash::Indexer::IndexingResource).to receive(:new).and_return(@my_indexing_resource)
-
-        object_double('Blacklight').as_stubbed_const
-        allow(Blacklight).to receive(:connection_config).and_return(blacklight_hash)
       end
 
       describe '#submit_to_solr' do

@@ -122,7 +122,8 @@ test:
     account: my.account
     password: "my.password"
     sandbox: true
-  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://127.0.0.1:8983/solr/rors" %>
+  solr_url: <%= ENV['SOLR_URL'] || "http://someserver.org:8983/solr/dryad" %>
+  ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://someserver.org:8983/solr/rors" %>
   stripe_payment_url: https://dashboard.stripe.com/acc_123456/test
 
 <% else %>
@@ -297,6 +298,7 @@ defaults: &DEFAULTS
     - ["382c0eff-62ff-4884-8439-2c638b9838d1", "Second Harmonic Generation Dataset"]
     - ["a4c38812-fba1-49f0-a1bf-28ff4e4e76fd", "SIMS Dataset"]
     - ["594b7267-01e9-4d46-b9e9-5edc52051223", "Thick Section Multiphoton MxIF Dataset"]
+  solr_url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8983/solr/rors" %>
   cache:
     app_url: 'redis://localhost:6380/0'
@@ -332,6 +334,7 @@ dev: &DEV
     dpc_change_date: 2022-12-14
     additional_storage_chunk_size: 1.0e+5 # (100KB)
     additional_storage_chunk_cost: 5000
+  solr_url: <%= ENV['SOLR_URL'] || "http://18.236.111.137:8983/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://18.236.111.137:8983/solr/rors" %>
   cache:
     app_url: 'redis://master.dev-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'
@@ -349,6 +352,7 @@ development:
     api_zip_size: 200_000_000
     files: 100
     frictionless: 50_000_000
+  solr_url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8983/solr/rors" %>
   cache:
     app_url: 'redis://localhost:6380/0'
@@ -375,6 +379,7 @@ stage:
     merritt_bucket: dryad-assetstore-merritt-stage
     key: AKIA2KERHV5E3OITXZXC
     secret: <%= Rails.application.credentials[Rails.env.to_sym][:s3_secret] %>
+  solr_url: <%= ENV['SOLR_URL'] || "http://34.215.143.38:8983/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://34.215.143.38:8983/solr/rors" %>
   cache:
     app_url: 'redis://master.stage-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'
@@ -457,6 +462,7 @@ production:
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: false
+  solr_url: <%= ENV['SOLR_URL'] || "http://35.91.212.8:8983/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://35.91.212.8:8983/solr/rors" %>
   cache:
     app_url: 'redis://master.production-sidekiq.zkdynt.usw2.cache.amazonaws.com:6380/0'

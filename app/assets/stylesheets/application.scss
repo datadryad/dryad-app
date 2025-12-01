@@ -24,8 +24,6 @@ body, body#yes-really {
 	margin: 0 auto;
 	padding: 10px;
 	font-family: 'KievitWeb', sans-serif;
-
-	/* Blacklight resets */
 	font-size: initial;
 	font-size: 1.1rem;
 
@@ -130,6 +128,7 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 @import 'scss/sharing-steps';
 @import 'scss/getting-started';
 @import 'scss/social-share';
+@import 'scss/slider';
 
 // ***** Elements ***** //
 
@@ -148,4 +147,3 @@ a[role='button']:focus-visible, a[class*='button']:focus-visible {
 @import 'scss/review';
 @import 'scss/search-results';
 @import 'scss/upload';
-@import 'scss/blacklight-icons';

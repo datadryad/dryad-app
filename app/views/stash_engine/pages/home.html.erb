@@ -3,19 +3,9 @@
   <div class="o-banner__stretch">
     <h1 class="screen-reader-only">Dryad data</h1>
     <p class="o-banner__tagline">Trusted, simple, community driven</p>
-    <div class="o-banner-search">
-      <%= link_to raw('Explore<span class="hide-mobile">&nbsp;data</span>'), '/search', class: 'o-banner-explore js-nav-out' %>
-      <form role="search" class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
-        <input name="utf8" value="✓" type="hidden">
-        <label class="o-global-search__label" for="search-field-input1">Search Dryad data</label>
-        <input class="o-global-search__input" id="search-field-input1" type="search" name="q">
-        <button aria-label="Submit search" class="o-global-search__submit-button" type="submit" id="search">
-          <i class="fa fa-search" aria-hidden="true"></i>
-          <span>Search</span>
-        </button>
-      </form>
-    </div>
+    <%= render 'shared/search_banner' %>
   </div>
+  
   <!-- Promoting scholarship through open data -->
   <!-- the above may be required for Nagios check -->
   <!-- Add class 'light' below for white text on dark background image -->

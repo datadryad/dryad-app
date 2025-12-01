@@ -10,7 +10,7 @@ You'll need the following parts installed and configured on a (local) UI develop
 You'll also need the following components installed either on the same server or on separate servers for all the application features to work:
 
 - MySQL (with the database specified in the database.yml created and using utf8mb4 character set by default)
-- SOLR (with a blacklight schema and core installed)
+- SOLR
 - An S3 storage repository will be needed to submit files
 - A DOI-minting service to mint DOIs.
 
@@ -181,9 +181,7 @@ insert a validation report into the stash_engine_frictionless_reports table to e
 
 ## Final search configuration
 
-To configure where the search interface draws its
-data from, modify the `config/blacklight.yml` to change the endpoint for the
-development server. When running locally, the default server is the Dryad
+When running locally, the default server is the Dryad
 development server, but it can be overridden with the `SOLR_URL` environment
 variable.
 

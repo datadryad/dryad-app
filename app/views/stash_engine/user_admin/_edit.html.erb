@@ -4,7 +4,7 @@
   <% if @user.orcid.present? %>
     <a href="<%= @user.orcid_link %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= @user.orcid %></a>
   <% end %>
-</div>
+</p>
 <%= form_with(url: user_update_path(@user.id), model: @user, method: :post, local: false) do |form| %>
   <% @form = form %>
   <div class="o-admin-form-inline" style="align-items: flex-start; gap: 2ch;">
