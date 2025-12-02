@@ -57,7 +57,7 @@ class FeeCalculatorController < ApplicationController
   end
 
   def resource_options
-    attrs = params.permit(%i[generate_invoice pay_ppr_fee])
+    attrs = params.permit(%i[id generate_invoice pay_ppr_fee])
     attrs[:generate_invoice] = ActiveModel::Type::Boolean.new.cast(attrs[:generate_invoice]) if attrs.key?(:generate_invoice)
     attrs[:pay_ppr_fee] = ActiveModel::Type::Boolean.new.cast(attrs[:pay_ppr_fee]) if attrs.key?(:pay_ppr_fee)
     attrs.to_hash.with_indifferent_access

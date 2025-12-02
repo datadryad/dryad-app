@@ -21,6 +21,7 @@ module StashEngine
     def resource
       @resource ||= (resource_id = params[:id]) && Resource.find(resource_id)
     end
+
     helper_method :resource
 
     # GET /resources
@@ -72,6 +73,7 @@ module StashEngine
       logger.error("Unable to create new resource: #{e.full_message}")
       redirect_to stash_url_helpers.dashboard_path, alert: 'Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.'
     end
+
     # rubocop:enable Metrics/AbcSize
 
     # PATCH/PUT /resources/1
@@ -164,7 +166,7 @@ module StashEngine
       @resource.check_add_cedar_json
       dpc_checks = {
         total_file_size: @resource.total_file_size,
-        journal_will_pay: @resource.identifier.journal&.will_pay?,
+        journal_will_pay: !!@resource.identifier.journal&.will_pay?,
         institution_will_pay: @resource.identifier.institution_will_pay?,
         funder_will_pay: @resource.identifier.funder_will_pay?,
         user_must_pay: @resource.identifier.user_must_pay?,
@@ -187,19 +189,19 @@ module StashEngine
       if @resource.title && @resource.title.length > 3
         other_submissions = params.key?(:admin) ? StashEngine::Resource.all : current_user.resources
         other_submissions = other_submissions.latest_per_dataset.where.not(identifier_id: @resource.identifier_id)
-          .where("stash_engine_identifiers.pub_state != 'withdrawn'")
+                              .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         primary_article = @resource.related_identifiers.find_by(work_type: 'primary_article')&.related_identifier
         manuscript = @resource.resource_publication&.manuscript_number
         dupes = other_submissions.where('LOWER(title) = LOWER(?)', @resource.title)&.select(:id, :title, :identifier_id).to_a
         if primary_article.present?
           dupes.concat(other_submissions.joins(:related_identifiers)
-              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
-              &.select(:id, :title, :identifier_id).to_a)
+                         .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
+                         &.select(:id, :title, :identifier_id).to_a)
         end
         if manuscript&.match(/\d/)
           dupes.concat(
             other_submissions.joins(:resource_publication).where(resource_publication: { manuscript_number: manuscript })
-            &.select(:id, :title, :identifier_id).to_a
+              &.select(:id, :title, :identifier_id).to_a
           )
         end
       end
@@ -209,6 +211,7 @@ module StashEngine
         format.json { render json: @dupes }
       end
     end
+
     # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
     def file_pub_dates

@@ -43,6 +43,7 @@ module StashEngine
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     belongs_to :sponsor, class_name: 'StashEngine::JournalOrganization', optional: true
     has_one :payment_configuration, as: :partner, dependent: :destroy
+    has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
 
     validates_associated :issns
     accepts_nested_attributes_for :flag, allow_destroy: true

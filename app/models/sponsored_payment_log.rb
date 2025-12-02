@@ -9,8 +9,12 @@
 #  payer_type   :string(191)
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  payer_id     :integer
+#  payer_id     :string(191)
 #  resource_id  :integer
+#
+# Indexes
+#
+#  index_sponsored_payment_logs_on_payer_id_and_payer_type  (payer_id,payer_type)
 #
 class SponsoredPaymentLog < ApplicationRecord
 
@@ -21,5 +25,7 @@ class SponsoredPaymentLog < ApplicationRecord
   validates :payer_id, presence: true
   validates :payer_type, presence: true
   validates :paid_storage, presence: true
+
+  scope :for_current_year, -> { where('year(created_at) = ?', Date.today.year) }
 
 end

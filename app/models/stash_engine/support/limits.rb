@@ -6,7 +6,7 @@ module StashEngine
       extend ActiveSupport::Concern
 
       def new_upload_size_limit
-        payer_2025? || sponsored
+        payer_2025? || sponsored?
       end
     end
   end

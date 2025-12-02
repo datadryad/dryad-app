@@ -22,6 +22,7 @@ FactoryBot.define do
     covers_dpc { nil }
     covers_ldf { nil }
     ldf_limit { nil }
+    yearly_ldf_fee_limit { nil }
 
     to_create do |instance|
       record = PaymentConfiguration.find_or_initialize_by(partner: instance.partner)
