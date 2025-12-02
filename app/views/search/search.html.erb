@@ -38,7 +38,9 @@
     </div>
     <ul id="search_result_list">
       <% @results['docs'].each do |result|%>
+      <li class="search-result">
         <%= render partial: 'search_result', locals: {result: result} %>
+      </li>
       <% end %>
     </ul>
     <div class="c-space-paginator">

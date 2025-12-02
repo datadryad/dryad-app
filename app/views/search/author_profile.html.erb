@@ -1,0 +1,51 @@
+<div id="profile-page">
+  <% if @author.present? %>
+  <div class="search-profile">
+    <b role="heading" aria-level="1"><%= @author.name %></b>
+    <span style="margin-left: 0;">
+      <%= @author.affiliation&.smart_name %>
+    </span>
+    <a href="<%= orcid_link(params[:orcid]) %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= params[:orcid] %></a>
+  </div>
+  <h2 class="o-heading__level4">Author of <%= @results['numFound'] %> Dryad datasets</h2>
+  <div id="search_result_info">
+    <span>
+      <span>Results</span> <b><% unless @results['numFound'].zero? %><%= @results['start'] + 1 %> to <% end %><%= @results['start'] + [@page_size, @results['numFound'] - @results['start']].min %></b> of <b><%= @results['numFound'] %></b>
+    </span>
+    <span id="result_sorting">
+      Sort by:
+      <% if params[:sort] != 'date asc' %>
+        <span>Newest</span>
+      <% else %>
+        <%= link_to('Newest', author_profile_path(request.parameters.except(:action, :controller).merge(sort: 'date desc'))) %>
+      <% end %>
+      <% if params[:sort] == 'date asc' %>
+        <span>Oldest</span>
+      <% else %>
+        <%= link_to('Oldest', author_profile_path(request.parameters.except(:action, :controller).merge(sort: 'date asc')), disabled: true) %>
+      <% end %>
+    </span>
+  </div>
+  <ul id="search_result_list">
+    <% @results['docs'].each_with_index do |result, i|%>
+      <li class="search-result">
+        <%= render partial: 'search_result', locals: {result: result} %>
+        <% if @articles[i].present? %>
+          <p>
+            Primary article:
+            <%= result_citation(@articles[i], result['dryad_related_publication_issn_s']) %>
+          </p>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+  <div class="c-space-paginator">
+    <% pagination = Kaminari.paginate_array([], total_count: @results['numFound']).page(@page).per(@page_size) %>
+    <%= paginate pagination, params: { page_size: @page_size } %>
+  </div>
+  <% else %>
+  <div class="callout err">
+    <p>No Dryad author found for ORCID <%= params[:orcid] %></p>
+  </div>
+  <% end %>
+</div>

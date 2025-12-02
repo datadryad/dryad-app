@@ -1,16 +1,14 @@
-<li class="search-result">
-  <h3><%= link_to result['dc_title_s']&.html_safe, show_path(id: result['dc_identifier_s']) %></h3>
-  <p>Published <%= formatted_date(result['dct_issued_dt']) %>.
-    <span class="author-list"><%= result['dc_creator_sm'].first(6).join('; ') %><% if result['dc_creator_sm'].size > 6 %>&ellip;<% end%></span>
-  </p>
-  <p><%= result['dc_description_s'].truncate_words(50)%></p>
-  <p>
-    <%= meta_list(result) %>
-    <span class="subjects">
-      Subjects:
-      <% result['dc_subject_sm'].each do |subj| %>
-        <%= link_to subj, "/search?subject=#{subj}", class: 'o-link__primary' %>
-      <% end %>
-    </span>
-  </p>
-</li>
+<h3><%= link_to result['dc_title_s']&.html_safe, show_path(id: result['dc_identifier_s']) %></h3>
+<p>Published <%= formatted_date(result['dct_issued_dt']) %>.
+  <span class="author-list"><%= result['dc_creator_sm'].first(6).join('; ') %><% if result['dc_creator_sm'].size > 6 %>, et al<% end%></span>
+</p>
+<p><%= result['dc_description_s'].truncate_words(50)%></p>
+<p>
+  <%= meta_list(result) %>
+  <span class="subjects">
+    Subjects:
+    <% result['dc_subject_sm'].each do |subj| %>
+      <%= link_to subj, "/search?subject=#{subj}", class: 'o-link__primary' %>
+    <% end %>
+  </span>
+</p>

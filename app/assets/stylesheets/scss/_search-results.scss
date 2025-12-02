@@ -173,7 +173,7 @@
   row-gap: .5ch;
 
   b {
-    font-size: 1.1rem;
+    font-size: 1.125em;
   }
   span:nth-child(2) {
     grid-column: auto / span 2;
@@ -267,5 +267,15 @@
         margin: .5ch 0 0;
       }
     }
+  }
+}
+
+#profile-page {
+  .search-profile {
+    font-size: 1em;
+    padding: 2ch
+  }
+  .search-result {
+    margin: 1.25rem 0;
   }
 }
