@@ -788,18 +788,8 @@ paths:
             A list of terms to be searched. If multiple terms are
             supplied, matches will only be returned for items that contain
             all terms. Terms may include an `*` at the end to indicate a
-            wildcard. A term may be negated to indicate terms that should *not*
+            wildcard. A term may be negated to indicate that it should *not*
             be present in the results (e.g., `cat -fish`). Use quotation marks to search for an exact phrase.
-        - in: query
-          name: title
-          schema:
-            type: string
-          description: Search for terms within the dataset title.
-        - in: query
-          name: abstract
-          schema:
-            type: string
-          description: Search for terms within the dataset abstract.
         - in: query
           name: subject
           schema:

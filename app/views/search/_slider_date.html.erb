@@ -1,0 +1,35 @@
+<% months = (Date.new(2007,12,1)..Date.today + 1.month).map { |date| date.strftime('%Y-%m-01T00:00:00Z') }.uniq %>
+<div role="group" aria-labelledby="date-slider-label">
+  <input type="hidden" name="publishedSince" id="date-least-input" value="<%= params['publishedSince'] || months.first %>">
+  <input type="hidden" name="publishedBefore" id="date-most-input" value="<%= params['publishedBefore'] || months.last %>">
+  <div class="slider-values">
+    <label id="date-least-value" for="date-least"><%= Date.parse(params['publishedSince'] || months.first).strftime('%b %Y') %></label>
+    <label id="date-most-value" for="date-most"><%= Date.parse(params['publishedBefore'] || months.last).strftime('%b %Y') %></label>
+  </div>
+  <div class="slider">
+    <div class="slider-track" id="date-track"></div>
+    <input type="range" min="0" max="<%= months.length - 1 %>" value="<%= params['publishedSince'].present? ? months.find_index { |x| params['publishedSince'][0..6] == x[0..6] } : 0 %>" id="date-least"/>
+    <input type="range" min="0" max="<%= months.length - 1 %>" value="<%= params['publishedBefore'].present? ? months.find_index { |x| params['publishedBefore'][0..6] == x[0..6] } :  months.length - 1 %>" id="date-most"/>
+  </div>
+  <script type="text/javascript">
+    const dtrack = document.getElementById('date-track');
+    const dleast = document.getElementById('date-least');
+    const dmost = document.getElementById('date-most');
+    const dvalues = <%= months.to_json.html_safe %>;
+
+    new DoubleSlider(dtrack, dleast, dmost, dvalues)
+
+    const formatDateDisplay = (d) => {
+      const date = new Date(d);
+      const abbrv = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${abbrv[date.getMonth()]} ${date.getFullYear()}`
+    }
+
+    const formatPubDate = () => {
+      document.getElementById('date-least-value').textContent = formatDateDisplay(document.getElementById('date-least-input').value)
+      document.getElementById('date-most-value').textContent = formatDateDisplay(document.getElementById('date-most-input').value)
+    }
+    dleast.addEventListener('input', formatPubDate)
+    dmost.addEventListener('input', formatPubDate)
+  </script>
+</div>

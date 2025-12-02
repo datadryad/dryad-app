@@ -39,15 +39,16 @@
 }
 
 .c-columns__content, #page-content {
-  padding-left: 2px;
+  padding: 6px;
+  margin: -6px;
   overflow: auto;
   overflow-wrap: anywhere;
 
   @include bp(screen3) {
-    flex: 0 1 80ch;
+    flex: 0 1 44rem;
   }
   @media (min-width: $screen-lg-min + 200) {
-    flex: 0 1 90ch;
+    flex: 0 1 54rem;
   }
 }
 
@@ -56,11 +57,8 @@
 
   @include bp(screen3) {
     margin: 0;
-    flex: 0 1 40ch;
-  }
-  @media (min-width: $screen-lg-min + 200) {
-    margin: 0;
-    flex: 0 1 35ch;
+    flex: 0 1 21rem;
+    max-width: 311px;
   }
 }
 

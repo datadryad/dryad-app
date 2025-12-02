@@ -1,26 +1,29 @@
+.o-banner-advanced {
+  font-size: 1.15rem; 
+  width: 90%;
+  margin-bottom: -.5ch;
+  a:link, a:visited {
+    text-decoration: none;
+    color: white;
+  }
+  a:hover, a:active {
+    text-decoration: underline;
+    color: $lighter-green;
+  }
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+}
+
 .o-banner-search {
   width: 90%;
-  //margin-top:;
+  padding-top: 1ch;
   font-size: 1.7rem;
 
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 2ch;
-  
-  .o-banner-explore {
-    display: inline-block;
-    line-height: 2;
-    text-decoration: none;
-    &:link, &:visited {
-      color: white;
-    }
-    &:hover, &:active {
-      color: $lighter-green;
-    }
-    padding-right: 2ch;
-    border-right: thin solid $lighter-green;
-  }
+  gap: 1ch;
 
   .o-global-search {
     flex-grow: 2;
@@ -36,9 +39,9 @@
     @extend %fcontrol-focus;
     flex-shrink: 1;
     flex-grow: 2;
-    font-size: 0.8em;
-    margin-right: -14ch;
-    padding-right: calc(14ch + .5em);
+    font-size: 1.25rem;
+    margin-right: -15.5ch;
+    padding-right: calc(14ch + 1ch);
 
     &::placeholder {
       opacity: 1;
@@ -48,7 +51,7 @@
 
   .o-global-search__submit-button {
     width: 14ch;
-    padding: 0 1ch;
+    padding: 0 .5ch;
     height: 50px;
     font-size: inherit;
     font-size: 0.8em;
@@ -62,14 +65,14 @@
   .reset-button {
   	display: inline-flex;
   	align-items: center;
-    margin-left: .5ch;
+    margin-left: 1ch;
     font-size: 1.35rem;
     color: white;
   }
 
   @media (max-width: $screen-md-min) {
     .o-global-search__input {
-      margin-right: -4ch;
+      margin-right: -4.5ch;
       padding-right: calc(4ch + .5em);
     }
     .o-global-search__submit-button {
@@ -98,6 +101,12 @@
   }
 }
 
+.search-page .o-banner__stretch {
+  margin-bottom: 2rem;
+  padding-top: 2ch;
+  background-color: rgba($dark-blue, .95);
+}
+
 .search-page .c-columns {
   @include bp(screen3) {
     flex-direction: row-reverse;
@@ -111,13 +120,16 @@
 	h3 {
 		font-size: 1.25rem;
 	}
-	h4.expand-button {
+	h4, h4.expand-button {
 		font-size: 1.1rem;
 		button {
 			border-bottom: none;
 			display: inline-flex;
 			justify-content: space-between;
 		}
+    & + [role='group'] {
+      margin-top: .5ch;
+    }
 	}
 	.search-filter {
 		padding: 1ch;
@@ -180,6 +192,33 @@
 			content: ',';
 		}
 	}
-
 }
 
+#advanced-search {
+  *[aria-level='2'] {
+    font-size: 1.25rem;
+  }
+  .search-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    row-gap: 2ch;
+    padding: 1.5ch;
+    margin-bottom: 2ch;
+    background-color: $lightest-blue;
+
+    @include bp(screen3) {
+      grid-template-columns: 2.8fr 1fr;
+      column-gap: 7ch;
+    }
+
+    .help-text {
+      font-size: .98rem;
+      margin: -1ch 0 1ch;
+
+      @include bp(screen3) {
+        margin: .5ch 0 0;
+      }
+    }
+  }
+}
