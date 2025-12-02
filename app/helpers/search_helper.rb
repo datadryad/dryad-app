@@ -7,7 +7,9 @@ module SearchHelper
       file_extensions: :fileExt,
       subject_keywords: :subject,
       author_affiliations: :affiliation,
-      funding_organizations: :funder
+      funding_organizations: :funder,
+      orcid: :orcid,
+      award: :award
     }
   end
 

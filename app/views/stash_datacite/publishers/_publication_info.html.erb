@@ -3,7 +3,7 @@
     facility = resource.contributors.where(contributor_type: 'sponsor').first
     if facility.present? && facility.contributor_name.present? %>
     <div class="o-metadata__group2-item">
-      Research facility: <%if facility.name_identifier_id.present? && facility.identifier_type == 'ror'%><a href="/search?q=<%= URI.encode_www_form_component(facility.name_identifier_id) %>"><%= facility.contributor_name_friendly%></a>
+      Research facility: <%if facility.name_identifier_id.present? && facility.identifier_type == 'ror'%><a href="<%= new_search_path(org: facility.name_identifier_id) %>"><%= facility.contributor_name_friendly%></a>
         <% else %><%= facility.contributor_name_friendly %><% end %>
     </div>
   <% end %>
