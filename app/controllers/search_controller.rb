@@ -33,7 +33,7 @@ class SearchController < ApplicationController
 
   def profiles
     d = []
-    d << StashEngine::Author.where(author_orcid: params['orcid']).last if params['orcid'].present?
+    d << StashEngine::Author.joins(:resource).where(resource: { solr_indexed: true }, author_orcid: params['orcid']).last if params['orcid'].present?
     [params['affiliation'], params['org'], params['funder']].flatten.reject(&:blank?).each do |o|
       d << StashEngine::RorOrg.find_by(ror_id: o)
     end
