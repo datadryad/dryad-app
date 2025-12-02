@@ -1,0 +1,33 @@
+<% type = :orcid if bio.is_a?(StashEngine::Author) %>
+<% type ||= :author_affiliations if params.key?('affiliation') %>
+<% type ||= :funding_organizations if params.key?('funder') %>
+<% type ||= :research_organizations %>
+<% val = bio.is_a?(StashEngine::RorOrg) ? bio.ror_id : bio.author_orcid %>
+<div class="search-profile">
+  <b>
+    <%= bio.name %>
+  </b>
+  <span>
+    <% if type == :orcid %>
+      <%= bio.affiliation.smart_name %>
+    <% else %>
+      <% if bio.acronyms.present? %>
+        (<%= bio.acronyms.join(', ') %>)
+      <% end %>
+      <%= bio.country %>
+    <% end %>
+  </span>
+  <% if type == :orcid %>
+    <a href="<%= orcid_link(val) %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= val %></a>
+  <% else %>
+    <a href="<%= val %>" target="_blank" rel="noreferrer"><%= val %><i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
+  <% end %>
+  <span>
+    <% if type == :orcid %>
+      Author
+    <% else %>
+      Organization
+    <% end %>
+  </span>
+  <a class="o-link__secondary" href="<%= remove_filter(type, val) %>">Remove from search<i class="fas fa-trash-can" aria-hidden="true"></i></a>
+</div>

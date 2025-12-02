@@ -18,16 +18,16 @@ All datasets on Dryad are published under the **[CC0 (Creative Commons Zero)](ht
 
 Dryad provides a user-friendly search interface to help you locate datasets relevant to your interests. Here's how to get started:
 
-1. **Navigate to the search bar** on Dryad's homepage or the [Explore data page](/search).
+1. **Navigate to the search bar** on Dryad's homepage or the [search results page](/search).
 2. **Enter keywords or phrases** related to your research topic. For example, "climate change impacts on biodiversity" or "gene expression in cancer."
 3. **Filter options** are available on the left-hand side, allowing you to narrow your results by:
-    1. **Subject area**: Select from common keywords that describe the topics or disciplines relevant to the dataset. 
-    2. **Journal name**: To find datasets associated with studies published in specific journals.
-    3. **Institution name:** To find datasets associated with researchers from specific academic organizations.
-    4. **Geographical location:** To find datasets associated with a certain region or country.
-    5. **Funder:** To find datasets financially supported by a certain funding organization.
-    6. **File extension:** To identify datasets of a certain file type such as CSV or fasta.
-* Once you find a dataset of interest, clicking on it will lead you to the dataset's landing page. Key components of a dataset landing page include:
+    1. **Research organizations:** To find datasets associated with specific academic organizations.
+    2. **Journals**: To find datasets associated with studies published in specific journals.
+    3. **Publication years**: To find datasets based on publication year.
+    4. **File extensions:** To identify datasets of a certain file type such as CSV or fasta.
+    5. **Subject keywords**: Select from common keywords that describe the topics or disciplines relevant to the dataset. 
+4. Additional, more detailed search options are available from the [Advanced search page](/search/advanced)
+5. Once you find a dataset of interest, clicking on it will lead you to the dataset's landing page. Key components of a dataset landing page include:
     * **Abstract**: A brief description of the data.
     * **README**: Starting with datasets published in 2023, you'll find an embedded README file describing data collection and processing methods, term definitions, a file inventory, and other useful context for reusing the data.
     * **Data citation and DOI**: Dryad provides a recommended citation for each dataset so you can give appropriate credit to the original creators. The DOI is a unique digital identifier that makes the dataset persistently accessible and citable.

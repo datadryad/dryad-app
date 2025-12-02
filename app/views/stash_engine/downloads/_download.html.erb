@@ -7,13 +7,15 @@
 <div class="o-download">
   <%= form_with url: "#{worker_scope}downloadZip/#{"doi_#{dataset_identifier.identifier}__v#{minimal_date(resource.publication_date.present? && resource.publication_date < Time.now.utc ? resource.publication_date : resource.updated_at)}".gsub(/\.|:|\//, '_')}.zip", method: :post, name: 'download', id: 'zip_download', remote: true do |form| %>
       <div id="file_downloads"></div>
+      <p class="download-info"><span>Click names to download individual files</span>
       <% if resource.total_file_size > APP_CONFIG.maximums.zip_size %>
-        <p id="download-select-label">Select up to <%= filesize(APP_CONFIG.maximums.zip_size) %> of files for download</p>
+        <span id="download-select-label">Select up to <%= filesize(APP_CONFIG.maximums.zip_size) %> of files for zip download</span></p>
       <% end %>
       <button type="button" class="o-download__files js-download" id="download_zip_button" <% if resource.total_file_size > APP_CONFIG.maximums.zip_size %>disabled<%end%>>
         <span id="download_icon" aria-hidden="true"></span>
         <span role="status"><% if resource.total_file_size < APP_CONFIG.maximums.zip_size %>Download full dataset<% else %>Download selected files<%end%></span>
       </button>
+     <% if resource.total_file_size < APP_CONFIG.maximums.zip_size %></p><%end%>
   <% end %>
   <div class="screen-reader-only" id="accessible-dl-msg" aria-live="assertive"></div>
 </div>

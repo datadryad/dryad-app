@@ -1,0 +1,130 @@
+<form id="advanced-search" role="search" action="/search" accept-charset="UTF-8" method="get">
+  <div class="admin-dashboard-header">
+    <h1>Advanced search</h1>
+    <button aria-label="Submit search" class="o-button__plain-text2 advance-submit" type="submit">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <span>Search</span>
+    </button>
+  </div>
+  <b role="heading" aria-level="2">Text queries</b>
+  <div class="search-section">
+    <div class="input-stack">
+      <label for="q">Search terms</label>
+      <input type="text" name="q" id="q" class="c-input__text" aria-describedby="q-help"/>
+    </div>
+    <div class="help-text" id="q-help">Terms may include an * at the end to indicate a wildcard. A term may be negated to indicate that it should not be present in the results (e.g., <code style="background: white;">cat -fish</code>). Use quotation marks to search for an exact phrase.</div>
+    <div class="input-stack">
+      <label for="subject">Subject keywords</label>
+      <input type="text" name="subject" id="subject" class="c-input__text" aria-describedby="subject-help"/>
+    </div>
+    <div class="help-text" id="subject-help">Terms that must be present within subject keywords.</div>
+  </div>
+  <b role="heading" aria-level="2">Institutions and organizations</b>
+  <div class="search-section">
+    <div>
+      <div class="input-stack">
+        <input type="hidden" name="org">
+        <input type="hidden" name="funder">
+        <input type="hidden" name="affiliation">
+        <%= render partial: 'stash_engine/shared/search_select', locals: {
+          id: 'ror',
+          label: 'Research organization',
+          field_name: 'ror',
+          options_path: '/stash_datacite/affiliations/autocomplete?query=',
+          options_label: 'name',
+          options_value: 'id',
+          selected: {},
+          describedby: 'ror-help',
+        } %>
+      </div>
+      <div class="radio_choice" style="font-size: .98rem; margin-top: 1ch">
+        <label><input type="radio" name="org_search" value="org" checked/>Search all organizations</label>
+        <label><input type="radio" name="org_search" value="funder" />Limit to research funders</label>
+        <label><input type="radio" name="org_search" value="affiliation" />Limit to author affiliations</label>
+      </div>
+    </div>
+    <div class="help-text" id="ror-help">Select a research organization from <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> to find associated datasets. You may limit the association type to either funders or author affiliations.</div>
+    <div class="input-stack">
+      <label for="award">Funding award number</label>
+      <input type="text" name="award" id="award" class="c-input__text" aria-describedby="award-help"/>
+    </div>
+    <div class="help-text" id="award-help">A grant number or other funding award ID associated with the data.</div>
+  </div>
+  <b role="heading" aria-level="2">Related publications</b>
+  <div class="search-section">
+    <div class="input-stack">
+      <input type="hidden" name="journalISSN">
+      <%= render partial: 'stash_engine/shared/search_select', locals: {
+        id: 'journal_search',
+        label: 'Journal',
+        field_name: 'journal_search',
+        options_path: '/stash_datacite/publications/autocomplete?term=',
+        options_label: 'title',
+        options_value: 'issn',
+        selected: {},
+        describedby: 'journal_search-help'
+      } %>
+    </div>
+    <div class="help-text" id="journal_search-help">Search for datasets associated with a primary article from the selected journal.</div>
+    <div class="input-stack">
+      <label for="relatedId">Related work identifier</label>
+      <input type="text" name="relatedId" id="relatedId" class="c-input__text" aria-describedby="relatedId-help"/>
+    </div>
+    <div class="help-text" id="relatedId-help">Related work DOIs, PubMed IDs, or manuscript numbers. DOIs must be in URL form (<code style="background: white;">https://doi.org/10...</code>).</div>
+  </div>
+  <b role="heading" aria-level="2">Author search</b>
+  <div class="search-section">
+    <div class="input-stack">
+      <label for="orcid">Author ORCID</label>
+      <input type="text" name="orcid" id="orcid" class="c-input__text" aria-describedby="orcid-help"/>
+    </div>
+    <div class="help-text" id="orcid-help">Search for datasets from a specific author via their <a href="https://orcid.org/" target="_blank" rel="noreferrer">ORCID iD<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> (in form <code style="background: white">0000-1234-5678-9101</code>)</div>
+    <div class="input-stack">
+      <label for="author">Author name</label>
+      <input type="text" name="author" id="author" class="c-input__text" aria-describedby="author-help"/>
+    </div>
+    <div class="help-text" id="author-help">Search for datasets from authors by name. Use form surname comma given-names, in quotes, to exactly match a single author name (e.g. <code style="background: white;">"Smith, John"</code>)</div>
+  </div>
+  <b role="heading" aria-level="2">Files and publication</b>
+  <div class="search-section">    
+    <div class="input-stack">
+      <span id="date-slider-label">Publication date</span>
+      <%= render partial: 'slider_date' %>
+    </div>
+    <div class="help-text">Retrieve only datasets with a first publication date within the selected range.</div>
+    <div class="input-stack">
+      <span id="size-slider-label">Dataset size</span>
+      <%= render partial: 'slider_size' %>
+    </div>
+    <div class="help-text">Retrieve only datasets with a total file size within the selected range.</div>
+    <div class="input-stack" role="group" aria-labelledby="ext-legend" aria-describedby="fileExt-help">
+      <span id="ext-legend" style="margin-bottom: .5ch">File extensions</span>
+      <div class="radio_choice">
+        <% @facets['facet_fields']['dryad_dataset_file_ext_sm'].each_slice(2) do |v, _c| %>
+        <label><input type="checkbox" id="fileExt_<%= v %>" name="fileExt[]" value="<%= v %>"><%= v %></label>
+        <% end %>
+      </div>
+    </div>
+    <div class="help-text" id="fileExt-help">Retrieve only datasets containing files with the selected extensions.</div>
+  </div>
+  <div class="c-modal__buttons-right">
+    <button aria-label="Submit search" class="o-button__plain-text2 advance-submit" type="submit">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <span>Search</span>
+    </button>
+  </div>
+</form>
+<script type="text/javascript">
+  form = document.getElementById('advanced-search')
+  document.querySelectorAll('.advance-submit').forEach(b => b.addEventListener('click', (e) => {
+    e.preventDefault();
+    var org = form.elements[`${form.elements['org_search'].value}`];
+    org.value = document.getElementById('searchselect-ror__value').value;
+    form.elements['journalISSN'].value = document.getElementById('searchselect-journal_search__value').value;
+    for (let item of form.elements) {
+      item.disabled = !item.value || item.id.startsWith('searchselect');
+    }
+    form.elements['org_search'].forEach(r => r.disabled = true);
+    form.requestSubmit()
+  }))
+</script>

@@ -9,7 +9,7 @@ require 'cgi'
 # came from another class, but it's the only method we need from that class.
 #
 # The Datacite::Mapping patches extra methods into an external gem David wrote to make classes for every enum and they
-# are used to special-sauce output for SOLR and blacklight's schema.
+# are used to special-sauce output for SOLR schema.
 
 # these patch datacite mapping modules for some extra stuff David added
 module Datacite
@@ -40,6 +40,7 @@ end
 
 module Stash
   module Indexer
+    # rubocop:disable Metrics/ClassLength
     class IndexingResource
 
       DESCRIPTION_TYPES_TO_DB = { Datacite::Mapping::DescriptionType::ABSTRACT => 'abstract',
@@ -51,7 +52,7 @@ module Stash
         @resource = resource
       end
 
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
       def to_index_document
         georss = calc_bounding_box
@@ -72,7 +73,7 @@ module Stash
           dc_publisher_s: publisher,
           dct_temporal_sm: dct_temporal_dates,
           dryad_related_publication_name_s: related_publication_name,
-          dryad_related_publication_id_s: related_publication_id,
+          dryad_related_publication_id_sm: related_publication_ids,
           dryad_related_publication_issn_s: related_publication_issn,
           dryad_author_affiliation_name_sm: author_affiliations,
           dryad_author_affiliation_id_sm: author_affiliation_ids,
@@ -81,12 +82,18 @@ module Stash
           updated_at_dt: updated_at_str,
           author_orcids_sm: @resource.authors.map(&:author_orcid).reject(&:blank?).uniq,
           funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
-          funder_ror_ids_sm: @resource.funders.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
+          funder_ror_ids_sm: dataset_funder_ids,
           sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
-          rw_sim: formatted_related_works
+          funding_sm: formatted_funding,
+          rw_sim: formatted_related_works,
+          dataset_size_l: @resource.total_file_size
         }
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+
+      def formatted_funding
+        @resource.funders.completed.map { |f| "#{f.contributor_name}#{f.award_number.present? ? ": #{f.award_number}" : ''}" }.reject(&:blank?).uniq
+      end
 
       def formatted_related_works
         @resource.related_identifiers.map { |rw| "id=#{rw.related_identifier},type=#{rw.work_type}" if rw.related_identifier.present? }.uniq.compact
@@ -118,7 +125,7 @@ module Stash
       end
 
       def subjects
-        @resource.subjects.map { |s| s.subject&.strip }.reject(&:blank?)
+        @resource.subjects.order(subject_scheme: :desc, subject: :asc).map { |s| s.subject&.strip }.reject(&:blank?)
       end
 
       def publication_year
@@ -218,19 +225,19 @@ module Stash
       end
 
       def related_publication_name
-        @resource.resource_publication&.publication_name
+        @resource.resource_publication&.publication_name.presence
       end
 
       def related_publication_issn
-        @resource.resource_publication&.publication_issn
+        @resource.resource_publication&.publication_issn.presence
       end
 
-      def related_publication_id
+      def related_publication_ids
         ids = [@resource.resource_publication&.manuscript_number]
         ids << @resource.identifier.internal_data.where(data_type: 'pubmedID')&.map(&:value)&.uniq
-
-        pub_doi = @resource.related_identifiers.where(related_identifier_type: 'doi', work_type: 'primary_article').last
-        (pub_doi.present? ? "#{ids.flatten.join(' ')} #{pub_doi.related_identifier}" : ids.flatten.join(' '))
+        pub_dois = @resource.related_identifiers.where(related_identifier_type: 'doi')
+        ids += pub_dois.map(&:related_identifier)
+        ids.flatten.reject(&:blank?).uniq
       end
 
       # rubocop:disable Style/MultilineBlockChain
@@ -255,9 +262,15 @@ module Stash
 
       def dataset_funders
         # Also do we only want to add items with valid ROR entries?
-        contrib_names = @resource.contributors.funder.completed.map(&:contributor_name)
-        contrib_names << group_funders
+        contrib_names = @resource.funders.completed.map(&:contributor_name)
+        contrib_names << group_funders.map(&:contributor_name) if group_funders.present?
         contrib_names.flatten.reject(&:blank?).uniq
+      end
+
+      def dataset_funder_ids
+        ids = @resource.funders.completed.rors.map(&:name_identifier_id)
+        ids << group_funders.map(&:name_identifier_id) if group_funders.present?
+        ids.flatten.reject(&:blank?).uniq
       end
 
       # see how many group funders belong to each relevant group in the ContributorGrouping table and return additional
@@ -265,13 +278,21 @@ module Stash
       def group_funders
         extra_funders = []
         @resource.contributors.funder.completed.each do |funder|
-          groups = StashDatacite::ContributorGrouping.where(
-            "json_contains(json_contains->'$[*].name_identifier_id', json_array(?))",
-            funder.name_identifier_id
-          )
-          extra_funders |= groups.map(&:contributor_name)
+          groups = funder_parent(funder.name_identifier_id)
+          extra_funders |= groups
+          groups.each do |group|
+            gp = funder_parent(group.name_identifier_id)
+            extra_funders |= gp
+          end
         end
         extra_funders
+      end
+
+      def funder_parent(funder_id)
+        StashDatacite::ContributorGrouping.where(
+          "json_contains(json_contains->'$[*].name_identifier_id', json_array(?))",
+          funder_id
+        )
       end
 
       def updated_at_str
@@ -300,3 +321,4 @@ module Stash
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

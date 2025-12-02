@@ -136,8 +136,8 @@ module StashEngine
 
     # The first "created" file of the same name before this one if this one isn't created.
     # In an ideal world, this would have an exact correspondence to where the item is stored in S3, but we don't live in that world.
-    def original_deposit_file
-      return nil if file_state == 'deleted' # no current file to have a path for
+    def original_deposit_file(with_deleted: false)
+      return nil if !with_deleted && file_state == 'deleted' # no current file to have a path for
 
       return self if file_state == 'created' # if this is the first created file, it's the original deposit file
 

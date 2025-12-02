@@ -96,14 +96,14 @@
       <int name="indent">2</int>
       <str name="defType">edismax</str>
       <str name="echoParams">all</str>
-      <str name="mm">6&lt;-1 6&lt;90%</str>
+      <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
       <int name="qs">1</int>
       <int name="ps">0</int>
       <float name="tie">0.01</float>
       <str name="fl">*,score</str>
-      <str name="sort">score desc, dc_title_sort asc</str>
+      <str name="sort">score desc, dct_issued_sort desc</str>
       <str name="q.alt">*:*</str>
-      <!-- briley 06/03/2019 - field to store the publication id that cites the dataset -->
+      <str name="q.op">AND</str>
       <str name="qf">
         text^1
         dc_description_ti^2
@@ -120,16 +120,15 @@
         layer_slug_ti^10
         dc_identifier_ti^10
         dryad_related_publication_id_ti^11
-        dryad_author_affiliation_id_tmi^12
         dryad_dataset_file_ext_tmi^13
         dcs_funder_tmi^14
         dryad_related_publication_name_ti^15
         author_orcids_tmi^15
         funder_awd_ids_tmi^15
-        funder_ror_ids_tmi^15
-        sponsor_ror_ids_tmi^15
+        ror_ids_tmi^15
+        rw_identifier_tmi^15
+        rw_type_tmi^15
       </str>
-      <!-- briley 06/03/2019 - field to store the publication id that cites the dataset -->
       <str name="pf"><!-- phrase boost within result set -->
         text^1
         dc_description_ti^2
@@ -146,37 +145,25 @@
         layer_slug_ti^10
         dc_identifier_ti^10
         dryad_related_publication_id_ti^11
-        dryad_author_affiliation_id_tmi^12
         dryad_dataset_file_ext_tmi^13
         dcs_funder_tmi^14
         dryad_related_publication_name_ti^15
+        rw_identifier_tmi^15
+        rw_type_tmi^15
       </str>
-      <bool name="facet">true</bool>
+      <bool name="facet">false</bool>
       <int name="facet.mincount">1</int>
       <int name="facet.limit">10</int>
-      <str name="facet.field">dct_isPartOf_sm</str>
-      <str name="facet.field">dct_provenance_s</str>
-      <str name="facet.field">dct_spatial_sm</str>
       <str name="facet.field">dc_creator_sm</str>
-      <str name="facet.field">dc_format_s</str>
-      <str name="facet.field">dc_language_s</str>
-      <str name="facet.field">dc_publisher_s</str>
-      <str name="facet.field">dc_rights_s</str>
       <str name="facet.field">dc_subject_sm</str>
-      <str name="facet.field">layer_geom_type_s</str>
-      <str name="facet.field">solr_year_i</str>
-      <!-- briley 06/03/2019 - provide a facet for the publication that cites the dataset -->
-      <str name="facet.field">dryad_related_publication_name_s</str>
       <str name="facet.field">dryad_related_publication_issn_s</str>
-      <!-- sfisher 08/22/2019 - provide a facet for author affiliation(s) -->
-      <str name="facet.field">dryad_author_affiliation_name_sm</str>
-      <str name="facet.field">dryad_dataset_file_ext_sm</str>
-      <str name="facet.field">dcs_funder_sm</str>
-
-      <str name="facet.field">author_orcids_sm</str>
-      <str name="facet.field">funder_awd_ids_sm</str>
+      <str name="facet.field">ror_ids_sm</str>      
       <str name="facet.field">funder_ror_ids_sm</str>
-      <str name="facet.field">sponsor_ror_ids_sm</str>
+      <str name="facet.field">dryad_author_affiliation_id_sm</str>
+      <str name="facet.field">author_orcids_sm</str>
+      <str name="facet.field">dryad_dataset_file_ext_sm</str>
+      <str name="facet.field">solr_year_i</str>
+      <str name="spellcheck">true</str>
     </lst>
     <arr name="last-components">
       <str>spellcheck</str>

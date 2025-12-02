@@ -164,6 +164,7 @@
   },
   "resolutions": {
     "nanoid": "<4.0.0",
-    "prosemirror-model": "^1.25.3"
+    "prosemirror-model": "^1.25.3",
+    "js-yaml": "^4.1.1"
   }
 }

@@ -55,6 +55,8 @@ servers:
 tags:
     - name: root
       description: Root-level API calls
+    - name: search
+      description: Searching datasets
     - name: datasets
       description: Dataset operations
     - name: versions
@@ -775,11 +777,9 @@ paths:
     get:
       summary: Search publicly-available datasets
       tags:
-        - root
-      description: Search the published Dryad datasets by keyword, institutional affiliation, and date.
+        - search
+      description: Search the published Dryad datasets. Query all fields, or look for terms in specific metadata fields of the dataset.
       parameters:
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/per_page'
         - in: query
           name: q
           schema:
@@ -788,15 +788,54 @@ paths:
             A list of terms to be searched. If multiple terms are
             supplied, matches will only be returned for items that contain
             all terms. Terms may include an `*` at the end to indicate a
-            wildcard. A term may be negated to indicate terms that should *not*
-            be present in the results (e.g., `cat -fish`).
+            wildcard. A term may be negated to indicate that it should *not*
+            be present in the results (e.g., `cat -fish`). Use quotation marks to search for an exact phrase.
+        - in: query
+          name: subject
+          schema:
+            type: string
+          description: Search for a dataset by subject keyword.
+        - in: query
+          name: orcid
+          schema:
+            type: string
+          description: Search for authors using author [ORCIDs](https://orcid.org/). If multiple, separate with a space.
+        - in: query
+          name: author
+          schema:
+            type: string
+          description: Search for authors by name.
         - in: query
           name: affiliation
           schema:
             type: string
           description:
-            A ROR identifier specifying an institutional
+            A ROR identifier for an institutional
             affiliation that must be present in the list of dataset authors. The
+            identifier should be in the full "https" format and should be
+            URL-encoded, e.g., `https%3A%2F%2Fror.org%2F00x6h5n95`.
+        - in: query
+          name: facility
+          schema:
+            type: string
+          description:
+            A ROR identifier for the dataset research facility. The
+            identifier should be in the full "https" format and should be
+            URL-encoded, e.g., `https%3A%2F%2Fror.org%2F00x6h5n95`.
+        - in: query
+          name: funder
+          schema:
+            type: string
+          description:
+            A ROR identifier for a dataset funder. The
+            identifier should be in the full "https" format and should be
+            URL-encoded, e.g., `https%3A%2F%2Fror.org%2F00x6h5n95`.
+        - in: query
+          name: org
+          schema:
+            type: string
+          description:
+            A ROR identifier for a dataset funder, affiliation, or research facility. The
             identifier should be in the full "https" format and should be
             URL-encoded, e.g., `https%3A%2F%2Fror.org%2F00x6h5n95`.
         - in: query
@@ -805,15 +844,54 @@ paths:
             type: string
           description:
             The abbreviation for a partner organization in
-            Dryad. This will automatically search all affiliations associated
-            with the given tenant. If both a *tenant* and *affiliation* are
-            specified, the tenant will be ignored.
+            Dryad. This will automatically search all organizations associated with the given tenant.
+        - in: query
+          name: award
+          schema:
+            type: string
+          description: An award or grant number associated with the dataset.
         - in: query
           name: journalISSN
           schema:
             type: string
           description:
             The journal ISSN.
+        - in: query
+          name: relatedWorkIdentifier
+          schema:
+            type: string
+          description:
+            A DOI or other URL that links a dataset to a related work. It allows `*` as a wildcard at the beginning and/or end of the value.
+        - in: query
+          name: relatedWorkRelationship
+          schema:
+            type: string
+          description:
+            The type of relationship expressed by a related work.
+        - in: query
+          name: relatedId
+          schema:
+            type: string
+          description:
+            Any related work ID associated with the dataset, including manuscript numbers and PubMed IDs.
+        - in: query
+          name: publishedSince
+          schema:
+            type: string
+          description:
+            A timestamp for limiting results. Datasets will
+            only be returned that have been published since the given
+            time. The time must be specified in ISO 8601 format, and the time
+            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
+        - in: query
+          name: publishedBefore
+          schema:
+            type: string
+          description:
+            A timestamp for limiting results. Datasets will
+            only be returned that have been published before the given
+            time. The time must be specified in ISO 8601 format, and the time
+            zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
         - in: query
           name: modifiedSince
           schema:
@@ -832,18 +910,9 @@ paths:
             only be returned that have been modified before the given
             time. The time must be specified in ISO 8601 format, and the time
             zone must be set to UTC, e.g., `2020-10-08T10:24:53Z`.
-        - in: query
-          name: relatedWorkIdentifier
-          schema:
-            type: string
-          description:
-            The identifier that is present in a related work. It allows `*` as a wildcard at the beginning and/or end of the value.
-        - in: query
-          name: relatedWorkRelationship
-          schema:
-            type: string
-          description:
-            The type of relationship expressed by a related work.
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per_page'
+        
       responses:
         '200':
           description: A list of datasets.

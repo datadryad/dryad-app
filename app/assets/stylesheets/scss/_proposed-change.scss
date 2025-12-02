@@ -27,10 +27,43 @@
   }
 }
 
+.record-updater {
+  thead tr, tbody tr:last-child{
+    border-bottom-width: thick;
+  }
+
+  .record-updater-action {
+    margin: 1ch 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2ch;
+
+    p {
+      margin-bottom: 0;
+    }
+
+    div:last-child div {
+      display: flex;
+      align-items: baseline;
+      gap: 2ch;
+    }
+  }
+
+  .record-updater-mergeable {
+    background-color: $lighter-blue;
+    background-clip: padding-box;
+    i {
+      width: 2.1ch;
+      margin-left: -2.1ch;
+    }
+  }
+}
+
 .c-proposed-change-table__column-mergeable {
   position: relative;
   background-color: $lighter-blue;
-  background-clip: padding-box;
+  background-clip: border-box;
 
   .c-proposed-change-table__column-mergeable-icon {
     position: absolute;

@@ -1,5 +1,11 @@
-module StashEngine
+# rubocop:disable Style/MixinUsage
+# this drops in a couple methods and makes "def filesize(bytes, decimal_points = 2)" available
+# to output digital storage sizes
+#
+include StashEngine::ApplicationHelper
+# rubocop:enable Style/MixinUsage
 
+module StashEngine
   # Mails users about submissions
   class ResourceMailer < ApplicationMailer
 
@@ -76,6 +82,34 @@ module StashEngine
 
       mail(to: user_email(@user),
            subject: "#{rails_env}DELETE NOTIFICATION: Dryad submission was deleted \"#{@title}\"")
+    end
+
+    def ld_submission(resource)
+      @resource = resource
+      assign_variables(resource)
+      @partner_name = resource.tenant.short_name
+
+      mail(
+        # to: @resource.tenant&.campus_contacts,
+        # bcc: 'partnerships@datadryad.org',
+        to: 'devs@datadryad.org',
+        subject: "#{rails_env}Notification of Large Data submission to Dryad"
+      )
+    end
+
+    def ld_publication(resource)
+      @resource = resource
+      assign_variables(resource)
+      tier = ResourceFeeCalculatorService.new(resource).storage_fee_tier
+      @storage_fee = tier[:price]
+      @partner_name = resource.tenant.short_name
+
+      mail(
+        # to: @resource.tenant&.campus_contacts,
+        # bcc: 'partnerships@datadryad.org',
+        to: 'devs@datadryad.org',
+        subject: "#{rails_env}Notification of Large Data publication to Dryad"
+      )
     end
   end
 end

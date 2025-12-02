@@ -1,0 +1,18 @@
+<div class="o-banner-search">
+  <form role="search" class="o-global-search" action="/search" accept-charset="UTF-8" method="get">
+    <label class="o-global-search__label" for="search-field-input1">Search Dryad data</label>
+    <input class="o-global-search__input" id="search-field-input1" type="search" name="q" value="<%= params[:q] %>">
+    <button aria-label="Submit search" class="o-global-search__submit-button" type="submit" id="search">
+      <i class="fa fa-search" aria-hidden="true"></i>
+      <span>Search data</span>
+    </button>
+    <% if params[:controller] == 'search' %>
+      <a href="<%= new_search_path(request.parameters.except(:action, :controller, :q)) %>" class="o-button__plain-textlink reset-button" aria-label="Clear" title="Clear">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </a>
+    <% end %>
+  </form>
+</div>
+<div class="o-banner-advanced">
+  <a href="/search/advanced" class="js-nav-out" aria-label="Advanced search">Advanced search</a>
+</div>

@@ -8,7 +8,7 @@ namespace :status_dashboard do
       abbreviation: 'solr',
       name: 'Solr',
       description: 'The Solr engine that drives the Dryad "Explore data" pages',
-      documentation: 'Solr drives the logic behind the \'Explore data\' section of the application. <br /><br />If the log is reporting a connection error then it is likely that Solr is not running. You will need to log onto the Solr instance and restart it: <blockquote>/dryad/apps/init.d/solr.dryad start</blockquote><br />For information on how to manage Dryad\'s instance of Solr/Blacklight please see: <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/solr.md" target="_blank">https://github.com/datadryad/dryad-app/blob/main/documentation/solr.md</a>',
+      documentation: 'Solr drives the logic behind the \'Explore data\' section of the application. <br /><br />If the log is reporting a connection error then it is likely that Solr is not running. You will need to log onto the Solr instance and restart it: <blockquote>/dryad/apps/init.d/solr.dryad start</blockquote><br />For information on how to manage Dryad\'s instance of Solr please see: <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/solr.md" target="_blank">https://github.com/datadryad/dryad-app/blob/main/documentation/solr.md</a>',
       internally_managed: true,
       status: 1
     },

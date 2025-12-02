@@ -8,6 +8,10 @@ class FeeCalculatorService
     calculator_class.constantize.new(options, resource: resource, payer_record: payer).call
   end
 
+  def storage_fee_tier(resource: nil)
+    calculator_class.constantize.new({}, resource: resource).storage_fee_tier
+  end
+
   private
 
   def calculator_class

@@ -3,23 +3,36 @@
 # Table name: stash_engine_ror_orgs
 #
 #  id         :bigint           not null, primary key
-#  ror_id     :string(191)
-#  name       :string(191)
-#  home_page  :string(191)
-#  country    :string(191)
 #  acronyms   :json
 #  aliases    :json
+#  country    :string(191)
+#  home_page  :string(191)
 #  isni_ids   :json
+#  name       :string(191)
+#  status     :integer          default(0)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  ror_id     :string(191)
+#
+# Indexes
+#
+#  index_stash_engine_ror_orgs_on_status  (status)
 #
 module StashEngine
   class RorOrg < ApplicationRecord
     self.table_name = 'stash_engine_ror_orgs'
-    validates :ror_id, uniqueness: { case_sensitive: true }
     include Stash::Indexer::RorIndexer
 
     ROR_MAX_RESULTS = 30
+
+    enum :status, { active: 0, inactive: 1, withdrawn: 2 }
+
+    has_many :contributors, class_name: 'StashDatacite::Contributor', foreign_key: :name_identifier_id, primary_key: :ror_id
+    has_many :affiliations, class_name: 'StashDatacite::Affiliation', foreign_key: :ror_id, primary_key: :ror_id
+    has_many :funders, class_name: 'StashEngine::Funder', foreign_key: :ror_id, primary_key: :ror_id
+    has_many :tenant_ror_orgs, class_name: 'StashEngine::TenantRorOrg', foreign_key: :ror_id, primary_key: :ror_id
+
+    validates :ror_id, uniqueness: { case_sensitive: true }
 
     # Search the RorOrg for the given string. This will search name, acronyms, aliases, etc.
     # @return an Array of Hashes { id: 'https://ror.org/12345', name: 'Sample University', ... }

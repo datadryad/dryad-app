@@ -4,7 +4,7 @@
   <% if item_label == 'Primary article' && @resource.journal.present? %><div class="primary_article"><% end %>
   <h3><%= item_label.pluralize(article_ids.count) %></h3>
   <% if item_label == 'Primary article' && @resource.journal.present? %>
-    <span class="article_journal">From: <a href="/search?f%5Bdryad_related_publication_name_s%5D%5B%5D=<%= URI.encode_www_form_component(@resource.journal.title) %>"><%= @resource.journal.title %></a></span>
+    <span class="article_journal">From: <a href="/search?journalISSN=<%= URI.encode_www_form_component(@resource.journal.single_issn) %>"><%= @resource.journal.title %></a></span>
     </div>
   <% end %>
   <ul>
