@@ -119,7 +119,7 @@ module StashEngine
                     :preprint_server, :journal_code, :manuscript_number_regex, :peer_review_custom_text, :sponsor_id,
                     :default_to_ppr, :allow_review_workflow, :flag, :note,
                     flag_attributes: %i[id note _destroy],
-                    payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit yearly_ldf_fee_limit])
+                    payment_configuration_attributes: %i[id payment_plan covers_ldf ldf_limit yearly_ldf_limit])
     end
   end
 end

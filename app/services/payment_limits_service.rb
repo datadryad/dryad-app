@@ -23,7 +23,7 @@ class PaymentLimitsService
     resource_fees = calculate_fees
     return false if resource_fees[:storage_fee].to_f.zero?
 
-    payer.payment_logs.for_current_year.sum(&:ldf) + resource_fees[:storage_fee].to_f > payer.payment_configuration.yearly_ldf_fee_limit
+    payer.payment_logs.for_current_year.sum(&:ldf) + resource_fees[:storage_fee].to_f > payer.payment_configuration.yearly_ldf_limit
   end
 
   def calculate_fees
