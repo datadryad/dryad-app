@@ -36,7 +36,7 @@
 
 .o-banner__stretch {
   width: 100%;
-  padding: 20px 8px 26px;
+  padding: 20px 16px 26px;
   margin: auto auto -26px;
   display: flex;
   flex-direction: column;
@@ -48,12 +48,7 @@
 
   @include bp(screen1) {
     font-size: 1.7em;
-  }
-  @include bp(screen2) {
-    font-size: 1.7em;
-  }
-  @include bp(screen3) {
-    font-size: 1.7em;
+    padding: 20px 8px 26px;
   }
   @media (max-width: $screen-md-min) {
     height: 100%;
