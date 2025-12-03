@@ -10,7 +10,7 @@
       <% txt = current_user ? 'Submit a new dataset' : 'Login and then submit a new dataset' %>
       <%= button_to 'Submit', lnk, method: :get, class: "c-header__menu-button", title: txt %>
     </li>
-    <% unless params[:action] == 'home' || params[:controller] == 'search' %>
+    <% unless ['home', 'search', 'advanced'].include?(params[:action])%>
       <li class="c-header__nav-item hide-mobile"><a class="js-nav-out" href="/search/advanced">Advanced search</a></li>
       <li class="c-header__nav-item last-child">
         <form role="search" class="o-global-search c-header__global-search" action="/search" accept-charset="UTF-8" method="get">
