@@ -2,12 +2,12 @@
   <% if @author.present? %>
   <div class="search-profile">
     <b role="heading" aria-level="1"><%= @author.name %></b>
-    <span style="margin-left: 0;">
+    <span>
       <%= @author.affiliation&.smart_name %>
     </span>
     <a href="<%= orcid_link(params[:orcid]) %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= params[:orcid] %></a>
   </div>
-  <h2 class="o-heading__level4">Author of <%= @results['numFound'] %> Dryad datasets</h2>
+  <h2 class="o-heading__level4">Author of <%= pluralize(@results['numFound'], 'Dryad dataset') %></h2>
   <div id="search_result_info">
     <span>
       <span>Results</span> <b><% unless @results['numFound'].zero? %><%= @results['start'] + 1 %> to <% end %><%= @results['start'] + [@page_size, @results['numFound'] - @results['start']].min %></b> of <b><%= @results['numFound'] %></b>

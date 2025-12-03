@@ -21,7 +21,7 @@ class SearchController < ApplicationController
   end
 
   def author_profile
-    @author = StashEngine::Author.joins(:resource).where(resource: { solr_indexed: true }, author_orcid: params[:orcid]).last
+    @author = author
     service = StashApi::SolrSearchService.new(query: '', filters: params.except(:q, :action, :controller))
     search = service.search(page: page, per_page: per_page, fields: "#{fields} dryad_related_publication_issn_s", facet: false)
     @results = search['response']
@@ -41,11 +41,15 @@ class SearchController < ApplicationController
 
   def profiles
     d = []
-    d << StashEngine::Author.joins(:resource).where(resource: { solr_indexed: true }, author_orcid: params['orcid']).last if params['orcid'].present?
+    d << author if params['orcid'].present?
     [params['affiliation'], params['org'], params['funder']].flatten.reject(&:blank?).each do |o|
       d << StashEngine::RorOrg.find_by(ror_id: o)
     end
     d.reject(&:blank?)
+  end
+
+  def author
+    StashEngine::Author.joins(:resource).where(resource: { solr_indexed: true }, author_orcid: params[:orcid]).last
   end
 
   def articles
