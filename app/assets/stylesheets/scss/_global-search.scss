@@ -4,6 +4,7 @@ $search-field-size: 28px;
 
 .o-global-search {
   display: flex;
+  max-width: 100%;
   height: $search-field-size;
 
   &:focus-within .o-global-search__input {
@@ -23,6 +24,7 @@ $search-field-size: 28px;
   border: solid $lighter-blue;
   border-width: 1px 3px 1px 1px; // for focus styles
   margin-right: -28px;
+  max-width: calc(100% - 28px);
   padding-right: calc(28px + .5em);
   &::placeholder {
     opacity: 1;

@@ -4,7 +4,7 @@
     <input class="o-global-search__input" id="search-field-input1" type="search" name="q" value="<%= params[:q] %>">
     <button aria-label="Submit search" class="o-global-search__submit-button" type="submit" id="search">
       <i class="fa fa-search" aria-hidden="true"></i>
-      <span>Search data</span>
+      <span<% if params[:controller] == 'search' %> role="heading" aria-level="1"<% end %>>Search data</span>
     </button>
     <% if params[:controller] == 'search' %>
       <a href="<%= new_search_path(request.parameters.except(:action, :controller, :q)) %>" class="o-button__plain-textlink reset-button" aria-label="Clear" title="Clear">
