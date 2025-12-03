@@ -90,6 +90,10 @@ module FeeCalculator
       add_invoice_fee
     end
 
+    def storage_fee_tier
+      get_tier_by_range(storage_fee_tiers, resource.total_file_size)
+    end
+
     private
 
     def verify_new_payment_system
@@ -202,6 +206,13 @@ module FeeCalculator
       raise ActionController::BadRequest, OUT_OF_RANGE_MESSAGE if tier.nil?
 
       tier[:price]
+    end
+
+    def get_tier_by_range(tier_definition, value)
+      tier = tier_definition.find { |t| t[:range].include?(value.to_i) }
+      raise ActionController::BadRequest, OUT_OF_RANGE_MESSAGE if tier.nil?
+
+      tier
     end
 
     def add_fee_to_total(value_key, fee)

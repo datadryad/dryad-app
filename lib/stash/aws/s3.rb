@@ -14,7 +14,8 @@ module Stash
       attr_reader :s3_bucket
 
       # By default, use the temporary storage bucket
-      def initialize(s3_bucket_name: APP_CONFIG[:s3][:bucket])
+      def initialize(s3_bucket_name: APP_CONFIG[:s3][:bucket], region: APP_CONFIG[:s3][:region])
+        @region = region
         @s3_bucket = s3_resource.bucket(s3_bucket_name)
         @s3_bucket_name = s3_bucket_name
       end
@@ -45,6 +46,15 @@ module Stash
       def exists?(s3_key:)
         obj = s3_bucket.object(s3_key)
         obj.exists?
+      end
+
+      def object_versions(s3_key:)
+        resp = s3_client.list_object_versions(bucket: @s3_bucket_name, prefix: s3_key)
+        resp.versions
+      end
+
+      def storage_class(s3_key:)
+        head_object(s3_key: s3_key).storage_class
       end
 
       def size(s3_key:)
@@ -115,7 +125,7 @@ module Stash
       end
 
       def s3_client
-        @s3_client ||= ::Aws::S3::Client.new(region: APP_CONFIG[:s3][:region], credentials: s3_credentials)
+        @s3_client ||= ::Aws::S3::Client.new(region: @region, credentials: s3_credentials)
       end
 
       def s3_resource

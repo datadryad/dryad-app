@@ -101,6 +101,12 @@
   }
 }
 
+.search-page .o-banner__stretch {
+  margin-bottom: 2rem;
+  padding-top: 2ch;
+  background-color: rgba($dark-blue, .95);
+}
+
 .search-page .c-columns {
   @include bp(screen3) {
     flex-direction: row-reverse;
@@ -242,7 +248,7 @@
   .search-section {
     display: grid;
     grid-template-columns: 1fr;
-    align-items: baseline;
+    align-items: start;
     row-gap: 2ch;
     padding: 1.5ch;
     margin-bottom: 2ch;
@@ -258,7 +264,7 @@
       margin: -1ch 0 1ch;
 
       @include bp(screen3) {
-        margin: 0;
+        margin: .5ch 0 0;
       }
     }
   }

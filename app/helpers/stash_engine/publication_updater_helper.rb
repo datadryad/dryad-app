@@ -12,9 +12,21 @@ module StashEngine
       return "<td>#{new_val.presence || 'Not available'}</td>" unless mergeable?(old_val, new_val)
 
       <<~HTML
-        <td class="c-proposed-change-table__column-mergeable" aria-label="Merged into the above">
+        <td class="c-proposed-change-table__column-mergeable" aria-label="Merge into the above">
           #{new_val.presence || 'Not available'}
           <i class="fa fa-arrow-up c-proposed-change-table__column-mergeable-icon" role="img" aria-label="Replace above content with below"></i>
+        </td>
+      HTML
+    end
+
+    def render_row(old_val:, new_val:)
+      return '<td></td>' unless old_val.present? || new_val.present?
+      return "<td>#{new_val.presence || 'Not available'}</td>" unless mergeable?(old_val, new_val)
+
+      <<~HTML
+        <td class="record-updater-mergeable" aria-label="Merge into existing">
+          <i class="fa fa-arrow-left" role="img" aria-label="Replace existing content with proposed"></i>
+          #{new_val.presence || 'Not available'}
         </td>
       HTML
     end

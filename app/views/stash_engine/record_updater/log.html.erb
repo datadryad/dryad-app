@@ -15,27 +15,26 @@
           Decision
         </th>
         <th>
-          Title
+          Dataset
         </th>
-
         <% @columns.each do |column| %>
           <th class="c-lined-table__sort c-proposed-change-table__column-large" <%= sort_display(column.to_s) %> >
             <%= sortable_column_head sort_field: column.to_s, title: column.to_s.humanize %>
           </th>
         <% end %>
       </tr>
-      <% @proposed_changes.each do |proposed_change| %>
-        <tbody>
-          <tr class="c-lined-table__row">
-            <td rowspan="2"><%= formatted_datetime(proposed_change.updated_at) %></td>
-            <td rowspan="2"><%= proposed_change.status.humanize %></td>
-            <%= render partial: 'current_metadata', locals: { proposed_change: proposed_change, record: proposed_change.record, resource: proposed_change.resource } %>
-          </tr>
-          <tr class="c-lined-table__row" id="proposed_<%= proposed_change.id %>">
-            <%= render partial: 'proposed_history', locals: { proposed_change: proposed_change, record: proposed_change.record, resource: proposed_change.resource } %>
-          </tr>
-        </tbody>
+      <tbody>
+      <% @proposed_changes.each do |proposed_change| %>        
+        <tr>
+          <td><%= proposed_change.updated_at %></td>
+          <td><%= proposed_change.approved? ? 'Approved' : 'Rejected' %></td>
+          <td><%= link_to proposed_change.resource.title.html_safe, show_path(id: proposed_change.resource.identifier.to_s), target: '_blank' %></td>
+          <% @columns.each do |column| %>
+            <td><%= JSON.parse(proposed_change.update_data)[column] %></td>
+          <% end %>
+        </tr>
       <% end %>
+      </tbody>
     </thead>
   </table>
 </div>

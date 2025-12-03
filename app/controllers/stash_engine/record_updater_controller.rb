@@ -19,16 +19,12 @@ module StashEngine
       apply_joins
       apply_filters
 
-      index_params[:sort] = 'award_number' if index_params[:sort].blank?
-      index_params[:direction] = 'desc' if index_params[:direction].blank?
-      ord = helpers.sortable_table_order(whitelist: %w[award_number award_uri award_title name_identifier_id contributor_name])
-
       if request.format.to_s == 'text/csv' # we want all the results to put in csv
         @page = 1
         @page_size = 1_000_000
       end
 
-      @proposed_changes = @proposed_changes.order(ord).page(@page).per(@page_size)
+      @proposed_changes = @proposed_changes.order('award_number desc').page(@page).per(@page_size)
       return unless @proposed_changes.present?
 
       respond_to do |format|
