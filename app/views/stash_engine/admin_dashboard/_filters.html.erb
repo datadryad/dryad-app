@@ -125,12 +125,16 @@ end
       id: 'funder',
       label: 'Funder:',
       field_name: 'filters[funder]',
-      options_path: '/stash_datacite/contributors/autocomplete?query=',
+      options_path: '/stash_datacite/affiliations/autocomplete?query=',
       options_label: 'name',
       options_value: 'id',
       selected: @filters.dig(:funder),
       describedby: 'filter-funder-desc'
     } %>
+    <span class="limiter">
+      <%= check_box_tag 'funder_limit', name: 'filters[funder_limit]' %>
+      <label for="funder_limit">Exclude children</span>
+    </span>
   </div>
   <p class="help" id="filter-funder-desc">Filter result datasets by funding organizations matched with a <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR ID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.
   <div class="date-flex">
