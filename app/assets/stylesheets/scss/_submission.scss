@@ -638,6 +638,7 @@ dialog#submission-step[open] {
 
 .radio_choice {
   display: flex;
+  flex-wrap: wrap;
   gap: 2ch;
   label {
     display: inline-flex;
