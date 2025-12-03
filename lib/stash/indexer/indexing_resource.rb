@@ -129,10 +129,14 @@ module Stash
       end
 
       def publication_year
+        return @resource.process_date.last_status_date&.year if @resource.last_curation_activity&.status == 'embargoed'
+
         @resource.publication_date&.year
       end
 
       def issued_date
+        return @resource.process_date.last_status_date if @resource.last_curation_activity&.status == 'embargoed'
+
         @resource&.publication_date&.utc&.iso8601
       end
 
