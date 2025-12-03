@@ -42,7 +42,7 @@ RSpec.describe 'SearchController', type: :request do
         end
       end
 
-      context 'with funder search' do
+      context 'with file extension search' do
         let(:filters) { { fileExt: 'test' } }
         let(:extra_field) { ' dryad_dataset_file_ext_sm' }
 
@@ -51,7 +51,7 @@ RSpec.describe 'SearchController', type: :request do
         end
       end
 
-      context 'with funder search' do
+      context 'with affiliation search' do
         let(:filters) { { affiliation: 'test' } }
         let(:extra_field) { ' dryad_author_affiliation_name_sm' }
 
@@ -60,7 +60,7 @@ RSpec.describe 'SearchController', type: :request do
         end
       end
 
-      context 'with funder search' do
+      context 'with journal search' do
         let(:filters) { { journalISSN: 'test' } }
         let(:extra_field) { ' dryad_related_publication_name_s' }
 

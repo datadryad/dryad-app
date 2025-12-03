@@ -28,5 +28,9 @@ module StashEngine
 
       mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 NIH/NSF ROR could not be matched!")
     end
+
+    def s3_lifetime_policy
+      mail(to: 'devs@datadryad.org', subject: "#{rails_env}🚨 S3 Lifetime Policy not validated!")
+    end
   end
 end

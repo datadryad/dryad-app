@@ -1,6 +1,6 @@
 <% @page_title = "Funding updater" %>
 <div class="admin-dashboard-header">
-<h1 class="o-heading__level1" id="pubupdate-label">Funding updater</h1>
+<h1 class="o-heading__level1" id="updater-label">Funding updater</h1>
 <a href="<%= record_updaters_log_path %>">Match history</a>
 </div>
 <div>
@@ -26,25 +26,18 @@
   <% end %>
 
   <p style="margin-bottom: 0; text-align: right"><%= @proposed_changes.total_count %> results</p>
-  <div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="pubupdate-label" style="margin-top: 0">
-    <table class="c-lined-table c-proposed-change-table">
+  <div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="updater-label" style="margin-top: 0">
+    <table class="c-lined-table record-updater">
       <thead>
       <tr>
-        <th>
-          Dataset
-        </th>
-        <% @columns.each do |column| %>
-          <th class="c-lined-table__sort c-proposed-change-table__column-large" <%= sort_display(column.to_s) %> >
-            <%= sortable_column_head sort_field: column.to_s, title: column.to_s.humanize.sub('uri', 'URI') %>
-          </th>
-        <% end %>
+        <th style="min-width: 128px">Fields</th>
+        <th style="min-width: 44%;">Existing</th>
+        <th>Proposed</th>
       </tr>
       </thead>
-      <tbody>
       <% @proposed_changes.each do |proposed_change| %>
-        <%= render partial: 'proposed_change_line',locals: { proposed_change: proposed_change, resource: proposed_change.resource } %>
+        <%= render partial: 'proposed_change_line',locals: { rows: @columns, proposed_change: proposed_change, resource: proposed_change.resource } %>
       <% end %>
-      </tbody>
     </table>
   </div>
 

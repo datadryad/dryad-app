@@ -1,4 +1,0 @@
-<td></td>
-<% @columns.each do |column| %>
-  <%= render_column(old_val: record.send(column), new_val: JSON.parse(proposed_change.update_data)[column]).html_safe %>
-<% end %>

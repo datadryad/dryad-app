@@ -23,7 +23,7 @@
       <details <% if dl_resource == res %>id="download_resource"<% end %> class="c-file-group" <%if res.id == resources.last.id && (res.current_file_uploads.count < 10 || res.total_file_size > APP_CONFIG.maximums.zip_size) %> open<%end%>>
         <summary role="button" class="o-showhide__summary c-file-group__summary">
           <span><%= formatted_date(res.publication_date.present? && res.publication_date < Time.now.utc ? res.publication_date : res.updated_at) %> version files</span>
-          <span><%= filesize(res.total_file_size) %><% if dl_resource == res && res.total_file_size > APP_CONFIG.maximums.zip_size %><i id="download-select" class="fas fa-download" title="Select files for download"></i><% end %></span>
+          <span><%= filesize(res.total_file_size) %><% if dl_resource == res && res.total_file_size > APP_CONFIG.maximums.zip_size %><i id="download-select" class="fas fa-download" title="Select files for zip download"></i><% end %></span>
         </summary>
         <% if dl_resource == res %><form id="download-select-form" <% if res.total_file_size > APP_CONFIG.maximums.zip_size %>aria-labelledby="download-select-label"<% end %>></form><% end %>
         <ul class="c-file-group__list">
