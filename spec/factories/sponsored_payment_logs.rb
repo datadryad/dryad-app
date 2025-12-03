@@ -16,16 +16,17 @@
 #
 #  index_sponsored_payment_logs_on_payer_id_and_payer_type  (payer_id,payer_type)
 #
-class SponsoredPaymentLog < ApplicationRecord
+FactoryBot.define do
 
-  belongs_to :payer, polymorphic: true
-  belongs_to :resource, class_name: StashEngine::Resource.to_s
+  factory :sponsored_payment_log do
+    resource
+    # payer
 
-  validates :resource_id, presence: true
-  validates :payer_id, presence: true
-  validates :payer_type, presence: true
-  validates :ldf, presence: true
-
-  scope :for_current_year, -> { where('year(created_at) = ?', Date.today.year) }
+    id { Faker::Number.number }
+    dpc { '1' }
+    ldf { nil }
+    payer_type { 'StashEngine::Tenant' }
+    payer_id { 'dryad' }
+  end
 
 end
