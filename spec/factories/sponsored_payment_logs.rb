@@ -2,15 +2,14 @@
 #
 # Table name: sponsored_payment_logs
 #
-#  id           :bigint           not null, primary key
-#  dpc          :integer
-#  ldf          :integer
-#  paid_storage :integer
-#  payer_type   :string(191)
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  payer_id     :string(191)
-#  resource_id  :integer
+#  id          :bigint           not null, primary key
+#  dpc         :integer
+#  ldf         :integer
+#  payer_type  :string(191)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  payer_id    :string(191)
+#  resource_id :integer
 #
 # Indexes
 #
