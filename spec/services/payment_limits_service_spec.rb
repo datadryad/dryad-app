@@ -29,6 +29,12 @@ describe PaymentLimitsService do
           let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001) }
 
           it { is_expected.to be_truthy }
+
+          context 'but resource LDF is 0' do
+            let(:total_file_size) { 10_000 }
+
+            it { is_expected.to be_falsey }
+          end
         end
 
         context 'when limit is not reached but with current resource it will be exceeded' do
@@ -43,8 +49,14 @@ describe PaymentLimitsService do
           it { is_expected.to be_falsey }
         end
 
-        context 'when but resource LDF is 0' do
+        context 'but resource LDF is 0' do
           let(:total_file_size) { 10_000 }
+
+          it { is_expected.to be_falsey }
+        end
+
+        context 'with logs on previous year' do
+          let!(:log) { create(:sponsored_payment_log, payer: tenant, ldf: 1_001, created_at: 1.year.ago) }
 
           it { is_expected.to be_falsey }
         end

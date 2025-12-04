@@ -20,6 +20,22 @@ describe CurationService do
     mock_stripe!
   end
 
+  describe '#process' do
+    before { neuter_emails! }
+
+    it 'calls #processed_sponsored_resource if status changes' do
+      service.process
+
+      expect(SponsoredPaymentsService).to receive_message_chain(:new, :log_payment).with(resource).with(no_args)
+      CurationService.new(resource: resource, user: curator, status: 'submitted').process
+    end
+
+    it 'does not call #processed_sponsored_resource if status does not change' do
+      expect(SponsoredPaymentsService).not_to receive(:new)
+      service.process
+    end
+  end
+
   context :submit_to_datacite do
     let(:resource_state) { create(:resource_state, :submitted, resource: resource) }
     let(:status) { 'published' }
@@ -496,6 +512,27 @@ describe CurationService do
       expect(resource).to receive(:send_software_to_zenodo).with(publish: true).and_return('test2')
       expect(resource).to receive(:send_supp_to_zenodo).with(publish: true).and_return('test3')
       service.process
+    end
+  end
+
+
+  describe '#processed_sponsored_resource' do
+    %w[submitted peer_review].each do |status|
+      it "calls log_payment if status is #{status}" do
+        service.process
+
+        expect(SponsoredPaymentsService).to receive_message_chain(:new, :log_payment).with(resource).with(no_args)
+        CurationService.new(resource: resource, user: curator, status: status).process
+      end
+    end
+
+    (StashEngine::CurationActivity.statuses.keys - %w[submitted peer_review]).each do |status|
+      it "does not call log_payment if status is #{status}" do
+        service.process
+
+        expect(SponsoredPaymentsService).not_to receive(:new)
+        CurationService.new(resource: resource, user: curator, status: status).process
+      end
     end
   end
 end
