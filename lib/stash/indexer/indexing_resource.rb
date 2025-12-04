@@ -281,15 +281,18 @@ module Stash
       # contributor names if we have an encompassing contributor that wants to be credited for its underling funders
       def group_funders
         extra_funders = []
-        @resource.contributors.funder.completed.each do |funder|
-          groups = funder_parent(funder.name_identifier_id)
-          extra_funders |= groups
-          groups.each do |group|
-            gp = funder_parent(group.name_identifier_id)
-            extra_funders |= gp
-          end
+        @resource.contributors.funder.completed.uniq(&:name_identifier_id).each do |funder|
+          extra_funders |= funder_tree(extra_funders, funder.name_identifier_id)
         end
         extra_funders
+      end
+
+      def funder_tree(array, id)
+        parent = funder_parent(id)
+        return array if parent.empty? || array.include?(parent.first)
+
+        array |= parent
+        array | funder_tree(array, parent.first.name_identifier_id)
       end
 
       def funder_parent(funder_id)
