@@ -6,11 +6,14 @@
   <p><%= result['dc_description_s'].truncate_words(50)%></p>
   <p>
     <%= meta_list(result) %>
+    <% if result['dc_subject_sm'].present? %>
     <span class="subjects">
       Subjects:
-      <% result['dc_subject_sm'].each do |subj| %>
+      <% result['dc_subject_sm'].first(12).each do |subj| %>
         <%= link_to subj, "/search?subject=#{subj}", class: 'o-link__primary' %>
       <% end %>
+      <% if result['dc_subject_sm'].size > 12 %>...<% end%>
     </span>
+    <% end %>
   </p>
 </li>
