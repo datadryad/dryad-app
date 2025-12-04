@@ -290,14 +290,14 @@ module Stash
         return set if parents.empty?
 
         set.merge(parents)
-        set.merge(funder_tree(set, parents.map(&:name_identifier_id)))
+        set.merge(funder_tree(set, parents.map(&:name_identifier_id).uniq))
       end
 
       def funder_parents(funder_ids)
         StashDatacite::ContributorGrouping.where(
           "json_overlaps(json_contains->'$[*].name_identifier_id', json_array(#{funder_ids.map { |_x| '?' }.join(',')}))",
           *funder_ids
-        ).select(:name_identifier_id, :contributor_name, :id)
+        ).select(:name_identifier_id, :contributor_name, :id).distinct
       end
 
       def updated_at_str
