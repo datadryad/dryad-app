@@ -281,26 +281,24 @@ module Stash
       # see how many group funders belong to each relevant group in the ContributorGrouping table and return additional
       # contributor names if we have an encompassing contributor that wants to be credited for its underling funders
       def group_funders
-        extra_funders = Set.new
-        @resource.contributors.funder.completed.uniq(&:name_identifier_id).each do |funder|
-          extra_funders.merge(funder_tree(extra_funders, funder.name_identifier_id).flatten)
-        end
+        extra_funders = funder_tree(Set.new, @resource.contributors.funder.completed.map(&:name_identifier_id).uniq)
         extra_funders.to_a
       end
 
-      def funder_tree(set, id)
-        parent = funder_parent(id)
-        return set if parent.empty?
+      def funder_tree(set, ids)
+        parents = funder_parents(ids)
+        return set if parents.empty?
 
-        set.merge(parent)
-        set.merge(funder_tree(set, parent.first.name_identifier_id))
+        added = parents - set.to_a
+        set.merge(parents)
+        set.merge(funder_tree(set, added.map(&:name_identifier_id).uniq))
       end
 
-      def funder_parent(funder_id)
+      def funder_parents(funder_ids)
         StashDatacite::ContributorGrouping.where(
-          "json_contains(json_contains->'$[*].name_identifier_id', json_array(?))",
-          funder_id
-        ).select(:name_identifier_id, :contributor_name, :id)
+          "json_overlaps(json_contains->'$[*].name_identifier_id', json_array(#{funder_ids.map { |_x| '?' }.join(',')}))",
+          *funder_ids
+        ).select(:name_identifier_id, :contributor_name, :id).distinct
       end
 
       def updated_at_str
