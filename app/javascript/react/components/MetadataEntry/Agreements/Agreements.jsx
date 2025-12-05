@@ -4,10 +4,12 @@ import {showSavedMsg, showSavingMsg} from '../../../../lib/utils';
 import {ExitIcon} from '../../ExitButton';
 import Calculations from './Calculations';
 import CalculateFees from '../../CalculateFees';
+import {useStore} from '../../../shared/store';
 
 export default function Agreements({
-  resource, setResource, user, form, previous, config, fees, current, setAuthorStep, preview = false,
+  resource, setResource, user, form, previous, config, current, setAuthorStep, preview = false,
 }) {
+  const {updateStore, storeState: {dpc, fees, userMustPay}} = useStore();
   const subType = resource.resource_type.resource_type;
   const submitted = !!resource.identifier.process_date.processing;
   const curated = !!resource.identifier.process_date.curation_end;
@@ -15,7 +17,6 @@ export default function Agreements({
   const submitter = users.find((u) => u.role === 'submitter');
   const isSubmitter = user.id === submitter.id;
   const formRef = useRef(null);
-  const [dpc, setDPC] = useState({});
   const [ppr, setPPR] = useState(resource.hold_for_peer_review);
   const [agree, setAgree] = useState(resource.accepted_agreement);
   const [reason, setReason] = useState('');
@@ -86,22 +87,16 @@ export default function Agreements({
     } else if (curated) {
       setReason(', because the dataset has previously been submitted and entered curation');
     }
+    if (!preview && !curated) {
+      if (dpc.automatic_ppr && !ppr)
+        postPPR(true);
+      else
+        if (!dpc.allow_review && ppr) postPPR(false);
+    }
   }, [dpc]);
 
   useEffect(() => {
-    const getPaymentInfo = async () => {
-      axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
-        if (!preview && !curated) {
-          if (data.data.automatic_ppr && !ppr) postPPR(true);
-          else if (!data.data.allow_review && ppr) postPPR(false);
-        }
-        setResource((r) => ({...r, total_file_size: data.data.total_file_size}));
-        setDPC(data.data);
-      });
-    };
-    if (preview || current) {
-      getPaymentInfo();
-    }
+    if (preview || current) updateStore({refreshDpcStatus: true});
   }, [current, preview]);
 
   if (Object.keys(dpc).length === 0) {
@@ -196,7 +191,7 @@ export default function Agreements({
             </div>
           )}
           {resource.identifier.old_payment_system
-            ? dpc.user_must_pay && (
+            ? userMustPay && (
               <>
                 <Calculations resource={resource} config={config} />
                 <p>The submitter may choose an invoice recipient upon submission of the dataset.</p>
@@ -226,7 +221,7 @@ export default function Agreements({
         <>
           {(subType !== 'collection'
             && (!resource.identifier.payment_type || resource.identifier.payment_type === 'unknown')
-            && (dpc.user_must_pay || (!dpc.funder_will_pay && dpc.institution_will_pay))) && (
+            && (userMustPay || (!dpc.funder_will_pay && dpc.institution_will_pay))) && (
             <>
               {dpc.institution_will_pay && !!dpc.aff_tenant && dpc.aff_tenant.id !== resource.tenant_id && (
                 <>
@@ -234,7 +229,7 @@ export default function Agreements({
                   <div style={{maxWidth: '700px'}} ref={formRef} />
                 </>
               )}
-              {dpc.user_must_pay && (
+              {userMustPay && (
                 <div className="callout warn" style={{margin: '1em 0', paddingBottom: '5px'}}>
                   <p style={{marginBottom: '.75em'}}>
                     <i className="fas fa-circle-question" aria-hidden="true" style={{marginRight: '.5ch'}} />
@@ -278,7 +273,7 @@ export default function Agreements({
               <label>
                 <input type="checkbox" id="agreement" defaultChecked={agree} onChange={toggleTerms} required disabled={submitted} />
                 <span className="input-label">I agree</span>
-                {` to Dryad's ${subType !== 'collection' && dpc.user_must_pay ? 'payment terms and ' : ''}`}
+                {` to Dryad's ${subType !== 'collection' && userMustPay ? 'payment terms and ' : ''}`}
                 <a href="/terms" target="_blank">terms of submission<ExitIcon /></a>
               </label>
             </p>

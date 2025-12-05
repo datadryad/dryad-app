@@ -22,11 +22,13 @@ import Agreements from '../components/MetadataEntry/Agreements';
 import SubmissionHelp, {
   PublicationHelp, TitleHelp, AuthHelp, DescHelp, SubjHelp, SuppHelp, CompHelp, FilesHelp, ReadMeHelp, WorksHelp, AgreeHelp,
 } from '../components/SubmissionHelp';
+import {StoreProvider, useStore} from '../shared/store';
 /* eslint-disable jsx-a11y/no-autofocus */
 
 function Submission({
   submission, user, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
 }) {
+  const {updateStore, storeState: {userMustPay, refreshDpcStatus}} = useStore();
   const location = useLocation();
   const subRef = useRef([]);
   const previewRef = useRef(null);
@@ -36,7 +38,6 @@ function Submission({
   const [review, setReview] = useState(!!resource.identifier.process_date.processing || !!resource.accepted_agreement);
   const [payment, setPayment] = useState(false);
   const [pubDates, setPubDates] = useState([]);
-  const [fees, setFees] = useState({});
   const [invoice, setInvoice] = useState(resource.identifier.old_payment_system);
   const previous = resource.previous_curated_resource;
   const observers = [];
@@ -144,7 +145,6 @@ function Submission({
         resource={resource}
         setResource={setResource}
         current={step.name === 'Agreements'}
-        fees={fees}
         config={config_payments}
         form={change_tenant}
         user={user}
@@ -156,7 +156,6 @@ function Submission({
           resource, setResource, user, previous,
         }}
         config={config_payments}
-        fees={fees}
         form={change_tenant}
         user={user}
         setAuthorStep={() => setStep(steps().find((l) => l.name === 'Authors'))}
@@ -170,19 +169,26 @@ function Submission({
     });
   };
 
-  const calculateFees = () => {
+  useEffect(() => {
+    if (!refreshDpcStatus) return;
+
+    axios.get(`/resources/${resource.id}/dpc_status`).then((data) => {
+      updateStore({dpc: data.data, refreshDpcStatus: false, userMustPay: data.data.user_must_pay});
+      setResource((r) => ({...r, total_file_size: data.data.total_file_size}));
+    });
+  }, [refreshDpcStatus]);
+
+  useEffect(() => {
+    if (!userMustPay) return;
+
     axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
       .then(({data}) => {
         if (resource.hold_for_peer_review && data.fees.ppr_discount) {
           data.fees.total = 0;
         }
-        setFees(data.fees || {});
+        updateStore({fees: data.fees || {}});
       });
-  };
-
-  useEffect(() => {
-    if (resource.identifier['user_must_pay?']) calculateFees();
-  }, [resource.identifier['user_must_pay?'], resource.hold_for_peer_review, resource.generic_files, invoice]);
+  }, [userMustPay, resource.hold_for_peer_review, resource.generic_files, invoice]);
 
   const recheckPayer = () => {
     axios.get(`/resources/${resource.id}/payer_check`)
@@ -195,6 +201,7 @@ function Submission({
             new_upload_size_limit: data.new_upload_size_limit,
           },
         }));
+        updateStore({userMustPay: data.user_must_pay});
       });
   };
 
@@ -343,7 +350,7 @@ function Submission({
               ))}
             </div>
             <SubmissionForm {...{
-              steps, resource, fees, payment, setPayment, previewRef, user,
+              steps, resource, payment, setPayment, previewRef, user,
             }}
             />
           </>
@@ -354,7 +361,7 @@ function Submission({
               <Payments
                 config={config_payments}
                 {...{
-                  resource, setResource, fees, invoice, setInvoice, setPayment,
+                  resource, setResource, invoice, setInvoice, setPayment,
                 }}
               />
             </div>
@@ -499,5 +506,19 @@ function Submission({
 }
 
 export default function SubmissionWrapper(props) {
-  return <BrowserRouter><Submission {...props} /></BrowserRouter>;
+  let initialState = {
+    ...props,
+    refreshDpcStatus: false,
+    userMustPay: false,
+    dpc: {},
+    fees: {},
+  };
+
+  return (
+    <BrowserRouter>
+      <StoreProvider initialState={initialState}>
+        <Submission {...props} />
+      </StoreProvider>
+    </BrowserRouter>
+  );
 }
