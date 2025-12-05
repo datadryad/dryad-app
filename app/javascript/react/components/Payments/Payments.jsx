@@ -11,7 +11,7 @@ import {useStore} from '../../shared/store';
 function Payments({
   resource, setResource, invoice, setInvoice, setPayment, config,
 }) {
-  const {storeState: {fees} } = useStore();
+  const {storeState: {fees}} = useStore();
   const [ppr, setPPR] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
 

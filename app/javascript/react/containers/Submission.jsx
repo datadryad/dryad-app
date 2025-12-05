@@ -28,7 +28,7 @@ import {StoreProvider, useStore} from '../shared/store';
 function Submission({
   submission, user, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
 }) {
-  const {updateStore, storeState: {userMustPay, refreshDpcStatus}} = useStore();
+  const {updateStore, storeState: {userMustPay, refreshDpcStatus, refreshFees}} = useStore();
   const location = useLocation();
   const subRef = useRef([]);
   const previewRef = useRef(null);
@@ -179,16 +179,16 @@ function Submission({
   }, [refreshDpcStatus]);
 
   useEffect(() => {
-    if (!userMustPay) return;
+    if (!userMustPay && !refreshFees) return;
 
     axios.get(`/resource_fee_calculator/${resource.id}`, {params: {generate_invoice: invoice}})
       .then(({data}) => {
         if (resource.hold_for_peer_review && data.fees.ppr_discount) {
           data.fees.total = 0;
         }
-        updateStore({fees: data.fees || {}});
+        updateStore({refreshFees: false, fees: data.fees || {}});
       });
-  }, [userMustPay, resource.hold_for_peer_review, resource.generic_files, invoice]);
+  }, [userMustPay, resource.hold_for_peer_review, resource.generic_files, invoice, refreshFees]);
 
   const recheckPayer = () => {
     axios.get(`/resources/${resource.id}/payer_check`)
@@ -506,9 +506,10 @@ function Submission({
 }
 
 export default function SubmissionWrapper(props) {
-  let initialState = {
+  const initialState = {
     ...props,
     refreshDpcStatus: false,
+    refreshFees: false,
     userMustPay: false,
     dpc: {},
     fees: {},

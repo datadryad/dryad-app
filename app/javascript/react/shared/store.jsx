@@ -1,16 +1,23 @@
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext, useContext, useMemo, useState,
+} from 'react';
 
 const StoreContext = createContext();
 
-export const StoreProvider = ({ children, initialState = {} }) => {
+export function StoreProvider({children, initialState = {}}) {
   const [storeState, setStoreState] = useState(initialState);
 
   const updateStore = (mergeObject) => {
-    setStoreState((prevState) => ({ ...prevState, ...mergeObject }));
-  }
+    setStoreState((prevState) => ({...prevState, ...mergeObject}));
+  };
+
+  const contextValue = useMemo(
+    () => ({storeState, updateStore}),
+    [storeState, updateStore],
+  );
 
   return (
-    <StoreContext.Provider value={{ storeState, updateStore }}>
+    <StoreContext.Provider value={contextValue}>
       {children}
     </StoreContext.Provider>
   );

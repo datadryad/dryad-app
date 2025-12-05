@@ -12,8 +12,8 @@ const validateEmail = (value) => {
   return null;
 };
 
-export default function InvoiceForm({ resource, setResource, setPayment }) {
-  const {storeState: {fees} } = useStore();
+export default function InvoiceForm({resource, setResource, setPayment}) {
+  const {storeState: {fees}} = useStore();
   const {authors, users} = resource;
   const submitter = authors.find((a) => a.author_orcid === users.find((u) => u.role === 'submitter')?.orcid);
   const [name, setName] = useState(null);

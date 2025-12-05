@@ -4,7 +4,7 @@ import {useStore} from '../shared/store';
 export default function SubmissionForm({
   steps, resource, previewRef, user, payment, setPayment,
 }) {
-  const {storeState: {fees, userMustPay} } = useStore();
+  const {storeState: {fees, userMustPay}} = useStore();
   const [hasChanges, setChanges] = useState(!resource.previous_curated_resource);
   const [showR, setShowR] = useState(resource.display_readme);
   const [userComment, setUserComment] = useState(resource?.edit_histories?.[0]?.user_comment);

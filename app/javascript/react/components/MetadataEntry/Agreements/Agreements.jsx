@@ -88,10 +88,8 @@ export default function Agreements({
       setReason(', because the dataset has previously been submitted and entered curation');
     }
     if (!preview && !curated) {
-      if (dpc.automatic_ppr && !ppr)
-        postPPR(true);
-      else
-        if (!dpc.allow_review && ppr) postPPR(false);
+      if (dpc.automatic_ppr && !ppr) postPPR(true);
+      else if (!dpc.allow_review && ppr) postPPR(false);
     }
   }, [dpc]);
 

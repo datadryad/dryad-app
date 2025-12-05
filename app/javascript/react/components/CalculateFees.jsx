@@ -4,7 +4,7 @@ import {ExitIcon} from './ExitButton';
 import {useStore} from '../shared/store';
 
 export default function CalculateFees({resource, ppr = false}) {
-  const {storeState: {fees} } = useStore();
+  const {storeState: {fees}} = useStore();
   const paid = !!resource.identifier.last_invoiced_file_size;
 
   /* eslint-disable max-len */
