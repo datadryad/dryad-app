@@ -289,8 +289,9 @@ module Stash
         parents = funder_parents(ids)
         return set if parents.empty?
 
+        added = parents - set.to_a
         set.merge(parents)
-        set.merge(funder_tree(set, parents.map(&:name_identifier_id).uniq))
+        set.merge(funder_tree(set, added.map(&:name_identifier_id).uniq))
       end
 
       def funder_parents(funder_ids)
