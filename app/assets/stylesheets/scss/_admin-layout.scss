@@ -98,8 +98,14 @@
     line-height: 1;
     margin-left: .25ch;
     gap: .25ch;
+    max-width: 80px;
     label {
       white-space: wrap !important;
+    }
+    @media (max-width: 760px) {
+      max-width: 100%;
+      width: 100%;
+      margin-top: .5ch;
     }
   }
 }
@@ -224,7 +230,7 @@
         grid-template-columns: subgrid;
       }
 
-      @media (max-width: 650px) { 
+      @media (max-width: 850px) { 
         grid-template-columns: 1fr;
         row-gap: .75ch;
         .date-flex {

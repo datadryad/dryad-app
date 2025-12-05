@@ -162,28 +162,6 @@ RSpec.feature 'AdminPaths', type: :feature do
     end
   end
 
-  context :dataset_funder_path do
-    it 'is not accessible by regular users' do
-      sign_in
-      visit stash_url_helpers.ds_admin_funders_path
-      # User redirected
-      expect(page).to have_text('My datasets')
-    end
-
-    it 'is accessible by tenant admins' do
-      tenant = create(:tenant_ucop)
-      sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
-      visit stash_url_helpers.ds_admin_funders_path
-      expect(page).to have_text('Dataset funder dashboard')
-    end
-
-    it 'is accessible by dryad admins' do
-      sign_in(create(:user, role: 'admin'))
-      visit stash_url_helpers.ds_admin_funders_path
-      expect(page).to have_text('Dataset funder dashboard')
-    end
-  end
-
   context :user_admin_path do
     it 'is not accessible by regular users' do
       sign_in

@@ -81,7 +81,7 @@ module StashDatacite
 
     # GET /contributors/autocomplete?query={query_term}
     def autocomplete
-      # Limited to existing funder selections — only used on admin dashboard currently
+      # Limited to existing funder selections — not currently used
       partial_term = params['query']
       if partial_term.blank?
         render json: nil
