@@ -44,6 +44,7 @@ module StashEngine
     has_many :email_tokens, class_name: 'StashEngine::EmailToken', dependent: :destroy
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_one :payment_configuration, as: :partner, dependent: :destroy
+    has_many :payment_logs, class_name: 'SponsoredPaymentLog', as: :payer
 
     accepts_nested_attributes_for :flag, allow_destroy: true
     accepts_nested_attributes_for :payment_configuration

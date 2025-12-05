@@ -35,15 +35,15 @@ module FeeCalculator
     INVOICE_FEE = 199
     # rubocop:enable Layout/SpaceInsideRangeLiteral, Layout/ExtraSpacing
 
-    def initialize(options = {}, resource: nil)
+    def initialize(options = {}, resource: nil, payer_record: nil)
       @sum = 0
       @options = options
       @sum_options = {}
       @resource = resource
-      @payer = resource ? resource.identifier.payer : nil
-      @payment_plan_is_2025 = resource ? resource.identifier.payer_2025? : false
-      @covers_ldf = resource ? resource.identifier.payer&.payment_configuration&.covers_ldf : false
-      @ldf_limit = resource ? resource.identifier.payer&.payment_configuration&.ldf_limit : nil
+      @payer = payer_record || (resource ? resource.identifier.payer : nil)
+      @payment_plan_is_2025 = resource ? resource.identifier.payer_2025?(@payer) : false
+      @covers_ldf = resource ? @payer&.payment_configuration&.covers_ldf : false
+      @ldf_limit = resource ? @payer&.payment_configuration&.ldf_limit : nil
     end
 
     def call
