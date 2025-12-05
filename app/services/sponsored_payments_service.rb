@@ -11,6 +11,8 @@ class SponsoredPaymentsService
     return if payer.nil?
     # user is flagged to pay
     return if resource.identifier.user_must_pay?
+    # user is not on 2025 plan
+    return unless PayersService.new(payer).is_2025_payer?
 
     # for this resource, there is an invoice or user already paid/failed with CC
     payment = resource.payment

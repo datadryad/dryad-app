@@ -33,7 +33,15 @@ describe SponsoredPaymentsService do
       include_examples('does not create sponsored payment log')
     end
 
-    context 'when payer exists' do
+    (PaymentConfiguration.payment_plans.keys - ['2025']).each do |plan|
+      context "when payer payment plan is #{plan}" do
+        let!(:payment_conf) { create(:payment_configuration, partner: tenant, payment_plan: plan) }
+
+        include_examples('does not create sponsored payment log')
+      end
+    end
+
+    context 'when payer exists with a 2025 payment plan' do
       context 'and a payment record exists' do
         include_examples('creates sponsored payment log')
       end

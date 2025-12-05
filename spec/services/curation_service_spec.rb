@@ -515,7 +515,6 @@ describe CurationService do
     end
   end
 
-
   describe '#processed_sponsored_resource' do
     %w[submitted peer_review].each do |status|
       it "calls log_payment if status is #{status}" do
