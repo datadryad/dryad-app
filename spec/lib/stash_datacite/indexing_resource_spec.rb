@@ -149,12 +149,7 @@ module Stash
 
       describe '#dataset_funders' do
         it 'should return a list of funders as facet values' do
-          expect(@ir.dataset_funders).to eq([@contributor.contributor_name])
-        end
-
-        it 'should call group_funders from dataset_funders to attempt adding additional funders' do
-          expect(@ir).to receive(:group_funders)
-          @ir.dataset_funders
+          expect(@ir.dataset_funders(@ir.group_funders)).to eq([@contributor.contributor_name])
         end
       end
 

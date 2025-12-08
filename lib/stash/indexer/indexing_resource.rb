@@ -55,6 +55,7 @@ module Stash
       # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       # this is really what we want to get out of this for solr indexing, the rest is for compatibility with old indexing
       def to_index_document
+        group = group_funders
         georss = calc_bounding_box
         {
           uuid: doi,
@@ -78,11 +79,11 @@ module Stash
           dryad_author_affiliation_name_sm: author_affiliations,
           dryad_author_affiliation_id_sm: author_affiliation_ids,
           dryad_dataset_file_ext_sm: dataset_file_exts,
-          dcs_funder_sm: dataset_funders,
+          dcs_funder_sm: dataset_funders(group),
           updated_at_dt: updated_at_str,
           author_orcids_sm: @resource.authors.map(&:author_orcid).reject(&:blank?).uniq,
           funder_awd_ids_sm: @resource.funders.map(&:award_number).reject(&:blank?).uniq,
-          funder_ror_ids_sm: dataset_funder_ids,
+          funder_ror_ids_sm: dataset_funder_ids(group),
           sponsor_ror_ids_sm: @resource.contributors.sponsors.rors.map(&:name_identifier_id).reject(&:blank?).uniq,
           funding_sm: formatted_funding,
           rw_sim: formatted_related_works,
@@ -264,39 +265,40 @@ module Stash
         end.flatten.reject(&:blank?).uniq
       end
 
-      def dataset_funders
+      def dataset_funders(group)
         # Also do we only want to add items with valid ROR entries?
         contrib_names = @resource.funders.completed.map(&:contributor_name)
-        contrib_names << group_funders.map(&:contributor_name) if group_funders.present?
+        contrib_names << group.map(&:contributor_name) if group.present?
         contrib_names.flatten.reject(&:blank?).uniq
       end
 
-      def dataset_funder_ids
+      def dataset_funder_ids(group)
         ids = @resource.funders.completed.rors.map(&:name_identifier_id)
-        ids << group_funders.map(&:name_identifier_id) if group_funders.present?
+        ids << group.map(&:name_identifier_id) if group.present?
         ids.flatten.reject(&:blank?).uniq
       end
 
       # see how many group funders belong to each relevant group in the ContributorGrouping table and return additional
       # contributor names if we have an encompassing contributor that wants to be credited for its underling funders
       def group_funders
-        extra_funders = []
-        @resource.contributors.funder.completed.each do |funder|
-          groups = funder_parent(funder.name_identifier_id)
-          extra_funders |= groups
-          groups.each do |group|
-            gp = funder_parent(group.name_identifier_id)
-            extra_funders |= gp
-          end
-        end
-        extra_funders
+        extra_funders = funder_tree(Set.new, @resource.contributors.funder.completed.map(&:name_identifier_id).uniq)
+        extra_funders.to_a
       end
 
-      def funder_parent(funder_id)
+      def funder_tree(set, ids)
+        parents = funder_parents(ids)
+        return set if parents.empty?
+
+        added = parents - set.to_a
+        set.merge(parents)
+        set.merge(funder_tree(set, added.map(&:name_identifier_id).uniq))
+      end
+
+      def funder_parents(funder_ids)
         StashDatacite::ContributorGrouping.where(
-          "json_contains(json_contains->'$[*].name_identifier_id', json_array(?))",
-          funder_id
-        )
+          "json_overlaps(json_contains->'$[*].name_identifier_id', json_array(#{funder_ids.map { |_x| '?' }.join(',')}))",
+          *funder_ids
+        ).select(:name_identifier_id, :contributor_name, :id).distinct
       end
 
       def updated_at_str
