@@ -8,6 +8,7 @@
   <%= form_with(url: contributors_update_path(format: :js), method: :patch, local: false, model: funder, scope: :contributor, html: {style: 'margin-bottom: 2rem; background-color: #f2f2f2; padding: 6px;'}) do |f| -%>
     <%= f.hidden_field :id %>
     <%= f.hidden_field :resource_id %>
+    <%= f.hidden_field :identifier_type, value: 'ror' %>
     <%= f.hidden_field :name_identifier_id %>
     <%= f.hidden_field :contributor_name %>
     <div class="input-line" style="max-width: 100%; flex-wrap: wrap;">
@@ -47,6 +48,7 @@
 <h2>+Add funder</h2>
 <%= form_with(url: contributors_create_path(format: :js), method: :post, local: false, scope: :contributor, model: @funder) do |f| %>
   <%= f.hidden_field :resource_id, value: @resource.id %>
+  <%= f.hidden_field :type, value: 'funder' %>
   <%= f.hidden_field :name_identifier_id %>
   <%= f.hidden_field :contributor_name %>
   <div class="input-line" style="max-width: 100%; flex-wrap: wrap">
