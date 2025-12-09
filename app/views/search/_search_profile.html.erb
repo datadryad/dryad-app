@@ -9,7 +9,7 @@
   </b>
   <span>
     <% if type == :orcid %>
-      <%= bio.affiliation.smart_name %>
+      <%= bio.affiliation&.smart_name %>
     <% else %>
       <% if bio.acronyms.present? %>
         (<%= bio.acronyms.join(', ') %>)
@@ -17,17 +17,18 @@
       <%= bio.country %>
     <% end %>
   </span>
-  <% if type == :orcid %>
-    <a href="<%= orcid_link(val) %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" style="margin-right: 3px;" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= val %></a>
+  <% if type == :orcid %>    
+    <a href="<%= orcid_link(val) %>" target="_blank" rel="noreferrer"><i class="fab fa-orcid" role="img" aria-label="ORCID profile (opens in new tab): "></i><%= val %></a>
+    <%= link_to '<i class="fas fa-address-card" aria-hidden="true"></i>Dryad author profile'.html_safe, author_profile_path(orcid: val), style: "margin-right: 2ch"%>
   <% else %>
     <a href="<%= val %>" target="_blank" rel="noreferrer"><%= val %><i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>
   <% end %>
-  <span>
+  <span class="type">
     <% if type == :orcid %>
       Author
     <% else %>
       Organization
     <% end %>
-  </span>
+  </span class="type">
   <a class="o-link__secondary" href="<%= remove_filter(type, val) %>">Remove from search<i class="fas fa-trash-can" aria-hidden="true"></i></a>
 </div>

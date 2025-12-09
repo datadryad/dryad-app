@@ -496,6 +496,7 @@ Rails.application.routes.draw do
     get '/', to: 'search', as: 'new_search'
     get '/advanced', to: 'advanced', as: "advanced_search"
   end
+  get 'author/:orcid', to: 'search#author_profile', as: 'author_profile'
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
   get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
