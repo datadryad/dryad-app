@@ -1,0 +1,6 @@
+// open a modal dialog
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'new_search') %>";
+document.getElementById('genericModalDialog').showModal();
+document.getElementById('search_save').setAttribute('aria-expanded', 'true');
+document.getElementById('genericModalDialog').addEventListener('close', () => document.getElementById('search_save').setAttribute('aria-expanded', 'false'));
+document.getElementById('cancel_dialog').addEventListener('click', () => document.getElementById('genericModalDialog').close());
