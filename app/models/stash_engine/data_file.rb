@@ -119,18 +119,18 @@ module StashEngine
 
       # First, look for the file in the v3 hierarchy
       s3 = Stash::Aws::S3.new(s3_bucket_name: APP_CONFIG[:s3][:merritt_bucket])
-      permanent_key = "v3/#{f.s3_staged_path}"
+      pp permanent_key = "v3/#{f.s3_staged_path}"
       return permanent_key if s3.exists?(s3_key: permanent_key)
 
       # If it's not in the v3 hierarchy, check in the Merritt/ark hierarchy
-      f2 = DataFile.find_merritt_deposit_file(file: f) # find where Merritt has decided to store the file, may be an earlier creation
+      f2 = StashEngine::DataFile.find_merritt_deposit_file(file: f) # find where Merritt has decided to store the file, may be an earlier creation
 
-      return DataFile.mrt_bucket_path(file: f2) unless f2.nil?
+      return StashEngine::DataFile.mrt_bucket_path(file: f2) unless f2.nil?
 
       # If it gets here, then Merritt has some edge cases where not all entries are represented in our database file entries.
       # Typically, these are specially migrated legacy Dash datasets with Merritt having multiple versions internally, but
       # Dryad has fewer (like Merritt v3 and Dryad v1 and Merritt versions 1 & 2 are not represented in our database at all)
-      DataFile.find_merritt_deposit_path(before_file: f)
+      StashEngine::DataFile.find_merritt_deposit_path(before_file: f)
     end
 
     # the permanent storage URL, not the staged storage URL
