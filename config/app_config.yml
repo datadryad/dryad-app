@@ -266,38 +266,6 @@ defaults: &DEFAULTS
     account: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_username] %>
     password: <%= Rails.application.credentials[Rails.env.to_sym][:datacite_password] %>
     sandbox: true
-  cedar_editor_url: "/cedar-embeddable-editor/cedar-embeddable-editor.js?1-5-0"
-  cedar_templates:
-    # - ["9ce4b66a-1597-47cb-b465-24d9d33fbb88", "Files", "File Description"]
-    # - ["ea716306-5263-4f7a-9155-b7958f566933", "NCBI-MIAIRR", "MiAIRR V1.1.0"]
-    # - ["dc3fa214-88f4-49dd-b56b-f4552b2d3474", "NCBI-HUMAN", "CEDAR-NCBI Human Tissue"]
-    # - ["b7f291ea-d548-43dc-8685-dc74e73892a5", "EEB",  "Ecology and Evolutionary Biology"]
-    - ["7479dcb2-2c2f-44c8-953d-507c8b52c06a", "Human Cognitive Neuroscience Data"]
-    - ["17653460-3b7c-4644-9351-db38360dc130", "ATACseq Dataset"]
-    - ["745f82ce-2d70-480b-af69-b8945e5292cd", "Auto-fluorescence Dataset"]
-    - ["f5050476-05cf-44ab-9d85-dd7d8d755d9e", "Histology Dataset"]
-    - ["f24ed227-d41e-49c0-aa70-f5720a701ae7", "LC-MS Dataset"]
-    - ["ff903a6b-f92e-414d-818a-d5137a03e9db", "PhenoCycler Dataset"]
-    - ["58b33dfd-96da-41f2-a274-9b1895da7298", "RNAseq (with probes) Dataset"]
-    - ["85725781-0412-40f3-8ba5-6acef6cf4120", "RNAseq Dataset"]
-    - ["f79a1ffc-eb37-42cc-9bb5-8111757fe58b", "Sample Block"]
-    - ["15240463-21c8-44f2-b9d1-d1b36ab2dcf7", "Sample Section"]
-    - ["e51ba4cd-5b78-48f8-b240-f70e21de2f12", "Sample Suspension"]
-    - ["8c04c5b0-c34a-4e64-b1bc-be8c398a7b42", "Iterative Indirect Immunofluorescence Imaging Dataset"]
-    - ["fd522fce-a14d-4753-8b91-a5f3424f2614", "Cell DIVE Dataset"]
-    - ["e35e53ca-4653-4110-b673-d52761abfc15", "CODEX Dataset"]
-    - ["9775197a-b210-4350-b5c2-18e3db521a73", "COMET Dataset"]
-    - ["3d3c3f03-9e6e-40ba-b63a-075576cc3236", "Confocal Dataset"]
-    - ["3b27c833-ae5f-4c20-b802-5851b9da1e6f", "CyCIF Dataset"]
-    - ["2544b169-9610-418f-8df7-08132a3bf47a", "DESI Dataset"]
-    - ["87b54449-f999-4e8f-821a-e27cb77e0386", "Enhanced SRS Dataset"]
-    - ["5749827f-e197-4cd4-bd84-1ed9ec91dea6", "Light Sheet Dataset"]
-    - ["e42e077b-e94f-4909-8c5f-9b6238ac4bbb", "MALDI Dataset"]
-    - ["f53e7a7e-e5e5-4eda-bc74-a8e95a338ac6", "MPLEx Dataset"]
-    - ["ff59e240-21de-4cf0-ab5e-a446bbfe0ec8", "MUSIC Dataset"]
-    - ["382c0eff-62ff-4884-8439-2c638b9838d1", "Second Harmonic Generation Dataset"]
-    - ["a4c38812-fba1-49f0-a1bf-28ff4e4e76fd", "SIMS Dataset"]
-    - ["594b7267-01e9-4d46-b9e9-5edc52051223", "Thick Section Multiphoton MxIF Dataset"]
   solr_url: <%= ENV['SOLR_URL'] || "http://localhost:8983/solr/dryad" %>
   ror_solr_url: <%= ENV['ROR_SOLR_URL'] || "http://localhost:8983/solr/rors" %>
   cache:

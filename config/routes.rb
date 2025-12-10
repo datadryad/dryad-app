@@ -521,8 +521,12 @@ Rails.application.routes.draw do
   get '/metadata_entry_pages/MaterialIcons-Regular.woff2', to: redirect('/MaterialIcons-Regular.woff2')
   get '/metadata_entry_pages/MaterialIcons-Regular.ttf', to: redirect('/MaterialIcons-Regular.ttf')
 
-  get '/cedar-config', to: 'cedar#json_config'
-  post '/cedar-save', to: 'cedar#save'
+  get '/cedar/config', to: 'cedar#json_config'  
+  get '/cedar/:id/template', to: 'cedar#template'
+  get '/cedar/:id/metadata', to: 'cedar#metadata'
+  get '/cedar/check/:resource_id', to: 'cedar#check'
+  post '/cedar/save/:resource_id', to: 'cedar#save'
+  delete '/cedar/save/:resource_id', to: 'cedar#delete'
 
   ########################## Redirects ######################################
 

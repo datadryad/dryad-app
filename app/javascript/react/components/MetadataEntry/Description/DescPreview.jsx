@@ -55,8 +55,7 @@ function DescSection({
 
 export default function DescPreview({resource, previous, curator}) {
   const descs = ['abstract', 'methods', 'other'];
-  const cedar = resource.cedar_json ? new Blob([resource.cedar_json]) : '';
-
+  const cedar = resource.cedar_json?.json ? new Blob([resource.cedar_json.json]) : '';
   return (
     <>
       {descs.map((t) => (
@@ -69,12 +68,14 @@ export default function DescPreview({resource, previous, curator}) {
           curator={curator}
         />
       ))}
-      {!!resource.cedar_json && (
+      {!!resource.cedar_json.json && (
         <div className="callout">
           <p>DisciplineSpecificMetadata.json <span className="file_size">{formatSizeUnits(cedar.size)}</span> file generated.</p>
         </div>
       )}
-      {previous && previous.cedar_json !== resource.cedar_json && <p className="del ins">CEDAR file changed</p>}
+      {previous && JSON.stringify(previous.cedar_json?.json) !== JSON.stringify(resource.cedar_json?.json) && (
+        <p className="del ins">CEDAR file changed</p>
+      )}
     </>
   );
 }

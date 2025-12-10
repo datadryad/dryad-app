@@ -8,7 +8,7 @@ class CedarController < ApplicationController
       showSampleTemplateLinks: false,
       terminologyIntegratedSearchUrl: 'https://terminology.metadatacenter.org/bioportal/integrated-search',
 
-      sampleTemplateLocationPrefix: '/cedar-embeddable-editor/templates',
+      sampleTemplateLocationPrefix: '/cedar/',
       loadSampleTemplateName: params[:template],
       expandedSampleTemplateLinks: false,
 
@@ -40,20 +40,48 @@ class CedarController < ApplicationController
     end
   end
 
-  # Save data from the Cedar editor into the database
+  def check
+    resource = StashEngine::Resource.find_by(id: params[:resource_id])
+    abstract = resource.descriptions.type_abstract.first&.description
+    journal = resource.resource_publication&.publication_name
+    search_string = [resource.title, abstract, journal, resource.subjects&.map(&:subject)].flatten.reject(&:blank?).join(' ')
+    group = CedarWordBank.where("REGEXP_LIKE(?, keywords, 'i')", search_string)
+    templates = group.first&.cedar_templates&.select(:id, :title) || []
+    templates |= CedarTemplate.where(id: resource.cedar_json.template_id)&.select(:id, :title) if resource.cedar_json.present?
+    render json: { check: templates.present?, templates: templates.reject(&:blank?) }.to_json
+  end
+
+  def template
+    render json: CedarTemplate.find_by(id: params[:id]).template
+  end
+
+  def metadata
+    render json: { note: 'Metadata loaded separately' }.to_json
+  end
+
   def save
-    # If the CSRF token is not present or not valid, don't save the data
-    csrf = params['info']['csrf']
-    return unless csrf && valid_authenticity_token?(session, csrf)
-
-    resource = StashEngine::Resource.find(params['info']['resource_id']&.to_i)
+    resource = StashEngine::Resource.find_by(id: params[:resource_id])
     render json: { error: 'resource-not-found' }.to_json, status: 404 unless resource.present?
+    if resource.cedar_json.present?
+      resource.cedar_json.update(json_params)
+    else
+      resource.create_cedar_json(json_params)
+    end
+    render json: resource.cedar_json.as_json
+  end
 
-    merged = params['info'].merge(metadata: params['metadata'])
-    cedar_json = merged.to_json(except: %i[resource_id csrf])
-    resource.update(cedar_json: params['metadata'].present? ? cedar_json : nil)
-    resource.reload
+  def delete
+    resource = StashEngine::Resource.find_by(id: params[:resource_id])
+    render json: { error: 'resource-not-found' }.to_json, status: 404 unless resource.present?
+    resource.cedar_json.destroy
+    render json: { message: 'CEDAR file destroyed' }
+  end
 
-    render json: { message: 'Save value received in the Cedar Save method' }
+  private
+
+  def json_params
+    j = params.permit(:json, :template_id)
+    j[:json] = JSON.parse(j[:json])
+    j
   end
 end
