@@ -55,10 +55,6 @@ class CedarController < ApplicationController
     render json: CedarTemplate.find_by(id: params[:id]).template
   end
 
-  def metadata
-    render json: { note: 'Metadata loaded separately' }.to_json
-  end
-
   def save
     resource = StashEngine::Resource.find_by(id: params[:resource_id])
     render json: { error: 'resource-not-found' }.to_json, status: 404 unless resource.present?

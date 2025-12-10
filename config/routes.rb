@@ -523,7 +523,6 @@ Rails.application.routes.draw do
 
   get '/cedar/config', to: 'cedar#json_config'  
   get '/cedar/:id/template', to: 'cedar#template'
-  get '/cedar/:id/metadata', to: 'cedar#metadata'
   get '/cedar/check/:resource_id', to: 'cedar#check'
   post '/cedar/save/:resource_id', to: 'cedar#save'
   delete '/cedar/save/:resource_id', to: 'cedar#delete'
