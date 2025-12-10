@@ -25,6 +25,7 @@ class CurationService
     if @activity.curation_status_changed?
       process_dates
       process_resource if @activity.published? || @activity.embargoed?
+      process_resource_flags
       unless @skip_emails
         email_status_change_notices
         email_orcid_invitations if @activity.published?
@@ -129,6 +130,14 @@ class CurationService
     copy_to_zenodo if @activity.published?
     @resource.submit_to_solr
     @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
+  end
+
+  def process_resource_flags
+    # only if there are file changes
+    return unless @status.in?(%w[peer_review submitted curation])
+    return if @resource.data_files.where(file_state: %w[created deleted]).none?
+
+    @resource.update(has_file_changes: true)
   end
 
   def process_payment
