@@ -28,3 +28,6 @@ bundle exec rails affiliation_import:update_affiliations_names >> /home/ec2-user
 bundle exec rails cleanup:duplicate_affiliations >> /home/ec2-user/deploy/shared/log/duplicate_affiliations.log 2>&1
 bundle exec rails cleanup:affiliations_wo_ror >> /home/ec2-user/deploy/shared/log/affiliations_wo_ror_cleanup.log 2>&1
 bundle exec rails cleanup:contributors_wo_ror >> /home/ec2-user/deploy/shared/log/contributors_wo_ror_cleanup.log 2>&1
+
+# Spot check files digests for secondary storage
+bundle exec rails checksums:spot_check_secondary_storage_files >> /home/ec2-user/deploy/shared/log/spot_check_secondary_storage_files.log 2>&1

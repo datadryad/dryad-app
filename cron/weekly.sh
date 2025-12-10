@@ -28,6 +28,3 @@ fi
 bundle exec rails cleanup:delete_orphan_records >> /home/ec2-user/deploy/shared/log/delete_orphan_records.log 2>&1
 bundle exec rails certbot:check_and_notify >> /home/ec2-user/deploy/shared/log/certbot.log 2>&1
 bundle exec rails s3_policies:deleted_files_check >> /home/ec2-user/deploy/shared/log/s3_policies_deleted_files_check.log 2>&1
-
-# Download & validate file digests on 10 random files FILES
-bundle exec rails checksums:spot_check >> /home/ec2-user/deploy/shared/log/file_checksum_spot_check.log 2>&1
