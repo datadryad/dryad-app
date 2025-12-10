@@ -48,7 +48,7 @@ class CedarController < ApplicationController
     group = CedarWordBank.where("REGEXP_LIKE(?, keywords, 'i')", search_string)
     templates = group.first&.cedar_templates&.select(:id, :title) || []
     templates |= CedarTemplate.where(id: resource.cedar_json.template_id)&.select(:id, :title) if resource.cedar_json.present?
-    render json: { check: templates.present?, templates: templates.reject(&:blank?) }.to_json
+    render json: { check: templates.present?, templates: templates }.to_json
   end
 
   def template
