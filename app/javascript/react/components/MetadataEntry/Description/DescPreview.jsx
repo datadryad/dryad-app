@@ -68,7 +68,7 @@ export default function DescPreview({resource, previous, curator}) {
           curator={curator}
         />
       ))}
-      {!!resource.cedar_json.json && (
+      {!!resource.cedar_json?.json && (
         <div className="callout">
           <p>DisciplineSpecificMetadata.json <span className="file_size">{formatSizeUnits(cedar.size)}</span> file generated.</p>
         </div>
