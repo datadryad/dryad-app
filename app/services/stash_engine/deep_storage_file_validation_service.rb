@@ -40,22 +40,23 @@ module StashEngine
 
     def process_file
       # Download to temp
-      temp = "/tmp/#{File.basename(key)}"
-      puts "Downloading #{key}"
+      temp = "/tmp/#{File.basename(@key)}"
+      puts "Downloading #{@key}"
       File.open(temp, 'wb') do |file|
         @s3.get_object(bucket: @bucket, key: @key) do |chunk|
           file.write(chunk)
         end
       end
 
-      sums = Stash::Checksums.get_checksums([file.digest_type], temp)
+      sums = Stash::Checksums.get_checksums([file.digest_type], File.open(temp))
       checksum = sums.get_checksum(file.digest_type)
       size = sums.input_size
       if size == file.upload_file_size && checksum == file.digest
         file.validated_at = Time.now.utc
         file.save
+        puts ' File validated successfully.'
       else
-        p ' File cannot be validated; possible corruption! '
+        puts ' File cannot be validated; possible corruption!'
         StashEngine::UserMailer.deep_archive_file_validation_error(file, @bucket).deliver_now
         false
       end
