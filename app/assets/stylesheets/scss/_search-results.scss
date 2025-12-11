@@ -177,25 +177,27 @@
   row-gap: .5ch;
 
   b {
-    font-size: 1.1rem;
+    font-size: 1.125em;
   }
-  span:nth-child(2) {
-    grid-column: auto / span 2;
-  }
-  span:last-of-type, a:last-child {
+  .type, a:last-child {
     margin-left: auto;
+    grid-column: 3;
   }
   a {
     white-space: nowrap;
+    i {
+      margin-right: .35ch;
+    }
     &.o-link__secondary i {
-      margin-left: .35rem;
+      margin-right: 0;
+      margin-left: .35ch;
     }
   }
 
   @container (width < 615px) {
     grid-template-rows: auto auto auto;
     grid-template-columns: 1fr auto;
-    span:nth-child(2) {
+    .type, a:last-child {
       grid-column: auto;
     }
   }
@@ -276,5 +278,15 @@
 
   .advance-submit {
     margin-left: auto;
+  }
+}
+
+#profile-page {
+  .search-profile {
+    font-size: 1em;
+    padding: 2ch
+  }
+  .search-result {
+    margin: 1.25rem 0;
   }
 }
