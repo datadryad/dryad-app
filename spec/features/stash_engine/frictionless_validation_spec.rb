@@ -3,8 +3,6 @@ require 'rails_helper'
 require 'fileutils'
 
 RSpec.feature 'UploadFiles', type: :feature, js: true do
-
-  include MerrittHelper
   include DatasetHelper
   include DatabaseHelper
   include GenericFilesHelper

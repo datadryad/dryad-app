@@ -1,6 +1,6 @@
 <h1>Save this search</h1>
 <% if current_user.admin_searches.count == 10 %>
-  <p>You have reached the limit on saved searches! Please modify or delete one of your <a href="/account#saved" style="font-weight: normal;">existing saved searches</a>.</p>
+  <p>You have reached the limit on saved searches! Please modify or delete one of your <a href="/account/saved_searches" style="font-weight: normal;">existing saved searches</a>.</p>
 <% else %>
   <%= form_with(model: StashEngine::AdminSearch, url: stash_url_helpers.saved_search_path, method: :post, local: false ) do %>
     <input type="hidden" name="type" value="StashEngine::AdminSearch">

@@ -8,9 +8,6 @@
 #  enabled            :boolean          default(TRUE)
 #  long_name          :string(191)
 #  low_income_country :boolean          default(FALSE)
-#  old_covers_dpc     :boolean          default(TRUE)
-#  old_covers_ldf     :boolean          default(FALSE)
-#  old_payment_plan   :integer
 #  partner_display    :boolean          default(TRUE)
 #  short_name         :string(191)
 #  created_at         :datetime         not null

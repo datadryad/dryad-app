@@ -43,20 +43,10 @@ module StashEngine
          %w[stash_engine_proposed_changes.title publication_name publication_issn publication_doi
             stash_engine_proposed_changes.publication_date authors score])
 
-      if request.format.to_s == 'text/csv' # we want all the results to put in csv
-        @page = 1
-        @page_size = 1_000_000
-      end
-
       @proposed_changes = proposed_changes.order(ord).page(@page).per(@page_size)
       return unless @proposed_changes.present?
 
-      respond_to do |format|
-        format.html
-        format.csv do
-          headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_pub_updater_report.csv"
-        end
-      end
+      respond_to(&:html)
     end
 
     def update

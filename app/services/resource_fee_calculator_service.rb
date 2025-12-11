@@ -26,7 +26,7 @@ class ResourceFeeCalculatorService
       'publisher'
     elsif ident.institution_will_pay?
       'institution'
-    elsif ident.journal&.will_pay?
+    elsif ident.journal_will_pay?
       'publisher'
     else
       'individual'
