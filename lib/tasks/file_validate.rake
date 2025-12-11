@@ -122,10 +122,7 @@ namespace :checksums do
 
   desc 'Spot checks of secondary file replicas'
   task spot_check_secondary_storage_files: :environment do
-    processing = 5
-
     today = Time.now.utc
-    index = 0
     puts ''
     puts "Validating secondary storage checksums for 5 random files #{today}"
     # 5 random files which
@@ -139,18 +136,17 @@ namespace :checksums do
       .where(upload_file_size: ..1_000_000_000)
       .joins(resource: :identifier)
       .where.not(identifier: { pub_state: 'withdrawn' })
-      .order(Arel.sql('RAND()')).limit(100)
+      .order(Arel.sql('RAND()')).limit(50)
       .each do |file|
 
       next if !file.resource || file.resource.current_state == 'in_progress'
 
       puts "   Validating secondary storage checksum for file id #{file.id}"
-      index += 1
       StashEngine::DeepStorageFileValidationService
         .new(file: file, bucket: 'dryad-assetstore-v3-eu', region: 'eu-central-1')
         .validate_file
 
-      break if index == processing
+      break
     rescue StandardError => e
       puts "   Exception! #{e.message}"
       next
