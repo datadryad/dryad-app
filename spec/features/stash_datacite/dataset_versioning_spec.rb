@@ -1,7 +1,5 @@
 require 'rails_helper'
 RSpec.feature 'DatasetVersioning', type: :feature do
-
-  include MerrittHelper
   include DatasetHelper
   include Mocks::CurationActivity
   include Mocks::Datacite
