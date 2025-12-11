@@ -323,9 +323,6 @@ Rails.application.routes.draw do
     post 'file_note/:id', to: 'curation_activity#file_note', as: 'file_note'
     get 'file_note/:resource_id', to: 'curation_activity#make_file_note'
 
-    # admin report for dataset funders
-    get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'
-
     # routing for submission queue controller
     get 'submission_queue', to: 'submission_queue#index'
     get 'submission_queue/refresh_table', to: 'submission_queue#refresh_table'
@@ -553,6 +550,7 @@ Rails.application.routes.draw do
   get '/interested', to: redirect('/contact#get-involved')
   get '/stash/interested', to: redirect('/contact#get-involved')
   get '/stash/ds_admin', to: redirect('/admin_dashboard')
+  get '/ds_admin_funders', to: redirect('/admin_dashboard')
 
   get '/stash', to: redirect('/')
   get '/stash/*path', to: redirect { |params, req|
