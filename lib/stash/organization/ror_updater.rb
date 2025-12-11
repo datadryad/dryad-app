@@ -12,7 +12,6 @@ module Stash
     class RorUpdater
 
       FILE_DIR = '/home/ec2-user/deploy/shared/ror'
-      FILE_DIR = '/Users/alin/work/dryad/ror_import/'
       DOWNLOAD_URL = 'https://zenodo.org/api/communities/ror-data/records?q=&sort=newest'
 
       # rubocop:disable Metrics/MethodLength, Metrics/BlockNesting
