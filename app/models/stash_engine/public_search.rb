@@ -22,18 +22,6 @@
 #  fk_rails_...  (user_id => stash_engine_users.id)
 #
 module StashEngine
-  class SavedSearch < ApplicationRecord
-    self.table_name = 'stash_engine_saved_searches'
-    belongs_to :user, class_name: 'StashEngine::User'
-
-    def properties
-      JSON.parse(super)
-    end
-
-    def create_code
-      code = SecureRandom.urlsafe_base64(16)
-      code = SecureRandom.urlsafe_base64(16) while SavedSearch.where(share_code: code).count > 0
-      update(share_code: code)
-    end
+  class PublicSearch < SavedSearch
   end
 end

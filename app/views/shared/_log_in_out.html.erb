@@ -2,6 +2,7 @@
   <button class="c-header_nav-button" aria-expanded="false" aria-controls="manage-menu"><i class="fa fa-user"><span class="screen-reader-only">User settings</i></button>
   <ul class="c-header__nav-submenu" id="manage-menu" hidden>
     <li><%= link_to 'My account', my_account_path %></li>
+    <li><%= link_to 'Saved searches', saved_searches_path %></li>
     <% if current_user.system_user? %>
       <li><%= link_to 'Manage accounts', user_admin_path %></li>
     <% end %>

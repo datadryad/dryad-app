@@ -19,25 +19,15 @@ module StashEngine
       apply_joins
       apply_filters
 
-      if request.format.to_s == 'text/csv' # we want all the results to put in csv
-        @page = 1
-        @page_size = 1_000_000
-      end
-
       @proposed_changes = @proposed_changes.order('award_number desc').page(@page).per(@page_size)
       return unless @proposed_changes.present?
 
-      respond_to do |format|
-        format.html
-        format.csv do
-          headers['Content-Disposition'] = "attachment; filename=#{Time.new.strftime('%F')}_pub_updater_report.csv"
-        end
-      end
+      respond_to(&:html)
     end
 
     def update
       # Accept
-      @proposed_change.record.update(JSON.parse(@proposed_change.update_data))
+      @proposed_change.record.update(JSON.parse(@proposed_change.update_data).merge(award_verified: true))
       @proposed_change.user = current_user
       @proposed_change.approved!
       @proposed_change.reload
@@ -55,6 +45,7 @@ module StashEngine
     def destroy
       # Reject
       respond_to do |format|
+        @proposed_change.record.update(award_verified: true)
         @proposed_change.user = current_user
         @proposed_change.rejected!
         @proposed_change.reload

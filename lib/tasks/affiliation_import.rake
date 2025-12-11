@@ -125,49 +125,6 @@ namespace :affiliation_import do
     Stash::Organization::RorUpdater.process_ror_json(json_file_path: ror_dump_file)
   end
 
-  # example: rake affiliation_import:populate_funder_ror_mapping -- --path /path/to/json_file
-  desc 'Populate fundref_id to ror_id mapping table'
-  task populate_funder_ror_mapping: :environment do
-    $stdout.sync = true # keeps stdout from buffering which causes weird delays such as with tail -f
-
-    args = Tasks::ArgsParser.parse(:path)
-    unless args.path
-      puts 'Please enter the path to the ROR dump json file as an argument'
-      puts 'You can get the latest dump from https://doi.org/10.5281/zenodo.6347574 (get json file for last version in zip)'
-      exit
-    end
-
-    ror_dump_file = args.path
-    exit unless File.exist?(ror_dump_file)
-
-    ActiveRecord::Base.connection.truncate(StashEngine::XrefFunderToRor.table_name)
-    fundref_ror_mapping = {}
-    File.open(ror_dump_file, 'r') do |f|
-      data = JSON.parse(f.read)
-      data.each do |org|
-        ror_id = org['id']
-        name = org['name']
-        fundref_ids = org.dig('external_ids', 'FundRef', 'all')
-        next if fundref_ids.blank?
-
-        fundref_ids.each do |fundref_id|
-          fundref_ror_mapping[fundref_id] = { ror: ror_id, name: name }
-        end
-      end
-    end
-
-    to_insert = []
-    fundref_ror_mapping.each_with_index do |(fundref_id, ror_info), index|
-      to_insert << { xref_id: "http://dx.doi.org/10.13039/#{fundref_id}", ror_id: ror_info[:ror], org_name: ror_info[:name] }
-      if index % 1000 == 0 && index > 0
-        StashEngine::XrefFunderToRor.insert_all(to_insert)
-        to_insert = []
-      end
-    end
-    StashEngine::XrefFunderToRor.insert_all(to_insert) unless to_insert.empty?
-    puts 'Done updating fundref to ror mapping table'
-  end
-
   desc 'Populate NIH funders so they can be grouped under NIH umbrella organization'
   task populate_nih_ror_group: :environment do
     json = <<~JSON

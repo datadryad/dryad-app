@@ -56,12 +56,7 @@
         <% end %>
       <% end %>
     </div>
-
   </div>
-
-  <%= link_to 'Get Comma Separated Values (CSV) for import into Excel',
-    record_updaters_path(@data_type, sortable_table_params.merge(format: :csv)) %>
-  <div id="proposed-change-dialog" class="o-admin-dialog" style="display: none">Processing your request ...</div>
 
   <script type="text/javascript">
     $('.c-lined-table').on('click', 'button[name="accept_changes"], button[name="reject_changes"]', function(){

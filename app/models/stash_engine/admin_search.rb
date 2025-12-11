@@ -37,12 +37,6 @@ module StashEngine
       properties['search_string']
     end
 
-    def create_code
-      code = SecureRandom.urlsafe_base64(16)
-      code = SecureRandom.urlsafe_base64(16) while AdminSearch.where(share_code: code).count > 0
-      update(share_code: code)
-    end
-
     private
 
     def only_one_default

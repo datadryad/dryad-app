@@ -64,7 +64,13 @@
   </div>
   <div class="c-columns__sidebar search-filters">
     <% if @facets['facet_fields'].values.any?(&:present?) %>
-      <h3>Filter results</h3>
+      <div class="search-filter-header">
+        <h3>Filter results</h3>
+        <%= form_with(url: new_saved_search_path, method: :get, local: false) do %>
+          <input type="hidden" name="properties" value="<%= request.parameters.except(:action, :controller, :page_size, :page ).to_json %>" />
+          <button class="o-button__plain-text7" id="search_save" aria-haspopup="dialog" aria-controls="search_form" aria-expanded="true"><i class="fa fa-bookmark" aria-hidden="true"></i>Save search</button>
+        <% end %>
+      </div>
     <% end %>
     <% if params.key?('publishedBefore') || params.key?('publishedSince') %>
       <div class="search-filter">

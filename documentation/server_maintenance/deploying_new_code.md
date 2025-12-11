@@ -1,8 +1,8 @@
 Patching and deployment
 =======================
 
-## Patching
-
+Patching
+--------
 Patch all instances: dev, stage, and production, and all SOLR instances. If an instance needs patching, you will see a message like the following when you log on:
 
 ```
@@ -57,7 +57,6 @@ cd solr-9.7.0/
 bin/solr start
 ```
 
-
 Steps to deploy a new release to stage/production
 -------------------------------------------------
 
@@ -65,12 +64,19 @@ Deploying to the Dryad production system requires several steps. These
 are elaborated below or in supporting documents as noted.
 
 Steps in a production deploy:
-1. Tag the code for release and create release notes
-2. Deploy to stage - For each server, remove it from the ALB, perform
+1. Update the date for generated assets, so browser caching works properly
+2. Tag the code for release and create release notes
+3. Deploy to stage - For each server, remove it from the ALB, perform
    the deploy, and return it to the ALB. 
-3. Test any new functionality on stage
-4. Deploy to prod - For each server, remove it from the ALB, perform
+4. Test any new functionality on stage
+5. Deploy to prod - For each server, remove it from the ALB, perform
    the deploy, and return it to the ALB. 
+
+Date for generated assets
+-------------------------
+
+Update config/initializers/assets.rb to contain the current date for the `assets.version`
+
 
 Creating tags for deployment
 ----------------------------
