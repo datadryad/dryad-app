@@ -9,7 +9,11 @@ module Stash
 
         class << self
           def reindex_all
-            where(status: %i[active inactive]).each(&:reindex)
+            count = where(status: %i[active inactive]).count
+            where(status: %i[active inactive]).each_with_index do |a, i|
+              puts "Reindexing #{i + 1} of #{count}"
+              a.reindex
+            end
           end
 
           def search(query, fq: [], operation: 'OR', limit: 100, fl: nil)
