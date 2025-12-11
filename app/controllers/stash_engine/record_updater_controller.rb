@@ -37,7 +37,7 @@ module StashEngine
 
     def update
       # Accept
-      @proposed_change.record.update(JSON.parse(@proposed_change.update_data))
+      @proposed_change.record.update(JSON.parse(@proposed_change.update_data).merge(award_verified: true))
       @proposed_change.user = current_user
       @proposed_change.approved!
       @proposed_change.reload
@@ -55,6 +55,7 @@ module StashEngine
     def destroy
       # Reject
       respond_to do |format|
+        @proposed_change.record.update(award_verified: true)
         @proposed_change.user = current_user
         @proposed_change.rejected!
         @proposed_change.reload
