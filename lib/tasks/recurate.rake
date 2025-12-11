@@ -6,8 +6,8 @@ namespace :recurate do
   task nih_contributors: :environment do
     query = StashDatacite::Contributor.updatable.nih
       .where(award_verified: false).on_latest_resource
-      .joins(resource: :current_resource_state)
-      .where.not(stash_engine_resource_states: { resource_state: :in_progress })
+      .joins(resource: :last_curation_activity)
+      .where.not(stash_engine_curation_activities: { status: %w[in_progress withdrawn] })
 
     total_count = query.count
     query.each_with_index do |contrib, idx|
@@ -21,8 +21,8 @@ namespace :recurate do
   task nsf_contributors: :environment do
     query = StashDatacite::Contributor.updatable.nsf
       .where(award_verified: false).on_latest_resource
-      .joins(resource: :current_resource_state)
-      .where.not(stash_engine_resource_states: { resource_state: :in_progress })
+      .joins(resource: :last_curation_activity)
+      .where.not(stash_engine_curation_activities: { status: %w[in_progress withdrawn] })
 
     total_count = query.count
     query.each_with_index do |contrib, idx|
@@ -36,8 +36,8 @@ namespace :recurate do
   task populate_missing_awards: :environment do
     query = StashDatacite::Contributor.needs_award_details.updatable
       .where(award_verified: false).on_latest_resource
-      .joins(resource: :current_resource_state)
-      .where.not(stash_engine_resource_states: { resource_state: :in_progress })
+      .joins(resource: :last_curation_activity)
+      .where.not(stash_engine_curation_activities: { status: %w[in_progress withdrawn] })
 
     total_count = query.count
     query.each_with_index do |contrib, idx|
