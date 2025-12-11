@@ -2,6 +2,13 @@
 <%= javascript_pack_tag 'application' %>
 <div id="page-columns">
   <div id="page-content">
+    <nav aria-label="Terms navigation" style="display: flex; align-items: baseline; column-gap: 1ch; flex-wrap: wrap; font-size: 1rem; margin-bottom: 2rem;">
+      <span>Account:</span>
+      <ul class="c-header__nav-group">
+        <li class="c-second__nav-item"><a href="/account" aria-current="page">My account</a></li>
+        <li class="c-second__nav-item"><a href="/account/saved_searches">Saved searches</a></li>
+      </ul>
+    </nav>
     <div style="display: flex; align-items: center; justify-content: space-between; row-gap: 2ch">
       <h1>My account</h1>
       <% if current_user.orcid %>
@@ -52,21 +59,6 @@
           </div>
         <% end %>        
       </div>
-      <% if current_user.min_admin? %>
-        <div id="admin_searches">    
-          <h2 id="saved">Saved searches</h2>
-          <% if current_user.admin_searches.empty? %>
-            <p>Save searches from the <%= link_to 'Admin dashboard', admin_dashboard_path %></p>
-          <% else %>
-            <p>Click the search name to view results and to edit search fields and filters.</p>
-            <ol class="saved_searches_list" id="admin_searches_list">
-              <% current_user.admin_searches.each_with_index do |s,i| %>
-                <%= render partial: 'saved_search', locals: { saved_search: s, index: i } %>
-              <% end %>
-            </ol>
-          <% end %>
-        </div>
-      <% end %>
     </div>
   </div>
 </div>
@@ -85,18 +77,4 @@
     document.getElementById('edit-tenant-form').setAttribute('hidden', 'hidden');
     document.getElementById('dryad-member').removeAttribute('hidden');
   });
-  document.querySelectorAll('.copy-share-code').forEach(url => url.addEventListener('click', (e) => {
-    e.preventDefault()
-    window.navigator.clipboard.writeText(url.href).then(async () => {
-      url.setAttribute('aria-label', 'Copied')
-      url.setAttribute('title', 'Copied')
-      url.firstElementChild.classList.toggle('fa-share')
-      url.firstElementChild.classList.toggle('fa-check')
-      await new Promise(res => setTimeout(res, 3000));
-      url.setAttribute('title', 'Copy link to share search')
-      url.setAttribute('aria-label', 'Copy link to share search')
-      url.firstElementChild.classList.toggle('fa-share')
-      url.firstElementChild.classList.toggle('fa-check')
-    });
-  }));
 </script>

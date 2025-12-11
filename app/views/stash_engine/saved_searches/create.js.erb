@@ -1,0 +1,3 @@
+// edit the modal dialog
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'create_search') %>";
+document.getElementById('close_dialog').addEventListener('click', () => document.getElementById('genericModalDialog').close());

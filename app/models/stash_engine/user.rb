@@ -38,6 +38,7 @@ module StashEngine
     belongs_to :affiliation, class_name: 'StashDatacite::Affiliation', optional: true
     belongs_to :tenant, class_name: 'StashEngine::Tenant', optional: true
     has_many :admin_searches, class_name: 'StashEngine::AdminSearch', dependent: :destroy
+    has_many :public_searches, class_name: 'StashEngine::PublicSearch', dependent: :destroy
     has_one :flag, class_name: 'StashEngine::Flag', as: :flaggable, dependent: :destroy
     has_one :email_token, class_name: 'StashEngine::EmailToken', dependent: :destroy
     has_one :api_application,
