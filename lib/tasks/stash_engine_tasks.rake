@@ -460,7 +460,7 @@ namespace :identifiers do
         in_ip = false
         date_entered_ip = i.created_at
 
-        who_pays = if i.journal&.will_pay?
+        who_pays = if i.journal_will_pay?
                      'journal'
                    elsif i.institution_will_pay?
                      'institution'
@@ -536,7 +536,7 @@ namespace :identifiers do
         in_ppr = false
         date_entered_ppr = 'ERROR'
 
-        who_pays = if i.journal&.will_pay?
+        who_pays = if i.journal_will_pay?
                      'journal'
                    elsif i.institution_will_pay?
                      'institution'
