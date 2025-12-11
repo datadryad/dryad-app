@@ -14,7 +14,7 @@ module StashEngine
         return false if latest_resource.resource_type&.resource_type == 'collection'
         return PaymentLimitsService.new(latest_resource, payer).limits_exceeded? if sponsored?
 
-        !journal_will_pay? && !institution_will_pay? && !funder_will_pay?
+        true
       end
 
       def payer
