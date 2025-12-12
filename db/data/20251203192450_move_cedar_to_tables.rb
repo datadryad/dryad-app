@@ -84,7 +84,11 @@ class MoveCedarToTables < ActiveRecord::Migration[8.0]
     end
     StashEngine::Resource.where.not(old_cedar_json: ['', nil]).each do |r|
       json = JSON.parse(r.old_cedar_json)
-      CedarJson.create(resource_id: r.id, template_id: json['template']['id'], json: json['metadata'], updated_at: json['updated'])
+      if json['template'].blank?
+        r.update(old_cedar_json: nil)
+      else
+        CedarJson.create(resource_id: r.id, template_id: json['template']['id'], json: json['metadata'], updated_at: json['updated'])
+      end
     end
   end
 
