@@ -1,14 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import RorAutocomplete from '../RorAutocomplete';
+import {useStore} from '../../../shared/store';
 /* eslint-disable react/no-array-index-key */
 
 export default function Affiliations({
   formRef, id, affiliations, setAffiliations,
 }) {
+  const {updateStore} = useStore();
   const [affs, setAffs] = useState(affiliations.length > 0 ? affiliations : [{long_name: '', ror_id: ''}]);
 
   useEffect(() => {
     setAffiliations(affs);
+    updateStore({refreshFees: true});
   }, [affs]);
 
   const updateName = (i, v) => {

@@ -7,10 +7,14 @@ module StashEngine
 
       # Check if the user must pay for this identifier, or if payment is
       # otherwise covered - but send waivers to stripe
+      # if payer has a LDF limit set and it is reached:
+      #  - institution should pay DPC
+      #  - user pays LDF calculated as per institution
       def user_must_pay?
         return false if latest_resource.resource_type&.resource_type == 'collection'
+        return PaymentLimitsService.new(latest_resource, payer).limits_exceeded? if sponsored?
 
-        !journal_will_pay? && !institution_will_pay? && !funder_will_pay?
+        true
       end
 
       def payer
@@ -21,15 +25,13 @@ module StashEngine
         nil
       end
 
-      def payer_2025?
+      def payer_2025?(current_payer = nil)
         return false if old_payment_system
 
-        current_payer = payer
+        current_payer ||= payer
         return true if current_payer.nil?
 
-        return current_payer.payment_configuration&.payment_plan.to_s == '2025' if current_payer.is_a? StashEngine::Journal
-
-        current_payer.payment_configuration&.payment_plan.to_s == '2025'
+        PayersService.new(current_payer).is_2025_payer?
       end
 
       def payer_name
@@ -56,7 +58,7 @@ module StashEngine
         true
       end
 
-      def sponsored
+      def sponsored?
         payer.present?
       end
 
