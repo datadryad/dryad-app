@@ -15,9 +15,9 @@ module Tasks
 
       def call
         items = StashEngine::Identifier
-                  .joins(:process_date)
-                  .where(pub_state: 'published', process_date: { approved: start_time..end_time })
-                  .includes(:curation_activities, latest_resource: [:curator, :tenant, journal: :sponsor])
+          .joins(:process_date)
+          .where(pub_state: 'published', process_date: { approved: start_time..end_time })
+          .includes(:curation_activities, latest_resource: [:curator, :tenant, { journal: :sponsor }])
 
         CSV.open(File.join(Rails.root.join('reports'), @report_name), 'wb') do |csv|
           csv << csv_header
@@ -37,7 +37,7 @@ module Tasks
               ident.most_recent_curator&.name,
               curation_time,
               aar_time,
-              (curation_time + aar_time).round(2),
+              (curation_time + aar_time).round(2)
             ]
           end
         end
