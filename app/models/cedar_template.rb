@@ -11,6 +11,7 @@
 #
 # Indexes
 #
+#  index_cedar_templates_on_id            (id)
 #  index_cedar_templates_on_word_bank_id  (word_bank_id)
 #
 # Foreign Keys
