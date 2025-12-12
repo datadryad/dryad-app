@@ -11,7 +11,7 @@ module Stash
           def reindex_all
             count = where(status: %i[active inactive]).count
             where(status: %i[active inactive]).each_with_index do |a, i|
-              puts "Reindexing #{i + 1} of #{count}"
+              puts "Reindexing #{i + 1} of #{count}" if (i + 1) % 500 == 0
               a.reindex
             end
           end
