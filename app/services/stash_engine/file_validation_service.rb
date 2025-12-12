@@ -46,7 +46,7 @@ module StashEngine
 
     def copy_digests
       created = file.original_deposit_file
-      return if created.digest == file.digest
+      return if created.digest == file.digest || created.digest.blank?
 
       puts "   Copying digest from file id #{created.id} to file id #{file.id}"
       file.digest       = created.digest
@@ -62,15 +62,27 @@ module StashEngine
     def fetch_s3_digest(bucket_name: APP_CONFIG[:s3][:merritt_bucket], force_fetch: false)
       return true if file.digest? && !force_fetch
 
-      puts "Fetching S3 digest for file #{file.id}"
+      puts "Fetching S3 digest for file #{file.id} form #{bucket_name}"
       s3 = Stash::Aws::S3.new(s3_bucket_name: bucket_name)
-      info = s3.head_object(s3_key: file.s3_permanent_path)
+
+      # check V3 path and also ols Merritt path
+      v3_path = file.s3_permanent_path
+      ark_path = StashEngine::DataFile.mrt_bucket_path(file: file)
+
+      success = fetch_s3_digest_for_path(path: v3_path, s3: s3)
+      fetch_s3_digest_for_path(path: ark_path, s3: s3) unless success
+    end
+
+    private
+
+    def fetch_s3_digest_for_path(path:, s3:)
+      info = s3.head_object(s3_key: path)
 
       if info&.metadata
-        pp digest_info = fetch_digest(info.metadata)
+        digest_info = fetch_digest(info.metadata)
         file.update!(digest_info) if digest_info
       else
-        puts "   No digest metadata on S3 for file #{file.id} on bucket #{bucket_name}"
+        puts "   No digest metadata on S3 for file #{file.id}"
         return false
       end
 
@@ -79,8 +91,6 @@ module StashEngine
       puts "   Error fetching S3 data for file #{file.id}: #{e.message}"
       false
     end
-
-    private
 
     def fetch_digest(metadata)
       S3_DIGEST_TYPES.each do |digest_type|

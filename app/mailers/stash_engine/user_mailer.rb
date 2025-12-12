@@ -152,6 +152,17 @@ module StashEngine
            subject: "#{rails_env}File checksum validation error")
     end
 
+    def deep_archive_file_validation_error(file, bucket_name)
+      logger.warn('Unable to validate file checksum; nil file') unless file.present?
+      @zenodo_error_emails = APP_CONFIG['zenodo_error_email']
+      return unless file.present? && @zenodo_error_emails.present?
+
+      @file = file
+      @bucket_name = bucket_name
+      mail(to: @zenodo_error_emails,
+           subject: "#{rails_env}Deep archive file checksum validation error")
+    end
+
     def feedback_signup(message)
       @message = message
       @submission_error_emails = APP_CONFIG['submission_error_email'] || [@helpdesk_email]
