@@ -4,6 +4,8 @@ require 'csv'
 module Tasks
   module Reports
     class TatsReport
+      include StashEngine::ApplicationHelper
+
       attr_reader :start_time, :end_time
 
       def initialize(year:, month:)
@@ -23,6 +25,7 @@ module Tasks
           csv << csv_header
           items.each do |ident|
             service = TimeInStatus.new(identifier: ident, return_in: :days)
+            submitted_time = service.time_in_status %w[submitted]
             curation_time = service.time_in_status %w[curation]
             aar_time = service.time_in_status %w[action_required]
 
@@ -30,14 +33,15 @@ module Tasks
               ident.id,
               ident.to_s,
               ident.latest_resource.title,
-              ident.storage_size,
+              filesize(ident.storage_size),
               ident.latest_resource.tenant&.short_name,
               ident.journal&.title,
               ident.journal&.sponsor&.name,
               ident.most_recent_curator&.name,
+              submitted_time,
               curation_time,
               aar_time,
-              (curation_time + aar_time).round(2)
+              (submitted_time + curation_time + aar_time).round(2)
             ]
           end
         end
@@ -49,7 +53,8 @@ module Tasks
       def csv_header
         [
           'ID', 'DOI', 'Title', 'Size', 'Dryad Partner', 'Journal', 'Journal Sponsor', 'Curator',
-          'Time with curator', 'Time with submitter', 'Time from submission to publication'
+          'Time in submitted (Submitted)', 'Time with curator (Curation)', 'Time with author (AAR)',
+          'Time from submission to publication'
         ]
       end
     end
