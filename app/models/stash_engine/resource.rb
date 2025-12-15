@@ -4,7 +4,6 @@
 #
 #  id                        :integer          not null, primary key
 #  accepted_agreement        :boolean
-#  cedar_json                :text(65535)
 #  deleted_at                :datetime
 #  display_readme            :boolean          default(TRUE)
 #  download_uri              :text(65535)
@@ -14,6 +13,7 @@
 #  hold_for_peer_review      :boolean          default(FALSE)
 #  loosen_validation         :boolean          default(FALSE)
 #  meta_view                 :boolean          default(FALSE)
+#  old_cedar_json            :text(65535)
 #  peer_review_end_date      :datetime
 #  preserve_curation_status  :boolean          default(FALSE)
 #  publication_date          :datetime
@@ -98,6 +98,7 @@ module StashEngine
     # download tokens are for validating zip assembly requests by the zipping lambda
     has_one :download_token, class_name: 'StashEngine::DownloadToken', dependent: :destroy
     has_one :language, class_name: 'StashDatacite::Language', dependent: :destroy
+    has_one :cedar_json, class_name: 'CedarJson', dependent: :destroy
     has_many :descriptions, class_name: 'StashDatacite::Description', dependent: :destroy
     has_many :contributors, class_name: 'StashDatacite::Contributor', dependent: :destroy
     has_many :funders, -> { where(contributor_type: 'funder') }, class_name: 'StashDatacite::Contributor'
@@ -139,7 +140,7 @@ module StashEngine
     end
 
     amoeba do
-      include_association %i[authors generic_files contributors descriptions geolocations temporal_coverages
+      include_association %i[authors generic_files contributors descriptions cedar_json geolocations temporal_coverages
                              related_identifiers resource_type rights flag sizes resource_publications roles]
       customize(->(old_resource, new_resource) {
         # someone made the resource_state have IDs in both directions in the DB, so it needs to be removed to initialize a new one
@@ -441,13 +442,13 @@ module StashEngine
       filename = 'DisciplineSpecificMetadata.json'
 
       # remove previous file and exit if file has been deleted
-      if !cedar_json || cedar_json.empty?
+      if !cedar_json || cedar_json.json.blank?
         old_file = data_files.present_files.where(upload_file_name: filename).first
         old_file.smart_destroy! if old_file&.digest
         return
       end
 
-      add_data_as_file(filename, cedar_json)
+      add_data_as_file(filename, JSON.generate(cedar_json.json))
     end
 
     # We create one of some editing items that aren't required and might not be filled in.  Also users may add a blank

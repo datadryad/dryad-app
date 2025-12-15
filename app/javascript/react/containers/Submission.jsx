@@ -25,7 +25,7 @@ import SubmissionHelp, {
 /* eslint-disable jsx-a11y/no-autofocus */
 
 function Submission({
-  submission, user, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
+  submission, user, s3_dir_name, config_s3, config_maximums, config_payments, change_tenant,
 }) {
   const location = useLocation();
   const subRef = useRef([]);
@@ -74,7 +74,6 @@ function Submission({
         resource={resource}
         setResource={setResource}
         curator={user.curator}
-        cedar={config_cedar}
       />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
