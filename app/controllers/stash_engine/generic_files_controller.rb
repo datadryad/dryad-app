@@ -123,6 +123,7 @@ module StashEngine
       render json: { error: "Filename #{params[:newfilename]} is in use" } and return if duplicates.present?
 
       @file.update(download_filename: params[:newfilename])
+      @resource.update(has_file_changes: true)
       readme_update
 
       render json: {

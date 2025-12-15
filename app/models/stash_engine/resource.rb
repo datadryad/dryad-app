@@ -8,6 +8,7 @@
 #  display_readme            :boolean          default(TRUE)
 #  download_uri              :text(65535)
 #  file_view                 :boolean          default(FALSE)
+#  has_file_changes          :boolean          default(FALSE)
 #  has_geolocation           :boolean          default(FALSE)
 #  hold_for_peer_review      :boolean          default(FALSE)
 #  loosen_validation         :boolean          default(FALSE)
@@ -36,6 +37,7 @@
 #
 #  index_stash_engine_resources_on_current_editor_id             (current_editor_id)
 #  index_stash_engine_resources_on_deleted_at                    (deleted_at)
+#  index_stash_engine_resources_on_has_file_changes              (has_file_changes)
 #  index_stash_engine_resources_on_identifier_id                 (identifier_id)
 #  index_stash_engine_resources_on_identifier_id_and_created_at  (identifier_id,created_at) UNIQUE
 #  index_stash_engine_resources_on_tenant_id                     (tenant_id)
@@ -147,6 +149,7 @@ module StashEngine
         new_resource.publication_date = nil
         new_resource.meta_view = false
         new_resource.file_view = false
+        new_resource.has_file_changes = false
 
         new_resource.generic_files.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
@@ -254,8 +257,7 @@ module StashEngine
     end
 
     scope :with_file_changes, -> do
-      joins(:data_files)
-        .where(stash_engine_generic_files: { file_state: %w[created deleted], type: 'StashEngine::DataFile' })
+      where(has_file_changes: true)
     end
 
     scope :files_published, -> do

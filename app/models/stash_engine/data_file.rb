@@ -44,6 +44,7 @@ module StashEngine
     has_many :container_files, class_name: 'StashEngine::ContainerFile', dependent: :delete_all
 
     after_commit :recalculate_total, unless: :skip_total_recalculation
+    after_commit :resource_file_changes
 
     def recalculate_total
       StashEngine::Resource.find_by(id: resource.id)&.update(total_file_size: resource.data_files.present_files.sum(:upload_file_size))
@@ -343,5 +344,11 @@ module StashEngine
         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
     end
 
+    def resource_file_changes
+      return unless file_state.in?(%w[created deleted])
+      return if download_filename == 'README.md'
+
+      resource.update(has_file_changes: true)
+    end
   end
 end
