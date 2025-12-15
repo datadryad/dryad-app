@@ -346,6 +346,7 @@ module StashEngine
 
     def resource_file_changes
       return unless file_state.in?(%w[created deleted])
+      return if download_filename == 'README.md'
 
       resource.update(has_file_changes: true)
     end

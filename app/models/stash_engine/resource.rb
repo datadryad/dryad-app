@@ -149,6 +149,7 @@ module StashEngine
         new_resource.publication_date = nil
         new_resource.meta_view = false
         new_resource.file_view = false
+        new_resource.has_file_changes = false
 
         new_resource.generic_files.each do |file|
           raise "Expected #{new_resource.id}, was #{file.resource_id}" unless file.resource_id == new_resource.id
