@@ -41,11 +41,11 @@ module Tasks
               ident.journal&.sponsor&.name,
               ident.most_recent_curator&.name,
               submitted_time,
-              (submitted_time * 100/total_time.to_f).round(2),
+              (submitted_time * 100 / total_time.to_f).round(2),
               curation_time,
-              (curation_time * 100/total_time.to_f).round(2),
+              (curation_time * 100 / total_time.to_f).round(2),
               aar_time,
-              (aar_time * 100/total_time.to_f).round(2),
+              (aar_time * 100 / total_time.to_f).round(2),
               total_time
             ]
           end
