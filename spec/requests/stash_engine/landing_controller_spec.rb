@@ -6,8 +6,6 @@ require 'byebug'
 # see https://relishapp.com/rspec/rspec-rails/v/3-8/docs/request-specs/request-spec
 module StashEngine
   RSpec.describe LandingController, type: :request do
-
-    include MerrittHelper
     include DatasetHelper
     include DatabaseHelper
     include Mocks::CurationActivity

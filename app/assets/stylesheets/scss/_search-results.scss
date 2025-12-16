@@ -122,6 +122,17 @@
 }
 
 .search-filters {
+  .search-filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2ch;
+
+    #search_save i {
+      margin-right: .35ch;
+    }
+  }
   h3, h4 {
     margin: 0;
   }

@@ -26,6 +26,100 @@ bots:
     weight:
       adjust: 10
 
+  # Requires a subscription to Thoth to use, see
+  # https://anubis.techaro.lol/docs/admin/thoth#geoip-based-filtering
+  - name: countries-with-aggressive-scrapers
+    action: WEIGH
+    geoip:
+      countries:
+        - BR
+        - CN
+    weight:
+      adjust: 10
+
+  # Requires a subscription to Thoth to use, see
+  # https://anubis.techaro.lol/docs/admin/thoth#asn-based-filtering
+  - name: aggressive-asns-without-functional-abuse-contact
+    action: WEIGH
+    asns:
+      match:
+        - 13335 # Cloudflare
+        - 136907 # Huawei Cloud
+        - 45102 # Alibaba Cloud
+    weight:
+      adjust: 10
+
+  # ## System load based checks.
+  # # If the system is under high load, add weight.
+  # - name: high-load-average
+  #   action: WEIGH
+  #   expression: load_1m >= 10.0 # make sure to end the load comparison in a .0
+  #   weight:
+  #     adjust: 20
+
+  ## If your backend service is running on the same operating system as Anubis,
+  ## you can uncomment this rule to make the challenge easier when the system is
+  ## under low load.
+  ##
+  ## If it is not, remove weight.
+  # - name: low-load-average
+  #   action: WEIGH
+  #   expression: load_15m <= 4.0 # make sure to end the load comparison in a .0
+  #   weight:
+  #     adjust: -10
+
+  # Assert behaviour that only genuine browsers display. This ensures that Chrome
+  # or Firefox versions
+  - name: realistic-browser-catchall
+    expression:
+      all:
+        - '"User-Agent" in headers'
+        - '( userAgent.contains("Firefox") ) || ( userAgent.contains("Chrome") ) || ( userAgent.contains("Safari") )'
+        - '"Accept" in headers'
+        - '"Sec-Fetch-Dest" in headers'
+        - '"Sec-Fetch-Mode" in headers'
+        - '"Sec-Fetch-Site" in headers'
+        - '"Accept-Encoding" in headers'
+        - '( headers["Accept-Encoding"].contains("zstd") || headers["Accept-Encoding"].contains("br") )'
+        - '"Accept-Language" in headers'
+    action: WEIGH
+    weight:
+      adjust: -10
+
+  # The Upgrade-Insecure-Requests header is typically sent by browsers, but not always
+  - name: upgrade-insecure-requests
+    expression: '"Upgrade-Insecure-Requests" in headers'
+    action: WEIGH
+    weight:
+      adjust: -2
+
+  # Chrome should behave like Chrome
+  - name: chrome-is-proper
+    expression:
+      all:
+        - userAgent.contains("Chrome")
+        - '"Sec-Ch-Ua" in headers'
+        - 'headers["Sec-Ch-Ua"].contains("Chromium")'
+        - '"Sec-Ch-Ua-Mobile" in headers'
+        - '"Sec-Ch-Ua-Platform" in headers'
+    action: WEIGH
+    weight:
+      adjust: -5
+
+  - name: should-have-accept
+    expression: '!("Accept" in headers)'
+    action: WEIGH
+    weight:
+      adjust: 5
+
+  # Generic catchall rule
+  - name: generic-browser
+    user_agent_regex: >-
+      Mozilla|Opera
+    action: WEIGH
+    weight:
+      adjust: 10
+
 dnsbl: false
 
 # By default, send HTTP 200 back to clients that either get issued a challenge
@@ -74,14 +168,32 @@ thresholds:
       # https://anubis.techaro.lol/docs/admin/configuration/challenges/proof-of-work
       algorithm: fast
       difficulty: 2 # two leading zeros, very fast for most clients
-      report_as: 2
-
-  # For clients that are browser like and have gained many points from custom rules
-  - name: extreme-suspicion
-    expression: weight >= 20
+      report_as: 3
+  - name: mild-proof-of-work
+    expression:
+      all:
+        - weight >= 20
+        - weight < 30
     action: CHALLENGE
     challenge:
       # https://anubis.techaro.lol/docs/admin/configuration/challenges/proof-of-work
       algorithm: fast
       difficulty: 4
       report_as: 4
+  # For clients that are browser like and have gained many points from custom rules
+  - name: extreme-suspicion
+    expression: weight >= 30
+    action: CHALLENGE
+    challenge:
+      # https://anubis.techaro.lol/docs/admin/configuration/challenges/proof-of-work
+      algorithm: fast
+      difficulty: 6
+      report_as: 6
+
+#impressum:
+#  footer: >-
+#    Footer message on all pages
+#  page:
+#    title: Custom title
+#    body: >-
+#      Custom page

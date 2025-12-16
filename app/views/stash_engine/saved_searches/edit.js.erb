@@ -1,0 +1,7 @@
+document.getElementById('admin_searches_list')?.classList?.add('with_form')
+document.getElementById('saved_search<%= @saved_search.id %>').innerHTML = "<%= escape_javascript(render partial: 'stash_engine/saved_searches/edit_search', locals: { saved_search: @saved_search }) %>";
+
+document.getElementById('cancel_save<%= @saved_search.id %>').addEventListener('click', (e) => {
+  e.preventDefault()
+  document.getElementById('saved_search<%= @saved_search.id %>').outerHTML = "<%= escape_javascript(render partial: 'stash_engine/saved_searches/saved_search', locals: { saved_search: @saved_search, index: @index }) %>";
+})

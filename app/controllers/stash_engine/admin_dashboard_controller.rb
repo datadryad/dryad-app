@@ -331,10 +331,13 @@ module StashEngine
       return unless @role_object.is_a?(StashEngine::Funder) || @filters.dig(:funder, :value).present?
 
       funder_ror = @role_object.is_a?(StashEngine::Funder) ? @role_object.ror_id : @filters.dig(:funder, :value)
+
+      funder_ror = StashDatacite::Contributor.related_rors(funder_ror) unless @filters[:funder_limit].present?
+
       @datasets = @datasets.joins(
-        "inner join dcs_contributors on stash_engine_resources.id = dcs_contributors.resource_id
-        and dcs_contributors.contributor_type = 'funder' and dcs_contributors.name_identifier_id = '#{funder_ror}'"
+        "inner join dcs_contributors funders on stash_engine_resources.id = funders.resource_id and funders.contributor_type = 'funder'"
       )
+        .where('funders.name_identifier_id': funder_ror)
     end
 
     def date_string(date_hash)

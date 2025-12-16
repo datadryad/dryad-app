@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import Description from './Description';
 import Cedar from './Cedar';
-import cedarCheck from './cedarCheck';
 
 export default function DescriptionGroup({
-  resource, setResource, curator, cedar, current,
+  resource, setResource, curator, current,
 }) {
   const [methods, setMethods] = useState(null);
   const [usage, setUsage] = useState(null);
@@ -12,7 +12,7 @@ export default function DescriptionGroup({
 
   const [openMethods, setOpenMethods] = useState(false);
   const [showCedar, setShowCedar] = useState(false);
-  const [template, setTemplate] = useState(null);
+  const [templates, setTemplates] = useState(null);
 
   const abstractLabel = {
     label: 'Abstract',
@@ -42,12 +42,14 @@ export default function DescriptionGroup({
   }, [current]);
 
   useEffect(() => {
-    if (current) {
-      const {check, template: templ} = cedarCheck(resource, cedar.templates);
-      setShowCedar(check);
-      if (templ) setTemplate({id: templ[0], title: templ[1]});
+    async function cedarCheck() {
+      axios.get(`/cedar/check/${resource.id}`).then((data) => {
+        setShowCedar(data.data.check);
+        setTemplates(data.data.templates);
+      });
     }
-  }, [current, resource]);
+    if (current) cedarCheck();
+  }, [current, abstract?.description, resource.title, resource.subjects, resource.resource_publication?.publication_name]);
 
   if (!abstract?.id) {
     return <p><i className="fas fa-spinner fa-spin" role="img" aria-label="Loading..." /></p>;
@@ -69,8 +71,8 @@ export default function DescriptionGroup({
           {usage?.description && (
             <Description dcsDescription={usage} setResource={setResource} mceLabel={usageLabel} curator={curator} />
           )}
-          {showCedar && template && (
-            <Cedar resource={resource} setResource={setResource} editorUrl={cedar.editorUrl} templates={cedar.templates} singleTemplate={template} />
+          {showCedar && templates && (
+            <Cedar resource={resource} setResource={setResource} templates={templates} />
           )}
         </>
       )}

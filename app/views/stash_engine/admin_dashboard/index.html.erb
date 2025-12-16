@@ -6,7 +6,7 @@
 </div>
 <div class="admin-dashboard-buttons" style="margin-top: 2rem;">
   <div class="admin-dashboard-results" style="min-height: 40px; display: flex; align-items: center;">
-    <b role="heading" aria-level="2" id="search_head">Search results<% if @saved_search %>: <a href="/account#saved" style="font-weight: normal;"><%= @saved_search.title %></a><% end %></b>
+    <b role="heading" aria-level="2" id="search_head">Search results<% if @saved_search %>: <a href="/account/saved_searches" style="font-weight: normal;"><%= @saved_search.title %></a><% end %></b>
     <% if @shared_search %><b style="margin-right: auto">Imported search: <%= @shared_search.title %></b><% end %>
     <button type="button" class="o-button__plain-text7" id="search_open" aria-controls="search_form" aria-expanded="<%= !unaltered %>"><i class="fa fa-<%= unaltered ? 'sliders' : 'square-caret-up'%>" aria-hidden="true"></i>Fields and filters</button>
   </div>
