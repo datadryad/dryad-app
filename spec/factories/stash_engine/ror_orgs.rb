@@ -9,7 +9,7 @@
 #  home_page  :string(191)
 #  isni_ids   :json
 #  name       :string(191)
-#  status     :integer          default(0)
+#  status     :integer          default("active")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  ror_id     :string(191)

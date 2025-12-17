@@ -20,6 +20,14 @@ class SearchController < ApplicationController
     @facets = search['facet_counts']
   end
 
+  def author_profile
+    @author = author
+    service = StashApi::SolrSearchService.new(query: '', filters: params.except(:q, :action, :controller))
+    search = service.search(page: page, per_page: per_page, fields: "#{fields} dryad_related_publication_issn_s", facet: false)
+    @results = search['response']
+    @articles = articles
+  end
+
   private
 
   def fields
@@ -33,11 +41,27 @@ class SearchController < ApplicationController
 
   def profiles
     d = []
-    d << StashEngine::Author.joins(:resource).where(resource: { solr_indexed: true }, author_orcid: params['orcid']).last if params['orcid'].present?
+    d << author if params['orcid'].present?
     [params['affiliation'], params['org'], params['funder']].flatten.reject(&:blank?).each do |o|
       d << StashEngine::RorOrg.find_by(ror_id: o)
     end
     d.reject(&:blank?)
+  end
+
+  def author
+    StashEngine::Author.joins(:resource).where(resource: { solr_indexed: true }, author_orcid: params[:orcid]).last
+  end
+
+  def articles
+    return unless @results['docs'].present?
+
+    @results['docs'].map do |d|
+      id = StashEngine::Identifier.find_by(identifier: d['dc_identifier_s'].gsub('doi:', ''))
+      doi = id&.publication_article_doi
+      next nil unless doi.present?
+
+      StashEngine::CounterCitation.citation_metadata(doi: doi, stash_identifier: id).metadata
+    end
   end
 
   def page

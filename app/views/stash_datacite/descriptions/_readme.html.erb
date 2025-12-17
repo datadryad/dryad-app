@@ -2,8 +2,12 @@
   <% content = review.readme_content %>
   <div id="landing_readme">
     <% readme_html = readme_render content.sub(/^# /, '# README: ') %>
-    <% readme_parsed = Nokogiri::HTML5::DocumentFragment.parse(readme_html) %>
-    <% h2 = display_desc(readme_parsed.css('h2')&.first&.inner_html)&.html_safe %>
+    <% readme_parsed = Nokogiri::HTML5::DocumentFragment.parse(readme_html)
+      pres = readme_parsed.css('code, samp, kbd')
+      pres.each do |pre|
+        pre.content = CGI.unescapeHTML(pre.content)
+      end
+      h2 = display_desc(readme_parsed.css('h2')&.first&.inner_html)&.html_safe %>
     <% if params[:controller].include?('landing') %>
       <h2 class="expand-button"><button id="readme" aria-expanded="false" aria-controls="readme-sec"><%= h2.presence || 'README' %></button></h2>
     <% else %>

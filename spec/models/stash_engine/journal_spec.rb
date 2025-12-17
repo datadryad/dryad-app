@@ -10,8 +10,6 @@
 #  journal_code            :string(191)
 #  manuscript_number_regex :string(191)
 #  notify_contacts         :text(65535)
-#  old_covers_ldf          :boolean          default(FALSE)
-#  old_payment_plan_type   :string
 #  peer_review_custom_text :text(65535)
 #  preprint_server         :boolean          default(FALSE)
 #  review_contacts         :text(65535)

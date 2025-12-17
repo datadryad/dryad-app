@@ -255,6 +255,15 @@ Rails.application.routes.draw do
     post 'account/edit', to: 'user_account#edit', as: 'edit_account'
     post 'account/api', to: 'user_account#api_application', as: 'get_api'
     post 'account/token', to: 'user_account#api_token', as: 'get_token'
+
+    # saved_searches
+    get 'account/saved_searches', to: 'saved_searches#index', as: 'saved_searches'
+    get 'saved_search/new', to: 'saved_searches#new', as: 'new_saved_search'
+    post 'saved_search', to: 'saved_searches#create'
+    get 'saved_search/:id', to: 'saved_searches#edit', as: 'saved_search_edit'
+    match 'saved_search/:id', to: 'saved_searches#update', via: %i[put patch], as: 'update_saved_search'
+    delete 'saved_search/:id', to: 'saved_searches#destroy', as: 'saved_search_delete'
+
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     # page for viewing a single user
@@ -293,13 +302,6 @@ Rails.application.routes.draw do
     get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'
     match 'admin_search/:id', to: 'admin_dashboard#save_search', via: %i[put patch], as: 'save_admin_search'
 
-    # saved_searches
-    # get 'account/saved_searches/:type', to: 'saved_searches#index'
-    post 'saved_search', to: 'saved_searches#create'
-    get 'saved_search/:id', to: 'saved_searches#edit', as: 'saved_search_edit'
-    match 'saved_search/:id', to: 'saved_searches#update', via: %i[put patch], as: 'update_saved_search'
-    delete 'saved_search/:id', to: 'saved_searches#destroy', as: 'saved_search_delete'
-
     # activity log
     get 'ds_admin/:id', to: 'admin_datasets#index', as: 'activity_log'
     get 'ds_admin/:id/activity_log', to: 'admin_datasets#activity_log', as: 'activity'
@@ -322,9 +324,6 @@ Rails.application.routes.draw do
     post 'curation_note/:id', to: 'curation_activity#curation_note', as: 'curation_note'
     post 'file_note/:id', to: 'curation_activity#file_note', as: 'file_note'
     get 'file_note/:resource_id', to: 'curation_activity#make_file_note'
-
-    # admin report for dataset funders
-    get 'ds_admin_funders', to: 'admin_dataset_funders#index', as: 'ds_admin_funders'
 
     # routing for submission queue controller
     get 'submission_queue', to: 'submission_queue#index'
@@ -496,6 +495,7 @@ Rails.application.routes.draw do
     get '/', to: 'search', as: 'new_search'
     get '/advanced', to: 'advanced', as: "advanced_search"
   end
+  get 'author/:orcid', to: 'search#author_profile', as: 'author_profile'
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
   get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
@@ -520,8 +520,11 @@ Rails.application.routes.draw do
   get '/metadata_entry_pages/MaterialIcons-Regular.woff2', to: redirect('/MaterialIcons-Regular.woff2')
   get '/metadata_entry_pages/MaterialIcons-Regular.ttf', to: redirect('/MaterialIcons-Regular.ttf')
 
-  get '/cedar-config', to: 'cedar#json_config'
-  post '/cedar-save', to: 'cedar#save'
+  get '/cedar/config', to: 'cedar#json_config'  
+  get '/cedar/:id/template', to: 'cedar#template'
+  get '/cedar/check/:resource_id', to: 'cedar#check'
+  post '/cedar/save/:resource_id', to: 'cedar#save'
+  delete '/cedar/save/:resource_id', to: 'cedar#delete'
 
   ########################## Redirects ######################################
 
@@ -552,6 +555,7 @@ Rails.application.routes.draw do
   get '/interested', to: redirect('/contact#get-involved')
   get '/stash/interested', to: redirect('/contact#get-involved')
   get '/stash/ds_admin', to: redirect('/admin_dashboard')
+  get '/ds_admin_funders', to: redirect('/admin_dashboard')
 
   get '/stash', to: redirect('/')
   get '/stash/*path', to: redirect { |params, req|

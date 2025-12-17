@@ -47,7 +47,7 @@
   </div>
   <div class="input-stack">
     <span class="input-line">
-      <span><b>Submitter:</b> <span id="submitter_name"><%= r.submitter.name %></span></span>
+      <span><b>Submitter:</b> <span id="submitter_name"><%= r.submitter&.name&.presence || '<em>Not set</em>'.html_safe %></span></span>
       <% if policy([:stash_engine, :admin_datasets]).edit_submitter? %>
         <%= form_with(url: ds_admin_popup_path(id: @identifier&.id, field: 'submitter'), method: :get, local: false) do %>
           <button class="o-button__plain-text7" aria-haspopup="dialog" aria-label="Edit submitter" title="Edit submitter"><i class="fas fa-pencil" aria-hidden="true"></i></button>

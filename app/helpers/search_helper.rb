@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ModuleLength
 module SearchHelper
   def filter_to_term
     {
@@ -105,4 +106,18 @@ module SearchHelper
     str.html_safe
   end
 
+  def result_citation(citation, issn)
+    c = JSON.parse(citation)
+    str = c['author'].first(3).map { |a| a['family'] }.join(', ')
+    str += ', et al' if c['author'].size > 3
+    str += '. '
+    str += "(#{c.dig('issued', 'date-parts').first.first}) " if c.dig('issued', 'date-parts').present?
+    str += " <a href=\"https://doi.org/#{c['DOI']}\" target=\"_blank\" rel=\"noreferrer\">#{c['title']}"
+    str += '<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>. '
+    str += "<a href=\"#{new_search_path(journalIssn: issn)}\">" if issn.present?
+    str += "<em>#{c['container-title']}</em>"
+    str += '</a>' if issn.present?
+    str.html_safe
+  end
 end
+# rubocop:enable Metrics/ModuleLength

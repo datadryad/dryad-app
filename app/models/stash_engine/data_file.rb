@@ -44,6 +44,7 @@ module StashEngine
     has_many :container_files, class_name: 'StashEngine::ContainerFile', dependent: :delete_all
 
     after_commit :recalculate_total, unless: :skip_total_recalculation
+    after_commit :resource_file_changes
 
     def recalculate_total
       StashEngine::Resource.find_by(id: resource.id)&.update(total_file_size: resource.data_files.present_files.sum(:upload_file_size))
@@ -123,14 +124,14 @@ module StashEngine
       return permanent_key if s3.exists?(s3_key: permanent_key)
 
       # If it's not in the v3 hierarchy, check in the Merritt/ark hierarchy
-      f2 = DataFile.find_merritt_deposit_file(file: f) # find where Merritt has decided to store the file, may be an earlier creation
+      f2 = StashEngine::DataFile.find_merritt_deposit_file(file: f) # find where Merritt has decided to store the file, may be an earlier creation
 
-      return DataFile.mrt_bucket_path(file: f2) unless f2.nil?
+      return StashEngine::DataFile.mrt_bucket_path(file: f2) unless f2.nil?
 
       # If it gets here, then Merritt has some edge cases where not all entries are represented in our database file entries.
       # Typically, these are specially migrated legacy Dash datasets with Merritt having multiple versions internally, but
       # Dryad has fewer (like Merritt v3 and Dryad v1 and Merritt versions 1 & 2 are not represented in our database at all)
-      DataFile.find_merritt_deposit_path(before_file: f)
+      StashEngine::DataFile.find_merritt_deposit_path(before_file: f)
     end
 
     # the permanent storage URL, not the staged storage URL
@@ -343,5 +344,11 @@ module StashEngine
         .select { |i| File.directory?(i) }.select { |i| File.mtime(i) + 7.days < Time.new.utc }.map { |i| File.basename(i) }
     end
 
+    def resource_file_changes
+      return unless file_state.in?(%w[created deleted])
+      return if download_filename == 'README.md'
+
+      resource.update(has_file_changes: true)
+    end
   end
 end

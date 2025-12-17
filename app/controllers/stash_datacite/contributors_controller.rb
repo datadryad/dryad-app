@@ -15,7 +15,7 @@ module StashDatacite
 
     # POST /contributors
     def create
-      @contributor = find_or_initialize
+      @contributor = Contributor.new(contributor_params)
       respond_to do |format|
         if @contributor.save
           check_reindex
@@ -81,7 +81,7 @@ module StashDatacite
 
     # GET /contributors/autocomplete?query={query_term}
     def autocomplete
-      # Limited to existing funder selections — only used on admin dashboard currently
+      # Limited to existing funder selections — not currently used
       partial_term = params['query']
       if partial_term.blank?
         render json: nil
@@ -137,29 +137,6 @@ module StashDatacite
         :id, :contributor_name, :contributor_type, :identifier_type, :name_identifier_id, :affiliation_id, :funder_order, :resource_id,
         :award_number, :award_uri, :award_title, :award_description
       )
-    end
-
-    def find_or_initialize
-      # If it's the same as the previous one, but the award number changed from blank to non-blank, just add the award number
-      contrib_name = contributor_params[:contributor_name].squish
-      unless contrib_name.blank?
-        contributor = Contributor.where('resource_id = ? AND (contributor_name = ? OR contributor_name = ?)',
-                                        contributor_params[:resource_id],
-                                        contrib_name,
-                                        "#{contrib_name}*")&.last
-      end
-      if contributor.present?
-        if contributor.award_number.blank? || contributor.award_description.blank? || contributor.award_title.blank?
-          contributor.award_number = contributor_params[:award_number]
-          contributor.award_description = contributor_params[:award_description].squish if contributor_params[:award_description].present?
-          contributor.award_title = contributor_params[:award_title].squish if contributor_params[:award_title].present?
-        else
-          contributor.funder_order = contributor_params[:funder_order]
-        end
-      else
-        contributor = Contributor.new(contributor_params)
-      end
-      contributor
     end
 
     def check_reorder_valid

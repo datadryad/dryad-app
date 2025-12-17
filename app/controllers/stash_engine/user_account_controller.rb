@@ -5,8 +5,6 @@ module StashEngine
 
     def index
       require_user_login if current_user.proxy_user?
-
-      current_user.admin_searches.each { |s| s.create_code unless s.share_code.present? }
     end
 
     def edit
