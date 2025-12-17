@@ -95,7 +95,7 @@ module StashEngine
         tenant = latest_resource&.tenant
 
         # do not remove recorded institution sponsor due to sponsorship change
-        return true if payment_id == tenant.id
+        return true if payment_id.present? && payment_id == tenant&.id
 
         return false unless tenant&.payment_configuration&.covers_dpc
 
