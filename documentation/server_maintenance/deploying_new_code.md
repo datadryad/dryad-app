@@ -124,7 +124,5 @@ On the deregistered instance, run the following:
 
 ```
 deploy_dryad.sh <tag-name or branch>
-puma_restart.sh
-sudo systemctl restart sidekiq
 ```
 
