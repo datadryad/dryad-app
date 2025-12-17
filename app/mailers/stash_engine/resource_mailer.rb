@@ -86,28 +86,36 @@ module StashEngine
 
     def ld_submission(resource)
       @resource = resource
+      if @resource.tenant&.campus_contacts&.blank?
+        logger.warn("No campus_contact to send ld_submission email for resource: #{@resource.id}")
+        return
+      end
+
       assign_variables(resource)
       @partner_name = resource.tenant.short_name
 
       mail(
-        # to: @resource.tenant&.campus_contacts,
-        # bcc: 'partnerships@datadryad.org',
-        to: 'devs@datadryad.org',
+        to: @resource.tenant&.campus_contacts,
+        bcc: 'partnerships@datadryad.org',
         subject: "#{rails_env}Notification of Large Data submission to Dryad"
       )
     end
 
     def ld_publication(resource)
       @resource = resource
+      if @resource.tenant&.campus_contacts&.blank?
+        logger.warn("No campus_contact to send ld_publication email for resource: #{@resource.id}")
+        return
+      end
+
       assign_variables(resource)
       tier = ResourceFeeCalculatorService.new(resource).storage_fee_tier
       @storage_fee = tier[:price]
       @partner_name = resource.tenant.short_name
 
       mail(
-        # to: @resource.tenant&.campus_contacts,
-        # bcc: 'partnerships@datadryad.org',
-        to: 'devs@datadryad.org',
+        to: @resource.tenant&.campus_contacts,
+        bcc: 'partnerships@datadryad.org',
         subject: "#{rails_env}Notification of Large Data publication to Dryad"
       )
     end
