@@ -39,7 +39,7 @@ gem 'acts_as_paranoid', '~> 0.10.3'
 gem 'amatch', '~> 0.4.0'
 gem 'amoeba', '~> 3.3.0'
 gem 'aws-sdk-lambda'
-gem 'aws-sdk-s3', '~> 1.113'
+gem 'aws-sdk-s3', '~> 1.208'
 gem 'aws-sdk-sns'
 gem 'bootsnap', require: false
 gem 'charlock_holmes', '~> 0.7.9'
