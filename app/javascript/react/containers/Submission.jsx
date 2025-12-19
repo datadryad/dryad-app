@@ -181,7 +181,7 @@ function Submission({
 
   useEffect(() => {
     if (resource.identifier['user_must_pay?']) calculateFees();
-  }, [resource.identifier['user_must_pay?'], resource.hold_for_peer_review, resource.generic_files, invoice]);
+  }, [resource.identifier['user_must_pay?'], resource.hold_for_peer_review, resource.generic_files, invoice, resource.authors]);
 
   const recheckPayer = () => {
     axios.get(`/resources/${resource.id}/payer_check`)
