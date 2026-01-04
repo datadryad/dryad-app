@@ -358,7 +358,7 @@ module StashApi
       it 'disallows download by anonymous for unpublished' do
         @curation_activities[0][2].destroy!
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_json_headers.merge('Accept' => '*/*')
-        expect(response_code).to eq(404)
+        expect(response_code).to eq(401)
       end
 
       it 'disallows download by random normal user for unpublished' do
