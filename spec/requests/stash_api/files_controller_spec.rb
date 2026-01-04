@@ -318,14 +318,19 @@ module StashApi
         end
       end
 
-      it 'allows download by public for published' do
+      it 'allows download by any authenticated user for published' do
         @resources[0].update(publication_date: Time.new - 24.hours,
                              current_state: 'submitted',
                              file_view: true)
-        response_code = get "/api/v2/files/#{@files[0].first.id}/download"
+        some_user = create(:user)
+        some_doorkeeper = create(:doorkeeper_application, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+                                 owner_id: some_user.id, owner_type: 'StashEngine::User')
+        access_token = get_access_token(doorkeeper_application: some_doorkeeper)
+        response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_json_headers
+          .merge('Accept' => '*/*', 'Authorization' => "Bearer #{access_token}")
         expect(response_code).to eq(302)
       end
-
+      
       it 'allows download by superuser for unpublished but in Merritt' do
         @curation_activities[0][2].destroy!
         response_code = get "/api/v2/files/#{@files[0].first.id}/download", headers: default_authenticated_headers.merge('Accept' => '*/*')
