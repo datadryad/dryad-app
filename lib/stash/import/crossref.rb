@@ -113,7 +113,7 @@ module Stash
           identifier_id: @resource.identifier_id,
           approved: false,
           rejected: false,
-          authors: @sm['author'].to_json,
+          authors: @sm['author'].first(10).to_json,
           provenance: 'crossref',
           publication_date: pub_date,
           publication_doi: @sm['DOI'],
