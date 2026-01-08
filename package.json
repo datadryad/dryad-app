@@ -108,7 +108,7 @@
     "react_ujs": "^2.6.1",
     "remark-sub-super": "^1.0.21",
     "sass": "^1.49.10",
-    "shakapacker": "6.6.0",
+    "shakapacker": "9.5.0",
     "string-similarity": "^4.0.4",
     "stripe": "^17.7.0",
     "style-loader": "^3.3.3",
