@@ -1,0 +1,67 @@
+<% @page_title = "Manage CEDAR word banks" %>
+
+<%= render partial: 'shared/cedar_header', locals: {current: 'banks'} %>
+
+<h2 id="banks-label">CEDAR Word banks</h2>
+
+<div class="o-admin-form-inline">  
+  <%= form_with(url: cedar_word_bank_path, method: 'get', id: 'admin_search') do %>
+    <div class="o-admin-form-inline">
+      <div class="o-admin-form-pair">
+        <label for="search-terms">Search terms:</label>
+        <%= search_field_tag(:q, params[:q], class: 'c-input__text', id: 'search-terms' ) %>
+      </div>
+      <%= submit_tag('Search', name: nil, class: 'o-button__plain-text2' ) %>
+    </div>
+  <% end %>
+  <% if policy(:cedar_word_bank).new? %>
+    <%= form_with(url: cedar_word_bank_new_path, method: :get, local: false, html: {style: "margin-left: auto"}) do %>
+      <button class="o-button__plain-text7"><i class="fa fa-plus" aria-hidden="true"></i> Add new</button>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="table-wrapper c-lined-table-wrapper" role="region" tabindex="0" aria-labelledby="banks-label">
+<table class="c-lined-table">
+  <thead>
+    <tr>      
+      <th class="c-lined-table__sort" <%= sort_display('label') %>>
+        <%= sortable_column_head sort_field: 'label', title: 'Label' %>
+      </th>
+      <th>
+        Regex terms
+      </th>
+      <th>
+        Templates
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>  
+    <% @banks.each do |b| %>
+      <tr class="c-lined-table__row" id="row_<%=b.id%>">
+        <%= render partial: 'word_bank_row', locals: {b: b} %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+<div class="search-results-footer">
+  <div class="c-space-paginator">
+    <%= paginate @banks, params: { page_size: @page_size } %>
+    <div class="c-paginator-page_size">
+      Page size:
+      <%
+        current_ps = params[:page_size].to_i
+        current_ps = 10 if current_ps == 0
+        [10, 50, 100].each do |ps| %>
+        <% if ps == current_ps %>
+          <span class="page-current"><%= ps %></span>
+        <% else %>
+          <%= link_to(ps, cedar_word_bank_path(request.parameters.except(:action, :controller).merge(page_size: ps, page: 1)), 'aria-label': "#{ps} results per page") %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
