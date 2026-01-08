@@ -21,6 +21,9 @@
 class CedarTemplate < ApplicationRecord
   self.table_name = :cedar_templates
 
+  validates :id, presence: true, uniqueness: true
+  validates :title, presence: true
+
   belongs_to :cedar_word_bank, foreign_key: :word_bank_id
   has_many :cedar_json, foreign_key: :template_id
 end

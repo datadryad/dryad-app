@@ -6,7 +6,7 @@ RSpec.feature 'CedarAdmin', type: :feature, js: true do
       @mock = create(:tenant)
       @system_admin = create(:user, role: 'manager')
       sign_in(@system_admin, false)
-      2.times { create(:cedar_word_bank) }
+      create(:cedar_word_bank)
     end
 
     describe :word_banks do
@@ -20,7 +20,20 @@ RSpec.feature 'CedarAdmin', type: :feature, js: true do
           find('input[name=commit]').click
         end
         expect(page).to have_content 'New word bank'
-        expect(CedarWordBank.all.length).to eql(3)
+        expect(CedarWordBank.all.length).to eql(2)
+      end
+
+      it 'edits a word bank' do
+        visit stash_url_helpers.cedar_word_bank_path
+        find('.c-admin-edit-icon').click
+        within(:css, '#genericModalDialog') do
+          expect(page).to have_content('Word bank label')
+          fill_in 'label', with: 'Test word bank update'
+          fill_in 'keywords', with: 'some|different|test|words'
+          find('input[name=commit]').click
+        end
+        expect(page).to have_content 'Test word bank update'
+        expect(CedarWordBank.all.length).to eql(1)
       end
     end
 
@@ -37,6 +50,18 @@ RSpec.feature 'CedarAdmin', type: :feature, js: true do
         end
         expect(page).to have_content 'This is just a test'
         expect(CedarTemplate.all.length).to eql(1)
+      end
+
+      it 'does not add a random json file' do
+        visit stash_url_helpers.cedar_template_path
+        click_button 'Add new'
+        expect(page).to have_content('New CEDAR template')
+        within(:css, '#genericModalDialog') do
+          attach_file('file-select', "#{Rails.root}/spec/fixtures/stash_engine/valid.json")
+          expect(page).to have_text('Not a CEDAR template file.')
+          find('input[name=commit]').click
+        end
+        expect(CedarTemplate.all.length).to eql(0)
       end
     end
   end
