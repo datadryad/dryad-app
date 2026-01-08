@@ -18,12 +18,13 @@
 #
 #  fk_rails_...  (word_bank_id => cedar_word_banks.id)
 #
-class CedarTemplate < ApplicationRecord
-  self.table_name = :cedar_templates
+FactoryBot.define do
 
-  validates :id, presence: true, uniqueness: true
-  validates :title, presence: true
+  factory :cedar_template do
+    cedar_word_bank
 
-  belongs_to :cedar_word_bank, foreign_key: :word_bank_id
-  has_many :cedar_json, foreign_key: :template_id
+    id { Faker::Internet.uuid }
+    title { Faker::Lorem.sentence }
+    template { JSON.parse("{\"@id\": \"#{Faker::Internet.uuid}\", \"schema:name\": \"#{Faker::Lorem.sentence}\"}") }
+  end
 end

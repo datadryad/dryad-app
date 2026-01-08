@@ -4,8 +4,6 @@ require 'uri'
 
 module StashEngine
   class ApplicationController < ::ApplicationController
-
-    include Pundit::Authorization
     include SharedController
     include SharedSecurityController
 

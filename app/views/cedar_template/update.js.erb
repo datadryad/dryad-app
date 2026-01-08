@@ -1,0 +1,2 @@
+document.getElementById("row_<%= @template.id %>").innerHTML = "<%= escape_javascript(render partial: 'template_row', locals: {t: @template}) %>";
+document.getElementById('genericModalDialog').close();

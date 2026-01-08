@@ -1,0 +1,18 @@
+<td>
+  <%= t.title %>
+</td>
+<td>
+  <%= t.id %>
+</td>
+<td>
+  <div class="c-lined-table__with-actions">
+    <div class="c-lined-table__data" id="template_<%= t.id %>"><%= link_to(t.cedar_word_bank&.label, cedar_word_bank_path(q: t.cedar_word_bank&.label)) %></div>
+    <% if policy(t).edit? %>
+      <%= form_with(url: cedar_template_edit_path(id: t.id), method: :get, local: false) do %>
+        <button class="c-admin-edit-icon" aria-label="Edit template" aria-haspopup="dialog" id="edit_button_<%= t.id %>">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      <% end %>
+    <% end %>
+  </div>
+</td>

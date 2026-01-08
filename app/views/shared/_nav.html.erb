@@ -64,6 +64,7 @@
               <% end %>
               <% if current_user.min_manager? %>
                 <li><%= link_to 'Submission queue', url_for(controller: 'stash_engine/submission_queue', action: 'index', only_path: true) %>
+                <li><%= link_to 'Manage CEDAR', cedar_word_bank_path %></li>
               <% end %>
             <% end %>
             <% if current_user.superuser? %>
