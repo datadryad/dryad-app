@@ -1,5 +1,6 @@
 {
   "name": "dryad",
+  "packageManager": "yarn@1.22.22",
   "jest": {
     "verbose": true,
     "roots": [
@@ -108,7 +109,7 @@
     "react_ujs": "^2.6.1",
     "remark-sub-super": "^1.0.21",
     "sass": "^1.49.10",
-    "shakapacker": "7.2.3",
+    "shakapacker": "8.0.0",
     "string-similarity": "^4.0.4",
     "stripe": "^17.7.0",
     "style-loader": "^3.3.3",
