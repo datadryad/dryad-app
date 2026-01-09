@@ -4,8 +4,8 @@ class FeeCalculatorService
     @calculation_type = type
   end
 
-  def calculate(options, resource: nil)
-    calculator_class.constantize.new(options, resource: resource).call
+  def calculate(options, resource: nil, payer_record: nil)
+    calculator_class.constantize.new(options, resource: resource, payer_record: payer_record).call
   end
 
   def storage_fee_tier(resource: nil)
