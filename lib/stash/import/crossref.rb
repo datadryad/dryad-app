@@ -198,7 +198,9 @@ module Stash
           issn = CGI.escape(issn) if issn.present?
           title_query = resource.title&.gsub(/\s+/, ' ')&.strip
           title_query = CGI.escape(title_query)&.gsub(/\s/, '+') if title_query.present?
-          author_query = resource.authors.map { |a| a.author_last_name&.gsub(/\s+/, ' ')&.strip }.reject(&:blank?)
+          author_query = resource.authors.map do |a|
+            a.author_last_name&.strip&.presence || a.author_first_name&.strip&.presence || a.author_org_name&.strip
+          end.reject(&:blank?)
           author_query = author_query.map { |a| CGI.escape(a) }.join('+') if author_query.present?
 
           [issn, title_query, author_query]
