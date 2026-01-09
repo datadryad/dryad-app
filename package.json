@@ -109,7 +109,7 @@
     "react_ujs": "^2.6.1",
     "remark-sub-super": "^1.0.21",
     "sass": "^1.49.10",
-    "shakapacker": "8.4.0",
+    "shakapacker": "9.5.0",
     "string-similarity": "^4.0.4",
     "stripe": "^17.7.0",
     "style-loader": "^3.3.3",
@@ -120,8 +120,6 @@
     "webpack": "^5",
     "webpack-assets-manifest": "^5",
     "webpack-cli": "^5",
-    "webpack-merge": "^5",
-    "webpack-sources": "^3",
     "yup": "^0.32.11"
   },
   "babel": {
