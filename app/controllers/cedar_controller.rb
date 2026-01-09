@@ -5,21 +5,21 @@ class CedarController < ApplicationController
 
   def json_config
     json_output = {
-      showSampleTemplateLinks: false,
-      terminologyIntegratedSearchUrl: 'https://terminology.metadatacenter.org/bioportal/integrated-search',
-
       sampleTemplateLocationPrefix: '/cedar/',
-      loadSampleTemplateName: params[:template],
-      expandedSampleTemplateLinks: false,
+      loadSampleTemplateName: "#{params[:template]}#{params.key?(:viewer) ? "/#{params[:resource_id]}" : ''}",
+      readOnlyMode: params.key?(:viewer),
+      hideEmptyFields: params.key?(:viewer),
 
+      showSampleTemplateLinks: false,
+      expandedSampleTemplateLinks: false,
       showTemplateRenderingRepresentation: false,
+      expandedTemplateRenderingRepresentation: false,
       showInstanceDataCore: false,
       expandedInstanceDataCore: false,
       showMultiInstanceInfo: false,
       expandedMultiInstanceInfo: false,
-
-      expandedTemplateRenderingRepresentation: false,
-      showInstanceDataFull: true,
+      showAllMultiInstanceValues: false,
+      showInstanceDataFull: false,
       expandedInstanceDataFull: false,
       showTemplateSourceData: false,
       expandedTemplateSourceData: false,
@@ -31,8 +31,7 @@ class CedarController < ApplicationController
       fallbackLanguage: 'en',
 
       collapseStaticComponents: false,
-      showStaticText: true,
-      showAllMultiInstanceValues: false
+      showStaticText: !params.key?(:viewer)
     }
 
     respond_to do |format|
@@ -55,6 +54,11 @@ class CedarController < ApplicationController
     render json: CedarTemplate.find_by(id: params[:id]).template
   end
 
+  def metadata
+    resource = StashEngine::Resource.find_by(id: params[:resource_id])
+    render json: resource.cedar_json.json
+  end
+
   def save
     resource = StashEngine::Resource.find_by(id: params[:resource_id])
     render json: { error: 'resource-not-found' }.to_json, status: 404 unless resource.present?
@@ -71,6 +75,12 @@ class CedarController < ApplicationController
     render json: { error: 'resource-not-found' }.to_json, status: 404 unless resource.present?
     resource.cedar_json.destroy
     render json: { message: 'CEDAR file destroyed' }
+  end
+
+  def preview
+    @resource = StashEngine::Resource.find_by(id: params[:resource_id])
+    @template = @resource.cedar_json.cedar_template
+    render template: 'stash_engine/downloads/preview_cedar', formats: [:js]
   end
 
   private

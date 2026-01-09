@@ -37,6 +37,9 @@
                   <span class="input-line" id="file_admin_check<%= fu.id %>" style="margin-left: auto" data-load="/data_files/<%= fu.id %>/admin_checks.js" aria-live="polite" aria-busy="true"></span>
                 <% end %>
                 <div style="min-width: 80px; text-align: center;">
+                  <% if fu.download_filename == 'DisciplineSpecificMetadata.json' %>
+                  <%= button_to '<i class="far fa-eye c-file-group__preview" aria-hidden="true"></i>Open metadata viewer'.html_safe, cedar_preview_path(res.id), remote: true, class: 'o-button__plain-text7', method: 'get' %>
+                  <% end %>
                   <% unless fu.preview_type.nil? %>
                     <div id="file_preview_check<%= fu.id %>" data-load="<%= preview_check_path(file_id: fu.id, format: :js) %>" aria-live="polite" aria-busy="true">
                       <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>

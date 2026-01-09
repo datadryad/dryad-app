@@ -1,0 +1,20 @@
+document.getElementById('genericModalContent').innerHTML = "<%= escape_javascript(render partial: 'stash_engine/downloads/preview_cedar') %>";
+var dialog = document.getElementById('genericModalDialog');
+var editor = document.getElementById('cedarEditor');
+var modalSetup = () => {
+  editor.loadConfigFromURL('/cedar/config?viewer&resource_id=<%= @resource.id %>&template=<%= @template.id %>');
+}
+if (dialog.querySelector('script')) {
+  modalSetup();
+} else {
+  const script = document.createElement('script');
+  script.src = '/cedar-embeddable-editor/cedar-embeddable-editor.js?1-5-0';
+  script.async = true;
+  script.onload = () => modalSetup();
+  dialog.appendChild(script);
+}
+document.getElementById('cancel_dialog').addEventListener('click', (e) => {
+  e.preventDefault();
+  dialog.close();
+});
+dialog.showModal();
