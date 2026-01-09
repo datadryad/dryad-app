@@ -30,5 +30,10 @@ module StashEngine
       JSON.parse(super)
     end
 
+    def create_code
+      code = SecureRandom.urlsafe_base64(16)
+      code = SecureRandom.urlsafe_base64(16) while SavedSearch.where(share_code: code).count > 0
+      update(share_code: code)
+    end
   end
 end

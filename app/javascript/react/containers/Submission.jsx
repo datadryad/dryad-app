@@ -26,7 +26,7 @@ import {StoreProvider, useStore} from '../shared/store';
 /* eslint-disable jsx-a11y/no-autofocus */
 
 function Submission({
-  submission, user, s3_dir_name, config_s3, config_maximums, config_payments, config_cedar, change_tenant,
+  submission, user, s3_dir_name, config_s3, config_maximums, config_payments, change_tenant,
 }) {
   const {updateStore, storeState: {userMustPay, refreshDpcStatus, refreshFees}} = useStore();
   const location = useLocation();
@@ -75,7 +75,6 @@ function Submission({
         resource={resource}
         setResource={setResource}
         curator={user.curator}
-        cedar={config_cedar}
       />,
       help: <DescHelp type={resource.resource_type.resource_type} />,
       preview: <DescPreview resource={resource} previous={previous} curator={user.curator} />,
@@ -188,7 +187,7 @@ function Submission({
         }
         updateStore({refreshFees: false, fees: data.fees || {}});
       });
-  }, [userMustPay, resource.hold_for_peer_review, resource.generic_files, invoice, refreshFees]);
+  }, [userMustPay, resource.hold_for_peer_review, resource.generic_files, resource.authors, invoice, refreshFees]);
 
   const recheckPayer = () => {
     axios.get(`/resources/${resource.id}/payer_check`)

@@ -36,4 +36,37 @@ RSpec.feature 'Search', type: :feature, js: true do
     expect(page).to have_text('Dataset size')
     expect(page).not_to have_button('Publication years')
   end
+
+  context :saved_search do
+    it 'requires user login' do
+      sign_out
+      visit new_search_path
+      click_button 'Save search'
+      expect(page).to have_text('log in or create a Dryad account')
+    end
+
+    it 'saves, edits, and deletes a search' do
+      sign_in(create(:user))
+      # create
+      visit new_search_path
+      click_button 'Save search'
+      expect(page).to have_text('Save search terms and filters')
+      fill_in('title', with: 'Test search')
+      click_button 'Submit'
+      expect(page).to have_link('your saved searches')
+      # edit
+      click_link 'your saved searches'
+      within(find('#public_searches_list li:first-child')) do
+        expect(page).to have_link('Test search')
+        click_button 'Edit search description'
+        expect(page).to have_button('Save')
+        fill_in('title', with: 'Edited search')
+        click_button 'Save'
+      end
+      expect(page).to have_link('Edited search')
+      # delete
+      click_button 'Delete saved search: Edited search'
+      expect(page).not_to have_css('#public_searches_list li')
+    end
+  end
 end

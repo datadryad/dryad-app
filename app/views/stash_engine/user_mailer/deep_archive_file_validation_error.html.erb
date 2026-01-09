@@ -1,0 +1,7 @@
+<p>Deep archive file cannot be validated; possible corruption!</p>
+<hr/>
+<pre>id: <%= @file.id %></pre>
+<pre>filename: <%= @file.download_filename %></pre>
+<pre>S3 filename: <%= @file.upload_file_name %></pre>
+<pre>url: <%= @file.s3_permanent_presigned_url %></pre>
+<pre>bucket name: <%= @bucket_name %></pre>

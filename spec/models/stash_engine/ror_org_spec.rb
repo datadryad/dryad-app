@@ -1,24 +1,25 @@
 # Commenting out this file until we decide if we want to test solr search on github
 #
-# # == Schema Information
-# #
-# # Table name: stash_engine_ror_orgs
-# #
-# #  id         :bigint           not null, primary key
-# #  acronyms   :json
-# #  aliases    :json
-# #  country    :string(191)
-# #  home_page  :string(191)
-# #  isni_ids   :json
-# #  name       :string(191)
-# #  status     :integer          default(0)
-# #  created_at :datetime         not null
-# #  updated_at :datetime         not null
-# #  ror_id     :string(191)
-# #
-# # Indexes
-# #
-# #  index_stash_engine_ror_orgs_on_status  (status)
+# == Schema Information
+#
+# Table name: stash_engine_ror_orgs
+#
+#  id         :bigint           not null, primary key
+#  acronyms   :json
+#  aliases    :json
+#  country    :string(191)
+#  home_page  :string(191)
+#  isni_ids   :json
+#  name       :string(191)
+#  status     :integer          default("active")
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  ror_id     :string(191)
+#
+# Indexes
+#
+#  index_stash_engine_ror_orgs_on_status  (status)
+#
 
 # module StashEngine
 #

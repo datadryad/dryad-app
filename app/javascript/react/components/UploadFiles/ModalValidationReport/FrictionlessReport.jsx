@@ -1,7 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import React from 'react';
 import ReportError from './ReportError';
-// import './frictionless-components.css';
 
 function getReportErrors(task) {
   const reportErrors = {};

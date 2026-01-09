@@ -2,21 +2,17 @@
 import React, {
   useState, useRef, useEffect, useCallback,
 } from 'react';
-import {Form, Formik} from 'formik';
 import moment from 'moment';
+import axios from 'axios';
 import {isEqual} from 'lodash';
+import {ExitIcon} from '../../ExitButton';
 import {showSavingMsg, showSavedMsg} from '../../../../lib/utils';
 
-export default function Cedar({
-  resource, setResource, editorUrl, templates, singleTemplate = null,
-}) {
-  const [template, setTemplate] = useState(singleTemplate);
-  const [csrf, setCsrf] = useState(null);
+export default function Cedar({resource, setResource, templates}) {
+  const [template, setTemplate] = useState(null);
   const [metadata, setMetadata] = useState(null);
   const [currMeta, setCurrMeta] = useState(null);
-  const [updated, setUpdated] = useState(undefined);
 
-  const formRef = useRef(null);
   const templateRef = useRef(template);
   const del = useRef(null);
   const dialog = useRef(null);
@@ -24,6 +20,8 @@ export default function Cedar({
   const popupWatcher = useRef(null);
   const formObserver = useRef(null);
   const editorLoaded = useRef(null);
+
+  const authenticity_token = document.querySelector("meta[name='csrf-token']")?.getAttribute('content');
 
   const unloadEditor = () => {
     if (editorLoaded.current) {
@@ -33,12 +31,10 @@ export default function Cedar({
   };
 
   useEffect(() => {
-    setCsrf(document.querySelector("meta[name='csrf-token']")?.getAttribute('content'));
-    const json = resource.cedar_json ? JSON.parse(resource.cedar_json) : {};
-    if (json.template) {
-      setTemplate(json.template);
-      setMetadata(json.metadata);
-      setUpdated(json.updated);
+    const json = resource.cedar_json || {};
+    if (json.json) {
+      setTemplate(templates.find((t) => t.id === json.template_id));
+      setMetadata(json.json);
     }
     return () => {
       if (popupWatcher.current) {
@@ -53,30 +49,19 @@ export default function Cedar({
     };
   }, []);
 
-  const getInfo = () => {
-    const time = new Date().toISOString();
-    const {id: resource_id} = resource;
-    const info = {
-      template, resource_id, csrf, updated: time,
-    };
-    return info;
-  };
-
   // Save & set saved content
   useEffect(() => {
     if (currMeta && !isEqual(currMeta, metadata)) {
       showSavingMsg();
-      const info = getInfo();
-      const wrappedMeta = {info, metadata: currMeta};
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/cedar-save');
-      xhr.setRequestHeader('Accept', 'application/json');
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify(wrappedMeta, null, 2));
-      setUpdated(info.updated);
-      setMetadata(currMeta);
-      setResource((r) => ({...r, cedar_json: JSON.stringify({template, updated: info.updated, metadata: currMeta})}));
-      if (editor.current) editor.current.templateInfo = info;
+      const saveJson = {authenticity_token, template_id: template.id, json: JSON.stringify(currMeta)};
+      axios.post(
+        `/cedar/save/${resource.id}`,
+        saveJson,
+        {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+      ).then((data) => {
+        setMetadata(currMeta);
+        setResource((r) => ({...r, cedar_json: data.data}));
+      });
       showSavedMsg();
     }
   }, [currMeta, metadata]);
@@ -84,25 +69,22 @@ export default function Cedar({
   useEffect(() => {
     if (!isEqual(template, templateRef.current)) {
       if (template === null) {
-        const xhr = new XMLHttpRequest();
-        const info = getInfo();
-        xhr.open('POST', '/cedar-save');
-        xhr.setRequestHeader('Accept', 'application/json');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({info, metadata: null}, null, 2));
-        setCurrMeta(null);
-        setUpdated(null);
-        setMetadata(null);
-        setResource((r) => ({...r, cedar_json: null}));
-        if (singleTemplate) setTemplate(singleTemplate);
+        axios.delete(
+          `/cedar/save/${resource.id}`,
+          {headers: {'Content-Type': 'application/json; charset=utf-8', Accept: 'application/json'}},
+        ).then(() => {
+          setMetadata(null);
+          setResource((r) => ({...r, cedar_json: null}));
+        });
+        if (templates.length === 1) setTemplate(templates[0]);
       }
     }
     templateRef.current = template;
   }, [template]);
 
   useEffect(() => {
-    if (singleTemplate) setTemplate(singleTemplate);
-  }, [singleTemplate]);
+    if (templates.length === 1) setTemplate(templates[0]);
+  }, [templates]);
 
   // Save form content when changed
   const checkSave = () => {
@@ -115,7 +97,6 @@ export default function Cedar({
   const setRef = useCallback((el) => {
     if (el?.id === 'cedarDialog') {
       dialog.current = el;
-
       // Move the cdk-overlay-container into the modal for rendering above dialog
       popupWatcher.current = new MutationObserver(() => {
         const popups = document.querySelector('body > .cdk-overlay-container');
@@ -138,11 +119,7 @@ export default function Cedar({
   }, []);
 
   const modalSetup = () => {
-    const {id: resource_id} = resource;
-    editor.current.loadConfigFromURL(`/cedar-config?template=${template.id}`);
-    editor.current.templateInfo = {
-      template, resource_id, csrf, updated,
-    };
+    editor.current.loadConfigFromURL(`/cedar/config?template=${template.id}`);
     editor.current.dataset.template = template.id;
     // restore metadata
     unloadEditor();
@@ -162,23 +139,20 @@ export default function Cedar({
       return;
     }
     if (dialog.current?.dataset.template !== template.id) {
-      if (editorUrl) {
-        if (dialog.current.querySelector('script')) {
-          modalSetup();
-        } else {
-          const script = document.createElement('script');
-          script.src = editorUrl;
-          script.async = true;
-          script.onload = () => modalSetup();
-          dialog.current.appendChild(script);
-        }
-        dialog.current.dataset.template = template.id;
+      if (dialog.current.querySelector('script')) {
+        modalSetup();
+      } else {
+        const script = document.createElement('script');
+        script.src = '/cedar-embeddable-editor/cedar-embeddable-editor.js?1-5-0';
+        script.async = true;
+        script.onload = () => modalSetup();
+        dialog.current.appendChild(script);
       }
+      dialog.current.dataset.template = template.id;
     }
     dialog.current.showModal();
   };
 
-  if (!editorUrl) return null;
   if (!templates) return null;
 
   const {id: resource_id} = resource;
@@ -186,71 +160,64 @@ export default function Cedar({
   return (
     <div className="cedar-container">
       <h3 className="o-heading__level3">Standardized metadata</h3>
-      <p>Fill out a standardized metadata form for your discipline to make your data more useful to others.</p>
-      <Formik
-        initialValues={{resource_id, authenticity_token: (csrf || '')}}
-        innerRef={formRef}
-        onSubmit={() => openModal()}
-      >
-        {(formik) => (
-          <Form onSubmit={formik.handleSubmit}>
-            {metadata && template ? (
-              <div style={{display: 'flex', alignItems: 'center'}}>
-                <p style={{padding: '8px', border: 'thin solid #777', backgroundColor: '#fff'}}>
-                  <strong>{template.title}</strong><br />
-                  {updated && `Last modified ${moment(updated).local().format('H:mmA, MM/DD/YYYY')}`}
-                </p>
-                <button
-                  aria-haspopup="dialog"
-                  aria-controls="cedarDialog"
-                  disabled={!template}
-                  type="submit"
-                  className="o-button__plain-text2"
-                  style={{margin: '0 1rem'}}
-                >
-                  Edit form
-                </button>
-                <button
-                  type="button"
-                  className="o-button__remove"
-                  aria-haspopup="dialog"
-                  aria-controls="deleteCedarDialog"
-                  onClick={() => del.current.showModal()}
-                >
-                  Delete form
-                </button>
-              </div>
+      <p>Fill out a <a href="https://metadatacenter.org/" target="_blank" rel="noreferrer">standardized metadata form<ExitIcon /></a> for your discipline to make your data more useful to others.</p>
+      <div>
+        {metadata && template ? (
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <p style={{padding: '8px', border: 'thin solid #777', backgroundColor: '#fff'}}>
+              <strong>{template.title}</strong><br />
+              {resource.cedar_json.updated_at && `Last modified ${moment(resource.cedar_json.updated_at).local().format('H:mmA, MM/DD/YYYY')}`}
+            </p>
+            <button
+              aria-haspopup="dialog"
+              aria-controls="cedarDialog"
+              disabled={!template}
+              type="button"
+              onClick={() => openModal()}
+              className="o-button__plain-text2"
+              style={{margin: '0 1rem'}}
+            >
+              Edit form
+            </button>
+            <button
+              type="button"
+              className="o-button__remove"
+              aria-haspopup="dialog"
+              aria-controls="deleteCedarDialog"
+              onClick={() => del.current.showModal()}
+            >
+              Delete form
+            </button>
+          </div>
+        ) : (
+          templates.length === 1
+            ? template && (
+              <button type="button" className="o-button__add" onClick={() => openModal()}>
+              Add metadata form: <strong>{template.title}</strong>
+              </button>
             ) : (
-              singleTemplate ? (
-                <button disabled={!template} type="submit" className="o-button__add">
-                  Add metadata form: <strong>{singleTemplate.title}</strong>
+              <>
+                <label className="c-input__label" htmlFor={`cedar__${resource_id}`}>Choose a metadata form
+                </label>
+                <select
+                  id={`cedar__${resource_id}`}
+                  className="c-input__select"
+                  name="cedarTemplate"
+                  onChange={(e) => {
+                    const t = e.currentTarget;
+                    setTemplate(t.value ? {id: t.value, title: t.options[t.selectedIndex].label} : null);
+                  }}
+                >
+                  <option key="0" value="" label="Select a relevant form" />
+                  {templates.map((tm) => (<option key={tm.id} value={tm.id} label={tm.title} />))}
+                </select>
+                <button disabled={!template} type="button" className="o-button__add" onClick={() => openModal()}>
+                Add metadata form
                 </button>
-              ) : (
-                <>
-                  <label className="c-input__label" htmlFor={`cedar__${resource_id}`}>Choose a metadata form
-                  </label>
-                  <select
-                    id={`cedar__${resource_id}`}
-                    className="c-input__text"
-                    name="cedarTemplate"
-                    onChange={(e) => {
-                      const t = e.currentTarget;
-                      setTemplate(t.value ? {id: t.value, title: t.options[t.selectedIndex].label} : null);
-                    }}
-                    onBlur={formik.handleBlur}
-                  >
-                    <option key="0" value="" label="- Select one -" />
-                    {templates.map((templ) => (<option key={templ[0]} value={templ[0]} label={templ[1]} />))}
-                  </select>
-                  <button disabled={!template} type="submit" className="o-button__add">
-                    Add metadata form
-                  </button>
-                </>
-              )
-            )}
-          </Form>
+              </>
+            )
         )}
-      </Formik>
+      </div>
       <dialog className="modalDialog" id="cedarDialog" aria-modal="true" ref={setRef}>
         <div className="modalClose">
           <button aria-label="Close" type="button" onClick={() => dialog.current.close()} />

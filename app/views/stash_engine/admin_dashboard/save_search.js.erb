@@ -11,7 +11,7 @@ if (document.getElementById('search_clear')) {
   document.getElementById('search_clear').setAttribute('hidden', true)
 }
 <% if @saved_search %>
-document.getElementById("search_head").innerHTML = 'Search results: <a href="/account#saved" style="font-weight: normal;"><%= @saved_search.title %></a>';
+document.getElementById("search_head").innerHTML = 'Search results: <a href="/account/saved_searches" style="font-weight: normal;"><%= @saved_search.title %></a>';
 <% unless @saved_search.default? %>
 document.getElementById('search_form').firstElementChild.setAttribute('action', '/admin_dashboard?search=<%= @index %>')
 const url = new URL(window.location.href);

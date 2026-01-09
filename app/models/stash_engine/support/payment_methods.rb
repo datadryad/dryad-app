@@ -95,6 +95,10 @@ module StashEngine
 
       def institution_will_pay?
         tenant = latest_resource&.tenant
+
+        # do not remove recorded institution sponsor due to sponsorship change
+        return true if payment_id.present? && payment_id == tenant&.id
+
         return false unless tenant&.payment_configuration&.covers_dpc
 
         if tenant&.authentication&.strategy == 'author_match'

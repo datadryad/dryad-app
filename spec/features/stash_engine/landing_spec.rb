@@ -2,8 +2,6 @@ require 'byebug'
 require_relative '../../requests/stash_engine/download_helpers'
 
 RSpec.feature 'Landing', type: :feature, js: true do
-
-  include MerrittHelper
   include DatasetHelper
   include DatabaseHelper
   include Mocks::CurationActivity

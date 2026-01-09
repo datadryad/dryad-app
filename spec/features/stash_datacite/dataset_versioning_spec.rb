@@ -1,7 +1,5 @@
 require 'rails_helper'
 RSpec.feature 'DatasetVersioning', type: :feature do
-
-  include MerrittHelper
   include DatasetHelper
   include Mocks::CurationActivity
   include Mocks::Datacite
@@ -274,7 +272,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
   def set_and_submit
     @resource = StashEngine::Resource.find(page.current_path.match(%r{submission/(\d+)})[1].to_i)
     submit_form
-    mock_successfull_merritt_submission!(@resource)
+    @resource.current_state = 'submitted'
+    @resource.save
+    @resource.reload
   end
 
   def minor_update

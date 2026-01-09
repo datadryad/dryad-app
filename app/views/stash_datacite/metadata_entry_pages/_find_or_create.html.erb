@@ -6,6 +6,5 @@
   config_s3: APP_CONFIG[:s3].to_h.except(:secret).to_ostruct,
   config_maximums: APP_CONFIG[:maximums].to_h,
   config_payments: APP_CONFIG[:payments].to_h.except(:key),
-  config_cedar: {editorUrl: APP_CONFIG[:cedar_editor_url], templates: APP_CONFIG[:cedar_templates]},
   change_tenant: render(partial: 'stash_engine/shared/change_tenant')
 }) %>

@@ -255,6 +255,15 @@ Rails.application.routes.draw do
     post 'account/edit', to: 'user_account#edit', as: 'edit_account'
     post 'account/api', to: 'user_account#api_application', as: 'get_api'
     post 'account/token', to: 'user_account#api_token', as: 'get_token'
+
+    # saved_searches
+    get 'account/saved_searches', to: 'saved_searches#index', as: 'saved_searches'
+    get 'saved_search/new', to: 'saved_searches#new', as: 'new_saved_search'
+    post 'saved_search', to: 'saved_searches#create'
+    get 'saved_search/:id', to: 'saved_searches#edit', as: 'saved_search_edit'
+    match 'saved_search/:id', to: 'saved_searches#update', via: %i[put patch], as: 'update_saved_search'
+    delete 'saved_search/:id', to: 'saved_searches#destroy', as: 'saved_search_delete'
+
     # admin user management
     get 'user_admin', to: 'user_admin#index' # main page for administering users
     # page for viewing a single user
@@ -292,13 +301,6 @@ Rails.application.routes.draw do
     post 'admin_dashboard/:id', to: 'admin_dashboard#update', as: 'admin_dash_update'
     get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'
     match 'admin_search/:id', to: 'admin_dashboard#save_search', via: %i[put patch], as: 'save_admin_search'
-
-    # saved_searches
-    # get 'account/saved_searches/:type', to: 'saved_searches#index'
-    post 'saved_search', to: 'saved_searches#create'
-    get 'saved_search/:id', to: 'saved_searches#edit', as: 'saved_search_edit'
-    match 'saved_search/:id', to: 'saved_searches#update', via: %i[put patch], as: 'update_saved_search'
-    delete 'saved_search/:id', to: 'saved_searches#destroy', as: 'saved_search_delete'
 
     # activity log
     get 'ds_admin/:id', to: 'admin_datasets#index', as: 'activity_log'
@@ -518,8 +520,11 @@ Rails.application.routes.draw do
   get '/metadata_entry_pages/MaterialIcons-Regular.woff2', to: redirect('/MaterialIcons-Regular.woff2')
   get '/metadata_entry_pages/MaterialIcons-Regular.ttf', to: redirect('/MaterialIcons-Regular.ttf')
 
-  get '/cedar-config', to: 'cedar#json_config'
-  post '/cedar-save', to: 'cedar#save'
+  get '/cedar/config', to: 'cedar#json_config'  
+  get '/cedar/:id/template', to: 'cedar#template'
+  get '/cedar/check/:resource_id', to: 'cedar#check'
+  post '/cedar/save/:resource_id', to: 'cedar#save'
+  delete '/cedar/save/:resource_id', to: 'cedar#delete'
 
   ########################## Redirects ######################################
 

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import moment from 'moment';
 import ellipsize from '../../../../lib/string_patch';
-import classes from './File.module.css';
 
 export const TabularCheckStatus = {
   checking: 'Checking...',
@@ -16,13 +15,13 @@ const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const statusCss = (status) => {
   switch (status) {
   case 'Pending':
-    return classes.Blinking;
+    return 'font-weight: bold;';
   case TabularCheckStatus.checking:
-    return classes.Blinking;
+    return 'font-weight: bold;';
   case TabularCheckStatus.noissues:
-    return classes.Passed;
+    return '';
   case TabularCheckStatus.error:
-    return classes.Passed;
+    return '';
   default:
     return '';
   }
