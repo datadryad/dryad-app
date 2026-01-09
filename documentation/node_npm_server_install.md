@@ -1,10 +1,9 @@
 # Installing Node/NPM on servers
 Since we're updating our servers to use React for file uploads it requires Node and NPM to be installed on the server
-for deployment with Capistrano. Capistrano now uses Webpacker (Ruby) which calls Webpack, which is a
+for deployment with Capistrano. Capistrano now uses Shakapacker (Ruby) which calls Webpack, which is a
 Javascript way to bundle assets.
 
-Right now we are using both Sprockets (asset pipeline) and Webpack. As we move toward Rails 6, I
-believe Webpacker is the default. Also, it appears that it's recommended to go through all Javascript
+Right now we are using both Sprockets (asset pipeline) and Shakapacker. It appears that it's recommended to go through all Javascript
 files to modernize them an make them more encapsulated rather than using Global scope for Javascript.
 See for example https://rossta.net/blog/from-sprockets-to-webpack.html which walks through
 decisions they made while upgrading.
