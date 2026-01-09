@@ -14,7 +14,7 @@ module StashApi
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[show download]
     before_action :setup_identifier_and_resource_for_put, only: %i[update em_submission_metadata set_internal_datum add_internal_datum]
     before_action :doorkeeper_authorize!, only: %i[create update]
-    before_action :require_api_user, only: %i[create update em_submission_metadata]
+    before_action :require_api_user, only: %i[create update em_submission_metadata download]
     before_action :optional_api_user, except: %i[create update em_submission_metadata]
     before_action :require_permission, only: :update
     before_action :lock_down_admin_only_params, only: %i[create update]
