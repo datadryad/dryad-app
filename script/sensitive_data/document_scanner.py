@@ -3,6 +3,7 @@ import time
 from response import Response
 import constants as const
 import requests
+import ipaddress
 
 class DocumentScanner:
   def __init__(self, file_path):
@@ -17,7 +18,8 @@ class DocumentScanner:
       "addresses": const.ADDRESS_PATTERN,
       "emails": const.EMAIL_PATTERN,
       "urls": const.URL_PATTERN,
-      # "coordinates": const.COORD_PATTERN
+      "ip": const.IP_PATTERN,
+#       "coordinates": const.COORD_PATTERN
     }
 
   def read_file(self):
@@ -52,8 +54,19 @@ class DocumentScanner:
       matches = re.findall(pattern, line)
 
       if matches:
-        # Store the line number and matches for each occurrence
-        occurrences.append({"line_number": line_number, "matches": matches, "pattern": pattern_name})
+        # Check if found matches are real IP addresses
+        if pattern_name == "ip":
+          for item in matches:
+            try:
+              ip_obj = ipaddress.ip_address(item)
+              if isinstance(ip_obj, ipaddress.IPv6Address) or isinstance(ip_obj, ipaddress.IPv4Address):
+                # Store the line number and matches for each occurrence
+                occurrences.append({"line_number": line_number, "matches": item, "pattern": pattern_name})
+            except ValueError:
+              continue
+        else:
+          # Store the line number and matches for each occurrence
+          occurrences.append({"line_number": line_number, "matches": matches, "pattern": pattern_name})
       if const.CUTOFF_ERROR_COUNT <= len(self.response.issues) + len(occurrences):
         return occurrences
 
