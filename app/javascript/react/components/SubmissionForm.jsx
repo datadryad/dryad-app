@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react';
+import {useStore} from '../shared/store';
 
 export default function SubmissionForm({
-  steps, resource, previewRef, user, fees, payment, setPayment,
+  steps, resource, previewRef, user, payment, setPayment,
 }) {
+  const {storeState: {fees, userMustPay}} = useStore();
   const [hasChanges, setChanges] = useState(!resource.previous_curated_resource);
   const [showR, setShowR] = useState(resource.display_readme);
   const [userComment, setUserComment] = useState(resource?.edit_histories?.[0]?.user_comment);
@@ -20,7 +22,7 @@ export default function SubmissionForm({
   }, [previewRef.current, resource]);
 
   const submit = (e) => {
-    const mustPay = !payment && resource.identifier['user_must_pay?'] && (fees.total || resource.identifier.old_payment_system);
+    const mustPay = !payment && userMustPay && (fees.total || resource.identifier.old_payment_system);
     if (mustPay || !hasChanges || steps().some((s) => s.fail) || (curator && !userComment) || (!isSubmitter && !curator)) {
       e.preventDefault();
     }

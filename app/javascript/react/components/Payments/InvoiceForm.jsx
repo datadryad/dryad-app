@@ -3,6 +3,7 @@ import {Field, Form, Formik} from 'formik';
 import axios from 'axios';
 import {showSavedMsg, showSavingMsg} from '../../../lib/utils';
 import {ExitIcon} from '../ExitButton';
+import {useStore} from '../../shared/store';
 
 const validateEmail = (value) => {
   if (value && !/^[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+$/i.test(value)) {
@@ -11,9 +12,8 @@ const validateEmail = (value) => {
   return null;
 };
 
-export default function InvoiceForm({
-  resource, setResource, setPayment, fees,
-}) {
+export default function InvoiceForm({resource, setResource, setPayment}) {
+  const {storeState: {fees}} = useStore();
   const {authors, users} = resource;
   const submitter = authors.find((a) => a.author_orcid === users.find((u) => u.role === 'submitter')?.orcid);
   const [name, setName] = useState(null);

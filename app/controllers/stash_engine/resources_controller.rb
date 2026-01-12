@@ -21,6 +21,7 @@ module StashEngine
     def resource
       @resource ||= (resource_id = params[:id]) && Resource.find(resource_id)
     end
+
     helper_method :resource
 
     # GET /resources
@@ -72,6 +73,7 @@ module StashEngine
       logger.error("Unable to create new resource: #{e.full_message}")
       redirect_to stash_url_helpers.dashboard_path, alert: 'Unable to register a DOI at this time. Please contact help@datadryad.org for assistance.'
     end
+
     # rubocop:enable Metrics/AbcSize
 
     # PATCH/PUT /resources/1
@@ -193,13 +195,13 @@ module StashEngine
         dupes = other_submissions.where('LOWER(title) = LOWER(?)', @resource.title)&.select(:id, :title, :identifier_id).to_a
         if primary_article.present?
           dupes.concat(other_submissions.joins(:related_identifiers)
-              .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
-              &.select(:id, :title, :identifier_id).to_a)
+                         .where(related_identifiers: { work_type: 'primary_article', related_identifier: primary_article })
+                         &.select(:id, :title, :identifier_id).to_a)
         end
         if manuscript&.match(/\d/)
           dupes.concat(
             other_submissions.joins(:resource_publication).where(resource_publication: { manuscript_number: manuscript })
-            &.select(:id, :title, :identifier_id).to_a
+              &.select(:id, :title, :identifier_id).to_a
           )
         end
       end
@@ -209,6 +211,7 @@ module StashEngine
         format.json { render json: @dupes }
       end
     end
+
     # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
     def file_pub_dates
