@@ -243,7 +243,6 @@ Rails.application.routes.draw do
     get 'dataset/*id', to: redirect{ |params| "/dataset/#{params[:id].sub('%2F', '/') }"}, status: 302,
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
-    get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
     get '/404', to: 'pages#app_404', as: 'app_404'
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
