@@ -75,12 +75,13 @@ You should see a 200 response and some information something like:
 
 {"message" => "Welcome application owner &lt;name&gt;", "user_id" => &lt;number&gt;}
 
+
 Perform API calls, such as download a dataset
 ---------------------------------------------
 
-An authentication token may be added to any API call. Some API calls, such as creating a new dataset, require a token for any call. Other calls, such as downloading a dataset, will behave differently when a token is included.
+An authentication token may be added to any API call. Some API calls, such as creating a new dataset and downloading files, require a token for any call. Other calls, such as searching for datasets, will behave differently when a token is included.
 
-When including a token in a download call, access will be granted to more datasets. Without a token, only published datasets will be available. With a token, datasets created by the token's owner will also be available, as well as datasets that the owner may access through their permissions. 
+When including a token in a call, access will be granted to more datasets. Without a token, only published datasets will be available. With a token, datasets created by the token's owner will also be available, as well as datasets that the owner may access through their permissions. 
 
 ```bash
 curl -L -O -J -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -X GET https://<domain>/api/v2/datasets/<encoded_doi>
