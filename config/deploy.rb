@@ -37,18 +37,6 @@ append :linked_dirs,
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
-namespace :assets do
-  before 'assets:precompile', 'assets:install_dependencies'
-  desc "Ensures that dependencies required to compile assets are installed"
-  task install_dependencies: :environment do
-    # yarn v1.x (classic)
-    raise if File.exist?("package.json") && !(system "yarn install --frozen-lockfile")
-
-    # yarn v2+ (berry)
-    # raise if File.exist?("package.json") && !(system "yarn install --immutable")
-  end  
-end
-
 namespace :deploy do
   after :deploy, 'git:version'
   after :deploy, 'cleanup:remove_example_configs'
