@@ -16,7 +16,7 @@ module StashApi
     before_action -> { require_file_id(file_id: params[:id]) }, only: %i[show destroy download]
     before_action -> { require_stash_identifier(doi: params[:id]) }, only: %i[update]
     before_action :doorkeeper_authorize!, only: %i[update destroy]
-    before_action :require_api_user, only: %i[update destroy]
+    before_action :require_api_user, only: %i[update destroy download]
     before_action :optional_api_user, except: %i[create update]
     before_action :require_in_progress_resource, only: %i[update]
     before_action :require_file_current_uploads, only: :update

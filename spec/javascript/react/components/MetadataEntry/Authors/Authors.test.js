@@ -5,6 +5,13 @@ import {faker} from '@faker-js/faker';
 import axios from 'axios';
 import Authors from '../../../../../../app/javascript/react/components/MetadataEntry/Authors';
 
+jest.mock('../../../../../../app/javascript/react/shared/store', () => ({
+  useStore: () => ({
+    storeState: {fees: 999},
+    updateStore: jest.fn(),
+  }),
+}));
+
 jest.mock('axios');
 
 const makeAuthor = (resource_id, myOrder) => {

@@ -57,11 +57,6 @@ module StashEngine
       respond_to(&:html)
     end
 
-    def citations
-      @identifier = Identifier.find(params[:identifier_id])
-      respond_to(&:js)
-    end
-
     def metrics
       @identifier = Identifier.find(params[:identifier_id])
       respond_to(&:js)

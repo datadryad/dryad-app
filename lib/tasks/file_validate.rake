@@ -8,13 +8,17 @@ namespace :checksums do
     today = Time.now.utc
     index = 0
     puts ''
+    last_id = Rails.cache.read('file-validation-last-id') || 0
+
     puts "Validating file digests #{today}"
+    puts "Validating files starting with ID: #{last_id}"
     query = StashEngine::DataFile
       .where(file_state: 'created', file_deleted_at: nil)
       .where('validated_at is null or validated_at < ?', 60.days.ago)
       .where.not(digest: nil)
 
-    files = query.order(validated_at: :asc, id: :asc).limit(processing)
+    files = query.where('id > ?', last_id).order(validated_at: :asc, id: :asc).limit(processing)
+    last_id = files.count < processing ? 0 : files.last&.id || 0
     files += query.order(Arel.sql('RAND()')).limit(processing)
 
     files.uniq.each do |f|
@@ -29,6 +33,7 @@ namespace :checksums do
       puts "   Exception! #{e.message}"
       next
     end
+    Rails.cache.write('file-validation-last-id', last_id)
   end
 
   desc 'Generate new checksums for incorrect duplicates'

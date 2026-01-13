@@ -30,6 +30,7 @@ class CurationService
         email_orcid_invitations if @activity.published?
       end
       update_salesforce_metadata if @resource.curation_activities.count > 1
+      processed_sponsored_resource
     end
 
     @resource.identifier.reload
@@ -143,6 +144,12 @@ class CurationService
     return unless @resource.identifier.old_payment_system
 
     @resource.identifier.update(old_payment_system: false, last_invoiced_file_size: @resource.total_file_size)
+  end
+
+  def processed_sponsored_resource
+    return unless @status.in?(%w[submitted peer_review])
+
+    SponsoredPaymentsService.new(@resource).log_payment
   end
 
   def submit_to_datacite

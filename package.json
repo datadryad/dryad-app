@@ -1,5 +1,6 @@
 {
   "name": "dryad",
+  "packageManager": "yarn@1.22.22",
   "jest": {
     "verbose": true,
     "roots": [
@@ -104,11 +105,11 @@
     "puppeteer": "^24.15.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.0.2",
+    "react-router-dom": "^7.0",
     "react_ujs": "^2.6.1",
     "remark-sub-super": "^1.0.21",
     "sass": "^1.49.10",
-    "shakapacker": "6.6.0",
+    "shakapacker": "9.5.0",
     "string-similarity": "^4.0.4",
     "stripe": "^17.7.0",
     "style-loader": "^3.3.3",
@@ -116,11 +117,9 @@
     "truncate-utf8-bytes": "^1.0.2",
     "unist-util-visit": "^5.0.0",
     "uuid": "^11.1.0",
-    "webpack": "5",
-    "webpack-assets-manifest": "5",
-    "webpack-cli": "5",
-    "webpack-merge": "5",
-    "webpack-sources": "^3.2.3",
+    "webpack": "^5",
+    "webpack-assets-manifest": "^5",
+    "webpack-cli": "^5",
     "yup": "^0.32.11"
   },
   "babel": {
@@ -160,7 +159,7 @@
     "stylelint": "^16.0.0",
     "stylelint-config-property-sort-order-smacss": "^10.0.0",
     "stylelint-config-recommended-scss": "^14.0.0",
-    "webpack-dev-server": "^5.2.2"
+    "webpack-dev-server": "^5"
   },
   "resolutions": {
     "nanoid": "<4.0.0",

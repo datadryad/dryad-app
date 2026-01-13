@@ -243,7 +243,6 @@ Rails.application.routes.draw do
     get 'dataset/*id', to: redirect{ |params| "/dataset/#{params[:id].sub('%2F', '/') }"}, status: 302,
         constraints: { id: /\S+\d%2F(dryad|FK2|[A-Z]\d)\S+/ }
     get 'dataset/*id', to: 'landing#show', as: 'show', constraints: { id: /\S+/ }
-    get 'landing/citations/:identifier_id', to: 'landing#citations', as: 'show_citations'
     get '/404', to: 'pages#app_404', as: 'app_404'
     get 'landing/metrics/:identifier_id', to: 'landing#metrics', as: 'show_metrics'
     get 'test', to: 'pages#test'
@@ -511,20 +510,25 @@ Rails.application.routes.draw do
 
   get :health_check, to: 'health#check'
 
-  ########################## CEDAR Embeddable Editor ###############################
+  ########################## CEDAR Embeddable Editor
 
-  post 'metadata_entry_pages/cedar_popup', to: 'metadata_entry_pages#cedar_popup', as: 'cedar_popup'
+  scope module: 'cedar', path: 'cedar' do
+    get '/config', to: 'json_config'  
+    get '/:id/template', to: 'template'
+    get '/:id/:resource_id/template', to: 'template'
+    get '/:id/:resource_id/metadata', to: 'metadata'
+    get '/check/:resource_id', to: 'check'
+    get '/preview/:resource_id', to: 'preview', as: 'cedar_preview'
+    post '/save/:resource_id', to: 'save'
+    delete '/save/:resource_id', to: 'delete'
+  end
+
+  post '/metadata_entry_pages/cedar_popup', to: 'metadata_entry_pages#cedar_popup', as: 'cedar_popup'
 
   # Redirect the calls for MaterialUI icons, since the embeddable editor doesn't know what path it was loaded from
   get '/metadata_entry_pages/MaterialIcons-Regular.woff', to: redirect('/MaterialIcons-Regular.woff')
   get '/metadata_entry_pages/MaterialIcons-Regular.woff2', to: redirect('/MaterialIcons-Regular.woff2')
   get '/metadata_entry_pages/MaterialIcons-Regular.ttf', to: redirect('/MaterialIcons-Regular.ttf')
-
-  get '/cedar/config', to: 'cedar#json_config'  
-  get '/cedar/:id/template', to: 'cedar#template'
-  get '/cedar/check/:resource_id', to: 'cedar#check'
-  post '/cedar/save/:resource_id', to: 'cedar#save'
-  delete '/cedar/save/:resource_id', to: 'cedar#delete'
 
   ########################## Redirects ######################################
 
