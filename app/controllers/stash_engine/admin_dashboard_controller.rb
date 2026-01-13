@@ -280,10 +280,10 @@ module StashEngine
     # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
 
     def size_filter
-      from = @filters.dig(:size, :least)
+      from = @filters.dig(:size, :least).to_i
       to = @filters.dig(:size, :most)
 
-      @datasets = @datasets.where("stash_engine_resources.total_file_size #{range_string(from, to)}")
+      @datasets = @datasets.where("stash_engine_resources.total_file_size #{"BETWEEN #{from} AND #{to.presence || 2_000_000_000_000}"}")
     end
 
     def tenant_filter
@@ -351,10 +351,6 @@ module StashEngine
     def date_string(date_hash)
       from = date_hash[:start_date]
       to = date_hash[:end_date]
-      range_string(from, to)
-    end
-
-    def range_string(from, to)
       return "<= '#{to}'" if from.blank?
       return ">= '#{from}'" if to.blank?
 
