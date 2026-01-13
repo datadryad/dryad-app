@@ -283,7 +283,9 @@ module StashEngine
       from = @filters.dig(:size, :least).to_i
       to = @filters.dig(:size, :most)
 
-      @datasets = @datasets.where("stash_engine_resources.total_file_size #{"BETWEEN #{from} AND #{to.presence || 2_000_000_000_000}"}")
+      @datasets = @datasets.where("#{
+        from.zero? ? 'stash_engine_resources.total_file_size IS NULL OR ' : ''
+      }stash_engine_resources.total_file_size #{"BETWEEN #{from} AND #{to.presence || 2_000_000_000_000}"}")
     end
 
     def tenant_filter
