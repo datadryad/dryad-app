@@ -118,6 +118,10 @@
   }
 }
 
+.o-admin-form-pair.full-width {
+  flex-basis: 100%;
+  max-width: 100%;
+}
 .o-admin-form-pair.half-width {
   flex-basis: 50%;
   max-width: calc(50% - 2ch);
@@ -279,6 +283,31 @@
   select{
     max-width: 80vw;
     text-overflow: ellipsis;
+  }
+
+  #size-slider-label {
+    margin-right: .5ch; 
+    & + div {
+      flex: 1;
+      position: relative;
+      #slider-values {
+        display: inline;
+      }
+      .slider {
+        width: calc(100% - 12ch);
+        margin: 0 auto;
+      }
+      #size-least-value {
+        position: absolute;
+        left: 0;
+        top: 1px;
+      }
+      #size-most-value {
+        position: absolute;
+        right: 0;
+        top: 1px;
+      }
+    }
   }
 }
 
