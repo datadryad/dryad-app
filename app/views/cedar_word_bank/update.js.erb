@@ -1,0 +1,2 @@
+document.getElementById("row_<%= @bank.id %>").innerHTML = "<%= escape_javascript(render partial: 'word_bank_row', locals: {b: @bank}) %>";
+document.getElementById('genericModalDialog').close();

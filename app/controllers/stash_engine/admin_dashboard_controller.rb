@@ -242,6 +242,7 @@ module StashEngine
 
       user_filters
       date_filters
+      size_filter
     end
 
     def user_filters
@@ -277,6 +278,15 @@ module StashEngine
       ) unless @filters[:first_pub_date].nil? || @filters[:first_pub_date].values.all?(&:blank?)
     end
     # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
+
+    def size_filter
+      from = @filters.dig(:size, :least).to_i
+      to = @filters.dig(:size, :most)
+
+      @datasets = @datasets.where("#{
+        from.zero? ? 'stash_engine_resources.total_file_size IS NULL OR ' : ''
+      }stash_engine_resources.total_file_size #{"BETWEEN #{from} AND #{to.presence || 2_000_000_000_000}"}")
+    end
 
     def tenant_filter
       return unless @role_object.is_a?(StashEngine::Tenant) || @filters[:member].present? || @filters[:flag] == 'tenant'

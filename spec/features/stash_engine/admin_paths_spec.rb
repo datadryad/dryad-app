@@ -286,6 +286,68 @@ RSpec.feature 'AdminPaths', type: :feature do
     end
   end
 
+  context :cedar_template_path do
+    it 'is not accessible by regular users' do
+      sign_in
+      visit stash_url_helpers.cedar_template_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is not accessible by tenant admins' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.cedar_template_path
+      # User redirected
+      expect(page).to have_text('Admin dashboard')
+    end
+
+    it 'is not accessible by tenant curators' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.cedar_template_path
+      # User redirected
+      expect(page).to have_text('Admin dashboard')
+    end
+
+    it 'is accessible by dryad admins' do
+      sign_in(create(:user, role: 'admin'))
+      visit stash_url_helpers.cedar_template_path
+      expect(page).to have_text('Manage CEDAR')
+    end
+  end
+
+  context :cedar_word_bank_path do
+    it 'is not accessible by regular users' do
+      sign_in
+      visit stash_url_helpers.cedar_word_bank_path
+      # User redirected
+      expect(page).to have_text('My datasets')
+    end
+
+    it 'is not accessible by tenant admins' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'admin', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.cedar_word_bank_path
+      # User redirected
+      expect(page).to have_text('Admin dashboard')
+    end
+
+    it 'is not accessible by tenant curators' do
+      tenant = create(:tenant_ucop)
+      sign_in(create(:user, role: 'curator', role_object: tenant, tenant_id: 'ucop'))
+      visit stash_url_helpers.cedar_word_bank_path
+      # User redirected
+      expect(page).to have_text('Admin dashboard')
+    end
+
+    it 'is accessible by dryad admins' do
+      sign_in(create(:user, role: 'admin'))
+      visit stash_url_helpers.cedar_word_bank_path
+      expect(page).to have_text('Manage CEDAR')
+    end
+  end
+
   context :status_dashboard_path do
     it 'is not accessible by regular users' do
       sign_in

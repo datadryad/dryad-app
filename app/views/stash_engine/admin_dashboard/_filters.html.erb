@@ -139,12 +139,17 @@ end
   <p class="help" id="filter-funder-desc">Filter result datasets by funding organizations matched with a <a href="https://ror.org/" target="_blank" rel="noreferrer">ROR ID<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a>.
   <div class="date-flex">
     <%= render partial: 'filter_date', locals: { id: 'submit_date', label: 'Submitted' } %>
-    <p class="help" id="submit_date-filter-desc">Filter results by the date the latest revision of the dataset was submitted</p>
+    <p class="help" id="submit_date-filter-desc">Filter results by the date the latest revision of the dataset was submitted.</p>
     <%= render partial: 'filter_date', locals: { id: 'first_sub_date', label: 'First submitted' } %>
-    <p class="help" id="first_sub_date-filter-desc">Filter results by the date the dataset was first submitted</p>
+    <p class="help" id="first_sub_date-filter-desc">Filter results by the date the dataset was first submitted.</p>
     <%= render partial: 'filter_date', locals: { id: 'publication_date', label: 'Published' } %>
-    <p class="help" id="publication_date-filter-desc">Filter results by the date the latest revision of the dataset was published</p>
+    <p class="help" id="publication_date-filter-desc">Filter results by the date the latest revision of the dataset was published.</p>
     <%= render partial: 'filter_date', locals: { id: 'first_pub_date', label: 'First published' } %>
-    <p class="help" id="first_pub_date-filter-desc">Filter results by the date the dataset was first published</p>
+    <p class="help" id="first_pub_date-filter-desc">Filter results by the date the dataset was first published.</p>
+    <div class="o-admin-form-pair full-width">
+      <span id="size-slider-label">Dataset size:</span>
+      <%= render partial: 'search/slider_size', locals: { most_name: 'filters[size][most]', most_value: @filters.dig(:size, :most), least_name: 'filters[size][least]', least_value: @filters.dig(:size, :least)} %>
+    </div>
+    <p class="help" id="size-slider-desc">Filter results by the size of the latest revision of the dataset.</p>
   </div>
 </fieldset>

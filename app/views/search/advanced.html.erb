@@ -92,12 +92,12 @@
       <span id="date-slider-label">Publication date</span>
       <%= render partial: 'slider_date' %>
     </div>
-    <div class="help-text">Retrieve only datasets with a first publication date within the selected range.</div>
+    <div class="help-text" id="date-slider-desc">Retrieve only datasets with a first publication date within the selected range.</div>
     <div class="input-stack">
       <span id="size-slider-label">Dataset size</span>
-      <%= render partial: 'slider_size' %>
+      <%= render partial: 'slider_size', locals: { most_name: 'sizeLesser', most_value: params['sizeLesser'], least_name: 'sizeGreater', least_value: params['sizeGreater'] } %>
     </div>
-    <div class="help-text">Retrieve only datasets with a total file size within the selected range.</div>
+    <div class="help-text" id="size-slider-desc">Retrieve only datasets with a total file size within the selected range.</div>
     <div class="input-stack" role="group" aria-labelledby="ext-legend" aria-describedby="fileExt-help">
       <span id="ext-legend" style="margin-bottom: .5ch">File extensions</span>
       <div class="radio_choice">

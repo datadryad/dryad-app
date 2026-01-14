@@ -79,7 +79,7 @@
   const observer = new MutationObserver(checkForm)
   const clearFilters = (e) => {
     e.preventDefault()
-    const inputs = document.querySelectorAll(['#edit_filters-form input:not([type="checkbox"])', '#search_form input[type="search"]'])
+    const inputs = document.querySelectorAll(['#edit_filters-form input:not([type="checkbox"]):not([type="range"])', '#search_form input[type="search"]'])
     for (const input of inputs) {
       input.value = ''
       input.classList.remove('selected')
@@ -93,6 +93,13 @@
     for (const check of checks) {
       check.checked = false
     }
+    const sizeLeast = document.getElementById('size-least')
+    sizeLeast.value = sizeLeast.min
+    sizeLeast.dispatchEvent(new Event('input'))
+    const sizeMost = document.getElementById('size-most')
+    sizeMost.value = sizeMost.max
+    sizeMost.dispatchEvent(new Event('input'))
+
     checkForm()
   }
 </script>
