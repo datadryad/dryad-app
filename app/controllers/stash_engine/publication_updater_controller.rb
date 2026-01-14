@@ -33,7 +33,6 @@ module StashEngine
         .joins(
           'JOIN stash_engine_curation_activities sa ON sa.id = stash_engine_resources.last_curation_activity_id'
         )
-        .where("stash_engine_identifiers.pub_state != 'withdrawn'")
         .select('stash_engine_proposed_changes.*')
 
       proposed_changes = add_param_filters(proposed_changes)
