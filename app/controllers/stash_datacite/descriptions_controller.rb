@@ -32,9 +32,9 @@ module StashDatacite
     # PATCH/PUT /descriptions/1
     def update
       items = description_params
-      if %w[technicalinfo hsi_statement changelog].include?(@description&.description_type) || items[:description].nil?
-        items[:description] = items[:description].gsub(/([\.\?\!,;:'"]) {2,}/, '\1 ')
-      else
+      if %w[technicalinfo hsi_statement changelog].include?(@description&.description_type)
+        items[:description] = items[:description]&.gsub(/([\.\?\!,;:'"]) {2,}/, '\1 ')
+      elsif items[:description].present?
         desc = helpers.markdown_render(content: items[:description], header_offset: 2)
         items[:description] =
           Loofah.fragment(desc).scrub!(:strip).to_s
