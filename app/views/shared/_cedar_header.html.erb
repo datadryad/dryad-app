@@ -1,0 +1,7 @@
+<nav aria-label="CEDAR management navigation" style="display: flex; align-items: baseline; column-gap: 30px; flex-wrap: wrap">
+  <h1 style="margin-bottom: 0;">Manage CEDAR</h1>
+  <ul class="c-header__nav-group" style="height: 22.2667px; font-size: 1rem;">
+    <li class="c-second__nav-item"><a<% if current == 'banks' %> aria-current="page"<%end%> href="<%= cedar_word_bank_path %>">Word banks</a>
+    <li class="c-second__nav-item"><a<% if current == 'templates' %> aria-current="page"<%end%> href="<%= cedar_template_path %>">Templates</a>
+  </ul>
+</nav>

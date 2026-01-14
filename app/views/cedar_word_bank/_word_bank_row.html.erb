@@ -1,0 +1,16 @@
+<td>
+  <div class="c-lined-table__with-actions">
+    <div class="c-lined-table__data" id="word_bank_<%= b.id %>"><%= b.label %></div>
+    <% if policy(b).edit? %>
+      <%= form_with(url: cedar_word_bank_edit_path(id: b.id), method: :get, local: false) do %>
+        <button class="c-admin-edit-icon" aria-label="Edit template" aria-haspopup="dialog" id="edit_button_<%= b.id %>">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      <% end %>
+    <% end %>
+  </div>
+</td>
+<td><code style="background: transparent;"><%= b.keywords %></code></td>
+<td>
+  <%= b.cedar_templates.map(&:title).join(', ') %>
+</td>

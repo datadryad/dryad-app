@@ -530,6 +530,17 @@ Rails.application.routes.draw do
   get '/metadata_entry_pages/MaterialIcons-Regular.woff2', to: redirect('/MaterialIcons-Regular.woff2')
   get '/metadata_entry_pages/MaterialIcons-Regular.ttf', to: redirect('/MaterialIcons-Regular.ttf')
 
+  get '/cedar_template', to: 'cedar_template#index'
+  get '/cedar_template/new', to: 'cedar_template#new', as: 'cedar_template_new'
+  post '/cedar_template', to: 'cedar_template#create', as: 'cedar_template_create'
+  get '/cedar_template/:id', to: 'cedar_template#edit', as: 'cedar_template_edit'
+  post '/cedar_template/:id', to: 'cedar_template#update', as: 'cedar_template_update'
+  get '/cedar_word_bank', to: 'cedar_word_bank#index'
+  get '/cedar_word_bank/new', to: 'cedar_word_bank#new', as: 'cedar_word_bank_new'
+  post '/cedar_word_bank', to: 'cedar_word_bank#create', as: 'cedar_word_bank_create'
+  get '/cedar_word_bank/:id', to: 'cedar_word_bank#edit', as: 'cedar_word_bank_edit'
+  post '/cedar_word_bank/:id', to: 'cedar_word_bank#update', as: 'cedar_word_bank_update'
+
   ########################## Redirects ######################################
 
   # Routing to redirect old Dryad URLs to their correct locations in this system

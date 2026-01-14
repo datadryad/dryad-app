@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
 
+  include Pundit::Authorization
+
   before_action :set_paper_trail_whodunnit
 
   def process_action(*args)
