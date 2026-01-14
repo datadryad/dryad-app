@@ -137,8 +137,8 @@ export default function UploadFiles({
       if (chosenFiles.some((f) => f.uploadType === 'data' && f.status !== 'Pending' && f.file_state === 'created')) {
         setChanges(true);
       }
-      if (initialLoad && previous.generic_files.some((p) => !chosenFiles.some((f) => f.upload_file_name === p.upload_file_name
-        && f.storage_version_id === p.storage_version_id))
+      if (initialLoad && previous.generic_files.some((p) => p.type === 'StashEngine::DataFile'
+        && !chosenFiles.some((f) => f.upload_file_name === p.upload_file_name && f.storage_version_id === p.storage_version_id))
       ) {
         setChanges(true);
       }

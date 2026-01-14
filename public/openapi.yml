@@ -5,16 +5,15 @@ info:
   description: |
     Dryad's REST API allows detailed interaction and programmatic interfacing with Dryad contents. The most common case is to use GET requests to retrieve information about datasets, versions, and files.
 
-    When using the API, any DOI included must be <a href="https://www.w3schools.com/tags/ref_urlencode.ASP" target="blank">URL-encoded<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> to ensure correct processing. Anonymous users of the API are limited to 30 requests per minute, with a lower limit for downloads of data files. 
+    When using the API, any DOI included must be <a href="https://www.w3schools.com/tags/ref_urlencode.ASP" target="blank">URL-encoded<i class="fas fa-arrow-up-right-from-square exit-icon" aria-label=" (opens in new window)" role="img"></i></a> to ensure correct processing. Anonymous users of the API are limited to 30 requests per minute, and are not allowed to download data files. 
 
     Examples:
 
     - [List datasets](https://datadryad.org/api/v2/datasets)
     - [Search for datasets](https://datadryad.org/api/v2/search?q=carbon)
     - [Get information about a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7)
-    - [See versions of a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/versions)
-    - [Get files from a version](https://datadryad.org/api/v2/versions/26724/files)
-    - [Download the most recent version of a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/download)
+    - [List versions of a dataset](https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.j1fd7/versions)
+    - [List files in a version](https://datadryad.org/api/v2/versions/26724/files)
 
     Detailed documentation:
 
@@ -27,6 +26,7 @@ info:
     To access more powerful features, an API account is required. API accounts allow users to:
 
     - Access the API at higher rates (authenticated users may make up to 120 requests per minute)
+    - Download data files
     - Access datasets that are not yet public, but are associated with the account's community (institution, journal, etc.)
     - Update datasets associated with the account's community
 
@@ -313,6 +313,8 @@ paths:
       tags:
         - datasets 
       description: This downloads the zip package of the latest submitted version of the dataset that is visible to the user (or public).
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/doi'
       responses:
@@ -420,6 +422,8 @@ paths:
       tags:
         - versions
       description: This downloads the zip package of a specified, submitted version of the dataset that is visible to the user (or public).
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/version_id'
       responses:
@@ -504,6 +508,8 @@ paths:
       tags:
         - files
       description: Only files that have been stored in the storage repository may be downloaded (and ability to download may depend on the user).  Versions of a dataset still in-progress only have staged files that may not be downloaded until they have been submitted to the storage repository.
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/file_id'
       responses:

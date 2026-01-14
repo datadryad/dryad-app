@@ -86,6 +86,7 @@
           <% end %>
           <h4 id="date-slider-label">Publication date</h4>
           <%= render partial: 'slider_date' %>
+          <div class="screen-reader-only" id="date-slider-desc">Retrieve only datasets with a first publication date within the selected range.</div>
           <div style="text-align: right"><button class="o-button__plain-text4" type="submit">Apply</button></div>
         </form>
       </div>
@@ -103,7 +104,8 @@
             <% end %>
           <% end %>
           <h4 id="size-slider-label">Dataset size</h4>
-          <%= render partial: 'slider_size' %>
+          <%= render partial: 'slider_size', locals: { most_name: 'sizeLesser', most_value: params['sizeLesser'], least_name: 'sizeGreater', least_value: params['sizeGreater'] } %>
+          <div class="screen-reader-only" id="size-slider-desc">Retrieve only datasets with a total file size within the selected range.</div>
           <div style="text-align: right"><button class="o-button__plain-text4" type="submit">Apply</button></div>
         </form>
       </div>

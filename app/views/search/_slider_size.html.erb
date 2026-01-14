@@ -1,15 +1,15 @@
-<% sizes = [0, 5000, 50000, 500000, 1000000, 5000000, 10000000, 25000000, 100000000, 500000000, 1000000000, 5000000000, 10000000000, 50000000000, 100000000000, 500000000000, 1000000000000, 2000000000000] %>
-<div role="group" aria-labelledby="size-slider-label">
-  <input type="hidden" name="sizeGreater" id="size-least-input" value="<%= params['sizeGreater'] || sizes.first %>">
-  <input type="hidden" name="sizeLesser" id="size-most-input" value="<%= params['sizeLesser'] || sizes.last %>">
+<% sizes = [0, 5000, 50000, 500000, 1000000, 5000000, 10000000, 25000000, 100000000, 500000000, 1000000000, 5000000000, 10000000000, 25000000000, 50000000000, 100000000000, 250000000000, 500000000000, 1000000000000, 2000000000000] %>
+<div role="group" aria-labelledby="size-slider-label" aria-describedby="size-slider-desc">
+  <input type="hidden" name="<%= least_name %>" id="size-least-input" value="<%= least_value || sizes.first %>">
+  <input type="hidden" name="<%= most_name %>" id="size-most-input" value="<%= most_value || sizes.last %>">
   <div class="slider-values">
-    <label id="size-least-value" for="size-least"><%= filesize(params['sizeGreater']&.to_i ||sizes.first) %></label>
-    <label id="size-most-value" for="size-most"><%= filesize(params['sizeLesser']&.to_i || sizes.last) %></label>
+    <label id="size-least-value" for="size-least"><%= filesize(least_value&.to_i ||sizes.first) %></label>
+    <label id="size-most-value" for="size-most"><%= filesize(most_value&.to_i || sizes.last) %></label>
   </div>
   <div class="slider">
     <div class="slider-track" id="size-track"></div>
-    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= params['sizeGreater'].present? ? sizes.bsearch_index { |x| params['sizeGreater'].to_i <= x } : 0 %>" id="size-least"/>
-    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= params['sizeLesser'].present? ? sizes.bsearch_index { |x| params['sizeLesser'].to_i <= x } : sizes.length - 1 %>" id="size-most"/>
+    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= least_value.present? ? sizes.bsearch_index { |x| least_value.to_i <= x } : 0 %>" id="size-least"/>
+    <input type="range" min="0" max="<%= sizes.length - 1 %>" value="<%= most_value.present? ? sizes.bsearch_index { |x| most_value.to_i <= x } : sizes.length - 1 %>" id="size-most"/>
   </div>
   <script type="text/javascript">
     var strack = document.getElementById('size-track');

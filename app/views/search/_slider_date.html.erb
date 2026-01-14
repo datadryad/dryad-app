@@ -1,5 +1,5 @@
 <% months = (Date.new(2007,12,1)..Date.today + 1.month).map { |date| date.strftime('%Y-%m-01T00:00:00Z') }.uniq %>
-<div role="group" aria-labelledby="date-slider-label">
+<div role="group" aria-labelledby="date-slider-label" aria-describedby="date-slider-desc">
   <input type="hidden" name="publishedSince" id="date-least-input" value="<%= params['publishedSince'] || months.first %>">
   <input type="hidden" name="publishedBefore" id="date-most-input" value="<%= params['publishedBefore'] || months.last %>">
   <div class="slider-values">

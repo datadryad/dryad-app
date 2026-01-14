@@ -29,7 +29,7 @@
   <li>American Genetic Association (AGA)</li>
   <li>American Society of Naturalists</li>
   <li>Association for Tropical Biology and Conservation (ATBC)</li>
-  <li>Biological Journal of the Lennean Society</li>
+  <li>Biological Journal of the Linnean Society</li>
   <li>BioMed Central</li>
   <li>British Ecological Society</li>
   <li>BMJ Open</li>
@@ -153,7 +153,7 @@ The release of this statement was deeply formative in Dryad’s development and 
 
 From 2018 to 2023, Dryad was supported by in-kind investment in product management, platform development, and grants management through a partnership with the California Digital Library (CDL).
 
-In 2025, the Dryad platform represents over 50,000 data publications – the work of over 200,000 researchers in connection with over 70,000 international institutions and over 1,000 academic journals. 
+In 2026, the Dryad platform represents over 65,000 data publications – the work of over 300,000 researchers in connection with over 100,000 international institutions and over 2,000 academic journals. 
 
 For the latest figures, read our [Annual report](https://github.com/datadryad/governance/tree/main/annual-reports).
      
