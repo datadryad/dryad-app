@@ -267,6 +267,7 @@ The DPC and Annual Service Fee are combined to calculate the total annual fee, w
 <div style="font-size: .98rem;">
 <h3 style="font-size: 1.1rem">Change log</h3>
 <ul>
+  <li>January 28, 2025: Clarified description of data size ranges</li>
   <li>August 28, 2025: Added detailed description of annual research expenditures</li>
   <li>June 24, 2025: Added consortium policy and pricing table</li>
   <li>June 18, 2025: Clarified policy for cases where both an institutional library and a campus-based publisher have partner agreements</li>

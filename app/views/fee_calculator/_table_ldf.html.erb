@@ -2,7 +2,7 @@
 <% tiers.each do |t| %>
   <% if t[:price] > 0 %>
     <tr>
-      <td><%= t[:range].to_s.split('..').map {|n| filesize(n.to_i) }.join('-') %></td>
+      <td>Up to <%= filesize(t[:range].to_s.split('..').last.to_i) %></td>
       <td><%= number_to_currency(t[:price], precision: 0) %></td>
     </tr>
   <% end %>
