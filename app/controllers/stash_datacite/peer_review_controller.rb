@@ -23,18 +23,23 @@ module StashDatacite
     end
 
     def release
-      @errors = StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors
-      @not_paid = @resource.identifier.payment_needed?
+      errors = StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors
+      not_paid = @resource.identifier.payment_needed?
 
-      if @errors || @not_paid
+      @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
+
+      if errors || not_paid
+        flash[:alert] = 'Unable to submit dataset for curation. Please correct submission errors' if errors
+
+        if not_paid
+          CurationService.new(resource: @resource, status: 'awaiting_payment', note: 'Full DPC payment required').process
+          @resource.reload
+          flash[:notice] = 'Please pay the remaining DPC to submit for curation and publication'
+        end
+
         new_res = DuplicateResourceService.new(@resource, current_user).call
-        new_res.update(hold_for_peer_review: false, peer_review_end_date: nil)
-
-        flash[:alert] = 'Unable to submit dataset for curation. Please correct submission errors' if @errors
-        flash[:notice] = 'Please pay the remaining DPC to submit for curation and publication' if @not_paid
         redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: new_res.id)
       else
-        @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
         CurationService.new(
           resource: @resource, user_id: current_user.id, status: 'queued', note: 'Release from PPR'
         ).process

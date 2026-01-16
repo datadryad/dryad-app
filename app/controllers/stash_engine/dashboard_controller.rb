@@ -23,7 +23,7 @@ module StashEngine
             .joins(:last_curation_activity)
             .select("stash_engine_resources.*,
             CASE
-              WHEN status='action_required' THEN 0
+              WHEN status in ('action_required', 'awaiting_payment') THEN 0
               WHEN (status='in_progress' and (current_editor_id = #{current_user.id} or  current_editor_id is null)) THEN 0
               WHEN (status='in_progress' and current_editor_id in (#{StashEngine::User.all_curators.map(&:id).join(',').presence || '-1'})) THEN 3
               WHEN status='in_progress' THEN 1
