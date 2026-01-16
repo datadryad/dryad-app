@@ -1,5 +1,6 @@
 import React from 'react';
 import {upCase, ordinalNumber} from '../../../../lib/utils';
+import {orderedItems} from '../DragonDropList';
 
 export {default} from './Authors';
 export {default as AuthPreview} from './AuthPreview';
@@ -7,7 +8,8 @@ export {default as AuthPreview} from './AuthPreview';
 const checkName = (a) => [a.author_first_name, a.author_last_name, a.author_org_name].filter(Boolean).join(' ').toLowerCase();
 
 export const authorCheck = (resource) => {
-  const {authors, users} = resource;
+  const {authors: auths, users} = resource;
+  const authors = orderedItems({items: auths, typeName: 'author'});
   const submitter = authors.find((a) => a.author_orcid === users.find((u) => u.role === 'submitter')?.orcid);
   if (!submitter) {
     return (
