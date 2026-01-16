@@ -191,8 +191,8 @@ Sample call and (abbreviated) response:
 	}
   ],
   "versionNumber": 1,
-  "versionStatus": "submitted",
-  "curationStatus": "Submitted",
+  "versionStatus": "queued",
+  "curationStatus": "Queued for curation",
   "lastModificationDate": "2020-10-02",
   "visibility": "restricted",
   "sharingLink":"https://datadryad.org/share/OI-tU-WmoT3I2KCOqX7Of624",
@@ -231,7 +231,7 @@ OR directly
 ```
 
 The value may be:
-- `submitted` -- when a manuscript is accepted, and the dataset should be moved from "Private for peer review" into "Queued for curation" status
+- `submitted` or `queued` -- when a manuscript is accepted, and the dataset should be moved from "Private for peer review" into "Queued for curation" status
 - `withdrawn` -- when a manuscript is rejected or withdrawn, and the dataset should be moved from "Private for peer review" into a "Withdrawn" status, so the author may resubmit it in the future
 
 You also need to set the Content-Type header to 'application/json-patch+json'

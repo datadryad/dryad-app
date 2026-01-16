@@ -423,7 +423,7 @@ module StashEngine
         # YES -- move to queued after a PPR status
         CurationService.new(status: 'peer_review', resource: @res[0], user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
-        res_new.resource_states.first.update(resource_state: 'queued')
+        res_new.resource_states.first.update(resource_state: 'submitted')
         CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day).process
         CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day, note: 'another item').process
         stats = CurationStats.create(date: @day)

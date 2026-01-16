@@ -37,7 +37,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       create(:curation_activity, :queued, resource: @resource, note: 'status updated via API call')
       visit current_path
       expect(page).not_to have_text(manuscript.manuscript_number)
-      expect(page).to have_text('accepted')
+      expect(page).not_to have_text('accepted')
     end
 
     it 'renders salesforce links in notes field' do

@@ -304,7 +304,7 @@ module StashEngine
         next if ca.identifier_id.blank?
         next if datasets_found.include?(ca.identifier_id)
         # check if this was the actual date of submission for this resource
-        next unless ca.resource_with_deleted.queued_date&.to_date == date
+        next unless ca.resource_with_deleted.submitted_date&.to_date == date
 
         # if this dataset has been published or embargoed, count it
         ident = ca.identifier_with_deleted

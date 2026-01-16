@@ -428,7 +428,7 @@ module StashApi
     def update_version_status(new_status)
       ensure_in_progress { yield }
       pre_submission_updates
-      if new_status == 'submitted'
+      if %w[submitted queued].include?(new_status)
         CurationService.new(resource: @resource, status: 'processing',
                             note: 'Repository processing data', user_id: @user&.id || 0).process
       end
@@ -436,6 +436,7 @@ module StashApi
     end
 
     def update_curation_status(new_status)
+      new_status = 'queued' if new_status == 'submitted'
       note = 'status updated via API call'
 
       # DON'T go backwards in workflow,

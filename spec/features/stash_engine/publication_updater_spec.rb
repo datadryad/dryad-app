@@ -35,9 +35,9 @@ RSpec.feature 'PublicationUpdater', type: :feature, js: true do
       visit stash_url_helpers.publication_updater_path
       expect(page).to have_content('5 results')
       expect(page).to have_content('Published', minimum: 3)
-      expect(page).to have_content('Submitted', minimum: 2)
+      expect(page).to have_content('Queued for curation', minimum: 2)
 
-      select 'Submitted'
+      select 'Queued for curation'
       click_button 'Search'
       expect(page).to have_content('2 results')
       expect(page).to have_content(r[1].title)

@@ -1406,7 +1406,7 @@ module StashEngine
         it 'is false even when current curation state is Submitted' do
           identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.999/999')
           resource = create(:resource, user_id: user.id, identifier_id: identifier.id)
-          CurationService.new(status: 'submitted', resource: resource).process
+          CurationService.new(status: 'queued', resource: resource).process
           resource.reload
           expect(resource.curatable?).to eql(false)
         end
@@ -1424,7 +1424,7 @@ module StashEngine
         it 'returns the correct dates for a regular submission' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
           CurationService.new(user: @user, resource: res, created_at: '2020-01-01', status: 'in_progress').process
-          CurationService.new(user: @user, resource: res, created_at: '2020-01-02', status: 'submitted').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-02', status: 'queued').process
           CurationService.new(user: @user, resource: res, created_at: '2020-01-03', status: 'curation').process
           CurationService.new(user: @user, resource: res, created_at: '2020-01-04', status: 'published').process
           expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
@@ -1451,8 +1451,8 @@ module StashEngine
         it 'returns no curation date without curation' do
           res = create(:resource, user_id: @user.id, tenant_id: @user.tenant_id)
           CurationService.new(user: @user, resource: res, created_at: '2020-01-01', status: 'in_progress').process
-          CurationService.new(user: @user, resource: res, created_at: '2020-01-02', status: 'submitted').process
-          CurationService.new(user: @user, resource: res, created_at: '2020-01-03', status: 'submitted').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-02', status: 'queued').process
+          CurationService.new(user: @user, resource: res, created_at: '2020-01-03', status: 'queued').process
           CurationService.new(user: @user, resource: res, created_at: '2020-01-04', status: 'published').process
           expect(res.submitted_date.to_date).to eql(Date.parse('2020-01-02'))
           expect(res.curation_start_date).to be_nil
@@ -1694,9 +1694,9 @@ module StashEngine
 
         context 'when deleting a resource that is not the last resource' do
           let!(:first_resource) { create(:resource, identifier: identifier, created_at: 2.minutes.ago) }
-          let!(:ca1) { create(:curation_activity, resource: first_resource, status: 'submitted', created_at: 2.minutes.ago) }
+          let!(:ca1) { create(:curation_activity, resource: first_resource, status: 'queued', created_at: 2.minutes.ago) }
           let!(:resource) { create(:resource, identifier: identifier, created_at: 1.minute.ago) }
-          let!(:ca2) { create(:curation_activity, resource: resource, status: 'submitted', created_at: 1.minute.ago) }
+          let!(:ca2) { create(:curation_activity, resource: resource, status: 'queued', created_at: 1.minute.ago) }
           let!(:last_resource) { create(:resource, identifier: identifier) }
 
           before do

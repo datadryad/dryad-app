@@ -124,7 +124,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           # Make sure the appropriate buttons are available
           # Make sure the right text is shown
           expect(page).to have_link(@resource.title)
-          expect(page).to have_text('Submitted')
+          expect(page).to have_text('Queued for curation')
           @resource.authors.each do |author|
             expect(page).to have_text(author.author_last_name)
           end
@@ -138,7 +138,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         expect(page).to have_text(@resource.identifier.identifier)
 
-        expect(page).to have_text('Submitted')
+        expect(page).to have_text('Queued for curation')
         expect(page).to have_text(@author.name)
       end
 

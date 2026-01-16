@@ -83,7 +83,7 @@ module StashApi
 
         expect(response).to have_http_status(:ok)
         output = response_body_hash
-        expect(output[:status]).to eq('Submitted')
+        expect(output[:status]).to eq('Queued for curation')
         expect(output[:note]).to eq('New activity note')
       end
     end

@@ -372,7 +372,7 @@ namespace :identifiers do
         next unless time_in_curation >=	0
 
         # TimeToApproval = time from submission to approval
-        time_to_approval = (i.approval_date - r.queued_date).to_i / 1.day if i.approval_date && r.queued_date
+        time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
 
         csv << [i.identifier, i.created_at, i.latest_resource.size, num_files, file_extensions, time_to_approval, time_in_curation]
       end
@@ -1080,7 +1080,7 @@ namespace :identifiers do
                 approval_date_str, res&.title,
                 res&.subjects&.fos&.map(&:subject),
                 res&.current_curation_status,
-                first_res&.queued_date, i.date_first_published, i.resources.last.updated_at,
+                first_res&.submitted_date, i.date_first_published, i.resources.last.updated_at,
                 i.storage_size,
                 stat&.unique_investigation_count, stat&.unique_request_count, stat&.citation_count,
                 i.payment_type, i.publication_name, i.journal&.sponsor&.name,
@@ -1446,7 +1446,7 @@ namespace :curation_stats do
         time_aar_to_curation = (post_aar_curation_date - i.aar_date).to_i / 1.day if i.aar_date && post_aar_curation_date
 
         # TimeToApproval = time from submission to approval
-        time_to_approval = (i.approval_date - r.queued_date).to_i / 1.day if i.approval_date && r.queued_date
+        time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
 
         csv << [i.identifier, # DOI
                 curation_completed_date_str, # CurationCompletedDate
