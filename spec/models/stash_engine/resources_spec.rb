@@ -666,7 +666,7 @@ module StashEngine
           res = create(:resource, publication_date: Time.new - 1.day, identifier_id: @identifier.id)
           res.current_resource_state.update(resource_state: 'submitted')
           @curation_activities << [
-            CurationService.new(status: 'submitted', user: @user, resource: res).process,
+            CurationService.new(status: 'queued', user: @user, resource: res).process,
             CurationService.new(status: 'embargoed', user: @user, resource: res).process
           ]
           @resources << res

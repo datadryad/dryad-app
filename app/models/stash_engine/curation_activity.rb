@@ -37,23 +37,21 @@ module StashEngine
     belongs_to :resource_with_deleted, -> { with_deleted }, class_name: 'StashEngine::Resource', foreign_key: 'resource_id'
     belongs_to :identifier_with_deleted, -> { with_deleted }, class_name: 'StashEngine::Identifier', foreign_key: 'identifier_id'
 
-    # Explanation of statuses
-    #  :in_progress <-- When the resource's current resource_state != 'submitted'
-    #                  This is the initial default value set on initialize
-    #
-    #  :submitted   <-- When the resource's current resource_state == 'submitted'
-    #                  This is set by a callback on ResourceState.save
-    #
-    #  :curation, :action_required, :published, :embargoed and :withdrawn are all manually
-    #  set by the Curator on the Admin page.
-    #
-    #  :published   <-- Is set by the Curator via the UI OR automatically set when the
-    #                   Resource's publication_date has reached maturity
-    #
+    # in_progress - default status, version is being edited
+    # processing - version has been submitted for file processing
+    # queued - version is processed and ready for curation. automatically set
+    # peer_review - version is processed but not ready for curation
+    # curation - version is being curated. manually set
+    # action_required - version requires revision. manually set
+    # withdrawn - version will not be revised or published
+    # embargoed - version metadata is public, files will be public on specificed date
+    # to_be_published - version will be public on specified date
+    # published - version is public
+
     enum_vals = %w[
       in_progress
       processing
-      submitted
+      queued
       peer_review
       curation
       action_required
@@ -72,14 +70,14 @@ module StashEngine
     CURATOR_ALLOWED_STATES = {
       in_progress: %w[in_progress],
       processing: %w[in_progress processing],
-      submitted: %w[submitted curation withdrawn peer_review],
-      peer_review: %w[peer_review submitted curation withdrawn],
-      curation: (enum_vals - %w[in_progress processing submitted to_be_published]),
-      action_required: (enum_vals - %w[in_progress processing submitted to_be_published]),
+      queued: %w[queued curation withdrawn peer_review],
+      peer_review: %w[peer_review queued curation withdrawn],
+      curation: (enum_vals - %w[in_progress processing queued to_be_published]),
+      action_required: (enum_vals - %w[in_progress processing queued to_be_published]),
       withdrawn: %w[withdrawn curation],
       embargoed: %w[embargoed curation withdrawn published],
       to_be_published: %w[embargoed curation withdrawn to_be_published published],
-      published: (enum_vals - %w[in_progress processing submitted to_be_published])
+      published: (enum_vals - %w[in_progress processing queued to_be_published])
     }.with_indifferent_access.freeze
 
     # Validations
@@ -106,10 +104,10 @@ module StashEngine
       case status
       when 'error'
         'Upload error'
+      when 'queued'
+        'Queued for curation'
       when 'peer_review'
         'Private for peer review'
-      when 'action_required'
-        'Action required'
       else
         status.humanize
       end

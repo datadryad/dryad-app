@@ -279,7 +279,7 @@ To see these changes:
 1. Create a dataset associated with a journal as described above, and put it in `peer_review` status
 2. Send an updated email, with the same manuscript number, but with `Article Status: accepted`
 3. Process the email as described above
-4. Verify that the associated dataset has moved to `submitted` status
+4. Verify that the associated dataset has moved to `queued` status
 
 When the email contains `Article Status: rejected`, the associated dataset will
 be moved to `withdrawn` status.

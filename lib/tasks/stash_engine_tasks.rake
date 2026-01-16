@@ -72,7 +72,7 @@ namespace :identifiers do
       CurationService.new(
         resource_id: resource.id,
         user_id: resource.submitter.id,
-        status: resource.identifier.internal_data.empty? ? 'submitted' : 'peer_review',
+        status: resource.identifier.internal_data.empty? ? 'queued' : 'peer_review',
         created_at: resource.updated_at,
         updated_at: resource.updated_at
       ).process
@@ -372,7 +372,7 @@ namespace :identifiers do
         next unless time_in_curation >=	0
 
         # TimeToApproval = time from submission to approval
-        time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
+        time_to_approval = (i.approval_date - r.queued_date).to_i / 1.day if i.approval_date && r.queued_date
 
         csv << [i.identifier, i.created_at, i.latest_resource.size, num_files, file_extensions, time_to_approval, time_in_curation]
       end
@@ -1080,7 +1080,7 @@ namespace :identifiers do
                 approval_date_str, res&.title,
                 res&.subjects&.fos&.map(&:subject),
                 res&.current_curation_status,
-                first_res&.submitted_date, i.date_first_published, i.resources.last.updated_at,
+                first_res&.queued_date, i.date_first_published, i.resources.last.updated_at,
                 i.storage_size,
                 stat&.unique_investigation_count, stat&.unique_request_count, stat&.citation_count,
                 i.payment_type, i.publication_name, i.journal&.sponsor&.name,
@@ -1129,10 +1129,10 @@ namespace :identifiers do
 
       # Identifiers that have their FIRST submitted date in the given period
       found_identifiers = Set[]
-      first_submitted = StashEngine::Identifier.joins(:process_date)
-        .where(stash_engine_process_dates: { submitted: origin_date..end_date })
+      first_queued = StashEngine::Identifier.joins(:process_date)
+        .where(stash_engine_process_dates: { queued: origin_date..end_date })
         .distinct
-      found_identifiers.merge(first_submitted)
+      found_identifiers.merge(first_queued)
 
       # produce the stats
       puts('  writing results')
@@ -1145,7 +1145,7 @@ namespace :identifiers do
         csv << [i.identifier, i.publication_article_doi,
                 u&.affiliation&.long_name, r&.country,
                 res&.current_curation_status,
-                i.process_date.submitted&.to_date, i.date_first_published&.to_date, i.resources.last.updated_at.to_date,
+                i.process_date.queued&.to_date, i.date_first_published&.to_date, i.resources.last.updated_at.to_date,
                 i.storage_size,
                 i.payment_type, i.publication_name, i.journal&.sponsor&.name,
                 res&.contributors&.map(&:contributor_name)&.compact,
@@ -1391,7 +1391,7 @@ namespace :curation_stats do
                 i.payment_type,
                 cas.find(&:in_progress?)&.created_at,
                 cas.find(&:peer_review?)&.created_at,
-                cas.find(&:submitted?)&.created_at,
+                cas.find(&:queued?)&.created_at,
                 cas.find(&:curation?)&.created_at,
                 cas.find(&:action_required?)&.created_at,
                 cas.find(&:embargoed?)&.created_at,
@@ -1446,7 +1446,7 @@ namespace :curation_stats do
         time_aar_to_curation = (post_aar_curation_date - i.aar_date).to_i / 1.day if i.aar_date && post_aar_curation_date
 
         # TimeToApproval = time from submission to approval
-        time_to_approval = (i.approval_date - r.submitted_date).to_i / 1.day if i.approval_date && r.submitted_date
+        time_to_approval = (i.approval_date - r.queued_date).to_i / 1.day if i.approval_date && r.queued_date
 
         csv << [i.identifier, # DOI
                 curation_completed_date_str, # CurationCompletedDate

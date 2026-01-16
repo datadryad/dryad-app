@@ -16,7 +16,7 @@
 #  date                        :datetime
 #  new_datasets                :integer
 #  new_datasets_to_peer_review :integer
-#  new_datasets_to_submitted   :integer
+#  new_datasets_to_queued      :integer
 #  ppr_size                    :integer
 #  ppr_to_curation             :integer
 #  created_at                  :datetime         not null
@@ -42,7 +42,7 @@ module StashEngine
         datasets_to_be_curated.present? &&
         datasets_unclaimed.present? &&
         new_datasets.present? &&
-        new_datasets_to_submitted.present? &&
+        new_datasets_to_queued.present? &&
         new_datasets_to_peer_review.present? &&
         ppr_to_curation.present? &&
         datasets_to_aar.present? &&
@@ -61,7 +61,7 @@ module StashEngine
       populate_datasets_curated
       populate_datasets_to_be_curated
       populate_new_datasets
-      populate_new_datasets_to_submitted
+      populate_new_datasets_to_queued
       populate_new_datasets_to_peer_review
       populate_ppr_to_curation
       populate_datasets_to_aar
@@ -122,19 +122,19 @@ module StashEngine
     end
 
     # The number of datasets available for curation on that day,
-    # including any held over from before (either have status 'curation' or 'submitted')
+    # including any held over from before (either have status 'curation' or 'queued')
     def populate_datasets_to_be_curated
       # for each dataset that was in the target status on the given day
       identifiers = StashEngine::Identifier.with_deleted.where(created_at: LAUNCH_DATE..(date + 1.day)).select(:id)
-      activities_in_status = identifiers_with_status(identifiers, %w[submitted curation])
+      activities_in_status = identifiers_with_status(identifiers, %w[queued curation])
       to_be_curated = activities_in_status.count
 
-      # all submitted datasets
-      submitted_activities = identifiers_with_status(identifiers, 'submitted')
+      # all queued datasets
+      queued_activities = identifiers_with_status(identifiers, 'queued')
 
       # there is a curator assignment
       with_assigned_curator_note = CurationActivity.with_deleted.select('identifier_id, MAX(id) AS last_ca_id')
-        .where(created_at: LAUNCH_DATE..(date + 1.day), identifier_id: submitted_activities.select(:identifier_id))
+        .where(created_at: LAUNCH_DATE..(date + 1.day), identifier_id: queued_activities.select(:identifier_id))
         .where("note like 'Changing curator to%' OR note like 'System auto-assigned curator%'")
         .group('identifier_id')
 
@@ -145,7 +145,7 @@ module StashEngine
         .where("note like 'Changing curator to unassigned%'")
         .count
 
-      unclaimed = submitted_activities.count - with_assigned_curator_note.size.size + unassigned
+      unclaimed = queued_activities.count - with_assigned_curator_note.size.size + unassigned
       update(datasets_to_be_curated: to_be_curated, datasets_unclaimed: unclaimed)
     end
 
@@ -153,24 +153,24 @@ module StashEngine
       update(new_datasets: StashEngine::Identifier.with_deleted.where(created_at: date..(date + 1.day)).count)
     end
 
-    # The number of new submissions that day (so the first time we see them as 'submitted' in the system)
-    def populate_new_datasets_to_submitted
+    # The number of new submissions that day (so the first time we see them as 'queued' in the system)
+    def populate_new_datasets_to_queued
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.with_deleted.where(created_at: date..(date + 1.day), status: %w[submitted]).find_each do |ca|
+      CurationActivity.with_deleted.where(created_at: date..(date + 1.day), status: %w[queued]).find_each do |ca|
         next if ca.identifier_id.blank?
         next if datasets_found.include?(ca.identifier_id)
 
         first_submission = StashEngine::Resource.with_deleted.where(identifier_id: ca.identifier_id)&.submitted&.by_version&.first
         next if first_submission.nil?
 
-        # skip if the dataset was not first submitted on this date
+        # skip if the dataset was not first queued on this date
         process_date = StashEngine::ProcessDate.with_deleted.find_by(processable_type: 'StashEngine::Resource', processable_id: first_submission.id)
-        next unless process_date&.submitted&.to_date == date
+        next unless process_date&.queued&.to_date == date
 
         datasets_found.add(ca.identifier_id)
       end
-      update(new_datasets_to_submitted: datasets_found.size)
+      update(new_datasets_to_queued: datasets_found.size)
     end
 
     # The number of new PPR that day (so the first time we see them as 'peer_review' in the system)
@@ -218,13 +218,13 @@ module StashEngine
 
     # The number of previously PPR datasets that entered Curation that day
     # Note that this is intended to be more inclusive than other transitions. It includes
-    # any dataset in submitted status that was in PPR more recently than it was in a
+    # any dataset in queued status that was in PPR more recently than it was in a
     # prior curation status.
     def populate_ppr_to_curation
       p2c_count = 0
       # for each dataset that received curation status on the given day
       found = Set.new
-      CurationActivity.with_deleted.where(created_at: date..(date + 1.day), status: 'submitted').find_each do |ca|
+      CurationActivity.with_deleted.where(created_at: date..(date + 1.day), status: 'queued').find_each do |ca|
         next if ca.identifier_id.blank?
         next if found.include?(ca.identifier_id)
 
@@ -269,11 +269,11 @@ module StashEngine
     end
 
     # The number that come back to us after an Author Action Required
-    # (so they change status from 'action_required' to 'submitted' or previously 'curation')
+    # (so they change status from 'action_required' to 'queued' or previously 'curation')
     def populate_author_revised
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      CurationActivity.with_deleted.where(created_at: date..(date + 1.day), status: 'submitted')
+      CurationActivity.with_deleted.where(created_at: date..(date + 1.day), status: 'queued')
         .includes(:resource_with_deleted)
         .find_each do |ca|
 
@@ -294,17 +294,17 @@ module StashEngine
       update(author_revised: datasets_found.size)
     end
 
-    # The number resubmitted that day (were 'published' or 'embargoed' before, and changed status to 'submitted')
+    # The number resubmitted that day (were 'published' or 'embargoed' before, and changed status to 'queued')
     def populate_author_versioned
       datasets_found = Set.new
       # for each dataset that received the target status on the given day
-      StashEngine::CurationActivity.with_deleted.where(created_at: date..(date + 1.day), status: 'submitted')
+      StashEngine::CurationActivity.with_deleted.where(created_at: date..(date + 1.day), status: 'queued')
         .includes(:identifier_with_deleted, resource_with_deleted: :process_date).find_each do |ca|
 
         next if ca.identifier_id.blank?
         next if datasets_found.include?(ca.identifier_id)
         # check if this was the actual date of submission for this resource
-        next unless ca.resource_with_deleted.submitted_date&.to_date == date
+        next unless ca.resource_with_deleted.queued_date&.to_date == date
 
         # if this dataset has been published or embargoed, count it
         ident = ca.identifier_with_deleted

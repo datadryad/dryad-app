@@ -255,18 +255,18 @@ module StashEngine
         describe '#date_last_curated' do
           it 'selects the correct date_last_curated' do
             target_date = DateTime.new(2010, 2, 3).utc
-            CurationService.new(resource: @res1, status: 'submitted', user: @user, created_at: '2000-01-01').process
+            CurationService.new(resource: @res1, status: 'queued', user: @user, created_at: '2000-01-01').process
             CurationService.new(resource: @res1, status: 'curation', user: @user, created_at: target_date).process
-            CurationService.new(resource: @res2, status: 'submitted', user: @user, created_at: '2020-01-01').process
-            CurationService.new(resource: @res3, status: 'submitted', user: @user, created_at: '2030-01-01').process
+            CurationService.new(resource: @res2, status: 'queued', user: @user, created_at: '2020-01-01').process
+            CurationService.new(resource: @res3, status: 'queued', user: @user, created_at: '2030-01-01').process
             expect(@identifier.date_last_curated).to eq(target_date)
           end
 
           it 'gives no date_last_curated for uncurated items' do
-            CurationService.new(resource: @res1, status: 'submitted', user: @user, created_at: '2000-01-01').process
+            CurationService.new(resource: @res1, status: 'queued', user: @user, created_at: '2000-01-01').process
             CurationService.new(resource: @res1, status: 'peer_review', user: @user, created_at: '2010-01-01').process
-            CurationService.new(resource: @res2, status: 'submitted', user: @user, created_at: '2020-01-01').process
-            CurationService.new(resource: @res3, status: 'submitted', user: @user, created_at: '2030-01-01').process
+            CurationService.new(resource: @res2, status: 'queued', user: @user, created_at: '2020-01-01').process
+            CurationService.new(resource: @res3, status: 'queued', user: @user, created_at: '2030-01-01').process
             expect(@identifier.date_last_curated).to eq(nil)
           end
         end

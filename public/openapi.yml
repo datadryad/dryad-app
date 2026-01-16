@@ -1133,11 +1133,11 @@ components:
               type: integer
             versionStatus:
               type: string
-              enum: ['in_progress', 'processing', 'submitted']              
+              enum: ['in_progress', 'processing', 'queued']              
               description: Internal processing status of files.
             curationStatus:
               type: string
-              enum: [in_progress, 'submitted', 'processing', 'peer_review', 'curation', 'action_required', 'withdrawn', 'embargoed', 'published']
+              enum: [in_progress, 'queued', 'processing', 'peer_review', 'curation', 'action_required', 'withdrawn', 'embargoed', 'published']
               description: Status in the curation workflow.
             versionChanges:
               type: string

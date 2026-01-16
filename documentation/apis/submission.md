@@ -198,7 +198,7 @@ resp = RestClient.patch(
 # A successful response will be a 202 and you should receive a json response
 # with information about the submission. You may continue to do GET requests
 # on the dataset /api/v2/datasets/<encoded-doi> to see the status changes until
-# a successful ingest which will be 'submitted'.
+# a successful ingest which will be 'processing' or 'queued'.
 
 return_hash = JSON.parse(resp)
 ```
@@ -210,8 +210,8 @@ flow](../submission_flow.md) document.
 
 This step is optional.
 
-By default, datasets that are submitted are immediately eligible for
-curation. Dryad curators may evaluate and publish `submitted` datasets at any
+By default, datasets that are submitted are immediately 'Queued for
+curation'. Dryad curators may evaluate and publish `queued` datasets at any
 time. If you wish your dataset to remain private until an associated article is
 published, you may want to place the dataset in the `curationStatus` of `peer_review`.
 

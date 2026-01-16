@@ -297,7 +297,7 @@ Setting "Private For Peer Review" (PPR) on dataset that was accidentally publish
 select id,identifier,pub_state from stash_engine_identifiers where identifier like '%';
 select id, file_view, meta_view from stash_engine_resources where identifier_id=;
 select * from stash_engine_curation_activities where resource_id=;
-update stash_engine_curation_activities set status='submitted' where id=;
+update stash_engine_curation_activities set status='queued' where id=;
 update stash_engine_resources set file_view=false, meta_view=false, solr_indexed=false where identifier_id=;
 update stash_engine_resources set peer_review_end_date=DATE_ADD(now(), INTERVAL 6 MONTH), publication_date=NULL where id=;
 update stash_engine_identifiers set pub_state='unpublished' where id=;

@@ -1024,7 +1024,7 @@ module StashApi
                                   'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           expect(response_code).to eq(200)
-          expect(@res.current_curation_status).to eq('submitted')
+          expect(@res.current_curation_status).to eq('queued')
         end
 
         it 'does not allow curationStatus to be updated if the item is already published' do

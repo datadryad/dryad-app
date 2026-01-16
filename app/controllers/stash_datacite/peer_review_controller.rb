@@ -36,10 +36,10 @@ module StashDatacite
       else
         @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
         CurationService.new(
-          resource: @resource, user_id: current_user.id, status: 'submitted', note: 'Release from PPR'
+          resource: @resource, user_id: current_user.id, status: 'queued', note: 'Release from PPR'
         ).process
         @resource.reload
-        redirect_to dashboard_path, notice: 'Dataset released from Private for Peer Review and submitted for curation'
+        redirect_to dashboard_path, notice: 'Dataset released from Private for Peer Review and queued for curation'
       end
     rescue ActiveRecord::RecordInvalid
       redirect_to dashboard_path, alert: 'Unable to edit peer review status at this time.'

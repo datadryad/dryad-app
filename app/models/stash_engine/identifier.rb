@@ -525,7 +525,7 @@ module StashEngine
     end
 
     def date_available_for_curation
-      process_date.submitted
+      process_date.queued
     end
 
     def curation_completed_date

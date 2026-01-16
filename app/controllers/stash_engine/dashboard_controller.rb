@@ -28,7 +28,7 @@ module StashEngine
               WHEN (status='in_progress' and current_editor_id in (#{StashEngine::User.all_curators.map(&:id).join(',').presence || '-1'})) THEN 3
               WHEN status='in_progress' THEN 1
               WHEN status='peer_review' THEN 2
-              WHEN status in ('submitted', 'curation', 'processing') THEN 3
+              WHEN status in ('queued', 'curation', 'processing') THEN 3
               WHEN status='withdrawn' THEN 5
               ELSE 4
             END as sort_order")

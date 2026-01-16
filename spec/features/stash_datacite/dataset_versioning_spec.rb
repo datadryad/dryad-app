@@ -109,9 +109,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
       end
 
-      it "is 'submitted' without a curator", js: true do
+      it "is 'queued' without a curator", js: true do
         expect(@resource.submitted?).to eql(true)
-        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('queued')
         expect(@resource.current_editor_id).to eq(@author.id)
 
         # 'displays the proper information on the Admin pages', js: true do
@@ -158,7 +158,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
         update_dataset
         @resource.reload
-        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('queued')
         expect(@resource.user_id).to eql(@curator.id)
         Timecop.return
       end
@@ -185,7 +185,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
 
-        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('queued')
         expect(@resource.user_id).to eql(@curator.id)
       end
 
@@ -201,7 +201,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
 
-        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('queued')
         expect(@resource.user_id).to eql(@curator.id)
       end
 
@@ -241,7 +241,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           update_dataset
           @resource.reload
 
-          expect(@resource.current_curation_status).to eql('submitted')
+          expect(@resource.current_curation_status).to eql('queued')
           expect(@resource.user_id).to eql(curator2.id)
         end
 
@@ -261,7 +261,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           update_dataset
           @resource.reload
 
-          expect(@resource.current_curation_status).to eql('submitted')
+          expect(@resource.current_curation_status).to eql('queued')
           expect(@resource.user_id).to eql(@curator.id)
         end
 

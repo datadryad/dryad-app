@@ -34,7 +34,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       expect(page).to have_text('1 related work')
       expect(page).to have_text('published')
       @resource.resource_publication.update(manuscript_number: nil)
-      create(:curation_activity, :submitted, resource: @resource, note: 'status updated via API call')
+      create(:curation_activity, :queued, resource: @resource, note: 'status updated via API call')
       visit current_path
       expect(page).not_to have_text(manuscript.manuscript_number)
       expect(page).to have_text('accepted')
