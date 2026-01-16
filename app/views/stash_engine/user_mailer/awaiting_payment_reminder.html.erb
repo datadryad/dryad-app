@@ -1,0 +1,25 @@
+<p>Dear <%= @user_name %>,</p>
+
+<p>
+  Title: <%= @resource.title.html_safe %><br/>
+  DOI: <%= @resource.identifier_uri %>
+</p>
+
+<p>
+  As a reminder, your Dryad dataset is currently awaiting payment and has not entered
+  our curation process. Payment of the <a href="<%= @costs_url %>">Data Publishing Charge</a> is required for the curation and publication of your data.</p>
+</p>
+
+<p>
+  <% if @invoice %>
+    Please ensure that the invoice you requested be issued for this dataset is paid in order to proceed.
+  <% else %>
+    <a href="<%= @submission_url %>">Revise your submission</a> and click "Pay & Submit for publication" to pay the remaining fee and submit your dataset.
+  <% end %>
+</p>
+
+<p>
+  Datasets left without payment are withdrawn one year after the dataset submission date. Once withdrawn, your submission can be reinstated within one year.
+</p>
+
+<p>Please contact us at <a href="mailto:<%= @helpdesk_email %>?subject=DOI: <%= @resource.identifier_value %>"><%= @helpdesk_email %></a> if you have any concerns.</p>

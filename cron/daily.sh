@@ -16,7 +16,8 @@ bundle exec rails dataset_deletion:in_progress_reminders >> /home/ec2-user/deplo
 bundle exec rails identifiers:action_required_reminder >> /home/ec2-user/deploy/shared/log/action_required_reminders.log 2>&1
 # Action required reminders - monthly
 bundle exec rails dataset_deletion:in_action_required_reminders >> /home/ec2-user/deploy/shared/log/action_required_reminders.log 2>&1
-
+# Awaiting payment reminders - monthly after 6 months
+bundle exec rails dataset_deletion:in_awaiting_payment_reminders >> /home/ec2-user/deploy/shared/log/awaiting_payment_reminders.log 2>&1
 # Peer review reminders - monthly after 6 months
 bundle exec rails dataset_deletion:in_peer_review_reminders >> /home/ec2-user/deploy/shared/log/peer_review_reminders.log 2>&1
 
