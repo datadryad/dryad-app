@@ -141,6 +141,15 @@ export default function Authors({
           + Add group author
         </button>
       </div>
+
+      {authors.length === 1 && (
+        <div className="callout warn">
+          <p>
+            A sole author is provided for this data submission.
+            If any co-authors contributed to the collection, analysis, or presentation of the data, please add them using the buttons above.
+          </p>
+        </div>
+      )}
     </>
   );
 }
