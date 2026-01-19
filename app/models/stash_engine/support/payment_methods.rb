@@ -12,6 +12,7 @@ module StashEngine
       #  - user pays LDF calculated as per institution
       def user_must_pay?
         return false if latest_resource.resource_type&.resource_type == 'collection'
+        return false if waiver? && old_payment_system
         return PaymentLimitsService.new(latest_resource, payer).limits_exceeded? if sponsored?
 
         true
