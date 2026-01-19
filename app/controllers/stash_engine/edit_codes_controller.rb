@@ -20,7 +20,8 @@ module StashEngine
         if @edit_code.role == 'submitter'
           @resource.submitter = current_user.id
         else
-          @resource.roles.find_or_create_by(user_id: current_user.id).update(role: params[:role])
+          role = @resource.roles.find_or_create_by(user_id: current_user.id)
+          role.update(role: @edit_code.role) unless role.role == 'creator'
         end
         @edit_code.author.update(author_orcid: current_user.orcid, author_email: current_user.email)
         @edit_code.update(applied: true)
