@@ -40,6 +40,12 @@ module Stash
         res
       end
 
+      def invoice_paid?
+        invoice = Stripe::Invoice.retrieve(resource.payment.invoice_id)
+        # one of 'draft', 'open', 'paid', 'uncollectible', or 'void'
+        invoice&.status == 'paid'
+      end
+
       def handle_customer(invoice_details)
         author = StashEngine::Author.find(invoice_details['author_id'])
         customer_id = lookup_prior_stripe_customer_id(invoice_details['customer_email'])

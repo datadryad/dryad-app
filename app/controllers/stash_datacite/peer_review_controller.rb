@@ -29,16 +29,16 @@ module StashDatacite
       @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
 
       if errors || not_paid
-        flash[:alert] = 'Unable to submit dataset for curation. Please correct submission errors' if errors
+        CurationService.new(resource: @resource, status: 'awaiting_payment', note: 'Full DPC payment required').process if not_paid
 
-        if not_paid
-          CurationService.new(resource: @resource, status: 'awaiting_payment', note: 'Full DPC payment required').process
-          @resource.reload
-          flash[:notice] = 'Please pay the remaining DPC to submit for curation and publication'
+        if errors || (not_paid && resource.payment.invoice_id.blank?)
+          flash[:notice] = 'Please pay the remaining DPC to submit for curation and publication' if not_paid
+          flash[:alert] = 'Unable to submit dataset for curation. Please correct submission errors' if errors
+          new_res = DuplicateResourceService.new(@resource, current_user).call
+          redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: new_res.id)
+        else
+          redirect_to dashboard_path, notice: 'Dataset cannot be queued for curation until invoice is paid'
         end
-
-        new_res = DuplicateResourceService.new(@resource, current_user).call
-        redirect_to stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: new_res.id)
       else
         CurationService.new(
           resource: @resource, user_id: current_user.id, status: 'queued', note: 'Release from PPR'

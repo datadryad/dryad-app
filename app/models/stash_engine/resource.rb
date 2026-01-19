@@ -1217,7 +1217,7 @@ module StashEngine
                           note: 'System set back to curation').process
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def create_post_submission_status(prior_cur_act)
       attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
       curation_note = ''
@@ -1254,13 +1254,18 @@ module StashEngine
         end
       end
 
+      if target_status == 'queued' && resource.identifier.payment_needed?
+        target_status = 'awaiting_payment'
+        curation_note 'Invoice must be paid before curation'
+      end
+
       # Generate the status
       # This will usually have the side effect of sending out notification emails to the author/journal
       CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
       target_status
     end
 
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def auto_assign_curator(target_status:)
       target_curator = curator&.curator? ? curator : identifier.most_recent_curator
