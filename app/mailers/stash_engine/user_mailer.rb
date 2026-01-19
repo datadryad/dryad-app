@@ -204,6 +204,7 @@ module StashEngine
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?
 
+      @invoice = resource.payment.invoice_id.present?
       @costs_url = Rails.application.routes.url_helpers.costs_url
       @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
       mail(to: user_email(@user),
