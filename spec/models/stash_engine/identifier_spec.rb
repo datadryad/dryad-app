@@ -445,6 +445,14 @@ module StashEngine
         expect(@identifier.user_must_pay?).to eq(true)
       end
 
+      it 'returns false if waiver is applied on an old_payment_system dataset' do
+        @identifier.update(payment_type: 'waiver')
+        expect(@identifier.user_must_pay?).to eq(true)
+
+        @identifier.update(old_payment_system: true, payment_type: 'waiver')
+        expect(@identifier.user_must_pay?).to eq(false)
+      end
+
       it 'returns false if journal will pay' do
         journal = create(:journal, issn: @fake_issn)
         create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
