@@ -1260,9 +1260,9 @@ module StashEngine
         end
       end
 
-      if target_status == 'queued' && resource.identifier.payment_needed?
+      if target_status == 'queued' && identifier.payment_needed?
         target_status = 'awaiting_payment'
-        curation_note 'Invoice must be paid before curation'
+        curation_note = 'Invoice must be paid before curation'
       end
 
       # Generate the status

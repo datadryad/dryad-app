@@ -21,7 +21,7 @@ module Stash
       end
 
       def invoice_created?
-        resource.payment.invoice_id.present?
+        resource&.payment&.invoice_id&.present?
       end
 
       def create_invoice
