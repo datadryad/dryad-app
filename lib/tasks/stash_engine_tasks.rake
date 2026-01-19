@@ -132,6 +132,28 @@ namespace :identifiers do
     end
   end
 
+  desc 'check invoice payment status'
+  task check_dataset_payment: :environment do
+    Time.now
+    log 'Checking invoiced datasets for payment'
+
+    StashEngine::Resource.latest_per_dataset.invoice_due.find_each do |res|
+      invoicer = Stash::Payments::StripeInvoicer.new(res)
+      next unless invoicer.invoice_created? && invoicer.invoice_paid?
+
+      CurationService.new(
+        resource: res,
+        user_id: 0,
+        status: 'queued',
+        note: 'Invoice has been paid, or cannot be found`'
+      ).process
+    rescue StandardError => e
+      # NOTE: we get errors with test data updating DOI and some of the other callbacks on publishing
+      log "    Exception! #{e.message}"
+
+    end
+  end
+
   # example: RAILS_ENV=production bundle exec rake identifiers:remove_abandoned_datasets -- --dry_run true
   desc 'remove abandoned, unpublished datasets that will never be published'
   task remove_abandoned_datasets: :environment do

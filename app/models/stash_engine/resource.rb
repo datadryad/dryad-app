@@ -309,6 +309,12 @@ module StashEngine
       joins('INNER JOIN stash_engine_identifiers ON stash_engine_resources.id = stash_engine_identifiers.latest_resource_id')
     end
 
+    scope :invoice_due, -> do
+      joins(:last_curation_activity, :payment)
+        .where(last_curation_activity: { status: 'awaiting_payment' })
+        .where.not(payment: { invoice_id: [nil, ''] })
+    end
+
     def set_identifier
       self.identifier = StashEngine::Identifier.find_by(id: identifier_id) if identifier.blank?
     end

@@ -29,6 +29,7 @@ bundle exec rails dataset_deletion:final_withdrawn_notification >> /home/ec2-use
 
 
 bundle exec rails identifiers:publish_datasets >> /home/ec2-user/deploy/shared/log/publish_datasets.log 2>&1
+bundle exec rails identifiers:check_dataset_payment >> /home/ec2-user/deploy/shared/log/dataset_invoice_status.log 2>&1
 bundle exec rails identifiers:doi_linking_invitation >> /home/ec2-user/deploy/shared/log/doi_linking_invitation.log 2>&1
 bundle exec rails identifiers:update_missing_search_words >> /home/ec2-user/deploy/shared/log/update_search_words.log 2>&1
 bundle exec rails dev_ops:retry_zenodo_errors >> /home/ec2-user/deploy/shared/log/retry_zenodo_errors.log 2>&1
