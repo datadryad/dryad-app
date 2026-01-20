@@ -50,7 +50,7 @@ class PaymentsService
 
   def product_name(fee_key)
     name = fee_key == :storage_fee ? @storage_fee_label : PRODUCT_NAME_MAPPER[fee_key]
-    "#{name} for #{resource.identifier} (#{filesize(resource.total_file_size)})"
+    "#{name} for #{resource.identifier} (#{filesize(resource.total_file_size)}) submitted by #{resource.submitter.name}"
   end
 
   def discounts
