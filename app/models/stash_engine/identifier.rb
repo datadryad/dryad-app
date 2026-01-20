@@ -42,6 +42,7 @@ module StashEngine
   class Identifier < ApplicationRecord
     include StashEngine::Support::PaymentMethods
     include StashEngine::Support::Limits
+    include StashEngine::Support::Statuses
 
     self.table_name = 'stash_engine_identifiers'
     acts_as_paranoid
@@ -67,6 +68,7 @@ module StashEngine
             class_name: 'StashEngine::Resource',
             primary_key: 'latest_resource_id',
             foreign_key: 'id'
+    has_one :last_curation_activity, class_name: 'StashEngine::CurationActivity', through: :latest_resource
     belongs_to :software_license, class_name: 'StashEngine::SoftwareLicense', optional: true
     has_many :curation_activities, class_name: 'StashEngine::CurationActivity', through: :resources
     has_many :payments, class_name: 'ResourcePayment', through: :resources
@@ -283,15 +285,6 @@ module StashEngine
       update_column :search_words, my_string
     end
 
-    def allow_review?
-      # do not allow to go into peer review after already published
-      return false if pub_state == 'published'
-      # do not allow to go into peer review if associated manuscript already accepted or published
-      return false if has_accepted_manuscript? || publication_article_doi
-
-      true
-    end
-
     def publication_issn
       latest_resource&.resource_publication&.publication_issn
     end
@@ -324,8 +317,12 @@ module StashEngine
       latest_resource&.resource_preprint&.publication_name
     end
 
+    def allow_review?
+      TargetStatusService.new(latest_resource).allow_ppr?
+    end
+
     def automatic_ppr?
-      return false unless latest_manuscript.present?
+      return false unless latest_manuscript.present? || journal&.default_to_ppr?
       return false if has_accepted_manuscript?
       return false if has_rejected_manuscript?
       return false if publication_article_doi.present?
@@ -389,7 +386,7 @@ module StashEngine
     # finds the latest applicable state from terminal states for each resource/version.
     # We only really care about whether it's some form of published, embargoed or withdrawn
     def calculated_pub_state
-      states = resources.map { |res| res.curation_activities&.last&.status }.compact
+      states = resources.map(&:current_curation_status).compact
 
       return 'withdrawn' if states.last == 'withdrawn'
 
@@ -405,8 +402,7 @@ module StashEngine
       my_pub = false
       resources.each do |res|
         res.reload
-        ca = res.last_curation_activity
-        case ca&.status # nil for no status
+        case res.current_curation_status
         when 'withdrawn'
           res.update_columns(meta_view: false, file_view: false)
         when 'embargoed'
@@ -511,8 +507,7 @@ module StashEngine
 
     # returns the date on which this identifier was initially referred for author action
     def aar_date
-      resources.map(&:curation_activities).flatten.uniq(&:status)
-        .select { |ca| ca.status == 'action_required' }.pluck(&:created_at).first
+      first_status_activity('action_required')&.created_at
     end
 
     # returns the date on which this identifier was returned to curators after action_required
