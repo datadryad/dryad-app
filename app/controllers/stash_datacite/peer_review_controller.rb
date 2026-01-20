@@ -13,7 +13,6 @@ module StashDatacite
       @help_email = APP_CONFIG[:contact_email].last || 'help@datadryad.org'
       begin
         @resource.hold_for_peer_review = peer_review_params[:hold_for_peer_review]
-        @resource.peer_review_end_date = (@resource.hold_for_peer_review? ? Time.now.utc + 6.months : nil)
         @resource.save
       rescue ActiveRecord::RecordInvalid
         @error = 'Unable to enable peer review status at this time.'
@@ -26,7 +25,7 @@ module StashDatacite
       errors = StashDatacite::Resource::DatasetValidations.new(resource: @resource).errors
       not_paid = @resource.identifier.payment_needed?
 
-      @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
+      @resource.update(hold_for_peer_review: false)
 
       if errors || not_paid
         CurationService.new(resource: @resource, status: 'awaiting_payment', note: 'Full DPC payment required').process if not_paid
