@@ -25,7 +25,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       @superuser = create(:user, role: 'superuser')
       2.times do
         identifier = create(:identifier)
-        @resource = create(:resource, :submitted, publication_date: nil, user: @user, identifier: identifier)
+        @resource = create(:resource, :paid, :submitted, publication_date: nil, user: @user, identifier: identifier)
       end
       sign_in(@superuser, false)
     end
@@ -170,7 +170,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       create(:role, user: @admin, role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, skip_datacite_update: true)
+      @resource = create(:resource, :paid, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, skip_datacite_update: true)
       Timecop.return
     end
 
@@ -280,7 +280,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
           end
 
           it 'filters by curator', js: true do
-            create(:resource, :submitted, user: @user, tenant_id: @admin.tenant_id, skip_datacite_update: true)
+            create(:resource, :paid, :submitted, user: @user, tenant_id: @admin.tenant_id, skip_datacite_update: true)
             visit stash_url_helpers.admin_dashboard_path
             expect(page).to have_text('Admin dashboard')
             assert_selector('tbody tr', count: 2)
@@ -448,7 +448,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
           user = create(:user, tenant_id: tenant)
           2.times do
             identifier = create(:identifier)
-            @res1 = create(:resource, :submitted, user: user, identifier: identifier)
+            @res1 = create(:resource, :paid, :submitted, user: user, identifier: identifier)
           end
         end
         @consortium = create(:tenant, id: 'consortium', short_name: 'Consortium', long_name: 'Consortium')
@@ -458,7 +458,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
           user = create(:user, tenant_id: member)
           2.times do
             identifier = create(:identifier)
-            @res2 = create(:resource, :submitted, user: user, identifier: identifier)
+            @res2 = create(:resource, :paid, :submitted, user: user, identifier: identifier)
           end
         end
         sign_in(create(:user, role: 'admin', role_object: @consortium, tenant_id: 'consortium'))
