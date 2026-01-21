@@ -19,7 +19,6 @@ module StashEngine
       end
 
       def payer
-        return recorded_payer if recorded_payer.present?
         return funder_payment_info&.payer_funder if funder_will_pay?
         return latest_resource&.tenant if institution_will_pay?
         return journal if journal_will_pay?
@@ -103,6 +102,11 @@ module StashEngine
         return latest_resource.submitter if payment_type == 'stripe'
 
         nil
+      end
+
+      def display_payer
+        return recorded_payer if recorded_payer.present?
+        return payer.presence || {}
       end
 
       def institution_will_pay?

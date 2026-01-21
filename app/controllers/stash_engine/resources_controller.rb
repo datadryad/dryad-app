@@ -236,7 +236,7 @@ module StashEngine
       render json: {
         new_upload_size_limit: @resource.identifier.new_upload_size_limit,
         user_must_pay: @resource.identifier.user_must_pay?,
-        payer: @resource.identifier.payer
+        display_payer: @resource.identifier.display_payer
       }, status: :ok
     end
 
