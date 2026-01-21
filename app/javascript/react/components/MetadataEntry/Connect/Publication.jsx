@@ -60,7 +60,7 @@ export default function Publication({current, resource, setResource}) {
     const {manuscript_number} = resource.resource_publication;
     const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
     if (manuscript_number || primary_article) {
-      setSponsored(Object.hasOwn(resource.identifier.payer, 'title') ? resource.identifier.payer.title : false);
+      setSponsored(Object.hasOwn(resource.identifier.payer || {}, 'title') ? resource.identifier.payer.title : false);
     } else {
       setSponsored(false);
     }

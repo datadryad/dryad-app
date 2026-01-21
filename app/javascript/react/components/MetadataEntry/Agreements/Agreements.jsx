@@ -170,12 +170,12 @@ export default function Agreements({
       {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
       {subType !== 'collection' && (
         <>
-          {Object.hasOwn(resource.identifier.payer.hasOwnProperty, 'name') && (
+          {Object.hasOwn(resource.identifier.payer || {}, 'name') && (
             <div className="callout">
               <p>Payment for this submission is sponsored by <b>{resource.identifier.payer.name}</b></p>
             </div>
           )}
-          {Object.hasOwn(resource.identifier.payer, 'long_name') && (
+          {Object.hasOwn(resource.identifier.payer || {}, 'long_name') && (
             <>
               <div className="callout">
                 <p>Payment for this submission is sponsored by <b>{resource.identifier.payer.long_name}</b></p>
@@ -183,7 +183,7 @@ export default function Agreements({
               {previous && resource.tenant_id !== previous.tenant_id && <p className="del ins">Partner institution changed</p>}
             </>
           )}
-          {Object.hasOwn(resource.identifier.payer.hasOwnProperty, 'title') && (
+          {Object.hasOwn(resource.identifier.payer || {}, 'title') && (
             <div className="callout">
               <p>Payment for this submission is sponsored by <b>{resource.identifier.payer.title}</b></p>
             </div>

@@ -100,8 +100,9 @@ module StashEngine
         return funder_payment_info&.payer_funder if payment_type == 'funder'
         return StashEngine::Tenant.find(payment_id) if payment_type.start_with?('institution')
         return StashEngine::Journal.find_by_issn(payment_id) if payment_type.start_with?('journal')
+        return latest_resource.submitter if payment_type == 'stripe'
 
-        latest_resource.submitter if payment_type == 'stripe'
+        nil
       end
 
       def institution_will_pay?
