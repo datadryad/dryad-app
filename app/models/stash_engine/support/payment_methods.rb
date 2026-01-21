@@ -106,7 +106,8 @@ module StashEngine
 
       def display_payer
         return recorded_payer if recorded_payer.present?
-        return payer.presence || {}
+
+        payer.presence || {}
       end
 
       def institution_will_pay?
