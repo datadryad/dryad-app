@@ -74,13 +74,6 @@
   </p>
 </div>
 <div class="bio">
-  <img src="/images/mollyhirst.jpg" alt="Headshot of Molly Hirst">
-  <h5>Molly Hirst</h5><br/>
-  <p><em>Senior Data Curator I</em><br/>
-  Molly holds a Ph.D. in Ecology and Evolutionary Biology from the University of Michigan, where she studied genomics and sperm biology in hybridizing Platyrrhine primates. She gained extensive experience and a passion for curation as a graduate student curatorial assistant for nearly all UM Museum of Zoology and Herbarium divisions. Molly can be found cuddling her cats, reading, traveling the world as a naturalist, gardening, ice skating, and spoiling her nephew.
-  </p>
-</div>
-<div class="bio">
   <img src="/images/alex.jpg" alt="Headshot of Alex Hall">
   <h5>Alex Hall</h5><br/>
   <p><em>Data Curator</em><br/>Alex is an interdisciplinary scientist with a B.S. in Animal Behavior and Ph.D. in Biology. He has published a dozen papers on topics such as parthenogenesis, artificial light at night, and image processing. He has been an advocate for open science and open data sharing practices, through, for example, BioImaging North America and Non-Clinical Tomography Users Research Network. Alex enjoys greyhound rescue, pottery, house music, birdwatching, and reptiles.</p>
@@ -95,6 +88,13 @@
   <h5>Kailasha Purushothaman</h5><br/>
   <p><em>Data Curator</em><br/>
   Kailasha has a diverse range of experiences and expertise in the fields of medical physics, teaching, biophysics imaging and copyediting. She earned her Master of Medical Physics degree from RMIT University and began her career as a Physicist at Peter MacCallum Cancer Center in Australia, where she gained valuable experience in radiation therapy. She has also taught medical physics and biomedical imaging to undergraduate students. In her free time, Kailasha enjoys pursuing creative outlets such as cooking and painting.</p>
+</div>
+<div class="bio">
+  <img src="/images/maryann.jpg" alt="Headshot of Mary Ann Tuli">
+  <h5>Mary Ann Tuli</h5><br/>
+  <p><em>Data Curator</em><br/>
+  Mary Ann studied Applied Molecular Biology at the University of Hull, UK. She began her biocuration career at the EMBL Database in Heidelberg, later working on the model organism database WormBase. She subsequently moved into scientific publishing as a Data Editor for GigaDB, the data repository supporting GigaScience Press journals. Outside of work, she is a keen and competitive runner and enjoys watching live theatre and ballet.
+  </p>
 </div>
 <div class="bio">
   <img src="/images/jwalter.png" alt="Headshot of Jeremy Walter">
