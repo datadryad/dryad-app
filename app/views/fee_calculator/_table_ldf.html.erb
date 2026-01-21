@@ -1,8 +1,8 @@
 <% tiers = FeeCalculator::InstitutionService.new.storage_fee_tiers %>
-<% tiers.each do |t| %>
+<% tiers.each_with_index do |t, i| %>
   <% if t[:price] > 0 %>
     <tr>
-      <td>Up to <%= filesize(t[:range].to_s.split('..').last.to_i) %></td>
+      <td><%= i == 1 ? '&gt;10 GB u'.html_safe : 'U'%>p to <%= filesize(t[:range].to_s.split('..').last.to_i) %></td>
       <td><%= number_to_currency(t[:price], precision: 0) %></td>
     </tr>
   <% end %>
