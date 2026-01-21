@@ -196,6 +196,7 @@ function Submission({
           ...res,
           identifier: {
             ...res.identifier,
+            payer: data.payer,
             'user_must_pay?': data.user_must_pay,
             new_upload_size_limit: data.new_upload_size_limit,
           },

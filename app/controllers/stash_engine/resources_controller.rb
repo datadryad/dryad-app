@@ -235,7 +235,8 @@ module StashEngine
     def payer_check
       render json: {
         new_upload_size_limit: @resource.identifier.new_upload_size_limit,
-        user_must_pay: @resource.identifier.user_must_pay?
+        user_must_pay: @resource.identifier.user_must_pay?,
+        payer: @resource.identifier.payer
       }, status: :ok
     end
 

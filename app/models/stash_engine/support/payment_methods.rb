@@ -19,6 +19,7 @@ module StashEngine
       end
 
       def payer
+        return recorded_payer if recorded_payer.present?
         return funder_payment_info&.payer_funder if funder_will_pay?
         return latest_resource&.tenant if institution_will_pay?
         return journal if journal_will_pay?
@@ -93,6 +94,15 @@ module StashEngine
         save
       end
       # rubocop:enable Metrics/AbcSize
+
+      def recorded_payer
+        return nil if payment_type.blank?
+        return funder_payment_info&.payer_funder if payment_type == 'funder'
+        return StashEngine::Tenant.find(payment_id) if payment_type.start_with?('institution')
+        return StashEngine::Journal.find_by_issn(payment_id) if payment_type.start_with?('journal')
+
+        latest_resource.submitter if payment_type == 'stripe'
+      end
 
       def institution_will_pay?
         tenant = latest_resource&.tenant
