@@ -6,6 +6,7 @@ module StashEngine
       extend ActiveSupport::Concern
 
       def current_curation_status
+        reload
         last_curation_activity&.status
       end
 

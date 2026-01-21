@@ -684,10 +684,12 @@ module StashEngine
 
     def previous_curated_resource
       previous_resources.each { |r| return r if r.last_curated_status.present? }
+      nil
     end
 
     def previous_published_resource
       previous_resources.each { |r| return r if r.last_published_status.present? }
+      nil
     end
 
     def previous_resource_published?

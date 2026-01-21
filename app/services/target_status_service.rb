@@ -7,8 +7,8 @@ class TargetStatusService
   def curator_override?
     prev_submitted = @resource.identifier.last_submitted_status
     if prev_submitted&.status == 'peer_review'
-      peer_review_set = prev_submitted.resource.first_status_activity('peer_review')
-      return true if peer_review_set&.user&.min_curator?
+      peer_review_set = @resource.identifier.curation_activities.where(status: 'peer_review', user_id: StashEngine::User.curators.pluck(:id))
+      return true if peer_review_set&.any?(&:curation_status_changed?)
     end
 
     false
