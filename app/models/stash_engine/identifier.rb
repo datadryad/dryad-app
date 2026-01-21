@@ -248,6 +248,10 @@ module StashEngine
       resources.in_progress.count > 0
     end
 
+    def published?
+      %w[published embargoed].include?(pub_state)
+    end
+
     def to_s
       # TODO: Make sure this is correct for all identifier types
       "#{identifier_type&.downcase}:#{identifier}"
