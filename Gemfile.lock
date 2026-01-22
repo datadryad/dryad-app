@@ -679,6 +679,8 @@ GEM
       logger (>= 1.6.2)
       rack (>= 3.1.0)
       redis-client (>= 0.23.2)
+    sidekiq-limit_fetch (4.4.1)
+      sidekiq (>= 6)
     sidekiq-unique-jobs (8.0.11)
       concurrent-ruby (~> 1.0, >= 1.0.5)
       sidekiq (>= 7.0.0, < 9.0.0)
@@ -885,6 +887,7 @@ DEPENDENCIES
   shakapacker (= 9.5.0)
   shoulda (~> 4.0.0)
   sidekiq (~> 8.0.7)
+  sidekiq-limit_fetch
   sidekiq-unique-jobs (~> 8.0.11)
   simplecov
   simplecov-console
