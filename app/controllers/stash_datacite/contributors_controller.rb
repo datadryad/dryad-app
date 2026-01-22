@@ -143,6 +143,9 @@ module StashDatacite
       params.require(:contributor).permit!
       @contributors = Contributor.where(id: params[:contributor].keys)
 
+      # contributors must not be empty
+      render json: { error: 'bad request' }, status: :bad_request unless @contributors.first.present?
+
       # you can only order things belonging to one resource
       render json: { error: 'bad request' }, status: :bad_request unless @contributors.map(&:resource_id)&.uniq&.length == 1
 
