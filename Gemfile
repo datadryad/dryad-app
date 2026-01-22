@@ -91,8 +91,8 @@ gem 'rsolr', '~> 2.6.0'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'serrano', '~> 1.6'
 gem 'sidekiq', '~> 8.0.7'
-gem 'sidekiq-unique-jobs', '~> 8.0.11'
 gem 'sidekiq-limit_fetch'
+gem 'sidekiq-unique-jobs', '~> 8.0.11'
 gem 'stripe', '~> 5.50.0'
 gem 'sync', '~> 0.5.0' # not sure where this is used
 gem 'yaml', '~> 0.4.0' # version 0.2.0 breaks Gmail (https://github.com/datadryad/dryad-app/pull/771)
