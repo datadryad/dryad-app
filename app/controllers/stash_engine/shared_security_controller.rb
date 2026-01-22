@@ -130,15 +130,19 @@ module StashEngine
       display_authorization_failure
     end
 
-    def ajax_require_current_user
-      false unless @current_user
+    def ajax_require_permission
+      # a new unsaved model, not affecting the DB
+      return if params[:id] == 'new'
+      return if valid_edit_code?
+
+      ajax_blocked unless (current_user && resource) && resource.can_edit?(user: current_user)
     end
 
-    def ajax_require_modifiable
-      return if params[:id] == 'new' # a new unsaved model, not affecting the DB
+    def ajax_require_unsubmitted
+      # a new unsaved model, not affecting the DB
+      return if params[:id] == 'new'
 
-      ajax_blocked unless valid_edit_code? ||
-                                 ((current_user && resource) && resource.can_edit?(user: current_user))
+      ajax_blocked unless resource.in_progress?
     end
 
     # these owner/admin need to be in controller since they address the current_user from session, not easily available from model

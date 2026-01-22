@@ -495,6 +495,10 @@ module StashEngine
     # ------------------------------------------------------------
     # Current resource state
 
+    def in_progress?
+      current_state == 'in_progress'
+    end
+
     def submitted?
       current_state == 'submitted'
     end

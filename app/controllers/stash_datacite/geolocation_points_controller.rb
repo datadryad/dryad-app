@@ -4,7 +4,8 @@
 module StashDatacite
   class GeolocationPointsController < ApplicationController
     before_action :set_geolocation_point, only: %i[edit update delete]
-    before_action :ajax_require_modifiable, only: %i[map_coordinates update_coordinates create delete]
+    before_action :ajax_require_permission, only: %i[map_coordinates update_coordinates create delete]
+    before_action :ajax_require_unsubmitted, only: %i[map_coordinates update_coordinates create delete]
 
     def index
       respond_to do |format|

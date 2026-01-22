@@ -3,7 +3,7 @@ module StashDatacite
   class ContributorsController < ApplicationController
     before_action :check_reorder_valid, only: %i[reorder]
     before_action :set_contributor, only: %i[update delete]
-    before_action :ajax_require_modifiable, only: %i[update create delete reorder]
+    before_action :ajax_require_permission, only: %i[update create delete reorder]
 
     respond_to :json
 
