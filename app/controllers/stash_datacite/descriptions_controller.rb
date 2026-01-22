@@ -3,7 +3,7 @@ module StashDatacite
     include ::ApplicationHelper
     before_action :set_description, only: %i[update destroy]
     before_action :ajax_require_permission, only: %i[update destroy]
-    before_action :ajax_require_unsubmitted, only: %i[update destroy]
+    before_action :ajax_require_unsubmitted, only: %i[update destroy], unless: -> { description_params[:description_type] == 'concern' }
 
     respond_to :json
 
