@@ -6,6 +6,7 @@
       <b><%= @admin_stats.datasets_available_for_curation %></b></div>
     <div class="callout" style="padding: 1ch">Current unassigned: <b><%= @admin_stats.datasets_submitted_unclaimed_count %></b>
     </div>
+    <%= link_to 'Curation status charts', curation_stats_charts_path %>
   </div>
 </div>
 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -14,6 +15,9 @@
 </div>
 <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="stats-label">
   <table class="c-lined-table">
+    <caption>
+      All curation stats are calculated daily at 00:00 UTC
+    </caption>
     <thead style="cursor: help">
       <tr>
         <th title="End of the date range for the activity">Date</th>
@@ -53,11 +57,4 @@
       <% end %>
     </tbody>
   </table>
-</div>
-
-<div style="padding-bottom: 20px">
-  <span style="float: left">
-    <%= link_to 'View charts', curation_stats_charts_path %>
-  </span>
-  <span style="float: right">* All curation stats are calculated daily at 00:00 UTC</span>
 </div>

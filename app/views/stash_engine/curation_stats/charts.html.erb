@@ -1,17 +1,21 @@
+<% content_for :head do %>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<% end %>
 <div>
+  <h1>Curation status charts</h1>
   <form method="get">
-    <label for="start_day">Select period:</label>
-    <input type="date" name="start_day" value="<%= @start_day.to_date %>" />
-    <input type="date" name="end_day" value="<%= @end_day.to_date %>" />
-    <input type="submit" value="Apply" class="o-button__submit"/>
+    <div role="group" aria-labelledby="range-label">
+      <b id="range-label" style="margin-right: 1ch">Chart date range</b>
+      <label for="start_day">from:</label>
+      <input type="date" id="start_day" name="start_day" class="c-input__text" value="<%= @start_day.to_date %>" />
+      <label for="end_day">to:</label>
+      <input type="date" name="end_day" id="end_day" class="c-input__text" value="<%= @end_day.to_date %>" />
+      <input type="submit" value="Apply" class="o-button__submit" style="margin-left: 1ch" />
+    </div>
   </form>
-
-  <canvas id="dailyChart"></canvas>
-  <br />
-  <br />
-  <canvas id="monthlyChart"></canvas>
+  <canvas style="margin: 2rem 0;" id="dailyChart" role="img" aria-label="Daily curation stats: Line chart graphing the count of each column of the curation stats table over time."></canvas>
+  <canvas id="monthlyChart" aria-label="Monthly curation stats: Line chart graphing the count of each column of the curation stats table over time."></canvas>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   generate_chart(
     document.getElementById('monthlyChart').getContext('2d'),
@@ -55,6 +59,9 @@
       hidden: ['aar_size', 'ppr_size', 'datasets_to_be_curated', 'datasets_unclaimed'].includes(field)
     }));
 
+    Chart.defaults.font.family = 'KievitWeb';
+    Chart.defaults.font.size = 14;
+
     new Chart(ctx, {
       type: 'line',
       data: { labels, datasets },
@@ -63,7 +70,7 @@
         interaction: { mode: 'index', intersect: false },
         stacked: false,
         plugins: {
-          title: { display: true, text: title },
+          title: { display: true, text: title, font: { size: 20 } },
           legend: { position: 'bottom' }
         },
         scales: {
