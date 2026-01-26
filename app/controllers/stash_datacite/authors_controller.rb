@@ -77,6 +77,8 @@ module StashDatacite
             role = @author.resource.roles.where(role: 'submitter')&.first
           else
             role = @author.resource.roles.find_or_create_by(user_id: @author.user.id)
+            return if role.role == 'creator'
+
             role.update(role: params[:role])
           end
           @author.resource.reload

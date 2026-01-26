@@ -32,7 +32,7 @@ describe PaymentsService do
           price_data: {
             currency: 'usd',
             product_data: {
-              name: "Data Publishing Charge for #{identifier} (6.23 GB)"
+              name: "Data Publishing Charge for #{identifier} (6.23 GB) submitted by #{resource.submitter.name}"
             },
             unit_amount: 18_000
           }
@@ -63,7 +63,7 @@ describe PaymentsService do
               price_data: {
                 currency: 'usd',
                 product_data: {
-                  name: "Large data fee for #{identifier} (11 GB)"
+                  name: "Large data fee for #{identifier} (11 GB) submitted by #{resource.submitter.name}"
                 },
                 unit_amount: 25_900
               }
@@ -88,7 +88,7 @@ describe PaymentsService do
               price_data: {
                 currency: 'usd',
                 product_data: {
-                  name: "Data Publishing Charge for #{identifier} (16.32 GB)"
+                  name: "Data Publishing Charge for #{identifier} (16.32 GB) submitted by #{resource.submitter.name}"
                 },
                 unit_amount: 52_000
               }

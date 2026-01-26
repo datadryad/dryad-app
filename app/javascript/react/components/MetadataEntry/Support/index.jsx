@@ -1,11 +1,13 @@
 import React from 'react';
 import {upCase, ordinalNumber} from '../../../../lib/utils';
+import {orderedItems} from '../DragonDropList';
 
 export {default} from './Support';
 export {default as SuppPreview} from './SuppPreview';
 
-export const fundingCheck = (funders) => {
-  if (funders.length < 1) return true;
+export const fundingCheck = (orgs) => {
+  if (orgs.length < 1) return true;
+  const funders = orderedItems({items: orgs, typeName: 'funder'});
   const orgError = funders.findIndex((f) => !f.contributor_name);
   if (orgError >= 0) {
     return (

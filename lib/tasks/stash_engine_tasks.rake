@@ -216,6 +216,7 @@ namespace :identifiers do
             status: 'withdrawn',
             note: 'remove_abandoned_datasets CRON - mark files as deleted'
           )
+          PubStateService.new(i).update_for_ca_status('withdrawn')
         end
       end
     end
