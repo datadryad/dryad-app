@@ -8,6 +8,7 @@ module StashEngine
 
     before_action :check_data_type
     before_action :require_user_login
+    before_action :setup_filter, only: :index
     before_action :setup_paging, only: %i[index log]
     before_action :check_status, only: %i[update destroy]
 
@@ -18,8 +19,7 @@ module StashEngine
       @proposed_changes = RecordUpdater.send(@data_type).pending
       apply_joins
       apply_filters
-
-      @proposed_changes = @proposed_changes.order('award_number desc').page(@page).per(@page_size)
+      @proposed_changes = @proposed_changes.order('record_id desc').page(@page).per(@page_size)
       return unless @proposed_changes.present?
 
       respond_to(&:html)
@@ -63,7 +63,7 @@ module StashEngine
 
       index_params[:sort] = 'updated_at' if index_params[:sort].blank?
       index_params[:direction] = 'desc' if index_params[:direction].blank?
-      ord = helpers.sortable_table_order(whitelist: %w[award_number award_uri award_title name_identifier_id contributor_name updated_at])
+      ord = helpers.sortable_table_order(whitelist: ['updated_at'] + COLUMNS_MAPPER[@data_type])
 
       @proposed_changes = @proposed_changes.order(ord).page(@page).per(@page_size)
     end
@@ -85,6 +85,15 @@ module StashEngine
                    end
     end
 
+    def setup_filter
+      @statuses = [OpenStruct.new(value: '', label: '*Select status*')]
+      @excluded = StashEngine::CurationActivity.statuses.except(:in_progress, :processing, :embargoed, :withdrawn)
+      @statuses << @excluded.keys.map do |s|
+        OpenStruct.new(value: s, label: StashEngine::CurationActivity.readable_status(s))
+      end
+      @statuses.flatten!
+    end
+
     def check_status
       authorize RecordUpdater, policy_class: ProposedChangePolicy
       @proposed_change = RecordUpdater.send(@data_type).pending.find(index_params[:id])
@@ -94,22 +103,24 @@ module StashEngine
     def apply_joins
       query = case @data_type
               when :funder
-                "inner join dcs_contributors as records on record_updaters.record_id = records.id and records.contributor_type = 'funder'"
+                ["JOIN dcs_contributors records on record_updaters.record_id = records.id and records.contributor_type = 'funder'"]
               end
-      return if query.nil?
-
-      @proposed_changes = @proposed_changes.joins(query)
+      query << 'JOIN stash_engine_resources on records.resource_id = stash_engine_resources.id'
+      query << 'JOIN stash_engine_curation_activities sa ON sa.id = stash_engine_resources.last_curation_activity_id'
+      @proposed_changes = @proposed_changes.joins(query.join(' '))
     end
 
     def apply_filters
-      if index_params[:award_number].present?
-        @proposed_changes = @proposed_changes
-          .where('records.award_number LIKE ?', "%#{index_params[:award_number].strip}%")
+      if params[:search].present?
+        @proposed_changes = @proposed_changes.where("JSON_SEARCH(update_data, 'one', ?) is not null",
+                                                    "%#{params[:search]}%")
       end
-      return unless index_params[:contrib_name].present?
 
-      @proposed_changes = @proposed_changes
-        .where('records.contributor_name LIKE ?', "%#{index_params[:contrib_name].strip}%")
+      @proposed_changes = if params[:status].present?
+                            @proposed_changes.where('sa.status': params[:status])
+                          else
+                            @proposed_changes.where("sa.status in (#{@excluded.map { |_x| '?' }.join(',')})", *@excluded)
+                          end
     end
 
     def refresh_error
@@ -121,7 +132,7 @@ module StashEngine
     end
 
     def index_params
-      params.permit(*%i[data_type id award_number contrib_name page page_size sort direction])
+      params.permit(*%i[data_type id search status page page_size sort direction])
     end
   end
 end
