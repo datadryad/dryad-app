@@ -8,6 +8,7 @@ RSpec.shared_examples('API submission flow') do |can_submit, submit_response|
     json_response = response_body_hash
     expect(/Welcome application owner.+$/).to match(json_response[:message])
     expect(user.id).to eql(json_response[:user_id])
+    original_orcid = user.orcid
 
     ### LIST dataset - returns no datasets
     get '/api/v2/datasets', headers: headers
@@ -41,7 +42,7 @@ RSpec.shared_examples('API submission flow') do |can_submit, submit_response|
     expect(json_response[:curationStatus]).to eq('In progress')
     expect(json_response[:lastModificationDate]).to eq(Date.today.to_s)
     expect(json_response[:visibility]).to eq('restricted')
-    expect(json_response[:userId]).to eq(user.orcid)
+    expect(json_response[:userId]).to eq(original_orcid)
     expect(json_response[:license]).to eq(Stash::Wrapper::License::CC_ZERO.uri.to_s)
     expect(json_response[:editLink]).to eq("/edit/#{CGI.escape(doi)}/#{identifier.edit_code}")
 

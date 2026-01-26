@@ -130,7 +130,7 @@ module StashApi
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
         output = response_body_hash
         expect(response_code).to eq(201)
-        expect(output[:userId]).to eq(test_user.orcid)
+        expect(output[:userId]).to eq(test_user.reload.orcid)
       end
 
       it 'creates a new dataset with a userId explicitly set by journal admin' do
@@ -149,7 +149,7 @@ module StashApi
         response_code = post '/api/v2/datasets', params: @meta.json, headers: default_authenticated_headers
         output = response_body_hash
         expect(response_code).to eq(201)
-        expect(output[:userId]).to eq(test_user.orcid)
+        expect(output[:userId]).to eq(test_user.reload.orcid)
       end
 
       it 'creates a new dataset with a secondary ISSN representing the journal' do
