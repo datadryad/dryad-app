@@ -1017,21 +1017,21 @@ module StashApi
         it 'allows curationStatus to be updated' do
           expect(@res.current_curation_status).to eq('peer_review')
 
-          @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'submitted' }].to_json
+          @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'queued' }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(
                                   'Content-Type' => 'application/json-patch+json', 'Authorization' => "Bearer #{access_token}"
                                 )
           expect(response_code).to eq(200)
-          expect(@res.current_curation_status).to eq('submitted')
+          expect(@res.current_curation_status).to eq('queued')
         end
 
         it 'does not allow curationStatus to be updated if the item is already published' do
           @ca = create(:curation_activity, :published, resource: @res)
           expect(@res.current_curation_status).to eq('published')
 
-          @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'submitted' }].to_json
+          @patch_body = [{ op: 'replace', path: '/curationStatus', value: 'queued' }].to_json
           response_code = patch "/api/v2/datasets/doi%3A#{CGI.escape(@identifier.identifier)}",
                                 params: @patch_body,
                                 headers: default_json_headers.merge(

@@ -102,7 +102,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         click_button('Apply')
         assert_selector('tbody tr', count: 2)
         click_button('multiselect-status__input')
-        check 'status-submitted'
+        check 'status-queued'
         click_button('Apply')
         assert_selector('tbody tr', count: 3)
         click_button('multiselect-status__input')
@@ -298,10 +298,10 @@ RSpec.feature 'AdminDashboard', type: :feature do
             select('unassign', from: 'stash_engine_resource_curator_id')
             click_button('Submit')
             expect(find('#search_results')).not_to have_text(@curator.name)
-            expect(find('#search_results')).to have_text('Submitted')
+            expect(find('#search_results')).to have_text('Queued for curation')
             @resource.reload
             expect(@resource.user_id).to eq(nil)
-            expect(@resource.current_curation_status).to eq('submitted')
+            expect(@resource.current_curation_status).to eq('queued')
           end
 
           it 'submits a curation status change and reflects in the page and history afterwards' do

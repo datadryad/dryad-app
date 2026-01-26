@@ -49,7 +49,7 @@ value: {
         "abstract": "<p>test</p>",
 	"lastModificationDate": "2020-02-18",
         "versionNumber": 1,
-        "versionStatus": "submitted",
+        "versionStatus": "queued",
 	"visibility": "public"
       },
       {
@@ -87,7 +87,7 @@ value: {
         "abstract": "<p>test</p>",
 	"lastModificationDate": "2020-02-18",
         "versionNumber": 2,
-        "versionStatus": "submitted",
+        "versionStatus": "queued",
 	"visibility": "public"
       },
       {

@@ -27,7 +27,7 @@ describe CurationService do
       service.process
 
       expect(SponsoredPaymentsService).to receive_message_chain(:new, :log_payment).with(resource).with(no_args)
-      CurationService.new(resource: resource, user: curator, status: 'submitted').process
+      CurationService.new(resource: resource, user: curator, status: 'queued').process
     end
 
     it 'does not call #processed_sponsored_resource if status does not change' do
@@ -234,7 +234,7 @@ describe CurationService do
     end
 
     StashEngine::CurationActivity.statuses.each_key do |state|
-      if %w[published embargoed peer_review submitted withdrawn].include?(state)
+      if %w[published embargoed peer_review queued withdrawn].include?(state)
         it "sends email when '#{state}'" do
           expect_any_instance_of(StashEngine::UserMailer).to receive(:status_change)
           CurationService.new(resource: resource, user: user, status: state).process
@@ -247,11 +247,11 @@ describe CurationService do
       end
     end
 
-    it "does not send email when resource is 'submitted' a second time" do
-      CurationService.new(resource: resource, user: user, status: 'submitted').process
+    it "does not send email when resource is 'queued' a second time" do
+      CurationService.new(resource: resource, user: user, status: 'queued').process
       CurationService.new(resource: resource, user: curator, status: 'peer_review').process
       expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
-      CurationService.new(resource: resource, user: user, status: 'submitted').process
+      CurationService.new(resource: resource, user: user, status: 'queued').process
     end
 
     it "does not send email when identifier is 'published' a second time" do
@@ -263,9 +263,9 @@ describe CurationService do
       end
     end
 
-    it "does not send email when 'submitted' by a curator" do
+    it "does not send email when 'queued' by a curator" do
       expect_any_instance_of(StashEngine::UserMailer).not_to receive(:status_change)
-      CurationService.new(resource: resource, user: curator, status: 'submitted').process
+      CurationService.new(resource: resource, user: curator, status: 'queued').process
     end
   end
 
@@ -313,14 +313,14 @@ describe CurationService do
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:curation_status_changed?).and_return(true)
       end
 
-      %w[submitted embargoed published].each do |status|
+      %w[queued embargoed published].each do |status|
         it "calls notify_partner_of_large_data_submission on #{status}" do
           expect(mock_cost_reporting_service).to receive(:notify_partner_of_large_data_submission)
           CurationService.new(resource: resource, user: curator, status: status).process
         end
       end
 
-      (StashEngine::CurationActivity.statuses.keys - %w[submitted embargoed published]).each do |status|
+      (StashEngine::CurationActivity.statuses.keys - %w[queued embargoed published]).each do |status|
         it "does not call notify_partner_of_large_data_submission on #{status}" do
           expect(mock_cost_reporting_service).not_to receive(:notify_partner_of_large_data_submission)
           CurationService.new(resource: resource, user: curator, status: status).process
@@ -333,7 +333,7 @@ describe CurationService do
         allow_any_instance_of(StashEngine::CurationActivity).to receive(:curation_status_changed?).and_return(false)
       end
 
-      %w[submitted embargoed published].each do |status|
+      %w[queued embargoed published].each do |status|
         it "does not call notify_partner_of_large_data_submission on #{status}" do
           expect(mock_cost_reporting_service).not_to receive(:notify_partner_of_large_data_submission)
           CurationService.new(resource: resource, user: curator, status: status).process
@@ -516,7 +516,7 @@ describe CurationService do
   end
 
   describe '#processed_sponsored_resource' do
-    %w[submitted peer_review].each do |status|
+    %w[queued peer_review].each do |status|
       it "calls log_payment if status is #{status}" do
         service.process
 
@@ -525,7 +525,7 @@ describe CurationService do
       end
     end
 
-    (StashEngine::CurationActivity.statuses.keys - %w[submitted peer_review]).each do |status|
+    (StashEngine::CurationActivity.statuses.keys - %w[queued peer_review]).each do |status|
       it "does not call log_payment if status is #{status}" do
         service.process
 

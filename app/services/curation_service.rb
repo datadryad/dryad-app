@@ -81,7 +81,7 @@ class CurationService
     when 'peer_review'
       StashEngine::UserMailer.status_change(@resource, @status).deliver_now
       StashEngine::UserMailer.journal_review_notice(@resource, @status).deliver_now
-    when 'submitted'
+    when 'queued'
       CostReportingService.new(@resource).notify_partner_of_large_data_submission
       # Don't send multiple emails for the same resource, or for submission made by curator
       return unless @activity.first_time_in_status?
@@ -106,7 +106,7 @@ class CurationService
 
     if @activity.first_time_in_status?
       case @status
-      when 'processing', 'peer_review', 'submitted', 'withdrawn'
+      when 'processing', 'peer_review', 'queued', 'withdrawn'
         update_dates[@status.to_sym] = @activity.created_at
       when 'curation'
         update_dates[:curation_start] = @activity.created_at
@@ -147,7 +147,7 @@ class CurationService
   end
 
   def processed_sponsored_resource
-    return unless @status.in?(%w[submitted peer_review])
+    return unless @status.in?(%w[queued peer_review])
 
     SponsoredPaymentsService.new(@resource).log_payment
   end

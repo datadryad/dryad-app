@@ -210,8 +210,8 @@ flow](../submission_flow.md) document.
 
 This step is optional.
 
-By default, datasets that are submitted are immediately eligible for
-curation. Dryad curators may evaluate and publish `submitted` datasets at any
+By default, datasets that are submitted are immediately set to the curationStatus 'Queued for
+curation'. Dryad curators may evaluate and publish these datasets at any
 time. If you wish your dataset to remain private until an associated article is
 published, you may want to place the dataset in the `curationStatus` of `peer_review`.
 
