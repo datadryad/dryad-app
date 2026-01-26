@@ -40,7 +40,7 @@ module StashApi
         if @post
           vals = vals.merge(
             {
-              userId: @resource&.submitter&.id,
+              userId: @resource&.submitter&.orcid || @resource&.submitter&.id,
               skipDataciteUpdate: @resource.skip_datacite_update || nil,
               skipEmails: @resource.skip_emails || nil,
               preserveCurationStatus: @resource.preserve_curation_status || nil,

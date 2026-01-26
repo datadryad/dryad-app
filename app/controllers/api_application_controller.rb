@@ -114,13 +114,14 @@ class ApiApplicationController < StashEngine::ApplicationController
     # the user we're operating for varies depending on the grant type.
     return unless doorkeeper_token
 
-    @user = if doorkeeper_token.resource_owner_id.present?
+    api_user = doorkeeper_token.application.owner
+    @user = if doorkeeper_token.resource_owner_id.present? && !api_user.min_curator?
               # Authorization Code Grant
               # Roleless user for API proxy
               StashEngine::ProxyUser.where(id: doorkeeper_token.resource_owner_id).first
             else
               # Client Credentials Grant type
-              doorkeeper_token.application.owner
+              api_user
             end
 
     logger.info("User: #{@user&.id}")
