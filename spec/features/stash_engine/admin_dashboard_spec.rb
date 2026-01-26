@@ -62,7 +62,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       visit stash_url_helpers.admin_dashboard_results_path(format: :csv)
       csv_line = page.body.split("\n").first
       csv_parts = csv_line.split(',')
-      expect(csv_parts).to include('Submitter', 'Metrics', 'Grant funders')
+      expect(csv_parts).to include('Submitter', 'Views', 'Downloads', 'Citations', 'Grant funders')
     end
 
     it 'has 3 search fields', js: true do
