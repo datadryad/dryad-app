@@ -41,7 +41,7 @@ RSpec.shared_examples('API submission flow') do |can_submit, submit_response|
     expect(json_response[:curationStatus]).to eq('In progress')
     expect(json_response[:lastModificationDate]).to eq(Date.today.to_s)
     expect(json_response[:visibility]).to eq('restricted')
-    expect(json_response[:userId]).to eq(user.id)
+    expect(json_response[:userId]).to eq(user.orcid)
     expect(json_response[:license]).to eq(Stash::Wrapper::License::CC_ZERO.uri.to_s)
     expect(json_response[:editLink]).to eq("/edit/#{CGI.escape(doi)}/#{identifier.edit_code}")
 
