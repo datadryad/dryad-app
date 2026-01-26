@@ -1,7 +1,8 @@
 module StashDatacite
   class TitlesController < ApplicationController
 
-    before_action :ajax_require_modifiable, only: [:update]
+    before_action :ajax_require_permission, only: [:update]
+    before_action :ajax_require_unsubmitted, only: [:update]
 
     respond_to :json
 

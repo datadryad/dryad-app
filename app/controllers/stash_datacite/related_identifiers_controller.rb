@@ -3,7 +3,7 @@ module StashDatacite
     include PublicationMixin
 
     before_action :set_related_identifier, only: %i[update delete]
-    before_action :ajax_require_modifiable, only: %i[update create delete]
+    before_action :ajax_require_permission, only: %i[update create delete]
 
     # GET /related_identifiers/new
     def new

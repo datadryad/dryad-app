@@ -21,6 +21,8 @@ module StashEngine
       before(:each) do
         Timecop.travel(Time.now.utc - 3.minutes)
         @identifier = @resource.identifier
+        @resource.current_resource_state.update(resource_state: 'submitted')
+
         # version 1 with files
         @resource1 = @resource
         create(:data_file, resource: @resource1)
