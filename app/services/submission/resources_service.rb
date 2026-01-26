@@ -24,7 +24,10 @@ module Submission
         Sidekiq.redis { |r| r.set(redis_key, new_files.count) }
 
         new_files.each do |file|
-          Submission::CopyFileJob.perform_async(file.id)
+          queue = :submission_file
+          queue = :big_submission_file if file.upload_file_size > SMALL_UPLOAD_QUEUE_LIMIT
+
+          Submission::CopyFileJob.set(queue: queue).perform_async(file.id)
         end
       else
         Submission::CheckStatusJob.perform_async(resource_id)
