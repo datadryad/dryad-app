@@ -17,6 +17,7 @@
       <span id="searchlabel3">Award IDs: </span>
       <%= search_field_tag('filters[awards]', @filters[:awards], class: "c-input__text#{@filters[:awards].present? ? ' selected' : ''}", 'aria-labelledby': 'searchlabel searchlabel3', style: 'flex-grow: 2' ) %>
     </div>
+    <div class="admin-dashboard-results" id="save_buttons"></div>
     <div class="admin-dashboard-results" style="margin-left: auto">
       <button type="button" class="o-button__plain-text7" id="clear_filters" title="Clear search and filters"><i class="fa fa-times" aria-hidden="true"></i>Clear</button>
       <button type="submit" class="o-button__submit" id="apply_changes">Apply</button>

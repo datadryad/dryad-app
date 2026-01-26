@@ -1,3 +1,6 @@
+<% content_for :head do %>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<% end %>
 <% @page_title = "Admin dashboard" %>
 <% unaltered = @saved_search&.filters == @filters && @saved_search&.fields == @fields && (@saved_search&.search_string == @search_string || (@saved_search&.search_string.blank? && @search_string.blank?)) %>
 <div class="admin-dashboard-header">
@@ -12,8 +15,13 @@
   </div>
   <div id="search_form" <% if unaltered %>hidden<% end %>>
     <%= render partial: 'search_form' %>
+  </div>
+  <div id="search_charts" aria-busy="true">
+    <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
+  </div>
+  <div class="admin-dashboard-results">
+    <button type="button" class="o-button__plain-text7" id="charts_open" aria-controls="search_charts" aria-expanded="true"><i class="fas fa-square-caret-up" aria-hidden="true"></i>Charts and graphs</button>
   </div>  
-  <div class="admin-dashboard-results" id="save_buttons" <% if unaltered %>hidden<% end %>></div>
   <div class="admin-dashboard-results" style="font-size: .9em;" id="count_and_export" role="status" aria-busy="true">
     <i class="fas fa-spin fa-spinner" aria-hidden="true"></i>
   </div>
@@ -28,10 +36,15 @@
 <script type="text/javascript">
   document.getElementById('search_open').addEventListener('click', (e) => {
     document.getElementById('search_form').toggleAttribute('hidden')
-    document.getElementById('save_buttons').toggleAttribute('hidden')
     e.currentTarget.setAttribute('aria-expanded', e.currentTarget.getAttribute('aria-expanded') !== 'true')
     e.currentTarget.firstElementChild.classList.toggle('fa-sliders')
-    e.currentTarget.firstElementChild.classList.toggle('fa-square-caret-up')    
+    e.currentTarget.firstElementChild.classList.toggle('fa-square-caret-up')
+  })
+  document.getElementById('charts_open').addEventListener('click', (e) => {
+    document.getElementById('search_charts').toggleAttribute('hidden')
+    e.currentTarget.setAttribute('aria-expanded', e.currentTarget.getAttribute('aria-expanded') !== 'true')
+    e.currentTarget.firstElementChild.classList.toggle('fa-chart-pie')
+    e.currentTarget.firstElementChild.classList.toggle('fa-square-caret-up')
   })
   const cancelClick = (e) => {
     e.preventDefault();
