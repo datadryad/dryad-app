@@ -428,7 +428,7 @@ module StashApi
     def update_version_status(new_status)
       ensure_in_progress { yield }
       pre_submission_updates
-      if %w[submitted queued].include?(new_status)
+      if new_status == 'submitted'
         CurationService.new(resource: @resource, status: 'processing',
                             note: 'Repository processing data', user_id: @user&.id || 0).process
       end

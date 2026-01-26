@@ -93,6 +93,7 @@ value: {
   ],
   "sharingLink": "https://datadryad.org/dataset/doi:10.5072/FK2708471V",
   "versionNumber": 1,
-  "versionStatus": "queued",
+  "versionStatus": "submitted",
+  "curationStatus": "Queued for curation",
   "visibility": "public"
 }
