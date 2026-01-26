@@ -1,5 +1,7 @@
 var cform = document.getElementById('contact_form')
-var success = document.createElement('div')
+var success = document.getElementById('form_status')
 success.classList.add('callout', 'alt')
 success.innerHTML = '<p>Your query has been submitted to the Dryad helpdesk.</p>'
-cform.prepend(success)
+cform.style.pointerEvents = 'none';
+var button = cform.querySelector('button')
+button.querySelector('i').remove()

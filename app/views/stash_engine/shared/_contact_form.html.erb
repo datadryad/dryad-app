@@ -10,8 +10,9 @@
     'Other'
 ]%>
 <div id="contact_form" aria-live="polite">
+  <div role="alert" id="form_status"></div>
   <div class="callout">
-  <%= form_with(url: stash_url_helpers.contact_helpdesk_path, method: :post, local: false, id: 'contact_form_form') do |form| %>
+  <%= form_with(url: stash_url_helpers.contact_helpdesk_path, method: :post, local: false, id: 'contact_form_form', 'aria-describedby': 'form-status') do |form| %>
     <% if local_assigns.key?(:identifier) %>
       <%= form.hidden_field :identifier, value: identifier %> 
     <% end %>

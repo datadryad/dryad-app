@@ -34,7 +34,7 @@
 		}
 	}
 
-	#contact_form .callout {
+	#contact_form .callout:not(.alt) {
 		background-color: transparent;
 		padding: 0;
 	}
