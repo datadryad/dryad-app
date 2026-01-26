@@ -2,7 +2,8 @@ module StashDatacite
   class AuthorsController < ApplicationController
     before_action :check_reorder_valid, only: %i[reorder]
     before_action :set_author, only: %i[update delete invite check_invoice set_invoice]
-    before_action :ajax_require_modifiable, only: %i[update create delete reorder]
+    before_action :ajax_require_permission, only: %i[update create delete reorder]
+    before_action :ajax_require_unsubmitted, only: %i[update create delete reorder]
 
     respond_to :json
 

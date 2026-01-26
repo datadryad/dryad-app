@@ -4,7 +4,8 @@
 module StashDatacite
   class TemporalCoveragesController < ApplicationController
     before_action :set_temporal_coverage, only: %i[update destroy]
-    before_action :ajax_require_modifiable, only: %i[update destroy]
+    before_action :ajax_require_permission, only: %i[update destroy]
+    before_action :ajax_require_unsubmitted, only: %i[update destroy]
 
     respond_to :json
 

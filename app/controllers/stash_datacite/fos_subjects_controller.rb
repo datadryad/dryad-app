@@ -1,6 +1,7 @@
 module StashDatacite
   class FosSubjectsController < ApplicationController
-    before_action :ajax_require_modifiable, only: %i[update]
+    before_action :ajax_require_permission, only: %i[update]
+    before_action :ajax_require_unsubmitted, only: %i[update]
 
     # PATCH/PUT /fos_subjects/1
     # We are using this for both new/update, id is resource_id, fos_subjects is the subject

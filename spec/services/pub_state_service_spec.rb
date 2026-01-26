@@ -17,7 +17,7 @@ describe PubStateService do
       end
     end
 
-    %w[in_progress processing submitted peer_review curation action_required to_be_published].each do |status|
+    %w[in_progress processing queued peer_review curation action_required to_be_published].each do |status|
       it "updates identifier with proper pub date for status `#{status}`" do
         subject.update_for_ca_status(status)
         expect(identifier.reload.pub_state).to eq('unpublished')

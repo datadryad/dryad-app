@@ -34,10 +34,10 @@ module Tasks
 
       def add_identifier_to_csv(csv, ident)
         service = TimeInStatus.new(identifier: ident, return_in: :days)
-        submitted_time = service.time_in_status %w[submitted]
+        queued_time = service.time_in_status %w[queued]
         curation_time = service.time_in_status %w[curation], include_statuses: %w[in_progress], action_taken_by: :dryad
         aar_time = service.time_in_status %w[action_required], include_statuses: %w[in_progress], action_taken_by: :author
-        total_time = (submitted_time + curation_time + aar_time).round(2)
+        total_time = (queued_time + curation_time + aar_time).round(2)
 
         csv << [
           ident.id,
@@ -48,7 +48,7 @@ module Tasks
           ident.journal&.title,
           ident.journal&.sponsor&.name,
           ident.most_recent_curator&.name,
-          submitted_time, (submitted_time * 100 / total_time.to_f).round(2),
+          queued_time, (queued_time * 100 / total_time.to_f).round(2),
           curation_time, (curation_time * 100 / total_time.to_f).round(2),
           aar_time, (aar_time * 100 / total_time.to_f).round(2),
           total_time
@@ -58,7 +58,7 @@ module Tasks
       def csv_header
         [
           'ID', 'DOI', 'Title', 'Readable Size', 'Size', 'Institution Partner', 'Journal', 'Journal Sponsor', 'Curator',
-          'Time in submitted (Submitted)', 'Time in submitted (%)',
+          'Time in queue (Queued)', 'Time in queue (%)',
           'Time with curator (Curation)', 'Time with curator (%)',
           'Time with author (AAR)', 'Time with author (%)',
           'Time from submission to publication'

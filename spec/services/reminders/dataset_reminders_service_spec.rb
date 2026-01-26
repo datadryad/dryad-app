@@ -112,8 +112,8 @@ module Reminders
         Timecop.travel(3.months.ago) do
           mock_salesforce!
           create(:curation_activity, resource: resource, status: 'processing')
-          create(:curation_activity, resource: resource, status: 'submitted')
-          create(:curation_activity, resource: resource, status: 'submitted', note: 'Status change email sent to author')
+          create(:curation_activity, resource: resource, status: 'queued')
+          create(:curation_activity, resource: resource, status: 'queued', note: 'Status change email sent to author')
           create(:curation_activity, resource: resource, status: 'curation')
           create(:curation_activity, resource: resource, status: 'in_progress')
         end

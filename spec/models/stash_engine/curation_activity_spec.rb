@@ -53,7 +53,7 @@ module StashEngine
 
     context :readable_status do
       it 'class method allows conversion of status to humanized status' do
-        expect(CurationActivity.readable_status('submitted')).to eql('Submitted')
+        expect(CurationActivity.readable_status('queued')).to eql('Queued for curation')
       end
 
       it 'returns a readable version of :peer_review' do
@@ -68,7 +68,7 @@ module StashEngine
 
       it 'returns a default readable version of the remaining statuses' do
         CurationActivity.statuses.each_key do |s|
-          unless %w[peer_review action_required unchanged].include?(s)
+          unless %w[peer_review queued unchanged].include?(s)
             curation_activity.send("#{s}!")
             expect(curation_activity.readable_status).to eql(s.humanize)
           end

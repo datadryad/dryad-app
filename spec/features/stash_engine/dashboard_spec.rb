@@ -48,7 +48,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         expect(page).to have_text('Submitted to Dryad')
         expect(page).to have_css('#user_processing li', count: 1)
         expect(find('#user_processing li')).to have_link(resources[2].title)
-        expect(find('#user_processing li')).to have_text('Submitted')
+        expect(find('#user_processing li')).to have_text('Queued for curation')
 
         expect(page).to have_text('Complete')
         expect(page).to have_css('#user_complete li', count: 1)
@@ -156,7 +156,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         expect(page).to have_text('Is this dataset ready for curation and publication?')
         click_button 'Yes'
 
-        expect(page).to have_text('Dataset released from Private for Peer Review and submitted for curation')
+        expect(page).to have_text('Dataset released from Private for Peer Review and queued for curation')
         expect(page).not_to have_text('Kept private')
         expect(page).to have_text('Submitted to Dryad')
         expect(page).to have_css('#user_processing li', count: 2)

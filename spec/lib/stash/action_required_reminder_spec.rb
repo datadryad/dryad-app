@@ -11,8 +11,8 @@ module Stash
         mock_salesforce!
         @resource = create(:resource)
         create(:curation_activity, resource: @resource, status: 'processing', created_at: 3.months.ago, updated_at: 3.months.ago)
-        create(:curation_activity, resource: @resource, status: 'submitted', created_at: 3.months.ago, updated_at: 3.months.ago)
-        create(:curation_activity, resource: @resource, status: 'submitted', note: 'Status change email sent to author',
+        create(:curation_activity, resource: @resource, status: 'queued', created_at: 3.months.ago, updated_at: 3.months.ago)
+        create(:curation_activity, resource: @resource, status: 'queued', note: 'Status change email sent to author',
                                    created_at: 3.months.ago, updated_at: 3.months.ago)
         create(:curation_activity, resource: @resource, status: 'curation', created_at: 3.months.ago, updated_at: 3.months.ago)
       end

@@ -149,7 +149,7 @@ module StashApi
       if disposition.present? && (@resource.current_curation_status == 'peer_review')
         if disposition.downcase == 'accept'
           # article is accepted -> transition peer_review to curation
-          CurationService.new(user_id: @user.id, resource: @resource, status: 'submitted',
+          CurationService.new(user_id: @user.id, resource: @resource, status: 'queued',
                               note: 'updating status based on API notification from Editorial Manager').process
         else
           # any other article disposition -> transition peer_review to withdrawn
@@ -436,11 +436,12 @@ module StashApi
     end
 
     def update_curation_status(new_status)
+      new_status = 'queued' if new_status == 'submitted'
       note = 'status updated via API call'
 
       # DON'T go backwards in workflow,
-      # don't change a status other than submitted or peer_review
-      unless %w[submitted peer_review].include?(@resource.current_curation_status)
+      # don't change a status other than queued or peer_review
+      unless %w[queued peer_review].include?(@resource.current_curation_status)
         note = "received API request to change status to #{new_status}, but retaining current curation status due to workflow rules"
         new_status = @resource.current_curation_status
       end

@@ -7,7 +7,6 @@ module GenericFilesHelper
     allow_any_instance_of(StashEngine::GenericFile).to receive(:uploaded).and_return(true)
     @user = create(:user, role: 'superuser')
     @resource = create(:resource, user_id: @user.id)
-    @resource.current_resource_state.update(resource_state: 'submitted')
     @token = create(:download_token, resource_id: @resource.id, available: Time.new + 5.minutes.to_i)
     @resource.reload
   end

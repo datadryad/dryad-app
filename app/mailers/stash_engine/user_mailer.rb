@@ -3,9 +3,9 @@ module StashEngine
   # rubocop:disable Metrics/ClassLength
   class UserMailer < ApplicationMailer
 
-    # Called from CurationActivity when the status is submitted, peer_review, published, embargoed or withdrawn
+    # Called from CurationActivity when the status is queued, peer_review, published, embargoed or withdrawn
     def status_change(resource, status)
-      return unless %w[submitted peer_review published embargoed withdrawn].include?(status)
+      return unless %w[queued peer_review published embargoed withdrawn].include?(status)
 
       assign_variables(resource)
       return unless @user.present? && user_email(@user).present?

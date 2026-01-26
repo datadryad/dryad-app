@@ -16,7 +16,7 @@ module PublicationMixin
       CurationService.new(
         resource: resource,
         user_id: 0, # system user
-        status: 'submitted',
+        status: 'queued',
         note: 'Release from peer review through publication information'
       ).process
       StashEngine::UserMailer.peer_review_pub_linked(resource).deliver_now

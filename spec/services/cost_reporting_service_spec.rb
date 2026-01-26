@@ -59,7 +59,7 @@ describe CostReportingService do
       include_examples 'does not send ldf notification'
     end
 
-    context 'when status changes to submitted' do
+    context 'when status changes to queued' do
       before(:each) do
         expect(StashEngine::ResourceMailer).not_to receive(:ld_publication)
         allow(StashEngine::ResourceMailer).to receive(:ld_submission).and_return(mock_mailer)
@@ -67,7 +67,7 @@ describe CostReportingService do
 
       context 'on first submission' do
         before do
-          create(:curation_activity, :submitted, resource: resource)
+          create(:curation_activity, :queued, resource: resource)
         end
 
         include_examples 'sends ldf notification'
@@ -93,7 +93,7 @@ describe CostReportingService do
 
         context 'another curation activity with same status exists' do
           before do
-            create(:curation_activity, :submitted, resource: resource, note: 'some note')
+            create(:curation_activity, :queued, resource: resource, note: 'some note')
           end
 
           include_examples 'does not send ldf notification'
@@ -101,15 +101,15 @@ describe CostReportingService do
 
         context 'and the email was already sent once' do
           before do
-            create(:curation_activity, :submitted, resource: resource,
-                                                   note: 'Sending large data notification for status: submitted')
+            create(:curation_activity, :queued, resource: resource,
+                                                note: 'Sending large data notification for status: queued')
           end
 
           include_examples 'does not send ldf notification'
 
           context 'on an new CA' do
             before do
-              create(:curation_activity, :submitted, resource: resource)
+              create(:curation_activity, :queued, resource: resource)
             end
 
             include_examples 'does not send ldf notification'
@@ -120,8 +120,8 @@ describe CostReportingService do
       context 'on second submission' do
         context 'when initial submission has same status' do
           before do
-            create(:curation_activity, :submitted, resource: prev_resource)
-            create(:curation_activity, :submitted, resource: resource)
+            create(:curation_activity, :queued, resource: prev_resource)
+            create(:curation_activity, :queued, resource: resource)
           end
 
           context 'and files_size tier does not change' do
@@ -131,15 +131,15 @@ describe CostReportingService do
 
             context 'and the email was already sent once' do
               before do
-                create(:curation_activity, :submitted, resource: resource,
-                                                       note: 'Sending large data notification for status: submitted')
+                create(:curation_activity, :queued, resource: resource,
+                                                    note: 'Sending large data notification for status: queued')
               end
 
               include_examples 'does not send ldf notification'
 
               context 'on an new CA' do
                 before do
-                  create(:curation_activity, :submitted, resource: resource)
+                  create(:curation_activity, :queued, resource: resource)
                 end
 
                 include_examples 'does not send ldf notification'
@@ -157,7 +157,7 @@ describe CostReportingService do
         context 'when initial submission has wrong status' do
           before do
             create(:curation_activity, :in_progress, resource: prev_resource)
-            create(:curation_activity, :submitted, resource: resource)
+            create(:curation_activity, :queued, resource: resource)
           end
 
           include_examples 'sends ldf notification'
@@ -222,10 +222,10 @@ describe CostReportingService do
         end
       end
 
-      context 'and the email for submitted status was sent' do
+      context 'and the email for queued status was sent' do
         before do
-          create(:curation_activity, :submitted, resource: resource,
-                                                 note: 'Sending large data notification for status: submitted')
+          create(:curation_activity, :queued, resource: resource,
+                                              note: 'Sending large data notification for status: queued')
           create(:curation_activity, :published, resource: resource)
         end
 
@@ -271,7 +271,7 @@ describe CostReportingService do
 
         context 'when initial submission has wrong status' do
           before do
-            create(:curation_activity, :submitted, resource: prev_resource)
+            create(:curation_activity, :queued, resource: prev_resource)
             create(:curation_activity, :published, resource: resource)
           end
 
