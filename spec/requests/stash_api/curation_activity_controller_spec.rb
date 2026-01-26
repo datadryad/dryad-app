@@ -14,7 +14,7 @@ module StashApi
     let(:identifier) { create(:identifier) }
     let!(:resource) { create(:resource, identifier: identifier, created_at: 2.minutes.ago) }
     let(:dataset_id) { CGI.escape(identifier.to_s) }
-    let(:submit_ca) { create(:curation_activity, resource: resource, note: 'Activity 1', status: 'submitted', user: user) }
+    let(:submit_ca) { create(:curation_activity, resource: resource, note: 'Activity 1', status: 'queued', user: user) }
     let(:curation_ca) { create(:curation_activity, resource: resource, note: 'Activity 2', status: 'curation') }
 
     before do
@@ -36,7 +36,7 @@ module StashApi
         output = response_body_hash
 
         expect(output.size).to eq(3)
-        expect(output.map { |a| a['status'] }).to contain_exactly('In progress', 'Submitted', 'Curation')
+        expect(output.map { |a| a['status'] }).to contain_exactly('In progress', 'Queued for curation', 'Curation')
         expect(output.map { |a| a['note'] }).to contain_exactly(nil, 'Activity 1', 'Activity 2')
       end
     end
@@ -53,7 +53,7 @@ module StashApi
           expect(output[:dataset]).to eq(identifier.to_s)
           expect(output[:keywords]).to eq(nil)
           expect(output[:note]).to eq('Activity 1')
-          expect(output[:status]).to eq('Submitted')
+          expect(output[:status]).to eq('Queued for curation')
         end
       end
 
@@ -74,7 +74,7 @@ module StashApi
         curation_activity_attrs = {
           curation_activity: {
             note: 'New activity note',
-            status: 'submitted'
+            status: 'queued'
           }
         }
         expect do
@@ -83,7 +83,7 @@ module StashApi
 
         expect(response).to have_http_status(:ok)
         output = response_body_hash
-        expect(output[:status]).to eq('Submitted')
+        expect(output[:status]).to eq('Queued for curation')
         expect(output[:note]).to eq('New activity note')
       end
     end
@@ -95,7 +95,7 @@ module StashApi
         curation_activity_attrs = {
           curation_activity: {
             note: 'New activity note',
-            status: 'submitted'
+            status: 'queued'
           }
         }
 
@@ -106,7 +106,7 @@ module StashApi
 
         expect(response).to have_http_status(:ok)
         output = response_body_hash
-        expect(output[:status]).to eq('Submitted')
+        expect(output[:status]).to eq('Queued for curation')
         expect(output[:note]).to eq('New activity note')
       end
     end

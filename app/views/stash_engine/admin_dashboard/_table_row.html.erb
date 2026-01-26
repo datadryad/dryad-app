@@ -98,10 +98,10 @@
     </td>
   <% end %>
   <% if @fields.include?('submit_date') %>
-    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.process_date.processing || dataset.process_date.submitted) %></td>
+    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.submitted_date) %></td>
   <% end %>
   <% if @fields.include?('first_sub_date') %>
-    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.process_date.processing || dataset.identifier.process_date.submitted) %></td>
+    <td class="c-lined-table__digits"><%= formatted_datetime(dataset.identifier.process_date.processing || dataset.identifier.process_date.queued || dataset.identifier.process_date.peer_review) %></td>
   <% end %>
   <% if @fields.include?('publication_date') %>
     <td class="c-lined-table__digits" id="dataset_published_<%= dataset.identifier_id %>">
@@ -118,7 +118,7 @@
   <% end %>
   <% if @fields.include?('queue_date') %>
     <td class="c-lined-table__digits">
-      <%= formatted_datetime(dataset.identifier.process_date.submitted) %>
+      <%= formatted_datetime(dataset.identifier.process_date.queued) %>
     </td>
   <% end %>
 </tr>

@@ -35,9 +35,9 @@ RSpec.feature 'PublicationUpdater', type: :feature, js: true do
       visit stash_url_helpers.publication_updater_path
       expect(page).to have_content('5 results')
       expect(page).to have_content('Published', minimum: 3)
-      expect(page).to have_content('Submitted', minimum: 2)
+      expect(page).to have_content('Queued for curation', minimum: 2)
 
-      select 'Submitted'
+      select 'Queued for curation'
       click_button 'Search'
       expect(page).to have_content('2 results')
       expect(page).to have_content(r[1].title)
@@ -95,7 +95,7 @@ RSpec.feature 'PublicationUpdater', type: :feature, js: true do
       expect(page).not_to have_content(proposed_changes[1].title, wait: 15)
       expect(resources[1].identifier.publication_name).to eq(proposed_changes[1].publication_name)
       expect(resources[1].identifier.publication_article_doi).to include(proposed_changes[1].publication_doi)
-      expect(resources[1].current_curation_status).to eq('submitted')
+      expect(resources[1].current_curation_status).to eq('queued')
     end
 
     it 'accepts a change and sends a PPR resource for payment' do

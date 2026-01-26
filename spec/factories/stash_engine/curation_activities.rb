@@ -34,8 +34,8 @@ FactoryBot.define do
       status { 'in_progress' }
     end
 
-    trait :submitted do
-      status { 'submitted' }
+    trait :queued do
+      status { 'queued' }
     end
 
     trait :peer_review do

@@ -10,10 +10,10 @@ in the system with CamelCase or snake_case, depending on the situation.
   "New Dataset" button, or the dataset was first created via API.
 - SubmittedDate -- The dataset was first submitted to the system. Typically, a
   user pressed the "Submit" button at the end of the submission process, and the
-  dataset entered either `submitted` or `peer_review` status.
+  dataset entered `processing` and then either `queued` or `peer_review` status.
 - PeerReviewDate -- This dataset first entered `peer_review`. If the dataset
   never entered `peer_review`, this date will be blank. 
-- CurationStartDate -- The dataset first went either to `submitted` or
+- CurationStartDate -- The dataset first went either to `queued` or
   `curation` status.
 - AARDate -- The dataset first went to `action_required` status.
 - AAREndDate -- The dataset first returned from `action_required` status.

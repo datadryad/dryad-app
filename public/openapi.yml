@@ -273,7 +273,7 @@ paths:
       summary: Update the state of an in-progress dataset
       tags:
         - datasets 
-      description: "Sending a JSON patch request whose JSON body looks like **[ { 'op': 'replace', 'path': '/versionStatus', 'value': 'submitted' } ]**. (This is the most common command, attempting to change the versionStatus to Submitted.) Other options are available that are useful for integration with manuscript processing systems. See the [embedded Dryad documentation](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/embedded_submission.md) for details. Set http header **'Content-Type: application/json-patch+json'** when making the request instead of a standard json content-type."
+      description: "Sending a JSON patch request whose JSON body looks like **[ { 'op': 'replace', 'path': '/versionStatus', 'value': 'submitted' } ]**. (This is the most common command, attempting to change the versionStatus to 'submitted'.) Other options are available that are useful for integration with manuscript processing systems. See the [embedded Dryad documentation](https://github.com/datadryad/dryad-app/blob/main/documentation/apis/embedded_submission.md) for details. Set http header **'Content-Type: application/json-patch+json'** when making the request instead of a standard json content-type."
       requestBody:
         description: JSON Patch object
         required: true
@@ -1099,11 +1099,11 @@ components:
           type: string
           oneOf:
             - title: "/versionStatus"
-              enum: ['submitted']
+              enum: ['in_progress', 'processing', 'submitted']
             - title: "/curationStatus"
-              enum: [in_progress', 'submitted', 'processing', 'peer_review', 'curation', 'action_required', 'withdrawn', 'embargoed', 'published']
+              enum: ['queued', 'submitted', 'peer_review', 'curation', 'action_required', 'withdrawn']
             - title: "/publicationISSN"
-          example: submitted
+          example: queued
 
     # --- Version(s) ---
     # plural
@@ -1137,8 +1137,8 @@ components:
               description: Internal processing status of files.
             curationStatus:
               type: string
-              enum: [in_progress, 'submitted', 'processing', 'peer_review', 'curation', 'action_required', 'withdrawn', 'embargoed', 'published']
-              description: Status in the curation workflow.
+              enum: [In progress, Processing, Queued for curation, Private for Peer Review, Awaiting payment, Curation, Action required, Withdrawn, Embargoed, Published]
+              description: Status of the submission in the curation workflow.
             versionChanges:
               type: string
               enum: [files_changed, metadata_changed]

@@ -203,11 +203,11 @@ module StashEngine
     def date_fields
       if @filters[:submit_date]&.values&.any?(&:present?)
         @datasets = @datasets.joins(:process_date).select(
-          'IFNULL(stash_engine_process_dates.processing, stash_engine_process_dates.submitted) as submit_date'
+          'COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
         )
       elsif @sort == 'submit_date'
         @datasets = @datasets.left_outer_joins(:process_date).select(
-          'IFNULL(stash_engine_process_dates.processing, stash_engine_process_dates.submitted) as submit_date'
+          'COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
         )
       end
       return unless @sort == 'first_pub_date' || @filters[:first_pub_date]&.values&.any?(&:present?)
@@ -260,15 +260,17 @@ module StashEngine
         "stash_engine_curation_activities.updated_at #{date_string(@filters[:updated_at])}"
       ) unless @filters[:updated_at].nil? || @filters[:updated_at].values.all?(&:blank?)
       @datasets = @datasets.where(
-        "IFNULL(stash_engine_process_dates.processing, stash_engine_process_dates.submitted) #{date_string(@filters[:submit_date])}"
+        "COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) #{
+          date_string(@filters[:submit_date])
+        }"
       ) unless @filters[:submit_date].nil? || @filters[:submit_date].values.all?(&:blank?)
       if %w[first_sub_date queue_date].include?(@sort) || @filters[:first_sub_date]&.values&.any?(&:present?)
         filter_on = @filters[:first_sub_date]&.values&.any?(&:present?)
         @datasets = @datasets.joins(
           "#{filter_on ? '' : 'LEFT OUTER '}JOIN stash_engine_process_dates id_dates ON id_dates.processable_type = 'StashEngine::Identifier'
             AND id_dates.processable_id = stash_engine_identifiers.id
-          #{filter_on ? " AND IFNULL(id_dates.processing, id_dates.submitted) #{date_string(@filters[:first_sub_date])}" : ''}"
-        ).select('IFNULL(id_dates.processing, id_dates.submitted) as first_sub_date, id_dates.submitted as queue_date')
+          #{filter_on ? " AND COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) #{date_string(@filters[:first_sub_date])}" : ''}"
+        ).select('COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) as first_sub_date, id_dates.queued as queue_date')
       end
       @datasets = @datasets.where(
         "stash_engine_resources.publication_date #{date_string(@filters[:publication_date])}"
@@ -391,7 +393,7 @@ module StashEngine
 
       return state_error unless CurationActivity.allowed_states(@last_state, current_user).include?(@status)
 
-      if @status == 'submitted' && @last_state == 'peer_review'
+      if @status == 'queued' && @last_state == 'peer_review'
         release_resource(@resource)
       else
         decipher_curation_activity
@@ -461,7 +463,7 @@ module StashEngine
       curator_id = params.dig(:stash_engine_resource, :curator, :id)
       if curator_id&.to_i == 0
         @resource.update(user_id: nil)
-        @status = 'submitted' if @resource.current_curation_status == 'curation'
+        @status = 'queued' if @resource.current_curation_status == 'curation'
         @curator_name = ''
       else
         @resource.update(user_id: curator_id)
