@@ -97,7 +97,7 @@ paths:
       summary: Test OAuth2 and bearer authentication
       tags:
         - root 
-      description: "Test your <a href='/api#api-accounts'>API account authentication</a> by sending authenticated headers:  `Accept: application/json`, `Content-Type: application/json`, `Authorization: Bearer {your-token}`. \n\n `Accept` header is optional if you are using `Content-Type: application/json`."
+      description: "Test your <a href='https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md'>API account authentication</a> by sending authenticated headers:  `Accept: application/json`, `Content-Type: application/json`, `Authorization: Bearer {your-token}`. \n\n `Accept` header is optional if you are using `Content-Type: application/json`."
 
       responses:
         '200':
@@ -148,7 +148,7 @@ paths:
       tags:
         - datasets 
       description: 
-        You must be <a href="/api#api-accounts">logged in</a>. Use a JSON structure as shown below.
+        You must be <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md">logged in</a>. Use a JSON structure as shown below.
 
 
         If no funders are declared, users will be asked to list them later; to declare no funding submit a funder with <code>identifier&#x0003A; '0'</code> (see the "Set no funding" example). If human subject information is in the dataset, include a statement explaining how the data was de-identified (see the 'Include HSI statement' example).
@@ -229,7 +229,7 @@ paths:
       summary: Update (overwrite) dataset metadata for DOI
       tags:
         - datasets 
-      description: This will overwrite writeable metadata for an in-progress dataset.  This is an insert or update action (upsert). Be sure to URL encode the DOI (see example below). You must be <a href="/api#api-accounts">logged in</a>. Use a JSON structure as shown below. For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
+      description: This will overwrite writeable metadata for an in-progress dataset.  This is an insert or update action (upsert). Be sure to URL encode the DOI (see example below). You must be <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/api_accounts.md">logged in</a>. Use a JSON structure as shown below. For a more full list of properties that can be sent, check the Schema below and the <a href="https://github.com/datadryad/dryad-app/blob/main/documentation/apis/sample_dataset.json" target="_blank">sample dataset object</a>.
       parameters:
         - $ref: '#/components/parameters/doi'
       security:
