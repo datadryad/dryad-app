@@ -38,7 +38,7 @@ function Payments({
 
   if (invoice) {
     return (
-      <div id="payment">
+      <div id="submission-payment">
         {resource.identifier.old_payment_system ? <Calculations resource={resource} config={config} /> : (
           <>
             <p>
@@ -70,7 +70,7 @@ function Payments({
   }
 
   return (
-    <div id="payment">
+    <div id="submission-payment">
       {resource.hold_for_peer_review ? (
         <>
           <CalculateFees resource={resource} ppr />
