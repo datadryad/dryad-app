@@ -53,7 +53,7 @@ module StashEngine
     end
 
     def count
-      if session[:admin_search_count].blank? || session[:admin_charts].blank?
+      if session[:admin_search_count].blank?
         res = ActiveRecord::Base.connection.select_all(
           "select count(*) as total, #{helpers.size_chart} from (#{params[:sql]}) subquery"
         )
