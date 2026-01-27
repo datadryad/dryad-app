@@ -41,6 +41,9 @@
     e.currentTarget.firstElementChild.classList.toggle('fa-square-caret-up')
   })
   document.getElementById('charts_open').addEventListener('click', (e) => {
+    if (e.currentTarget.getAttribute('aria-expanded') !== 'true' && document.getElementById('charts_form_button')) {
+      document.getElementById('charts_form_button').click();
+    }
     document.getElementById('search_charts').toggleAttribute('hidden')
     e.currentTarget.setAttribute('aria-expanded', e.currentTarget.getAttribute('aria-expanded') !== 'true')
     e.currentTarget.firstElementChild.classList.toggle('fa-chart-pie')
@@ -72,6 +75,8 @@
     window.history.pushState({}, null, `${window.location.pathname}?${params.toString()}`);
     document.getElementById('count_and_export').innerHTML = '<i class="fas fa-spin fa-spinner" aria-hidden="true"></i>'
     document.getElementById('count_and_export').setAttribute('aria-busy', true)
+    document.getElementById('search_charts').innerHTML = '<i class="fas fa-spin fa-spinner" aria-hidden="true"></i>'
+    document.getElementById('search_charts').setAttribute('aria-busy', true)
   }
   const checkForm = () => {
     const form = document.querySelector('#search_form form')
