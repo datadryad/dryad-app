@@ -94,6 +94,22 @@ module StashEngine
       end
       # rubocop:enable Metrics/AbcSize
 
+      def recorded_payer
+        return nil if payment_type.blank?
+        return funder_payment_info&.payer_funder if payment_type == 'funder'
+        return StashEngine::Tenant.find(payment_id) if payment_type.start_with?('institution')
+        return StashEngine::Journal.find_by_issn(payment_id) if payment_type.start_with?('journal')
+        return latest_resource.submitter if payment_type == 'stripe'
+
+        nil
+      end
+
+      def display_payer
+        return recorded_payer if recorded_payer.present?
+
+        payer.presence || {}
+      end
+
       def institution_will_pay?
         tenant = latest_resource&.tenant
 

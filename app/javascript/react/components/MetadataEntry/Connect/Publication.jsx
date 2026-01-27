@@ -59,11 +59,12 @@ export default function Publication({current, resource, setResource}) {
   useEffect(() => {
     const {manuscript_number} = resource.resource_publication;
     const primary_article = resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier;
-    if (!resource.tenant?.payment_configuration?.covers_dpc) {
-      const journal_pp = resource.journal?.payment_configuration?.payment_plan;
-      setSponsored(!!journal_pp && (manuscript_number || primary_article) ? resource.journal.title : false);
+    if (manuscript_number || primary_article) {
+      setSponsored(Object.hasOwn(resource.identifier.display_payer, 'title') ? resource.identifier.display_payer.title : false);
+    } else {
+      setSponsored(false);
     }
-  }, [resource.journal, resource.resource_publication, resource.related_identifiers]);
+  }, [resource.identifier.display_payer, resource.resource_publication, resource.related_identifiers]);
 
   useEffect(() => {
     const selected = new Set([]);

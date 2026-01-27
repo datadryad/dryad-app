@@ -170,22 +170,22 @@ export default function Agreements({
       {preview ? <h2>Do you agree to Dryad’s terms?</h2> : <h3 style={{marginTop: '3rem'}}>Do you agree to Dryad’s terms?</h3>}
       {subType !== 'collection' && (
         <>
-          {dpc.funder_will_pay && (
+          {Object.hasOwn(resource.identifier.display_payer, 'name') && (
             <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{dpc.paying_funder}</b></p>
+              <p>Payment for this submission is sponsored by <b>{resource.identifier.display_payer.name}</b></p>
             </div>
           )}
-          {!dpc.funder_will_pay && dpc.institution_will_pay && (
+          {Object.hasOwn(resource.identifier.display_payer, 'long_name') && (
             <>
               <div className="callout">
-                <p>Payment for this submission is sponsored by <b>{resource.tenant.long_name}</b></p>
+                <p>Payment for this submission is sponsored by <b>{resource.identifier.display_payer.long_name}</b></p>
               </div>
               {previous && resource.tenant_id !== previous.tenant_id && <p className="del ins">Partner institution changed</p>}
             </>
           )}
-          {!dpc.funder_will_pay && !dpc.institution_will_pay && dpc.journal_will_pay && (
+          {Object.hasOwn(resource.identifier.display_payer, 'title') && (
             <div className="callout">
-              <p>Payment for this submission is sponsored by <b>{resource.resource_publication.publication_name}</b></p>
+              <p>Payment for this submission is sponsored by <b>{resource.identifier.display_payer.title}</b></p>
             </div>
           )}
           {resource.identifier.old_payment_system
