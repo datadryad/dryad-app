@@ -363,13 +363,6 @@ Rails.application.routes.draw do
     resource :pots, only: [:show]
   end
 
-  ############################# Discovery support ######################################
-
-  get '/latest', to: 'latest#index', as: 'latest_index'
-
-  # Endpoint for LinkOut
-  get :discover, to: 'catalog#discover'
-
   ########################## StashDatacite support ######################################
 
   scope module: 'stash_datacite', path: '/stash_datacite' do
@@ -495,6 +488,11 @@ Rails.application.routes.draw do
     get '/advanced', to: 'advanced', as: "advanced_search"
   end
   get 'author/:orcid', to: 'search#author_profile', as: 'author_profile'
+
+  get '/latest', to: 'latest#index', as: 'latest_index'
+  
+  # Endpoint for LinkOut
+  get :discover, to: 'search#discover'
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
   get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator

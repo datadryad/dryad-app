@@ -28,6 +28,27 @@ class SearchController < ApplicationController
     @articles = articles
   end
 
+  # Endpoint called from LinkOut buttons on Pubmed site but could be used to locate a Dataset
+  # based on manuscript number or pubmed id
+  # GET discover?query=[:internal_datum_value]
+  def discover
+    query = params[:query].to_s.gsub('"', '')
+    query = query.gsub('doi:', '') if query.start_with?('doi:')
+
+    internal_data = StashApi::SolrSearchService.new(query: nil, filters: { relatedId: query }).search
+    StashApi::SolrSearchService.new(
+      query: nil,
+      filters: {
+        relatedWorkIdentifier: "*#{query}",
+        relatedWorkRelationship: 'primary_article'
+      }
+    ).search
+
+    identifiers = find_related(internal_data) + find_related(related_ids)
+
+    redirect_discover_to_landing(identifiers, query)
+  end
+
   private
 
   def fields
@@ -71,5 +92,30 @@ class SearchController < ApplicationController
   def per_page
     @page_size = 10 if params[:page_size].blank? || params[:page_size].to_i == 0
     @page_size ||= params[:page_size].to_i
+  end
+
+  def find_related(related)
+    return [] unless related.is_a?(Hash)
+
+    dois = related_dois['docs']
+    ids = dois.map { |a| a['dc_identifier_s'].gsub('doi:', '') } if dois.any?
+    StashEngine::Identifier.where(identifier: ids)
+  end
+
+  def redirect_discover_to_landing(identifiers, query)
+    if identifiers.length > 1
+      # Found multiple datasets for the publication so do a Blacklight search for their DOIs
+      redirect_to new_search_path(q: query.to_s)
+    elsif identifiers.length == 1
+      # Found one match so just send them to the landing page
+      redirect_to stash_url_helpers.show_path(identifiers.first&.to_s)
+    else
+      # Nothing was found so see if we were sent a Dryad DOI
+      identifier = StashEngine::Identifier.find_by(identifier: query.to_s)
+      redirect_to stash_url_helpers.show_path(identifier.to_s) if identifier.present?
+
+      # Nothing was found so send the user to the Blacklight search page with the original query
+      redirect_to new_search_path(q: query.to_s) if identifier.blank?
+    end
   end
 end
