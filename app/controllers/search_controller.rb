@@ -104,17 +104,17 @@ class SearchController < ApplicationController
 
   def redirect_discover_to_landing(identifiers, query)
     if identifiers.length > 1
-      # Found multiple datasets for the publication so do a Blacklight search for their DOIs
-      redirect_to new_search_path(q: query.to_s)
+      # Found multiple datasets for the publication, so redirect to search
+      redirect_to new_search_path(q: query.to_s) and return
     elsif identifiers.length == 1
-      # Found one match so just send them to the landing page
-      redirect_to stash_url_helpers.show_path(identifiers.first&.to_s)
+      # Found one match, redirect to the landing page
+      redirect_to stash_url_helpers.show_path(identifiers.first&.to_s) and return
     else
-      # Nothing was found so see if we were sent a Dryad DOI
+      # Nothing was found, check if we were sent a Dryad DOI
       identifier = StashEngine::Identifier.find_by(identifier: query.to_s)
-      redirect_to stash_url_helpers.show_path(identifier.to_s) if identifier.present?
+      redirect_to stash_url_helpers.show_path(identifier.to_s) and return if identifier.present?
 
-      # Nothing was found so send the user to the Blacklight search page with the original query
+      # Nothing was found, redirect to search
       redirect_to new_search_path(q: query.to_s) if identifier.blank?
     end
   end
