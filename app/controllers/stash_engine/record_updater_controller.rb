@@ -59,7 +59,6 @@ module StashEngine
       @columns = COLUMNS_MAPPER[@data_type]
       @proposed_changes = RecordUpdater.send(@data_type).where.not(status: :pending)
       apply_joins
-      apply_filters
 
       index_params[:sort] = 'updated_at' if index_params[:sort].blank?
       index_params[:direction] = 'desc' if index_params[:direction].blank?
