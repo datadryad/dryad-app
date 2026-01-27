@@ -169,8 +169,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
         sign_in(user)
         doi = Faker::Pid.doi
         click_button 'Link article'
-        expect(page).to have_text('Link primary article')
-        fill_in 'searchselect-journal__input', with: 'Test Journal'
+        expect(page).to have_text('Does your dataset contain the foundational data for a primary article?')
         fill_in 'related_identifier', with: doi
         click_button 'Submit'
         expect(page).not_to have_button('Link article')
