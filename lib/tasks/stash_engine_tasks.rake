@@ -141,6 +141,7 @@ namespace :identifiers do
       invoicer = Stash::Payments::StripeInvoicer.new(res)
       next unless invoicer.invoice_created? && invoicer.invoice_paid?
 
+      res.resource_payment.update(status: :paid)
       CurationService.new(
         resource: res,
         user_id: 0,
