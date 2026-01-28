@@ -145,10 +145,9 @@ namespace :identifiers do
         resource: res,
         user_id: 0,
         status: 'queued',
-        note: 'Invoice has been paid, or cannot be found`'
+        note: 'Invoice has been paid, or cannot be found'
       ).process
     rescue StandardError => e
-      # NOTE: we get errors with test data updating DOI and some of the other callbacks on publishing
       log "    Exception! #{e.message}"
 
     end
