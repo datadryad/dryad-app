@@ -30,13 +30,10 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       ActionMailer::Base.deliveries = []
       Timecop.travel(Time.now.utc - 5.minutes)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, identifier: @identifier, user: @author,
-                                                tenant_id: @author.tenant_id, accepted_agreement: true)
+      @resource = create(:resource, :paid, :submitted, identifier: @identifier, user: @author,
+                                                       tenant_id: @author.tenant_id, accepted_agreement: true)
       create(:description, resource: @resource, description_type: 'technicalinfo')
       create(:description, resource: @resource, description_type: 'hsi_statement', description: nil)
-      create(:data_file, resource: @resource)
-      @resource.reload
-      @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)
       Timecop.return
     end
 

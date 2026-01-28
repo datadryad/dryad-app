@@ -51,7 +51,7 @@ RSpec.feature 'EditLink', type: :feature do
       create(:role, user: @admin, role: 'admin', role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
+      @resource = create(:resource, :paid, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id)
       sign_in(@admin)
     end
 
@@ -93,7 +93,7 @@ RSpec.feature 'EditLink', type: :feature do
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
       new_user = create(:user, tenant_id: nil)
-      expect { create(:resource, :submitted, user: new_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
+      expect { create(:resource, :paid, :submitted, user: new_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page).to have_text('User settings')
     end
@@ -104,7 +104,9 @@ RSpec.feature 'EditLink', type: :feature do
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
       system_user = StashEngine::User.where(id: 0).first || create(:user, id: 0)
-      expect { @resource = create(:resource, :submitted, user: system_user, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
+      expect do
+        @resource = create(:resource, :paid, :submitted, user: system_user, identifier: new_ident)
+      end.to change(StashEngine::Resource, :count).by(1)
       Timecop.return
       visit "/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page).to have_text('User settings')
@@ -117,7 +119,7 @@ RSpec.feature 'EditLink', type: :feature do
       new_ident = create(:identifier)
       new_ident.edit_code = Faker::Number.number(digits: 4)
       new_ident.save
-      expect { create(:resource, :submitted, user_id: 0, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
+      expect { create(:resource, :paid, :submitted, user_id: 0, identifier: new_ident) }.to change(StashEngine::Resource, :count).by(1)
       visit "/edit/#{new_ident.identifier}/#{new_ident.edit_code}"
       expect(page.current_path).to eq('/sessions/choose_login')
     end

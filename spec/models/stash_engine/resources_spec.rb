@@ -1403,7 +1403,7 @@ module StashEngine
           expect(resource.reload.curatable?).to eql(false)
         end
 
-        it 'is false even when current curation state is Submitted' do
+        it 'is false even when current curation state is queued' do
           identifier = create(:identifier, identifier_type: 'DOI', identifier: '10.999/999')
           resource = create(:resource, user_id: user.id, identifier_id: identifier.id)
           CurationService.new(status: 'queued', resource: resource).process

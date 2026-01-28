@@ -51,6 +51,7 @@ module Reports
           'In progress - monthly' => ['in_progress_deletion_notice - reminded submitter that this item is still `in_progress`'],
           'Action required - 2 weeks' => ['CRON: mailed action required reminder 1'],
           'Action required - monthly' => ['action_required_deletion_notice - reminded submitter that this item is still `action_required`'],
+          'Awaiting payment - monthly' => ['awaiting_payment_deletion_notice - reminded submitter that this item is still `awaiting_payment`'],
           'Peer review - monthly' => ['peer_review_deletion_notice - reminded submitter that this item is still `peer_review`'],
           'Withdrawn notice' => ['withdrawn_email_notice - notification that this item was set to `withdrawn`'],
           'Final withdrawn notice' => ['final_withdrawn_email_notice - reminded submitter that this item is still `withdrawn`']

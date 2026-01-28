@@ -21,7 +21,7 @@ RSpec.feature 'AdminSearch', type: :feature do
     @superuser = create(:user, role: 'superuser')
     3.times do
       identifier = create(:identifier)
-      create(:resource, :submitted, user: @user, identifier: identifier)
+      create(:resource, :paid, :submitted, user: @user, identifier: identifier)
     end
   end
 

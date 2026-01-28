@@ -308,6 +308,12 @@ module StashEngine
       joins('INNER JOIN stash_engine_identifiers ON stash_engine_resources.id = stash_engine_identifiers.latest_resource_id')
     end
 
+    scope :invoice_due, -> do
+      joins(:last_curation_activity, :payment)
+        .where(last_curation_activity: { status: 'awaiting_payment' })
+        .where.not(payment: { invoice_id: [nil, ''] })
+    end
+
     def set_identifier
       self.identifier = StashEngine::Identifier.find_by(id: identifier_id) if identifier.blank?
     end
@@ -1220,7 +1226,7 @@ module StashEngine
                           note: 'System set back to curation').process
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def create_post_submission_status(prior_cur_act)
       attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
       curation_note = ''
@@ -1257,13 +1263,18 @@ module StashEngine
         end
       end
 
+      if target_status == 'queued' && identifier.payment_needed?
+        target_status = 'awaiting_payment'
+        curation_note = 'Invoice must be paid before curation'
+      end
+
       # Generate the status
       # This will usually have the side effect of sending out notification emails to the author/journal
       CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
       target_status
     end
 
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def auto_assign_curator(target_status:)
       target_curator = curator&.curator? ? curator : identifier.most_recent_curator

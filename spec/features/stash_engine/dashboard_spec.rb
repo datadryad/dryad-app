@@ -20,7 +20,7 @@ RSpec.feature 'Dashboard', type: :feature, js: true do
       [
         create(:resource, user: user),
         create(:resource, :submitted, user: user, hold_for_peer_review: true),
-        create(:resource, :submitted, user: user),
+        create(:resource, :paid, :submitted, user: user),
         create(:resource_published, user: user)
       ]
     end
