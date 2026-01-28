@@ -30,7 +30,7 @@ class SearchController < ApplicationController
 
   # Endpoint called from LinkOut buttons on Pubmed site but could be used to locate a Dataset
   # based on manuscript number or pubmed id
-  # GET discover?query=[:internal_datum_value]
+  # GET discover?query=doi/pmid/manuscript
   def discover
     query = params[:query].to_s.gsub('"', '')
     query = query.gsub('doi:', '') if query.start_with?('doi:')
@@ -88,7 +88,7 @@ class SearchController < ApplicationController
   def find_related(related)
     return [] unless related.is_a?(Hash)
 
-    dois = related['docs']
+    dois = related.dig('response', 'docs')
     ids = dois.map { |a| a['dc_identifier_s'].gsub('doi:', '') } if dois&.any?
     StashEngine::Identifier.where(identifier: ids)
   end
@@ -96,7 +96,7 @@ class SearchController < ApplicationController
   def redirect_discover_to_landing(identifiers, query)
     if identifiers.length > 1
       # Found multiple datasets for the publication, so redirect to search
-      redirect_to new_search_path(q: query.to_s) and return
+      redirect_to new_search_path(q: '', relatedId: query.to_s) and return
     elsif identifiers.length == 1
       # Found one match, redirect to the landing page
       redirect_to stash_url_helpers.show_path(identifiers.first&.to_s) and return
