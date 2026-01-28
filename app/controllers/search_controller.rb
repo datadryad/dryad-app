@@ -36,7 +36,7 @@ class SearchController < ApplicationController
     query = query.gsub('doi:', '') if query.start_with?('doi:')
 
     internal_data = StashApi::SolrSearchService.new(query: nil, filters: { relatedId: query }).search
-    StashApi::SolrSearchService.new(
+    related_ids = StashApi::SolrSearchService.new(
       query: nil,
       filters: {
         relatedWorkIdentifier: "*#{query}",
@@ -97,7 +97,7 @@ class SearchController < ApplicationController
   def find_related(related)
     return [] unless related.is_a?(Hash)
 
-    dois = related_dois['docs']
+    dois = related['docs']
     ids = dois.map { |a| a['dc_identifier_s'].gsub('doi:', '') } if dois.any?
     StashEngine::Identifier.where(identifier: ids)
   end
