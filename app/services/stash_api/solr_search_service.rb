@@ -45,7 +45,6 @@ module StashApi
         license: 'dc_rights_s',
         fileExt: 'dryad_dataset_file_ext_sm',
         journalISSN: 'dryad_related_publication_issn_s',
-        relatedId: 'dryad_related_publication_id_sm',
         funder: 'funder_ror_ids_sm',
         award: 'funder_awd_ids_sm',
         facility: 'sponsor_ror_ids_sm',
@@ -61,6 +60,7 @@ module StashApi
         author: 'dc_creator_tmi',
         orcid: 'author_orcids_tmi',
         affiliationName: 'dryad_author_affiliation_name_tmi',
+        relatedId: 'dryad_related_publication_id_tmi',
         journal: 'dryad_related_publication_name_ti',
         funderName: 'dcs_funder_tmi'
       }

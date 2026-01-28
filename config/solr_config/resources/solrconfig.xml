@@ -118,7 +118,7 @@
         layer_geom_type_ti^9
         layer_slug_ti^10
         dc_identifier_ti^10
-        dryad_related_publication_id_ti^11
+        dryad_related_publication_id_tmi^11
         dryad_dataset_file_ext_tmi^13
         dcs_funder_tmi^14
         dryad_related_publication_name_ti^15
@@ -143,7 +143,7 @@
         layer_geom_type_ti^9
         layer_slug_ti^10
         dc_identifier_ti^10
-        dryad_related_publication_id_ti^11
+        dryad_related_publication_id_tmi^11
         dryad_dataset_file_ext_tmi^13
         dcs_funder_tmi^14
         dryad_related_publication_name_ti^15
