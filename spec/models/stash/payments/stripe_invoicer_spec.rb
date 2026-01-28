@@ -28,6 +28,7 @@ module Stash
         mock_salesforce!
         mock_stripe!
         allow(invoicer).to receive(:lookup_prior_stripe_customer_id).and_return('stripe_customer_id')
+        allow(Stripe::Invoice).to receive(:retrieve).and_return(OpenStruct.new({ id: invoice_id, status: 'open' }))
       end
 
       describe 'initializer' do
@@ -37,15 +38,32 @@ module Stash
       end
 
       describe '#invoice_created' do
-        it 'returns true' do
+        it 'returns false' do
           expect(invoicer.invoice_created?).to be_falsey
         end
 
         context 'with invoice_id set' do
-          let(:invoice_id) { 'invoice-id' }
+          let(:invoice_id) { 'in_voice-id' }
 
           it 'returns true' do
             expect(invoicer.invoice_created?).to be_truthy
+          end
+        end
+      end
+
+      describe '#invoice_paid' do
+        let(:invoice_id) { 'in_voice-id' }
+
+        it 'returns false' do
+          expect(Stripe::Invoice).to receive(:retrieve)
+          expect(invoicer.invoice_paid?).to be_falsey
+        end
+
+        context 'with paid invoice' do
+          before { allow(Stripe::Invoice).to receive(:retrieve).and_return(OpenStruct.new({ id: invoice_id, status: 'paid' })) }
+          it 'returns true' do
+            expect(Stripe::Invoice).to receive(:retrieve)
+            expect(invoicer.invoice_paid?).to be_truthy
           end
         end
       end

@@ -1,8 +1,7 @@
 var cform = document.getElementById('contact_form')
-var error = document.createElement('div')
+var error = document.getElementById('form_status')
 error.classList.add('callout', 'err')
 error.innerHTML = '<%= @message.html_safe %>'
-cform.prepend(error)
 var button = cform.querySelector('button')
 button.querySelector('i').remove()
 form.querySelector('button').disabled = false

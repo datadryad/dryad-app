@@ -3,8 +3,8 @@
 module DatabaseHelper
 
   def create_basic_dataset!
-    resource = create(:resource, :submitted, created_at: 1.minute.ago, authors: 3.times.map { create(:author) })
-    3.times.map { create(:data_file, resource: resource) }
+    resource = create(:resource, :paid, :submitted, created_at: 1.minute.ago, authors: 3.times.map { create(:author) })
+    create(:data_file, resource: resource)
     create(:description, resource: resource, description_type: 'technicalinfo')
     create(:description, resource: resource, description_type: 'hsi_statement', description: nil)
     resource

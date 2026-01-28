@@ -34,10 +34,10 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       expect(page).to have_text('1 related work')
       expect(page).to have_text('published')
       @resource.resource_publication.update(manuscript_number: nil)
-      create(:curation_activity, :submitted, resource: @resource, note: 'status updated via API call')
+      create(:curation_activity, :queued, resource: @resource, note: 'status updated via API call')
       visit current_path
       expect(page).not_to have_text(manuscript.manuscript_number)
-      expect(page).to have_text('accepted')
+      expect(page).not_to have_text('accepted')
     end
 
     it 'renders salesforce links in notes field' do
@@ -105,7 +105,7 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       create(:role, user: @admin, role: 'admin', role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, created_at: 1.minute.ago)
+      @resource = create(:resource, :paid, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, created_at: 1.minute.ago)
     end
 
     context :tenant_admin do
@@ -249,6 +249,8 @@ RSpec.feature 'AdminDatasets', type: :feature, js: true do
       end
 
       it 'sets a fee waiver and shows a log' do
+        @resource.identifier.update(last_invoiced_file_size: nil)
+        @resource.payment.destroy
         expect(page).to have_text('Payment:')
         click_button('Apply fee discount')
         expect(page).to have_text('Please provide a reason')

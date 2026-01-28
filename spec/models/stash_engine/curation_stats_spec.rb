@@ -16,7 +16,7 @@
 #  date                        :datetime
 #  new_datasets                :integer
 #  new_datasets_to_peer_review :integer
-#  new_datasets_to_submitted   :integer
+#  new_datasets_to_queued      :integer
 #  ppr_size                    :integer
 #  ppr_to_curation             :integer
 #  created_at                  :datetime         not null
@@ -99,7 +99,7 @@ module StashEngine
         CurationService.new(status: 'peer_review', resource: @res[0], user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
         res_new.resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day).process
         res_new.delete
         stats = CurationStats.create(date: @day)
         expect(stats.ppr_to_curation).to eq(1)
@@ -109,7 +109,7 @@ module StashEngine
         CurationService.new(status: 'peer_review', resource: @res[0], user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
         res_new.resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day).process
         res_new.identifier.delete
         stats = CurationStats.create(date: @day)
         expect(stats.ppr_to_curation).to eq(1)
@@ -154,13 +154,13 @@ module StashEngine
         stats = CurationStats.create(date: @day)
 
         # YES -- user submitted
-        CurationService.new(status: 'submitted', resource: @res[0], user: @user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[0], user: @user, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_to_be_curated).to eq(1)
 
         # YES -- journal notification out of PPR
         CurationService.new(status: 'peer_review', resource: @res[1], user: @user, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: @res[1], user: @system_user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[1], user: @system_user, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_to_be_curated).to eq(2)
 
@@ -168,7 +168,7 @@ module StashEngine
         CurationService.new(status: :in_progress, resource: @res[2], user: @user, created_at: @day).process
         CurationService.new(status: :in_progress, resource: @res[2], user: @system_user, created_at: @day).process
         CurationService.new(status: :in_progress, resource: @res[2], user: @system_user, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: @res[2], user: @system_user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[2], user: @system_user, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_to_be_curated).to eq(3)
 
@@ -176,15 +176,15 @@ module StashEngine
         CurationService.new(status: 'peer_review', resource: @res[3], user: @user, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[3].identifier.id, user: @curator, tenant_id: 'dryad')
         CurationService.new(status: :in_progress, resource: res_new, user: @curator, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_to_be_curated).to eq(4)
 
         # YES -- curator is working on it, but user submitted in the past
-        CurationService.new(status: 'submitted', resource: @res[4], user: @user, created_at: @day - 2.days)
+        CurationService.new(status: 'queued', resource: @res[4], user: @user, created_at: @day - 2.days)
         res_new2 = create(:resource, identifier_id: @res[4].identifier.id, user: @curator, tenant_id: 'dryad')
         CurationService.new(status: :in_progress, resource: res_new2, user: @curator, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: res_new2, user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new2, user: @curator, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_to_be_curated).to eq(5)
       end
@@ -205,7 +205,7 @@ module StashEngine
         expect(stats.datasets_unclaimed).to eq(0)
 
         # NO -- user submitted and added a curator
-        CurationService.new(status: 'submitted', resource: @res[3], user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[3], user: @curator, created_at: @day).process
         CurationService.new(status: :curation, resource: @res[3], note: 'Changing curator to Any Name', user: @curator, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_unclaimed).to eq(0)
@@ -223,13 +223,13 @@ module StashEngine
         stats = CurationStats.create(date: @day)
 
         # YES -- user submitted
-        CurationService.new(status: 'submitted', resource: @res[0], user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[0], user: @curator, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_unclaimed).to eq(1)
 
         # YES -- journal notification out of PPR
         CurationService.new(status: 'peer_review', resource: @res[1], user: @user, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: @res[1], user: @system_user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[1], user: @system_user, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_unclaimed).to eq(2)
 
@@ -237,7 +237,7 @@ module StashEngine
         CurationService.new(status: :in_progress, resource: @res[2], user: @user, created_at: @day).process
         CurationService.new(status: :in_progress, resource: @res[2], user: @system_user, created_at: @day).process
         CurationService.new(status: :in_progress, resource: @res[2], user: @system_user, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: @res[2], user: @system_user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[2], user: @system_user, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_unclaimed).to eq(3)
 
@@ -245,27 +245,27 @@ module StashEngine
         CurationService.new(status: 'peer_review', resource: @res[3], user: @user, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[3].identifier.id, user: @curator, tenant_id: 'dryad')
         CurationService.new(status: :in_progress, resource: res_new, user: @curator, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_unclaimed).to eq(4)
 
         # YES -- user submitted, a curator was assigned, then the curator was unassigned
-        CurationService.new(status: 'submitted', resource: @res[4], user: @curator, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: @res[4], note: 'Changing curator to Any Name.', user: @curator, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: @res[4], note: 'Changing curator to unassigned.', user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[4], user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[4], note: 'Changing curator to Any Name.', user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[4], note: 'Changing curator to unassigned.', user: @curator, created_at: @day).process
         stats.recalculate
         expect(stats.datasets_unclaimed).to eq(5)
       end
     end
 
-    describe :new_datasets_to_submitted do
+    describe :new_datasets_to_queued do
       it 'knows when there are none' do
         # NO -- move into curation, but not anywhere else (not typical, but could happen)
         CurationService.new(status: :curation, resource: @res[1], user: @curator, created_at: @day).process
         # NO -- move into peer_review
         CurationService.new(status: 'peer_review', resource: @res[2], user: @curator, created_at: @day).process
         stats = CurationStats.create(date: @day)
-        expect(stats.new_datasets_to_submitted).to eq(0)
+        expect(stats.new_datasets_to_queued).to eq(0)
       end
 
       it 'counts correctly when there are some' do
@@ -274,51 +274,51 @@ module StashEngine
         # NO -- move into curation, but not actually submitted
         CurationService.new(status: :curation, resource: @res[0], user: @curator, created_at: @day1).process
         stats.recalculate
-        expect(stats.new_datasets_to_submitted).to eq(0)
+        expect(stats.new_datasets_to_queued).to eq(0)
 
-        # YES -- move into submitted
+        # YES -- move into queued
         @res[1].resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: @res[1], user: @user, created_at: @day1).process
+        CurationService.new(status: 'queued', resource: @res[1], user: @user, created_at: @day1).process
         stats.recalculate
-        expect(stats.new_datasets_to_submitted).to eq(1)
+        expect(stats.new_datasets_to_queued).to eq(1)
 
         # YES -- move into published
         @res[2].resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: @res[2], user: @user, created_at: @day1).process
+        CurationService.new(status: 'queued', resource: @res[2], user: @user, created_at: @day1).process
         CurationService.new(status: :curation, resource: @res[2], user: @curator, created_at: @day1).process
         CurationService.new(status: :published, resource: @res[2], user: @curator, created_at: @day1).process
         stats.recalculate
-        expect(stats.new_datasets_to_submitted).to eq(2)
+        expect(stats.new_datasets_to_queued).to eq(2)
 
         # NO -- was submitted previously
         @res[3].resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: @res[3], user: @user, created_at: @day - 2.days).process
+        CurationService.new(status: 'queued', resource: @res[3], user: @user, created_at: @day - 2.days).process
         stats.recalculate
-        expect(stats.new_datasets_to_submitted).to eq(2)
+        expect(stats.new_datasets_to_queued).to eq(2)
 
         # YES -- but there are two resources, and only one should count
         id_new = create(:identifier, identifier_type: 'DOI', identifier: '10.123/two_resource_ident')
         res_new = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
         res_new.resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day1).process
+        CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day1).process
         Timecop.travel(Time.now.utc + 1.minute)
         res_new2 = create(:resource, identifier_id: id_new.id, user: @user, tenant_id: 'dryad')
         res_new2.resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: res_new2, user: @curator, created_at: @day1).process
+        CurationService.new(status: 'queued', resource: res_new2, user: @curator, created_at: @day1).process
         stats.recalculate
-        expect(stats.new_datasets_to_submitted).to eq(3)
+        expect(stats.new_datasets_to_queued).to eq(3)
 
         # NO -- there are two resources, and the first was submitted before the target day
         id_new2 = create(:identifier, identifier_type: 'DOI', identifier: '10.123/two_resource_ident_prev_submission')
         res_new3 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
         res_new3.resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: res_new3, user: @curator, created_at: @day1 - 2.days).process
+        CurationService.new(status: 'queued', resource: res_new3, user: @curator, created_at: @day1 - 2.days).process
         Timecop.travel(Time.now.utc + 1.minute)
         res_new4 = create(:resource, identifier_id: id_new2.id, user: @user, tenant_id: 'dryad')
         res_new4.resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: res_new4, user: @curator, created_at: @day1).process
+        CurationService.new(status: 'queued', resource: res_new4, user: @curator, created_at: @day1).process
         stats.recalculate
-        expect(stats.new_datasets_to_submitted).to eq(3)
+        expect(stats.new_datasets_to_queued).to eq(3)
         Timecop.return
       end
     end
@@ -328,7 +328,7 @@ module StashEngine
         # NO -- move into curation, but not anywhere else (not typical, but could happen)
         CurationService.new(status: :curation, resource: @res[1], user: @curator, created_at: @day).process
         # NO -- move into submitted
-        CurationService.new(status: 'submitted', resource: @res[2], user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[2], user: @curator, created_at: @day).process
         stats = CurationStats.create(date: @day)
         expect(stats.new_datasets_to_peer_review).to eq(0)
       end
@@ -385,9 +385,9 @@ module StashEngine
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(3)
 
-        # YES -- goes through 'submitted' before 'peer_review
+        # YES -- goes through 'queued' before 'peer_review
         @res[4].resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: @res[4], user: @user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[4], user: @user, created_at: @day).process
         CurationService.new(status: 'peer_review', resource: @res[4], user: @user, created_at: @day).process
         stats.recalculate
         expect(stats.new_datasets_to_peer_review).to eq(4)
@@ -397,35 +397,35 @@ module StashEngine
 
     describe :ppr_to_curation do
       it 'knows when there are none' do
-        # NO -- move to submitted after a curation status
+        # NO -- move to queued after a curation status
         CurationService.new(status: 'peer_review', resource: @res[0], user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
         CurationService.new(status: :curation, resource: res_new, user: @curator, created_at: @day).process
         Timecop.travel(Time.now.utc + 1.minute)
         res_new2 = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
-        CurationService.new(status: 'submitted', resource: res_new2, user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new2, user: @curator, created_at: @day).process
         stats = CurationStats.create(date: @day)
         expect(stats.ppr_to_curation).to eq(0)
         Timecop.return
       end
 
       it 'counts correctly when there are some' do
-        # YES -- move to submitted after a PPR status
+        # YES -- move to queued after a PPR status
         CurationService.new(status: 'peer_review', resource: @res[0], user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
         res_new.resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day).process
         stats = CurationStats.create(date: @day)
         expect(stats.ppr_to_curation).to eq(1)
       end
 
       it 'counts each identifier once' do
-        # YES -- move to submitted after a PPR status
+        # YES -- move to queued after a PPR status
         CurationService.new(status: 'peer_review', resource: @res[0], user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[0].identifier_id, user: @user, tenant_id: 'dryad')
         res_new.resource_states.first.update(resource_state: 'submitted')
-        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day, note: 'another item').process
+        CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day, note: 'another item').process
         stats = CurationStats.create(date: @day)
         expect(stats.ppr_to_curation).to eq(1)
       end
@@ -438,8 +438,8 @@ module StashEngine
       it 'knows when there are none' do
         # NO -- move into curation, but not anywhere else (not typical, but could happen)
         CurationService.new(status: :curation, resource: @res[1], user: @curator, created_at: @day).process
-        # NO -- move into submitted
-        CurationService.new(status: 'submitted', resource: @res[2], user: @curator, created_at: @day).process
+        # NO -- move into queued
+        CurationService.new(status: 'queued', resource: @res[2], user: @curator, created_at: @day).process
         stats = CurationStats.create(date: @day)
         expect(stats.datasets_to_aar).to eq(0)
         expect(stats.datasets_to_embargoed).to eq(0)
@@ -529,7 +529,7 @@ module StashEngine
 
         # YES -- within the same version
         CurationService.new(resource: @res[0], status: 'action_required', user: @curator, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: @res[0], user: @user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[0], user: @user, created_at: @day).process
         stats.recalculate
         expect(stats.author_revised).to eq(1)
 
@@ -537,7 +537,7 @@ module StashEngine
         CurationService.new(status: :curation, resource: @res[1], user: @curator, created_at: @day).process
         CurationService.new(resource: @res[1], status: 'action_required', user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[1].identifier.id, user: @user, tenant_id: 'dryad')
-        CurationService.new(status: 'submitted', resource: res_new, user: @curator, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new, user: @curator, created_at: @day).process
         CurationService.new(status: :curation, resource: res_new, user: @curator, created_at: @day).process
         stats.recalculate
         expect(stats.author_revised).to eq(2)
@@ -547,7 +547,7 @@ module StashEngine
     describe :author_versioned do
       it 'knows when there are none' do
         # NO -- just a normal submission
-        CurationService.new(status: 'submitted', resource: @res[1], user: @user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[1], user: @user, created_at: @day).process
 
         stats = CurationStats.create(date: @day)
         expect(stats.author_versioned).to eq(0)
@@ -557,9 +557,9 @@ module StashEngine
         stats = CurationStats.create(date: @day)
 
         # YES -- within the same version (unlikely)
-        CurationService.new(status: 'submitted', resource: @res[0], user: @user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[0], user: @user, created_at: @day).process
         CurationService.new(status: 'published', resource: @res[0], user: @curator, created_at: @day).process
-        CurationService.new(status: 'submitted', resource: @res[0], user: @user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: @res[0], user: @user, created_at: @day).process
         stats.recalculate
         expect(stats.author_versioned).to eq(1)
 
@@ -567,7 +567,7 @@ module StashEngine
         CurationService.new(status: 'curation', resource: @res[1], user: @curator, created_at: @day).process
         CurationService.new(status: 'embargoed', resource: @res[1], user: @curator, created_at: @day).process
         res_new = create(:resource, identifier_id: @res[1].identifier.id, user: @user, tenant_id: 'dryad')
-        CurationService.new(status: 'submitted', resource: res_new, user: @user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new, user: @user, created_at: @day).process
         stats.recalculate
         expect(stats.author_versioned).to eq(2)
 
@@ -575,7 +575,7 @@ module StashEngine
         CurationService.new(status: 'curation', resource: @res[2], user: @curator, created_at: @day - 2.days).process
         CurationService.new(status: 'published', resource: @res[2], user: @curator, created_at: @day - 2.days).process
         res_new = create(:resource, identifier_id: @res[2].identifier.id, user: @user, tenant_id: 'dryad')
-        CurationService.new(status: 'submitted', resource: res_new, user: @user, created_at: @day).process
+        CurationService.new(status: 'queued', resource: res_new, user: @user, created_at: @day).process
         stats.recalculate
         expect(stats.author_versioned).to eq(3)
       end

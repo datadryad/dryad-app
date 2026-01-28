@@ -12,7 +12,7 @@
 #  peer_review             :datetime
 #  processable_type        :string(191)
 #  processing              :datetime
-#  submitted               :datetime
+#  queued                  :datetime
 #  withdrawn               :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null

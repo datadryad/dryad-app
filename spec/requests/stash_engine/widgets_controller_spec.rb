@@ -17,7 +17,7 @@ module StashEngine
       ignore_zenodo!
       @user = create(:user, role: 'superuser')
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, identifier: @identifier, user_id: @user.id, tenant_id: @user.tenant_id)
+      @resource = create(:resource, :paid, :submitted, identifier: @identifier, user_id: @user.id, tenant_id: @user.tenant_id)
       @publication_doi = create(:related_identifier, :publication_doi, resource: @resource)
       @pmid = create(:internal_datum, identifier_id: @identifier.id, data_type: 'pubmedID', value: Faker::Number.number(digits: 8))
     end

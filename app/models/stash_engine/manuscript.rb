@@ -97,7 +97,7 @@ module StashEngine
       target_note = "setting manuscript status based on notification from journal #{manuscript.journal&.title} " \
                     "-- manuscript #{manuscript.manuscript_number}, status #{manuscript.status}"
       if manuscript.accepted?
-        target_status = 'submitted'
+        target_status = 'queued'
       elsif manuscript.rejected?
         target_status = 'withdrawn'
         resource.resource_publication.update(publication_name: nil, publication_issn: nil)
@@ -106,8 +106,8 @@ module StashEngine
       end
 
       # if the status is being updated based on notification from a journal, DON'T go backwards in workflow,
-      # that is, don't change a status other than submitted or peer_review
-      unless %w[submitted peer_review].include?(resource.current_curation_status)
+      # that is, don't change a status other than queued or peer_review
+      unless %w[queued peer_review].include?(resource.current_curation_status)
         target_note = "received notification from journal module that the associated manuscript is #{manuscript.status}, " \
                       "but the dataset is #{resource.current_curation_status}, so it will retain that status"
         target_status = resource.current_curation_status

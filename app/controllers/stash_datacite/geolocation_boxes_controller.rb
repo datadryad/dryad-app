@@ -4,7 +4,8 @@
 module StashDatacite
   class GeolocationBoxesController < ApplicationController
     before_action :set_geolocation_box, only: %i[show edit update delete]
-    before_action :ajax_require_modifiable, only: %i[map_coordinates create delete]
+    before_action :ajax_require_permission, only: %i[map_coordinates create delete]
+    before_action :ajax_require_unsubmitted, only: %i[map_coordinates create delete]
 
     # # GET /geolocation_boxes/
     def boxes_coordinates

@@ -13,7 +13,6 @@
 #  hold_for_peer_review      :boolean          default(FALSE)
 #  loosen_validation         :boolean          default(FALSE)
 #  meta_view                 :boolean          default(FALSE)
-#  old_cedar_json            :text(65535)
 #  peer_review_end_date      :datetime
 #  preserve_curation_status  :boolean          default(FALSE)
 #  publication_date          :datetime
@@ -309,6 +308,12 @@ module StashEngine
       joins('INNER JOIN stash_engine_identifiers ON stash_engine_resources.id = stash_engine_identifiers.latest_resource_id')
     end
 
+    scope :invoice_due, -> do
+      joins(:last_curation_activity, :payment)
+        .where(last_curation_activity: { status: 'awaiting_payment' })
+        .where.not(payment: { invoice_id: [nil, ''] })
+    end
+
     def set_identifier
       self.identifier = StashEngine::Identifier.find_by(id: identifier_id) if identifier.blank?
     end
@@ -495,6 +500,10 @@ module StashEngine
     # ------------------------------------------------------------
     # Current resource state
 
+    def in_progress?
+      current_state == 'in_progress'
+    end
+
     def submitted?
       current_state == 'submitted'
     end
@@ -555,7 +564,7 @@ module StashEngine
     def submitted_date
       return unless process_date
 
-      process_date.submitted || process_date.peer_review
+      process_date.processing || process_date.queued || process_date.peer_review
     end
 
     # Date on which the curators first received this resource
@@ -569,7 +578,7 @@ module StashEngine
       update = identifier.date_last_published
       {
         CREATED: identifier.process_date.processing,
-        SUBMITTED: identifier.process_date.submitted,
+        SUBMITTED: identifier.process_date.queued,
         ISSUED: identifier.datacite_issued_date,
         AVAILABLE: available,
         UPDATED: update == available ? nil : update
@@ -1217,18 +1226,18 @@ module StashEngine
                           note: 'System set back to curation').process
     end
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def create_post_submission_status(prior_cur_act)
       attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
       curation_note = ''
-      target_status = 'submitted'
+      target_status = 'queued'
 
       # Determine whether to auto-publish
       if previous_resource_published?
         changes = changed_fields(previous_resource)
         changes = changes.delete_if { |c| c.is_a?(Array) }
         if (changes - %w[related_identifiers subjects funders]).empty?
-          # create submitted status
+          # create queued status
           CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
           # immediately create published status
           update(publication_date: previous_resource.publication_date)
@@ -1236,16 +1245,16 @@ module StashEngine
           curation_note = "Auto-published with minimal changes to #{changes.join(', ')}"
         end
 
-        # Determine which submission status to use, :submitted or :peer_review status
+        # Determine which submission status to use, :queued or :peer_review status
       elsif (hold_for_peer_review? && identifier.allow_review?) || identifier.automatic_ppr?
         publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
         if publication_accepted
           curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has already been accepted"
-          target_status = 'submitted'
+          target_status = 'queued'
           update(hold_for_peer_review: false, peer_review_end_date: nil)
         elsif identifier.date_last_curated.present?
           curation_note = 'Private for peer review was requested, but the submission has already been curated'
-          target_status = 'submitted'
+          target_status = 'queued'
           update(hold_for_peer_review: false, peer_review_end_date: nil)
         else
           curation_note = "Set to Private for peer review at #{identifier.automatic_ppr? ? "journal's" : "author's"} request"
@@ -1254,13 +1263,18 @@ module StashEngine
         end
       end
 
+      if target_status == 'queued' && identifier.payment_needed?
+        target_status = 'awaiting_payment'
+        curation_note = 'Invoice must be paid before curation'
+      end
+
       # Generate the status
       # This will usually have the side effect of sending out notification emails to the author/journal
       CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
       target_status
     end
 
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def auto_assign_curator(target_status:)
       target_curator = curator&.curator? ? curator : identifier.most_recent_curator

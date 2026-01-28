@@ -13,7 +13,6 @@
 #  hold_for_peer_review      :boolean          default(FALSE)
 #  loosen_validation         :boolean          default(FALSE)
 #  meta_view                 :boolean          default(FALSE)
-#  old_cedar_json            :text(65535)
 #  peer_review_end_date      :datetime
 #  preserve_curation_status  :boolean          default(FALSE)
 #  publication_date          :datetime
@@ -84,11 +83,19 @@ FactoryBot.define do
       3.times { resource.subjects << create(:subject, subject: Faker::Lorem.unique.word) }
     end
 
+    trait :paid do
+      after(:create) do |resource|
+        2.times { create(:data_file, resource: resource) }
+        create(:resource_payment, resource: resource, status: 'paid')
+        resource.reload
+        resource.identifier.update(last_invoiced_file_size: resource.total_file_size)
+      end
+    end
+
     trait :submitted do
       after(:create) do |resource|
         CurationService.new(status: 'processing', user: resource.submitter, resource: resource).process
         resource.current_state = 'submitted'
-        resource.save
         resource.reload
       end
     end
@@ -99,6 +106,7 @@ FactoryBot.define do
   factory :resource_embargoed, parent: :resource, class: StashEngine::Resource do
 
     publication_date { (Time.now.utc.to_date + 2.days).to_s }
+    paid
     submitted
 
     after(:create) do |resource|
@@ -116,6 +124,7 @@ FactoryBot.define do
   factory :resource_published, parent: :resource, class: StashEngine::Resource do
 
     publication_date { Time.now.utc.to_date.to_s }
+    paid
     submitted
 
     after(:create) do |resource|

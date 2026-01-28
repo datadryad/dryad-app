@@ -30,13 +30,10 @@ RSpec.feature 'DatasetVersioning', type: :feature do
       ActionMailer::Base.deliveries = []
       Timecop.travel(Time.now.utc - 5.minutes)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, identifier: @identifier, user: @author,
-                                                tenant_id: @author.tenant_id, accepted_agreement: true)
+      @resource = create(:resource, :paid, :submitted, identifier: @identifier, user: @author,
+                                                       tenant_id: @author.tenant_id, accepted_agreement: true)
       create(:description, resource: @resource, description_type: 'technicalinfo')
       create(:description, resource: @resource, description_type: 'hsi_statement', description: nil)
-      create(:data_file, resource: @resource)
-      @resource.reload
-      @resource.identifier.update(last_invoiced_file_size: @resource.total_file_size)
       Timecop.return
     end
 
@@ -109,9 +106,9 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         @resource.reload
       end
 
-      it "is 'submitted' without a curator", js: true do
+      it "is 'queued' without a curator", js: true do
         expect(@resource.submitted?).to eql(true)
-        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('queued')
         expect(@resource.current_editor_id).to eq(@author.id)
 
         # 'displays the proper information on the Admin pages', js: true do
@@ -124,7 +121,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           # Make sure the appropriate buttons are available
           # Make sure the right text is shown
           expect(page).to have_link(@resource.title)
-          expect(page).to have_text('Submitted')
+          expect(page).to have_text('Queued for curation')
           @resource.authors.each do |author|
             expect(page).to have_text(author.author_last_name)
           end
@@ -138,7 +135,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
 
         expect(page).to have_text(@resource.identifier.identifier)
 
-        expect(page).to have_text('Submitted')
+        expect(page).to have_text('Queued for curation')
         expect(page).to have_text(@author.name)
       end
 
@@ -158,7 +155,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         end
         update_dataset
         @resource.reload
-        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('queued')
         expect(@resource.user_id).to eql(@curator.id)
         Timecop.return
       end
@@ -185,7 +182,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
 
-        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('queued')
         expect(@resource.user_id).to eql(@curator.id)
       end
 
@@ -201,7 +198,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         update_dataset
         @resource.reload
 
-        expect(@resource.current_curation_status).to eql('submitted')
+        expect(@resource.current_curation_status).to eql('queued')
         expect(@resource.user_id).to eql(@curator.id)
       end
 
@@ -241,7 +238,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           update_dataset
           @resource.reload
 
-          expect(@resource.current_curation_status).to eql('submitted')
+          expect(@resource.current_curation_status).to eql('queued')
           expect(@resource.user_id).to eql(curator2.id)
         end
 
@@ -261,7 +258,7 @@ RSpec.feature 'DatasetVersioning', type: :feature do
           update_dataset
           @resource.reload
 
-          expect(@resource.current_curation_status).to eql('submitted')
+          expect(@resource.current_curation_status).to eql('queued')
           expect(@resource.user_id).to eql(@curator.id)
         end
 

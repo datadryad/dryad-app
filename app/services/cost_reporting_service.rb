@@ -11,7 +11,7 @@ class CostReportingService
     return unless should_send_notification?
 
     CurationService.new(status: @status, resource_id: resource.id, user: StashEngine::User.system_user, note: @note).process
-    if @status == 'submitted'
+    if @status == 'queued'
       StashEngine::ResourceMailer.ld_submission(resource).deliver_now
     else
       StashEngine::ResourceMailer.ld_publication(resource).deliver_now
@@ -28,7 +28,7 @@ class CostReportingService
     return false if resource.tenant&.campus_contacts&.blank?
 
     # NO - wrong status
-    return false unless @status.in?(%w[submitted published])
+    return false unless @status.in?(%w[queued published])
 
     # NO - previous notification was already sent for this resource
     return false if resource.curation_activities.where(note: @note).exists?
@@ -62,7 +62,7 @@ class CostReportingService
   end
 
   def allowed_statuses
-    return %w[submitted curation action_required embargoed to_be_published published] if @status == 'submitted'
+    return %w[queued curation action_required embargoed to_be_published published] if @status == 'queued'
 
     %w[published]
   end

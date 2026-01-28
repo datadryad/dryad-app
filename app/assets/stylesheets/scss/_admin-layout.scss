@@ -158,8 +158,6 @@
 }
 
 .admin-dashboard-form {
-  margin-bottom: 2rem;
-
   #edit_fields-form,
   #edit_filters-form {
     border: none;
@@ -327,6 +325,32 @@
   }
 }
 
+#search_charts {
+  width: 100%;
+  & > div {
+    display: flex;
+    gap: 2ch;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    div {
+      height: 300px;
+      &:first-child {
+        width: 300px;
+      }
+      &:last-child {
+        min-width: 600px;
+        max-width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        @media screen and (max-width: 631px) {
+          min-width: 0;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
 #save_buttons {
   width: auto;
   height: auto;
@@ -368,7 +392,7 @@
   align-items: center;
   justify-content: space-between;
   column-gap: 1ch;
-  row-gap: .5ch;
+  row-gap: 1ch;
   flex-wrap: wrap;
   margin: .8rem auto .2rem;
 

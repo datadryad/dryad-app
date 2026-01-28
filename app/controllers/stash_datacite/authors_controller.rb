@@ -2,7 +2,8 @@ module StashDatacite
   class AuthorsController < ApplicationController
     before_action :check_reorder_valid, only: %i[reorder]
     before_action :set_author, only: %i[update delete invite check_invoice set_invoice]
-    before_action :ajax_require_modifiable, only: %i[update create delete reorder]
+    before_action :ajax_require_permission, only: %i[update create delete reorder]
+    before_action :ajax_require_unsubmitted, only: %i[update create delete reorder]
 
     respond_to :json
 
@@ -77,6 +78,8 @@ module StashDatacite
             role = @author.resource.roles.where(role: 'submitter')&.first
           else
             role = @author.resource.roles.find_or_create_by(user_id: @author.user.id)
+            return if role.role == 'creator'
+
             role.update(role: params[:role])
           end
           @author.resource.reload

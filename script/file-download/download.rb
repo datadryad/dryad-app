@@ -127,7 +127,7 @@ json = response.parse
 # --------------------------
 last_version = nil
 json['_embedded']['stash:versions'].reverse.each do |v|
-  if v['versionStatus'] == 'submitted'
+  if v['versionStatus'] == 'queued'
     last_version = v
     break
   end

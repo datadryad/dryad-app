@@ -7,6 +7,7 @@ RSpec.shared_examples('send email notifications tasks') do |count, date|
         Rake::Task['dataset_deletion:in_progress_reminders'].execute
         Rake::Task['identifiers:action_required_reminder'].execute
         Rake::Task['dataset_deletion:in_action_required_reminders'].execute
+        Rake::Task['dataset_deletion:in_awaiting_payment_reminders'].execute
         Rake::Task['dataset_deletion:in_peer_review_reminders'].execute
         Rake::Task['dataset_deletion:auto_withdraw'].execute
         Rake::Task['dataset_deletion:final_withdrawn_notification'].execute

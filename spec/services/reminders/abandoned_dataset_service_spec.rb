@@ -268,6 +268,93 @@ module Reminders
       end
     end
 
+    describe '#send_awaiting_payment_reminders' do
+      let!(:curation_activity) { CurationService.new(status: 'awaiting_payment', resource_id: resource.id).process }
+
+      before do
+        allow(StashEngine::ResourceMailer).to receive_message_chain(:action_required_delete_notification, :deliver_now).and_return(true)
+        resource.last_curation_activity.update!(status: 'awaiting_payment')
+      end
+
+      context 'when status date is sooner then one month' do
+        before do
+          resource.last_curation_activity.update!(created_at: 1.day.ago)
+        end
+        it 'does not send notification email' do
+          expect(StashEngine::ResourceMailer).to receive(:awaiting_payment_delete_notification).never
+          expect(subject).to receive(:create_activity).never
+
+          subject.send_awaiting_payment_reminders
+        end
+      end
+
+      context 'when status date is older then one year' do
+        before do
+          resource.last_curation_activity.update!(created_at: 13.months.ago)
+        end
+
+        it 'does not send notification email' do
+          expect(StashEngine::ResourceMailer).to receive(:awaiting_payment_delete_notification).never
+          expect(subject).to receive(:create_activity).never
+
+          subject.send_awaiting_payment_reminders
+        end
+      end
+
+      context 'when status date is between 6 months and 1 year' do
+        [6, 7, 9, 11].each do |month_num|
+          it "sends notification email at #{month_num} months" do
+            Timecop.travel(month_num.months.from_now + 1.day)
+
+            expect(StashEngine::ResourceMailer).to receive_message_chain(:awaiting_payment_delete_notification,
+                                                                         :deliver_now).with(resource).with(no_args)
+            expect(subject).to receive(:create_activity).with('awaiting_payment_deletion_notice', resource).once
+
+            subject.send_awaiting_payment_reminders
+          end
+        end
+
+        it 'sends only one email per month' do
+          Timecop.travel(6.months.from_now) do
+            subject.send(:create_activity, 'awaiting_payment_deletion_notice', resource)
+          end
+          expect(StashEngine::ResourceMailer).to receive(:awaiting_payment_delete_notification).never
+
+          [1.second, 1.day, 2.week, 1.month - 1.day].each do |period|
+            Timecop.travel(6.months.from_now + period) do
+              subject.send_awaiting_payment_reminders
+            end
+          end
+        end
+
+        it 'sends second email after a month' do
+          Timecop.travel(6.month.from_now) do
+            subject.send(:create_activity, 'awaiting_payment_deletion_notice', resource)
+          end
+
+          expect(StashEngine::ResourceMailer).to receive(:awaiting_payment_delete_notification).once
+          Timecop.travel(7.month.from_now) do
+            subject.send_awaiting_payment_reminders
+          end
+        end
+
+        it 'sends one email for each resource' do
+          resource.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
+
+          CurationService.new(status: 'awaiting_payment', resource_id: resource2.id).process
+          resource2.reload.last_curation_activity.update!(created_at: 1.months.ago, updated_at: 1.months.ago)
+
+          subject.send(:create_activity, 'awaiting_payment_deletion_notice', resource)
+          subject.send(:create_activity, 'awaiting_payment_deletion_notice', resource2)
+
+          expect(StashEngine::ResourceMailer).to receive(:awaiting_payment_delete_notification).twice
+          Timecop.travel(7.month + 1.day) do
+            subject.send_awaiting_payment_reminders
+          end
+        end
+      end
+    end
+
     describe '#send_peer_review_reminders' do
       let!(:curation_activity) { CurationService.new(status: 'peer_review', resource_id: resource.id).process }
 

@@ -12,6 +12,7 @@ module StashEngine
       #  - user pays LDF calculated as per institution
       def user_must_pay?
         return false if latest_resource.resource_type&.resource_type == 'collection'
+        return false if waiver? && old_payment_system
         return PaymentLimitsService.new(latest_resource, payer).limits_exceeded? if sponsored?
 
         true
@@ -53,6 +54,10 @@ module StashEngine
       def payment_needed?
         return false unless user_must_pay?
         return false if old_payment_system
+
+        invoicer = Stash::Payments::StripeInvoicer.new(latest_resource)
+        return !invoicer.invoice_paid? if invoicer.invoice_created?
+
         return false unless last_invoiced_file_size.blank? || last_invoiced_file_size.zero?
 
         true
@@ -92,6 +97,22 @@ module StashEngine
         save
       end
       # rubocop:enable Metrics/AbcSize
+
+      def recorded_payer
+        return nil if payment_type.blank?
+        return funder_payment_info&.payer_funder if payment_type == 'funder'
+        return StashEngine::Tenant.find(payment_id) if payment_type.start_with?('institution')
+        return StashEngine::Journal.find_by_issn(payment_id) if payment_type.start_with?('journal')
+        return latest_resource.submitter if payment_type == 'stripe'
+
+        nil
+      end
+
+      def display_payer
+        return recorded_payer if recorded_payer.present?
+
+        payer.presence || {}
+      end
 
       def institution_will_pay?
         tenant = latest_resource&.tenant

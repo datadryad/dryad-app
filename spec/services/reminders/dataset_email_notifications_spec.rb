@@ -148,6 +148,44 @@ module StashEngine
       end
     end
 
+    describe 'awaiting_payment resource notifications' do
+      before do
+        CurationService.new(user: curator, status: 'awaiting_payment', resource: resource).process
+        resource.current_resource_state.update(resource_state: 'processing')
+      end
+
+      context 'called at 14 days, sends no emails' do
+        it_should_behave_like 'send email notifications tasks', 0, (14.days + 10.minutes).from_now
+      end
+
+      #  sends no monthly reminder under 6 months
+      [1, 3, 5].each do |months_number|
+        context "called at #{months_number} months, sends no emails" do
+          it_should_behave_like 'send email notifications tasks', 0, (months_number.months + 10.minutes).from_now
+        end
+      end
+
+      # sends monthly reminder between 6 months and 1 year
+      [6, 10, 11].each do |months_number|
+        context "called at #{months_number} months, sends 1 email" do
+          it_should_behave_like 'send email notifications tasks', 1, (months_number.months + 10.minutes).from_now
+        end
+      end
+
+      context 'called after 1 year, sends no email' do
+        # no monthly reminders since it should be withdrawn at 1 year
+        # withdraw email at 1 year
+        it_should_behave_like 'send email notifications tasks', 1, (1.year + 10.minutes).from_now
+      end
+
+      context 'called after 1 year and 9 months, sends no email' do
+        # no monthly reminders since it should be withdrawn at 1 year
+        # withdraw email at 1 year
+        # no final reminder
+        it_should_behave_like 'send email notifications tasks', 1, (1.year + 9.months + 10.minutes).from_now
+      end
+    end
+
     describe 'auto withdrawn resource notifications' do
       before do
         CurationService.new(status: 'withdrawn', resource_id: resource.id, user_id: 0,
