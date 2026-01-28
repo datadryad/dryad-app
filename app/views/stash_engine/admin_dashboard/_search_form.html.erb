@@ -1,4 +1,4 @@
-<%= form_with(url: stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], share: params[:share], sort: params[:sort], direction: params[:direction], page_size: params[:page_size]), method: :post, local: false, class: 'admin-dashboard-form') do %>
+<%= form_with(url: stash_url_helpers.admin_dashboard_results_path(format: :js, search: params[:search], share: params[:share], sort: params[:sort], direction: params[:direction], page_size: params[:page_size]), method: :post, local: false, id: 'admin_search_form', class: 'admin-dashboard-form') do %>
   <%= render partial: 'fields' %>
   <%= render partial: 'filters' %>
   <div class="admin-dashboard-buttons" style="border: 0; padding: 0; column-gap: 3ch; row-gap: 2ch">
@@ -17,9 +17,12 @@
       <span id="searchlabel3">Award IDs: </span>
       <%= search_field_tag('filters[awards]', @filters[:awards], class: "c-input__text#{@filters[:awards].present? ? ' selected' : ''}", 'aria-labelledby': 'searchlabel searchlabel3', style: 'flex-grow: 2' ) %>
     </div>
-    <div class="admin-dashboard-results" style="margin-left: auto">
-      <button type="button" class="o-button__plain-text7" id="clear_filters" title="Clear search and filters"><i class="fa fa-times" aria-hidden="true"></i>Clear</button>
-      <button type="submit" class="o-button__submit" id="apply_changes">Apply</button>
-    </div>
-  </div>  
+  </div>
 <% end %>
+<div class="admin-dashboard-buttons">
+  <div id="save_buttons" class="admin-dashboard-results"></div>
+  <div class="admin-dashboard-results" style="margin-left: auto">
+    <button type="button" form="admin_search_form" class="o-button__plain-text7" id="clear_filters" title="Clear search and filters"><i class="fa fa-times" aria-hidden="true"></i>Clear</button>
+    <button type="submit" form="admin_search_form" class="o-button__submit" id="apply_changes">Apply</button>
+  </div>
+</div>

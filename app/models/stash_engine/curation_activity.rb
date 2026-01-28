@@ -39,6 +39,7 @@ module StashEngine
 
     # in_progress - default status, version is being edited
     # processing - version has been submitted for file processing
+    # awaiting_payment - version is processed but awaiting payment
     # queued - version is processed and ready for curation. automatically set
     # peer_review - version is processed but not ready for curation
     # curation - version is being curated. manually set
@@ -51,6 +52,7 @@ module StashEngine
     enum_vals = %w[
       in_progress
       processing
+      awaiting_payment
       queued
       peer_review
       curation
@@ -70,8 +72,9 @@ module StashEngine
     CURATOR_ALLOWED_STATES = {
       in_progress: %w[in_progress],
       processing: %w[in_progress processing],
-      queued: %w[queued curation withdrawn peer_review],
-      peer_review: %w[peer_review queued curation withdrawn],
+      awaiting_payment: %w[queued peer_review curation withdrawn],
+      queued: %w[queued peer_review curation withdrawn],
+      peer_review: %w[queued peer_review curation withdrawn],
       curation: (enum_vals - %w[in_progress processing queued to_be_published]),
       action_required: (enum_vals - %w[in_progress processing queued to_be_published]),
       withdrawn: %w[withdrawn curation],

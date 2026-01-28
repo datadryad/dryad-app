@@ -88,6 +88,28 @@ module Reminders
       true
     end
 
+    # Send awaiting payment delete email notification
+    # - email is sent monthly starting from 6th month until 1 year
+    # - after 1 year the resource should be set to Withdrawn status
+    def send_awaiting_payment_reminders
+      StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
+        .where(stash_engine_curation_activities: { status: 'awaiting_payment' })
+        .where(stash_engine_process_dates: { delete_calculation_date: (1.year - 1.day).ago.beginning_of_day..6.months.ago.end_of_day })
+        .each do |resource|
+
+        reminder_flag = 'awaiting_payment_deletion_notice'
+        last_reminder = resource.curation_activities.where('note LIKE ?', "%#{reminder_flag}%")&.last
+        if last_reminder.blank? || last_reminder.created_at <= 1.month.ago
+          log_data_for_status('awaiting_payment', resource)
+          StashEngine::ResourceMailer.awaiting_payment_delete_notification(resource).deliver_now
+          create_activity(reminder_flag, resource)
+        end
+      rescue StandardError => e
+        log "    Exception! #{e.message}"
+      end
+      true
+    end
+
     # Send Peer Review delete email notification
     # - email is sent monthly starting from 6th month until 1 year
     # - after 1 year the resource should be set to Withdrawn status
@@ -116,7 +138,7 @@ module Reminders
     # def send_withdrawn_notification
     def auto_withdraw
       StashEngine::Resource.latest_per_dataset.joins(:last_curation_activity).joins(:process_date)
-        .where(stash_engine_curation_activities: { status: %w[peer_review action_required] })
+        .where(stash_engine_curation_activities: { status: %w[peer_review action_required awaiting_payment] })
         .where('stash_engine_process_dates.delete_calculation_date <= ?', 1.year.ago.end_of_day)
         .each do |resource|
 

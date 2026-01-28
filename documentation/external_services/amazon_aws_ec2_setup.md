@@ -295,7 +295,7 @@ To get Apache using the new certificates:
 
 Verify the certificates and check expiration dates (on all servers)
 ```
-curl --insecure -vvI https://localhost 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'
+curl --insecure -vvI https://localhost 2>&1 | grep "expire date"
 ```
 
 
@@ -324,7 +324,7 @@ sudo systemctl restart httpd
 6. Copy certs to other servers and restart their Apaches too
 7. Verify certificates (on all servers)
 ```
-curl --insecure -vvI https://localhost 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'
+curl --insecure -vvI https://localhost 2>&1 | grep "expire date"
 ```
 
 

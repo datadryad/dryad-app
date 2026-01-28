@@ -12,14 +12,13 @@
   <%= form_with url: record_updaters_path(@data_type), method: :get do |_form| %>
   <div class="o-admin-form-inline">
     <div class="o-admin-form-pair">
-      <label for="award_number">Award number:</label>
-      <%= text_field_tag 'award_number', params[:award_number], {class: 'c-input__text'} %>
+      <label for="query">Search:</label>
+      <%= text_field_tag 'search', params[:search], {class: 'c-input__text', id: 'query'} %>
     </div>
     <div class="o-admin-form-pair">
-      <label for="contrib_name">Contributor name:</label>
-      <%= text_field_tag 'contrib_name', params[:contrib_name], {class: 'c-input__text'} %>
+      <label for="status">Curation status:</label>
+      <%= select_tag :status, options_from_collection_for_select(@statuses, "value", "label", params[:status]), class: 'c-input__select' %>
     </div>
-
     <%= submit_tag('Search', class: 'o-button__submit', name: nil ) %>
     <%= button_tag "Reset", type: :reset, id: 'reset_button', class: "o-button__remove" %>
   </div>
@@ -66,8 +65,8 @@
 
     $("#reset_button").on("click", function(e) {
       e.preventDefault();
-      $("#award_number").val("");
-      $("#contrib_name").val("");
+      $("#query").val("");
+      $("#status").val("");
       e.target.form.submit();
     });
   </script>

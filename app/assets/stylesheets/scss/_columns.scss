@@ -135,19 +135,9 @@
     box-sizing: border-box;
 
     &.minimized {
-      height: 110px;
+      columns: 1;
+      height: 46px;
       overflow: hidden;
-
-      &:before{
-        content: '';
-        display: block;
-        height: 62px;
-        position: absolute;
-        top: 38px;
-        width: 100%;
-        background-color: black;
-        background: linear-gradient(transparent, $lightest-blue);
-      }
 
       #nav-mobile-button {
         display: inline-block;

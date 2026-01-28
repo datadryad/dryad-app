@@ -30,7 +30,7 @@ RSpec.feature 'PublicationUpdater', type: :feature, js: true do
     end
 
     it 'filters the proposed changes' do
-      r = 2.times.map { create(:resource, :submitted) }
+      r = 2.times.map { create(:resource, :paid, :submitted) }
       pc = r.map { |n| create(:proposed_change, :preprint, identifier: n.identifier) }
       visit stash_url_helpers.publication_updater_path
       expect(page).to have_content('5 results')
@@ -111,7 +111,7 @@ RSpec.feature 'PublicationUpdater', type: :feature, js: true do
       expect(resources[1].identifier.publication_article_doi).to include(proposed_changes[1].publication_doi)
       resources[1].identifier.reload
       new_res = resources[1].identifier.latest_resource
-      expect(new_res.current_curation_status).to eq('in_progress')
+      expect(new_res.current_curation_status).to eq('awaiting_payment')
       expect(new_res.hold_for_peer_review).to eq(false)
     end
   end

@@ -307,7 +307,7 @@ module Stash
 
       describe '#dct_temporal_dates' do
         it 'gets those dates' do
-          expect(@ir.dct_temporal_dates).to eql(%w[2018-11-14 2018-11-14 2019-01-01 2019-01-01])
+          expect(@ir.dct_temporal_dates).to eql(%w[2018-11-14 2019-01-01 2019-01-01])
         end
       end
 
@@ -348,7 +348,7 @@ module Stash
             dct_issued_dt: @resource.publication_date.utc.iso8601,
             dc_rights_s: 'Creative Commons Zero v1.0 Universal',
             dc_publisher_s: 'Dryad',
-            dct_temporal_sm: %w[2018-11-14 2018-11-14 2019-01-01 2019-01-01],
+            dct_temporal_sm: %w[2018-11-14 2019-01-01 2019-01-01],
             dryad_author_affiliation_id_sm: ['https://ror.example.org/16xx22bs', 'https://ror.example.org/18dl67sn1'],
             dryad_author_affiliation_name_sm: [@affil1.long_name,
                                                @affil2.long_name],

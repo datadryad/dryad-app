@@ -38,6 +38,23 @@ module StashEngine
            template_name: 'peer_review_reminder')
     end
 
+    def awaiting_payment_delete_notification(resource)
+      logger.warn('Unable to send awaiting_payment_delete_notification; nil resource') unless resource.present?
+      return unless resource.present?
+
+      assign_variables(resource)
+      return unless @user.present? && user_email(@user).present?
+
+      @invoice = resource&.payment&.invoice_id&.present?
+      @costs_url = Rails.application.routes.url_helpers.costs_url
+      @submission_url = Rails.application.routes.url_helpers.metadata_entry_pages_find_or_create_url(resource_id: resource.id)
+
+      mail(to: user_email(@user),
+           subject: "#{rails_env}REMINDER: Dryad submission \"#{@title}\"",
+           template_path: 'stash_engine/user_mailer',
+           template_name: 'awaiting_payment_reminder')
+    end
+
     def action_required_delete_notification(resource)
       logger.warn('Unable to send action_required_delete_notification; nil resource') unless resource.present?
       return unless resource.present?

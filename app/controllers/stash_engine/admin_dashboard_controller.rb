@@ -5,6 +5,7 @@ module StashEngine
     helper SortableTableHelper
     helper AdminHelper
     helper AdminDashboardHelper
+    helper AdminChartsHelper
     before_action :require_admin
     protect_from_forgery except: :results
     before_action :setup_paging, only: %i[results]
@@ -53,10 +54,17 @@ module StashEngine
 
     def count
       if session[:admin_search_count].blank?
-        session[:admin_search_count] =
-          StashEngine::Resource.unscoped.select('count(*) as total').from("(#{params[:sql]}) subquery").map(&:total).first
+        res = ActiveRecord::Base.connection.select_all(
+          "select count(*) as total from (#{params[:sql]}) subquery"
+        )
+        session[:admin_search_count] = res.to_a.first['total']
       end
       @count = session[:admin_search_count]
+      respond_to(&:js)
+    end
+
+    def charts
+      @charts = JSON.parse((helpers.size_chart + helpers.datasets_monthly).to_json, symbolize_names: true)
       respond_to(&:js)
     end
 
@@ -201,18 +209,15 @@ module StashEngine
     end
 
     def date_fields
-      if @filters[:submit_date]&.values&.any?(&:present?)
-        @datasets = @datasets.joins(:process_date).select(
-          'COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
-        )
-      elsif @sort == 'submit_date'
-        @datasets = @datasets.left_outer_joins(:process_date).select(
-          'COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
-        )
-      end
-      return unless @sort == 'first_pub_date' || @filters[:first_pub_date]&.values&.any?(&:present?)
+      @datasets = if @filters[:submit_date]&.values&.any?(&:present?)
+                    @datasets.joins(:process_date)
+                  else
+                    @datasets.left_outer_joins(:process_date)
+                  end
 
-      @datasets = @datasets.select('stash_engine_identifiers.publication_date as first_pub_date')
+      @datasets = @datasets.select(
+        'COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
+      ).select('stash_engine_identifiers.publication_date as first_pub_date')
     end
 
     def add_filters

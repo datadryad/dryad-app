@@ -54,6 +54,10 @@ module StashEngine
       def payment_needed?
         return false unless user_must_pay?
         return false if old_payment_system
+
+        invoicer = Stash::Payments::StripeInvoicer.new(latest_resource)
+        return !invoicer.invoice_paid? if invoicer.invoice_created?
+
         return false unless last_invoiced_file_size.blank? || last_invoiced_file_size.zero?
 
         true
