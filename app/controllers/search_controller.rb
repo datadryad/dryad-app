@@ -35,16 +35,7 @@ class SearchController < ApplicationController
     query = params[:query].to_s.gsub('"', '')
     query = query.gsub('doi:', '') if query.start_with?('doi:')
 
-    internal_data = StashApi::SolrSearchService.new(query: nil, filters: { relatedId: query }).search
-    related_ids = StashApi::SolrSearchService.new(
-      query: nil,
-      filters: {
-        relatedWorkIdentifier: "*#{query}",
-        relatedWorkRelationship: 'primary_article'
-      }
-    ).search
-
-    identifiers = find_related(internal_data) + find_related(related_ids)
+    identifiers = find_related(StashApi::SolrSearchService.new(query: nil, filters: { relatedId: query }).search)
 
     redirect_discover_to_landing(identifiers, query)
   end
@@ -98,7 +89,7 @@ class SearchController < ApplicationController
     return [] unless related.is_a?(Hash)
 
     dois = related['docs']
-    ids = dois.map { |a| a['dc_identifier_s'].gsub('doi:', '') } if dois.any?
+    ids = dois.map { |a| a['dc_identifier_s'].gsub('doi:', '') } if dois&.any?
     StashEngine::Identifier.where(identifier: ids)
   end
 
