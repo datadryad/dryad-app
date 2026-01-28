@@ -4,9 +4,12 @@ module StashEngine
   module AdminChartsHelper
     def size_chart
       tiers = FeeCalculator::InstitutionService.new.storage_fee_tiers
-      tiers.map do |t|
+      query = tiers.map do |t|
         "SUM(CASE WHEN total_file_size BETWEEN #{t[:range].to_s.split('..').map(&:to_i).join(' AND ')} THEN 1 ELSE 0 END) as tier#{t[:tier]}"
       end.join(', ')
+      ActiveRecord::Base.connection.select_all(
+        "select #{query} from (#{params[:sql]}) subquery"
+      ).to_a
     end
 
     # rubocop:disable Layout/LineLength, Metrics/AbcSize

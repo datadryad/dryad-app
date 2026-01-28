@@ -55,16 +55,16 @@ module StashEngine
     def count
       if session[:admin_search_count].blank?
         res = ActiveRecord::Base.connection.select_all(
-          "select count(*) as total, #{helpers.size_chart} from (#{params[:sql]}) subquery"
+          "select count(*) as total from (#{params[:sql]}) subquery"
         )
-        session[:admin_search_count] = res.to_a.first
+        session[:admin_search_count] = res.to_a.first['total']
       end
       @count = session[:admin_search_count]
       respond_to(&:js)
     end
 
     def charts
-      @charts = JSON.parse(([session[:admin_search_count]] + helpers.datasets_monthly).to_json, symbolize_names: true)
+      @charts = JSON.parse((helpers.size_chart + helpers.datasets_monthly).to_json, symbolize_names: true)
       respond_to(&:js)
     end
 
