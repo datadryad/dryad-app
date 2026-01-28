@@ -296,6 +296,7 @@ Rails.application.routes.draw do
     match 'admin_dashboard', to: 'admin_dashboard#index', via: %i[get post]
     match 'admin_dashboard/results', to: 'admin_dashboard#results', via: %i[get post], as: 'admin_dashboard_results'
     match 'admin_dashboard/count', to: 'admin_dashboard#count', via: %i[get post], as: 'admin_dashboard_count'
+    match 'admin_dashboard/charts', to: 'admin_dashboard#charts', via: %i[get post], as: 'admin_dashboard_charts'
     get 'admin_dashboard/:id/edit/:field', to: 'admin_dashboard#edit', as: 'admin_dash_edit'
     post 'admin_dashboard/:id', to: 'admin_dashboard#update', as: 'admin_dash_update'
     get 'admin_search', to: 'admin_dashboard#new_search', as: 'new_admin_search'

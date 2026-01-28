@@ -1,0 +1,3 @@
+document.getElementById('search_charts').innerHTML = ''
+document.getElementById('search_charts').append(document.createRange().createContextualFragment("<%= escape_javascript(render partial: 'search_charts', locals: { charts: @charts }) %>"));
+document.getElementById('search_charts').setAttribute('aria-busy', false)
