@@ -12,12 +12,12 @@
   <%= form_with url: record_updaters_path(@data_type), method: :get do |_form| %>
   <div class="o-admin-form-inline">
     <div class="o-admin-form-pair">
-      <label for="search">Search:</label>
-      <%= text_field_tag 'search', params[:search], {class: 'c-input__text'} %>
+      <label for="query">Search:</label>
+      <%= text_field_tag 'search', params[:search], {class: 'c-input__text', id: 'query'} %>
     </div>
     <div class="o-admin-form-pair">
       <label for="status">Curation status:</label>
-      <%= select_tag :status, options_from_collection_for_select(@statuses, "value", "label", params[:status]), class: 'c-input__text' %>
+      <%= select_tag :status, options_from_collection_for_select(@statuses, "value", "label", params[:status]), class: 'c-input__select' %>
     </div>
     <%= submit_tag('Search', class: 'o-button__submit', name: nil ) %>
     <%= button_tag "Reset", type: :reset, id: 'reset_button', class: "o-button__remove" %>
@@ -65,7 +65,7 @@
 
     $("#reset_button").on("click", function(e) {
       e.preventDefault();
-      $("#search").val("");
+      $("#query").val("");
       $("#status").val("");
       e.target.form.submit();
     });
