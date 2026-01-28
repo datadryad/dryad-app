@@ -29,8 +29,11 @@
   }
 
   @media (max-width: $screen-md-min) {
-    height: 150px;
-    margin-bottom: 1.2rem;
+    height: 160px;
+    background-image: none !important;
+    .o-banner__credit {
+      display: none;
+    }
   }
 }
 
@@ -52,6 +55,7 @@
   }
   @media (max-width: $screen-md-min) {
     height: 100%;
+    background-color: $dark-blue;
     margin-bottom: 0;
   }
 
@@ -143,21 +147,18 @@
 
 .t-home__quote {
   display: flex;
-  flex: 1 0 0%; // 0% instead of 0 fixes ie bug
+  flex: 1 0 0; // 0% instead of 0 fixes ie bug
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
   height: 120px;
-  background: linear-gradient(rgba($lighter-gray, 0.85) 120px, transparent 0), url('/images/scss/bg_ramon-y-cajal.png') 0 0 / cover no-repeat;
+  background: linear-gradient(rgba(78, 80, 80, 0.9) 100%, transparent 0), url('/images/scss/bg_ramon-y-cajal.png') 0 0 / cover no-repeat;
   text-align: center;
 }
 
 .o-quote__quote {
-  margin: 0 1.5rem;
-  padding: 5px 16px;
-  opacity: 0.9;
-  background-color: $dark-gray;
+  padding: 0 2rem;
   color: white;
 
   a:link, a:visited {
