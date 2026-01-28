@@ -5,7 +5,7 @@ require 'stash/link_out/pubmed_sequence_service'
 require 'stash/link_out/pubmed_service'
 require 'cgi'
 
-# rubocop:disable Metrics/ClassLength, Metrics/AbcSize, Metrics/MethodLength
+# rubocop:disable Metrics/ClassLength, Metrics/MethodLength
 module StashDatacite
   class PublicationsController < ApplicationController
     def update
@@ -116,12 +116,11 @@ module StashDatacite
         publication.update(publication_name: @pub_name, publication_issn: @pub_issn, manuscript_number: @msid)
       end
       @resource.reload
-      return unless @resource.identifier.allow_review? && @resource.identifier.date_last_curated.blank? && @resource.journal&.default_to_ppr?
+      return unless @resource.identifier.allow_review? && @resource.identifier.automatic_ppr?
 
-      # if the newly-set journal wants PPR by default, and it is allowed, set the PPR value for this resource
+      # if the newly-set journal is integrated and it is allowed, set the PPR value for this resource
       @resource.update(hold_for_peer_review: true)
     end
-    # rubocop:enable Metrics/AbcSize
 
     def save_doi
       form_doi = params[:primary_article_doi]

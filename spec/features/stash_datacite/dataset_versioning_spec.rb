@@ -159,6 +159,24 @@ RSpec.feature 'DatasetVersioning', type: :feature do
         expect(@resource.user_id).to eql(@curator.id)
         Timecop.return
       end
+
+      it 'goes to ppr when overidden and set to do so by curator', js: true do
+        @resource.update(hold_for_peer_review: true, current_editor_id: @curator.id)
+        CurationService.new(user_id: @curator.id, resource_id: @resource.id, status: 'curation').process
+        CurationService.new(user_id: @curator.id, resource_id: @resource.id, status: 'peer_review').process
+        @resource.reload
+        Timecop.travel(Time.now.utc + 1.minute)
+        sign_in(@author)
+        click_link 'My datasets'
+        within(:css, "form[action=\"/metadata_entry_pages/new_version?resource_id=#{@resource.id}\"]") do
+          find('button[name="update"]').click
+        end
+        update_dataset
+        @resource.reload
+        expect(@resource.current_curation_status).to eql('peer_review')
+        expect(@resource.user_id).to eql(@curator.id)
+        Timecop.return
+      end
     end
 
     context :after_curation do

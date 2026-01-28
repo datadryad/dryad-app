@@ -188,9 +188,7 @@ module StashEngine
     def previously_published?
       return false unless resource
 
-      # ignoring the current CA, is there an embargoed or published status at any point for this identifier?
-      resource.identifier.resources.map(&:curation_activities).flatten.reject { |ca| ca.id == id }
-        .map(&:status).intersect?(%w[published embargoed]) || false
+      resource.previous_published_resource.present?
     end
 
     def can_update_pub_state?(status)

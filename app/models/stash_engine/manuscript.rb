@@ -117,7 +117,7 @@ module StashEngine
 
       # once we receive a notification from the journal, we know that the manuscript is no longer in
       # review, so remove the hold_for_peer_review setting
-      resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
+      resource.update(hold_for_peer_review: false)
       CurationService.new(resource: resource, status: target_status, user_id: 0, note: target_note).process
     end
 

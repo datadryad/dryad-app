@@ -556,20 +556,22 @@ module StashEngine
         create(:journal, issn: @fake_issn, title: @bogus_title)
         expect(@identifier.journal.title).to eq(@bogus_title)
       end
+    end
 
-      it 'allows review when there is no journal' do
+    describe '#allow_review' do
+      it 'allows review' do
         expect(@identifier.allow_review?).to be(true)
       end
 
       it 'disallows review if already published' do
-        @identifier.pub_state = 'published'
+        @identifier.update(pub_state: 'published')
         expect(@identifier.allow_review?).to be(false)
       end
 
-      it 'allows review when the curation status is review, regardless of journal settings' do
-        create(:journal, issn: @fake_issn, allow_review_workflow: false)
-        allow_any_instance_of(Resource).to receive(:current_curation_status).and_return('peer_review')
-        expect(@identifier.allow_review?).to be(true)
+      it 'disallows review if previously curated' do
+        create(:curation_activity, :curation, resource: @res1, user: @user)
+        create(:curation_activity, :action_required, resource: @res1, user: @user)
+        expect(@identifier.allow_review?).to be(false)
       end
     end
 

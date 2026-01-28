@@ -6,7 +6,7 @@ module PublicationMixin
     return unless resource == resource.identifier.latest_resource
     return unless resource.current_curation_status == 'peer_review'
 
-    resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
+    resource.update(hold_for_peer_review: false)
 
     if resource.identifier.payment_needed?
       CurationService.new(resource: resource, status: 'awaiting_payment', note: 'Full DPC payment required').process

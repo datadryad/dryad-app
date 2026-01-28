@@ -129,7 +129,7 @@ class CurationService
     process_payment
     copy_to_zenodo if @activity.published?
     @resource.submit_to_solr
-    @resource.update(hold_for_peer_review: false, peer_review_end_date: nil)
+    @resource.update(hold_for_peer_review: false)
   end
 
   def process_payment
