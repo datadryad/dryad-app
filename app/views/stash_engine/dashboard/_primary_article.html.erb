@@ -1,24 +1,11 @@
-<h1>Link primary article</h1>
+<h1>Link article</h1>
+<p>Does your dataset contain the foundational data for a primary article? Enter the article DOI to create a link.</p>
 <%= form_with(url: stash_url_helpers.save_primary_article_path, method: :post, local: false, scope: :primary_article, model: @related_work) do |f| %>
-  <%= f.hidden_field :publication_id, value: @publication.id %>
   <%= f.hidden_field :resource_id %>
   <%= f.hidden_field :work_type %>
   <div class="input-line" style="width: 700px">
     <div class="input-stack" style="flex: 1">
-      <%= render partial: 'stash_engine/shared/search_select', locals: {
-        id: 'journal',
-        label: 'Journal name',
-        field_name: 'publication',
-        options_path: '/stash_datacite/publications/autocomplete?term=',
-        options_label: 'title',
-        options_value: 'issn',
-        required: true,
-        save_text: true,
-        selected: {value: @publication.publication_issn, label: @publication.publication_name}
-      } %>
-    </div>
-    <div class="input-stack" style="flex: 1">
-      <%= f.label :related_identifier, 'DOI <span style="font-size:.98rem; color: #4e4e50">(e.g., 10.5702/qlm.1266rr)</span>'.html_safe, for: "related_identifier#{@related_work.id}" %>
+      <%= f.label :related_identifier, 'Article DOI <span style="font-size:.98rem; color: #4e4e50">(e.g., 10.5702/qlm.1266rr)</span>'.html_safe, for: "related_identifier#{@related_work.id}" %>
       <%= f.text_field :related_identifier, class: 'c-input__text', id: "related_identifier#{@related_work.id}", required: true %>
     </div>
   </div>
