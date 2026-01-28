@@ -6,14 +6,7 @@ export default function ExitButton({resource}) {
   const previous = resource.previous_curated_resource;
   return (
     <>
-      <form
-        action={`/dashboard/contact_helpdesk/${resource.identifier.id}`}
-        data-remote="true"
-        method="get"
-      >
-        <input type="hidden" name="authenticity_token" value={authenticity_token} />
-        <button className="o-button__plain-text7" type="submit"><i className="fas fa-circle-question" aria-hidden="true" />Get help</button>
-      </form>
+      <a href="/help" target="_blank" className="o-button__plain-text7"><i className="fas fa-circle-question" aria-hidden="true" />Get help</a>
       <form
         action={`/resources/${resource.id}/logout`}
         data-confirm={

@@ -2,7 +2,7 @@
   <div id="submission-heading"><div><h1>Dataset submission payment</h1></div></div>
   <div id="submission-step">
     <div class="submission-edit">
-      <div id="payment">
+      <div id="submission-payment">
         <p style="text-align: center;">Thank you, your payment was successful. The dataset is now submitting.</p>
         <%= form_with(url: '/stash_datacite/resources/submission', method: :post, html: {id: 'submit_form'}) do %>
           <input type="hidden" name="resource_id" value="<%=@resource.id%>" />
