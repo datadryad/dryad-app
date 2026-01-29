@@ -20,31 +20,6 @@ module StashDatacite
       end
     end
 
-    # Review responds as a get request to review the resource before saving -- ajaxes into page when we thought multi schemas
-    def review
-      respond_to do |format|
-        format.js do
-          @resource = StashEngine::Resource.find(params[:id])
-          @resource.cleanup_blank_models!
-          check_required_fields(@resource)
-          @review = Resource::Review.new(@resource)
-          @resource.has_geolocation = @review.geolocation_data?
-          if @resource.identifier.automatic_ppr? && @resource.identifier.date_last_curated.blank?
-            @resource.hold_for_peer_review = true
-          elsif !@resource.identifier.allow_review? || @resource.identifier.date_last_curated.present?
-            @resource.hold_for_peer_review = false
-            @resource.peer_review_end_date = nil
-          end
-          @resource.save!
-          @resource.reload
-          if @resource.identifier.payment_type.blank? || @resource.identifier.payment_type == 'unknown'
-            @target_page = stash_url_helpers.metadata_entry_pages_find_or_create_path(resource_id: @resource.id)
-            @aff_tenant = StashEngine::Tenant.where(ror_id: @resource.owner_author.affiliations.map(&:ror_id)).connect_list.first
-          end
-        end
-      end
-    end
-
     def submission
       resource_cleanup
       ensure_license

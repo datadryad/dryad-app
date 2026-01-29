@@ -409,7 +409,6 @@ module StashEngine
           @curator_name = current_user.name
         end
         @resource.hold_for_peer_review = true if @status == 'peer_review'
-        @resource.peer_review_end_date = (Time.now.utc + 6.months) if @status == 'peer_review'
         @resource.save
         @curation_activity = CurationService.new(resource: @resource, user_id: current_user.id, status: @status, note: @note).process
       end

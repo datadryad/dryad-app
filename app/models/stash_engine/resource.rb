@@ -51,6 +51,7 @@ require 'cgi'
 
 module StashEngine
   class Resource < ApplicationRecord # rubocop:disable Metrics/ClassLength
+    include StashEngine::Support::Statuses
     self.table_name = 'stash_engine_resources'
     acts_as_paranoid
     has_paper_trail meta: {
@@ -544,12 +545,6 @@ module StashEngine
       (submitted? && !file_view) || last_curation_activity&.embargoed?
     end
 
-    # Shortcut to the current curation activity's status
-    def current_curation_status
-      reload
-      last_curation_activity&.status
-    end
-
     # Create the initial CurationActivity
     def init_curation_status
       CurationService.new(resource_id: id, user_id: current_editor_id || user_id, status: 'in_progress').process
@@ -687,21 +682,17 @@ module StashEngine
     end
 
     def previous_resource
-      previous_resources.first
+      previous_resources&.first
     end
 
     def previous_curated_resource
-      StashEngine::Resource.joins(:last_curation_activity)
-        .where("stash_engine_curation_activities.status IN ('published', 'embargoed', 'action_required')")
-        .where(identifier_id: identifier_id).where('stash_engine_resources.id < ?', id)
-        .order(id: :desc).first
+      previous_resources.each { |r| return r if r.last_curated_status.present? }
+      nil
     end
 
     def previous_published_resource
-      StashEngine::Resource.joins(:last_curation_activity)
-        .where("stash_engine_curation_activities.status IN ('published', 'embargoed')")
-        .where(identifier_id: identifier_id).where('stash_engine_resources.id < ?', id)
-        .order(id: :desc).first
+      previous_resources.each { |r| return r if r.last_published_status.present? }
+      nil
     end
 
     def previous_resource_published?
@@ -1191,31 +1182,16 @@ module StashEngine
     # -----------------------------------------------------------
     # Handle the 'submitted' resource state (happens after successful repo submission)
     def prepare_for_curation
-      prior_version = identifier.resources.includes(:curation_activities).where.not(id: id).order(created_at: :desc).first if identifier.present?
+      target_status = TargetStatusService.new(self).set_target_status
 
-      # try to assign credit for the action to the same person as the immediately previous activity,
-      # otherwise prefer editor_id and then user_id from resource
-      prior_cur_act = StashEngine::CurationActivity.joins(:resource).where('stash_engine_resources.identifier_id = ?', identifier_id)
-        .order(id: :desc).first
+      # Stop if it's auto-published
+      return if auto_publish?
 
-      target_status = create_post_submission_status(prior_cur_act)
-
-      # If it's auto-published, we're done
-      return if %w[published embargoed].include?(target_status)
-
-      # Warn curators if this is potentially a duplicate
-      completions = StashDatacite::Resource::Completions.new(self)
-      if prior_version.blank? && completions.duplicate_submission
-        dup_id = completions.duplicate_submission.identifier&.identifier
-        CurationService.new(user_id: 0, status: target_status, resource_id: id,
-                            note: "System noticed possible duplicate dataset #{dup_id}").process
-      end
-
-      # If it's the first version, or the prior version was in the submitter's control, we're done
-      return if prior_version.blank? || prior_version.current_curation_status.blank?
+      # Stop if it's the first version, or the prior version was from the submitter
+      return if previous_resource.blank? || previous_resource.current_curation_status.blank?
       return unless identifier.date_last_curated.present?
 
-      # If we get here, the previous version was *not* controlled by the submitter, but a curator
+      # If we get here, the previous version was controlled by a curator
       # so assign it to the previous curator, with a fallback process
       auto_assign_curator(target_status: target_status)
 
@@ -1226,55 +1202,21 @@ module StashEngine
                           note: 'System set back to curation').process
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    def create_post_submission_status(prior_cur_act)
-      attribution = (prior_cur_act.nil? ? (current_editor_id || user_id) : prior_cur_act.user_id)
-      curation_note = ''
-      target_status = 'queued'
+    def auto_publish?
+      return false unless previous_resource_published?
 
-      # Determine whether to auto-publish
-      if previous_resource_published?
-        changes = changed_fields(previous_resource)
-        changes = changes.delete_if { |c| c.is_a?(Array) }
-        if (changes - %w[related_identifiers subjects funders]).empty?
-          # create queued status
-          CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
-          # immediately create published status
-          update(publication_date: previous_resource.publication_date)
-          target_status = previous_resource.last_curation_activity.status
-          curation_note = "Auto-published with minimal changes to #{changes.join(', ')}"
-        end
-
-        # Determine which submission status to use, :queued or :peer_review status
-      elsif (hold_for_peer_review? && identifier.allow_review?) || identifier.automatic_ppr?
-        publication_accepted = identifier.has_accepted_manuscript? || identifier.publication_article_doi
-        if publication_accepted
-          curation_note = "Private for peer review was requested, but associated manuscript #{manuscript} has already been accepted"
-          target_status = 'queued'
-          update(hold_for_peer_review: false, peer_review_end_date: nil)
-        elsif identifier.date_last_curated.present?
-          curation_note = 'Private for peer review was requested, but the submission has already been curated'
-          target_status = 'queued'
-          update(hold_for_peer_review: false, peer_review_end_date: nil)
-        else
-          curation_note = "Set to Private for peer review at #{identifier.automatic_ppr? ? "journal's" : "author's"} request"
-          target_status = 'peer_review'
-          update(hold_for_peer_review: true, peer_review_end_date: Time.now.utc + 6.months)
-        end
+      changes = changed_fields(previous_resource)
+      changes = changes.delete_if { |c| c.is_a?(Array) }
+      if (changes - %w[related_identifiers subjects funders]).empty?
+        # immediately create published status
+        update(publication_date: previous_resource.publication_date)
+        CurationService.new(resource_id: id, status: previous_resource.last_curation_activity.status, user: last_curation_activity.user,
+                            note: "Auto-published with minimal changes to #{changes.join(', ')}").process
+        return true
       end
 
-      if target_status == 'queued' && identifier.payment_needed?
-        target_status = 'awaiting_payment'
-        curation_note = 'Invoice must be paid before curation'
-      end
-
-      # Generate the status
-      # This will usually have the side effect of sending out notification emails to the author/journal
-      CurationService.new(resource_id: id, user_id: attribution, status: target_status, note: curation_note).process
-      target_status
+      false
     end
-
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def auto_assign_curator(target_status:)
       target_curator = curator&.curator? ? curator : identifier.most_recent_curator
