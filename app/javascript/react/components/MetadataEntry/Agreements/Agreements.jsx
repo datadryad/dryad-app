@@ -78,18 +78,20 @@ export default function Agreements({
   }, [dpc, formRef.current]);
 
   useEffect(() => {
-    if (resource.identifier.pub_state === 'published') {
-      setReason(', because the data has been previously published');
-    } else if (dpc.man_decision_made) {
-      setReason(', because the journal has made a decision on the associated manuscript');
-    } else if (resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier) {
-      setReason(', because the associated primary publication is not in peer review');
-    } else if (curated) {
-      setReason(', because the dataset has previously been submitted and entered curation');
-    }
-    if (!preview && !curated) {
-      if (dpc.automatic_ppr && !ppr) postPPR(true);
-      else if (!dpc.allow_review && ppr) postPPR(false);
+    if (Object.hasOwn(dpc, 'total_file_size')) {
+      if (resource.identifier.pub_state === 'published') {
+        setReason(', because the data has been previously published');
+      } else if (dpc.man_decision_made) {
+        setReason(', because the journal has made a decision on the associated manuscript');
+      } else if (resource.related_identifiers.find((r) => r.work_type === 'primary_article')?.related_identifier) {
+        setReason(', because the associated primary publication is not in peer review');
+      } else if (curated) {
+        setReason(', because the dataset has previously been submitted and entered curation');
+      }
+      if (!curated) {
+        if (dpc.automatic_ppr && !ppr) postPPR(true);
+        else if (!dpc.allow_review && ppr) postPPR(false);
+      }
     }
   }, [dpc]);
 

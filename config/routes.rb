@@ -364,13 +364,6 @@ Rails.application.routes.draw do
     resource :pots, only: [:show]
   end
 
-  ############################# Discovery support ######################################
-
-  get '/latest', to: 'latest#index', as: 'latest_index'
-
-  # Endpoint for LinkOut
-  get :discover, to: 'catalog#discover'
-
   ########################## StashDatacite support ######################################
 
   scope module: 'stash_datacite', path: '/stash_datacite' do
@@ -477,7 +470,6 @@ Rails.application.routes.draw do
     # get composite views or items that begin at the resource level
     get 'metadata_entry_pages/find_or_create', to: 'metadata_entry_pages#find_or_create', as: :datacite_metadata_entry_pages
     get 'metadata_entry_pages/:resource_id/files', to: 'metadata_entry_pages#find_files', as: 'find_files'
-    get 'resources/review', to: 'resources#review'
     match 'resources/submission' => 'resources#submission', as: :resources_submission, via: :post
     get 'resources/show', to: 'resources#show'
 
@@ -496,6 +488,11 @@ Rails.application.routes.draw do
     get '/advanced', to: 'advanced', as: "advanced_search"
   end
   get 'author/:orcid', to: 'search#author_profile', as: 'author_profile'
+
+  get '/latest', to: 'latest#index', as: 'latest_index'
+  
+  # Endpoint for LinkOut
+  get :discover, to: 'search#discover'
 
   get :fee_calculator, to: 'fee_calculator#calculate_fee', format: :json
   get 'resource_fee_calculator/:id', to: 'fee_calculator#calculate_resource_fee', format: :json, as: :resource_fee_calculator
@@ -584,12 +581,15 @@ Rails.application.routes.draw do
   get '/costs', to: redirect('/help/requirements/costs')
   get '/reuse', to: redirect('/help/guides/reuse')
   get '/best_practices', to: redirect('/help/guides/best_practices')
-  get '/submission_process', to: redirect('/help/submission_steps/submission')
+  get '/submission_process', to: redirect('/help/guides/submission')
+  get '/help/submission_steps/submission', to: redirect('/help/guides/submission')
   get '/data_check_guide', to: redirect('/help/guides/data_check_alerts')
-  get '/process', to: redirect('/help/submission_steps/publication')
-  get '/docs/HumanSubjectsData.pdf', to: redirect('/help/guides/HumanSubjectsData.pdf')
-  get '/docs/EndangeredSpeciesData.pdf', to: redirect('/help/guides/EndangeredSpeciesData.pdf')
-  get '/docs/QuickstartGuideToDataSharing.pdf', to: redirect('/help/guides/QuickstartGuideToDataSharing.pdf')
+  get '/process', to: redirect('/help/guides/publication')
+  get '/help/submission_steps/publication', to: redirect('/help/guides/publication')
+  get '/help/submission_steps/curation', to: redirect('/help/guides/curation')
+  get '/help/guides/HumanSubjectsData.pdf', to: redirect('/docs/HumanSubjectsData.pdf')
+  get '/help/guides/EndangeredSpeciesData.pdf', to: redirect('/docs/EndangeredSpeciesData.pdf')
+  get '/help/guides/QuickstartGuideToDataSharing.pdf', to: redirect('/docs/QuickstartGuideToDataSharing.pdf')
 
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
