@@ -15,7 +15,7 @@ module StashEngine
     # rubocop:disable Layout/LineLength, Metrics/AbcSize
     def datasets_monthly
       sd = ActiveRecord::Base.connection.select_all(
-        "select CONCAT(YEAR(submit_date), ' ', QUARTER(submit_date)) AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
+        "select CONCAT(YEAR(first_sub_date), ' ', QUARTER(first_sub_date)) AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
       )
       pd = ActiveRecord::Base.connection.select_all(
         "select CONCAT(YEAR(first_pub_date), ' ', QUARTER(first_pub_date)) AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"

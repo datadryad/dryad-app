@@ -209,15 +209,26 @@ module StashEngine
     end
 
     def date_fields
-      @datasets = if @filters[:submit_date]&.values&.any?(&:present?)
-                    @datasets.joins(:process_date)
-                  else
-                    @datasets.left_outer_joins(:process_date)
-                  end
+      filter_on = @filters[:first_sub_date]&.values&.any?(&:present?)
+      @datasets = @datasets.joins(
+        "#{filter_on ? '' : 'LEFT OUTER '}JOIN stash_engine_process_dates id_dates ON id_dates.processable_type = 'StashEngine::Identifier'
+          AND id_dates.processable_id = stash_engine_identifiers.id
+        #{filter_on ? " AND COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) #{date_string(@filters[:first_sub_date])}" : ''}"
+      ).select(
+        'COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) as first_sub_date, id_dates.queued as queue_date'
+      ).select('stash_engine_identifiers.publication_date as first_pub_date')
+
+      return unless @filters[:submit_date]&.values&.any?(&:present?) || @sort == 'submit_date'
+
+      if @filters[:submit_date]&.values&.any?(&:present?)
+        @datasets = @datasets.joins(:process_date)
+      elsif @sort == 'submit_date'
+        @datasets = @datasets.left_outer_joins(:process_date)
+      end
 
       @datasets = @datasets.select(
         'COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) as submit_date'
-      ).select('stash_engine_identifiers.publication_date as first_pub_date')
+      )
     end
 
     def add_filters
@@ -263,26 +274,21 @@ module StashEngine
     def date_filters
       @datasets = @datasets.where(
         "stash_engine_curation_activities.updated_at #{date_string(@filters[:updated_at])}"
-      ) unless @filters[:updated_at].nil? || @filters[:updated_at].values.all?(&:blank?)
+      ) if @filters[:updated_at]&.values&.any?(&:present?)
+
       @datasets = @datasets.where(
         "COALESCE(stash_engine_process_dates.processing, stash_engine_process_dates.queued, stash_engine_process_dates.peer_review) #{
           date_string(@filters[:submit_date])
         }"
-      ) unless @filters[:submit_date].nil? || @filters[:submit_date].values.all?(&:blank?)
-      if %w[first_sub_date queue_date].include?(@sort) || @filters[:first_sub_date]&.values&.any?(&:present?)
-        filter_on = @filters[:first_sub_date]&.values&.any?(&:present?)
-        @datasets = @datasets.joins(
-          "#{filter_on ? '' : 'LEFT OUTER '}JOIN stash_engine_process_dates id_dates ON id_dates.processable_type = 'StashEngine::Identifier'
-            AND id_dates.processable_id = stash_engine_identifiers.id
-          #{filter_on ? " AND COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) #{date_string(@filters[:first_sub_date])}" : ''}"
-        ).select('COALESCE(id_dates.processing, id_dates.queued, id_dates.peer_review) as first_sub_date, id_dates.queued as queue_date')
-      end
+      ) if @filters[:submit_date]&.values&.any?(&:present?)
+
       @datasets = @datasets.where(
         "stash_engine_resources.publication_date #{date_string(@filters[:publication_date])}"
-      ) unless @filters[:publication_date].nil? || @filters[:publication_date].values.all?(&:blank?)
+      ) if @filters[:publication_date]&.values&.any?(&:present?)
+
       @datasets = @datasets.where(
         "stash_engine_identifiers.publication_date #{date_string(@filters[:first_pub_date])}"
-      ) unless @filters[:first_pub_date].nil? || @filters[:first_pub_date].values.all?(&:blank?)
+      ) if @filters[:first_pub_date]&.values&.any?(&:present?)
     end
     # rubocop:enable Style/MultilineIfModifier, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/AbcSize
 
