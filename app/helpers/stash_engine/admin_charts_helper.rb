@@ -22,10 +22,13 @@ module StashEngine
       )
       subs = sd.to_a.reject { |h| h['period'].nil? }
       pubs = pd.to_a.reject { |h| h['period'].nil? }
-      qs = { 1 => 1, 2 => 4, 3 => 7, 4 => 10 }
-      seasons = { 1 => 'Winter', 2 => 'Spring', 3 => 'Summer', 4 => 'Autumn' }
+
+      return [{ dates: ["#{seasons[Date.today.quarter.to_i]} #{Date.today.year}"], subs: [0], pubs: [0] }] unless subs.first.present?
+
       f = subs.first['period'].split
       l = subs.last['period'].split
+      qs = { 1 => 1, 2 => 4, 3 => 7, 4 => 10 }
+      seasons = { 1 => 'Winter', 2 => 'Spring', 3 => 'Summer', 4 => 'Autumn' }
 
       range = (Date.new(f.first.to_i, qs[f.last.to_i], 1)..Date.new(l.first.to_i, qs[l.last.to_i], 1)).map { |d| "#{d.year} #{d.quarter}" }.uniq
       [{
