@@ -289,7 +289,7 @@ module StashDatacite
         raise StashDatacite::ExternalServerError, "Status code: #{resp.status.code}" if resp.status.code > 499
 
         return false
-      rescue HTTP::Error, HTTP::TimeoutError, StashDatacite::ExternalServerError => e
+      rescue HTTP::Error, HTTP::TimeoutError, OpenSSL::SSL::SSLError, StashDatacite::ExternalServerError => e
         retry if (retries += 1) < 3
         # IDK what we really do if there are HTTP errors or timeout errors aside from treating it as
         # a bad attempt at resolving the URL and logging it.

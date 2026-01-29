@@ -21,7 +21,7 @@ module Stash
       end
 
       def invoice_created?
-        resource.payment.invoice_id.present?
+        resource.payment&.invoice_id&.present?
       end
 
       def create_invoice
@@ -38,6 +38,12 @@ module Stash
         res = invoice.send_invoice
         resource.identifier.update(last_invoiced_file_size: ds_size) if resource.identifier.last_invoiced_file_size.to_i < ds_size
         res
+      end
+
+      def invoice_paid?
+        invoice = Stripe::Invoice.retrieve(resource.payment.invoice_id)
+        # one of 'draft', 'open', 'paid', 'uncollectible', or 'void'
+        invoice&.status == 'paid'
       end
 
       def handle_customer(invoice_details)

@@ -115,7 +115,7 @@ export default function InvoiceForm({resource, setResource, setPayment}) {
                 || errors.email
               }
             >
-              {resource.identifier.old_payment_system ? '' : 'Send invoice &amp; '}
+              {resource.identifier.old_payment_system ? '' : 'Send invoice & '}
               Submit for{' '}
               {resource.hold_for_peer_review ? 'peer review' : 'publication'}
             </button>

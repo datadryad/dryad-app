@@ -26,13 +26,13 @@ describe StashEngine::UserMailer, type: :mailer do
       context "when status is '#{status}'" do
         let(:status) { status }
 
-        if %w[peer_review submitted published embargoed withdrawn].include?(status)
+        if %w[peer_review queued published embargoed withdrawn].include?(status)
           it 'should send an email' do
             case status
             when 'peer_review'
               expect(mail.body.to_s).to include(identifier.shares.first.sharing_link)
               expect(mail.body.to_s).to include('your submission will not enter our curation process for review and publication')
-            when 'submitted'
+            when 'queued'
               expect(mail.body.to_s).to include('Thank you for your submission to Dryad')
             when 'published'
               expect(mail.body.to_s).to include('approved for publication')
@@ -52,7 +52,7 @@ describe StashEngine::UserMailer, type: :mailer do
     end
 
     context 'title with HTML elements' do
-      let(:status) { 'submitted' }
+      let(:status) { 'queued' }
 
       it 'does not include HTML elements in the email subject' do
         allow(resource).to receive(:title).and_return('A dataset title that contains <em>italics</em> and <sup>stuff</sup>')
@@ -163,7 +163,7 @@ describe StashEngine::UserMailer, type: :mailer do
     end
 
     context 'when status is not "published"' do
-      let(:status) { 'submitted' }
+      let(:status) { 'queued' }
 
       include_examples 'should not send an email'
     end
@@ -200,7 +200,7 @@ describe StashEngine::UserMailer, type: :mailer do
     end
 
     context 'when status is not "peer_review"' do
-      let(:status) { 'submitted' }
+      let(:status) { 'queued' }
 
       include_examples 'should not send an email'
     end

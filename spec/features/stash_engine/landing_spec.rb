@@ -75,7 +75,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
     end
 
     it 'does not show an unpublished resource' do
-      create(:data_file, resource: create(:resource, :submitted, identifier: identifier))
+      create(:data_file, resource: create(:resource, :paid, :submitted, identifier: identifier))
       visit stash_url_helpers.landing_show_path(id: identifier.to_s)
       expect(all('details.c-file-group').count).to eq(1)
     end
@@ -91,7 +91,7 @@ RSpec.feature 'Landing', type: :feature, js: true do
       end
 
       it 'shows an unpublished resource and hides from public' do
-        create(:data_file, resource: create(:resource, :submitted, identifier: identifier))
+        create(:data_file, resource: create(:resource, :paid, :submitted, identifier: identifier))
         visit stash_url_helpers.landing_show_path(id: identifier.to_s)
         expect(all('details.c-file-group').count).to eq(2)
 

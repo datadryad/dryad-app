@@ -15,6 +15,7 @@ export default function Description({setResource, dcsDescription, mceLabel}) {
         description: value,
         resource_id: dcsDescription.resource_id,
         id: dcsDescription.id,
+        description_type: dcsDescription.description_type,
       },
     };
     showSavingMsg();

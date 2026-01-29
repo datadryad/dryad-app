@@ -34,7 +34,7 @@ const capitals = (t) => {
 export default function TitleImport({current, resource, setResource}) {
   const dupeRef = useRef(null);
   const [connections, setConnections] = useState([]);
-  const [apiJournals, setAPIJournals] = useState([]);
+  const [apiJournals, setAPIJournals] = useState(null);
   const [importError, setImportError] = useState(null);
   const [caseWarning, setCaseWarning] = useState(false);
   const [dupeWarning, setDupeWarning] = useState(false);
@@ -73,7 +73,7 @@ export default function TitleImport({current, resource, setResource}) {
         setAPIJournals(data.data.api_journals);
       });
     }
-    if (current && !apiJournals.length) getList();
+    if (current && !apiJournals) getList();
   }, [current, apiJournals]);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function TitleImport({current, resource, setResource}) {
           resource={resource}
           setResource={setResource}
           setImportError={setImportError}
-          apiJournals={apiJournals}
+          apiJournals={apiJournals || []}
           importType={type}
           key={type}
         />

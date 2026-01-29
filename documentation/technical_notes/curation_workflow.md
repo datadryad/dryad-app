@@ -9,7 +9,7 @@ flexibility as possible.
 Automatic assignment process
 ----------------------------
 
-When a version of dataset a dataset is submitted, it is most efficient if it is
+When a version of dataset a dataset is queued, it is most efficient if it is
 worked on by the same curator that worked on previous versions. Dryad will
 attempt to automatically assign the previous curator.
 
@@ -25,16 +25,16 @@ Dryad attempts to set the status of a newly-submitted dataset based on its
 history. The primary goal is that while a dataset is being actively curated, it
 will be in "curation" status. A submitted version that the curator wasn't
 expecting (e.g., author updates a dataset post-publication) results in
-"submitted" status, so the curator can pick it up when they have time.
+"queued" status, so the curator can pick it up when they have time.
 
 Major rules:
 - If it has been in curation since the last published version, return it to curation
-- If it has not been in curation since the last published version, leave it as submitted 
+- If it has not been in curation since the last published version, leave it as queued 
 
 Workflow sequences and their resultant status:
-- author submits, then updates themselves.... --> submitted
+- author submits, then updates themselves.... --> queued
 - author submits, curator edits --> curation 
-- author submits, curator publishes, author resubmits --> submitted w/ curator assigned
+- author submits, curator publishes, author resubmits --> queued w/ curator assigned
 - author submits, curator publishes, author resubmits, curator edits --> curation 
 - author submits, curator returns aar, author edits --> curation 
 - author submits, curator returns aar, author edits, curator edits --> curation 

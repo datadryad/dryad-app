@@ -13,6 +13,12 @@ namespace :dataset_deletion do
     Reminders::AbandonedDatasetService.new(logging: true).send_action_required_reminders
   end
 
+  desc 'Send monthly email reminder to the submitter when a dataset has been in `awaiting_payment` for more then 6 months'
+  task in_awaiting_payment_reminders: :environment do
+    log 'Mailing users whose datasets have been awaiting_payment for more then 6 months'
+    Reminders::AbandonedDatasetService.new(logging: true).send_awaiting_payment_reminders
+  end
+
   desc 'Send monthly email reminder to the submitter when a dataset has been in `peer_review` for more then 6 months'
   task in_peer_review_reminders: :environment do
     log 'Mailing users whose datasets have been peer_review for more then 6 months'

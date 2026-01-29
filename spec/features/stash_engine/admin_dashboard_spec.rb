@@ -25,7 +25,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       @superuser = create(:user, role: 'superuser')
       2.times do
         identifier = create(:identifier)
-        @resource = create(:resource, :submitted, publication_date: nil, user: @user, identifier: identifier)
+        @resource = create(:resource, :paid, :submitted, publication_date: nil, user: @user, identifier: identifier)
       end
       sign_in(@superuser, false)
     end
@@ -62,7 +62,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       visit stash_url_helpers.admin_dashboard_results_path(format: :csv)
       csv_line = page.body.split("\n").first
       csv_parts = csv_line.split(',')
-      expect(csv_parts).to include('Submitter', 'Metrics', 'Grant funders')
+      expect(csv_parts).to include('Submitter', 'Views', 'Downloads', 'Citations', 'Grant funders')
     end
 
     it 'has 3 search fields', js: true do
@@ -102,7 +102,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
         click_button('Apply')
         assert_selector('tbody tr', count: 2)
         click_button('multiselect-status__input')
-        check 'status-submitted'
+        check 'status-queued'
         click_button('Apply')
         assert_selector('tbody tr', count: 3)
         click_button('multiselect-status__input')
@@ -170,7 +170,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
       create(:role, user: @admin, role_object: @admin.tenant)
       @user = create(:user, tenant_id: @admin.tenant_id)
       @identifier = create(:identifier)
-      @resource = create(:resource, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, skip_datacite_update: true)
+      @resource = create(:resource, :paid, :submitted, user: @user, identifier: @identifier, tenant_id: @admin.tenant_id, skip_datacite_update: true)
       Timecop.return
     end
 
@@ -280,7 +280,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
           end
 
           it 'filters by curator', js: true do
-            create(:resource, :submitted, user: @user, tenant_id: @admin.tenant_id, skip_datacite_update: true)
+            create(:resource, :paid, :submitted, user: @user, tenant_id: @admin.tenant_id, skip_datacite_update: true)
             visit stash_url_helpers.admin_dashboard_path
             expect(page).to have_text('Admin dashboard')
             assert_selector('tbody tr', count: 2)
@@ -298,10 +298,10 @@ RSpec.feature 'AdminDashboard', type: :feature do
             select('unassign', from: 'stash_engine_resource_curator_id')
             click_button('Submit')
             expect(find('#search_results')).not_to have_text(@curator.name)
-            expect(find('#search_results')).to have_text('Submitted')
+            expect(find('#search_results')).to have_text('Queued for curation')
             @resource.reload
             expect(@resource.user_id).to eq(nil)
-            expect(@resource.current_curation_status).to eq('submitted')
+            expect(@resource.current_curation_status).to eq('queued')
           end
 
           it 'submits a curation status change and reflects in the page and history afterwards' do
@@ -448,7 +448,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
           user = create(:user, tenant_id: tenant)
           2.times do
             identifier = create(:identifier)
-            @res1 = create(:resource, :submitted, user: user, identifier: identifier)
+            @res1 = create(:resource, :paid, :submitted, user: user, identifier: identifier)
           end
         end
         @consortium = create(:tenant, id: 'consortium', short_name: 'Consortium', long_name: 'Consortium')
@@ -458,7 +458,7 @@ RSpec.feature 'AdminDashboard', type: :feature do
           user = create(:user, tenant_id: member)
           2.times do
             identifier = create(:identifier)
-            @res2 = create(:resource, :submitted, user: user, identifier: identifier)
+            @res2 = create(:resource, :paid, :submitted, user: user, identifier: identifier)
           end
         end
         sign_in(create(:user, role: 'admin', role_object: @consortium, tenant_id: 'consortium'))

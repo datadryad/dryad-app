@@ -35,7 +35,7 @@ module StashEngine
       expect(@resource.descriptions).to have(3).items
       expect(@resource.authors.first.affiliations).to have(1).items
       expect(@resource.current_resource_state.resource_state).to eq('submitted')
-      expect(@resource.curation_activities.last.status).to eq('submitted')
+      expect(@resource.curation_activities.last.status).to eq('queued')
       expect(@resource.stash_version.version).to eq(1)
       expect(@resource.stash_version.merritt_version).to eq(1)
       expect(@identifier.latest_downloadable_resource(user: @resource.creator)).to eq(@resource)

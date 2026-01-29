@@ -5,7 +5,8 @@ module StashEngine
     before_action :require_modify_permission, only: %i[find_or_create reject_agreement accept_agreement]
     before_action :require_duplicate_permission, only: %i[new_version new_version_from_previous]
     before_action :require_can_duplicate, only: %i[new_version new_version_from_previous]
-    before_action :ajax_require_modifiable, only: %i[reject_agreement accept_agreement]
+    before_action :ajax_require_permission, only: %i[reject_agreement accept_agreement]
+    before_action :ajax_require_unsubmitted, only: %i[reject_agreement accept_agreement]
     before_action :bust_cache, only: %i[find_or_create]
     before_action :require_not_obsolete, only: %i[find_or_create]
 

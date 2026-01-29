@@ -1,7 +1,7 @@
 RSpec.shared_examples('in status size for a date') do |status, method|
   it 'knows when there are none' do
     # NO -- just a normal submission
-    create(:curation_activity, :submitted, resource: @res[1], user: @user, created_at: @day)
+    create(:curation_activity, :queued, resource: @res[1], user: @user, created_at: @day)
 
     stats = StashEngine::CurationStats.create(date: @day)
     expect(stats.send(method)).to eq(0)
@@ -33,7 +33,7 @@ RSpec.shared_examples('in status size for a date') do |status, method|
 
     # NO -- a new version is created
     new_version = create(:resource, identifier: @idents[4])
-    create(:curation_activity, :submitted, resource: new_version, user: @curator, created_at: @day)
+    create(:curation_activity, :queued, resource: new_version, user: @curator, created_at: @day)
     stats.recalculate
     expect(stats.send(method)).to eq(2)
 

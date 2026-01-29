@@ -78,7 +78,7 @@ module Stash
     end
 
     def self.create_email_case(email:, subject:, body:, sname:, id: nil)
-      return unless email && sname && subject && body
+      return unless email && sname && subject && body && sf_client
 
       case_hash = {
         Origin: 'Form',

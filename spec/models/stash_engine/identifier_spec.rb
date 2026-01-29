@@ -255,18 +255,18 @@ module StashEngine
         describe '#date_last_curated' do
           it 'selects the correct date_last_curated' do
             target_date = DateTime.new(2010, 2, 3).utc
-            CurationService.new(resource: @res1, status: 'submitted', user: @user, created_at: '2000-01-01').process
+            CurationService.new(resource: @res1, status: 'queued', user: @user, created_at: '2000-01-01').process
             CurationService.new(resource: @res1, status: 'curation', user: @user, created_at: target_date).process
-            CurationService.new(resource: @res2, status: 'submitted', user: @user, created_at: '2020-01-01').process
-            CurationService.new(resource: @res3, status: 'submitted', user: @user, created_at: '2030-01-01').process
+            CurationService.new(resource: @res2, status: 'queued', user: @user, created_at: '2020-01-01').process
+            CurationService.new(resource: @res3, status: 'queued', user: @user, created_at: '2030-01-01').process
             expect(@identifier.date_last_curated).to eq(target_date)
           end
 
           it 'gives no date_last_curated for uncurated items' do
-            CurationService.new(resource: @res1, status: 'submitted', user: @user, created_at: '2000-01-01').process
+            CurationService.new(resource: @res1, status: 'queued', user: @user, created_at: '2000-01-01').process
             CurationService.new(resource: @res1, status: 'peer_review', user: @user, created_at: '2010-01-01').process
-            CurationService.new(resource: @res2, status: 'submitted', user: @user, created_at: '2020-01-01').process
-            CurationService.new(resource: @res3, status: 'submitted', user: @user, created_at: '2030-01-01').process
+            CurationService.new(resource: @res2, status: 'queued', user: @user, created_at: '2020-01-01').process
+            CurationService.new(resource: @res3, status: 'queued', user: @user, created_at: '2030-01-01').process
             expect(@identifier.date_last_curated).to eq(nil)
           end
         end
@@ -445,6 +445,14 @@ module StashEngine
         expect(@identifier.user_must_pay?).to eq(true)
       end
 
+      it 'returns false if waiver is applied on an old_payment_system dataset' do
+        @identifier.update(payment_type: 'waiver')
+        expect(@identifier.user_must_pay?).to eq(true)
+
+        @identifier.update(old_payment_system: true, payment_type: 'waiver')
+        expect(@identifier.user_must_pay?).to eq(false)
+      end
+
       it 'returns false if journal will pay' do
         journal = create(:journal, issn: @fake_issn)
         create(:payment_configuration, partner: journal, payment_plan: 'SUBSCRIPTION')
@@ -548,20 +556,22 @@ module StashEngine
         create(:journal, issn: @fake_issn, title: @bogus_title)
         expect(@identifier.journal.title).to eq(@bogus_title)
       end
+    end
 
-      it 'allows review when there is no journal' do
+    describe '#allow_review' do
+      it 'allows review' do
         expect(@identifier.allow_review?).to be(true)
       end
 
       it 'disallows review if already published' do
-        @identifier.pub_state = 'published'
+        @identifier.update(pub_state: 'published')
         expect(@identifier.allow_review?).to be(false)
       end
 
-      it 'allows review when the curation status is review, regardless of journal settings' do
-        create(:journal, issn: @fake_issn, allow_review_workflow: false)
-        allow_any_instance_of(Resource).to receive(:current_curation_status).and_return('peer_review')
-        expect(@identifier.allow_review?).to be(true)
+      it 'disallows review if previously curated' do
+        create(:curation_activity, :curation, resource: @res1, user: @user)
+        create(:curation_activity, :action_required, resource: @res1, user: @user)
+        expect(@identifier.allow_review?).to be(false)
       end
     end
 

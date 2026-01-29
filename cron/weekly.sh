@@ -9,6 +9,8 @@ export RAILS_ENV="$1"
 find /home/ec2-user/deploy/shared/tmp/cache -mtime +21 -type f -exec rm {} \;
 find /home/ec2-user/deploy/shared/tmp/cache -empty -type d -delete
 
+bundle exec rails publication_updater:query_preprints >> /home/ec2-user/deploy/shared/log/publication_updater_preprints.log 2>&1
+
 bundle exec rails publication_updater:crossref >> /home/ec2-user/deploy/shared/log/publication_updater_crossref.log 2>&1
 
 bundle exec rails identifiers:voided_invoices_report >> /home/ec2-user/deploy/shared/log/voided_invoices_report.log 2>&1

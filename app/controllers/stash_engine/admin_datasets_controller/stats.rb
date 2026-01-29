@@ -40,12 +40,12 @@ module StashEngine
         datasets_with_resource_state_count(state: 'submitted')
       end
 
-      def datasets_submitted_unclaimed_count
-        datasets_with_curation_status_count(status: 'submitted', only_unclaimed: true)
+      def datasets_unclaimed_count
+        datasets_with_curation_status_count(status: 'queued', only_unclaimed: true)
       end
 
       def datasets_available_for_curation
-        datasets_with_curation_status_count(status: 'submitted') +
+        datasets_with_curation_status_count(status: 'queued') +
           datasets_with_curation_status_count(status: 'curation')
       end
 

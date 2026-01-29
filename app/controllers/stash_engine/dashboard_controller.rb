@@ -23,12 +23,12 @@ module StashEngine
             .joins(:last_curation_activity)
             .select("stash_engine_resources.*,
             CASE
-              WHEN status='action_required' THEN 0
+              WHEN status in ('action_required', 'awaiting_payment') THEN 0
               WHEN (status='in_progress' and (current_editor_id = #{current_user.id} or  current_editor_id is null)) THEN 0
               WHEN (status='in_progress' and current_editor_id in (#{StashEngine::User.all_curators.map(&:id).join(',').presence || '-1'})) THEN 3
               WHEN status='in_progress' THEN 1
               WHEN status='peer_review' THEN 2
-              WHEN status in ('submitted', 'curation', 'processing') THEN 3
+              WHEN status in ('queued', 'curation', 'processing') THEN 3
               WHEN status='withdrawn' THEN 5
               ELSE 4
             END as sort_order")
@@ -50,10 +50,13 @@ module StashEngine
     end
 
     def save_primary_article
-      @publication = StashEngine::ResourcePublication.find_or_create_by(resource_id: params.dig(:primary_article, :resource_id),
-                                                                        pub_type: :primary_article)
-      @publication.update(publication_name: params.dig(:publication, :label), publication_issn: params.dig(:publication, :value))
+      resource = StashEngine::Resource.find_by(id: params.dig(:primary_article, :resource_id))
       std_fmt = StashDatacite::RelatedIdentifier.standardize_format(params.dig(:primary_article, :related_identifier))
+      bare_doi = Stash::Import::Crossref.bare_doi(doi_string: std_fmt)
+
+      cr = Stash::Import::Crossref.query_by_doi(resource: resource, doi: bare_doi)
+      cr.populate_pub_update! if cr.present?
+      @publication = resource.resource_publication
       @related_work = StashDatacite::RelatedIdentifier.create(
         resource_id: params.dig(:primary_article, :resource_id), work_type: :primary_article,
         relation_type: 'iscitedby', related_identifier: std_fmt,

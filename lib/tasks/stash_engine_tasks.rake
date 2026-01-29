@@ -72,7 +72,7 @@ namespace :identifiers do
       CurationService.new(
         resource_id: resource.id,
         user_id: resource.submitter.id,
-        status: resource.identifier.internal_data.empty? ? 'submitted' : 'peer_review',
+        status: resource.identifier.internal_data.empty? ? 'queued' : 'peer_review',
         created_at: resource.updated_at,
         updated_at: resource.updated_at
       ).process
@@ -127,6 +127,28 @@ namespace :identifiers do
       ).process
     rescue StandardError => e
       # NOTE: we get errors with test data updating DOI and some of the other callbacks on publishing
+      log "    Exception! #{e.message}"
+
+    end
+  end
+
+  desc 'check invoice payment status'
+  task check_dataset_payment: :environment do
+    Time.now
+    log 'Checking invoiced datasets for payment'
+
+    StashEngine::Resource.latest_per_dataset.invoice_due.find_each do |res|
+      invoicer = Stash::Payments::StripeInvoicer.new(res)
+      next unless invoicer.invoice_created? && invoicer.invoice_paid?
+
+      res.resource_payment.update(status: :paid)
+      CurationService.new(
+        resource: res,
+        user_id: 0,
+        status: 'queued',
+        note: 'Invoice has been paid, or cannot be found'
+      ).process
+    rescue StandardError => e
       log "    Exception! #{e.message}"
 
     end
@@ -216,6 +238,7 @@ namespace :identifiers do
             status: 'withdrawn',
             note: 'remove_abandoned_datasets CRON - mark files as deleted'
           )
+          PubStateService.new(i).update_for_ca_status('withdrawn')
         end
       end
     end
@@ -1129,10 +1152,10 @@ namespace :identifiers do
 
       # Identifiers that have their FIRST submitted date in the given period
       found_identifiers = Set[]
-      first_submitted = StashEngine::Identifier.joins(:process_date)
-        .where(stash_engine_process_dates: { submitted: origin_date..end_date })
+      first_queued = StashEngine::Identifier.joins(:process_date)
+        .where(stash_engine_process_dates: { queued: origin_date..end_date })
         .distinct
-      found_identifiers.merge(first_submitted)
+      found_identifiers.merge(first_queued)
 
       # produce the stats
       puts('  writing results')
@@ -1145,7 +1168,7 @@ namespace :identifiers do
         csv << [i.identifier, i.publication_article_doi,
                 u&.affiliation&.long_name, r&.country,
                 res&.current_curation_status,
-                i.process_date.submitted&.to_date, i.date_first_published&.to_date, i.resources.last.updated_at.to_date,
+                i.process_date.queued&.to_date, i.date_first_published&.to_date, i.resources.last.updated_at.to_date,
                 i.storage_size,
                 i.payment_type, i.publication_name, i.journal&.sponsor&.name,
                 res&.contributors&.map(&:contributor_name)&.compact,
@@ -1391,7 +1414,7 @@ namespace :curation_stats do
                 i.payment_type,
                 cas.find(&:in_progress?)&.created_at,
                 cas.find(&:peer_review?)&.created_at,
-                cas.find(&:submitted?)&.created_at,
+                cas.find(&:queued?)&.created_at,
                 cas.find(&:curation?)&.created_at,
                 cas.find(&:action_required?)&.created_at,
                 cas.find(&:embargoed?)&.created_at,
