@@ -46,11 +46,11 @@ time_desc = time[:dates].map.with_index { |d,i| "#{d}: #{time[:subs][i]} submitt
       labels: <%= time[:dates].to_json.html_safe %>,
       datasets: [
         {
-          label: 'Datasets submitted',
+          label: 'First submitted',
           data: <%= time[:subs].to_json.html_safe %>
         },
         {
-          label: 'Datasets published',
+          label: 'First published',
           data: <%= time[:pubs].to_json.html_safe %>
         },
       ]
