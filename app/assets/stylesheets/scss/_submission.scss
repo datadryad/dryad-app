@@ -47,19 +47,23 @@ html.preview_submission {
             text-align: center;
             font-size: 1.3rem;
           }
-          button {
+          button, a {
             display: inline-flex;
             gap: .35ch;
             align-items: baseline;
           }
-          & > button {
-            margin-left: -140px;
-          }
-          form:first-of-type {
+          a {
+            margin-top: -2px;
             margin-left: -210px;
+            &:visited, &:active {
+              color: $link-body-color;
+            }
+            &:hover {
+              color: $link-body-hover-color;
+            }
           }
           @media (max-width: 750px) {
-            & > button, form:first-of-type {
+            a {
               margin: 0;
             }
           }
