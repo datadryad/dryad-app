@@ -582,14 +582,8 @@ Rails.application.routes.draw do
   get '/reuse', to: redirect('/help/guides/reuse')
   get '/best_practices', to: redirect('/help/guides/best_practices')
   get '/submission_process', to: redirect('/help/guides/submission')
-  get '/help/submission_steps/submission', to: redirect('/help/guides/submission')
   get '/data_check_guide', to: redirect('/help/guides/data_check_alerts')
   get '/process', to: redirect('/help/guides/publication')
-  get '/help/submission_steps/publication', to: redirect('/help/guides/publication')
-  get '/help/submission_steps/curation', to: redirect('/help/guides/curation')
-  get '/help/guides/HumanSubjectsData.pdf', to: redirect('/docs/HumanSubjectsData.pdf')
-  get '/help/guides/EndangeredSpeciesData.pdf', to: redirect('/docs/EndangeredSpeciesData.pdf')
-  get '/help/guides/QuickstartGuideToDataSharing.pdf', to: redirect('/docs/QuickstartGuideToDataSharing.pdf')
 
   # Routing to redirect old Dryad landing pages to the correct location
   # Regex based on https://www.crossref.org/blog/dois-and-matching-regular-expressions/ but a little more restrictive specific to old dryad
