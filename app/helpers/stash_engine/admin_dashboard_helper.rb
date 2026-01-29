@@ -15,7 +15,7 @@ module StashEngine
       head << 'Submitter' if @fields.include?('submitter')
       head << 'Status' if @fields.include?('status')
       head << 'Size' if @fields.include?('size')
-      head << 'Metrics' if @fields.include?('metrics')
+      head << 'Views' << 'Downloads' << 'Citations' if @fields.include?('metrics')
       if @fields.include?('funders') || @fields.include?('awards')
         head << (@fields.include?('funders') ? 'Grant funders' : 'Award IDs')
       end
@@ -67,12 +67,12 @@ module StashEngine
         }"
       end
       row << StashEngine::CurationActivity.readable_status(dataset.last_curation_activity.status) if @fields.include?('status')
-      row << filesize(dataset.total_file_size) if @fields.include?('size')
+      row << dataset.total_file_size if @fields.include?('size')
       if @fields.include?('metrics')
         c = dataset.identifier.counter_stat.unique_investigation_count
         r = dataset.identifier.counter_stat.unique_request_count
         views = c.blank? || c < r ? (r || 0) : c
-        row << "#{views} views, #{r || 0} downloads, #{dataset.identifier.counter_stat.citation_count || 0} citations"
+        row << views << (r || 0) << (dataset.identifier.counter_stat.citation_count || 0)
       end
       if @fields.include?('funders') || @fields.include?('awards')
         row << dataset.funders.map do |f|

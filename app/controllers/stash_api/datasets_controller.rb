@@ -428,7 +428,7 @@ module StashApi
     def update_version_status(new_status)
       ensure_in_progress { yield }
       pre_submission_updates
-      if %w[submitted queued].include?(new_status)
+      if new_status == 'submitted'
         CurationService.new(resource: @resource, status: 'processing',
                             note: 'Repository processing data', user_id: @user&.id || 0).process
       end
@@ -526,8 +526,8 @@ module StashApi
 
     def check_may_set_user_id
       return if params['userId'].nil?
-      # if you're a curator or its your own user
-      return if @user.min_curator? || params['userId'].to_i == @user.id
+      # if you're a curator or its your own user or own ORCID
+      return if @user.min_curator? || params['userId'].to_i == @user.id || params['userId'].to_s == @user.orcid
 
       # do you admin the target journal?
       return if @user.journals_as_admin.include?(@journal)

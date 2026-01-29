@@ -2,7 +2,8 @@ module StashDatacite
   class SubjectsController < ApplicationController
 
     before_action :set_subject, only: [:delete]
-    before_action :ajax_require_modifiable, only: %i[create delete]
+    before_action :ajax_require_permission, only: %i[create delete]
+    before_action :ajax_require_unsubmitted, only: %i[create delete]
 
     # GET /subjects/new
     def new

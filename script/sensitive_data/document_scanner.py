@@ -5,6 +5,14 @@ import constants as const
 import requests
 import ipaddress
 
+import boto3
+import csv
+import io
+
+s3 = boto3.client("s3")
+SPECIES_BUCKET = "dryad-lambda-pkg"
+SPECIES_KEY = "endangered_species_common_names.csv"
+
 class DocumentScanner:
   def __init__(self, file_path):
     self.file_path = file_path
@@ -19,7 +27,8 @@ class DocumentScanner:
       "emails": const.EMAIL_PATTERN,
       "urls": const.URL_PATTERN,
       "ip": const.IP_PATTERN,
-#       "coordinates": const.COORD_PATTERN
+      "endangered_species": self.load_species_regex()
+      #"coordinates": const.COORD_PATTERN
     }
 
   def read_file(self):
@@ -86,3 +95,19 @@ class DocumentScanner:
     self.response.run_time = float("%.2f" % (time.time() - self.start_time))
     self.response.finished = finished
     return self.response
+
+  def load_species_regex(self):
+    response = s3.get_object(Bucket=SPECIES_BUCKET, Key=SPECIES_KEY)
+    body = response["Body"].read().decode("utf-8")
+
+    reader = csv.DictReader(io.StringIO(body))
+    species = set()
+
+    for row in reader:
+      if row["language"].strip().lower() == 'english':
+        scientificName = row["scientificName"].strip().lower()
+        if scientificName:
+          species.add(re.escape(scientificName))
+
+    pattern = r"\b(" + "|".join(species) + r")\b"
+    return re.compile(pattern, re.IGNORECASE)

@@ -8,7 +8,7 @@ RSpec.feature 'HelpCenter', type: :feature, js: true do
   it 'loads the search bar and menu' do
     expect(page).to have_text('Dryad help center')
     expect(page).to have_selector('#page-content input#help_search')
-    expect(page).to have_text('Submission walkthrough')
+    expect(page).to have_text('Submitting data')
   end
 
   it 'visits a page, moves the search bar and shows a submenu' do

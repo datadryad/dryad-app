@@ -13,7 +13,6 @@
 #  hold_for_peer_review      :boolean          default(FALSE)
 #  loosen_validation         :boolean          default(FALSE)
 #  meta_view                 :boolean          default(FALSE)
-#  old_cedar_json            :text(65535)
 #  peer_review_end_date      :datetime
 #  preserve_curation_status  :boolean          default(FALSE)
 #  publication_date          :datetime

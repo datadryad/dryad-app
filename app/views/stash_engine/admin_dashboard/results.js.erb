@@ -27,6 +27,9 @@ for (const input of hidden) {
 document.getElementById('clear_filters').removeEventListener('click', clearFilters)
 document.getElementById('clear_filters').addEventListener('click', clearFilters)
 document.getElementById('count_form_button').click();
+if (document.getElementById('charts_open').getAttribute('aria-expanded') === 'true') {
+  document.getElementById('charts_form_button').click();
+}
 <% if params[:pressed].present? %>document.querySelector('*[data-sort=<%=params[:pressed]%>]').focus()<% end %>
 
 var noClicks = Array.from(document.getElementsByClassName('prevent-click'));

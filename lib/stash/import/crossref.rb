@@ -29,6 +29,22 @@ module Stash
           nil
         end
 
+        def query_by_preprint_doi(resource:, doi:)
+          return nil unless resource.present? && doi.present?
+
+          bare = bare_doi(doi_string: doi)
+          resp = Serrano.works(ids: bare.gsub(/\s+/, ''))
+          return nil unless resp.first.present? && resp.first['message'].present?
+
+          id = resp.first['message'].dig('relation', 'is-preprint-of', 0)
+          return nil unless id.present? && id['id-type'] == 'doi'
+
+          b = bare_doi(doi_string: id['id'])
+          query_by_doi(resource: resource, doi: b)
+        rescue Serrano::NotFound, Serrano::InternalServerError
+          nil
+        end
+
         def query_by_author_title(resource:)
           return nil if resource.blank? || resource.title&.strip.blank?
 

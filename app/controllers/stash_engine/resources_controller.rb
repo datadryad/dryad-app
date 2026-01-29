@@ -6,15 +6,6 @@ module StashEngine
     before_action :require_login
     before_action :assign_resource, only: %i[logout display_readme dupe_check file_pub_dates]
     before_action :require_modify_permission, except: %i[index new logout display_readme dupe_check file_pub_dates]
-    before_action :require_in_progress, only: %i[upload review upload_manifest up_code up_code_manifest]
-    # before_action :lockout_incompatible_uploads, only: %i[upload upload_manifest]
-    before_action :lockout_incompatible_sfw_uploads, only: %i[up_code up_code_manifest]
-    before_action :update_internal_search, only: %i[upload review upload_manifest up_code up_code_manifest]
-    before_action :bust_cache, only: %i[upload manifest up_code up_code_manifest review]
-    before_action :require_not_obsolete, only: %i[upload manifest up_code up_code_manifest review]
-    # after_action :verify_authorized, only: %i[create]
-
-    # apply Pundit?
 
     attr_writer :resource
 
@@ -235,7 +226,8 @@ module StashEngine
     def payer_check
       render json: {
         new_upload_size_limit: @resource.identifier.new_upload_size_limit,
-        user_must_pay: @resource.identifier.user_must_pay?
+        user_must_pay: @resource.identifier.user_must_pay?,
+        display_payer: @resource.identifier.display_payer
       }, status: :ok
     end
 
@@ -271,30 +263,8 @@ module StashEngine
       @resource = resource
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def resource_params
       params.require(:resource).permit(:user_id, :current_resource_state_id)
-    end
-
-    def require_in_progress
-      redirect_to choose_dashboard_path, alert: 'You may only edit the current version of the dataset' unless resource.current_state == 'in_progress'
-      false
-    end
-
-    def lockout_incompatible_uploads
-      if request[:action] == 'upload' && resource.upload_type == :manifest
-        redirect_to upload_manifest_resource_path(resource)
-      elsif request[:action] == 'upload_manifest' && resource.upload_type == :files
-        redirect_to upload_resource_path(resource)
-      end
-    end
-
-    def lockout_incompatible_sfw_uploads
-      if request[:action] == 'up_code' && resource.upload_type(association: 'software_files') == :manifest
-        redirect_to up_code_manifest_resource_path(resource)
-      elsif request[:action] == 'up_code_manifest' && resource.upload_type(association: 'software_files') == :files
-        redirect_to up_code_resource_path(resource)
-      end
     end
 
     # this is to be sure that our internal search index gets updated occasionally before full submission so search is better

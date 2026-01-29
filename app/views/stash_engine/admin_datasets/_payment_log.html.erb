@@ -5,7 +5,7 @@
       <% if log.class.name == 'ResourcePayment' %>
         <%= log.pay_with_invoice? ? 'Invoice' : 'Bill' %> for $<%= log.amount %> <%= log.status %>
         <% if log.has_discount? || log.ppr_fee_paid? %>
-          (<%= log.has_discount? ? 'with waiver' : 'PPR fee' %>)
+          (<%= log.has_discount? ? 'with PPR fee discount' : 'PPR fee' %>)
         <% end %> 
         <span style="font-size: .98rem"><%= formatted_datetime(log.updated_at) %></span>
       <% else %>

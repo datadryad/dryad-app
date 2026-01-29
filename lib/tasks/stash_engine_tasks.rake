@@ -141,14 +141,14 @@ namespace :identifiers do
       invoicer = Stash::Payments::StripeInvoicer.new(res)
       next unless invoicer.invoice_created? && invoicer.invoice_paid?
 
+      res.resource_payment.update(status: :paid)
       CurationService.new(
         resource: res,
         user_id: 0,
         status: 'queued',
-        note: 'Invoice has been paid, or cannot be found`'
+        note: 'Invoice has been paid, or cannot be found'
       ).process
     rescue StandardError => e
-      # NOTE: we get errors with test data updating DOI and some of the other callbacks on publishing
       log "    Exception! #{e.message}"
 
     end
@@ -238,6 +238,7 @@ namespace :identifiers do
             status: 'withdrawn',
             note: 'remove_abandoned_datasets CRON - mark files as deleted'
           )
+          PubStateService.new(i).update_for_ca_status('withdrawn')
         end
       end
     end
