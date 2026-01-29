@@ -34,10 +34,6 @@ end
 
 SUBMISSION_REDIS_KEY = 'resource:%{resource.id}:remaining_files'.freeze
 
-HELP_PAGES_ACCOUNT = [
-  { path: '/help/account/login', name: 'Creating a Dryad account'},
-  { path: '/help/account/management', name: 'Managing my account'}
-]
 NIH_ROR = 'https://ror.org/01cwqze88'.freeze
 NSF_ROR = 'https://ror.org/021nxhr62'.freeze
 
@@ -108,6 +104,11 @@ NSF_ROR_NAMES_MAPPING = {
   'emerging frontiers' => 'https://ror.org/01tnvpc68'
 }.freeze
 
+HELP_PAGES_ACCOUNT = [
+  { path: '/help/account/login', name: 'Creating a Dryad account'},
+  { path: '/help/account/management', name: 'Managing my account'}
+]
+
 HELP_PAGES_REQUIREMENTS =
   [
     { path: '/help/requirements/files', name: 'File requirements' },
@@ -115,23 +116,27 @@ HELP_PAGES_REQUIREMENTS =
     { path: '/help/requirements/costs', name: 'Costs' }
   ]
 
+HELP_PAGES_STEPS =
+  [
+    { path: '/help/submission_steps/connect', name: 'Connecting publications' },
+    { path: '/help/submission_steps/authors', name: 'Authors and editors' },
+    { path: '/help/submission_steps/description', name: 'Describing data' },
+    { path: '/help/submission_steps/files', name: 'Uploading files' },
+    { path: '/help/submission_steps/readme', name: 'Creating a README' },
+    { path: '/help/submission_steps/peer_review', name: 'Private for Peer Review' },
+    { path: '/help/submission_steps/preview', name: 'Preview and payment'}
+  ]
+
 HELP_PAGES_GUIDES =
   [
-    { path: '/help/guides/QuickstartGuideToDataSharing.pdf', name: 'Data sharing (quick start)' },
+    { path: '/help/guides/submission', name: 'Submitting data' },
+    { path: '/help/guides/curation', name: 'Dataset curation' },
+    { path: '/help/guides/publication', name: 'Published datasets' },
     { path: '/help/guides/best_practices', name: 'Good data practices' },
     { path: '/help/guides/reuse', name: 'How to reuse Dryad data' },
-    { path: '/help/guides/EndangeredSpeciesData.pdf', name: 'Guidance for species data' },
-    { path: '/help/guides/HumanSubjectsData.pdf', name: 'Sharing human subjects data' },
     { path: '/help/guides/data_check_alerts', name: 'Tabular data check alerts' }
   ]
 
-HELP_PAGES_STEPS =
-  [
-    { path: '/help/submission_steps/submission', name: 'Submission walkthrough' },
-    { path: '/help/submission_steps/curation', name: 'Dataset curation' },
-    { path: '/help/submission_steps/publication', name: 'Published datasets' }
-  ]
-
-HELP_PAGES = HELP_PAGES_REQUIREMENTS + HELP_PAGES_GUIDES + HELP_PAGES_STEPS + HELP_PAGES_ACCOUNT
+HELP_PAGES = HELP_PAGES_REQUIREMENTS + HELP_PAGES_STEPS + HELP_PAGES_GUIDES + HELP_PAGES_ACCOUNT
 
 SMALL_UPLOAD_QUEUE_LIMIT = 2_000_000_000 # 2 GB

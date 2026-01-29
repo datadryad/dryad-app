@@ -7,7 +7,7 @@ So, you want to share your research data in Dryad, but are unsure where to start
 
 We want to help you share your research with the scientific community to increase its [visibility](https://peerj.com/articles/175/) and foster collaborations. The following guidelines will help make your Dryad datasets as [Findable, Accessible, Interoperable, and Reusable (FAIR)](https://www.force11.org/group/fairgroup/fairprinciples) as possible.
 
-No time to dig into the details? Check out our <a href="https://datadryad.org/docs/QuickstartGuideToDataSharing.pdf">Quickstart guide to data sharing<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>.
+No time to dig into the details? Check out our <a href="/docs/QuickstartGuideToDataSharing.pdf">Quickstart guide to data sharing<span class="pdfIcon" role="img" aria-label=" (PDF)"/></a>.
 
 ## Gather all relevant data needed for reanalysis
 

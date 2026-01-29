@@ -20,10 +20,21 @@
 	gap: 2ch;
 	flex-wrap: wrap;
 
-	button {
+	button, a {
 		display: inline-flex;
 		align-items: baseline;
 		gap: .35ch;
+	}
+
+	a {
+		padding: 8px;
+	}
+
+	a:visited, a:active {
+		color: $link-body-color;
+	}
+	a:hover {
+		color: $link-body-hover-color;
 	}
 }
 
