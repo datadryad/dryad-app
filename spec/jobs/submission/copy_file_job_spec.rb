@@ -3,7 +3,7 @@ require 'rails_helper'
 
 RSpec.describe Submission::CopyFileJob, type: :job do
   let(:resource) { create(:resource) }
-  let(:data_file) { create(:data_file, resource: resource) }
+  let(:data_file) { create(:data_file, resource: resource, download_filename: 'file.txt') }
   let!(:queue_state) { create(:repo_queue_state, resource: resource) }
 
   let(:files_service) { instance_double(Submission::FilesService) }
@@ -36,7 +36,17 @@ RSpec.describe Submission::CopyFileJob, type: :job do
       it 'calls FilesService#copy_file and enqueues CheckStatusJob' do
         expect(files_service).to receive(:copy_file)
         expect(Submission::CheckStatusJob).to receive(:perform_async).with(resource.id)
+        expect(ArchiveAnalyzerJob).not_to receive(:perform_async)
         perform_job
+      end
+
+      context 'when the file is an archive' do
+        let(:data_file) { create(:data_file, resource: resource, download_filename: 'archive.zip') }
+
+        it 'calls FilesService#copy_file and enqueues CheckStatusJob' do
+          expect(ArchiveAnalyzerJob).to receive(:perform_async).with(data_file.id)
+          perform_job
+        end
       end
     end
 

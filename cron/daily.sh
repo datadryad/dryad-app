@@ -35,7 +35,7 @@ bundle exec rails identifiers:update_missing_search_words >> /home/ec2-user/depl
 bundle exec rails dev_ops:retry_zenodo_errors >> /home/ec2-user/deploy/shared/log/retry_zenodo_errors.log 2>&1
 bundle exec rails curation_stats:update_recent >> /home/ec2-user/deploy/shared/log/curation_stats.log 2>&1
 bundle exec rails journal_email:clean_old_manuscripts >> /home/ec2-user/deploy/shared/log/manuscripts_clean.log 2>&1
-#bundle exec rails compressed:update_contents >> /home/ec2-user/deploy/shared/log/compressed_contents.log 2>&1
+bundle exec rails compressed:update_contents >> /home/ec2-user/deploy/shared/log/compressed_contents.log 2>&1
 bundle exec rails identifiers:datasets_without_primary_articles_report  >> /home/ec2-user/deploy/shared/log/datasets_without_primary_articles_report.log 2>&1
 
 # Clean outdated content from the database and temporary S3 store
