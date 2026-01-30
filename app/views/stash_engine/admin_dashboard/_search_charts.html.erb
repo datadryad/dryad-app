@@ -10,7 +10,7 @@ time_desc = time[:dates].map.with_index { |d,i| "#{d}: #{time[:subs][i]} submitt
 %>
 <div>
   <div><canvas id="size-chart" role="img" aria-label="Pie chart counting datasets in size ranges. <%= pie_desc %>"></canvas></div>
-  <div><canvas id="datasets-monthly-chart" role="img" aria-label="Line chart showing quarterly counts of datasets submitted and published. <%= time_desc %>"></canvas></div>
+  <div><canvas id="datasets-monthly-chart" role="img" aria-label="Line chart showing counts of datasets submitted and published by date. <%= time_desc %>"></canvas></div>
 </div>
 <script>
   Chart.defaults.font.family = 'KievitWeb';

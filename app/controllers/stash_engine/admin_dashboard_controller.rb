@@ -64,7 +64,7 @@ module StashEngine
     end
 
     def charts
-      @charts = JSON.parse((helpers.size_chart + helpers.datasets_monthly).to_json, symbolize_names: true)
+      @charts = JSON.parse((helpers.size_chart + helpers.datasets_by_date).to_json, symbolize_names: true)
       respond_to(&:js)
     end
 
