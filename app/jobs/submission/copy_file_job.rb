@@ -11,7 +11,7 @@ module Submission
         Timeout.timeout(1.day) do
           pp "Uploading file #{file.id}"
           Submission::FilesService.new(file).copy_file
-          ArchiveAnalyzerJob.perform_async(file.id) if file.archive?
+          ArchiveAnalyzerJob.perform_async(file.id) if file.archive? && file.file_state.in?(%w[created copied])
 
           set_submission_status
         end

@@ -6,6 +6,7 @@ class ArchiveAnalyzerJob < Submission::BaseJob
   def perform(file_id)
     start = Time.current
     file = StashEngine::DataFile.find(file_id)
+    return if !file.archive? || %w[created copied].exclude?(file.file_state)
 
     if file.copied?
       puts "Copying container_contents for #{file.upload_file_name} (id: #{file.id}, " \
@@ -30,7 +31,7 @@ class ArchiveAnalyzerJob < Submission::BaseJob
       file.container_files.delete_all
       StashEngine::ContainerFile.insert_all(to_insert)
     end
-    puts "Finished for #{file.upload_file_name} (id: #{file.id}, size: #{filesize(file.upload_file_size)}, in #{Time.current - start})"
+    puts "Finished for #{file.upload_file_name} (id: #{file.id}, size: #{filesize(file.upload_file_size)}, in #{Time.current - start} seconds)"
   ensure
     file.update(compressed_try: file.compressed_try + 1)
   end
