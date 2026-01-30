@@ -30,7 +30,8 @@ module StashDatacite
       if errors || not_paid
         CurationService.new(resource: @resource, status: 'awaiting_payment', note: 'Full DPC payment required').process if not_paid
 
-        if errors || (not_paid && resource.payment.invoice_id.blank?)
+        invoicer = Stash::Payments::StripeInvoicer.new(@resource)
+        if errors || (not_paid && !invoicer.invoice_created?)
           flash[:notice] = 'Please pay the remaining DPC to submit for curation and publication' if not_paid
           flash[:alert] = 'Unable to submit dataset for curation. Please correct submission errors' if errors
           new_res = DuplicateResourceService.new(@resource, current_user).call
