@@ -13,8 +13,9 @@ module StashEngine
     end
 
     def label_format(d)
-      return Date.parse(d).strftime('%b %d, %Y') if d.length > 6
-      return Date.parse(d).strftime('%b %Y') if d.length > 4
+      c = d.split('-')
+      return Date.parse(d).strftime('%b %d, %Y') if d.length > 8
+      return Date.new(c.first.to_i, c.last.to_i, 1).strftime('%b %Y') if d.length > 4
 
       d
     end
