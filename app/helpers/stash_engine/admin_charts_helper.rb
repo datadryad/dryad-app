@@ -12,31 +12,40 @@ module StashEngine
       ).to_a
     end
 
-    # rubocop:disable Layout/LineLength, Metrics/AbcSize
-    def datasets_monthly
+    def label_format(d)
+      c = d.split('-')
+      return Date.parse(d).strftime('%b %d, %Y') if d.length > 8
+      return Date.new(c.first.to_i, c.last.to_i, 1).strftime('%b %Y') if d.length > 4
+
+      d
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    def datasets_by_date
       sd = ActiveRecord::Base.connection.select_all(
-        "select CONCAT(YEAR(first_sub_date), ' ', QUARTER(first_sub_date)) AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
+        "select DATE_FORMAT(first_sub_date, '%Y-%m-%d') AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
       )
       pd = ActiveRecord::Base.connection.select_all(
-        "select CONCAT(YEAR(first_pub_date), ' ', QUARTER(first_pub_date)) AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
+        "select DATE_FORMAT(first_pub_date, '%Y-%m-%d') AS period, count(*) as count from (#{params[:sql]}) subquery GROUP BY period ORDER BY period"
       )
       subs = sd.to_a.reject { |h| h['period'].nil? }
       pubs = pd.to_a.reject { |h| h['period'].nil? }
-      qs = { 1 => 1, 2 => 4, 3 => 7, 4 => 10 }
-      seasons = { 1 => 'Winter', 2 => 'Spring', 3 => 'Summer', 4 => 'Autumn' }
 
-      return [{ dates: ["#{seasons[Date.today.quarter.to_i]} #{Date.today.year}"], subs: [0], pubs: [0] }] unless subs.first.present?
+      return [{ dates: [Date.today.strftime('%F')], subs: [0], pubs: [0] }] unless subs.first.present?
 
-      f = subs.first['period'].split
-      l = subs.last['period'].split
+      range = (Date.parse(subs.first['period'])..Date.parse(subs.last['period'])).map { |d| d.strftime('%F') }.uniq
 
-      range = (Date.new(f.first.to_i, qs[f.last.to_i], 1)..Date.new(l.first.to_i, qs[l.last.to_i], 1)).map { |d| "#{d.year} #{d.quarter}" }.uniq
+      if range.length > 30
+        range = range.map { |d| d[0..6] }.uniq
+        range = range.map { |d| d[0..3] }.uniq if range.length > 36
+      end
+
       [{
-        dates: range.map { |d| "#{seasons[d.split.last.to_i]} #{d.split.first}" },
-        subs: range.map { |d| subs.find { |h| h['period'] == d }&.[]('count') || 0 },
-        pubs: range.map { |d| pubs.find { |h| h['period'] == d }&.[]('count') || 0 }
+        dates: range.map { |d| label_format(d) },
+        subs: range.map { |d| subs.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } },
+        pubs: range.map { |d| pubs.sum { |h| h['period'].start_with?(d) ? h['count'] : 0 } }
       }]
     end
-    # rubocop:enable Layout/LineLength, Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize
   end
 end
