@@ -35,7 +35,7 @@ module StashEngine
 
       range = (Date.parse(subs.first['period'])..Date.parse(subs.last['period'])).map { |d| d.strftime('%F') }.uniq
 
-      if range.length > 30
+      if range.length > 60
         range = range.map { |d| d[0..6] }.uniq
         range = range.map { |d| d[0..3] }.uniq if range.length > 36
       end

@@ -50,14 +50,14 @@
       </td>
       <td class="c-lined-table__digits">
         <% if res.submitted? %>
-          <%= default_date(res.publication_date) %>
+          <%= formatted_date(res.publication_date) %>
         <% end %>
       </td>
       <td class="c-lined-table__digits">
         <%= filesize(res.total_file_size) %>
       </td>
       <td class="c-lined-table__digits">
-        <%= default_date(res.updated_at) %>
+        <%= formatted_date(res.updated_at) %>
       </td>
       <td>
         <%= res.editor&.name %>

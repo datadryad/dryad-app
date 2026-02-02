@@ -22,7 +22,7 @@ module FeeCalculator
 
     def add_storage_fee_difference
       paid_for = FREE_STORAGE_SIZE
-      paid_for = [paid_for, resource.identifier.previous_invoiced_file_size.to_i].max
+      paid_for = [paid_for, resource.identifier.last_invoiced_file_size.to_i].max
 
       super(paid_for)
     end
