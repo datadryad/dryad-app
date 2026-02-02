@@ -44,12 +44,14 @@ module Stash
 
       def invoice_paid?
         invoice = Stripe::Invoice.retrieve(resource.payment.invoice_id)
+        return false unless invoice&.status.present?
+
         if invoice.status == 'void' && invoice.latest_revision.present?
           resource.payment.update(invoice_id: invoice.latest_revision)
-          invoice = Stripe::Invoice.retrieve(invoice.latest_revision)
+          return invoice_paid?
         end
         # one of 'draft', 'open', 'paid', 'uncollectible', or 'void'
-        invoice&.status == 'paid'
+        invoice.status == 'paid'
       end
 
       def handle_customer(invoice_details)
