@@ -84,7 +84,7 @@ module FeeCalculator
     def handle_ldf_limit
       @sum_options[:storage_fee_label] = PRODUCT_NAME_MAPPER[:storage_fee_overage]
       tier = get_tier_by_value(storage_fee_tiers, @ldf_limit)
-      paid_for = [tier[:range].max, resource.identifier.previous_invoiced_file_size.to_i].max
+      paid_for = [tier[:range].max, resource.identifier.last_invoiced_file_size.to_i].max
 
       add_storage_fee_difference(paid_for)
       add_invoice_fee
@@ -149,7 +149,7 @@ module FeeCalculator
     end
 
     def add_storage_fee_difference(paid_storage_size = nil)
-      paid_storage_size ||= resource.identifier.previous_invoiced_file_size
+      paid_storage_size ||= resource.identifier.last_invoiced_file_size
       paid_tier_price = price_by_range(storage_fee_tiers, paid_storage_size)
       new_tier_price = price_by_range(storage_fee_tiers, resource.total_file_size)
 

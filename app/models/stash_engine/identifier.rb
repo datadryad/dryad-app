@@ -563,8 +563,16 @@ module StashEngine
       res.publication_date || res.updated_at
     end
 
-    def previous_invoiced_file_size
-      last_invoiced_file_size.presence || latest_resource.previous_published_resource&.total_file_size
+    def last_invoiced_file_size
+      return read_attribute(:last_invoiced_file_size) unless read_attribute(:last_invoiced_file_size).nil?
+
+      res = nil
+      res = latest_resource.total_file_size if latest_resource.last_curation_activity.status.in?(status_group[:published])
+      res ||= latest_resource.previous_published_resource&.total_file_size
+      return if res.nil?
+
+      update(last_invoiced_file_size: res)
+      res
     end
 
     # ------------------------------------------------------------
