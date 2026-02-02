@@ -24,7 +24,7 @@ module StashEngine
         # search the query in any searchable field
         @users = @users.where('LOWER(first_name) LIKE LOWER(?) OR LOWER(last_name) LIKE LOWER(?) OR orcid LIKE ? or LOWER(email) LIKE LOWER(?)',
                               "%#{q}%", "%#{q}%", "%#{q}%", "%#{q}%")
-        @users = @users.or(User.where("LOWER(CONCAT(first_name, ' ', last_name)) LIKE LOWER(?)", "%#{q}%")) if q.include?(' ')
+        @users = @users.or(User.where("LOWER(CONCAT(first_name, ' ', last_name)) LIKE LOWER(?)", "%#{q.gsub(' ', '%')}%")) if q.include?(' ')
       end
 
       ord = helpers.sortable_table_order(whitelist: %w[last_name email tenant_id last_login])
