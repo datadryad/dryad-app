@@ -163,7 +163,7 @@ class CurationService
 
     inv = Stash::Payments::Invoicer.new(resource: @resource, curator: user)
     if @resource.identifier.payment_type == 'stripe' && @activity.previously_published?
-      inv.check_new_overages(@resource.identifier.previous_invoiced_file_size)
+      inv.check_new_overages(@resource.identifier.last_invoiced_file_size)
     else
       inv.charge_user_via_invoice
     end

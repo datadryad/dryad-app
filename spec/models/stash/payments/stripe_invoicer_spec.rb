@@ -66,6 +66,32 @@ module Stash
             expect(invoicer.invoice_paid?).to be_truthy
           end
         end
+
+        context 'with void invoice' do
+          before do
+            allow(Stripe::Invoice).to receive(:retrieve)
+              .with(invoice_id)
+              .and_return(OpenStruct.new({ id: invoice_id, status: 'void', latest_revision: 'in_voice-id-new' })).once
+          end
+
+          it 'updates resource invoice and returns true' do
+            allow(Stripe::Invoice).to receive(:retrieve)
+              .with('in_voice-id-new')
+              .and_return(OpenStruct.new({ id: 'in_voice-id-new', status: 'paid' })).once
+            expect(Stripe::Invoice).to receive(:retrieve).twice
+            expect(invoicer.invoice_paid?).to be_truthy
+            expect(resource.payment.invoice_id).to eq('in_voice-id-new')
+          end
+
+          it 'updates resource invoice and returns false' do
+            allow(Stripe::Invoice).to receive(:retrieve)
+              .with('in_voice-id-new')
+              .and_return(OpenStruct.new({ id: 'in_voice-id-new', status: 'open' })).once
+            expect(Stripe::Invoice).to receive(:retrieve).twice
+            expect(invoicer.invoice_paid?).to be_falsey
+            expect(resource.payment.invoice_id).to eq('in_voice-id-new')
+          end
+        end
       end
 
       describe '#create_invoice' do
