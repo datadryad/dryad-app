@@ -72,7 +72,8 @@ class CedarController < ApplicationController
 
   def delete
     resource = StashEngine::Resource.find_by(id: params[:resource_id])
-    render json: { error: 'resource-not-found' }.to_json, status: 404 unless resource.present?
+    render json: { error: 'resource-not-found' }.to_json, status: 404 and return unless resource.present? && resource.cedar_json.present?
+
     resource.cedar_json.destroy
     render json: { message: 'CEDAR file destroyed' }
   end
