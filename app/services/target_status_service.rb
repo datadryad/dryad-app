@@ -15,7 +15,7 @@ class TargetStatusService
   end
 
   def allow_ppr?
-    return false if @resource.identifier.has_accepted_manuscript? || @resource.identifier.publication_article_doi || @resource.identifier.published?
+    return false if @resource.identifier.accepted_for_publication? || @resource.identifier.published?
     return true if curator_override?
     return false if @resource.identifier.last_curated_status.present?
 

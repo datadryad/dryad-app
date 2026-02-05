@@ -327,9 +327,8 @@ module StashEngine
 
     def automatic_ppr?
       return false unless latest_manuscript.present? || journal&.default_to_ppr?
-      return false if has_accepted_manuscript?
+      return false if accepted_for_publication?
       return false if has_rejected_manuscript?
-      return false if publication_article_doi.present?
 
       true
     end
@@ -345,6 +344,20 @@ module StashEngine
       return false unless latest_manuscript.present?
 
       latest_manuscript.rejected?
+    end
+
+    def has_api_acceptance?
+      return false unless journal&.api_journal?
+
+      curation_activities.exists?(status: 'queued', note: 'status updated via API call')
+    end
+
+    def accepted_for_publication?
+      return true if publication_article_doi.present?
+      return true if has_accepted_manuscript?
+      return true if has_api_acceptance?
+
+      false
     end
     # rubocop:enable Naming/PredicateName
 
