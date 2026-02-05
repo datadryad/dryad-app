@@ -37,6 +37,7 @@ module StashEngine
       status_checks = {
         in_progress: 1.month,
         action_required: 1.month,
+        awaiting_payment: 1.month,
         peer_review: 6.months
       }
       status_checks[processable.current_curation_status.to_sym]
