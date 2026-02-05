@@ -2,7 +2,7 @@ module Mocks
 
   module Datacite
     def mock_datacite!
-      allow_any_instance_of(Stash::Doi::DataciteGen).to receive(:update_metadata).and_return(true)
+      allow_any_instance_of(::Datacite::DoiGen).to receive(:update_metadata).and_return(true)
 
       stub_request(:post, %r{mds\.test\.datacite\.org/metadata})
         .with(
@@ -44,7 +44,7 @@ module Mocks
       @mock_datacitegen = double('datacitegen')
       allow(@mock_datacitegen).to receive(:update_identifier_metadata!).and_return(true)
       allow(@mock_datacitegen).to receive(:mint_id).and_return("doi:#{Faker::Pid.doi}")
-      allow(Stash::Doi::DataciteGen).to receive(:new).and_return(@mock_datacitegen)
+      allow(::Datacite::DoiGen).to receive(:new).and_return(@mock_datacitegen)
     end
 
     def mock_good_doi_resolution(doi:)
