@@ -1,0 +1,20 @@
+{
+  "data": {
+    "id": "10.6071/m3rp49",
+    "type": "dois",
+    "relationships": {
+      "citations": {
+        "data": [
+          {
+            "id": "10.1126/sciadv.1602232",
+            "type": "dois"
+          },
+          {
+            "id": "10.1098/rsif.2017.0030",
+            "type": "dois"
+          }
+        ]
+      }
+    }
+  }
+}

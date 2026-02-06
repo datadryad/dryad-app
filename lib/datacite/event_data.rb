@@ -5,7 +5,7 @@ require 'cgi'
 # 10.5061/dryad.2343k, 10.5061/dryad.070jc, 10.5061/dryad.8j60q, 10.5061/dryad.kd00n, 10.5061/dryad.6rd6f
 
 module Datacite
-  module EventData
+  class EventData
     attr_reader :doi
 
     UNIQUE_INVESTIGATIONS = %w[unique-dataset-investigations-regular unique-dataset-investigations-machine].freeze
